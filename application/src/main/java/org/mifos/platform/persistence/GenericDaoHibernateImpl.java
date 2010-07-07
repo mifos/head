@@ -74,38 +74,35 @@ public class GenericDaoHibernateImpl<T, ID extends Serializable>
 
     @Override
     public List<T> execFindQuery(String qryMethodName, Object[] queryArgs) {
-        //final Query namedQuery = prepareQuery(qryMethodName, queryArgs);
-        //System.out.println("executing named query:" + namedQuery.getQueryString());
-        //return namedQuery.list();
-        return getHibernateTemplate().findByNamedQuery(type.getSimpleName() + "." + qryMethodName, queryArgs);
+        Query namedQuery = getSession().getNamedQuery(type.getSimpleName() + "." + qryMethodName);
+        if (namedQuery.getNamedParameters().length != 0) {
+            setArgsOnNamedQuery(queryArgs, namedQuery);
+        } else {
+            setParamsOnNamedQuery(queryArgs, namedQuery);
+        }
+        return namedQuery.list();
     }
 
-    protected Query prepareQuery(String qryMethodName, Object[] queryArgs) {
-        final String queryName = type.getSimpleName() + "." + qryMethodName;
-        //getHibernateTemplate().getSessionFactory().getCurrentSession() was replacement for getSession() method.
-
-        final Query namedQuery = getHibernateTemplate().getSessionFactory().getCurrentSession().getNamedQuery(queryName);
-        String[] namedParameters = namedQuery.getNamedParameters();
-        if (namedParameters.length==0) {
-            if(queryArgs != null) {
-                for(int i = 0; i < queryArgs.length; i++) {
-                    Object arg = queryArgs[i];
-                    namedQuery.setParameter(i, arg);
-                }
+    private void setParamsOnNamedQuery(Object[] queryArgs, Query namedQuery) {
+        if(queryArgs != null) {
+            for(int i = 0; i < queryArgs.length; i++) {
+                namedQuery.setParameter(i, queryArgs[i]);
             }
-        } else {
-            if(queryArgs != null) {
-                for(int i = 0; i < queryArgs.length; i++) {
-                    Object arg = queryArgs[i];
-                    if(arg instanceof Collection) {
-                        namedQuery.setParameterList(namedParameters[i], (Collection) arg);
-                    } else {
-                        namedQuery.setParameter(namedParameters[i], arg);
-                    }
+        }
+    }
+
+    private void setArgsOnNamedQuery(Object[] queryArgs, Query namedQuery) {
+        if(queryArgs != null) {
+            String[] namedParameters = namedQuery.getNamedParameters();
+            for(int i = 0; i < queryArgs.length; i++) {
+                Object arg = queryArgs[i];
+                if(arg instanceof Collection) {
+                    namedQuery.setParameterList(namedParameters[i], (Collection) arg);
+                } else {
+                    namedQuery.setParameter(namedParameters[i], arg);
                 }
             }
         }
-        return namedQuery;
     }
 
 }

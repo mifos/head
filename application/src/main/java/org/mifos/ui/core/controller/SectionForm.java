@@ -22,10 +22,14 @@ package org.mifos.ui.core.controller;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SectionForm implements Serializable {
     private static final long serialVersionUID = 4707282409987816335L;
     private String name;
+
+    private List<Question> questions = new ArrayList<Question>();
 
     public String getName() {
         return name;
@@ -37,5 +41,13 @@ public class SectionForm implements Serializable {
 
     public void trimName() {
         name = StringUtils.trim(name);
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
     }
 }

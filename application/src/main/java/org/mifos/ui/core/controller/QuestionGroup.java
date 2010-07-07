@@ -38,6 +38,10 @@ public class QuestionGroup implements Serializable {
 
     private List<SectionForm> sections = new ArrayList<SectionForm>();
 
+    private List<Question> questionPool = new ArrayList<Question>();
+
+    private List<String> selectedQuestionIds = new ArrayList<String>();
+
     private SectionForm currentSection = new SectionForm();
 
     public void setTitle(String title) {
@@ -85,20 +89,44 @@ public class QuestionGroup implements Serializable {
     }
 
     public void setEventSource(EventSource eventSource) {
-        if (eventSource == null || StringUtils.isEmpty(eventSource.getEvent()) || StringUtils.isEmpty(eventSource.getSource())) return;
+        if (eventSource == null || StringUtils.isEmpty(eventSource.getEvent()) || StringUtils.isEmpty(eventSource.getSource()))
+            return;
         eventSourceId = format("%s.%s", eventSource.getEvent(), eventSource.getSource());
     }
 
     public void addCurrentSection() {
         currentSection.trimName();
-        if(StringUtils.isEmpty(getSectionName())){
+        if (StringUtils.isEmpty(getSectionName())) {
             setSectionName("Misc");
         }
-        sections.add(currentSection);
+        addCurrentSectionToSections();
+        addSelectedQuestionsToCurrentSection();
         currentSection = new SectionForm();
+        selectedQuestionIds = new ArrayList<String>();
     }
 
-    public String getSectionName(){
+    private void addSelectedQuestionsToCurrentSection() {
+        ArrayList<Question> addedQuestions = new ArrayList<Question>();
+        for (Question question : questionPool) {
+            if (selectedQuestionIds.contains(question.getId())) {
+                currentSection.getQuestions().add(question);
+                addedQuestions.add(question);
+            }
+        }
+        questionPool.removeAll(addedQuestions);
+    }
+
+    private void addCurrentSectionToSections() {
+        for (SectionForm section : sections) {
+            if (StringUtils.equalsIgnoreCase(section.getName(), currentSection.getName())) {
+                currentSection = section;
+                return;
+            }
+        }
+        sections.add(currentSection);
+    }
+
+    public String getSectionName() {
         return currentSection.getName();
     }
 
@@ -108,14 +136,66 @@ public class QuestionGroup implements Serializable {
 
     public void removeSection(String sectionName) {
         SectionForm sectionToDelete = null;
-        for (SectionForm sectionForm: sections){
-            if(sectionName.equals(sectionForm.getName())){
+        for (SectionForm sectionForm : sections) {
+            if (StringUtils.equalsIgnoreCase(sectionName,sectionForm.getName())) {
                 sectionToDelete = sectionForm;
                 break;
             }
         }
         if (sectionToDelete != null) {
+            questionPool.addAll(sectionToDelete.getQuestions());
             sections.remove(sectionToDelete);
+        }
+    }
+
+    public List<Question> getQuestionPool() {
+        return questionPool;
+    }
+
+    public void setQuestionPool(List<Question> questionPool) {
+        this.questionPool = questionPool;
+    }
+
+    public List<String> getSelectedQuestionIds() {
+        return selectedQuestionIds;
+    }
+
+    public void setSelectedQuestionIds(List<String> selectedQuestionIds) {
+        this.selectedQuestionIds = selectedQuestionIds;
+    }
+
+    public void removeQuestion(String sectionName, String questionId) {
+        for (SectionForm section : sections) {
+            if (StringUtils.equalsIgnoreCase(sectionName, section.getName())) {
+                removeQuestionFromSection(questionId, section);
+                if (sectionHasNoQuestions(section)) {
+                    removeSection(sectionName);
+                }
+                break;
+            }
+        }
+    }
+
+    public boolean hasQuestionsInCurrentSection() {
+        return selectedQuestionIds.size()==0;
+    }
+
+    private boolean sectionHasNoQuestions(SectionForm section) {
+        return section.getQuestions().size() == 0;
+    }
+
+    private void removeQuestionFromSection(String questionId, SectionForm section) {
+        Question questionToRemove = null;
+        List<Question> questions = section.getQuestions();
+        for (Question question : questions) {
+            if (StringUtils.equals(questionId, question.getId())) {
+                questionToRemove = question;
+                break;
+            }
+        }
+        if (questionToRemove != null) {
+            questions.remove(questionToRemove);
+            questionPool.add(questionToRemove);
         }
     }
 }

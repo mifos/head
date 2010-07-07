@@ -31,6 +31,8 @@ public class Question implements Serializable{
 
     private String id;
 
+    private boolean required;
+
     public String getTitle() {
         return title;
     }
@@ -57,5 +59,13 @@ public class Question implements Serializable{
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 }
