@@ -16,9 +16,9 @@
 	   <webflow:flow-location-pattern value="/WEB-INF/flows/**.xml"/>
 	</webflow:flow-registry>
 	
-	<bean id="swfOgnlExprParser" class="org.springframework.webflow.expression.WebFlowOgnlExpressionParser"/>
+	<bean id="flowExpressionParser" class="org.springframework.webflow.expression.WebFlowOgnlExpressionParser"/>
 	
-	<webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="mvcViewFactoryCreator" expression-parser="swfOgnlExprParser" development="true" />
+	<webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="mvcViewFactoryCreator" expression-parser="flowExpressionParser" development="true" />
 	<bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
 	   <property name="viewResolvers" ref="freemarkerViewResolver"/>
 	   <property name="useSpringBeanBinding" value="true" />
