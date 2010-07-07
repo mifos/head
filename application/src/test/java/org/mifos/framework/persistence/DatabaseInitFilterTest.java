@@ -45,18 +45,12 @@ public class DatabaseInitFilterTest extends TestCase {
         ApplicationInitializer.clearDatabaseError();
     }
 
-    public void testDatabaseIsReallyOld() throws Exception {
-        String output = printError(-1);
-
-        StringAssert.assertContains("Database is too old to have a version", output);
-    }
-
     public void testUpgradeFailed() throws Exception {
         ApplicationInitializer.setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE, "test death message",
                 new SQLException("bletch ick sputter die"));
         String output = printError(66);
 
-        StringAssert.assertContains("Database Version = 66\n", output);
+        StringAssert.assertContains("Unable to apply database upgrades", output);
         StringAssert.assertContains("Correct the error and restart the application", output);
         StringAssert.assertContains("bletch ick sputter die", output);
     }
@@ -71,7 +65,7 @@ public class DatabaseInitFilterTest extends TestCase {
 
     private String printError(int version) {
         StringWriter out = new StringWriter();
-        new DatabaseInitFilter().printErrorPage(new PrintWriter(out), version);
+        new DatabaseInitFilter().printErrorPage(new PrintWriter(out));
         String output = out.toString();
         return output;
     }

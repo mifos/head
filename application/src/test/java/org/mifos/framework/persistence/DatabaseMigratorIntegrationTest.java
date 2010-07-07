@@ -28,6 +28,8 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import junitx.framework.StringAssert;
+
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
@@ -47,7 +49,7 @@ public class DatabaseMigratorIntegrationTest {
     @BeforeClass
     public void beforeClass() throws Exception {
         StaticHibernateUtil.initialize();
-//        connection = TestDatabase.getJDBCConnection();
+        // connection = TestDatabase.getJDBCConnection();
         connection = StaticHibernateUtil.getSessionTL().connection();
         connection.setAutoCommit(false);
 
@@ -55,8 +57,8 @@ public class DatabaseMigratorIntegrationTest {
 
     @AfterClass
     public void afterClass() throws Exception {
-//        connection.close();
-//        StaticHibernateUtil.flushAndCloseSession();
+        connection.close();
+        StaticHibernateUtil.flushAndCloseSession();
     }
 
     /**
@@ -140,6 +142,20 @@ public class DatabaseMigratorIntegrationTest {
 
     }
 
+    public void testReallyOldDatabase() throws Exception {
+        TestDatabase.dropMySQLDatabase();
+        createFooTable(connection);
+
+        DatabaseMigrator migrator = new DatabaseMigrator(connection);
+        try {
+            migrator.isNSDU(connection);
+
+        } catch (Exception e) {
+            StringAssert.assertContains("Database is too old to be upgraded", e.getMessage());
+        }
+
+    }
+
     public void testFirstRun() throws Exception {
 
         DatabaseSetup.executeScript("mifosdroptables.sql", connection);
@@ -180,7 +196,7 @@ public class DatabaseMigratorIntegrationTest {
 
     }
 
-    @Test (enabled=false)
+    @Test(enabled = false)
     public void testMethodUpgrade() throws Exception {
 
         loadNonSeqDatabaseSchema();

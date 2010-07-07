@@ -156,9 +156,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
                 if (!databaseError.isError) {
                     try {
-                        if(!migrator.isNSDU()){
-                            migrator.firstRun(migrator.getLegacyUpgradesMap());
-                        }
+                        migrator.upgrade();
                     } catch (Throwable t) {
                         setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE, "Failed to upgrade database.", t);
                     }
@@ -211,10 +209,10 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         }
     }
 
-    public static void printDatabaseError(XmlBuilder xml, int dbVersion) {
+    public static void printDatabaseError(XmlBuilder xml) {
         synchronized (ApplicationInitializer.class) {
             if (databaseError.isError) {
-                addDatabaseErrorMessage(xml, dbVersion);
+                addDatabaseErrorMessage(xml);
             } else {
                 addNoFurtherDetailsMessage(xml);
             }
@@ -228,7 +226,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         xml.text("\n");
     }
 
-    private static void addDatabaseErrorMessage(XmlBuilder xml, int dbVersion) {
+    private static void addDatabaseErrorMessage(XmlBuilder xml) {
         xml.startTag("p", "style", "font-weight: bolder; color: red; font-size: x-large;");
 
         xml.text(databaseError.errmsg);

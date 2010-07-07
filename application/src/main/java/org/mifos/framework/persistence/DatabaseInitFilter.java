@@ -37,7 +37,7 @@ import org.mifos.framework.struts.tags.XmlBuilder;
 public class DatabaseInitFilter implements Filter {
 
     private static boolean databaseVerified = false;
-    private static int databaseVersion = -1;
+
 
     public DatabaseInitFilter() {
     }
@@ -58,12 +58,10 @@ public class DatabaseInitFilter implements Filter {
         httpResponse.setStatus(500);
         PrintWriter out = httpResponse.getWriter();
 
-        int version = databaseVersion;
-
-        printErrorPage(out, version);
+        printErrorPage(out);
     }
 
-    void printErrorPage(PrintWriter out, int version) {
+    void printErrorPage(PrintWriter out) {
         XmlBuilder xml = new XmlBuilder();
         xml.startTag("html");
         xml.startTag("head");
@@ -90,7 +88,7 @@ public class DatabaseInitFilter implements Filter {
         xml.endTag("p");
         xml.text("\n");
 
-        ApplicationInitializer.printDatabaseError(xml, version);
+        ApplicationInitializer.printDatabaseError(xml);
 
         xml.endTag("body");
         xml.text("\n");

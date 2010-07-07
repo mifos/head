@@ -363,10 +363,17 @@ public class DatabaseMigrator {
     }
 
     public boolean isNSDU(Connection conn) throws SQLException {
-        ResultSet results = conn.getMetaData().getColumns(null, null, "APPLIED_UPGRADES", "UPGRADE_ID");
-        boolean foundColumns = results.next();
+        ResultSet results = conn.getMetaData().getColumns(null, null, "applied_upgrades", "upgrade_id");
+        boolean foundAppliedUpgrades = results.next();
         results.close();
-        return foundColumns;
+
+        results = conn.getMetaData().getColumns(null, null, "database_version", "database_version");
+        boolean foundDatabaseVersion = results.next();
+
+        if (! (foundAppliedUpgrades || foundDatabaseVersion)){
+            throw new RuntimeException("Database is too old to be upgraded");
+        }
+        return foundAppliedUpgrades;
     }
 
     @SuppressWarnings("unused")
