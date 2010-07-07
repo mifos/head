@@ -18,49 +18,39 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.contract;
+package org.mifos.ui.core.controller;
 
-public class SectionQuestionDetail {
-    private int questionId;
-    private boolean mandatory;
-    private String title;
+import org.mifos.platform.questionnaire.contract.SectionQuestionDetail;
 
-    public SectionQuestionDetail(int questionId, boolean mandatory) {
-        this(questionId, null, mandatory);
-    }
+public class SectionQuestionDetailForm {
+    private SectionQuestionDetail sectionQuestionDetail;
 
-    public SectionQuestionDetail(int questionId, String title, boolean mandatory) {
-        this.questionId = questionId;
-        this.mandatory = mandatory;
-        this.title = title;
+    public SectionQuestionDetailForm(SectionQuestionDetail sectionQuestionDetail) {
+        this.sectionQuestionDetail = sectionQuestionDetail;
     }
 
     public int getQuestionId() {
-        return questionId;
-    }
-
-    public boolean isMandatory() {
-        return mandatory;
+        return sectionQuestionDetail.getQuestionId();
     }
 
     public String getTitle() {
-        return title;
+        return sectionQuestionDetail.getTitle();
+    }
+
+    public boolean isMandatory() {
+        return sectionQuestionDetail.isMandatory();
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        SectionQuestionDetail that = (SectionQuestionDetail) o;
-
-        if (questionId != that.questionId) return false;
-
-        return true;
+        SectionQuestionDetailForm that = (SectionQuestionDetailForm) o;
+        return getQuestionId() == that.getQuestionId();
     }
 
     @Override
     public int hashCode() {
-        return questionId;
+        return getQuestionId();
     }
 }

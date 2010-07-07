@@ -20,13 +20,15 @@
 package org.mifos.platform.questionnaire.contract;
 
 import org.apache.commons.lang.StringUtils;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.QuestionnaireServiceFacadeImpl;
-import org.mifos.test.matchers.EventSourceMatcher;
+import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mifos.ui.core.controller.Question;
 import org.mifos.ui.core.controller.QuestionGroup;
 import org.mifos.ui.core.controller.SectionForm;
@@ -40,8 +42,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
@@ -63,16 +64,10 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void shouldCreateQuestionGroup() throws ApplicationException {
-        QuestionGroup questionGroup = getQuestionGroup(TITLE, "Create", "Client", asList(getSectionForm("S1"), getSectionForm("S2")));
+        QuestionGroup questionGroup = getQuestionGroup(TITLE, "Create", "Client", asList(getSectionFormWithQuestions("S1", 123), getSectionFormWithQuestions("S2", 123)));
         questionnaireServiceFacade.createQuestionGroup(questionGroup);
         verify(questionnaireService, times(1)).defineQuestionGroup(argThat(
-                new QuestionGroupDefinitionMatcher(TITLE, "Create", "Client", asList(getSectionForm("S1"), getSectionForm("S2")))));
-    }
-
-    private SectionForm getSectionForm(String name) {
-        SectionForm sectionForm = new SectionForm();
-        sectionForm.setName(name);
-        return sectionForm;
+                new QuestionGroupDefinitionMatcher(TITLE, "Create", "Client", asList(getSectionDefinitionWithQuestions("S1", 123), getSectionDefinitionWithQuestions("S2", 123)))));
     }
 
     @Test
@@ -129,33 +124,11 @@ public class QuestionnaireServiceFacadeTest {
     @Test
     public void testGetQuestionGroupById() throws ApplicationException {
         int questionGroupId = 1;
-        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", "S1", "S2");
-        when(questionnaireService.getQuestionGroup(questionGroupId)).thenReturn(questionGroupDetail);
-        QuestionGroup questionGroup = questionnaireServiceFacade.getQuestionGroup(questionGroupId);
-        assertNotNull("Question group should not be null", questionGroup);
-        assertThat(questionGroup.getTitle(), is(TITLE));
-        List<SectionForm> sectionForms = questionGroup.getSections();
-        assertThat(sectionForms.size(), is(2));
-        assertThat(sectionForms.get(0).getName(), is("S1"));
-        assertThat(sectionForms.get(1).getName(), is("S2"));
-        EventSource eventSource = questionGroup.getEventSource();
-        assertThat(eventSource, is(not(nullValue())));
-        assertThat(eventSource.getEvent(), is("Create"));
-        assertThat(eventSource.getSource(), is("Client"));
-    }
-
-    private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, String... sectionNames) {
-        List<SectionDefinition> sectionDefinitions = new ArrayList<SectionDefinition>();
-        for (String sectionName : sectionNames) {
-            sectionDefinitions.add(getSectionDefinition(sectionName));
-        }
-        return new QuestionGroupDetail(1, title, new EventSource(event, source, null), sectionDefinitions);
-    }
-
-    private SectionDefinition getSectionDefinition(String name) {
-        SectionDefinition sectionDefinition = new SectionDefinition();
-        sectionDefinition.setName(name);
-        return sectionDefinition;
+        List<SectionDefinition> sections = asList(getSectionDefinitionWithQuestions("S1", 121), getSectionDefinitionWithQuestions("S2", 122, 123));
+        QuestionGroupDetail expectedQuestionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", sections);
+        when(questionnaireService.getQuestionGroup(questionGroupId)).thenReturn(expectedQuestionGroupDetail);
+        QuestionGroupDetail questionGroupDetail = questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId);
+        assertThat(questionGroupDetail, new QuestionGroupDetailMatcher(expectedQuestionGroupDetail));
     }
 
     @Test
@@ -163,7 +136,7 @@ public class QuestionnaireServiceFacadeTest {
         int questionGroupId = 1;
         when(questionnaireService.getQuestionGroup(questionGroupId)).thenThrow(new ApplicationException(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
         try {
-            questionnaireServiceFacade.getQuestionGroup(questionGroupId);
+            questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId);
         } catch (ApplicationException e) {
             verify(questionnaireService, times(1)).getQuestionGroup(questionGroupId);
             assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
@@ -196,14 +169,64 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testRetrieveEventSources() {
-        List<EventSource> events = getEvents(makeEvent("Create", "Client", "Create Client"), makeEvent("View", "Client", "View Client"));
+        EventSource event1 = makeEvent("Create", "Client", "Create Client");
+        EventSource event2 = makeEvent("View", "Client", "View Client");
+        List<EventSource> events = getEvents(event1, event2);
         when(questionnaireService.getAllEventSources()).thenReturn(events);
         List<EventSource> eventSources = questionnaireServiceFacade.getAllEventSources();
         assertNotNull(eventSources);
         assertTrue(eventSources.size() == 2);
-        assertThat(eventSources, new EventSourceMatcher("Create", "Client", "Create Client"));
-        assertThat(eventSources, new EventSourceMatcher("View", "Client", "View Client"));
+        assertThat(eventSources, new EventSourcesMatcher(asList(event1, event2)));
         verify(questionnaireService).getAllEventSources();
+    }
+
+    private SectionForm getSectionForm(String name) {
+        SectionForm sectionForm = new SectionForm();
+        sectionForm.setName(name);
+        return sectionForm;
+    }
+
+    private SectionForm getSectionFormWithQuestions(String name, int... questionIds) {
+        SectionForm sectionForm = new SectionForm();
+        sectionForm.setName(name);
+        List<Question> questions = new ArrayList<Question>();
+        for (int quesId : questionIds) {
+            Question question = new Question();
+            question.setTitle("Q" + quesId);
+            question.setId(String.valueOf(quesId));
+            question.setRequired(false);
+            questions.add(question);
+        }
+        sectionForm.setQuestions(questions);
+        return sectionForm;
+    }
+
+    private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, List<SectionDefinition> sections) {
+        return new QuestionGroupDetail(1, title, new EventSource(event, source, null), sections);
+    }
+
+    private List<SectionDefinition> getSections(String... sectionNames) {
+        List<SectionDefinition> sectionDefinitions = new ArrayList<SectionDefinition>();
+        for (String sectionName : sectionNames) {
+            sectionDefinitions.add(getSectionDefinition(sectionName));
+        }
+        return sectionDefinitions;
+    }
+
+    private SectionDefinition getSectionDefinition(String name) {
+        SectionDefinition sectionDefinition = new SectionDefinition();
+        sectionDefinition.setName(name);
+        sectionDefinition.addQuestion(new SectionQuestionDetail(123, "Q1", true));
+        return sectionDefinition;
+    }
+
+    private SectionDefinition getSectionDefinitionWithQuestions(String name, int... questionIds) {
+        SectionDefinition sectionDefinition = new SectionDefinition();
+        sectionDefinition.setName(name);
+        for (int quesId : questionIds) {
+            sectionDefinition.addQuestion(new SectionQuestionDetail(quesId, "Q" + quesId, false));
+        }
+        return sectionDefinition;
     }
 
     private List<EventSource> getEvents(EventSource... event) {
@@ -251,35 +274,148 @@ public class QuestionnaireServiceFacadeTest {
         }
     }
 
-    private class QuestionGroupDefinitionMatcher extends ArgumentMatcher<QuestionGroupDefinition> {
-        private String title;
-        private List<SectionForm> sectionForms;
-        private String event;
-        private String source;
+    private class QuestionGroupDefinitionMatcher extends TypeSafeMatcher<QuestionGroupDefinition> {
 
-        public QuestionGroupDefinitionMatcher(String title, String event, String source, List<SectionForm> sectionForms) {
-            this.title = title;
-            this.event = event;
-            this.source = source;
-            this.sectionForms = sectionForms;
+        private QuestionGroupDefinition questionGroupDefinition;
+
+        public QuestionGroupDefinitionMatcher(QuestionGroupDefinition questionGroupDefinition) {
+            this.questionGroupDefinition = questionGroupDefinition;
+        }
+
+        public QuestionGroupDefinitionMatcher(String title, String event, String source, List<SectionDefinition> sectionDefinitions) {
+            this(new QuestionGroupDefinition(title, new EventSource(event, source, event + "." + source), sectionDefinitions));
         }
 
         @Override
-        public boolean matches(Object argument) {
-            if (argument instanceof QuestionGroupDefinition) {
-                QuestionGroupDefinition questionGroupDefinition = (QuestionGroupDefinition) argument;
-                List<SectionDefinition> sectionDefinitions = questionGroupDefinition.getSectionDefinitions();
-                for (int i = 0; i < sectionDefinitions.size(); i++) {
-                    if (!sectionForms.get(i).getName().equals(sectionDefinitions.get(i).getName())) {
-                        return false;
-                    }
-                }
-                return StringUtils.equals(questionGroupDefinition.getTitle(), title) &&
-                        StringUtils.equals(questionGroupDefinition.getEventSource().getEvent(), event) &&
-                        StringUtils.equals(questionGroupDefinition.getEventSource().getSource(), source);
+        public boolean matchesSafely(QuestionGroupDefinition questionGroupDefinition) {
+            if (StringUtils.equalsIgnoreCase(this.questionGroupDefinition.getTitle(), questionGroupDefinition.getTitle())) {
+                assertThat(this.questionGroupDefinition.getEventSource(), new EventSourceMatcher(questionGroupDefinition.getEventSource()));
+                assertThat(this.questionGroupDefinition.getSectionDefinitions(), new SectionDefinitionListMatcher(questionGroupDefinition.getSectionDefinitions()));
+            } else {
+                return false;
             }
-            return false;
+            return true;
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("Question group definitions do not match");
         }
     }
 
+    private class EventSourceMatcher extends TypeSafeMatcher<EventSource> {
+
+        private EventSource eventSource;
+
+        public EventSourceMatcher(EventSource eventSource) {
+            this.eventSource = eventSource;
+        }
+
+        @Override
+        public boolean matchesSafely(EventSource eventSource) {
+            return StringUtils.endsWithIgnoreCase(this.eventSource.getDesciption(), eventSource.getDesciption()) &&
+                    StringUtils.endsWithIgnoreCase(this.eventSource.getSource(), eventSource.getSource()) &&
+                    StringUtils.endsWithIgnoreCase(this.eventSource.getEvent(), eventSource.getEvent());
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("Event sources do not match");
+        }
+    }
+
+    private class SectionDefinitionListMatcher extends TypeSafeMatcher<List<SectionDefinition>> {
+        private List<SectionDefinition> sectionDefinitions;
+
+        public SectionDefinitionListMatcher(List<SectionDefinition> sectionDefinitions) {
+            this.sectionDefinitions = sectionDefinitions;
+        }
+
+
+        @Override
+        public boolean matchesSafely(List<SectionDefinition> sectionDefinitions) {
+            if (this.sectionDefinitions.size() == sectionDefinitions.size()) {
+                for (SectionDefinition sectionDefinition : this.sectionDefinitions) {
+                    assertThat(sectionDefinitions, hasItem(new SectionDefinitionMatcher(sectionDefinition)));
+                }
+            } else {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("Section definition lists do not match");
+        }
+    }
+
+    private class SectionDefinitionMatcher extends TypeSafeMatcher<SectionDefinition> {
+        private SectionDefinition sectionDefinition;
+
+        public SectionDefinitionMatcher(SectionDefinition sectionDefinition) {
+            this.sectionDefinition = sectionDefinition;
+        }
+
+        @Override
+        public boolean matchesSafely(SectionDefinition sectionDefinition) {
+            if (StringUtils.equalsIgnoreCase(this.sectionDefinition.getName(), sectionDefinition.getName())
+                    && this.sectionDefinition.getQuestions().size() == sectionDefinition.getQuestions().size()) {
+                for (SectionQuestionDetail sectionQuestionDetail : this.sectionDefinition.getQuestions()) {
+                    assertThat(sectionDefinition.getQuestions(), hasItem(new SectionQuestionDetailMatcher(sectionQuestionDetail)));
+                }
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("Section definitions do not match");
+        }
+
+    }
+
+    private class SectionQuestionDetailMatcher extends TypeSafeMatcher<SectionQuestionDetail> {
+        private SectionQuestionDetail sectionQuestionDetail;
+
+        public SectionQuestionDetailMatcher(SectionQuestionDetail sectionQuestionDetail) {
+            this.sectionQuestionDetail = sectionQuestionDetail;
+        }
+
+        @Override
+        public boolean matchesSafely(SectionQuestionDetail sectionQuestionDetail) {
+            return this.sectionQuestionDetail.getQuestionId() == sectionQuestionDetail.getQuestionId()
+                    & StringUtils.equalsIgnoreCase(this.sectionQuestionDetail.getTitle(), sectionQuestionDetail.getTitle());
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("Section definition questions do not match");
+        }
+    }
+
+    private class EventSourcesMatcher extends TypeSafeMatcher<List<EventSource>> {
+        private List<EventSource> eventSources;
+
+        public EventSourcesMatcher(List<EventSource> eventSources) {
+            this.eventSources = eventSources;
+        }
+
+        @Override
+        public boolean matchesSafely(List<EventSource> eventSources) {
+            if (eventSources.size() == this.eventSources.size()) {
+                for (EventSource eventSource : this.eventSources) {
+                    assertThat(eventSources, hasItem(new EventSourceMatcher(eventSource)));
+                }
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("EventSources did not match");
+        }
+    }
 }

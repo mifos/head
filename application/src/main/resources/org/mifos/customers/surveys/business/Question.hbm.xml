@@ -25,7 +25,7 @@
 	<query name="questions.retrieveAll">
        <![CDATA[from Question as question order by question.shortName]]>
     </query>
- 	<query name="questions.retrieveByState">
+ 	<query name="Question.retrieveByState">
        <![CDATA[from Question as question where question.questionState=:QUESTION_STATE order by question.shortName]]>
     </query>
     <query name="questions.retrieveByName">
@@ -35,7 +35,7 @@
        <![CDATA[from Question as question where question.answerType=:ANSWER_TYPE]]>
     </query>  
      <query name="Question.retrieveCountOfQuestionsWithTitle">
-       <![CDATA[select count(*) from Question as question where question.shortName=?]]>
+       <![CDATA[select count(*) from Question as question where question.shortName=:questionTitle]]>
     </query>
 
 </hibernate-mapping>
