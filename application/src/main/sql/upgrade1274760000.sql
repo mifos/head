@@ -1,10 +1,10 @@
-CREATE TABLE FOO (
-FOO_ID INTEGER,
-Description VARCHAR(25),
-PRIMARY KEY(FOO_ID)
+create table foo (
+foo_id integer,
+description varchar(25),
+primary key(foo_id)
 
 )
-ENGINE=InnoDB CHARACTER SET utf8;
+engine=innodb character set utf8;
 
-INSERT INTO FOO VALUES(1, 'BAR');
-INSERT INTO FOO VALUES(2, 'BAZ');
+insert into foo values(1, 'BAR');
+insert into foo values(2, 'BAZ');
