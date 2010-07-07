@@ -573,15 +573,6 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertNotNull(personnel.getLastLogin());
     }
 
-    public void testUpdatePassword() throws Exception {
-        personnel = createPersonnel();
-        Short mifosId = new Short((short) 1);
-        personnel.updatePassword("testPassword", mifosId);
-       Assert.assertEquals(personnel.getUpdatedBy(), mifosId);
-        Assert.assertNotNull(personnel.getLastLogin());
-       Assert.assertEquals(personnel.getPasswordChanged(), LoginConstants.PASSWORDCHANGEDFLAG);
-    }
-
     public void testUpdatePasswordWithWrongOldPassword() throws Exception {
         personnel = createPersonnel();
         Assert.assertNull(personnel.getLastLogin());

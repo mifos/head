@@ -63,16 +63,10 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // one of the dependent methods throws Exception
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
         loanTestHelper = new LoanTestHelper(selenium);
-        (new MifosPage(selenium)).logout();
-        LoginPage loginPage = new AppLauncher(selenium).launchMifos().logout();
-        loginPage.verifyPage();
-        homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
-        homePage.verifyPage();
     }
 
     @AfterMethod
@@ -83,6 +77,8 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newWeeklyGroupLoanAccount() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+
+        homePage = loginSuccessfully();
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("MyGroup1233266297718");
@@ -104,11 +100,13 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     }
 
 //    @Test( groups = {"smoke"})
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @SuppressWarnings({ "PMD.SignatureDeclareThrowsException"})
     private void newMonthlyGroupLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
-        // FIXME - keithw - do manual test to verify is not broken and rewrite test
 
+        // FIXME - keithw - ignoring test as it uses a disbursement date that is not a working day when creating loan which causes it to fail.
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_005_dbunit.xml.zip", dataSource, selenium);
+
+        homePage = loginSuccessfully();
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("GroupfirstOfMonth");
@@ -127,19 +125,15 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         createLoanAccountConfirmationPage.verifyPage();
         LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
         loanAccountPage.verifyPage();
-
-
-//        LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
-//        loanAccountPage.verifyPage();
     }
 
-//    @Test( groups = {"smoke"})
+    @Test( groups = {"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void newMonthlyGroupLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
-
-        // FIXME - keithw - do manual test to verify is not broken and rewrite test
+    public void newMonthlyGroupLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
 
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_005_dbunit.xml.zip", dataSource, selenium);
+
+        homePage = loginSuccessfully();
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Group3rdFriday");
@@ -158,10 +152,6 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         createLoanAccountConfirmationPage.verifyPage();
         LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
         loanAccountPage.verifyPage();
-
-
-//        LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
-//        loanAccountPage.verifyPage();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -199,5 +189,15 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         loanAccountEntryPage.selectTwoClientsForGlim();
         loanAccountEntryPage.selectPurposeForGlim();
         loanAccountEntryPage.clickContinue();
+    }
+
+    private HomePage loginSuccessfully() {
+        (new MifosPage(selenium)).logout();
+        LoginPage loginPage = new AppLauncher(selenium).launchMifos();
+        loginPage.verifyPage();
+        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
+        homePage.verifyPage();
+
+        return homePage;
     }
 }

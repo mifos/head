@@ -407,7 +407,7 @@ public interface NamedQueryConstants {
     String SURVEYS_RETRIEVE_ALL_PPI = "surveys.retrieveAllPPISurveys";
     String QUESTIONS_GET_NUM = "questions.getNum";
     String QUESTIONS_RETRIEVE_ALL = "questions.retrieveAll";
-    String QUESTIONS_RETRIEVE_BY_STATE = "questions.retrieveByState";
+    String QUESTIONS_RETRIEVE_BY_STATE = "Question.retrieveByState";
     String QUESTIONS_RETRIEVE_BY_TYPE = "questions.retrieveByAnswerType";
     String QUESTIONS_RETRIEVE_BY_NAME = "questions.retrieveByName";
     String SURVEYS_RETRIEVE_BY_CUSTOMERS_TYPES = "surveys.retrieveCustomersSurveys";

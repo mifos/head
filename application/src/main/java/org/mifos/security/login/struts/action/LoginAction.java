@@ -36,7 +36,7 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.LoginActivityDto;
-import org.mifos.application.servicefacade.LoginServiceFacade;
+import org.mifos.application.servicefacade.LegacyLoginServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -64,7 +64,7 @@ import org.mifos.security.util.UserContext;
 public class LoginAction extends BaseAction {
 
     private static final MifosLogger loginLogger = MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER);
-    private final LoginServiceFacade loginServiceFacade = DependencyInjectedServiceLocator.locationLoginServiceFacade();
+    private final LegacyLoginServiceFacade loginServiceFacade = DependencyInjectedServiceLocator.locationLoginServiceFacade();
 
     @Override
     protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
@@ -139,6 +139,7 @@ public class LoginAction extends BaseAction {
 
     public ActionForward logout(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
         loginLogger.debug("Inside logout of LoginAction");
 
         ResourceBundle resources;

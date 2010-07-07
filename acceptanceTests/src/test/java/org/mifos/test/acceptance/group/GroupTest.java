@@ -81,11 +81,9 @@ public class GroupTest extends UiTestCaseBase {
         groupViewDetailsPage.verifyPage();
     }
 
-//    @Test(sequential = true, groups = {"smoke","group","acceptance","ui"})
+    @Test(sequential = true, groups = {"smoke","group","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    private void createGroupInPendingApprovalStateTest() throws Exception {
-
-        // FIXME - keithw - test manually and rewrite tests.
+    public void createGroupInPendingApprovalStateTest() throws Exception {
 
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
         CreateGroupEntryPage groupEntryPage = loginAndNavigateToNewGroupPage();

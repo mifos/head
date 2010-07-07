@@ -46,4 +46,8 @@ public class SectionDefinition {
     public List<SectionQuestionDetail> getQuestions() {
         return questionDetails;
     }
+
+    public void setQuestionDetails(List<SectionQuestionDetail> questionDetails) {
+        this.questionDetails = questionDetails;
+    }
 }

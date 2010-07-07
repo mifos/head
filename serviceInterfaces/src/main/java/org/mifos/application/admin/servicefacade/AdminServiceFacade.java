@@ -27,5 +27,4 @@ public interface AdminServiceFacade {
     ProductConfigurationDto retrieveProductConfiguration();
 
     void updateProductConfiguration(ProductConfigurationDto productConfiguration);
-
 }

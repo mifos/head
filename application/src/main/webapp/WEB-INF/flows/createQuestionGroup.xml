@@ -7,12 +7,14 @@
 
     <on-start>
        <evaluate expression="questionnaireController.getAllQgEventSources()" result ="flowScope.EventSources" />
+       <evaluate expression="questionnaireServiceFacade.getAllQuestions()" result="questionGroupDefinition.questionPool" />
     </on-start>
 
 	<view-state id="createQuestionGroup" model="questionGroupDefinition">
 		<transition on="defineQuestionGroup" to="defineQuestionGroup" />
         <transition on="addSection" to="addSection"/>
         <transition on="deleteSection" to="deleteSection"/>
+        <transition on="deleteQuestion" to="deleteQuestion"/>
         <transition on="cancel" to="cancel" bind="false" history="discard"/>
 	</view-state>
 
@@ -21,9 +23,15 @@
         <transition on="success" to="createQuestionGroup" />
     </action-state>
 
-    <action-state id="addSection">
-        <evaluate expression="questionnaireController.addSection(questionGroupDefinition)"/>
+    <action-state id="deleteQuestion">
+        <evaluate expression="questionnaireController.deleteQuestion(questionGroupDefinition, requestParameters.questionSection ,requestParameters._eventId_deleteQuestion )"/>
         <transition on="success" to="createQuestionGroup" />
+    </action-state>
+
+    <action-state id="addSection">
+        <evaluate expression="questionnaireController.addSection(questionGroupDefinition, flowRequestContext)"/>
+        <transition on="success" to="createQuestionGroup" />
+        <transition on="failure" to="createQuestionGroup" />
     </action-state>
 
     <action-state id="defineQuestionGroup">

@@ -6,6 +6,7 @@
     					http://www.springframework.org/schema/aop classpath:xsd/spring-aop-3.0.xsd">
 
     <bean id="loginServiceFacade" class="org.mifos.application.servicefacade.LoginServiceFacadeWebTier">
+    	<constructor-arg ref="personnelService" />
     	<constructor-arg ref="personnelDao" />
     </bean>
     
@@ -93,4 +94,7 @@
     	<constructor-arg ref="savingsProductDao" />
     </bean>
     
+    <bean id="personnelService" class="org.mifos.customers.personnel.business.service.PersonnelServiceImpl" >
+    	<constructor-arg ref="personnelDao" />
+    </bean>
 </beans>
