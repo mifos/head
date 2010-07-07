@@ -65,15 +65,16 @@
                         onkeypress="return FnCheckNumCharsOnPress(event,this);"
                         onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
                     </li>
+                    <li>
+                        <label for="selectedQuestionIds"><span class="red">*</span>[@spring.message "questionnaire.select.questions"/]</label>
+                        <select multiple="multiple" size="10" id="selectedQuestionIds" name="selectedQuestionIds" style="width:35em">
+                            [#list questionGroupDefinition.questionPool as question]
+                                <option value="${question.id}">${question.title}</option>   
+                            [/#list]
+                        </select>
+                    </li>
                 </ol>
             </fieldset>
-            <div class="marginLeft15em">
-                <select multiple="multiple" size="10" id="selectedQuestionIds" name="selectedQuestionIds" style="width:35em">
-                    [#list questionGroupDefinition.questionPool as question]
-                        <option value="${question.id}">${question.title}</option>
-                    [/#list]
-                </select>
-            </div>
             <div class="marginLeft15em">
                     <input type="submit" name="_eventId_addSection" id="_eventId_addSection" value='[@spring.message "questionnaire.addSection"/]' class="buttn"/>
             </div>
