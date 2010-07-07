@@ -11,7 +11,7 @@
 		<beans:property name="loginFormUrl" value="/login.ftl" />
 	</beans:bean>
 	
-	<beans:bean id="authenticationSuccessHandler" class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+	<beans:bean id="authenticationSuccessHandler" class="org.mifos.security.authentication.MifosAuthenticationSuccessHandler">
         <beans:property name="defaultTargetUrl" value="/custSearchAction.do?method=getHomePage" />
         <beans:property name="alwaysUseDefaultTargetUrl" value="true" />
     </beans:bean>

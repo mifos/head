@@ -18,13 +18,12 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.admin.servicefacade;
+package org.mifos.customers.personnel.business.service;
 
-import org.mifos.dto.screen.ProductConfigurationDto;
+import org.mifos.customers.personnel.business.PersonnelBO;
 
-public interface AdminServiceFacade {
+public interface PersonnelService {
 
-    ProductConfigurationDto retrieveProductConfiguration();
+    void changePassword(PersonnelBO user, String newPassword);
 
-    void updateProductConfiguration(ProductConfigurationDto productConfiguration);
 }

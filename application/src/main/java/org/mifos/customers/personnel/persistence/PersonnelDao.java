@@ -32,6 +32,8 @@ import org.mifos.customers.personnel.business.PersonnelDto;
 
 public interface PersonnelDao {
 
+    void save(PersonnelBO user);
+
     PersonnelBO findPersonnelById(Short id);
 
     PersonnelBO findPersonnelByUsername(String personnelName);

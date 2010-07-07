@@ -20,13 +20,10 @@
 
 package org.mifos.application.servicefacade;
 
-import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.dto.domain.ChangePasswordRequest;
 
-/**
- *
- */
-public interface LoginServiceFacade {
+public interface NewLoginServiceFacade {
 
-    LoginActivityDto login(String userName, String password) throws ApplicationException;
+    void changePassword(ChangePasswordRequest changePasswordRequest);
 
 }

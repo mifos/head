@@ -20,18 +20,22 @@
 
 package org.mifos.test.acceptance.personnel;
 
-import junit.framework.Assert;
 
 import org.mifos.framework.util.DbUnitUtilities;
+import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.login.ChangePasswordPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
+import org.mifos.test.acceptance.framework.office.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.UserHelper;
+import org.mifos.test.acceptance.framework.user.CreateUserConfirmationPage;
+import org.mifos.test.acceptance.framework.user.CreateUserEnterDataPage;
 import org.mifos.test.acceptance.framework.user.CreateUserParameters;
+import org.mifos.test.acceptance.framework.user.CreateUserPreviewDataPage;
 import org.mifos.test.acceptance.framework.user.EditUserDataPage;
 import org.mifos.test.acceptance.framework.user.EditUserPreviewDataPage;
 import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
@@ -40,12 +44,14 @@ import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"personnel","acceptance","ui"})
+@Test(sequential = true, groups = {"personnel","acceptance","ui", "smoke"})
 public class PersonnelTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -71,12 +77,12 @@ public class PersonnelTest extends UiTestCaseBase {
 
     @AfterMethod
     public void logOut() {
-        (new MifosPage(selenium)).logout();
+//        (new MifosPage(selenium)).logout();
     }
 
     @Test(groups = {"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void createUserTest() throws Exception {
+    private void createUserTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
@@ -84,7 +90,7 @@ public class PersonnelTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void editUserTest() throws Exception {
+    private void editUserTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
@@ -104,7 +110,7 @@ public class PersonnelTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void createUserWithNonAdminRoleTest() throws Exception {
+    private void createUserWithNonAdminRoleTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
@@ -116,9 +122,23 @@ public class PersonnelTest extends UiTestCaseBase {
     public void changePasswordTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
-        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        HomePage homePage = loginSuccessfully();
+        AdminPage adminPage = homePage.navigateToAdminPage();
+
         CreateUserParameters userParameters = adminPage.getAdminUserParameters();
-        UserViewDetailsPage userDetailsPage = userHelper.createUser(userParameters, "MyOffice1233171674227");
+        ChooseOfficePage createUserPage = adminPage.navigateToCreateUserPage();
+        createUserPage.verifyPage();
+
+        CreateUserEnterDataPage userEnterDataPage = createUserPage.selectOffice("MyOffice1233171674227");
+
+        CreateUserPreviewDataPage userPreviewDataPage = userEnterDataPage.submitAndGotoCreateUserPreviewDataPage(userParameters);
+        CreateUserConfirmationPage userConfirmationPage = userPreviewDataPage.submit();
+        userConfirmationPage.verifyPage();
+
+        UserViewDetailsPage userDetailsPage = userConfirmationPage.navigateToUserViewDetailsPage();
+        userDetailsPage.verifyPage();
+        Assert.assertTrue(userDetailsPage.getFullName().contains(userParameters.getFirstName() + " " + userParameters.getLastName()));
+
         EditUserDataPage editUserPage = userDetailsPage.navigateToEditUserDataPage();
 
         CreateUserParameters passwordParameters = new CreateUserParameters();
@@ -126,10 +146,11 @@ public class PersonnelTest extends UiTestCaseBase {
         passwordParameters.setPasswordRepeat("tester1");
 
         EditUserPreviewDataPage editPreviewDataPage = editUserPage.submitAndGotoEditUserPreviewDataPage(passwordParameters);
-        editPreviewDataPage.submit();
+        UserViewDetailsPage submitUserpage = editPreviewDataPage.submit();
+        submitUserpage.verifyPage();
 
-        LoginPage loginPage = new LoginPage(selenium);
-        loginPage.logout();
+        LoginPage loginPage = (new MifosPage(selenium)).logout();
+
         ChangePasswordPage changePasswordPage = loginPage.loginAndGoToChangePasswordPageAs(userParameters.getUserName(), passwordParameters.getPassword());
         ChangePasswordPage.SubmitFormParameters changePasswordParameters = new ChangePasswordPage.SubmitFormParameters();
         changePasswordParameters.setOldPassword("tester1");
@@ -138,5 +159,15 @@ public class PersonnelTest extends UiTestCaseBase {
         HomePage homePage2 = changePasswordPage.submitAndGotoHomePage(changePasswordParameters);
 
         Assert.assertTrue(homePage2.getWelcome().contains(userParameters.getFirstName()));
+    }
+
+    private HomePage loginSuccessfully() {
+        (new MifosPage(selenium)).logout();
+        LoginPage loginPage = new AppLauncher(selenium).launchMifos();
+        loginPage.verifyPage();
+        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
+        homePage.verifyPage();
+
+        return homePage;
     }
 }
