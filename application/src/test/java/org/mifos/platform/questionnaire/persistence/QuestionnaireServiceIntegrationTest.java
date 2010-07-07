@@ -20,9 +20,6 @@
 
 package org.mifos.platform.questionnaire.persistence;
 
-import org.apache.commons.lang.StringUtils;
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +32,7 @@ import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.QuestionGroupState;
 import org.mifos.platform.questionnaire.domain.Section;
+import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mifos.test.matchers.EventSourceMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -43,16 +41,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
 import static org.mifos.platform.questionnaire.contract.QuestionType.*;
 
@@ -69,11 +63,12 @@ public class QuestionnaireServiceIntegrationTest {
 
     @Autowired
     private QuestionGroupDao questionGroupDao;
+    public static final String TITLE = "Title";
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldDefineQuestion() throws ApplicationException {
-        String questionTitle = "Title" + System.currentTimeMillis();
+        String questionTitle = TITLE + System.currentTimeMillis();
         QuestionDetail questionDetail = defineQuestion(questionTitle, DATE);
         assertNotNull(questionDetail);
         Integer questionId = questionDetail.getId();
@@ -88,19 +83,25 @@ public class QuestionnaireServiceIntegrationTest {
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldDefineQuestionGroup() throws ApplicationException {
-        String questionTitle = "Title" + System.currentTimeMillis();
-        QuestionGroupDetail questionGroupDetail = defineQuestionGroup(questionTitle, "Create", "Client", asList(getSection("S1"), getSection("S2")));
+        String title = TITLE + System.currentTimeMillis();
+        QuestionDetail questionDetail1 = defineQuestion(title + 1, NUMERIC);
+        QuestionDetail questionDetail2 = defineQuestion(title + 2, FREETEXT);
+        SectionDefinition section1 = getSectionWithQuestionId("S1", questionDetail1.getId());
+        SectionDefinition section2 = getSectionWithQuestionId("S2", questionDetail2.getId());
+        QuestionGroupDetail questionGroupDetail = defineQuestionGroup(title, "Create", "Client", asList(section1, section2));
         assertNotNull(questionGroupDetail);
         Integer questionGroupId = questionGroupDetail.getId();
         assertNotNull(questionGroupId);
         QuestionGroup questionGroup = questionGroupDao.getDetails(questionGroupId);
         assertNotNull(questionGroup);
-        assertEquals(questionTitle, questionGroup.getTitle());
+        assertEquals(title, questionGroup.getTitle());
         assertEquals(QuestionGroupState.ACTIVE, questionGroup.getState());
         List<Section> sections = questionGroup.getSections();
         assertEquals(2, sections.size());
         assertEquals("S1", sections.get(0).getName());
+        assertEquals(title + 1, sections.get(0).getQuestions().get(0).getQuestion().getShortName());
         assertEquals("S2", sections.get(1).getName());
+        assertEquals(title + 2, sections.get(1).getQuestions().get(0).getQuestion().getShortName());
         verifyCreationDate(questionGroup);
         verifyEventSources(questionGroup);
     }
@@ -109,10 +110,20 @@ public class QuestionnaireServiceIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldGetAllQuestions() throws ApplicationException {
         int initialCountOfQuestions = questionnaireService.getAllQuestions().size();
-        defineQuestion("Q1" + System.currentTimeMillis(), NUMERIC);
-        defineQuestion("Q2" + System.currentTimeMillis(), FREETEXT);
-        int finalCountOfQuestions = questionnaireService.getAllQuestions().size();
+        QuestionDetail questionDetail2 = defineQuestion("Q2" + System.currentTimeMillis(), FREETEXT);
+        QuestionDetail questionDetail1 = defineQuestion("Q1" + System.currentTimeMillis(), NUMERIC);
+        List<String> expectedOrderTitles = Arrays.asList(questionDetail1.getShortName(), questionDetail2.getShortName());
+        List<Integer> expectedOrderIds = Arrays.asList(questionDetail1.getId(), questionDetail2.getId());
+        List<QuestionDetail> questionDetails = questionnaireService.getAllQuestions();
+        int finalCountOfQuestions = questionDetails.size();
         assertThat(finalCountOfQuestions - initialCountOfQuestions, is(2));
+        List<QuestionDetail> actualQuestions = new ArrayList<QuestionDetail>();
+        for (QuestionDetail questionDetail : questionDetails) {
+            if (expectedOrderIds.contains(questionDetail.getId()))
+                actualQuestions.add(questionDetail);
+        }
+        assertThat(actualQuestions.get(0).getShortName(), is(expectedOrderTitles.get(0)));
+        assertThat(actualQuestions.get(1).getShortName(), is(expectedOrderTitles.get(1)));
     }
 
     @Test
@@ -121,20 +132,23 @@ public class QuestionnaireServiceIntegrationTest {
         int initialCount = questionnaireService.getAllQuestionGroups().size();
         String questionGroupTitle1 = "QG1" + System.currentTimeMillis();
         String questionGroupTitle2 = "QG2" + System.currentTimeMillis();
-        defineQuestionGroup(questionGroupTitle1, "Create", "Client", asList(getSection("S1")));
-        defineQuestionGroup(questionGroupTitle2, "Create", "Client", asList(getSection("S2"), getSection("S1")));
+        List<SectionDefinition> sectionsForQG1 = asList(getSection("S1"));
+        defineQuestionGroup(questionGroupTitle1, "Create", "Client", sectionsForQG1);
+        List<SectionDefinition> sectionsForQG2 = asList(getSection("S2"), getSection("S1"));
+        defineQuestionGroup(questionGroupTitle2, "Create", "Client", sectionsForQG2);
         List<QuestionGroupDetail> questionGroups = questionnaireService.getAllQuestionGroups();
         int finalCount = questionGroups.size();
         assertThat(finalCount - initialCount, is(2));
-        assertThat(questionGroups, hasItems(getQuestionGroupDetailMatcher(questionGroupTitle1, asList(getSection("S1"))),
-                getQuestionGroupDetailMatcher(questionGroupTitle2, asList(getSection("S2"), getSection("S1")))));
+        assertThat(questionGroups, hasItems(getQuestionGroupDetailMatcher(questionGroupTitle1, sectionsForQG1),
+                getQuestionGroupDetailMatcher(questionGroupTitle2, sectionsForQG2)));
     }
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldGetQuestionGroupById() throws ApplicationException {
         String title = "QG1" + System.currentTimeMillis();
-        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title, "Create", "Client", asList(getSection("S1"), getSection("S2")));
+        List<SectionDefinition> definitions = asList(getSection("S1"), getSection("S2"));
+        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title, "Create", "Client", definitions);
         QuestionGroupDetail retrievedQuestionGroupDetail = questionnaireService.getQuestionGroup(createdQuestionGroupDetail.getId());
         assertNotSame(createdQuestionGroupDetail, retrievedQuestionGroupDetail);
         assertThat(retrievedQuestionGroupDetail.getTitle(), is(title));
@@ -148,6 +162,55 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(eventSource, is(not(nullValue())));
         assertThat(eventSource.getEvent(), is("Create"));
         assertThat(eventSource.getSource(), is("Client"));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldGetQuestionGroupByIdOrdersQuestionsWithinEverySection() throws ApplicationException {
+        String qgTitle = "QG1" + System.currentTimeMillis();
+
+        SectionDefinition sectionDefinition1 = new SectionDefinition();
+        sectionDefinition1.setName("Section1");
+        String section1Question1 = "Q2_" + System.currentTimeMillis();
+        sectionDefinition1.addQuestion(new SectionQuestionDetail(defineQuestion(section1Question1, FREETEXT).getId(), false));
+        String section1Question2 = "Q1_" + System.currentTimeMillis();
+        sectionDefinition1.addQuestion(new SectionQuestionDetail(defineQuestion(section1Question2, NUMERIC).getId(), true));
+        String section1Question3 = "Q3_" + System.currentTimeMillis();
+        sectionDefinition1.addQuestion(new SectionQuestionDetail(defineQuestion(section1Question3, DATE).getId(), true));
+
+        SectionDefinition sectionDefinition2 = new SectionDefinition();
+        sectionDefinition2.setName("Section2");
+        String section2Question1 = "S2_" + System.currentTimeMillis();
+        sectionDefinition2.addQuestion(new SectionQuestionDetail(defineQuestion(section2Question1, FREETEXT).getId(), false));
+        String section2Question2 = "S3_" + System.currentTimeMillis();
+        sectionDefinition2.addQuestion(new SectionQuestionDetail(defineQuestion(section2Question2, DATE).getId(), true));
+        String section2Question3 = "S1_" + System.currentTimeMillis();
+        sectionDefinition2.addQuestion(new SectionQuestionDetail(defineQuestion(section2Question3, NUMERIC).getId(), true));
+
+        int questionGroupId = defineQuestionGroup(qgTitle, "Create", "Client", asList(sectionDefinition1, sectionDefinition2)).getId();
+        QuestionGroupDetail questionGroupDetail = questionnaireService.getQuestionGroup(questionGroupId);
+        assertThat(questionGroupDetail, notNullValue());
+        List<SectionDefinition> sectionDefinitions = questionGroupDetail.getSectionDefinitions();
+        assertThat(sectionDefinitions, notNullValue());
+        assertThat(sectionDefinitions.size(), is(2));
+
+        SectionDefinition section1 = sectionDefinitions.get(0);
+        assertThat(section1.getName(), is("Section1"));
+        List<SectionQuestionDetail> questions1 = section1.getQuestions();
+        assertThat(questions1, notNullValue());
+        assertThat(questions1.size(), is(3));
+        assertThat(questions1.get(0).getTitle(), is(section1Question1));
+        assertThat(questions1.get(1).getTitle(), is(section1Question2));
+        assertThat(questions1.get(2).getTitle(), is(section1Question3));
+
+        SectionDefinition section2 = sectionDefinitions.get(1);
+        assertThat(section2.getName(), is("Section2"));
+        List<SectionQuestionDetail> questions2 = section2.getQuestions();
+        assertThat(questions2, notNullValue());
+        assertThat(questions2.size(), is(3));
+        assertThat(questions2.get(0).getTitle(), is(section2Question1));
+        assertThat(questions2.get(1).getTitle(), is(section2Question2));
+        assertThat(questions2.get(2).getTitle(), is(section2Question3));
     }
 
     @Test
@@ -179,7 +242,7 @@ public class QuestionnaireServiceIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void testGetQuestionByIdFailure() throws ApplicationException {
         String title = "Q1" + System.currentTimeMillis();
-        QuestionDetail createdQuestionDetail = defineQuestion(title, QuestionType.DATE);
+        QuestionDetail createdQuestionDetail = defineQuestion(title, DATE);
         Integer maxQuestionId = createdQuestionDetail.getId();
         try {
             questionnaireService.getQuestion(maxQuestionId + 1);
@@ -192,7 +255,7 @@ public class QuestionnaireServiceIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldThrowExceptionForDuplicateQuestion() throws ApplicationException {
         long offset = System.currentTimeMillis();
-        String questionTitle = "Title" + offset;
+        String questionTitle = TITLE + offset;
         defineQuestion(questionTitle, DATE);
         try {
             defineQuestion(questionTitle, FREETEXT);
@@ -205,7 +268,7 @@ public class QuestionnaireServiceIntegrationTest {
     @Test
     @Transactional
     public void testIsDuplicateQuestion() throws ApplicationException {
-        String questionTitle = "Title" + System.currentTimeMillis();
+        String questionTitle = TITLE + System.currentTimeMillis();
         boolean result = questionnaireService.isDuplicateQuestion(new QuestionDefinition(questionTitle, FREETEXT));
         assertThat(result, is(false));
         defineQuestion(questionTitle, DATE);
@@ -230,9 +293,18 @@ public class QuestionnaireServiceIntegrationTest {
         return questionnaireService.defineQuestionGroup(new QuestionGroupDefinition(title, new EventSource(event, source, null), sectionDefinitions));
     }
 
-    private SectionDefinition getSection(String name) {
+    private SectionDefinition getSection(String name) throws ApplicationException {
         SectionDefinition section = new SectionDefinition();
         section.setName(name);
+        String questionTitle = "Question" + name + System.currentTimeMillis();
+        section.addQuestion(new SectionQuestionDetail(defineQuestion(questionTitle, NUMERIC).getId(), questionTitle, true));
+        return section;
+    }
+
+    private SectionDefinition getSectionWithQuestionId(String name, int questionId) throws ApplicationException {
+        SectionDefinition section = new SectionDefinition();
+        section.setName(name);
+        section.addQuestion(new SectionQuestionDetail(questionId, true));
         return section;
     }
 
@@ -261,45 +333,3 @@ public class QuestionnaireServiceIntegrationTest {
 }
 
 
-class QuestionGroupDetailMatcher extends TypeSafeMatcher<QuestionGroupDetail> {
-    private QuestionGroupDetail questionGroupDetail;
-
-    public QuestionGroupDetailMatcher(QuestionGroupDetail questionGroupDetail) {
-        this.questionGroupDetail = questionGroupDetail;
-    }
-
-    @Override
-    public boolean matchesSafely(QuestionGroupDetail questionGroupDetail) {
-        if (StringUtils.equals(this.questionGroupDetail.getTitle(), questionGroupDetail.getTitle())) {
-            for (SectionDefinition sectionDefinition : this.questionGroupDetail.getSectionDefinitions()) {
-                assertThat(questionGroupDetail.getSectionDefinitions(), hasItem(new QuestionGroupSectionMatcher(sectionDefinition)));
-            }
-        } else {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public void describeTo(Description description) {
-        description.appendText("QuestionGroupDetail do not match.");
-    }
-}
-
-class QuestionGroupSectionMatcher extends TypeSafeMatcher<SectionDefinition> {
-    private SectionDefinition sectionDefinition;
-
-    public QuestionGroupSectionMatcher(SectionDefinition sectionDefinition) {
-        this.sectionDefinition = sectionDefinition;
-    }
-
-    @Override
-    public boolean matchesSafely(SectionDefinition sectionDefinition) {
-        return StringUtils.equals(this.sectionDefinition.getName(), sectionDefinition.getName());
-    }
-
-    @Override
-    public void describeTo(Description description) {
-        description.appendText("QuestionGroup sections do not match");
-    }
-}

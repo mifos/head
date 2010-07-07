@@ -16,7 +16,7 @@
 	
 	<div id="top-right-links">
       <a id="settings" href="#">[@spring.message "yourSettings"/]</a> |
-   	<a id="logout" href="j_spring_security_logout">[@spring.message "logout"/]</a>
+   	<a id="logout_link" href="j_spring_security_logout">[@spring.message "logout"/]</a>
 	</div>	
 	<div id="top-menu-bar">
 		<ul id="simple-menu">

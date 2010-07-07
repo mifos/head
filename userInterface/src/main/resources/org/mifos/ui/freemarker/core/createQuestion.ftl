@@ -59,6 +59,7 @@
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.add.questions":""}/]
     [@mifos.crumbpairs breadcrumb/]
 
+
     <div class="fontnormal marginLeft30">
         <div class="orangeheading marginTop15">
             [@spring.message "questionnaire.view.questions"/]
@@ -70,7 +71,7 @@
             <fieldset>
 			 <ol>
 			    <li>
-				  <label for="title"><span class="mandatoryField">*</span>Question Title:</label>
+				  <label for="title"><span class="mandatoryField">*</span>Question Title: </label>
 				  <script src="pages/framework/js/func.js"></script>
 				  <script src="pages/framework/js/func_en_GB.js"></script>
 				  [@spring.formInput "questionDefinition.currentQuestion.title", 
@@ -78,7 +79,7 @@
 				        onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"' /]
 			    </li>
 			    <li>
-				  <label for="eventSourceId"><span class="mandatoryField">*</span>Answer type</label>
+				  <label for="eventSourceId"><span class="mandatoryField">*</span>Answer type: </label>
 				  [@spring.formSingleSelect "questionDefinition.currentQuestion.type", ["Free text", "Date"], 'styleId="answerType" onchange="setDisable();"' /]			
 			    </li>		    
 			 </ol>

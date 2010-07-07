@@ -28,10 +28,7 @@ import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.contract.*;
-import org.mifos.platform.questionnaire.domain.EventEntity;
-import org.mifos.platform.questionnaire.domain.EventSourceEntity;
-import org.mifos.platform.questionnaire.domain.QuestionGroup;
-import org.mifos.platform.questionnaire.domain.Section;
+import org.mifos.platform.questionnaire.domain.*;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
@@ -40,6 +37,7 @@ import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -72,10 +70,13 @@ public class QuestionnaireServiceTest {
 
     private static final String QUESTION_TITLE = "Test QuestionDetail Title";
     private static final String QUESTION_GROUP_TITLE = "Question Group Title";
+    public static final String EVENT_CREATE = "Create";
+    public static final String SOURCE_CLIENT = "Client";
 
     @Before
     public void setUp() {
-        questionnaireService = new QuestionnaireServiceImpl(questionnaireValidator, questionDao, new QuestionnaireMapperImpl(eventSourceDao), questionGroupDao);
+        QuestionnaireMapperImpl questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao);
+        questionnaireService = new QuestionnaireServiceImpl(questionnaireValidator, questionDao, questionnaireMapper, questionGroupDao, eventSourceDao);
     }
 
     @Test
@@ -105,10 +106,10 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldGetAllQuestions() {
-        when(questionDao.getDetailsAll()).thenReturn(asList(getQuestion(1, "q1", AnswerType.DATE), getQuestion(2, "q2", AnswerType.FREETEXT)));
+        when(questionDao.retrieveByState(1)).thenReturn(asList(getQuestion(1, "q1", AnswerType.DATE), getQuestion(2, "q2", AnswerType.FREETEXT)));
         List<QuestionDetail> questionDetails = questionnaireService.getAllQuestions();
         assertNotNull("getAllQuestions should not return null", questionDetails);
-        verify(questionDao, times(1)).getDetailsAll();
+        verify(questionDao, times(1)).retrieveByState(1);
 
         assertThat(questionDetails.get(0).getText(), is("q1"));
         assertThat(questionDetails.get(0).getShortName(), is("q1"));
@@ -133,30 +134,72 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldDefineQuestionGroup() throws ApplicationException {
-        List<SectionDefinition> sectionDefinitionList = asList(getSectionDefinition("S1"), getSectionDefinition("S2"));
-        EventSource event = getEventSource("Create", "Client");
-        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(QUESTION_GROUP_TITLE, event, sectionDefinitionList);
+        QuestionGroupDefinition questionGroupDefinition = getQuestionGroupDefinition(EVENT_CREATE, SOURCE_CLIENT, "S1", "S2");
+        setUpEventSourceExpectations(EVENT_CREATE, SOURCE_CLIENT);
+        when(questionDao.getDetails(anyInt())).thenReturn(getQuestion(11), getQuestion(12), getQuestion(11), getQuestion(12));
         try {
-            EventSourceEntity eventSourceEntity = getEventSourceEntity("Create", "Client");
-            when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(Collections.singletonList(eventSourceEntity));
             QuestionGroupDetail questionGroupDetail = questionnaireService.defineQuestionGroup(questionGroupDefinition);
+            assertQuestionGroupDetail(questionGroupDetail);
             verify(questionnaireValidator).validate(questionGroupDefinition);
             verify(questionGroupDao, times(1)).create(any(QuestionGroup.class));
             verify(eventSourceDao, times(1)).retrieveByEventAndSource(anyString(), anyString());
-            assertNotNull(questionGroupDetail);
-            assertEquals(QUESTION_GROUP_TITLE, questionGroupDetail.getTitle());
-            List<SectionDefinition> sectionDefinitions = questionGroupDetail.getSectionDefinitions();
-            assertNotNull(sectionDefinitions);
-            assertThat(sectionDefinitions.size(), is(2));
-            assertThat(sectionDefinitions.get(0).getName(), is("S1"));
-            assertThat(sectionDefinitions.get(1).getName(), is("S2"));
-            EventSource eventSource = questionGroupDetail.getEventSource();
-            assertThat(eventSource, is(not(nullValue())));
-            assertThat(eventSource.getEvent(), is("Create"));
-            assertThat(eventSource.getSource(), is("Client"));
+            verify(questionDao, times(4)).getDetails(anyInt());
         } catch (ApplicationException e) {
             fail("Should not have thrown the validation exception");
         }
+    }
+
+    private Question getQuestion(int questionId) {
+        Question question = new Question();
+        question.setQuestionId(questionId);
+        return question;
+    }
+
+    private void assertQuestionGroupDetail(QuestionGroupDetail questionGroupDetail) {
+        assertNotNull(questionGroupDetail);
+        assertEquals(QUESTION_GROUP_TITLE, questionGroupDetail.getTitle());
+        assertSections(questionGroupDetail.getSectionDefinitions());
+        assertEvent(questionGroupDetail.getEventSource());
+    }
+
+    private void assertEvent(EventSource eventSource) {
+        assertThat(eventSource, notNullValue());
+        assertThat(eventSource.getEvent(), is(EVENT_CREATE));
+        assertThat(eventSource.getSource(), is(SOURCE_CLIENT));
+    }
+
+    private void assertSections(List<SectionDefinition> sectionDefinitions) {
+        assertNotNull(sectionDefinitions);
+        assertThat(sectionDefinitions.size(), is(2));
+        assertThat(sectionDefinitions.get(0).getName(), is("S1"));
+        assertThat(sectionDefinitions.get(1).getName(), is("S2"));
+        assertSectionQuestions(sectionDefinitions.get(0).getQuestions());
+    }
+
+    private void assertSectionQuestions(List<SectionQuestionDetail> sectionQuestionDetails) {
+        assertThat(sectionQuestionDetails, notNullValue());
+        assertThat(sectionQuestionDetails.size(), is(2));
+        assertThat(sectionQuestionDetails.get(0).getQuestionId(), is(11));
+        assertThat(sectionQuestionDetails.get(0).isMandatory(), is(true));
+        assertThat(sectionQuestionDetails.get(1).getQuestionId(), is(12));
+        assertThat(sectionQuestionDetails.get(1).isMandatory(), is(false));
+    }
+
+    private void setUpEventSourceExpectations(String event, String source) {
+        EventSourceEntity eventSourceEntity = getEventSourceEntity(event, source);
+        when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(Collections.singletonList(eventSourceEntity));
+    }
+
+    private QuestionGroupDefinition getQuestionGroupDefinition(String event, String source, String... sectionNames) {
+        return new QuestionGroupDefinition(QUESTION_GROUP_TITLE, getEventSource(event, source), getSectionDefinitions(sectionNames));
+    }
+
+    private List<SectionDefinition> getSectionDefinitions(String... sectionNames) {
+        List<SectionDefinition> sectionDefinitionList = new ArrayList<SectionDefinition>();
+        for (String sectionName : sectionNames) {
+            sectionDefinitionList.add(getSectionDefinition(sectionName));
+        }
+        return sectionDefinitionList;
     }
 
     private EventSourceEntity getEventSourceEntity(String event, String source) {
@@ -177,6 +220,8 @@ public class QuestionnaireServiceTest {
     private SectionDefinition getSectionDefinition(String name) {
         SectionDefinition section = new SectionDefinition();
         section.setName(name);
+        section.addQuestion(new SectionQuestionDetail(11, true));
+        section.addQuestion(new SectionQuestionDetail(12, false));
         return section;
     }
 
@@ -190,7 +235,9 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldGetAllQuestionGroups() {
-        when(questionGroupDao.getDetailsAll()).thenReturn(asList(getQuestionGroup(0, "QG0", asList(new Section("S0_0"))), getQuestionGroup(1, "QG1", asList(new Section("S1_0"), new Section("S1_1")))));
+        QuestionGroup questionGroup1 = getQuestionGroup(0, "QG0", getSections("S0_0"));
+        QuestionGroup questionGroup2 = getQuestionGroup(1, "QG1", getSections("S1_0", "S1_1"));
+        when(questionGroupDao.getDetailsAll()).thenReturn(asList(questionGroup1, questionGroup2));
         List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getAllQuestionGroups();
         assertNotNull("getAllQuestionGroups should not return null", questionGroupDetails);
         for (int i = 0; i < questionGroupDetails.size(); i++) {
@@ -203,11 +250,33 @@ public class QuestionnaireServiceTest {
         }
     }
 
+    private List<Section> getSections(String... names) {
+        List<Section> sectionList = new ArrayList<Section>();
+        for (String name : names) {
+            Section section = new Section(name);
+            SectionQuestion sectionQuestion = new SectionQuestion();
+            sectionQuestion.setQuestion(new Question());
+            section.setQuestions(asList(sectionQuestion));
+            sectionList.add(section);
+        }
+        return sectionList;
+    }
+
+    @Test
+    public void shouldGetAllEventSources() {
+        when(eventSourceDao.getDetailsAll()).thenReturn(asList(getEventSourceEntity("Create", "Client")));
+        List<EventSource> eventSources = questionnaireService.getAllEventSources();
+        assertThat(eventSources, notNullValue());
+        assertThat(eventSources.size(), is(1));
+        assertThat(eventSources.get(0).getEvent(), is("Create"));
+        assertThat(eventSources.get(0).getSource(), is("Client"));
+    }
+
     @Test
     public void testGetQuestionGroupByIdSuccess() throws ApplicationException {
         int questionGroupId = 1;
         String title = "Title";
-        when(questionGroupDao.getDetails(questionGroupId)).thenReturn(getQuestionGroup(questionGroupId, title, asList(new Section("S1"), new Section("S2"))));
+        when(questionGroupDao.getDetails(questionGroupId)).thenReturn(getQuestionGroup(questionGroupId, title, getSections("S1", "S2")));
         QuestionGroupDetail groupDetail = questionnaireService.getQuestionGroup(questionGroupId);
         assertNotNull(groupDetail);
         assertThat(groupDetail.getTitle(), is(title));

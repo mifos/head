@@ -87,7 +87,20 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     private static SectionDefinition mapToSectionDefinition(SectionForm sectionForm) {
         SectionDefinition section = new SectionDefinition();
         section.setName(sectionForm.getName());
+        section.setQuestionDetails(mapToSectionQuestionDetails(sectionForm.getQuestions()));
         return section;
+    }
+
+    private static List<SectionQuestionDetail> mapToSectionQuestionDetails(List<Question> questions) {
+        List<SectionQuestionDetail> questionDetails = new ArrayList<SectionQuestionDetail>();
+        for(Question question: questions){
+            questionDetails.add(mapToSectionQuestionDetail(question));
+        }
+        return questionDetails;
+    }
+
+    private static SectionQuestionDetail mapToSectionQuestionDetail(Question question) {
+        return new SectionQuestionDetail(Integer.valueOf(question.getId()), question.getTitle(), question.isRequired());
     }
 
     @Override
@@ -118,8 +131,8 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public QuestionGroup getQuestionGroup(int questionGroupId) throws ApplicationException {
-        return mapToQuestionGroup(questionnaireService.getQuestionGroup(questionGroupId));
+    public QuestionGroupDetail getQuestionGroupDetail(int questionGroupId) throws ApplicationException {
+        return questionnaireService.getQuestionGroup(questionGroupId);
     }
 
     @Override

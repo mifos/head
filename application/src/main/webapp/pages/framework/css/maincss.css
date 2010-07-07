@@ -36,11 +36,19 @@ a:hover {
 .marginLeft30{
 	margin-left:20px;
 }
+
+.marginLeft15em{
+	margin-left:15em;
+}
+
+.marginLeft12em{
+	margin-left:12em;
+}
 .content {
 	padding-top: 10px;
 	/*margin-left:180px;*/
 	padding-left:4px;
-	width:100%;
+	width:85%;
 	text-decoration:none;
 	color:#000000;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
@@ -202,7 +210,6 @@ a:hover {
 .marginTop15{
 	margin-top:15px;
 }
-
 
 .buttn {
 	font-family: Arial, Verdana, Helvetica, sans-serif;
@@ -495,8 +502,10 @@ a:hover {
 	border-bottom: #696969 1px solid;
 	border-left: #A2A2A2 1px solid;
 	border-top: #A2A2A2 1px solid;
-    background-image: url(images/buttons/buttonbgcancel.jpg);
+    background-image: url(../images/buttons/buttonbgcancel.jpg);
 	background-repeat: repeat-x;
     cursor: pointer;
     height: 20px
 }
+
+
