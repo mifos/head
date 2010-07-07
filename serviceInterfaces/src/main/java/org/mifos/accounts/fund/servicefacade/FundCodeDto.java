@@ -22,6 +22,8 @@ package org.mifos.accounts.fund.servicefacade;
 
 import java.io.Serializable;
 
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
 public class FundCodeDto implements Serializable {
 
     private String id;
