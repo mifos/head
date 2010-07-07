@@ -31,6 +31,8 @@ public class Question implements Serializable{
 
     private String id;
 
+    @org.hibernate.validator.constraints.NotEmpty
+    @javax.validation.constraints.Size(max=50)
     public String getTitle() {
         return title;
     }
@@ -43,6 +45,7 @@ public class Question implements Serializable{
         this.title = StringUtils.trim(this.title);
     }
 
+    @org.hibernate.validator.constraints.NotEmpty
     public String getType() {
         return type;
     }
