@@ -34,8 +34,9 @@ import org.testng.annotations.Test;
  * Corresponds to story 661 in mingle
  * http://mingle.mifos.org:7070/projects/cheetah/cards/661
  */
+@SuppressWarnings("PMD")
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"user","acceptance","ui"})
+@Test(sequential=true, groups={"user","acceptance","ui", "smoke"})
 public class DefaultAdminUserCanLoginTest extends UiTestCaseBase {
 
 	private AppLauncher appLauncher;
@@ -66,19 +67,19 @@ public class DefaultAdminUserCanLoginTest extends UiTestCaseBase {
 					.verifyPage();
 	}
 
-	public void userLoginFailureBadPasswordTest() {
+	private void userLoginFailureBadPasswordTest() {
 		LoginPage loginPage = appLauncher.launchMifos().loginFailedAs("mifos", "mifos3");
 		Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "No error message was displayed when bad password was used to login.");
 	}
 
 
-	public void userLoginFailureNoPasswordTest() {
+	private void userLoginFailureNoPasswordTest() {
 		LoginPage loginPage = appLauncher.launchMifos().loginFailedAs("mifos", "");
 		Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "No error message was displayed when no password was used to login.");
 
 	}
 
-	public void userLoginFailureNoUsernameTest() {
+	private void userLoginFailureNoUsernameTest() {
 		LoginPage loginPage = appLauncher.launchMifos().loginFailedAs("", "abc");
 		Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "No error message was displayed when no username was used to login.");
 	}

@@ -46,9 +46,15 @@
                         ${section.name}<br/>
                         <table id="sections.table" name="sections.table">
                          <tr>
-                             <td class="drawtablehd">[@spring.message "questionnaire.question.name"/]</td>
-                             <td class="drawtablehd">[@spring.message "questionnaire.question.mandatory"/]</td>
+                             <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.name"/]</td>
+                             <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.mandatory"/]</td>
                          </tr>
+                        [#list section.sectionQuestions as sectionQuestion]
+                             <tr>
+                                 <td class="drawtablerow" width="50%">${sectionQuestion.title}</td>
+                                 <td class="drawtablerow" width="50%"></td>
+                             </tr>
+                        [/#list]
                          <tr>
                              <td>&nbsp;</td>
                              <td>&nbsp;</td>
