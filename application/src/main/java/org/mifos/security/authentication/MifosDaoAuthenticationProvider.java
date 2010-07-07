@@ -20,6 +20,7 @@
 
 package org.mifos.security.authentication;
 
+import org.mifos.security.MifosUser;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -31,11 +32,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public class MifosDaoAuthenticationProvider extends DaoAuthenticationProvider {
 
-    private PasswordHashing passwordHashing;
-
-    public MifosDaoAuthenticationProvider(final PasswordHashing passwordHashing) {
-        this.passwordHashing = passwordHashing;
-    }
+    private PasswordHashing passwordHashing = new PasswordHashing();
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails,

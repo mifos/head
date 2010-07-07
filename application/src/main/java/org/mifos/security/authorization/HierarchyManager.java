@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -40,6 +41,7 @@ import org.mifos.security.util.OfficeCacheDto;
 import org.mifos.security.util.OfficeSearch;
 import org.mifos.security.util.SecurityEvent;
 import org.mifos.security.util.UserContext;
+import org.springframework.util.Assert;
 
 public class HierarchyManager implements Observer {
     private static Map<Short, OfficeCacheDto> hierarchyMap;
@@ -108,25 +110,43 @@ public class HierarchyManager implements Observer {
         }
     }
 
-    public BranchLocation compareOfficeInHierarchy(UserContext user, short officeId) {
+    public BranchLocation compareOfficeInHierarchy(UserContext user, Short officeId) {
+
+        Assert.notNull(officeId, "officeId should not be null");
+        Assert.notNull(user, "userContext should not be null");
+
         short userBranch = user.getBranchId().shortValue();
         if (userBranch == officeId) {
             return BranchLocation.SAME;
-        } else {
-            /*
-             * Look into the map now if the passed officeid's searchid on which
-             * user wants to perform action starts with the user's office
-             * searchid it means that office falls under that user hiererchy
-             */
-            String userOfficeSearchId = hierarchyMap.get(user.getBranchId()).getSearchId();
-            String operatedOfficeSearchId = hierarchyMap.get(Short.valueOf(officeId)).getSearchId();
+        }
 
-            if (operatedOfficeSearchId.startsWith(userOfficeSearchId)) {
-                return BranchLocation.BELOW;
-            } else {
-                return BranchLocation.ABOVE_OR_DIFFERENT;
+        /*
+         * Look into the map now if the passed officeid's searchid on which user wants to perform action starts with the
+         * user's office searchid it means that office falls under that user hiererchy
+         */
+        String userOfficeSearchId = hierarchyMap.get(user.getBranchId()).getSearchId();
+
+        OfficeCacheDto cachedOffice = hierarchyMap.get(officeId);
+        if (cachedOffice == null) {
+            try {
+                init(); // repopulate cachedmap
+                cachedOffice = hierarchyMap.get(officeId);
+            } catch (SystemException e) {
+                throw new MifosRuntimeException(e);
+            } catch (OfficeException e) {
+                throw new MifosRuntimeException(e);
+            }
+            if (cachedOffice == null) {
+                throw new IllegalArgumentException("office with id [" + officeId + "] does not exist");
             }
         }
+        String operatedOfficeSearchId = cachedOffice.getSearchId();
+
+        if (operatedOfficeSearchId.startsWith(userOfficeSearchId)) {
+            return BranchLocation.BELOW;
+        }
+
+        return BranchLocation.ABOVE_OR_DIFFERENT;
     }
 
     public String getSearchId(short branchId) {
@@ -140,5 +160,4 @@ public class HierarchyManager implements Observer {
     public enum BranchLocation {
         SAME, BELOW, ABOVE_OR_DIFFERENT
     };
-
 }

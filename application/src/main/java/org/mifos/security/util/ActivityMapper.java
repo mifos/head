@@ -635,10 +635,10 @@ public class ActivityMapper {
 
     public boolean isAddingNotesPermittedForAccounts(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(
-                userContext,
-                new ActivityContext(getActivityIdForAddingNotes(accountTypes, customerLevel), recordOfficeId,
-                        recordLoanOfficerId));
+
+        short activityId = getActivityIdForAddingNotes(accountTypes, customerLevel);
+        ActivityContext activityContext = new ActivityContext(activityId, recordOfficeId, recordLoanOfficerId);
+        return AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext);
     }
 
     private short getActivityIdForAddingNotes(AccountTypes accountTypes, CustomerLevel customerLevel) {
