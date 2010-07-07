@@ -58,7 +58,6 @@ public class LoginPage extends MifosPage {
     }
 
 	public HomePage loginSuccessfulAs(String userName, String password) {
-		selenium.open("loginAction.do?method=load");
 		selenium.type(USERNAME_INPUT_ID, userName);
 		selenium.type(PASSWORD_INPUT_ID, password);
 		selenium.click(LOGIN_BUTTON_ID);
@@ -67,7 +66,8 @@ public class LoginPage extends MifosPage {
 	}
 
     public ChangePasswordPage loginAndGoToChangePasswordPageAs(String userName, String password) {
-        selenium.open("loginAction.do?method=load");
+        selenium.open("login.ftl");
+        waitForPageToLoad();
         selenium.type(USERNAME_INPUT_ID, userName);
         selenium.type(PASSWORD_INPUT_ID, password);
         selenium.click(LOGIN_BUTTON_ID);
@@ -76,7 +76,7 @@ public class LoginPage extends MifosPage {
     }
 
 	public LoginPage loginFailedAs(String userName, String password) {
-		selenium.open("loginAction.do?method=load");
+		selenium.open("login.ftl");
 		selenium.type(USERNAME_INPUT_ID, userName);
 		selenium.type(PASSWORD_INPUT_ID, password);
 		selenium.click(LOGIN_BUTTON_ID);
@@ -86,7 +86,7 @@ public class LoginPage extends MifosPage {
 
 	@Override
     public LoginPage logout() {
-		selenium.open("loginAction.do?method=logout");
+	    selenium.open("j_spring_security_logout");
 		waitForPageToLoad();
 		return new LoginPage(selenium);
 	}

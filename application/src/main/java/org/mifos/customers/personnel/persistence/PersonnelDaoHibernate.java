@@ -22,11 +22,13 @@ package org.mifos.customers.personnel.persistence;
 
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.config.persistence.ApplicationConfigurationPersistence;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.business.RoleBO;
+import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,14 +39,60 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
 
 public class PersonnelDaoHibernate implements PersonnelDao {
 
     private final GenericDao genericDao;
-    private static org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence rolesPermissionsPersistence;
+    private static RolesPermissionsPersistence rolesPermissionsPersistence;
 
     public PersonnelDaoHibernate(GenericDao genericDao) {
         this.genericDao = genericDao;
+    }
+
+    @Override
+    public void save(PersonnelBO user) {
+        this.genericDao.createOrUpdate(user);
+    }
+
+    @Override
+    public PersonnelBO findPersonnelById(Short id) {
+        if (id == null) {
+            return null;
+        }
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("PERSONNEL_ID", id);
+
+        return (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery("findPersonnelById", queryParameters);
+    }
+
+    @Override
+    public PersonnelBO findPersonnelByUsername(final String username) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("USER_NAME", username);
+
+        return (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GETPERSONNELBYNAME, queryParameters);
+    }
+
+    @Override
+    public MifosUser findAuthenticatedUserByUsername(String username) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("USER_NAME", username);
+
+        PersonnelBO user = (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GETPERSONNELBYNAME, queryParameters);
+
+        byte[] password = user.getEncryptedPassword();
+        boolean enabled = user.isActive();
+        boolean accountNonExpired = !user.isLocked();
+        boolean credentialsNonExpired = true;
+        boolean accountNonLocked = !user.isLocked();
+
+        GrantedAuthority mifosUser = new GrantedAuthorityImpl(MifosUser.FULLY_AUTHENTICATED_USER);
+        List<GrantedAuthority> authorities = Arrays.asList(mifosUser);
+
+        return new MifosUser(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
 
     @SuppressWarnings("unchecked")
@@ -62,18 +110,6 @@ public class PersonnelDaoHibernate implements PersonnelDao {
                 NamedQueryConstants.MASTERDATA_ACTIVE_LOANOFFICERS_INBRANCH, queryParameters);
 
         return queryResult;
-    }
-
-    @Override
-    public PersonnelBO findPersonnelById(Short id) {
-        if(id==null){
-            return null;
-        }
-
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("PERSONNEL_ID", id);
-
-        return (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery("findPersonnelById", queryParameters);
     }
 
     @Override
@@ -117,40 +153,6 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         } catch (PersistenceException e) {
             throw new org.mifos.framework.exceptions.ServiceException(e);
         }
-    }
-
-    @Override
-    public OfficeBO getOffice(Short officeId) throws org.mifos.framework.exceptions.ServiceException {
-        try {
-            return new OfficePersistence().getOffice(officeId);
-        } catch (PersistenceException e) {
-
-            throw new org.mifos.framework.exceptions.ServiceException(e);
-        }
-    }
-
-    @Override
-    public PersonnelBO getPersonnel(Short personnelId) throws org.mifos.framework.exceptions.ServiceException {
-        try {
-            return new PersonnelPersistence().getPersonnel(personnelId);
-        } catch (PersistenceException e) {
-
-            throw new org.mifos.framework.exceptions.ServiceException(e);
-        }
-    }
-
-    @Override
-    public PersonnelBO getPersonnel(String personnelName) throws org.mifos.framework.exceptions.ServiceException {
-        PersonnelBO personnel = null;
-        try {
-            personnel = new PersonnelPersistence().getPersonnelByUserName(personnelName);
-            if (personnel == null) {
-                throw new org.mifos.framework.exceptions.ServiceException(org.mifos.security.login.util.helpers.LoginConstants.KEYINVALIDUSER);
-            }
-        } catch (PersistenceException e) {
-            throw new org.mifos.framework.exceptions.ServiceException(e);
-        }
-        return personnel;
     }
 
     @Override

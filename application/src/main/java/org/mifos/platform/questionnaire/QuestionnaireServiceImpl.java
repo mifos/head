@@ -21,6 +21,7 @@
 package org.mifos.platform.questionnaire;
 
 import org.mifos.customers.surveys.business.Question;
+import org.mifos.customers.surveys.helpers.QuestionState;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.contract.*;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
@@ -56,11 +57,13 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     public QuestionnaireServiceImpl(QuestionnaireValidator questionnaireValidator, QuestionDao questionDao,
-                                    QuestionnaireMapperImpl questionnaireMapper, QuestionGroupDao questionGroupDao) {
+                                    QuestionnaireMapperImpl questionnaireMapper, QuestionGroupDao questionGroupDao,
+                                    EventSourceDao eventSourceDao) {
         this.questionnaireValidator = questionnaireValidator;
         this.questionDao = questionDao;
         this.questionnaireMapper = questionnaireMapper;
         this.questionGroupDao = questionGroupDao;
+        this.eventSourceDao = eventSourceDao;
     }
 
     @Override
@@ -73,7 +76,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Override
     public List<QuestionDetail> getAllQuestions() {
-        List<Question> questions = questionDao.getDetailsAll();
+        List<Question> questions = questionDao.retrieveByState(QuestionState.ACTIVE.getValue());
         return questionnaireMapper.mapToQuestionDetails(questions);
     }
 

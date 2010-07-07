@@ -32,8 +32,10 @@ import org.mifos.accounts.productdefinition.business.service.ProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.jmx.export.annotation.ManagedAttribute;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminServiceFacadeWebTierTest {

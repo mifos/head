@@ -21,6 +21,8 @@
 package org.mifos.application.servicefacade;
 
 import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacadeWebTier;
+import org.mifos.customers.personnel.business.service.PersonnelService;
+import org.mifos.customers.personnel.business.service.PersonnelServiceImpl;
 
 import org.mifos.accounts.fees.business.service.FeeService;
 import org.mifos.accounts.fees.business.service.FeeServiceImpl;
@@ -79,8 +81,6 @@ import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
-import org.mifos.security.authentication.AuthenticationDao;
-import org.mifos.security.authentication.AuthenticationDaoHibernate;
 
 /**
  * I contain static factory methods for locating/creating application services.
@@ -96,7 +96,7 @@ public class DependencyInjectedServiceLocator {
     private static CenterDetailsServiceFacade centerDetailsServiceFacade;
     private static GroupDetailsServiceFacade groupDetailsServiceFacade;
     private static ClientDetailsServiceFacade clientDetailsServiceFacade;
-    private static LoginServiceFacade loginServiceFacade;
+    private static LegacyLoginServiceFacade loginServiceFacade;
     private static MeetingServiceFacade meetingServiceFacade;
 
     private static PersonnelDetailsServiceFacade personnelDetailsServiceFacade;
@@ -111,6 +111,7 @@ public class DependencyInjectedServiceLocator {
     private static CustomerService customerService;
     private static HolidayService holidayService;
     private static FeeService feeService;
+    private static PersonnelService personnelService;
 
     // DAOs
     private static OfficePersistence officePersistence = new OfficePersistence();
@@ -132,7 +133,6 @@ public class DependencyInjectedServiceLocator {
     private static CustomerDao customerDao = new CustomerDaoHibernate(genericDao);
     private static LoanProductDao loanProductDao = new LoanProductDaoHibernate(genericDao);
     private static SavingsDao savingsDao = new SavingsDaoHibernate(genericDao);
-    private static AuthenticationDao authenticationDao = new AuthenticationDaoHibernate();
     private static CollectionSheetDao collectionSheetDao = new CollectionSheetDaoHibernate(savingsDao);
     private static GeneralLedgerDao generalLedgerDao = new GeneralLedgerDaoHibernate(genericDao);
 
@@ -227,9 +227,12 @@ public class DependencyInjectedServiceLocator {
         return loanServiceFacade;
     }
 
-    public static LoginServiceFacade locationLoginServiceFacade() {
+    public static LegacyLoginServiceFacade locationLoginServiceFacade() {
         if (loginServiceFacade == null) {
-            loginServiceFacade = new LoginServiceFacadeWebTier(authenticationDao);
+            if (personnelService == null) {
+                personnelService = new PersonnelServiceImpl(personnelDao);
+            }
+            loginServiceFacade = new LoginServiceFacadeWebTier(personnelService, personnelDao);
         }
         return loginServiceFacade;
     }

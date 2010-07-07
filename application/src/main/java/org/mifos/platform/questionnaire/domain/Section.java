@@ -21,11 +21,16 @@ package org.mifos.platform.questionnaire.domain;
 
 import org.mifos.framework.business.AbstractEntity;
 
+import java.util.List;
+
 public class Section extends AbstractEntity {
+    private static final long serialVersionUID = -6805203646344424230L;
+
     private int id;
-
     private String name;
+    private List<SectionQuestion> questions;
 
+    @SuppressWarnings({"UnusedDeclaration"})
     Section() {
     }
 
@@ -37,7 +42,23 @@ public class Section extends AbstractEntity {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public List<SectionQuestion> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<SectionQuestion> questions) {
+        this.questions = questions;
     }
 }

@@ -21,8 +21,11 @@
 package org.mifos.application.servicefacade;
 
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.service.PersonnelService;
+import org.mifos.customers.personnel.exceptions.PersonnelException;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.dto.domain.ChangePasswordRequest;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.security.authentication.AuthenticationDao;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
@@ -30,11 +33,13 @@ import org.mifos.security.util.UserContext;
 /**
  *
  */
-public class LoginServiceFacadeWebTier implements LoginServiceFacade {
+public class LoginServiceFacadeWebTier implements LegacyLoginServiceFacade, NewLoginServiceFacade {
 
-    private final AuthenticationDao personnelDao;
+    private final PersonnelService personnelService;
+    private final PersonnelDao personnelDao;
 
-    public LoginServiceFacadeWebTier(AuthenticationDao personnelDao) {
+    public LoginServiceFacadeWebTier(PersonnelService personnelService, PersonnelDao personnelDao) {
+        this.personnelService = personnelService;
         this.personnelDao = personnelDao;
     }
 
@@ -46,10 +51,20 @@ public class LoginServiceFacadeWebTier implements LoginServiceFacade {
             throw new ApplicationException(LoginConstants.KEYINVALIDUSER);
         }
 
-        UserContext userContext = user.login(password);
+        try {
+            UserContext userContext = user.login(password);
+            ActivityContext activityContext = new ActivityContext(Short.valueOf("0"), user.getOffice().getOfficeId(), user.getPersonnelId());
 
-        ActivityContext activityContext = new ActivityContext(Short.valueOf("0"), user.getOffice().getOfficeId(), user.getPersonnelId());
+            return new LoginActivityDto(userContext, activityContext, user.getPasswordChanged());
+        } catch (PersonnelException e) {
+            throw new ApplicationException(e.getKey());
+        }
+    }
 
-        return new LoginActivityDto(userContext, activityContext, user.getPasswordChanged());
+    @Override
+    public void changePassword(ChangePasswordRequest changePasswordRequest) {
+        PersonnelBO user = this.personnelDao.findPersonnelByUsername(changePasswordRequest.getUsername());
+
+        this.personnelService.changePassword(user, changePasswordRequest.getNewPassword());
     }
 }

@@ -43,6 +43,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
 public class GroupTest extends UiTestCaseBase {
 
@@ -83,6 +84,7 @@ public class GroupTest extends UiTestCaseBase {
     @Test(sequential = true, groups = {"smoke","group","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createGroupInPendingApprovalStateTest() throws Exception {
+
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
         CreateGroupEntryPage groupEntryPage = loginAndNavigateToNewGroupPage();
         CreateGroupSubmitParameters formParameters = getGenericGroupFormParameters();

@@ -32,6 +32,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -219,10 +220,17 @@ public class StandardAccountService implements AccountService {
         if (!accountBo.isTrxnDateValid(payment.getPaymentDate().toDateMidnight().toDate())) {
             errors.add(InvalidPaymentReason.INVALID_DATE);
         }
-        if (!accountBo.getState().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING) &&
-            !accountBo.getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING) &&
-            !accountBo.getState().equals(AccountState.CUSTOMER_ACCOUNT_ACTIVE)) {
-            errors.add(InvalidPaymentReason.INVALID_LOAN_STATE);
+        if (accountBo instanceof LoanBO) {
+            if (!accountBo.getState().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING)
+                    && !accountBo.getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)
+                    && !accountBo.getState().equals(AccountState.CUSTOMER_ACCOUNT_ACTIVE)) {
+                errors.add(InvalidPaymentReason.INVALID_LOAN_STATE);
+            }
+        }
+        if (accountBo instanceof SavingsBO) {
+            if (!accountBo.getState().equals(AccountState.SAVINGS_ACTIVE)) {
+                errors.add(InvalidPaymentReason.INVALID_LOAN_STATE);
+            }
         }
         if (AccountTypes.getAccountType(accountBo.getAccountType().getAccountTypeId()) == AccountTypes.LOAN_ACCOUNT) {
             if (!getLoanPaymentTypes().contains(payment.getPaymentType())) {

@@ -35,6 +35,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
 public class CreateSavingsAccountTest extends UiTestCaseBase {
 
@@ -64,6 +65,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(sequential = true, groups = { "smoke", "savings", "acceptance", "ui" })
     public void newVoluntaryClientSavingsAccount() throws Exception {
+
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml.zip", dataSource, selenium);
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();

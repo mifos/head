@@ -45,6 +45,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
 @Test(sequential = true, groups = {"smoke","loan","acceptance","ui"})
 public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
@@ -53,8 +54,10 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
 
     @Autowired
     private DriverManagerDataSource dataSource;
+
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
+
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
@@ -138,6 +141,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
 
         return loanAccountPage;
     }
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newWeeklyGLIMAccount() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml.zip", dataSource, selenium);

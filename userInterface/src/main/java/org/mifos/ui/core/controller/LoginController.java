@@ -18,16 +18,23 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.security.authentication;
+package org.mifos.ui.core.controller;
 
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-/**
- *
- */
-public interface AuthenticationDao extends UserDetailsService {
+@Controller
+@RequestMapping("/login")
+@SuppressWarnings("PMD")
+public class LoginController {
 
-    PersonnelBO findPersonnelByUsername(String username);
+    protected LoginController() {
+        // default contructor for spring autowiring
+    }
 
+    @RequestMapping(method = RequestMethod.GET)
+    public void showForm() {
+        System.out.println("");
+    }
 }

@@ -37,6 +37,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
 @Test(sequential = true, groups = {"loan","acceptance","ui"})
 public class FeeTest extends UiTestCaseBase {
@@ -72,6 +73,7 @@ public class FeeTest extends UiTestCaseBase {
     @Test(groups = {"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void applyFee() throws Exception {
+
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
 
         // the data set contains an approved loan w/ id 000100000000005

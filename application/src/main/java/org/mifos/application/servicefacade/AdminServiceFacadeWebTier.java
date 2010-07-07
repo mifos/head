@@ -25,6 +25,9 @@ import org.mifos.accounts.productdefinition.business.service.ProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.dto.domain.ChangePasswordRequest;
 import org.mifos.dto.screen.ProductConfigurationDto;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
