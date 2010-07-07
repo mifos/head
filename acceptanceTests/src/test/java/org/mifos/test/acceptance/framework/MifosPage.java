@@ -95,7 +95,7 @@ public class MifosPage extends AbstractPage {
         // using a wildcard we check to see if that span has text or not.
         // wildcards are not supported in id tags so we use a css selector.
 
-        String errorMessage = selenium.getText("css=span[id*=\"login.errormessage\"]");
+        String errorMessage = selenium.getText("css=span[id*=\"error.message\"]");
         if (isEmpty(errorMessage)) {
             return false;
         }
