@@ -66,11 +66,9 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-//    @Test( groups={"smoke"})
+    @Test( groups={"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void disburseLoan() throws Exception {
-
-        // FIXME - keithw - test manually and rewrite tests to pass
+    public void disburseLoan() throws Exception {
 
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2009,7,11,13,0,0,0);
