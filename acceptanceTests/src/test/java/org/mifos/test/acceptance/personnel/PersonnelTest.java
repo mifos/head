@@ -51,7 +51,7 @@ import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"personnel","acceptance","ui", "smoke"})
+@Test(sequential = true, groups = {"personnel","acceptance","ui"})
 public class PersonnelTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -77,12 +77,12 @@ public class PersonnelTest extends UiTestCaseBase {
 
     @AfterMethod
     public void logOut() {
-//        (new MifosPage(selenium)).logout();
+        (new MifosPage(selenium)).logout();
     }
 
-    @Test(groups = {"smoke"},enabled = false)
+    @Test(groups = {"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void createUserTest() throws Exception {
+    public void createUserTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
@@ -90,7 +90,7 @@ public class PersonnelTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void editUserTest() throws Exception {
+    public void editUserTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
@@ -110,7 +110,7 @@ public class PersonnelTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void createUserWithNonAdminRoleTest() throws Exception {
+    public void createUserWithNonAdminRoleTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
@@ -118,7 +118,6 @@ public class PersonnelTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = {"personnel","acceptance","ui"},enabled = false)
     public void changePasswordTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
