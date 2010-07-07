@@ -80,8 +80,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
      * dibursed without getting an invalid disbursal date error. See MIFOS-2597.
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void checkGLIMInvalidDisbursementDateWhenEditingLoan() throws Exception {
-        // FIXME - KEITHW - ignoring test for now...
+    public void checkGLIMInvalidDisbursementDateWhenEditingLoan() throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2009,7,11,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);

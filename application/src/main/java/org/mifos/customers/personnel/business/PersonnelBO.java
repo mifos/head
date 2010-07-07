@@ -683,6 +683,10 @@ public class PersonnelBO extends AbstractBusinessObject {
         return userContext;
     }
 
+    /**
+     * use {@link PersonnelBO#changePasswordTo(String, Short)}
+     */
+    @Deprecated
     public void updatePassword(final String oldPassword, final String newPassword, final Short updatedById) throws PersonnelException {
         logger.debug("Trying to updatePassword");
         byte[] encryptedPassword = getEncryptedPassword(oldPassword, newPassword);
@@ -700,15 +704,14 @@ public class PersonnelBO extends AbstractBusinessObject {
         }
     }
 
-    public void updatePassword(final String newPassword, final Short updatedById) throws PersistenceException {
+    public void changePasswordTo(String newPassword, final Short changedByUserId) {
         byte[] encryptedPassword = getEncryptedPassword(newPassword);
         this.setEncryptedPassword(encryptedPassword);
         this.setPasswordChanged(LoginConstants.PASSWORDCHANGEDFLAG);
         if (this.getLastLogin() == null) {
             this.setLastLogin(new DateTimeService().getCurrentJavaDateTime());
         }
-        setUpdateDetails(updatedById);
-        new PersonnelPersistence().createOrUpdate(this);
+        setUpdateDetails(changedByUserId);
     }
 
     public void unlockPersonnel(final Short updatedById) throws PersonnelException {

@@ -18,13 +18,29 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.admin.servicefacade;
+package org.mifos.dto.domain;
 
-import org.mifos.dto.screen.ProductConfigurationDto;
+public class ChangePasswordRequest {
 
-public interface AdminServiceFacade {
+    private final String username;
+    private final String oldPassword;
+    private final String newPassword;
 
-    ProductConfigurationDto retrieveProductConfiguration();
+    public ChangePasswordRequest(String username, String oldPassword, String newPassword) {
+        this.username = username;
+        this.oldPassword = oldPassword;
+        this.newPassword = newPassword;
+    }
 
-    void updateProductConfiguration(ProductConfigurationDto productConfiguration);
+    public String getUsername() {
+        return this.username;
+    }
+
+    public String getOldPassword() {
+        return this.oldPassword;
+    }
+
+    public String getNewPassword() {
+        return this.newPassword;
+    }
 }
