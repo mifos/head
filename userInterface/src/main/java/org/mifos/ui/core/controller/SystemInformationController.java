@@ -46,7 +46,7 @@ public class SystemInformationController {
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="NP_UNWRITTEN_FIELD", justification="request is not null")
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView handleRequestInternal(HttpServletRequest request) {
+    public ModelAndView viewSystemInformation(HttpServletRequest request) {
         ServletContext context = request.getSession().getServletContext();
 
         // TODO: figure out if this is really where we want to get this

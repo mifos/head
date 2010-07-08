@@ -4,8 +4,7 @@
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 	<class
-		name="org.mifos.security.rolesandpermission.business.RoleActivityEntity"
-		table="roles_activity">
+		name="org.mifos.security.rolesandpermission.business.RoleActivityEntity" table="roles_activity">
 		<composite-id>			   
 			<key-many-to-one name="activity" column="activity_id"
 				class="org.mifos.security.rolesandpermission.business.ActivityEntity"
@@ -15,5 +14,9 @@
 				access="field"/>
 		</composite-id>
 	</class>
+	
+	<query name="findDistinctActivityIdsForGivenSetOfRoleIds">
+            <![CDATA[select distinct ra.activity.id from RoleActivityEntity ra where ra.role.id IN (:ROLE_IDS)]]>
+    </query>
 </hibernate-mapping>
 
