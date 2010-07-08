@@ -20,24 +20,37 @@
 
 package org.mifos.ui.core.controller;
 
-import org.apache.commons.lang.StringUtils;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionForm implements Serializable{
+import org.apache.commons.lang.StringUtils;
+
+public class QuestionForm extends ScreenObject {
     private List<Question> questions = new ArrayList<Question>();
+
+    @javax.validation.Valid
     private Question currentQuestion = new Question();
+
+    public Question getCurrentQuestion() {
+        return this.currentQuestion;
+    }
+
+    public void setCurrentQuestion(Question currentQuestion) {
+        this.currentQuestion = currentQuestion;
+    }
+
     private static final long serialVersionUID = 2010225942240327677L;
 
+
+    /*@org.hibernate.validator.constraints.NotEmpty
+    @javax.validation.constraints.Size(max=50)
     public String getTitle() {
         return currentQuestion.getTitle();
     }
 
     public void setTitle(String title) {
         currentQuestion.setTitle(title);
-    }
+    }*/
 
     public List<Question> getQuestions() {
         return questions;
@@ -54,22 +67,33 @@ public class QuestionForm implements Serializable{
     }
 
     public boolean isDuplicateTitle(String questionTitle) {
-        if(StringUtils.isEmpty(questionTitle)){
-            return false;
-        }
-        for (Question question: questions){
-            if(StringUtils.equalsIgnoreCase(questionTitle.trim(), question.getTitle())){
-                return true;
-            }
-        }
-        return false;
+        return (findQuestionByTitle(questionTitle) != null);
     }
 
-    public void setType(String type) {
+    public void removeQuestion(String questionTitle) {
+       Question question = findQuestionByTitle(questionTitle);
+       if (question != null) {
+         questions.remove(question);
+       }
+    }
+
+    private Question findQuestionByTitle(String title) {
+        if(!StringUtils.isBlank(title)){
+            for (Question qt : questions){
+                if(StringUtils.equalsIgnoreCase(title.trim(), qt.getTitle())){
+                    return qt;
+                }
+            }
+        }
+        return null;
+    }
+
+    /*public void setType(String type) {
         currentQuestion.setType(type);
     }
 
     public String getType() {
         return currentQuestion.getType();
-    }
+    }*/
+
 }
