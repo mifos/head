@@ -36,7 +36,7 @@
 		<intercept-url pattern="/*.html" filters="none" />		
 		<intercept-url pattern="/login.ftl*" filters="none" />
 		
-    	<intercept-url pattern="/**" access="hasRole('ROLE_FULLY_AUTHENTICATED_USER')" />
+    	<intercept-url pattern="/**" access="isFullyAuthenticated()" />
     	<logout logout-success-url="/login.ftl?loggedout"/>
   	</http>
   	
