@@ -54,12 +54,8 @@
     [#include "adminLeftPane.ftl" /]
 </div>
 <div class="content leftMargin180">
-    <span id="page.id" title="createQuestion"/></span>
-
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.add.questions":""}/]
     [@mifos.crumbpairs breadcrumb/]
-
-
     <div class="fontnormal marginLeft30">
         <div class="orangeheading marginTop15">
             [@spring.message "questionnaire.view.questions"/]
@@ -117,5 +113,6 @@
 		    <input type="hidden" name="h_user_locale" value="en_GB"/>
 	    </form>
     </div>
+    <span id="page.id" title="createQuestion"/>
 </div>
 [@mifos.footer/]
