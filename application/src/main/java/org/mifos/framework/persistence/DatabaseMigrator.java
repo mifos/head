@@ -27,6 +27,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import org.mifos.reports.business.ReportsCategoryBO;
+import org.mifos.reports.persistence.AddReport;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -136,6 +138,7 @@ public class DatabaseMigrator {
 
         for (int i : availableUpgrades.keySet()) {
             if (!appliedUpgrades.contains(i)) {
+                System.out.println("applying upgrade with timestamp: "+ i);
                 applyUpgrade(i, availableUpgrades.get(i));
             }
         }
@@ -238,7 +241,10 @@ public class DatabaseMigrator {
         legacyUpgrades.put(252, 1277589236);
         legacyUpgrades.put(253, 1277589321);
         legacyUpgrades.put(254, 1277589383);
-        legacyUpgrades.put(255, 1278334318);
+//        legacyUpgrades.put(255, 1278540763);
+//        legacyUpgrades.put(256, 1278540832);
+
+
 
         return legacyUpgrades;
     }
@@ -273,6 +279,7 @@ public class DatabaseMigrator {
 
     private void applyUpgrade(int upgradeNumber, String type) throws Exception {
 
+
         if (SCRIPT_UPGRADE_TYPE.equals(type)) {
             URL url = SqlResource.getInstance().getUrl("upgrade" + upgradeNumber + ".sql");
             SqlUpgrade sqlUpgrade = new SqlUpgrade(url);
@@ -287,15 +294,9 @@ public class DatabaseMigrator {
         } else if (METHOD_UPGRADE_TYPE.equals(type)) {
 
             Method method = DatabaseMigrator.class.getDeclaredMethod("upgrade" + upgradeNumber);
-
-            try {
-                method.invoke(this);
-            } catch (InvocationTargetException e) {
-                e.getCause().printStackTrace();
-                e.printStackTrace();
-            }
-
+            method.invoke(this);
         }
+
         Statement stmt = connection.createStatement();
         stmt.execute("insert into applied_upgrades values (" + upgradeNumber + ")");
         connection.commit();
@@ -370,7 +371,7 @@ public class DatabaseMigrator {
         results = conn.getMetaData().getColumns(null, null, "database_version", "database_version");
         boolean foundDatabaseVersion = results.next();
 
-        if (! (foundAppliedUpgrades || foundDatabaseVersion)){
+        if (!(foundAppliedUpgrades || foundDatabaseVersion)) {
             throw new RuntimeException("Database is too old to be upgraded");
         }
         return foundAppliedUpgrades;
@@ -392,6 +393,17 @@ public class DatabaseMigrator {
         // "Can Define product mix"),
         // new AddActivity(248, SecurityConstants.CAN_EDIT_PRODUCT_MIX, SecurityConstants.PRODUCT_MIX, ENGLISH_LOCALE,
         // "Can Edit product mix")));
+    }
+
+    @SuppressWarnings("unused")
+    private static void upgrade1278540763() {
+        new AddReport(ReportsCategoryBO.ANALYSIS, "Detailed Aging Of Portfolio At Risk Report",
+                "DetailedAgingPortfolioAtRiskReport.rptdesign");
+    }
+
+    @SuppressWarnings("unused")
+    private static void upgrade1278540832() {
+        new AddReport(ReportsCategoryBO.ANALYSIS, "General Ledger Report", "GeneralLedgerReport.rptdesign");
     }
 
     // TODO remove

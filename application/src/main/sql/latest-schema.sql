@@ -3745,11 +3745,6 @@ engine=innodb character set utf8;
 
 create index loan_counter_client_perf_idx on loan_counter (client_perf_id);
 
-create table database_version (
-    database_version integer
-)
-engine=innodb character set utf8;
-
 -- Begin tables for the Reports Mini Portal
 
 
@@ -4369,4 +4364,9 @@ create table sections_questions(
     primary key (id),
     foreign key (section_id) references sections(id),
     foreign key (question_id) references questions(question_id)
+);
+
+create table applied_upgrades(
+	upgrade_id integer not null,
+	primary key (upgrade_id)
 );

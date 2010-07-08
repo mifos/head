@@ -22,6 +22,8 @@ package org.mifos.framework.persistence;
 
 import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -33,6 +35,7 @@ import junit.framework.Assert;
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -86,11 +89,10 @@ public class LatestTestAfterCheckpointIntegrationTest {
 
     @Test
     public void testSimple() throws Exception {
-        connection.createStatement().execute("drop table if exists foo");
-        connection.commit();
+
         loadLatest();
         IDataSet latestDump = dbUnitConnection.createDataSet();
-        connection.createStatement().execute("drop table if exists foo");
+        connection.createStatement().execute("drop table foo");
         connection.commit();
         applyUpgrades();
         IDataSet upgradeDump = dbUnitConnection.createDataSet();
@@ -105,10 +107,10 @@ public class LatestTestAfterCheckpointIntegrationTest {
 
         // FIXME for some reason the comparison of DatabaseDataSet (IDataSet) doesn't expose the difference at assert in
         // datasets FlatXmlDataSet seems to work here.
-        // final File latestDumpFile = File.createTempFile("latestDataDump", ".xml");
-        // FlatXmlDataSet.write(latestDataDump, new FileOutputStream(latestDumpFile));
-        // latestDataDump = new FlatXmlDataSet(latestDumpFile);
-        // latestDumpFile.delete();
+        final File latestDumpFile = File.createTempFile("latestDataDump", ".xml");
+        FlatXmlDataSet.write(latestDataDump, new FileOutputStream(latestDumpFile));
+        latestDataDump = new FlatXmlDataSet(latestDumpFile);
+        latestDumpFile.delete();
 
         final String latestDumpAsString = TestDatabase.getAllTablesStructureDump();
         dropLatestDatabase();
@@ -117,16 +119,14 @@ public class LatestTestAfterCheckpointIntegrationTest {
         DatabaseMigrator migrator = new DatabaseMigrator(connection);
         migrator.upgrade();
 
-        //exclude applied_upgrades table from dump
-        connection.createStatement().execute("drop table if exists applied_upgrades");
         String upgradeDump = TestDatabase.getAllTablesStructureDump();
 
         IDataSet upgradeDataDump = dbUnitConnection.createDataSet();
-        
-        // final File upgradeDumpFile = File.createTempFile("upgradeDataDump", ".xml");
-        // FlatXmlDataSet.write(upgradeDataDump, new FileOutputStream(upgradeDumpFile));
-        // upgradeDataDump = new FlatXmlDataSet(upgradeDumpFile);
-        // upgradeDumpFile.delete();
+
+        final File upgradeDumpFile = File.createTempFile("upgradeDataDump", ".xml");
+        FlatXmlDataSet.write(upgradeDataDump, new FileOutputStream(upgradeDumpFile));
+        upgradeDataDump = new FlatXmlDataSet(upgradeDumpFile);
+        upgradeDumpFile.delete();
 
         Assert.assertEquals(latestDumpAsString, upgradeDump);
         Assertion.assertEquals(latestDataDump, upgradeDataDump);
@@ -221,6 +221,8 @@ public class LatestTestAfterCheckpointIntegrationTest {
     }
 
     private void loadLatest() throws Exception {
+        connection.createStatement().execute("drop table if exists foo");
+        connection.commit();
         connection.createStatement().execute("create table foo(x integer, y integer default 7)");
         connection.createStatement().execute("insert into foo(x, y) values(5,7)");
         connection.commit();

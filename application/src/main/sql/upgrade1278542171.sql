@@ -1,0 +1,1 @@
+alter table sections_questions add column sequence_number integer not null;

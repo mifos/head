@@ -22,5 +22,3 @@ create table question_group_entity_events(
     foreign key (question_group_id) references question_group(id),
     foreign key (entity_event_id) references entity_events(id)
 )engine=innodb character set utf8;
-
-update database_version set database_version = 259 where database_version = 258;

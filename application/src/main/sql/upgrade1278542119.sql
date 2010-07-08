@@ -5,5 +5,3 @@ create table question_group(
   state integer not null,
   primary key (id)
 )engine=innodb character set utf8;
-
-update database_version set database_version = 258 where database_version = 257;
