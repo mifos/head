@@ -132,9 +132,9 @@ public class QuestionnaireServiceIntegrationTest {
         int initialCount = questionnaireService.getAllQuestionGroups().size();
         String questionGroupTitle1 = "QG1" + System.currentTimeMillis();
         String questionGroupTitle2 = "QG2" + System.currentTimeMillis();
-        List<SectionDefinition> sectionsForQG1 = asList(getSection("Section1"));
+        List<SectionDefinition> sectionsForQG1 = asList(getSection("S1"));
         defineQuestionGroup(questionGroupTitle1, "Create", "Client", sectionsForQG1);
-        List<SectionDefinition> sectionsForQG2 = asList(getSection("S2"), getSection("Section2"));
+        List<SectionDefinition> sectionsForQG2 = asList(getSection("S2"), getSection("S1"));
         defineQuestionGroup(questionGroupTitle2, "Create", "Client", sectionsForQG2);
         List<QuestionGroupDetail> questionGroups = questionnaireService.getAllQuestionGroups();
         int finalCount = questionGroups.size();
@@ -282,6 +282,7 @@ public class QuestionnaireServiceIntegrationTest {
         List<EventSource> eventSources = questionnaireService.getAllEventSources();
         assertNotNull(eventSources);
         assertThat(eventSources, new EventSourceMatcher("Create", "Client", "Create Client"));
+        assertThat(eventSources, new EventSourceMatcher("View", "Client", "View Client"));
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws ApplicationException {
