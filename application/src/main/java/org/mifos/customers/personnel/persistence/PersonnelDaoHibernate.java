@@ -81,7 +81,12 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("USER_NAME", username);
 
-        PersonnelBO user = (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GETPERSONNELBYNAME, queryParameters);
+        PersonnelBO user = (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery(
+                NamedQueryConstants.GETPERSONNELBYNAME, queryParameters);
+
+        if (user == null) {
+            return null;
+        }
 
         byte[] password = user.getEncryptedPassword();
         boolean enabled = user.isActive();
@@ -92,7 +97,8 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         GrantedAuthority mifosUser = new GrantedAuthorityImpl(MifosUser.FULLY_AUTHENTICATED_USER);
         List<GrantedAuthority> authorities = Arrays.asList(mifosUser);
 
-        return new MifosUser(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+        return new MifosUser(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
+                authorities);
     }
 
     @SuppressWarnings("unchecked")

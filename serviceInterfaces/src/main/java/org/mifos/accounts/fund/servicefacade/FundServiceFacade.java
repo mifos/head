@@ -20,37 +20,18 @@
 
 package org.mifos.accounts.fund.servicefacade;
 
-import java.io.Serializable;
+import java.util.List;
 
-public class FundDto implements Serializable {
+@SuppressWarnings("PMD.SignatureDeclareThrowsException")
+public interface FundServiceFacade {
 
-    private String id;
+    FundDto getFund(Short fundId);
 
-    private FundCodeDto code;
+    List<FundDto> getFunds();
 
-    private String name;
+    List<FundCodeDto> getFundCodes();
 
-    public String getId() {
-        return id;
-    }
+    void updateFund(FundDto fundDto) throws Exception;
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public FundCodeDto getCode() {
-        return code;
-    }
-
-    public void setCode(FundCodeDto code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    void createFund(FundDto fundDto) throws Exception;
 }

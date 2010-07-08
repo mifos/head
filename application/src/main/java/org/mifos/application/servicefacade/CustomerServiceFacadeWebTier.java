@@ -48,7 +48,6 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
-import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
@@ -904,11 +903,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
     @Override
     public boolean isGroupHierarchyRequired() {
-        try {
-            return ClientRules.getClientCanExistOutsideGroup();
-        } catch (ConfigurationException e) {
-            throw new MifosRuntimeException(e);
-        }
+        return ClientRules.getClientCanExistOutsideGroup();
     }
 
     @Override
