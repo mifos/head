@@ -26,19 +26,19 @@ import org.mifos.accounts.api.AccountPaymentParametersDto;
 
 public class ParseResultDto {
     private final List<String> parseErrors;
-    private final List<AccountPaymentParametersDto> successfullyParsedPayments;
+    private final List<AccountPaymentParametersDto> successfullyParsedRows;
 
     public ParseResultDto(final List<String> parseErrors, final List<AccountPaymentParametersDto> successfullyParsedRows) {
         this.parseErrors = parseErrors;
-        this.successfullyParsedPayments = successfullyParsedRows;
+        this.successfullyParsedRows = successfullyParsedRows;
     }
 
     public List<String> getParseErrors() {
         return this.parseErrors;
     }
 
-    public List<AccountPaymentParametersDto> getSuccessfullyParsedPayments() {
-        return this.successfullyParsedPayments;
+    public List<AccountPaymentParametersDto> getSuccessfullyParsedRows() {
+        return this.successfullyParsedRows;
     }
 
 }
