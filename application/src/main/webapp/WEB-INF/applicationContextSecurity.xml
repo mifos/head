@@ -19,17 +19,23 @@
     <beans:bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
         <beans:property name="defaultFailureUrl" value="/login.ftl?accessDenied" />
     </beans:bean>
+    
+    <global-method-security pre-post-annotations="enabled" />
            
-	<http auto-config="false" entry-point-ref="loginFormAuthentication">
+	<http auto-config="false" entry-point-ref="loginFormAuthentication" use-expressions="true">
 		<custom-filter position="FORM_LOGIN_FILTER" ref="mifosLegacyAuthenticationFilter" />
-		<intercept-url pattern="/*.css*" filters="none" />
 		<intercept-url pattern="/ping.ftl" filters="none" />
 		<intercept-url pattern="/dateTimeUpdate.ftl*" filters="none" />
 		<intercept-url pattern="/initializeApplication.ftl*" filters="none" />
 		<intercept-url pattern="/customPropertiesUpdate.ftl*" filters="none" />
-		
+
+		<intercept-url pattern="/*.css*" filters="none" />
+		<intercept-url pattern="/*.gif" filters="none" />
+		<intercept-url pattern="/*.jpg" filters="none" />
+		<intercept-url pattern="/*.js" filters="none" />
+		<intercept-url pattern="/*.html" filters="none" />		
 		<intercept-url pattern="/login.ftl*" filters="none" />
-    	<intercept-url pattern="/**" access="ROLE_FULLY_AUTHENTICATED_USER" />
+    	<intercept-url pattern="/**" access="hasRole('ROLE_FULLY_AUTHENTICATED_USER')" />
     	<logout logout-success-url="/login.ftl?loggedout"/>
   	</http>
   	

@@ -20,7 +20,6 @@
 
 package org.mifos.application.admin.struts.action;
 
-import java.sql.DatabaseMetaData;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
@@ -34,13 +33,10 @@ import org.mifos.application.admin.business.service.SystemInfoService;
 import org.mifos.application.admin.business.service.SystemInformationServiceFacadeWebTier;
 import org.mifos.application.admin.servicefacade.SystemInformationDto;
 import org.mifos.application.admin.servicefacade.SystemInformationServiceFacade;
-import org.mifos.application.admin.system.SystemInfo;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.reports.struts.action.BirtReportsUploadAction;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 

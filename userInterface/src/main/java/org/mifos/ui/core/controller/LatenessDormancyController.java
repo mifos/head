@@ -44,9 +44,9 @@ public class LatenessDormancyController {
     private static final String CANCEL_PARAM = "CANCEL";
     private static final String CANCEL_PARAM_VALUE = "Cancel";
 
-    BreadCrumbsLinks adminCrumb=new BreadCrumbsLinks();
-    BreadCrumbsLinks childCrumb=new BreadCrumbsLinks();
-    List<BreadCrumbsLinks> breadcrumbs=new LinkedList<BreadCrumbsLinks> ();
+    private final BreadCrumbsLinks adminCrumb = new BreadCrumbsLinks();
+    private final BreadCrumbsLinks childCrumb = new BreadCrumbsLinks();
+    private final List<BreadCrumbsLinks> breadcrumbs = new LinkedList<BreadCrumbsLinks> ();
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
@@ -60,7 +60,7 @@ public class LatenessDormancyController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-     @ModelAttribute("breadcrumbs")
+    @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
         adminCrumb.setLink("admin.ftl");
         childCrumb.setLink("editLatenessDormancy.ftl");
@@ -70,6 +70,7 @@ public class LatenessDormancyController {
         breadcrumbs.add(childCrumb);
         return breadcrumbs;
     }
+
     @ModelAttribute("formBean")
     public LatenessDormancyFormBean showPopulatedForm() {
         ProductConfigurationDto productConfiguration = adminServiceFacade.retrieveProductConfiguration();
@@ -78,8 +79,6 @@ public class LatenessDormancyController {
         formBean.setDormancyDays(productConfiguration.getDormancyDays());
         return formBean;
     }
-
-
 
     @RequestMapping(method = RequestMethod.POST)
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,

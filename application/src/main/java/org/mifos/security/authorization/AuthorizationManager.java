@@ -29,12 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.hibernate.Session;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityRoles;

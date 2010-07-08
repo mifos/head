@@ -41,9 +41,6 @@ import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.message.MessageResolver;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.webflow.execution.RequestContext;
 

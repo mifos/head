@@ -20,46 +20,40 @@
 
 package org.mifos.ui.core.controller;
 
-import org.mifos.application.admin.servicefacade.SystemInformationDto;
-import org.mifos.application.admin.servicefacade.SystemInformationServiceFacade;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+
+import org.mifos.application.admin.servicefacade.SystemInformationDto;
+import org.mifos.application.admin.servicefacade.SystemInformationServiceFacade;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class SystemInformationController extends AbstractController {
+@RequestMapping("/systemInformation")
+public class SystemInformationController {
 
+    @Autowired
     private SystemInformationServiceFacade systemInformationServiceFacade;
 
-    public SystemInformationServiceFacade getSystemInformationServiceFacade() {
-        return this.systemInformationServiceFacade;
-    }
-
-    public void setSystemInformationServiceFacade(SystemInformationServiceFacade systemInformationServiceFacade) {
-        this.systemInformationServiceFacade = systemInformationServiceFacade;
-    }
-
-    @Override
-    @RequestMapping("/systemInformation.ftl")
-    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) {
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="NP_UNWRITTEN_FIELD", justification="request is not null")
+    @RequestMapping(method = RequestMethod.GET)
+    public ModelAndView handleRequestInternal(HttpServletRequest request) {
         ServletContext context = request.getSession().getServletContext();
 
         // TODO: figure out if this is really where we want to get this
         Locale locale = request.getLocale();
 
-        SystemInformationDto systemInformationDto = null;
-        try {
-            systemInformationDto = systemInformationServiceFacade.getSystemInformation(context, locale);
-        } catch (Exception e) {
-            // TODO: what should we really do here?
-            systemInformationDto = new SystemInformationDto("error", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
-        }
+        SystemInformationDto systemInformationDto = systemInformationServiceFacade.getSystemInformation(context, locale);
+
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("request", request);
         model.put("systemInformationDto", systemInformationDto);
@@ -71,5 +65,4 @@ public class SystemInformationController extends AbstractController {
 
         return modelAndView;
     }
-
 }
