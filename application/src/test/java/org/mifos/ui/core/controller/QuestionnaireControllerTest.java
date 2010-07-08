@@ -37,9 +37,14 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.binding.message.DefaultMessageResolver;
+import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.message.MessageResolver;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -76,9 +81,12 @@ public class QuestionnaireControllerTest {
     @Mock
     private HttpServletRequest httpServletRequest;
 
+    LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+
     @Before
     public void setUp() throws Exception {
         questionnaireController = new QuestionnaireController(questionnaireServiceFacade);
+        validator.afterPropertiesSet();
     }
 
     @After
@@ -89,6 +97,8 @@ public class QuestionnaireControllerTest {
     public void testAddQuestionForSuccess() throws Exception {
         QuestionForm questionForm = getQuestionForm(TITLE, "Numeric");
         when(questionnaireServiceFacade.isDuplicateQuestion(TITLE)).thenReturn(false);
+        when(messageContext.getAllMessages()).thenReturn(new Message[] {});
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionnaireController.addQuestion(questionForm, requestContext);
         List<Question> questions = questionForm.getQuestions();
         verify(questionnaireServiceFacade).isDuplicateQuestion(TITLE);
@@ -100,46 +110,51 @@ public class QuestionnaireControllerTest {
     @Test
     public void testAddQuestionForFailureWhenQuestionTitleNotProvided() throws Exception {
         QuestionForm questionForm = new QuestionForm();
+        questionForm.setValidator(validator);
         when(requestContext.getMessageContext()).thenReturn(messageContext);
+        when(messageContext.hasErrorMessages()).thenReturn(true);
         String result = questionnaireController.addQuestion(questionForm, requestContext);
         assertThat(questionForm.getQuestions().size(), is(0));
         assertThat(result, is(notNullValue()));
         assertThat(result, is("failure"));
         verify(requestContext).getMessageContext();
-        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.emptytitle")));
+        verify(messageContext).addMessage(argThat(new MessageMatcher("NotEmpty.QuestionForm.currentQuestion.title")));
     }
 
     @Test
     public void testAddQuestionForFailureWhenQuestionTitleProvidedWithAllBlanks() throws Exception {
         QuestionForm questionForm = new QuestionForm();
-        questionForm.setTitle("      ");
+        questionForm.setValidator(validator);
+        questionForm.getCurrentQuestion().setTitle("      ");
+        questionForm.getCurrentQuestion().setType("Free Text");
         when(requestContext.getMessageContext()).thenReturn(messageContext);
+        when(messageContext.hasErrorMessages()).thenReturn(true);
         String result = questionnaireController.addQuestion(questionForm, requestContext);
         assertThat(questionForm.getQuestions().size(), is(0));
         assertThat(result, is(notNullValue()));
         assertThat(result, is("failure"));
         verify(requestContext).getMessageContext();
-        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.emptytitle")));
+        // TODO: Assert for message code content
+//        verify(messageContext).addMessage(argThat(new MessageMatcher("NotEmpty.QuestionForm.currentQuestion.title")));
     }
 
     @Test
     public void testAddQuestionForFailureWhenQuestionTitleIsDuplicateInDB() throws Exception {
         QuestionForm questionForm = new QuestionForm();
-        questionForm.setTitle(TITLE);
+        questionForm.getCurrentQuestion().setTitle(TITLE);
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         when(questionnaireServiceFacade.isDuplicateQuestion(TITLE)).thenReturn(true);
         String result = questionnaireController.addQuestion(questionForm, requestContext);
         assertThat(questionForm.getQuestions().size(), is(0));
-        assertThat(result, is(notNullValue()));
         assertThat(result, is("failure"));
         verify(requestContext).getMessageContext();
-        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.duplicate.question.title")));
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.question.duplicate")));
     }
 
     @Test
     public void testAddQuestionForFailureWhenQuestionTitleIsDuplicateInForm() throws Exception {
         QuestionForm questionForm = new QuestionForm();
-        questionForm.setTitle("  " + TITLE + "    ");
+        questionForm.getCurrentQuestion().setTitle("  " + TITLE + "    ");
         questionForm.setQuestions(asList(getQuestion("0", TITLE, "Number")));
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionnaireController.addQuestion(questionForm, requestContext);
@@ -147,7 +162,7 @@ public class QuestionnaireControllerTest {
         assertThat(result, is(notNullValue()));
         assertThat(result, is("failure"));
         verify(requestContext).getMessageContext();
-        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.duplicate.question.title")));
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.question.duplicate")));
     }
 
     @Test
@@ -243,12 +258,12 @@ public class QuestionnaireControllerTest {
     public void testCreateQuestionFailure() throws Exception {
         QuestionForm questionForm = getQuestionForm(TITLE, "Numeric");
         when(requestContext.getMessageContext()).thenReturn(messageContext);
-        doThrow(new ApplicationException("DB Write Failure")).when(questionnaireServiceFacade).createQuestions(Matchers.<List<Question>>anyObject());
+        doThrow(new ApplicationException("db.write.failure")).when(questionnaireServiceFacade).createQuestions(Matchers.<List<Question>>anyObject());
         String result = questionnaireController.createQuestions(questionForm, requestContext);
         assertThat(result, is("failure"));
         verify(questionnaireServiceFacade).createQuestions(Matchers.<List<Question>>anyObject());
         verify(requestContext).getMessageContext();
-        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.serivce.failure")));
+        verify(messageContext).addMessage(argThat(new MessageMatcher("db.write.failure")));
     }
 
     @Test
@@ -275,7 +290,7 @@ public class QuestionnaireControllerTest {
         assertThat(result, is(notNullValue()));
         assertThat(result, is("failure"));
         verify(requestContext).getMessageContext();
-        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.emptytitle")));
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.questionGroup.title.empty")));
     }
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
@@ -286,7 +301,7 @@ public class QuestionnaireControllerTest {
         String result = questionnaireController.defineQuestionGroup(questionGroup, requestContext);
         assertThat(result, is("failure"));
         verify(requestContext).getMessageContext();
-        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.no.sections.in.group")));
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.section.atLeastOne")));
     }
 
     @Test
@@ -297,7 +312,7 @@ public class QuestionnaireControllerTest {
         assertThat(result, is(notNullValue()));
         assertThat(result, is("failure"));
         verify(requestContext).getMessageContext();
-        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.empty.appliesTo")));
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.appliesTo.mandatory")));
     }
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
@@ -305,12 +320,12 @@ public class QuestionnaireControllerTest {
     public void testCreateQuestionGroupFailure() throws Exception {
         QuestionGroup questionGroup = getQuestionGroup(TITLE, "Create.Client", "S1", "S2");
         when(requestContext.getMessageContext()).thenReturn(messageContext);
-        doThrow(new ApplicationException("DB Write Failure")).when(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroup>anyObject());
+        doThrow(new ApplicationException("questionnaire.error.duplicate.question.found.in.section")).when(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroup>anyObject());
         String result = questionnaireController.defineQuestionGroup(questionGroup, requestContext);
         assertThat(result, is("failure"));
         verify(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroup>anyObject());
         verify(requestContext).getMessageContext();
-        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.serivce.failure")));
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.duplicate.question.found.in.section")));
     }
 
     @Test
@@ -471,8 +486,8 @@ public class QuestionnaireControllerTest {
 
     private QuestionForm getQuestionForm(String title, String type) {
         QuestionForm questionForm = new QuestionForm();
-        questionForm.setTitle(title);
-        questionForm.setType(type);
+        questionForm.getCurrentQuestion().setTitle(title);
+        questionForm.getCurrentQuestion().setType(type);
         return questionForm;
     }
 
@@ -514,7 +529,10 @@ public class QuestionnaireControllerTest {
         public boolean matchesSafely(MessageResolver messageResolver) {
             DefaultMessageResolver defaultMessageResolver = (DefaultMessageResolver) messageResolver;
             String[] codes = defaultMessageResolver.getCodes();
-            return codes.length == 1 && StringUtils.equals(codes[0], errorCode);
+            for (String code : codes) {
+                if (StringUtils.equals(code, errorCode)) return true;
+            }
+            return false;
         }
 
         @Override

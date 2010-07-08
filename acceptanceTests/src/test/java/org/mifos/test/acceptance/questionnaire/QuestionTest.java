@@ -50,7 +50,7 @@ public class QuestionTest extends UiTestCaseBase {
     private InitializeApplicationRemoteTestingService initRemote;
     private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
     private String title;
-    private static final String TITLE_MISSING = "Please specify the title.";
+    private static final String TITLE_MISSING = "Please specify the question title.";
     private static final String DUPLICATE_TITLE = "The name specified already exists.";
     private CreateQuestionParameters createQuestionParameters;
     private static final String DATE_TYPE = "Date";
