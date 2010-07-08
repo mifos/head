@@ -21,12 +21,13 @@
 package org.mifos.framework.spring;
 
 import java.util.ArrayList;
+import java.io.IOException;
 
-import org.mifos.core.ClasspathResource;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -57,8 +58,9 @@ public class SpringUtil {
 
     /**
      * Provides an array of config files based on what is found by
-     * {@link ResourceLoader}. Hopefully this coincides with the class loader
+     * {@link ConfigurationLocator}. Hopefully this coincides with the class loader
      * used by {@link ClassPathXmlApplicationContext}...
+     * @return array of config files
      */
     private static String[] getConfigFiles() {
         ArrayList<String> configFiles = new ArrayList<String>();
@@ -66,14 +68,20 @@ public class SpringUtil {
         // required config file. exception thrown if not found.
         configFiles.add(FilePaths.SPRING_CONFIG_CORE);
 
-        if (null != ClasspathResource.findResource(FilePaths.FINANCIAL_ACTION_MAPPING_CONFIG_CUSTOM_BEAN)) {
-            logger.info("using " + FilePaths.FINANCIAL_ACTION_MAPPING_CONFIG_CUSTOM_BEAN + " for custom bean configuration");
-            configFiles.add(FilePaths.FINANCIAL_ACTION_MAPPING_CONFIG_CUSTOM_BEAN);
+        String customMbcPath;
+        try {
+            customMbcPath = new ConfigurationLocator().getFilePath(FilePaths.FINANCIAL_ACTION_MAPPING_CONFIG_CUSTOM_BEAN);
+        } catch (IOException e) {
+            customMbcPath = null;
+        }
+        if (customMbcPath != null) {
+            logger.info("using " + customMbcPath + " for custom bean configuration");
+            configFiles.add("file:" + customMbcPath);
         } else {
             logger.debug(FilePaths.FINANCIAL_ACTION_MAPPING_CONFIG_CUSTOM_BEAN + " not found in application classpath. Ignoring.");
         }
 
-        return configFiles.toArray(new String[] {});
+        return configFiles.toArray(new String[configFiles.size()]);
     }
 
     public static ApplicationContext getAppContext() {
