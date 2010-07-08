@@ -15,6 +15,10 @@
         <beans:property name="defaultTargetUrl" value="/custSearchAction.do?method=getHomePage" />
         <beans:property name="alwaysUseDefaultTargetUrl" value="true" />
     </beans:bean>
+    
+    <beans:bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+        <beans:property name="defaultFailureUrl" value="/login.ftl?accessDenied" />
+    </beans:bean>
            
 	<http auto-config="false" entry-point-ref="loginFormAuthentication">
 		<custom-filter position="FORM_LOGIN_FILTER" ref="mifosLegacyAuthenticationFilter" />
@@ -24,7 +28,7 @@
 		<intercept-url pattern="/initializeApplication.ftl*" filters="none" />
 		<intercept-url pattern="/customPropertiesUpdate.ftl*" filters="none" />
 		
-		<intercept-url pattern="/login.ftl*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<intercept-url pattern="/login.ftl*" filters="none" />
     	<intercept-url pattern="/**" access="ROLE_FULLY_AUTHENTICATED_USER" />
     	<logout logout-success-url="/login.ftl?loggedout"/>
   	</http>
@@ -37,6 +41,7 @@
   		<beans:constructor-arg ref="loginServiceFacade" />
   		<beans:property name="authenticationManager" ref="authenticationManager" />
   		<beans:property name="authenticationSuccessHandler" ref="authenticationSuccessHandler" />
+  		<beans:property name="authenticationFailureHandler" ref="authenticationFailureHandler" />
   	</beans:bean>
   	
     <beans:bean id="mifosAuthenticationProvider" class="org.mifos.security.authentication.MifosDaoAuthenticationProvider">
