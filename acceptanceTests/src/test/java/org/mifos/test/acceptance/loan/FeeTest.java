@@ -70,11 +70,9 @@ public class FeeTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-//    @Test(groups = {"smoke"})
+    @Test(groups = {"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void applyFee() throws Exception {
-
-        // FIXME - keithw - test manually and rewrite test to pass..
+    public void applyFee() throws Exception {
 
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
 

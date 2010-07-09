@@ -34,52 +34,53 @@ import org.testng.annotations.Test;
  * Corresponds to story 661 in mingle
  * http://mingle.mifos.org:7070/projects/cheetah/cards/661
  */
+@SuppressWarnings("PMD")
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"user","acceptance","ui"})
+@Test(sequential=true, groups={"user","acceptance","ui", "smoke"})
 public class DefaultAdminUserCanLoginTest extends UiTestCaseBase {
 
-	private AppLauncher appLauncher;
+    private AppLauncher appLauncher;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-	@BeforeMethod
-	public void setUp() throws Exception {
-		super.setUp();
-		appLauncher = new AppLauncher(selenium);
-	}
+    @BeforeMethod
+    public void setUp() throws Exception {
+        super.setUp();
+        appLauncher = new AppLauncher(selenium);
+    }
 
-	@AfterMethod
-	public void logOut() {
-		(new MifosPage(selenium)).logout();
-	}
+    @AfterMethod
+    public void logOut() {
+        (new MifosPage(selenium)).logout();
+    }
 
-	public void canLaunchMifosTest() {
-		appLauncher
-			.launchMifos()
-				.verifyPage();
-	}
+    public void canLaunchMifosTest() {
+        appLauncher
+            .launchMifos()
+                .verifyPage();
+    }
 
-	public void defaultAdminLoginSuccessTest() {
-		appLauncher
-			.launchMifos()
-				.loginSuccessfullyUsingDefaultCredentials()
-					.verifyPage();
-	}
+    public void defaultAdminLoginSuccessTest() {
+        appLauncher
+            .launchMifos()
+                .loginSuccessfullyUsingDefaultCredentials()
+                    .verifyPage();
+    }
 
-	public void userLoginFailureBadPasswordTest() {
-		LoginPage loginPage = appLauncher.launchMifos().loginFailedAs("mifos", "mifos3");
-		Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "No error message was displayed when bad password was used to login.");
-	}
+    public void userLoginFailureBadPasswordTest() {
+        LoginPage loginPage = appLauncher.launchMifos().loginFailedAs("mifos", "mifos3");
+        Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "No error message was displayed when bad password was used to login.");
+    }
 
 
-	public void userLoginFailureNoPasswordTest() {
-		LoginPage loginPage = appLauncher.launchMifos().loginFailedAs("mifos", "");
-		Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "No error message was displayed when no password was used to login.");
+    public void userLoginFailureNoPasswordTest() {
+        LoginPage loginPage = appLauncher.launchMifos().loginFailedAs("mifos", "");
+        Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "No error message was displayed when no password was used to login.");
 
-	}
+    }
 
-	public void userLoginFailureNoUsernameTest() {
-		LoginPage loginPage = appLauncher.launchMifos().loginFailedAs("", "abc");
-		Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "No error message was displayed when no username was used to login.");
-	}
+    public void userLoginFailureNoUsernameTest() {
+        LoginPage loginPage = appLauncher.launchMifos().loginFailedAs("", "abc");
+        Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "No error message was displayed when no username was used to login.");
+    }
 }

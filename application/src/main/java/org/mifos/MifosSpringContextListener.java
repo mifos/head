@@ -20,14 +20,15 @@
 
 package org.mifos;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
+import java.io.IOException;
 
 import javax.servlet.ServletContext;
 
-import org.mifos.core.ClasspathResource;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
 
@@ -43,13 +44,16 @@ public class MifosSpringContextListener extends ContextLoaderListener {
         List<String> configLocations = new ArrayList<String>();
 
         String[] oldConfigLocations = applicationContext.getConfigLocations();
-        for (String config : oldConfigLocations) {
-            configLocations.add(config);
-        }
+        configLocations.addAll(Arrays.asList(oldConfigLocations));
 
-        URI financialActionMappingsCustomisation = ClasspathResource.findResource(FilePaths.FINANCIAL_ACTION_MAPPING_CONFIG_CUSTOM_BEAN);
+        String financialActionMappingsCustomisation;
+        try {
+            financialActionMappingsCustomisation = new ConfigurationLocator().getFilePath(FilePaths.FINANCIAL_ACTION_MAPPING_CONFIG_CUSTOM_BEAN);
+        } catch (IOException e) {
+            financialActionMappingsCustomisation = null;
+        }
         if (financialActionMappingsCustomisation != null) {
-            configLocations.add(financialActionMappingsCustomisation.toASCIIString());
+            configLocations.add("file:" + financialActionMappingsCustomisation);
         }
 
         applicationContext.setConfigLocations(configLocations.toArray(new String[configLocations.size()]));

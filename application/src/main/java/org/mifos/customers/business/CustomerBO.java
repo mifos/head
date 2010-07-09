@@ -853,11 +853,11 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         try {
             if (customFields != null) {
                 for (CustomFieldDto fieldView : customFields) {
-                    if (CustomFieldType.fromInt(fieldView.getFieldId()).equals(CustomFieldType.DATE)
+                    if (CustomFieldType.fromInt(fieldView.getFieldType()).equals(CustomFieldType.DATE)
                             && StringUtils.isNotBlank(fieldView.getFieldValue())) {
                         SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, getUserContext().getPreferredLocale());
-                        String userfmt = DateUtils.convertToCurrentDateFormat(format.toPattern());
-                        fieldView.setFieldValue(DateUtils.convertUserToDbFmt(fieldView.getFieldValue(), userfmt));
+                        String databaseFormat = DateUtils.convertToCurrentDateFormat(format.toPattern());
+                        fieldView.setFieldValue(DateUtils.convertUserToDbFmt(fieldView.getFieldValue(), databaseFormat));
                     }
 
                     for (CustomerCustomFieldEntity fieldEntity : getCustomFields()) {

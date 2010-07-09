@@ -156,9 +156,8 @@ while(enn.hasMoreElements()){
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<td>
-							 <html-el:link styleId="admin.link.viewOrganizationSettings"
-								action="viewOrganizationSettingsAction.do?method=get&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.vieworganizationsettings" /></html-el:link></td>
+							<a id="admin.link.viewOrganizationSettings" href="viewOrganizationSettings.ftl"><mifos:mifoslabel name="admin.vieworganizationsettings" /></a>
+							</td>
 						</tr>
 						<tr class="fontnormal">
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"

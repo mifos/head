@@ -21,21 +21,34 @@
 package org.mifos.security.authentication;
 
 import java.io.IOException;
+import java.util.Random;
+import java.util.ResourceBundle;
 
+import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.servicefacade.LoginActivityDto;
-import org.mifos.application.servicefacade.LoginServiceFacade;
+import org.mifos.application.servicefacade.LegacyLoginServiceFacade;
+import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.ServletUtils;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -47,11 +60,49 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    final LoginServiceFacade loginServiceFacade;
+    final LegacyLoginServiceFacade loginServiceFacade;
 
-    public MifosLegacyUsernamePasswordAuthenticationFilter(final LoginServiceFacade loginServiceFacade) {
+    public MifosLegacyUsernamePasswordAuthenticationFilter(final LegacyLoginServiceFacade loginServiceFacade) {
         super();
         this.loginServiceFacade = loginServiceFacade;
+    }
+
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
+            ServletException {
+
+        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) res;
+        AuthenticationException denied = null;
+
+        boolean allowAuthenticationToContinue = true;
+        if (MifosTask.isBatchJobRunningThatRequiresExclusiveAccess()) {
+            allowAuthenticationToContinue = false;
+
+            request.getSession(false).invalidate();
+            ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE);
+            String errorMessage = resources.getString(LoginConstants.BATCH_JOB_RUNNING);
+            denied = new AuthenticationServiceException(errorMessage);
+        }
+
+        ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class.getName());
+        if (shutdownManager.isShutdownDone()) {
+            allowAuthenticationToContinue = false;
+            request.getSession(false).invalidate();
+            ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE);
+            String errorMessage = resources.getString(LoginConstants.SHUTDOWN);
+            denied = new AuthenticationServiceException(errorMessage);
+        }
+
+        if (shutdownManager.isInShutdownCountdownNotificationThreshold()) {
+            request.setAttribute("shutdownIsImminent", true);
+        }
+
+        if (allowAuthenticationToContinue) {
+            super.doFilter(request, response, chain);
+        } else {
+            unsuccessfulAuthentication(request, response, denied);
+        }
     }
 
     @Override
@@ -59,6 +110,7 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
             Authentication authResult) throws IOException, ServletException {
 
         final String username = obtainUsername(request);
+        request.setAttribute("username", username);
         final String password = obtainPassword(request);
 
         handleLegacySuccessfulAuthentication(request, username, password);
@@ -69,36 +121,38 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
     private void handleLegacySuccessfulAuthentication(HttpServletRequest request, final String username,
             final String password) {
         try {
+            FlowManager flowManager = new FlowManager();
+            String flowKey = String.valueOf(new DateTimeService().getCurrentDateTime().getMillis());
+            flowManager.addFLow(flowKey, new Flow(), this.getFilterName());
+            request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+
+            request.getSession(false).setAttribute(Constants.FLOWMANAGER, flowManager);
+            request.getSession(false).setAttribute(Constants.RANDOMNUM, new Random().nextLong());
+
             LoginActivityDto loginActivity = loginServiceFacade.login(username, password);
 
             request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT, loginActivity.getActivityContext());
+            request.setAttribute("activityDto", loginActivity);
 
             UserContext userContext = loginActivity.getUserContext();
+            request.setAttribute(Constants.USERCONTEXT, userContext);
+            request.getSession(false).setAttribute(Constants.USERCONTEXT, userContext);
+
             if (loginActivity.isPasswordChanged()) {
                 HttpSession hs = request.getSession(false);
                 hs.setAttribute(Constants.USERCONTEXT, userContext);
                 hs.setAttribute("org.apache.struts.action.LOCALE", userContext.getCurrentLocale());
             } else {
-                String currentFlowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
-                HttpSession session = request.getSession();
-                FlowManager flowManager = (FlowManager) session.getAttribute(Constants.FLOWMANAGER);
-                try {
-                    flowManager.addObjectToFlow(currentFlowKey, Constants.TEMPUSERCONTEXT, userContext);
-                } catch (PageExpiredException e) {
-                    e.printStackTrace();
-                }
+                flowManager.addObjectToFlow(flowKey, Constants.TEMPUSERCONTEXT, userContext);
             }
 
             Short passwordChanged = loginActivity.getPasswordChangedFlag();
             if (null != passwordChanged && LoginConstants.PASSWORDCHANGEDFLAG.equals(passwordChanged)) {
-                FlowManager flowManager = (FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER);
-                if (flowManager != null) {
-                    flowManager.removeFlow((String) request.getAttribute(Constants.CURRENTFLOWKEY));
-                    request.setAttribute(Constants.CURRENTFLOWKEY, null);
-                }
+                flowManager.removeFlow((String) request.getAttribute(Constants.CURRENTFLOWKEY));
+                request.setAttribute(Constants.CURRENTFLOWKEY, null);
             }
         } catch (ApplicationException e1) {
-            // IGNORE as shouldn't happen
+            throw new MifosRuntimeException(e1);
         }
     }
 }

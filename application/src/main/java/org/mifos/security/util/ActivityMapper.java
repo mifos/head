@@ -56,7 +56,6 @@ import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.admin.struts.action.AdminAction;
 import org.mifos.application.admin.struts.action.ShutdownAction;
 import org.mifos.application.admin.struts.action.SystemInfoAction;
-import org.mifos.application.admin.struts.action.ViewOrganizationSettingsAction;
 import org.mifos.application.collectionsheet.struts.action.CollectionSheetEntryAction;
 import org.mifos.application.holiday.struts.action.HolidayAction;
 import org.mifos.application.importexport.struts.action.ImportTransactionsAction;
@@ -256,7 +255,6 @@ public class ActivityMapper {
         parseActionSecurity(BirtAdminDocumentUploadAction.getSecurity());
         parseActionSecurity(SystemInfoAction.getSecurity());
         parseActionSecurity(ImportTransactionsAction.getSecurity());
-        parseActionSecurity(ViewOrganizationSettingsAction.getSecurity());
         parseActionSecurity(ShutdownAction.getSecurity());
     }
 
@@ -635,10 +633,10 @@ public class ActivityMapper {
 
     public boolean isAddingNotesPermittedForAccounts(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(
-                userContext,
-                new ActivityContext(getActivityIdForAddingNotes(accountTypes, customerLevel), recordOfficeId,
-                        recordLoanOfficerId));
+
+        short activityId = getActivityIdForAddingNotes(accountTypes, customerLevel);
+        ActivityContext activityContext = new ActivityContext(activityId, recordOfficeId, recordLoanOfficerId);
+        return AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext);
     }
 
     private short getActivityIdForAddingNotes(AccountTypes accountTypes, CustomerLevel customerLevel) {

@@ -35,6 +35,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
@@ -53,11 +57,14 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private InitializeApplicationRemoteTestingService initRemote;
 
     private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
-    private String title1;
-    private String title2;
-    private static final String TITLE_MISSING = "Please specify the title.";
+    private String qgTitle1, qgTitle2;
+    private String qTitle1, qTitle2, qTitle3;
+    private static final String TITLE_MISSING = "Please specify Question Group title";
     private static final String APPLIES_TO_MISSING = "Please choose a valid 'Applies To' value";
-    private static final String SECTION_MISSING = "Please specify at least one question or section";
+    private static final String SECTION_MISSING = "Please add at least one section";
+    private static final String QUESTION_MISSING = "Section should have at least one question";
+    public static final String APPLIES_TO_CREATE_CLIENT = "Create Client";
+    public static final String SECTION_DEFAULT = "Default";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -66,8 +73,11 @@ public class QuestionGroupTest extends UiTestCaseBase {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
-        title1 = "Title1 " + System.currentTimeMillis();
-        title2 = "Title2 " + System.currentTimeMillis();
+        qgTitle1 = "QuestionGroup1 " + System.currentTimeMillis();
+        qgTitle2 = "QuestionGroup2 " + System.currentTimeMillis();
+        qTitle1 = "Question1 " + System.currentTimeMillis();
+        qTitle2 = "Question2 " + System.currentTimeMillis();
+        qTitle3 = "Question3 " + System.currentTimeMillis();
     }
 
     @AfterMethod
@@ -76,24 +86,32 @@ public class QuestionGroupTest extends UiTestCaseBase {
     }
 
     public void createQuestionGroup() {
-        AdminPage adminPage = getAdminPage();
-
-        // pre-check
-//        ViewAllQuestionGroupsPage viewQuestionGroupsPage = getViewQuestionGroupsPage(adminPage);
-//        String[] questionGroups = viewQuestionGroupsPage.getAllQuestionGroups();
-//        assertEquals(questionGroups.length, 0);
-
+        AdminPage adminPage = createQuestions(qTitle1, qTitle2, qTitle3);
         CreateQuestionGroupPage createQuestionGroupPage = getCreateQuestionGroupPage(adminPage);
-
         testMissingMandatoryInputs(createQuestionGroupPage);
-        testCreateQuestionGroup(createQuestionGroupPage, title1, "Create Client", "Default");
+        testCreateQuestionGroup(createQuestionGroupPage, qgTitle1, APPLIES_TO_CREATE_CLIENT, SECTION_DEFAULT, asList(qTitle1, qTitle2), asList(qTitle3));
         testShouldAllowDuplicateTitlesForQuestionGroup();
         testCancelCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)));
+        testViewQuestionGroups();
+    }
 
-        // post question group creation check.
+    private void testViewQuestionGroups() {
         ViewAllQuestionGroupsPage viewQuestionGroupsPage = getViewQuestionGroupsPage(new AdminPage(selenium));
         testViewQuestionGroups(viewQuestionGroupsPage);
-        testQuestionGroupDetail(viewQuestionGroupsPage);
+        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle1, "Default", asList(qTitle1, qTitle2));
+        viewQuestionGroupsPage.navigateToViewAllQuestionGroupsPage();
+        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle2, "Misc", asList(qTitle1, qTitle3));
+    }
+
+    private AdminPage createQuestions(String... qTitles) {
+        CreateQuestionPage createQuestionPage = getAdminPage().navigateToCreateQuestionPage().verifyPage();
+        CreateQuestionParameters parameters = new CreateQuestionParameters();
+        for (String qTitle : qTitles) {
+            parameters.setTitle(qTitle);
+            parameters.setType("Free text");
+            createQuestionPage.addQuestion(parameters);
+        }
+        return createQuestionPage.submitQuestions().verifyPage();
     }
 
     private void testMissingMandatoryInputs(CreateQuestionGroupPage createQuestionGroupPage) {
@@ -102,17 +120,8 @@ public class QuestionGroupTest extends UiTestCaseBase {
         assertTextFoundOnPage(TITLE_MISSING);
         assertTextFoundOnPage(APPLIES_TO_MISSING);
         assertTextFoundOnPage(SECTION_MISSING);
-    }
-
-    private void testCreateQuestionGroup(CreateQuestionGroupPage createQuestionGroupPage, String title, String appliesTo, String sectionName) {
-        CreateQuestionGroupParameters parameters = new CreateQuestionGroupParameters();
-        parameters.setTitle(title);
-        parameters.setAppliesTo(appliesTo);
-        parameters.setSectionName(sectionName);
         createQuestionGroupPage.addSection(parameters);
-        assertPage(CreateQuestionGroupPage.PAGE_ID);
-        createQuestionGroupPage.submit(parameters);
-        assertPage(AdminPage.PAGE_ID);
+        assertTextFoundOnPage(QUESTION_MISSING);
     }
 
     private void testCancelCreateQuestionGroup(CreateQuestionGroupPage createQuestionGroupPage) {
@@ -120,10 +129,13 @@ public class QuestionGroupTest extends UiTestCaseBase {
         assertPage(AdminPage.PAGE_ID);
     }
 
-    private void testQuestionGroupDetail(ViewAllQuestionGroupsPage viewAllQuestionGroupsPage) {
-        QuestionGroupDetailPage questionGroupDetailPage = viewAllQuestionGroupsPage.navigateToQuestionGroupDetailPage(title1);
+    private void testQuestionGroupDetail(ViewAllQuestionGroupsPage viewAllQuestionGroupsPage, String title, String sectionName, List<String> questions) {
+        QuestionGroupDetailPage questionGroupDetailPage = viewAllQuestionGroupsPage.navigateToQuestionGroupDetailPage(title);
         questionGroupDetailPage.verifyPage();
-        assertTextFoundOnPage(title1);
+        assertEquals(title, questionGroupDetailPage.getTitle());
+        assertEquals(APPLIES_TO_CREATE_CLIENT, questionGroupDetailPage.getAppliesTo());
+        assertEquals(asList(sectionName), questionGroupDetailPage.getSections());
+        assertEquals(questions, questionGroupDetailPage.getSectionsQuestions(sectionName));
     }
 
     private CreateQuestionGroupPage getCreateQuestionGroupPage(AdminPage adminPage) {
@@ -133,9 +145,9 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private void testViewQuestionGroups(ViewAllQuestionGroupsPage viewQuestionGroupsPage) {
         String[] questionGroups = viewQuestionGroupsPage.getAllQuestionGroups();
         assertEquals(3, questionGroups.length);
-        assertEquals(title1, questionGroups[0]);
-        assertEquals(title2, questionGroups[1]);
-        assertEquals(title2, questionGroups[2]);
+        assertEquals(qgTitle1, questionGroups[0]);
+        assertEquals(qgTitle2, questionGroups[1]);
+        assertEquals(qgTitle2, questionGroups[2]);
     }
 
     private ViewAllQuestionGroupsPage getViewQuestionGroupsPage(AdminPage adminPage) {
@@ -148,38 +160,23 @@ public class QuestionGroupTest extends UiTestCaseBase {
     }
 
     private void testShouldAllowDuplicateTitlesForQuestionGroup() {
-        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), title2, "View Client", "Hello");
-        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), title2, "Create Client", "World");
+        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, APPLIES_TO_CREATE_CLIENT, "", asList(qTitle1, qTitle3), asList(qTitle2));
+        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, "View Client", "Hello", asList(qTitle2), asList(qTitle1, qTitle3));
+    }
+
+    private void testCreateQuestionGroup(CreateQuestionGroupPage createQuestionGroupPage, String title, String appliesTo,
+                                         String sectionName, List<String> questionsToSelect, List<String> questionsNotToSelect) {
+        CreateQuestionGroupParameters parameters = new CreateQuestionGroupParameters();
+        parameters.setTitle(title);
+        parameters.setAppliesTo(appliesTo);
+        parameters.setSectionName(sectionName);
+        parameters.setQuestions(questionsToSelect);
+        createQuestionGroupPage.addSection(parameters);
+        assertPage(CreateQuestionGroupPage.PAGE_ID);
+        assertTrue(createQuestionGroupPage.getAvailableQuestions().containsAll(questionsNotToSelect));
+        createQuestionGroupPage.submit(parameters);
+        assertPage(AdminPage.PAGE_ID);
     }
 
 }
 
-class CreateQuestionGroupParameters {
-    private String title = "";
-    private String appliesTo = "--select one--";
-    private String sectionName = "";
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setAppliesTo(String appliesTo) {
-        this.appliesTo = appliesTo;
-    }
-
-    public String getAppliesTo() {
-        return appliesTo;
-    }
-
-    public String getSectionName() {
-        return sectionName;
-    }
-
-    public void setSectionName(String sectionName) {
-        this.sectionName = sectionName;
-    }
-}

@@ -23,6 +23,7 @@ package org.mifos.application.admin.system;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -35,6 +36,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.StandardTestingService;
@@ -69,8 +71,8 @@ public class SystemInfo implements Serializable {
     private String databaseUser;
 
     // Note: make sure to close the connection that got the metadata!
-    public SystemInfo(DatabaseMetaData databaseMetaData, ServletContext context, Locale locale, boolean getInfoSource)
-            throws Exception {
+    public SystemInfo(DatabaseMetaData databaseMetaData, ServletContext context, Locale locale, boolean getInfoSource) {
+
         if (getInfoSource) {
             try {
                 this.infoSource = Arrays.toString(new StandardTestingService().getAllSettingsFilenames());
@@ -78,20 +80,29 @@ public class SystemInfo implements Serializable {
                 this.infoSource = MessageLookup.getInstance().lookup("admin.unableToDetermineConfigurationSource");
             }
         }
+
         this.databaseMetaData = databaseMetaData;
         this.locale = locale;
-        final URI mysqlOnly = new URI(databaseMetaData.getURL());
-        this.infoURL = new URI(mysqlOnly.getSchemeSpecificPart());
 
-        setDatabaseUser(databaseMetaData.getUserName());
-        setApplicationServerInfo(context.getServerInfo());
-        setJavaVendor(System.getProperty("java.vendor"));
-        setJavaVersion(System.getProperty("java.version"));
-        setBuildInformation(new VersionInfo());
-        setOsName(System.getProperty("os.name"));
-        setOsArch(System.getProperty("os.arch"));
-        setOsVersion(System.getProperty("os.version"));
-        setOsUser(System.getProperty("user.name"));
+
+        try {
+            URI mysqlOnly = new URI(databaseMetaData.getURL());
+            this.infoURL = new URI(mysqlOnly.getSchemeSpecificPart());
+
+            setDatabaseUser(databaseMetaData.getUserName());
+            setApplicationServerInfo(context.getServerInfo());
+            setJavaVendor(System.getProperty("java.vendor"));
+            setJavaVersion(System.getProperty("java.version"));
+            setBuildInformation(new VersionInfo());
+            setOsName(System.getProperty("os.name"));
+            setOsArch(System.getProperty("os.arch"));
+            setOsVersion(System.getProperty("os.version"));
+            setOsUser(System.getProperty("user.name"));
+        } catch (URISyntaxException e) {
+            throw new MifosRuntimeException(e);
+        } catch (SQLException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 
     public int getApplicationVersion() {

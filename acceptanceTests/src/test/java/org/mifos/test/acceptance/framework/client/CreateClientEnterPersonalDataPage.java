@@ -27,15 +27,15 @@ import com.thoughtworks.selenium.Selenium;
 public class CreateClientEnterPersonalDataPage extends MifosPage {
 
     public CreateClientEnterPersonalDataPage() {
-		super();
-	}
+        super();
+    }
 
-	/**
-	 * @param selenium
-	 */
-	public CreateClientEnterPersonalDataPage(Selenium selenium) {
-		super(selenium);
-	}
+    /**
+     * @param selenium
+     */
+    public CreateClientEnterPersonalDataPage(Selenium selenium) {
+        super(selenium);
+    }
 
     public void verifyPage() {
         this.verifyPage("create_ClientPersonalInfo");

@@ -26,14 +26,18 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.contract.EventSource;
+import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
+import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.message.MessageResolver;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.webflow.execution.RequestContext;
+import org.mifos.ui.core.controller.Question; 
+
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -75,8 +79,9 @@ public class QuestionnaireController {
             if (invalid(questionGroupId)) {
                 model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_GROUP_ID);
             } else {
-                QuestionGroup questionGroup = questionnaireServiceFacade.getQuestionGroup(Integer.valueOf(questionGroupId));
-                model.addAttribute("questionGroupDetail", questionGroup);
+                QuestionGroupDetail questionGroupDetail = questionnaireServiceFacade.getQuestionGroupDetail(Integer.valueOf(questionGroupId));
+                QuestionGroupDetailForm questionGroupDetailForm = new QuestionGroupDetailForm(questionGroupDetail);
+                model.addAttribute("questionGroupDetail", questionGroupDetailForm);
                 model.addAttribute("eventSources", getAllQgEventSources());
             }
         } catch (ApplicationException e) {
@@ -106,18 +111,32 @@ public class QuestionnaireController {
     }
 
     public String addQuestion(QuestionForm questionForm, RequestContext requestContext) {
-        if (questionFormHasErrors(questionForm, requestContext)) {
+        MessageContext context = requestContext.getMessageContext();
+        questionForm.validateConstraints(context);
+
+        if (context.hasErrorMessages()) {
+            return "failure";
+        }
+
+        if (isDuplicateQuestion(questionForm)) {
+            constructErrorMessage(
+                    context, "questionnaire.error.question.duplicate",
+                    "currentQuestion.title", "The name specified already exists.");
             return "failure";
         }
         questionForm.addCurrentQuestion();
         return "success";
     }
 
+    public void removeQuestion(QuestionForm questionForm, String questionTitle) {
+        questionForm.removeQuestion(questionTitle);
+    }
+
     public String createQuestions(QuestionForm questionForm, RequestContext requestContext) {
         try {
             questionnaireServiceFacade.createQuestions(questionForm.getQuestions());
         } catch (ApplicationException e) {
-            constructAndLogSystemError(requestContext, e);
+            constructAndLogSystemError(requestContext.getMessageContext(), e);
             return "failure";
         }
         return "success";
@@ -131,7 +150,7 @@ public class QuestionnaireController {
             questionGroup.trimTitle();
             questionnaireServiceFacade.createQuestionGroup(questionGroup);
         } catch (ApplicationException e) {
-            constructAndLogSystemError(requestContext, e);
+            constructAndLogSystemError(requestContext.getMessageContext(), e);
             return "failure";
         }
         return "success";
@@ -146,7 +165,12 @@ public class QuestionnaireController {
         return evtSourcesMap;
     }
 
-    public String addSection(QuestionGroup questionGroup) {
+    public String addSection(QuestionGroup questionGroup, RequestContext requestContext) {
+        if(questionGroup.hasQuestionsInCurrentSection()){
+            constructErrorMessage(requestContext.getMessageContext(),
+                    "questionnaire.error.no.question.in.section", "currentSectionTitle", "Section should have at least one question.");
+            return "failure";
+        }
         questionGroup.addCurrentSection();
         return "success";
     }
@@ -156,17 +180,22 @@ public class QuestionnaireController {
         return "success";
     }
 
+    public String deleteQuestion(QuestionGroup questionGroup, String sectionName, String questionId) {
+        questionGroup.removeQuestion(sectionName,questionId);
+        return "success";
+    }
+
     private String getEventSourceId(EventSource evtSrc) {
         return evtSrc.getEvent().trim().concat(".").concat(evtSrc.getSource().trim());
     }
 
-    private void constructAndLogSystemError(RequestContext requestContext, ApplicationException e) {
-        constructErrorMessage(requestContext, "questionnaire.serivce.failure", "id", "There is an unexpected failure. Please retry or contact technical support");
+    private void constructAndLogSystemError(MessageContext messageContext, ApplicationException e) {
+        constructErrorMessage(messageContext, e.getKey(), "id", "There is an unexpected failure. Please retry or contact technical support");
         MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
     }
 
     private boolean isDuplicateQuestion(QuestionForm questionForm) {
-        String title = StringUtils.trim(questionForm.getTitle());
+        String title = StringUtils.trim(questionForm.getCurrentQuestion().getTitle());
         return questionForm.isDuplicateTitle(title) || questionnaireServiceFacade.isDuplicateQuestion(title);
     }
 
@@ -174,23 +203,23 @@ public class QuestionnaireController {
         return isEmpty(StringUtils.trimToNull(title));
     }
 
-    private void constructErrorMessage(RequestContext requestContext, String code, String source, String message) {
+    private void constructErrorMessage(MessageContext context, String code, String source, String message) {
         MessageResolver messageResolver = new MessageBuilder().error().code(code).source(source).defaultText(message).build();
-        requestContext.getMessageContext().addMessage(messageResolver);
+        context.addMessage(messageResolver);
     }
 
     private boolean questionGroupHasErrors(QuestionGroup questionGroup, RequestContext requestContext) {
         boolean result = false;
         if (isInvalidTitle(questionGroup.getTitle())) {
-            constructErrorMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question Group text");
+            constructErrorMessage(requestContext.getMessageContext(), "questionnaire.error.questionGroup.title.empty", "title", "Please specify Question Group title");
             result = true;
         }
         if (sectionsNotPresent(questionGroup.getSections())) {
-            constructErrorMessage(requestContext, "questionnaire.error.no.sections.in.group", "sectionName", "Please specify at least one section or question");
+            constructErrorMessage(requestContext.getMessageContext(), "questionnaire.error.section.atLeastOne", "sectionName", "Please specify at least one section or question");
             result = true;
         }
         if (appliesToNotPresent(questionGroup.getEventSourceId())) {
-            constructErrorMessage(requestContext, "questionnaire.error.empty.appliesTo", "eventSourceId", "Please choose a valid 'Applies To' value");
+            constructErrorMessage(requestContext.getMessageContext(), "questionnaire.error.appliesTo.mandatory", "eventSourceId", "Please choose a valid 'Applies To' value");
             result = true;
         }
         return result;
@@ -202,18 +231,6 @@ public class QuestionnaireController {
 
     private boolean sectionsNotPresent(List<SectionForm> sections) {
         return CollectionUtils.isEmpty(sections);
-    }
-
-    private boolean questionFormHasErrors(QuestionForm questionForm, RequestContext requestContext) {
-        if (isInvalidTitle(questionForm.getTitle())) {
-            constructErrorMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question text");
-            return true;
-        }
-        if (isDuplicateQuestion(questionForm)) {
-            constructErrorMessage(requestContext, "questionnaire.error.duplicate.question.title", "title", "The name specified already exists.");
-            return true;
-        }
-        return false;
     }
 
     private boolean invalid(String id) {

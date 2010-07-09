@@ -20,11 +20,9 @@
 
 package org.mifos.customers.personnel.persistence;
 
-import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.security.MifosUser;
-import org.mifos.security.rolesandpermission.business.RoleBO;
 import java.util.List;
+
+import org.mifos.security.MifosUser;
 
 import org.mifos.application.servicefacade.CenterCreation;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -32,29 +30,15 @@ import org.mifos.customers.personnel.business.PersonnelDto;
 
 public interface PersonnelDao {
 
+    void save(PersonnelBO user);
+
     PersonnelBO findPersonnelById(Short id);
 
     PersonnelBO findPersonnelByUsername(String personnelName);
 
+    PersonnelBO findByGlobalPersonnelNum(String globalNumber);
+
     MifosUser findAuthenticatedUserByUsername(String username);
 
-    PersonnelBO getPersonnelByGlobalPersonnelNum(String globalPersonnelNum) throws ServiceException;
-
-    List<PersonnelDto> findActiveLoanOfficersForOffice(CenterCreation centerCreation);
-
-    List<RoleBO> getRoles() throws ServiceException;
-
-    List<SupportedLocalesEntity> getAllLocales();
-
-    org.mifos.framework.hibernate.helper.QueryResult getAllPersonnelNotes(Short personnelId) throws ServiceException;
-
-    org.mifos.framework.hibernate.helper.QueryResult search(String searchString, Short officeId, Short userId) throws ServiceException;
-
-    List<PersonnelBO> getAllPersonnel() throws ServiceException;
-
-    List<PersonnelBO> getActiveLoanOfficersUnderOffice(Short officeId) throws ServiceException;
-
-    List<SupportedLocalesEntity> getSupportedLocales() throws ServiceException;
-
-    List<PersonnelBO> getActiveBranchManagersUnderOffice(Short officeId) throws ServiceException;
+    List<PersonnelDto> findActiveLoanOfficersForOffice(CenterCreation centerCreationDto);
 }

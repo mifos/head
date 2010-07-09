@@ -95,7 +95,7 @@ public class Row {
             // Used to get the string for each column in a row
             String columnString = (element.getColumn(pageContext, obj, locale, isFlowRequired));
             if (!columnString.trim().equals("")) {
-                columns.append(columnString).append("	");
+                columns.append(columnString).append("    ");
             }
         }
         if (!(columns.toString().equals(""))) {

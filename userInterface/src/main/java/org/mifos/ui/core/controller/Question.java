@@ -28,21 +28,27 @@ public class Question implements Serializable{
     private String title;
     private static final long serialVersionUID = -2584259958410679795L;
     private String type;
-
     private String id;
+    private boolean required;
 
+    @org.hibernate.validator.constraints.NotEmpty
+    @javax.validation.constraints.Size(min=1,max=50)
     public String getTitle() {
         return title;
     }
 
+
+
     public void setTitle(String title) {
         this.title = title;
+        trimTitle();
     }
 
     public void trimTitle() {
         this.title = StringUtils.trim(this.title);
     }
 
+    @org.hibernate.validator.constraints.NotEmpty
     public String getType() {
         return type;
     }
@@ -57,5 +63,13 @@ public class Question implements Serializable{
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 }

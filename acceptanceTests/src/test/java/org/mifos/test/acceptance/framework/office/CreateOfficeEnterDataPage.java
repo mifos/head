@@ -26,20 +26,20 @@ import com.thoughtworks.selenium.Selenium;
 
 public class CreateOfficeEnterDataPage extends MifosPage {
 
-	public CreateOfficeEnterDataPage() {
-		super();
-	}
+    public CreateOfficeEnterDataPage() {
+        super();
+    }
 
     public void verifyPage() {
         verifyPage("CreateNewOffice");
     }
 
-	/**
-	 * @param selenium
-	 */
-	public CreateOfficeEnterDataPage(Selenium selenium) {
-		super(selenium);
-	}
+    /**
+     * @param selenium
+     */
+    public CreateOfficeEnterDataPage(Selenium selenium) {
+        super(selenium);
+    }
 
     public CreateOfficePreviewDataPage submitAndGotoCreateOfficePreviewDataPage(OfficeParameters parameters) {
         typeTextIfNotEmpty("CreateNewOffice.input.officeName", parameters.getOfficeName());

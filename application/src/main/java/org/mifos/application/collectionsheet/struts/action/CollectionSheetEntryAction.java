@@ -542,7 +542,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         if (accountNums.size() != 0) {
             ListIterator<String> iter = accountNums.listIterator();
             builder.append("<br>");
-            builder.append(message + "-	");
+            builder.append(message + "-    ");
             while (iter.hasNext()) {
                 builder.append(iter.next());
                 if (iter.hasNext()) {

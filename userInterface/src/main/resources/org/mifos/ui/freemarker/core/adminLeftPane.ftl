@@ -8,8 +8,7 @@
 </div>-->
  <div  class="sidebar ht600">
   <div>
-  <form name="custSearchActionForm" method="post"
-                              action="/mifos/custSearchAction.do?method=loadAllBranches">
+  <form name="custSearchActionForm" method="post" action="custSearchAction.do?method=loadAllBranches">
     <p class="orangetab">[@spring.message "administrativeTasks" /]</p>
     <p class="paddingLeft marginTop10 fontBold">[@spring.message "searchbynamesystemIDoraccountnumber"/]<br />
     <input type="text" name="searchString" maxlength="200" size="15" value="">

@@ -39,10 +39,11 @@
             [@spring.message "questionnaire.create.question.group.prompt"/]
             <a href="createQuestionGroup.ftl">[@spring.message "questionnaire.create.question.group.link"/]</a>
         </div>
-        <div class="marginTop15">
+        <div id="questionGroupList" class="marginTop15">
             [#list questionGroups as questionGroup]
                 <img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/>
-                <a href="viewQuestionGroupDetail.ftl?questionGroupId=${questionGroup.id}" id="questionGroupId_${questionGroup.id}">${questionGroup.title}<br/></a>
+                <a href="viewQuestionGroupDetail.ftl?questionGroupId=${questionGroup.id}" id="questionGroupId_${questionGroup.id}">${questionGroup.title}</a>
+                <br/>
             [/#list]
         </div>
     </div>
