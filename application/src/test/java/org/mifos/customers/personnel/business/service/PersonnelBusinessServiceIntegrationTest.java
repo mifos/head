@@ -73,7 +73,7 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
         personnel = createPersonnel();
         String oldUserName = personnel.getUserName();
         personnel = personnelBusinessService.getPersonnel(personnel.getUserName());
-       Assert.assertEquals(oldUserName, personnel.getUserName());
+        Assert.assertEquals(oldUserName, personnel.getUserName());
     }
 
     public void testFailureGetPersonnel() throws Exception {
@@ -81,8 +81,8 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
         try {
             personnel = personnelBusinessService.getPersonnel("WRONG_USERNAME");
         } catch (ServiceException pe) {
-           Assert.assertTrue(true);
-           Assert.assertEquals(LoginConstants.KEYINVALIDUSER, pe.getKey());
+            Assert.assertTrue(true);
+            Assert.assertEquals(LoginConstants.KEYINVALIDUSER, pe.getKey());
         }
 
     }
@@ -93,7 +93,7 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
             personnelBusinessService.getOffice(TestObjectFactory.HEAD_OFFICE);
             Assert.fail();
         } catch (ServiceException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -106,7 +106,7 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
             personnelBusinessService.getPersonnel("WRONG_USERNAME");
             Assert.fail();
         } catch (ServiceException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -119,8 +119,8 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
                 .valueOf("1"));
 
         Assert.assertNotNull(queryResult);
-       Assert.assertEquals(1, queryResult.getSize());
-       Assert.assertEquals(1, queryResult.get(0, 10).size());
+        Assert.assertEquals(1, queryResult.getSize());
+        Assert.assertEquals(1, queryResult.get(0, 10).size());
     }
 
     public void testSearchFailure() throws Exception {
@@ -129,7 +129,7 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
             personnelBusinessService.search("Raj", Short.valueOf("1"), Short.valueOf("1"));
             Assert.fail();
         } catch (ServiceException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -142,7 +142,7 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
         List<PersonnelBO> loanOfficers = personnelBusinessService
                 .getActiveLoanOfficersUnderOffice(office.getOfficeId());
         Assert.assertNotNull(loanOfficers);
-       Assert.assertEquals(1, loanOfficers.size());
+        Assert.assertEquals(1, loanOfficers.size());
 
     }
 
@@ -152,7 +152,7 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
             personnelBusinessService.getActiveLoanOfficersUnderOffice(Short.valueOf("3"));
             Assert.fail();
         } catch (ServiceException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -165,20 +165,7 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
             personnelBusinessService.getRoles();
             Assert.fail();
         } catch (ServiceException e) {
-           Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-
-    }
-
-    public void testGetPersonnelByGlobalPersonnelNumFailure() throws Exception {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            personnelBusinessService.getPersonnelByGlobalPersonnelNum("12345678");
-            Assert.fail();
-        } catch (ServiceException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -191,7 +178,7 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
             personnelBusinessService.getPersonnel("12345678");
             Assert.fail();
         } catch (ServiceException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -206,7 +193,7 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
     public void testGetAllPersonnel() throws Exception {
         List<PersonnelBO> personnel = personnelBusinessService.getAllPersonnel();
         Assert.assertNotNull(personnel);
-       Assert.assertEquals(3, personnel.size());
+        Assert.assertEquals(3, personnel.size());
     }
 
     private PersonnelBO createPersonnel(OfficeBO office, PersonnelLevel personnelLevel) throws Exception {

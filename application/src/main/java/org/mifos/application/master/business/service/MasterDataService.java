@@ -22,7 +22,6 @@ package org.mifos.application.master.business.service;
 
 import java.util.List;
 
-import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.ValueListElement;

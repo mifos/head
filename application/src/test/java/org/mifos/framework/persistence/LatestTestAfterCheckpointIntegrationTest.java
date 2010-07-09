@@ -35,7 +35,6 @@ import java.sql.Statement;
 import junit.framework.Assert;
 
 import org.dbunit.Assertion;
-import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;

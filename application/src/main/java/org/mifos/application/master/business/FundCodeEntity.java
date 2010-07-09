@@ -20,7 +20,6 @@
 
 package org.mifos.application.master.business;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;

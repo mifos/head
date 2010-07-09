@@ -97,15 +97,6 @@ public class PersonnelBusinessService implements BusinessService {
         }
     }
 
-    public PersonnelBO getPersonnelByGlobalPersonnelNum(String globalPersonnelNum) throws ServiceException {
-        try {
-            return new PersonnelPersistence().getPersonnelByGlobalPersonnelNum(globalPersonnelNum);
-        } catch (PersistenceException e) {
-
-            throw new ServiceException(e);
-        }
-    }
-
     /**
      * @deprecated use {@link PersonnelDao}.
      */

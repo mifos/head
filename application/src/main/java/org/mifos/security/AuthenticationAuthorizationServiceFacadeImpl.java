@@ -1,3 +1,4 @@
+
 package org.mifos.security;
 
 import java.util.ResourceBundle;
@@ -6,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public class AuthenticationAuthorizationServiceFacadeImpl implements AuthenticationAuthorizationServiceFacade {
 
     private final PersonnelDao personnelDao;
+    private final RolesPermissionsPersistence permissionsPersistence = new RolesPermissionsPersistence();
 
     public AuthenticationAuthorizationServiceFacadeImpl(PersonnelDao personnelDao) {
         this.personnelDao = personnelDao;
@@ -31,6 +34,7 @@ public class AuthenticationAuthorizationServiceFacadeImpl implements Authenticat
         }
 
         MifosUser userDetails = personnelDao.findAuthenticatedUserByUsername(username);
+
         if (userDetails == null) {
             ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE);
             String errorMessage = resources.getString(LoginConstants.KEYINVALIDUSER);

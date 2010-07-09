@@ -67,19 +67,19 @@ public class DefaultAdminUserCanLoginTest extends UiTestCaseBase {
 					.verifyPage();
 	}
 
-	private void userLoginFailureBadPasswordTest() {
+	public void userLoginFailureBadPasswordTest() {
 		LoginPage loginPage = appLauncher.launchMifos().loginFailedAs("mifos", "mifos3");
 		Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "No error message was displayed when bad password was used to login.");
 	}
 
 
-	private void userLoginFailureNoPasswordTest() {
+	public void userLoginFailureNoPasswordTest() {
 		LoginPage loginPage = appLauncher.launchMifos().loginFailedAs("mifos", "");
 		Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "No error message was displayed when no password was used to login.");
 
 	}
 
-	private void userLoginFailureNoUsernameTest() {
+	public void userLoginFailureNoUsernameTest() {
 		LoginPage loginPage = appLauncher.launchMifos().loginFailedAs("", "abc");
 		Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "No error message was displayed when no username was used to login.");
 	}
