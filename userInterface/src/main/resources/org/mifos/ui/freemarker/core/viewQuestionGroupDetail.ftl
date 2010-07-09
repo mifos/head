@@ -35,10 +35,10 @@
             [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":"viewQuestionGroups.ftl",Request.questionGroupDetail.title:""}/]
             [@mifos.crumbpairs breadcrumb/]
             <div class="marginLeft30">
-                <div class="orangeheading marginTop15">
+                <div id="questionGroup.title" class="orangeheading marginTop15">
                     ${Request.questionGroupDetail.title}
                 </div>
-                <div class="marginTop15">
+                <div id="questionGroup.appliesTo" class="marginTop15">
                     [@spring.message "questionnaire.question.group.applies.to"/]: ${Request.eventSources[Request.questionGroupDetail.eventSourceId]}
                 </div>
                 <div class="marginTop15">
