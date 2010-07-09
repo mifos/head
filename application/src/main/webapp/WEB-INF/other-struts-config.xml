@@ -516,15 +516,6 @@
             <forward name="choose_survey" path="/pages/application/surveys/jsp/create_instance_choosesurvey.jsp"/>
         </action>
 
- 		<action path="/viewOrganizationSettingsAction"
-                 type="org.mifos.application.admin.struts.action.ViewOrganizationSettingsAction"
-                 parameter="method"
-                 scope="session"
-                 validate="false"
-                 name="genericActionForm">
-             <forward name="load_success" path="/pages/application/admin/jsp/vieworganizationsettings.jsp"/>            
-         </action>
-
         <action path="/ppiAction"
                 type="org.mifos.customers.ppi.struts.action.PPIAction"
                 parameter="method"
@@ -638,13 +629,5 @@
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <!--  Accepted Payment Type resources -->
     <message-resources key="acceptedPaymentTypeUIResources"
-                       parameter="org.mifos.config.localizedResources.AcceptedPaymentTypeUIResources"/>
- 	 <!-- View Organization Settings Resources -->
-	 <message-resources key="viewOrganizationSettingsUIResources"
-		parameter="org.mifos.config.localizedResources.ViewOrganizationSettingsUIResources"
-		factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/> 
-		<!-- View Configuration Settings Resources -->
-	 <message-resources key="viewConfigurationSettingsUIResources"
-		parameter="org.mifos.config.localizedResources.ViewConfigurationSettingsUIResources"
-		factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>                       
+                       parameter="org.mifos.config.localizedResources.AcceptedPaymentTypeUIResources"/>                     
 </struts-config>
