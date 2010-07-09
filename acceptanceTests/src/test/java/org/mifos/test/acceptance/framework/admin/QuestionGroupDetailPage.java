@@ -32,4 +32,13 @@ public class QuestionGroupDetailPage extends MifosPage {
         verifyPage("view_question_groups_details");
         return this;
     }
+
+    public String getTitle() {
+        return selenium.getEval("window.document.getElementById('questionGroup.title').innerHTML").trim();
+    }
+
+    public String getAppliesTo() {
+        String appliesToStr = selenium.getEval("window.document.getElementById('questionGroup.appliesTo').innerHTML");
+        return appliesToStr.substring(appliesToStr.indexOf(':') + 1).trim();
+    }
 }
