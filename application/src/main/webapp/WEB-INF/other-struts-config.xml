@@ -21,7 +21,6 @@
         <form-bean name="meetingActionForm" type="org.mifos.application.meeting.struts.actionforms.MeetingActionForm"/>
         <!-- admin action form -->
         <form-bean name="adminActionForm" type="org.mifos.application.admin.struts.actionforms.AdminActionForm"/>
-        <form-bean name="systemInfoActionForm" type="org.mifos.application.admin.struts.actionforms.SystemInfoActionForm"/>
         <form-bean name="shutdownActionForm" type="org.mifos.application.admin.struts.actionforms.ShutdownActionForm"/>
         <!-- Notes form bean -->
         <form-bean name="feeactionform" type="org.mifos.accounts.fees.struts.actionforms.FeeActionForm"/>
@@ -192,10 +191,6 @@
         <action path="/AdminAction" type="org.mifos.application.admin.struts.action.AdminAction" name="adminActionForm"
                 parameter="method" input="/AdminAction.do?method=validate" validate="false">
             <forward name="load_success" path="/pages/application/admin/jsp/admin.jsp" />
-        </action>
-        <action path="/systemInfoAction" type="org.mifos.application.admin.struts.action.SystemInfoAction" name="systemInfoActionForm"
-                parameter="method" input="/SystemInfoAction.do?method=validate" validate="false">
-            <forward name="load_success" path="/pages/application/admin/jsp/sysinfo.jsp" />
         </action>
         <action path="/shutdownAction" type="org.mifos.application.admin.struts.action.ShutdownAction" name="shutdownActionForm"
                 parameter="method" input="/ShutdownAction.do?method=validate" validate="false">

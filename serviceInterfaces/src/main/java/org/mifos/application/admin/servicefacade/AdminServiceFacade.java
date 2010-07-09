@@ -21,10 +21,13 @@
 package org.mifos.application.admin.servicefacade;
 
 import org.mifos.dto.screen.ProductConfigurationDto;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface AdminServiceFacade {
 
+    @PreAuthorize("isFullyAuthenticated()")
     ProductConfigurationDto retrieveProductConfiguration();
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_UPDATE_LATENESS_DORMANCY')")
     void updateProductConfiguration(ProductConfigurationDto productConfiguration);
 }
