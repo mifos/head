@@ -20,8 +20,6 @@
 
 package org.mifos.application.servicefacade;
 
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.customers.client.business.service.ClientBusinessService;
 
 import org.mifos.accounts.fees.business.service.FeeService;
 import org.mifos.accounts.fees.business.service.FeeServiceImpl;
@@ -35,6 +33,7 @@ import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
 import org.mifos.accounts.fund.servicefacade.WebTierFundServiceFacade;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
@@ -62,6 +61,7 @@ import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
 import org.mifos.customers.center.business.service.CenterDetailsServiceFacade;
 import org.mifos.customers.center.business.service.WebTierCenterDetailsServiceFacade;
+import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
 import org.mifos.customers.client.business.service.WebTierClientDetailsServiceFacade;
 import org.mifos.customers.group.business.service.GroupDetailsServiceFacade;
@@ -76,6 +76,8 @@ import org.mifos.customers.persistence.CustomerDaoHibernate;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacade;
 import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacadeWebTier;
+import org.mifos.customers.personnel.business.service.PersonnelService;
+import org.mifos.customers.personnel.business.service.PersonnelServiceImpl;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
@@ -96,7 +98,7 @@ public class DependencyInjectedServiceLocator {
     private static CenterDetailsServiceFacade centerDetailsServiceFacade;
     private static GroupDetailsServiceFacade groupDetailsServiceFacade;
     private static ClientDetailsServiceFacade clientDetailsServiceFacade;
-    private static LoginServiceFacade loginServiceFacade;
+    private static LegacyLoginServiceFacade loginServiceFacade;
     private static MeetingServiceFacade meetingServiceFacade;
 
     private static PersonnelDetailsServiceFacade personnelDetailsServiceFacade;
@@ -111,8 +113,7 @@ public class DependencyInjectedServiceLocator {
     private static CustomerService customerService;
     private static HolidayService holidayService;
     private static FeeService feeService;
-    private static LoanBusinessService loanBusinessService;
-    private static ClientBusinessService clientBusinessService;
+    private static PersonnelService personnelService;
 
     // DAOs
     private static OfficePersistence officePersistence = new OfficePersistence();
@@ -228,9 +229,12 @@ public class DependencyInjectedServiceLocator {
         return loanServiceFacade;
     }
 
-    public static LoginServiceFacade locationLoginServiceFacade() {
+    public static LegacyLoginServiceFacade locationLoginServiceFacade() {
         if (loginServiceFacade == null) {
-            loginServiceFacade = new LoginServiceFacadeWebTier(personnelDao);
+            if (personnelService == null) {
+                personnelService = new PersonnelServiceImpl(personnelDao);
+            }
+            loginServiceFacade = new LoginServiceFacadeWebTier(personnelService, personnelDao);
         }
         return loginServiceFacade;
     }

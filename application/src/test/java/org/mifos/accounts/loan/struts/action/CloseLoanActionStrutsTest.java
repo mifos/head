@@ -26,10 +26,8 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
-import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.TransactionHistoryDto;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountState;

@@ -20,11 +20,9 @@
 
 package org.mifos.customers.personnel.business.service;
 
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.security.util.UserContext;
 
 public interface PersonnelDetailsServiceFacade {
-    PersonnelInformationDto getPersonnelInformationDto(String globalCustNum, UserContext userContext)
-            throws ServiceException;
+
+    PersonnelInformationDto getPersonnelInformationDto(String globalCustNum, Short userLocaleId);
 
 }

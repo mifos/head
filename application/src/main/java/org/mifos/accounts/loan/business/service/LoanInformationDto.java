@@ -4,19 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
-import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountNotesEntity;
-import org.mifos.accounts.business.AccountTypeEntity;
 import org.mifos.accounts.loan.business.LoanActivityDto;
-import org.mifos.accounts.loan.business.LoanActivityEntity;
-import org.mifos.accounts.loan.business.LoanPerformanceHistoryEntity;
-import org.mifos.accounts.loan.business.MaxMinNoOfInstall;
-import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
-import org.mifos.application.master.business.InterestTypesEntity;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.helpers.Money;
@@ -291,6 +281,4 @@ public class LoanInformationDto implements DataTransferObject {
     public List<SurveyDto> getAccountSurveys() {
         return this.accountSurveys;
     }
-
-
 }

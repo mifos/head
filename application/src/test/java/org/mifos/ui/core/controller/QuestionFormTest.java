@@ -27,15 +27,15 @@ public class QuestionFormTest {
     @Test
     public void testAddCurrentQuestion(){
         QuestionForm questionForm = new QuestionForm();
-        questionForm.setTitle("  Q1 ");
-        questionForm.setType("Free text");
+        questionForm.getCurrentQuestion().setTitle("  Q1 ");
+        questionForm.getCurrentQuestion().setType("Free text");
         questionForm.addCurrentQuestion();
         List<Question> questionList = questionForm.getQuestions();
         assertThat(questionList.size(), is(1));
         String title = questionList.get(0).getTitle();
         String type = questionList.get(0).getType();
-        assertNotSame(title, questionForm.getTitle());
-        assertNotSame(type, questionForm.getType());
+        assertNotSame(title, questionForm.getCurrentQuestion().getTitle());
+        assertNotSame(type, questionForm.getCurrentQuestion().getType());
         assertThat(title, is("Q1"));
         assertThat(type, is("Free text"));
     }

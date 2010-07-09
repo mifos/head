@@ -67,6 +67,7 @@ public class LoginPage extends MifosPage {
 
     public ChangePasswordPage loginAndGoToChangePasswordPageAs(String userName, String password) {
         selenium.open("login.ftl");
+        waitForPageToLoad();
         selenium.type(USERNAME_INPUT_ID, userName);
         selenium.type(PASSWORD_INPUT_ID, password);
         selenium.click(LOGIN_BUTTON_ID);

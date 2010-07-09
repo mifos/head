@@ -18,29 +18,29 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.fund.servicefacade;
+package org.mifos.dto.domain;
 
-import java.io.Serializable;
+public class ChangePasswordRequest {
 
-public class FundCodeDto implements Serializable {
+    private final String username;
+    private final String oldPassword;
+    private final String newPassword;
 
-    private String id;
-
-    private String value;
-
-    public String getId() {
-        return id;
+    public ChangePasswordRequest(String username, String oldPassword, String newPassword) {
+        this.username = username;
+        this.oldPassword = oldPassword;
+        this.newPassword = newPassword;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getUsername() {
+        return this.username;
     }
 
-    public String getValue() {
-        return value;
+    public String getOldPassword() {
+        return this.oldPassword;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public String getNewPassword() {
+        return this.newPassword;
     }
 }

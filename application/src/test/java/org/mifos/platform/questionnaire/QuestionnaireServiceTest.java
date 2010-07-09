@@ -106,10 +106,10 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldGetAllQuestions() {
-        when(questionDao.getDetailsAll()).thenReturn(asList(getQuestion(1, "q1", AnswerType.DATE), getQuestion(2, "q2", AnswerType.FREETEXT)));
+        when(questionDao.retrieveByState(1)).thenReturn(asList(getQuestion(1, "q1", AnswerType.DATE), getQuestion(2, "q2", AnswerType.FREETEXT)));
         List<QuestionDetail> questionDetails = questionnaireService.getAllQuestions();
         assertNotNull("getAllQuestions should not return null", questionDetails);
-        verify(questionDao, times(1)).getDetailsAll();
+        verify(questionDao, times(1)).retrieveByState(1);
 
         assertThat(questionDetails.get(0).getText(), is("q1"));
         assertThat(questionDetails.get(0).getShortName(), is("q1"));

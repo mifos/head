@@ -71,12 +71,10 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-//    @Test( groups = {"smoke"})
+    @Test( groups = {"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    private void newWeeklyLSIMClientLoanAccount() throws Exception {
-
-        // FIXME - KEITHW - test manually and rewrite test to pass
+    public void newWeeklyLSIMClientLoanAccount() throws Exception {
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Stu1233171716380 Client1233171716380");

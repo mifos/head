@@ -145,6 +145,10 @@ public class PersonnelPersistence extends Persistence {
         return false;
     }
 
+    /**
+     * @deprecated use {@link PersonnelDao#findByGlobalPersonnelNum(String)} or from tests use test-only method of finding personnel.
+     */
+    @Deprecated
     public PersonnelBO getPersonnelByGlobalPersonnelNum(String globalPersonnelNum) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("globalPersonnelNum", globalPersonnelNum);

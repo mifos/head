@@ -20,20 +20,39 @@
 
 package org.mifos.accounts.fund.servicefacade;
 
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.accounts.fund.exception.FundException;
+import java.io.Serializable;
 
-import java.util.List;
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class FundDto implements Serializable {
 
-public interface FundServiceFacade {
+    private String id;
 
-    FundDto getFund(Short fundId);
+    private FundCodeDto code;
 
-    List<FundDto> getFunds();
+    private String name;
 
-    List<FundCodeDto> getFundCodes();
+    public String getId() {
+        return id;
+    }
 
-    void updateFund(FundDto fundDto) throws ApplicationException;
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    void createFund(FundDto fundDto) throws FundException;
+    public FundCodeDto getCode() {
+        return code;
+    }
+
+    public void setCode(FundCodeDto code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

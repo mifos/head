@@ -8,11 +8,10 @@
             <generator class="native"/>
         </id>
         <property name="name" column="name" access="field"/>
-        <list name="questions" lazy="false" inverse="true" cascade="save-update">
+        <bag name="questions" lazy="false" inverse="true" cascade="save-update" order-by="sequence_number">
             <key column="section_id" not-null="true"/>
-            <list-index column="sequence_number"/>
             <one-to-many class="org.mifos.platform.questionnaire.domain.SectionQuestion"/>
-        </list>
+        </bag>
 
     </class>
 </hibernate-mapping>

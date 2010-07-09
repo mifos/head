@@ -21,9 +21,13 @@
 package org.mifos.application.admin.servicefacade;
 
 import javax.servlet.http.HttpSession;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import java.util.Properties;
 
-@SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public interface ViewOrganizationSettingsServiceFacade {
-    Properties getOrganizationSettings(HttpSession session) throws Exception;
+
+    @PreAuthorize("hasAnyRole('ROLE_VIEW_SYSTEM_INFO', 'ROLE_VIEW_ORGANIZATION_SETTINGS')")
+    Properties getOrganizationSettings(HttpSession session);
 }

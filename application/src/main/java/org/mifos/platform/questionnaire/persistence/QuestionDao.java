@@ -27,4 +27,5 @@ import java.util.List;
 
 public interface QuestionDao extends GenericDao<Question, Integer> {
     List retrieveCountOfQuestionsWithTitle(String questionTitle);
+    List retrieveByState(int questionState);
 }

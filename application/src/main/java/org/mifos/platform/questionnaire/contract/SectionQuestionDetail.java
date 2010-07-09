@@ -23,10 +23,16 @@ package org.mifos.platform.questionnaire.contract;
 public class SectionQuestionDetail {
     private int questionId;
     private boolean mandatory;
+    private String title;
 
     public SectionQuestionDetail(int questionId, boolean mandatory) {
+        this(questionId, null, mandatory);
+    }
+
+    public SectionQuestionDetail(int questionId, String title, boolean mandatory) {
         this.questionId = questionId;
         this.mandatory = mandatory;
+        this.title = title;
     }
 
     public int getQuestionId() {
@@ -35,6 +41,10 @@ public class SectionQuestionDetail {
 
     public boolean isMandatory() {
         return mandatory;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     @Override
