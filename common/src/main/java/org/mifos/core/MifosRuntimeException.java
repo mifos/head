@@ -22,15 +22,15 @@ package org.mifos.core;
 
 public class MifosRuntimeException extends RuntimeException {
 
-	private static final long serialVersionUID = -7723281929851244266L;
+    private static final long serialVersionUID = -7723281929851244266L;
 
-	public MifosRuntimeException() {
-		super();
-	}
+    public MifosRuntimeException() {
+        super();
+    }
 
-	public MifosRuntimeException(final String message) {
-		super(message);
-	}
+    public MifosRuntimeException(final String message) {
+        super(message);
+    }
 
     public MifosRuntimeException(final String message, final Throwable cause) {
         super(message, cause);

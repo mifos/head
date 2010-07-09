@@ -38,10 +38,10 @@ public class SimpleDataSetTest {
         this.simpleDataSet = new SimpleDataSet();
     }
 
-	public void testEmptyDataSet() {
-	    String expectedOutput = "<dataset>\n</dataset>";
-	    Assert.assertEquals(this.simpleDataSet.toString(), expectedOutput);
-	}
+    public void testEmptyDataSet() {
+        String expectedOutput = "<dataset>\n</dataset>";
+        Assert.assertEquals(this.simpleDataSet.toString(), expectedOutput);
+    }
 
     public void testOneEmptyTable() {
         String expectedOutput = "<dataset>\n<firstTable />\n</dataset>";

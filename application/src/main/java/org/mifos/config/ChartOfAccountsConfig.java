@@ -46,6 +46,7 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.ConfigurationLocator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -87,7 +88,12 @@ public class ChartOfAccountsConfig {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder parser = dbf.newDocumentBuilder();
-            document = parser.parse(new File(ClasspathResource.getURI(chartOfAccountsXml)));
+            if (FilePaths.CHART_OF_ACCOUNTS_DEFAULT.equals(chartOfAccountsXml)) { // default chart of accounts
+                document = parser.parse(new File(ClasspathResource.getURI(chartOfAccountsXml)));
+            }
+            else { // custom chart of accounts
+                document = parser.parse(new File(chartOfAccountsXml));
+            }
 
             // create a SchemaFactory capable of understanding XML schemas
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -123,15 +129,23 @@ public class ChartOfAccountsConfig {
      * placing a file called <code>mifosChartOfAccounts.custom.xml</code>
      * anywhere in the application server classpath.
      *
+     * @param session Session
      * @return relative path to Chart of Accounts config file that the
      *         {@link ClasspathResource} can use to derive the actual on-disk
      *         location.
      */
     public static String getCoaUri(Session session) {
-        final boolean customCoaExists = (null != ClasspathResource.findResource(FilePaths.CHART_OF_ACCOUNTS_CUSTOM));
+        String customCoaPath;
+        try {
+            customCoaPath = new ConfigurationLocator().getFilePath(FilePaths.CHART_OF_ACCOUNTS_CUSTOM);
+        } catch (IOException e) {
+            customCoaPath = null;
+        }
+
+        final boolean customCoaExists = customCoaPath != null;
 
         if (customCoaExists) {
-            return FilePaths.CHART_OF_ACCOUNTS_CUSTOM;
+            return customCoaPath;
         }
 
         // if data exists in the database, the only way to add GL accounts is

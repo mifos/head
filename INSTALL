@@ -20,7 +20,7 @@ This file describes how to install Mifos for use in a production environment.
    http://www.mifos.org/knowledge/support/deploying-mifos/upgrading-mifos
 
    For upgrade instructions for this release see:
-   http://www.mifos.org/knowledge/support/deploying-mifos/upgradeto15
+   http://www.mifos.org/knowledge/support/deploying-mifos/upgradeto16
 
 3. Configuring MySQL
     3.1. Setting Database Parameters
@@ -36,9 +36,9 @@ This file describes how to install Mifos for use in a production environment.
          long_query_time=1
 
     3.2. Initializing the Mifos Database
-         To initialize the Mifos database, run the four commands below from the
+         To initialize the Mifos database, run the commands below from the
          directory that contains this INSTALL file. These commands assume a
-         schema named "mifos", a username of "mifos" and a password of "mifos".
+         schema named "mifos" has been created, with a username of "mifos" and a password of "mifos".
          Adjust them if your database login is different. See sections 6.1.4
          and 7.1 for more information.
 
@@ -119,7 +119,7 @@ This file describes how to install Mifos for use in a production environment.
          "trapdoor".
 
     7.2. Release Notes -
-         http://www.mifos.org/developers/wiki/ReleaseNotes/V15
+         http://www.mifos.org/developers/wiki/ReleaseNotes/V16
 
     7.3. System Recommendations (hardware, networking) -
     	 http://www.mifos.org/developers/wiki/MifosSystemRecommendations

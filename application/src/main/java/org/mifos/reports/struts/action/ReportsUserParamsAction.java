@@ -21,7 +21,6 @@
 package org.mifos.reports.struts.action;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;

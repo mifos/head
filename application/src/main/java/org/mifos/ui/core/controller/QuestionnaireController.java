@@ -211,7 +211,7 @@ public class QuestionnaireController {
     private boolean questionGroupHasErrors(QuestionGroup questionGroup, RequestContext requestContext) {
         boolean result = false;
         if (isInvalidTitle(questionGroup.getTitle())) {
-            constructErrorMessage(requestContext.getMessageContext(), "questionnaire.error.questionGroup.title.empty", "title", "Please specify Question Group text");
+            constructErrorMessage(requestContext.getMessageContext(), "questionnaire.error.questionGroup.title.empty", "title", "Please specify Question Group title");
             result = true;
         }
         if (sectionsNotPresent(questionGroup.getSections())) {

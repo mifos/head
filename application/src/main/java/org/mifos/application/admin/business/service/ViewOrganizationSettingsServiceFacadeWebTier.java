@@ -32,8 +32,6 @@ import org.mifos.config.ConfigLocale;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
-import org.mifos.config.exceptions.ConfigurationException;
-import org.mifos.framework.exceptions.ServiceException;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -44,7 +42,7 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
     private static final String DELIMITER = ", ";
 
     @Override
-    public Properties getOrganizationSettings(HttpSession httpSession) throws Exception {
+    public Properties getOrganizationSettings(HttpSession httpSession) {
         Properties orgSettings = new Properties();
 
         orgSettings.putAll(getFiscalRules());
@@ -111,7 +109,7 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         return currencies;
     }
 
-    private Properties getClientRules() throws ConfigurationException {
+    private Properties getClientRules() {
         Properties clientRules = new Properties();
 
         clientRules.setProperty("centerHierarchyExists", booleanToYesNo(ClientRules.getCenterHierarchyExists()));
@@ -143,7 +141,7 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         return processFlowRules;
     }
 
-    private Properties getMiscRules(HttpSession httpSession) throws ServiceException {
+    private Properties getMiscRules(HttpSession httpSession) {
         Properties misc = new Properties();
 
         Integer timeoutVal = httpSession.getMaxInactiveInterval() / 60;
