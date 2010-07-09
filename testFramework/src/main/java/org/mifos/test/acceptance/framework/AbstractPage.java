@@ -21,7 +21,6 @@
 package org.mifos.test.acceptance.framework;
 
 import com.thoughtworks.selenium.Selenium;
-import com.thoughtworks.selenium.Wait;
 import org.testng.Assert;
 
 /**
@@ -62,11 +61,6 @@ public class AbstractPage {
     }
 
     public void verifyPage(String pageName) {
-        new Wait("Waiting for page.id element has failed. Current page is: \n" + selenium.getBodyText() + "\n Html content is: \n" + selenium.getHtmlSource()) {
-            public boolean until() {
-                return selenium.isElementPresent("id=page.id");
-            }
-        };
         Assert.assertEquals(selenium.getAttribute("page.id@title"), pageName);
     }
 

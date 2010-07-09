@@ -98,7 +98,9 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private void testViewQuestionGroups() {
         ViewAllQuestionGroupsPage viewQuestionGroupsPage = getViewQuestionGroupsPage(new AdminPage(selenium));
         testViewQuestionGroups(viewQuestionGroupsPage);
-        testQuestionGroupDetail(viewQuestionGroupsPage);
+        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle1, "Default", asList(qTitle1, qTitle2));
+        viewQuestionGroupsPage.navigateToViewAllQuestionGroupsPage();
+        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle2, "Misc", asList(qTitle1, qTitle3));
     }
 
     private AdminPage createQuestions(String... qTitles) {
@@ -127,13 +129,13 @@ public class QuestionGroupTest extends UiTestCaseBase {
         assertPage(AdminPage.PAGE_ID);
     }
 
-    private void testQuestionGroupDetail(ViewAllQuestionGroupsPage viewAllQuestionGroupsPage) {
-        QuestionGroupDetailPage questionGroupDetailPage = viewAllQuestionGroupsPage.navigateToQuestionGroupDetailPage(qgTitle1);
+    private void testQuestionGroupDetail(ViewAllQuestionGroupsPage viewAllQuestionGroupsPage, String title, String sectionName, List<String> questions) {
+        QuestionGroupDetailPage questionGroupDetailPage = viewAllQuestionGroupsPage.navigateToQuestionGroupDetailPage(title);
         questionGroupDetailPage.verifyPage();
-        assertEquals(qgTitle1, questionGroupDetailPage.getTitle());
+        assertEquals(title, questionGroupDetailPage.getTitle());
         assertEquals(APPLIES_TO_CREATE_CLIENT, questionGroupDetailPage.getAppliesTo());
-        assertEquals(asList(SECTION_DEFAULT), questionGroupDetailPage.getSections());
-        assertEquals(asList(qTitle1, qTitle2), questionGroupDetailPage.getSectionsQuestions(SECTION_DEFAULT));
+        assertEquals(asList(sectionName), questionGroupDetailPage.getSections());
+        assertEquals(questions, questionGroupDetailPage.getSectionsQuestions(sectionName));
     }
 
     private CreateQuestionGroupPage getCreateQuestionGroupPage(AdminPage adminPage) {
@@ -158,8 +160,8 @@ public class QuestionGroupTest extends UiTestCaseBase {
     }
 
     private void testShouldAllowDuplicateTitlesForQuestionGroup() {
+        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, APPLIES_TO_CREATE_CLIENT, "", asList(qTitle1, qTitle3), asList(qTitle2));
         testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, "View Client", "Hello", asList(qTitle2), asList(qTitle1, qTitle3));
-        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, APPLIES_TO_CREATE_CLIENT, "World", asList(qTitle1, qTitle3), asList(qTitle2));
     }
 
     private void testCreateQuestionGroup(CreateQuestionGroupPage createQuestionGroupPage, String title, String appliesTo,
