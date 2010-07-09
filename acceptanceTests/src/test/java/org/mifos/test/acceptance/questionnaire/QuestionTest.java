@@ -147,6 +147,7 @@ public class QuestionTest extends UiTestCaseBase {
 
     private void testMissingTitle(CreateQuestionPage createQuestionPage) {
         createQuestionParameters.setTitle("");
+        createQuestionParameters.setType(DATE_TYPE);
         createQuestionPage.addQuestion(createQuestionParameters);
         assertTextFoundOnPage(TITLE_MISSING);
     }
