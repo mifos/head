@@ -29,16 +29,16 @@ import com.thoughtworks.selenium.Selenium;
 
 public class CreateGroupEnterDataPage extends MifosPage {
 
-	public CreateGroupEnterDataPage() {
-		super();
-	}
+    public CreateGroupEnterDataPage() {
+        super();
+    }
 
-	/**
-	 * @param selenium
-	 */
-	public CreateGroupEnterDataPage(Selenium selenium) {
-		super(selenium);
-	}
+    /**
+     * @param selenium
+     */
+    public CreateGroupEnterDataPage(Selenium selenium) {
+        super(selenium);
+    }
 
     @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
     public static class SubmitFormParameters {
