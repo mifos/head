@@ -6,6 +6,7 @@
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   [#include "adminLeftPane.ftl" ]
+   <span id="page.id" title="SysInfo" />
    <div class=" content leftMargin180">
   	<form method="" action="" name="formname">
     <div class="span-24">

@@ -61,6 +61,9 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
+/**
+ * remove {@link LoginActionForm} and LoginFilter, LoginFilterStrutsTest when deleting {@link LoginAction}.
+ */
 public class LoginAction extends BaseAction {
 
     private static final MifosLogger loginLogger = MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER);
