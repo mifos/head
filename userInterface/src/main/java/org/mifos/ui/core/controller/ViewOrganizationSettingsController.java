@@ -25,7 +25,7 @@ public class ViewOrganizationSettingsController {
 
     protected ViewOrganizationSettingsController() {
         super();
-        crumb1.setLink("admin.ftl");
+        crumb1.setLink("AdminAction.do?method=load");
         crumb1.setMessage("admin");
         crumb2.setLink("viewOrganizationSettings.ftl");
         crumb2.setMessage("viewOrganizationSettings");
