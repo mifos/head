@@ -1,5 +1,1 @@
 Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Questionnaire
-Bundle-SymbolicName:org.mifos.platform.questionnaire
-Bundle-Version: 1.0
