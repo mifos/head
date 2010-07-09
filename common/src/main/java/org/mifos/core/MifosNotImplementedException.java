@@ -22,15 +22,15 @@ package org.mifos.core;
 
 public class MifosNotImplementedException extends MifosRuntimeException {
 
-	private static final long serialVersionUID = 8710919284125165027L;
+    private static final long serialVersionUID = 8710919284125165027L;
 
-	public MifosNotImplementedException() {
-		super();
-	}
+    public MifosNotImplementedException() {
+        super();
+    }
 
-	public MifosNotImplementedException(String message) {
-		super(message);
-	}
+    public MifosNotImplementedException(String message) {
+        super(message);
+    }
 
     public MifosNotImplementedException(String message, Throwable cause) {
         super(message, cause);

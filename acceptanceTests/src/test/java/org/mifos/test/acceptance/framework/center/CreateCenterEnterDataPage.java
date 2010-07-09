@@ -26,13 +26,13 @@ import com.thoughtworks.selenium.Selenium;
 
 public class CreateCenterEnterDataPage extends MifosPage {
 
-	public CreateCenterEnterDataPage() {
-		super();
-	}
+    public CreateCenterEnterDataPage() {
+        super();
+    }
 
-	public CreateCenterEnterDataPage(Selenium selenium) {
-		super(selenium);
-	}
+    public CreateCenterEnterDataPage(Selenium selenium) {
+        super(selenium);
+    }
 
     @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
     public static class SubmitFormParameters {

@@ -29,10 +29,10 @@ import org.testng.annotations.Test;
 @Test(sequential=true, groups={"core","acceptance","ui"})
 public class PingTest extends UiTestCaseBase {
 
-	public void pingTest() {
-	    PingPage pingPage = new PingPage(this.selenium);
-	    pingPage.navigateToPingPage();
-	    pingPage.verifyPage();
-	}
+    public void pingTest() {
+        PingPage pingPage = new PingPage(this.selenium);
+        pingPage.navigateToPingPage();
+        pingPage.verifyPage();
+    }
 }
 
