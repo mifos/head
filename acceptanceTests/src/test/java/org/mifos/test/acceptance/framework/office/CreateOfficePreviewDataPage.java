@@ -26,28 +26,28 @@ import com.thoughtworks.selenium.Selenium;
 
 public class CreateOfficePreviewDataPage extends MifosPage {
 
-	public CreateOfficePreviewDataPage() {
-		super();
-	}
+    public CreateOfficePreviewDataPage() {
+        super();
+    }
 
     public void verifyPage() {
         verifyPage("preview_new_office");
     }
 
-	/**
-	 * @param selenium
-	 */
-	public CreateOfficePreviewDataPage(Selenium selenium) {
-		super(selenium);
-	}
+    /**
+     * @param selenium
+     */
+    public CreateOfficePreviewDataPage(Selenium selenium) {
+        super(selenium);
+    }
 
-	public String getOfficeName() {
-	    return selenium.getText("preview_new_office.text.officeName");
-	}
+    public String getOfficeName() {
+        return selenium.getText("preview_new_office.text.officeName");
+    }
 
-	public String getShortName() {
-	    return selenium.getText("preview_new_office.text.shortName");
-	}
+    public String getShortName() {
+        return selenium.getText("preview_new_office.text.shortName");
+    }
 
     public CreateOfficeConfirmationPage submit() {
         selenium.click("preview_new_office.button.submit");

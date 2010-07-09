@@ -35,7 +35,7 @@ import org.springframework.web.servlet.mvc.Controller;
 
 public class RedirectionController implements Controller {
     private static final Log LOG = LogFactory.getLog(RedirectionController.class);
-	private String viewToRedirectTo = "";
+    private String viewToRedirectTo = "";
 
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -46,12 +46,12 @@ public class RedirectionController implements Controller {
         return new ModelAndView(viewToRedirectTo, "model", model);
     }
 
-	public void setViewToRedirectTo(String viewToRedirectTo) {
-		this.viewToRedirectTo = viewToRedirectTo;
-	}
+    public void setViewToRedirectTo(String viewToRedirectTo) {
+        this.viewToRedirectTo = viewToRedirectTo;
+    }
 
-	public String getViewToRedirectTo() {
-		return viewToRedirectTo;
-	}
+    public String getViewToRedirectTo() {
+        return viewToRedirectTo;
+    }
 
 }

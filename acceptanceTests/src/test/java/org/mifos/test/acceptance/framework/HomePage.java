@@ -35,30 +35,30 @@ import com.thoughtworks.selenium.Selenium;
  */
 public class HomePage extends MifosPage {
 
-	public HomePage() {
-		super();
-	}
+    public HomePage() {
+        super();
+    }
 
-	public HomePage(Selenium selenium) {
-		super(selenium);
-	}
+    public HomePage(Selenium selenium) {
+        super(selenium);
+    }
 
     public HomePage verifyPage() {
         verifyPage("Home");
-		return this;
+        return this;
     }
 
-	public ClientsAndAccountsHomepage navigateToClientsAndAccountsUsingHeaderTab() {
-		selenium.click("homeheader.link.clientsAndAccounts");
-		waitForPageToLoad();
-		return new ClientsAndAccountsHomepage(selenium);
-	}
+    public ClientsAndAccountsHomepage navigateToClientsAndAccountsUsingHeaderTab() {
+        selenium.click("homeheader.link.clientsAndAccounts");
+        waitForPageToLoad();
+        return new ClientsAndAccountsHomepage(selenium);
+    }
 
-	public AdminPage navigateToAdminPage() {
+    public AdminPage navigateToAdminPage() {
         selenium.click("homeheader.link.admin");
         waitForPageToLoad();
         return new AdminPage(selenium);
-	}
+    }
 
     public String getWelcome() {
         return selenium.getText("home.text.welcome");

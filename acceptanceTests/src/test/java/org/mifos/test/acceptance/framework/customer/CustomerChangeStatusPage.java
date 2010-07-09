@@ -27,16 +27,16 @@ import com.thoughtworks.selenium.Selenium;
 
 public class CustomerChangeStatusPage extends MifosPage {
 
-	public CustomerChangeStatusPage() {
-		super();
-	}
+    public CustomerChangeStatusPage() {
+        super();
+    }
 
-	/**
-	 * @param selenium
-	 */
-	public CustomerChangeStatusPage(Selenium selenium) {
-		super(selenium);
-	}
+    /**
+     * @param selenium
+     */
+    public CustomerChangeStatusPage(Selenium selenium) {
+        super(selenium);
+    }
 
     public void verifyPage() {
         this.verifyPage("customerchangeStatus");

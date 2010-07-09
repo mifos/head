@@ -53,26 +53,26 @@ public class AdminPage extends MifosPage {
     public static final String PAGE_ID = "admin";
 
     public AdminPage() {
-		super();
-	}
+        super();
+    }
 
-	public AdminPage(Selenium selenium) {
-		super(selenium);
-	}
+    public AdminPage(Selenium selenium) {
+        super(selenium);
+    }
 
-	public ViewHolidaysPage navigateToViewHolidaysPage() {
-	    selenium.click("admin.link.viewHolidays");
+    public ViewHolidaysPage navigateToViewHolidaysPage() {
+        selenium.click("admin.link.viewHolidays");
         waitForPageToLoad();
         return new ViewHolidaysPage(selenium);
     }
 
-	public ViewFeesPage navigateToViewFeesPage() {
+    public ViewFeesPage navigateToViewFeesPage() {
         selenium.click("admin.link.viewFees");
         waitForPageToLoad();
         return new ViewFeesPage(selenium);
     }
 
-	public CreateQuestionPage navigateToCreateQuestionPage() {
+    public CreateQuestionPage navigateToCreateQuestionPage() {
         selenium.click("admin.link.defineNewQuestion");
         waitForPageToLoad();
         return new CreateQuestionPage(selenium);

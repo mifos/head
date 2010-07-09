@@ -58,8 +58,8 @@ import org.apache.struts.taglib.TagUtils;
 public class MifosCompositeSelect extends BodyTagSupport {
 
     /**
-	 *
-	 */
+     *
+     */
     private static final long serialVersionUID = 65587969876768761L;
 
     private String boxName;
