@@ -58,7 +58,7 @@
     [@mifos.crumbpairs breadcrumb/]
     <div class="fontnormal marginLeft30">
         <div class="orangeheading marginTop15">
-            [@spring.message "questionnaire.view.questions"/]
+            [@spring.message "questionnaire.add.questions"/]
         </div>
         <div id="allErrorsDiv" class="allErrorsDiv">
             [@mifosMacros.showAllErrors "questionDefinition.*"/]
