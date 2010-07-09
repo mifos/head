@@ -25,7 +25,7 @@
 				
 					[#if Session.SPRING_SECURITY_LAST_EXCEPTION?? && Session.SPRING_SECURITY_LAST_EXCEPTION.message?has_content]
 					<div class="error-messages">
-   						<span id="login.errormessage">${Session.SPRING_SECURITY_LAST_EXCEPTION.message}</span><br/>
+   						<span id="login.error.message">${Session.SPRING_SECURITY_LAST_EXCEPTION.message}</span><br/>
 					</div>
 					[/#if]
 					

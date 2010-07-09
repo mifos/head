@@ -9,15 +9,13 @@ ALTER TABLE survey_questions ENGINE = InnoDB;
 ALTER TABLE survey_response ENGINE = InnoDB;
 
 
-delimiter //
-
-DROP PROCEDURE IF EXISTS addFk//
+DROP PROCEDURE IF EXISTS addFk;
 
 CREATE PROCEDURE addFk(IN tableName CHAR(64), IN columnName CHAR(64), IN referencedTableName CHAR(64),IN referencedColumnName CHAR(64))
 BEGIN
-    set @fkCount = 0;
+    set @fkCount = 0
 
-    SET @s = CONCAT(
+    ;SET @s = CONCAT(
             '
                 select
                     COUNT(*) into @fkCount
@@ -38,28 +36,26 @@ BEGIN
             ' u.column_name = '''              ,columnName,          ''' and ',
             ' u.referenced_table_name = '''    ,referencedTableName, ''' and ',
             ' u.referenced_column_name = '''   ,referencedColumnName,''''
-        );
-    PREPARE stmt FROM @s;
-    EXECUTE stmt;
+        )
+    ;PREPARE stmt FROM @s
+    ;EXECUTE stmt
 
-    IF @fkCount = 0
+    ;IF @fkCount = 0
         THEN
-            set foreign_key_checks = 0;
+            set foreign_key_checks = 0
 
-            SET @s = CONCAT(
+            ;SET @s = CONCAT(
                     'alter table ' , tableName ,
                     ' add constraint foreign key( ' , columnName , ' ) references ',
                     referencedTableName, '( ', referencedColumnName,') on delete no action on update no action'
-                );
-            PREPARE stmt FROM @s;
-            EXECUTE stmt;
+                )
+            ;PREPARE stmt FROM @s
+            ;EXECUTE stmt
 
-            set foreign_key_checks = 1;
-    END IF;
-END;
-//
-
-delimiter ;
+            ;set foreign_key_checks = 1
+    ;END IF
+;END
+;
 
 call addFk('ppi_survey',        'survey_id',            'survey',               'survey_id');
 call addFk('ppi_likelihoods',   'survey_id',            'survey',               'survey_id');

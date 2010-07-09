@@ -20,32 +20,30 @@
 
 package org.mifos.customers.personnel.persistence;
 
-import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.config.persistence.ApplicationConfigurationPersistence;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.security.MifosUser;
-import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
-
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.servicefacade.CenterCreation;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelDto;
+import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
+import org.mifos.security.MifosUser;
+import org.mifos.security.rolesandpermission.business.RoleBO;
+import org.mifos.security.util.SecurityConstants;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 
 public class PersonnelDaoHibernate implements PersonnelDao {
 
     private final GenericDao genericDao;
-    private static RolesPermissionsPersistence rolesPermissionsPersistence;
 
     public PersonnelDaoHibernate(GenericDao genericDao) {
         this.genericDao = genericDao;
@@ -76,17 +74,23 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         return (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GETPERSONNELBYNAME, queryParameters);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public MifosUser findAuthenticatedUserByUsername(String username) {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("USER_NAME", username);
-
-        PersonnelBO user = (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery(
-                NamedQueryConstants.GETPERSONNELBYNAME, queryParameters);
-
+        PersonnelBO user = findPersonnelByUsername(username);
         if (user == null) {
             return null;
         }
+
+        Set<Short> roleIds = new HashSet<Short>();
+        for (PersonnelRoleEntity personnelRole : user.getPersonnelRoles()) {
+            RoleBO role = personnelRole.getRole();
+            roleIds.add(role.getId());
+        }
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("ROLE_IDS", new ArrayList<Short>(roleIds));
+        List<Short> activityIds = (List<Short>) this.genericDao.executeNamedQuery("findDistinctActivityIdsForGivenSetOfRoleIds", queryParameters);
 
         byte[] password = user.getEncryptedPassword();
         boolean enabled = user.isActive();
@@ -94,8 +98,7 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = !user.isLocked();
 
-        GrantedAuthority mifosUser = new GrantedAuthorityImpl(MifosUser.FULLY_AUTHENTICATED_USER);
-        List<GrantedAuthority> authorities = Arrays.asList(mifosUser);
+        List<GrantedAuthority> authorities = translateActivityIdsToGrantedAuthorities(activityIds);
 
         return new MifosUser(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
                 authorities);
@@ -119,83 +122,36 @@ public class PersonnelDaoHibernate implements PersonnelDao {
     }
 
     @Override
-    public List<PersonnelBO> getActiveBranchManagersUnderOffice(Short officeId) throws org.mifos.framework.exceptions.ServiceException {
-        try {
-            return new PersonnelPersistence().getActiveLoanOfficersUnderOffice(officeId);
-        } catch (PersistenceException e) {
-            throw new org.mifos.framework.exceptions.ServiceException(e);
-        }
+    public PersonnelBO findByGlobalPersonnelNum(String globalNumber) {
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("globalPersonnelNum", globalNumber);
+
+        return (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.PERSONNEL_BY_SYSTEM_ID, queryParameters);
     }
 
-    @Override
-    public List<PersonnelBO> getActiveLoanOfficersUnderOffice(Short officeId) throws org.mifos.framework.exceptions.ServiceException {
-        try {
-            return new PersonnelPersistence().getActiveLoanOfficersUnderOffice(officeId);
-        } catch (PersistenceException e) {
-            throw new org.mifos.framework.exceptions.ServiceException(e);
+    private List<GrantedAuthority> translateActivityIdsToGrantedAuthorities(List<Short> activityIdList) {
+
+        Map<Short, GrantedAuthority> activityToGrantedAuthorityMap = populateSecurityConstantToGrantedAuthorityMap();
+
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        if (activityIdList != null) {
+            for (Short activityId : activityIdList) {
+                if (activityToGrantedAuthorityMap.containsKey(activityId)) {
+                    authorities.add(activityToGrantedAuthorityMap.get(activityId));
+                }
+            }
         }
+
+        return authorities;
     }
 
-    @Override
-    public List<SupportedLocalesEntity> getAllLocales() {
+    private Map<Short, GrantedAuthority> populateSecurityConstantToGrantedAuthorityMap() {
 
-        return new ApplicationConfigurationPersistence().getSupportedLocale();
-    }
+        // FIXME - keithw - just keeping adding the SecurityConstants and corresponding GrantedAuthority name for area
+        Map<Short, GrantedAuthority> authoritiesMap = new HashMap<Short, GrantedAuthority>();
+        authoritiesMap.put(SecurityConstants.CAN_VIEW_SYSTEM_INFO, new GrantedAuthorityImpl(MifosUser.VIEW_SYSTEM_INFO));
 
-    @Override
-    public List<PersonnelBO> getAllPersonnel() throws org.mifos.framework.exceptions.ServiceException {
-
-        try {
-            return new PersonnelPersistence().getAllPersonnel();
-        } catch (PersistenceException pe) {
-            throw new org.mifos.framework.exceptions.ServiceException(pe);
-        }
-    }
-
-    @Override
-    public QueryResult getAllPersonnelNotes(Short personnelId) throws org.mifos.framework.exceptions.ServiceException {
-        try {
-            return new PersonnelPersistence().getAllPersonnelNotes(personnelId);
-        } catch (PersistenceException e) {
-            throw new org.mifos.framework.exceptions.ServiceException(e);
-        }
-    }
-
-    @Override
-    public PersonnelBO getPersonnelByGlobalPersonnelNum(String globalPersonnelNum) throws org.mifos.framework.exceptions.ServiceException {
-        try {
-            return new PersonnelPersistence().getPersonnelByGlobalPersonnelNum(globalPersonnelNum);
-        } catch (PersistenceException e) {
-
-            throw new org.mifos.framework.exceptions.ServiceException(e);
-        }
-    }
-
-    @Override
-    public List<RoleBO> getRoles() throws org.mifos.framework.exceptions.ServiceException {
-        try {
-            return rolesPermissionsPersistence.getRoles();
-        } catch (PersistenceException e) {
-            throw new org.mifos.framework.exceptions.ServiceException(e);
-        }
-    }
-
-    @Override
-    public List<SupportedLocalesEntity> getSupportedLocales() throws org.mifos.framework.exceptions.ServiceException {
-        try {
-            List<SupportedLocalesEntity> locales = new PersonnelPersistence().getSupportedLocales();
-            return locales;
-        } catch (PersistenceException e) {
-            throw new org.mifos.framework.exceptions.ServiceException(e);
-        }
-    }
-
-    @Override
-    public QueryResult search(String searchString, Short officeId, Short userId)  throws org.mifos.framework.exceptions.ServiceException {
-        try {
-            return new PersonnelPersistence().search(searchString, userId);
-        } catch (PersistenceException e) {
-            throw new org.mifos.framework.exceptions.ServiceException(e);
-        }
+        return authoritiesMap;
     }
 }
