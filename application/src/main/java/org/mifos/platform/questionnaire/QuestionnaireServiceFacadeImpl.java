@@ -126,8 +126,8 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public List<QuestionGroup> getAllQuestionGroups() {
-        return mapToQuestionGroups(questionnaireService.getAllQuestionGroups());
+    public List<QuestionGroupDetail> getAllQuestionGroups() {
+        return questionnaireService.getAllQuestionGroups();
     }
 
     @Override
@@ -143,38 +143,6 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     @Override
     public List<EventSource> getAllEventSources() {
         return questionnaireService.getAllEventSources();
-    }
-
-    private List<QuestionGroup> mapToQuestionGroups(List<QuestionGroupDetail> questionGroupDetails) {
-        List<QuestionGroup> questionGroups = new ArrayList<QuestionGroup>();
-        for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
-            QuestionGroup questionGroup = mapToQuestionGroup(questionGroupDetail);
-            questionGroups.add(questionGroup);
-        }
-        return questionGroups;
-    }
-
-    private QuestionGroup mapToQuestionGroup(QuestionGroupDetail questionGroupDetail) {
-        QuestionGroup questionGroup = new QuestionGroup();
-        questionGroup.setId(questionGroupDetail.getId().toString());
-        questionGroup.setTitle(questionGroupDetail.getTitle());
-        questionGroup.setSections(mapToSectionForms(questionGroupDetail.getSectionDefinitions()));
-        questionGroup.setEventSource(questionGroupDetail.getEventSource());
-        return questionGroup;
-    }
-
-    private List<SectionForm> mapToSectionForms(List<SectionDefinition> sectionDefinitions) {
-        List<SectionForm> sectionForms = new ArrayList<SectionForm>();
-        for(SectionDefinition sectionDefinition: sectionDefinitions){
-            sectionForms.add(mapToSectionForm(sectionDefinition));
-        }
-        return sectionForms;
-    }
-
-    private SectionForm mapToSectionForm(SectionDefinition sectionDefinition) {
-        SectionForm sectionForm = new SectionForm();
-        sectionForm.setName(sectionDefinition.getName());
-        return sectionForm;
     }
 
     private void populateStringToQuestionTypeMap() {

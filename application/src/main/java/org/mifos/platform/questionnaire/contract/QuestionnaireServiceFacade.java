@@ -35,7 +35,7 @@ public interface QuestionnaireServiceFacade {
 
     List<Question> getAllQuestions();
 
-    List<QuestionGroup> getAllQuestionGroups();
+    List<QuestionGroupDetail> getAllQuestionGroups();
 
     QuestionGroupDetail getQuestionGroupDetail(int questionGroupId) throws ApplicationException;
 

@@ -100,23 +100,16 @@ public class QuestionnaireServiceFacadeTest {
         when(questionnaireService.getAllQuestionGroups()).thenReturn(
                 asList(new QuestionGroupDetail(1, "title1", asList(getSectionDefinition("S1"), getSectionDefinition("S2"))),
                         new QuestionGroupDetail(2, "title2", asList(getSectionDefinition("S3")))));
-        List<QuestionGroup> questionGroup = questionnaireServiceFacade.getAllQuestionGroups();
-        assertNotNull(questionGroup);
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getAllQuestionGroups();
+        assertNotNull(questionGroupDetails);
 
-        QuestionGroup questionGroup1 = questionGroup.get(0);
-        assertThat(questionGroup1.getId(), is("1"));
-        assertThat(questionGroup1.getTitle(), is("title1"));
-        List<SectionForm> sectionsOfQuestionGroup1 = questionGroup1.getSections();
-        assertThat(sectionsOfQuestionGroup1.size(), is(2));
-        assertThat(sectionsOfQuestionGroup1.get(0).getName(), is("S1"));
-        assertThat(sectionsOfQuestionGroup1.get(1).getName(), is("S2"));
+        QuestionGroupDetail questionGroupDetail1 = questionGroupDetails.get(0);
+        assertThat(questionGroupDetail1.getId(), is(1));
+        assertThat(questionGroupDetail1.getTitle(), is("title1"));
 
-        QuestionGroup groupGroup2 = questionGroup.get(1);
-        assertThat(groupGroup2.getId(), is("2"));
-        assertThat(groupGroup2.getTitle(), is("title2"));
-        List<SectionForm> sectionsOfQuestionGroup2 = groupGroup2.getSections();
-        assertThat(sectionsOfQuestionGroup2.size(), is(1));
-        assertThat(sectionsOfQuestionGroup2.get(0).getName(), is("S3"));
+        QuestionGroupDetail questionGroupDetail2 = questionGroupDetails.get(1);
+        assertThat(questionGroupDetail2.getId(), is(2));
+        assertThat(questionGroupDetail2.getTitle(), is("title2"));
 
         verify(questionnaireService).getAllQuestionGroups();
     }

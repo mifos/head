@@ -30,6 +30,7 @@ import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.contract.*;
+import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -333,19 +334,13 @@ public class QuestionnaireControllerTest {
 
     @Test
     public void shouldGetAllQuestionGroups() {
-        when(questionnaireServiceFacade.getAllQuestionGroups()).thenReturn(asList(
-                getQuestionGroup(1, "title1", asList(getSection("sectionName1",
-                        asList(getQuestion("1", "Q1", "Free Text"), getQuestion("2", "Q2", "Date"))))),
-                getQuestionGroup(2, "title2", asList(getSection("sectionName2",
-                        asList(getQuestion("3", "Q3", "Free Text"), getQuestion("4", "Q4", "Date"), getQuestion("5", "Q5", "Date")))))));
+        List<QuestionGroupDetail> questionGroupDetails = asList(
+                getQuestionGroupDetail(1, TITLE, "title1", "sectionName1"), getQuestionGroupDetail(1, TITLE, "title1", "sectionName1"));
+        when(questionnaireServiceFacade.getAllQuestionGroups()).thenReturn(questionGroupDetails);
         String view = questionnaireController.getAllQuestionGroups(model, httpServletRequest);
         assertThat(view, is("viewQuestionGroups"));
         verify(questionnaireServiceFacade).getAllQuestionGroups();
-        verify(model).addAttribute(eq("questionGroups"), argThat(new ListOfQuestionGroupMatcher(asList(
-                getQuestionGroup(1, "title1", asList(getSection("sectionName1",
-                        asList(getQuestion("1", "Q1", "Free Text"), getQuestion("2", "Q2", "Date"))))),
-                getQuestionGroup(2, "title2", asList(getSection("sectionName2",
-                        asList(getQuestion("3", "Q3", "Free Text"), getQuestion("4", "Q4", "Date"), getQuestion("5", "Q5", "Date")))))))));
+        verify(model).addAttribute(eq("questionGroups"), argThat(new ListOfQuestionGroupDetailMatcher(questionGroupDetails)));
     }
 
     @Test
@@ -396,7 +391,7 @@ public class QuestionnaireControllerTest {
     @Test
     public void shouldGetQuestionGroupById() throws ApplicationException {
         int questionGroupId = 1;
-        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(questionGroupId, "S1", "S2", "S3");
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(questionGroupId, TITLE, "S1", "S2", "S3");
         when(questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId)).thenReturn(questionGroupDetail);
         when(httpServletRequest.getParameter("questionGroupId")).thenReturn(Integer.toString(questionGroupId));
         String view = questionnaireController.getQuestionGroup(model, httpServletRequest);
@@ -407,25 +402,14 @@ public class QuestionnaireControllerTest {
         verify(model).addAttribute(eq("questionGroupDetail"), argThat(new QuestionGroupDetailFormMatcher(new QuestionGroupDetailForm(questionGroupDetail))));
     }
 
-    private QuestionGroupDetail getQuestionGroupDetail(int questionGroupId, String... sectionNames) {
+    private QuestionGroupDetail getQuestionGroupDetail(int questionGroupId, String title, String... sectionNames) {
         List<SectionDefinition> sectionDefinitions = new ArrayList<SectionDefinition>();
         for (String sectionName : sectionNames) {
             SectionDefinition sectionDefinition = new SectionDefinition();
             sectionDefinition.setName(sectionName);
             sectionDefinitions.add(sectionDefinition);
         }
-        return new QuestionGroupDetail(questionGroupId, TITLE, sectionDefinitions);
-    }
-
-    private QuestionGroup getQuestionGroup(int questionGroupId, String title, String... sectionNames) {
-        QuestionGroup questionGroup = new QuestionGroup();
-        questionGroup.setId(Integer.toString(questionGroupId));
-        questionGroup.setTitle(title);
-        for (String sectionName : sectionNames) {
-            questionGroup.setSectionName(sectionName);
-            questionGroup.addCurrentSection();
-        }
-        return questionGroup;
+        return new QuestionGroupDetail(questionGroupId, title, sectionDefinitions);
     }
 
     @Test
@@ -705,18 +689,18 @@ public class QuestionnaireControllerTest {
         }
     }
 
-    private class ListOfQuestionGroupMatcher extends TypeSafeMatcher<List<QuestionGroup>> {
-        private List<QuestionGroup> questionGroups;
+    private class ListOfQuestionGroupDetailMatcher extends TypeSafeMatcher<List<QuestionGroupDetail>> {
+        private List<QuestionGroupDetail> questionGroupDetails;
 
-        public ListOfQuestionGroupMatcher(List<QuestionGroup> questionGroups) {
-            this.questionGroups = questionGroups;
+        public ListOfQuestionGroupDetailMatcher(List<QuestionGroupDetail> questionGroupDetails) {
+            this.questionGroupDetails = questionGroupDetails;
         }
 
         @Override
-        public boolean matchesSafely(List<QuestionGroup> questionGroups) {
-            if (this.questionGroups.size() == questionGroups.size()) {
-                for (QuestionGroup questionGroup : this.questionGroups) {
-                    assertThat(questionGroups, hasItem(new QuestionGroupMatcher(questionGroup)));
+        public boolean matchesSafely(List<QuestionGroupDetail> questionGroupDetails) {
+            if (this.questionGroupDetails.size() == questionGroupDetails.size()) {
+                for (QuestionGroupDetail questionGroupDetail : this.questionGroupDetails) {
+                    assertThat(questionGroupDetails, hasItem(new QuestionGroupDetailMatcher(questionGroupDetail)));
                 }
             } else {
                 return false;
@@ -726,7 +710,7 @@ public class QuestionnaireControllerTest {
 
         @Override
         public void describeTo(Description description) {
-            description.appendText("List of question groups do not match");
+            description.appendText("List of question group details do not match");
         }
     }
 }
