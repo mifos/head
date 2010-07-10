@@ -25,26 +25,26 @@ import java.util.List;
 public class QuestionGroupDefinition {
     private String title;
 
-    private List<SectionDefinition> sectionDefinitions;
+    private List<SectionDetail> sectionDetails;
 
     private EventSource eventSource;
 
-    public QuestionGroupDefinition(String title, EventSource eventSource, List<SectionDefinition> sectionDefinitions) {
+    public QuestionGroupDefinition(String title, EventSource eventSource, List<SectionDetail> sectionDetails) {
         this.title = title;
         this.eventSource = eventSource;
-        this.sectionDefinitions = sectionDefinitions;
+        this.sectionDetails = sectionDetails;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public List<SectionDefinition> getSectionDefinitions() {
-        return sectionDefinitions;
+    public List<SectionDetail> getSectionDefinitions() {
+        return sectionDetails;
     }
 
-    public void setSectionDefinitions(List<SectionDefinition> sectionDefinitions) {
-        this.sectionDefinitions = sectionDefinitions;
+    public void setSectionDefinitions(List<SectionDetail> sectionDetails) {
+        this.sectionDetails = sectionDetails;
     }
 
     public EventSource getEventSource() {

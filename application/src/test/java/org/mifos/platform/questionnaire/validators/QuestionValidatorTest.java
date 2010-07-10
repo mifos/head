@@ -88,7 +88,7 @@ public class QuestionValidatorTest {
     public void shouldNotThrowExceptionWhenQuestionGroupTitleIsProvided() {
         when(eventSourceDao.retrieveCountByEventAndSource(anyString(), anyString())).thenReturn(Arrays.asList((long) 1));
         try {
-            questionnaireValidator.validate(new QuestionGroupDefinition("Title", getEventSource("Create", "Client"), asList(getSection("S1"))));
+            questionnaireValidator.validate(new QuestionGroupDetail(0, "Title", getEventSource("Create", "Client"), asList(getSection("S1"))));
         } catch (ApplicationException e) {
             fail("Should not have thrown the exception");
         }
@@ -98,7 +98,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenQuestionGroupTitleIsProvided() {
         try {
-            questionnaireValidator.validate(new QuestionGroupDefinition(null, getEventSource("Create", "Client"), asList(getSection("S1"))));
+            questionnaireValidator.validate(new QuestionGroupDetail(0, null, getEventSource("Create", "Client"), asList(getSection("S1"))));
             fail("Should have thrown the application exception");
         } catch (ApplicationException e) {
             assertEquals(QUESTION_GROUP_TITLE_NOT_PROVIDED, e.getKey());
@@ -109,7 +109,7 @@ public class QuestionValidatorTest {
     public void shouldNotThrowExceptionWhenQuestionGroupHasAtLeastOneSection() {
         when(eventSourceDao.retrieveCountByEventAndSource(anyString(), anyString())).thenReturn(Arrays.asList((long) 1));
         try {
-            questionnaireValidator.validate(new QuestionGroupDefinition("Title", getEventSource("Create", "Client"), asList(getSection("S1"))));
+            questionnaireValidator.validate(new QuestionGroupDetail(0, "Title", getEventSource("Create", "Client"), asList(getSection("S1"))));
         } catch (ApplicationException e) {
             fail("Should not have thrown the exception");
         }
@@ -119,7 +119,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenQuestionGroupHasNoSections() {
         try {
-            questionnaireValidator.validate(new QuestionGroupDefinition("Title", getEventSource("Create", "Client"), new ArrayList<SectionDefinition>()));
+            questionnaireValidator.validate(new QuestionGroupDetail(0, "Title", getEventSource("Create", "Client"), new ArrayList<SectionDetail>()));
             fail("Should have thrown the application exception");
         } catch (ApplicationException e) {
             assertEquals(QUESTION_GROUP_SECTION_NOT_PROVIDED, e.getKey());
@@ -129,7 +129,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenEventIsNotProvided() {
         try {
-            questionnaireValidator.validate(new QuestionGroupDefinition("Title", getEventSource(null, "Client"), asList(getSection("S1"))));
+            questionnaireValidator.validate(new QuestionGroupDetail(0, "Title", getEventSource(null, "Client"), asList(getSection("S1"))));
             fail("Should have thrown the application exception");
         } catch (ApplicationException e) {
             assertEquals(INVALID_EVENT_SOURCE, e.getKey());
@@ -140,7 +140,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenSourceIsNotProvided() {
         try {
-            questionnaireValidator.validate(new QuestionGroupDefinition("Title", getEventSource("Create", null), asList(getSection("S1"))));
+            questionnaireValidator.validate(new QuestionGroupDetail(0, "Title", getEventSource("Create", null), asList(getSection("S1"))));
             fail("Should have thrown the application exception");
         } catch (ApplicationException e) {
             assertEquals(INVALID_EVENT_SOURCE, e.getKey());
@@ -151,7 +151,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenEventSourceIsNotProvided() {
         try {
-            questionnaireValidator.validate(new QuestionGroupDefinition("Title", null, asList(getSection("S1"))));
+            questionnaireValidator.validate(new QuestionGroupDetail(0, "Title", null, asList(getSection("S1"))));
             fail("Should have thrown the application exception");
         } catch (ApplicationException e) {
             assertEquals(INVALID_EVENT_SOURCE, e.getKey());
@@ -162,7 +162,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenAGivenSectionHasNoQuestions() {
         try {
-            questionnaireValidator.validate(new QuestionGroupDefinition("Title", getEventSource("Create", "Client"), asList(getSectionWithQuestions("S1"))));
+            questionnaireValidator.validate(new QuestionGroupDetail(0, "Title", getEventSource("Create", "Client"), asList(getSectionWithQuestions("S1"))));
             fail("Should have thrown the application exception");
         } catch (ApplicationException e) {
             assertEquals(NO_QUESTIONS_FOUND_IN_SECTION, e.getKey());
@@ -173,10 +173,10 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenAGivenQuestionAppearsInMoreThanOneSection() {
         try {
-            SectionDefinition sectionDefinition1 = getSectionWithQuestions("S1", 1, 3);
-            SectionDefinition sectionDefinition2 = getSectionWithQuestions("S2", 3, 2);
-            List<SectionDefinition> sectionDefinitions = asList(sectionDefinition1, sectionDefinition2);
-            questionnaireValidator.validate(new QuestionGroupDefinition("Title", getEventSource("Create", "Client"), sectionDefinitions));
+            SectionDetail sectionDefinition1 = getSectionWithQuestions("S1", 1, 3);
+            SectionDetail sectionDefinition2 = getSectionWithQuestions("S2", 3, 2);
+            List<SectionDetail> sectionDetails = asList(sectionDefinition1, sectionDefinition2);
+            questionnaireValidator.validate(new QuestionGroupDetail(0, "Title", getEventSource("Create", "Client"), sectionDetails));
             fail("Should have thrown the application exception");
         } catch (ApplicationException e) {
             assertEquals(DUPLICATE_QUESTION_FOUND_IN_SECTION, e.getKey());
@@ -184,15 +184,15 @@ public class QuestionValidatorTest {
         verify(eventSourceDao, never()).retrieveCountByEventAndSource(anyString(), anyString());
     }
 
-    private SectionDefinition getSection(String name) {
-        SectionDefinition section = new SectionDefinition();
+    private SectionDetail getSection(String name) {
+        SectionDetail section = new SectionDetail();
         section.setName(name);
         section.addQuestion(new SectionQuestionDetail(12, true));
         return section;
     }
 
-    private SectionDefinition getSectionWithQuestions(String name, int... questionIds) {
-        SectionDefinition section = new SectionDefinition();
+    private SectionDetail getSectionWithQuestions(String name, int... questionIds) {
+        SectionDetail section = new SectionDetail();
         section.setName(name);
         if (questionIds != null) {
             for (int questionId : questionIds) {

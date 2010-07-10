@@ -23,8 +23,8 @@ package org.mifos.platform.questionnaire.mappers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.platform.questionnaire.contract.EventSource;
-import org.mifos.platform.questionnaire.contract.QuestionGroupDefinition;
-import org.mifos.platform.questionnaire.contract.SectionDefinition;
+import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.contract.SectionDetail;
 import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +55,8 @@ public class QuestionnaireMapperIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldMapEventSources() {
         EventSource eventSource = new EventSource("Create", "Client", "Create Client");
-        List<SectionDefinition> sectionDefinitions = getSectionDefinitions();
-        QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(new QuestionGroupDefinition("Title", eventSource, sectionDefinitions));
+        List<SectionDetail> sectionDetails = getSectionDefinitions();
+        QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(new QuestionGroupDetail(0, "Title", eventSource, sectionDetails));
         Set<EventSourceEntity> eventSources = questionGroup.getEventSources();
         assertThat(eventSources, is(not(nullValue())));
         assertThat(eventSources.size(), is(1));
@@ -66,11 +66,11 @@ public class QuestionnaireMapperIntegrationTest {
         assertThat(eventSourceEntity.getDescription(), is("Create Client"));
     }
 
-    private List<SectionDefinition> getSectionDefinitions() {
-        List<SectionDefinition> sectionDefinitions = new ArrayList<SectionDefinition>();
-        SectionDefinition sectionDefinition = new SectionDefinition();
-        sectionDefinition.setName("Name");
-        sectionDefinitions.add(sectionDefinition);
-        return sectionDefinitions;
+    private List<SectionDetail> getSectionDefinitions() {
+        List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
+        SectionDetail sectionDetail = new SectionDetail();
+        sectionDetail.setName("Name");
+        sectionDetails.add(sectionDetail);
+        return sectionDetails;
     }
 }

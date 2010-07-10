@@ -30,7 +30,6 @@ import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.QuestionnaireServiceFacadeImpl;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mifos.ui.core.controller.Question;
-import org.mifos.ui.core.controller.QuestionGroup;
 import org.mifos.ui.core.controller.SectionForm;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
@@ -64,10 +63,10 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void shouldCreateQuestionGroup() throws ApplicationException {
-        QuestionGroup questionGroup = getQuestionGroup(TITLE, "Create", "Client", asList(getSectionFormWithQuestions("S1", 123), getSectionFormWithQuestions("S2", 123)));
-        questionnaireServiceFacade.createQuestionGroup(questionGroup);
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", asList(getSectionDetailWithQuestions("S1", 123), getSectionDetailWithQuestions("S2", 123)));
+        questionnaireServiceFacade.createQuestionGroup(questionGroupDetail);
         verify(questionnaireService, times(1)).defineQuestionGroup(argThat(
-                new QuestionGroupDefinitionMatcher(TITLE, "Create", "Client", asList(getSectionDefinitionWithQuestions("S1", 123), getSectionDefinitionWithQuestions("S2", 123)))));
+                new QuestionGroupDetailMatcher(questionGroupDetail)));
     }
 
     @Test
@@ -88,10 +87,10 @@ public class QuestionnaireServiceFacadeTest {
     @Test
     public void testGetAllQuestion() {
         when(questionnaireService.getAllQuestions()).thenReturn(asList(new QuestionDetail(1, "title", "title", QuestionType.NUMERIC)));
-        List<Question> questionDetailList = questionnaireServiceFacade.getAllQuestions();
+        List<QuestionDetail> questionDetailList = questionnaireServiceFacade.getAllQuestions();
         assertNotNull(questionDetailList);
         assertThat(questionDetailList.get(0).getTitle(), is("title"));
-        assertThat(questionDetailList.get(0).getId(), is("1"));
+        assertThat(questionDetailList.get(0).getId(), is(1));
         verify(questionnaireService).getAllQuestions();
     }
 
@@ -117,7 +116,7 @@ public class QuestionnaireServiceFacadeTest {
     @Test
     public void testGetQuestionGroupById() throws ApplicationException {
         int questionGroupId = 1;
-        List<SectionDefinition> sections = asList(getSectionDefinitionWithQuestions("S1", 121), getSectionDefinitionWithQuestions("S2", 122, 123));
+        List<SectionDetail> sections = asList(getSectionDefinitionWithQuestions("S1", 121), getSectionDefinitionWithQuestions("S2", 122, 123));
         QuestionGroupDetail expectedQuestionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", sections);
         when(questionnaireService.getQuestionGroup(questionGroupId)).thenReturn(expectedQuestionGroupDetail);
         QuestionGroupDetail questionGroupDetail = questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId);
@@ -179,47 +178,43 @@ public class QuestionnaireServiceFacadeTest {
         return sectionForm;
     }
 
-    private SectionForm getSectionFormWithQuestions(String name, int... questionIds) {
-        SectionForm sectionForm = new SectionForm();
-        sectionForm.setName(name);
-        List<Question> questions = new ArrayList<Question>();
+    private SectionDetail getSectionDetailWithQuestions(String name, int... questionIds) {
+        SectionDetail sectionDetail = new SectionDetail();
+        sectionDetail.setName(name);
+        List<SectionQuestionDetail> questions = new ArrayList<SectionQuestionDetail>();
         for (int quesId : questionIds) {
-            Question question = new Question();
-            question.setTitle("Q" + quesId);
-            question.setId(String.valueOf(quesId));
-            question.setRequired(false);
-            questions.add(question);
+            questions.add(new SectionQuestionDetail(quesId, "Q" + quesId, false));
         }
-        sectionForm.setQuestions(questions);
-        return sectionForm;
+        sectionDetail.setQuestionDetails(questions);
+        return sectionDetail;
     }
 
-    private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, List<SectionDefinition> sections) {
+    private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, List<SectionDetail> sections) {
         return new QuestionGroupDetail(1, title, new EventSource(event, source, null), sections);
     }
 
-    private List<SectionDefinition> getSections(String... sectionNames) {
-        List<SectionDefinition> sectionDefinitions = new ArrayList<SectionDefinition>();
+    private List<SectionDetail> getSections(String... sectionNames) {
+        List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
         for (String sectionName : sectionNames) {
-            sectionDefinitions.add(getSectionDefinition(sectionName));
+            sectionDetails.add(getSectionDefinition(sectionName));
         }
-        return sectionDefinitions;
+        return sectionDetails;
     }
 
-    private SectionDefinition getSectionDefinition(String name) {
-        SectionDefinition sectionDefinition = new SectionDefinition();
-        sectionDefinition.setName(name);
-        sectionDefinition.addQuestion(new SectionQuestionDetail(123, "Q1", true));
-        return sectionDefinition;
+    private SectionDetail getSectionDefinition(String name) {
+        SectionDetail sectionDetail = new SectionDetail();
+        sectionDetail.setName(name);
+        sectionDetail.addQuestion(new SectionQuestionDetail(123, "Q1", true));
+        return sectionDetail;
     }
 
-    private SectionDefinition getSectionDefinitionWithQuestions(String name, int... questionIds) {
-        SectionDefinition sectionDefinition = new SectionDefinition();
-        sectionDefinition.setName(name);
+    private SectionDetail getSectionDefinitionWithQuestions(String name, int... questionIds) {
+        SectionDetail sectionDetail = new SectionDetail();
+        sectionDetail.setName(name);
         for (int quesId : questionIds) {
-            sectionDefinition.addQuestion(new SectionQuestionDetail(quesId, "Q" + quesId, false));
+            sectionDetail.addQuestion(new SectionQuestionDetail(quesId, "Q" + quesId, false));
         }
-        return sectionDefinition;
+        return sectionDetail;
     }
 
     private List<EventSource> getEvents(EventSource... event) {
@@ -235,14 +230,6 @@ public class QuestionnaireServiceFacadeTest {
         question.setTitle(title);
         question.setType(type);
         return question;
-    }
-
-    private QuestionGroup getQuestionGroup(String title, String event, String source, List<SectionForm> sections) {
-        QuestionGroup questionGroup = new QuestionGroup();
-        questionGroup.setTitle(title);
-        questionGroup.setSections(sections);
-        questionGroup.setEventSourceId(String.format("%s.%s", event, source));
-        return questionGroup;
     }
 
     private class QuestionDefinitionMatcher extends ArgumentMatcher<QuestionDefinition> {
@@ -275,8 +262,8 @@ public class QuestionnaireServiceFacadeTest {
             this.questionGroupDefinition = questionGroupDefinition;
         }
 
-        public QuestionGroupDefinitionMatcher(String title, String event, String source, List<SectionDefinition> sectionDefinitions) {
-            this(new QuestionGroupDefinition(title, new EventSource(event, source, event + "." + source), sectionDefinitions));
+        public QuestionGroupDefinitionMatcher(String title, String event, String source, List<SectionDetail> sectionDetails) {
+            this(new QuestionGroupDefinition(title, new EventSource(event, source, event + "." + source), sectionDetails));
         }
 
         @Override
@@ -317,19 +304,19 @@ public class QuestionnaireServiceFacadeTest {
         }
     }
 
-    private class SectionDefinitionListMatcher extends TypeSafeMatcher<List<SectionDefinition>> {
-        private List<SectionDefinition> sectionDefinitions;
+    private class SectionDefinitionListMatcher extends TypeSafeMatcher<List<SectionDetail>> {
+        private List<SectionDetail> sectionDetails;
 
-        public SectionDefinitionListMatcher(List<SectionDefinition> sectionDefinitions) {
-            this.sectionDefinitions = sectionDefinitions;
+        public SectionDefinitionListMatcher(List<SectionDetail> sectionDetails) {
+            this.sectionDetails = sectionDetails;
         }
 
 
         @Override
-        public boolean matchesSafely(List<SectionDefinition> sectionDefinitions) {
-            if (this.sectionDefinitions.size() == sectionDefinitions.size()) {
-                for (SectionDefinition sectionDefinition : this.sectionDefinitions) {
-                    assertThat(sectionDefinitions, hasItem(new SectionDefinitionMatcher(sectionDefinition)));
+        public boolean matchesSafely(List<SectionDetail> sectionDetails) {
+            if (this.sectionDetails.size() == sectionDetails.size()) {
+                for (SectionDetail sectionDetail : this.sectionDetails) {
+                    assertThat(sectionDetails, hasItem(new SectionDefinitionMatcher(sectionDetail)));
                 }
             } else {
                 return false;
@@ -343,19 +330,19 @@ public class QuestionnaireServiceFacadeTest {
         }
     }
 
-    private class SectionDefinitionMatcher extends TypeSafeMatcher<SectionDefinition> {
-        private SectionDefinition sectionDefinition;
+    private class SectionDefinitionMatcher extends TypeSafeMatcher<SectionDetail> {
+        private SectionDetail sectionDetail;
 
-        public SectionDefinitionMatcher(SectionDefinition sectionDefinition) {
-            this.sectionDefinition = sectionDefinition;
+        public SectionDefinitionMatcher(SectionDetail sectionDetail) {
+            this.sectionDetail = sectionDetail;
         }
 
         @Override
-        public boolean matchesSafely(SectionDefinition sectionDefinition) {
-            if (StringUtils.equalsIgnoreCase(this.sectionDefinition.getName(), sectionDefinition.getName())
-                    && this.sectionDefinition.getQuestions().size() == sectionDefinition.getQuestions().size()) {
-                for (SectionQuestionDetail sectionQuestionDetail : this.sectionDefinition.getQuestions()) {
-                    assertThat(sectionDefinition.getQuestions(), hasItem(new SectionQuestionDetailMatcher(sectionQuestionDetail)));
+        public boolean matchesSafely(SectionDetail sectionDetail) {
+            if (StringUtils.equalsIgnoreCase(this.sectionDetail.getName(), sectionDetail.getName())
+                    && this.sectionDetail.getQuestions().size() == sectionDetail.getQuestions().size()) {
+                for (SectionQuestionDetail sectionQuestionDetail : this.sectionDetail.getQuestions()) {
+                    assertThat(sectionDetail.getQuestions(), hasItem(new SectionQuestionDetailMatcher(sectionQuestionDetail)));
                 }
                 return true;
             }

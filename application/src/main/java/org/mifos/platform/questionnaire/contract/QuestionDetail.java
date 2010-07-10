@@ -20,13 +20,14 @@
 
 package org.mifos.platform.questionnaire.contract;
 
-public class QuestionDetail {
+import java.io.Serializable;
+
+public class QuestionDetail implements Serializable {
+    private static final long serialVersionUID = -2350908554610624733L;
+
     private Integer id;
-
     private String text;
-
     private String shortName;
-
     private QuestionType type;
 
     public QuestionDetail(Integer id, String text, String shortName, QuestionType type) {
@@ -48,6 +49,9 @@ public class QuestionDetail {
         return shortName;
     }
 
+    public String getTitle() {
+        return shortName;
+    }
 
     public QuestionType getType() {
         return type;
