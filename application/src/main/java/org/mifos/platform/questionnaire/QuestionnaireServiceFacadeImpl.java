@@ -136,8 +136,8 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public Question getQuestion(int questionId) throws ApplicationException {
-        return mapToQuestion(questionnaireService.getQuestion(questionId));
+    public QuestionDetail getQuestionDetail(int questionId) throws ApplicationException {
+        return questionnaireService.getQuestion(questionId);
     }
 
     @Override

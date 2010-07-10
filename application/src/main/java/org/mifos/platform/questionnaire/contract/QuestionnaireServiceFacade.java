@@ -39,7 +39,7 @@ public interface QuestionnaireServiceFacade {
 
     QuestionGroupDetail getQuestionGroupDetail(int questionGroupId) throws ApplicationException;
 
-    Question getQuestion(int questionId) throws ApplicationException;
+    QuestionDetail getQuestionDetail(int questionId) throws ApplicationException;
 
     List<EventSource> getAllEventSources();
 }

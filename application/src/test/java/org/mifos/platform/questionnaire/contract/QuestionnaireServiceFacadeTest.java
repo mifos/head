@@ -148,10 +148,10 @@ public class QuestionnaireServiceFacadeTest {
         int questionId = 1;
         String title = "Title";
         when(questionnaireService.getQuestion(questionId)).thenReturn(new QuestionDetail(questionId, title, title, QuestionType.NUMERIC));
-        Question question = questionnaireServiceFacade.getQuestion(questionId);
-        assertNotNull("Question group should not be null", question);
-        assertThat(question.getTitle(), is(title));
-        assertThat(question.getType(), is("Number"));
+        QuestionDetail questionDetail = questionnaireServiceFacade.getQuestionDetail(questionId);
+        assertNotNull("Question group should not be null", questionDetail);
+        assertThat(questionDetail.getShortName(), is(title));
+        assertThat(questionDetail.getType(), is(QuestionType.NUMERIC));
         verify(questionnaireService).getQuestion(questionId);
     }
 
@@ -160,7 +160,7 @@ public class QuestionnaireServiceFacadeTest {
         int questionId = 1;
         when(questionnaireService.getQuestion(questionId)).thenThrow(new ApplicationException(QuestionnaireConstants.QUESTION_NOT_FOUND));
         try {
-            questionnaireServiceFacade.getQuestion(questionId);
+            questionnaireServiceFacade.getQuestionDetail(questionId);
         } catch (ApplicationException e) {
             verify(questionnaireService, times(1)).getQuestion(questionId);
             assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_NOT_FOUND));

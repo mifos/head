@@ -26,6 +26,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.contract.EventSource;
+import org.mifos.platform.questionnaire.contract.QuestionDetail;
 import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.webflow.execution.RequestContext;
-import org.mifos.ui.core.controller.Question; 
-
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -99,9 +98,8 @@ public class QuestionnaireController {
             if (invalid(questionId)) {
                 model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_ID);
             } else {
-                Question question = questionnaireServiceFacade.
-                        getQuestion(Integer.valueOf(questionId));
-                model.addAttribute("questionDetail", question);
+                QuestionDetail questionDetail = questionnaireServiceFacade.getQuestionDetail(Integer.valueOf(questionId));
+                model.addAttribute("questionDetail", new QuestionDetailForm(questionDetail));
             }
         } catch (ApplicationException e) {
             MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);

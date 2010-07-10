@@ -29,10 +29,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
-import org.mifos.platform.questionnaire.contract.EventSource;
-import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
-import org.mifos.platform.questionnaire.contract.SectionDefinition;
+import org.mifos.platform.questionnaire.contract.*;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -354,24 +351,24 @@ public class QuestionnaireControllerTest {
     @Test
     public void shouldGetQuestionById() throws ApplicationException {
         int questionId = 1;
-        Question question = getQuestion(Integer.toString(questionId), TITLE, "Number");
-        when(questionnaireServiceFacade.getQuestion(questionId)).thenReturn(question);
+        QuestionDetail questionDetail = getQuestionDetail(questionId, TITLE, QuestionType.NUMERIC);
+        when(questionnaireServiceFacade.getQuestionDetail(questionId)).thenReturn(questionDetail);
         when(httpServletRequest.getParameter("questionId")).thenReturn(Integer.toString(questionId));
         String view = questionnaireController.getQuestion(model, httpServletRequest);
         assertThat(view, is("viewQuestionDetail"));
-        verify(questionnaireServiceFacade).getQuestion(questionId);
+        verify(questionnaireServiceFacade).getQuestionDetail(questionId);
         verify(httpServletRequest, times(1)).getParameter("questionId");
-        verify(model).addAttribute(eq("questionDetail"), argThat(new QuestionMatcher(getQuestion(Integer.toString(questionId), TITLE, "Number"))));
+        verify(model).addAttribute(eq("questionDetail"), argThat(new QuestionDetailMatcher(TITLE, "Number")));
     }
 
     @Test
     public void testGetQuestionWhenNotPresentInDb() throws ApplicationException {
         int questionId = 1;
-        when(questionnaireServiceFacade.getQuestion(questionId)).thenThrow(new ApplicationException(QuestionnaireConstants.QUESTION_NOT_FOUND));
+        when(questionnaireServiceFacade.getQuestionDetail(questionId)).thenThrow(new ApplicationException(QuestionnaireConstants.QUESTION_NOT_FOUND));
         when(httpServletRequest.getParameter("questionId")).thenReturn(Integer.toString(questionId));
         String view = questionnaireController.getQuestion(model, httpServletRequest);
         assertThat(view, is("viewQuestionDetail"));
-        verify(questionnaireServiceFacade).getQuestion(questionId);
+        verify(questionnaireServiceFacade).getQuestionDetail(questionId);
         verify(httpServletRequest, times(1)).getParameter("questionId");
         verify(model).addAttribute("error_message_code", QuestionnaireConstants.QUESTION_NOT_FOUND);
     }
@@ -382,7 +379,7 @@ public class QuestionnaireControllerTest {
         String view = questionnaireController.getQuestion(model, httpServletRequest);
         assertThat(view, is("viewQuestionDetail"));
         verify(httpServletRequest, times(1)).getParameter("questionId");
-        verify(questionnaireServiceFacade, times(0)).getQuestion(anyInt());
+        verify(questionnaireServiceFacade, times(0)).getQuestionDetail(anyInt());
         verify(model).addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_ID);
     }
 
@@ -392,7 +389,7 @@ public class QuestionnaireControllerTest {
         String view = questionnaireController.getQuestion(model, httpServletRequest);
         assertThat(view, is("viewQuestionDetail"));
         verify(httpServletRequest, times(1)).getParameter("questionId");
-        verify(questionnaireServiceFacade, times(0)).getQuestion(anyInt());
+        verify(questionnaireServiceFacade, times(0)).getQuestionDetail(anyInt());
         verify(model).addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_ID);
     }
 
@@ -507,6 +504,10 @@ public class QuestionnaireControllerTest {
         return question;
     }
 
+    private QuestionDetail getQuestionDetail(int id, String title, QuestionType type) {
+        return new QuestionDetail(id, null, title, type);
+    }
+
     private SectionForm getSection(String sectionName, List<Question> questions) {
         SectionForm section = new SectionForm();
         section.setName(sectionName);
@@ -560,6 +561,27 @@ public class QuestionnaireControllerTest {
         @Override
         public void describeTo(Description description) {
             description.appendText("Question lists does not match");
+        }
+    }
+
+    private class QuestionDetailMatcher extends TypeSafeMatcher<QuestionDetailForm> {
+        private String title;
+        private String type;
+
+        public QuestionDetailMatcher(String title, String type) {
+            this.title = title;
+            this.type = type;
+        }
+
+        @Override
+        public boolean matchesSafely(QuestionDetailForm questionDetailForm) {
+            return StringUtils.equals(title, questionDetailForm.getTitle()) &&
+                    StringUtils.equals(type, questionDetailForm.getType());
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("QuestionDetail does not match");
         }
     }
 
