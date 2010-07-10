@@ -490,7 +490,7 @@ public class QuestionnaireControllerTest {
         assertThat(sectionQuestions.get(0).getTitle(), is("Q1"));
         assertThat(sectionQuestions.get(1).getQuestionId(), is(2));
         assertThat(sectionQuestions.get(1).getTitle(), is("Q2"));
-        verify(questionnaireServiceFacade);
+        verify(questionnaireServiceFacade).getAllQuestions();
     }
 
     @Test
@@ -499,7 +499,7 @@ public class QuestionnaireControllerTest {
         List<SectionQuestionDetail> sectionQuestions = questionnaireController.getAllSectionQuestions();
         assertThat(sectionQuestions, is(notNullValue()));
         assertThat(sectionQuestions.size(), is(0));
-        verify(questionnaireServiceFacade);
+        verify(questionnaireServiceFacade).getAllQuestions();
     }
 
     private QuestionForm getQuestionForm(String title, String type) {
