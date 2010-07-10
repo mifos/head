@@ -1678,6 +1678,8 @@ public class LoanBO extends AccountBO {
              */
             if (accountReOpened) {
                 loanSummary.increaseBy(null, increaseInterest, increasePenalty, increaseFees);
+                // fix for MIFOS-3287
+                this.setClosedDate(null);
             }
 
             // Reverse just one payment when reopening an account
