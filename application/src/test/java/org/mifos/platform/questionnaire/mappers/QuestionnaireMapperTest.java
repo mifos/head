@@ -65,7 +65,7 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapQuestionDefinitionToQuestion() {
-        QuestionDefinition questionDefinition = new QuestionDefinition(TITLE, QuestionType.FREETEXT);
+        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.FREETEXT);
         Question question = questionnaireMapper.mapToQuestion(questionDefinition);
         assertThat(question.getAnswerTypeAsEnum(), is(FREETEXT));
         assertThat(question.getQuestionText(), is(TITLE));

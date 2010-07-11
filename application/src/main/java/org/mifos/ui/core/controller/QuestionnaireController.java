@@ -97,7 +97,7 @@ public class QuestionnaireController {
                 model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_ID);
             } else {
                 QuestionDetail questionDetail = questionnaireServiceFacade.getQuestionDetail(Integer.valueOf(questionId));
-                model.addAttribute("questionDetail", new QuestionDetailForm(questionDetail));
+                model.addAttribute("questionDetail", new Question(questionDetail));
             }
         } catch (ApplicationException e) {
             MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);

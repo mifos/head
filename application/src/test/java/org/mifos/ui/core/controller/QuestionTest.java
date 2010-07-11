@@ -30,19 +30,19 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
-public class QuestionDetailFormTest {
+public class QuestionTest {
 
     @Test
     public void shouldGetTitleAndType() {
-        assertQuestionDetailForm("Question Title1", QuestionType.NUMERIC, "Number");
-        assertQuestionDetailForm("Question Title2", QuestionType.FREETEXT, "Free text");
-        assertQuestionDetailForm("Question Title2", QuestionType.DATE, "Date");
+        assertQuestion("Question Title1", QuestionType.NUMERIC, "Number");
+        assertQuestion("Question Title2", QuestionType.FREETEXT, "Free text");
+        assertQuestion("Question Title2", QuestionType.DATE, "Date");
     }
 
-    private void assertQuestionDetailForm(String shortName, QuestionType questionType, String questionTypeString) {
+    private void assertQuestion(String shortName, QuestionType questionType, String questionTypeString) {
         QuestionDetail questionDetail = new QuestionDetail(123, "Question Text", shortName, questionType);
-        QuestionDetailForm questionDetailForm = new QuestionDetailForm(questionDetail);
-        assertThat(questionDetailForm.getTitle(), is(shortName));
-        assertThat(questionDetailForm.getType(), is(questionTypeString));
+        Question question = new Question(questionDetail);
+        assertThat(question.getTitle(), is(shortName));
+        assertThat(question.getType(), is(questionTypeString));
     }
 }

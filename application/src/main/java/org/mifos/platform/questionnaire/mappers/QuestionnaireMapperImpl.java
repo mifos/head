@@ -74,11 +74,11 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     @Override
-    public Question mapToQuestion(QuestionDefinition questionDefinition) {
+    public Question mapToQuestion(QuestionDetail questionDetail) {
         Question question = new Question();
-        question.setShortName(questionDefinition.getTitle());
-        question.setQuestionText(questionDefinition.getTitle());
-        question.setAnswerType(mapToAnswerType(questionDefinition.getType()));
+        question.setShortName(questionDetail.getTitle());
+        question.setQuestionText(questionDetail.getTitle());
+        question.setAnswerType(mapToAnswerType(questionDetail.getType()));
         question.setQuestionState(QuestionState.ACTIVE);
         return question;
     }

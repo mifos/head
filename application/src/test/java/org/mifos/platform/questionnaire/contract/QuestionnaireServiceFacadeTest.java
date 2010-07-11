@@ -30,7 +30,6 @@ import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.QuestionnaireServiceFacadeImpl;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mifos.ui.core.controller.Question;
-import org.mifos.ui.core.controller.SectionForm;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -75,7 +74,7 @@ public class QuestionnaireServiceFacadeTest {
         String title1 = title + 1;
         String title2 = title + 2;
         questionnaireServiceFacade.createQuestions(asList(getQuestion(title1, "Free text"), getQuestion(title2, "Date")));
-        verify(questionnaireService, times(2)).defineQuestion(argThat(new QuestionDefinitionMatcher(QuestionType.FREETEXT, QuestionType.DATE)));
+        verify(questionnaireService, times(2)).defineQuestion(argThat(new QuestionDetailMatcher(QuestionType.FREETEXT, QuestionType.DATE)));
     }
 
     @Test
@@ -123,6 +122,7 @@ public class QuestionnaireServiceFacadeTest {
         assertThat(questionGroupDetail, new QuestionGroupDetailMatcher(expectedQuestionGroupDetail));
     }
 
+    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
     public void testGetQuestionGroupByIdFailure() throws ApplicationException {
         int questionGroupId = 1;
@@ -147,6 +147,7 @@ public class QuestionnaireServiceFacadeTest {
         verify(questionnaireService).getQuestion(questionId);
     }
 
+    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
     public void testGetQuestionByIdFailure() throws ApplicationException {
         int questionId = 1;
@@ -172,12 +173,6 @@ public class QuestionnaireServiceFacadeTest {
         verify(questionnaireService).getAllEventSources();
     }
 
-    private SectionForm getSectionForm(String name) {
-        SectionForm sectionForm = new SectionForm();
-        sectionForm.setName(name);
-        return sectionForm;
-    }
-
     private SectionDetail getSectionDetailWithQuestions(String name, int... questionIds) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
@@ -191,14 +186,6 @@ public class QuestionnaireServiceFacadeTest {
 
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, List<SectionDetail> sections) {
         return new QuestionGroupDetail(1, title, new EventSource(event, source, null), sections);
-    }
-
-    private List<SectionDetail> getSections(String... sectionNames) {
-        List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
-        for (String sectionName : sectionNames) {
-            sectionDetails.add(getSectionDefinition(sectionName));
-        }
-        return sectionDetails;
     }
 
     private SectionDetail getSectionDefinition(String name) {
@@ -232,54 +219,25 @@ public class QuestionnaireServiceFacadeTest {
         return question;
     }
 
-    private class QuestionDefinitionMatcher extends ArgumentMatcher<QuestionDefinition> {
+    private class QuestionDetailMatcher extends ArgumentMatcher<QuestionDetail> {
         private List<QuestionType> questionType;
 
-        public QuestionDefinitionMatcher(QuestionType... questionType) {
+        public QuestionDetailMatcher(QuestionType... questionType) {
             this.questionType = new ArrayList<QuestionType>();
             this.questionType.addAll(Arrays.asList(questionType));
         }
 
         @Override
         public boolean matches(Object argument) {
-            if (argument instanceof QuestionDefinition) {
-                QuestionDefinition questionDefinition = (QuestionDefinition) argument;
-                if (questionType.get(0) == questionDefinition.getType()) {
-                    questionType.remove(questionDefinition.getType());
-                    questionType.add(questionDefinition.getType());
+            if (argument instanceof QuestionDetail) {
+                QuestionDetail questionDetail = (QuestionDetail) argument;
+                if (questionType.get(0) == questionDetail.getType()) {
+                    questionType.remove(questionDetail.getType());
+                    questionType.add(questionDetail.getType());
                     return true;
                 }
             }
             return false;
-        }
-    }
-
-    private class QuestionGroupDefinitionMatcher extends TypeSafeMatcher<QuestionGroupDefinition> {
-
-        private QuestionGroupDefinition questionGroupDefinition;
-
-        public QuestionGroupDefinitionMatcher(QuestionGroupDefinition questionGroupDefinition) {
-            this.questionGroupDefinition = questionGroupDefinition;
-        }
-
-        public QuestionGroupDefinitionMatcher(String title, String event, String source, List<SectionDetail> sectionDetails) {
-            this(new QuestionGroupDefinition(title, new EventSource(event, source, event + "." + source), sectionDetails));
-        }
-
-        @Override
-        public boolean matchesSafely(QuestionGroupDefinition questionGroupDefinition) {
-            if (StringUtils.equalsIgnoreCase(this.questionGroupDefinition.getTitle(), questionGroupDefinition.getTitle())) {
-                assertThat(this.questionGroupDefinition.getEventSource(), new EventSourceMatcher(questionGroupDefinition.getEventSource()));
-                assertThat(this.questionGroupDefinition.getSectionDefinitions(), new SectionDefinitionListMatcher(questionGroupDefinition.getSectionDefinitions()));
-            } else {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("Question group definitions do not match");
         }
     }
 
@@ -301,77 +259,6 @@ public class QuestionnaireServiceFacadeTest {
         @Override
         public void describeTo(Description description) {
             description.appendText("Event sources do not match");
-        }
-    }
-
-    private class SectionDefinitionListMatcher extends TypeSafeMatcher<List<SectionDetail>> {
-        private List<SectionDetail> sectionDetails;
-
-        public SectionDefinitionListMatcher(List<SectionDetail> sectionDetails) {
-            this.sectionDetails = sectionDetails;
-        }
-
-
-        @Override
-        public boolean matchesSafely(List<SectionDetail> sectionDetails) {
-            if (this.sectionDetails.size() == sectionDetails.size()) {
-                for (SectionDetail sectionDetail : this.sectionDetails) {
-                    assertThat(sectionDetails, hasItem(new SectionDefinitionMatcher(sectionDetail)));
-                }
-            } else {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("Section definition lists do not match");
-        }
-    }
-
-    private class SectionDefinitionMatcher extends TypeSafeMatcher<SectionDetail> {
-        private SectionDetail sectionDetail;
-
-        public SectionDefinitionMatcher(SectionDetail sectionDetail) {
-            this.sectionDetail = sectionDetail;
-        }
-
-        @Override
-        public boolean matchesSafely(SectionDetail sectionDetail) {
-            if (StringUtils.equalsIgnoreCase(this.sectionDetail.getName(), sectionDetail.getName())
-                    && this.sectionDetail.getQuestions().size() == sectionDetail.getQuestions().size()) {
-                for (SectionQuestionDetail sectionQuestionDetail : this.sectionDetail.getQuestions()) {
-                    assertThat(sectionDetail.getQuestions(), hasItem(new SectionQuestionDetailMatcher(sectionQuestionDetail)));
-                }
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("Section definitions do not match");
-        }
-
-    }
-
-    private class SectionQuestionDetailMatcher extends TypeSafeMatcher<SectionQuestionDetail> {
-        private SectionQuestionDetail sectionQuestionDetail;
-
-        public SectionQuestionDetailMatcher(SectionQuestionDetail sectionQuestionDetail) {
-            this.sectionQuestionDetail = sectionQuestionDetail;
-        }
-
-        @Override
-        public boolean matchesSafely(SectionQuestionDetail sectionQuestionDetail) {
-            return this.sectionQuestionDetail.getQuestionId() == sectionQuestionDetail.getQuestionId()
-                    & StringUtils.equalsIgnoreCase(this.sectionQuestionDetail.getTitle(), sectionQuestionDetail.getTitle());
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("Section definition questions do not match");
         }
     }
 

@@ -95,7 +95,7 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
                 makeEntry("Number", QuestionType.NUMERIC));
     }
 
-    private QuestionDefinition mapToQuestionDefinition(Question question) {
-        return new QuestionDefinition(question.getTitle(), stringToQuestionTypeMap.get(question.getType()));
+    private QuestionDetail mapToQuestionDefinition(Question question) {
+        return new QuestionDetail(question.getTitle(), stringToQuestionTypeMap.get(question.getType()));
     }
 }

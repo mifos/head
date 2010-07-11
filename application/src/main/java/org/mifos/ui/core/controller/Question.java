@@ -20,54 +20,76 @@
 
 package org.mifos.ui.core.controller;
 
-import org.apache.commons.lang.StringUtils;
+import org.mifos.framework.util.CollectionUtils;
+import org.mifos.platform.questionnaire.contract.QuestionDetail;
+import org.mifos.platform.questionnaire.contract.QuestionType;
 
 import java.io.Serializable;
+import java.util.Map;
+
+import static org.mifos.framework.util.MapEntry.makeEntry;
 
 public class Question implements Serializable{
-    private String title;
     private static final long serialVersionUID = -2584259958410679795L;
-    private String type;
-    private String id;
-    private boolean required;
+    private QuestionDetail questionDetail;
+    private Map<String, QuestionType> stringToQuestionTypeMap;
+    private Map<QuestionType, String> questionTypeToStringMap;
+
+    public Question() {
+        this(new QuestionDetail());
+    }
+
+    public Question(QuestionDetail questionDetail) {
+        this.questionDetail = questionDetail;
+        populateStringToQuestionTypeMap();
+        populateQuestionTypeToStringMap();
+    }
 
     @org.hibernate.validator.constraints.NotEmpty
     @javax.validation.constraints.Size(min=1,max=50)
     public String getTitle() {
-        return title;
+        return questionDetail.getTitle();
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        questionDetail.setTitle(title);
         trimTitle();
     }
 
     public void trimTitle() {
-        this.title = StringUtils.trim(this.title);
+        questionDetail.trimTitle();
     }
 
     @org.hibernate.validator.constraints.NotEmpty
     public String getType() {
-        return type;
+        return questionTypeToStringMap.get(questionDetail.getType());
     }
 
     public void setType(String type) {
-        this.type = type;
+        questionDetail.setType(stringToQuestionTypeMap.get(type));
     }
 
     public String getId() {
-        return id;
+        return questionDetail.getId().toString();
     }
 
     public void setId(String id) {
-        this.id = id;
+        questionDetail.setId(Integer.valueOf(id));
     }
 
-    public boolean isRequired() {
-        return required;
+    public QuestionDetail getQuestionDetail() {
+        return questionDetail;
     }
 
-    public void setRequired(boolean required) {
-        this.required = required;
+    private void populateStringToQuestionTypeMap() {
+        stringToQuestionTypeMap = CollectionUtils.asMap(makeEntry("Free text", QuestionType.FREETEXT),
+                makeEntry("Date", QuestionType.DATE),
+                makeEntry("Number", QuestionType.NUMERIC));
+    }
+
+    private void populateQuestionTypeToStringMap() {
+        questionTypeToStringMap = CollectionUtils.asMap(makeEntry(QuestionType.FREETEXT, "Free text"),
+                makeEntry(QuestionType.DATE, "Date"),
+                makeEntry(QuestionType.NUMERIC, "Number"));
     }
 }

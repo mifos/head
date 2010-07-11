@@ -285,7 +285,7 @@ public class QuestionnaireServiceIntegrationTest {
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws ApplicationException {
-        return questionnaireService.defineQuestion(new QuestionDefinition(questionTitle, questionType));
+        return questionnaireService.defineQuestion(new QuestionDetail(questionTitle, questionType));
     }
 
     private QuestionGroupDetail defineQuestionGroup(String title, String event, String source, List<SectionDetail> sectionDetails) throws ApplicationException {

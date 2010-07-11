@@ -32,7 +32,7 @@ public interface QuestionnaireMapper {
 
     QuestionDetail mapToQuestionDetail(Question question);
 
-    Question mapToQuestion(QuestionDefinition questionDefinition);
+    Question mapToQuestion(QuestionDetail questionDetail);
 
     QuestionGroup mapToQuestionGroup(QuestionGroupDetail questionGroupDetail);
 

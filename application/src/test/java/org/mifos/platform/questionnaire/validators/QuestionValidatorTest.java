@@ -58,7 +58,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldNotThrowExceptionWhenQuestionTitleIsProvided() {
         try {
-            questionnaireValidator.validate(new QuestionDefinition("Title", FREETEXT));
+            questionnaireValidator.validate(new QuestionDetail("Title", FREETEXT));
         } catch (ApplicationException e) {
             fail("Should not have thrown the exception");
         }
@@ -67,7 +67,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenQuestionTitleIsProvided() {
         try {
-            questionnaireValidator.validate(new QuestionDefinition(null, FREETEXT));
+            questionnaireValidator.validate(new QuestionDetail(null, FREETEXT));
             fail("Should have thrown the application exception");
         } catch (ApplicationException e) {
             assertEquals(QUESTION_TITLE_NOT_PROVIDED, e.getKey());
@@ -77,7 +77,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenQuestionTypeNotProvided() {
         try {
-            questionnaireValidator.validate(new QuestionDefinition("Title 123", INVALID));
+            questionnaireValidator.validate(new QuestionDetail("Title 123", INVALID));
             fail("Should have thrown the application exception");
         } catch (ApplicationException e) {
             assertEquals(QUESTION_TYPE_NOT_PROVIDED, e.getKey());

@@ -261,6 +261,7 @@ public class QuestionnaireControllerTest {
         return new SectionQuestionDetail(id, title, true);
     }
 
+    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
     public void testCreateQuestionFailure() throws Exception {
         QuestionForm questionForm = getQuestionForm(TITLE, "Numeric");
@@ -380,9 +381,10 @@ public class QuestionnaireControllerTest {
         assertThat(view, is("viewQuestionDetail"));
         verify(questionnaireServiceFacade).getQuestionDetail(questionId);
         verify(httpServletRequest, times(1)).getParameter("questionId");
-        verify(model).addAttribute(eq("questionDetail"), argThat(new QuestionDetailFormMatcher(TITLE, "Number")));
+        verify(model).addAttribute(eq("questionDetail"), argThat(new QuestionMatcher("1", TITLE, "Number")));
     }
 
+    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
     public void testGetQuestionWhenNotPresentInDb() throws ApplicationException {
         int questionId = 1;
@@ -439,6 +441,7 @@ public class QuestionnaireControllerTest {
         return new QuestionGroupDetail(questionGroupId, title, sectionDetails);
     }
 
+    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
     public void testGetQuestionGroupWhenNotPresentInDb() throws ApplicationException {
         int questionGroupId = 1;
@@ -555,59 +558,22 @@ public class QuestionnaireControllerTest {
         }
     }
 
-    private class QuestionDetailFormMatcher extends TypeSafeMatcher<QuestionDetailForm> {
+    private class QuestionMatcher extends TypeSafeMatcher<Question> {
+        private String id;
         private String title;
         private String type;
 
-        public QuestionDetailFormMatcher(String title, String type) {
+        public QuestionMatcher(String id, String title, String type) {
+            this.id = id;
             this.title = title;
             this.type = type;
         }
 
         @Override
-        public boolean matchesSafely(QuestionDetailForm questionDetailForm) {
-            return StringUtils.equals(title, questionDetailForm.getTitle()) &&
-                    StringUtils.equals(type, questionDetailForm.getType());
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("QuestionDetail does not match");
-        }
-    }
-
-    private class QuestionMatcher extends TypeSafeMatcher<Question> {
-        private Question question;
-
-        public QuestionMatcher(Question question) {
-            this.question = question;
-        }
-
-        @Override
         public boolean matchesSafely(Question question) {
-            return (equalsIgnoreCase(this.question.getType(), question.getType())
-                    && equalsIgnoreCase(this.question.getId(), question.getId())
-                    && equalsIgnoreCase(this.question.getTitle(), question.getTitle()));
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("Question does not match");
-        }
-    }
-
-    private class QuestionDetailMatcher extends TypeSafeMatcher<QuestionDetail> {
-        private QuestionDetail questionDetail;
-
-        public QuestionDetailMatcher(QuestionDetail questionDetail) {
-            this.questionDetail = questionDetail;
-        }
-
-        @Override
-        public boolean matchesSafely(QuestionDetail questionDetail) {
-            return ((this.questionDetail.getType() == questionDetail.getType())
-                    && (this.questionDetail.getId().equals(questionDetail.getId()))
-                    && equalsIgnoreCase(this.questionDetail.getTitle(), questionDetail.getTitle()));
+            return (equalsIgnoreCase(type, question.getType())
+                    && equalsIgnoreCase(id, question.getId())
+                    && equalsIgnoreCase(title, question.getTitle()));
         }
 
         @Override
@@ -658,33 +624,6 @@ public class QuestionnaireControllerTest {
         @Override
         public void describeTo(Description description) {
             description.appendText("SectionDetailForms do not match");
-        }
-    }
-
-    class SectionFormMatcher extends TypeSafeMatcher<SectionForm> {
-        private SectionForm sectionForm;
-
-        public SectionFormMatcher(SectionForm sectionForm) {
-            this.sectionForm = sectionForm;
-        }
-
-        @Override
-        public boolean matchesSafely(SectionForm sectionForm) {
-            if (StringUtils.equals(this.sectionForm.getName(), sectionForm.getName()) &&
-                    this.sectionForm.getQuestionDetails().size() == sectionForm.getQuestionDetails().size()) {
-                for (QuestionDetail question : this.sectionForm.getQuestionDetails()) {
-                    assertThat(sectionForm.getQuestionDetails(), hasItem(new QuestionDetailMatcher(question)));
-                }
-            } else {
-                return false;
-            }
-            return true;
-
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("Sections do not match");
         }
     }
 

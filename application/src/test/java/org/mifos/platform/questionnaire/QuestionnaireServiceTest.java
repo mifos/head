@@ -81,7 +81,7 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldDefineQuestion() throws ApplicationException {
-        QuestionDefinition questionDefinition = new QuestionDefinition(QUESTION_TITLE, FREETEXT);
+        QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, FREETEXT);
         try {
             QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
             verify(questionDao, times(1)).create(any(Question.class));
@@ -96,9 +96,10 @@ public class QuestionnaireServiceTest {
         verify(questionDao).create(any(org.mifos.customers.surveys.business.Question.class));
     }
 
+    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test(expected = ApplicationException.class)
     public void shouldThrowValidationExceptionWhenQuestionTitleIsNull() throws ApplicationException {
-        QuestionDefinition questionDefinition = new QuestionDefinition(null, INVALID);
+        QuestionDetail questionDefinition = new QuestionDetail(null, INVALID);
         doThrow(new ApplicationException(QUESTION_TITLE_NOT_PROVIDED)).when(questionnaireValidator).validate(questionDefinition);
         questionnaireService.defineQuestion(questionDefinition);
         verify(questionnaireValidator).validate(questionDefinition);
@@ -190,10 +191,6 @@ public class QuestionnaireServiceTest {
         when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(Collections.singletonList(eventSourceEntity));
     }
 
-    private QuestionGroupDefinition getQuestionGroupDefinition(String event, String source, String... sectionNames) {
-        return new QuestionGroupDefinition(QUESTION_GROUP_TITLE, getEventSource(event, source), getSectionDefinitions(sectionNames));
-    }
-
     private QuestionGroupDetail getQuestionGroupDetail(String event, String source, String... sectionNames) {
         return new QuestionGroupDetail(0, QUESTION_GROUP_TITLE, getEventSource(event, source), getSectionDefinitions(sectionNames));
     }
@@ -229,6 +226,7 @@ public class QuestionnaireServiceTest {
         return section;
     }
 
+    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test(expected = ApplicationException.class)
     public void shouldThrowValidationExceptionWhenQuestionGroupTitleIsNull() throws ApplicationException {
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, null, null, asList(getSectionDefinition("S1")));

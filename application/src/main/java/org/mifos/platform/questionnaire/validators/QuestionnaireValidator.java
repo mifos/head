@@ -21,11 +21,11 @@
 package org.mifos.platform.questionnaire.validators;
 
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.platform.questionnaire.contract.QuestionDefinition;
+import org.mifos.platform.questionnaire.contract.QuestionDetail;
 import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
 
 public interface QuestionnaireValidator {
-    void validate(QuestionDefinition questionDefinition) throws ApplicationException;
+    void validate(QuestionDetail questionDetail) throws ApplicationException;
 
     void validate(QuestionGroupDetail questionGroupDetail) throws ApplicationException;
 }

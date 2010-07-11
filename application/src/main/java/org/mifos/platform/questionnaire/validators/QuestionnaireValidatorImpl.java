@@ -51,9 +51,9 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     @Override
-    public void validate(QuestionDefinition questionDefinition) throws ApplicationException {
-        validateQuestionTitle(questionDefinition);
-        validateQuestionType(questionDefinition);
+    public void validate(QuestionDetail questionDetail) throws ApplicationException {
+        validateQuestionTitle(questionDetail);
+        validateQuestionType(questionDetail);
     }
 
     @Override
@@ -108,12 +108,12 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
             throw new ApplicationException(QUESTION_GROUP_TITLE_NOT_PROVIDED);
     }
 
-    private void validateQuestionType(QuestionDefinition questionDefinition) throws ApplicationException {
+    private void validateQuestionType(QuestionDetail questionDefinition) throws ApplicationException {
         if (INVALID == questionDefinition.getType())
             throw new ApplicationException(QUESTION_TYPE_NOT_PROVIDED);
     }
 
-    private void validateQuestionTitle(QuestionDefinition questionDefinition) throws ApplicationException {
+    private void validateQuestionTitle(QuestionDetail questionDefinition) throws ApplicationException {
         if (StringUtils.isEmpty(questionDefinition.getTitle()))
             throw new ApplicationException(QUESTION_TITLE_NOT_PROVIDED);
     }
