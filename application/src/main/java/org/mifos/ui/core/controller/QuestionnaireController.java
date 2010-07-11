@@ -130,12 +130,20 @@ public class QuestionnaireController {
 
     public String createQuestions(QuestionForm questionForm, RequestContext requestContext) {
         try {
-            questionnaireServiceFacade.createQuestions(questionForm.getQuestions());
+            questionnaireServiceFacade.createQuestions(getQuestionDetails(questionForm));
         } catch (ApplicationException e) {
             constructAndLogSystemError(requestContext.getMessageContext(), e);
             return "failure";
         }
         return "success";
+    }
+
+    private List<QuestionDetail> getQuestionDetails(QuestionForm questionForm) {
+        List<QuestionDetail> questionDetails = new ArrayList<QuestionDetail>();
+        for (Question question : questionForm.getQuestions()) {
+            questionDetails.add(question.getQuestionDetail());
+        }
+        return questionDetails;
     }
 
     public String defineQuestionGroup(QuestionGroupForm questionGroupForm, RequestContext requestContext) {

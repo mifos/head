@@ -21,25 +21,18 @@
 package org.mifos.platform.questionnaire;
 
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.util.CollectionUtils;
 import org.mifos.platform.questionnaire.contract.*;
-import org.mifos.ui.core.controller.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Map;
-
-import static org.mifos.framework.util.MapEntry.makeEntry;
 
 public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacade {
 
     @Autowired
     private QuestionnaireService questionnaireService;
-    private Map<String, QuestionType> stringToQuestionTypeMap;
 
     public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService) {
         this.questionnaireService = questionnaireService;
-        populateStringToQuestionTypeMap();
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
@@ -48,9 +41,9 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public void createQuestions(List<Question> questions) throws ApplicationException {
-        for (Question question : questions) {
-            questionnaireService.defineQuestion(mapToQuestionDefinition(question));
+    public void createQuestions(List<QuestionDetail> questionDetails) throws ApplicationException {
+        for (QuestionDetail questionDetail : questionDetails) {
+            questionnaireService.defineQuestion(questionDetail);
         }
     }
 
@@ -89,13 +82,4 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         return questionnaireService.getAllEventSources();
     }
 
-    private void populateStringToQuestionTypeMap() {
-        stringToQuestionTypeMap = CollectionUtils.asMap(makeEntry("Free text", QuestionType.FREETEXT),
-                makeEntry("Date", QuestionType.DATE),
-                makeEntry("Number", QuestionType.NUMERIC));
-    }
-
-    private QuestionDetail mapToQuestionDefinition(Question question) {
-        return new QuestionDetail(question.getTitle(), stringToQuestionTypeMap.get(question.getType()));
-    }
 }

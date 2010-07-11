@@ -21,12 +21,11 @@
 package org.mifos.platform.questionnaire.contract;
 
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.ui.core.controller.Question;
 
 import java.util.List;
 
 public interface QuestionnaireServiceFacade {
-    void createQuestions(List<Question> questions) throws ApplicationException;
+    void createQuestions(List<QuestionDetail> questionDetails) throws ApplicationException;
 
     boolean isDuplicateQuestion(String title);
 

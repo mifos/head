@@ -29,7 +29,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.QuestionnaireServiceFacadeImpl;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
-import org.mifos.ui.core.controller.Question;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -73,7 +72,7 @@ public class QuestionnaireServiceFacadeTest {
         String title = TITLE + System.currentTimeMillis();
         String title1 = title + 1;
         String title2 = title + 2;
-        questionnaireServiceFacade.createQuestions(asList(getQuestion(title1, "Free text"), getQuestion(title2, "Date")));
+        questionnaireServiceFacade.createQuestions(asList(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT), getQuestionDetail(0, title2, title2, QuestionType.DATE)));
         verify(questionnaireService, times(2)).defineQuestion(argThat(new QuestionDetailMatcher(QuestionType.FREETEXT, QuestionType.DATE)));
     }
 
@@ -85,12 +84,16 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testGetAllQuestion() {
-        when(questionnaireService.getAllQuestions()).thenReturn(asList(new QuestionDetail(1, "title", "title", QuestionType.NUMERIC)));
+        when(questionnaireService.getAllQuestions()).thenReturn(asList(getQuestionDetail(1, "title", "title", QuestionType.NUMERIC)));
         List<QuestionDetail> questionDetailList = questionnaireServiceFacade.getAllQuestions();
         assertNotNull(questionDetailList);
         assertThat(questionDetailList.get(0).getTitle(), is("title"));
         assertThat(questionDetailList.get(0).getId(), is(1));
         verify(questionnaireService).getAllQuestions();
+    }
+
+    private QuestionDetail getQuestionDetail(int id, String text, String shortName, QuestionType questionType) {
+        return new QuestionDetail(id, text, shortName, questionType);
     }
 
     @Test
@@ -210,13 +213,6 @@ public class QuestionnaireServiceFacadeTest {
 
     private EventSource makeEvent(String event, String source, String description) {
         return new EventSource(event, source, description);
-    }
-
-    private Question getQuestion(String title, String type) {
-        Question question = new Question();
-        question.setTitle(title);
-        question.setType(type);
-        return question;
     }
 
     private class QuestionDetailMatcher extends ArgumentMatcher<QuestionDetail> {

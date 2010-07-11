@@ -266,10 +266,10 @@ public class QuestionnaireControllerTest {
     public void testCreateQuestionFailure() throws Exception {
         QuestionForm questionForm = getQuestionForm(TITLE, "Numeric");
         when(requestContext.getMessageContext()).thenReturn(messageContext);
-        doThrow(new ApplicationException("db.write.failure")).when(questionnaireServiceFacade).createQuestions(Matchers.<List<Question>>anyObject());
+        doThrow(new ApplicationException("db.write.failure")).when(questionnaireServiceFacade).createQuestions(Matchers.<List<QuestionDetail>>anyObject());
         String result = questionnaireController.createQuestions(questionForm, requestContext);
         assertThat(result, is("failure"));
-        verify(questionnaireServiceFacade).createQuestions(Matchers.<List<Question>>anyObject());
+        verify(questionnaireServiceFacade).createQuestions(Matchers.<List<QuestionDetail>>anyObject());
         verify(requestContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher("db.write.failure")));
     }
@@ -279,7 +279,7 @@ public class QuestionnaireControllerTest {
         QuestionForm questionForm = getQuestionForm(TITLE, "Date");
         String result = questionnaireController.createQuestions(questionForm, requestContext);
         assertThat(result, is("success"));
-        verify(questionnaireServiceFacade).createQuestions(questionForm.getQuestions());
+        verify(questionnaireServiceFacade).createQuestions(anyListOf(QuestionDetail.class));
     }
 
     @Test
