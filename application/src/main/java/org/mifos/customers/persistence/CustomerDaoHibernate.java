@@ -1388,6 +1388,15 @@ public class CustomerDaoHibernate implements CustomerDao {
         }
     }
 
+    @Override
+    public void checkPermissionForDefaultFeeRemovalFromLoan(UserContext userContext, CustomerBO customer) throws CustomerException {
+        if (!ActivityMapper.getInstance().isRemoveFeesPermittedForAccounts(AccountTypes.LOAN_ACCOUNT, customer.getLevel(),
+                userContext, customer.getOfficeId(), customer.getLoanOfficerId())) {
+            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+
+    }
+
     private boolean isPermissionAllowed(UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
         return ActivityMapper.getInstance().isRemoveFeesPermittedForAccounts(AccountTypes.CUSTOMER_ACCOUNT,
                 CustomerLevel.CLIENT, userContext, recordOfficeId, recordLoanOfficerId);

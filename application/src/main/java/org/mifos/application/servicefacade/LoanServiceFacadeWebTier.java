@@ -305,6 +305,10 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         LocalizationConverter localizationConverter = new LocalizationConverter();
         CustomerBO customer = customerDao.findCustomerById(customerId);
 
+        if (loanActionForm.isDefaultFeeRemoved()) {
+            customerDao.checkPermissionForDefaultFeeRemovalFromLoan(userContext, customer);
+        }
+
         new LoanService().validateDisbursementDateForNewLoan(customer.getOfficeId(), disbursementDate);
 
         boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationPersistence()

@@ -213,4 +213,6 @@ public interface CustomerDao {
     List<AccountBO> findGLIMLoanAccountsApplicableTo(Integer customerId, Integer customerWithActiveAccount);
 
     void checkPermissionForDefaultFeeRemoval(UserContext userContext, Short officeId, Short personnelId) throws CustomerException;
+
+    void checkPermissionForDefaultFeeRemovalFromLoan(UserContext userContext, CustomerBO customer) throws CustomerException;
 }
