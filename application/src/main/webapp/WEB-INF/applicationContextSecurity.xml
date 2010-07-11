@@ -32,6 +32,9 @@
 		<intercept-url pattern="/*.css*" filters="none" />
 		<intercept-url pattern="/*.gif" filters="none" />
 		<intercept-url pattern="/*.jpg" filters="none" />
+		<intercept-url pattern="/pages/framework/images/*.jpg" filters="none" />		
+		<intercept-url pattern="/pages/framework/images/buttons/*.jpg" filters="none" />		
+		<intercept-url pattern="/*.jpg" filters="none" />
 		<intercept-url pattern="/*.js" filters="none" />
 		<intercept-url pattern="/*.html" filters="none" />		
 		<intercept-url pattern="/login.ftl*" filters="none" />
