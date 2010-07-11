@@ -211,4 +211,6 @@ public interface CustomerDao {
     CustomerPerformanceHistoryDto numberOfMeetings(boolean bool, Integer clientId);
 
     List<AccountBO> findGLIMLoanAccountsApplicableTo(Integer customerId, Integer customerWithActiveAccount);
+
+    void checkPermissionForDefaultFeeRemoval(UserContext userContext, Short officeId, Short personnelId) throws CustomerException;
 }
