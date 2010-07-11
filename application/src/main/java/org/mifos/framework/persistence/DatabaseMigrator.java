@@ -200,7 +200,7 @@ public class DatabaseMigrator {
             if (e.getKey() <= databaseVersion) {
                 Statement stmt = connection.createStatement();
 
-                stmt.execute("insert into APPLIED_UPGRADES values(" + e.getValue() + ")");
+                stmt.execute("insert into applied_upgrades values(" + e.getValue() + ")");
                 connection.commit();
             }
         }
@@ -269,8 +269,8 @@ public class DatabaseMigrator {
     private void createAppliedUpgradesTable() {
         try {
             Statement stmt = connection.createStatement();
-            stmt.execute("CREATE TABLE  APPLIED_UPGRADES" + "( UPGRADE_ID INTEGER NOT NULL,"
-                    + "PRIMARY KEY(UPGRADE_ID)" + ")ENGINE=InnoDB CHARACTER SET utf8;");
+            stmt.execute("CREATE TABLE  applied_upgrades" + "( upgrade_id INTEGER NOT NULL,"
+                    + "PRIMARY KEY(upgrade_id)" + ")ENGINE=InnoDB CHARACTER SET utf8;");
             connection.commit();
         } catch (SQLException e) {
             System.err.print("Unable to create APPLIED_UPGRADES table for NSDU");
@@ -294,7 +294,8 @@ public class DatabaseMigrator {
         } else if (METHOD_UPGRADE_TYPE.equals(type)) {
 
             Method method = DatabaseMigrator.class.getDeclaredMethod("upgrade" + upgradeNumber);
-            method.invoke(this);
+            Upgrade up = (Upgrade)method.invoke(this);
+            up.upgrade(connection);
         }
 
         Statement stmt = connection.createStatement();
@@ -345,7 +346,7 @@ public class DatabaseMigrator {
         Statement stmt = null;
         try {
             stmt = connection.createStatement(ResultSet.FETCH_FORWARD, ResultSet.CONCUR_READ_ONLY);
-            ResultSet rs = stmt.executeQuery("SELECT UPGRADE_ID FROM APPLIED_UPGRADES");
+            ResultSet rs = stmt.executeQuery("select upgrade_id from applied_upgrades");
 
             if (rs.next()) {
                 appliedUpgrades.add(rs.getInt(1));
@@ -378,14 +379,14 @@ public class DatabaseMigrator {
     }
 
     @SuppressWarnings("unused")
-    private static void upgrade1277571792() {
-        new AddActivity("Permissions-CanShutdownMifos", SecurityConstants.CAN_SHUTDOWN_MIFOS,
-                SecurityConstants.SYSTEM_INFORMATION);
+    private static Upgrade upgrade1277571792() {
+        return new AddActivity("Permissions-CanShutdownMifos",
+                SecurityConstants.CAN_SHUTDOWN_MIFOS, SecurityConstants.SYSTEM_INFORMATION);
     }
 
     @SuppressWarnings("unused")
-    private static void upgrade1277588373() {
-        new AddActivity("Permissions-CanDefineHoliday", SecurityConstants.CAN_DEFINE_HOLIDAY,
+    private static Upgrade upgrade1277588373() {
+        return new AddActivity("Permissions-CanDefineHoliday", SecurityConstants.CAN_DEFINE_HOLIDAY,
                 SecurityConstants.ORGANIZATION_MANAGEMENT);
         // register(register, new CompositeUpgrade(
         // new AddActivity(248, SecurityConstants.PRODUCT_MIX, null, ENGLISH_LOCALE, "Product mix"),
@@ -396,14 +397,14 @@ public class DatabaseMigrator {
     }
 
     @SuppressWarnings("unused")
-    private static void upgrade1278540763() {
-        new AddReport(ReportsCategoryBO.ANALYSIS, "Detailed Aging Of Portfolio At Risk Report",
+    private static Upgrade upgrade1278540763() {
+        return new AddReport(ReportsCategoryBO.ANALYSIS, "Detailed Aging Of Portfolio At Risk Report",
                 "DetailedAgingPortfolioAtRiskReport.rptdesign");
     }
 
     @SuppressWarnings("unused")
-    private static void upgrade1278540832() {
-        new AddReport(ReportsCategoryBO.ANALYSIS, "General Ledger Report", "GeneralLedgerReport.rptdesign");
+    private static Upgrade upgrade1278540832() {
+        return new AddReport(ReportsCategoryBO.ANALYSIS, "General Ledger Report", "GeneralLedgerReport.rptdesign");
     }
 
     // TODO remove

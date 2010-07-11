@@ -45,19 +45,15 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**
- * This class runs tests on database upgrade scripts (both SQL
- * based and java based).  It uses a version of the database referred to as
- * a "checkpoint" as a starting point.  The database checkpoint version that
- * it starts with can be adjusted by updating sql/latest-schema-checkupoint.sql
- * and sql/latest-data-checkupoint.sql with a pair of the corresponding
- * latest-schema.sql and latest-data.sql files for a given database version.
- * The static variable DatabaseVersionPersistence.LATEST_CHECKPOINT_VERSION
- * must then be set to the database version number of the latest-xxx.sql files
- * that have been used to update the latest-xxx-checkpoint.sql files.
- * This test will run upgrade scripts using LATEST_CHECKPOINT_VERSION
- * as a starting point.  In general LATEST_CHECKPOINT_VERSION should be a
- * database version that is at least 3-5 upgrades ago in order to allow for
- * fixes to be made to recent upgrades when necessary.
+ * This class runs tests on database upgrade scripts (both SQL based and java based). It uses a version of the database
+ * referred to as a "checkpoint" as a starting point. The database checkpoint version that it starts with can be
+ * adjusted by updating sql/latest-schema-checkupoint.sql and sql/latest-data-checkupoint.sql with a pair of the
+ * corresponding latest-schema.sql and latest-data.sql files for a given database version. The static variable
+ * DatabaseVersionPersistence.LATEST_CHECKPOINT_VERSION must then be set to the database version number of the
+ * latest-xxx.sql files that have been used to update the latest-xxx-checkpoint.sql files. This test will run upgrade
+ * scripts using LATEST_CHECKPOINT_VERSION as a starting point. In general LATEST_CHECKPOINT_VERSION should be a
+ * database version that is at least 3-5 upgrades ago in order to allow for fixes to be made to recent upgrades when
+ * necessary.
  */
 public class LatestTestAfterCheckpointIntegrationTest {
 
@@ -101,34 +97,31 @@ public class LatestTestAfterCheckpointIntegrationTest {
 
     @Test
     public void testRealSchemaFromCheckpoint() throws Exception {
-        createLatestDatabaseWithLatestData();
+        String tmpDir = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
 
-        IDataSet latestDataDump = dbUnitConnection.createDataSet();
+        createLatestDatabaseWithLatestData();
 
         // FIXME for some reason the comparison of DatabaseDataSet (IDataSet) doesn't expose the difference at assert in
         // datasets FlatXmlDataSet seems to work here.
-        final File latestDumpFile = File.createTempFile("latestDataDump", ".xml");
-        FlatXmlDataSet.write(latestDataDump, new FileOutputStream(latestDumpFile));
-        latestDataDump = new FlatXmlDataSet(latestDumpFile);
-        latestDumpFile.delete();
-
-        final String latestDumpAsString = TestDatabase.getAllTablesStructureDump();
+        IDataSet latestDataDump = dbUnitConnection.createDataSet();
+        FlatXmlDataSet.write(latestDataDump, new FileOutputStream(tmpDir + "latestDataDump.xml"));
+        latestDataDump = new FlatXmlDataSet(new File(tmpDir + "latestDataDump.xml"));
+        final String latestSchemaDump = TestDatabase.getAllTablesStructureDump();
+        new FileOutputStream(tmpDir + "latestSchemaDump").write(latestSchemaDump.getBytes());
         dropLatestDatabase();
 
         createLatestCheckPointDatabaseWithLatestData();
+
         DatabaseMigrator migrator = new DatabaseMigrator(connection);
         migrator.upgrade();
 
-        String upgradeDump = TestDatabase.getAllTablesStructureDump();
-
+        String upgradeSchemaDump = TestDatabase.getAllTablesStructureDump();
+        new FileOutputStream(tmpDir + "upgradeSchemaDump").write(upgradeSchemaDump.getBytes());
         IDataSet upgradeDataDump = dbUnitConnection.createDataSet();
+        FlatXmlDataSet.write(upgradeDataDump, new FileOutputStream(tmpDir + "upgradeDataDump.xml"));
+        upgradeDataDump = new FlatXmlDataSet(new File(tmpDir + "upgradeDataDump.xml"));
 
-        final File upgradeDumpFile = File.createTempFile("upgradeDataDump", ".xml");
-        FlatXmlDataSet.write(upgradeDataDump, new FileOutputStream(upgradeDumpFile));
-        upgradeDataDump = new FlatXmlDataSet(upgradeDumpFile);
-        upgradeDumpFile.delete();
-
-        Assert.assertEquals(latestDumpAsString, upgradeDump);
+        Assert.assertEquals(latestSchemaDump, upgradeSchemaDump);
         Assertion.assertEquals(latestDataDump, upgradeDataDump);
     }
 
@@ -142,9 +135,8 @@ public class LatestTestAfterCheckpointIntegrationTest {
     }
 
     /**
-     * The idea here is to figure out whether we are dropping tables in the
-     * right order to deal with foreign keys. I'm not sure we fully succeed,
-     * however.
+     * The idea here is to figure out whether we are dropping tables in the right order to deal with foreign keys. I'm
+     * not sure we fully succeed, however.
      */
     @Test
     public void testDropTablesWithData() throws Exception {
