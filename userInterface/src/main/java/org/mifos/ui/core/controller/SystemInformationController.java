@@ -49,7 +49,6 @@ public class SystemInformationController {
     public ModelAndView viewSystemInformation(HttpServletRequest request) {
         ServletContext context = request.getSession().getServletContext();
 
-        // TODO: figure out if this is really where we want to get this
         Locale locale = request.getLocale();
 
         SystemInformationDto systemInformationDto = systemInformationServiceFacade.getSystemInformation(context, locale);
