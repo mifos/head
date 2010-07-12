@@ -26,17 +26,17 @@ import com.thoughtworks.selenium.Selenium;
 
 public class AppLauncher extends AbstractPage {
 
-	public AppLauncher() {
-		super();
-	}
+    public AppLauncher() {
+        super();
+    }
 
-	public AppLauncher(Selenium selenium) {
-		super(selenium);
-	}
+    public AppLauncher(Selenium selenium) {
+        super(selenium);
+    }
 
-	public LoginPage launchMifos() {
-		selenium.open("login.ftl");
-		return new LoginPage(selenium);
-	}
+    public LoginPage launchMifos() {
+        selenium.open("login.ftl");
+        return new LoginPage(selenium);
+    }
 
 }

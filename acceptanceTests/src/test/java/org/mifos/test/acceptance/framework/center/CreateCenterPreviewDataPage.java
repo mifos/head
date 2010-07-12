@@ -26,13 +26,13 @@ import com.thoughtworks.selenium.Selenium;
 
 public class CreateCenterPreviewDataPage extends MifosPage {
 
-	public CreateCenterPreviewDataPage() {
-		super();
-	}
+    public CreateCenterPreviewDataPage() {
+        super();
+    }
 
-	public CreateCenterPreviewDataPage(Selenium selenium) {
-		super(selenium);
-	}
+    public CreateCenterPreviewDataPage(Selenium selenium) {
+        super(selenium);
+    }
 
     public CreateCenterConfirmationPage submit() {
         selenium.click("previewcenter.button.submit");

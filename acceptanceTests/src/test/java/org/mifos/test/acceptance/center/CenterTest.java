@@ -50,44 +50,44 @@ public class CenterTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
-	private NavigationHelper navigationHelper;
+    private NavigationHelper navigationHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-	@BeforeMethod
-	public void setUp() throws Exception {
-		super.setUp();
-		navigationHelper = new NavigationHelper(selenium);
-		new InitializeApplicationRemoteTestingService().reinitializeApplication(selenium);
-	}
+    @BeforeMethod
+    public void setUp() throws Exception {
+        super.setUp();
+        navigationHelper = new NavigationHelper(selenium);
+        new InitializeApplicationRemoteTestingService().reinitializeApplication(selenium);
+    }
 
-	@AfterMethod
-	public void logOut() {
-		(new MifosPage(selenium)).logout();
-	}
+    @AfterMethod
+    public void logOut() {
+        (new MifosPage(selenium)).logout();
+    }
 
-	@SuppressWarnings("PMD.SignatureDeclareThrowsException")
-	public void createCenterTest() throws Exception {
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createCenterTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
         createCenter(getCenterParameters("Fantastico", "Joe1233171679953 Guy1233171679953"), "MyOffice1233171674227");
-	}
+    }
 
-	public CenterViewDetailsPage createCenter(CreateCenterEnterDataPage.SubmitFormParameters formParameters, String officeName) {
-	    ClientsAndAccountsHomepage clientsAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
+    public CenterViewDetailsPage createCenter(CreateCenterEnterDataPage.SubmitFormParameters formParameters, String officeName) {
+        ClientsAndAccountsHomepage clientsAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
 
         CreateCenterChooseOfficePage chooseOfficePage = clientsAccountsPage.navigateToCreateNewCenterPage();
         CreateCenterEnterDataPage enterDataPage = chooseOfficePage.selectOffice(officeName);
-	    CreateCenterPreviewDataPage centerPreviewDataPage = enterDataPage.submitAndGotoCreateCenterPreviewDataPage(formParameters);
+        CreateCenterPreviewDataPage centerPreviewDataPage = enterDataPage.submitAndGotoCreateCenterPreviewDataPage(formParameters);
         CreateCenterConfirmationPage confirmationPage = centerPreviewDataPage.submit();
         confirmationPage.verifyPage();
         CenterViewDetailsPage centerDetailsPage = confirmationPage.navigateToCenterViewDetailsPage();
         centerDetailsPage.verifyActiveCenter(formParameters);
 
         return centerDetailsPage;
-	}
+    }
 
-	public CreateCenterEnterDataPage.SubmitFormParameters getCenterParameters(String centerName, String loanOfficer) {
+    public CreateCenterEnterDataPage.SubmitFormParameters getCenterParameters(String centerName, String loanOfficer) {
         CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();
         formParameters.setCenterName(centerName);
         formParameters.setLoanOfficer(loanOfficer);
@@ -99,6 +99,6 @@ public class CenterTest extends UiTestCaseBase {
 
         formParameters.setMeeting(meetingFormParameters);
         return formParameters;
-	}
+    }
 
 }

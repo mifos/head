@@ -274,6 +274,9 @@ public class ClientCustAction extends CustAction {
         String governmentId = actionForm.getGovernmentId();
         String clientName = actionForm.getClientName().getDisplayName();
         String givenDateOfBirth = actionForm.getDateOfBirth();
+        if (actionForm.isDefaultFeeRemoved()) {
+            customerDao.checkPermissionForDefaultFeeRemoval(getUserContext(request), actionForm.getOfficeIdValue(), actionForm.getLoanOfficerIdValue());
+        }
         DateTime dateOfBirth = new DateTime(DateUtils.getDateAsSentFromBrowser(givenDateOfBirth));
         ProcessRulesDto processRules = this.customerServiceFacade.previewClient(governmentId, dateOfBirth, clientName);
         String pendingApprovalState = processRules.isClientPendingApprovalStateEnabled()? CustomerConstants.YES: CustomerConstants.NO;

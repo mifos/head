@@ -6,6 +6,7 @@
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   [#include "adminLeftPane.ftl" ]
+   <span id="page.id" title="SysInfo" />
    <div class=" content leftMargin180">
   	<form method="" action="" name="formname">
     <div class="span-24">
@@ -30,7 +31,7 @@
             <div><span class="span-5" id="sysinfo.text.databasePort">[@spring.message "databasePort" /]</span><span class="span-16">${model.systemInformationDto.databasePort}</span></div>
             <div><span class="span-5" id="sysinfo.text.datebaseName">[@spring.message "databaseName" /]</span><span class="span-16">${model.systemInformationDto.databaseName}</span></div>
             <div><span class="span-5" id="sysinfo.text.databaseUser">[@spring.message "databaseUser" /]</span><span class="span-16">${model.systemInformationDto.databaseUser}</span></div>
-            <div><span class="span-5" id="sysinfo.text.dateTime">[@spring.message "dateandTime" /]</span><span class="span-16">${model.systemInformationDto.dateTimeString}</span></div>
+            <div><span class="span-5">[@spring.message "dateandTime" /]</span><span id="sysinfo.text.dateTime" class="span-16">${model.systemInformationDto.dateTimeString}</span></div>
             <div><span class="span-5" id="sysinfo.text.dateTimeIso8601">[@spring.message "dateandTimeinISO8601format" /]</span><span class="span-16">${model.systemInformationDto.dateTimeStringIso8601}</span></div>
             <div><span class="span-5" id="sysinfo.text.osUser">[@spring.message "osuser" /]</span><span class="span-16">${model.systemInformationDto.osUser}</span></div>
         </div>

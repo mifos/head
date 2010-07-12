@@ -74,45 +74,45 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     @Override
-    public Question mapToQuestion(QuestionDefinition questionDefinition) {
+    public Question mapToQuestion(QuestionDetail questionDetail) {
         Question question = new Question();
-        question.setShortName(questionDefinition.getTitle());
-        question.setQuestionText(questionDefinition.getTitle());
-        question.setAnswerType(mapToAnswerType(questionDefinition.getType()));
+        question.setShortName(questionDetail.getTitle());
+        question.setQuestionText(questionDetail.getTitle());
+        question.setAnswerType(mapToAnswerType(questionDetail.getType()));
         question.setQuestionState(QuestionState.ACTIVE);
         return question;
     }
 
     @Override
-    public QuestionGroup mapToQuestionGroup(QuestionGroupDefinition questionGroupDefinition) {
+    public QuestionGroup mapToQuestionGroup(QuestionGroupDetail questionGroupDetail) {
         QuestionGroup questionGroup = new QuestionGroup();
-        questionGroup.setTitle(questionGroupDefinition.getTitle());
+        questionGroup.setTitle(questionGroupDetail.getTitle());
         questionGroup.setState(QuestionGroupState.ACTIVE);
         questionGroup.setDateOfCreation(Calendar.getInstance().getTime());
-        questionGroup.setSections(mapToSections(questionGroupDefinition.getSectionDefinitions()));
-        questionGroup.setEventSources(mapToEventSources(questionGroupDefinition));
+        questionGroup.setSections(mapToSections(questionGroupDetail.getSectionDetails()));
+        questionGroup.setEventSources(mapToEventSources(questionGroupDetail));
         return questionGroup;
     }
 
-    private Set<EventSourceEntity> mapToEventSources(QuestionGroupDefinition questionGroupDefinition) {
+    private Set<EventSourceEntity> mapToEventSources(QuestionGroupDetail questionGroupDetail) {
         Set<EventSourceEntity> eventSources = new HashSet<EventSourceEntity>();
-        EventSource eventSource = questionGroupDefinition.getEventSource();
+        EventSource eventSource = questionGroupDetail.getEventSource();
         List list = eventSourceDao.retrieveByEventAndSource(eventSource.getEvent(), eventSource.getSource());
         for (Object obj : list) eventSources.add((EventSourceEntity) obj);
         return eventSources;
     }
 
-    private List<Section> mapToSections(List<SectionDefinition> sectionDefinitions) {
+    private List<Section> mapToSections(List<SectionDetail> sectionDetails) {
         List<Section> sections = new ArrayList<Section>();
-        for (SectionDefinition sectionDefinition : sectionDefinitions) {
-            sections.add(mapToSection(sectionDefinition));
+        for (SectionDetail sectionDetail : sectionDetails) {
+            sections.add(mapToSection(sectionDetail));
         }
         return sections;
     }
 
-    private Section mapToSection(SectionDefinition sectionDefinition) {
-        Section section = new Section(sectionDefinition.getName());
-        section.setQuestions(mapToSectionQuestions(sectionDefinition.getQuestions(), section));
+    private Section mapToSection(SectionDetail sectionDetail) {
+        Section section = new Section(sectionDetail.getName());
+        section.setQuestions(mapToSectionQuestions(sectionDetail.getQuestions(), section));
         return section;
     }
 
@@ -136,9 +136,9 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     @Override
     public QuestionGroupDetail mapToQuestionGroupDetail(QuestionGroup questionGroup) {
-        List<SectionDefinition> sectionDefinitions = mapToSectionDefinitions(questionGroup.getSections());
+        List<SectionDetail> sectionDetails = mapToSectionDefinitions(questionGroup.getSections());
         EventSource eventSource = mapToEventSource(questionGroup.getEventSources());
-        return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), eventSource, sectionDefinitions);
+        return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), eventSource, sectionDetails);
     }
 
     private EventSource mapToEventSource(Set<EventSourceEntity> eventSources) {
@@ -147,22 +147,22 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return new EventSource(eventSourceEntity.getEvent().getName(), eventSourceEntity.getSource().getEntityType(), eventSourceEntity.getDescription());
     }
 
-    private List<SectionDefinition> mapToSectionDefinitions(List<Section> sections) {
-        List<SectionDefinition> sectionDefinitions = new ArrayList<SectionDefinition>();
+    private List<SectionDetail> mapToSectionDefinitions(List<Section> sections) {
+        List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
         for(Section section: sections){
-            sectionDefinitions.add(mapToSectionDefinition(section));
+            sectionDetails.add(mapToSectionDefinition(section));
         }
-        return sectionDefinitions;
+        return sectionDetails;
     }
 
-    private SectionDefinition mapToSectionDefinition(Section section) {
-        SectionDefinition sectionDefinition = new SectionDefinition();
-        sectionDefinition.setName(section.getName());
+    private SectionDetail mapToSectionDefinition(Section section) {
+        SectionDetail sectionDetail = new SectionDetail();
+        sectionDetail.setName(section.getName());
         for (SectionQuestion sectionQuestion : section.getQuestions()) {
             Question question = sectionQuestion.getQuestion();
-            sectionDefinition.addQuestion(new SectionQuestionDetail(question.getQuestionId(), question.getShortName(), sectionQuestion.isRequired()));
+            sectionDetail.addQuestion(new SectionQuestionDetail(question.getQuestionId(), question.getShortName(), sectionQuestion.isRequired()));
         }
-        return sectionDefinition;
+        return sectionDetail;
     }
 
     @Override

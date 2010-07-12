@@ -24,10 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
-import org.mifos.platform.questionnaire.contract.EventSource;
-import org.mifos.platform.questionnaire.contract.QuestionGroupDefinition;
-import org.mifos.platform.questionnaire.contract.SectionDefinition;
-import org.mifos.platform.questionnaire.contract.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -54,9 +51,9 @@ public class QuestionnaireValidatorIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldCheckForInValidEventSource() {
         EventSource eventSource = new EventSource("Disburse", "Client", "Disburse Client");
-        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition("QuestionGroup123", eventSource, getSectionDefinitions());
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, "QuestionGroup123", eventSource, getSectionDefinitions());
         try {
-            questionnaireValidator.validate(questionGroupDefinition);
+            questionnaireValidator.validate(questionGroupDetail);
             fail("Should have raised a validation error for invalid event");
         } catch (ApplicationException e) {
             assertThat(e.getKey(), is(QuestionnaireConstants.INVALID_EVENT_SOURCE));
@@ -67,17 +64,17 @@ public class QuestionnaireValidatorIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldCheckForValidEventSource() {
         EventSource eventSource = new EventSource("Create", "Client", "Create Client");
-        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition("QuestionGroup123", eventSource, getSectionDefinitions());
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, "QuestionGroup123", eventSource, getSectionDefinitions());
         try {
-            questionnaireValidator.validate(questionGroupDefinition);
+            questionnaireValidator.validate(questionGroupDetail);
         } catch (ApplicationException e) {
             fail("Should not have raised a validation error for this event");
         }
     }
 
-    private List<SectionDefinition> getSectionDefinitions() {
-        SectionDefinition sectionDefinition = new SectionDefinition();
-        sectionDefinition.addQuestion(new SectionQuestionDetail(123, true));
-        return asList(sectionDefinition);
+    private List<SectionDetail> getSectionDefinitions() {
+        SectionDetail sectionDetail = new SectionDetail();
+        sectionDetail.addQuestion(new SectionQuestionDetail(123, true));
+        return asList(sectionDetail);
     }
 }

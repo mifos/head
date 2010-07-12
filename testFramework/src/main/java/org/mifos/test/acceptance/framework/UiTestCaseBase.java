@@ -51,41 +51,41 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
 
     private final DatabaseTestUtils dbUtils = new DatabaseTestUtils();
 
-	protected Selenium selenium;
+    protected Selenium selenium;
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // allow for overriding methods to throw Exception
-	@BeforeMethod
-	public void setUp() throws Exception {
-		// do nothing
-	}
+    @BeforeMethod
+    public void setUp() throws Exception {
+        // do nothing
+    }
 
-	@AfterGroups(groups={"ui"})
-	public void stopSelenium() {
+    @AfterGroups(groups={"ui"})
+    public void stopSelenium() {
         synchronized(UiTestCaseBase.class) {
             if (seleniumServerIsRunning.booleanValue() && this.selenium != null) {
                 this.selenium.stop();
             }
         }
-	}
+    }
 
-	@Autowired
-	@Test(enabled=false)
-	public void setSelenium(Selenium selenium) {
-		this.selenium = selenium;
-		synchronized(UiTestCaseBase.class) {
-			if (!seleniumServerIsRunning.booleanValue()) {
-				selenium.start();
-				seleniumServerIsRunning = Boolean.TRUE;
-			}
-		}
-	}
+    @Autowired
+    @Test(enabled=false)
+    public void setSelenium(Selenium selenium) {
+        this.selenium = selenium;
+        synchronized(UiTestCaseBase.class) {
+            if (!seleniumServerIsRunning.booleanValue()) {
+                selenium.start();
+                seleniumServerIsRunning = Boolean.TRUE;
+            }
+        }
+    }
 
-	@Test(enabled=false)
-	public Selenium getSelenium() {
+    @Test(enabled=false)
+    public Selenium getSelenium() {
         synchronized(UiTestCaseBase.class) {
             return selenium;
         }
-	}
+    }
 
     protected void assertTextFoundOnPage (String text, String message) {
         assertTrue(selenium.isTextPresent(text), message);

@@ -36,6 +36,7 @@
                 <value>/WEB-INF/freemarker/</value>
                 <value>classpath:org/mifos/ui/freemarker/core</value>
                 <value>classpath:org/mifos/ui/freemarker/css</value>
+                <value>classpath:org/mifos/platform/questionnaire/ui/views</value>
             </list>
         </property>
         <property name="preferFileSystemAccess" value="false"/>
@@ -67,6 +68,10 @@
     <bean name="testingService" class="org.mifos.framework.util.StandardTestingService"/>
 
     <context:component-scan base-package="org.mifos.ui.core.controller"/>
+    <context:component-scan base-package="org.mifos.platform">
+        <context:include-filter type="regex" expression="org.mifos.platform.[^\.]*.ui.*" />
+        <context:include-filter type="regex" expression="org.mifos.platform.[^\.]*.service.*" />
+    </context:component-scan>
 
     <bean name="genericController" class="org.mifos.ui.core.controller.GenericController"/>
 

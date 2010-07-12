@@ -40,6 +40,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -309,6 +310,15 @@ public abstract class CustomerActionForm extends BaseActionForm {
         return feesToApply;
     }
 
+    public boolean isDefaultFeeRemoved() {
+        for (FeeDto fee : getDefaultFees()) {
+            if (fee.isRemoved()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public FeeDto getSelectedFee(int index) {
         while (index >= additionalFees.size()) {
             additionalFees.add(new FeeDto());
@@ -318,7 +328,8 @@ public abstract class CustomerActionForm extends BaseActionForm {
 
     @Override
     public void reset(ActionMapping mapping, HttpServletRequest request) {
-        if (request.getParameter("displayName") != null) {
+        String method = request.getParameter(Methods.method.toString());
+        if (method != null && method.equals(Methods.preview.toString())) {
             for (int i = 0; i < defaultFees.size(); i++) {
                 // if an already checked fee is unchecked then the value set to
                 // 0

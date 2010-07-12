@@ -20,14 +20,29 @@
 
 package org.mifos.platform.questionnaire.contract;
 
-public class QuestionDetail {
+import org.apache.commons.lang.StringUtils;
+
+import java.io.Serializable;
+
+public class QuestionDetail implements Serializable {
+    private static final long serialVersionUID = -2350908554610624733L;
+
     private Integer id;
-
     private String text;
-
     private String shortName;
-
     private QuestionType type;
+
+    public QuestionDetail() {
+        this(null);
+    }
+
+    public QuestionDetail(String text) {
+        this(text, QuestionType.INVALID);
+    }
+
+    public QuestionDetail(String text, QuestionType type) {
+        this(0, text, text, type);
+    }
 
     public QuestionDetail(Integer id, String text, String shortName, QuestionType type) {
         this.id = id;
@@ -48,8 +63,27 @@ public class QuestionDetail {
         return shortName;
     }
 
+    public String getTitle() {
+        return shortName;
+    }
 
     public QuestionType getType() {
         return type;
+    }
+
+    public void setTitle(String title) {
+        this.shortName = title;
+    }
+
+    public void setType(QuestionType type) {
+        this.type = type;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void trimTitle() {
+        this.shortName = StringUtils.trim(this.shortName);
     }
 }

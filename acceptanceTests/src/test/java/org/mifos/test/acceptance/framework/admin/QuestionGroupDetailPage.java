@@ -22,6 +22,11 @@ package org.mifos.test.acceptance.framework.admin;
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.lang.String.format;
+
 public class QuestionGroupDetailPage extends MifosPage {
 
     public QuestionGroupDetailPage(Selenium selenium) {
@@ -31,5 +36,44 @@ public class QuestionGroupDetailPage extends MifosPage {
     public QuestionGroupDetailPage verifyPage() {
         verifyPage("view_question_groups_details");
         return this;
+    }
+
+    public String getTitle() {
+        return selenium.getEval("window.document.getElementById('questionGroup.title').innerHTML").trim();
+    }
+
+    public String getAppliesTo() {
+        String appliesToStr = selenium.getEval("window.document.getElementById('questionGroup.appliesTo').innerHTML");
+        return appliesToStr.substring(appliesToStr.indexOf(':') + 1).trim();
+    }
+
+    public List<String> getSections() {
+        int numSections = Integer.valueOf(selenium.getEval("window.document.getElementById('questionGroup.sections').getElementsByTagName('table').length"));
+        List<String> sections = new ArrayList<String>();
+        for (int i=0; i<numSections; i++) {
+            String tableId = selenium.getEval("window.document.getElementById('questionGroup.sections').getElementsByTagName('table')[" + i + "].id");
+            sections.add(tableId.substring(tableId.lastIndexOf('.') + 1).trim());
+        }
+        return sections;
+    }
+
+    public List<String> getSectionsQuestions(String sectionName) {
+        List<String> questions = new ArrayList<String>();
+        int numQuestions = Integer.valueOf(selenium.getEval("window.document.getElementById('sections.table." + sectionName + "').rows.length"));
+        for (int i=1; i<numQuestions; i++) {
+            questions.add(selenium.getTable(format("sections.table.%s.%d.0", sectionName, i)).trim());
+        }
+        return questions;
+    }
+
+    public List<String> getMandatoryQuestions(String sectionName) {
+        List<String> questions = new ArrayList<String>();
+        int numQuestions = Integer.valueOf(selenium.getEval("window.document.getElementById('sections.table." + sectionName + "').rows.length"));
+        for (int i = 1; i < numQuestions; i++) {
+            if("Yes".equals(selenium.getTable(format("sections.table.%s.%d.1", sectionName, i)).trim())){
+                questions.add(selenium.getTable(format("sections.table.%s.%d.0", sectionName, i)).trim());
+            }
+        }
+        return questions;
     }
 }

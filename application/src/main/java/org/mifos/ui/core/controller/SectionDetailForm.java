@@ -20,28 +20,60 @@
 
 package org.mifos.ui.core.controller;
 
-import org.mifos.platform.questionnaire.contract.SectionDefinition;
+import org.mifos.platform.questionnaire.contract.SectionDetail;
 import org.mifos.platform.questionnaire.contract.SectionQuestionDetail;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SectionDetailForm {
-    private SectionDefinition sectionDefinition;
+import static org.apache.commons.lang.StringUtils.trim;
 
-    public SectionDetailForm(SectionDefinition sectionDefinition) {
-        this.sectionDefinition = sectionDefinition;
+public class SectionDetailForm implements Serializable {
+    private static final long serialVersionUID = 900851228874986225L;
+    private SectionDetail sectionDetail;
+
+    public SectionDetailForm() {
+        this(new SectionDetail());
+    }
+
+    public SectionDetailForm(SectionDetail sectionDetail) {
+        this.sectionDetail = sectionDetail;
     }
 
     public String getName() {
-        return sectionDefinition.getName();
+        return sectionDetail.getName();
     }
 
     public List<SectionQuestionDetailForm> getSectionQuestions() {
         List<SectionQuestionDetailForm> questionDetailForms = new ArrayList<SectionQuestionDetailForm>();
-        for (SectionQuestionDetail sectionQuestionDetail : sectionDefinition.getQuestions()) {
+        for (SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()) {
             questionDetailForms.add(new SectionQuestionDetailForm(sectionQuestionDetail));
         }
         return questionDetailForms;
+    }
+
+    public List<SectionQuestionDetail> getSectionQuestionDetails() {
+        return sectionDetail.getQuestions();
+    }
+
+    public SectionDetail getSectionDetail() {
+        return sectionDetail;
+    }
+
+    public void trimName() {
+        sectionDetail.setName(trim(getName()));
+    }
+
+    public void setName(String name) {
+        sectionDetail.setName(name);
+    }
+
+    public void addSectionQuestion(SectionQuestionDetail sectionQuestionDetail) {
+        sectionDetail.addQuestion(sectionQuestionDetail);
+    }
+
+    public void setQuestionDetails(List<SectionQuestionDetail> sectionQuestionDetails) {
+        sectionDetail.setQuestionDetails(sectionQuestionDetails);
     }
 }

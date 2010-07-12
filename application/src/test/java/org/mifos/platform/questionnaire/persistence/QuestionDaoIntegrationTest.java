@@ -25,7 +25,6 @@ import org.junit.runner.RunWith;
 import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.helpers.QuestionState;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.platform.questionnaire.contract.QuestionDefinition;
 import org.mifos.platform.questionnaire.contract.QuestionDetail;
 import org.mifos.platform.questionnaire.contract.QuestionType;
 import org.mifos.platform.questionnaire.contract.QuestionnaireService;
@@ -86,6 +85,6 @@ public class QuestionDaoIntegrationTest {
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws ApplicationException {
-        return questionnaireService.defineQuestion(new QuestionDefinition(questionTitle, questionType));
+        return questionnaireService.defineQuestion(new QuestionDetail(questionTitle, questionType));
     }
 }

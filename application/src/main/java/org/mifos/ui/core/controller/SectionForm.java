@@ -20,6 +20,7 @@
 package org.mifos.ui.core.controller;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.platform.questionnaire.contract.QuestionDetail;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class SectionForm implements Serializable {
     private static final long serialVersionUID = 4707282409987816335L;
     private String name;
 
-    private List<Question> questions = new ArrayList<Question>();
+    private List<QuestionDetail> questionDetails = new ArrayList<QuestionDetail>();
 
     public String getName() {
         return name;
@@ -43,11 +44,11 @@ public class SectionForm implements Serializable {
         name = StringUtils.trim(name);
     }
 
-    public List<Question> getQuestions() {
-        return questions;
+    public List<QuestionDetail> getQuestionDetails() {
+        return questionDetails;
     }
 
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
+    public void setQuestionDetails(List<QuestionDetail> questionDetails) {
+        this.questionDetails = questionDetails;
     }
 }

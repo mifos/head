@@ -45,6 +45,7 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -1378,6 +1379,27 @@ public class CustomerDaoHibernate implements CustomerDao {
         }
 
         return matchingAccounts;
+    }
+
+    @Override
+    public void checkPermissionForDefaultFeeRemoval(UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) throws CustomerException {
+        if (!isPermissionAllowed(userContext, recordOfficeId, recordLoanOfficerId)) {
+            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+    }
+
+    @Override
+    public void checkPermissionForDefaultFeeRemovalFromLoan(UserContext userContext, CustomerBO customer) throws CustomerException {
+        if (!ActivityMapper.getInstance().isRemoveFeesPermittedForAccounts(AccountTypes.LOAN_ACCOUNT, customer.getLevel(),
+                userContext, customer.getOfficeId(), customer.getLoanOfficerId())) {
+            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+
+    }
+
+    private boolean isPermissionAllowed(UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
+        return ActivityMapper.getInstance().isRemoveFeesPermittedForAccounts(AccountTypes.CUSTOMER_ACCOUNT,
+                CustomerLevel.CLIENT, userContext, recordOfficeId, recordLoanOfficerId);
     }
 
     @SuppressWarnings("unchecked")

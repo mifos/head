@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.mifos.accounts.savings.persistence.GenericDao;
@@ -130,19 +131,32 @@ public class PersonnelDaoHibernate implements PersonnelDao {
     }
 
     private List<GrantedAuthority> translateActivityIdsToGrantedAuthorities(List<Short> activityIdList) {
-        GrantedAuthority fullyAuthenticatedAuthority = new GrantedAuthorityImpl(MifosUser.FULLY_AUTHENTICATED_USER);
+
+        Map<Short, GrantedAuthority> activityToGrantedAuthorityMap = populateSecurityConstantToGrantedAuthorityMap();
 
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(fullyAuthenticatedAuthority);
-
         if (activityIdList != null) {
             for (Short activityId : activityIdList) {
-                if (activityId.equals(SecurityConstants.CAN_VIEW_SYSTEM_INFO)) {
-                    authorities.add(new GrantedAuthorityImpl(MifosUser.VIEW_SYSTEM_INFO));
+                if (activityToGrantedAuthorityMap.containsKey(activityId)) {
+                    authorities.add(activityToGrantedAuthorityMap.get(activityId));
                 }
             }
         }
 
         return authorities;
+    }
+
+    private Map<Short, GrantedAuthority> populateSecurityConstantToGrantedAuthorityMap() {
+
+        // FIXME - keithw - just keeping adding the SecurityConstants and corresponding GrantedAuthority name for area
+        Map<Short, GrantedAuthority> authoritiesMap = new HashMap<Short, GrantedAuthority>();
+
+        //Product definition -> Product Categories
+        authoritiesMap.put(SecurityConstants.UPDATE_LATENESS_DORMANCY, new GrantedAuthorityImpl(MifosUser.UPDATE_LATENESS_DORMANCY));
+
+        // System Information
+        authoritiesMap.put(SecurityConstants.CAN_VIEW_SYSTEM_INFO, new GrantedAuthorityImpl(MifosUser.VIEW_SYSTEM_INFO));
+
+        return authoritiesMap;
     }
 }

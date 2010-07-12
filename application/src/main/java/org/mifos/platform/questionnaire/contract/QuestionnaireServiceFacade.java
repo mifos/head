@@ -21,25 +21,23 @@
 package org.mifos.platform.questionnaire.contract;
 
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.ui.core.controller.Question;
-import org.mifos.ui.core.controller.QuestionGroup;
 
 import java.util.List;
 
 public interface QuestionnaireServiceFacade {
-    void createQuestions(List<Question> questions) throws ApplicationException;
+    void createQuestions(List<QuestionDetail> questionDetails) throws ApplicationException;
 
     boolean isDuplicateQuestion(String title);
 
-    void createQuestionGroup(QuestionGroup questionGroup) throws ApplicationException;
+    void createQuestionGroup(QuestionGroupDetail questionGroupDetail) throws ApplicationException;
 
-    List<Question> getAllQuestions();
+    List<QuestionDetail> getAllQuestions();
 
-    List<QuestionGroup> getAllQuestionGroups();
+    List<QuestionGroupDetail> getAllQuestionGroups();
 
     QuestionGroupDetail getQuestionGroupDetail(int questionGroupId) throws ApplicationException;
 
-    Question getQuestion(int questionId) throws ApplicationException;
+    QuestionDetail getQuestionDetail(int questionId) throws ApplicationException;
 
     List<EventSource> getAllEventSources();
 }

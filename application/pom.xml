@@ -249,6 +249,10 @@
             <artifactId>mifos-userInterface</artifactId>
         </dependency>
         <dependency>
+	    <groupId>org.mifos</groupId>
+	    <artifactId>mifos-questionnaire</artifactId>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
@@ -824,7 +828,7 @@
                                 <include>**/*StrutsTest.java</include>
                             </includes>
                             <systemProperties>
-                                <mifos.test.mode>integration</mifos.test.mode>
+                                <mifos.mode>integration</mifos.mode>
                             </systemProperties>
                             <argLine>${maven.surefire.memory}</argLine>
                             <reportsDirectory>${project.build.directory}/surefire-reports/integration</reportsDirectory>

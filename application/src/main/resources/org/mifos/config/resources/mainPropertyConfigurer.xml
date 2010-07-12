@@ -9,15 +9,21 @@
         <constructor-arg value="mainDatabase.properties"/>
     </bean>
 
+    <bean id="acceptanceProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
+        <constructor-arg value="acceptanceDatabase.properties"/>
+    </bean>
+
     <bean id="customProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
         <constructor-arg value="local.properties"/>
     </bean>
 
     <bean id="mainPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="locations">
             <list>
                 <ref bean="defaultProperties"/>
+                <ref bean="acceptanceProperties"/>
                 <ref bean="customProperties"/>
             </list>
         </property>

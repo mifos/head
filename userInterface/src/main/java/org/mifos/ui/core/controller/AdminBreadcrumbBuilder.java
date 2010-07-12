@@ -18,10 +18,32 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.admin.struts.actionforms;
+package org.mifos.ui.core.controller;
 
-import org.mifos.framework.struts.actionforms.BaseActionForm;
+import java.util.LinkedList;
+import java.util.List;
 
-public class SystemInfoActionForm extends BaseActionForm {
 
+public class AdminBreadcrumbBuilder {
+
+    private final List<BreadCrumbsLinks> breadcrumbs = new LinkedList<BreadCrumbsLinks>();
+
+    public AdminBreadcrumbBuilder withLink(String message, String link) {
+
+        BreadCrumbsLinks breadCrumb = new BreadCrumbsLinks();
+        breadCrumb.setMessage(message);
+        breadCrumb.setLink(link);
+        breadcrumbs.add(breadCrumb);
+        return this;
+    }
+
+    public List<BreadCrumbsLinks> build() {
+
+        BreadCrumbsLinks root = new BreadCrumbsLinks();
+        root.setMessage("admin");
+        root.setLink("AdminAction.do?method=load");
+
+        breadcrumbs.add(0, root);
+        return breadcrumbs;
+    }
 }
