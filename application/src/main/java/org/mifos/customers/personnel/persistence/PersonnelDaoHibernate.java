@@ -150,6 +150,11 @@ public class PersonnelDaoHibernate implements PersonnelDao {
 
         // FIXME - keithw - just keeping adding the SecurityConstants and corresponding GrantedAuthority name for area
         Map<Short, GrantedAuthority> authoritiesMap = new HashMap<Short, GrantedAuthority>();
+
+        //Product definition -> Product Categories
+        authoritiesMap.put(SecurityConstants.UPDATE_LATENESS_DORMANCY, new GrantedAuthorityImpl(MifosUser.UPDATE_LATENESS_DORMANCY));
+
+        // System Information
         authoritiesMap.put(SecurityConstants.CAN_VIEW_SYSTEM_INFO, new GrantedAuthorityImpl(MifosUser.VIEW_SYSTEM_INFO));
 
         return authoritiesMap;

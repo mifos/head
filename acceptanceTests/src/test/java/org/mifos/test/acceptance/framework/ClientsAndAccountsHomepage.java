@@ -44,24 +44,24 @@ import com.thoughtworks.selenium.Selenium;
 
 public class ClientsAndAccountsHomepage extends AbstractPage {
 
-	public ClientsAndAccountsHomepage() {
-		super();
-	}
+    public ClientsAndAccountsHomepage() {
+        super();
+    }
 
-	public ClientsAndAccountsHomepage(Selenium selenium) {
-		super(selenium);
-	}
+    public ClientsAndAccountsHomepage(Selenium selenium) {
+        super(selenium);
+    }
 
-	public void verifyPage() {
-	    verifyPage("ClientsAccounts");
-	}
+    public void verifyPage() {
+        verifyPage("ClientsAccounts");
+    }
 
-	// TODO fix these 5 following methods. They all belong in a navigation helper.
-	public CollectionSheetEntrySelectPage navigateToEnterCollectionSheetDataUsingLeftMenu() {
-		selenium.click("id=menu.link.label.enter.label.collectionsheet.label.data");
-		waitForPageToLoad();
-		return new CollectionSheetEntrySelectPage(selenium);
-	}
+    // TODO fix these 5 following methods. They all belong in a navigation helper.
+    public CollectionSheetEntrySelectPage navigateToEnterCollectionSheetDataUsingLeftMenu() {
+        selenium.click("id=menu.link.label.enter.label.collectionsheet.label.data");
+        waitForPageToLoad();
+        return new CollectionSheetEntrySelectPage(selenium);
+    }
 
     public CreateLoanAccountsSearchPage navigateToCreateMultipleLoanAccountsUsingLeftMenu() {
         selenium.click("menu.link.label.createmultipleloanaccountsprefix.loan.label.createmultipleloanaccountssuffix");

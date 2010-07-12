@@ -26,8 +26,8 @@ import org.testng.annotations.Test;
 @Test(groups = { "unit" })
 public class DatabaseTestUtilsTest {
 
-	public void testCreateClient() {
-		Assert.assertEquals(true, true);
-	}
+    public void testCreateClient() {
+        Assert.assertEquals(true, true);
+    }
 
 }

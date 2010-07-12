@@ -51,20 +51,20 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     @Override
-    public void validate(QuestionDefinition questionDefinition) throws ApplicationException {
-        validateQuestionTitle(questionDefinition);
-        validateQuestionType(questionDefinition);
+    public void validate(QuestionDetail questionDetail) throws ApplicationException {
+        validateQuestionTitle(questionDetail);
+        validateQuestionType(questionDetail);
     }
 
     @Override
-    public void validate(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException {
-        validateQuestionGroupTitle(questionGroupDefinition);
-        validateQuestionGroupSections(questionGroupDefinition);
-        validateQuestionGroupEventSource(questionGroupDefinition);
+    public void validate(QuestionGroupDetail questionGroupDetail) throws ApplicationException {
+        validateQuestionGroupTitle(questionGroupDetail);
+        validateQuestionGroupSections(questionGroupDetail);
+        validateQuestionGroupEventSource(questionGroupDetail);
     }
 
-    private void validateQuestionGroupEventSource(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException {
-        EventSource eventSource = questionGroupDefinition.getEventSource();
+    private void validateQuestionGroupEventSource(QuestionGroupDetail questionGroupDetail) throws ApplicationException {
+        EventSource eventSource = questionGroupDetail.getEventSource();
         if (eventSource == null || StringUtils.isEmpty(eventSource.getSource()) || StringUtils.isEmpty(eventSource.getEvent()))
             throw new ApplicationException(QuestionnaireConstants.INVALID_EVENT_SOURCE);
         validateEventSource(eventSource);
@@ -77,19 +77,19 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         }
     }
 
-    private void validateQuestionGroupSections(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException {
-        List<SectionDefinition> sectionDefinitions = questionGroupDefinition.getSectionDefinitions();
-        if(isEmpty(sectionDefinitions)) {
+    private void validateQuestionGroupSections(QuestionGroupDetail questionGroupDetail) throws ApplicationException {
+        List<SectionDetail> sectionDetails = questionGroupDetail.getSectionDetails();
+        if(isEmpty(sectionDetails)) {
             throw new ApplicationException(QuestionnaireConstants.QUESTION_GROUP_SECTION_NOT_PROVIDED);
         }
-        validateSectionDefinitions(sectionDefinitions);
+        validateSectionDefinitions(sectionDetails);
     }
 
-    private void validateSectionDefinitions(List<SectionDefinition> sectionDefinitions) throws ApplicationException {
+    private void validateSectionDefinitions(List<SectionDetail> sectionDetails) throws ApplicationException {
         Set<SectionQuestionDetail> questions = new HashSet<SectionQuestionDetail>();
-        for (SectionDefinition sectionDefinition : sectionDefinitions) {
-            validateSectionDefinition(sectionDefinition);
-            for (SectionQuestionDetail questionDetail : sectionDefinition.getQuestions()) {
+        for (SectionDetail sectionDetail : sectionDetails) {
+            validateSectionDefinition(sectionDetail);
+            for (SectionQuestionDetail questionDetail : sectionDetail.getQuestions()) {
                 if (!questions.add(questionDetail)) {
                     throw new ApplicationException(DUPLICATE_QUESTION_FOUND_IN_SECTION);
                 }
@@ -97,23 +97,23 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         }
     }
 
-    private void validateSectionDefinition(SectionDefinition sectionDefinition) throws ApplicationException {
-        if (isEmpty(sectionDefinition.getQuestions())) {
+    private void validateSectionDefinition(SectionDetail sectionDetail) throws ApplicationException {
+        if (isEmpty(sectionDetail.getQuestions())) {
             throw new ApplicationException(NO_QUESTIONS_FOUND_IN_SECTION);
         }
     }
 
-    private void validateQuestionGroupTitle(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException {
-        if (StringUtils.isEmpty(questionGroupDefinition.getTitle()))
+    private void validateQuestionGroupTitle(QuestionGroupDetail questionGroupDetail) throws ApplicationException {
+        if (StringUtils.isEmpty(questionGroupDetail.getTitle()))
             throw new ApplicationException(QUESTION_GROUP_TITLE_NOT_PROVIDED);
     }
 
-    private void validateQuestionType(QuestionDefinition questionDefinition) throws ApplicationException {
+    private void validateQuestionType(QuestionDetail questionDefinition) throws ApplicationException {
         if (INVALID == questionDefinition.getType())
             throw new ApplicationException(QUESTION_TYPE_NOT_PROVIDED);
     }
 
-    private void validateQuestionTitle(QuestionDefinition questionDefinition) throws ApplicationException {
+    private void validateQuestionTitle(QuestionDetail questionDefinition) throws ApplicationException {
         if (StringUtils.isEmpty(questionDefinition.getTitle()))
             throw new ApplicationException(QUESTION_TITLE_NOT_PROVIDED);
     }

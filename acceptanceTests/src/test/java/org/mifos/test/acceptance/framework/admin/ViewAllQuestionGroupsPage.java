@@ -46,4 +46,9 @@ public class ViewAllQuestionGroupsPage extends MifosPage {
         }
         return questions;
     }
+
+    public void navigateToViewAllQuestionGroupsPage() {
+        selenium.click("link=View Question Groups");
+        waitForPageToLoad();
+    }
 }

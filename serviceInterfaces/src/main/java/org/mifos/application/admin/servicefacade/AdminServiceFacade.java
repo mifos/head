@@ -25,12 +25,15 @@ import java.util.List;
 
 import org.mifos.dto.screen.OfficeLevelDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public interface AdminServiceFacade {
 
+    @PreAuthorize("isFullyAuthenticated()")
     ProductConfigurationDto retrieveProductConfiguration();
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_UPDATE_LATENESS_DORMANCY')")
     void updateProductConfiguration(ProductConfigurationDto productConfiguration);
 
     List<OfficeLevelDto> retrieveOfficeLevelsWithConfiguration();

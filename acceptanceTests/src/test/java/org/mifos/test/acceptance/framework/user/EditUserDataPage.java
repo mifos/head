@@ -26,16 +26,16 @@ import com.thoughtworks.selenium.Selenium;
 
 public class EditUserDataPage extends MifosPage {
 
-	public EditUserDataPage() {
-		super();
-	}
+    public EditUserDataPage() {
+        super();
+    }
 
-	/**
-	 * @param selenium
-	 */
-	public EditUserDataPage(Selenium selenium) {
-		super(selenium);
-	}
+    /**
+     * @param selenium
+     */
+    public EditUserDataPage(Selenium selenium) {
+        super(selenium);
+    }
 
     public EditUserPreviewDataPage submitAndGotoEditUserPreviewDataPage(CreateUserParameters parameters) {
         typeTextIfNotEmpty("edit_user.input.firstName", parameters.getFirstName());

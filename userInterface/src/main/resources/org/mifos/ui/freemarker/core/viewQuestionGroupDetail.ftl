@@ -41,10 +41,10 @@
                 <div id="questionGroup.appliesTo" class="marginTop15">
                     [@spring.message "questionnaire.question.group.applies.to"/]: ${Request.eventSources[Request.questionGroupDetail.eventSourceId]}
                 </div>
-                <div class="marginTop15">
+                <div id="questionGroup.sections" class="marginTop15">
                     [#list Request.questionGroupDetail.sections as section]
                         ${section.name}<br/>
-                        <table id="sections.table" name="sections.table">
+                        <table id="sections.table.${section.name}" name="sections.table.${section.name}">
                          <tr>
                              <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.name"/]</td>
                              <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.mandatory"/]</td>
@@ -55,10 +55,6 @@
                                  <td class="drawtablerow" width="50%"></td>
                              </tr>
                         [/#list]
-                         <tr>
-                             <td>&nbsp;</td>
-                             <td>&nbsp;</td>
-                         </tr>
                         </table>
                     [/#list]
                 </div>

@@ -19,15 +19,17 @@
  */
 package org.mifos.platform.questionnaire.contract;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SectionDefinition {
-    private String name;
+public class SectionDetail implements Serializable {
+    private static final long serialVersionUID = -7143251556021871484L;
 
+    private String name;
     private List<SectionQuestionDetail> questionDetails;
 
-    public SectionDefinition() {
+    public SectionDetail() {
         questionDetails = new ArrayList<SectionQuestionDetail>();
     }
 

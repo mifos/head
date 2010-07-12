@@ -38,7 +38,7 @@ public class Upgrade223 extends Upgrade {
     public void upgrade(Connection connection) throws IOException, SQLException {
 
        int newLookupEntityId= addLookupEntity(connection,"LivingStatus", "This entity is used to track whether the family member" +
-        		" is living together with the client or not");
+                " is living together with the client or not");
 
        insertLookupValue(connection, newLookupEntityId, "Together");
        insertLookupValue(connection, newLookupEntityId, "NotTogether");

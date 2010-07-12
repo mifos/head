@@ -21,30 +21,18 @@
 package org.mifos.platform.questionnaire;
 
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.util.CollectionUtils;
 import org.mifos.platform.questionnaire.contract.*;
-import org.mifos.ui.core.controller.Question;
-import org.mifos.ui.core.controller.QuestionGroup;
-import org.mifos.ui.core.controller.SectionForm;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import static org.mifos.framework.util.MapEntry.makeEntry;
 
 public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacade {
 
     @Autowired
     private QuestionnaireService questionnaireService;
-    private Map<String, QuestionType> stringToQuestionTypeMap;
-    private Map<QuestionType, String> questionTypeToStringMap;
 
     public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService) {
         this.questionnaireService = questionnaireService;
-        populateStringToQuestionTypeMap();
-        populateQuestionTypeToStringMap();
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
@@ -53,9 +41,9 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public void createQuestions(List<Question> questions) throws ApplicationException {
-        for (Question question : questions) {
-            questionnaireService.defineQuestion(mapToQuestionDefinition(question));
+    public void createQuestions(List<QuestionDetail> questionDetails) throws ApplicationException {
+        for (QuestionDetail questionDetail : questionDetails) {
+            questionnaireService.defineQuestion(questionDetail);
         }
     }
 
@@ -65,69 +53,18 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public void createQuestionGroup(QuestionGroup questionGroup) throws ApplicationException {
-        questionnaireService.defineQuestionGroup(mapToQuestionDefinition(questionGroup));
-    }
-
-    private QuestionGroupDefinition mapToQuestionDefinition(QuestionGroup questionGroupForm) {
-        String title = questionGroupForm.getTitle();
-        List<SectionDefinition> sectionDefinitions = mapToSectionDefinitions(questionGroupForm.getSections());
-        EventSource eventSource = questionGroupForm.getEventSource();
-        return new QuestionGroupDefinition(title, eventSource, sectionDefinitions);
-    }
-
-    private static List<SectionDefinition> mapToSectionDefinitions(List<SectionForm> sectionForms) {
-        List<SectionDefinition> sections = new ArrayList<SectionDefinition>();
-        for (SectionForm sectionForm: sectionForms){
-            sections.add(mapToSectionDefinition(sectionForm));
-        }
-        return sections;
-    }
-
-    private static SectionDefinition mapToSectionDefinition(SectionForm sectionForm) {
-        SectionDefinition section = new SectionDefinition();
-        section.setName(sectionForm.getName());
-        section.setQuestionDetails(mapToSectionQuestionDetails(sectionForm.getQuestions()));
-        return section;
-    }
-
-    private static List<SectionQuestionDetail> mapToSectionQuestionDetails(List<Question> questions) {
-        List<SectionQuestionDetail> questionDetails = new ArrayList<SectionQuestionDetail>();
-        for(Question question: questions){
-            questionDetails.add(mapToSectionQuestionDetail(question));
-        }
-        return questionDetails;
-    }
-
-    private static SectionQuestionDetail mapToSectionQuestionDetail(Question question) {
-        return new SectionQuestionDetail(Integer.valueOf(question.getId()), question.getTitle(), question.isRequired());
+    public void createQuestionGroup(QuestionGroupDetail questionGroupDetail) throws ApplicationException {
+        questionnaireService.defineQuestionGroup(questionGroupDetail);
     }
 
     @Override
-    public List<Question> getAllQuestions() {
-        return mapToQuestions(questionnaireService.getAllQuestions());
-    }
-
-    private List<Question> mapToQuestions(List<QuestionDetail> questionDetails) {
-        List<Question> questions = new ArrayList<Question>();
-        for (QuestionDetail questionDetail : questionDetails) {
-            Question question = mapToQuestion(questionDetail);
-            questions.add(question);
-        }
-        return questions;
-    }
-
-    private Question mapToQuestion(QuestionDetail questionDetail) {
-        Question question = new Question();
-        question.setTitle(questionDetail.getText());
-        question.setId(questionDetail.getId().toString());
-        question.setType(questionTypeToStringMap.get(questionDetail.getType()));
-        return question;
+    public List<QuestionDetail> getAllQuestions() {
+        return questionnaireService.getAllQuestions();
     }
 
     @Override
-    public List<QuestionGroup> getAllQuestionGroups() {
-        return mapToQuestionGroups(questionnaireService.getAllQuestionGroups());
+    public List<QuestionGroupDetail> getAllQuestionGroups() {
+        return questionnaireService.getAllQuestionGroups();
     }
 
     @Override
@@ -136,8 +73,8 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public Question getQuestion(int questionId) throws ApplicationException {
-        return mapToQuestion(questionnaireService.getQuestion(questionId));
+    public QuestionDetail getQuestionDetail(int questionId) throws ApplicationException {
+        return questionnaireService.getQuestion(questionId);
     }
 
     @Override
@@ -145,51 +82,4 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         return questionnaireService.getAllEventSources();
     }
 
-    private List<QuestionGroup> mapToQuestionGroups(List<QuestionGroupDetail> questionGroupDetails) {
-        List<QuestionGroup> questionGroups = new ArrayList<QuestionGroup>();
-        for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
-            QuestionGroup questionGroup = mapToQuestionGroup(questionGroupDetail);
-            questionGroups.add(questionGroup);
-        }
-        return questionGroups;
-    }
-
-    private QuestionGroup mapToQuestionGroup(QuestionGroupDetail questionGroupDetail) {
-        QuestionGroup questionGroup = new QuestionGroup();
-        questionGroup.setId(questionGroupDetail.getId().toString());
-        questionGroup.setTitle(questionGroupDetail.getTitle());
-        questionGroup.setSections(mapToSectionForms(questionGroupDetail.getSectionDefinitions()));
-        questionGroup.setEventSource(questionGroupDetail.getEventSource());
-        return questionGroup;
-    }
-
-    private List<SectionForm> mapToSectionForms(List<SectionDefinition> sectionDefinitions) {
-        List<SectionForm> sectionForms = new ArrayList<SectionForm>();
-        for(SectionDefinition sectionDefinition: sectionDefinitions){
-            sectionForms.add(mapToSectionForm(sectionDefinition));
-        }
-        return sectionForms;
-    }
-
-    private SectionForm mapToSectionForm(SectionDefinition sectionDefinition) {
-        SectionForm sectionForm = new SectionForm();
-        sectionForm.setName(sectionDefinition.getName());
-        return sectionForm;
-    }
-
-    private void populateStringToQuestionTypeMap() {
-        stringToQuestionTypeMap = CollectionUtils.asMap(makeEntry("Free text", QuestionType.FREETEXT),
-                makeEntry("Date", QuestionType.DATE),
-                makeEntry("Number", QuestionType.NUMERIC));
-    }
-
-    private void populateQuestionTypeToStringMap() {
-        questionTypeToStringMap = CollectionUtils.asMap(makeEntry(QuestionType.FREETEXT, "Free text"),
-                makeEntry(QuestionType.DATE, "Date"),
-                makeEntry(QuestionType.NUMERIC, "Number"));
-    }
-
-    private QuestionDefinition mapToQuestionDefinition(Question question) {
-        return new QuestionDefinition(question.getTitle(), stringToQuestionTypeMap.get(question.getType()));
-    }
 }
