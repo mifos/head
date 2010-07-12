@@ -39,7 +39,7 @@ import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"admin", "acceptance","ui"})
+@Test(sequential = true, groups = {"admin", "acceptance","ui", "smoke"})
 public class SystemInfoDateTimeTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -60,7 +60,7 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
         new DateTimeUpdaterRemoteTestingService(selenium).resetDateTime();
     }
 
-    private void verifyCurrentDateTimeTest() {
+    public void verifyCurrentDateTimeTest() {
         AdminPage adminPage = loginAndGoToAdminPage();
         SystemInfoPage systemInfoPage = adminPage.navigateToSystemInfoPage();
         systemInfoPage.verifyPage();
@@ -75,7 +75,7 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
         timeMachinePage.verifySuccess(targetTime);
     }
 
-    private void verifyDateTimeTest() throws UnsupportedEncodingException {
+    public void verifyDateTimeTest() throws UnsupportedEncodingException {
         DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
@@ -86,7 +86,7 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
         systemInfoPage.verifyDateTime(targetTime);
     }
 
-    private void verifyDateTimeAndTimeZone() throws UnsupportedEncodingException {
+    public void verifyDateTimeAndTimeZone() throws UnsupportedEncodingException {
         DateTimeZone dateTimeZone = DateTimeZone.forOffsetHours(1);
         DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
