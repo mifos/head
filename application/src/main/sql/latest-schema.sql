@@ -4319,7 +4319,7 @@ create table question_group(
   date_of_creation date not null,
   state integer not null,
   primary key (id)
-);
+)engine=innodb character set utf8;
 
 create table events (
     id integer not null,
@@ -4369,4 +4369,4 @@ create table sections_questions(
 create table applied_upgrades(
 	upgrade_id integer not null,
 	primary key (upgrade_id)
-);
+)engine=innodb character set utf8;

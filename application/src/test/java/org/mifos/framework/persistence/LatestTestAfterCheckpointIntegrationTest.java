@@ -113,7 +113,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
         createLatestCheckPointDatabaseWithLatestData();
 
         DatabaseMigrator migrator = new DatabaseMigrator(connection);
-        migrator.upgrade();
+        migrator.upgrade() ;
 
         String upgradeSchemaDump = TestDatabase.getAllTablesStructureDump();
         new FileOutputStream(tmpDir + "upgradeSchemaDump").write(upgradeSchemaDump.getBytes());
