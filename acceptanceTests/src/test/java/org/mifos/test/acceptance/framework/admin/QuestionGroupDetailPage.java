@@ -65,4 +65,15 @@ public class QuestionGroupDetailPage extends MifosPage {
         }
         return questions;
     }
+
+    public List<String> getMandatoryQuestions(String sectionName) {
+        List<String> questions = new ArrayList<String>();
+        int numQuestions = Integer.valueOf(selenium.getEval("window.document.getElementById('sections.table." + sectionName + "').rows.length"));
+        for (int i = 1; i < numQuestions; i++) {
+            if("Yes".equals(selenium.getTable(format("sections.table.%s.%d.1", sectionName, i)).trim())){
+                questions.add(selenium.getTable(format("sections.table.%s.%d.0", sectionName, i)).trim());
+            }
+        }
+        return questions;
+    }
 }

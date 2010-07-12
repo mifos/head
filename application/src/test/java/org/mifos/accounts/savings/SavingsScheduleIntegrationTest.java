@@ -217,6 +217,7 @@ public class SavingsScheduleIntegrationTest {
         }
     }
 
+    @Ignore
     @Test
     public void createWeeklySavingScheduleNoHoliday() throws Exception {
 

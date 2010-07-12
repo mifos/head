@@ -828,7 +828,7 @@
                                 <include>**/*StrutsTest.java</include>
                             </includes>
                             <systemProperties>
-                                <mifos.test.mode>integration</mifos.test.mode>
+                                <mifos.mode>integration</mifos.mode>
                             </systemProperties>
                             <argLine>${maven.surefire.memory}</argLine>
                             <reportsDirectory>${project.build.directory}/surefire-reports/integration</reportsDirectory>
