@@ -23,7 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.contract.SectionDefinition;
+import org.mifos.platform.questionnaire.contract.SectionDetail;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
@@ -38,8 +38,8 @@ public class QuestionGroupDetailMatcher extends TypeSafeMatcher<QuestionGroupDet
     @Override
     public boolean matchesSafely(QuestionGroupDetail questionGroupDetail) {
         if (StringUtils.equals(this.questionGroupDetail.getTitle(), questionGroupDetail.getTitle())) {
-            for (SectionDefinition sectionDefinition : this.questionGroupDetail.getSectionDefinitions()) {
-                assertThat(questionGroupDetail.getSectionDefinitions(), hasItem(new QuestionGroupSectionMatcher(sectionDefinition)));
+            for (SectionDetail sectionDetail : this.questionGroupDetail.getSectionDetails()) {
+                assertThat(questionGroupDetail.getSectionDetails(), hasItem(new QuestionGroupSectionMatcher(sectionDetail)));
             }
         } else {
             return false;

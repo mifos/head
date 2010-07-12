@@ -65,7 +65,7 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapQuestionDefinitionToQuestion() {
-        QuestionDefinition questionDefinition = new QuestionDefinition(TITLE, QuestionType.FREETEXT);
+        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.FREETEXT);
         Question question = questionnaireMapper.mapToQuestion(questionDefinition);
         assertThat(question.getAnswerTypeAsEnum(), is(FREETEXT));
         assertThat(question.getQuestionText(), is(TITLE));
@@ -104,9 +104,9 @@ public class QuestionnaireMapperTest {
         when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList());
         when(questionDao.getDetails(12)).thenReturn(new Question());
         EventSource eventSource = getEventSource("Create", "Client");
-        List<SectionDefinition> sectionDefinitions = asList(getSectionDefinition(SECTION_NAME));
-        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(TITLE, eventSource, sectionDefinitions);
-        QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDefinition);
+        List<SectionDetail> sectionDetails = asList(getSectionDefinition(SECTION_NAME));
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, TITLE, eventSource, sectionDetails);
+        QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         assertQuestionGroup(questionGroup);
         verify(eventSourceDao, times(1)).retrieveByEventAndSource(anyString(), anyString());
         verify(questionDao, times(1)).getDetails(12);
@@ -142,8 +142,8 @@ public class QuestionnaireMapperTest {
         return new EventSource(event, source, null);
     }
 
-    private SectionDefinition getSectionDefinition(String name) {
-        SectionDefinition section = new SectionDefinition();
+    private SectionDetail getSectionDefinition(String name) {
+        SectionDetail section = new SectionDetail();
         section.setName(name);
         section.addQuestion(new SectionQuestionDetail(12, true));
         return section;
@@ -155,11 +155,11 @@ public class QuestionnaireMapperTest {
         QuestionGroupDetail questionGroupDetail = questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
         assertThat(questionGroupDetail, is(not(nullValue())));
         assertThat(questionGroupDetail.getTitle(), is(TITLE));
-        List<SectionDefinition> sectionDefinitions = questionGroupDetail.getSectionDefinitions();
-        assertThat(sectionDefinitions, is(not(nullValue())));
-        assertThat(questionGroupDetail.getSectionDefinitions().size(), is(2));
-        assertThat(questionGroupDetail.getSectionDefinitions().get(0).getName(), is("S1"));
-        assertThat(questionGroupDetail.getSectionDefinitions().get(1).getName(), is("S2"));
+        List<SectionDetail> sectionDetails = questionGroupDetail.getSectionDetails();
+        assertThat(sectionDetails, is(not(nullValue())));
+        assertThat(questionGroupDetail.getSectionDetails().size(), is(2));
+        assertThat(questionGroupDetail.getSectionDetails().get(0).getName(), is("S1"));
+        assertThat(questionGroupDetail.getSectionDetails().get(1).getName(), is("S2"));
         EventSource eventSource = questionGroupDetail.getEventSource();
         assertThat(eventSource, is(not(nullValue())));
         assertThat(eventSource.getEvent(), is("Create"));
@@ -215,12 +215,12 @@ public class QuestionnaireMapperTest {
         for (int i = 0; i < countOfQuestions; i++) {
             QuestionGroupDetail questionGroupDetail = questionGroupDetails.get(i);
             assertThat(questionGroupDetail.getTitle(), is(TITLE + i));
-            SectionDefinition sectionDefinition1 = questionGroupDetail.getSectionDefinitions().get(0);
+            SectionDetail sectionDefinition1 = questionGroupDetail.getSectionDetails().get(0);
             assertThat(sectionDefinition1.getName(), is(SECTION + i));
             List<SectionQuestionDetail> questionDetails1 = sectionDefinition1.getQuestions();
             assertThat(questionDetails1.size(), is(1));
             assertThat(questionDetails1.get(0).getTitle(), is(SECTION + i));
-            SectionDefinition sectionDefinition2 = questionGroupDetail.getSectionDefinitions().get(1);
+            SectionDetail sectionDefinition2 = questionGroupDetail.getSectionDetails().get(1);
             assertThat(sectionDefinition2.getName(), is(SECTION + (i + 1)));
             List<SectionQuestionDetail> questionDetails2 = sectionDefinition2.getQuestions();
             assertThat(questionDetails2.size(), is(1));

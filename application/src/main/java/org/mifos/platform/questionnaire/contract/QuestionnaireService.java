@@ -25,11 +25,11 @@ import org.mifos.framework.exceptions.ApplicationException;
 import java.util.List;
 
 public interface QuestionnaireService {
-    QuestionDetail defineQuestion(QuestionDefinition questionDefinition) throws ApplicationException;
+    QuestionDetail defineQuestion(QuestionDetail questionDetail) throws ApplicationException;
 
     List<QuestionDetail> getAllQuestions();
 
-    QuestionGroupDetail defineQuestionGroup(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException;
+    QuestionGroupDetail defineQuestionGroup(QuestionGroupDetail questionGroupDetail) throws ApplicationException;
 
     List<QuestionGroupDetail> getAllQuestionGroups();
 

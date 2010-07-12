@@ -161,7 +161,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
 
     private void testShouldAllowDuplicateTitlesForQuestionGroup() {
         testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, APPLIES_TO_CREATE_CLIENT, "", asList(qTitle1, qTitle3), asList(qTitle2));
-        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, "View Client", "Hello", asList(qTitle2), asList(qTitle1, qTitle3));
+        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, "Create Client", "Hello", asList(qTitle2), asList(qTitle1, qTitle3));
     }
 
     private void testCreateQuestionGroup(CreateQuestionGroupPage createQuestionGroupPage, String title, String appliesTo,

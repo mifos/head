@@ -67,9 +67,9 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public QuestionDetail defineQuestion(QuestionDefinition questionDefinition) throws ApplicationException {
-        questionnaireValidator.validate(questionDefinition);
-        Question question = questionnaireMapper.mapToQuestion(questionDefinition);
+    public QuestionDetail defineQuestion(QuestionDetail questionDetail) throws ApplicationException {
+        questionnaireValidator.validate(questionDetail);
+        Question question = questionnaireMapper.mapToQuestion(questionDetail);
         persistQuestion(question);
         return questionnaireMapper.mapToQuestionDetail(question);
     }
@@ -81,9 +81,9 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public QuestionGroupDetail defineQuestionGroup(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException {
-        questionnaireValidator.validate(questionGroupDefinition);
-        QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDefinition);
+    public QuestionGroupDetail defineQuestionGroup(QuestionGroupDetail questionGroupDetail) throws ApplicationException {
+        questionnaireValidator.validate(questionGroupDetail);
+        QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         questionGroupDao.create(questionGroup);
         return questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
     }

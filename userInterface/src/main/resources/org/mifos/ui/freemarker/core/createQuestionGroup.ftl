@@ -38,7 +38,7 @@
             [@spring.message "questionnaire.addQuestionGroup"/]
         </div>
         <div class="allErrorsDiv">
-            [@mifosmacros.showAllErrors "questionGroupDefinition.*"/]
+            [@mifosmacros.showAllErrors "questionGroupForm.*"/]
         </div>
         <form name="createquestiongroupform"
               action="createQuestionGroup.ftl?execution=${flowExecutionKey}" method="POST">
@@ -47,7 +47,7 @@
                     <li>
                         <label for="title"><span class="red">*</span>[@spring.message
                             "questionnaire.questionGroupTitle"/]</label>
-                        [@spring.formInput "questionGroupDefinition.title",
+                        [@spring.formInput "questionGroupForm.title",
                         'maxlength="50"
                         onkeypress="return FnCheckNumCharsOnPress(event,this);"
                         onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
@@ -55,12 +55,12 @@
                     <li>
                         <label for="eventSourceId"><span class="red">*</span>[@spring.message
                             "questionnaire.questionGroupAppliesTo"/]</label>
-                        [@mifosmacros.formSingleSelectWithPrompt "questionGroupDefinition.eventSourceId", EventSources,
+                        [@mifosmacros.formSingleSelectWithPrompt "questionGroupForm.eventSourceId", EventSources,
                         "--select one--" /]
                     </li>
                     <li>
                         <label for="sectionName">[@spring.message "questionnaire.currentSectionTitle"/]</label>
-                        [@spring.formInput "questionGroupDefinition.sectionName",
+                        [@spring.formInput "questionGroupForm.sectionName",
                         'maxlength="50"
                         onkeypress="return FnCheckNumCharsOnPress(event,this);"
                         onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
@@ -68,8 +68,8 @@
                     <li>
                         <label for="selectedQuestionIds"><span class="red">*</span>[@spring.message "questionnaire.select.questions"/]</label>
                         <select multiple="multiple" size="10" id="selectedQuestionIds" name="selectedQuestionIds" style="width:35em">
-                            [#list questionGroupDefinition.questionPool as question]
-                                <option value="${question.id}">${question.title}</option>   
+                            [#list questionGroupForm.questionPool as sectionQuestion]
+                                <option value="${sectionQuestion.questionId}">${sectionQuestion.title}</option>   
                             [/#list]
                         </select>
                     </li>
@@ -79,7 +79,7 @@
                     <input type="submit" name="_eventId_addSection" id="_eventId_addSection" value='[@spring.message "questionnaire.addSection"/]' class="buttn"/>
             </div>
             <div id="divSections">
-                [#list questionGroupDefinition.sections?reverse as section]
+                [#list questionGroupForm.sections?reverse as section]
                 <b>${section.name}:&nbsp;&nbsp;</b>
                 <a href="javascript:removeSection('${section.name}')">[@spring.message
                     "questionnaire.remove.link"/]</a>
@@ -89,10 +89,10 @@
                         <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.name"/]</td>
                         <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.delete"/]</td>
                     </tr>
-                    [#list section.questions as sectionQuestion]
+                    [#list section.sectionQuestions as sectionQuestion]
                     <tr>
                         <td class="drawtablerow">${sectionQuestion.title}</td>
-                        <td class="drawtablerow"><a href="javascript:removeQuestion('${section.name}','${sectionQuestion.id}')">
+                        <td class="drawtablerow"><a href="javascript:removeQuestion('${section.name}','${sectionQuestion.questionId}')">
                             [@spring.message "questionnaire.remove.link"/]</a></td>
                     </tr>
                     [/#list]
