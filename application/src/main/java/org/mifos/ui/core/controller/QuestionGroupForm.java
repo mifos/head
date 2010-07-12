@@ -81,6 +81,8 @@ public class QuestionGroupForm implements Serializable {
         if (StringUtils.isNotEmpty(eventSourceId) && !StringUtils.equals(DEFAULT_APPLIES_TO_OPTION, eventSourceId)) {
             String[] parts = eventSourceId.split("\\.");
             this.questionGroupDetail.setEventSource(new EventSource(parts[0], parts[1], eventSourceId));
+        }else{
+            this.questionGroupDetail.setEventSource(new EventSource(null, null, null));
         }
     }
 
@@ -159,8 +161,16 @@ public class QuestionGroupForm implements Serializable {
             }
         }
         if (sectionToDelete != null) {
-            questionPool.addAll(sectionToDelete.getQuestions());
+            markQuestionsOptionalAndReturnToPool(sectionToDelete);
             sectionDetails.remove(sectionToDelete);
+        }
+    }
+
+    private void markQuestionsOptionalAndReturnToPool(SectionDetail sectionDetail) {
+        List<SectionQuestionDetail> sectionQuestionDetails = sectionDetail.getQuestions();
+        for(SectionQuestionDetail sectionQuestionDetail: sectionQuestionDetails){
+            sectionQuestionDetail.setMandatory(false);
+            questionPool.add(sectionQuestionDetail);
         }
     }
 
@@ -210,6 +220,7 @@ public class QuestionGroupForm implements Serializable {
             }
         }
         if (questionToRemove != null) {
+            questionToRemove.setMandatory(false);
             questions.remove(questionToRemove);
             questionPool.add(questionToRemove);
         }

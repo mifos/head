@@ -67,4 +67,8 @@ public class SectionQuestionDetail implements Serializable {
     public int hashCode() {
         return questionId;
     }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
+    }
 }
