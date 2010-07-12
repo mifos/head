@@ -5,7 +5,7 @@ import java.util.List;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.persistence.OfficeHierarchyPersistence;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
-import org.mifos.dto.screen.OfficeLevelDto;
+import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {

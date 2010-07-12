@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.dto.screen;
+package org.mifos.dto.domain;
 
 
 public class OfficeLevelDto {

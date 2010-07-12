@@ -21,12 +21,11 @@
 package org.mifos.ui.core.controller;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
-import org.mifos.dto.screen.OfficeLevelDto;
-import org.mifos.dto.screen.OfficeLevels;
+import org.mifos.dto.domain.OfficeLevelDto;
+import org.mifos.dto.domain.OfficeLevels;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -46,10 +45,6 @@ public class ViewOfficeHierarchyController {
     private static final String CANCEL_PARAM = "CANCEL";
     private static final String CANCEL_PARAM_VALUE = "Cancel";
 
-    private final BreadCrumbsLinks adminCrumb = new BreadCrumbsLinks();
-    private final BreadCrumbsLinks childCrumb = new BreadCrumbsLinks();
-    private final List<BreadCrumbsLinks> breadcrumbs = new LinkedList<BreadCrumbsLinks> ();
-
     @Autowired
     private AdminServiceFacade adminServiceFacade;
 
@@ -64,13 +59,7 @@ public class ViewOfficeHierarchyController {
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
-        adminCrumb.setLink("admin.ftl");
-        childCrumb.setLink("viewOfficeHierarchy.ftl");
-        adminCrumb.setMessage("admin");
-        childCrumb.setMessage("viewOfficeHierarchy");
-        breadcrumbs.add(adminCrumb);
-        breadcrumbs.add(childCrumb);
-        return breadcrumbs;
+        return new AdminBreadcrumbBuilder().withLink("viewOfficeHierarchy", "viewOfficeHierarchy.ftl").build();
     }
 
     @ModelAttribute("formBean")
@@ -100,7 +89,6 @@ public class ViewOfficeHierarchyController {
             adminServiceFacade.updateOfficeLevelHierarchies(dtos);
             status.setComplete();
         }
-
         return viewName;
     }
 

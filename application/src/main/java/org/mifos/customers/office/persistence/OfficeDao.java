@@ -31,7 +31,7 @@ import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.dto.domain.OfficeDto;
-import org.mifos.dto.screen.OfficeLevelDto;
+import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.security.util.UserContext;
 
 public interface OfficeDao {

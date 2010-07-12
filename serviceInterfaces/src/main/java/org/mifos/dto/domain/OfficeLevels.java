@@ -1,4 +1,4 @@
-package org.mifos.dto.screen;
+package org.mifos.dto.domain;
 
 public enum OfficeLevels {
 

@@ -47,7 +47,7 @@ import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.dto.domain.OfficeDto;
-import org.mifos.dto.screen.OfficeLevelDto;
+import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.security.util.UserContext;
 
 import edu.emory.mathcs.backport.java.util.Collections;

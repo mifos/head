@@ -29,7 +29,7 @@ import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.customers.office.business.service.OfficeHierarchyService;
 import org.mifos.customers.office.persistence.OfficeDao;
-import org.mifos.dto.screen.OfficeLevelDto;
+import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
