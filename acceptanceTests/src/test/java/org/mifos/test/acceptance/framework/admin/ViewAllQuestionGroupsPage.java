@@ -39,10 +39,10 @@ public class ViewAllQuestionGroupsPage extends MifosPage {
     }
 
     public String[] getAllQuestionGroups() {
-        int rows = Integer.valueOf(selenium.getEval("window.document.getElementById('questionGroups.table').rows.length"));
+        int rows = Integer.valueOf(selenium.getEval("window.document.getElementById('questionGroupList').getElementsByTagName('a').length"));
         String[] questions = new String[rows];
         for (int i=0; i<rows; i++) {
-            questions[i] = selenium.getTable("questionGroups.table." + i + ".1");
+            questions[i] = selenium.getEval("window.document.getElementById('questionGroupList').getElementsByTagName('a')[" + i + "].innerHTML");
         }
         return questions;
     }
