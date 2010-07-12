@@ -18,22 +18,24 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.admin.servicefacade;
+package org.mifos.dto.screen;
 
 
-import java.util.List;
+public class OfficeLevelDto {
 
-import org.mifos.dto.screen.OfficeLevelDto;
-import org.mifos.dto.screen.ProductConfigurationDto;
+    private final Short levelId;
+    private final Boolean configured;
 
-@SuppressWarnings("PMD.SignatureDeclareThrowsException")
-public interface AdminServiceFacade {
+    public OfficeLevelDto(Short levelId, Boolean configuration) {
+        this.levelId = levelId;
+        this.configured = configuration;
+    }
 
-    ProductConfigurationDto retrieveProductConfiguration();
+    public Short getLevelId() {
+        return this.levelId;
+    }
 
-    void updateProductConfiguration(ProductConfigurationDto productConfiguration);
-
-    List<OfficeLevelDto> retrieveOfficeLevelsWithConfiguration();
-
-    void updateOfficeLevelHierarchies(List<OfficeLevelDto> officeLevels) throws Exception;
+    public Boolean isConfigured() {
+        return this.configured;
+    }
 }

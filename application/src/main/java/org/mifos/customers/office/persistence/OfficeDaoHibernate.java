@@ -47,6 +47,7 @@ import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.dto.domain.OfficeDto;
+import org.mifos.dto.screen.OfficeLevelDto;
 import org.mifos.security.util.UserContext;
 
 import edu.emory.mathcs.backport.java.util.Collections;
@@ -118,6 +119,20 @@ public class OfficeDaoHibernate implements OfficeDao {
                 NamedQueryConstants.GETACTIVELEVELS, queryParameters);
         if (queryResult == null) {
             queryResult = new ArrayList<OfficeDetailsDto>();
+        }
+
+        return queryResult;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<OfficeLevelDto> findOfficeLevelsWithConfiguration() {
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        List<OfficeLevelDto> queryResult = (List<OfficeLevelDto>) genericDao.executeNamedQuery(
+                NamedQueryConstants.GET_OFFICE_LEVELS_WITH_CONFIGURATION, queryParameters);
+        if (queryResult == null) {
+            queryResult = new ArrayList<OfficeLevelDto>();
         }
 
         return queryResult;

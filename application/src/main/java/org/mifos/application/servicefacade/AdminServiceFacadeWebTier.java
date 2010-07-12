@@ -20,23 +20,33 @@
 
 package org.mifos.application.servicefacade;
 
+import java.util.List;
+
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.service.ProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.customers.office.business.service.OfficeHierarchyService;
+import org.mifos.customers.office.persistence.OfficeDao;
+import org.mifos.dto.screen.OfficeLevelDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
     private ProductService productService;
+    private OfficeHierarchyService officeHierarchyService;
     private LoanProductDao loanProductDao;
     private SavingsProductDao savingsProductDao;
+    private OfficeDao officeDao;
 
-    public AdminServiceFacadeWebTier(ProductService productService, LoanProductDao loanProductDao, SavingsProductDao savingsProductDao) {
+    public AdminServiceFacadeWebTier(ProductService productService, OfficeHierarchyService officeHierarchyService, LoanProductDao loanProductDao,
+                                    SavingsProductDao savingsProductDao, OfficeDao officeDao) {
         this.productService = productService;
+        this.officeHierarchyService = officeHierarchyService;
         this.loanProductDao = loanProductDao;
         this.savingsProductDao = savingsProductDao;
+        this.officeDao = officeDao;
     }
 
     @Override
@@ -54,5 +64,16 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         ProductTypeEntity savingsProductConfiguration = this.savingsProductDao.findSavingsProductConfiguration();
 
         this.productService.updateLatenessAndDormancy(loanProductConfiguration, savingsProductConfiguration, productConfiguration);
+    }
+
+    @Override
+    public List<OfficeLevelDto> retrieveOfficeLevelsWithConfiguration() {
+        List<OfficeLevelDto> officeLevels = officeDao.findOfficeLevelsWithConfiguration();
+        return officeLevels;
+    }
+
+    @Override
+    public void updateOfficeLevelHierarchies(List<OfficeLevelDto> officeLevels) throws Exception {
+        officeHierarchyService.updateOfficeHierarchyConfiguration(officeLevels);
     }
 }

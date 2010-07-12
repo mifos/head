@@ -9,7 +9,7 @@
 	<div class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "viewOfficeHierarchy"/]</span></div>
 	<br/>
     <div class="marginTop10">&nbsp;</div> 
-    <form action="" >
+    <form method="post" name="viewofficehierarchy" action="viewOfficeHierarchy.ftl">
     <div class="span-19">
   	     <div class="fontBold"><span class="orangeheading">[@spring.message"viewofficehierarchy"/]</span></div>
         <p><span>[@spring.message"theofficehierarchycanhaveminimumtwoandmaximumfivelevels"/]</span></p>
@@ -20,15 +20,25 @@
         <div><span class="fontBold">[@spring.message"note"/] </span><span>[@spring.message"thehighestandlowesthierarchylevelscannotberemovedfromthesystem"/]</span></div>
 		<div class="span-19">
     	<div class="prepend-2">
-    <span><input type="checkbox" checked="checked" disabled="disabled" />&nbsp;[@spring.message"headOffice"/]</span><br />
+    <span>
+    [@spring.bind "formBean.headOffice" /]
+    <input type="checkbox" checked="checked" disabled="disabled"  name="${spring.status.expression}" value="${spring.status.value}"/>&nbsp;[@spring.message"headOffice"/]</span><br />
         
-     <span><input type="checkbox" checked="checked" />&nbsp;[@spring.message"regionalOffice"/]</span><br />
+     <span>
+     [@spring.bind "formBean.regionalOffice" /]    
+     <input type="checkbox" checked="checked" name="${spring.status.expression}" value="${spring.status.value}"/>&nbsp;[@spring.message"regionalOffice"/]</span><br />
            
-     <span><input type="checkbox" checked="checked" />&nbsp;[@spring.message"divisionalOffice"/]</span><br />
+     <span>
+	[@spring.bind "formBean.divisionalOffice" /]     
+     <input type="checkbox" checked="checked"  name="${spring.status.expression}" value="${spring.status.value}"/>&nbsp;[@spring.message"divisionalOffice"/]</span><br />
           
-     <span><input type="checkbox" checked="checked" />&nbsp;[@spring.message"areaOffice"/]</span><br />
+     <span>
+	[@spring.bind "formBean.areaOffice" /]     
+     <input type="checkbox" checked="checked"  name="${spring.status.expression}" value="${spring.status.value}"/>&nbsp;[@spring.message"areaOffice"/]</span><br />
           
-     <span><input type="checkbox" checked="checked" disabled="disabled" />&nbsp;[@spring.message"branchOffice"/]</span><br />
+     <span>
+	[@spring.bind "formBean.branchOffice" /]     
+     <input type="checkbox" checked="checked" disabled="disabled"  name="${spring.status.expression}" value="${spring.status.value}"/>&nbsp;[@spring.message"branchOffice"/]</span><br />
            
             </div>
         </div>
@@ -38,7 +48,7 @@
            
         <div class="prepend-9">
           <input class="buttn floatLeft"   type="button" name="submit" onclick="window.location='admin.ftl'" value="Submit" />
-          <input class="buttn2" type="button" name="cancel" value="Cancel" onclick="window.location='admin.ftl'"/>
+          <input class="buttn2" type="button" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]" />
         </div>
 	</div>
    	</form> 
