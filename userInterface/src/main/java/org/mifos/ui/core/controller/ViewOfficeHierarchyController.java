@@ -71,6 +71,7 @@ public class ViewOfficeHierarchyController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
                                     @ModelAttribute("formBean") ViewOfficeHierarchyFormBean formBean,
                                     BindingResult result,
@@ -97,11 +98,11 @@ public class ViewOfficeHierarchyController {
         formBean.setHeadOffice(true);
         formBean.setBranchOffice(true);
         for (OfficeLevelDto dto : officeLevels) {
-            if (dto.getLevelId().equals(OfficeLevels.REGIONALOFFICE)) {
+            if (dto.getLevelId().equals(OfficeLevels.REGIONALOFFICE.getValue())) {
                 formBean.setRegionalOffice(true);
-            } else if (dto.getLevelId().equals(OfficeLevels.SUBREGIONALOFFICE)) {
+            } else if (dto.getLevelId().equals(OfficeLevels.SUBREGIONALOFFICE.getValue())) {
                 formBean.setSubRegionalOffice(true);
-            } else if (dto.getLevelId().equals(OfficeLevels.AREAOFFICE)) {
+            } else if (dto.getLevelId().equals(OfficeLevels.AREAOFFICE.getValue())) {
                 formBean.setAreaOffice(true);
             }
         }
