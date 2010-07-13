@@ -20,22 +20,26 @@
 
 package org.mifos.dto.domain;
 
+import java.io.Serializable;
 
-public class OfficeLevelDto {
 
-    private final Short levelId;
-    private final Boolean configured;
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class OfficeLevelDto implements Serializable {
 
-    public OfficeLevelDto(Short levelId, Boolean configuration) {
-        this.levelId = levelId;
-        this.configured = configuration;
+    private final Short id;
+    private final Short configured;
+
+    public OfficeLevelDto(final Short id, final Short configured) {
+        this.id = id;
+        this.configured = configured;
     }
 
-    public Short getLevelId() {
-        return this.levelId;
+    public Short getId() {
+        return this.id;
     }
 
-    public Boolean isConfigured() {
+    public Short getConfigured() {
         return this.configured;
     }
 }

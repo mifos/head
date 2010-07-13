@@ -14,7 +14,7 @@ public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
     public void updateOfficeHierarchyConfiguration(List<OfficeLevelDto> officeLevels) throws OfficeException {
         for (OfficeLevelDto dto: officeLevels) {
             try {
-                if (!dto.isConfigured() && new OfficeHierarchyPersistence().isOfficePresentForLevel(dto.getLevelId())) {
+                if (dto.getConfigured() == 0 && new OfficeHierarchyPersistence().isOfficePresentForLevel(dto.getId())) {
                     throw new OfficeException(OfficeConstants.KEYHASACTIVEOFFICEWITHLEVEL);
                 }
                 new OfficeHierarchyPersistence().createOrUpdate(this);

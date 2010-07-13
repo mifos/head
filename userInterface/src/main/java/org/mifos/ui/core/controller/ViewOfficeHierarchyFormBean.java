@@ -26,15 +26,15 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EQ_UNUSUAL", justification="using commons equals builder")
 public class ViewOfficeHierarchyFormBean {
 
-    private Boolean headOffice;
+    private Boolean headOffice = false;
 
-    private Boolean branchOffice;
+    private Boolean branchOffice = false;
 
-    private Boolean regionalOffice;
+    private Boolean regionalOffice = false;
 
-    private Boolean subRegionalOffice;
+    private Boolean subRegionalOffice = false;
 
-    private Boolean areaOffice;
+    private Boolean areaOffice = false;
 
     public Boolean getHeadOffice() {
         return this.headOffice;
