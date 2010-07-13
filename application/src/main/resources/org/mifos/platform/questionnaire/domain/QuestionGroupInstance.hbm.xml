@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.platform.questionnaire.domain.QuestionGroupInstance" table="question_group_instance">
+        <id name="id" column="id" type="integer" unsaved-value="0" access="field">
+            <generator class="native" />
+        </id>
+        <many-to-one name="questionGroup" column="question_group_id" access="field" cascade="save-update" not-null="true" />
+        <property name="entityId" column="entity_id" type="integer" />
+        <property name="dateConducted" column="date_conducted" type="date" />
+        <property name="completedStatus" column="completed_status" type="integer"/>
+        <property name="creatorId" column="created_by" access="field" type="integer" />
+        <property name="versionNum" column="version_id" access="field" type="integer" />
+        <bag name="questionGroupResponses" table="question_group_response" cascade="all" inverse="true" >
+            <key column="question_group_instance_id" />
+            <one-to-many class="org.mifos.platform.questionnaire.domain.QuestionGroupResponse" />
+        </bag>
+    </class>
+</hibernate-mapping>

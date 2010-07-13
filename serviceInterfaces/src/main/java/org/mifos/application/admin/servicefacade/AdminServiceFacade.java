@@ -20,10 +20,10 @@
 
 package org.mifos.application.admin.servicefacade;
 
-
 import java.util.List;
 
 import org.mifos.dto.domain.OfficeLevelDto;
+import org.mifos.dto.screen.LoanProductDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -39,4 +39,7 @@ public interface AdminServiceFacade {
     List<OfficeLevelDto> retrieveOfficeLevelsWithConfiguration();
 
     void updateOfficeLevelHierarchies(List<OfficeLevelDto> officeLevels) throws Exception;
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<LoanProductDto> retrieveLoanProducts();
 }
