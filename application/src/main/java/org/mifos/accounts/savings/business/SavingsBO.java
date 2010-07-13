@@ -244,8 +244,10 @@ public class SavingsBO extends AccountBO {
 
         HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
 
-        CalendarEvent futureCalendarEventsApplicableToOffice = holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
-        setValuesForActiveState(futureCalendarEventsApplicableToOffice.getWorkingDays(), futureCalendarEventsApplicableToOffice.getHolidays());
+        CalendarEvent futureCalendarEventsApplicableToOffice = holidayDao.findCalendarEventsForThisYearAndNext(customer
+                .getOfficeId());
+        setValuesForActiveState(futureCalendarEventsApplicableToOffice.getWorkingDays(),
+                futureCalendarEventsApplicableToOffice.getHolidays());
     }
 
     public void populateInstanceForTest(final SavingsOfferingBO savingsOffering) {
@@ -633,12 +635,16 @@ public class SavingsBO extends AccountBO {
         Money interestAmount = new Money(getCurrency());
 
         if (trxn != null) {
-            SavingsTrxnDetailEntity savedTrxn = trxn;
-            trxn = trxn.getAccountPayment().getAmount().isGreaterThanZero() ? getLastTrxnForPayment(trxn
-                    .getAccountPayment()) : getLastTrxnForAdjustedPayment(trxn.getAccountPayment());
-            if (!savedTrxn.getAccountTrxnId().equals(trxn.getAccountTrxnId())) {
-                initialBalance = false;
+
+            if (!(trxn.getAccountAction().equals(AccountActionTypes.SAVINGS_INTEREST_POSTING))) {
+                SavingsTrxnDetailEntity savedTrxn = trxn;
+                trxn = trxn.getAccountPayment().getAmount().isGreaterThanZero() ? getLastTrxnForPayment(trxn
+                        .getAccountPayment()) : getLastTrxnForAdjustedPayment(trxn.getAccountPayment());
+                if (!savedTrxn.getAccountTrxnId().equals(trxn.getAccountTrxnId())) {
+                    initialBalance = false;
+                }
             }
+
             if (getInterestCalcType().getId().equals(InterestCalcType.MINIMUM_BALANCE.getValue())) {
                 principal = getMinimumBalance(fromDate, toDate, trxn, adjustedTrxn, initialBalance);
             } else if (getInterestCalcType().getId().equals(InterestCalcType.AVERAGE_BALANCE.getValue())) {
@@ -1899,13 +1905,17 @@ public class SavingsBO extends AccountBO {
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
         LocalDate currentDate = new LocalDate();
         LocalDate thisIntervalStartDate = customerMeeting.startDateForMeetingInterval(currentDate);
-        LocalDate nextMatchingDate = new LocalDate(scheduledEvent.nextEventDateAfter(thisIntervalStartDate.toDateTimeAtStartOfDay()));
-        DateTime futureIntervalStartDate = customerMeeting.startDateForMeetingInterval(nextMatchingDate).toDateTimeAtStartOfDay();
+        LocalDate nextMatchingDate = new LocalDate(scheduledEvent.nextEventDateAfter(thisIntervalStartDate
+                .toDateTimeAtStartOfDay()));
+        DateTime futureIntervalStartDate = customerMeeting.startDateForMeetingInterval(nextMatchingDate)
+                .toDateTimeAtStartOfDay();
 
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
+                workingDays, holidays);
 
         int numberOfInstallmentsToGenerate = getLastInstallmentId();
-        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate, futureIntervalStartDate, scheduledEvent);
+        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
+                futureIntervalStartDate, scheduledEvent);
 
         if (getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
                 || getCustomer().getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())
