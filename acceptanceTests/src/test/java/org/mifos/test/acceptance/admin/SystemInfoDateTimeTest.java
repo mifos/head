@@ -39,7 +39,7 @@ import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"admin", "acceptance","ui", "smoke"})
+@Test(sequential = true, groups = {"admin", "acceptance","ui"})
 public class SystemInfoDateTimeTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;

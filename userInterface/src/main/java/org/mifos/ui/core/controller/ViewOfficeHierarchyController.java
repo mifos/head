@@ -41,7 +41,7 @@ import org.springframework.web.bind.support.SessionStatus;
 @SessionAttributes("formBean")
 public class ViewOfficeHierarchyController {
 
-    private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/admin.ftl";
+    private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
     private static final String CANCEL_PARAM = "CANCEL";
     private static final String CANCEL_PARAM_VALUE = "Cancel";
 
@@ -71,6 +71,7 @@ public class ViewOfficeHierarchyController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
                                     @ModelAttribute("formBean") ViewOfficeHierarchyFormBean formBean,
                                     BindingResult result,
@@ -97,23 +98,24 @@ public class ViewOfficeHierarchyController {
         formBean.setHeadOffice(true);
         formBean.setBranchOffice(true);
         for (OfficeLevelDto dto : officeLevels) {
-            if (dto.getLevelId().equals(OfficeLevels.REGIONALOFFICE)) {
+            if (dto.getId().equals(OfficeLevels.REGIONALOFFICE.getValue())) {
                 formBean.setRegionalOffice(true);
-            } else if (dto.getLevelId().equals(OfficeLevels.SUBREGIONALOFFICE)) {
+            } else if (dto.getId().equals(OfficeLevels.SUBREGIONALOFFICE.getValue())) {
                 formBean.setSubRegionalOffice(true);
-            } else if (dto.getLevelId().equals(OfficeLevels.AREAOFFICE)) {
+            } else if (dto.getId().equals(OfficeLevels.AREAOFFICE.getValue())) {
                 formBean.setAreaOffice(true);
             }
         }
     }
 
+    @SuppressWarnings("PMD")
     private void updateConfiguredData(ViewOfficeHierarchyFormBean formBean,
             List<OfficeLevelDto> officeLevels) {
 
-        officeLevels.add(new OfficeLevelDto(OfficeLevels.HEADOFFICE.getValue(), formBean.getHeadOffice()));
-        officeLevels.add(new OfficeLevelDto(OfficeLevels.BRANCHOFFICE.getValue(), formBean.getBranchOffice()));
-        officeLevels.add(new OfficeLevelDto(OfficeLevels.REGIONALOFFICE.getValue(), formBean.getBranchOffice()));
-        officeLevels.add(new OfficeLevelDto(OfficeLevels.SUBREGIONALOFFICE.getValue(), formBean.getBranchOffice()));
-        officeLevels.add(new OfficeLevelDto(OfficeLevels.AREAOFFICE.getValue(), formBean.getBranchOffice()));
+        officeLevels.add(new OfficeLevelDto(OfficeLevels.HEADOFFICE.getValue(), formBean.getHeadOffice() ? ((short) 1): 0));
+        officeLevels.add(new OfficeLevelDto(OfficeLevels.BRANCHOFFICE.getValue(), formBean.getBranchOffice() ? ((short) 1): 0));
+        officeLevels.add(new OfficeLevelDto(OfficeLevels.REGIONALOFFICE.getValue(), formBean.getBranchOffice() ? ((short) 1): 0));
+        officeLevels.add(new OfficeLevelDto(OfficeLevels.SUBREGIONALOFFICE.getValue(), formBean.getBranchOffice() ? ((short) 1): 0));
+        officeLevels.add(new OfficeLevelDto(OfficeLevels.AREAOFFICE.getValue(), formBean.getBranchOffice() ? ((short) 1): 0));
    }
 }

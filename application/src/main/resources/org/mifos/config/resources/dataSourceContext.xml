@@ -7,37 +7,37 @@
     <import resource="mainPropertyConfigurer.xml"/>
 
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-        <property name="driverClass" value="${main.database.driver}"/>
+        <property name="driverClass" value="${${mifos.mode}.database.driver}"/>
         <property name="jdbcUrl"
-                  value="jdbc:mysql://${main.database.host}:${main.database.port}/${main.database}"/>
-        <property name="user" value="${main.database.user}"/>
-        <property name="password" value="${main.database.password}"/>
+                  value="jdbc:mysql://${${mifos.mode}.database.host}:${${mifos.mode}.database.port}/${${mifos.mode}.database}"/>
+        <property name="user" value="${${mifos.mode}.database.user}"/>
+        <property name="password" value="${${mifos.mode}.database.password}"/>
         <property name="initialPoolSize" value="5"></property>
-        <property name="minPoolSize" value="${main.database.hibernate.c3p0.min_size}"/>
-        <property name="maxPoolSize" value="${main.database.hibernate.c3p0.max_size}"/>
-        <property name="checkoutTimeout" value="${main.database.hibernate.c3p0.timeout}"/>
-        <property name="maxStatements" value="${main.database.hibernate.c3p0.max_statements}"></property>
+        <property name="minPoolSize" value="${${mifos.mode}.database.hibernate.c3p0.min_size}"/>
+        <property name="maxPoolSize" value="${${mifos.mode}.database.hibernate.c3p0.max_size}"/>
+        <property name="checkoutTimeout" value="${${mifos.mode}.database.hibernate.c3p0.timeout}"/>
+        <property name="maxStatements" value="${${mifos.mode}.database.hibernate.c3p0.max_statements}"></property>
         <property name="testConnectionOnCheckout" value="false"/>
         <property name="idleConnectionTestPeriod"
-                  value="${main.database.hibernate.c3p0.idle_test_period}"></property>
+                  value="${${mifos.mode}.database.hibernate.c3p0.idle_test_period}"></property>
     </bean>
 
     <bean id="dbSpecificHibernateProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="properties">
             <props>
-                <prop key="hibernate.dialect">${main.database.hibernate.dialect}</prop>
-                <prop key="hibernate.show_sql">${main.database.hibernate.show_sql}</prop>
+                <prop key="hibernate.dialect">${${mifos.mode}.database.hibernate.dialect}</prop>
+                <prop key="hibernate.show_sql">${${mifos.mode}.database.hibernate.show_sql}</prop>
                 <prop key="hibernate.generate_statistics">false</prop>
                 <prop key="hibernate.format_sql">false</prop>
                 <prop key="hibernate.use_sql_comments">false</prop>
-                <prop key="hibernate.cache.use_query_cache">${main.database.hibernate.cache.use_query_cache}
+                <prop key="hibernate.cache.use_query_cache">${${mifos.mode}.database.hibernate.cache.use_query_cache}
                 </prop>
                 <prop key="hibernate.cache.use_second_level_cache">
-                    ${main.database.hibernate.cache.use_second_level_cache}
+                    ${${mifos.mode}.database.hibernate.cache.use_second_level_cache}
                 </prop>
                 <prop key="hibernate.connection.provider_class">
-                    ${main.database.hibernate.connection.provider_class}
+                    ${${mifos.mode}.database.hibernate.connection.provider_class}
                 </prop>
 
             </props>

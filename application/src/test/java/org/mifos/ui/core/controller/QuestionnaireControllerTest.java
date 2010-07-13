@@ -90,6 +90,20 @@ public class QuestionnaireControllerTest {
     }
 
     @Test
+    public void testRemoveQuestion() {
+        QuestionForm questionForm = new QuestionForm();
+        ArrayList<Question> questions = new ArrayList<Question>();
+        questionForm.setQuestions(questions);
+        String title = "title";
+        questions.add(getQuestion("1", title,"Free text"));
+        questionnaireController.removeQuestion(questionForm, "");
+        questionnaireController.removeQuestion(questionForm, "junk");        
+        assertThat(questionForm.getQuestions().size(), is(1));
+        questionnaireController.removeQuestion(questionForm, title);
+        assertThat(questionForm.getQuestions().size(), is(0));
+    }
+
+    @Test
     public void testAddQuestionForSuccess() throws Exception {
         QuestionForm questionForm = getQuestionForm(TITLE, "Numeric");
         when(questionnaireServiceFacade.isDuplicateQuestion(TITLE)).thenReturn(false);
@@ -228,7 +242,7 @@ public class QuestionnaireControllerTest {
     }
 
     @Test
-    public void testRemoveQuestion() {
+    public void testRemoveQuestionFromSection() {
         QuestionGroupForm questionGroup = new QuestionGroupForm();
         List<SectionDetailForm> sections = new ArrayList<SectionDetailForm>();
         sections.add(getSectionSectionDetailForm("sectionName", new ArrayList<SectionQuestionDetail>(asList(getSectionQuestionDetail(1, "Q1"), getSectionQuestionDetail(2, "Q2")))));

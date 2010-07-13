@@ -461,7 +461,7 @@
                         <output>${basedir}/target/logs/${container.name}.out</output>
                         <timeout>600000</timeout>
                         <systemProperties>
-                            <mifos.test.mode>acceptance</mifos.test.mode>
+                            <mifos.mode>acceptance</mifos.mode>
                         </systemProperties>
                     </container>
                     <configuration>
