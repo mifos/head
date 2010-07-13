@@ -20,6 +20,9 @@
 
 package org.mifos.application.admin.servicefacade;
 
+import java.util.List;
+
+import org.mifos.dto.screen.LoanProductDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -30,4 +33,8 @@ public interface AdminServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_UPDATE_LATENESS_DORMANCY')")
     void updateProductConfiguration(ProductConfigurationDto productConfiguration);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<LoanProductDto> retrieveLoanProducts();
+
 }
