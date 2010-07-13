@@ -3,6 +3,7 @@
 [#import "blueprintmacros.ftl" as mifos]
 [@mifos.header "login" /]
 <!-- Container Begins-->
+<span id="page.id" title="Login" />
 <div class="container"> &nbsp;
   <!--Header-->
   <span class="logo"></span>
@@ -15,18 +16,18 @@
         <!--Begining of Right side div-->
         <div class="span-8 last" align="center">
           <div class="error">
-          	<span>
+          	<span id="login.error.message">
           		[#if Session.SPRING_SECURITY_LAST_EXCEPTION?? && Session.SPRING_SECURITY_LAST_EXCEPTION.message?has_content]
 		 					<span>${Session.SPRING_SECURITY_LAST_EXCEPTION.message}</span><br/>		
 				[/#if]
 			</span>
 		</div>					
 		<div>
-          	<span class="normalFont"><label>[@spring.message "UserName" /]</label>&nbsp;:</span>
+          	<span class="normalFont"><label for="login.input.username">[@spring.message "UserName" /]</label>&nbsp;:</span>
             <span ><input type="text" name="j_username" id="login.input.username"></span>
           </div>
           <div class="paddingTop5">
-          	<span class="normalFont">&nbsp;<label>[@spring.message "user.password"/]</label>&nbsp;:</span>
+          	<span class="normalFont">&nbsp;<label for="login.input.password">[@spring.message "user.password"/]</label>&nbsp;:</span>
             <span><input type="password" name="j_password" id="login.input.password"></span>
         </div>
           <div>&nbsp;</div>
