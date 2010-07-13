@@ -141,4 +141,12 @@ public class LoanProductDaoHibernateIntegrationTest {
        assertThat(productType, is(notNullValue()));
        assertThat(productType.getType(), is(ProductType.LOAN));
     }
+
+    @Test
+    public void testShouldFindAllLoanProducts() {
+
+        // exercise test
+        List<Object[]> queryResult = loanProductDao.findAllLoanProducts();
+
+    }
 }

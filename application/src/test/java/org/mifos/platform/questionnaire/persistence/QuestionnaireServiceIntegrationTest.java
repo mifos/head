@@ -28,10 +28,7 @@ import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.contract.*;
-import org.mifos.platform.questionnaire.domain.EventSourceEntity;
-import org.mifos.platform.questionnaire.domain.QuestionGroup;
-import org.mifos.platform.questionnaire.domain.QuestionGroupState;
-import org.mifos.platform.questionnaire.domain.Section;
+import org.mifos.platform.questionnaire.domain.*;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mifos.test.matchers.EventSourceMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +60,10 @@ public class QuestionnaireServiceIntegrationTest {
 
     @Autowired
     private QuestionGroupDao questionGroupDao;
+
+    @Autowired
+    private QuestionGroupInstanceDao questionGroupInstanceDao;
+
     public static final String TITLE = "Title";
 
     @Test
@@ -282,6 +283,36 @@ public class QuestionnaireServiceIntegrationTest {
         List<EventSource> eventSources = questionnaireService.getAllEventSources();
         assertNotNull(eventSources);
         assertThat(eventSources, new EventSourceMatcher("Create", "Client", "Create Client"));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldPersistQuestionGroupInstance() throws ApplicationException {
+        String title = "QG1" + System.currentTimeMillis();
+        List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
+        QuestionGroupDetail questionGroupDetail = defineQuestionGroup(title, "Create", "Client", details);
+        QuestionGroup questionGroup = questionGroupDao.getDetails(questionGroupDetail.getId());
+        QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
+        questionGroupInstance.setQuestionGroup(questionGroup);
+        questionGroupInstance.setCompletedStatus(1);
+        questionGroupInstance.setCreatorId(122);
+        questionGroupInstance.setDateConducted(Calendar.getInstance().getTime());
+        questionGroupInstance.setEntityId(101);
+        questionGroupInstance.setVersionNum(1);
+        List<QuestionGroupResponse> groupResponses = new ArrayList<QuestionGroupResponse>();
+        QuestionGroupResponse questionGroupResponse = new QuestionGroupResponse();
+        questionGroupResponse.setResponse("Foo Bar");
+        questionGroupResponse.setQuestionGroupInstance(questionGroupInstance);
+        questionGroupResponse.setSectionQuestion(questionGroup.getSections().get(0).getQuestions().get(0));
+        questionGroupResponse.setSectionQuestion(questionGroup.getSections().get(1).getQuestions().get(0));
+        groupResponses.add(questionGroupResponse);
+        questionGroupInstance.setQuestionGroupResponses(groupResponses);
+        Integer id = questionGroupInstanceDao.create(questionGroupInstance);
+        QuestionGroupInstance groupInstance = questionGroupInstanceDao.getDetails(id);
+        assertThat(groupInstance, is(notNullValue()));
+        assertThat(groupInstance.getQuestionGroupResponses(), is(notNullValue()));
+        assertThat(groupInstance.getQuestionGroupResponses().get(0).getSectionQuestion(), is(notNullValue()));
+        assertThat(groupInstance.getQuestionGroupResponses().get(0).getResponse(), is("Foo Bar"));
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws ApplicationException {
