@@ -73,4 +73,12 @@ public class CreateQuestionGroupPage extends MifosPage {
             }
         }
     }
+
+    public void markEveryOtherQuestionsMandatory(List<String> questionsToSelect) {
+        for(int i=0;i<questionsToSelect.size();i++){
+            if(i%2==0){
+                selenium.click("id=sections["+i+"].sectionQuestions["+i+"].mandatory");
+            }
+        }
+    }
 }

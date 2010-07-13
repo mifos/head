@@ -41,6 +41,10 @@ public class SectionQuestionDetailForm {
         return sectionQuestionDetail.isMandatory();
     }
 
+    public void setMandatory(boolean mandatory) {
+        sectionQuestionDetail.setMandatory(mandatory);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

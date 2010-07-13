@@ -88,12 +88,4 @@ public class QuestionForm extends ScreenObject {
         return null;
     }
 
-    /*public void setType(String type) {
-        currentQuestion.setType(type);
-    }
-
-    public String getType() {
-        return currentQuestion.getType();
-    }*/
-
 }

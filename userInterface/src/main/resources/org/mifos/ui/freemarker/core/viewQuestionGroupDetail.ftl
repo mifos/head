@@ -39,11 +39,11 @@
                     ${Request.questionGroupDetail.title}
                 </div>
                 <div id="questionGroup.appliesTo" class="marginTop15">
-                    [@spring.message "questionnaire.question.group.applies.to"/]: ${Request.eventSources[Request.questionGroupDetail.eventSourceId]}
+                    [@spring.message "questionnaire.questionGroupAppliesTo"/]: ${Request.eventSources[Request.questionGroupDetail.eventSourceId]}
                 </div>
                 <div id="questionGroup.sections" class="marginTop15">
                     [#list Request.questionGroupDetail.sections as section]
-                        ${section.name}<br/>
+                        <b>${section.name}</b><br/>
                         <table id="sections.table.${section.name}" name="sections.table.${section.name}">
                          <tr>
                              <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.name"/]</td>
@@ -52,7 +52,13 @@
                         [#list section.sectionQuestions as sectionQuestion]
                              <tr>
                                  <td class="drawtablerow" width="50%">${sectionQuestion.title}</td>
-                                 <td class="drawtablerow" width="50%"></td>
+                                 <td class="drawtablerow" width="50%">
+                                     [#if sectionQuestion.mandatory]
+                                         [@spring.message "questionnaire.yes"/]
+                                     [#else]
+                                         [@spring.message "questionnaire.no"/]
+                                     [/#if]
+                                 </td>
                              </tr>
                         [/#list]
                         </table>
