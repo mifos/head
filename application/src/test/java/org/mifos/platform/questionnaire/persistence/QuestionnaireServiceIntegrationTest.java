@@ -287,6 +287,19 @@ public class QuestionnaireServiceIntegrationTest {
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldGetQuestionGroupsByEventAndSource() throws ApplicationException {
+        String title = "QG1" + System.currentTimeMillis();
+        List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
+        QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details);
+        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
+        assertThat(questionGroups, is(notNullValue()));
+        QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
+        assertThat(actualQGDetail, is(notNullValue()));
+        assertThat(actualQGDetail.getTitle(), is(title));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
     public void shouldPersistQuestionGroupInstance() throws ApplicationException {
         String title = "QG1" + System.currentTimeMillis();
         List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
@@ -360,6 +373,14 @@ public class QuestionnaireServiceIntegrationTest {
     private QuestionGroupDetailMatcher getQuestionGroupDetailMatcher(String questionGroupTitle, List<SectionDetail> sectionDetails) {
         return new QuestionGroupDetailMatcher(new QuestionGroupDetail(0, questionGroupTitle, sectionDetails));
     }
+
+    private QuestionGroupDetail getMatchingQGDetailById(Integer expectedId, List<QuestionGroupDetail> questionGroups) {
+        QuestionGroupDetail actualQGDetail = null;
+        for (QuestionGroupDetail questionGroupDetail : questionGroups) {
+            if (questionGroupDetail.getId().equals(expectedId)) {
+                actualQGDetail = questionGroupDetail;
+            }
+        }
+        return actualQGDetail;
+    }
 }
-
-

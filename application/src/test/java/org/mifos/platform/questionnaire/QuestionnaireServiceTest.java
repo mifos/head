@@ -341,4 +341,16 @@ public class QuestionnaireServiceTest {
         verify(questionDao, times(2)).retrieveCountOfQuestionsWithTitle(QUESTION_TITLE);
     }
 
+    @Test
+    public void shouldGetAllQuestionGroupsByEventSource() throws ApplicationException {
+        List<QuestionGroup> questionGroups = asList(getQuestionGroup(1, "Title1", getSections("Section1")), getQuestionGroup(2, "Title2", getSections("Section2")));
+        when(questionGroupDao.retrieveQuestionGroupsByEventSource("Create", "Client")).thenReturn(questionGroups);
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
+        assertThat(questionGroupDetails, is(notNullValue()));
+        assertThat(questionGroupDetails.size(), is(2));
+        assertThat(questionGroupDetails.get(0).getTitle(), is("Title1"));
+        assertThat(questionGroupDetails.get(1).getTitle(), is("Title2"));
+        verify(questionnaireValidator, times(1)).validate(any(EventSource.class));
+        verify(questionGroupDao, times(1)).retrieveQuestionGroupsByEventSource("Create", "Client");
+    }
 }
