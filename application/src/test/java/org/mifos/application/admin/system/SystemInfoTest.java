@@ -30,7 +30,6 @@ import junit.framework.Assert;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.util.DateTimeService;
 
 import servletunit.ServletContextSimulator;
