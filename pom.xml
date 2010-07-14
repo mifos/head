@@ -42,6 +42,7 @@
         <module>acceptanceTests</module>
         <module>spi</module>
         <module>api</module>
+        <module>questionnaire</module>
     </modules>
 
     <!--
@@ -92,6 +93,11 @@
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-userInterface</artifactId>
                 <version>1.7-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+	        <groupId>org.mifos</groupId>
+	        <artifactId>mifos-questionnaire</artifactId>
+	        <version>1.7-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -162,17 +168,17 @@
             <dependency>
 		       <groupId>org.springframework.webflow</groupId>
 		       <artifactId>spring-binding</artifactId>
-		       <version>2.0.9.RELEASE</version>
+		       <version>2.1.0.RELEASE</version>
 	        </dependency>
 	        <dependency>
 		       <groupId>org.springframework.webflow</groupId>
 		       <artifactId>spring-js</artifactId>
-		       <version>2.0.9.RELEASE</version>
+		       <version>2.1.0.RELEASE</version>
 	        </dependency>
 	        <dependency>
 		       <groupId>org.springframework.webflow</groupId>
 		       <artifactId>spring-webflow</artifactId>
-		       <version>2.0.9.RELEASE</version>
+		       <version>2.1.0.RELEASE</version>
 	        </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>

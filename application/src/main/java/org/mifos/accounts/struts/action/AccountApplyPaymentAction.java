@@ -38,7 +38,6 @@ import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.api.PaymentTypeDto;
 import org.mifos.accounts.api.StandardAccountService;
 import org.mifos.accounts.api.UserReferenceDto;
-import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;

@@ -20,20 +20,47 @@
 
 package org.mifos.platform.questionnaire.contract;
 
-public class QuestionDetail {
+import org.apache.commons.lang.StringUtils;
+
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+
+public class QuestionDetail implements Serializable {
+    private static final long serialVersionUID = -2350908554610624733L;
+
     private Integer id;
-
     private String text;
-
     private String shortName;
-
     private QuestionType type;
+    private List<String> answerChoices;
+
+    public QuestionDetail() {
+        this(null);
+    }
+
+    public QuestionDetail(String text) {
+        this(text, QuestionType.INVALID);
+    }
+
+    public QuestionDetail(String text, QuestionType type) {
+        this(0, text, text, type);
+    }
 
     public QuestionDetail(Integer id, String text, String shortName, QuestionType type) {
+        this(id, text, shortName, type, new LinkedList<String>());
+    }
+
+    public QuestionDetail(String title, QuestionType type, List<String> answerChoices) {
+        this(0, title, title, type, answerChoices);
+    }
+
+    public QuestionDetail(Integer id, String text, String shortName, QuestionType type, List<String> answerChoices) {
         this.id = id;
         this.text = text;
         this.shortName = shortName;
         this.type = type;
+        this.answerChoices = answerChoices;
     }
 
     public Integer getId() {
@@ -48,8 +75,31 @@ public class QuestionDetail {
         return shortName;
     }
 
+    public String getTitle() {
+        return shortName;
+    }
 
     public QuestionType getType() {
         return type;
+    }
+
+    public void setTitle(String title) {
+        this.shortName = title;
+    }
+
+    public void setType(QuestionType type) {
+        this.type = type;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void trimTitle() {
+        this.shortName = StringUtils.trim(this.shortName);
+    }
+
+    public List<String> getAnswerChoices() {
+        return answerChoices;
     }
 }

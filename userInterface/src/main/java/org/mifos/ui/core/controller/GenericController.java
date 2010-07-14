@@ -37,20 +37,20 @@ import java.util.Map;
 @Controller
 public class GenericController extends AbstractController {
 
-	@Override
-    @RequestMapping(value={"/accessDenied.ftl","/pageNotFound.ftl","/ping.ftl","/cheetah.css.ftl","/gazelle.css.ftl","/adminHome.ftl","/maincss.css","/screen.css","/admin.ftl","/viewProductMix.ftl","/viewProductCategories.ftl","/viewOfficeHierarchy.ftl","/viewLoanProducts.ftl","/defineMandatoryHiddenFields.ftl","/viewFunds.ftl","/defineLabels.ftl","/defineLookupOptions.ftl","/viewChecklists.ftl","/viewEditCheckLists.ftl","/viewEditSavingsProduct.ftl","/viewEditLoanProduct.ftl","/viewSavingsProducts.ftl"})
-	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)  {
-        	Map<String, Object> model = new HashMap<String, Object>();
-        	model.put("request", request);
-        	Map<String, Object> status = new HashMap<String, Object>();
-        	List<String> errorMessages = new ArrayList<String>();
-        	status.put("errorMessages", errorMessages);
-        	ModelAndView modelAndView = new ModelAndView(getPageToDisplay(request), "model", model);
-        	modelAndView.addObject("status", status);
-        	return modelAndView;
-	}
+    @Override
+    @RequestMapping(value={"/accessDenied.ftl","/pageNotFound.ftl","/ping.ftl","/cheetah.css.ftl","/gazelle.css.ftl","/adminHome.ftl","/maincss.css","/screen.css","/maincss.css.ftl","/screen.css.ftl","/admin.ftl","/viewProductMix.ftl","/viewProductCategories.ftl","/viewOfficeHierarchy.ftl","/viewLoanProducts.ftl","/defineMandatoryHiddenFields.ftl","/viewFunds.ftl","/defineLabels.ftl","/defineLookupOptions.ftl","/viewChecklists.ftl","/viewEditCheckLists.ftl","/viewEditSavingsProduct.ftl","/viewEditLoanProduct.ftl","/viewOffices.ftl","/viewHolidays.ftl","/manageRolesAndPermissions.ftl","/viewSystemUsers.ftl","/viewAdditionalFields.ftl","/viewReportsTemplates.ftl","/viewReportsCategory.ftl"})
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)  {
+            Map<String, Object> model = new HashMap<String, Object>();
+            model.put("request", request);
+            Map<String, Object> status = new HashMap<String, Object>();
+            List<String> errorMessages = new ArrayList<String>();
+            status.put("errorMessages", errorMessages);
+            ModelAndView modelAndView = new ModelAndView(getPageToDisplay(request), "model", model);
+            modelAndView.addObject("status", status);
+            return modelAndView;
+    }
 
-	public String getPageToDisplay(HttpServletRequest request) {
-		return request.getRequestURI().replaceFirst("/mifos.*/","").replace(".ftl", "");
-	}
+    public String getPageToDisplay(HttpServletRequest request) {
+        return request.getRequestURI().replaceFirst("/mifos.*/","").replace(".ftl", "");
+    }
 }

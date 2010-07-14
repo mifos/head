@@ -26,18 +26,20 @@ import java.util.Locale;
 import javax.servlet.ServletContext;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.joda.time.DateTime;
+import org.junit.Before;
+import org.junit.Test;
+import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.util.DateTimeService;
 
 import servletunit.ServletContextSimulator;
 
-public class SystemInfoTest extends TestCase {
+public class SystemInfoTest {
 
     private SystemInfo info;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         ServletContext servletContext = new ServletContextSimulator();
         MockDatabaseMetaData metaData = new MockDatabaseMetaData();
@@ -47,40 +49,46 @@ public class SystemInfoTest extends TestCase {
         info.setBuildInformation(new MockSvnRevision());
     }
 
+    @Test
     public void testApplicationDatabaseVersion() throws Exception {
        //TODO Update for NSDU
     }
 
+    @Test
     public void testDatabaseDetails() throws Exception {
-       Assert.assertEquals("vendorName", info.getDatabaseVendor());
-       Assert.assertEquals("1.0", info.getDatabaseVersion());
-       Assert.assertEquals("driverName", info.getDriverName());
-       Assert.assertEquals("2.0", info.getDriverVersion());
+        Assert.assertEquals("vendorName", info.getDatabaseVendor());
+        Assert.assertEquals("1.0", info.getDatabaseVersion());
+        Assert.assertEquals("driverName", info.getDriverName());
+        Assert.assertEquals("2.0", info.getDriverVersion());
     }
 
+    @Test
     public void testDatabaseInfos() throws Exception {
         String infoSourceValue = "test";
         info.setInfoSource(infoSourceValue);
-       Assert.assertEquals(info.getInfoSource(), infoSourceValue);
+        Assert.assertEquals(info.getInfoSource(), infoSourceValue);
         URI full = new URI("jdbc:mysql://localhost:3305/mifos?useUnicode=true&characterEncoding=UTF-8");
         URI mysqlSpecific = new URI(full.getSchemeSpecificPart());
         info.setInfoURL(mysqlSpecific);
-       Assert.assertEquals("localhost", info.getDatabaseServer());
-       Assert.assertEquals("mifos", info.getDatabaseName());
-       Assert.assertEquals("3305", info.getDatabasePort());
+        Assert.assertEquals("localhost", info.getDatabaseServer());
+        Assert.assertEquals("mifos", info.getDatabaseName());
+        Assert.assertEquals("3305", info.getDatabasePort());
         info.setDatabaseUser("mysql");
-       Assert.assertEquals("mysql", info.getDatabaseUser());
+        Assert.assertEquals("mysql", info.getDatabaseUser());
     }
 
+    @Test
     public void testJava() throws Exception {
-       Assert.assertEquals("Sun", info.getJavaVendor());
-       Assert.assertEquals("1.5", info.getJavaVersion());
+        Assert.assertEquals("Sun", info.getJavaVendor());
+        Assert.assertEquals("1.5", info.getJavaVersion());
     }
 
+    @Test
     public void testApplicationServer() throws Exception {
-       Assert.assertEquals("MockServletEngine/1.9.5", info.getApplicationServerInfo());
+        Assert.assertEquals("MockServletEngine/1.9.5", info.getApplicationServerInfo());
     }
 
+    @Test
     public void testGetVersionInfoFromMissingFile() throws Exception {
         try {
             info.setBuildInformation(new VersionInfo("non-existant.file"));
@@ -90,13 +98,14 @@ public class SystemInfoTest extends TestCase {
         }
     }
 
+    @Test
     public void testGetDateTime() {
         DateTime referenceDateTime = new DateTime(2008, 12, 5, 1, 10, 0, 0);
         DateTimeService dateTimeService = new DateTimeService();
         try {
             // set a fixed datetime which is what SystemInfo should get back
             dateTimeService.setCurrentDateTimeFixed(referenceDateTime);
-           Assert.assertEquals("System info date time should be from the DateTimeService", referenceDateTime, info
+            Assert.assertEquals("System info date time should be from the DateTimeService", referenceDateTime, info
                     .getDateTime());
         } finally {
             dateTimeService.resetToCurrentSystemDateTime();

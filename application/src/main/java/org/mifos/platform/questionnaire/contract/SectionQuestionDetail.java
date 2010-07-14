@@ -20,7 +20,11 @@
 
 package org.mifos.platform.questionnaire.contract;
 
-public class SectionQuestionDetail {
+import java.io.Serializable;
+
+public class SectionQuestionDetail implements Serializable {
+    private static final long serialVersionUID = -6756173977268032788L;
+
     private int questionId;
     private boolean mandatory;
     private String title;
@@ -62,5 +66,9 @@ public class SectionQuestionDetail {
     @Override
     public int hashCode() {
         return questionId;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
     }
 }

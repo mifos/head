@@ -156,9 +156,8 @@ while(enn.hasMoreElements()){
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<td>
-							 <html-el:link styleId="admin.link.viewOrganizationSettings"
-								action="viewOrganizationSettingsAction.do?method=get&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.vieworganizationsettings" /></html-el:link></td>
+							<a id="admin.link.viewOrganizationSettings" href="viewOrganizationSettings.ftl"><mifos:mifoslabel name="admin.vieworganizationsettings" /></a>
+							</td>
 						</tr>
 						<tr class="fontnormal">
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
@@ -232,7 +231,7 @@ while(enn.hasMoreElements()){
 								<tr class="fontnormal">
 									<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 									<td width="97%">
-										<a id="admin.link.viewSystemInfo" href="systemInfoAction.do?method=load">
+										<a id="admin.link.viewSystemInfo" href="systemInformation.ftl">
 										<mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.sysinfo.title" bundle="adminUIResources" /></a></td>
 								</tr>
 							</table>
@@ -265,9 +264,8 @@ while(enn.hasMoreElements()){
 						<tr class="fontnormal">
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
-							<td><html-el:link styleId="admin.link.viewLatenessDormancyDefinition"
-								href="prdconfaction.do?method=load&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.viewlate/dordef" /></html-el:link></td>
+							<td>
+							<a id="admin.link.viewLatenessDormancyDefinition" href="editLatenessDormancy.ftl"><mifos:mifoslabel name="admin.viewlate/dordef" /></a>
 						</tr>
 					</table>
 					<br>

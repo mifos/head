@@ -20,6 +20,8 @@
 
 package org.mifos.ui.core.controller;
 
+import java.util.List;
+
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,15 +55,17 @@ public class LatenessDormancyController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
+    @ModelAttribute("breadcrumbs")
+    public List<BreadCrumbsLinks> showBreadCrumbs() {
+        return new AdminBreadcrumbBuilder().withLink("editLatenessDormancy", "editLatenessDormancy.ftl").build();
+    }
+
     @ModelAttribute("formBean")
     public LatenessDormancyFormBean showPopulatedForm() {
-
         ProductConfigurationDto productConfiguration = adminServiceFacade.retrieveProductConfiguration();
-
         LatenessDormancyFormBean formBean = new LatenessDormancyFormBean();
         formBean.setLatenessDays(productConfiguration.getLatenessDays());
         formBean.setDormancyDays(productConfiguration.getDormancyDays());
-
         return formBean;
     }
 

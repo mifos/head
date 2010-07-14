@@ -21,26 +21,26 @@ package org.mifos.platform.questionnaire.matchers;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
-import org.mifos.platform.questionnaire.contract.SectionDefinition;
+import org.mifos.platform.questionnaire.contract.SectionDetail;
 import org.mifos.platform.questionnaire.contract.SectionQuestionDetail;
 
 import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
 
-public class QuestionGroupSectionMatcher extends TypeSafeMatcher<SectionDefinition> {
-    private SectionDefinition sectionDefinition;
+public class QuestionGroupSectionMatcher extends TypeSafeMatcher<SectionDetail> {
+    private SectionDetail sectionDetail;
 
-    public QuestionGroupSectionMatcher(SectionDefinition sectionDefinition) {
-        this.sectionDefinition = sectionDefinition;
+    public QuestionGroupSectionMatcher(SectionDetail sectionDetail) {
+        this.sectionDetail = sectionDetail;
     }
 
     @Override
-    public boolean matchesSafely(SectionDefinition sectionDefinition) {
-        boolean sameTitle = equalsIgnoreCase(this.sectionDefinition.getName(), sectionDefinition.getName());
-        if (sameTitle && this.sectionDefinition.getQuestions().size() == sectionDefinition.getQuestions().size()) {
-            for (SectionQuestionDetail questionDetail : this.sectionDefinition.getQuestions()) {
-                assertThat(sectionDefinition.getQuestions(), hasItem(new SectionQuestionDetailMatcher(questionDetail)));
+    public boolean matchesSafely(SectionDetail sectionDetail) {
+        boolean sameTitle = equalsIgnoreCase(this.sectionDetail.getName(), sectionDetail.getName());
+        if (sameTitle && this.sectionDetail.getQuestions().size() == sectionDetail.getQuestions().size()) {
+            for (SectionQuestionDetail questionDetail : this.sectionDetail.getQuestions()) {
+                assertThat(sectionDetail.getQuestions(), hasItem(new SectionQuestionDetailMatcher(questionDetail)));
             }
         }
         return sameTitle;
@@ -53,21 +53,3 @@ public class QuestionGroupSectionMatcher extends TypeSafeMatcher<SectionDefiniti
 
 }
 
-class SectionQuestionDetailMatcher extends TypeSafeMatcher<SectionQuestionDetail> {
-    private SectionQuestionDetail sectionQuestionDetail;
-
-    public SectionQuestionDetailMatcher(SectionQuestionDetail sectionQuestionDetail) {
-        this.sectionQuestionDetail = sectionQuestionDetail;
-    }
-
-    @Override
-    public boolean matchesSafely(SectionQuestionDetail sectionQuestionDetail) {
-        return this.sectionQuestionDetail.getQuestionId() == sectionQuestionDetail.getQuestionId()
-                && equalsIgnoreCase(this.sectionQuestionDetail.getTitle(), sectionQuestionDetail.getTitle());
-    }
-
-    @Override
-    public void describeTo(Description description) {
-        description.appendText("SectionQuestionDetail do not match");
-    }
-}

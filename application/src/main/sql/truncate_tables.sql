@@ -202,10 +202,12 @@ truncate table  batch_branch_confirmation_issue;
 truncate table  batch_branch_confirmation_disbursement;
 truncate table  batch_branch_cash_confirmation_report;
 
+truncate table question_group_response;
 truncate table sections_questions;
 truncate table questions;
 truncate table sections;
 truncate table question_group_event_sources;
+truncate table question_group_instance;
 truncate table question_group;
 truncate table event_sources;
 truncate table events;

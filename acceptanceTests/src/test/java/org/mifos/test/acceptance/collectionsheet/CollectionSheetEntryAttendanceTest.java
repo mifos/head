@@ -120,7 +120,7 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
 
     private void enterAttendanceData(CollectionSheetEntryEnterDataPage enterDataPage, int[] attendanceValues) {
         int id = 0;
-    	for (int attendance : attendanceValues) {
+        for (int attendance : attendanceValues) {
             enterDataPage.enterAttendance(id, attendance);
             id++;
         }

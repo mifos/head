@@ -1,66 +1,59 @@
+/*
+ * Copyright (c) 2005-2010 Grameen Foundation USA
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
 package org.mifos.ui.core.controller;
 
-import java.util.LinkedList;
-import java.util.List;
 import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Properties;
 
-@SuppressWarnings( { "PMD.SystemPrintln", "PMD.SingularField", "PMD.AvoidPrintStackTrace" })
 @Controller
-public class ViewOrganizationSettingsController extends AbstractController{
+@RequestMapping("/viewOrganizationSettings")
+public class ViewOrganizationSettingsController {
 
+    @Autowired
     private ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade;
 
-    //BreadCrumbsLinks linksList;
-    BreadCrumbsLinks crumb1=new BreadCrumbsLinks();
-    BreadCrumbsLinks crumb2=new BreadCrumbsLinks();
-    List<BreadCrumbsLinks> linksList=new LinkedList<BreadCrumbsLinks> ();
-
-    ViewOrganizationSettingsController(){
-        super();
-        crumb1.setLink("admin.ftl");
-        crumb1.setMessage("admin");
-        crumb2.setLink("viewOrganizationSettings.ftl");
-        crumb2.setMessage("viewOrganizationSettings");
-        linksList.add(crumb1);
-        linksList.add(crumb2);
+    protected ViewOrganizationSettingsController() {
+        // empty constructor for spring wiring
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="NP_UNWRITTEN_FIELD", justification="request is not null")
+    @RequestMapping(method = RequestMethod.GET)
+    public ModelAndView handleRequestInternal(HttpServletRequest request) {
 
-    public ViewOrganizationSettingsServiceFacade getViewOrganzationSettingsSeviceFacade(){
-        return this.viewOrganizationSettingsServiceFacade;
-    }
+        ModelAndView modelAndView = new ModelAndView("viewOrganizationSettings");
+        Properties p = viewOrganizationSettingsServiceFacade.getOrganizationSettings(request.getSession());
+        modelAndView.addObject("properties", p);
+        modelAndView.addObject("breadcrumbs", new AdminBreadcrumbBuilder().withLink("viewOrganizationSettings", "viewOrganizationSettings.ftl").build());
 
-    public void setViewOrganizationSettingsServiceFacade(ViewOrganizationSettingsServiceFacade viewOrganizationServiceFacade){
-        this.viewOrganizationSettingsServiceFacade=viewOrganizationServiceFacade;
-    }
-
-    @Override
-    @RequestMapping("/viewOrganizationSettings.ftl")
-    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
-     {
-
-         ModelAndView modelAndView = new ModelAndView("viewOrganizationSettings");
-         try {
-             Properties p = viewOrganizationSettingsServiceFacade.getOrganizationSettings(request.getSession());
-             modelAndView.addObject("properties", p);
-            modelAndView.addObject("breadcrumbs",linksList);
-         } catch (Exception e) {
-             e.printStackTrace();
-         }
-         return modelAndView;
+        return modelAndView;
     }
 
     public String getPageToDisplay(HttpServletRequest request) {
-        System.out.println(request.getRequestURI());
-        return request.getRequestURI().replace("mifos/","").replace("/", "").replace(".ftl", "");
+        return request.getRequestURI().replace("mifos/", "").replace("/", "").replace(".ftl", "");
     }
-
 }

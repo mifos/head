@@ -46,7 +46,6 @@ import org.mifos.application.servicefacade.CustomerDetailsDto;
 import org.mifos.application.servicefacade.OnlyBranchOfficeHierarchyDto;
 import org.mifos.application.servicefacade.ProcessRulesDto;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
@@ -68,7 +67,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
@@ -276,6 +274,9 @@ public class ClientCustAction extends CustAction {
         String governmentId = actionForm.getGovernmentId();
         String clientName = actionForm.getClientName().getDisplayName();
         String givenDateOfBirth = actionForm.getDateOfBirth();
+        if (actionForm.isDefaultFeeRemoved()) {
+            customerDao.checkPermissionForDefaultFeeRemoval(getUserContext(request), actionForm.getOfficeIdValue(), actionForm.getLoanOfficerIdValue());
+        }
         DateTime dateOfBirth = new DateTime(DateUtils.getDateAsSentFromBrowser(givenDateOfBirth));
         ProcessRulesDto processRules = this.customerServiceFacade.previewClient(governmentId, dateOfBirth, clientName);
         String pendingApprovalState = processRules.isClientPendingApprovalStateEnabled()? CustomerConstants.YES: CustomerConstants.NO;

@@ -4,7 +4,7 @@
 
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-  <div class="sidebar ht1350">
+  <div class="sidebar ht1500">
   [#include "adminLeftPane.ftl" ]
   </div>
   <div class="content leftMargin180">

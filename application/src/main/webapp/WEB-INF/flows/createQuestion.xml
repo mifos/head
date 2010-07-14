@@ -8,13 +8,17 @@
 	<view-state id="createQuestion" model="questionDefinition">
 		<transition on="addQuestion" to="addQuestion" />
 		<transition on="createQuestions" to="createQuestions" />
+		<transition on="removeQuestion" to="removeQuestion"/>
 		<transition on="cancel" to="cancel" bind="false" history="discard"/>
 	</view-state>
 
     <action-state id="addQuestion">
         <evaluate expression="questionnaireController.addQuestion(questionDefinition, flowRequestContext)"/>
-        <transition on="success" to="createQuestion" />
-        <transition on="failure" to="createQuestion" />
+        <transition to="createQuestion" />
+    </action-state>
+    <action-state id="removeQuestion">
+    	<evaluate expression="questionDefinition.removeQuestion(requestParameters._eventId_removeQuestion)"/>
+        <transition to="createQuestion" />
     </action-state>
 
     <action-state id="createQuestions">

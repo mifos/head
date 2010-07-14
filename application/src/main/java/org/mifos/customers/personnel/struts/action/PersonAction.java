@@ -299,7 +299,7 @@ public class PersonAction extends SearchAction {
         /* Now we are getting personnelInformationDto instead of PersonnelBO. PersonnelDetailsServiceFacade encapsulates
                 all calls to PersonnelDao to obtain PersonnelInformationDto */
         PersonnelInformationDto personnelInformationDto = this.personnelDetailsServiceFacade.getPersonnelInformationDto(
-                ((PersonActionForm) form).getGlobalPersonnelNum(), getUserContext(request));
+                ((PersonActionForm) form).getGlobalPersonnelNum(), getUserContext(request).getLocaleId());
 
         personnelInformationDto.getStatus().setLocaleId(userContext.getLocaleId());
         SessionUtils.removeThenSetAttribute("personnelInformationDto", personnelInformationDto, request);

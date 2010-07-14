@@ -20,11 +20,15 @@
 
 package org.mifos.application.servicefacade;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.service.ProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
@@ -33,7 +37,8 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private LoanProductDao loanProductDao;
     private SavingsProductDao savingsProductDao;
 
-    public AdminServiceFacadeWebTier(ProductService productService, LoanProductDao loanProductDao, SavingsProductDao savingsProductDao) {
+    public AdminServiceFacadeWebTier(ProductService productService, LoanProductDao loanProductDao,
+            SavingsProductDao savingsProductDao) {
         this.productService = productService;
         this.loanProductDao = loanProductDao;
         this.savingsProductDao = savingsProductDao;
@@ -44,7 +49,8 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         ProductTypeEntity loanProductConfiguration = this.loanProductDao.findLoanProductConfiguration();
         ProductTypeEntity savingsProductConfiguration = this.savingsProductDao.findSavingsProductConfiguration();
 
-        return new ProductConfigurationDto(loanProductConfiguration.getLatenessDays().intValue(), savingsProductConfiguration.getDormancyDays().intValue());
+        return new ProductConfigurationDto(loanProductConfiguration.getLatenessDays().intValue(),
+                savingsProductConfiguration.getDormancyDays().intValue());
     }
 
     @Override
@@ -53,6 +59,47 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         ProductTypeEntity loanProductConfiguration = this.loanProductDao.findLoanProductConfiguration();
         ProductTypeEntity savingsProductConfiguration = this.savingsProductDao.findSavingsProductConfiguration();
 
-        this.productService.updateLatenessAndDormancy(loanProductConfiguration, savingsProductConfiguration, productConfiguration);
+        this.productService.updateLatenessAndDormancy(loanProductConfiguration, savingsProductConfiguration,
+                productConfiguration);
+    }
+
+    @Override
+    public List<ProductDisplayDto> retrieveLoanProducts() {
+
+        List<Object[]> queryResult = this.loanProductDao.findAllLoanProducts();
+        return productsToDto(queryResult);
+
+    }
+
+    @Override
+    public List<ProductDisplayDto> retrieveSavingsProducts() {
+
+        List<Object[]> queryResult = this.savingsProductDao.findAllSavingsProducts();
+        return productsToDto(queryResult);
+
+    }
+
+    private List<ProductDisplayDto> productsToDto(final List<Object[]> queryResult) {
+
+        if (queryResult.size() == 0) {
+            return null;
+        }
+
+        List<ProductDisplayDto> products = new ArrayList<ProductDisplayDto>();
+        Short prdOfferingId;
+        String prdOfferingName;
+        Short prdOfferingStatusId;
+        String prdOfferingStatusName;
+
+        for (Object[] row : queryResult) {
+            prdOfferingId = (Short) row[0];
+            prdOfferingName = (String) row[1];
+            prdOfferingStatusId = (Short) row[2];
+            prdOfferingStatusName = (String) row[3];
+            ProductDisplayDto product = new ProductDisplayDto(prdOfferingId, prdOfferingName, prdOfferingStatusId,
+                    prdOfferingStatusName);
+            products.add(product);
+        }
+        return products;
     }
 }

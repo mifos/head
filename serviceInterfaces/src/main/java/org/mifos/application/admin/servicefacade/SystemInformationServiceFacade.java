@@ -24,7 +24,10 @@ import java.util.Locale;
 
 import javax.servlet.ServletContext;
 
-@SuppressWarnings("PMD.SignatureDeclareThrowsException")
+import org.springframework.security.access.prepost.PreAuthorize;
+
 public interface SystemInformationServiceFacade {
-    SystemInformationDto getSystemInformation(ServletContext context, Locale locale) throws Exception;
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_VIEW_SYSTEM_INFO')")
+    SystemInformationDto getSystemInformation(ServletContext context, Locale locale);
 }

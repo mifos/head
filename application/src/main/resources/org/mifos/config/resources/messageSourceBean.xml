@@ -14,6 +14,7 @@
                 <value>org/mifos/config/localizedResources/MessageLookupMessages</value>
                 <value>org/mifos/config/localizedResources/reporterrors</value>
                 <value>org/mifos/config/localizedResources/SharedMessages</value>
+                <value>org/mifos/config/localizedResources/LoginUIResources</value>
             </list>
         </property>
     </bean>

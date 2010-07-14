@@ -37,7 +37,6 @@ import org.mifos.accounts.loan.struts.action.RepayLoanAction;
 import org.mifos.accounts.loan.struts.action.ReverseLoanDisbursalAction;
 import org.mifos.accounts.productdefinition.struts.action.LoanPrdAction;
 import org.mifos.accounts.productdefinition.struts.action.PrdCategoryAction;
-import org.mifos.accounts.productdefinition.struts.action.PrdConfAction;
 import org.mifos.accounts.productdefinition.struts.action.SavingsPrdAction;
 import org.mifos.accounts.productsmix.struts.action.ProductMixAction;
 import org.mifos.accounts.savings.struts.action.SavingsAction;
@@ -55,8 +54,6 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.admin.struts.action.AdminAction;
 import org.mifos.application.admin.struts.action.ShutdownAction;
-import org.mifos.application.admin.struts.action.SystemInfoAction;
-import org.mifos.application.admin.struts.action.ViewOrganizationSettingsAction;
 import org.mifos.application.collectionsheet.struts.action.CollectionSheetEntryAction;
 import org.mifos.application.holiday.struts.action.HolidayAction;
 import org.mifos.application.importexport.struts.action.ImportTransactionsAction;
@@ -200,7 +197,6 @@ public class ActivityMapper {
         parseActionSecurity(MeetingAction.getSecurity());
         parseActionSecurity(PrdCategoryAction.getSecurity());
         parseActionSecurity(SavingsPrdAction.getSecurity());
-        parseActionSecurity(PrdConfAction.getSecurity());
         parseActionSecurity(LoanPrdAction.getSecurity());
         parseActionSecurity(FeeAction.getSecurity());
         parseActionSecurity(ChkListAction.getSecurity());
@@ -254,9 +250,7 @@ public class ActivityMapper {
         parseActionSecurity(AcceptedPaymentTypeAction.getSecurity());
         parseActionSecurity(ReportsCategoryAction.getSecurity());
         parseActionSecurity(BirtAdminDocumentUploadAction.getSecurity());
-        parseActionSecurity(SystemInfoAction.getSecurity());
         parseActionSecurity(ImportTransactionsAction.getSecurity());
-        parseActionSecurity(ViewOrganizationSettingsAction.getSecurity());
         parseActionSecurity(ShutdownAction.getSecurity());
     }
 

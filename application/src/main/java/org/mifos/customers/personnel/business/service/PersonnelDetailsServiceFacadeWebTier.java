@@ -21,6 +21,7 @@
 package org.mifos.customers.personnel.business.service;
 
 import java.util.Set;
+
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.business.OfficeBO;
@@ -32,8 +33,6 @@ import org.mifos.customers.personnel.business.PersonnelNotesEntity;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.security.util.UserContext;
 
 /**
  *
@@ -47,10 +46,9 @@ public class PersonnelDetailsServiceFacadeWebTier implements PersonnelDetailsSer
     }
 
     @Override
-    public PersonnelInformationDto getPersonnelInformationDto(String globalCustNum, UserContext userContext)
-            throws ServiceException {
+    public PersonnelInformationDto getPersonnelInformationDto(String globalCustNum, Short userLocaleId) {
 
-        PersonnelBO personnel = personnelDao.getPersonnelByGlobalPersonnelNum(globalCustNum);
+        PersonnelBO personnel = personnelDao.findByGlobalPersonnelNum(globalCustNum);
         if (personnel == null) {
             throw new MifosRuntimeException("personnel not found for globalCustNum" + globalCustNum);
         }
@@ -69,7 +67,7 @@ public class PersonnelDetailsServiceFacadeWebTier implements PersonnelDetailsSer
         String userName = personnel.getUserName();
         Set<PersonnelCustomFieldEntity> customFields = personnel.getCustomFields();
         Set<PersonnelNotesEntity> personnelNotes = personnel.getPersonnelNotes();
-        personnel.getStatus().setLocaleId(userContext.getLocaleId());
+        personnel.getStatus().setLocaleId(userLocaleId);
 
         return new PersonnelInformationDto(displayName, status, locked,
                                            personnelDetails, emailId, preferredLocale,

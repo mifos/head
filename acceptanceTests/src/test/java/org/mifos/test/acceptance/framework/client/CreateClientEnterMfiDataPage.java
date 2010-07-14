@@ -28,16 +28,16 @@ import com.thoughtworks.selenium.Selenium;
 
 public class CreateClientEnterMfiDataPage extends MifosPage {
 
-	public CreateClientEnterMfiDataPage() {
-		super();
-	}
+    public CreateClientEnterMfiDataPage() {
+        super();
+    }
 
-	/**
-	 * @param selenium
-	 */
-	public CreateClientEnterMfiDataPage(Selenium selenium) {
-		super(selenium);
-	}
+    /**
+     * @param selenium
+     */
+    public CreateClientEnterMfiDataPage(Selenium selenium) {
+        super(selenium);
+    }
 
     @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
     public static class SubmitFormParameters {

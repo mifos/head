@@ -26,19 +26,19 @@ import com.thoughtworks.selenium.Selenium;
 
 public class CollectionSheetEntryPreviewDataPage extends AbstractPage {
 
-	public CollectionSheetEntryPreviewDataPage() {
-		super();
-	}
+    public CollectionSheetEntryPreviewDataPage() {
+        super();
+    }
 
-	public CollectionSheetEntryPreviewDataPage(Selenium selenium) {
-		super(selenium);
-	}
+    public CollectionSheetEntryPreviewDataPage(Selenium selenium) {
+        super(selenium);
+    }
 
 
-	public CollectionSheetEntryPreviewDataPage verifyPage(CollectionSheetEntrySelectPage.SubmitFormParameters parameters) {
+    public CollectionSheetEntryPreviewDataPage verifyPage(CollectionSheetEntrySelectPage.SubmitFormParameters parameters) {
         this.verifyPage("BulkEntryPreview");
-		return this;
-	}
+        return this;
+    }
 
     public CollectionSheetEntryEnterDataPage editAndGoToCollectionSheetEntryEnterDataPage() {
         selenium.click("bulkentry_preview.button.editdata");

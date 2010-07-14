@@ -3,8 +3,8 @@
 [#import "blueprintmacros.ftl" as mifos]
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-  <!--  Left Sidebar Begins
-  <div class="sidebar ht1050">
+  <!--  Left Sidebar Begins-->
+  <div class="sidebar ht1350">
   [#include "adminLeftPane.ftl" ]
   </div> 
    <!--  Left Sidebar Ends-->

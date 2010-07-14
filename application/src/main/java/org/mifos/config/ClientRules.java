@@ -28,6 +28,7 @@ import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.config.util.helpers.ConfigConstants;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -143,14 +144,14 @@ public class ClientRules {
     }
 
     /** Can group loans exist? */
-    public static Boolean getGroupCanApplyLoans() throws ConfigurationException {
+    public static Boolean getGroupCanApplyLoans() {
         if (groupCanApplyLoans == null) {
             groupCanApplyLoans = getGroupCanApplyLoansFromConfig();
         }
         return groupCanApplyLoans;
     }
 
-    public static boolean getClientCanExistOutsideGroup() throws ConfigurationException {
+    public static boolean getClientCanExistOutsideGroup() {
         if (clientCanExistOutsideGroup == null) {
             clientCanExistOutsideGroup = getClientCanExistOutsideGroupFromConfig();
         }
@@ -171,7 +172,7 @@ public class ClientRules {
                 + " file is untouched.";
     }
 
-    private static boolean getGroupCanApplyLoansFromConfig() throws ConfigurationException {
+    private static boolean getGroupCanApplyLoansFromConfig() {
         boolean cfgValue;
         try {
             int dbValue = getConfigPersistence().getConfigurationKeyValueInteger(GroupCanApplyLoansKey).getValue();
@@ -186,14 +187,13 @@ public class ClientRules {
 
                     // Trying to override db value of "true/yes" with "false/no"
                     // in the config file violates business rules.
-                    throw new ConfigurationException(getBadOverrideMsg(GroupCanApplyLoansKey,
-                            "Group loans may already exist."));
+                    throw new MifosRuntimeException(getBadOverrideMsg(GroupCanApplyLoansKey, "Group loans may already exist."));
                 }
 
                 makeDatabaseConfigMatchFilebasedConfig();
             }
         } catch (PersistenceException ex) {
-            throw new ConfigurationException(ex);
+            throw new MifosRuntimeException(ex);
         }
 
         return cfgValue;
@@ -203,7 +203,7 @@ public class ClientRules {
         getConfigPersistence().updateConfigurationKeyValueInteger(GroupCanApplyLoansKey, Constants.NO);
     }
 
-    private static boolean getClientCanExistOutsideGroupFromConfig() throws ConfigurationException {
+    private static boolean getClientCanExistOutsideGroupFromConfig() {
         boolean cfgValue;
         try {
             int dbValue = getConfigPersistence().getConfigurationKeyValueInteger(ClientCanExistOutsideGroupKey)
@@ -216,11 +216,10 @@ public class ClientRules {
             } else if (dbValue == Constants.YES && cfgValue == false) {
                 // Trying to override db value of "true/yes" with "false/no"
                 // in the config file violates business rules.
-                throw new ConfigurationException(getBadOverrideMsg(ClientCanExistOutsideGroupKey,
-                        "Clients outside of groups may already exist."));
+                throw new MifosRuntimeException(getBadOverrideMsg(ClientCanExistOutsideGroupKey, "Clients outside of groups may already exist."));
             }
         } catch (PersistenceException ex) {
-            throw new ConfigurationException(ex);
+            throw new MifosRuntimeException(ex);
         }
 
         return cfgValue;

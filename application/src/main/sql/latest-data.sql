@@ -3185,6 +3185,4 @@ insert into report_jasper_map (report_id, report_category_id, report_name, repor
 insert into events (id, name) values (1, 'Create'), (2, 'View');
 insert into event_sources (id, entity_type_id, event_id, description) values
     (1, (select entity_type_id from entity_master where entity_type = 'Client'), 1, 'Create Client');
-insert into event_sources (id, entity_type_id, event_id, description) values
-    (2, (select entity_type_id from entity_master where entity_type = 'Client'), 2, 'View Client');
 /* Upgrade 260 END */
