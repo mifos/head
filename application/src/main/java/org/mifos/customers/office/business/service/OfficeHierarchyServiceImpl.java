@@ -28,6 +28,7 @@ import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
+import org.mifos.service.BusinessRuleException;
 
 public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
 
@@ -79,6 +80,9 @@ public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
             }
 
             transactionHelper.commitTransaction();
+        } catch (BusinessRuleException e) {
+            transactionHelper.rollbackTransaction();
+            throw e;
         } catch (Exception e) {
             transactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);

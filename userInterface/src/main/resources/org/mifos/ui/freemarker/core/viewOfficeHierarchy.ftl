@@ -6,26 +6,23 @@
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   [#include "adminLeftPane.ftl" /]
    <div class="content leftMargin180">
-	<div class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "viewOfficeHierarchy"/]</span></div>
-	<br/>
+	[@mifos.crumbs breadcrumbs/]
+	
     <div class="marginTop10">&nbsp;</div> 
-    <form method="post" name="viewofficehierarchy" action="viewOfficeHierarchy.ftl">
-
-  		[@spring.bind "formBean" /]
-  		[@spring.showErrors "<br>" /]    
+    <form method="post" name="viewofficehierarchy" action="viewOfficeHierarchy.ftl">  
     <div class="span-19">
-  	     <div class="fontBold"><span class="orangeheading">[@spring.message"viewofficehierarchy"/]</span></div>
-        <p><span>[@spring.message"theofficehierarchycanhaveminimumtwoandmaximumfivelevels"/]</span></p>
+	    <div class="fontBold"><span class="orangeheading">[@spring.message "viewofficehierarchy"/]</span></div>
+        <span>[@spring.message "theofficehierarchycanhaveminimumtwoandmaximumfivelevels"/]</span>
+        [@spring.bind "formBean" /]
+  		[@spring.showErrors "<li>" /]  
+        <p><span>[@spring.message "checkthelevelstobeincluded"/]. </span></p>
         <p>&nbsp;&nbsp;</p>
-        <p>&nbsp;&nbsp;</p>
-        <p><span>[@spring.message"checkthelevelstobeincluded"/]. </span></p>
-        <p>&nbsp;&nbsp;</p>
-        <div><span class="fontBold">[@spring.message"note"/] </span><span>[@spring.message"thehighestandlowesthierarchylevelscannotberemovedfromthesystem"/]</span></div>
+        <div><span class="fontBold">[@spring.message "note"/] </span><span>[@spring.message "thehighestandlowesthierarchylevelscannotberemovedfromthesystem"/]</span></div>
 		<div class="span-19">
     	<div class="prepend-2">
 
     <span>
-    [@spring.formCheckbox "formBean.headOffice" "disabled=disabled" /]
+    [@spring.formCheckbox "formBean.headOffice" "disabled=disabled"/]
     [@spring.message "headOffice"/]
     </span><br />
 	        
@@ -45,7 +42,7 @@
      </span><br />
           
      <span>
-     [@spring.formCheckbox "formBean.branchOffice" "disabled=disabled" /]
+     [@spring.formCheckbox "formBean.branchOffice" "disabled"/]
      [@spring.message "branchOffice"/]
      </span><br />
 

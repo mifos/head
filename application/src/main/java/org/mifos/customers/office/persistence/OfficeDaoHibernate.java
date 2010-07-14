@@ -50,6 +50,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
@@ -321,7 +322,7 @@ public class OfficeDaoHibernate implements OfficeDao {
         queryParameters.put("LEVEL_ID", officeLevel.getValue());
         Number count = (Number) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_OFFICE_COUNT, queryParameters);
         if (count != null && count.longValue() > 0) {
-            throw new MifosRuntimeException(OfficeConstants.KEYHASACTIVEOFFICEWITHLEVEL);
+            throw new BusinessRuleException(OfficeConstants.KEYHASACTIVEOFFICEWITHLEVEL);
         }
     }
 }
