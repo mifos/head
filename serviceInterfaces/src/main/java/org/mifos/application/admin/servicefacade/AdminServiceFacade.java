@@ -39,8 +39,10 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_UPDATE_LATENESS_DORMANCY')")
     void updateProductConfiguration(ProductConfigurationDto productConfiguration);
 
+    @PreAuthorize("isFullyAuthenticated()")
     OfficeLevelDto retrieveOfficeLevelsWithConfiguration();
 
+    @PreAuthorize("isFullyAuthenticated()")
     void updateOfficeLevelHierarchies(UpdateConfiguredOfficeLevelRequest updateRequest);
 
     @PreAuthorize("isFullyAuthenticated()")

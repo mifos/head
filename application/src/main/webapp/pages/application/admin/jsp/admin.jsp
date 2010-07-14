@@ -94,11 +94,9 @@ while(enn.hasMoreElements()){
 							| <html-el:link styleId="admin.link.defineNewOffice" action="/offAction.do?method=load&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel name="admin.defnewoff" /></html-el:link></td>
 						</tr>
 						<tr class="fontnormal">
-							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
-								height="11"></td>
-							<td><html-el:link styleId="admin.link.viewOfficeHierarchy"
-								action="/offhierarchyaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.viewoffhier" /></html-el:link></td>
+							<td><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+							<td>
+							<a id="admin.link.viewOfficeHierarchy" href="viewOfficeHierarchy.ftl"><mifos:mifoslabel name="admin.viewoffhier" /></a>
 						</tr>
 					</table>
 					<br>
