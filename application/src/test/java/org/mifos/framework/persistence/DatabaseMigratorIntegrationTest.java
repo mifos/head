@@ -78,7 +78,7 @@ public class DatabaseMigratorIntegrationTest {
         SortedMap<Integer, String> upgrades = new TreeMap<Integer, String>();
         upgrades.put(1274760000, DatabaseMigrator.SCRIPT_UPGRADE_TYPE);
 
-        DatabaseMigrator migrator = new DatabaseMigrator(connection, upgrades);
+        DatabaseMigrator migrator = new DatabaseMigrator(connection, upgrades, "org.mifos.framework.persistence");
         migrator.upgrade();
 
         IDataSet dump = new DatabaseConnection(connection).createDataSet();
@@ -132,7 +132,7 @@ public class DatabaseMigratorIntegrationTest {
         SortedMap<Integer, String> upgrades = new TreeMap<Integer, String>();
         upgrades.put(1275913405, DatabaseMigrator.CLASS_UPGRADE_TYPE);
 
-        new DatabaseMigrator(connection, upgrades).upgrade();
+        new DatabaseMigrator(connection, upgrades, "org.mifos.framework.persistence").upgrade();
 
         IDataSet dump2 = new DatabaseConnection(connection).createDataSet();
         Assertion.assertEquals(expected, dump2.getTable("baz"));
@@ -186,7 +186,8 @@ public class DatabaseMigratorIntegrationTest {
         legacyUpgradesMap.put(201, 1276821432);
         legacyUpgradesMap.put(253, 1276821600);
 
-        DatabaseMigrator migrator = new DatabaseMigrator(connection, availableUpgrades);
+        DatabaseMigrator migrator = new DatabaseMigrator(connection, availableUpgrades,
+                "org.mifos.framework.persistence");
         migrator.firstRun(legacyUpgradesMap);
 
         // check appliedUPgrades table contains Unix time-stamps for upgrades
@@ -204,7 +205,7 @@ public class DatabaseMigratorIntegrationTest {
         SortedMap<Integer, String> upgrades = new TreeMap<Integer, String>();
         upgrades.put(1277124044, DatabaseMigrator.METHOD_UPGRADE_TYPE);
 
-        DatabaseMigrator migrator = new DatabaseMigrator(connection, upgrades);
+        DatabaseMigrator migrator = new DatabaseMigrator(connection, upgrades, "org.mifos.framework.persistence");
 
         migrator.upgrade();
 

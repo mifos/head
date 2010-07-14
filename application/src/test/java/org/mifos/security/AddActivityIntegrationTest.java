@@ -136,7 +136,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
            Assert.assertEquals(e.getMessage(), AddActivity.wrongLookupValueKeyFormat);
         }
         String goodKey = "Permissions-NewActivity";
-        // use valid construtor and valid key
+        // use valid constructor and valid key
         upgrade = new AddActivity(goodKey, newId, null);
         upgrade.upgrade(session.connection());
         ActivityEntity fetched = (ActivityEntity) session.get(ActivityEntity.class, newId);

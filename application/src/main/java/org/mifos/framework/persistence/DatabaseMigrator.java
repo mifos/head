@@ -62,22 +62,26 @@ public class DatabaseMigrator {
 
     public SortedMap<Integer, String> availableUpgrades;
 
+    private String upgradesPackage;
+
     public static final short ENGLISH_LOCALE = 1;
 
     public static final String CLASS_UPGRADE_TYPE = "class";
     public static final String METHOD_UPGRADE_TYPE = "method";
     public static final String SCRIPT_UPGRADE_TYPE = "sql";
 
+
+
     public DatabaseMigrator() {
-        this(StaticHibernateUtil.getSessionTL().connection(), getAvailableUpgrades());
+        this(StaticHibernateUtil.getSessionTL().connection(), getAvailableUpgrades(), "org.mifos.application.master.persistence");
 
     }
 
     public DatabaseMigrator(Connection connection) {
-        this(connection, getAvailableUpgrades());
+        this(connection, getAvailableUpgrades(), "org.mifos.application.master.persistence");
     }
 
-    public DatabaseMigrator(Connection connection, SortedMap<Integer, String> availableUpgrades) {
+    public DatabaseMigrator(Connection connection, SortedMap<Integer, String> availableUpgrades, String upgradesPackage) {
         this.connection = connection;
         try {
             connection.setAutoCommit(false);
@@ -86,6 +90,7 @@ public class DatabaseMigrator {
             e.printStackTrace();
         }
         this.availableUpgrades = availableUpgrades;
+        this.upgradesPackage = upgradesPackage;
 
     }
 
@@ -286,7 +291,7 @@ public class DatabaseMigrator {
             sqlUpgrade.upgrade(connection);
 
         } else if (CLASS_UPGRADE_TYPE.equals(type)) {
-            String className = "org.mifos.application.master.persistence.Upgrade" + upgradeNumber;
+            String className = upgradesPackage +".Upgrade"+ upgradeNumber;
 
             Upgrade upgradeClass = getInstanceOfUpgradeClass(className);
             upgradeClass.upgrade(connection);
