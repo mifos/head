@@ -28,6 +28,7 @@ import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.dto.domain.OfficeDto;
@@ -39,6 +40,8 @@ public interface OfficeDao {
     OfficeBO findOfficeById(Short officeIdValue);
 
     OfficeDto findOfficeDtoById(Short valueOf);
+
+    void save(OfficeLevelEntity entity);
 
     List<OfficeDto> findAllOffices();
 
@@ -54,6 +57,10 @@ public interface OfficeDao {
 
     List<CustomFieldDefinitionEntity> retrieveCustomFieldsForOffice();
 
+    List<OfficeDto> findActiveParents(OfficeLevel officeLevel);
+
+    OfficeLevelEntity retrieveOfficeLevel(OfficeLevel officeLevel);
+
     void validateOfficeNameIsNotTaken(String officeName) throws OfficeException;
 
     void validateOfficeShortNameIsNotTaken(String shortName) throws OfficeException;
@@ -64,5 +71,5 @@ public interface OfficeDao {
 
     void validateBranchIsActiveWithNoActivePersonnel(Short officeId, UserContext userContext) throws CustomerException;
 
-    List<OfficeDto> findActiveParents(OfficeLevel officeLevel);
+    void validateNoOfficesExistGivenOfficeLevel(OfficeLevel regionaloffice);
 }

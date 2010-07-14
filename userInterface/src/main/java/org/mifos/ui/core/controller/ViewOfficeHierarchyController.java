@@ -20,6 +20,7 @@
 
 package org.mifos.ui.core.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
@@ -41,7 +42,6 @@ public class ViewOfficeHierarchyController {
 
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
     private static final String CANCEL_PARAM = "CANCEL";
-    private static final String CANCEL_PARAM_VALUE = "Cancel";
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
@@ -72,15 +72,14 @@ public class ViewOfficeHierarchyController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
                                     @ModelAttribute("formBean") ViewOfficeHierarchyFormBean formBean,
                                     BindingResult result,
-                                    SessionStatus status) throws Exception {
+                                    SessionStatus status) {
 
         String viewName = REDIRECT_TO_ADMIN_SCREEN;
 
-        if (CANCEL_PARAM_VALUE.equals(cancel)) {
+        if (StringUtils.isNotBlank(cancel)) {
             viewName = REDIRECT_TO_ADMIN_SCREEN;
             status.setComplete();
         } else if (result.hasErrors()) {

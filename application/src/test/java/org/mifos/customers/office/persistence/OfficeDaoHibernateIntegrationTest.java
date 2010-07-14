@@ -41,6 +41,7 @@ import org.mifos.config.Localization;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.dto.domain.OfficeDto;
@@ -222,6 +223,15 @@ public class OfficeDaoHibernateIntegrationTest {
         // verification
         assertThat(allOffices.isHeadOfficeEnabled(), is(true));
         assertThat(allOffices.isBranchOfficeEnabled(), is(true));
+    }
+
+    @Test
+    public void shouldRetrieveOfficeLevelById() throws Exception {
+
+        OfficeLevelEntity officeLevel = officeDao.retrieveOfficeLevel(OfficeLevel.AREAOFFICE);
+
+        // verification
+        assertThat(officeLevel.isConfigured(), is(true));
     }
 
     private void createOfficeHierarchy() {

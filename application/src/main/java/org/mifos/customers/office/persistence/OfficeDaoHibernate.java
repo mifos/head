@@ -61,6 +61,11 @@ public class OfficeDaoHibernate implements OfficeDao {
         this.genericDao = genericDao;
     }
 
+    @Override
+    public void save(OfficeLevelEntity entity) {
+        this.genericDao.createOrUpdate(entity);
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public List<OfficeBO> findBranchsOnlyWithParentsMatching(String searchId) {
@@ -300,5 +305,23 @@ public class OfficeDaoHibernate implements OfficeDao {
         queryParameters.put("STATUS_ID", OfficeStatus.ACTIVE.getValue());
 
         return (List<OfficeDto>) this.genericDao.executeNamedQuery("office.findActiveParents", queryParameters);
+    }
+
+    @Override
+    public OfficeLevelEntity retrieveOfficeLevel(OfficeLevel officeLevel) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("OFFICE_LEVEL_ID", officeLevel.getValue());
+
+        return (OfficeLevelEntity) this.genericDao.executeUniqueResultNamedQuery("officeLevel.findById", queryParameters);
+    }
+
+    @Override
+    public void validateNoOfficesExistGivenOfficeLevel(OfficeLevel officeLevel) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("LEVEL_ID", officeLevel.getValue());
+        Number count = (Number) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_OFFICE_COUNT, queryParameters);
+        if (count != null && count.longValue() > 0) {
+            throw new MifosRuntimeException(OfficeConstants.KEYHASACTIVEOFFICEWITHLEVEL);
+        }
     }
 }

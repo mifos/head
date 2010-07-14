@@ -20,7 +20,6 @@
 
 package org.mifos.application.servicefacade;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
