@@ -26,7 +26,7 @@ public class ProductMixDto {
     private final Short productCategoryTypeID;
     private final Short prdOfferingId;
     private final Short productTypeID;
-    private String prdOfferingName;
+    private final String prdOfferingName;
 
     public ProductMixDto(Short productCategoryTypeID, Short prdOfferingId, Short productTypeID, String prdOfferingName) {
         this.productCategoryTypeID = productCategoryTypeID;
