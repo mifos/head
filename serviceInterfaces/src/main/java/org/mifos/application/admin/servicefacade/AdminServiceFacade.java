@@ -25,6 +25,8 @@ import java.util.List;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.screen.LoanProductDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
+import org.mifos.dto.screen.ProductDto;
+import org.mifos.dto.screen.ProductMixDetailsDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -42,4 +44,10 @@ public interface AdminServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     List<LoanProductDto> retrieveLoanProducts();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    ProductMixDetailsDto retrieveProductMixDetails(Short prdOfferingId, String productType) throws Exception;
+
+    @PreAuthorize("isFullyAuthenticated()")
+    ProductDto retrieveAllProductMix() throws Exception;
 }
