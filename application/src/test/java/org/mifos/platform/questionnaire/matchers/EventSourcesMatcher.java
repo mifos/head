@@ -21,35 +21,35 @@ package org.mifos.platform.questionnaire.matchers;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
-import org.mifos.platform.questionnaire.contract.SectionDetail;
-import org.mifos.platform.questionnaire.contract.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.contract.EventSource;
 
-import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
+import java.util.List;
+
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
 
-public class QuestionGroupSectionMatcher extends TypeSafeMatcher<SectionDetail> {
-    private SectionDetail sectionDetail;
+public class EventSourcesMatcher extends TypeSafeMatcher<List<EventSource>> {
 
-    public QuestionGroupSectionMatcher(SectionDetail sectionDetail) {
-        this.sectionDetail = sectionDetail;
+    private List<EventSource> eventSources;
+
+    public EventSourcesMatcher(List<EventSource> eventSources) {
+        this.eventSources = eventSources;
     }
 
     @Override
-    public boolean matchesSafely(SectionDetail sectionDetail) {
-        boolean sameTitle = equalsIgnoreCase(this.sectionDetail.getName(), sectionDetail.getName());
-        if (sameTitle && this.sectionDetail.getQuestions().size() == sectionDetail.getQuestions().size()) {
-            for (SectionQuestionDetail questionDetail : this.sectionDetail.getQuestions()) {
-                assertThat(sectionDetail.getQuestions(), hasItem(new SectionQuestionDetailMatcher(questionDetail)));
+    public boolean matchesSafely(List<EventSource> eventSources) {
+        if (eventSources.size() == this.eventSources.size()) {
+            for (EventSource eventSource : this.eventSources) {
+                assertThat(eventSources, hasItem(new EventSourceMatcher(eventSource)));
             }
+            return true;
         }
-        return sameTitle;
+        return false;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("QuestionGroup sections do not match");
+        description.appendText("EventSources did not match");
     }
 
 }
-

@@ -19,36 +19,38 @@
  */
 package org.mifos.platform.questionnaire.matchers;
 
+import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Description;
+import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
-import org.mifos.platform.questionnaire.contract.SectionDetail;
-import org.mifos.platform.questionnaire.contract.SectionQuestionDetail;
+import org.mifos.customers.surveys.business.QuestionChoice;
 
-import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
+import java.util.List;
+
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
 
-public class QuestionGroupSectionMatcher extends TypeSafeMatcher<SectionDetail> {
-    private SectionDetail sectionDetail;
+public class QuestionChoicesMatcher extends TypeSafeMatcher<List<QuestionChoice>> {
+    private List<QuestionChoice> questionChoices;
 
-    public QuestionGroupSectionMatcher(SectionDetail sectionDetail) {
-        this.sectionDetail = sectionDetail;
+    public QuestionChoicesMatcher(List<QuestionChoice> questionChoices) {
+        this.questionChoices = questionChoices;
     }
 
     @Override
-    public boolean matchesSafely(SectionDetail sectionDetail) {
-        boolean sameTitle = equalsIgnoreCase(this.sectionDetail.getName(), sectionDetail.getName());
-        if (sameTitle && this.sectionDetail.getQuestions().size() == sectionDetail.getQuestions().size()) {
-            for (SectionQuestionDetail questionDetail : this.sectionDetail.getQuestions()) {
-                assertThat(sectionDetail.getQuestions(), hasItem(new SectionQuestionDetailMatcher(questionDetail)));
+    public boolean matchesSafely(List<QuestionChoice> questionChoices) {
+        if (this.questionChoices.size() == questionChoices.size()) {
+            for (QuestionChoice questionChoice : this.questionChoices) {
+                assertThat(questionChoices, Matchers.hasItem(new QuestionChoiceMatcher(questionChoice)));
             }
+            return true;
         }
-        return sameTitle;
+        return false;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("QuestionGroup sections do not match");
+        description.appendText("List of question choices do not match");
     }
 
 }

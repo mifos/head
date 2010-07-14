@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.surveys.business.Question;
+import org.mifos.customers.surveys.business.QuestionChoice;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -39,10 +40,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
@@ -89,6 +92,27 @@ public class QuestionnaireServiceTest {
             assertEquals(QUESTION_TITLE, questionDetail.getText());
             assertEquals(QUESTION_TITLE, questionDetail.getShortName());
             assertEquals(FREETEXT, questionDetail.getType());
+            org.testng.Assert.assertEquals(questionDetail.getAnswerChoices(),asList());
+        } catch (ApplicationException e) {
+            fail("Should not have thrown the validation exception");
+        }
+        verify(questionnaireValidator).validate(questionDefinition);
+        verify(questionDao).create(any(org.mifos.customers.surveys.business.Question.class));
+    }
+
+    @Test
+    public void shouldDefineQuestionWithAnswerChoices() throws ApplicationException {
+        String choice1 = "choice1";
+        String choice2 = "choice2";
+        QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, QuestionType.MULTIPLE_CHOICE, asList(choice1, choice2));
+        try {
+            QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
+            verify(questionDao, times(1)).create(any(Question.class));
+            assertNotNull(questionDetail);
+            assertEquals(QUESTION_TITLE, questionDetail.getText());
+            assertEquals(QUESTION_TITLE, questionDetail.getShortName());
+            assertEquals(QuestionType.MULTIPLE_CHOICE, questionDetail.getType());
+            org.testng.Assert.assertEquals(questionDetail.getAnswerChoices(),asList(choice1, choice2));
         } catch (ApplicationException e) {
             fail("Should not have thrown the validation exception");
         }
@@ -130,6 +154,13 @@ public class QuestionnaireServiceTest {
         question.setQuestionText(text);
         question.setShortName(text);
         question.setAnswerType(type);
+        question.setChoices(new LinkedList<QuestionChoice>());
+        return question;
+    }
+
+    private Question getQuestion(int id, String text, AnswerType type, List<QuestionChoice> choices) {
+        Question question = getQuestion(id, text, type);
+        question.setChoices(choices);
         return question;
     }
 
@@ -308,6 +339,21 @@ public class QuestionnaireServiceTest {
         assertThat(questionDetail.getShortName(), is(title));
         assertThat(questionDetail.getText(), is(title));
         assertThat(questionDetail.getType(), is(QuestionType.DATE));
+        org.testng.Assert.assertEquals(questionDetail.getAnswerChoices(),asList());
+        verify(questionDao, times(1)).getDetails(questionId);
+    }
+    
+    @Test
+    public void testGetQuestionWithAnswerChoicesById() throws ApplicationException {
+        int questionId = 1;
+        String title = "Title";
+        when(questionDao.getDetails(questionId)).thenReturn(getQuestion(questionId, title, AnswerType.MULTIPLE_CHOICE, asList(new QuestionChoice("choice1"), new QuestionChoice("choice2"))));
+        QuestionDetail questionDetail = questionnaireService.getQuestion(questionId);
+        assertNotNull(questionDetail);
+        assertThat(questionDetail.getShortName(), is(title));
+        assertThat(questionDetail.getText(), is(title));
+        assertThat(questionDetail.getType(), is(QuestionType.MULTIPLE_CHOICE));
+        org.testng.Assert.assertEquals(questionDetail.getAnswerChoices(),asList("choice1","choice2"));
         verify(questionDao, times(1)).getDetails(questionId);
     }
 
