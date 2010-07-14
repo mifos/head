@@ -24,13 +24,15 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.surveys.business.Question;
+import org.mifos.customers.surveys.business.QuestionChoice;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.contract.*;
 import org.mifos.platform.questionnaire.domain.*;
+import org.mifos.platform.questionnaire.matchers.EventSourcesMatcher;
+import org.mifos.platform.questionnaire.matchers.QuestionChoicesMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
-import org.mifos.test.matchers.EventSourceMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -79,6 +81,23 @@ public class QuestionnaireServiceIntegrationTest {
         assertEquals(questionTitle, questionEntity.getShortName());
         assertEquals(questionTitle, questionEntity.getQuestionText());
         assertEquals(AnswerType.DATE, questionEntity.getAnswerTypeAsEnum());
+        org.testng.Assert.assertEquals(questionDetail.getAnswerChoices(), asList());
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldDefineQuestionWithAnswerChoices() throws ApplicationException {
+        String questionTitle = TITLE + System.currentTimeMillis();
+        QuestionDetail questionDetail = defineQuestion(questionTitle, MULTIPLE_CHOICE, asList("choice1", "choice2"));
+        assertNotNull(questionDetail);
+        Integer questionId = questionDetail.getId();
+        assertNotNull(questionId);
+        Question questionEntity = questionDao.getDetails(questionId);
+        assertNotNull(questionEntity);
+        assertEquals(questionTitle, questionEntity.getShortName());
+        assertEquals(questionTitle, questionEntity.getQuestionText());
+        assertEquals(AnswerType.MULTIPLE_CHOICE, questionEntity.getAnswerTypeAsEnum());
+        assertThat(questionEntity.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoice("choice1"), new QuestionChoice("choice2"))));
     }
 
     @Test
@@ -241,6 +260,19 @@ public class QuestionnaireServiceIntegrationTest {
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldGetQuestionWithAnswerChoicesById() throws ApplicationException {
+        String title = "Q1" + System.currentTimeMillis();
+        QuestionDetail createdQuestionDetail = defineQuestion(title, QuestionType.MULTIPLE_CHOICE, asList("choice1", "choice2"));
+        QuestionDetail retrievedQuestionDetail = questionnaireService.getQuestion(createdQuestionDetail.getId());
+        assertNotSame(createdQuestionDetail, retrievedQuestionDetail);
+        assertThat(retrievedQuestionDetail.getText(), is(title));
+        assertThat(retrievedQuestionDetail.getShortName(), is(title));
+        assertThat(retrievedQuestionDetail.getType(), is(QuestionType.MULTIPLE_CHOICE));
+        org.testng.Assert.assertEquals(retrievedQuestionDetail.getAnswerChoices(), asList("choice1", "choice2"));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
     public void testGetQuestionByIdFailure() throws ApplicationException {
         String title = "Q1" + System.currentTimeMillis();
         QuestionDetail createdQuestionDetail = defineQuestion(title, DATE);
@@ -282,7 +314,7 @@ public class QuestionnaireServiceIntegrationTest {
     public void shouldRetrieveAllEventSources() {
         List<EventSource> eventSources = questionnaireService.getAllEventSources();
         assertNotNull(eventSources);
-        assertThat(eventSources, new EventSourceMatcher("Create", "Client", "Create Client"));
+        assertThat(eventSources, new EventSourcesMatcher(asList(new EventSource("Create", "Client", "Create Client"))));
     }
 
     @Test
@@ -330,6 +362,10 @@ public class QuestionnaireServiceIntegrationTest {
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws ApplicationException {
         return questionnaireService.defineQuestion(new QuestionDetail(questionTitle, questionType));
+    }
+
+    private QuestionDetail defineQuestion(String questionTitle, QuestionType type, List<String> choices) throws ApplicationException {
+        return questionnaireService.defineQuestion(new QuestionDetail(questionTitle, type, choices));
     }
 
     private QuestionGroupDetail defineQuestionGroup(String title, String event, String source, List<SectionDetail> sectionDetails) throws ApplicationException {
