@@ -21,6 +21,7 @@
 package org.mifos.platform.questionnaire.validators;
 
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.platform.questionnaire.contract.EventSource;
 import org.mifos.platform.questionnaire.contract.QuestionDetail;
 import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
 
@@ -28,4 +29,6 @@ public interface QuestionnaireValidator {
     void validate(QuestionDetail questionDetail) throws ApplicationException;
 
     void validate(QuestionGroupDetail questionGroupDetail) throws ApplicationException;
+
+    void validate(EventSource eventSource) throws ApplicationException;
 }

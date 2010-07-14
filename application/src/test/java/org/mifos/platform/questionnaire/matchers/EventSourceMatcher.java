@@ -17,39 +17,35 @@
  *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  *  explanation of the license and how it is applied.
  */
+package org.mifos.platform.questionnaire.matchers;
 
-package org.mifos.test.matchers;
-
+import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.mifos.platform.questionnaire.contract.EventSource;
 
-import java.util.List;
+public class EventSourceMatcher extends TypeSafeMatcher<EventSource> {
 
-public class EventSourceMatcher extends TypeSafeMatcher<List<EventSource>> {
-    private String source;
-    private String event;
-    private String description;
+    private EventSource eventSource;
 
-    public EventSourceMatcher(String event, String source, String description) {
-        this.event = event;
-        this.source = source;
-        this.description = description;
+    public EventSourceMatcher(EventSource eventSource) {
+        this.eventSource = eventSource;
+    }
+
+    public EventSourceMatcher(String event, String source, String desc) {
+        this.eventSource = new EventSource(event, source, desc);
     }
 
     @Override
-    public boolean matchesSafely(List<EventSource> eventSources) {
-        for (EventSource eventSource : eventSources) {
-            if (eventSource.getSource().equals(source) &&
-                    eventSource.getEvent().equals(event) &&
-                        eventSource.getDesciption().equals(description))
-                return true;
-        }
-        return false;
+    public boolean matchesSafely(EventSource eventSource) {
+        return StringUtils.endsWithIgnoreCase(this.eventSource.getDesciption(), eventSource.getDesciption()) &&
+                StringUtils.endsWithIgnoreCase(this.eventSource.getSource(), eventSource.getSource()) &&
+                StringUtils.endsWithIgnoreCase(this.eventSource.getEvent(), eventSource.getEvent());
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("One of the eventSource objects did not match");
+        description.appendText("Event sources do not match");
     }
+
 }
