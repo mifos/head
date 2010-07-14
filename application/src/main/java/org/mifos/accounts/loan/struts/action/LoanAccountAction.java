@@ -496,6 +496,9 @@ public class LoanAccountAction extends AccountAppAction {
                 UserContext userContext = getUserContext(request);
                 DateTime disbursementDate = new DateTime(loanAccountForm.getDisbursementDateValue(userContext.getPreferredLocale()));
                 LoanBO loan = this.loanServiceFacade.previewLoanRedoDetails(customerId, loanAccountForm, disbursementDate, userContext);
+
+                String loanDisbursementDate = DateUtils.getUserLocaleDate(null, disbursementDate.toDate());
+                SessionUtils.setAttribute("loanDisbursementDate", loanDisbursementDate, request);
                 SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
             }
 

@@ -94,7 +94,7 @@ public class DateUtils {
         }
 
         catch (ParseException e) {
-            throw new InvalidDateException(dbDate);
+            throw new InvalidDateException(dbDate, e);
         }
     }
 
