@@ -109,14 +109,13 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public List<OfficeLevelDto> retrieveOfficeLevelsWithConfiguration() {
-        List<OfficeLevelDto> officeLevels = officeDao.findOfficeLevelsWithConfiguration();
-        return officeLevels;
+    public OfficeLevelDto retrieveOfficeLevelsWithConfiguration() {
+        return officeDao.findOfficeLevelsWithConfiguration();
     }
 
     @Override
     public void updateOfficeLevelHierarchies(UpdateConfiguredOfficeLevelRequest updateRequest) {
-//        officeHierarchyService.updateOfficeHierarchyConfiguration(officeLevels);
+        officeHierarchyService.updateOfficeHierarchyConfiguration(updateRequest);
     }
 
     @Override

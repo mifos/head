@@ -41,6 +41,7 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -126,16 +127,40 @@ public class OfficeDaoHibernate implements OfficeDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<OfficeLevelDto> findOfficeLevelsWithConfiguration() {
+    public OfficeLevelDto findOfficeLevelsWithConfiguration() {
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        List<OfficeLevelDto> queryResult = (List<OfficeLevelDto>) genericDao.executeNamedQuery(
-                NamedQueryConstants.GET_OFFICE_LEVELS_WITH_CONFIGURATION, queryParameters);
-        if (queryResult == null) {
-            queryResult = new ArrayList<OfficeLevelDto>();
+        List<OfficeLevelEntity> officeLevelEntities = (List<OfficeLevelEntity>) genericDao.executeNamedQuery("officeLevel.getOfficeLevelsWithConfiguration", queryParameters);
+        if (officeLevelEntities == null) {
+            officeLevelEntities = new ArrayList<OfficeLevelEntity>();
         }
 
-        return queryResult;
+        OfficeLevelDto officeLevels = new OfficeLevelDto();
+        for (OfficeLevelEntity officeLevelEntity : officeLevelEntities) {
+
+            OfficeLevel level = OfficeLevel.getOfficeLevel(officeLevelEntity.getId());
+            switch (level) {
+            case HEADOFFICE:
+                officeLevels.setHeadOfficeEnabled(officeLevelEntity.isConfigured());
+                break;
+            case REGIONALOFFICE:
+                officeLevels.setRegionalOfficeEnabled(officeLevelEntity.isConfigured());
+                break;
+            case SUBREGIONALOFFICE:
+                officeLevels.setSubRegionalOfficeEnabled(officeLevelEntity.isConfigured());
+                break;
+            case AREAOFFICE:
+                officeLevels.setAreaOfficeEnabled(officeLevelEntity.isConfigured());
+                break;
+            case BRANCHOFFICE:
+                officeLevels.setBranchOfficeEnabled(officeLevelEntity.isConfigured());
+                break;
+            default:
+                break;
+            }
+        }
+
+        return officeLevels;
     }
 
     @Override

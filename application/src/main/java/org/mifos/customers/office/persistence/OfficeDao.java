@@ -46,7 +46,7 @@ public interface OfficeDao {
 
     List<OfficeDetailsDto> findActiveOfficeLevels();
 
-    List<OfficeLevelDto> findOfficeLevelsWithConfiguration();
+    OfficeLevelDto findOfficeLevelsWithConfiguration();
 
     OfficeHierarchyDto headOfficeHierarchy();
 

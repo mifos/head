@@ -20,11 +20,8 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.List;
-
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.OfficeLevelDto;
-import org.mifos.dto.domain.OfficeLevels;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -60,9 +57,13 @@ public class ViewOfficeHierarchyController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView showBreadCrumbs() {
 
-        List<OfficeLevelDto> officeLevels = adminServiceFacade.retrieveOfficeLevelsWithConfiguration();
+        OfficeLevelDto officeLevels = adminServiceFacade.retrieveOfficeLevelsWithConfiguration();
         ViewOfficeHierarchyFormBean formBean = new ViewOfficeHierarchyFormBean();
-        setConfiguredDataInForm(formBean, officeLevels);
+        formBean.setHeadOffice(officeLevels.isHeadOfficeEnabled());
+        formBean.setRegionalOffice(officeLevels.isRegionalOfficeEnabled());
+        formBean.setSubRegionalOffice(officeLevels.isSubRegionalOfficeEnabled());
+        formBean.setAreaOffice(officeLevels.isAreaOfficeEnabled());
+        formBean.setBranchOffice(officeLevels.isBranchOfficeEnabled());
 
         ModelAndView mav = new ModelAndView("viewOfficeHierarchy");
         mav.addObject("breadcrumbs", new AdminBreadcrumbBuilder().withLink("viewOfficeHierarchy", "viewOfficeHierarchy.ftl").build());
@@ -90,20 +91,5 @@ public class ViewOfficeHierarchyController {
             status.setComplete();
         }
         return viewName;
-    }
-
-    private void setConfiguredDataInForm(ViewOfficeHierarchyFormBean formBean,
-            List<OfficeLevelDto> officeLevels) {
-        formBean.setHeadOffice(true);
-        formBean.setBranchOffice(true);
-        for (OfficeLevelDto dto : officeLevels) {
-            if (dto.getId().equals(OfficeLevels.REGIONALOFFICE.getValue())) {
-                formBean.setRegionalOffice(true);
-            } else if (dto.getId().equals(OfficeLevels.SUBREGIONALOFFICE.getValue())) {
-                formBean.setSubRegionalOffice(true);
-            } else if (dto.getId().equals(OfficeLevels.AREAOFFICE.getValue())) {
-                formBean.setAreaOffice(true);
-            }
-        }
     }
 }
