@@ -39,6 +39,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.argThat;
@@ -174,6 +175,17 @@ public class QuestionnaireServiceFacadeTest {
         assertTrue(eventSources.size() == 2);
         assertThat(eventSources, new EventSourcesMatcher(asList(event1, event2)));
         verify(questionnaireService).getAllEventSources();
+    }
+
+    @Test
+    public void shouldRetrieveQuestionGroupsByEventSource() throws ApplicationException {
+        List<QuestionGroupDetail> groupDetails = asList(getQuestionGroupDetail(TITLE + 1, "Create", "Client", asList(new SectionDetail())));
+        when(questionnaireService.getQuestionGroups(any(EventSource.class))).thenReturn(groupDetails);
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getQuestionGroups("Create", "Client");
+        assertThat(questionGroupDetails, is(notNullValue()));
+        assertThat(questionGroupDetails.size(), is(1));
+        assertThat(questionGroupDetails.get(0).getTitle(), is(TITLE + 1));
+        verify(questionnaireService, times(1)).getQuestionGroups(argThat(new EventSourceMatcher(new EventSource("Create", "Client", "Create.Client"))));
     }
 
     private SectionDetail getSectionDetailWithQuestions(String name, int... questionIds) {
