@@ -14,3 +14,4 @@ drop table if exists coll_sheet_customer;
 drop table if exists coll_sheet;
 
 drop table if exists database_version;
+drop table if exists rank_days_master;

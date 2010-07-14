@@ -28,34 +28,34 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import junit.framework.Assert;
 import junitx.framework.StringAssert;
 
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
-@Test
+
+
 public class DatabaseMigratorIntegrationTest {
 
     private static java.sql.Connection connection;
 
-    @BeforeClass
+    @Before
     public void beforeClass() throws Exception {
         StaticHibernateUtil.initialize();
-        // connection = TestDatabase.getJDBCConnection();
         connection = StaticHibernateUtil.getSessionTL().connection();
         connection.setAutoCommit(false);
 
     }
 
-    @AfterClass
+    @After
     public void afterClass() throws Exception {
         connection.close();
         StaticHibernateUtil.flushAndCloseSession();
@@ -66,6 +66,7 @@ public class DatabaseMigratorIntegrationTest {
      * "1274760000" to "1274761395".
      */
 
+    @Test
     public void testSimpleSQLUpgrade() throws Exception {
         loadNonSeqDatabaseSchema();
         createFooTable(connection);
@@ -116,6 +117,7 @@ public class DatabaseMigratorIntegrationTest {
         connection.commit();
     }
 
+    @Test
     public void testJavaBasedUpgrade() throws Exception {
         loadNonSeqDatabaseSchema();
         connection.createStatement().execute("drop table if exists baz");
@@ -138,10 +140,12 @@ public class DatabaseMigratorIntegrationTest {
         Assertion.assertEquals(expected, dump2.getTable("baz"));
     }
 
+    @Test
     public void testMergedUpgrade() throws Exception {
 
     }
 
+    @Test
     public void testReallyOldDatabase() throws Exception {
         TestDatabase.dropMySQLDatabase();
         createFooTable(connection);
@@ -156,6 +160,7 @@ public class DatabaseMigratorIntegrationTest {
 
     }
 
+    @Test
     public void testFirstRun() throws Exception {
 
         DatabaseSetup.executeScript("mifosdroptables.sql", connection);
@@ -197,7 +202,7 @@ public class DatabaseMigratorIntegrationTest {
 
     }
 
-    @Test(enabled = false)
+
     public void testMethodUpgrade() throws Exception {
 
         loadNonSeqDatabaseSchema();

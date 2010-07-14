@@ -21,6 +21,9 @@
 package org.mifos.accounts.business;
 
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
+
+import java.sql.Connection;
+
 import junit.framework.Assert;
 
 import org.hibernate.Session;
@@ -98,7 +101,9 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
         String goodKey = "AccountFlags-NewAccountStateFlag";
         // use valid construtor and valid key
         upgrade = new AddAccountStateFlag( newId, goodKey, goodKey);
-        upgrade.upgrade(session.connection());
+        Connection conn = session.connection();
+        conn.setAutoCommit(true);
+        upgrade.upgrade(conn);
         AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(AccountStateFlagEntity.class, newId);
         Assert.assertEquals(goodKey, flag.getLookUpValue().getLookUpName());
         MifosConfiguration.getInstance().init();

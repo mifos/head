@@ -41,6 +41,7 @@ public abstract class Upgrade {
      * logging code in Mifos.
      */
     private static final Logger LOG = Logger.getLogger(LoggerConstants.FRAMEWORKLOGGER);
+    public static final String WRONG_CONSTRUCTOR = "This db version is higher than 174 so it needs to use the constructor with lookupValueKey parameter.";
 
     protected Logger getLogger() {
         return LOG;

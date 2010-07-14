@@ -82,6 +82,14 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
     public void testConstructor() throws Exception {
         short newId = 31000;
         AddAccountAction upgrade = null;
+        try {
+                        // use deprecated construtor
+                        upgrade = new AddAccountAction(newId, TEST_LOCALE,
+                                "NewAccountAction");
+                    } catch (Exception e) {
+                       Assert.assertEquals(e.getMessage(), AddAccountAction.WRONG_CONSTRUCTOR);
+                    }
+
         String invalidKey = "NewAccountAction";
 
         try {
@@ -91,11 +99,11 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
            Assert.assertEquals(e.getMessage(), AddAccountAction.wrongLookupValueKeyFormat);
         }
         String goodKey = "AccountAction-NewAccountAction";
-        // use valid construtor and valid key
+        // use valid constructor and valid key
         upgrade = new AddAccountAction(newId, goodKey);
         upgrade.upgrade(connection);
 
-        AccountActionEntity action = (AccountActionEntity) session.get(AccountActionEntity.class, newId);
+       AccountActionEntity action = (AccountActionEntity) session.get(AccountActionEntity.class, newId);
        Assert.assertEquals(goodKey, action.getLookUpValue().getLookUpName());
     }
 
