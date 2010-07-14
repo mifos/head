@@ -20,12 +20,12 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.OfficeLevels;
+import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -85,9 +85,8 @@ public class ViewOfficeHierarchyController {
         } else if (result.hasErrors()) {
             viewName = "viewOfficeHierarchy";
         } else {
-            List<OfficeLevelDto> dtos = new ArrayList<OfficeLevelDto>();
-            updateConfiguredData(formBean, dtos);
-            adminServiceFacade.updateOfficeLevelHierarchies(dtos);
+            UpdateConfiguredOfficeLevelRequest updateRequest = new UpdateConfiguredOfficeLevelRequest(formBean.isSubRegionalOffice(), formBean.isRegionalOffice(), formBean.isAreaOffice());
+            adminServiceFacade.updateOfficeLevelHierarchies(updateRequest);
             status.setComplete();
         }
         return viewName;
@@ -107,15 +106,4 @@ public class ViewOfficeHierarchyController {
             }
         }
     }
-
-    @SuppressWarnings("PMD")
-    private void updateConfiguredData(ViewOfficeHierarchyFormBean formBean,
-            List<OfficeLevelDto> officeLevels) {
-
-        officeLevels.add(new OfficeLevelDto(OfficeLevels.HEADOFFICE.getValue(), formBean.isHeadOffice() ? ((short) 1): 0));
-        officeLevels.add(new OfficeLevelDto(OfficeLevels.BRANCHOFFICE.getValue(), formBean.isBranchOffice() ? ((short) 1): 0));
-        officeLevels.add(new OfficeLevelDto(OfficeLevels.REGIONALOFFICE.getValue(), formBean.isRegionalOffice() ? ((short) 1): 0));
-        officeLevels.add(new OfficeLevelDto(OfficeLevels.SUBREGIONALOFFICE.getValue(), formBean.isSubRegionalOffice() ? ((short) 1): 0));
-        officeLevels.add(new OfficeLevelDto(OfficeLevels.AREAOFFICE.getValue(), formBean.isAreaOffice() ? ((short) 1): 0));
-   }
 }

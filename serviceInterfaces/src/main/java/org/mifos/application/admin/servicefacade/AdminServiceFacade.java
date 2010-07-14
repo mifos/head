@@ -23,6 +23,7 @@ package org.mifos.application.admin.servicefacade;
 import java.util.List;
 
 import org.mifos.dto.domain.OfficeLevelDto;
+import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.LoanProductDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.mifos.dto.screen.ProductDto;
@@ -40,7 +41,7 @@ public interface AdminServiceFacade {
 
     List<OfficeLevelDto> retrieveOfficeLevelsWithConfiguration();
 
-    void updateOfficeLevelHierarchies(List<OfficeLevelDto> officeLevels) throws Exception;
+    void updateOfficeLevelHierarchies(UpdateConfiguredOfficeLevelRequest updateRequest);
 
     @PreAuthorize("isFullyAuthenticated()")
     List<LoanProductDto> retrieveLoanProducts();
@@ -50,4 +51,5 @@ public interface AdminServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     ProductDto retrieveAllProductMix() throws Exception;
+
 }

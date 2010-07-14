@@ -36,6 +36,7 @@ import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.customers.office.business.service.OfficeHierarchyService;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.dto.domain.OfficeLevelDto;
+import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.LoanProductDto;
 import org.mifos.dto.screen.ProductCategoryDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
@@ -114,8 +115,8 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public void updateOfficeLevelHierarchies(List<OfficeLevelDto> officeLevels) throws Exception {
-        officeHierarchyService.updateOfficeHierarchyConfiguration(officeLevels);
+    public void updateOfficeLevelHierarchies(UpdateConfiguredOfficeLevelRequest updateRequest) {
+//        officeHierarchyService.updateOfficeHierarchyConfiguration(officeLevels);
     }
 
     @Override
