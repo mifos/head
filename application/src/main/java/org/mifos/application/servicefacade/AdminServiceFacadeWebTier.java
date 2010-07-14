@@ -28,7 +28,7 @@ import org.mifos.accounts.productdefinition.business.service.ProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
-import org.mifos.dto.screen.ProductDto;
+import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
@@ -64,7 +64,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public List<ProductDto> retrieveLoanProducts() {
+    public List<ProductDisplayDto> retrieveLoanProducts() {
 
         List<Object[]> queryResult = this.loanProductDao.findAllLoanProducts();
         return productsToDto(queryResult);
@@ -72,20 +72,20 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public List<ProductDto> retrieveSavingsProducts() {
+    public List<ProductDisplayDto> retrieveSavingsProducts() {
 
         List<Object[]> queryResult = this.savingsProductDao.findAllSavingsProducts();
         return productsToDto(queryResult);
 
     }
 
-    private List<ProductDto> productsToDto(final List<Object[]> queryResult) {
+    private List<ProductDisplayDto> productsToDto(final List<Object[]> queryResult) {
 
         if (queryResult.size() == 0) {
             return null;
         }
 
-        List<ProductDto> products = new ArrayList<ProductDto>();
+        List<ProductDisplayDto> products = new ArrayList<ProductDisplayDto>();
         Short prdOfferingId;
         String prdOfferingName;
         Short prdOfferingStatusId;
@@ -96,7 +96,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             prdOfferingName = (String) row[1];
             prdOfferingStatusId = (Short) row[2];
             prdOfferingStatusName = (String) row[3];
-            ProductDto product = new ProductDto(prdOfferingId, prdOfferingName, prdOfferingStatusId,
+            ProductDisplayDto product = new ProductDisplayDto(prdOfferingId, prdOfferingName, prdOfferingStatusId,
                     prdOfferingStatusName);
             products.add(product);
         }

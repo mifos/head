@@ -22,7 +22,7 @@ package org.mifos.application.admin.servicefacade;
 
 import java.util.List;
 
-import org.mifos.dto.screen.ProductDto;
+import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -35,9 +35,9 @@ public interface AdminServiceFacade {
     void updateProductConfiguration(ProductConfigurationDto productConfiguration);
 
     @PreAuthorize("isFullyAuthenticated()")
-    List<ProductDto> retrieveLoanProducts();
+    List<ProductDisplayDto> retrieveLoanProducts();
 
     @PreAuthorize("isFullyAuthenticated()")
-    List<ProductDto> retrieveSavingsProducts();
+    List<ProductDisplayDto> retrieveSavingsProducts();
 
 }
