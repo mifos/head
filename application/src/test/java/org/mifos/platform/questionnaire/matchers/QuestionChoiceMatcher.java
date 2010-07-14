@@ -17,32 +17,27 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+package org.mifos.platform.questionnaire.matchers;
 
-package org.mifos.customers.surveys.helpers;
+import org.apache.commons.lang.StringUtils;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
+import org.mifos.customers.surveys.business.QuestionChoice;
 
-public enum AnswerType {
-    INVALID(0), MULTISELECT(1), FREETEXT(2), NUMBER(3), CHOICE(4), DATE(5), MULTIPLE_CHOICE(6);
+class QuestionChoiceMatcher extends TypeSafeMatcher<QuestionChoice> {
+    private QuestionChoice questionChoice;
 
-    private int value;
-
-    private AnswerType(int value) {
-        this.value = value;
+    public QuestionChoiceMatcher(QuestionChoice questionChoice) {
+        this.questionChoice = questionChoice;
     }
 
-    public int getValue() {
-        return value;
+    @Override
+    public boolean matchesSafely(QuestionChoice questionChoice) {
+        return StringUtils.equals(questionChoice.getChoiceText(), this.questionChoice.getChoiceText());
     }
 
-    public String getString() {
-        return this.toString();
-    }
-
-    public static AnswerType fromInt(int type) {
-        for (AnswerType candidate : AnswerType.values()) {
-            if (type == candidate.getValue()) {
-                return candidate;
-            }
-        }
-        throw new RuntimeException("no answer type " + type);
+    @Override
+    public void describeTo(Description description) {
+        description.appendText("Question choices do not match");
     }
 }

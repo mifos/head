@@ -23,5 +23,8 @@ package org.mifos.platform.questionnaire.persistence;
 import org.mifos.platform.persistence.GenericDao;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 
+import java.util.List;
+
 public interface QuestionGroupDao extends GenericDao<QuestionGroup, Integer> {
+    List retrieveQuestionGroupsByEventSource(String event, String source);
 }

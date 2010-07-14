@@ -20,6 +20,8 @@
 
 package org.mifos.accounts.productdefinition.persistence;
 
+import java.util.List;
+
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 
 public interface SavingsProductDao {
@@ -27,5 +29,7 @@ public interface SavingsProductDao {
     ProductTypeEntity findSavingsProductConfiguration();
 
     void save(ProductTypeEntity savingsProductConfiguration);
+
+    List<Object[]> findAllSavingsProducts();
 
 }

@@ -20,14 +20,14 @@
 
 package org.mifos.dto.screen;
 
-public class LoanProductDto {
+public class ProductDisplayDto {
 
     private final Short prdOfferingId;
     private final String prdOfferingName;
     private final Short prdOfferingStatusId;
     private final String prdOfferingStatusName;
 
-    public LoanProductDto(final Short prdOfferingId, final String prdOfferingName, final Short prdOfferingStatusId,
+    public ProductDisplayDto(final Short prdOfferingId, final String prdOfferingName, final Short prdOfferingStatusId,
             String prdOfferingStatusName) {
         this.prdOfferingId = prdOfferingId;
         this.prdOfferingName = prdOfferingName;

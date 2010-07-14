@@ -36,8 +36,8 @@ import org.mifos.customers.office.business.service.OfficeHierarchyService;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
-import org.mifos.dto.screen.LoanProductDto;
 import org.mifos.dto.screen.ProductCategoryDto;
+import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.mifos.dto.screen.ProductDto;
 import org.mifos.dto.screen.ProductMixDetailsDto;
@@ -81,30 +81,43 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public List<LoanProductDto> retrieveLoanProducts() {
+    public List<ProductDisplayDto> retrieveLoanProducts() {
 
         List<Object[]> queryResult = this.loanProductDao.findAllLoanProducts();
+        return productsToDto(queryResult);
+
+    }
+
+    @Override
+    public List<ProductDisplayDto> retrieveSavingsProducts() {
+
+        List<Object[]> queryResult = this.savingsProductDao.findAllSavingsProducts();
+        return productsToDto(queryResult);
+
+    }
+
+    private List<ProductDisplayDto> productsToDto(final List<Object[]> queryResult) {
+
         if (queryResult.size() == 0) {
             return null;
         }
 
-        List<LoanProductDto> loanProducts = new ArrayList<LoanProductDto>();
+        List<ProductDisplayDto> products = new ArrayList<ProductDisplayDto>();
         Short prdOfferingId;
         String prdOfferingName;
         Short prdOfferingStatusId;
         String prdOfferingStatusName;
 
-        for (Object[] loanRow : queryResult) {
-            prdOfferingId = (Short) loanRow[0];
-            prdOfferingName = (String) loanRow[1];
-            prdOfferingStatusId = (Short) loanRow[2];
-            prdOfferingStatusName = (String) loanRow[3];
-            LoanProductDto loanProduct = new LoanProductDto(prdOfferingId, prdOfferingName, prdOfferingStatusId,
+        for (Object[] row : queryResult) {
+            prdOfferingId = (Short) row[0];
+            prdOfferingName = (String) row[1];
+            prdOfferingStatusId = (Short) row[2];
+            prdOfferingStatusName = (String) row[3];
+            ProductDisplayDto product = new ProductDisplayDto(prdOfferingId, prdOfferingName, prdOfferingStatusId,
                     prdOfferingStatusName);
-            loanProducts.add(loanProduct);
+            products.add(product);
         }
-        return loanProducts;
-
+        return products;
     }
 
     @Override
