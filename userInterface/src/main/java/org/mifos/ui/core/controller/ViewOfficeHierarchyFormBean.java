@@ -26,53 +26,49 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EQ_UNUSUAL", justification="using commons equals builder")
 public class ViewOfficeHierarchyFormBean {
 
-    private Boolean headOffice = false;
+    private boolean headOffice = false;
+    private boolean regionalOffice = false;
+    private boolean subRegionalOffice = false;
+    private boolean areaOffice = false;
+    private boolean branchOffice = false;
 
-    private Boolean branchOffice = false;
-
-    private Boolean regionalOffice = false;
-
-    private Boolean subRegionalOffice = false;
-
-    private Boolean areaOffice = false;
-
-    public Boolean getHeadOffice() {
+    public boolean isHeadOffice() {
         return this.headOffice;
     }
 
-    public void setHeadOffice(Boolean headOffice) {
+    public void setHeadOffice(boolean headOffice) {
         this.headOffice = headOffice;
     }
 
-    public Boolean getBranchOffice() {
+    public boolean isBranchOffice() {
         return this.branchOffice;
     }
 
-    public void setBranchOffice(Boolean branchOffice) {
+    public void setBranchOffice(boolean branchOffice) {
         this.branchOffice = branchOffice;
     }
 
-    public Boolean getRegionalOffice() {
+    public boolean isRegionalOffice() {
         return this.regionalOffice;
     }
 
-    public void setRegionalOffice(Boolean regionalOffice) {
+    public void setRegionalOffice(boolean regionalOffice) {
         this.regionalOffice = regionalOffice;
     }
 
-    public Boolean getSubRegionalOffice() {
+    public boolean isSubRegionalOffice() {
         return this.subRegionalOffice;
     }
 
-    public void setSubRegionalOffice(Boolean subRegionalOffice) {
+    public void setSubRegionalOffice(boolean subRegionalOffice) {
         this.subRegionalOffice = subRegionalOffice;
     }
 
-    public Boolean getAreaOffice() {
+    public boolean isAreaOffice() {
         return this.areaOffice;
     }
 
-    public void setAreaOffice(Boolean areaOffice) {
+    public void setAreaOffice(boolean areaOffice) {
         this.areaOffice = areaOffice;
     }
 
