@@ -37,6 +37,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.StandardTestingService;
 
@@ -105,8 +106,7 @@ public class SystemInfo implements Serializable {
     }
 
     public int getApplicationVersion() {
-        //TODO Update for NSDU
-	return 0;
+        return DatabaseVersionPersistence.APPLICATION_VERSION;
     }
 
     public String getDatabaseVendor() {
