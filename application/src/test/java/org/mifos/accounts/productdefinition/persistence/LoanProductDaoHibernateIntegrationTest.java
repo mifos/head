@@ -147,6 +147,6 @@ public class LoanProductDaoHibernateIntegrationTest {
 
         // exercise test
         List<Object[]> queryResult = loanProductDao.findAllLoanProducts();
-
+        assertThat(queryResult, is(notNullValue()));
     }
 }

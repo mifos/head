@@ -22,6 +22,8 @@ package org.mifos.accounts.productdefinition.persistence;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -94,5 +96,14 @@ public class SavingsProductDaoHibernateIntegrationTest {
 
        assertThat(productType, is(notNullValue()));
        assertThat(productType.getType(), is(ProductType.SAVINGS));
+    }
+
+    @Test
+    public void testShouldFindAllSavingsProducts() {
+
+        // exercise test
+        List<Object[]> queryResult = savingsProductDao.findAllSavingsProducts();
+        assertThat(queryResult, is(notNullValue()));
+
     }
 }

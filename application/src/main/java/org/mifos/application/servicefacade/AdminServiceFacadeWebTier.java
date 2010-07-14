@@ -23,15 +23,12 @@ package org.mifos.application.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.service.ProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
-import org.mifos.core.MifosRuntimeException;
-import org.mifos.dto.screen.LoanProductDto;
+import org.mifos.dto.screen.ProductDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
@@ -67,29 +64,42 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public List<LoanProductDto> retrieveLoanProducts() {
+    public List<ProductDto> retrieveLoanProducts() {
 
         List<Object[]> queryResult = this.loanProductDao.findAllLoanProducts();
+        return productsToDto(queryResult);
+
+    }
+
+    @Override
+    public List<ProductDto> retrieveSavingsProducts() {
+
+        List<Object[]> queryResult = this.savingsProductDao.findAllSavingsProducts();
+        return productsToDto(queryResult);
+
+    }
+
+    private List<ProductDto> productsToDto(final List<Object[]> queryResult) {
+
         if (queryResult.size() == 0) {
             return null;
         }
 
-        List<LoanProductDto> loanProducts = new ArrayList<LoanProductDto>();
+        List<ProductDto> products = new ArrayList<ProductDto>();
         Short prdOfferingId;
         String prdOfferingName;
         Short prdOfferingStatusId;
         String prdOfferingStatusName;
 
-        for (Object[] loanRow : queryResult) {
-            prdOfferingId = (Short) loanRow[0];
-            prdOfferingName = (String) loanRow[1];
-            prdOfferingStatusId = (Short) loanRow[2];
-            prdOfferingStatusName = (String) loanRow[3];
-            LoanProductDto loanProduct = new LoanProductDto(prdOfferingId, prdOfferingName, prdOfferingStatusId,
+        for (Object[] row : queryResult) {
+            prdOfferingId = (Short) row[0];
+            prdOfferingName = (String) row[1];
+            prdOfferingStatusId = (Short) row[2];
+            prdOfferingStatusName = (String) row[3];
+            ProductDto product = new ProductDto(prdOfferingId, prdOfferingName, prdOfferingStatusId,
                     prdOfferingStatusName);
-            loanProducts.add(loanProduct);
+            products.add(product);
         }
-        return loanProducts;
-
+        return products;
     }
 }
