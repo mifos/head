@@ -123,6 +123,13 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         return questionnaireMapper.mapToEventSources(eventSourceDao.getDetailsAll());
     }
 
+    @Override
+    public List<QuestionGroupDetail> getQuestionGroups(EventSource eventSource) throws ApplicationException {
+        questionnaireValidator.validate(eventSource);
+        List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSource.getEvent(), eventSource.getSource());
+        return questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
+    }
+
     private void persistQuestion(Question question) throws ApplicationException {
         try {
             questionDao.create(question);

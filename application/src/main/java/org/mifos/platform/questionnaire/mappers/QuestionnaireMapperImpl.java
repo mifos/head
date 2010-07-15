@@ -21,6 +21,7 @@
 package org.mifos.platform.questionnaire.mappers;
 
 import org.mifos.customers.surveys.business.Question;
+import org.mifos.customers.surveys.business.QuestionChoice;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.QuestionState;
 import org.mifos.platform.questionnaire.contract.*;
@@ -70,17 +71,37 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return new QuestionDetail(question.getQuestionId(),
                 question.getQuestionText(),
                 question.getShortName(),
-                mapToQuestionType(question.getAnswerTypeAsEnum()));
+                mapToQuestionType(question.getAnswerTypeAsEnum()), mapToAnswerChoices(question.getChoices()));
     }
+
+    private List<String> mapToAnswerChoices(List<QuestionChoice> choices) {
+        List<String> questionChoices = new LinkedList<String>();
+        for (QuestionChoice questionChoice : choices) {
+            questionChoices.add(questionChoice.getChoiceText());
+        }
+        return questionChoices;
+    }
+
 
     @Override
     public Question mapToQuestion(QuestionDetail questionDetail) {
         Question question = new Question();
         question.setShortName(questionDetail.getTitle());
         question.setQuestionText(questionDetail.getTitle());
-        question.setAnswerType(mapToAnswerType(questionDetail.getType()));
+        QuestionType type = questionDetail.getType();
+        question.setAnswerType(mapToAnswerType(type));
         question.setQuestionState(QuestionState.ACTIVE);
+        question.setChoices(mapToChoices(questionDetail.getAnswerChoices()));
         return question;
+    }
+
+
+    private List<QuestionChoice> mapToChoices(List<String> choices) {
+        List<QuestionChoice> questionChoices = new LinkedList<QuestionChoice>();
+        for (String choice : choices) {
+            questionChoices.add(new QuestionChoice(choice));
+        }
+        return questionChoices;
     }
 
     @Override
@@ -149,7 +170,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     private List<SectionDetail> mapToSectionDefinitions(List<Section> sections) {
         List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
-        for(Section section: sections){
+        for (Section section : sections) {
             sectionDetails.add(mapToSectionDefinition(section));
         }
         return sectionDetails;
@@ -200,14 +221,16 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         answerToQuestionType = asMap(makeEntry(AnswerType.INVALID, QuestionType.INVALID),
                 makeEntry(AnswerType.FREETEXT, QuestionType.FREETEXT),
                 makeEntry(AnswerType.DATE, QuestionType.DATE),
-                makeEntry(AnswerType.NUMBER, QuestionType.NUMERIC));
+                makeEntry(AnswerType.NUMBER, QuestionType.NUMERIC),
+                makeEntry(AnswerType.MULTIPLE_CHOICE, QuestionType.MULTIPLE_CHOICE));
     }
 
     private void populateQuestionToAnswerTypeMap() {
         questionToAnswerType = asMap(makeEntry(QuestionType.INVALID, AnswerType.INVALID),
                 makeEntry(QuestionType.FREETEXT, AnswerType.FREETEXT),
                 makeEntry(QuestionType.DATE, AnswerType.DATE),
-                makeEntry(QuestionType.NUMERIC, AnswerType.NUMBER));
+                makeEntry(QuestionType.NUMERIC, AnswerType.NUMBER),
+                makeEntry(QuestionType.MULTIPLE_CHOICE, AnswerType.MULTIPLE_CHOICE));
     }
 
 }

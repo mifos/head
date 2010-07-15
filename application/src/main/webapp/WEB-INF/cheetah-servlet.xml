@@ -15,6 +15,7 @@
         <property name="basenames">
             <list>
                 <value>org.mifos.ui.localizedProperties.messages</value>
+                <value>org.mifos.ui.localizedProperties.LookupValueMessages</value>
                 <value>org.mifos.ui.localizedProperties.questionnaire_messages</value>
             </list>
         </property>

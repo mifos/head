@@ -19,17 +19,16 @@
  */
 package org.mifos.platform.questionnaire.contract;
 
-import org.apache.commons.lang.StringUtils;
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.QuestionnaireServiceFacadeImpl;
+import org.mifos.platform.questionnaire.matchers.EventSourceMatcher;
+import org.mifos.platform.questionnaire.matchers.EventSourcesMatcher;
+import org.mifos.platform.questionnaire.matchers.QuestionDetailMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -39,7 +38,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
@@ -72,8 +71,12 @@ public class QuestionnaireServiceFacadeTest {
         String title = TITLE + System.currentTimeMillis();
         String title1 = title + 1;
         String title2 = title + 2;
-        questionnaireServiceFacade.createQuestions(asList(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT), getQuestionDetail(0, title2, title2, QuestionType.DATE)));
-        verify(questionnaireService, times(2)).defineQuestion(argThat(new QuestionDetailMatcher(QuestionType.FREETEXT, QuestionType.DATE)));
+        questionnaireServiceFacade.createQuestions(asList(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT),
+                getQuestionDetail(0, title2, title2, QuestionType.DATE),
+                getQuestionDetail(0, title2, title2, QuestionType.MULTIPLE_CHOICE,asList("choice1","choice2"))));
+        verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT))));
+        verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, QuestionType.DATE))));
+        verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, QuestionType.MULTIPLE_CHOICE, asList("choice1","choice2")))));
     }
 
     @Test
@@ -90,10 +93,6 @@ public class QuestionnaireServiceFacadeTest {
         assertThat(questionDetailList.get(0).getTitle(), is("title"));
         assertThat(questionDetailList.get(0).getId(), is(1));
         verify(questionnaireService).getAllQuestions();
-    }
-
-    private QuestionDetail getQuestionDetail(int id, String text, String shortName, QuestionType questionType) {
-        return new QuestionDetail(id, text, shortName, questionType);
     }
 
     @Test
@@ -176,6 +175,17 @@ public class QuestionnaireServiceFacadeTest {
         verify(questionnaireService).getAllEventSources();
     }
 
+    @Test
+    public void shouldRetrieveQuestionGroupsByEventSource() throws ApplicationException {
+        List<QuestionGroupDetail> groupDetails = asList(getQuestionGroupDetail(TITLE + 1, "Create", "Client", asList(new SectionDetail())));
+        when(questionnaireService.getQuestionGroups(any(EventSource.class))).thenReturn(groupDetails);
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getQuestionGroups("Create", "Client");
+        assertThat(questionGroupDetails, is(notNullValue()));
+        assertThat(questionGroupDetails.size(), is(1));
+        assertThat(questionGroupDetails.get(0).getTitle(), is(TITLE + 1));
+        verify(questionnaireService, times(1)).getQuestionGroups(argThat(new EventSourceMatcher("Create", "Client", "Create.Client")));
+    }
+
     private SectionDetail getSectionDetailWithQuestions(String name, int... questionIds) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
@@ -215,70 +225,13 @@ public class QuestionnaireServiceFacadeTest {
         return new EventSource(event, source, description);
     }
 
-    private class QuestionDetailMatcher extends ArgumentMatcher<QuestionDetail> {
-        private List<QuestionType> questionType;
-
-        public QuestionDetailMatcher(QuestionType... questionType) {
-            this.questionType = new ArrayList<QuestionType>();
-            this.questionType.addAll(Arrays.asList(questionType));
-        }
-
-        @Override
-        public boolean matches(Object argument) {
-            if (argument instanceof QuestionDetail) {
-                QuestionDetail questionDetail = (QuestionDetail) argument;
-                if (questionType.get(0) == questionDetail.getType()) {
-                    questionType.remove(questionDetail.getType());
-                    questionType.add(questionDetail.getType());
-                    return true;
-                }
-            }
-            return false;
-        }
+    private QuestionDetail getQuestionDetail(int id, String text, String shortName, QuestionType questionType) {
+        return new QuestionDetail(id, text, shortName, questionType);
     }
 
-    private class EventSourceMatcher extends TypeSafeMatcher<EventSource> {
-
-        private EventSource eventSource;
-
-        public EventSourceMatcher(EventSource eventSource) {
-            this.eventSource = eventSource;
-        }
-
-        @Override
-        public boolean matchesSafely(EventSource eventSource) {
-            return StringUtils.endsWithIgnoreCase(this.eventSource.getDesciption(), eventSource.getDesciption()) &&
-                    StringUtils.endsWithIgnoreCase(this.eventSource.getSource(), eventSource.getSource()) &&
-                    StringUtils.endsWithIgnoreCase(this.eventSource.getEvent(), eventSource.getEvent());
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("Event sources do not match");
-        }
+    private QuestionDetail getQuestionDetail(int id, String text, String shortName, QuestionType questionType, List<String> choices) {
+        return new QuestionDetail(id, text, shortName, questionType, choices);
     }
 
-    private class EventSourcesMatcher extends TypeSafeMatcher<List<EventSource>> {
-        private List<EventSource> eventSources;
-
-        public EventSourcesMatcher(List<EventSource> eventSources) {
-            this.eventSources = eventSources;
-        }
-
-        @Override
-        public boolean matchesSafely(List<EventSource> eventSources) {
-            if (eventSources.size() == this.eventSources.size()) {
-                for (EventSource eventSource : this.eventSources) {
-                    assertThat(eventSources, hasItem(new EventSourceMatcher(eventSource)));
-                }
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("EventSources did not match");
-        }
-    }
 }
+

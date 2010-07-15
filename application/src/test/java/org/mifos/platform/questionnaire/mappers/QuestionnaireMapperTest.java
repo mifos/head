@@ -24,13 +24,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.surveys.business.Question;
+import org.mifos.customers.surveys.business.QuestionChoice;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.platform.questionnaire.contract.*;
 import org.mifos.platform.questionnaire.domain.*;
+import org.mifos.platform.questionnaire.matchers.EventSourcesMatcher;
+import org.mifos.platform.questionnaire.matchers.QuestionChoicesMatcher;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
-import org.mifos.test.matchers.EventSourceMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -44,6 +46,7 @@ import static org.mifos.customers.surveys.helpers.AnswerType.FREETEXT;
 import static org.mifos.platform.questionnaire.domain.QuestionGroupState.ACTIVE;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionnaireMapperTest {
@@ -64,7 +67,7 @@ public class QuestionnaireMapperTest {
     }
 
     @Test
-    public void shouldMapQuestionDefinitionToQuestion() {
+    public void shouldMapQuestionDetailToQuestion() {
         QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.FREETEXT);
         Question question = questionnaireMapper.mapToQuestion(questionDefinition);
         assertThat(question.getAnswerTypeAsEnum(), is(FREETEXT));
@@ -72,10 +75,26 @@ public class QuestionnaireMapperTest {
     }
 
     @Test
+    public void shouldMapMultipleChoiceQuestionDetailToQuestion() {
+        String choice1 = "choice1";
+        String choice2 = "choice2";
+        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.MULTIPLE_CHOICE, asList(choice1, choice2));
+        Question question = questionnaireMapper.mapToQuestion(questionDefinition);
+        assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.MULTIPLE_CHOICE));
+        assertThat(question.getQuestionText(), is(TITLE));
+        assertThat(question.getShortName(), is(TITLE));
+        assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoice(choice1), new QuestionChoice(choice2))));
+    }
+
+    @Test
     public void shouldMapQuestionToQuestionDetail() {
         Question question = getQuestion(TITLE, AnswerType.FREETEXT);
         QuestionDetail questionDetail = questionnaireMapper.mapToQuestionDetail(question);
         assertQuestionDetail(questionDetail, TITLE, QuestionType.FREETEXT);
+
+        question = getQuestion(TITLE, AnswerType.MULTIPLE_CHOICE, asList(new QuestionChoice("choice1"), new QuestionChoice("choice2")));
+        questionDetail = questionnaireMapper.mapToQuestionDetail(question);
+        assertQuestionDetail(questionDetail, TITLE, QuestionType.MULTIPLE_CHOICE, asList("choice1", "choice2"));
     }
 
     @Test
@@ -136,10 +155,6 @@ public class QuestionnaireMapperTest {
         assertThat(sectionQuestion.getSection(), notNullValue());
         assertThat(sectionQuestion.isRequired(), is(true));
         assertThat(sectionQuestion.getSequenceNumber(), is(0));
-    }
-
-    private EventSource getEventSource(String event, String source) {
-        return new EventSource(event, source, null);
     }
 
     private SectionDetail getSectionDefinition(String name) {
@@ -233,7 +248,7 @@ public class QuestionnaireMapperTest {
         List<EventSourceEntity> events = getEventSourceEntities("Create", "Client", "Create Client");
         List<EventSource> eventSources = questionnaireMapper.mapToEventSources(events);
         assertThat(eventSources, is(not(nullValue())));
-        assertThat(eventSources, new EventSourceMatcher("Create", "Client", "Create Client"));
+        assertThat(eventSources, new EventSourcesMatcher(asList(getEventSource("Create", "Client", "Create Client"))));
     }
 
     private List<EventSourceEntity> getEventSourceEntities(String event, String source, String description) {
@@ -262,15 +277,6 @@ public class QuestionnaireMapperTest {
         assertThat(questionDetail.getType(), is(questionType));
     }
 
-    private Question getQuestion(String title, AnswerType answerType) {
-        return new Question(title, title, answerType);
-    }
-
-    private void assertQuestionDetail(QuestionDetail questionDetail, String title, QuestionType questionType) {
-        assertThat(questionDetail.getText(), is(title));
-        assertThat(questionDetail.getType(), is(questionType));
-    }
-
     private void assertCreationDate(Date dateOfCreation) {
         Calendar creationDate = Calendar.getInstance();
         creationDate.setTime(dateOfCreation);
@@ -279,4 +285,32 @@ public class QuestionnaireMapperTest {
         assertThat(creationDate.get(Calendar.MONTH), is(currentDate.get(Calendar.MONTH)));
         assertThat(creationDate.get(Calendar.YEAR), is(currentDate.get(Calendar.YEAR)));
     }
+
+    private Question getQuestion(String title, AnswerType answerType) {
+        return getQuestion(title, answerType, new LinkedList<QuestionChoice>());
+    }
+
+    private Question getQuestion(String title, AnswerType answerType, List<QuestionChoice> questionChoices) {
+        return new Question(title, title, answerType, questionChoices);
+    }
+
+    private void assertQuestionDetail(QuestionDetail questionDetail, String title, QuestionType questionType) {
+        assertThat(questionDetail.getText(), is(title));
+        assertThat(questionDetail.getType(), is(questionType));
+    }
+
+    private void assertQuestionDetail(QuestionDetail questionDetail, String title, QuestionType questionType, List<String> choices) {
+        assertQuestionDetail(questionDetail, title, questionType);
+        assertEquals(choices, questionDetail.getAnswerChoices());
+    }
+
+    private EventSource getEventSource(String event, String source) {
+        return new EventSource(event, source, null);
+    }
+
+    private EventSource getEventSource(String event, String source, String description) {
+        return new EventSource(event, source, description);
+    }
+
 }
+
