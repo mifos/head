@@ -47,7 +47,7 @@ import org.mifos.config.util.helpers.LabelConfigurations;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.office.business.OfficeLevelEntity;
-import org.mifos.customers.office.business.service.OfficeHierarchyBusinessService;
+import org.mifos.customers.office.persistence.OfficeHierarchyPersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -155,7 +155,7 @@ public class LabelConfigurationAction extends BaseAction {
 
     private void setOfficeLevelsInForm(LabelConfigurationActionForm labelConfigurationActionForm, Short localeId)
             throws Exception {
-        List<OfficeLevelEntity> officeLevels = new OfficeHierarchyBusinessService().getOfficeLevels(localeId);
+        List<OfficeLevelEntity> officeLevels = new OfficeHierarchyPersistence().getOfficeLevels(localeId);
         for (OfficeLevelEntity officeLevelEntity : officeLevels) {
             if (officeLevelEntity.getLevel().equals(OfficeLevel.HEADOFFICE)) {
                 labelConfigurationActionForm.setHeadOffice(officeLevelEntity.getName());
@@ -289,7 +289,7 @@ public class LabelConfigurationAction extends BaseAction {
 
     private void updateOfficeData(LabelConfigurationActionForm labelConfigurationActionForm, Short localeId)
             throws Exception {
-        List<OfficeLevelEntity> officeLevels = new OfficeHierarchyBusinessService().getOfficeLevels(localeId);
+        List<OfficeLevelEntity> officeLevels = new OfficeHierarchyPersistence().getOfficeLevels(localeId);
         for (OfficeLevelEntity officeLevelEntity : officeLevels) {
             if (officeLevelEntity.getLevel().equals(OfficeLevel.HEADOFFICE)) {
                 officeLevelEntity.update(labelConfigurationActionForm.getHeadOffice());

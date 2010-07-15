@@ -405,10 +405,12 @@ drop table if exists batch_branch_confirmation_disbursement;
 drop table if exists batch_branch_cash_confirmation_report;
 drop table if exists office_holiday;
 
+drop table if exists question_group_response;
 drop table if exists sections_questions;
 drop table if exists questions;
 drop table if exists sections;
 drop table if exists question_group_event_sources;
+drop table if exists question_group_instance;
 drop table if exists question_group;
 drop table if exists event_sources;
 drop table if exists events;

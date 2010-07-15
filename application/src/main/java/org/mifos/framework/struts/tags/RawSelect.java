@@ -125,7 +125,7 @@ public class RawSelect {
         super.toString();
         StringBuffer results = new StringBuffer();
         results
-                .append("<SELECT onMouseover=\"showtip(this,event,'Select the item(s)')\" onMouseOut=\"hidetip()\" onchange =\"showtip(this,event,'Select the item(s)')\" style=\"WIDTH: 136px\"");
+                .append("<SELECT onMouseover=\"showtip(this,event,'Select the item(s)')\" onMouseOut=\"hidetip()\" onchange =\"showtip(this,event,'Select the item(s)')\" style=\"MIN-WIDTH: 136px\"");
         prepareAttribute(results, "name", getName());
         prepareAttribute(results, "size", getSize());
         prepareAttribute(results, "multiple", getMultiple());

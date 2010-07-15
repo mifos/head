@@ -574,6 +574,15 @@ public class LoanAccountActionForm extends BaseActionForm {
         return feesToApply;
     }
 
+    public boolean isDefaultFeeRemoved() {
+        for (FeeDto fee : getDefaultFees()) {
+            if (fee.isRemoved()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public FeeDto getSelectedFee(int index) {
         while (index >= additionalFees.size()) {
             additionalFees.add(new FeeDto());

@@ -255,6 +255,38 @@
 	<query name="product.getAllLoanProducts">
 		<![CDATA[from org.mifos.accounts.productdefinition.business.LoanOfferingBO loanOffering order by loanOffering.prdOfferingName]]>
 	</query>
+	<sql-query name="findAllLoanProducts">
+		<return-scalar column="prdOfferingId" type="short" />
+		<return-scalar column="prdOfferingName" type="string" />
+		<return-scalar column="prdOfferingStatusId" type="short" />
+		<return-scalar column="prdOfferingStatusName" type="string" />	
+		<![CDATA[select po.prd_offering_id as prdOfferingId,
+				po.prd_offering_name as prdOfferingName,
+				po.offering_status_id as prdOfferingStatusId,
+				lv.lookup_name as prdOfferingStatusName
+				from prd_offering po 
+				join loan_offering lo on lo.prd_offering_id = po.prd_offering_id
+                join prd_status ps on ps.offering_status_id = po.offering_status_id
+                join prd_state p on p. prd_state_id = ps.prd_state_id 
+                join lookup_value lv on lv.lookup_id = prd_state_lookup_id
+                order by po.prd_offering_name]]>
+	</sql-query>
+	<sql-query name="findAllSavingsProducts">
+		<return-scalar column="prdOfferingId" type="short" />
+		<return-scalar column="prdOfferingName" type="string" />
+		<return-scalar column="prdOfferingStatusId" type="short" />
+		<return-scalar column="prdOfferingStatusName" type="string" />	
+		<![CDATA[select po.prd_offering_id as prdOfferingId,
+				po.prd_offering_name as prdOfferingName,
+				po.offering_status_id as prdOfferingStatusId,
+				lv.lookup_name as prdOfferingStatusName
+				from prd_offering po 
+				join savings_offering so on so.prd_offering_id = po.prd_offering_id
+                join prd_status ps on ps.offering_status_id = po.offering_status_id
+                join prd_state p on p. prd_state_id = ps.prd_state_id 
+                join lookup_value lv on lv.lookup_id = prd_state_lookup_id
+                order by po.prd_offering_name]]>
+	</sql-query>
 	<query name="product.getAllActiveLoanProducts">
 		<![CDATA[from org.mifos.accounts.productdefinition.business.LoanOfferingBO loanOffering where loanOffering.prdStatus.offeringStatusId = :prdStatus order by loanOffering.prdOfferingName]]>
 	</query>

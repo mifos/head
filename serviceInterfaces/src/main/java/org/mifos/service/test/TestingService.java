@@ -40,7 +40,7 @@ import org.mifos.core.MifosException;
  * @see TestMode
  */
 public interface TestingService {
-    String TEST_MODE_SYSTEM_PROPERTY = "mifos.test.mode";
+    String TEST_MODE_SYSTEM_PROPERTY = "mifos.mode";
     TestMode getTestMode();
     void reinitializeCaches();
     void setLocale(String languageCode, String countryCode) throws MifosException;

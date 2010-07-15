@@ -20,19 +20,25 @@
 
 package org.mifos.platform.questionnaire.contract;
 
-public class SectionQuestionDetail {
+import java.io.Serializable;
+
+public class SectionQuestionDetail implements Serializable {
+    private static final long serialVersionUID = -6756173977268032788L;
+
     private int questionId;
     private boolean mandatory;
     private String title;
+    private QuestionType questionType;
 
     public SectionQuestionDetail(int questionId, boolean mandatory) {
-        this(questionId, null, mandatory);
+        this(questionId, null, mandatory, QuestionType.FREETEXT);
     }
 
-    public SectionQuestionDetail(int questionId, String title, boolean mandatory) {
+    public SectionQuestionDetail(int questionId, String title, boolean mandatory, QuestionType questionType) {
         this.questionId = questionId;
         this.mandatory = mandatory;
         this.title = title;
+        this.questionType = questionType;
     }
 
     public int getQuestionId() {
@@ -45,6 +51,14 @@ public class SectionQuestionDetail {
 
     public String getTitle() {
         return title;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
+    }
+
+    public QuestionType getQuestionType() {
+        return questionType;
     }
 
     @Override

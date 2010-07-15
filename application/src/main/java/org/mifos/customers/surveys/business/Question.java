@@ -20,11 +20,6 @@
 
 package org.mifos.customers.surveys.business;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.mifos.customers.ppi.business.PPIChoice;
 import org.mifos.customers.surveys.SurveysConstants;
 import org.mifos.customers.surveys.helpers.AnswerType;
@@ -33,6 +28,11 @@ import org.mifos.framework.formulaic.DateValidator;
 import org.mifos.framework.formulaic.NumberValidator;
 import org.mifos.framework.formulaic.OneOfValidator;
 import org.mifos.framework.formulaic.ValidationError;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Question implements Serializable, Comparable<Question> {
     private int questionId;
@@ -87,9 +87,14 @@ public class Question implements Serializable, Comparable<Question> {
     }
 
     public Question(String shortName, String questionText, AnswerType answerType) {
+        this(shortName, questionText, answerType, new LinkedList<QuestionChoice>());
+    }
+
+    public Question(String shortName, String questionText, AnswerType answerType,List<QuestionChoice> choices) {
         setShortName(shortName);
         setQuestionText(questionText);
         setAnswerType(answerType);
+        setChoices(choices);
         questionState = QuestionState.ACTIVE;
     }
 

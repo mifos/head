@@ -13,4 +13,5 @@ public class QuestionnaireConstants {
     public static final String INVALID_EVENT_SOURCE = "questionnaire.error.InvalidEventSourceProvided";
     public static final String NO_QUESTIONS_FOUND_IN_SECTION = "questionnaire.error.no.questions.found.in.section";
     public static final String DUPLICATE_QUESTION_FOUND_IN_SECTION = "questionnaire.error.duplicate.question.found.in.section";
+    public static final String DEFAULT_APPLIES_TO_OPTION = "--select one--";
 }

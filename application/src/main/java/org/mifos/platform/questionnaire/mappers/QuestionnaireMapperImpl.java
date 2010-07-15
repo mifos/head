@@ -21,6 +21,7 @@
 package org.mifos.platform.questionnaire.mappers;
 
 import org.mifos.customers.surveys.business.Question;
+import org.mifos.customers.surveys.business.QuestionChoice;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.QuestionState;
 import org.mifos.platform.questionnaire.contract.*;
@@ -70,49 +71,69 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return new QuestionDetail(question.getQuestionId(),
                 question.getQuestionText(),
                 question.getShortName(),
-                mapToQuestionType(question.getAnswerTypeAsEnum()));
+                mapToQuestionType(question.getAnswerTypeAsEnum()), mapToAnswerChoices(question.getChoices()));
     }
 
+    private List<String> mapToAnswerChoices(List<QuestionChoice> choices) {
+        List<String> questionChoices = new LinkedList<String>();
+        for (QuestionChoice questionChoice : choices) {
+            questionChoices.add(questionChoice.getChoiceText());
+        }
+        return questionChoices;
+    }
+
+
     @Override
-    public Question mapToQuestion(QuestionDefinition questionDefinition) {
+    public Question mapToQuestion(QuestionDetail questionDetail) {
         Question question = new Question();
-        question.setShortName(questionDefinition.getTitle());
-        question.setQuestionText(questionDefinition.getTitle());
-        question.setAnswerType(mapToAnswerType(questionDefinition.getType()));
+        question.setShortName(questionDetail.getTitle());
+        question.setQuestionText(questionDetail.getTitle());
+        QuestionType type = questionDetail.getType();
+        question.setAnswerType(mapToAnswerType(type));
         question.setQuestionState(QuestionState.ACTIVE);
+        question.setChoices(mapToChoices(questionDetail.getAnswerChoices()));
         return question;
     }
 
+
+    private List<QuestionChoice> mapToChoices(List<String> choices) {
+        List<QuestionChoice> questionChoices = new LinkedList<QuestionChoice>();
+        for (String choice : choices) {
+            questionChoices.add(new QuestionChoice(choice));
+        }
+        return questionChoices;
+    }
+
     @Override
-    public QuestionGroup mapToQuestionGroup(QuestionGroupDefinition questionGroupDefinition) {
+    public QuestionGroup mapToQuestionGroup(QuestionGroupDetail questionGroupDetail) {
         QuestionGroup questionGroup = new QuestionGroup();
-        questionGroup.setTitle(questionGroupDefinition.getTitle());
+        questionGroup.setTitle(questionGroupDetail.getTitle());
         questionGroup.setState(QuestionGroupState.ACTIVE);
         questionGroup.setDateOfCreation(Calendar.getInstance().getTime());
-        questionGroup.setSections(mapToSections(questionGroupDefinition.getSectionDefinitions()));
-        questionGroup.setEventSources(mapToEventSources(questionGroupDefinition));
+        questionGroup.setSections(mapToSections(questionGroupDetail.getSectionDetails()));
+        questionGroup.setEventSources(mapToEventSources(questionGroupDetail));
         return questionGroup;
     }
 
-    private Set<EventSourceEntity> mapToEventSources(QuestionGroupDefinition questionGroupDefinition) {
+    private Set<EventSourceEntity> mapToEventSources(QuestionGroupDetail questionGroupDetail) {
         Set<EventSourceEntity> eventSources = new HashSet<EventSourceEntity>();
-        EventSource eventSource = questionGroupDefinition.getEventSource();
+        EventSource eventSource = questionGroupDetail.getEventSource();
         List list = eventSourceDao.retrieveByEventAndSource(eventSource.getEvent(), eventSource.getSource());
         for (Object obj : list) eventSources.add((EventSourceEntity) obj);
         return eventSources;
     }
 
-    private List<Section> mapToSections(List<SectionDefinition> sectionDefinitions) {
+    private List<Section> mapToSections(List<SectionDetail> sectionDetails) {
         List<Section> sections = new ArrayList<Section>();
-        for (SectionDefinition sectionDefinition : sectionDefinitions) {
-            sections.add(mapToSection(sectionDefinition));
+        for (SectionDetail sectionDetail : sectionDetails) {
+            sections.add(mapToSection(sectionDetail));
         }
         return sections;
     }
 
-    private Section mapToSection(SectionDefinition sectionDefinition) {
-        Section section = new Section(sectionDefinition.getName());
-        section.setQuestions(mapToSectionQuestions(sectionDefinition.getQuestions(), section));
+    private Section mapToSection(SectionDetail sectionDetail) {
+        Section section = new Section(sectionDetail.getName());
+        section.setQuestions(mapToSectionQuestions(sectionDetail.getQuestions(), section));
         return section;
     }
 
@@ -136,9 +157,9 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     @Override
     public QuestionGroupDetail mapToQuestionGroupDetail(QuestionGroup questionGroup) {
-        List<SectionDefinition> sectionDefinitions = mapToSectionDefinitions(questionGroup.getSections());
+        List<SectionDetail> sectionDetails = mapToSectionDefinitions(questionGroup.getSections());
         EventSource eventSource = mapToEventSource(questionGroup.getEventSources());
-        return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), eventSource, sectionDefinitions);
+        return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), eventSource, sectionDetails);
     }
 
     private EventSource mapToEventSource(Set<EventSourceEntity> eventSources) {
@@ -147,22 +168,24 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return new EventSource(eventSourceEntity.getEvent().getName(), eventSourceEntity.getSource().getEntityType(), eventSourceEntity.getDescription());
     }
 
-    private List<SectionDefinition> mapToSectionDefinitions(List<Section> sections) {
-        List<SectionDefinition> sectionDefinitions = new ArrayList<SectionDefinition>();
-        for(Section section: sections){
-            sectionDefinitions.add(mapToSectionDefinition(section));
+    private List<SectionDetail> mapToSectionDefinitions(List<Section> sections) {
+        List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
+        for (Section section : sections) {
+            sectionDetails.add(mapToSectionDefinition(section));
         }
-        return sectionDefinitions;
+        return sectionDetails;
     }
 
-    private SectionDefinition mapToSectionDefinition(Section section) {
-        SectionDefinition sectionDefinition = new SectionDefinition();
-        sectionDefinition.setName(section.getName());
+    private SectionDetail mapToSectionDefinition(Section section) {
+        SectionDetail sectionDetail = new SectionDetail();
+        sectionDetail.setName(section.getName());
         for (SectionQuestion sectionQuestion : section.getQuestions()) {
             Question question = sectionQuestion.getQuestion();
-            sectionDefinition.addQuestion(new SectionQuestionDetail(question.getQuestionId(), question.getShortName(), sectionQuestion.isRequired()));
+            QuestionType type = mapToQuestionType(question.getAnswerTypeAsEnum());
+            boolean required = sectionQuestion.isRequired();
+            sectionDetail.addQuestion(new SectionQuestionDetail(question.getQuestionId(), question.getShortName(), required, type));
         }
-        return sectionDefinition;
+        return sectionDetail;
     }
 
     @Override
@@ -200,14 +223,16 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         answerToQuestionType = asMap(makeEntry(AnswerType.INVALID, QuestionType.INVALID),
                 makeEntry(AnswerType.FREETEXT, QuestionType.FREETEXT),
                 makeEntry(AnswerType.DATE, QuestionType.DATE),
-                makeEntry(AnswerType.NUMBER, QuestionType.NUMERIC));
+                makeEntry(AnswerType.NUMBER, QuestionType.NUMERIC),
+                makeEntry(AnswerType.MULTIPLE_CHOICE, QuestionType.MULTIPLE_CHOICE));
     }
 
     private void populateQuestionToAnswerTypeMap() {
         questionToAnswerType = asMap(makeEntry(QuestionType.INVALID, AnswerType.INVALID),
                 makeEntry(QuestionType.FREETEXT, AnswerType.FREETEXT),
                 makeEntry(QuestionType.DATE, AnswerType.DATE),
-                makeEntry(QuestionType.NUMERIC, AnswerType.NUMBER));
+                makeEntry(QuestionType.NUMERIC, AnswerType.NUMBER),
+                makeEntry(QuestionType.MULTIPLE_CHOICE, AnswerType.MULTIPLE_CHOICE));
     }
 
 }

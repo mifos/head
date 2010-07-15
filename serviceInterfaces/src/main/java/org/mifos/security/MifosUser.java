@@ -33,6 +33,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class MifosUser implements UserDetails {
 
     public static final String VIEW_SYSTEM_INFO = "ROLE_VIEW_SYSTEM_INFO";
+    public static final String UPDATE_LATENESS_DORMANCY = "ROLE_UPDATE_LATENESS_DORMANCY";
 
     private final String username;
     private final byte[] password;

@@ -42,7 +42,7 @@ import static org.junit.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"}, enabled = false)
+@Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
 public class QuestionGroupTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -98,9 +98,9 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private void testViewQuestionGroups() {
         ViewAllQuestionGroupsPage viewQuestionGroupsPage = getViewQuestionGroupsPage(new AdminPage(selenium));
         testViewQuestionGroups(viewQuestionGroupsPage);
-        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle1, "Default", asList(qTitle1, qTitle2));
+        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle1, "Default", asList(qTitle1, qTitle2), asList(qTitle1));
         viewQuestionGroupsPage.navigateToViewAllQuestionGroupsPage();
-        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle2, "Misc", asList(qTitle1, qTitle3));
+        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle2, "Misc", asList(qTitle1, qTitle3), asList(qTitle1));
     }
 
     private AdminPage createQuestions(String... qTitles) {
@@ -129,13 +129,14 @@ public class QuestionGroupTest extends UiTestCaseBase {
         assertPage(AdminPage.PAGE_ID);
     }
 
-    private void testQuestionGroupDetail(ViewAllQuestionGroupsPage viewAllQuestionGroupsPage, String title, String sectionName, List<String> questions) {
+    private void testQuestionGroupDetail(ViewAllQuestionGroupsPage viewAllQuestionGroupsPage, String title, String sectionName, List<String> questions, List<String> mandatoryQuestions) {
         QuestionGroupDetailPage questionGroupDetailPage = viewAllQuestionGroupsPage.navigateToQuestionGroupDetailPage(title);
         questionGroupDetailPage.verifyPage();
         assertEquals(title, questionGroupDetailPage.getTitle());
         assertEquals(APPLIES_TO_CREATE_CLIENT, questionGroupDetailPage.getAppliesTo());
         assertEquals(asList(sectionName), questionGroupDetailPage.getSections());
         assertEquals(questions, questionGroupDetailPage.getSectionsQuestions(sectionName));
+        assertEquals(mandatoryQuestions, questionGroupDetailPage.getMandatoryQuestions(sectionName));
     }
 
     private CreateQuestionGroupPage getCreateQuestionGroupPage(AdminPage adminPage) {
@@ -161,7 +162,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
 
     private void testShouldAllowDuplicateTitlesForQuestionGroup() {
         testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, APPLIES_TO_CREATE_CLIENT, "", asList(qTitle1, qTitle3), asList(qTitle2));
-        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, "View Client", "Hello", asList(qTitle2), asList(qTitle1, qTitle3));
+        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, "Create Client", "Hello", asList(qTitle2), asList(qTitle1, qTitle3));
     }
 
     private void testCreateQuestionGroup(CreateQuestionGroupPage createQuestionGroupPage, String title, String appliesTo,
@@ -172,6 +173,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         parameters.setSectionName(sectionName);
         parameters.setQuestions(questionsToSelect);
         createQuestionGroupPage.addSection(parameters);
+        createQuestionGroupPage.markEveryOtherQuestionsMandatory(questionsToSelect);
         assertPage(CreateQuestionGroupPage.PAGE_ID);
         assertTrue(createQuestionGroupPage.getAvailableQuestions().containsAll(questionsNotToSelect));
         createQuestionGroupPage.submit(parameters);

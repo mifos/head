@@ -22,7 +22,7 @@ package org.mifos.ui.core.controller;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.platform.questionnaire.contract.SectionDefinition;
+import org.mifos.platform.questionnaire.contract.SectionDetail;
 import org.mifos.platform.questionnaire.contract.SectionQuestionDetail;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -31,6 +31,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mifos.platform.questionnaire.contract.QuestionType.FREETEXT;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SectionDetailFormTest {
@@ -52,11 +53,11 @@ public class SectionDetailFormTest {
         assertThat(questionDetailForm.isMandatory(), is(mandatory));
     }
 
-    private SectionDefinition getSectionDefinition() {
-        SectionDefinition sectionDefinition = new SectionDefinition();
-        sectionDefinition.addQuestion(new SectionQuestionDetail(121, "Question1", true));
-        sectionDefinition.addQuestion(new SectionQuestionDetail(122, "Question2", false));
-        sectionDefinition.addQuestion(new SectionQuestionDetail(123, "Question3", true));
-        return sectionDefinition;
+    private SectionDetail getSectionDefinition() {
+        SectionDetail sectionDetail = new SectionDetail();
+        sectionDetail.addQuestion(new SectionQuestionDetail(121, "Question1", true, FREETEXT));
+        sectionDetail.addQuestion(new SectionQuestionDetail(122, "Question2", false, FREETEXT));
+        sectionDetail.addQuestion(new SectionQuestionDetail(123, "Question3", true, FREETEXT));
+        return sectionDetail;
     }
 }

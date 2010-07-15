@@ -178,6 +178,7 @@ explanation of the license and how it is applied.
 													value="${cfdef.fieldValue}" /> </span>
 											</c:otherwise>
 										</c:choose>
+                                         <br>
 											</c:if>
 										</c:forEach>
 									</c:forEach>

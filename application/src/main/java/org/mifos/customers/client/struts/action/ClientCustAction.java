@@ -20,31 +20,12 @@
 
 package org.mifos.customers.client.struts.action;
 
-import java.io.BufferedOutputStream;
-import java.io.InputStream;
-import java.sql.Date;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.ClientDetailDto;
-import org.mifos.application.servicefacade.ClientFamilyDetailsDto;
-import org.mifos.application.servicefacade.ClientFamilyInfoDto;
-import org.mifos.application.servicefacade.ClientFormCreationDto;
-import org.mifos.application.servicefacade.ClientMfiInfoDto;
-import org.mifos.application.servicefacade.ClientPersonalInfoDto;
-import org.mifos.application.servicefacade.ClientRulesDto;
-import org.mifos.application.servicefacade.CustomerDetailsDto;
-import org.mifos.application.servicefacade.OnlyBranchOfficeHierarchyDto;
-import org.mifos.application.servicefacade.ProcessRulesDto;
+import org.mifos.application.servicefacade.*;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
@@ -58,19 +39,32 @@ import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.struts.action.CustAction;
+import org.mifos.customers.struts.actionforms.QuestionGroupDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.framework.MifosApplicationContext;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.util.helpers.CloseSession;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
+import org.mifos.framework.util.helpers.*;
+import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedOutputStream;
+import java.io.InputStream;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+
+import static org.mifos.customers.client.util.helpers.ClientConstants.EVENT_CREATE;
+import static org.mifos.customers.client.util.helpers.ClientConstants.SOURCE_CLIENT;
 
 public class ClientCustAction extends CustAction {
 
@@ -188,8 +182,17 @@ public class ClientCustAction extends CustAction {
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
         }
-
         return mapping.findForward(ActionForwards.load_success.toString());
+    }
+
+    // intentionally made public to aid testing !!!
+    public List<QuestionGroupDto> getQuestionGroups(QuestionnaireServiceFacade questionnaireServiceFacade) throws ApplicationException {
+        List<QuestionGroupDto> questionGroupDtos = new ArrayList<QuestionGroupDto>();
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getQuestionGroups(EVENT_CREATE, SOURCE_CLIENT);
+        for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
+            questionGroupDtos.add(new QuestionGroupDto(questionGroupDetail));
+        }
+        return questionGroupDtos;
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -274,6 +277,9 @@ public class ClientCustAction extends CustAction {
         String governmentId = actionForm.getGovernmentId();
         String clientName = actionForm.getClientName().getDisplayName();
         String givenDateOfBirth = actionForm.getDateOfBirth();
+        if (actionForm.isDefaultFeeRemoved()) {
+            customerDao.checkPermissionForDefaultFeeRemoval(getUserContext(request), actionForm.getOfficeIdValue(), actionForm.getLoanOfficerIdValue());
+        }
         DateTime dateOfBirth = new DateTime(DateUtils.getDateAsSentFromBrowser(givenDateOfBirth));
         ProcessRulesDto processRules = this.customerServiceFacade.previewClient(governmentId, dateOfBirth, clientName);
         String pendingApprovalState = processRules.isClientPendingApprovalStateEnabled()? CustomerConstants.YES: CustomerConstants.NO;
@@ -768,8 +774,7 @@ public class ClientCustAction extends CustAction {
     }
 
     private int calculateAge(Date date) {
-        int age = DateUtils.DateDiffInYears(date);
-        return age;
+        return DateUtils.DateDiffInYears(date);
     }
 
     private ClientBO getClientFromSession(HttpServletRequest request) throws PageExpiredException {
@@ -795,5 +800,9 @@ public class ClientCustAction extends CustAction {
     @SuppressWarnings({"unchecked"})
     private boolean isFamilyDetailsMandatory() {
         return FieldConfig.getInstance().isFieldManadatory("Client." + HiddenMandatoryFieldNamesConstants.FAMILY_DETAILS);
+    }
+
+    private QuestionnaireServiceFacade getQuestionnaireServiceFacade() {
+        return (QuestionnaireServiceFacade) new MifosApplicationContext().getBean("questionnaireServiceFacade");
     }
 }
