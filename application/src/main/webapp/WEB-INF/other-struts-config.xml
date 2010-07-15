@@ -35,9 +35,6 @@
         <!-- Bulk Entry form -->
         <form-bean name="collectionsheetactionform"
                    type="org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm"/>
-        <!-- Office Hierarchy Action form -->
-        <form-bean name="offhierarchyactionform"
-                   type="org.mifos.customers.office.struts.actionforms.OffHierarchyActionForm"/>
         <!-- Your Settings Action form -->
         <form-bean name="personnelSettingsActionForm"
                    type="org.mifos.customers.personnel.struts.actionforms.PersonnelSettingsActionForm"/>
@@ -315,16 +312,6 @@
             <forward name="search_success" path="/pages/application/office/jsp/viewOffices.jsp"/>
         </action>
         <!-- offAction End-->
-        <!-- off hierarchy Action start-->
-        <action path="/offhierarchyaction" type="org.mifos.customers.office.struts.action.OffHierarchyAction"
-                name="offhierarchyactionform" parameter="method" scope="session"
-                input="/offhierarchyaction.do?method=validate" validate="true">
-            <forward name="load_success" path="/pages/application/office/jsp/offhierarchy.jsp"/>
-            <forward name="update_success" path="/AdminAction.do?method=load"/>
-            <forward name="update_failure" path="/pages/application/office/jsp/offhierarchy.jsp"/>
-            <forward name="cancel_success" path="/AdminAction.do?method=load"/>
-        </action>
-        <!-- off hierarchy Action End-->
 
         <!-- role action -->
         <action path="/rolesPermission"
