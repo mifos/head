@@ -498,7 +498,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 										<span class="fontnormal"> <c:out
 										value="${feesSet.accountFeeAmount}" />&nbsp;( <mifos:mifoslabel
 										name="loan.periodicityTypeRate" /> <c:out
-										value="${loanfn:getMeetingRecurrence(feesSet.feeMeetingFrequency,sessionScope.UserContext)}" />)
+										value="${feesSet.meetingRecurrence}" />)
 									<html-el:link styleId="loanaccountdetail.link.removeFee"
 										href="accountAppAction.do?method=removeFees&feeId=${feesSet.feeId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
 										<mifos:mifoslabel name="loan.remove" />
