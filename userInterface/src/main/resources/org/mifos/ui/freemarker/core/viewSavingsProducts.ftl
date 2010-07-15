@@ -16,8 +16,8 @@
 <p>[@spring.message "clickonaSavingsproductbelowtoviewdetailsandmakechangesor"/] <a href="savingsproductaction.do?method=load">[@spring.message "defineanewSavingsproduct"/]</a></p>	    
             [#list products as product]
                 <img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/>
-                ${product.prdOfferingId}  ${product.prdOfferingName  
-                 [@spring.message code="ProductStatus-Active"/]               
+                ${product.prdOfferingId}  ${product.prdOfferingName } 
+                                [@spring.message "ProductStatus-Active" /]
                 ${product.prdOfferingStatusId} ${product.prdOfferingStatusName} 
                 <br/>
             [/#list]   
