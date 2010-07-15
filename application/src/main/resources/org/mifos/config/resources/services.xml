@@ -100,6 +100,7 @@
     </bean>
 
     <bean id="officeHierarchyService" class="org.mifos.customers.office.business.service.OfficeHierarchyServiceImpl" >
+    	<constructor-arg ref="officeDao" />
     </bean>
     
     <bean id="personnelService" class="org.mifos.customers.personnel.business.service.PersonnelServiceImpl" >

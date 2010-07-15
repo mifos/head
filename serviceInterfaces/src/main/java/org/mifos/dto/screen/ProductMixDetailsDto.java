@@ -20,19 +20,24 @@
 
 package org.mifos.dto.screen;
 
-public class LoanProductDto {
+import java.util.List;
+
+public class ProductMixDetailsDto {
 
     private final Short prdOfferingId;
     private final String prdOfferingName;
-    private final Short prdOfferingStatusId;
-    private final String prdOfferingStatusName;
+    private final Short productTypeID;
 
-    public LoanProductDto(final Short prdOfferingId, final String prdOfferingName, final Short prdOfferingStatusId,
-            String prdOfferingStatusName) {
+    private final List<String> allowedPrdOfferingNames;
+    private final List<String> notAllowedPrdOfferingNames;
+
+    public ProductMixDetailsDto(Short prdOfferingId, String prdOfferingName, Short productTypeID,
+            List<String> allowedPrdOfferingNames, List<String> notAllowedPrdOfferingNames) {
         this.prdOfferingId = prdOfferingId;
         this.prdOfferingName = prdOfferingName;
-        this.prdOfferingStatusId = prdOfferingStatusId;
-        this.prdOfferingStatusName = prdOfferingStatusName;
+        this.productTypeID = productTypeID;
+        this.allowedPrdOfferingNames = allowedPrdOfferingNames;
+        this.notAllowedPrdOfferingNames = notAllowedPrdOfferingNames;
     }
 
     public Short getPrdOfferingId() {
@@ -43,12 +48,15 @@ public class LoanProductDto {
         return this.prdOfferingName;
     }
 
-    public Short getPrdOfferingStatusId() {
-        return this.prdOfferingStatusId;
+    public Short getProductTypeID() {
+        return this.productTypeID;
     }
 
-    public String getPrdOfferingStatusName() {
-        return this.prdOfferingStatusName;
+    public List<String> getAllowedPrdOfferingNames() {
+        return this.allowedPrdOfferingNames;
     }
 
+    public List<String> getNotAllowedPrdOfferingNames() {
+        return this.notAllowedPrdOfferingNames;
+    }
 }

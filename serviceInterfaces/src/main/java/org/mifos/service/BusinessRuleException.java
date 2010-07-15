@@ -18,18 +18,18 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.productdefinition.persistence;
+package org.mifos.service;
 
-import java.util.List;
+public class BusinessRuleException extends RuntimeException {
 
-import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+    private final String messageKey;
 
-public interface SavingsProductDao {
+    public BusinessRuleException(String messageKey) {
+        super();
+        this.messageKey = messageKey;
+    }
 
-    ProductTypeEntity findSavingsProductConfiguration();
-
-    void save(ProductTypeEntity savingsProductConfiguration);
-
-    List<Object[]> findAllSavingsProducts();
-
+    public String getMessageKey() {
+        return this.messageKey;
+    }
 }

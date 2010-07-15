@@ -20,12 +20,13 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.OfficeLevelDto;
-import org.mifos.dto.domain.OfficeLevels;
+import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
+import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -41,9 +42,9 @@ import org.springframework.web.bind.support.SessionStatus;
 @SessionAttributes("formBean")
 public class ViewOfficeHierarchyController {
 
+    private static final String FORM_VIEW = "viewOfficeHierarchy";
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
     private static final String CANCEL_PARAM = "CANCEL";
-    private static final String CANCEL_PARAM_VALUE = "Cancel";
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
@@ -56,66 +57,54 @@ public class ViewOfficeHierarchyController {
         this.adminServiceFacade = adminServiceFacade;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("viewOfficeHierarchy", "viewOfficeHierarchy.ftl").build();
+        return new AdminBreadcrumbBuilder().withLink(FORM_VIEW, "viewOfficeHierarchy.ftl").build();
     }
 
+    @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("formBean")
-    public ViewOfficeHierarchyFormBean showPopulatedForm() {
-        List<OfficeLevelDto> officeLevels = adminServiceFacade.retrieveOfficeLevelsWithConfiguration();
+    public ViewOfficeHierarchyFormBean showPopulatedCheckboxForm() {
+        OfficeLevelDto officeLevels = adminServiceFacade.retrieveOfficeLevelsWithConfiguration();
         ViewOfficeHierarchyFormBean formBean = new ViewOfficeHierarchyFormBean();
-        setConfiguredDataInForm(formBean, officeLevels);
+        formBean.setHeadOffice(officeLevels.isHeadOfficeEnabled());
+        formBean.setRegionalOffice(officeLevels.isRegionalOfficeEnabled());
+        formBean.setSubRegionalOffice(officeLevels.isSubRegionalOfficeEnabled());
+        formBean.setAreaOffice(officeLevels.isAreaOfficeEnabled());
+        formBean.setBranchOffice(officeLevels.isBranchOfficeEnabled());
         return formBean;
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
                                     @ModelAttribute("formBean") ViewOfficeHierarchyFormBean formBean,
                                     BindingResult result,
-                                    SessionStatus status) throws Exception {
-
+                                    SessionStatus status) {
         String viewName = REDIRECT_TO_ADMIN_SCREEN;
 
-        if (CANCEL_PARAM_VALUE.equals(cancel)) {
+        if (StringUtils.isNotBlank(cancel)) {
             viewName = REDIRECT_TO_ADMIN_SCREEN;
             status.setComplete();
         } else if (result.hasErrors()) {
-            viewName = "viewOfficeHierarchy";
+            viewName = populateFormBeanForErrorView(formBean);
         } else {
-            List<OfficeLevelDto> dtos = new ArrayList<OfficeLevelDto>();
-            updateConfiguredData(formBean, dtos);
-            adminServiceFacade.updateOfficeLevelHierarchies(dtos);
-            status.setComplete();
+            try {
+                UpdateConfiguredOfficeLevelRequest updateRequest = new UpdateConfiguredOfficeLevelRequest(formBean
+                        .isSubRegionalOffice(), formBean.isRegionalOffice(), formBean.isAreaOffice());
+                adminServiceFacade.updateOfficeLevelHierarchies(updateRequest);
+                status.setComplete();
+            } catch (BusinessRuleException e) {
+                result.reject(e.getMessageKey(), "The update to office levels was not successful.");
+                viewName = populateFormBeanForErrorView(formBean);
+            }
         }
         return viewName;
     }
 
-    private void setConfiguredDataInForm(ViewOfficeHierarchyFormBean formBean,
-            List<OfficeLevelDto> officeLevels) {
+    private String populateFormBeanForErrorView(ViewOfficeHierarchyFormBean formBean) {
+        String viewName = FORM_VIEW;
         formBean.setHeadOffice(true);
         formBean.setBranchOffice(true);
-        for (OfficeLevelDto dto : officeLevels) {
-            if (dto.getId().equals(OfficeLevels.REGIONALOFFICE.getValue())) {
-                formBean.setRegionalOffice(true);
-            } else if (dto.getId().equals(OfficeLevels.SUBREGIONALOFFICE.getValue())) {
-                formBean.setSubRegionalOffice(true);
-            } else if (dto.getId().equals(OfficeLevels.AREAOFFICE.getValue())) {
-                formBean.setAreaOffice(true);
-            }
-        }
+        return viewName;
     }
-
-    @SuppressWarnings("PMD")
-    private void updateConfiguredData(ViewOfficeHierarchyFormBean formBean,
-            List<OfficeLevelDto> officeLevels) {
-
-        officeLevels.add(new OfficeLevelDto(OfficeLevels.HEADOFFICE.getValue(), formBean.getHeadOffice() ? ((short) 1): 0));
-        officeLevels.add(new OfficeLevelDto(OfficeLevels.BRANCHOFFICE.getValue(), formBean.getBranchOffice() ? ((short) 1): 0));
-        officeLevels.add(new OfficeLevelDto(OfficeLevels.REGIONALOFFICE.getValue(), formBean.getBranchOffice() ? ((short) 1): 0));
-        officeLevels.add(new OfficeLevelDto(OfficeLevels.SUBREGIONALOFFICE.getValue(), formBean.getBranchOffice() ? ((short) 1): 0));
-        officeLevels.add(new OfficeLevelDto(OfficeLevels.AREAOFFICE.getValue(), formBean.getBranchOffice() ? ((short) 1): 0));
-   }
 }

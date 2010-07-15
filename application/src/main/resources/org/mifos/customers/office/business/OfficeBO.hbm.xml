@@ -140,7 +140,7 @@
         <![CDATA[select new org.mifos.customers.office.business.OfficeDetailsDto(ol.id,lv.lookUpName) from org.mifos.customers.office.business.OfficeLevelEntity ol ,org.mifos.application.master.business.LookUpValueEntity lv where lv.lookUpId=ol.lookUpValue.lookUpId and ol.configured=1 and ol.id !=1 order by ol.id  ]]>        
     </query>
 	 <query name="officeLevel.getOfficeLevelsWithConfiguration">
-        <![CDATA[select new org.mifos.dto.domain.OfficeLevelDto(officeLevel.id, officeLevel.configured) from org.mifos.customers.office.business.OfficeLevelEntity officeLevel order by officeLevel.id]]>
+        <![CDATA[from org.mifos.customers.office.business.OfficeLevelEntity officeLevel order by officeLevel.id]]>
     </query>     
     <query name="office.getBranchParents">
 		<![CDATA[ select distinct o.parentOffice from org.mifos.customers.office.business.OfficeBO  o where o.level.id = :LEVEL_ID and o.status.id = :STATUS_ID and o.searchId like :SEARCH_ID order by o.parentOffice.officeName,o.officeName ]]>

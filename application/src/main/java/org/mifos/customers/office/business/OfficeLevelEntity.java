@@ -84,6 +84,14 @@ public class OfficeLevelEntity extends MasterDataEntity {
         return OfficeLevel.getOfficeLevel(this.getId());
     }
 
+    public void updateTo(boolean configuredChange) {
+        addConfigured(configuredChange);
+    }
+
+    /**
+     * remove when you have removed struts action around view office hierarchy.
+     */
+    @Deprecated
     public void update(boolean configured) throws OfficeException {
         try {
             if (!configured && new OfficeHierarchyPersistence().isOfficePresentForLevel(getLevel())) {

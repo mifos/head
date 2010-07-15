@@ -22,24 +22,53 @@ package org.mifos.dto.domain;
 
 import java.io.Serializable;
 
-
 @SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_NO_SERIALVERSIONID", justification = "should disable at filter level and also for pmd - not important for us")
 public class OfficeLevelDto implements Serializable {
 
-    private final Short id;
-    private final Short configured;
+    private boolean headOfficeEnabled;
+    private boolean regionalOfficeEnabled;
+    private boolean subRegionalOfficeEnabled;
+    private boolean areaOfficeEnabled;
+    private boolean branchOfficeEnabled;
 
-    public OfficeLevelDto(final Short id, final Short configured) {
-        this.id = id;
-        this.configured = configured;
+    public boolean isHeadOfficeEnabled() {
+        return this.headOfficeEnabled;
     }
 
-    public Short getId() {
-        return this.id;
+    public void setHeadOfficeEnabled(boolean headOfficeEnabled) {
+        this.headOfficeEnabled = headOfficeEnabled;
     }
 
-    public Short getConfigured() {
-        return this.configured;
+    public boolean isRegionalOfficeEnabled() {
+        return this.regionalOfficeEnabled;
+    }
+
+    public void setRegionalOfficeEnabled(boolean regionalOfficeEnabled) {
+        this.regionalOfficeEnabled = regionalOfficeEnabled;
+    }
+
+    public boolean isSubRegionalOfficeEnabled() {
+        return this.subRegionalOfficeEnabled;
+    }
+
+    public void setSubRegionalOfficeEnabled(boolean subRegionalOfficeEnabled) {
+        this.subRegionalOfficeEnabled = subRegionalOfficeEnabled;
+    }
+
+    public boolean isAreaOfficeEnabled() {
+        return this.areaOfficeEnabled;
+    }
+
+    public void setAreaOfficeEnabled(boolean areaOfficeEnabled) {
+        this.areaOfficeEnabled = areaOfficeEnabled;
+    }
+
+    public boolean isBranchOfficeEnabled() {
+        return this.branchOfficeEnabled;
+    }
+
+    public void setBranchOfficeEnabled(boolean branchOfficeEnabled) {
+        this.branchOfficeEnabled = branchOfficeEnabled;
     }
 }

@@ -41,6 +41,7 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -49,6 +50,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
@@ -58,6 +60,11 @@ public class OfficeDaoHibernate implements OfficeDao {
 
     public OfficeDaoHibernate(GenericDao genericDao) {
         this.genericDao = genericDao;
+    }
+
+    @Override
+    public void save(OfficeLevelEntity entity) {
+        this.genericDao.createOrUpdate(entity);
     }
 
     @SuppressWarnings("unchecked")
@@ -126,16 +133,40 @@ public class OfficeDaoHibernate implements OfficeDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<OfficeLevelDto> findOfficeLevelsWithConfiguration() {
+    public OfficeLevelDto findOfficeLevelsWithConfiguration() {
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        List<OfficeLevelDto> queryResult = (List<OfficeLevelDto>) genericDao.executeNamedQuery(
-                NamedQueryConstants.GET_OFFICE_LEVELS_WITH_CONFIGURATION, queryParameters);
-        if (queryResult == null) {
-            queryResult = new ArrayList<OfficeLevelDto>();
+        List<OfficeLevelEntity> officeLevelEntities = (List<OfficeLevelEntity>) genericDao.executeNamedQuery("officeLevel.getOfficeLevelsWithConfiguration", queryParameters);
+        if (officeLevelEntities == null) {
+            officeLevelEntities = new ArrayList<OfficeLevelEntity>();
         }
 
-        return queryResult;
+        OfficeLevelDto officeLevels = new OfficeLevelDto();
+        for (OfficeLevelEntity officeLevelEntity : officeLevelEntities) {
+
+            OfficeLevel level = OfficeLevel.getOfficeLevel(officeLevelEntity.getId());
+            switch (level) {
+            case HEADOFFICE:
+                officeLevels.setHeadOfficeEnabled(officeLevelEntity.isConfigured());
+                break;
+            case REGIONALOFFICE:
+                officeLevels.setRegionalOfficeEnabled(officeLevelEntity.isConfigured());
+                break;
+            case SUBREGIONALOFFICE:
+                officeLevels.setSubRegionalOfficeEnabled(officeLevelEntity.isConfigured());
+                break;
+            case AREAOFFICE:
+                officeLevels.setAreaOfficeEnabled(officeLevelEntity.isConfigured());
+                break;
+            case BRANCHOFFICE:
+                officeLevels.setBranchOfficeEnabled(officeLevelEntity.isConfigured());
+                break;
+            default:
+                break;
+            }
+        }
+
+        return officeLevels;
     }
 
     @Override
@@ -275,5 +306,23 @@ public class OfficeDaoHibernate implements OfficeDao {
         queryParameters.put("STATUS_ID", OfficeStatus.ACTIVE.getValue());
 
         return (List<OfficeDto>) this.genericDao.executeNamedQuery("office.findActiveParents", queryParameters);
+    }
+
+    @Override
+    public OfficeLevelEntity retrieveOfficeLevel(OfficeLevel officeLevel) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("OFFICE_LEVEL_ID", officeLevel.getValue());
+
+        return (OfficeLevelEntity) this.genericDao.executeUniqueResultNamedQuery("officeLevel.findById", queryParameters);
+    }
+
+    @Override
+    public void validateNoOfficesExistGivenOfficeLevel(OfficeLevel officeLevel) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("LEVEL_ID", officeLevel.getValue());
+        Number count = (Number) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_OFFICE_COUNT, queryParameters);
+        if (count != null && count.longValue() > 0) {
+            throw new BusinessRuleException(OfficeConstants.KEYHASACTIVEOFFICEWITHLEVEL);
+        }
     }
 }

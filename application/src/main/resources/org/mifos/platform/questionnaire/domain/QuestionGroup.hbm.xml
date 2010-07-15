@@ -25,4 +25,9 @@
                 class="org.mifos.platform.questionnaire.domain.EventSourceEntity"/>
         </set>
     </class>
+    <query name="QuestionGroup.retrieveQuestionGroupsByEventSource">
+              <![CDATA[select questionGroup from QuestionGroup as questionGroup join questionGroup.eventSources eventSource
+                       where eventSource.event.name = :EVENT and eventSource.source.entityType = :SOURCE
+              ]]>
+    </query>
 </hibernate-mapping>

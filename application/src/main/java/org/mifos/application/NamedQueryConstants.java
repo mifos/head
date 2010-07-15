@@ -266,7 +266,6 @@ public interface NamedQueryConstants {
     String GETCOUNTOFACTIVECHILDERN = "getCountOfActiveChildren";
     String GETACTIVEPARENTS = "masterdata.activeParents";
     String GETACTIVELEVELS = "masterdata.activeLevels";
-    String GET_OFFICE_LEVELS_WITH_CONFIGURATION = "officeLevel.getOfficeLevelsWithConfiguration";
     String GETOFFICESTATUS = "masterdata.officestatus";
     String GETCHILDERN = "getChlidren";
     String GET_CUSTOMER_PICTURE = "Customer.getPicture";

@@ -82,4 +82,8 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         return questionnaireService.getAllEventSources();
     }
 
+    @Override
+    public List<QuestionGroupDetail> getQuestionGroups(String event, String source) throws ApplicationException {
+        return questionnaireService.getQuestionGroups(new EventSource(event, source, String.format("%s.%s", event, source)));
+    }
 }
