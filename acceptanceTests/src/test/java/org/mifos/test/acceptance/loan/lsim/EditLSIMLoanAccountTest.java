@@ -98,6 +98,7 @@ public class EditLSIMLoanAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    @Test(enabled=false)
     public void editLSIMLoanWithWeeklyPayment() throws Exception {
         initData();
         String testAccount = "000100000000223";
