@@ -1,54 +1,23 @@
-/*
- * Copyright (c) 2005-2010 Grameen Foundation USA
- * All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- * implied. See the License for the specific language governing
- * permissions and limitations under the License.
- *
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
- * explanation of the license and how it is applied.
- */
-
 package org.mifos.dto.screen;
+
+import java.util.List;
 
 public class ProductDto {
 
-    private final Short prdOfferingId;
-    private final String prdOfferingName;
-    private final Short prdOfferingStatusId;
-    private final String prdOfferingStatusName;
+    //should add user context info here or those will be obtained by the course of the controller
+    private final List<ProductCategoryDto> productCategoryList;
+    private final List<ProductMixDto> productMixList;
 
-    public ProductDto(final Short prdOfferingId, final String prdOfferingName, final Short prdOfferingStatusId,
-            String prdOfferingStatusName) {
-        this.prdOfferingId = prdOfferingId;
-        this.prdOfferingName = prdOfferingName;
-        this.prdOfferingStatusId = prdOfferingStatusId;
-        this.prdOfferingStatusName = prdOfferingStatusName;
+    public ProductDto(List<ProductCategoryDto> productCategoryList, List<ProductMixDto> productMixList) {
+        this.productCategoryList = productCategoryList;
+        this.productMixList = productMixList;
     }
 
-    public Short getPrdOfferingId() {
-        return this.prdOfferingId;
+    public List<ProductCategoryDto> getProductCategoryList() {
+        return this.productCategoryList;
     }
 
-    public String getPrdOfferingName() {
-        return this.prdOfferingName;
+    public List<ProductMixDto> getProductMixList() {
+        return this.productMixList;
     }
-
-    public Short getPrdOfferingStatusId() {
-        return this.prdOfferingStatusId;
-    }
-
-    public String getPrdOfferingStatusName() {
-        return this.prdOfferingStatusName;
-    }
-
 }
