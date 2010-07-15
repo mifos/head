@@ -38,7 +38,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui"})
+@Test(sequential = true, groups = {"loan","acceptance","ui", "smoke"})
 public class WaiveLoanFeeTest extends UiTestCaseBase {
 
     @Autowired
@@ -63,7 +63,6 @@ public class WaiveLoanFeeTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(enabled=false)
     public void waiveFeeOnLastInstallment() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_006_dbunit.xml.zip", dataSource, selenium);
         LoginPage loginPage = appLauncher.launchMifos();
@@ -73,8 +72,8 @@ public class WaiveLoanFeeTest extends UiTestCaseBase {
         LoanAccountPage loanAccountPage = searchResultsPage.navigateToLoanAccountDetailPage("000100000000215");
         ViewInstallmentDetailsPage viewInstallmentDetailsPage = loanAccountPage.navigateToViewInstallmentDetails();
         viewInstallmentDetailsPage.verifyInstallmentAmount(11, 2, "16.0");
-//        viewInstallmentDetailsPage.waiveOverdueInstallmentFee();
-//        viewInstallmentDetailsPage.verifyInstallmentAmount(11, 2, "0.0");
+        viewInstallmentDetailsPage.waiveOverdueInstallmentFee();
+        viewInstallmentDetailsPage.verifyInstallmentAmount(11, 2, "0.0");
     }
 
 
