@@ -246,9 +246,14 @@ public class DatabaseMigrator {
         legacyUpgrades.put(252, 1277589236);
         legacyUpgrades.put(253, 1277589321);
         legacyUpgrades.put(254, 1277589383);
-//        legacyUpgrades.put(255, 1278540763);
-//        legacyUpgrades.put(256, 1278540832);
-
+        legacyUpgrades.put(255, 1278540763);
+        legacyUpgrades.put(256, 1278540832);
+        legacyUpgrades.put(257, 1278542100);
+        legacyUpgrades.put(258, 1278542119);
+        legacyUpgrades.put(259, 1278542138);
+        legacyUpgrades.put(260, 1278542152);
+        legacyUpgrades.put(261, 1278542171);
+        legacyUpgrades.put(262, 1279140399);
 
 
         return legacyUpgrades;

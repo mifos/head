@@ -54,12 +54,6 @@ insert into lookup_value (lookup_id,entity_id,lookup_name) values(624,74,'Langua
 insert into language (lang_id,lang_name,lang_short_name,lookup_id) values (11,'Hungarian','hu',624);
 insert into supported_locale (locale_id,country_id,lang_id,locale_name,default_locale) values(47,51,11,'Hungarian-Hungary',0);
 
---insert into lookup_value
---modify activity records
---delete original rows
---modify new rows suitably
-
-
 insert into lookup_value (lookup_id) values (625);
 insert into lookup_value (lookup_id) values (626);
 insert into lookup_value (lookup_id) values (627);

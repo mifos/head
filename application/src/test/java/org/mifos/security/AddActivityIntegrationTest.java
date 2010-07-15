@@ -23,6 +23,7 @@ package org.mifos.security;
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 import junit.framework.Assert;
@@ -82,6 +83,8 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private Upgrade upgradeAndCheck() throws IOException, SQLException, ApplicationException {
+        Connection connection = session.connection();
+        connection.setAutoCommit(true);
         short newId = 17032;
         AddActivity upgrade = new AddActivity(newId, SecurityConstants.LOAN_MANAGEMENT,
                 TEST_LOCALE, "Can use the executive washroom");
@@ -125,6 +128,8 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testConstructorTest() throws Exception {
+        Connection conn =session.connection();
+        conn.setAutoCommit(true);
         short newId = 30000;
         AddActivity upgrade = null;
         String invalidKey = "NewActivity";
@@ -138,7 +143,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
         String goodKey = "Permissions-NewActivity";
         // use valid constructor and valid key
         upgrade = new AddActivity(goodKey, newId, null);
-        upgrade.upgrade(session.connection());
+        upgrade.upgrade(conn);
         ActivityEntity fetched = (ActivityEntity) session.get(ActivityEntity.class, newId);
        Assert.assertEquals(null, fetched.getParent());
        Assert.assertEquals(goodKey, fetched.getActivityName());
