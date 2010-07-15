@@ -25,7 +25,6 @@ public class BusinessRuleException extends RuntimeException {
     private final String messageKey;
 
     public BusinessRuleException(String messageKey) {
-        super();
         this.messageKey = messageKey;
     }
 
