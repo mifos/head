@@ -376,7 +376,7 @@ public class QuestionnaireServiceIntegrationTest {
         SectionDetail section = new SectionDetail();
         section.setName(name);
         String questionTitle = "Question" + name + System.currentTimeMillis();
-        section.addQuestion(new SectionQuestionDetail(defineQuestion(questionTitle, NUMERIC).getId(), questionTitle, true));
+        section.addQuestion(new SectionQuestionDetail(defineQuestion(questionTitle, NUMERIC).getId(), questionTitle, true, QuestionType.FREETEXT));
         return section;
     }
 

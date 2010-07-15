@@ -23,10 +23,7 @@ package org.mifos.ui.core.controller;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.platform.questionnaire.contract.EventSource;
-import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.contract.SectionDetail;
-import org.mifos.platform.questionnaire.contract.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.contract.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -39,6 +36,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;
+import static org.mifos.platform.questionnaire.contract.QuestionType.FREETEXT;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionGroupFormTest {
@@ -237,7 +235,7 @@ public class QuestionGroupFormTest {
     }
 
     private SectionQuestionDetail getSectionQuestionDetail(int id, String title, boolean mandatory) {
-        return new SectionQuestionDetail(id, title, mandatory);
+        return new SectionQuestionDetail(id, title, mandatory, FREETEXT);
     }
 
     private void assertEventSource(EventSource eventSource, String event, String source) {

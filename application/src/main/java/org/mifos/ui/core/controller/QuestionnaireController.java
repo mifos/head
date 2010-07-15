@@ -256,7 +256,7 @@ public class QuestionnaireController {
         List<QuestionDetail> questionDetails = questionnaireServiceFacade.getAllQuestions();
         if (questionDetails != null) {
             for (QuestionDetail questionDetail : questionDetails) {
-                sectionQuestionDetails.add(new SectionQuestionDetail(questionDetail.getId(), questionDetail.getTitle(), false));
+                sectionQuestionDetails.add(new SectionQuestionDetail(questionDetail.getId(), questionDetail.getTitle(), false, QuestionType.FREETEXT));
             }
         }
         return sectionQuestionDetails;

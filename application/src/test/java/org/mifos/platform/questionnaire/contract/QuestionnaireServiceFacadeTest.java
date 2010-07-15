@@ -40,6 +40,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
+import static org.mifos.platform.questionnaire.contract.QuestionType.DATE;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 
@@ -72,10 +73,10 @@ public class QuestionnaireServiceFacadeTest {
         String title1 = title + 1;
         String title2 = title + 2;
         questionnaireServiceFacade.createQuestions(asList(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT),
-                getQuestionDetail(0, title2, title2, QuestionType.DATE),
+                getQuestionDetail(0, title2, title2, DATE),
                 getQuestionDetail(0, title2, title2, QuestionType.MULTIPLE_CHOICE,asList("choice1","choice2"))));
         verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT))));
-        verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, QuestionType.DATE))));
+        verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, DATE))));
         verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, QuestionType.MULTIPLE_CHOICE, asList("choice1","choice2")))));
     }
 
@@ -177,12 +178,27 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void shouldRetrieveQuestionGroupsByEventSource() throws ApplicationException {
-        List<QuestionGroupDetail> groupDetails = asList(getQuestionGroupDetail(TITLE + 1, "Create", "Client", asList(new SectionDetail())));
-        when(questionnaireService.getQuestionGroups(any(EventSource.class))).thenReturn(groupDetails);
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE + 1, "Create", "Client", asList(getSectionDetailWithQuestions("Section1", 11, 22, 33)));
+        when(questionnaireService.getQuestionGroups(any(EventSource.class))).thenReturn(asList(questionGroupDetail));
         List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getQuestionGroups("Create", "Client");
         assertThat(questionGroupDetails, is(notNullValue()));
         assertThat(questionGroupDetails.size(), is(1));
-        assertThat(questionGroupDetails.get(0).getTitle(), is(TITLE + 1));
+        QuestionGroupDetail questionGroupDetail1 = questionGroupDetails.get(0);
+        assertThat(questionGroupDetail1.getId(), is(1));
+        assertThat(questionGroupDetail1.getTitle(), is(TITLE + 1));
+        List<SectionDetail> sections = questionGroupDetail1.getSectionDetails();
+        assertThat(sections, is(notNullValue()));
+        assertThat(sections.size(), is(1));
+        SectionDetail section1 = sections.get(0);
+        assertThat(section1.getName(), is("Section1"));
+        List<SectionQuestionDetail> questions1 = section1.getQuestions();
+        assertThat(questions1, is(notNullValue()));
+        assertThat(questions1.size(), is(3));
+        SectionQuestionDetail question1 = questions1.get(0);
+        assertThat(question1.getQuestionId(), is(11));
+        assertThat(question1.getTitle(), is("Q11"));
+        assertThat(question1.isMandatory(), is(false));
+        assertThat(question1.getQuestionType(), is(DATE));
         verify(questionnaireService, times(1)).getQuestionGroups(argThat(new EventSourceMatcher("Create", "Client", "Create.Client")));
     }
 
@@ -191,7 +207,7 @@ public class QuestionnaireServiceFacadeTest {
         sectionDetail.setName(name);
         List<SectionQuestionDetail> questions = new ArrayList<SectionQuestionDetail>();
         for (int quesId : questionIds) {
-            questions.add(new SectionQuestionDetail(quesId, "Q" + quesId, false));
+            questions.add(new SectionQuestionDetail(quesId, "Q" + quesId, false, DATE));
         }
         sectionDetail.setQuestionDetails(questions);
         return sectionDetail;
@@ -204,7 +220,7 @@ public class QuestionnaireServiceFacadeTest {
     private SectionDetail getSectionDefinition(String name) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
-        sectionDetail.addQuestion(new SectionQuestionDetail(123, "Q1", true));
+        sectionDetail.addQuestion(new SectionQuestionDetail(123, "Q1", true, QuestionType.FREETEXT));
         return sectionDetail;
     }
 
@@ -212,7 +228,7 @@ public class QuestionnaireServiceFacadeTest {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
         for (int quesId : questionIds) {
-            sectionDetail.addQuestion(new SectionQuestionDetail(quesId, "Q" + quesId, false));
+            sectionDetail.addQuestion(new SectionQuestionDetail(quesId, "Q" + quesId, false, QuestionType.FREETEXT));
         }
         return sectionDetail;
     }

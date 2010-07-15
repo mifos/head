@@ -272,7 +272,7 @@ public class QuestionnaireControllerTest {
     }
 
     private SectionQuestionDetail getSectionQuestionDetail(int id, String title) {
-        return new SectionQuestionDetail(id, title, true);
+        return new SectionQuestionDetail(id, title, true, QuestionType.FREETEXT);
     }
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
