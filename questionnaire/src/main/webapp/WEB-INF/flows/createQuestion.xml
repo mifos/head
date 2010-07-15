@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="questionDefinition" class="org.mifos.platform.questionnaire.ui.model.QuestionForm"/>
+
+	<view-state id="createQuestion" model="questionDefinition">
+		<transition on="addQuestion" to="addQuestion" />
+		<transition on="createQuestions" to="createQuestions" />
+		<transition on="removeQuestion" to="removeQuestion"/>
+		<transition on="cancel" to="cancel" bind="false" history="discard"/>
+	</view-state>
+
+    <action-state id="addQuestion">
+        <evaluate expression="questionnaireController.addQuestion(questionDefinition, flowRequestContext)"/>
+        <transition to="createQuestion" />
+    </action-state>
+    <action-state id="removeQuestion">
+    	<evaluate expression="questionDefinition.removeQuestion(requestParameters._eventId_removeQuestion)"/>
+        <transition to="createQuestion" />
+    </action-state>
+
+    <action-state id="createQuestions">
+        <evaluate expression="questionnaireController.createQuestions(questionDefinition, flowRequestContext)"/>
+        <transition on="success" to="createQuestionSuccess" />
+        <transition on="failure" to="createQuestion" />
+    </action-state>
+
+    <end-state id="createQuestionSuccess" view="externalRedirect:contextRelative:/AdminAction.do?method=load" />
+    <end-state id="cancel" view="externalRedirect:contextRelative:/AdminAction.do?method=load" />
+
+</flow>

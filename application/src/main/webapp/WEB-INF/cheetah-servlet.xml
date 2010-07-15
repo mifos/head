@@ -15,7 +15,7 @@
         <property name="basenames">
             <list>
                 <value>org.mifos.ui.localizedProperties.messages</value>
-                <value>org.mifos.ui.localizedProperties.questionnaire_messages</value>
+                <value>org.mifos.platform.questionnaire.ui.localizedProperties.questionnaire_messages</value>
             </list>
         </property>
     </bean>
@@ -70,12 +70,11 @@
     <context:component-scan base-package="org.mifos.ui.core.controller"/>
     <context:component-scan base-package="org.mifos.platform">
         <context:include-filter type="regex" expression="org.mifos.platform.[^\.]*.ui.*" />
-        <context:include-filter type="regex" expression="org.mifos.platform.[^\.]*.service.*" />
     </context:component-scan>
 
     <bean name="genericController" class="org.mifos.ui.core.controller.GenericController"/>
 
-    <bean name="questionnaireController" class="org.mifos.ui.core.controller.QuestionnaireController"/>
+    <!-- <bean name="questionnaireController" class="org.mifos.platform.questionnaire.ui.controller.QuestionnaireController"/> -->
 
     <bean name="initializeApplicationController" class="org.mifos.ui.core.controller.InitializeApplicationController">
         <property name="testingService" ref="testingService" />
