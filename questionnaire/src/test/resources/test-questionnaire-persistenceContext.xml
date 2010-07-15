@@ -18,6 +18,11 @@
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="configLocation" value="/org/mifos/platform/questionnaire/domain/questionnaire_hibernate.cfg.xml"/>
+        <property name="annotatedClasses">
+           <list>
+                <value>org.mifos.framework.business.EntityMaster</value>
+           </list>
+        </property>
         <property name="hibernateProperties">
             <ref bean="dbSpecificHibernateProperties"/>
         </property>
