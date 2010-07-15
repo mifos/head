@@ -105,7 +105,7 @@ public class SystemInfo implements Serializable {
     }
 
     public int getApplicationVersion() {
-        // Update for NSDU
+        //FIXME Update for NSDU- I don't know from where I should get the value :(
         return 0;
     }
 

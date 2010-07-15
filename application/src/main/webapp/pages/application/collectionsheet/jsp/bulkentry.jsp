@@ -32,8 +32,19 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
         <span id="page.id" title="BulkEntry"/>
+		<script src="pages/framework/js/jquery/jquery-1.4.2.min.js"></script>
 		<script language="javascript">
 		<!--
+            // trap the return/enter key to prevent accidental form submission
+            jQuery(document).ready(function() {
+                jQuery(':input').bind("keypress", function(e) {
+                    var code = (e.keyCode ? e.keyCode : e.which);
+                    if (code == 13) { // Enter keycode
+                        e.preventDefault();
+                    }
+                });
+            });
+
 			function fnCancel(form) {
 				form.method.value="cancel";
 				form.action="collectionsheetaction.do";

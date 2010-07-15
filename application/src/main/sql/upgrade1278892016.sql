@@ -36,8 +36,6 @@ where lookup_id=623 and lookup_name='Not Together';
 insert into lookup_value values (620,92,'Together');
 insert into lookup_value values (621,92,'NotTogether');
 
-
-
 update repayment_rule
 set repayment_rule_lookup_id=626
 where repayment_rule_id=4 and repayment_rule_lookup_id=703;

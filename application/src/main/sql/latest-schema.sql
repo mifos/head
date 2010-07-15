@@ -4369,5 +4369,4 @@ create table sections_questions(
 create table applied_upgrades(
 	upgrade_id integer not null,
 	primary key (upgrade_id)
-)engine=innodb character set utf8;
-
+) engine=innodb character set utf8;
