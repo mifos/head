@@ -37,7 +37,6 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.StandardTestingService;
 
@@ -106,7 +105,8 @@ public class SystemInfo implements Serializable {
     }
 
     public int getApplicationVersion() {
-        return DatabaseVersionPersistence.APPLICATION_VERSION;
+        //FIXME I don't know from where I should get the value :(
+        return 0;
     }
 
     public String getDatabaseVendor() {

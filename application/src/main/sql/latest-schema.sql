@@ -4319,11 +4319,7 @@ create table question_group(
   date_of_creation date not null,
   state integer not null,
   primary key (id)
-<<<<<<< HEAD
-)engine=innodb character set utf8;
-=======
 ) engine=innodb character set utf8;
->>>>>>> 49059738561a67290a56a731f7993a13a548c395
 
 create table events (
     id integer not null,
@@ -4368,14 +4364,11 @@ create table sections_questions(
     primary key (id),
     foreign key (section_id) references sections(id),
     foreign key (question_id) references questions(question_id)
-<<<<<<< HEAD
 );
 
 create table applied_upgrades(
 	upgrade_id integer not null,
 	primary key (upgrade_id)
-)engine=innodb character set utf8;
-=======
 ) engine=innodb character set utf8;
 
 create table question_group_instance(
@@ -4399,4 +4392,3 @@ create table question_group_response(
     foreign key (sections_questions_id) references sections_questions(id),
     foreign key (question_group_instance_id) references question_group_instance(id)
 ) engine=innodb character set utf8;
->>>>>>> 49059738561a67290a56a731f7993a13a548c395
