@@ -31,6 +31,7 @@ import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
+import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,8 +60,8 @@ import org.mifos.accounts.business.InstallmentDetailsDto;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanActivityDto;
+import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
@@ -347,8 +348,10 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue().getAmountDoubleValue(), 212.0);
         modifyActionDateForFirstInstallment();
         Assert.assertEquals("Total no. of notes should be 6", 6, accountBO.getAccountNotes().size());
-        Assert.assertEquals("Total no. of recent notes should be 3", 3, ((List<AccountNotesEntity>) SessionUtils
-                .getAttribute(LoanConstants.NOTES, request)).size());
+
+        LoanInformationDto loanInformationDto = retrieveLoanInformationDtoFromSession();
+        Assert.assertEquals("Total no. of recent notes should be 3", 3, (loanInformationDto.getRecentAccountNotes()
+                                                                            .size()));
         Assert.assertEquals("Total no. of flags should be 1", 1, accountBO.getAccountFlags().size());
     }
 
@@ -473,8 +476,13 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue().getAmountDoubleValue(), 212.0);
         modifyActionDateForFirstInstallment();
         Assert.assertEquals("Total no. of notes should be 5", 5, accountBO.getAccountNotes().size());
-        Assert.assertEquals("Total no. of recent notes should be 3", 3, ((List<AccountNotesEntity>) SessionUtils
-                .getAttribute(LoanConstants.NOTES, request)).size());
+
+        LoanInformationDto loanInformationDto = retrieveLoanInformationDtoFromSession();
+        Assert.assertEquals("Total no. of recent notes should be 3", 3,  loanInformationDto.getRecentAccountNotes().size());
+    }
+
+    private LoanInformationDto retrieveLoanInformationDtoFromSession() throws PageExpiredException {
+        return (LoanInformationDto) SessionUtils.getAttribute("loanInformationDto", request);
     }
 
     public void testGetWithPayment() throws Exception {
@@ -490,8 +498,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward("get_success");
 
         Assert.assertEquals("Total no. of notes should be 5", 5, accountBO.getAccountNotes().size());
-        Assert.assertEquals("Total no. of recent notes should be 3", 3, ((List<AccountNotesEntity>) SessionUtils
-                .getAttribute(LoanConstants.NOTES, request)).size());
+        LoanInformationDto loanInformationDto = retrieveLoanInformationDtoFromSession();
+        Assert.assertEquals("Total no. of recent notes should be 3", 3, loanInformationDto.getRecentAccountNotes().size());
 
         Assert.assertEquals("Last payment action should be 'PAYMENT'", AccountActionTypes.DISBURSAL.getValue(),
                 SessionUtils.getAttribute(AccountConstants.LAST_PAYMENT_ACTION, request));
