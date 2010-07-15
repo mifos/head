@@ -690,6 +690,10 @@
                     <nosuffix>true</nosuffix>
                     <!-- Whether to obfuscate compressed files -->
                     <nomunge>true</nomunge>
+                    <!-- Files to exclude -->
+                    <excludes>
+                      <exclude>**/**.min.js</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
