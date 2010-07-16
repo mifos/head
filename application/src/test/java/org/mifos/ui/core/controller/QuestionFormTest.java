@@ -1,6 +1,7 @@
 package org.mifos.ui.core.controller;
 
 import org.junit.Test;
+import org.mifos.platform.questionnaire.contract.QuestionDetail;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class QuestionFormTest {
     }
 
     private Question getQuestion(String title) {
-        Question question = new Question();
+        Question question = new Question(new QuestionDetail());
         question.setTitle(title);
         return question;
     }

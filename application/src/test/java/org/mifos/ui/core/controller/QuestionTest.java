@@ -40,7 +40,7 @@ public class QuestionTest {
 
     @Test
     public void testAddAnswerChoice() {
-        Question question = new Question();
+        Question question = new Question(new QuestionDetail());
         question.setChoice("choice1");
         question.addAnswerChoice();
         question.setChoice("choice2");
@@ -55,7 +55,7 @@ public class QuestionTest {
 
     @Test
     public void testRemoveAnswerChoice() {
-        Question question = new Question();
+        Question question = new Question(new QuestionDetail());
         question.setChoice("choice1");
         question.addAnswerChoice();
         question.setChoice("choice2");
@@ -80,7 +80,7 @@ public class QuestionTest {
 
     @Test
     public void testQuestionTypeConversion() {
-        Question question = new Question();
+        Question question = new Question(new QuestionDetail());
         question.setType("Number");
         assertThat(question.getType(), is("Number"));
         question.setType("Free Text");

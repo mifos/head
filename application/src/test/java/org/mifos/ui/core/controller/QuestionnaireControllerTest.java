@@ -539,7 +539,7 @@ public class QuestionnaireControllerTest {
     }
 
     private Question getQuestion(String id, String title, String type) {
-        Question question = new Question();
+        Question question = new Question(new QuestionDetail());
         question.setTitle(title);
         question.setId(id);
         question.setType(type);

@@ -39,7 +39,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mifos.customers.client.util.helpers.ClientConstants.EVENT_CREATE;
 import static org.mifos.customers.client.util.helpers.ClientConstants.SOURCE_CLIENT;
-import static org.mifos.platform.questionnaire.contract.QuestionType.DATE;
+import static org.mifos.platform.questionnaire.contract.QuestionType.SINGLE_SELECT;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -73,7 +73,8 @@ public class ClientCustActionTest {
         QuestionDto question1 = questions1.get(0);
         assertThat(question1.getId(), is(111));
         assertThat(question1.getText(), is("Question1"));
-        assertThat(question1.getQuestionType(), is(DATE));
+        assertThat(question1.getQuestionType(), is(SINGLE_SELECT));
+        assertThat(question1.getAnswerChoices(), is(asList("red", "green", "blue")));
         assertThat(question1.isRequired(), is(true));
         verify(questionnaireServiceFacade, times(1)).getQuestionGroups(EVENT_CREATE, SOURCE_CLIENT);
     }
@@ -88,7 +89,8 @@ public class ClientCustActionTest {
     private SectionDetail getSectionDetail(String name, String title) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
-        sectionDetail.setQuestionDetails(asList(new SectionQuestionDetail(new QuestionDetail(111, title, title,  DATE), true)));
+        QuestionDetail questionDetail = new QuestionDetail(111, title, title, SINGLE_SELECT, asList("red", "green", "blue"));
+        sectionDetail.setQuestionDetails(asList(new SectionQuestionDetail(questionDetail, true)));
         return sectionDetail;
     }
 }

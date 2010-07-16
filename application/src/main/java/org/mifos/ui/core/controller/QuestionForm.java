@@ -21,6 +21,7 @@
 package org.mifos.ui.core.controller;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.platform.questionnaire.contract.QuestionDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class QuestionForm extends ScreenObject {
     private List<Question> questions = new ArrayList<Question>();
 
     @javax.validation.Valid
-    private Question currentQuestion = new Question();
+    private Question currentQuestion = new Question(new QuestionDetail());
 
     public Question getCurrentQuestion() {
         return this.currentQuestion;
@@ -64,7 +65,7 @@ public class QuestionForm extends ScreenObject {
         currentQuestion.trimTitle();
         currentQuestion.setChoicesIfApplicable();
         questions.add(currentQuestion);
-        currentQuestion = new Question();
+        currentQuestion = new Question(new QuestionDetail());
     }
 
     public boolean isDuplicateTitle(String questionTitle) {

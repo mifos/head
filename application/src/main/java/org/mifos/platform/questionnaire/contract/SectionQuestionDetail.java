@@ -21,6 +21,7 @@
 package org.mifos.platform.questionnaire.contract;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class SectionQuestionDetail implements Serializable {
     private static final long serialVersionUID = -6756173977268032788L;
@@ -51,6 +52,10 @@ public class SectionQuestionDetail implements Serializable {
 
     public QuestionType getQuestionType() {
         return questionDetail.getType();
+    }
+
+    public List<String> getAnswerChoices() {
+        return questionDetail.getAnswerChoices();
     }
 
     @Override

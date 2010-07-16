@@ -33,15 +33,10 @@ public class QuestionDetail implements Serializable {
     private String text;
     private String shortName;
     private QuestionType type;
-
     private List<String> answerChoices;
 
     public QuestionDetail() {
-        this(null);
-    }
-
-    public QuestionDetail(String text) {
-        this(text, QuestionType.INVALID);
+        this(null, QuestionType.INVALID);
     }
 
     public QuestionDetail(String text, QuestionType type) {
