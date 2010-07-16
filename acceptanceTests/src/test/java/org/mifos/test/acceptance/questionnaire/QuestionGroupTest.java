@@ -108,7 +108,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         CreateQuestionParameters parameters = new CreateQuestionParameters();
         for (String qTitle : qTitles) {
             parameters.setTitle(qTitle);
-            parameters.setType("Free text");
+            parameters.setType("Free Text");
             createQuestionPage.addQuestion(parameters);
         }
         return createQuestionPage.submitQuestions().verifyPage();

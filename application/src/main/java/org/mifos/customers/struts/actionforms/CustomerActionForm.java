@@ -20,14 +20,6 @@
 
 package org.mifos.customers.struts.actionforms;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
@@ -39,8 +31,8 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -50,13 +42,16 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.ExceptionConstants;
-import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.*;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * What's the difference between this and {@link CustActionForm} ?
@@ -102,6 +97,8 @@ public abstract class CustomerActionForm extends BaseActionForm {
     private List<CustomFieldDto> customFields;
 
     private List<CustomerPositionDto> customerPositions;
+
+    private List<QuestionGroupDto> questionGroupDtos;
 
     public CustomerActionForm() {
         address = new Address();
@@ -595,5 +592,13 @@ public abstract class CustomerActionForm extends BaseActionForm {
 
     public void setSearchString(String searchString) {
         this.searchString = searchString;
+    }
+
+    public List<QuestionGroupDto> getQuestionGroupDtos() {
+        return questionGroupDtos;
+    }
+
+    public void setQuestionGroupDtos(List<QuestionGroupDto> questionGroupDtos) {
+        this.questionGroupDtos = questionGroupDtos;
     }
 }

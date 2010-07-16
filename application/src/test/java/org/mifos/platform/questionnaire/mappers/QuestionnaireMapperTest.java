@@ -42,6 +42,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mifos.customers.surveys.helpers.AnswerType.DATE;
 import static org.mifos.customers.surveys.helpers.AnswerType.FREETEXT;
 import static org.mifos.platform.questionnaire.domain.QuestionGroupState.ACTIVE;
 import static org.mockito.Matchers.anyString;
@@ -78,9 +79,9 @@ public class QuestionnaireMapperTest {
     public void shouldMapMultipleChoiceQuestionDetailToQuestion() {
         String choice1 = "choice1";
         String choice2 = "choice2";
-        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.MULTIPLE_CHOICE, asList(choice1, choice2));
+        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.MULTI_SELECT, asList(choice1, choice2));
         Question question = questionnaireMapper.mapToQuestion(questionDefinition);
-        assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.MULTIPLE_CHOICE));
+        assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.MULTISELECT));
         assertThat(question.getQuestionText(), is(TITLE));
         assertThat(question.getShortName(), is(TITLE));
         assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoice(choice1), new QuestionChoice(choice2))));
@@ -92,9 +93,9 @@ public class QuestionnaireMapperTest {
         QuestionDetail questionDetail = questionnaireMapper.mapToQuestionDetail(question);
         assertQuestionDetail(questionDetail, TITLE, QuestionType.FREETEXT);
 
-        question = getQuestion(TITLE, AnswerType.MULTIPLE_CHOICE, asList(new QuestionChoice("choice1"), new QuestionChoice("choice2")));
+        question = getQuestion(TITLE, AnswerType.MULTISELECT, asList(new QuestionChoice("choice1"), new QuestionChoice("choice2")));
         questionDetail = questionnaireMapper.mapToQuestionDetail(question);
-        assertQuestionDetail(questionDetail, TITLE, QuestionType.MULTIPLE_CHOICE, asList("choice1", "choice2"));
+        assertQuestionDetail(questionDetail, TITLE, QuestionType.MULTI_SELECT, asList("choice1", "choice2"));
     }
 
     @Test
@@ -115,7 +116,7 @@ public class QuestionnaireMapperTest {
         assertQuestionType(QuestionType.INVALID, AnswerType.INVALID);
         assertQuestionType(QuestionType.FREETEXT, AnswerType.FREETEXT);
         assertQuestionType(QuestionType.NUMERIC, AnswerType.NUMBER);
-        assertQuestionType(QuestionType.DATE, AnswerType.DATE);
+        assertQuestionType(QuestionType.DATE, DATE);
     }
 
     @Test
@@ -160,7 +161,7 @@ public class QuestionnaireMapperTest {
     private SectionDetail getSectionDefinition(String name) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(12, true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID), true));
         return section;
     }
 
@@ -202,6 +203,7 @@ public class QuestionnaireMapperTest {
         SectionQuestion sectionQuestion = new SectionQuestion();
         Question question = new Question();
         question.setShortName(sectionName);
+        question.setAnswerType(DATE);
         sectionQuestion.setQuestion(question);
         section.setQuestions(asList(sectionQuestion));
         return section;
@@ -235,11 +237,13 @@ public class QuestionnaireMapperTest {
             List<SectionQuestionDetail> questionDetails1 = sectionDefinition1.getQuestions();
             assertThat(questionDetails1.size(), is(1));
             assertThat(questionDetails1.get(0).getTitle(), is(SECTION + i));
+            assertThat(questionDetails1.get(0).getQuestionType(), is(QuestionType.DATE));
             SectionDetail sectionDefinition2 = questionGroupDetail.getSectionDetails().get(1);
             assertThat(sectionDefinition2.getName(), is(SECTION + (i + 1)));
             List<SectionQuestionDetail> questionDetails2 = sectionDefinition2.getQuestions();
             assertThat(questionDetails2.size(), is(1));
             assertThat(questionDetails2.get(0).getTitle(), is(SECTION + (i + 1)));
+            assertThat(questionDetails2.get(0).getQuestionType(), is(QuestionType.DATE));
         }
     }
 

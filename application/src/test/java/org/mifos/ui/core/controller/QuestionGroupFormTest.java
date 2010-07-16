@@ -23,10 +23,7 @@ package org.mifos.ui.core.controller;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.platform.questionnaire.contract.EventSource;
-import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.contract.SectionDetail;
-import org.mifos.platform.questionnaire.contract.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.contract.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -237,7 +234,7 @@ public class QuestionGroupFormTest {
     }
 
     private SectionQuestionDetail getSectionQuestionDetail(int id, String title, boolean mandatory) {
-        return new SectionQuestionDetail(id, title, mandatory);
+        return new SectionQuestionDetail(new QuestionDetail(id, title, title, QuestionType.FREETEXT), mandatory);
     }
 
     private void assertEventSource(EventSource eventSource, String event, String source) {

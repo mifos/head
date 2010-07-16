@@ -88,7 +88,7 @@ public class QuestionTest extends UiTestCaseBase {
         QuestionDetailPage questionDetailPage = viewAllQuestionsPage.navigateToQuestionDetail(title);
         questionDetailPage.verifyPage();
         Assert.assertTrue(selenium.isTextPresent("Question: "+title), "Title is missing");
-        Assert.assertTrue(selenium.isTextPresent("Answer type: "+DATE_TYPE), "Answer type is missing");
+        Assert.assertTrue(selenium.isTextPresent("Answer Type: "+DATE_TYPE), "Answer type is missing");
     }
 
     private ViewAllQuestionsPage testViewQuestions(AdminPage adminPage) {

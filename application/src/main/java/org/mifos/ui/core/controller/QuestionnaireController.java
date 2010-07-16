@@ -120,6 +120,14 @@ public class QuestionnaireController {
                     "currentQuestion.title", "The name specified already exists.");
             return "failure";
         }
+
+        if(questionForm.answerChoicesAreInvalid()){
+            constructErrorMessage(
+                    context, "questionnaire.error.question.choices",
+                    "currentQuestion.choice", "Please specify at least 2 choices.");
+            return "failure";
+        }
+
         questionForm.addCurrentQuestion();
         return "success";
     }
@@ -256,7 +264,7 @@ public class QuestionnaireController {
         List<QuestionDetail> questionDetails = questionnaireServiceFacade.getAllQuestions();
         if (questionDetails != null) {
             for (QuestionDetail questionDetail : questionDetails) {
-                sectionQuestionDetails.add(new SectionQuestionDetail(questionDetail.getId(), questionDetail.getTitle(), false));
+                sectionQuestionDetails.add(new SectionQuestionDetail(questionDetail, false));
             }
         }
         return sectionQuestionDetails;

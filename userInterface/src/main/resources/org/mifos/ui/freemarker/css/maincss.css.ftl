@@ -82,7 +82,7 @@ padding-top:5px;
 	color:#CC6601;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-weight: bold;
-	font-size:11pt;
+	font-size:9pt;
 	
 }
 .silverheading {
@@ -259,7 +259,7 @@ padding-top:5px;
 	border-bottom: #696969 1px solid;
 	border-left: #a4a4a4 1px solid;
 	border-top: #a2a2a2 1px solid;
-/*	background-image:#fff url(../images/buttons/buttonbgcancel.jpg);
+/*	background-image:#fff url(pages/framework/images/buttons/buttonbgcancel.jpg);
 	background-repeat: repeat-x;*/
 	background-color:#FFFFFF;
 	cursor: pointer;
@@ -371,38 +371,38 @@ padding-top:5px;
 }
 .leftIMG {
 	float:left;
-	background:url(../images/smallarrowleft.gif) no-repeat;
+	background:url(pages/framework/images/smallarrowleft.gif) no-repeat;
 	width:11px;
 	height:11px;
 }
 .downIMG {
 	float:left;
-	background:url(../images/smallarrowdown.gif) no-repeat;
+	background:url(pages/framework/images/smallarrowdown.gif) no-repeat;
 	width:11px;
 	height:11px;
 }
 .topIMG {
 	float:left;
-	background:url(../images/smallarrowtop.gif) no-repeat;
+	background:url(pages/framework/images/smallarrowtop.gif) no-repeat;
 	width:11px;
 	height:11px;
 }
 .activeIMG {
-	background:url(../images/status_activegreen.gif) no-repeat;
+	background:url(pages/framework/images/status_activegreen.gif) no-repeat;
 	width:8px;
 	height:9px;
 	padding-left:20px;
 }
 .arrowIMG {
 	margin:3px 10px;
-	background:url(../images/timeline/bigarrow.gif) no-repeat;
+	background:url(pages/framework/images/timeline/bigarrow.gif) no-repeat;
 	width:17px;
 	height:17px;
 	padding-left:20px;
 }
 .arrowIMG1 {
 	margin:3px 10px;
-	background:url(../images/timeline/orangearrow.gif) no-repeat;
+	background:url(pages/framework/images/timeline/orangearrow.gif) no-repeat;
 	width:17px;
 	height:17px;
 	padding-left:20px;
@@ -410,7 +410,7 @@ padding-top:5px;
 }
 .completeIMG {
 	margin:3px 10px;
-	background:url(../images/timeline/tick.gif) no-repeat;
+	background:url(pages/framework/images/timeline/tick.gif) no-repeat;
 	width:17px;
 	height:17px;
 	padding-left:20px;
@@ -502,10 +502,25 @@ padding-top:5px;
 	border-bottom: #696969 1px solid;
 	border-left: #A2A2A2 1px solid;
 	border-top: #A2A2A2 1px solid;
-    background-image: url(../images/buttons/buttonbgcancel.jpg);
+    background-image: url(pages/framework/images/buttons/buttonbgcancel.jpg);
 	background-repeat: repeat-x;
     cursor: pointer;
     height: 20px
 }
 
 
+.insidebuttn
+{
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: 8pt;
+	font-weight: normal;
+	color: #000000;
+    border-right: #696969 1px solid;
+	border-bottom: #696969 1px solid;
+	border-left: #A2A2A2 1px solid;
+	border-top: #A2A2A2 1px solid;
+    background-image: url(../images/buttons/buttonbgcancel.jpg);
+	background-repeat: repeat-x;
+    cursor: pointer;
+    height: 17px
+}
