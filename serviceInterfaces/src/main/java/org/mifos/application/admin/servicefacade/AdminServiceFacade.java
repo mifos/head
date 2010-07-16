@@ -22,6 +22,7 @@ package org.mifos.application.admin.servicefacade;
 
 import java.util.List;
 
+import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ProductConfigurationDto;
@@ -57,4 +58,9 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     ProductDto retrieveAllProductMix() throws Exception;
 
+    @PreAuthorize("isFullyAuthenticated()")
+    MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields() throws Exception;
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto) throws Exception;
 }

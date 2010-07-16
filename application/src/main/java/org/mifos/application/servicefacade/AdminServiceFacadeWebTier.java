@@ -32,30 +32,41 @@ import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.application.util.helpers.EntityType;
+import org.mifos.config.ClientRules;
+import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
+import org.mifos.customers.office.business.service.MandatoryHiddenFieldService;
 import org.mifos.customers.office.business.service.OfficeHierarchyService;
 import org.mifos.customers.office.persistence.OfficeDao;
+import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ProductCategoryDto;
-import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
+import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductDto;
 import org.mifos.dto.screen.ProductMixDetailsDto;
 import org.mifos.dto.screen.ProductMixDto;
+import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
+import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
+import org.mifos.framework.exceptions.PersistenceException;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
     private ProductService productService;
     private OfficeHierarchyService officeHierarchyService;
+    private MandatoryHiddenFieldService mandatoryHiddenFieldService;
     private LoanProductDao loanProductDao;
     private SavingsProductDao savingsProductDao;
     private OfficeDao officeDao;
 
 
-    public AdminServiceFacadeWebTier(ProductService productService, OfficeHierarchyService officeHierarchyService, LoanProductDao loanProductDao,
+    public AdminServiceFacadeWebTier(ProductService productService, OfficeHierarchyService officeHierarchyService,
+                                    MandatoryHiddenFieldService mandatoryHiddenFieldService, LoanProductDao loanProductDao,
                                     SavingsProductDao savingsProductDao, OfficeDao officeDao) {
         this.productService = productService;
         this.officeHierarchyService = officeHierarchyService;
+        this.mandatoryHiddenFieldService = mandatoryHiddenFieldService;
         this.loanProductDao = loanProductDao;
         this.savingsProductDao = savingsProductDao;
         this.officeDao = officeDao;
@@ -173,5 +184,149 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         ProductMixDetailsDto dto = new ProductMixDetailsDto(prdOfferingId, prdOfferingBO.getPrdOfferingName(),
                                     prdOfferingBO.getPrdType().getProductTypeID(), allowedPrdOfferingNames, notAllowedPrdOfferingNames);
         return dto;
+    }
+
+    @Override
+    public MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields() throws Exception {
+        List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence().getAllConfigurationFieldList();
+        MandatoryHiddenFieldsDto dto = new MandatoryHiddenFieldsDto();
+        populateDto(dto, confFieldList);
+        dto.setFamilyDetailsRequired(ClientRules.isFamilyDetailsRequired());
+        return dto;
+    }
+
+    private void populateDto(MandatoryHiddenFieldsDto dto, List<FieldConfigurationEntity> confFieldList) {
+        if (confFieldList != null && confFieldList.size() > 0) {
+            for (FieldConfigurationEntity fieldConfiguration : confFieldList) {
+                if (fieldConfiguration.getEntityType() == EntityType.CLIENT) {
+                    populateClientDetails(dto, fieldConfiguration);
+                } else if (fieldConfiguration.getEntityType() == EntityType.GROUP) {
+                    populateGrouptDetails(dto, fieldConfiguration);
+                } else {
+                    populateSystemFields(dto, fieldConfiguration);
+                }
+            }
+        }
+    }
+
+    private void populateClientDetails(MandatoryHiddenFieldsDto dto, FieldConfigurationEntity fieldConfiguration) {
+        if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.MIDDLE_NAME)) {
+            dto.setHideClientMiddleName(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+            dto.setMandatoryClientMiddleName(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.SECOND_LAST_NAME)) {
+            dto.setHideClientSecondLastName(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+            dto.setMandatoryClientSecondLastName(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.GOVERNMENT_ID)) {
+            dto.setHideClientGovtId(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+            dto.setMandatoryClientGovtId(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.MARITAL_STATUS)) {
+            dto.setMandatoryMaritalStatus(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.POVERTY_STATUS)) {
+            dto.setHideClientPovertyStatus(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+            dto.setMandatoryClientPovertyStatus(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(
+                HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_INFORMATION)) {
+            dto.setHideClientSpouseFatherInformation(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+            dto.setMandatoryClientSpouseFatherInformation(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(
+                HiddenMandatoryFieldNamesConstants.FAMILY_DETAILS)) {
+            dto.setMandatoryClientFamilyDetails(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(
+                HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_MIDDLE_NAME)) {
+            dto.setHideClientSpouseFatherMiddleName(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(
+                HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_SECOND_LAST_NAME)) {
+            dto.setHideClientSpouseFatherSecondLastName(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+            dto.setMandatoryClientSpouseFatherSecondLastName(getBooleanValue(fieldConfiguration
+                    .getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.PHONE_NUMBER)) {
+            dto.setHideClientPhone(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+            dto.setMandatoryClientPhone(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.TRAINED)) {
+            dto.setHideClientTrained(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+            dto.setMandatoryClientTrained(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.TRAINED_DATE)) {
+            dto.setMandatoryClientTrainedOn(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.BUSINESS_ACTIVITIES)) {
+            dto.setHideClientBusinessWorkActivities(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+            dto.setMandatoryClientBusinessWorkActivities(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.NUMBER_OF_CHILDREN)) {
+            dto.setMandatoryNumberOfChildren(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ETHINICITY)) {
+            dto.setHideSystemEthnicity(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+            dto.setMandatorySystemEthnicity(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.CITIZENSHIP)) {
+            dto.setHideSystemCitizenShip(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+            dto.setMandatorySystemCitizenShip(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.HANDICAPPED)) {
+            dto.setHideSystemHandicapped(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+            dto.setMandatorySystemHandicapped(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.EDUCATION_LEVEL)) {
+            dto.setHideSystemEducationLevel(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+            dto.setMandatorySystemEducationLevel(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.PHOTO)) {
+            dto.setHideSystemPhoto(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+            dto.setMandatorySystemPhoto(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ADDRESS1)) {
+            dto.setMandatorySystemAddress1(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ADDRESS2)) {
+            dto.setHideSystemAddress2(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ADDRESS3)) {
+            dto.setHideSystemAddress3(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.CITY)) {
+            dto.setHideSystemCity(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.STATE)) {
+            dto.setHideSystemState(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.COUNTRY)) {
+            dto.setHideSystemCountry(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.POSTAL_CODE)) {
+            dto.setHideSystemPostalCode(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ASSIGN_CLIENTS)) {
+            dto.setHideSystemAssignClientPostions(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+        }
+    }
+
+    private void populateGrouptDetails(MandatoryHiddenFieldsDto dto, FieldConfigurationEntity fieldConfiguration) {
+        if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.TRAINED)) {
+            dto.setHideGroupTrained(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ADDRESS1)) {
+            dto.setMandatorySystemAddress1(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ADDRESS2)) {
+            dto.setHideSystemAddress2(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ADDRESS3)) {
+            dto.setHideSystemAddress3(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+        }
+
+    }
+
+    private void populateSystemFields(MandatoryHiddenFieldsDto dto, FieldConfigurationEntity fieldConfiguration) {
+        if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.EXTERNAL_ID)) {
+            dto.setHideSystemExternalId(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+            dto.setMandatorySystemExternalId(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.RECEIPT_ID)) {
+            dto.setHideSystemReceiptIdDate(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.PURPOSE_OF_LOAN)) {
+            dto.setMandatoryLoanAccountPurpose(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.SOURCE_OF_FUND)) {
+            dto.setMandatoryLoanSourceOfFund(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.COLLATERAL_TYPE)) {
+            dto.setHideSystemCollateralTypeNotes(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ADDRESS1)) {
+            dto.setMandatorySystemAddress1(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ADDRESS2)) {
+            dto.setHideSystemAddress2(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ADDRESS3)) {
+            dto.setHideSystemAddress3(getBooleanValue(fieldConfiguration.getHiddenFlag()));
+        }
+    }
+
+    private boolean getBooleanValue(Short s) {
+        return ((s != null)&&(s != 0))? true: false;
+    }
+
+    @Override
+    public void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto) throws Exception {
+        List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence().getAllConfigurationFieldList();
+        mandatoryHiddenFieldService.updateMandatoryHiddenFields(dto, confFieldList);
     }
 }
