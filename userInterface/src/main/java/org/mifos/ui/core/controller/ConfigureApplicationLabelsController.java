@@ -29,7 +29,6 @@ import org.mifos.dto.domain.ConfigurableLookupLabelDto;
 import org.mifos.dto.domain.GracePeriodDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
-import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
