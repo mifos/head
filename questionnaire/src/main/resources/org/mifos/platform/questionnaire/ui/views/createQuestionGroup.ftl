@@ -69,7 +69,7 @@
                         <label for="selectedQuestionIds"><span class="red">*</span>[@spring.message "questionnaire.select.questions"/]:</label>
                         <select multiple="multiple" size="10" id="selectedQuestionIds" name="selectedQuestionIds" style="width:35em">
                             [#list questionGroupForm.questionPool as sectionQuestion]
-                                <option value="${sectionQuestion.questionId}">${sectionQuestion.title}</option>
+                                <option value="${sectionQuestion.questionId?c}">${sectionQuestion.title}</option>
                             [/#list]
                         </select>
                     </li>
