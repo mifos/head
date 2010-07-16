@@ -44,6 +44,9 @@ public class Question implements Serializable {
         populateQuestionTypeToStringMap();
     }
 
+    public Question() {
+        //TODO: spring autowiring requires default constructor
+    }
     public Question(QuestionDetail questionDetail) {
         this.questionDetail = questionDetail;
     }
