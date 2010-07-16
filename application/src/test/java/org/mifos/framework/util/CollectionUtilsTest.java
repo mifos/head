@@ -20,15 +20,16 @@
 
 package org.mifos.framework.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import java.util.*;
 
-import static java.util.Collections.enumeration;
-import static java.util.Collections.list;
 import static org.mifos.framework.util.CollectionUtils.*;
-import static org.mifos.framework.util.MapEntry.makeEntry;
 
 public class CollectionUtilsTest extends TestCase {
 
@@ -85,26 +86,5 @@ public class CollectionUtilsTest extends TestCase {
        assertEquals(expected, splitListIntoParts(Arrays.asList(1, 2, 3, 4, 5), 2));
     }
 
-    public void testAsMap() {
-        Map<Integer, String> map = asMap(makeEntry(1, "One"), makeEntry(2, "Two"), makeEntry(3, "Three"));
-        Assert.assertTrue(map.containsKey(1) && map.containsValue("One"));
-        Assert.assertTrue(map.containsKey(2) && map.containsValue("Two"));
-        Assert.assertTrue(map.containsKey(3) && map.containsValue("Three"));
-    }
 
-    public void testAsOrderedMap() {
-        Map<Integer, String> map = asOrderedMap(makeEntry(1, "1"), makeEntry(2, "2"), makeEntry(3, "3"));
-        ArrayList<Map.Entry<Integer, String>> entryList = list(enumeration(map.entrySet()));
-        for (int i=1; i<=entryList.size(); i++) {
-            Map.Entry<Integer, String> entry = entryList.get(i - 1);
-            assertEquals(Integer.valueOf(i), entry.getKey());
-            assertEquals(String.valueOf(i), entry.getValue());
-        }
-    }
-    
-    public void testCollectionEmpty() {
-        assertEquals(false, isEmpty(Arrays.asList("Hi", "Bye")));
-        assertEquals(true, isEmpty(Collections.EMPTY_SET));
-        assertEquals(true, isEmpty(null));
-    }
 }
