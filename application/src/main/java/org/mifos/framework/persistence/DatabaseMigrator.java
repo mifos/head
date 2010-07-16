@@ -41,6 +41,9 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.mifos.core.ClasspathResource;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.AddActivity;
 import org.mifos.security.util.SecurityConstants;
@@ -70,10 +73,12 @@ public class DatabaseMigrator {
     public static final String METHOD_UPGRADE_TYPE = "method";
     public static final String SCRIPT_UPGRADE_TYPE = "sql";
 
+    private static MifosLogger LOG = null;
 
 
     public DatabaseMigrator() {
         this(StaticHibernateUtil.getSessionTL().connection(), getAvailableUpgrades(), "org.mifos.application.master.persistence");
+        LOG = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
 
     }
 
@@ -104,13 +109,16 @@ public class DatabaseMigrator {
 
             while (true) {
                 String line = bufferedReader.readLine();
+                if (line == null){
+                    break;
+                }
                 String upgradeType = line.substring(0, line.indexOf(':'));
                 Integer upgradeId = Integer.parseInt(line.substring(line.indexOf(':') + 1));
                 upgrades.put(upgradeId, upgradeType);
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            LOG.error("An error occurred whilst reading the upgrades.txt file");
 
         } finally {
             if (reader != null) {
@@ -357,9 +365,9 @@ public class DatabaseMigrator {
         Statement stmt = null;
         try {
             stmt = connection.createStatement(ResultSet.FETCH_FORWARD, ResultSet.CONCUR_READ_ONLY);
-            ResultSet rs = stmt.executeQuery("select upgrade_id from applied_upgrades");
+            ResultSet rs = stmt.executeQuery("select upgrade_id from applied_upgrades order by upgrade_id");
 
-            if (rs.next()) {
+            while (rs.next()) {
                 appliedUpgrades.add(rs.getInt(1));
             }
             rs.close();
