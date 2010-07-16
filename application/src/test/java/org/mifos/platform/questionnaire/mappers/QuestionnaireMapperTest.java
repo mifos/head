@@ -79,9 +79,9 @@ public class QuestionnaireMapperTest {
     public void shouldMapMultipleChoiceQuestionDetailToQuestion() {
         String choice1 = "choice1";
         String choice2 = "choice2";
-        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.MULTIPLE_CHOICE, asList(choice1, choice2));
+        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.MULTI_SELECT, asList(choice1, choice2));
         Question question = questionnaireMapper.mapToQuestion(questionDefinition);
-        assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.MULTIPLE_CHOICE));
+        assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.MULTISELECT));
         assertThat(question.getQuestionText(), is(TITLE));
         assertThat(question.getShortName(), is(TITLE));
         assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoice(choice1), new QuestionChoice(choice2))));
@@ -93,9 +93,9 @@ public class QuestionnaireMapperTest {
         QuestionDetail questionDetail = questionnaireMapper.mapToQuestionDetail(question);
         assertQuestionDetail(questionDetail, TITLE, QuestionType.FREETEXT);
 
-        question = getQuestion(TITLE, AnswerType.MULTIPLE_CHOICE, asList(new QuestionChoice("choice1"), new QuestionChoice("choice2")));
+        question = getQuestion(TITLE, AnswerType.MULTISELECT, asList(new QuestionChoice("choice1"), new QuestionChoice("choice2")));
         questionDetail = questionnaireMapper.mapToQuestionDetail(question);
-        assertQuestionDetail(questionDetail, TITLE, QuestionType.MULTIPLE_CHOICE, asList("choice1", "choice2"));
+        assertQuestionDetail(questionDetail, TITLE, QuestionType.MULTI_SELECT, asList("choice1", "choice2"));
     }
 
     @Test
@@ -161,7 +161,7 @@ public class QuestionnaireMapperTest {
     private SectionDetail getSectionDefinition(String name) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(12, true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID), true));
         return section;
     }
 

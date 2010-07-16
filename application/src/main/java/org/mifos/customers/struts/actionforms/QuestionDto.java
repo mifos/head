@@ -24,6 +24,8 @@ import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.platform.questionnaire.contract.QuestionType;
 import org.mifos.platform.questionnaire.contract.SectionQuestionDetail;
 
+import java.util.List;
+
 public class QuestionDto implements DataTransferObject {
     private static final long serialVersionUID = 1759235897826098794L;
 
@@ -47,5 +49,9 @@ public class QuestionDto implements DataTransferObject {
 
     public QuestionType getQuestionType() {
         return sectionQuestionDetail.getQuestionType();
+    }
+
+    public List<String> getAnswerChoices() {
+        return sectionQuestionDetail.getAnswerChoices();
     }
 }

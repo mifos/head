@@ -30,8 +30,6 @@ import java.util.List;
 public class QuestionGroupDto implements DataTransferObject {
     private static final long serialVersionUID = -3740125391034068655L;
 
-    private int id;
-    List<SectionDto> sectionDtos;
     private QuestionGroupDetail questionGroupDetail;
 
     public QuestionGroupDto(QuestionGroupDetail questionGroupDetail) {

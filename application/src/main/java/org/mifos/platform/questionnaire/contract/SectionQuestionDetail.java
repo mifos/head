@@ -21,28 +21,21 @@
 package org.mifos.platform.questionnaire.contract;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class SectionQuestionDetail implements Serializable {
     private static final long serialVersionUID = -6756173977268032788L;
 
-    private int questionId;
     private boolean mandatory;
-    private String title;
-    private QuestionType questionType;
+    private QuestionDetail questionDetail;
 
-    public SectionQuestionDetail(int questionId, boolean mandatory) {
-        this(questionId, null, mandatory, QuestionType.FREETEXT);
-    }
-
-    public SectionQuestionDetail(int questionId, String title, boolean mandatory, QuestionType questionType) {
-        this.questionId = questionId;
+    public SectionQuestionDetail(QuestionDetail questionDetail, boolean mandatory) {
+        this.questionDetail = questionDetail;
         this.mandatory = mandatory;
-        this.title = title;
-        this.questionType = questionType;
     }
 
     public int getQuestionId() {
-        return questionId;
+        return questionDetail.getId();
     }
 
     public boolean isMandatory() {
@@ -50,7 +43,7 @@ public class SectionQuestionDetail implements Serializable {
     }
 
     public String getTitle() {
-        return title;
+        return questionDetail.getTitle();
     }
 
     public void setMandatory(boolean mandatory) {
@@ -58,7 +51,11 @@ public class SectionQuestionDetail implements Serializable {
     }
 
     public QuestionType getQuestionType() {
-        return questionType;
+        return questionDetail.getType();
+    }
+
+    public List<String> getAnswerChoices() {
+        return questionDetail.getAnswerChoices();
     }
 
     @Override
@@ -68,13 +65,14 @@ public class SectionQuestionDetail implements Serializable {
 
         SectionQuestionDetail that = (SectionQuestionDetail) o;
 
-        if (questionId != that.questionId) return false;
+        if (questionDetail != null ? !questionDetail.equals(that.questionDetail) : that.questionDetail != null)
+            return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return questionId;
+        return questionDetail != null ? questionDetail.hashCode() : 0;
     }
 }
