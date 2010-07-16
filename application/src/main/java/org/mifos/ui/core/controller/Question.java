@@ -25,28 +25,32 @@ import org.mifos.platform.questionnaire.contract.QuestionDetail;
 import org.mifos.platform.questionnaire.contract.QuestionType;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import static org.mifos.framework.util.MapEntry.makeEntry;
+import static org.mifos.platform.questionnaire.contract.QuestionType.*;
 
-public class Question implements Serializable{
+public class Question implements Serializable {
     private static final long serialVersionUID = -2584259958410679795L;
+    private static Map<String, QuestionType> stringToQuestionTypeMap;
+    private static Map<QuestionType, String> questionTypeToStringMap;
     private QuestionDetail questionDetail;
-    private Map<String, QuestionType> stringToQuestionTypeMap;
-    private Map<QuestionType, String> questionTypeToStringMap;
+    private String choice;
 
-    public Question() {
-        this(new QuestionDetail());
-    }
-
-    public Question(QuestionDetail questionDetail) {
-        this.questionDetail = questionDetail;
+    static {
         populateStringToQuestionTypeMap();
         populateQuestionTypeToStringMap();
     }
 
+    public Question(QuestionDetail questionDetail) {
+        this.questionDetail = questionDetail;
+    }
+
     @org.hibernate.validator.constraints.NotEmpty
-    @javax.validation.constraints.Size(min=1,max=50)
+    @javax.validation.constraints.Size(min = 1, max = 50)
     public String getTitle() {
         return questionDetail.getTitle();
     }
@@ -81,15 +85,67 @@ public class Question implements Serializable{
         return questionDetail;
     }
 
-    private void populateStringToQuestionTypeMap() {
-        stringToQuestionTypeMap = CollectionUtils.asMap(makeEntry("Free text", QuestionType.FREETEXT),
-                makeEntry("Date", QuestionType.DATE),
-                makeEntry("Number", QuestionType.NUMERIC));
+    public List<String> getChoices() {
+        return this.questionDetail.getAnswerChoices();
     }
 
-    private void populateQuestionTypeToStringMap() {
-        questionTypeToStringMap = CollectionUtils.asMap(makeEntry(QuestionType.FREETEXT, "Free text"),
-                makeEntry(QuestionType.DATE, "Date"),
-                makeEntry(QuestionType.NUMERIC, "Number"));
+    public String getCommaSeparateChoices() {
+        String listAsString = this.questionDetail.getAnswerChoices().toString();
+        return listAsString.substring(1, listAsString.length() - 1);
+    }
+
+    public String getChoice() {
+        return choice;
+    }
+
+    public void setChoice(String choice) {
+        this.choice = choice;
+    }
+
+    public void addAnswerChoice() {
+        getChoices().add(getChoice());
+        setChoice(null);
+    }
+
+    public void removeChoice(int choiceIndex) {
+        getChoices().remove(choiceIndex);
+    }
+
+    public void setChoicesIfApplicable() {
+        QuestionType type = questionDetail.getType();
+        if (!answerChoicesApplicableFor(type)) {
+            questionDetail.setAnswerChoices(new ArrayList<String>());
+        }
+    }
+
+    public boolean answerChoicesAreInvalid() {
+        return answerChoicesApplicableFor(questionDetail.getType()) && getChoices().size() < 2;
+    }
+
+    private boolean answerChoicesApplicableFor(QuestionType type) {
+        return MULTI_SELECT.equals(type) || SINGLE_SELECT.equals(questionDetail.getType());
+    }
+
+    private static void populateStringToQuestionTypeMap() {
+        stringToQuestionTypeMap = CollectionUtils.asMap(
+                makeEntry(getResource("questionnaire.quesiton.choices.freetext"), FREETEXT),
+                makeEntry(getResource("questionnaire.quesiton.choices.date"), DATE),
+                makeEntry(getResource("questionnaire.quesiton.choices.multiselect"), MULTI_SELECT),
+                makeEntry(getResource("questionnaire.quesiton.choices.singleselect"), SINGLE_SELECT),
+                makeEntry(getResource("questionnaire.quesiton.choices.number"), NUMERIC));
+    }
+
+    private static void populateQuestionTypeToStringMap() {
+        questionTypeToStringMap = CollectionUtils.asMap(makeEntry(FREETEXT, getResource("questionnaire.quesiton.choices.freetext")),
+                makeEntry(DATE, getResource("questionnaire.quesiton.choices.date")),
+                makeEntry(NUMERIC, getResource("questionnaire.quesiton.choices.number")),
+                makeEntry(MULTI_SELECT, getResource("questionnaire.quesiton.choices.multiselect")),
+                makeEntry(SINGLE_SELECT, getResource("questionnaire.quesiton.choices.singleselect"))
+        );
+    }
+
+    private static String getResource(String key) {
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("org.mifos.ui.localizedProperties.questionnaire_messages");
+        return resourceBundle.getString(key);
     }
 }

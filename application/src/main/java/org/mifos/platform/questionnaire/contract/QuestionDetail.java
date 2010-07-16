@@ -23,7 +23,7 @@ package org.mifos.platform.questionnaire.contract;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionDetail implements Serializable {
@@ -36,11 +36,7 @@ public class QuestionDetail implements Serializable {
     private List<String> answerChoices;
 
     public QuestionDetail() {
-        this(null);
-    }
-
-    public QuestionDetail(String text) {
-        this(text, QuestionType.INVALID);
+        this(null, QuestionType.INVALID);
     }
 
     public QuestionDetail(String text, QuestionType type) {
@@ -48,7 +44,7 @@ public class QuestionDetail implements Serializable {
     }
 
     public QuestionDetail(Integer id, String text, String shortName, QuestionType type) {
-        this(id, text, shortName, type, new LinkedList<String>());
+        this(id, text, shortName, type, new ArrayList<String>());
     }
 
     public QuestionDetail(String title, QuestionType type, List<String> answerChoices) {
@@ -101,5 +97,26 @@ public class QuestionDetail implements Serializable {
 
     public List<String> getAnswerChoices() {
         return answerChoices;
+    }
+
+    public void setAnswerChoices(List<String> answerChoices) {
+        this.answerChoices = answerChoices;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        QuestionDetail that = (QuestionDetail) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }
