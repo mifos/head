@@ -20,6 +20,7 @@
 
 package org.mifos.dto.domain;
 
+@SuppressWarnings("PMD.TooManyFields") // is not applicable for data forms
 public class ConfigurableLookupLabelDto {
 
     private String client;
