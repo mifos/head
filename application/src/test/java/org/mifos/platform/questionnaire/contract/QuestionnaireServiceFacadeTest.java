@@ -42,6 +42,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 import static org.mifos.platform.questionnaire.contract.QuestionType.DATE;
 import static org.mifos.platform.questionnaire.contract.QuestionType.FREETEXT;
+import static org.mifos.platform.questionnaire.contract.QuestionType.MULTI_SELECT;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 
@@ -75,10 +76,10 @@ public class QuestionnaireServiceFacadeTest {
         String title2 = title + 2;
         questionnaireServiceFacade.createQuestions(asList(getQuestionDetail(0, title1, title1, FREETEXT),
                 getQuestionDetail(0, title2, title2, DATE),
-                getQuestionDetail(0, title2, title2, QuestionType.MULTIPLE_CHOICE,asList("choice1","choice2"))));
+                getQuestionDetail(0, title2, title2, MULTI_SELECT,asList("choice1","choice2"))));
         verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title1, title1, FREETEXT))));
         verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, DATE))));
-        verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, QuestionType.MULTIPLE_CHOICE, asList("choice1","choice2")))));
+        verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, MULTI_SELECT, asList("choice1","choice2")))));
     }
 
     @Test
@@ -148,6 +149,17 @@ public class QuestionnaireServiceFacadeTest {
         assertNotNull("Question group should not be null", questionDetail);
         assertThat(questionDetail.getShortName(), is(title));
         assertThat(questionDetail.getType(), is(QuestionType.NUMERIC));
+        verify(questionnaireService).getQuestion(questionId);
+    }
+
+    @Test
+    public void testGetQuestionWithAnswerChoicesById() throws ApplicationException {
+        int questionId = 1;
+        String title = "Title";
+        when(questionnaireService.getQuestion(questionId)).thenReturn(new QuestionDetail(questionId, title, title, MULTI_SELECT, asList("choice1","choice2")));
+        QuestionDetail questionDetail = questionnaireServiceFacade.getQuestionDetail(questionId);
+        assertNotNull("Question group should not be null", questionDetail);
+        assertThat(questionDetail, new QuestionDetailMatcher(new QuestionDetail(questionId, title, title, MULTI_SELECT, asList("choice1","choice2"))));
         verify(questionnaireService).getQuestion(questionId);
     }
 

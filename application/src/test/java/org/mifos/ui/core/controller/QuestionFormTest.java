@@ -28,7 +28,7 @@ public class QuestionFormTest {
     public void testAddCurrentQuestion(){
         QuestionForm questionForm = new QuestionForm();
         questionForm.getCurrentQuestion().setTitle("  Q1 ");
-        questionForm.getCurrentQuestion().setType("Free text");
+        questionForm.getCurrentQuestion().setType("Free Text");
         questionForm.addCurrentQuestion();
         List<Question> questionList = questionForm.getQuestions();
         assertThat(questionList.size(), is(1));
@@ -37,7 +37,7 @@ public class QuestionFormTest {
         assertNotSame(title, questionForm.getCurrentQuestion().getTitle());
         assertNotSame(type, questionForm.getCurrentQuestion().getType());
         assertThat(title, is("Q1"));
-        assertThat(type, is("Free text"));
+        assertThat(type, is("Free Text"));
     }
 
     private Question getQuestion(String title) {

@@ -509,3 +509,18 @@ padding-top:5px;
 }
 
 
+.insidebuttn
+{
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: 8pt;
+	font-weight: normal;
+	color: #000000;
+    border-right: #696969 1px solid;
+	border-bottom: #696969 1px solid;
+	border-left: #A2A2A2 1px solid;
+	border-top: #A2A2A2 1px solid;
+    background-image: url(../images/buttons/buttonbgcancel.jpg);
+	background-repeat: repeat-x;
+    cursor: pointer;
+    height: 17px
+}

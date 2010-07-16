@@ -20,12 +20,14 @@
 
 package org.mifos.ui.core.controller;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
 public class QuestionForm extends ScreenObject {
+    private static final long serialVersionUID = 2010225942240327677L;
+
     private List<Question> questions = new ArrayList<Question>();
 
     @javax.validation.Valid
@@ -38,8 +40,6 @@ public class QuestionForm extends ScreenObject {
     public void setCurrentQuestion(Question currentQuestion) {
         this.currentQuestion = currentQuestion;
     }
-
-    private static final long serialVersionUID = 2010225942240327677L;
 
 
     /*@org.hibernate.validator.constraints.NotEmpty
@@ -62,6 +62,7 @@ public class QuestionForm extends ScreenObject {
 
     public void addCurrentQuestion() {
         currentQuestion.trimTitle();
+        currentQuestion.setChoicesIfApplicable();
         questions.add(currentQuestion);
         currentQuestion = new Question();
     }
@@ -88,4 +89,7 @@ public class QuestionForm extends ScreenObject {
         return null;
     }
 
+    public boolean answerChoicesAreInvalid() {
+        return currentQuestion.answerChoicesAreInvalid();
+    }
 }

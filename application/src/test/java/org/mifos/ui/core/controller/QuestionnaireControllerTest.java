@@ -96,7 +96,7 @@ public class QuestionnaireControllerTest {
         ArrayList<Question> questions = new ArrayList<Question>();
         questionForm.setQuestions(questions);
         String title = "title";
-        questions.add(getQuestion("1", title,"Free text"));
+        questions.add(getQuestion("1", title,"Free Text"));
         questionnaireController.removeQuestion(questionForm, "");
         questionnaireController.removeQuestion(questionForm, "junk");        
         assertThat(questionForm.getQuestions().size(), is(1));
