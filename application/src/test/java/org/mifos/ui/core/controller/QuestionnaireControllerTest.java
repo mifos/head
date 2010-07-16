@@ -54,6 +54,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.DEFAULT_APPLIES_TO_OPTION;
+import static org.mifos.platform.questionnaire.contract.QuestionType.FREETEXT;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -95,7 +96,7 @@ public class QuestionnaireControllerTest {
         ArrayList<Question> questions = new ArrayList<Question>();
         questionForm.setQuestions(questions);
         String title = "title";
-        questions.add(getQuestion("1", title,"Free text"));
+        questions.add(getQuestion("1", title,"Free Text"));
         questionnaireController.removeQuestion(questionForm, "");
         questionnaireController.removeQuestion(questionForm, "junk");        
         assertThat(questionForm.getQuestions().size(), is(1));
@@ -272,7 +273,7 @@ public class QuestionnaireControllerTest {
     }
 
     private SectionQuestionDetail getSectionQuestionDetail(int id, String title) {
-        return new SectionQuestionDetail(id, title, true, QuestionType.FREETEXT);
+        return new SectionQuestionDetail(new QuestionDetail(id, title, title, FREETEXT), true);
     }
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
@@ -546,7 +547,7 @@ public class QuestionnaireControllerTest {
     }
 
     private QuestionDetail getQuestionDetail(int id, String title, QuestionType type) {
-        return new QuestionDetail(id, null, title, type);
+        return new QuestionDetail(id, title, title, type);
     }
 
     private class MessageMatcher extends TypeSafeMatcher<MessageResolver> {

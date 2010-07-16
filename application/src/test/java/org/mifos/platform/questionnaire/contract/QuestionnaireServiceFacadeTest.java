@@ -41,6 +41,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 import static org.mifos.platform.questionnaire.contract.QuestionType.DATE;
+import static org.mifos.platform.questionnaire.contract.QuestionType.FREETEXT;
+import static org.mifos.platform.questionnaire.contract.QuestionType.MULTI_SELECT;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 
@@ -72,12 +74,12 @@ public class QuestionnaireServiceFacadeTest {
         String title = TITLE + System.currentTimeMillis();
         String title1 = title + 1;
         String title2 = title + 2;
-        questionnaireServiceFacade.createQuestions(asList(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT),
+        questionnaireServiceFacade.createQuestions(asList(getQuestionDetail(0, title1, title1, FREETEXT),
                 getQuestionDetail(0, title2, title2, DATE),
-                getQuestionDetail(0, title2, title2, QuestionType.MULTIPLE_CHOICE,asList("choice1","choice2"))));
-        verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT))));
+                getQuestionDetail(0, title2, title2, MULTI_SELECT,asList("choice1","choice2"))));
+        verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title1, title1, FREETEXT))));
         verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, DATE))));
-        verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, QuestionType.MULTIPLE_CHOICE, asList("choice1","choice2")))));
+        verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, MULTI_SELECT, asList("choice1","choice2")))));
     }
 
     @Test
@@ -150,6 +152,17 @@ public class QuestionnaireServiceFacadeTest {
         verify(questionnaireService).getQuestion(questionId);
     }
 
+    @Test
+    public void testGetQuestionWithAnswerChoicesById() throws ApplicationException {
+        int questionId = 1;
+        String title = "Title";
+        when(questionnaireService.getQuestion(questionId)).thenReturn(new QuestionDetail(questionId, title, title, MULTI_SELECT, asList("choice1","choice2")));
+        QuestionDetail questionDetail = questionnaireServiceFacade.getQuestionDetail(questionId);
+        assertNotNull("Question group should not be null", questionDetail);
+        assertThat(questionDetail, new QuestionDetailMatcher(new QuestionDetail(questionId, title, title, MULTI_SELECT, asList("choice1","choice2"))));
+        verify(questionnaireService).getQuestion(questionId);
+    }
+
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
     public void testGetQuestionByIdFailure() throws ApplicationException {
@@ -207,7 +220,8 @@ public class QuestionnaireServiceFacadeTest {
         sectionDetail.setName(name);
         List<SectionQuestionDetail> questions = new ArrayList<SectionQuestionDetail>();
         for (int quesId : questionIds) {
-            questions.add(new SectionQuestionDetail(quesId, "Q" + quesId, false, DATE));
+            String text = "Q" + quesId;
+            questions.add(new SectionQuestionDetail(new QuestionDetail(quesId, text, text, DATE), false));
         }
         sectionDetail.setQuestionDetails(questions);
         return sectionDetail;
@@ -220,7 +234,7 @@ public class QuestionnaireServiceFacadeTest {
     private SectionDetail getSectionDefinition(String name) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
-        sectionDetail.addQuestion(new SectionQuestionDetail(123, "Q1", true, QuestionType.FREETEXT));
+        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(123, "Q1", "Q1", FREETEXT), true));
         return sectionDetail;
     }
 
@@ -228,7 +242,8 @@ public class QuestionnaireServiceFacadeTest {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
         for (int quesId : questionIds) {
-            sectionDetail.addQuestion(new SectionQuestionDetail(quesId, "Q" + quesId, false, QuestionType.FREETEXT));
+            String text = "Q" + quesId;
+            sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(quesId, text, text, FREETEXT), false));
         }
         return sectionDetail;
     }

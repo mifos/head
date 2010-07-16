@@ -36,7 +36,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;
-import static org.mifos.platform.questionnaire.contract.QuestionType.FREETEXT;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionGroupFormTest {
@@ -235,7 +234,7 @@ public class QuestionGroupFormTest {
     }
 
     private SectionQuestionDetail getSectionQuestionDetail(int id, String title, boolean mandatory) {
-        return new SectionQuestionDetail(id, title, mandatory, FREETEXT);
+        return new SectionQuestionDetail(new QuestionDetail(id, title, title, QuestionType.FREETEXT), mandatory);
     }
 
     private void assertEventSource(EventSource eventSource, String event, String source) {
