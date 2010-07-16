@@ -27,10 +27,7 @@ import org.mifos.customers.struts.actionforms.QuestionDto;
 import org.mifos.customers.struts.actionforms.QuestionGroupDto;
 import org.mifos.customers.struts.actionforms.SectionDto;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
-import org.mifos.platform.questionnaire.contract.SectionDetail;
-import org.mifos.platform.questionnaire.contract.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.contract.*;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -91,7 +88,7 @@ public class ClientCustActionTest {
     private SectionDetail getSectionDetail(String name, String title) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
-        sectionDetail.setQuestionDetails(asList(new SectionQuestionDetail(111, title, true, DATE)));
+        sectionDetail.setQuestionDetails(asList(new SectionQuestionDetail(new QuestionDetail(111, title, title,  DATE), true)));
         return sectionDetail;
     }
 }

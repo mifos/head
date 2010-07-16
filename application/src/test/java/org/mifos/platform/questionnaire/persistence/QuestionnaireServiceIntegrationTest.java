@@ -192,20 +192,20 @@ public class QuestionnaireServiceIntegrationTest {
         SectionDetail sectionDefinition1 = new SectionDetail();
         sectionDefinition1.setName("Section1");
         String section1Question1 = "Q2_" + System.currentTimeMillis();
-        sectionDefinition1.addQuestion(new SectionQuestionDetail(defineQuestion(section1Question1, FREETEXT).getId(), false));
+        sectionDefinition1.addQuestion(new SectionQuestionDetail(defineQuestion(section1Question1, FREETEXT), false));
         String section1Question2 = "Q1_" + System.currentTimeMillis();
-        sectionDefinition1.addQuestion(new SectionQuestionDetail(defineQuestion(section1Question2, NUMERIC).getId(), true));
+        sectionDefinition1.addQuestion(new SectionQuestionDetail(defineQuestion(section1Question2, NUMERIC), true));
         String section1Question3 = "Q3_" + System.currentTimeMillis();
-        sectionDefinition1.addQuestion(new SectionQuestionDetail(defineQuestion(section1Question3, DATE).getId(), true));
+        sectionDefinition1.addQuestion(new SectionQuestionDetail(defineQuestion(section1Question3, DATE), true));
 
         SectionDetail sectionDefinition2 = new SectionDetail();
         sectionDefinition2.setName("Section2");
         String section2Question1 = "S2_" + System.currentTimeMillis();
-        sectionDefinition2.addQuestion(new SectionQuestionDetail(defineQuestion(section2Question1, FREETEXT).getId(), false));
+        sectionDefinition2.addQuestion(new SectionQuestionDetail(defineQuestion(section2Question1, FREETEXT), false));
         String section2Question2 = "S3_" + System.currentTimeMillis();
-        sectionDefinition2.addQuestion(new SectionQuestionDetail(defineQuestion(section2Question2, DATE).getId(), true));
+        sectionDefinition2.addQuestion(new SectionQuestionDetail(defineQuestion(section2Question2, DATE), true));
         String section2Question3 = "S1_" + System.currentTimeMillis();
-        sectionDefinition2.addQuestion(new SectionQuestionDetail(defineQuestion(section2Question3, NUMERIC).getId(), true));
+        sectionDefinition2.addQuestion(new SectionQuestionDetail(defineQuestion(section2Question3, NUMERIC), true));
 
         int questionGroupId = defineQuestionGroup(qgTitle, "Create", "Client", asList(sectionDefinition1, sectionDefinition2)).getId();
         QuestionGroupDetail questionGroupDetail = questionnaireService.getQuestionGroup(questionGroupId);
@@ -376,14 +376,15 @@ public class QuestionnaireServiceIntegrationTest {
         SectionDetail section = new SectionDetail();
         section.setName(name);
         String questionTitle = "Question" + name + System.currentTimeMillis();
-        section.addQuestion(new SectionQuestionDetail(defineQuestion(questionTitle, NUMERIC).getId(), questionTitle, true, QuestionType.FREETEXT));
+        QuestionDetail questionDetail = defineQuestion(questionTitle, NUMERIC);
+        section.addQuestion(new SectionQuestionDetail(questionDetail, true));
         return section;
     }
 
     private SectionDetail getSectionWithQuestionId(String name, int questionId) throws ApplicationException {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(questionId, true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, null, null, QuestionType.INVALID), true));
         return section;
     }
 
