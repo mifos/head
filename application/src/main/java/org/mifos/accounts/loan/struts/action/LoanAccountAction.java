@@ -57,6 +57,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -71,10 +72,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
-import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
-import org.mifos.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
@@ -82,7 +80,6 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.MaxMinInterestRate;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
@@ -563,7 +560,7 @@ public class LoanAccountAction extends AccountAppAction {
             final HttpServletResponse response) throws Exception {
 
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
-        LoanInformationDto loanInformationDto = this.loanServiceFacade.getLoanInformationDto(globalAccountNum);
+        LoanInformationDto loanInformationDto = this.loanServiceFacade.getLoanInformationDto(globalAccountNum, getUserContext(request));
 
         final String accountStateNameLocalised = MessageLookup.getInstance().lookup(
                 loanInformationDto.getAccountStateName(), getUserContext(request));
@@ -574,6 +571,11 @@ public class LoanAccountAction extends AccountAppAction {
         final String interestTypeNameLocalised = MessageLookup.getInstance().lookup(
                 loanInformationDto.getInterestTypeName(), getUserContext(request));
         SessionUtils.removeThenSetAttribute("interestTypeNameLocalised", interestTypeNameLocalised, request);
+        final Set<String> accountFlagStateEntityNamesLocalised = new HashSet<String>();
+        for(String name: loanInformationDto.getAccountFlagNames()) {
+            accountFlagStateEntityNamesLocalised.add(MessageLookup.getInstance().lookup(name, getUserContext(request)));
+        }
+        SessionUtils.setCollectionAttribute("accountFlagNamesLocalised", accountFlagStateEntityNamesLocalised, request);
 
         String customerId = request.getParameter(CUSTOMER_ID);
         SessionUtils.removeAttribute(BUSINESS_KEY, request);
@@ -584,62 +586,21 @@ public class LoanAccountAction extends AccountAppAction {
         if (null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue() != 0) {
             SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, loanIndividualMonitoringIsEnabled
                     .intValue(), request);
-            if (loanInformationDto.isGroup()) {
-                SessionUtils.setAttribute(LOAN_ACCOUNT_OWNER_IS_A_GROUP, LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES,
-                        request);
-            }
         }
-
         setBusinessActivitiesIntoSession(request);
 
         if (null != loanIndividualMonitoringIsEnabled && 0 != loanIndividualMonitoringIsEnabled.intValue()
                 && loanInformationDto.isGroup()) {
 
-            List<LoanBO> individualLoans = loanBusinessService.findIndividualLoans(Integer.valueOf(
-                    loanInformationDto.getAccountId()).toString());
-
-            List<LoanAccountDetailsDto> loanAccountDetailsViewList = new ArrayList<LoanAccountDetailsDto>();
-
-            for (LoanBO individualLoan : individualLoans) {
-                LoanAccountDetailsDto loandetails = new LoanAccountDetailsDto();
-                loandetails.setClientId(individualLoan.getCustomer().getCustomerId().toString());
-                loandetails.setClientName(individualLoan.getCustomer().getDisplayName());
-                loandetails.setLoanAmount(null != individualLoan.getLoanAmount()
-                        && !EMPTY.equals(individualLoan.getLoanAmount().toString()) ? individualLoan.getLoanAmount()
-                        .toString() : "0.0");
-
-                if (null != individualLoan.getBusinessActivityId()) {
-                    loandetails.setBusinessActivity(individualLoan.getBusinessActivityId().toString());
-
-                    List<BusinessActivityEntity> businessActEntity = (List<BusinessActivityEntity>) SessionUtils
+            List<BusinessActivityEntity> businessActEntity = (List<BusinessActivityEntity>) SessionUtils
                             .getAttribute("BusinessActivities", request);
-
-                    for (ValueListElement busact : businessActEntity) {
-                        if (busact.getId().toString().equals(individualLoan.getBusinessActivityId().toString())) {
-                            loandetails.setBusinessActivityName(busact.getName());
-                        }
-                    }
-                }
-                String governmentId = clientBusinessService.getClient(individualLoan.getCustomer().getCustomerId())
-                        .getGovernmentId();
-                loandetails.setGovermentId(StringUtils.isNotBlank(governmentId) ? governmentId : "-");
-                loanAccountDetailsViewList.add(loandetails);
-            }
-            SessionUtils.setAttribute(CUSTOMER_ID, customerId, request);
-            SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanAccountDetailsViewList, request);
+            SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanServiceFacade.getLoanAccountDetailsViewList(loanInformationDto,
+                    businessActEntity, loanBusinessService, clientBusinessService), request);
         }
-
-        loanBusinessService.initialize(loanInformationDto.getLoanMeeting());
-        for (AccountActionDateEntity accountActionDateEntity : loanInformationDto.getAccountActionDates()) {
-            loanBusinessService.initialize(accountActionDateEntity);
-            for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
-                    .getAccountFeesActionDetails()) {
-                loanBusinessService.initialize(accountFeesActionDetailEntity);
-            }
-        }
-        setLocaleForMasterEntities(loanInformationDto, getUserContext(request).getLocaleId());
-        loadLoanDetailPageInfo(loanInformationDto, request);
+        loadCustomFieldDefinitions(request);
         loadMasterData(request);
+        SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION, loanBusinessService
+                .getLastPaymentAction(loanInformationDto.getAccountId()), request);
         SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
 
         request.setAttribute(CustomerConstants.SURVEY_KEY, loanInformationDto.getAccountSurveys());
@@ -1252,22 +1213,6 @@ public class LoanAccountAction extends AccountAppAction {
             }
         }
         return newMeetingForRepaymentDay;
-    }
-
-    private void setLocaleForMasterEntities(final LoanInformationDto loanInformationDto, final Short localeId) {
-        for (AccountFlagMapping accountFlagMapping : loanInformationDto.getAccountFlags()) {
-            accountFlagMapping.getFlag().setLocaleId(localeId);
-        }
-    }
-
-    private void loadLoanDetailPageInfo(final LoanInformationDto loanInformationDto, final HttpServletRequest request)
-            throws Exception {
-        SessionUtils.setCollectionAttribute(RECENTACCOUNTACTIVITIES, loanBusinessService
-                .getRecentActivityView(loanInformationDto.getGlobalAccountNum()), request);
-        SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION, loanBusinessService
-                .getLastPaymentAction(loanInformationDto.getAccountId()), request);
-        SessionUtils.setCollectionAttribute(NOTES, loanInformationDto.getRecentAccountNotes(), request);
-        loadCustomFieldDefinitions(request);
     }
 
     private LoanOfferingBO getLoanOffering(final Short loanOfferingId, final short localeId) throws Exception {

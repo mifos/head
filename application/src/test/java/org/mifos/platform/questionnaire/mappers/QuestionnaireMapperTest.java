@@ -42,6 +42,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mifos.customers.surveys.helpers.AnswerType.DATE;
 import static org.mifos.customers.surveys.helpers.AnswerType.FREETEXT;
 import static org.mifos.platform.questionnaire.domain.QuestionGroupState.ACTIVE;
 import static org.mockito.Matchers.anyString;
@@ -115,7 +116,7 @@ public class QuestionnaireMapperTest {
         assertQuestionType(QuestionType.INVALID, AnswerType.INVALID);
         assertQuestionType(QuestionType.FREETEXT, AnswerType.FREETEXT);
         assertQuestionType(QuestionType.NUMERIC, AnswerType.NUMBER);
-        assertQuestionType(QuestionType.DATE, AnswerType.DATE);
+        assertQuestionType(QuestionType.DATE, DATE);
     }
 
     @Test
@@ -202,6 +203,7 @@ public class QuestionnaireMapperTest {
         SectionQuestion sectionQuestion = new SectionQuestion();
         Question question = new Question();
         question.setShortName(sectionName);
+        question.setAnswerType(DATE);
         sectionQuestion.setQuestion(question);
         section.setQuestions(asList(sectionQuestion));
         return section;
@@ -235,11 +237,13 @@ public class QuestionnaireMapperTest {
             List<SectionQuestionDetail> questionDetails1 = sectionDefinition1.getQuestions();
             assertThat(questionDetails1.size(), is(1));
             assertThat(questionDetails1.get(0).getTitle(), is(SECTION + i));
+            assertThat(questionDetails1.get(0).getQuestionType(), is(QuestionType.DATE));
             SectionDetail sectionDefinition2 = questionGroupDetail.getSectionDetails().get(1);
             assertThat(sectionDefinition2.getName(), is(SECTION + (i + 1)));
             List<SectionQuestionDetail> questionDetails2 = sectionDefinition2.getQuestions();
             assertThat(questionDetails2.size(), is(1));
             assertThat(questionDetails2.get(0).getTitle(), is(SECTION + (i + 1)));
+            assertThat(questionDetails2.get(0).getQuestionType(), is(QuestionType.DATE));
         }
     }
 
