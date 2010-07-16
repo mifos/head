@@ -74,10 +74,10 @@ public class QuestionnaireServiceFacadeTest {
         String title2 = title + 2;
         questionnaireServiceFacade.createQuestions(asList(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT),
                 getQuestionDetail(0, title2, title2, DATE),
-                getQuestionDetail(0, title2, title2, QuestionType.MULTIPLE_CHOICE,asList("choice1","choice2"))));
+                getQuestionDetail(0, title2, title2, QuestionType.MULTI_SELECT,asList("choice1","choice2"))));
         verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT))));
         verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, DATE))));
-        verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, QuestionType.MULTIPLE_CHOICE, asList("choice1","choice2")))));
+        verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, QuestionType.MULTI_SELECT, asList("choice1","choice2")))));
     }
 
     @Test
@@ -147,6 +147,17 @@ public class QuestionnaireServiceFacadeTest {
         assertNotNull("Question group should not be null", questionDetail);
         assertThat(questionDetail.getShortName(), is(title));
         assertThat(questionDetail.getType(), is(QuestionType.NUMERIC));
+        verify(questionnaireService).getQuestion(questionId);
+    }
+
+    @Test
+    public void testGetQuestionWithAnswerChoicesById() throws ApplicationException {
+        int questionId = 1;
+        String title = "Title";
+        when(questionnaireService.getQuestion(questionId)).thenReturn(new QuestionDetail(questionId, title, title, QuestionType.MULTI_SELECT, asList("choice1","choice2")));
+        QuestionDetail questionDetail = questionnaireServiceFacade.getQuestionDetail(questionId);
+        assertNotNull("Question group should not be null", questionDetail);
+        assertThat(questionDetail, new QuestionDetailMatcher(new QuestionDetail(questionId, title, title, QuestionType.MULTI_SELECT, asList("choice1","choice2"))));
         verify(questionnaireService).getQuestion(questionId);
     }
 

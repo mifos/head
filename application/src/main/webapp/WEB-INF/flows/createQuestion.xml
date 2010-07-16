@@ -7,8 +7,10 @@
 
 	<view-state id="createQuestion" model="questionDefinition">
 		<transition on="addQuestion" to="addQuestion" />
-		<transition on="createQuestions" to="createQuestions" />
-		<transition on="removeQuestion" to="removeQuestion"/>
+        <transition on="removeQuestion" to="removeQuestion"/>
+        <transition on="addChoice" to="addChoice"/>
+        <transition on="removeChoice" to="removeChoice"/>
+        <transition on="createQuestions" to="createQuestions" />
 		<transition on="cancel" to="cancel" bind="false" history="discard"/>
 	</view-state>
 
@@ -16,8 +18,19 @@
         <evaluate expression="questionnaireController.addQuestion(questionDefinition, flowRequestContext)"/>
         <transition to="createQuestion" />
     </action-state>
+
     <action-state id="removeQuestion">
     	<evaluate expression="questionDefinition.removeQuestion(requestParameters._eventId_removeQuestion)"/>
+        <transition to="createQuestion" />
+    </action-state>
+
+    <action-state id="addChoice">
+    	<evaluate expression="questionDefinition.currentQuestion.addAnswerChoice()"/>
+        <transition to="createQuestion" />
+    </action-state>
+
+    <action-state id="removeChoice">
+    	<evaluate expression="questionDefinition.currentQuestion.removeChoice(requestParameters._eventId_removeChoice)"/>
         <transition to="createQuestion" />
     </action-state>
 

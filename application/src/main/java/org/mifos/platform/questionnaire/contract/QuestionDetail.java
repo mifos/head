@@ -23,7 +23,7 @@ package org.mifos.platform.questionnaire.contract;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionDetail implements Serializable {
@@ -33,6 +33,7 @@ public class QuestionDetail implements Serializable {
     private String text;
     private String shortName;
     private QuestionType type;
+
     private List<String> answerChoices;
 
     public QuestionDetail() {
@@ -48,7 +49,7 @@ public class QuestionDetail implements Serializable {
     }
 
     public QuestionDetail(Integer id, String text, String shortName, QuestionType type) {
-        this(id, text, shortName, type, new LinkedList<String>());
+        this(id, text, shortName, type, new ArrayList<String>());
     }
 
     public QuestionDetail(String title, QuestionType type, List<String> answerChoices) {
@@ -101,5 +102,9 @@ public class QuestionDetail implements Serializable {
 
     public List<String> getAnswerChoices() {
         return answerChoices;
+    }
+
+    public void setAnswerChoices(List<String> answerChoices) {
+        this.answerChoices = answerChoices;
     }
 }

@@ -88,7 +88,7 @@ public class QuestionnaireServiceIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldDefineQuestionWithAnswerChoices() throws ApplicationException {
         String questionTitle = TITLE + System.currentTimeMillis();
-        QuestionDetail questionDetail = defineQuestion(questionTitle, MULTIPLE_CHOICE, asList("choice1", "choice2"));
+        QuestionDetail questionDetail = defineQuestion(questionTitle, MULTI_SELECT, asList("choice1", "choice2"));
         assertNotNull(questionDetail);
         Integer questionId = questionDetail.getId();
         assertNotNull(questionId);
@@ -96,7 +96,7 @@ public class QuestionnaireServiceIntegrationTest {
         assertNotNull(questionEntity);
         assertEquals(questionTitle, questionEntity.getShortName());
         assertEquals(questionTitle, questionEntity.getQuestionText());
-        assertEquals(AnswerType.MULTIPLE_CHOICE, questionEntity.getAnswerTypeAsEnum());
+        assertEquals(AnswerType.MULTISELECT, questionEntity.getAnswerTypeAsEnum());
         assertThat(questionEntity.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoice("choice1"), new QuestionChoice("choice2"))));
     }
 
@@ -262,12 +262,12 @@ public class QuestionnaireServiceIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldGetQuestionWithAnswerChoicesById() throws ApplicationException {
         String title = "Q1" + System.currentTimeMillis();
-        QuestionDetail createdQuestionDetail = defineQuestion(title, QuestionType.MULTIPLE_CHOICE, asList("choice1", "choice2"));
+        QuestionDetail createdQuestionDetail = defineQuestion(title, QuestionType.MULTI_SELECT, asList("choice1", "choice2"));
         QuestionDetail retrievedQuestionDetail = questionnaireService.getQuestion(createdQuestionDetail.getId());
         assertNotSame(createdQuestionDetail, retrievedQuestionDetail);
         assertThat(retrievedQuestionDetail.getText(), is(title));
         assertThat(retrievedQuestionDetail.getShortName(), is(title));
-        assertThat(retrievedQuestionDetail.getType(), is(QuestionType.MULTIPLE_CHOICE));
+        assertThat(retrievedQuestionDetail.getType(), is(QuestionType.MULTI_SELECT));
         org.testng.Assert.assertEquals(retrievedQuestionDetail.getAnswerChoices(), asList("choice1", "choice2"));
     }
 

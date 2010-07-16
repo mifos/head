@@ -224,7 +224,8 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
                 makeEntry(AnswerType.FREETEXT, QuestionType.FREETEXT),
                 makeEntry(AnswerType.DATE, QuestionType.DATE),
                 makeEntry(AnswerType.NUMBER, QuestionType.NUMERIC),
-                makeEntry(AnswerType.MULTIPLE_CHOICE, QuestionType.MULTIPLE_CHOICE));
+                makeEntry(AnswerType.SINGLESELECT, QuestionType.SINGLE_SELECT),
+                makeEntry(AnswerType.MULTISELECT, QuestionType.MULTI_SELECT));
     }
 
     private void populateQuestionToAnswerTypeMap() {
@@ -232,7 +233,8 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
                 makeEntry(QuestionType.FREETEXT, AnswerType.FREETEXT),
                 makeEntry(QuestionType.DATE, AnswerType.DATE),
                 makeEntry(QuestionType.NUMERIC, AnswerType.NUMBER),
-                makeEntry(QuestionType.MULTIPLE_CHOICE, AnswerType.MULTIPLE_CHOICE));
+                makeEntry(QuestionType.SINGLE_SELECT, AnswerType.SINGLESELECT),
+                makeEntry(QuestionType.MULTI_SELECT, AnswerType.MULTISELECT));
     }
 
 }

@@ -120,6 +120,14 @@ public class QuestionnaireController {
                     "currentQuestion.title", "The name specified already exists.");
             return "failure";
         }
+
+        if(questionForm.answerChoicesAreInvalid()){
+            constructErrorMessage(
+                    context, "questionnaire.error.question.choices",
+                    "currentQuestion.choice", "Please specify at least 2 choices.");
+            return "failure";
+        }
+
         questionForm.addCurrentQuestion();
         return "success";
     }
