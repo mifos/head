@@ -59,4 +59,6 @@ public interface AdminServiceFacade {
     ProductDto retrieveAllProductMix() throws Exception;
 
     ConfigureApplicationLabelsDto retrieveConfigurableLabels();
+
+    void updateApplicationLabels(ConfigureApplicationLabelsDto applicationLabels);
 }

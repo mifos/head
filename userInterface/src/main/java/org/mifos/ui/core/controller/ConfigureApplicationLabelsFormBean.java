@@ -23,7 +23,7 @@ package org.mifos.ui.core.controller;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-@SuppressWarnings({"PMD.ExcessivePublicCount", "PMD.TooManyFields"})
+@SuppressWarnings("PMD.TooManyFields")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EQ_UNUSUAL", justification="using commons equals builder")
 public class ConfigureApplicationLabelsFormBean {
 

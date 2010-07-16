@@ -190,6 +190,20 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
+    public void updateApplicationLabels(ConfigureApplicationLabelsDto applicationLabels) {
+
+        ConfigureApplicationLabelsDto currentLabels = retrieveConfigurableLabels();
+
+        // 1. find labels that are different and return domain entity type for
+        //  - OfficeLevelEntity
+        //  - GracePeriodTypeEntity
+        //  - LookUpEntity
+        //  - LookUpEntity
+        //
+//        officeHierarchyService.updateApplicationLabels();
+    }
+
+    @Override
     public ConfigureApplicationLabelsDto retrieveConfigurableLabels() {
         OfficeLevelDto officeLevels = officeDao.findOfficeLevelsWithConfiguration();
 

@@ -157,16 +157,26 @@ public class ConfigureApplicationLabelsController {
         } else if (result.hasErrors()) {
             viewName = FORM_VIEW;
         } else {
-            try {
-//                UpdateConfiguredOfficeLevelRequest updateRequest = new UpdateConfiguredOfficeLevelRequest(formBean
-//                        .isSubRegionalOffice(), formBean.isRegionalOffice(), formBean.isAreaOffice());
-//                adminServiceFacade.updateOfficeLevelHierarchies(updateRequest);
-                status.setComplete();
-            } catch (BusinessRuleException e) {
-                result.reject(e.getMessageKey(), "The update to office levels was not successful.");
-                viewName = FORM_VIEW;
-            }
+
+            OfficeLevelDto officeLevels = officeLevelDtoFrom(formBean);
+            GracePeriodDto gracePeriodDto = new GracePeriodDto();
+            ConfigurableLookupLabelDto lookupLabels = new ConfigurableLookupLabelDto();
+            AccountStatusesLabelDto accountStatusLabels = new AccountStatusesLabelDto();
+            ConfigureApplicationLabelsDto applicationLabels = new ConfigureApplicationLabelsDto(officeLevels, gracePeriodDto, lookupLabels, accountStatusLabels);
+
+            adminServiceFacade.updateApplicationLabels(applicationLabels);
+            status.setComplete();
         }
         return viewName;
+    }
+
+    private OfficeLevelDto officeLevelDtoFrom(ConfigureApplicationLabelsFormBean formBean) {
+        OfficeLevelDto officeLevelDto = new OfficeLevelDto();
+        officeLevelDto.setHeadOfficeNameKey(formBean.getHeadOffice());
+        officeLevelDto.setRegionalOfficeNameKey(formBean.getRegionalOffice());
+        officeLevelDto.setSubRegionalOfficeNameKey(formBean.getSubRegionalOffice());
+        officeLevelDto.setAreaOfficeNameKey(formBean.getAreaOffice());
+        officeLevelDto.setBranchOfficeNameKey(formBean.getBranchOffice());
+        return officeLevelDto;
     }
 }
