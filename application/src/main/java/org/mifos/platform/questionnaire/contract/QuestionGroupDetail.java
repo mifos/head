@@ -20,22 +20,30 @@
 
 package org.mifos.platform.questionnaire.contract;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionGroupDetail {
+public class QuestionGroupDetail implements Serializable {
+    private static final long serialVersionUID = 5240884292277900071L;
+
     private Integer id;
     private String title;
-    private List<SectionDefinition> sectionDefinitions;
+    private List<SectionDetail> sectionDetails;
     private EventSource eventSource;
 
-    public QuestionGroupDetail(int id, String title, List<SectionDefinition> sectionDefinitions) {
-        this(id, title, null, sectionDefinitions);
+    public QuestionGroupDetail() {
+        this(0, null, null, new ArrayList<SectionDetail>());
     }
 
-    public QuestionGroupDetail(int id, String title, EventSource eventSource, List<SectionDefinition> sectionDefinitions) {
+    public QuestionGroupDetail(int id, String title, List<SectionDetail> sectionDetails) {
+        this(id, title, null, sectionDetails);
+    }
+
+    public QuestionGroupDetail(int id, String title, EventSource eventSource, List<SectionDetail> sectionDetails) {
         this.id = id;
         this.title = title;
-        this.sectionDefinitions = sectionDefinitions;
+        this.sectionDetails = sectionDetails;
         this.eventSource = eventSource;
     }
 
@@ -47,11 +55,27 @@ public class QuestionGroupDetail {
         return id;
     }
 
-    public List<SectionDefinition> getSectionDefinitions() {
-        return sectionDefinitions;
+    public List<SectionDetail> getSectionDetails() {
+        return sectionDetails;
     }
 
     public EventSource getEventSource() {
         return eventSource;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setSectionDetails(List<SectionDetail> sectionDetails) {
+        this.sectionDetails = sectionDetails;
+    }
+
+    public void setEventSource(EventSource eventSource) {
+        this.eventSource = eventSource;
     }
 }

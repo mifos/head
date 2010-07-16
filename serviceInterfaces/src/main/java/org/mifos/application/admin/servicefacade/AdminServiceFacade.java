@@ -20,11 +20,41 @@
 
 package org.mifos.application.admin.servicefacade;
 
-import org.mifos.dto.screen.ProductConfigurationDto;
+import java.util.List;
 
+import org.mifos.dto.domain.OfficeLevelDto;
+import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
+import org.mifos.dto.screen.ProductConfigurationDto;
+import org.mifos.dto.screen.ProductDisplayDto;
+import org.mifos.dto.screen.ProductDto;
+import org.mifos.dto.screen.ProductMixDetailsDto;
+import org.springframework.security.access.prepost.PreAuthorize;
+
+@SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public interface AdminServiceFacade {
 
+    @PreAuthorize("isFullyAuthenticated()")
     ProductConfigurationDto retrieveProductConfiguration();
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_UPDATE_LATENESS_DORMANCY')")
     void updateProductConfiguration(ProductConfigurationDto productConfiguration);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    OfficeLevelDto retrieveOfficeLevelsWithConfiguration();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateOfficeLevelHierarchies(UpdateConfiguredOfficeLevelRequest updateRequest);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<ProductDisplayDto> retrieveLoanProducts();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<ProductDisplayDto> retrieveSavingsProducts();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    ProductMixDetailsDto retrieveProductMixDetails(Short prdOfferingId, String productType) throws Exception;
+
+    @PreAuthorize("isFullyAuthenticated()")
+    ProductDto retrieveAllProductMix() throws Exception;
+
 }

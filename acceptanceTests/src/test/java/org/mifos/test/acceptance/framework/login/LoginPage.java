@@ -34,36 +34,36 @@ import com.thoughtworks.selenium.Selenium;
  */
 public class LoginPage extends MifosPage {
 
-	private static final String DEFAULT_PASSWORD = "testmifos";
+    private static final String DEFAULT_PASSWORD = "testmifos";
     private static final String DEFAULT_USERNAME = "mifos";
-    private static final String USERNAME_INPUT_ID	= "login.input.username";
-	private static final String PASSWORD_INPUT_ID = "login.input.password";
-	private static final String LOGIN_BUTTON_ID 	= "login.button.login";
-	//private static final String HEADING_LABEL_ID 	= "login.label.heading";
-	//private static final String WELCOME_LABEL_ID 	= "login.label.welcome";
-	//private static final String USERNAME_LABEL_ID = "login.label.username";
-	//private static final String PASSWORD_LABEL_ID = "login.label.password";
-	private static final String MESSAGE_ERROR_ID 	= "login.error.message";
+    private static final String USERNAME_INPUT_ID    = "login.input.username";
+    private static final String PASSWORD_INPUT_ID = "login.input.password";
+    private static final String LOGIN_BUTTON_ID     = "login.button.login";
+    //private static final String HEADING_LABEL_ID     = "login.label.heading";
+    //private static final String WELCOME_LABEL_ID     = "login.label.welcome";
+    //private static final String USERNAME_LABEL_ID = "login.label.username";
+    //private static final String PASSWORD_LABEL_ID = "login.label.password";
+    private static final String MESSAGE_ERROR_ID     = "login.error.message";
 
-	public LoginPage() {
-		super();
-	}
+    public LoginPage() {
+        super();
+    }
 
-	public LoginPage(Selenium selenium) {
-		super(selenium);
-	}
+    public LoginPage(Selenium selenium) {
+        super(selenium);
+    }
 
     public HomePage loginSuccessfullyUsingDefaultCredentials() {
         return loginSuccessfulAs(DEFAULT_USERNAME, DEFAULT_PASSWORD);
     }
 
-	public HomePage loginSuccessfulAs(String userName, String password) {
-		selenium.type(USERNAME_INPUT_ID, userName);
-		selenium.type(PASSWORD_INPUT_ID, password);
-		selenium.click(LOGIN_BUTTON_ID);
-		waitForPageToLoad();
-		return new HomePage(selenium);
-	}
+    public HomePage loginSuccessfulAs(String userName, String password) {
+        selenium.type(USERNAME_INPUT_ID, userName);
+        selenium.type(PASSWORD_INPUT_ID, password);
+        selenium.click(LOGIN_BUTTON_ID);
+        waitForPageToLoad();
+        return new HomePage(selenium);
+    }
 
     public ChangePasswordPage loginAndGoToChangePasswordPageAs(String userName, String password) {
         selenium.open("login.ftl");
@@ -75,40 +75,40 @@ public class LoginPage extends MifosPage {
         return new ChangePasswordPage(selenium);
     }
 
-	public LoginPage loginFailedAs(String userName, String password) {
-		selenium.open("login.ftl");
-		selenium.type(USERNAME_INPUT_ID, userName);
-		selenium.type(PASSWORD_INPUT_ID, password);
-		selenium.click(LOGIN_BUTTON_ID);
-		waitForPageToLoad();
-		return new LoginPage(selenium);
-	}
+    public LoginPage loginFailedAs(String userName, String password) {
+        selenium.open("login.ftl");
+        selenium.type(USERNAME_INPUT_ID, userName);
+        selenium.type(PASSWORD_INPUT_ID, password);
+        selenium.click(LOGIN_BUTTON_ID);
+        waitForPageToLoad();
+        return new LoginPage(selenium);
+    }
 
-	@Override
+    @Override
     public LoginPage logout() {
-	    selenium.open("j_spring_security_logout");
-		waitForPageToLoad();
-		return new LoginPage(selenium);
-	}
+        selenium.open("j_spring_security_logout");
+        waitForPageToLoad();
+        return new LoginPage(selenium);
+    }
 
-	public LoginPage verifyPage() {
+    public LoginPage verifyPage() {
         verifyPage("Login");
-		return this;
-	}
+        return this;
+    }
 
-	public LoginPage verifyFailedLoginBadPassword() {
+    public LoginPage verifyFailedLoginBadPassword() {
         Assert.assertEquals(selenium.getText(MESSAGE_ERROR_ID), "Please specify valid username/password to access the application.");
-		return this;
-	}
+        return this;
+    }
 
-	public LoginPage verifyFailedLoginNoPassword() {
-	        Assert.assertEquals(selenium.getText(MESSAGE_ERROR_ID), "Please specify the value for Password.");
-			return this;
-	}
+    public LoginPage verifyFailedLoginNoPassword() {
+            Assert.assertEquals(selenium.getText(MESSAGE_ERROR_ID), "Please specify the value for Password.");
+            return this;
+    }
 
-	public LoginPage verifyFailedLoginNoUsername() {
-		        Assert.assertEquals(selenium.getText(MESSAGE_ERROR_ID), "Please specify the value for Username.");
-				return this;
-	}
+    public LoginPage verifyFailedLoginNoUsername() {
+                Assert.assertEquals(selenium.getText(MESSAGE_ERROR_ID), "Please specify the value for Username.");
+                return this;
+    }
 
 }

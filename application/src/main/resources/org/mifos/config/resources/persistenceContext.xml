@@ -53,6 +53,8 @@
                 <value>/org/mifos/platform/questionnaire/domain/QuestionGroup.hbm.xml</value>
                 <value>/org/mifos/platform/questionnaire/domain/Section.hbm.xml</value>
                 <value>/org/mifos/platform/questionnaire/domain/SectionQuestion.hbm.xml</value>
+                <value>/org/mifos/platform/questionnaire/domain/QuestionGroupInstance.hbm.xml</value>
+                <value>/org/mifos/platform/questionnaire/domain/QuestionGroupResponse.hbm.xml</value>
             </list>
         </property>
 

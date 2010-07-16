@@ -28,14 +28,14 @@ import com.thoughtworks.selenium.Selenium;
 
 public class CreateMeetingPage extends MifosPage {
 
-	public CreateMeetingPage() {
-		super();
-	}
+    public CreateMeetingPage() {
+        super();
+    }
 
 
-	public CreateMeetingPage(Selenium selenium) {
-		super(selenium);
-	}
+    public CreateMeetingPage(Selenium selenium) {
+        super(selenium);
+    }
 
     public CreateCenterEnterDataPage submitAndGotoCreateCenterEnterDataPage(MeetingParameters parameters) {
         selectValueIfNotZero("weekDay", parameters.getWeekDay());

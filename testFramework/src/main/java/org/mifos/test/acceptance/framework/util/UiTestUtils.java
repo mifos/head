@@ -22,23 +22,23 @@ package org.mifos.test.acceptance.framework.util;
 
 public final class UiTestUtils {
 
-	private static final int DEFAULT_SLEEP_TIME = 30000;
+    private static final int DEFAULT_SLEEP_TIME = 30000;
 
-	private UiTestUtils() {
-		// prevent instantiation
-	}
+    private UiTestUtils() {
+        // prevent instantiation
+    }
 
-	// handy if you want to look at Selenium's web browser when a test is running, instead of setting a breakpoint.
-	public static void sleep() {
-		sleep(DEFAULT_SLEEP_TIME);
-	}
+    // handy if you want to look at Selenium's web browser when a test is running, instead of setting a breakpoint.
+    public static void sleep() {
+        sleep(DEFAULT_SLEEP_TIME);
+    }
 
-	public static void sleep(int milliseconds) {
-		try {
-			Thread.sleep(milliseconds);
-		} catch (InterruptedException e) {
-			// do nothing
-		}
-	}
+    public static void sleep(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            // do nothing
+        }
+    }
 
 }

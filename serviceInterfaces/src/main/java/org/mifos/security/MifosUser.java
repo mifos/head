@@ -32,7 +32,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
 public class MifosUser implements UserDetails {
 
-    public static final String FULLY_AUTHENTICATED_USER = "ROLE_FULLY_AUTHENTICATED_USER";
+    public static final String VIEW_SYSTEM_INFO = "ROLE_VIEW_SYSTEM_INFO";
+    public static final String UPDATE_LATENESS_DORMANCY = "ROLE_UPDATE_LATENESS_DORMANCY";
 
     private final String username;
     private final byte[] password;

@@ -28,6 +28,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface SystemInformationServiceFacade {
 
-    @PreAuthorize("hasRole('ROLE_VIEW_SYSTEM_INFO')")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_VIEW_SYSTEM_INFO')")
     SystemInformationDto getSystemInformation(ServletContext context, Locale locale);
 }

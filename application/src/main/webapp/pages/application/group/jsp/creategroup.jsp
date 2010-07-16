@@ -322,10 +322,10 @@ explanation of the license and how it is applied.
 
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal">
-												<mifos:mifoslabel keyhm="Group.TrainedDate" name="Group.grouptrainedon" bundle="GroupUIResources" />
+												<mifos:mifoslabel keyhm="Group.Trained" name="Group.grouptrainedon" bundle="GroupUIResources" />
 											</td>
 											<td>
-												<date:datetag keyhm="Group.TrainedDate" property="trainedDate"/>
+												<date:datetag keyhm="Group.Trained" property="trainedDate"/>
 											</td>
 										</tr>
 

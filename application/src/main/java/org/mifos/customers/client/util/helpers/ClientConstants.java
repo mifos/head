@@ -197,5 +197,7 @@ public interface ClientConstants {
     String CUSTOMERLOANACCOUNTSINUSE = "customerLoanAccountsInUse";
     String CUSTOMERSAVINGSACCOUNTSINUSE = "customerSavingsAccountsInUse";
 
+    String EVENT_CREATE = "Create";
+    String SOURCE_CLIENT = "Client";
 
 }

@@ -21,7 +21,6 @@
         <form-bean name="meetingActionForm" type="org.mifos.application.meeting.struts.actionforms.MeetingActionForm"/>
         <!-- admin action form -->
         <form-bean name="adminActionForm" type="org.mifos.application.admin.struts.actionforms.AdminActionForm"/>
-        <form-bean name="systemInfoActionForm" type="org.mifos.application.admin.struts.actionforms.SystemInfoActionForm"/>
         <form-bean name="shutdownActionForm" type="org.mifos.application.admin.struts.actionforms.ShutdownActionForm"/>
         <!-- Notes form bean -->
         <form-bean name="feeactionform" type="org.mifos.accounts.fees.struts.actionforms.FeeActionForm"/>
@@ -36,9 +35,6 @@
         <!-- Bulk Entry form -->
         <form-bean name="collectionsheetactionform"
                    type="org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm"/>
-        <!-- Office Hierarchy Action form -->
-        <form-bean name="offhierarchyactionform"
-                   type="org.mifos.customers.office.struts.actionforms.OffHierarchyActionForm"/>
         <!-- Your Settings Action form -->
         <form-bean name="personnelSettingsActionForm"
                    type="org.mifos.customers.personnel.struts.actionforms.PersonnelSettingsActionForm"/>
@@ -193,10 +189,6 @@
                 parameter="method" input="/AdminAction.do?method=validate" validate="false">
             <forward name="load_success" path="/pages/application/admin/jsp/admin.jsp" />
         </action>
-        <action path="/systemInfoAction" type="org.mifos.application.admin.struts.action.SystemInfoAction" name="systemInfoActionForm"
-                parameter="method" input="/SystemInfoAction.do?method=validate" validate="false">
-            <forward name="load_success" path="/pages/application/admin/jsp/sysinfo.jsp" />
-        </action>
         <action path="/shutdownAction" type="org.mifos.application.admin.struts.action.ShutdownAction" name="shutdownActionForm"
                 parameter="method" input="/ShutdownAction.do?method=validate" validate="false">
             <forward name="load_success" path="/pages/application/admin/jsp/shutdown.jsp" />
@@ -320,16 +312,6 @@
             <forward name="search_success" path="/pages/application/office/jsp/viewOffices.jsp"/>
         </action>
         <!-- offAction End-->
-        <!-- off hierarchy Action start-->
-        <action path="/offhierarchyaction" type="org.mifos.customers.office.struts.action.OffHierarchyAction"
-                name="offhierarchyactionform" parameter="method" scope="session"
-                input="/offhierarchyaction.do?method=validate" validate="true">
-            <forward name="load_success" path="/pages/application/office/jsp/offhierarchy.jsp"/>
-            <forward name="update_success" path="/AdminAction.do?method=load"/>
-            <forward name="update_failure" path="/pages/application/office/jsp/offhierarchy.jsp"/>
-            <forward name="cancel_success" path="/AdminAction.do?method=load"/>
-        </action>
-        <!-- off hierarchy Action End-->
 
         <!-- role action -->
         <action path="/rolesPermission"
@@ -516,15 +498,6 @@
             <forward name="choose_survey" path="/pages/application/surveys/jsp/create_instance_choosesurvey.jsp"/>
         </action>
 
- 		<action path="/viewOrganizationSettingsAction"
-                 type="org.mifos.application.admin.struts.action.ViewOrganizationSettingsAction"
-                 parameter="method"
-                 scope="session"
-                 validate="false"
-                 name="genericActionForm">
-             <forward name="load_success" path="/pages/application/admin/jsp/vieworganizationsettings.jsp"/>            
-         </action>
-
         <action path="/ppiAction"
                 type="org.mifos.customers.ppi.struts.action.PPIAction"
                 parameter="method"
@@ -638,13 +611,5 @@
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <!--  Accepted Payment Type resources -->
     <message-resources key="acceptedPaymentTypeUIResources"
-                       parameter="org.mifos.config.localizedResources.AcceptedPaymentTypeUIResources"/>
- 	 <!-- View Organization Settings Resources -->
-	 <message-resources key="viewOrganizationSettingsUIResources"
-		parameter="org.mifos.config.localizedResources.ViewOrganizationSettingsUIResources"
-		factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/> 
-		<!-- View Configuration Settings Resources -->
-	 <message-resources key="viewConfigurationSettingsUIResources"
-		parameter="org.mifos.config.localizedResources.ViewConfigurationSettingsUIResources"
-		factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>                       
+                       parameter="org.mifos.config.localizedResources.AcceptedPaymentTypeUIResources"/>                     
 </struts-config>

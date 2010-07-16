@@ -89,7 +89,7 @@ public class MifosSelectTest extends TestCase {
 
     private String selectTheItem(boolean leftSelect) {
         return "<SELECT onMouseover=\"showtip(this,event,'Select the item(s)')\" " + "onMouseOut=\"hidetip()\" "
-                + "onchange =\"showtip(this,event,'Select the item(s)')\" " + "style=\"WIDTH: 136px\" "
+                + "onchange =\"showtip(this,event,'Select the item(s)')\" " + "style=\"MIN-WIDTH: 136px\" "
                 + (leftSelect ? "name=\"LeftSelect\" " : "") + "size=\"5\">" + "</SELECT> ";
     }
 

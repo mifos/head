@@ -34,9 +34,9 @@ import org.testng.annotations.Test;
 @Test(groups = { "unit" })
 public class RedirectionControllerTest {
 
-	public void testHandleRequest() throws ServletException, IOException {
+    public void testHandleRequest() throws ServletException, IOException {
 
-    	String expectedPageToRedirectTo = "foopage";
+        String expectedPageToRedirectTo = "foopage";
         RedirectionController controller = new RedirectionController();
         controller.setViewToRedirectTo(expectedPageToRedirectTo);
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
@@ -47,7 +47,7 @@ public class RedirectionControllerTest {
         Assert.assertNotNull(modelAndView.getModel());
         Map<String, Object> modelMap = (Map<String, Object>) modelAndView.getModel().get("model");
         Object response = modelMap.get("response");
-		Assert.assertNotNull(response);
-		Assert.assertEquals(MockHttpServletResponse.class, response.getClass());
+        Assert.assertNotNull(response);
+        Assert.assertEquals(MockHttpServletResponse.class, response.getClass());
      }
 }

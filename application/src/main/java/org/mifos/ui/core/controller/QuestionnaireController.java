@@ -25,9 +25,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
-import org.mifos.platform.questionnaire.contract.EventSource;
-import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
+import org.mifos.platform.questionnaire.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
@@ -38,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,8 +77,8 @@ public class QuestionnaireController {
                 model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_GROUP_ID);
             } else {
                 QuestionGroupDetail questionGroupDetail = questionnaireServiceFacade.getQuestionGroupDetail(Integer.valueOf(questionGroupId));
-                QuestionGroupDetailForm questionGroupDetailForm = new QuestionGroupDetailForm(questionGroupDetail);
-                model.addAttribute("questionGroupDetail", questionGroupDetailForm);
+                QuestionGroupForm questionGroupForm = new QuestionGroupForm(questionGroupDetail);
+                model.addAttribute("questionGroupDetail", questionGroupForm);
                 model.addAttribute("eventSources", getAllQgEventSources());
             }
         } catch (ApplicationException e) {
@@ -97,9 +96,8 @@ public class QuestionnaireController {
             if (invalid(questionId)) {
                 model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_ID);
             } else {
-                Question question = questionnaireServiceFacade.
-                        getQuestion(Integer.valueOf(questionId));
-                model.addAttribute("questionDetail", question);
+                QuestionDetail questionDetail = questionnaireServiceFacade.getQuestionDetail(Integer.valueOf(questionId));
+                model.addAttribute("questionDetail", new Question(questionDetail));
             }
         } catch (ApplicationException e) {
             MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
@@ -122,6 +120,14 @@ public class QuestionnaireController {
                     "currentQuestion.title", "The name specified already exists.");
             return "failure";
         }
+
+        if(questionForm.answerChoicesAreInvalid()){
+            constructErrorMessage(
+                    context, "questionnaire.error.question.choices",
+                    "currentQuestion.choice", "Please specify at least 2 choices.");
+            return "failure";
+        }
+
         questionForm.addCurrentQuestion();
         return "success";
     }
@@ -132,7 +138,7 @@ public class QuestionnaireController {
 
     public String createQuestions(QuestionForm questionForm, RequestContext requestContext) {
         try {
-            questionnaireServiceFacade.createQuestions(questionForm.getQuestions());
+            questionnaireServiceFacade.createQuestions(getQuestionDetails(questionForm));
         } catch (ApplicationException e) {
             constructAndLogSystemError(requestContext.getMessageContext(), e);
             return "failure";
@@ -140,13 +146,21 @@ public class QuestionnaireController {
         return "success";
     }
 
-    public String defineQuestionGroup(QuestionGroup questionGroup, RequestContext requestContext) {
-        if (questionGroupHasErrors(questionGroup, requestContext)) {
+    private List<QuestionDetail> getQuestionDetails(QuestionForm questionForm) {
+        List<QuestionDetail> questionDetails = new ArrayList<QuestionDetail>();
+        for (Question question : questionForm.getQuestions()) {
+            questionDetails.add(question.getQuestionDetail());
+        }
+        return questionDetails;
+    }
+
+    public String defineQuestionGroup(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
+        if (questionGroupHasErrors(questionGroupForm, requestContext)) {
             return "failure";
         }
         try {
-            questionGroup.trimTitle();
-            questionnaireServiceFacade.createQuestionGroup(questionGroup);
+            questionGroupForm.trimTitle();
+            questionnaireServiceFacade.createQuestionGroup(questionGroupForm.getQuestionGroupDetail());
         } catch (ApplicationException e) {
             constructAndLogSystemError(requestContext.getMessageContext(), e);
             return "failure";
@@ -163,23 +177,23 @@ public class QuestionnaireController {
         return evtSourcesMap;
     }
 
-    public String addSection(QuestionGroup questionGroup, RequestContext requestContext) {
-        if(questionGroup.hasQuestionsInCurrentSection()){
+    public String addSection(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
+        if(questionGroupForm.hasQuestionsInCurrentSection()){
             constructErrorMessage(requestContext.getMessageContext(),
                     "questionnaire.error.no.question.in.section", "currentSectionTitle", "Section should have at least one question.");
             return "failure";
         }
-        questionGroup.addCurrentSection();
+        questionGroupForm.addCurrentSection();
         return "success";
     }
 
-    public String deleteSection(QuestionGroup questionGroup, String sectionName) {
-        questionGroup.removeSection(sectionName);
+    public String deleteSection(QuestionGroupForm questionGroupForm, String sectionName) {
+        questionGroupForm.removeSection(sectionName);
         return "success";
     }
 
-    public String deleteQuestion(QuestionGroup questionGroup, String sectionName, String questionId) {
-        questionGroup.removeQuestion(sectionName,questionId);
+    public String deleteQuestion(QuestionGroupForm questionGroupForm, String sectionName, String questionId) {
+        questionGroupForm.removeQuestion(sectionName,questionId);
         return "success";
     }
 
@@ -206,10 +220,10 @@ public class QuestionnaireController {
         context.addMessage(messageResolver);
     }
 
-    private boolean questionGroupHasErrors(QuestionGroup questionGroup, RequestContext requestContext) {
+    private boolean questionGroupHasErrors(QuestionGroupForm questionGroup, RequestContext requestContext) {
         boolean result = false;
         if (isInvalidTitle(questionGroup.getTitle())) {
-            constructErrorMessage(requestContext.getMessageContext(), "questionnaire.error.questionGroup.title.empty", "title", "Please specify Question Group text");
+            constructErrorMessage(requestContext.getMessageContext(), "questionnaire.error.questionGroup.title.empty", "title", "Please specify Question Group title");
             result = true;
         }
         if (sectionsNotPresent(questionGroup.getSections())) {
@@ -227,7 +241,7 @@ public class QuestionnaireController {
         return StringUtils.isEmpty(eventSourceId) || "--select one--".equals(eventSourceId);
     }
 
-    private boolean sectionsNotPresent(List<SectionForm> sections) {
+    private boolean sectionsNotPresent(List<SectionDetailForm> sections) {
         return CollectionUtils.isEmpty(sections);
     }
 
@@ -243,5 +257,16 @@ public class QuestionnaireController {
         catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    public List<SectionQuestionDetail> getAllSectionQuestions() {
+        List<SectionQuestionDetail> sectionQuestionDetails = new ArrayList<SectionQuestionDetail>();
+        List<QuestionDetail> questionDetails = questionnaireServiceFacade.getAllQuestions();
+        if (questionDetails != null) {
+            for (QuestionDetail questionDetail : questionDetails) {
+                sectionQuestionDetails.add(new SectionQuestionDetail(questionDetail, false));
+            }
+        }
+        return sectionQuestionDetails;
     }
 }

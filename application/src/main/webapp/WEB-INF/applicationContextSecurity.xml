@@ -29,13 +29,14 @@
 		<intercept-url pattern="/initializeApplication.ftl*" filters="none" />
 		<intercept-url pattern="/customPropertiesUpdate.ftl*" filters="none" />
 
-		<intercept-url pattern="/*.css*" filters="none" />
-		<intercept-url pattern="/*.gif" filters="none" />
-		<intercept-url pattern="/*.jpg" filters="none" />
-		<intercept-url pattern="/*.js" filters="none" />
-		<intercept-url pattern="/*.html" filters="none" />		
+		<intercept-url pattern="/**/*.css*" filters="none" />
+		<intercept-url pattern="/**/*.gif" filters="none" />
+		<intercept-url pattern="/**/*.jpg" filters="none" />	
+		<intercept-url pattern="/**/*.js" filters="none" />
+		<intercept-url pattern="/**/*.html" filters="none" />	
 		<intercept-url pattern="/login.ftl*" filters="none" />
-    	<intercept-url pattern="/**" access="hasRole('ROLE_FULLY_AUTHENTICATED_USER')" />
+		
+    	<intercept-url pattern="/**" access="isFullyAuthenticated()" />
     	<logout logout-success-url="/login.ftl?loggedout"/>
   	</http>
   	
@@ -59,39 +60,3 @@
     </beans:bean>
     
 </beans:beans>
-
-<!-- 
-<beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:sec="http://www.springframework.org/schema/security"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
-      http://www.springframework.org/schema/beans classpath:xsd/spring-beans-3.0.xsd
-      http://www.springframework.org/schema/security classpath:xsd/spring-security-3.0.xsd">
- 
-	<sec:global-method-security pre-post-annotations="enabled">
-		<sec:expression-handler ref="expressionHandler"/>
-    </sec:global-method-security>
-    
-    <bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
-        <property name="permissionEvaluator" ref="myPermissionEvaluator"/>
-  	</bean>
-
-	<bean id="myPermissionEvaluator" class="org.springframework.security.access.expression.method.DenyAllPermissionEvaluator" />
-
-	<bean id="mifosAccessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
-	    <property name="decisionVoters">
-	        <list>
-	            <bean class="org.springframework.security.access.vote.RoleVoter"/>
-	            <bean class="org.mifos.security.authorization.DynamicAuthorizationVoter"/>
-	            <bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
-	        </list>
-	    </property>
-	</bean>
-
-	<sec:http access-decision-manager-ref="mifosAccessDecisionManager" auto-config="false" use-expressions="true">
-	  	<sec:intercept-url pattern="/login.ftl" filters="none" />
-		<sec:intercept-url pattern="/**" access="hasRole('ROLE_FULLY_AUTHENTICATED_USER')" />
-		<sec:form-login login-page="/login.ftl" />
-	</sec:http>
-</beans>
--->

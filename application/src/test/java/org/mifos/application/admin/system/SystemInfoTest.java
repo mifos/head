@@ -26,19 +26,20 @@ import java.util.Locale;
 import javax.servlet.ServletContext;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.joda.time.DateTime;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.util.DateTimeService;
 
 import servletunit.ServletContextSimulator;
 
-public class SystemInfoTest extends TestCase {
+public class SystemInfoTest {
 
     private SystemInfo info;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         ServletContext servletContext = new ServletContextSimulator();
         MockDatabaseMetaData metaData = new MockDatabaseMetaData();
@@ -48,10 +49,12 @@ public class SystemInfoTest extends TestCase {
         info.setBuildInformation(new MockSvnRevision());
     }
 
+    @Test
     public void testApplicationDatabaseVersion() throws Exception {
         Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, info.getApplicationVersion());
     }
 
+    @Test
     public void testDatabaseDetails() throws Exception {
         Assert.assertEquals("vendorName", info.getDatabaseVendor());
         Assert.assertEquals("1.0", info.getDatabaseVersion());
@@ -59,6 +62,7 @@ public class SystemInfoTest extends TestCase {
         Assert.assertEquals("2.0", info.getDriverVersion());
     }
 
+    @Test
     public void testDatabaseInfos() throws Exception {
         String infoSourceValue = "test";
         info.setInfoSource(infoSourceValue);
@@ -73,15 +77,18 @@ public class SystemInfoTest extends TestCase {
         Assert.assertEquals("mysql", info.getDatabaseUser());
     }
 
+    @Test
     public void testJava() throws Exception {
         Assert.assertEquals("Sun", info.getJavaVendor());
         Assert.assertEquals("1.5", info.getJavaVersion());
     }
 
+    @Test
     public void testApplicationServer() throws Exception {
         Assert.assertEquals("MockServletEngine/1.9.5", info.getApplicationServerInfo());
     }
 
+    @Test
     public void testGetVersionInfoFromMissingFile() throws Exception {
         try {
             info.setBuildInformation(new VersionInfo("non-existant.file"));
@@ -91,6 +98,7 @@ public class SystemInfoTest extends TestCase {
         }
     }
 
+    @Test
     public void testGetDateTime() {
         DateTime referenceDateTime = new DateTime(2008, 12, 5, 1, 10, 0, 0);
         DateTimeService dateTimeService = new DateTimeService();

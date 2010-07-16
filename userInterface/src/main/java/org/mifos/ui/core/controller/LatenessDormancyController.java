@@ -20,7 +20,6 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
@@ -40,13 +39,9 @@ import org.springframework.web.bind.support.SessionStatus;
 @SessionAttributes("formBean")
 public class LatenessDormancyController {
 
-    private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/admin.ftl";
+    private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
     private static final String CANCEL_PARAM = "CANCEL";
     private static final String CANCEL_PARAM_VALUE = "Cancel";
-
-    private final BreadCrumbsLinks adminCrumb = new BreadCrumbsLinks();
-    private final BreadCrumbsLinks childCrumb = new BreadCrumbsLinks();
-    private final List<BreadCrumbsLinks> breadcrumbs = new LinkedList<BreadCrumbsLinks> ();
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
@@ -62,13 +57,7 @@ public class LatenessDormancyController {
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
-        adminCrumb.setLink("admin.ftl");
-        childCrumb.setLink("editLatenessDormancy.ftl");
-        adminCrumb.setMessage("admin");
-        childCrumb.setMessage("editLatenessDormancy");
-        breadcrumbs.add(adminCrumb);
-        breadcrumbs.add(childCrumb);
-        return breadcrumbs;
+        return new AdminBreadcrumbBuilder().withLink("editLatenessDormancy", "editLatenessDormancy.ftl").build();
     }
 
     @ModelAttribute("formBean")

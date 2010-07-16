@@ -21,5 +21,5 @@
 package org.mifos.platform.questionnaire.contract;
 
 public enum QuestionType {
-    INVALID, FREETEXT, NUMERIC, DATE
+    INVALID, FREETEXT, NUMERIC, MULTI_SELECT, SINGLE_SELECT, DATE
 }

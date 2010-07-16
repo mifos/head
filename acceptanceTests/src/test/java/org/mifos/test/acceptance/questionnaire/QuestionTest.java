@@ -88,7 +88,7 @@ public class QuestionTest extends UiTestCaseBase {
         QuestionDetailPage questionDetailPage = viewAllQuestionsPage.navigateToQuestionDetail(title);
         questionDetailPage.verifyPage();
         Assert.assertTrue(selenium.isTextPresent("Question: "+title), "Title is missing");
-        Assert.assertTrue(selenium.isTextPresent("Answer type: "+DATE_TYPE), "Answer type is missing");
+        Assert.assertTrue(selenium.isTextPresent("Answer Type: "+DATE_TYPE), "Answer type is missing");
     }
 
     private ViewAllQuestionsPage testViewQuestions(AdminPage adminPage) {
@@ -147,29 +147,9 @@ public class QuestionTest extends UiTestCaseBase {
 
     private void testMissingTitle(CreateQuestionPage createQuestionPage) {
         createQuestionParameters.setTitle("");
+        createQuestionParameters.setType(DATE_TYPE);
         createQuestionPage.addQuestion(createQuestionParameters);
         assertTextFoundOnPage(TITLE_MISSING);
     }
 }
 
-class CreateQuestionParameters {
-    private String title;
-
-    private String type;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-}

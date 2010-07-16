@@ -123,6 +123,4 @@ public class EditLSIMLoanAccountTest extends UiTestCaseBase {
 
         return loanAccountPage;
     }
-
-
 }

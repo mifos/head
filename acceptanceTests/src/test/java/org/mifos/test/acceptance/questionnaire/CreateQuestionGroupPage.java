@@ -22,6 +22,9 @@ package org.mifos.test.acceptance.questionnaire;
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CreateQuestionGroupPage extends MifosPage {
     public static final String PAGE_ID = "createQuestionGroup";
 
@@ -40,15 +43,42 @@ public class CreateQuestionGroupPage extends MifosPage {
     }
 
     public void submit(CreateQuestionGroupParameters createQuestionGroupParameters) {
-        selenium.type("title", createQuestionGroupParameters.getTitle());
-        selenium.select("eventSourceId", createQuestionGroupParameters.getAppliesTo());
+        selenium.type("name=title", createQuestionGroupParameters.getTitle());
+        selenium.select("id=eventSourceId", createQuestionGroupParameters.getAppliesTo());
         selenium.click("id=_eventId_defineQuestionGroup");
         waitForPageToLoad();
     }
 
     public void addSection(CreateQuestionGroupParameters createQuestionGroupParameters) {
-        selenium.type("sectionName", createQuestionGroupParameters.getSectionName());
+        selenium.type("id=sectionName", createQuestionGroupParameters.getSectionName());
+        selectSectionQuestions(createQuestionGroupParameters);
         selenium.click("id=_eventId_addSection");
         waitForPageToLoad();
+    }
+
+    public List<String> getAvailableQuestions() {
+        int numAvailQuestions = Integer.valueOf(selenium.getEval("window.document.getElementById('selectedQuestionIds').length"));
+        List<String> availQuestions = new ArrayList<String>();
+        for (int i=0; i<numAvailQuestions; i++){
+            availQuestions.add(selenium.getEval("window.document.getElementById('selectedQuestionIds').options[" + i + "].text"));
+        }
+        return availQuestions;
+    }
+
+    private void selectSectionQuestions(CreateQuestionGroupParameters createQuestionGroupParameters) {
+        List<String> sectionQuestions = createQuestionGroupParameters.getSectionQuestions();
+        if (sectionQuestions != null && !sectionQuestions.isEmpty()) {
+            for (String qTitle : sectionQuestions) {
+                selenium.addSelection("id=selectedQuestionIds", "label=" + qTitle);
+            }
+        }
+    }
+
+    public void markEveryOtherQuestionsMandatory(List<String> questionsToSelect) {
+        for(int i=0;i<questionsToSelect.size();i++){
+            if(i%2==0){
+                selenium.click("id=sections["+i+"].sectionQuestions["+i+"].mandatory");
+            }
+        }
     }
 }

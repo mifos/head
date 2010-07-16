@@ -4,13 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
-import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountNotesEntity;
-import org.mifos.accounts.loan.business.LoanActivityEntity;
-import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.helpers.Money;
@@ -23,15 +19,12 @@ public class LoanInformationDto implements DataTransferObject {
     private final String accountStateName;
     private final Integer customerId;
     private final String prdOfferingName;
-    private final Set<AccountFlagMapping> accountFlags;
+    private final Set<String> accountFlagNames;
     private final Date disbursementDate;
     private final boolean redone;
     private final Integer businessActivityId;
-    private final Set<AccountActionDateEntity> accountActionDates;
     private final String gracePeriodTypeName;
     private final String interestTypeName;
-    private final MeetingBO loanMeeting;
-    private final Set<AccountNotesEntity> accountNotes;
     private final List<AccountNotesEntity> recentAccountNotes;
     private final Short accountTypeId;
     private final Short officeId;
@@ -40,7 +33,7 @@ public class LoanInformationDto implements DataTransferObject {
     private final Money totalAmountDue;
     private final Money totalAmountInArrears;
     private final LoanSummaryDto loanSummary;
-    private final List<LoanActivityEntity> loanActivityDetails;
+    private final boolean loanActivityDetails;
     private final Double interestRate;
     private final boolean interestDeductedAtDisbursement;
     private final Short recurAfter;
@@ -55,41 +48,38 @@ public class LoanInformationDto implements DataTransferObject {
     private final String collateralNote;
     private final String externalId;
     private final Set<AccountCustomFieldEntity> accountCustomFields;
-    private final Set<AccountFeesEntity> accountFees;
+    private final Set<AccountFeesDto> accountFees;
     private final Date createdDate;
     private final LoanPerformanceHistoryDto performanceHistory;
     private final boolean group;
+    private final List<LoanActivityDto> recentAccountActivities;
 
     private final Boolean activeSurveys;
     private final List<SurveyDto> accountSurveys;
 
+
     public LoanInformationDto(String prdOfferingName, String globalAccountNum, Short accountStateId, String accountStateName,
-                              Set<AccountFlagMapping> accountFlags, Date disbursementDate, boolean redone, Integer businessActivityId,
-                              Integer accountId,Set<AccountActionDateEntity> accountActionDates,String gracePeriodTypeName,
-                              String interestTypeName,MeetingBO loanMeeting, Set<AccountNotesEntity> accountNotes,
-                              List<AccountNotesEntity> recentAccountNotes, Integer customerId, Short accountTypeId, Short officeId,
-                              Short personnelId, Date nextMeetingDate, Money totalAmountDue,Money totalAmountInArrears, LoanSummaryDto loanSummary,
-                              List<LoanActivityEntity> loanActivityDetails, Double interestRate, boolean interestDeductedAtDisbursement,
-                              Short recurAfter, Short recurrenceId, boolean prinDueLastInst, Short noOfInstallments, Short minNoOfInstall,
-                              Short maxNoOfInstall,
-                              Short gracePeriodDuration, String fundName, Integer collateralTypeId,String collateralNote, String externalId,
-                              Set<AccountCustomFieldEntity> accountCustomFields, Set<AccountFeesEntity> accountFees, Date createdDate,
-                              LoanPerformanceHistoryDto performanceHistory, boolean group, final Boolean activeSurveys, final List<SurveyDto> accountSurveys) {
+                              Set<String> accountFlagNames, Date disbursementDate, boolean redone, Integer businessActivityId,
+                              Integer accountId,String gracePeriodTypeName, String interestTypeName, List<AccountNotesEntity> recentAccountNotes,
+                              Integer customerId, Short accountTypeId, Short officeId, Short personnelId, Date nextMeetingDate, Money totalAmountDue,
+                              Money totalAmountInArrears, LoanSummaryDto loanSummary, boolean loanActivityDetails, Double interestRate,
+                              boolean interestDeductedAtDisbursement,Short recurAfter, Short recurrenceId, boolean prinDueLastInst,
+                              Short noOfInstallments, Short minNoOfInstall, Short maxNoOfInstall, Short gracePeriodDuration, String fundName,
+                              Integer collateralTypeId,String collateralNote, String externalId, Set<AccountCustomFieldEntity> accountCustomFields,
+                              Set<AccountFeesDto> accountFees, Date createdDate, LoanPerformanceHistoryDto performanceHistory, boolean group,
+                              List<LoanActivityDto> recentAccountActivities, final Boolean activeSurveys, final List<SurveyDto> accountSurveys) {
 
         this.prdOfferingName = prdOfferingName;
         this.globalAccountNum = globalAccountNum;
         this.accountStateId = accountStateId;
         this.accountStateName = accountStateName;
-        this.accountFlags = accountFlags;
+        this.accountFlagNames = accountFlagNames;
         this.disbursementDate = disbursementDate;
         this.redone = redone;
         this.businessActivityId = businessActivityId;
         this.accountId = accountId;
-        this.accountActionDates = accountActionDates;
         this.gracePeriodTypeName = gracePeriodTypeName;
         this.interestTypeName = interestTypeName;
-        this.loanMeeting = loanMeeting;
-        this.accountNotes = accountNotes;
         this.recentAccountNotes = recentAccountNotes;
         this.customerId = customerId;
         this.accountTypeId = accountTypeId;
@@ -118,6 +108,7 @@ public class LoanInformationDto implements DataTransferObject {
         this.createdDate = createdDate;
         this.performanceHistory = performanceHistory;
         this.group = group;
+        this.recentAccountActivities = recentAccountActivities;
 
         this.activeSurveys = activeSurveys;
         this.accountSurveys = accountSurveys;
@@ -139,8 +130,8 @@ public class LoanInformationDto implements DataTransferObject {
         return this.accountStateName;
     }
 
-    public Set<AccountFlagMapping> getAccountFlags() {
-        return this.accountFlags;
+    public Set<String> getAccountFlagNames() {
+        return this.accountFlagNames;
     }
 
     public Date getDisbursementDate() {
@@ -159,24 +150,12 @@ public class LoanInformationDto implements DataTransferObject {
         return this.accountId;
     }
 
-    public Set<AccountActionDateEntity> getAccountActionDates() {
-        return this.accountActionDates;
-    }
-
     public String getGracePeriodTypeName() {
         return this.gracePeriodTypeName;
     }
 
     public String getInterestTypeName() {
         return this.interestTypeName;
-    }
-
-    public MeetingBO getLoanMeeting() {
-        return this.loanMeeting;
-    }
-
-    public Set<AccountNotesEntity> getAccountNotes() {
-        return this.accountNotes;
     }
 
     public List<AccountNotesEntity> getRecentAccountNotes() {
@@ -215,7 +194,7 @@ public class LoanInformationDto implements DataTransferObject {
         return this.loanSummary;
     }
 
-    public List<LoanActivityEntity> getLoanActivityDetails() {
+    public boolean getLoanActivityDetails() {
         return this.loanActivityDetails;
     }
 
@@ -275,7 +254,7 @@ public class LoanInformationDto implements DataTransferObject {
         return this.accountCustomFields;
     }
 
-    public Set<AccountFeesEntity> getAccountFees() {
+    public Set<AccountFeesDto> getAccountFees() {
         return this.accountFees;
     }
 
@@ -291,6 +270,10 @@ public class LoanInformationDto implements DataTransferObject {
         return this.group;
     }
 
+    public List<LoanActivityDto> getRecentAccountActivity() {
+        return this.recentAccountActivities;
+    }
+
     public Boolean getActiveSurveys() {
         return this.activeSurveys;
     }
@@ -298,6 +281,4 @@ public class LoanInformationDto implements DataTransferObject {
     public List<SurveyDto> getAccountSurveys() {
         return this.accountSurveys;
     }
-
-
 }

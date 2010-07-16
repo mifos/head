@@ -35,16 +35,16 @@
             [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":"viewQuestionGroups.ftl",Request.questionGroupDetail.title:""}/]
             [@mifos.crumbpairs breadcrumb/]
             <div class="marginLeft30">
-                <div class="orangeheading marginTop15">
+                <div id="questionGroup.title" class="orangeheading marginTop15">
                     ${Request.questionGroupDetail.title}
                 </div>
-                <div class="marginTop15">
-                    [@spring.message "questionnaire.question.group.applies.to"/]: ${Request.eventSources[Request.questionGroupDetail.eventSourceId]}
+                <div id="questionGroup.appliesTo" class="marginTop15">
+                    [@spring.message "questionnaire.questionGroupAppliesTo"/]: ${Request.eventSources[Request.questionGroupDetail.eventSourceId]}
                 </div>
-                <div class="marginTop15">
+                <div id="questionGroup.sections" class="marginTop15">
                     [#list Request.questionGroupDetail.sections as section]
-                        ${section.name}<br/>
-                        <table id="sections.table" name="sections.table">
+                        <b>${section.name}</b><br/>
+                        <table id="sections.table.${section.name}" name="sections.table.${section.name}">
                          <tr>
                              <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.name"/]</td>
                              <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.mandatory"/]</td>
@@ -52,13 +52,15 @@
                         [#list section.sectionQuestions as sectionQuestion]
                              <tr>
                                  <td class="drawtablerow" width="50%">${sectionQuestion.title}</td>
-                                 <td class="drawtablerow" width="50%"></td>
+                                 <td class="drawtablerow" width="50%">
+                                     [#if sectionQuestion.mandatory]
+                                         [@spring.message "questionnaire.yes"/]
+                                     [#else]
+                                         [@spring.message "questionnaire.no"/]
+                                     [/#if]
+                                 </td>
                              </tr>
                         [/#list]
-                         <tr>
-                             <td>&nbsp;</td>
-                             <td>&nbsp;</td>
-                         </tr>
                         </table>
                     [/#list]
                 </div>
