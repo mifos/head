@@ -43,4 +43,6 @@ public interface QuestionnaireService {
     QuestionDetail getQuestion(int questionId) throws SystemException;
 
     List<EventSource> getAllEventSources();
+
+    List<QuestionGroupDetail> getQuestionGroups(EventSource eventSource) throws SystemException;
 }

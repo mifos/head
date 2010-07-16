@@ -19,32 +19,31 @@
  */
 package org.mifos.platform.questionnaire.service;
 
-import org.apache.commons.lang.StringUtils;
-import org.hamcrest.Description;
-import org.hamcrest.Matchers;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
+import org.mifos.platform.questionnaire.matchers.EventSourceMatcher;
+import org.mifos.platform.questionnaire.matchers.EventSourcesMatcher;
+import org.mifos.platform.questionnaire.matchers.QuestionDetailMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.Assert;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.is; //NOPMD
+import static org.hamcrest.CoreMatchers.notNullValue;   //NOPMD
+import static org.mockito.Matchers.argThat;    //NOPMD
+import org.mockito.Mockito;  
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("PMD")
 public class QuestionnaireServiceFacadeTest {
 
     private QuestionnaireServiceFacade questionnaireServiceFacade;
@@ -61,9 +60,9 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void shouldCreateQuestionGroup() throws SystemException {
-        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", asList(getSectionDetailWithQuestions("S1", 123), getSectionDetailWithQuestions("S2", 123)));
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", Arrays.asList(getSectionDetailWithQuestions("S1", 123), getSectionDetailWithQuestions("S2", 123)));
         questionnaireServiceFacade.createQuestionGroup(questionGroupDetail);
-        verify(questionnaireService, times(1)).defineQuestionGroup(argThat(
+        Mockito.verify(questionnaireService, Mockito.times(1)).defineQuestionGroup(argThat(
                 new QuestionGroupDetailMatcher(questionGroupDetail)));
     }
 
@@ -72,69 +71,69 @@ public class QuestionnaireServiceFacadeTest {
         String title = TITLE + System.currentTimeMillis();
         String title1 = title + 1;
         String title2 = title + 2;
-        questionnaireServiceFacade.createQuestions(asList(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT), getQuestionDetail(0, title2, title2, QuestionType.DATE)));
-        verify(questionnaireService, times(2)).defineQuestion(argThat(new QuestionDetailMatcher(QuestionType.FREETEXT, QuestionType.DATE)));
+        questionnaireServiceFacade.createQuestions(Arrays.asList(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT),
+                getQuestionDetail(0, title2, title2, QuestionType.DATE),
+                getQuestionDetail(0, title2, title2, QuestionType.MULTIPLE_CHOICE,Arrays.asList("choice1","choice2"))));
+        Mockito.verify(questionnaireService, Mockito.times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT))));
+        Mockito.verify(questionnaireService, Mockito.times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, QuestionType.DATE))));
+        Mockito.verify(questionnaireService, Mockito.times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, QuestionType.MULTIPLE_CHOICE, Arrays.asList("choice1","choice2")))));
     }
 
     @Test
     public void testShouldCheckDuplicates() {
         questionnaireServiceFacade.isDuplicateQuestion(TITLE);
-        verify(questionnaireService).isDuplicateQuestionTitle(any(String.class));
+        Mockito.verify(questionnaireService).isDuplicateQuestionTitle(Mockito.any(String.class));
     }
 
     @Test
     public void testGetAllQuestion() {
-        when(questionnaireService.getAllQuestions()).thenReturn(asList(getQuestionDetail(1, "title", "title", QuestionType.NUMERIC)));
+        Mockito.when(questionnaireService.getAllQuestions()).thenReturn(Arrays.asList(getQuestionDetail(1, "title", "title", QuestionType.NUMERIC)));
         List<QuestionDetail> questionDetailList = questionnaireServiceFacade.getAllQuestions();
-        assertNotNull(questionDetailList);
-        assertThat(questionDetailList.get(0).getTitle(), is("title"));
-        assertThat(questionDetailList.get(0).getId(), is(1));
-        verify(questionnaireService).getAllQuestions();
-    }
-
-    private QuestionDetail getQuestionDetail(int id, String text, String shortName, QuestionType questionType) {
-        return new QuestionDetail(id, text, shortName, questionType);
+        Assert.assertNotNull(questionDetailList);
+        Assert.assertThat(questionDetailList.get(0).getTitle(), is("title"));
+        Assert.assertThat(questionDetailList.get(0).getId(), is(1));
+        Mockito.verify(questionnaireService).getAllQuestions();
     }
 
     @Test
     public void testGetAllQuestionGroups() {
-        when(questionnaireService.getAllQuestionGroups()).thenReturn(
-                asList(new QuestionGroupDetail(1, "title1", asList(getSectionDefinition("S1"), getSectionDefinition("S2"))),
-                        new QuestionGroupDetail(2, "title2", asList(getSectionDefinition("S3")))));
+        Mockito.when(questionnaireService.getAllQuestionGroups()).thenReturn(
+                Arrays.asList(new QuestionGroupDetail(1, "title1", Arrays.asList(getSectionDefinition("S1"), getSectionDefinition("S2"))),
+                        new QuestionGroupDetail(2, "title2", Arrays.asList(getSectionDefinition("S3")))));
         List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getAllQuestionGroups();
-        assertNotNull(questionGroupDetails);
+        Assert.assertNotNull(questionGroupDetails);
 
         QuestionGroupDetail questionGroupDetail1 = questionGroupDetails.get(0);
-        assertThat(questionGroupDetail1.getId(), is(1));
-        assertThat(questionGroupDetail1.getTitle(), is("title1"));
+        Assert.assertThat(questionGroupDetail1.getId(), is(1));
+        Assert.assertThat(questionGroupDetail1.getTitle(), is("title1"));
 
         QuestionGroupDetail questionGroupDetail2 = questionGroupDetails.get(1);
-        assertThat(questionGroupDetail2.getId(), is(2));
-        assertThat(questionGroupDetail2.getTitle(), is("title2"));
+        Assert.assertThat(questionGroupDetail2.getId(), is(2));
+        Assert.assertThat(questionGroupDetail2.getTitle(), is("title2"));
 
-        verify(questionnaireService).getAllQuestionGroups();
+        Mockito.verify(questionnaireService).getAllQuestionGroups();
     }
 
     @Test
     public void testGetQuestionGroupById() throws SystemException {
         int questionGroupId = 1;
-        List<SectionDetail> sections = asList(getSectionDefinitionWithQuestions("S1", 121), getSectionDefinitionWithQuestions("S2", 122, 123));
+        List<SectionDetail> sections = Arrays.asList(getSectionDefinitionWithQuestions("S1", 121), getSectionDefinitionWithQuestions("S2", 122, 123));
         QuestionGroupDetail expectedQuestionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", sections);
-        when(questionnaireService.getQuestionGroup(questionGroupId)).thenReturn(expectedQuestionGroupDetail);
+        Mockito.when(questionnaireService.getQuestionGroup(questionGroupId)).thenReturn(expectedQuestionGroupDetail);
         QuestionGroupDetail questionGroupDetail = questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId);
-        assertThat(questionGroupDetail, new QuestionGroupDetailMatcher(expectedQuestionGroupDetail));
+        Assert.assertThat(questionGroupDetail, new QuestionGroupDetailMatcher(expectedQuestionGroupDetail));
     }
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
     public void testGetQuestionGroupByIdFailure() throws SystemException {
         int questionGroupId = 1;
-        when(questionnaireService.getQuestionGroup(questionGroupId)).thenThrow(new SystemException(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
+        Mockito.when(questionnaireService.getQuestionGroup(questionGroupId)).thenThrow(new SystemException(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
         try {
             questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId);
         } catch (SystemException e) {
-            verify(questionnaireService, times(1)).getQuestionGroup(questionGroupId);
-            assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
+            Mockito.verify(questionnaireService, Mockito.times(1)).getQuestionGroup(questionGroupId);
+            Assert.assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
         }
     }
 
@@ -142,24 +141,24 @@ public class QuestionnaireServiceFacadeTest {
     public void testGetQuestionById() throws SystemException {
         int questionId = 1;
         String title = "Title";
-        when(questionnaireService.getQuestion(questionId)).thenReturn(new QuestionDetail(questionId, title, title, QuestionType.NUMERIC));
+        Mockito.when(questionnaireService.getQuestion(questionId)).thenReturn(new QuestionDetail(questionId, title, title, QuestionType.NUMERIC));
         QuestionDetail questionDetail = questionnaireServiceFacade.getQuestionDetail(questionId);
-        assertNotNull("Question group should not be null", questionDetail);
-        assertThat(questionDetail.getShortName(), is(title));
-        assertThat(questionDetail.getType(), is(QuestionType.NUMERIC));
-        verify(questionnaireService).getQuestion(questionId);
+        Assert.assertNotNull("Question group should not be null", questionDetail);
+        Assert.assertThat(questionDetail.getShortName(), is(title));
+        Assert.assertThat(questionDetail.getType(), is(QuestionType.NUMERIC));
+        Mockito.verify(questionnaireService).getQuestion(questionId);
     }
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
     public void testGetQuestionByIdFailure() throws SystemException {
         int questionId = 1;
-        when(questionnaireService.getQuestion(questionId)).thenThrow(new SystemException(QuestionnaireConstants.QUESTION_NOT_FOUND));
+        Mockito.when(questionnaireService.getQuestion(questionId)).thenThrow(new SystemException(QuestionnaireConstants.QUESTION_NOT_FOUND));
         try {
             questionnaireServiceFacade.getQuestionDetail(questionId);
         } catch (SystemException e) {
-            verify(questionnaireService, times(1)).getQuestion(questionId);
-            assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_NOT_FOUND));
+            Mockito.verify(questionnaireService, Mockito.times(1)).getQuestion(questionId);
+            Assert.assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_NOT_FOUND));
         }
     }
 
@@ -168,12 +167,23 @@ public class QuestionnaireServiceFacadeTest {
         EventSource event1 = makeEvent("Create", "Client", "Create Client");
         EventSource event2 = makeEvent("View", "Client", "View Client");
         List<EventSource> events = getEvents(event1, event2);
-        when(questionnaireService.getAllEventSources()).thenReturn(events);
+        Mockito.when(questionnaireService.getAllEventSources()).thenReturn(events);
         List<EventSource> eventSources = questionnaireServiceFacade.getAllEventSources();
-        assertNotNull(eventSources);
-        assertTrue(eventSources.size() == 2);
-        assertThat(eventSources, new EventSourcesMatcher(asList(event1, event2)));
-        verify(questionnaireService).getAllEventSources();
+        Assert.assertNotNull(eventSources);
+        Assert.assertTrue(eventSources.size() == 2);
+        Assert.assertThat(eventSources, new EventSourcesMatcher(Arrays.asList(event1, event2)));
+        Mockito.verify(questionnaireService).getAllEventSources();
+    }
+
+    @Test
+    public void shouldRetrieveQuestionGroupsByEventSource() throws SystemException {
+        List<QuestionGroupDetail> groupDetails = Arrays.asList(getQuestionGroupDetail(TITLE + 1, "Create", "Client", Arrays.asList(new SectionDetail())));
+        Mockito.when(questionnaireService.getQuestionGroups(Mockito.any(EventSource.class))).thenReturn(groupDetails);
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getQuestionGroups("Create", "Client");
+        Assert.assertThat(questionGroupDetails, is(notNullValue()));
+        Assert.assertThat(questionGroupDetails.size(), is(1));
+        Assert.assertThat(questionGroupDetails.get(0).getTitle(), is(TITLE + 1));
+        Mockito.verify(questionnaireService, Mockito.times(1)).getQuestionGroups(argThat(new EventSourceMatcher("Create", "Client", "Create.Client")));
     }
 
     private SectionDetail getSectionDetailWithQuestions(String name, int... questionIds) {
@@ -215,70 +225,13 @@ public class QuestionnaireServiceFacadeTest {
         return new EventSource(event, source, description);
     }
 
-    private class QuestionDetailMatcher extends ArgumentMatcher<QuestionDetail> {
-        private List<QuestionType> questionType;
-
-        public QuestionDetailMatcher(QuestionType... questionType) {
-            this.questionType = new ArrayList<QuestionType>();
-            this.questionType.addAll(Arrays.asList(questionType));
-        }
-
-        @Override
-        public boolean matches(Object argument) {
-            if (argument instanceof QuestionDetail) {
-                QuestionDetail questionDetail = (QuestionDetail) argument;
-                if (questionType.get(0) == questionDetail.getType()) {
-                    questionType.remove(questionDetail.getType());
-                    questionType.add(questionDetail.getType());
-                    return true;
-                }
-            }
-            return false;
-        }
+    private QuestionDetail getQuestionDetail(int id, String text, String shortName, QuestionType questionType) {
+        return new QuestionDetail(id, text, shortName, questionType);
     }
 
-    private class EventSourceMatcher extends TypeSafeMatcher<EventSource> {
 
-        private EventSource eventSource;
-
-        public EventSourceMatcher(EventSource eventSource) {
-            this.eventSource = eventSource;
-        }
-
-        @Override
-        public boolean matchesSafely(EventSource eventSource) {
-            return StringUtils.endsWithIgnoreCase(this.eventSource.getDescription(), eventSource.getDescription()) &&
-                    StringUtils.endsWithIgnoreCase(this.eventSource.getSource(), eventSource.getSource()) &&
-                    StringUtils.endsWithIgnoreCase(this.eventSource.getEvent(), eventSource.getEvent());
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("Event sources do not match");
-        }
-    }
-
-    private class EventSourcesMatcher extends TypeSafeMatcher<List<EventSource>> {
-        private List<EventSource> eventSources;
-
-        public EventSourcesMatcher(List<EventSource> eventSources) {
-            this.eventSources = eventSources;
-        }
-
-        @Override
-        public boolean matchesSafely(List<EventSource> eventSources) {
-            if (eventSources.size() == this.eventSources.size()) {
-                for (EventSource eventSource : this.eventSources) {
-                    assertThat(eventSources, Matchers.hasItem(new EventSourceMatcher(eventSource)));
-                }
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("EventSources did not match");
-        }
+    private QuestionDetail getQuestionDetail(int id, String text, String shortName, QuestionType questionType, List<String> choices) {
+        return new QuestionDetail(id, text, shortName, questionType, choices);
     }
 }
+

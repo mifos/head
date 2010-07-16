@@ -40,4 +40,6 @@ public interface QuestionnaireServiceFacade {
     QuestionDetail getQuestionDetail(int questionId) throws SystemException;
 
     List<EventSource> getAllEventSources();
+
+    List<QuestionGroupDetail> getQuestionGroups(String event, String source) throws SystemException;
 }

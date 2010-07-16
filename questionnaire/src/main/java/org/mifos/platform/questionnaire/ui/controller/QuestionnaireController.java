@@ -22,7 +22,7 @@ package org.mifos.platform.questionnaire.ui.controller;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
-import org.mifos.platform.questionnaire.service.*;
+import org.mifos.platform.questionnaire.service.*;  //NOPMD
 import org.mifos.platform.questionnaire.ui.model.Question;
 import org.mifos.platform.questionnaire.ui.model.QuestionForm;
 import org.mifos.platform.questionnaire.ui.model.QuestionGroupForm;
@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@SuppressWarnings("PMD")
 public class QuestionnaireController {
 
     @Autowired

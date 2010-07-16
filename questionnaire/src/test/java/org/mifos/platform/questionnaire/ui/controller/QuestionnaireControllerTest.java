@@ -32,7 +32,7 @@ import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
-import org.mifos.platform.questionnaire.service.*;
+import org.mifos.platform.questionnaire.service.*;    //NOPMD
 import org.mifos.platform.questionnaire.ui.model.Question;
 import org.mifos.platform.questionnaire.ui.model.QuestionForm;
 import org.mifos.platform.questionnaire.ui.model.QuestionGroupForm;
@@ -56,9 +56,10 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.*;   //NOPMD
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("PMD")
 public class QuestionnaireControllerTest {
 
     private QuestionnaireController questionnaireController;

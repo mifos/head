@@ -9,7 +9,7 @@ import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
 import static org.junit.Assert.assertThat;
 
-
+@SuppressWarnings("PMD")
 public class QuestionGroupSectionMatcher extends TypeSafeMatcher<SectionDetail> {
     private SectionDetail sectionDetail;
 
@@ -33,23 +33,4 @@ public class QuestionGroupSectionMatcher extends TypeSafeMatcher<SectionDetail> 
         description.appendText("QuestionGroup sections do not match");
     }
 
-}
-
-class SectionQuestionDetailMatcher extends TypeSafeMatcher<SectionQuestionDetail> {
-    private SectionQuestionDetail sectionQuestionDetail;
-
-    public SectionQuestionDetailMatcher(SectionQuestionDetail sectionQuestionDetail) {
-        this.sectionQuestionDetail = sectionQuestionDetail;
-    }
-
-    @Override
-    public boolean matchesSafely(SectionQuestionDetail sectionQuestionDetail) {
-        return this.sectionQuestionDetail.getQuestionId() == sectionQuestionDetail.getQuestionId()
-                && equalsIgnoreCase(this.sectionQuestionDetail.getTitle(), sectionQuestionDetail.getTitle());
-    }
-
-    @Override
-    public void describeTo(Description description) {
-        description.appendText("SectionQuestionDetail do not match");
-    }
 }

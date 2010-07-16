@@ -21,5 +21,5 @@
 package org.mifos.platform.questionnaire.service;
 
 public enum QuestionType {
-    INVALID, FREETEXT, NUMERIC, DATE
+    INVALID, FREETEXT, NUMERIC, MULTIPLE_CHOICE, DATE
 }

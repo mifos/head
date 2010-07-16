@@ -22,7 +22,16 @@ package org.mifos.platform.questionnaire.domain;
 
 import org.mifos.framework.business.EntityMaster;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import java.io.Serializable;
 
 @NamedQueries( {
@@ -40,6 +49,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "event_sources")
+@SuppressWarnings("PMD")
 public class EventSourceEntity implements Serializable {
     //TODO: For the time being to resolve dependencies
     // should extend AbstractEntity? move AbstractEntity to common module first

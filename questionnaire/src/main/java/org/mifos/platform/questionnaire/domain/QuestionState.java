@@ -33,6 +33,7 @@ public enum QuestionState {
         return value;
     }
 
+    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
     public static QuestionState fromInt(int state) {
         for (QuestionState candidate : QuestionState.values()) {
             if (state == candidate.getValue()) {

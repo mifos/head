@@ -26,11 +26,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
-import org.mifos.platform.questionnaire.domain.*;
-import org.mifos.platform.questionnaire.matchers.EventSourceMatcher;
+import org.mifos.platform.questionnaire.domain.*;//NOPMD
+import org.mifos.platform.questionnaire.matchers.EventSourcesMatcher;
+import org.mifos.platform.questionnaire.matchers.QuestionChoicesMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
+import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -38,16 +40,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.*;      //NOPMD
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-import static org.mifos.platform.questionnaire.service.QuestionType.*;
+import static org.hamcrest.CoreMatchers.*;  //NOPMD
+import static org.junit.Assert.*;   //NOPMD
+import static org.mifos.platform.questionnaire.service.QuestionType.*;   //NOPMD
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/test-questionnaire-dbContext.xml", "/test-questionnaire-persistenceContext.xml", "/META-INF/spring/QuestionnaireContext.xml"})
 @TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
+@SuppressWarnings("PMD")
 public class QuestionnaireServiceIntegrationTest {
 
     @Autowired
@@ -58,6 +61,10 @@ public class QuestionnaireServiceIntegrationTest {
 
     @Autowired
     private QuestionGroupDao questionGroupDao;
+
+    @Autowired
+    private QuestionGroupInstanceDao questionGroupInstanceDao;
+
     public static final String TITLE = "Title";
 
     @Test
@@ -70,9 +77,26 @@ public class QuestionnaireServiceIntegrationTest {
         assertNotNull(questionId);
         QuestionEntity questionEntity = questionDao.getDetails(questionId);
         assertNotNull(questionEntity);
-        Assert.assertEquals(questionTitle, questionEntity.getShortName());
-        Assert.assertEquals(questionTitle, questionEntity.getQuestionText());
-        Assert.assertEquals(AnswerType.DATE, questionEntity.getAnswerTypeAsEnum());
+        assertEquals(questionTitle, questionEntity.getShortName());
+        assertEquals(questionTitle, questionEntity.getQuestionText());
+        assertEquals(AnswerType.DATE, questionEntity.getAnswerTypeAsEnum());
+        assertEquals(questionDetail.getAnswerChoices(), asList());
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldDefineQuestionWithAnswerChoices() throws SystemException {
+        String questionTitle = TITLE + System.currentTimeMillis();
+        QuestionDetail questionDetail = defineQuestion(questionTitle, MULTIPLE_CHOICE, asList("choice1", "choice2"));
+        assertNotNull(questionDetail);
+        Integer questionId = questionDetail.getId();
+        assertNotNull(questionId);
+        QuestionEntity questionEntity = questionDao.getDetails(questionId);
+        assertNotNull(questionEntity);
+        assertEquals(questionTitle, questionEntity.getShortName());
+        assertEquals(questionTitle, questionEntity.getQuestionText());
+        assertEquals(AnswerType.MULTIPLE_CHOICE, questionEntity.getAnswerTypeAsEnum());
+        assertThat(questionEntity.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2"))));
     }
 
     @Test
@@ -233,6 +257,17 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(retrievedQuestionDetail.getType(), is(QuestionType.FREETEXT));
     }
 
+    public void shouldGetQuestionWithAnswerChoicesById() throws SystemException {
+        String title = "Q1" + System.currentTimeMillis();
+        QuestionDetail createdQuestionDetail = defineQuestion(title, QuestionType.MULTIPLE_CHOICE, asList("choice1", "choice2"));
+        QuestionDetail retrievedQuestionDetail = questionnaireService.getQuestion(createdQuestionDetail.getId());
+        assertNotSame(createdQuestionDetail, retrievedQuestionDetail);
+        assertThat(retrievedQuestionDetail.getText(), is(title));
+        assertThat(retrievedQuestionDetail.getShortName(), is(title));
+        assertThat(retrievedQuestionDetail.getType(), is(QuestionType.MULTIPLE_CHOICE));
+        assertEquals(retrievedQuestionDetail.getAnswerChoices(), asList("choice1", "choice2"));
+    }
+
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void testGetQuestionByIdFailure() throws SystemException {
@@ -276,11 +311,58 @@ public class QuestionnaireServiceIntegrationTest {
     public void shouldRetrieveAllEventSources() {
         List<EventSource> eventSources = questionnaireService.getAllEventSources();
         assertNotNull(eventSources);
-        assertThat(eventSources, new EventSourceMatcher("Create", "Client", "Create Client"));
+        assertThat(eventSources, new EventSourcesMatcher(asList(new EventSource("Create", "Client", "Create Client"))));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldGetQuestionGroupsByEventAndSource() throws SystemException {
+        String title = "QG1" + System.currentTimeMillis();
+        List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
+        QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details);
+        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
+        assertThat(questionGroups, is(notNullValue()));
+        QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
+        assertThat(actualQGDetail, is(notNullValue()));
+        assertThat(actualQGDetail.getTitle(), is(title));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldPersistQuestionGroupInstance() throws SystemException {
+        String title = "QG1" + System.currentTimeMillis();
+        List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
+        QuestionGroupDetail questionGroupDetail = defineQuestionGroup(title, "Create", "Client", details);
+        QuestionGroup questionGroup = questionGroupDao.getDetails(questionGroupDetail.getId());
+        QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
+        questionGroupInstance.setQuestionGroup(questionGroup);
+        questionGroupInstance.setCompletedStatus(1);
+        questionGroupInstance.setCreatorId(122);
+        questionGroupInstance.setDateConducted(Calendar.getInstance().getTime());
+        questionGroupInstance.setEntityId(101);
+        questionGroupInstance.setVersionNum(1);
+        List<QuestionGroupResponse> groupResponses = new ArrayList<QuestionGroupResponse>();
+        QuestionGroupResponse questionGroupResponse = new QuestionGroupResponse();
+        questionGroupResponse.setResponse("Foo Bar");
+        questionGroupResponse.setQuestionGroupInstance(questionGroupInstance);
+        questionGroupResponse.setSectionQuestion(questionGroup.getSections().get(0).getQuestions().get(0));
+        questionGroupResponse.setSectionQuestion(questionGroup.getSections().get(1).getQuestions().get(0));
+        groupResponses.add(questionGroupResponse);
+        questionGroupInstance.setQuestionGroupResponses(groupResponses);
+        Integer id = questionGroupInstanceDao.create(questionGroupInstance);
+        QuestionGroupInstance groupInstance = questionGroupInstanceDao.getDetails(id);
+        assertThat(groupInstance, is(notNullValue()));
+        assertThat(groupInstance.getQuestionGroupResponses(), is(notNullValue()));
+        assertThat(groupInstance.getQuestionGroupResponses().get(0).getSectionQuestion(), is(notNullValue()));
+        assertThat(groupInstance.getQuestionGroupResponses().get(0).getResponse(), is("Foo Bar"));
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws SystemException {
         return questionnaireService.defineQuestion(new QuestionDetail(questionTitle, questionType));
+    }
+
+    private QuestionDetail defineQuestion(String questionTitle, QuestionType type, List<String> choices) throws SystemException {
+        return questionnaireService.defineQuestion(new QuestionDetail(questionTitle, type, choices));
     }
 
     private QuestionGroupDetail defineQuestionGroup(String title, String event, String source, List<SectionDetail> sectionDetails) throws SystemException {
@@ -324,6 +406,14 @@ public class QuestionnaireServiceIntegrationTest {
     private QuestionGroupDetailMatcher getQuestionGroupDetailMatcher(String questionGroupTitle, List<SectionDetail> sectionDetails) {
         return new QuestionGroupDetailMatcher(new QuestionGroupDetail(0, questionGroupTitle, sectionDetails));
     }
+
+    private QuestionGroupDetail getMatchingQGDetailById(Integer expectedId, List<QuestionGroupDetail> questionGroups) {
+        QuestionGroupDetail actualQGDetail = null;
+        for (QuestionGroupDetail questionGroupDetail : questionGroups) {
+            if (questionGroupDetail.getId().equals(expectedId)) {
+                actualQGDetail = questionGroupDetail;
+            }
+        }
+        return actualQGDetail;
+    }
 }
-
-

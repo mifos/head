@@ -21,11 +21,15 @@
 package org.mifos.platform.questionnaire.validators;
 
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+
 
 public interface QuestionnaireValidator {
     void validate(QuestionDetail questionDetail) throws SystemException;
 
     void validate(QuestionGroupDetail questionGroupDetail) throws SystemException;
+
+    void validate(EventSource eventSource) throws SystemException;
 }

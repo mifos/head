@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+@SuppressWarnings("PMD")
 public class QuestionEntity implements Serializable, Comparable<QuestionEntity> {
     private static final long serialVersionUID = -2L;
     
@@ -56,10 +57,19 @@ public class QuestionEntity implements Serializable, Comparable<QuestionEntity> 
         this(null, questionText, answerType);
     }
 
+    @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
     public QuestionEntity(String shortName, String questionText, AnswerType answerType) {
         setShortName(shortName);
         setQuestionText(questionText);
         setAnswerType(answerType);
+        questionState = QuestionState.ACTIVE;
+    }
+
+    public QuestionEntity(String shortName, String questionText, AnswerType answerType,List<QuestionChoiceEntity> choices) {
+        setShortName(shortName);
+        setQuestionText(questionText);
+        setAnswerType(answerType);
+        setChoices(choices);
         questionState = QuestionState.ACTIVE;
     }
 
@@ -153,6 +163,7 @@ public class QuestionEntity implements Serializable, Comparable<QuestionEntity> 
     }
 
     @Override
+    @SuppressWarnings("PMD.OnlyOneReturn")
     public final boolean equals(Object o) {
         if (o == null) {
             return false;

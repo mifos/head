@@ -36,13 +36,14 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertThat;
+import java.util.Arrays;
+import static org.hamcrest.CoreMatchers.not;   // NOPMD
+import static org.hamcrest.CoreMatchers.nullValue;   // NOPMD
+import static org.junit.Assert.assertNotSame;    // NOPMD
+import static org.junit.Assert.assertThat;     // NOPMD
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("PMD")
 public class QuestionGroupFormTest {
 
     @Test
@@ -57,7 +58,7 @@ public class QuestionGroupFormTest {
     public void shouldGetSections() {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName("Section1");
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, "Title", null, asList(sectionDetail));
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, "Title", null, Arrays.asList(sectionDetail));
         QuestionGroupForm questionGroupForm = new QuestionGroupForm(questionGroupDetail);
         List<SectionDetailForm> sections = questionGroupForm.getSections();
         assertThat(sections, Matchers.notNullValue());
@@ -106,8 +107,8 @@ public class QuestionGroupFormTest {
     @Test
     public void testAddCurrentSection() {
         QuestionGroupForm questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setQuestionPool(new ArrayList<SectionQuestionDetail>(asList(getSectionQuestionDetail(1, "Q1", true), getSectionQuestionDetail(2, "Q2", false))));
-        questionGroupForm.setSelectedQuestionIds(asList("1"));
+        questionGroupForm.setQuestionPool(new ArrayList<SectionQuestionDetail>(Arrays.asList(getSectionQuestionDetail(1, "Q1", true), getSectionQuestionDetail(2, "Q2", false))));
+        questionGroupForm.setSelectedQuestionIds(Arrays.asList("1"));
         String title = "title";
         questionGroupForm.setTitle(title);
         String sectionName = "sectionName";
@@ -126,7 +127,7 @@ public class QuestionGroupFormTest {
         assertNotSame(nameOfAddedSection, questionGroupForm.getSectionName());
         assertNotSame(questionGroupForm.getSelectedQuestionIds().size(), CoreMatchers.is(0));
 
-        questionGroupForm.setSelectedQuestionIds(asList("2"));
+        questionGroupForm.setSelectedQuestionIds(Arrays.asList("2"));
         questionGroupForm.setSectionName(sectionName);
         questionGroupForm.addCurrentSection();
 
@@ -193,7 +194,7 @@ public class QuestionGroupFormTest {
 
     private void setupSection(QuestionGroupForm questionGroupForm, List<SectionDetailForm> sections, String sectionName) {
         sections.add(getSectionSectionDetailForm(sectionName,
-                new ArrayList<SectionQuestionDetail>(asList(getSectionQuestionDetail(1, "Q1", false), getSectionQuestionDetail(2, "Q2", true)))));
+                new ArrayList<SectionQuestionDetail>(Arrays.asList(getSectionQuestionDetail(1, "Q1", false), getSectionQuestionDetail(2, "Q2", true)))));
         questionGroupForm.setSections(sections);
 
         assertThat(questionGroupForm.getSections().size(), CoreMatchers.is(1));

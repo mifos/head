@@ -23,6 +23,8 @@ package org.mifos.platform.questionnaire.service;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 public class QuestionDetail implements Serializable {
     private static final long serialVersionUID = -2350908554610624733L;
@@ -31,6 +33,7 @@ public class QuestionDetail implements Serializable {
     private String text;
     private String shortName;
     private QuestionType type;
+    private List<String> answerChoices;
 
     public QuestionDetail() {
         this(null);
@@ -45,10 +48,19 @@ public class QuestionDetail implements Serializable {
     }
 
     public QuestionDetail(Integer id, String text, String shortName, QuestionType type) {
+        this(id, text, shortName, type, new LinkedList<String>());
+    }
+
+    public QuestionDetail(String title, QuestionType type, List<String> answerChoices) {
+        this(0, title, title, type, answerChoices);
+    }
+
+    public QuestionDetail(Integer id, String text, String shortName, QuestionType type, List<String> answerChoices) {
         this.id = id;
         this.text = text;
         this.shortName = shortName;
         this.type = type;
+        this.answerChoices = answerChoices;
     }
 
     public Integer getId() {
@@ -85,5 +97,9 @@ public class QuestionDetail implements Serializable {
 
     public void trimTitle() {
         this.shortName = StringUtils.trim(this.shortName);
+    }
+
+    public List<String> getAnswerChoices() {
+        return answerChoices;
     }
 }

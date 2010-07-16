@@ -41,9 +41,11 @@ import org.mifos.config.Localization;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.dto.domain.OfficeDto;
+import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.util.StandardTestingService;
@@ -213,7 +215,26 @@ public class OfficeDaoHibernateIntegrationTest {
         assertThat(allOffices.size(), is(0));
     }
 
-    public void createOfficeHierarchy() {
+    @Test
+    public void shouldRetrieveOfficeLevels() throws Exception {
+
+        OfficeLevelDto allOffices = officeDao.findOfficeLevelsWithConfiguration();
+
+        // verification
+        assertThat(allOffices.isHeadOfficeEnabled(), is(true));
+        assertThat(allOffices.isBranchOfficeEnabled(), is(true));
+    }
+
+    @Test
+    public void shouldRetrieveOfficeLevelById() throws Exception {
+
+        OfficeLevelEntity officeLevel = officeDao.retrieveOfficeLevel(OfficeLevel.AREAOFFICE);
+
+        // verification
+        assertThat(officeLevel.isConfigured(), is(true));
+    }
+
+    private void createOfficeHierarchy() {
 
         // A default head office is added as seed data for integration tests along with a 'TestAreaOffice' as child
         headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));

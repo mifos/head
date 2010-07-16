@@ -34,7 +34,7 @@ import static java.lang.String.format;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.trim;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.DEFAULT_APPLIES_TO_OPTION;
-
+@SuppressWarnings("PMD")
 public class QuestionGroupForm implements Serializable {
     private static final long serialVersionUID = -7545625058942409636L;
 

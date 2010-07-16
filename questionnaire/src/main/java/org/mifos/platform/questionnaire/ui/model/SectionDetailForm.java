@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.commons.lang.StringUtils.trim;
-
+@SuppressWarnings("PMD")
 public class SectionDetailForm implements Serializable {
     private static final long serialVersionUID = 900851228874986225L;
     private SectionDetail sectionDetail;

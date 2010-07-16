@@ -14,9 +14,11 @@
     </bean>
     
     <bean id="adminServiceFacade" class="org.mifos.application.servicefacade.AdminServiceFacadeWebTier">
-    	<constructor-arg ref="productService" />
+       	<constructor-arg ref="productService" />
+    	<constructor-arg ref="officeHierarchyService" />
     	<constructor-arg ref="loanProductDao" />
     	<constructor-arg ref="savingsProductDao" />
+    	<constructor-arg ref="officeDao" />    	
     </bean>
 
     <bean id="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade" >
@@ -95,6 +97,10 @@
     <bean id="productService" class="org.mifos.accounts.productdefinition.business.service.ProductServiceImpl" >
     	<constructor-arg ref="loanProductDao" />
     	<constructor-arg ref="savingsProductDao" />
+    </bean>
+
+    <bean id="officeHierarchyService" class="org.mifos.customers.office.business.service.OfficeHierarchyServiceImpl" >
+    	<constructor-arg ref="officeDao" />
     </bean>
     
     <bean id="personnelService" class="org.mifos.customers.personnel.business.service.PersonnelServiceImpl" >

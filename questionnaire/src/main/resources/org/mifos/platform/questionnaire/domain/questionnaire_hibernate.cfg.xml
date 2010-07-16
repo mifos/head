@@ -11,5 +11,8 @@
 		<mapping resource="org/mifos/platform/questionnaire/domain/QuestionGroup.hbm.xml" />
 		<mapping resource="org/mifos/platform/questionnaire/domain/Section.hbm.xml" />
 		<mapping resource="org/mifos/platform/questionnaire/domain/SectionQuestion.hbm.xml" />
+
+        <mapping resource="org/mifos/platform/questionnaire/domain/QuestionGroupInstance.hbm.xml" />
+        <mapping resource="org/mifos/platform/questionnaire/domain/QuestionGroupResponse.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

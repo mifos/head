@@ -22,7 +22,7 @@ package org.mifos.platform.questionnaire.domain;
 
 
 public enum AnswerType {
-    INVALID(0), MULTISELECT(1), FREETEXT(2), NUMBER(3), CHOICE(4), DATE(5);
+    INVALID(0), MULTISELECT(1), FREETEXT(2), NUMBER(3), CHOICE(4), DATE(5), MULTIPLE_CHOICE(6);
 
     private int value;
 
@@ -38,6 +38,7 @@ public enum AnswerType {
         return this.toString();
     }
 
+    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
     public static AnswerType fromInt(int type) {
         for (AnswerType candidate : AnswerType.values()) {
             if (type == candidate.getValue()) {

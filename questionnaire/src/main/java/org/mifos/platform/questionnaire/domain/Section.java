@@ -32,7 +32,7 @@ public class Section implements Serializable {
     private String name;
     private List<SectionQuestion> questions;
 
-    @SuppressWarnings({"UnusedDeclaration"})
+    @SuppressWarnings({"UnusedDeclaration", "PMD.UncommentedEmptyConstructor"})
     Section() {
     }
 

@@ -21,29 +21,44 @@
 package org.mifos.platform.questionnaire.mappers;
 
 import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.business.EntityMaster;
-import org.mifos.platform.questionnaire.domain.*;
-import org.mifos.platform.questionnaire.matchers.EventSourceMatcher;
+import org.mifos.platform.questionnaire.domain.*;  //NOPMD
+import org.mifos.platform.questionnaire.matchers.EventSourcesMatcher;
+import org.mifos.platform.questionnaire.matchers.QuestionChoicesMatcher;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
-import org.mifos.platform.questionnaire.service.*;
+import org.mifos.platform.questionnaire.service.QuestionDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.SectionDetail;
+import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.*;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.mifos.platform.questionnaire.domain.QuestionGroupState.ACTIVE;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import java.util.ArrayList;
+import java.util.Arrays;  
+import java.util.Date;
+import java.util.List;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Calendar;
+
+import static org.hamcrest.CoreMatchers.*;   // NOPMD
+import static org.hamcrest.core.IsNull.nullValue; // NOPMD
+import static org.junit.Assert.assertThat;   // NOPMD
+import static org.mockito.Matchers.anyString; // NOPMD
+
+
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("PMD")
 public class QuestionnaireMapperTest {
     private static final String TITLE = "Title";
     private QuestionnaireMapper questionnaireMapper;
@@ -62,7 +77,7 @@ public class QuestionnaireMapperTest {
     }
 
     @Test
-    public void shouldMapQuestionDefinitionToQuestion() {
+    public void shouldMapQuestionDetailToQuestion() {
         QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.FREETEXT);
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
         assertThat(question.getAnswerTypeAsEnum(), CoreMatchers.is(AnswerType.FREETEXT));
@@ -70,10 +85,26 @@ public class QuestionnaireMapperTest {
     }
 
     @Test
+    public void shouldMapMultipleChoiceQuestionDetailToQuestion() {
+        String choice1 = "choice1";
+        String choice2 = "choice2";
+        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.MULTIPLE_CHOICE, Arrays.asList(choice1, choice2));
+        QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
+        assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.MULTIPLE_CHOICE));
+        assertThat(question.getQuestionText(), is(TITLE));
+        assertThat(question.getShortName(), is(TITLE));
+        assertThat(question.getChoices(), new QuestionChoicesMatcher(Arrays.asList(new QuestionChoiceEntity(choice1), new QuestionChoiceEntity(choice2))));
+    }
+
+    @Test
     public void shouldMapQuestionToQuestionDetail() {
         QuestionEntity question = getQuestion(TITLE, AnswerType.FREETEXT);
         QuestionDetail questionDetail = questionnaireMapper.mapToQuestionDetail(question);
         assertQuestionDetail(questionDetail, TITLE, QuestionType.FREETEXT);
+
+        question = getQuestion(TITLE, AnswerType.MULTIPLE_CHOICE, Arrays.asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2")));
+        questionDetail = questionnaireMapper.mapToQuestionDetail(question);
+        assertQuestionDetail(questionDetail, TITLE, QuestionType.MULTIPLE_CHOICE, Arrays.asList("choice1", "choice2"));
     }
 
     @Test
@@ -99,21 +130,21 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapQuestionGroupDefinitionToQuestionGroup() {
-        when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList());
-        when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
+        Mockito.when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList());
+        Mockito.when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
         EventSource eventSource = getEventSource("Create", "Client");
-        List<SectionDetail> sectionDetails = asList(getSectionDefinition(SECTION_NAME));
+        List<SectionDetail> sectionDetails = Arrays.asList(getSectionDefinition(SECTION_NAME));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, TITLE, eventSource, sectionDetails);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         assertQuestionGroup(questionGroup);
-        verify(eventSourceDao, times(1)).retrieveByEventAndSource(anyString(), anyString());
-        verify(questionDao, times(1)).getDetails(12);
+        Mockito.verify(eventSourceDao, Mockito.times(1)).retrieveByEventAndSource(anyString(), anyString());
+        Mockito.verify(questionDao, Mockito.times(1)).getDetails(12);
     }
 
     private void assertQuestionGroup(QuestionGroup questionGroup) {
         assertThat(questionGroup, notNullValue());
         assertThat(questionGroup.getTitle(), is(TITLE));
-        assertThat(questionGroup.getState(), is(ACTIVE));
+        assertThat(questionGroup.getState(), is(QuestionGroupState.ACTIVE));
         assertSections(questionGroup.getSections());
         assertCreationDate(questionGroup.getDateOfCreation());
     }
@@ -134,10 +165,6 @@ public class QuestionnaireMapperTest {
         assertThat(sectionQuestion.getSection(), notNullValue());
         assertThat(sectionQuestion.isRequired(), is(true));
         assertThat(sectionQuestion.getSequenceNumber(), is(0));
-    }
-
-    private EventSource getEventSource(String event, String source) {
-        return new EventSource(event, source, null);
     }
 
     private SectionDetail getSectionDefinition(String name) {
@@ -186,7 +213,7 @@ public class QuestionnaireMapperTest {
         QuestionEntity question = new QuestionEntity();
         question.setShortName(sectionName);
         sectionQuestion.setQuestion(question);
-        section.setQuestions(asList(sectionQuestion));
+        section.setQuestions(Arrays.asList(sectionQuestion));
         return section;
     }
 
@@ -235,7 +262,7 @@ public class QuestionnaireMapperTest {
         List<EventSourceEntity> events = getEventSourceEntities("Create", "Client", "Create Client");
         List<EventSource> eventSources = questionnaireMapper.mapToEventSources(events);
         assertThat(eventSources, is(not(nullValue())));
-        assertThat(eventSources, new EventSourceMatcher("Create", "Client", "Create Client"));
+        assertThat(eventSources, new EventSourcesMatcher(Arrays.asList(getEventSource("Create", "Client", "Create Client"))));
     }
 
     private List<EventSourceEntity> getEventSourceEntities(String event, String source, String description) {
@@ -255,21 +282,12 @@ public class QuestionnaireMapperTest {
     private QuestionGroup getQuestionGroup(String title, Section... sections) {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setTitle(title);
-        questionGroup.setSections(asList(sections));
+        questionGroup.setSections(Arrays.asList(sections));
         return questionGroup;
     }
 
     private void assertQuestionType(QuestionType questionType, AnswerType answerType) {
         QuestionDetail questionDetail = questionnaireMapper.mapToQuestionDetail(getQuestion(TITLE, answerType));
-        assertThat(questionDetail.getType(), is(questionType));
-    }
-
-    private QuestionEntity getQuestion(String title, AnswerType answerType) {
-        return new QuestionEntity(title, title, answerType);
-    }
-
-    private void assertQuestionDetail(QuestionDetail questionDetail, String title, QuestionType questionType) {
-        assertThat(questionDetail.getText(), is(title));
         assertThat(questionDetail.getType(), is(questionType));
     }
 
@@ -281,4 +299,32 @@ public class QuestionnaireMapperTest {
         assertThat(creationDate.get(Calendar.MONTH), is(currentDate.get(Calendar.MONTH)));
         assertThat(creationDate.get(Calendar.YEAR), is(currentDate.get(Calendar.YEAR)));
     }
+
+    private QuestionEntity getQuestion(String title, AnswerType answerType) {
+        return getQuestion(title, answerType, new LinkedList<QuestionChoiceEntity>());
+    }
+
+    private QuestionEntity getQuestion(String title, AnswerType answerType, List<QuestionChoiceEntity> questionChoices) {
+        return new QuestionEntity(title, title, answerType, questionChoices);
+    }
+
+    private void assertQuestionDetail(QuestionDetail questionDetail, String title, QuestionType questionType) {
+        assertThat(questionDetail.getText(), is(title));
+        assertThat(questionDetail.getType(), is(questionType));
+    }
+
+    private void assertQuestionDetail(QuestionDetail questionDetail, String title, QuestionType questionType, List<String> choices) {
+        assertQuestionDetail(questionDetail, title, questionType);
+        Assert.assertEquals(choices, questionDetail.getAnswerChoices());
+    }
+
+    private EventSource getEventSource(String event, String source) {
+        return new EventSource(event, source, null);
+    }
+
+    private EventSource getEventSource(String event, String source, String description) {
+        return new EventSource(event, source, description);
+    }
+
 }
+

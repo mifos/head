@@ -44,7 +44,7 @@ public class QuestionGroup implements Serializable {
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD", justification="Can't map to serializable sets from hibernate. e.g. HashSet - sad but true!")
     private Set<EventSourceEntity> eventSources;
 
-    @SuppressWarnings({"UnusedDeclaration"})
+    @SuppressWarnings({"UnusedDeclaration", "PMD.UnnecessaryConstructor","PMD.UncommentedEmptyConstructor"})
     public QuestionGroup() {
     }
 

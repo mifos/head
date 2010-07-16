@@ -25,6 +25,7 @@ import org.apache.commons.lang.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("PMD")
 public class QuestionForm extends ScreenObject {
     private List<Question> questions = new ArrayList<Question>();
 

@@ -21,7 +21,7 @@
 package org.mifos.platform.questionnaire.ui.model;
 
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
-
+@SuppressWarnings("PMD")
 public class SectionQuestionDetailForm {
     private SectionQuestionDetail sectionQuestionDetail;
 

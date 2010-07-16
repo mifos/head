@@ -24,17 +24,17 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
-import org.mifos.platform.questionnaire.service.*;
+import org.mifos.platform.questionnaire.service.*;  //NOPMD
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.*;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.*;    //NOPMD
 import static org.mifos.platform.questionnaire.service.QuestionType.INVALID;
 import static org.mifos.platform.util.CollectionUtils.isEmpty;
-
+@SuppressWarnings("PMD")
 public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
 
     @Autowired
@@ -57,12 +57,12 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     @Override
     public void validate(QuestionGroupDetail questionGroupDetail) throws SystemException {
         validateQuestionGroupTitle(questionGroupDetail);
-        validateQuestionGroupSections(questionGroupDetail);
-        validateQuestionGroupEventSource(questionGroupDetail);
+        validateQuestionGroupSections(questionGroupDetail.getSectionDetails());
+        validate(questionGroupDetail.getEventSource());
     }
 
-    private void validateQuestionGroupEventSource(QuestionGroupDetail questionGroupDetail) throws SystemException {
-        EventSource eventSource = questionGroupDetail.getEventSource();
+    @Override
+    public void validate(EventSource eventSource) throws SystemException {
         if (eventSource == null || StringUtils.isEmpty(eventSource.getSource()) || StringUtils.isEmpty(eventSource.getEvent()))
             throw new SystemException(QuestionnaireConstants.INVALID_EVENT_SOURCE);
         validateEventSource(eventSource);
@@ -75,8 +75,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         }
     }
 
-    private void validateQuestionGroupSections(QuestionGroupDetail questionGroupDetail) throws SystemException {
-        List<SectionDetail> sectionDetails = questionGroupDetail.getSectionDetails();
+    private void validateQuestionGroupSections(List<SectionDetail> sectionDetails) throws SystemException {
         if(isEmpty(sectionDetails)) {
             throw new SystemException(QuestionnaireConstants.QUESTION_GROUP_SECTION_NOT_PROVIDED);
         }

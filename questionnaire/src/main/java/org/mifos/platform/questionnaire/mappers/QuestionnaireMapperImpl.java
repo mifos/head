@@ -20,10 +20,10 @@
 
 package org.mifos.platform.questionnaire.mappers;
 
-import org.mifos.platform.questionnaire.domain.*;
+import org.mifos.platform.questionnaire.domain.*;  //NOPMD
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
-import org.mifos.platform.questionnaire.service.*;
+import org.mifos.platform.questionnaire.service.*; //NOPMD
 import org.mifos.platform.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,6 +32,7 @@ import java.util.*;
 import static org.mifos.platform.util.CollectionUtils.asMap;
 import static org.mifos.platform.util.MapEntry.makeEntry;
 
+@SuppressWarnings({"PMD", "UnusedDeclaration"})
 public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     private Map<AnswerType, QuestionType> answerToQuestionType;
     private Map<QuestionType, AnswerType> questionToAnswerType;
@@ -42,7 +43,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     @Autowired
     private QuestionDao questionDao;
 
-    @SuppressWarnings({"UnusedDeclaration"})
+    //@SuppressWarnings({"UnusedDeclaration"})
     public QuestionnaireMapperImpl() {
         this(null, null);
     }
@@ -68,17 +69,38 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return new QuestionDetail(question.getQuestionId(),
                 question.getQuestionText(),
                 question.getShortName(),
-                mapToQuestionType(question.getAnswerTypeAsEnum()));
+                mapToQuestionType(question.getAnswerTypeAsEnum()), mapToAnswerChoices(question.getChoices()));
     }
+
+    private List<String> mapToAnswerChoices(List<QuestionChoiceEntity> choices) {
+        List<String> questionChoices = new LinkedList<String>();
+        for (QuestionChoiceEntity questionChoice : choices) {
+            questionChoices.add(questionChoice.getChoiceText());
+        }
+        return questionChoices;
+    }
+
 
     @Override
     public QuestionEntity mapToQuestion(QuestionDetail questionDetail) {
         QuestionEntity question = new QuestionEntity();
         question.setShortName(questionDetail.getTitle());
         question.setQuestionText(questionDetail.getTitle());
-        question.setAnswerType(mapToAnswerType(questionDetail.getType()));
+        QuestionType type = questionDetail.getType();
+        question.setAnswerType(mapToAnswerType(type));
         question.setQuestionState(QuestionState.ACTIVE);
+        question.setChoices(mapToChoices(questionDetail.getAnswerChoices()));
         return question;
+    }
+
+
+    //@SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops"})
+    private List<QuestionChoiceEntity> mapToChoices(List<String> choices) {
+        List<QuestionChoiceEntity> questionChoices = new LinkedList<QuestionChoiceEntity>();
+        for (String choice : choices) {
+            questionChoices.add(new QuestionChoiceEntity(choice));
+        }
+        return questionChoices;
     }
 
     @Override
@@ -96,7 +118,9 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         Set<EventSourceEntity> eventSources = new HashSet<EventSourceEntity>();
         EventSource eventSource = questionGroupDetail.getEventSource();
         List list = eventSourceDao.retrieveByEventAndSource(eventSource.getEvent(), eventSource.getSource());
-        for (Object obj : list) eventSources.add((EventSourceEntity) obj);
+        for (Object obj : list) { 
+            eventSources.add((EventSourceEntity) obj);
+        }
         return eventSources;
     }
 
@@ -140,14 +164,16 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private EventSource mapToEventSource(Set<EventSourceEntity> eventSources) {
-        if (eventSources == null || eventSources.isEmpty()) return null;
+        if (eventSources == null || eventSources.isEmpty()) {
+            return null;
+        }
         EventSourceEntity eventSourceEntity = eventSources.toArray(new EventSourceEntity[eventSources.size()])[0];
         return new EventSource(eventSourceEntity.getEvent().getName(), eventSourceEntity.getSource().getEntityType(), eventSourceEntity.getDescription());
     }
 
     private List<SectionDetail> mapToSectionDefinitions(List<Section> sections) {
         List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
-        for(Section section: sections){
+        for (Section section : sections) {
             sectionDetails.add(mapToSectionDefinition(section));
         }
         return sectionDetails;
@@ -198,14 +224,16 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         answerToQuestionType = CollectionUtils.asMap(makeEntry(AnswerType.INVALID, QuestionType.INVALID),
                 makeEntry(AnswerType.FREETEXT, QuestionType.FREETEXT),
                 makeEntry(AnswerType.DATE, QuestionType.DATE),
-                makeEntry(AnswerType.NUMBER, QuestionType.NUMERIC));
+                makeEntry(AnswerType.NUMBER, QuestionType.NUMERIC),
+                makeEntry(AnswerType.MULTIPLE_CHOICE, QuestionType.MULTIPLE_CHOICE));
     }
 
     private void populateQuestionToAnswerTypeMap() {
         questionToAnswerType = asMap(makeEntry(QuestionType.INVALID, AnswerType.INVALID),
                 makeEntry(QuestionType.FREETEXT, AnswerType.FREETEXT),
                 makeEntry(QuestionType.DATE, AnswerType.DATE),
-                makeEntry(QuestionType.NUMERIC, AnswerType.NUMBER));
+                makeEntry(QuestionType.NUMERIC, AnswerType.NUMBER),
+                makeEntry(QuestionType.MULTIPLE_CHOICE, AnswerType.MULTIPLE_CHOICE));
     }
 
 }

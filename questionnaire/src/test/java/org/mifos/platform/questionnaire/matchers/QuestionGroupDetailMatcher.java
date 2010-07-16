@@ -27,7 +27,7 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 
 import static org.junit.Assert.assertThat;
-
+@SuppressWarnings("PMD")
 public class QuestionGroupDetailMatcher extends TypeSafeMatcher<QuestionGroupDetail> {
     private QuestionGroupDetail questionGroupDetail;
 

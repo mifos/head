@@ -20,6 +20,8 @@
 
 package org.mifos.application.servicefacade;
 
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.customers.client.business.service.ClientBusinessService;
 import java.util.Date;
 import java.util.List;
 
@@ -95,5 +97,8 @@ public interface LoanServiceFacade {
     void makeEarlyRepayment(String globalAccountNum, String earlyRepayAmount, String receiptNumber,
             java.sql.Date receiptDate, String paymentTypeId, Short id) throws AccountException;
 
-    LoanInformationDto getLoanInformationDto(String globalAccountNum);
+    LoanInformationDto getLoanInformationDto(String globalAccountNum, UserContext userContext) throws ServiceException;
+
+    List<LoanAccountDetailsDto> getLoanAccountDetailsViewList(LoanInformationDto loanInformationDto, List<BusinessActivityEntity> businessActEntity, LoanBusinessService loanBusinessService, ClientBusinessService clientBusinessService)
+            throws ServiceException;
 }

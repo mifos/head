@@ -10,7 +10,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;
-
+@SuppressWarnings("PMD")
 public class QuestionFormTest {
     private static final String TITLE = "title";
 

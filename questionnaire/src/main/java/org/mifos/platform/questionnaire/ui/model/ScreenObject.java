@@ -18,6 +18,7 @@ public class ScreenObject implements java.io.Serializable {
         this.validator = validator;
     }
 
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void validateConstraints(MessageContext context) {
         if (validator == null) {
             return;

@@ -46,6 +46,7 @@ import static org.mifos.platform.questionnaire.service.QuestionType.DATE;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/test-questionnaire-dbContext.xml", "/test-questionnaire-persistenceContext.xml", "/META-INF/spring/QuestionnaireContext.xml"})
 @TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
+@SuppressWarnings("PMD")
 public class QuestionDaoIntegrationTest {
 
     @Autowired
