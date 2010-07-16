@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.dto.domain.AccountStatusesLabelDto;
 import org.mifos.dto.domain.ConfigurableLookupLabelDto;
 import org.mifos.dto.domain.GracePeriodDto;
 import org.mifos.dto.domain.OfficeLevelDto;
@@ -69,25 +70,70 @@ public class ConfigureApplicationLabelsController {
     public ConfigureApplicationLabelsFormBean showPopulatedForm() {
         ConfigureApplicationLabelsDto appLabels = adminServiceFacade.retrieveConfigurableLabels();
         ConfigureApplicationLabelsFormBean formBean = new ConfigureApplicationLabelsFormBean();
-        populateOfficeHierarchyLabels(formBean, appLabels.getOfficeLevels());
-        populateGracePeriodLabels(formBean, appLabels.getGracePeriodDto());
-        populateLookupLabels(formBean, appLabels.getLookupLabels());
 
+        populateOfficeHierarchyLabels(formBean, appLabels.getOfficeLevels());
+        populateClientLabels(formBean, appLabels.getLookupLabels());
+        populateProductTypeLabels(formBean, appLabels.getLookupLabels());
+        populatePersonalInfoLabels(formBean, appLabels.getLookupLabels());
+        populateAddressLabels(formBean, appLabels.getLookupLabels());
+        populateAccountStatusesLabels(formBean, appLabels.getAccountStatusLabels());
+        populateGracePeriodLabels(formBean, appLabels.getGracePeriodDto());
+        populateMiscLabels(formBean, appLabels.getLookupLabels());
         return formBean;
     }
 
-    private void populateLookupLabels(ConfigureApplicationLabelsFormBean formBean, ConfigurableLookupLabelDto lookupLabels) {
-        formBean.setClient(lookupLabels.getClientKey());
-        formBean.setGroup(lookupLabels.getGroupKey());
-        formBean.setCenter(lookupLabels.getCenterKey());
-        formBean.setState(lookupLabels.getStateKey());
+    private void populateAccountStatusesLabels(ConfigureApplicationLabelsFormBean formBean, AccountStatusesLabelDto statusLabels) {
+        formBean.setPartialApplication(statusLabels.getPartialApplication());
+        formBean.setPendingApproval(statusLabels.getPendingApproval());
+        formBean.setApproved(statusLabels.getApproved());
+        formBean.setCancel(statusLabels.getCancel());
+        formBean.setClosed(statusLabels.getClosed());
+        formBean.setOnhold(statusLabels.getOnhold());
+        formBean.setActive(statusLabels.getActive());
+        formBean.setInActive(statusLabels.getInActive());
+        formBean.setActiveInBadStanding(statusLabels.getActiveInBadStanding());
+        formBean.setActiveInGoodStanding(statusLabels.getActiveInGoodStanding());
+        formBean.setClosedObligationMet(statusLabels.getClosedObligationMet());
+        formBean.setClosedRescheduled(statusLabels.getClosedRescheduled());
+        formBean.setClosedWrittenOff(statusLabels.getClosedWrittenOff());
+    }
 
+    private void populateClientLabels(ConfigureApplicationLabelsFormBean formBean, ConfigurableLookupLabelDto lookupLabels) {
+        formBean.setClient(lookupLabels.getClient());
+        formBean.setGroup(lookupLabels.getGroup());
+        formBean.setCenter(lookupLabels.getCenter());
+    }
+
+    private void populateProductTypeLabels(ConfigureApplicationLabelsFormBean formBean, ConfigurableLookupLabelDto lookupLabels) {
+        formBean.setLoans(lookupLabels.getLoans());
+        formBean.setSavings(lookupLabels.getSavings());
+    }
+
+    private void populatePersonalInfoLabels(ConfigureApplicationLabelsFormBean formBean, ConfigurableLookupLabelDto lookupLabels) {
+        formBean.setState(lookupLabels.getState());
+        formBean.setPostalCode(lookupLabels.getPostalCode());
+        formBean.setEthnicity(lookupLabels.getEthnicity());
+        formBean.setCitizenship(lookupLabels.getCitizenship());
+        formBean.setHandicapped(lookupLabels.getHandicapped());
+        formBean.setGovtId(lookupLabels.getGovtId());
+    }
+
+    private void populateAddressLabels(ConfigureApplicationLabelsFormBean formBean, ConfigurableLookupLabelDto lookupLabels) {
+        formBean.setAddress1(lookupLabels.getAddress1());
+        formBean.setAddress2(lookupLabels.getAddress2());
+        formBean.setAddress3(lookupLabels.getAddress3());
+    }
+
+    private void populateMiscLabels(ConfigureApplicationLabelsFormBean formBean, ConfigurableLookupLabelDto lookupLabels) {
+        formBean.setInterest(lookupLabels.getInterest());
+        formBean.setExternalId(lookupLabels.getExternalId());
+        formBean.setBulkEntry(lookupLabels.getBulkEntry());
     }
 
     private void populateGracePeriodLabels(ConfigureApplicationLabelsFormBean formBean, GracePeriodDto gracePeriodDto) {
-        formBean.setNone(gracePeriodDto.getNoneKey());
-        formBean.setGraceOnAllRepayments(gracePeriodDto.getGraceOnAllRepaymentsKey());
-        formBean.setPrincipalOnlyGrace(gracePeriodDto.getPrincipalOnlyGraceKey());
+        formBean.setNone(gracePeriodDto.getNone());
+        formBean.setGraceOnAllRepayments(gracePeriodDto.getGraceOnAllRepayments());
+        formBean.setPrincipalOnlyGrace(gracePeriodDto.getPrincipalOnlyGrace());
     }
 
     private void populateOfficeHierarchyLabels(ConfigureApplicationLabelsFormBean formBean, OfficeLevelDto officeLevels) {

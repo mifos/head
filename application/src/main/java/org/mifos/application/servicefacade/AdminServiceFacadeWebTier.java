@@ -23,6 +23,7 @@ package org.mifos.application.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
@@ -33,14 +34,18 @@ import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.config.util.helpers.ConfigurationConstants;
+import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.office.business.service.OfficeHierarchyService;
 import org.mifos.customers.office.persistence.OfficeDao;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.ConfigurableLookupLabelDto;
 import org.mifos.dto.domain.GracePeriodDto;
+import org.mifos.dto.domain.AccountStatusesLabelDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
@@ -191,11 +196,55 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         List<GracePeriodTypeEntity> gracePeriodTypes = applicationConfigurationDao.findGracePeriodTypes();
         GracePeriodDto gracePeriodDtos = assemble(gracePeriodTypes);
 
-//        List<LookUpEntity> lookupEntities = new ApplicationConfigurationPersistence().getLookupEntities();
         List<LookUpEntity> lookupEntities = applicationConfigurationDao.findLookupValueTypes();
         ConfigurableLookupLabelDto lookupLabels = assemble(lookupEntities);
 
-        return new ConfigureApplicationLabelsDto(officeLevels, gracePeriodDtos, lookupLabels);
+        List<AccountStateEntity> accountStateEntities = applicationConfigurationDao.findAllAccountStateEntities();
+        AccountStatusesLabelDto accountStatusLabels = assemble(accountStateEntities);
+
+        List<CustomerStatusEntity> customerStatuses = applicationConfigurationDao.findAllCustomerStatuses();
+        for (CustomerStatusEntity customerStatus : customerStatuses) {
+            if (customerStatus.getId().equals(CustomerStatus.CLIENT_HOLD.getValue())) {
+                accountStatusLabels.setOnhold(customerStatus.getName());
+            }
+        }
+
+        return new ConfigureApplicationLabelsDto(officeLevels, gracePeriodDtos, lookupLabels, accountStatusLabels);
+    }
+
+    private AccountStatusesLabelDto assemble(List<AccountStateEntity> accountStateEntities) {
+
+        AccountStatusesLabelDto loanAccountLabel = new AccountStatusesLabelDto();
+
+        for (AccountStateEntity accountState : accountStateEntities) {
+            if (accountState.getId().equals(AccountState.LOAN_PARTIAL_APPLICATION.getValue())) {
+                loanAccountLabel.setPartialApplication(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.LOAN_PENDING_APPROVAL.getValue())) {
+                loanAccountLabel.setPendingApproval(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.LOAN_APPROVED.getValue())) {
+                loanAccountLabel.setApproved(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.LOAN_CANCELLED.getValue())) {
+                loanAccountLabel.setCancel(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
+                loanAccountLabel.setActiveInGoodStanding(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
+                loanAccountLabel.setActiveInBadStanding(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())) {
+                loanAccountLabel.setClosedObligationMet(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())) {
+                loanAccountLabel.setClosedWrittenOff(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.LOAN_CLOSED_RESCHEDULED.getValue())) {
+                loanAccountLabel.setClosedRescheduled(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.SAVINGS_CLOSED.getValue())) {
+                loanAccountLabel.setClosed(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.SAVINGS_INACTIVE.getValue())) {
+                loanAccountLabel.setInActive(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.SAVINGS_ACTIVE.getValue())) {
+                loanAccountLabel.setActive(accountState.getName());
+            }
+        }
+
+        return loanAccountLabel;
     }
 
     private ConfigurableLookupLabelDto assemble(List<LookUpEntity> lookupEntities) {
@@ -204,68 +253,39 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
         for (LookUpEntity entity : lookupEntities) {
             if (entity.getEntityType().equals(ConfigurationConstants.CLIENT)) {
-                lookupLabels.setClientKey(entity.getEntityType());
-                // labelConfigurationActionForm.setClient(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),userContext));
+                lookupLabels.setClient(entity.findLabel());
             } else if (entity.getEntityType().equals(ConfigurationConstants.GROUP)) {
-                lookupLabels.setGroupKey(entity.getEntityType());
-                // labelConfigurationActionForm.setGroup(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),userContext));
+                lookupLabels.setGroup(entity.findLabel());
             } else if (entity.getEntityType().equals(ConfigurationConstants.CENTER)) {
-                lookupLabels.setCenterKey(entity.getEntityType());
-                // labelConfigurationActionForm.setCenter(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
-                // userContext));
+                lookupLabels.setCenter(entity.findLabel());
             } else if (entity.getEntityType().equals(ConfigurationConstants.LOAN)) {
-                lookupLabels.setLoansKey(entity.getEntityType());
-                // labelConfigurationActionForm.setLoans(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
-                // userContext));
+                lookupLabels.setLoans(entity.findLabel());
             } else if (entity.getEntityType().equals(ConfigurationConstants.SAVINGS)) {
-                lookupLabels.setSavingsKey(entity.getEntityType());
-                // labelConfigurationActionForm.setSavings(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),userContext));
+                lookupLabels.setSavings(entity.findLabel());
             } else if (entity.getEntityType().equals(ConfigurationConstants.STATE)) {
-                lookupLabels.setStateKey(entity.getEntityType());
-                // labelConfigurationActionForm.setState(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),userContext));
+                lookupLabels.setState(entity.findLabel());
             } else if (entity.getEntityType().equals(ConfigurationConstants.POSTAL_CODE)) {
-                lookupLabels.setPostalCodeKey(entity.getEntityType());
-                // labelConfigurationActionForm.setPostalCode(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
-                // userContext));
+                lookupLabels.setPostalCode(entity.findLabel());
             } else if (entity.getEntityType().equals(ConfigurationConstants.ETHINICITY)) {
-                lookupLabels.setEthnicityKey(entity.getEntityType());
-                // labelConfigurationActionForm.setEthnicity(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
-                // userContext));
+                lookupLabels.setEthnicity(entity.findLabel());
             } else if (entity.getEntityType().equals(ConfigurationConstants.CITIZENSHIP)) {
-                lookupLabels.setCitizenshipKey(entity.getEntityType());
-                // labelConfigurationActionForm.setCitizenship(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
-                // userContext));
+                lookupLabels.setCitizenship(entity.findLabel());
             } else if (entity.getEntityType().equals(ConfigurationConstants.HANDICAPPED)) {
-                lookupLabels.setHandicappedKey(entity.getEntityType());
-                // labelConfigurationActionForm.setHandicapped(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
-                // userContext));
+                lookupLabels.setHandicapped(entity.findLabel());
             } else if (entity.getEntityType().equals(ConfigurationConstants.GOVERNMENT_ID)) {
-                lookupLabels.setGovtIdKey(entity.getEntityType());
-                // labelConfigurationActionForm.setGovtId(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),userContext));
+                lookupLabels.setGovtId(entity.findLabel());
             } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS1)) {
-                lookupLabels.setAddress1Key(entity.getEntityType());
-                // labelConfigurationActionForm.setAddress1(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
-                // userContext));
+                lookupLabels.setAddress1(entity.findLabel());
             } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS2)) {
-                lookupLabels.setAddress2Key(entity.getEntityType());
-                // labelConfigurationActionForm.setAddress2(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
-                // userContext));
+                lookupLabels.setAddress2(entity.findLabel());
             } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS3)) {
-                lookupLabels.setAddress3Key(entity.getEntityType());
-                // labelConfigurationActionForm.setAddress3(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
-                // userContext));
+                lookupLabels.setAddress3(entity.findLabel());
             } else if (entity.getEntityType().equals(ConfigurationConstants.INTEREST)) {
-                lookupLabels.setInterestKey(entity.getEntityType());
-                // labelConfigurationActionForm.setInterest(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
-                // userContext));
+                lookupLabels.setInterest(entity.findLabel());
             } else if (entity.getEntityType().equals(ConfigurationConstants.EXTERNALID)) {
-                lookupLabels.setExternalIdKey(entity.getEntityType());
-                // labelConfigurationActionForm.setExternalId(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
-                // userContext));
+                lookupLabels.setExternalId(entity.findLabel());
             } else if (entity.getEntityType().equals(ConfigurationConstants.BULKENTRY)) {
-                lookupLabels.setBulkEntryKey(entity.getEntityType());
-                // labelConfigurationActionForm.setBulkEntry(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
-                // userContext));
+                lookupLabels.setBulkEntry(entity.findLabel());
             }
         }
 
@@ -280,13 +300,13 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             GraceType periodType = GraceType.fromInt(entity.getId());
             switch (periodType) {
             case NONE:
-                gracePeriods.setNoneKey(entity.getLookUpValue().getPropertiesKey());
+                gracePeriods.setNone(entity.getLookUpValue().getMessageText());
                 break;
             case GRACEONALLREPAYMENTS:
-                gracePeriods.setGraceOnAllRepaymentsKey(entity.getLookUpValue().getPropertiesKey());
+                gracePeriods.setGraceOnAllRepayments(entity.getLookUpValue().getMessageText());
                 break;
             case PRINCIPALONLYGRACE:
-                gracePeriods.setPrincipalOnlyGraceKey(entity.getLookUpValue().getPropertiesKey());
+                gracePeriods.setPrincipalOnlyGrace(entity.getLookUpValue().getMessageText());
                 break;
             default:
                 break;

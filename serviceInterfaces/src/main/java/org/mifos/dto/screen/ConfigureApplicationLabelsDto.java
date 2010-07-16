@@ -20,6 +20,7 @@
 
 package org.mifos.dto.screen;
 
+import org.mifos.dto.domain.AccountStatusesLabelDto;
 import org.mifos.dto.domain.ConfigurableLookupLabelDto;
 import org.mifos.dto.domain.GracePeriodDto;
 import org.mifos.dto.domain.OfficeLevelDto;
@@ -29,11 +30,13 @@ public class ConfigureApplicationLabelsDto {
     private final OfficeLevelDto officeLevels;
     private final GracePeriodDto gracePeriodDto;
     private final ConfigurableLookupLabelDto lookupLabels;
+    private final AccountStatusesLabelDto accountStatusLabels;
 
-    public ConfigureApplicationLabelsDto(OfficeLevelDto officeLevels, GracePeriodDto gracePeriodDto, ConfigurableLookupLabelDto lookupLabels) {
+    public ConfigureApplicationLabelsDto(OfficeLevelDto officeLevels, GracePeriodDto gracePeriodDto, ConfigurableLookupLabelDto lookupLabels, AccountStatusesLabelDto accountStatusLabels) {
         this.officeLevels = officeLevels;
         this.gracePeriodDto = gracePeriodDto;
         this.lookupLabels = lookupLabels;
+        this.accountStatusLabels = accountStatusLabels;
     }
 
     public OfficeLevelDto getOfficeLevels() {
@@ -46,5 +49,9 @@ public class ConfigureApplicationLabelsDto {
 
     public ConfigurableLookupLabelDto getLookupLabels() {
         return this.lookupLabels;
+    }
+
+    public AccountStatusesLabelDto getAccountStatusLabels() {
+        return this.accountStatusLabels;
     }
 }

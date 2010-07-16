@@ -22,31 +22,31 @@ package org.mifos.dto.domain;
 
 public class GracePeriodDto {
 
-    private String noneKey;
-    private String graceOnAllRepaymentsKey;
-    private String principalOnlyGraceKey;
+    private String none;
+    private String graceOnAllRepayments;
+    private String principalOnlyGrace;
 
-    public String getNoneKey() {
-        return this.noneKey;
+    public String getNone() {
+        return this.none;
     }
 
-    public void setNoneKey(String noneKey) {
-        this.noneKey = noneKey;
+    public void setNone(String none) {
+        this.none = none;
     }
 
-    public String getGraceOnAllRepaymentsKey() {
-        return this.graceOnAllRepaymentsKey;
+    public String getGraceOnAllRepayments() {
+        return this.graceOnAllRepayments;
     }
 
-    public void setGraceOnAllRepaymentsKey(String graceOnAllRepaymentsKey) {
-        this.graceOnAllRepaymentsKey = graceOnAllRepaymentsKey;
+    public void setGraceOnAllRepayments(String graceOnAllRepayments) {
+        this.graceOnAllRepayments = graceOnAllRepayments;
     }
 
-    public String getPrincipalOnlyGraceKey() {
-        return this.principalOnlyGraceKey;
+    public String getPrincipalOnlyGrace() {
+        return this.principalOnlyGrace;
     }
 
-    public void setPrincipalOnlyGraceKey(String principalOnlyGraceKey) {
-        this.principalOnlyGraceKey = principalOnlyGraceKey;
+    public void setPrincipalOnlyGrace(String principalOnlyGrace) {
+        this.principalOnlyGrace = principalOnlyGrace;
     }
 }

@@ -22,13 +22,19 @@ package org.mifos.config.persistence;
 
 import java.util.List;
 
+import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.customers.business.CustomerStatusEntity;
 
 public interface ApplicationConfigurationDao {
 
     List<GracePeriodTypeEntity> findGracePeriodTypes();
 
     List<LookUpEntity> findLookupValueTypes();
+
+    List<AccountStateEntity> findAllAccountStateEntities();
+
+    List<CustomerStatusEntity> findAllCustomerStatuses();
 
 }

@@ -22,177 +22,161 @@ package org.mifos.dto.domain;
 
 public class ConfigurableLookupLabelDto {
 
-    private String clientKey;
-    private String groupKey;
-    private String centerKey;
-    private String loansKey;
-    private String savingsKey;
-    private String stateKey;
-    private String postalCodeKey;
+    private String client;
+    private String group;
+    private String center;
 
-    private String ethnicityKey;
-    private String citizenshipKey;
-    private String handicappedKey;
-    private String govtIdKey;
-    private String address1Key;
-    private String address2Key;
-    private String address3Key;
+    private String loans;
+    private String savings;
 
-    private String interestKey;
-    private String externalIdKey;
-    private String bulkEntryKey;
+    private String state;
+    private String postalCode;
+    private String ethnicity;
+    private String citizenship;
+    private String handicapped;
+    private String govtId;
 
-    // private String partialApplication;
-    // private String pendingApproval;
-    //
-    // private String approved;
-    // private String cancel;
-    // private String closed;
-    // private String onhold;
-    //
-    // private String active;
-    // private String inActive;
-    //
-    // private String activeInGoodStanding;
-    // private String activeInBadStanding;
-    // private String closedObligationMet;
-    // private String closedRescheduled;
-    // private String closedWrittenOff;
-    //
+    private String address1;
+    private String address2;
+    private String address3;
 
-    public String getClientKey() {
-        return this.clientKey;
+    private String interest;
+    private String externalId;
+    private String bulkEntry;
+
+    public String getClient() {
+        return this.client;
     }
 
-    public void setClientKey(String clientKey) {
-        this.clientKey = clientKey;
+    public void setClient(String client) {
+        this.client = client;
     }
 
-    public String getGroupKey() {
-        return this.groupKey;
+    public String getGroup() {
+        return this.group;
     }
 
-    public void setGroupKey(String groupKey) {
-        this.groupKey = groupKey;
+    public void setGroup(String group) {
+        this.group = group;
     }
 
-    public String getCenterKey() {
-        return this.centerKey;
+    public String getCenter() {
+        return this.center;
     }
 
-    public void setCenterKey(String centerKey) {
-        this.centerKey = centerKey;
+    public void setCenter(String center) {
+        this.center = center;
     }
 
-    public String getLoansKey() {
-        return this.loansKey;
+    public String getLoans() {
+        return this.loans;
     }
 
-    public void setLoansKey(String loansKey) {
-        this.loansKey = loansKey;
+    public void setLoans(String loans) {
+        this.loans = loans;
     }
 
-    public String getSavingsKey() {
-        return this.savingsKey;
+    public String getSavings() {
+        return this.savings;
     }
 
-    public void setSavingsKey(String savingsKey) {
-        this.savingsKey = savingsKey;
+    public void setSavings(String savings) {
+        this.savings = savings;
     }
 
-    public String getStateKey() {
-        return this.stateKey;
+    public String getState() {
+        return this.state;
     }
 
-    public void setStateKey(String stateKey) {
-        this.stateKey = stateKey;
+    public void setState(String state) {
+        this.state = state;
     }
 
-    public String getPostalCodeKey() {
-        return this.postalCodeKey;
+    public String getPostalCode() {
+        return this.postalCode;
     }
 
-    public void setPostalCodeKey(String postalCodeKey) {
-        this.postalCodeKey = postalCodeKey;
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
-    public String getEthnicityKey() {
-        return this.ethnicityKey;
+    public String getEthnicity() {
+        return this.ethnicity;
     }
 
-    public void setEthnicityKey(String ethnicityKey) {
-        this.ethnicityKey = ethnicityKey;
+    public void setEthnicity(String ethnicity) {
+        this.ethnicity = ethnicity;
     }
 
-    public String getCitizenshipKey() {
-        return this.citizenshipKey;
+    public String getCitizenship() {
+        return this.citizenship;
     }
 
-    public void setCitizenshipKey(String citizenshipKey) {
-        this.citizenshipKey = citizenshipKey;
+    public void setCitizenship(String citizenship) {
+        this.citizenship = citizenship;
     }
 
-    public String getHandicappedKey() {
-        return this.handicappedKey;
+    public String getHandicapped() {
+        return this.handicapped;
     }
 
-    public void setHandicappedKey(String handicappedKey) {
-        this.handicappedKey = handicappedKey;
+    public void setHandicapped(String handicapped) {
+        this.handicapped = handicapped;
     }
 
-    public String getGovtIdKey() {
-        return this.govtIdKey;
+    public String getGovtId() {
+        return this.govtId;
     }
 
-    public void setGovtIdKey(String govtIdKey) {
-        this.govtIdKey = govtIdKey;
+    public void setGovtId(String govtId) {
+        this.govtId = govtId;
     }
 
-    public String getAddress1Key() {
-        return this.address1Key;
+    public String getAddress1() {
+        return this.address1;
     }
 
-    public void setAddress1Key(String address1Key) {
-        this.address1Key = address1Key;
+    public void setAddress1(String address1) {
+        this.address1 = address1;
     }
 
-    public String getAddress2Key() {
-        return this.address2Key;
+    public String getAddress2() {
+        return this.address2;
     }
 
-    public void setAddress2Key(String address2Key) {
-        this.address2Key = address2Key;
+    public void setAddress2(String address2) {
+        this.address2 = address2;
     }
 
-    public String getAddress3Key() {
-        return this.address3Key;
+    public String getAddress3() {
+        return this.address3;
     }
 
-    public void setAddress3Key(String address3Key) {
-        this.address3Key = address3Key;
+    public void setAddress3(String address3) {
+        this.address3 = address3;
     }
 
-    public String getExternalIdKey() {
-        return this.externalIdKey;
+    public String getInterest() {
+        return this.interest;
     }
 
-    public void setExternalIdKey(String externalIdKey) {
-        this.externalIdKey = externalIdKey;
+    public void setInterest(String interest) {
+        this.interest = interest;
     }
 
-    public String getBulkEntryKey() {
-        return this.bulkEntryKey;
+    public String getExternalId() {
+        return this.externalId;
     }
 
-    public void setBulkEntryKey(String bulkEntryKey) {
-        this.bulkEntryKey = bulkEntryKey;
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
-    public String getInterestKey() {
-        return this.interestKey;
+    public String getBulkEntry() {
+        return this.bulkEntry;
     }
 
-    public void setInterestKey(String interestKey) {
-        this.interestKey = interestKey;
+    public void setBulkEntry(String bulkEntry) {
+        this.bulkEntry = bulkEntry;
     }
 }
