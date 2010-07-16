@@ -63,11 +63,6 @@
             <id>maven-repository.mifos.org</id>
             <url>http://maven.mifos.org/nexus/content/groups/public/</url>
         </pluginRepository>
-        <pluginRepository>
-            <name>oss.sonatype.org - github-releases</name>
-            <id>oss.sonatype.org-github-releases</id>
-            <url>http://oss.sonatype.org/content/repositories/github-releases</url>
-        </pluginRepository>        
     </pluginRepositories>
 
     <dependencyManagement>
