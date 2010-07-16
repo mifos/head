@@ -26,16 +26,16 @@ import com.thoughtworks.selenium.Selenium;
 
 public class CreateUserEnterDataPage extends MifosPage {
 
-	public CreateUserEnterDataPage() {
-		super();
-	}
+    public CreateUserEnterDataPage() {
+        super();
+    }
 
-	/**
-	 * @param selenium
-	 */
-	public CreateUserEnterDataPage(Selenium selenium) {
-		super(selenium);
-	}
+    /**
+     * @param selenium
+     */
+    public CreateUserEnterDataPage(Selenium selenium) {
+        super(selenium);
+    }
 
     public CreateUserPreviewDataPage submitAndGotoCreateUserPreviewDataPage(CreateUserParameters parameters) {
         typeTextIfNotEmpty("create_user.input.firstName", parameters.getFirstName());

@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.surveys.business.Question;
+import org.mifos.customers.surveys.business.QuestionChoice;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -39,10 +40,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
@@ -81,7 +84,7 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldDefineQuestion() throws ApplicationException {
-        QuestionDefinition questionDefinition = new QuestionDefinition(QUESTION_TITLE, FREETEXT);
+        QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, FREETEXT);
         try {
             QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
             verify(questionDao, times(1)).create(any(Question.class));
@@ -89,6 +92,7 @@ public class QuestionnaireServiceTest {
             assertEquals(QUESTION_TITLE, questionDetail.getText());
             assertEquals(QUESTION_TITLE, questionDetail.getShortName());
             assertEquals(FREETEXT, questionDetail.getType());
+            org.testng.Assert.assertEquals(questionDetail.getAnswerChoices(),asList());
         } catch (ApplicationException e) {
             fail("Should not have thrown the validation exception");
         }
@@ -96,9 +100,30 @@ public class QuestionnaireServiceTest {
         verify(questionDao).create(any(org.mifos.customers.surveys.business.Question.class));
     }
 
+    @Test
+    public void shouldDefineQuestionWithAnswerChoices() throws ApplicationException {
+        String choice1 = "choice1";
+        String choice2 = "choice2";
+        QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, QuestionType.MULTI_SELECT, asList(choice1, choice2));
+        try {
+            QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
+            verify(questionDao, times(1)).create(any(Question.class));
+            assertNotNull(questionDetail);
+            assertEquals(QUESTION_TITLE, questionDetail.getText());
+            assertEquals(QUESTION_TITLE, questionDetail.getShortName());
+            assertEquals(QuestionType.MULTI_SELECT, questionDetail.getType());
+            org.testng.Assert.assertEquals(questionDetail.getAnswerChoices(),asList(choice1, choice2));
+        } catch (ApplicationException e) {
+            fail("Should not have thrown the validation exception");
+        }
+        verify(questionnaireValidator).validate(questionDefinition);
+        verify(questionDao).create(any(org.mifos.customers.surveys.business.Question.class));
+    }
+
+    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test(expected = ApplicationException.class)
     public void shouldThrowValidationExceptionWhenQuestionTitleIsNull() throws ApplicationException {
-        QuestionDefinition questionDefinition = new QuestionDefinition(null, INVALID);
+        QuestionDetail questionDefinition = new QuestionDetail(null, INVALID);
         doThrow(new ApplicationException(QUESTION_TITLE_NOT_PROVIDED)).when(questionnaireValidator).validate(questionDefinition);
         questionnaireService.defineQuestion(questionDefinition);
         verify(questionnaireValidator).validate(questionDefinition);
@@ -129,12 +154,19 @@ public class QuestionnaireServiceTest {
         question.setQuestionText(text);
         question.setShortName(text);
         question.setAnswerType(type);
+        question.setChoices(new LinkedList<QuestionChoice>());
+        return question;
+    }
+
+    private Question getQuestion(int id, String text, AnswerType type, List<QuestionChoice> choices) {
+        Question question = getQuestion(id, text, type);
+        question.setChoices(choices);
         return question;
     }
 
     @Test
     public void shouldDefineQuestionGroup() throws ApplicationException {
-        QuestionGroupDefinition questionGroupDefinition = getQuestionGroupDefinition(EVENT_CREATE, SOURCE_CLIENT, "S1", "S2");
+        QuestionGroupDetail questionGroupDefinition = getQuestionGroupDetail(EVENT_CREATE, SOURCE_CLIENT, "S1", "S2");
         setUpEventSourceExpectations(EVENT_CREATE, SOURCE_CLIENT);
         when(questionDao.getDetails(anyInt())).thenReturn(getQuestion(11), getQuestion(12), getQuestion(11), getQuestion(12));
         try {
@@ -158,7 +190,7 @@ public class QuestionnaireServiceTest {
     private void assertQuestionGroupDetail(QuestionGroupDetail questionGroupDetail) {
         assertNotNull(questionGroupDetail);
         assertEquals(QUESTION_GROUP_TITLE, questionGroupDetail.getTitle());
-        assertSections(questionGroupDetail.getSectionDefinitions());
+        assertSections(questionGroupDetail.getSectionDetails());
         assertEvent(questionGroupDetail.getEventSource());
     }
 
@@ -168,12 +200,12 @@ public class QuestionnaireServiceTest {
         assertThat(eventSource.getSource(), is(SOURCE_CLIENT));
     }
 
-    private void assertSections(List<SectionDefinition> sectionDefinitions) {
-        assertNotNull(sectionDefinitions);
-        assertThat(sectionDefinitions.size(), is(2));
-        assertThat(sectionDefinitions.get(0).getName(), is("S1"));
-        assertThat(sectionDefinitions.get(1).getName(), is("S2"));
-        assertSectionQuestions(sectionDefinitions.get(0).getQuestions());
+    private void assertSections(List<SectionDetail> sectionDetails) {
+        assertNotNull(sectionDetails);
+        assertThat(sectionDetails.size(), is(2));
+        assertThat(sectionDetails.get(0).getName(), is("S1"));
+        assertThat(sectionDetails.get(1).getName(), is("S2"));
+        assertSectionQuestions(sectionDetails.get(0).getQuestions());
     }
 
     private void assertSectionQuestions(List<SectionQuestionDetail> sectionQuestionDetails) {
@@ -190,16 +222,16 @@ public class QuestionnaireServiceTest {
         when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(Collections.singletonList(eventSourceEntity));
     }
 
-    private QuestionGroupDefinition getQuestionGroupDefinition(String event, String source, String... sectionNames) {
-        return new QuestionGroupDefinition(QUESTION_GROUP_TITLE, getEventSource(event, source), getSectionDefinitions(sectionNames));
+    private QuestionGroupDetail getQuestionGroupDetail(String event, String source, String... sectionNames) {
+        return new QuestionGroupDetail(0, QUESTION_GROUP_TITLE, getEventSource(event, source), getSectionDefinitions(sectionNames));
     }
 
-    private List<SectionDefinition> getSectionDefinitions(String... sectionNames) {
-        List<SectionDefinition> sectionDefinitionList = new ArrayList<SectionDefinition>();
+    private List<SectionDetail> getSectionDefinitions(String... sectionNames) {
+        List<SectionDetail> sectionDetailList = new ArrayList<SectionDetail>();
         for (String sectionName : sectionNames) {
-            sectionDefinitionList.add(getSectionDefinition(sectionName));
+            sectionDetailList.add(getSectionDefinition(sectionName));
         }
-        return sectionDefinitionList;
+        return sectionDetailList;
     }
 
     private EventSourceEntity getEventSourceEntity(String event, String source) {
@@ -217,20 +249,21 @@ public class QuestionnaireServiceTest {
         return new EventSource(event, source, null);
     }
 
-    private SectionDefinition getSectionDefinition(String name) {
-        SectionDefinition section = new SectionDefinition();
+    private SectionDetail getSectionDefinition(String name) {
+        SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(11, true));
-        section.addQuestion(new SectionQuestionDetail(12, false));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(11, null, null, QuestionType.INVALID), true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID), false));
         return section;
     }
 
+    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test(expected = ApplicationException.class)
     public void shouldThrowValidationExceptionWhenQuestionGroupTitleIsNull() throws ApplicationException {
-        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(null, null, asList(getSectionDefinition("S1")));
-        doThrow(new ApplicationException(QUESTION_GROUP_TITLE_NOT_PROVIDED)).when(questionnaireValidator).validate(questionGroupDefinition);
-        questionnaireService.defineQuestionGroup(questionGroupDefinition);
-        verify(questionnaireValidator).validate(questionGroupDefinition);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, null, null, asList(getSectionDefinition("S1")));
+        doThrow(new ApplicationException(QUESTION_GROUP_TITLE_NOT_PROVIDED)).when(questionnaireValidator).validate(questionGroupDetail);
+        questionnaireService.defineQuestionGroup(questionGroupDetail);
+        verify(questionnaireValidator).validate(questionGroupDetail);
     }
 
     @Test
@@ -243,9 +276,9 @@ public class QuestionnaireServiceTest {
         for (int i = 0; i < questionGroupDetails.size(); i++) {
             assertThat(questionGroupDetails.get(i).getId(), is(i));
             assertThat(questionGroupDetails.get(i).getTitle(), is("QG"+i));
-            List<SectionDefinition> sectionDefinitions = questionGroupDetails.get(i).getSectionDefinitions();
-            for(int j=0;j<sectionDefinitions.size();j++) {
-                assertThat(sectionDefinitions.get(j).getName(), is("S"+i+"_"+j));
+            List<SectionDetail> sectionDetails = questionGroupDetails.get(i).getSectionDetails();
+            for(int j=0;j< sectionDetails.size();j++) {
+                assertThat(sectionDetails.get(j).getName(), is("S"+i+"_"+j));
             }
         }
     }
@@ -306,6 +339,21 @@ public class QuestionnaireServiceTest {
         assertThat(questionDetail.getShortName(), is(title));
         assertThat(questionDetail.getText(), is(title));
         assertThat(questionDetail.getType(), is(QuestionType.DATE));
+        org.testng.Assert.assertEquals(questionDetail.getAnswerChoices(),asList());
+        verify(questionDao, times(1)).getDetails(questionId);
+    }
+    
+    @Test
+    public void testGetQuestionWithAnswerChoicesById() throws ApplicationException {
+        int questionId = 1;
+        String title = "Title";
+        when(questionDao.getDetails(questionId)).thenReturn(getQuestion(questionId, title, AnswerType.MULTISELECT, asList(new QuestionChoice("choice1"), new QuestionChoice("choice2"))));
+        QuestionDetail questionDetail = questionnaireService.getQuestion(questionId);
+        assertNotNull(questionDetail);
+        assertThat(questionDetail.getShortName(), is(title));
+        assertThat(questionDetail.getText(), is(title));
+        assertThat(questionDetail.getType(), is(QuestionType.MULTI_SELECT));
+        org.testng.Assert.assertEquals(questionDetail.getAnswerChoices(),asList("choice1","choice2"));
         verify(questionDao, times(1)).getDetails(questionId);
     }
 
@@ -339,4 +387,16 @@ public class QuestionnaireServiceTest {
         verify(questionDao, times(2)).retrieveCountOfQuestionsWithTitle(QUESTION_TITLE);
     }
 
+    @Test
+    public void shouldGetAllQuestionGroupsByEventSource() throws ApplicationException {
+        List<QuestionGroup> questionGroups = asList(getQuestionGroup(1, "Title1", getSections("Section1")), getQuestionGroup(2, "Title2", getSections("Section2")));
+        when(questionGroupDao.retrieveQuestionGroupsByEventSource("Create", "Client")).thenReturn(questionGroups);
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
+        assertThat(questionGroupDetails, is(notNullValue()));
+        assertThat(questionGroupDetails.size(), is(2));
+        assertThat(questionGroupDetails.get(0).getTitle(), is("Title1"));
+        assertThat(questionGroupDetails.get(1).getTitle(), is("Title2"));
+        verify(questionnaireValidator, times(1)).validate(any(EventSource.class));
+        verify(questionGroupDao, times(1)).retrieveQuestionGroupsByEventSource("Create", "Client");
+    }
 }

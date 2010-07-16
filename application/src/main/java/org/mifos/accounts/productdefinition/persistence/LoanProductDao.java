@@ -38,4 +38,6 @@ public interface LoanProductDao {
     ProductTypeEntity findLoanProductConfiguration();
 
     void save(ProductTypeEntity loanProductConfiguration);
+
+    List<Object[]> findAllLoanProducts();
 }

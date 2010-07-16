@@ -1,6 +1,7 @@
 package org.mifos.accounts.productdefinition.persistence;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
@@ -26,5 +27,11 @@ public class SavingsProductDaoHibernate implements SavingsProductDao {
     @Override
     public void save(ProductTypeEntity productType) {
         this.genericDao.createOrUpdate(productType);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Object[]> findAllSavingsProducts() {
+        return (List<Object[]>) genericDao.executeNamedQuery("findAllSavingsProducts", null);
     }
 }

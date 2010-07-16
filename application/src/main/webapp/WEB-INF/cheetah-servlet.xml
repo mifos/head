@@ -15,6 +15,7 @@
         <property name="basenames">
             <list>
                 <value>org.mifos.ui.localizedProperties.messages</value>
+                <value>org.mifos.ui.localizedProperties.LookupValueMessages</value>
                 <value>org.mifos.ui.localizedProperties.questionnaire_messages</value>
             </list>
         </property>
@@ -24,6 +25,7 @@
     	<property name="exceptionMappings">
     		<props>
     			<prop key="java.lang.Exception">unhandledError</prop>
+    			<prop key="org.springframework.security.access.AccessDeniedException">accessDenied</prop>
     		</props>
     	</property>
     	<property name="exceptionAttribute"><value>exception</value></property>
@@ -35,6 +37,7 @@
                 <value>/WEB-INF/freemarker/</value>
                 <value>classpath:org/mifos/ui/freemarker/core</value>
                 <value>classpath:org/mifos/ui/freemarker/css</value>
+                <value>classpath:org/mifos/platform/questionnaire/ui/views</value>
             </list>
         </property>
         <property name="preferFileSystemAccess" value="false"/>
@@ -66,6 +69,10 @@
     <bean name="testingService" class="org.mifos.framework.util.StandardTestingService"/>
 
     <context:component-scan base-package="org.mifos.ui.core.controller"/>
+    <context:component-scan base-package="org.mifos.platform">
+        <context:include-filter type="regex" expression="org.mifos.platform.[^\.]*.ui.*" />
+        <context:include-filter type="regex" expression="org.mifos.platform.[^\.]*.service.*" />
+    </context:component-scan>
 
     <bean name="genericController" class="org.mifos.ui.core.controller.GenericController"/>
 
@@ -86,4 +93,6 @@
     <bean name="batchJobController" class="org.mifos.ui.core.controller.BatchJobController">
         <property name="testingService" ref="testingService" />
     </bean>
+
+    <bean id="mifosApplicationContext" class="org.mifos.framework.MifosApplicationContext"/>
 </beans>

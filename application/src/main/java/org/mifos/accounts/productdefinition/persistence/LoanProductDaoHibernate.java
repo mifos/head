@@ -84,4 +84,10 @@ public class LoanProductDaoHibernate implements LoanProductDao {
     public void save(ProductTypeEntity productType) {
         this.genericDao.createOrUpdate(productType);
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Object[]> findAllLoanProducts() {
+        return (List<Object[]>) genericDao.executeNamedQuery("findAllLoanProducts", null);
+    }
 }

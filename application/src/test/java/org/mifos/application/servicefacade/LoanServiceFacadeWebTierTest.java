@@ -23,6 +23,8 @@ import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.Mockito.when;
 
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.customers.client.business.service.ClientBusinessService;
 import java.util.Arrays;
 import java.util.List;
 
@@ -72,6 +74,12 @@ public class LoanServiceFacadeWebTierTest {
 
     @Mock
     private LoanDao loanDao;
+
+    @Mock
+    private LoanBusinessService loanBusinessService;
+
+    @Mock
+    private ClientBusinessService clientBusinessService;
 
     // test data
     @Mock

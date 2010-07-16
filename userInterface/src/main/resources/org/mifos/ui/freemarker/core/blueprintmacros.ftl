@@ -23,7 +23,7 @@
 			  <a id="header.link.clientsAndAccounts" href="custSearchAction.do?method=loadMainSearch" class="[#if currentTab == "ClientsAndAccounts"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.ClientsAndAccounts" /]">[@spring.message "tab.ClientsAndAccounts" /]</a>
 			  <a id="header.link.reports" href="reportsAction.do?method=load" class="[#if currentTab == "Reports"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Reports" /]">[@spring.message "tab.Reports" /]</a>
 			  [@security.authorize ifAllGranted="ROLE_ADMIN"]
-			   <a id="header.link.admin" href="admin.ftl" class="[#if currentTab == "Home"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Admin" /]">[@spring.message "tab.Admin" /]</a>
+			   <a id="header.link.admin" href="AdminAction.do?method=load" class="[#if currentTab == "Home"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Admin" /]">[@spring.message "tab.Admin" /]</a>
 			  [/@security.authorize]
 		</span>
 	</div>
@@ -44,7 +44,7 @@
 		  <a id="header.link.home" href="custSearchAction.do?method=getHomePage" class="[#if currentTab == "Home"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Home" /]">[@spring.message "tab.Home" /]</a>
 		  <a id="header.link.clientsAndAccounts" href="custSearchAction.do?method=loadMainSearch" class="[#if currentTab == "ClientsAndAccounts"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.ClientsAndAccounts" /]">[@spring.message "tab.ClientsAndAccounts" /]</a>
 		  <a id="header.link.reports" href="reportsAction.do?method=load" class="[#if currentTab == "Reports"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Reports" /]">[@spring.message "tab.Reports" /]</a>
-		  <a id="header.link.admin" href="admin.ftl" class="[#if currentTab == "Admin"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Admin" /]">[@spring.message "tab.Admin" /]</a></span>
+		  <a id="header.link.admin" href="AdminAction.do?method=load" class="[#if currentTab == "Admin"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Admin" /]">[@spring.message "tab.Admin" /]</a></span>
 	   </div>
     <div class="clear"></div>
     <div class="orangeline">&nbsp;</div>
@@ -72,15 +72,15 @@
 [/#macro]
 
 [#macro crumb url]
-<div class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "tab.Admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "${url}"/]</span></div>
+<div class="bluedivs paddingLeft"><a href="AdminAction.do?method=load">[@spring.message "tab.Admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "${url}"/]</span></div>
 [/#macro]
 
 [#macro header pageTitle]
 <html>
   <head>
     <title id="${pageTitle}">[@spring.message "${pageTitle}" /]</title>
-    <link href="pages/framework/css/maincss.css" rel="stylesheet" type="text/css" />
-    <link href="pages/framework/css/screen.css" rel="stylesheet" type="text/css" />
+    <link href="maincss.css.ftl" rel="stylesheet" type="text/css" />
+    <link href="screen.css.ftl" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="pages/framework/js/jquery/jquery-1.4.2.min.js"></script>   
   </head>
   <body>

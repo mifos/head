@@ -3818,7 +3818,7 @@ create table survey (
   date_of_creation date not null,
   state integer not null,
   primary key(survey_id)
-);
+) engine=innodb character set utf8;
 
 create table ppi_survey (
   country_id integer not null,
@@ -3836,7 +3836,7 @@ create table ppi_survey (
     references survey(survey_id)
       on delete no action
       on update no action
-);
+) engine=innodb character set utf8;
 
 create table survey_instance (
   instance_id integer auto_increment not null,
@@ -3868,14 +3868,14 @@ create table survey_instance (
     references personnel(personnel_id)
       on delete no action
       on update no action
-);
+) engine=innodb character set utf8;
 
 create table ppi_survey_instance (
     instance_id integer not null,
     bottom_half_below decimal(21,4),
     top_half_below decimal(21,4),
     primary key(instance_id)
-);
+) engine=innodb character set utf8;
 
 create table questions (
   question_id integer auto_increment not null,
@@ -3887,7 +3887,7 @@ create table questions (
   short_name varchar(50) not null,
   primary key(question_id),
   unique(short_name)
-);
+) engine=innodb character set utf8;
 
 
 create table survey_questions (
@@ -3905,7 +3905,7 @@ create table survey_questions (
     references survey(survey_id)
       on delete no action
       on update no action
-);
+) engine=innodb character set utf8;
 
 create table ppi_likelihoods (
   likelihood_id integer auto_increment not null,
@@ -3920,7 +3920,7 @@ create table ppi_likelihoods (
     references survey(survey_id)
       on delete no action
       on update no action
-);
+) engine=innodb character set utf8;
 
 create table question_choices (
   choice_id integer auto_increment not null,
@@ -3934,7 +3934,7 @@ create table question_choices (
     references questions(question_id)
       on delete no action
       on update no action
-);
+) engine=innodb character set utf8;
 
 
 create table survey_response (
@@ -3962,7 +3962,7 @@ create table survey_response (
     references question_choices(choice_id)
       on delete no action
       on update no action
-);
+) engine=innodb character set utf8;
 
 
 -- end tables for surveys module
@@ -4324,13 +4324,13 @@ create table question_group(
   date_of_creation date not null,
   state integer not null,
   primary key (id)
-);
+) engine=innodb character set utf8;
 
 create table events (
     id integer not null,
     name varchar(50) not null,
     primary key (id)
-);
+) engine=innodb character set utf8;
 
 create table event_sources (
     id integer not null,
@@ -4340,7 +4340,7 @@ create table event_sources (
     primary key (id),
     foreign key (entity_type_id) references entity_master(entity_type_id),
     foreign key (event_id) references events(id)
-);
+) engine=innodb character set utf8;
 
 create table question_group_event_sources(
     id integer auto_increment not null,
@@ -4349,7 +4349,7 @@ create table question_group_event_sources(
     primary key (id),
     foreign key (question_group_id) references question_group(id),
     foreign key (event_source_id) references event_sources(id)
-);
+) engine=innodb character set utf8;
 
 create table sections(
     id integer auto_increment not null,
@@ -4358,7 +4358,7 @@ create table sections(
     sequence_number integer not null,
     primary key (id),
     foreign key (question_group_id) references question_group(id)
-);
+) engine=innodb character set utf8;
 
 create table sections_questions(
     id integer auto_increment not null,
@@ -4369,4 +4369,26 @@ create table sections_questions(
     primary key (id),
     foreign key (section_id) references sections(id),
     foreign key (question_id) references questions(question_id)
-);
+) engine=innodb character set utf8;
+
+create table question_group_instance(
+    id integer auto_increment not null,
+    question_group_id integer not null,
+    entity_id integer not null,
+    date_conducted date not null,
+    completed_status smallint not null,
+    created_by integer not null,
+    version_id integer not null,
+    primary key (id),
+    foreign key (question_group_id) references question_group(id)
+) engine=innodb character set utf8;
+
+create table question_group_response(
+    id integer auto_increment not null,
+    question_group_instance_id integer not null,
+    sections_questions_id integer not null,
+    response varchar(200) not null,
+    primary key (id),
+    foreign key (sections_questions_id) references sections_questions(id),
+    foreign key (question_group_instance_id) references question_group_instance(id)
+) engine=innodb character set utf8;

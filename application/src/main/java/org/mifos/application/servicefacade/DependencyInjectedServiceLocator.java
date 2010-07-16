@@ -20,9 +20,6 @@
 
 package org.mifos.application.servicefacade;
 
-import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacadeWebTier;
-import org.mifos.customers.personnel.business.service.PersonnelService;
-import org.mifos.customers.personnel.business.service.PersonnelServiceImpl;
 
 import org.mifos.accounts.fees.business.service.FeeService;
 import org.mifos.accounts.fees.business.service.FeeServiceImpl;
@@ -36,6 +33,7 @@ import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
 import org.mifos.accounts.fund.servicefacade.WebTierFundServiceFacade;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
@@ -63,6 +61,7 @@ import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
 import org.mifos.customers.center.business.service.CenterDetailsServiceFacade;
 import org.mifos.customers.center.business.service.WebTierCenterDetailsServiceFacade;
+import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
 import org.mifos.customers.client.business.service.WebTierClientDetailsServiceFacade;
 import org.mifos.customers.group.business.service.GroupDetailsServiceFacade;
@@ -76,6 +75,9 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerDaoHibernate;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacade;
+import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacadeWebTier;
+import org.mifos.customers.personnel.business.service.PersonnelService;
+import org.mifos.customers.personnel.business.service.PersonnelServiceImpl;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
