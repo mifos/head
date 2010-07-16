@@ -276,7 +276,7 @@ input[type=text], input[type=password], input.text, input.title, textarea, {/*ba
 }
 select{
 	border:1px solid #7f9db9;
-	color:#6A6969;
+	color:#000000;
 	font-family:Arial, Helvetica, sans-serif;
 	font-size:11px;
 	padding:2px;
