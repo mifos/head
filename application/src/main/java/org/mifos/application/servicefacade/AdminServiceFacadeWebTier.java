@@ -23,6 +23,9 @@ package org.mifos.application.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.accounts.acceptedpaymenttype.business.AcceptedPaymentType;
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.util.helpers.PaymentTypeData;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
@@ -32,15 +35,21 @@ import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
 import org.mifos.customers.office.business.service.MandatoryHiddenFieldService;
 import org.mifos.customers.office.business.service.OfficeHierarchyService;
 import org.mifos.customers.office.persistence.OfficeDao;
+import org.mifos.dto.domain.AcceptedPaymentTypeDto;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
+import org.mifos.dto.screen.PaymentTypeDto;
 import org.mifos.dto.screen.ProductCategoryDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.mifos.dto.screen.ProductDisplayDto;
@@ -49,7 +58,7 @@ import org.mifos.dto.screen.ProductMixDetailsDto;
 import org.mifos.dto.screen.ProductMixDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
-import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
@@ -328,5 +337,79 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     public void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto) throws Exception {
         List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence().getAllConfigurationFieldList();
         mandatoryHiddenFieldService.updateMandatoryHiddenFields(dto, confFieldList);
+    }
+
+    @Override
+    public AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes() throws Exception {
+        List<PaymentTypeDto> payments = getAllPaymentTypes((short)0);
+        // acceptedPaymentTypeActionForm.setAllPaymentTypes(payments);
+        AcceptedPaymentTypePersistence paymentTypePersistence = new AcceptedPaymentTypePersistence();
+        for (int i = 0; i < TrxnTypes.values().length; i++) {
+            setPaymentTypesForATransaction(payments, TrxnTypes.values()[i], paymentTypePersistence, new AcceptedPaymentTypeDto());
+        }
+        return null;
+    }
+
+    private List<PaymentTypeDto> getAllPaymentTypes(Short localeId) throws Exception {
+        List<PaymentTypeDto> paymentTypeList = new ArrayList<PaymentTypeDto>();
+        PaymentTypeDto payment = null;
+        Short id = 0;
+        List<PaymentTypeEntity> paymentTypes = getMasterEntities(PaymentTypeEntity.class, localeId);
+        for (PaymentTypeEntity masterDataEntity : paymentTypes) {
+            PaymentTypeEntity paymentType = masterDataEntity;
+            id = paymentType.getId();
+            payment = new PaymentTypeDto(id, paymentType.getName());
+            paymentTypeList.add(payment);
+        }
+
+        return paymentTypeList;
+    }
+
+    private <T extends MasterDataEntity>  List<T> getMasterEntities(Class<T> type, Short localeId) throws ServiceException {
+        return new MasterDataService().retrieveMasterEntities(type, localeId);
+    }
+    private void setPaymentTypesForATransaction(List<PaymentTypeDto> payments, TrxnTypes transactionType,
+            AcceptedPaymentTypePersistence paymentTypePersistence, AcceptedPaymentTypeDto dto)
+            throws Exception {
+
+        Short transactionId = transactionType.getValue();
+        List<AcceptedPaymentType> paymentTypeList = paymentTypePersistence
+                .getAcceptedPaymentTypesForATransaction(transactionId);
+        List<PaymentTypeDto> inList = new ArrayList<PaymentTypeDto>(payments);
+        List<PaymentTypeDto> outList = new ArrayList<PaymentTypeDto>();
+
+        PaymentTypeDto data = null;
+        for (AcceptedPaymentType paymentType : paymentTypeList) {
+            Short paymentTypeId = paymentType.getPaymentTypeEntity().getId();
+            data = new PaymentTypeDto(paymentTypeId, paymentType.getPaymentTypeEntity().getName());
+            outList.add(data);
+            RemoveFromInList(inList, paymentTypeId);
+        }
+        if (transactionType == TrxnTypes.loan_repayment) {
+            dto.setInRepaymentList(inList);
+            dto.setOutRepaymentList(outList);
+        } else if (transactionType == TrxnTypes.fee) {
+            dto.setInFeeList(inList);
+            dto.setOutFeeList(outList);
+        } else if (transactionType == TrxnTypes.loan_disbursement) {
+            dto.setInDisbursementList(inList);
+            dto.setOutDisbursementList(outList);
+        } else if (transactionType == TrxnTypes.savings_deposit) {
+            dto.setInDepositList(inList);
+            dto.setOutDepositList(outList);
+        } else if (transactionType == TrxnTypes.savings_withdrawal) {
+            dto.setInWithdrawalList(inList);
+            dto.setOutWithdrawalList(outList);
+        } else {
+            throw new Exception("Unknow account action for accepted payment type " + transactionType.toString());
+        }
+    }
+
+    private void RemoveFromInList(List<PaymentTypeDto> list, Short paymentTypeId) {
+        for (int i = list.size() - 1; i >= 0; i--) {
+            if (list.get(i).getId().shortValue() == paymentTypeId.shortValue()) {
+                list.remove(i);
+            }
+        }
     }
 }

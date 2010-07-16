@@ -22,6 +22,7 @@ package org.mifos.application.admin.servicefacade;
 
 import java.util.List;
 
+import org.mifos.dto.domain.AcceptedPaymentTypeDto;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
@@ -63,4 +64,7 @@ public interface AdminServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto) throws Exception;
+
+    @PreAuthorize("isFullyAuthenticated()")
+    AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes() throws Exception;
 }
