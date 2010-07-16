@@ -11,20 +11,34 @@
  
    <!--  Main Content Begins-->  
   <div class=" content leftMargin180">
-  <div class="bluedivs paddingLeft"><a href="admin.html">Admin</a>&nbsp;/&nbsp;<span class="fontBold">Define Labels</span></div>
+  
+  [@mifos.crumbs breadcrumbs/]
+  
   	<form method="" action="" name="formname">  	
     <div class="span-16">  		
         <div class="clear">&nbsp;</div>
         <div class="fontBold"><span class="orangeheading"> Define Labels</span></div>
-        <p class="error"></p>
+        [@spring.bind "formBean" /]
+  		[@spring.showErrors "<br>" /]
 		<p class="fontBold">Office Hierarchy </p>
         <div class="span-16 last">
-        	<div class="span-16"><span class="span-4 rightAlign">Head office&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Head office" /></span>
+        	<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="headoffice">Head office:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.headOffice" /]
+						<input type="text" id="headoffice" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Regional office&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Regional office" /></span>
+  			
+			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="regionaloffice">Regional office:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.regionalOffice" /]
+						<input type="text" id="regionaloffice" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
+  			
+  			
             <div class="span-16"><span class="span-4 rightAlign">Sub regional office&nbsp;:</span>
     				<span class="span-3"><input type="text" value="Sub regional office" /></span>
   			</div>
@@ -158,10 +172,13 @@
         <div class="clear">&nbsp;</div>
         <hr />
         <div class="span-20 last">
+        
+        
         <div class="prepend-7">
-          <input class="buttn" type="button" name="submit" value="Submit" onclick="location.href='admin.html'"/>
-          <input class="buttn2" type="button" name="cancel" value="Cancel" onclick="location.href='admin.html'"/>
+             <input class="buttn"  type="submit" name="submit" value="[@spring.message "submit"/]"/>
+            <input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]"/>
         </div>
+        
         </div>
 	</div>
    	</form> 

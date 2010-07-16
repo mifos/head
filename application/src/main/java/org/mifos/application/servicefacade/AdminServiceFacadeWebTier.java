@@ -23,6 +23,7 @@ package org.mifos.application.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
@@ -30,35 +31,43 @@ import org.mifos.accounts.productdefinition.business.service.ProductCategoryBusi
 import org.mifos.accounts.productdefinition.business.service.ProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
+import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.config.persistence.ApplicationConfigurationDao;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.office.business.service.OfficeHierarchyService;
 import org.mifos.customers.office.persistence.OfficeDao;
+import org.mifos.dto.domain.ConfigurableLookupLabelDto;
+import org.mifos.dto.domain.GracePeriodDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
+import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.dto.screen.ProductCategoryDto;
-import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
+import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductDto;
 import org.mifos.dto.screen.ProductMixDetailsDto;
 import org.mifos.dto.screen.ProductMixDto;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
-    private ProductService productService;
-    private OfficeHierarchyService officeHierarchyService;
-    private LoanProductDao loanProductDao;
-    private SavingsProductDao savingsProductDao;
-    private OfficeDao officeDao;
-
+    private final ProductService productService;
+    private final OfficeHierarchyService officeHierarchyService;
+    private final LoanProductDao loanProductDao;
+    private final SavingsProductDao savingsProductDao;
+    private final OfficeDao officeDao;
+    private final ApplicationConfigurationDao applicationConfigurationDao;
 
     public AdminServiceFacadeWebTier(ProductService productService, OfficeHierarchyService officeHierarchyService, LoanProductDao loanProductDao,
-                                    SavingsProductDao savingsProductDao, OfficeDao officeDao) {
+                                    SavingsProductDao savingsProductDao, OfficeDao officeDao, ApplicationConfigurationDao applicationConfigurationDao) {
         this.productService = productService;
         this.officeHierarchyService = officeHierarchyService;
         this.loanProductDao = loanProductDao;
         this.savingsProductDao = savingsProductDao;
         this.officeDao = officeDao;
+        this.applicationConfigurationDao = applicationConfigurationDao;
     }
 
     @Override
@@ -173,5 +182,117 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         ProductMixDetailsDto dto = new ProductMixDetailsDto(prdOfferingId, prdOfferingBO.getPrdOfferingName(),
                                     prdOfferingBO.getPrdType().getProductTypeID(), allowedPrdOfferingNames, notAllowedPrdOfferingNames);
         return dto;
+    }
+
+    @Override
+    public ConfigureApplicationLabelsDto retrieveConfigurableLabels() {
+        OfficeLevelDto officeLevels = officeDao.findOfficeLevelsWithConfiguration();
+
+        List<GracePeriodTypeEntity> gracePeriodTypes = applicationConfigurationDao.findGracePeriodTypes();
+        GracePeriodDto gracePeriodDtos = assemble(gracePeriodTypes);
+
+//        List<LookUpEntity> lookupEntities = new ApplicationConfigurationPersistence().getLookupEntities();
+        List<LookUpEntity> lookupEntities = applicationConfigurationDao.findLookupValueTypes();
+        ConfigurableLookupLabelDto lookupLabels = assemble(lookupEntities);
+
+        return new ConfigureApplicationLabelsDto(officeLevels, gracePeriodDtos, lookupLabels);
+    }
+
+    private ConfigurableLookupLabelDto assemble(List<LookUpEntity> lookupEntities) {
+
+        ConfigurableLookupLabelDto lookupLabels = new ConfigurableLookupLabelDto();
+
+        for (LookUpEntity entity : lookupEntities) {
+            if (entity.getEntityType().equals(ConfigurationConstants.CLIENT)) {
+                lookupLabels.setClientKey(entity.getEntityType());
+                // labelConfigurationActionForm.setClient(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),userContext));
+            } else if (entity.getEntityType().equals(ConfigurationConstants.GROUP)) {
+                lookupLabels.setGroupKey(entity.getEntityType());
+                // labelConfigurationActionForm.setGroup(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),userContext));
+            } else if (entity.getEntityType().equals(ConfigurationConstants.CENTER)) {
+                lookupLabels.setCenterKey(entity.getEntityType());
+                // labelConfigurationActionForm.setCenter(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
+                // userContext));
+            } else if (entity.getEntityType().equals(ConfigurationConstants.LOAN)) {
+                lookupLabels.setLoansKey(entity.getEntityType());
+                // labelConfigurationActionForm.setLoans(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
+                // userContext));
+            } else if (entity.getEntityType().equals(ConfigurationConstants.SAVINGS)) {
+                lookupLabels.setSavingsKey(entity.getEntityType());
+                // labelConfigurationActionForm.setSavings(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),userContext));
+            } else if (entity.getEntityType().equals(ConfigurationConstants.STATE)) {
+                lookupLabels.setStateKey(entity.getEntityType());
+                // labelConfigurationActionForm.setState(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),userContext));
+            } else if (entity.getEntityType().equals(ConfigurationConstants.POSTAL_CODE)) {
+                lookupLabels.setPostalCodeKey(entity.getEntityType());
+                // labelConfigurationActionForm.setPostalCode(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
+                // userContext));
+            } else if (entity.getEntityType().equals(ConfigurationConstants.ETHINICITY)) {
+                lookupLabels.setEthnicityKey(entity.getEntityType());
+                // labelConfigurationActionForm.setEthnicity(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
+                // userContext));
+            } else if (entity.getEntityType().equals(ConfigurationConstants.CITIZENSHIP)) {
+                lookupLabels.setCitizenshipKey(entity.getEntityType());
+                // labelConfigurationActionForm.setCitizenship(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
+                // userContext));
+            } else if (entity.getEntityType().equals(ConfigurationConstants.HANDICAPPED)) {
+                lookupLabels.setHandicappedKey(entity.getEntityType());
+                // labelConfigurationActionForm.setHandicapped(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
+                // userContext));
+            } else if (entity.getEntityType().equals(ConfigurationConstants.GOVERNMENT_ID)) {
+                lookupLabels.setGovtIdKey(entity.getEntityType());
+                // labelConfigurationActionForm.setGovtId(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),userContext));
+            } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS1)) {
+                lookupLabels.setAddress1Key(entity.getEntityType());
+                // labelConfigurationActionForm.setAddress1(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
+                // userContext));
+            } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS2)) {
+                lookupLabels.setAddress2Key(entity.getEntityType());
+                // labelConfigurationActionForm.setAddress2(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
+                // userContext));
+            } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS3)) {
+                lookupLabels.setAddress3Key(entity.getEntityType());
+                // labelConfigurationActionForm.setAddress3(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
+                // userContext));
+            } else if (entity.getEntityType().equals(ConfigurationConstants.INTEREST)) {
+                lookupLabels.setInterestKey(entity.getEntityType());
+                // labelConfigurationActionForm.setInterest(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
+                // userContext));
+            } else if (entity.getEntityType().equals(ConfigurationConstants.EXTERNALID)) {
+                lookupLabels.setExternalIdKey(entity.getEntityType());
+                // labelConfigurationActionForm.setExternalId(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
+                // userContext));
+            } else if (entity.getEntityType().equals(ConfigurationConstants.BULKENTRY)) {
+                lookupLabels.setBulkEntryKey(entity.getEntityType());
+                // labelConfigurationActionForm.setBulkEntry(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
+                // userContext));
+            }
+        }
+
+        return lookupLabels;
+    }
+
+    private GracePeriodDto assemble(List<GracePeriodTypeEntity> gracePeriodTypes) {
+
+        GracePeriodDto gracePeriods = new GracePeriodDto();
+
+        for (GracePeriodTypeEntity entity : gracePeriodTypes) {
+            GraceType periodType = GraceType.fromInt(entity.getId());
+            switch (periodType) {
+            case NONE:
+                gracePeriods.setNoneKey(entity.getLookUpValue().getPropertiesKey());
+                break;
+            case GRACEONALLREPAYMENTS:
+                gracePeriods.setGraceOnAllRepaymentsKey(entity.getLookUpValue().getPropertiesKey());
+                break;
+            case PRINCIPALONLYGRACE:
+                gracePeriods.setPrincipalOnlyGraceKey(entity.getLookUpValue().getPropertiesKey());
+                break;
+            default:
+                break;
+            }
+        }
+
+        return gracePeriods;
     }
 }

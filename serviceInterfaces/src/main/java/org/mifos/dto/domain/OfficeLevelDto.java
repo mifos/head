@@ -27,10 +27,15 @@ import java.io.Serializable;
 public class OfficeLevelDto implements Serializable {
 
     private boolean headOfficeEnabled;
+    private String headOfficeNameKey;
     private boolean regionalOfficeEnabled;
+    private String regionalOfficeNameKey;
     private boolean subRegionalOfficeEnabled;
+    private String subRegionalOfficeNameKey;
     private boolean areaOfficeEnabled;
+    private String areaOfficeNameKey;
     private boolean branchOfficeEnabled;
+    private String branchOfficeNameKey;
 
     public boolean isHeadOfficeEnabled() {
         return this.headOfficeEnabled;
@@ -70,5 +75,45 @@ public class OfficeLevelDto implements Serializable {
 
     public void setBranchOfficeEnabled(boolean branchOfficeEnabled) {
         this.branchOfficeEnabled = branchOfficeEnabled;
+    }
+
+    public String getHeadOfficeNameKey() {
+        return this.headOfficeNameKey;
+    }
+
+    public void setHeadOfficeNameKey(String headOfficeNameKey) {
+        this.headOfficeNameKey = headOfficeNameKey;
+    }
+
+    public String getRegionalOfficeNameKey() {
+        return this.regionalOfficeNameKey;
+    }
+
+    public void setRegionalOfficeNameKey(String regionalOfficeNameKey) {
+        this.regionalOfficeNameKey = regionalOfficeNameKey;
+    }
+
+    public String getSubRegionalOfficeNameKey() {
+        return this.subRegionalOfficeNameKey;
+    }
+
+    public void setSubRegionalOfficeNameKey(String subRegionalOfficeNameKey) {
+        this.subRegionalOfficeNameKey = subRegionalOfficeNameKey;
+    }
+
+    public String getAreaOfficeNameKey() {
+        return this.areaOfficeNameKey;
+    }
+
+    public void setAreaOfficeNameKey(String areaOfficeNameKey) {
+        this.areaOfficeNameKey = areaOfficeNameKey;
+    }
+
+    public String getBranchOfficeNameKey() {
+        return this.branchOfficeNameKey;
+    }
+
+    public void setBranchOfficeNameKey(String branchOfficeNameKey) {
+        this.branchOfficeNameKey = branchOfficeNameKey;
     }
 }

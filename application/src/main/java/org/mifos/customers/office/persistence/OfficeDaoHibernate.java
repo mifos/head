@@ -148,18 +148,23 @@ public class OfficeDaoHibernate implements OfficeDao {
             switch (level) {
             case HEADOFFICE:
                 officeLevels.setHeadOfficeEnabled(officeLevelEntity.isConfigured());
+                officeLevels.setHeadOfficeNameKey(officeLevelEntity.getLookUpValue().getPropertiesKey());
                 break;
             case REGIONALOFFICE:
                 officeLevels.setRegionalOfficeEnabled(officeLevelEntity.isConfigured());
+                officeLevels.setRegionalOfficeNameKey(officeLevelEntity.getLookUpValue().getPropertiesKey());
                 break;
             case SUBREGIONALOFFICE:
                 officeLevels.setSubRegionalOfficeEnabled(officeLevelEntity.isConfigured());
+                officeLevels.setSubRegionalOfficeNameKey(officeLevelEntity.getLookUpValue().getPropertiesKey());
                 break;
             case AREAOFFICE:
                 officeLevels.setAreaOfficeEnabled(officeLevelEntity.isConfigured());
+                officeLevels.setAreaOfficeNameKey(officeLevelEntity.getLookUpValue().getPropertiesKey());
                 break;
             case BRANCHOFFICE:
                 officeLevels.setBranchOfficeEnabled(officeLevelEntity.isConfigured());
+                officeLevels.setBranchOfficeNameKey(officeLevelEntity.getLookUpValue().getPropertiesKey());
                 break;
             default:
                 break;

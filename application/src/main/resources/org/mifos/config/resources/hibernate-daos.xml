@@ -9,6 +9,10 @@
 
     <bean id="genericDao" class="org.mifos.accounts.savings.persistence.GenericDaoHibernate" />
     
+    <bean id="applicationConfigurationDao" class="org.mifos.config.persistence.ApplicationConfigurationDaoHibernate" >
+    	<constructor-arg ref="genericDao" />
+    </bean>
+    
     <bean id="fundDao" class="org.mifos.accounts.fund.persistence.FundDaoHibernate" >
     	<constructor-arg ref="genericDao" />
     </bean>

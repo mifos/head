@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
+import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductDto;
@@ -57,4 +58,5 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     ProductDto retrieveAllProductMix() throws Exception;
 
+    ConfigureApplicationLabelsDto retrieveConfigurableLabels();
 }
