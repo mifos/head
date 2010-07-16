@@ -30,6 +30,7 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="review_transaction_savings" />
+    <script src="pages/framework/js/jquery/jquery-1.4.2.min.js"></script>
 	<script language="javascript">
 		function funCancel(form){
 			form.action="savingsDepositWithdrawalAction.do?method=cancel";
@@ -44,6 +45,12 @@ explanation of the license and how it is applied.
 			form.action="savingsDepositWithdrawalAction.do?method=previous";
 			form.submit();
 		}
+        jQuery(document).ready(function() {
+            var submitButton = jQuery("input#review_transaction_savings\\.button\\.submit")[0];
+            if (submitButton.disabled) {
+              submitButton.disabled = false;
+            }
+        });
 	</script>
 <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <html-el:form method="post" action="savingsDepositWithdrawalAction.do?method=makePayment" >

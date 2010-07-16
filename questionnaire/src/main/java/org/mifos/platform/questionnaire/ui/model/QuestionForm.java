@@ -21,16 +21,19 @@
 package org.mifos.platform.questionnaire.ui.model;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.platform.questionnaire.service.QuestionDetail;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("PMD")
 public class QuestionForm extends ScreenObject {
+    private static final long serialVersionUID = 2010225942240327677L;
+
     private List<Question> questions = new ArrayList<Question>();
 
     @javax.validation.Valid
-    private Question currentQuestion = new Question();
+    private Question currentQuestion = new Question(new QuestionDetail());
 
     public Question getCurrentQuestion() {
         return this.currentQuestion;
@@ -39,8 +42,6 @@ public class QuestionForm extends ScreenObject {
     public void setCurrentQuestion(Question currentQuestion) {
         this.currentQuestion = currentQuestion;
     }
-
-    private static final long serialVersionUID = 2010225942240327677L;
 
 
     /*@org.hibernate.validator.constraints.NotEmpty
@@ -63,8 +64,9 @@ public class QuestionForm extends ScreenObject {
 
     public void addCurrentQuestion() {
         currentQuestion.trimTitle();
+        currentQuestion.setChoicesIfApplicable();
         questions.add(currentQuestion);
-        currentQuestion = new Question();
+        currentQuestion = new Question(new QuestionDetail());
     }
 
     public boolean isDuplicateTitle(String questionTitle) {
@@ -89,4 +91,7 @@ public class QuestionForm extends ScreenObject {
         return null;
     }
 
+    public boolean answerChoicesAreInvalid() {
+        return currentQuestion.answerChoicesAreInvalid();
+    }
 }

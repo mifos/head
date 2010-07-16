@@ -22,7 +22,7 @@ package org.mifos.platform.questionnaire.domain;
 
 
 public enum AnswerType {
-    INVALID(0), MULTISELECT(1), FREETEXT(2), NUMBER(3), CHOICE(4), DATE(5), MULTIPLE_CHOICE(6);
+    INVALID(0), MULTISELECT(1), FREETEXT(2), NUMBER(3), CHOICE(4), DATE(5), SINGLESELECT(6);
 
     private int value;
 

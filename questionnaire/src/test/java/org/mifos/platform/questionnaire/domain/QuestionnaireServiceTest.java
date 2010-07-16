@@ -20,7 +20,6 @@
 
 package org.mifos.platform.questionnaire.domain;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,8 +38,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.Arrays;
 import org.junit.Assert;
 
@@ -88,32 +87,32 @@ public class QuestionnaireServiceTest {
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
             Assert.assertEquals(QuestionType.FREETEXT, questionDetail.getType());
-            Assert.assertEquals(questionDetail.getAnswerChoices(),Arrays.asList());
+            Assert.assertEquals(questionDetail.getAnswerChoices(), Arrays.asList());
         } catch (SystemException e) {
             Assert.fail("Should not have thrown the validation exception");
         }
         Mockito.verify(questionnaireValidator).validate(questionDefinition);
-        Mockito.verify(questionDao).create(any(org.mifos.platform.questionnaire.domain.QuestionEntity.class));
+        Mockito.verify(questionDao).create(any(QuestionEntity.class));
     }
 
     @Test
     public void shouldDefineQuestionWithAnswerChoices() throws SystemException {
         String choice1 = "choice1";
         String choice2 = "choice2";
-        QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, QuestionType.MULTIPLE_CHOICE, Arrays.asList(choice1, choice2));
+        QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, QuestionType.MULTI_SELECT, Arrays.asList(choice1, choice2));
         try {
             QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
-            Mockito.verify(questionDao, Mockito.times(1)).create(any(org.mifos.platform.questionnaire.domain.QuestionEntity.class));
+            Mockito.verify(questionDao, Mockito.times(1)).create(any(QuestionEntity.class));
             Assert.assertNotNull(questionDetail);
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
-            Assert.assertEquals(QuestionType.MULTIPLE_CHOICE, questionDetail.getType());
-            Assert.assertEquals(questionDetail.getAnswerChoices(),Arrays.asList(choice1, choice2));
+            Assert.assertEquals(QuestionType.MULTI_SELECT, questionDetail.getType());
+            Assert.assertEquals(questionDetail.getAnswerChoices(), Arrays.asList(choice1, choice2));
         } catch (SystemException e) {
             Assert.fail("Should not have thrown the validation exception");
         }
         Mockito.verify(questionnaireValidator).validate(questionDefinition);
-        Mockito.verify(questionDao).create(any(org.mifos.platform.questionnaire.domain.QuestionEntity.class));
+        Mockito.verify(questionDao).create(any(QuestionEntity.class));
     }
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
@@ -248,8 +247,8 @@ public class QuestionnaireServiceTest {
     private SectionDetail getSectionDefinition(String name) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(11, true));
-        section.addQuestion(new SectionQuestionDetail(12, false));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(11, null, null, QuestionType.INVALID), true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID), false));
         return section;
     }
 
@@ -321,7 +320,7 @@ public class QuestionnaireServiceTest {
             Assert.fail("Should raise application exception when question group is not present");
         } catch (SystemException e) {
             Mockito.verify(questionGroupDao, Mockito.times(1)).getDetails(questionGroupId);
-            Assert.assertThat(e.getKey(), CoreMatchers.is(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
+            Assert.assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
         }
     }
 
@@ -338,19 +337,17 @@ public class QuestionnaireServiceTest {
         Assert.assertEquals(questionDetail.getAnswerChoices(),Arrays.asList());
         Mockito.verify(questionDao, Mockito.times(1)).getDetails(questionId);
     }
-    
+
     @Test
     public void testGetQuestionWithAnswerChoicesById() throws SystemException {
         int questionId = 1;
         String title = "Title";
-        Mockito.when(questionDao.getDetails(questionId)).thenReturn(
-                getQuestion(questionId, title, AnswerType.MULTIPLE_CHOICE,
-                        Arrays.asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2"))));
+        Mockito.when(questionDao.getDetails(questionId)).thenReturn(getQuestion(questionId, title, AnswerType.MULTISELECT, Arrays.asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2"))));
         QuestionDetail questionDetail = questionnaireService.getQuestion(questionId);
         Assert.assertNotNull(questionDetail);
         Assert.assertThat(questionDetail.getShortName(), is(title));
         Assert.assertThat(questionDetail.getText(), is(title));
-        Assert.assertThat(questionDetail.getType(), is(QuestionType.MULTIPLE_CHOICE));
+        Assert.assertThat(questionDetail.getType(), is(QuestionType.MULTI_SELECT));
         Assert.assertEquals(questionDetail.getAnswerChoices(),Arrays.asList("choice1","choice2"));
         Mockito.verify(questionDao, Mockito.times(1)).getDetails(questionId);
     }
@@ -378,9 +375,10 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldCheckDuplicates() {
+        QuestionDefinition questionDefinition = new QuestionDefinition(QUESTION_TITLE, QuestionType.FREETEXT);
         Mockito.when(questionDao.retrieveCountOfQuestionsWithTitle(QUESTION_TITLE)).thenReturn(Arrays.asList((long) 0)).thenReturn(Arrays.asList((long) 1));
-        Assert.assertEquals(false, questionnaireService.isDuplicateQuestionTitle(QUESTION_TITLE));
-        Assert.assertEquals(true, questionnaireService.isDuplicateQuestionTitle(QUESTION_TITLE));
+        Assert.assertEquals(false, questionnaireService.isDuplicateQuestionTitle(questionDefinition.getTitle()));
+        Assert.assertEquals(true, questionnaireService.isDuplicateQuestionTitle(questionDefinition.getTitle()));
         Mockito.verify(questionDao, Mockito.times(2)).retrieveCountOfQuestionsWithTitle(QUESTION_TITLE);
     }
 

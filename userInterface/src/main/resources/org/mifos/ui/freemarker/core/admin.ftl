@@ -19,12 +19,12 @@
       <p class="orangeheading">[@spring.message "manageOrganization" /]</p>
       <p class="fontBold">[@spring.message "systemusers"/]</p>
       <ul>
-        <li type="circle"><a id="admin.link.viewSysUsers" href="PersonAction.do?method=loadSearch&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "viewsystemusers"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineNewUsers" href="PersonAction.do?method=chooseOffice&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "definenewsystemuser" /]</a></li>       
-        <li type="circle"><a id="admin.link.manageRoles" href="rolesPermission.do?method=viewRoles&name=aa&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "managerolesandpermissions"/]</a></li>
+        <li type="circle"><a id="admin.link.viewSysUsers" href="viewSystemUsers.ftl">[@spring.message "viewsystemusers"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineNewUsers" href="defineNewSystemUser.ftl">[@spring.message "definenewsystemuser" /]</a></li>       
+        <li type="circle"><a id="admin.link.manageRoles" href="manageRolesAndPermissions.ftl">[@spring.message "managerolesandpermissions"/]</a></li>
       </ul>
       <p><span class="fontBold">[@spring.message "offices"/]</span>
       <ul>
-        <li type="circle"><a id="admin.link.viewOffices" href="offAction.do?method=getAllOffices">[@spring.message "viewOffices" /]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewOffice" href="offAction.do?method=load">[@spring.message "defineNewOffice"/]</a></li>
+        <li type="circle"><a id="admin.link.viewOffices" href="viewOffices.ftl">[@spring.message "viewOffices" /]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewOffice" href="defineNewOffice.ftl">[@spring.message "defineNewOffice"/]</a></li>
         <li type="circle"><a id="admin.link.viewOfficeHierarchy" href="viewOfficeHierarchy.ftl">[@spring.message "viewofficehierarchy" /]</a></li>        
       </ul>
       </p>
@@ -32,9 +32,9 @@
       <ul>
         <li type="circle"><a id="admin.link.defineNewFees" href="feeaction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}" >[@spring.message "viewfees"/]</a>&nbsp;|&nbsp;<a eId="admin.link.defineNewFees" href="feeaction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "definenewfees"/]</a></li>
         <li type="circle"><a id="admin.link.viewFunds" href="viewFunds.ftl" >[@spring.message "viewfunds"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewFund"	href="fundAction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "definenewfund"/]</a></li>
-        <li type="circle"><a id="admin.link.viewChecklists" href="viewChecklists.ftl" >[@spring.message "viewchecklists"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewChecklist" href="chkListAction.do?method=load">[@spring.message "definenewchecklist"/]</a></li>
-        <li type="circle"><a id="admin.link.viewHolidays" href="holidayAction.do?method=get" >[@spring.message "viewholidays"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewHoliday" href="holidayAction.do?method=load">[@spring.message "definenewholidays"/]</a></li>
-        <li type="circle"><a id="admin.link.defineAcceptedPaymentType" href="acceptedPaymentTypeAction.do?method=load" >[@spring.message "defineacceptedpayments"/]</a></li>
+        <li type="circle"><a id="admin.link.viewChecklists" href="viewChecklists.ftl" >[@spring.message "viewchecklists"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewChecklist" href="defineNewChecklist.ftl">[@spring.message "definenewchecklist"/]</a></li>
+        <li type="circle"><a id="admin.link.viewHolidays" href="holidayAction.do?method=get" >[@spring.message "viewholidays"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewHoliday" href="defineNewHolidays.ftl">[@spring.message "definenewholidays"/]</a></li>
+        <li type="circle"><a id="admin.link.defineAcceptedPaymentType" href="defineAcceptedPaymentTypes.ftl" >[@spring.message "defineacceptedpayments"/]</a></li>
         <li type="circle"><a id="admin.link.viewOrganizationSettings" href="viewOrganizationSettings.ftl" >[@spring.message "viewOrganizationSettings"/]</a></li>
         <li type="circle"><a id="admin.link.viewPPI" href="ppiAction.do?method=get" >[@spring.message "viewPPIsettings" /]</a>&nbsp;|&nbsp;<a Id="admin.link.configurePPI" href="ppiAction.do?method=configure">[@spring.message "ConfigurePPIsettings"/]</a></li>
       </ul>
@@ -44,7 +44,7 @@
         <li type="circle"><a id="admin.link.defineLabels" href="defineLabels.ftl">[@spring.message "defineLabels"/]</a></li>
         <li type="circle"><a id="admin.link.defineLookupOption"	href="defineLookupOptions.ftl">[@spring.message "defineLookupOptions"/]</a></li>
         <li type="circle"><a id="admin.link.defineHiddenMandatoryFields" href="defineMandatoryHiddenFields.ftl">[@spring.message "definemandatory/hiddenfields"/]</a></li>
-        <li type="circle"><a id="admin.link.viewAdditionalFields" href="customFieldsAction.do?method=load">[@spring.message "viewAdditionalFields"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineAdditionalFields"	href="customFieldsAction.do?method=loadDefineCustomFields">[@spring.message "defineAdditionalFields"/]</a></li>
+        <li type="circle"><a id="admin.link.viewAdditionalFields" href="viewAdditionalFields.ftl">[@spring.message "viewAdditionalFields"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineAdditionalFields"	href="defineAdditionalFields.ftl">[@spring.message "defineAdditionalFields"/]</a></li>
       </ul>
       </p>
       <p class="orangeheading">[@spring.message "manageimports"/]</p>
@@ -61,8 +61,8 @@
       <p class="orangeheading">[@spring.message "manageProducts"/]</p>
       <p><span class="fontBold">[@spring.message "productrulesattributes"/]</span>
       <ul>
-        <li type="circle"><a id="admin.link.viewProductCategories" href="viewProductCategories.ftl">[@spring.message "viewproductcategories"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineNewProductCategory" href="productCategoryAction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "definenewcategory"/]</a></li>
-        <li type="circle"><a id="admin.link.viewLatenessDormancyDefinition" href="prdconfaction.do?method=load">[@spring.message "viewlatenessdormancydefinition"/]</a></li>
+        <li type="circle"><a id="admin.link.viewProductCategories" href="viewProductCategories.ftl">[@spring.message "viewproductcategories"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineNewProductCategory" href="defineNewCategory.ftl">[@spring.message "definenewcategory"/]</a></li>
+        <li type="circle"><a id="admin.link.viewLatenessDormancyDefinition" href="editLatenessDormancy.ftl">[@spring.message "viewlatenessdormancydefinition"/]</a></li>
       </ul>
       </p>
       <p><span class="fontBold">[@spring.message "manageproductmix"/]</span>

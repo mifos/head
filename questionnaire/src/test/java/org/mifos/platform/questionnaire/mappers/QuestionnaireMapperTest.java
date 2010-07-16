@@ -41,7 +41,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;  
 import java.util.Date;
@@ -54,7 +53,6 @@ import static org.hamcrest.CoreMatchers.*;   // NOPMD
 import static org.hamcrest.core.IsNull.nullValue; // NOPMD
 import static org.junit.Assert.assertThat;   // NOPMD
 import static org.mockito.Matchers.anyString; // NOPMD
-
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -88,9 +86,9 @@ public class QuestionnaireMapperTest {
     public void shouldMapMultipleChoiceQuestionDetailToQuestion() {
         String choice1 = "choice1";
         String choice2 = "choice2";
-        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.MULTIPLE_CHOICE, Arrays.asList(choice1, choice2));
+        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.MULTI_SELECT, Arrays.asList(choice1, choice2));
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
-        assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.MULTIPLE_CHOICE));
+        assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.MULTISELECT));
         assertThat(question.getQuestionText(), is(TITLE));
         assertThat(question.getShortName(), is(TITLE));
         assertThat(question.getChoices(), new QuestionChoicesMatcher(Arrays.asList(new QuestionChoiceEntity(choice1), new QuestionChoiceEntity(choice2))));
@@ -102,9 +100,9 @@ public class QuestionnaireMapperTest {
         QuestionDetail questionDetail = questionnaireMapper.mapToQuestionDetail(question);
         assertQuestionDetail(questionDetail, TITLE, QuestionType.FREETEXT);
 
-        question = getQuestion(TITLE, AnswerType.MULTIPLE_CHOICE, Arrays.asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2")));
+        question = getQuestion(TITLE, AnswerType.MULTISELECT, Arrays.asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2")));
         questionDetail = questionnaireMapper.mapToQuestionDetail(question);
-        assertQuestionDetail(questionDetail, TITLE, QuestionType.MULTIPLE_CHOICE, Arrays.asList("choice1", "choice2"));
+        assertQuestionDetail(questionDetail, TITLE, QuestionType.MULTI_SELECT, Arrays.asList("choice1", "choice2"));
     }
 
     @Test
@@ -170,7 +168,7 @@ public class QuestionnaireMapperTest {
     private SectionDetail getSectionDefinition(String name) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(12, true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID), true));
         return section;
     }
 
@@ -212,6 +210,7 @@ public class QuestionnaireMapperTest {
         SectionQuestion sectionQuestion = new SectionQuestion();
         QuestionEntity question = new QuestionEntity();
         question.setShortName(sectionName);
+        question.setAnswerType(AnswerType.DATE);
         sectionQuestion.setQuestion(question);
         section.setQuestions(Arrays.asList(sectionQuestion));
         return section;
@@ -249,11 +248,13 @@ public class QuestionnaireMapperTest {
             List<SectionQuestionDetail> questionDetails1 = sectionDefinition1.getQuestions();
             assertThat(questionDetails1.size(), is(1));
             assertThat(questionDetails1.get(0).getTitle(), is(SECTION + i));
+            assertThat(questionDetails1.get(0).getQuestionType(), is(QuestionType.DATE));
             SectionDetail sectionDefinition2 = questionGroupDetail.getSectionDetails().get(1);
             assertThat(sectionDefinition2.getName(), is(SECTION + (i + 1)));
             List<SectionQuestionDetail> questionDetails2 = sectionDefinition2.getQuestions();
             assertThat(questionDetails2.size(), is(1));
             assertThat(questionDetails2.get(0).getTitle(), is(SECTION + (i + 1)));
+            assertThat(questionDetails2.get(0).getQuestionType(), is(QuestionType.DATE));
         }
     }
 

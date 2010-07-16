@@ -18,8 +18,9 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.service;
+package org.mifos.customers.struts.actionforms;
 
-public enum QuestionType {
-    INVALID, FREETEXT, NUMERIC, MULTI_SELECT, SINGLE_SELECT, DATE
+public class QuestionChoiceDto {
+    private int id;
+    private String text;
 }

@@ -25,6 +25,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.QuestionDetail;
+import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.ui.model.SectionDetailForm;
 import org.mifos.platform.questionnaire.ui.model.SectionQuestionDetailForm;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -55,9 +57,9 @@ public class SectionDetailFormTest {
 
     private SectionDetail getSectionDefinition() {
         SectionDetail sectionDetail = new SectionDetail();
-        sectionDetail.addQuestion(new SectionQuestionDetail(121, "Question1", true));
-        sectionDetail.addQuestion(new SectionQuestionDetail(122, "Question2", false));
-        sectionDetail.addQuestion(new SectionQuestionDetail(123, "Question3", true));
+        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(121, "Question1", "Question1", QuestionType.FREETEXT), true));
+        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(122, "Question2", "Question2", QuestionType.FREETEXT), false));
+        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(123, "Question3", "Question3", QuestionType.FREETEXT), true));
         return sectionDetail;
     }
 }

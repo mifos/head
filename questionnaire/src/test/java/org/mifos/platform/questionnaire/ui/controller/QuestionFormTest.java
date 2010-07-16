@@ -1,6 +1,7 @@
 package org.mifos.platform.questionnaire.ui.controller;
 
 import org.junit.Test;
+import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.ui.model.Question;
 import org.mifos.platform.questionnaire.ui.model.QuestionForm;
 
@@ -30,7 +31,7 @@ public class QuestionFormTest {
     public void testAddCurrentQuestion(){
         QuestionForm questionForm = new QuestionForm();
         questionForm.getCurrentQuestion().setTitle("  Q1 ");
-        questionForm.getCurrentQuestion().setType("Free text");
+        questionForm.getCurrentQuestion().setType("Free Text");
         questionForm.addCurrentQuestion();
         List<Question> questionList = questionForm.getQuestions();
         assertThat(questionList.size(), is(1));
@@ -39,11 +40,11 @@ public class QuestionFormTest {
         assertNotSame(title, questionForm.getCurrentQuestion().getTitle());
         assertNotSame(type, questionForm.getCurrentQuestion().getType());
         assertThat(title, is("Q1"));
-        assertThat(type, is("Free text"));
+        assertThat(type, is("Free Text"));
     }
 
     private Question getQuestion(String title) {
-        Question question = new Question();
+        Question question = new Question(new QuestionDetail());
         question.setTitle(title);
         return question;
     }

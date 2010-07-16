@@ -98,7 +98,7 @@ public class QuestionnaireControllerTest {
         ArrayList<Question> questions = new ArrayList<Question>();
         questionForm.setQuestions(questions);
         String title = "title";
-        questions.add(getQuestion("1", title,"Free text"));
+        questions.add(getQuestion("1", title,"Free Text"));
         questionnaireController.removeQuestion(questionForm, "");
         questionnaireController.removeQuestion(questionForm, "junk");        
         Assert.assertThat(questionForm.getQuestions().size(), Is.is(1));
@@ -148,7 +148,7 @@ public class QuestionnaireControllerTest {
         Assert.assertThat(result, Is.is("failure"));
         Mockito.verify(requestContext).getMessageContext();
         // TODO: Assert for message code content
-//        verify(messageContext).addMessage(argThat(new MessageMatcher("NotEmpty.QuestionForm.currentQuestion.title")));
+        //verify(messageContext).addMessage(argThat(new MessageMatcher("NotEmpty.QuestionForm.currentQuestion.title")));
     }
 
     @Test
@@ -275,7 +275,7 @@ public class QuestionnaireControllerTest {
     }
 
     private SectionQuestionDetail getSectionQuestionDetail(int id, String title) {
-        return new SectionQuestionDetail(id, title, true);
+        return new SectionQuestionDetail(new QuestionDetail(id, title, title, QuestionType.FREETEXT), true);
     }
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
@@ -541,7 +541,7 @@ public class QuestionnaireControllerTest {
     }
 
     private Question getQuestion(String id, String title, String type) {
-        Question question = new Question();
+        Question question = new Question(new QuestionDetail());
         question.setTitle(title);
         question.setId(id);
         question.setType(type);
@@ -549,7 +549,7 @@ public class QuestionnaireControllerTest {
     }
 
     private QuestionDetail getQuestionDetail(int id, String title, QuestionType type) {
-        return new QuestionDetail(id, null, title, type);
+        return new QuestionDetail(id, title, title, type);
     }
 
     private class MessageMatcher extends TypeSafeMatcher<MessageResolver> {

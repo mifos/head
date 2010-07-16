@@ -21,13 +21,14 @@
 package org.mifos.platform.questionnaire.service;
 
 import java.io.Serializable;
+import java.util.List;
 
+@SuppressWarnings("PMD")
 public class SectionQuestionDetail implements Serializable {
     private static final long serialVersionUID = -6756173977268032788L;
 
-    private int questionId;
     private boolean mandatory;
-    private String title;
+    private QuestionDetail questionDetail;
 
     public SectionQuestionDetail() {
         //FIXEME: why does spring crib for not having a default constructor
@@ -35,18 +36,13 @@ public class SectionQuestionDetail implements Serializable {
         //TODO: Investigate later
         super();
     }
-    public SectionQuestionDetail(int questionId, boolean mandatory) {
-        this(questionId, null, mandatory);
-    }
-
-    public SectionQuestionDetail(int questionId, String title, boolean mandatory) {
-        this.questionId = questionId;
+    public SectionQuestionDetail(QuestionDetail questionDetail, boolean mandatory) {
+        this.questionDetail = questionDetail;
         this.mandatory = mandatory;
-        this.title = title;
     }
 
     public int getQuestionId() {
-        return questionId;
+        return questionDetail.getId();
     }
 
     public boolean isMandatory() {
@@ -54,7 +50,19 @@ public class SectionQuestionDetail implements Serializable {
     }
 
     public String getTitle() {
-        return title;
+        return questionDetail.getTitle();
+    }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
+    }
+
+    public QuestionType getQuestionType() {
+        return questionDetail.getType();
+    }
+
+    public List<String> getAnswerChoices() {
+        return questionDetail.getAnswerChoices();
     }
 
     @Override
@@ -69,15 +77,14 @@ public class SectionQuestionDetail implements Serializable {
 
         SectionQuestionDetail that = (SectionQuestionDetail) o;
 
-        return (questionId == that.questionId);
+        if (questionDetail != null ? !questionDetail.equals(that.questionDetail) : that.questionDetail != null)
+            return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return questionId;
-    }
-
-    public void setMandatory(boolean mandatory) {
-        this.mandatory = mandatory;
+        return questionDetail != null ? questionDetail.hashCode() : 0;
     }
 }
