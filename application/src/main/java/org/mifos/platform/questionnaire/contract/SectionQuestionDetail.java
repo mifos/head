@@ -29,6 +29,10 @@ public class SectionQuestionDetail implements Serializable {
     private boolean mandatory;
     private QuestionDetail questionDetail;
 
+    public SectionQuestionDetail() {
+        this(new QuestionDetail(), false);
+    }
+
     public SectionQuestionDetail(QuestionDetail questionDetail, boolean mandatory) {
         this.questionDetail = questionDetail;
         this.mandatory = mandatory;

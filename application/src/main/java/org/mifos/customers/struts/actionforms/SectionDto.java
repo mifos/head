@@ -47,4 +47,9 @@ public class SectionDto implements DataTransferObject {
         }
         return questions;
     }
+
+    public QuestionDto getQuestion(int i) {
+        List<QuestionDto> questions = getQuestions();
+        return i < questions.size() ? questions.get(i) : new QuestionDto(sectionDetail.getQuestionDetail(i));
+    }
 }

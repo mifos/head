@@ -52,4 +52,11 @@ public class SectionDetail implements Serializable {
     public void setQuestionDetails(List<SectionQuestionDetail> questionDetails) {
         this.questionDetails = questionDetails;
     }
+
+    public SectionQuestionDetail getQuestionDetail(int i) {
+        if (i >= this.questionDetails.size()) {
+            this.questionDetails.add(new SectionQuestionDetail());
+        }
+        return this.questionDetails.get(i);
+    }
 }

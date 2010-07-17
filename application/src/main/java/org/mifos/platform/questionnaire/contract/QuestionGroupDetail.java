@@ -78,4 +78,11 @@ public class QuestionGroupDetail implements Serializable {
     public void setEventSource(EventSource eventSource) {
         this.eventSource = eventSource;
     }
+
+    public SectionDetail getSectionDetail(int i) {
+        if (i >= this.sectionDetails.size()) {
+            this.sectionDetails.add(new SectionDetail());
+        }
+        return this.sectionDetails.get(i);
+    }
 }

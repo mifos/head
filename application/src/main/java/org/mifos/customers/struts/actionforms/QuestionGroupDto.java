@@ -32,6 +32,10 @@ public class QuestionGroupDto implements DataTransferObject {
 
     private QuestionGroupDetail questionGroupDetail;
 
+    public QuestionGroupDto() {
+        this(new QuestionGroupDetail());
+    }
+
     public QuestionGroupDto(QuestionGroupDetail questionGroupDetail) {
         this.questionGroupDetail = questionGroupDetail;
     }
@@ -42,6 +46,11 @@ public class QuestionGroupDto implements DataTransferObject {
             sections.add(new SectionDto(sectionDetail));
         }
         return sections;
+    }
+
+    public SectionDto getSection(int i) {
+        List<SectionDto> sections = getSections();
+        return i < sections.size() ? sections.get(i) : new SectionDto(questionGroupDetail.getSectionDetail(i));
     }
 
     public int getId() {

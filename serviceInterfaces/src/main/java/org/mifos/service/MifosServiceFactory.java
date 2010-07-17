@@ -18,25 +18,15 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.framework;
+package org.mifos.service;
 
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
-public class MifosApplicationContext implements ApplicationContextAware {
-    private ApplicationContext context;
+import javax.servlet.http.HttpServletRequest;
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.context = applicationContext;
-    }
+public class MifosServiceFactory {
 
-    public Object getBean(String beanName) {
-        Object result = null;
-        if (context != null) {
-            result = context.getBean(beanName);
-        }
-        return result;
+    public static Object getSpringBean(HttpServletRequest request, String beanName) {
+        return WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext()).getBean(beanName);
     }
 }

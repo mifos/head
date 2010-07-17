@@ -271,10 +271,17 @@ public abstract class CustomerActionForm extends BaseActionForm {
     }
 
     public CustomFieldDto getCustomField(int i) {
-        while (i >= customFields.size()) {
+        if (i >= customFields.size()) {
             customFields.add(new CustomFieldDto());
         }
         return customFields.get(i);
+    }
+
+    public QuestionGroupDto getQuestionGroup(int i) {
+        if (i >= questionGroupDtos.size()) {
+            questionGroupDtos.add(new QuestionGroupDto());
+        }
+        return questionGroupDtos.get(i);
     }
 
     public String getFormedByPersonnel() {
