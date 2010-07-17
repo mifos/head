@@ -274,25 +274,25 @@ public class DatabaseMigrator {
 
     public int readDatabaseVersion(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet results = statement.executeQuery("select DATABASE_VERSION from DATABASE_VERSION");
+        ResultSet results = statement.executeQuery("select database_version from database_version");
         if (results.next()) {
-            int version = results.getInt("DATABASE_VERSION");
+            int version = results.getInt("database_version");
             if (results.next()) {
-                throw new RuntimeException("too many rows in DATABASE_VERSION");
+                throw new RuntimeException("too many rows in database_version");
             }
             return version;
         }
-        throw new RuntimeException("No row in DATABASE_VERSION");
+        throw new RuntimeException("No row in database_version");
     }
 
     private void createAppliedUpgradesTable() {
         try {
             Statement stmt = connection.createStatement();
-            stmt.execute("CREATE TABLE  applied_upgrades" + "( upgrade_id INTEGER NOT NULL,"
-                    + "PRIMARY KEY(upgrade_id)" + ")ENGINE=InnoDB CHARACTER SET utf8;");
+            stmt.execute("create table  applied_upgrades" + "( upgrade_id integer not null,"
+                    + "primary key(upgrade_id)" + ")engine=innodb character set utf8;");
             connection.commit();
         } catch (SQLException e) {
-            System.err.print("Unable to create APPLIED_UPGRADES table for NSDU");
+            System.err.print("Unable to create table applied_upgrade table for Non Sequential Database Upgrade");
         }
     }
 
