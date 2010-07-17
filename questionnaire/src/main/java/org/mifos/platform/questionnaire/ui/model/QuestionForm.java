@@ -30,6 +30,7 @@ import java.util.List;
 public class QuestionForm extends ScreenObject {
     private static final long serialVersionUID = 2010225942240327677L;
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<Question> questions = new ArrayList<Question>();
 
     @javax.validation.Valid

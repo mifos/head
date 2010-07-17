@@ -30,6 +30,7 @@ public class Section implements Serializable {
 
     private int id;
     private String name;
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<SectionQuestion> questions;
 
     @SuppressWarnings({"UnusedDeclaration", "PMD.UncommentedEmptyConstructor"})

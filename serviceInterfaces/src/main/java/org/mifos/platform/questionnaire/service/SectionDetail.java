@@ -27,6 +27,7 @@ public class SectionDetail implements Serializable {
     private static final long serialVersionUID = -7143251556021871484L;
 
     private String name;
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<SectionQuestionDetail> questionDetails;
 
     public SectionDetail() {

@@ -34,6 +34,7 @@ public class QuestionDetail implements Serializable {
     private String text;
     private String shortName;
     private QuestionType type;
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<String> answerChoices;
 
     public QuestionDetail() {

@@ -40,7 +40,9 @@ public class QuestionGroupForm implements Serializable {
 
     private QuestionGroupDetail questionGroupDetail;
     private SectionDetailForm currentSection = new SectionDetailForm();
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<String> selectedQuestionIds = new ArrayList<String>();
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<SectionQuestionDetail> questionPool = new ArrayList<SectionQuestionDetail>();
 
     public QuestionGroupForm() {

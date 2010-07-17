@@ -39,6 +39,7 @@ public class QuestionGroup implements Serializable {
 
     private QuestionGroupState state;
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<Section> sections;
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD", justification="Can't map to serializable sets from hibernate. e.g. HashSet - sad but true!")

@@ -35,6 +35,7 @@ public class QuestionGroupInstance implements Serializable {
     private int completedStatus;
     private int creatorId;
     private int versionNum;
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<QuestionGroupResponse> questionGroupResponses;
 
     @SuppressWarnings({"PMD.UnnecessaryConstructor","PMD.UncommentedEmptyConstructor"})

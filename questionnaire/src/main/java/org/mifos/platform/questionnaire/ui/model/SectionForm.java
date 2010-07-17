@@ -30,6 +30,7 @@ public class SectionForm implements Serializable {
     private static final long serialVersionUID = 4707282409987816335L;
     private String name;
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<QuestionDetail> questionDetails = new ArrayList<QuestionDetail>();
 
     public String getName() {

@@ -29,6 +29,7 @@ public class QuestionGroupDetail implements Serializable {
 
     private Integer id;
     private String title;
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<SectionDetail> sectionDetails;
     private EventSource eventSource;
 

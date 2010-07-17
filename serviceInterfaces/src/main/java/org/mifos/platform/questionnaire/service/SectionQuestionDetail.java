@@ -34,7 +34,7 @@ public class SectionQuestionDetail implements Serializable {
         //FIXEME: why does spring crib for not having a default constructor
         //for this class, when this class is not hooked onto spring?
         //TODO: Investigate later
-        super();
+        //super();
         this(new QuestionDetail(), false);
     }
 

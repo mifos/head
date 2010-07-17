@@ -20,7 +20,6 @@
 package org.mifos.platform.questionnaire.domain;
 
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
 
 @SuppressWarnings("PMD")
@@ -41,9 +40,8 @@ public class QuestionEntity implements Serializable, Comparable<QuestionEntity> 
 
     private Integer numericMax;
 
-    private List<QuestionChoiceEntity> choices = new LinkedList<QuestionChoiceEntity>();
-
-
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
+    private List<QuestionChoiceEntity> choices;
 
     public QuestionEntity() {
         this(null);
@@ -57,20 +55,16 @@ public class QuestionEntity implements Serializable, Comparable<QuestionEntity> 
         this(null, questionText, answerType);
     }
 
-    @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
     public QuestionEntity(String shortName, String questionText, AnswerType answerType) {
-        setShortName(shortName);
-        setQuestionText(questionText);
-        setAnswerType(answerType);
-        questionState = QuestionState.ACTIVE;
+        this(shortName, questionText, answerType, null);
     }
 
     public QuestionEntity(String shortName, String questionText, AnswerType answerType,List<QuestionChoiceEntity> choices) {
-        setShortName(shortName);
-        setQuestionText(questionText);
-        setAnswerType(answerType);
-        setChoices(choices);
-        questionState = QuestionState.ACTIVE;
+        this.shortName = shortName;
+        this.questionText = questionText;
+        this.answerType = answerType;
+        this.choices = choices;
+        this.questionState = QuestionState.ACTIVE;
     }
 
     public void setShortName(String shortName) {
