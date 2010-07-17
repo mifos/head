@@ -21,8 +21,8 @@
 package org.mifos.customers.struts.actionforms;
 
 import org.mifos.framework.business.service.DataTransferObject;
-import org.mifos.platform.questionnaire.contract.QuestionType;
-import org.mifos.platform.questionnaire.contract.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 
 import java.util.List;
 

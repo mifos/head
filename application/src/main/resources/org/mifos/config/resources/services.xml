@@ -18,7 +18,8 @@
     	<constructor-arg ref="officeHierarchyService" />
     	<constructor-arg ref="loanProductDao" />
     	<constructor-arg ref="savingsProductDao" />
-    	<constructor-arg ref="officeDao" />    	
+    	<constructor-arg ref="officeDao" />
+    	<constructor-arg ref="applicationConfigurationDao" />    	
     </bean>
 
     <bean id="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade" >
