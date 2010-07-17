@@ -21,7 +21,7 @@
 		<mapping resource="org/mifos/accounts/productsmix/business/ProductMixBO.hbm.xml" />	
 
 		<!-- Audit Log -->
-		<mapping class="org.mifos.framework.components.fieldConfiguration.business.EntityMaster" />
+		<mapping class="org.mifos.framework.business.EntityMaster" />
 		<mapping resource="org/mifos/framework/components/audit/business/AuditLog.hbm.xml" />
 		<mapping resource="org/mifos/framework/components/audit/business/AuditLogRecord.hbm.xml" />
 		<!-- Batch Jobs -->

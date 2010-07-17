@@ -355,14 +355,7 @@ explanation of the license and how it is applied.
 															<c:if test="${cfdef.fieldId==cf.fieldId}">
 																<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" bundle="loanUIResources"></mifos:mifoslabel>: 
 										        		  	 	<span class="fontnormal">
-                                                                       <c:choose>
-                                                                           <c:when test="${cfdef.fieldType == MasterConstants.CUSTOMFIELD_DATE}">
-                                                                               <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,cf.fieldValue)}" />
-                                                                           </c:when>
-                                                                           <c:otherwise>
-                                                                               <c:out value="${cf.fieldValue}" />
-                                                                           </c:otherwise>
-                                                                       </c:choose>
+                                                                       <c:out value="${cf.fieldValue}" />
 															</span><br>
 														</c:if>
 													</c:forEach>

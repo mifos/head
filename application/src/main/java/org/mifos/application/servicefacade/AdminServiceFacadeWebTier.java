@@ -23,6 +23,8 @@ package org.mifos.application.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
@@ -30,35 +32,47 @@ import org.mifos.accounts.productdefinition.business.service.ProductCategoryBusi
 import org.mifos.accounts.productdefinition.business.service.ProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
+import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.config.persistence.ApplicationConfigurationDao;
+import org.mifos.config.util.helpers.ConfigurationConstants;
+import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.office.business.service.OfficeHierarchyService;
 import org.mifos.customers.office.persistence.OfficeDao;
+import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.ConfigurableLookupLabelDto;
+import org.mifos.dto.domain.GracePeriodDto;
+import org.mifos.dto.domain.AccountStatusesLabelDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
+import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.dto.screen.ProductCategoryDto;
-import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
+import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductDto;
 import org.mifos.dto.screen.ProductMixDetailsDto;
 import org.mifos.dto.screen.ProductMixDto;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
-    private ProductService productService;
-    private OfficeHierarchyService officeHierarchyService;
-    private LoanProductDao loanProductDao;
-    private SavingsProductDao savingsProductDao;
-    private OfficeDao officeDao;
-
+    private final ProductService productService;
+    private final OfficeHierarchyService officeHierarchyService;
+    private final LoanProductDao loanProductDao;
+    private final SavingsProductDao savingsProductDao;
+    private final OfficeDao officeDao;
+    private final ApplicationConfigurationDao applicationConfigurationDao;
 
     public AdminServiceFacadeWebTier(ProductService productService, OfficeHierarchyService officeHierarchyService, LoanProductDao loanProductDao,
-                                    SavingsProductDao savingsProductDao, OfficeDao officeDao) {
+                                    SavingsProductDao savingsProductDao, OfficeDao officeDao, ApplicationConfigurationDao applicationConfigurationDao) {
         this.productService = productService;
         this.officeHierarchyService = officeHierarchyService;
         this.loanProductDao = loanProductDao;
         this.savingsProductDao = savingsProductDao;
         this.officeDao = officeDao;
+        this.applicationConfigurationDao = applicationConfigurationDao;
     }
 
     @Override
@@ -173,5 +187,146 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         ProductMixDetailsDto dto = new ProductMixDetailsDto(prdOfferingId, prdOfferingBO.getPrdOfferingName(),
                                     prdOfferingBO.getPrdType().getProductTypeID(), allowedPrdOfferingNames, notAllowedPrdOfferingNames);
         return dto;
+    }
+
+    @Override
+    public void updateApplicationLabels(ConfigureApplicationLabelsDto applicationLabels) {
+
+        ConfigureApplicationLabelsDto currentLabels = retrieveConfigurableLabels();
+
+        // 1. find labels that are different and return domain entity type for
+        //  - OfficeLevelEntity
+        //  - GracePeriodTypeEntity
+        //  - LookUpEntity
+        //  - LookUpEntity
+        //
+//        officeHierarchyService.updateApplicationLabels();
+    }
+
+    @Override
+    public ConfigureApplicationLabelsDto retrieveConfigurableLabels() {
+        OfficeLevelDto officeLevels = officeDao.findOfficeLevelsWithConfiguration();
+
+        List<GracePeriodTypeEntity> gracePeriodTypes = applicationConfigurationDao.findGracePeriodTypes();
+        GracePeriodDto gracePeriodDtos = assemble(gracePeriodTypes);
+
+        List<LookUpEntity> lookupEntities = applicationConfigurationDao.findLookupValueTypes();
+        ConfigurableLookupLabelDto lookupLabels = assemble(lookupEntities);
+
+        List<AccountStateEntity> accountStateEntities = applicationConfigurationDao.findAllAccountStateEntities();
+        AccountStatusesLabelDto accountStatusLabels = assemble(accountStateEntities);
+
+        List<CustomerStatusEntity> customerStatuses = applicationConfigurationDao.findAllCustomerStatuses();
+        for (CustomerStatusEntity customerStatus : customerStatuses) {
+            if (customerStatus.getId().equals(CustomerStatus.CLIENT_HOLD.getValue())) {
+                accountStatusLabels.setOnhold(customerStatus.getName());
+            }
+        }
+
+        return new ConfigureApplicationLabelsDto(officeLevels, gracePeriodDtos, lookupLabels, accountStatusLabels);
+    }
+
+    private AccountStatusesLabelDto assemble(List<AccountStateEntity> accountStateEntities) {
+
+        AccountStatusesLabelDto loanAccountLabel = new AccountStatusesLabelDto();
+
+        for (AccountStateEntity accountState : accountStateEntities) {
+            if (accountState.getId().equals(AccountState.LOAN_PARTIAL_APPLICATION.getValue())) {
+                loanAccountLabel.setPartialApplication(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.LOAN_PENDING_APPROVAL.getValue())) {
+                loanAccountLabel.setPendingApproval(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.LOAN_APPROVED.getValue())) {
+                loanAccountLabel.setApproved(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.LOAN_CANCELLED.getValue())) {
+                loanAccountLabel.setCancel(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
+                loanAccountLabel.setActiveInGoodStanding(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
+                loanAccountLabel.setActiveInBadStanding(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())) {
+                loanAccountLabel.setClosedObligationMet(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())) {
+                loanAccountLabel.setClosedWrittenOff(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.LOAN_CLOSED_RESCHEDULED.getValue())) {
+                loanAccountLabel.setClosedRescheduled(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.SAVINGS_CLOSED.getValue())) {
+                loanAccountLabel.setClosed(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.SAVINGS_INACTIVE.getValue())) {
+                loanAccountLabel.setInActive(accountState.getName());
+            } else if (accountState.getId().equals(AccountState.SAVINGS_ACTIVE.getValue())) {
+                loanAccountLabel.setActive(accountState.getName());
+            }
+        }
+
+        return loanAccountLabel;
+    }
+
+    private ConfigurableLookupLabelDto assemble(List<LookUpEntity> lookupEntities) {
+
+        ConfigurableLookupLabelDto lookupLabels = new ConfigurableLookupLabelDto();
+
+        for (LookUpEntity entity : lookupEntities) {
+            if (entity.getEntityType().equals(ConfigurationConstants.CLIENT)) {
+                lookupLabels.setClient(entity.findLabel());
+            } else if (entity.getEntityType().equals(ConfigurationConstants.GROUP)) {
+                lookupLabels.setGroup(entity.findLabel());
+            } else if (entity.getEntityType().equals(ConfigurationConstants.CENTER)) {
+                lookupLabels.setCenter(entity.findLabel());
+            } else if (entity.getEntityType().equals(ConfigurationConstants.LOAN)) {
+                lookupLabels.setLoans(entity.findLabel());
+            } else if (entity.getEntityType().equals(ConfigurationConstants.SAVINGS)) {
+                lookupLabels.setSavings(entity.findLabel());
+            } else if (entity.getEntityType().equals(ConfigurationConstants.STATE)) {
+                lookupLabels.setState(entity.findLabel());
+            } else if (entity.getEntityType().equals(ConfigurationConstants.POSTAL_CODE)) {
+                lookupLabels.setPostalCode(entity.findLabel());
+            } else if (entity.getEntityType().equals(ConfigurationConstants.ETHINICITY)) {
+                lookupLabels.setEthnicity(entity.findLabel());
+            } else if (entity.getEntityType().equals(ConfigurationConstants.CITIZENSHIP)) {
+                lookupLabels.setCitizenship(entity.findLabel());
+            } else if (entity.getEntityType().equals(ConfigurationConstants.HANDICAPPED)) {
+                lookupLabels.setHandicapped(entity.findLabel());
+            } else if (entity.getEntityType().equals(ConfigurationConstants.GOVERNMENT_ID)) {
+                lookupLabels.setGovtId(entity.findLabel());
+            } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS1)) {
+                lookupLabels.setAddress1(entity.findLabel());
+            } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS2)) {
+                lookupLabels.setAddress2(entity.findLabel());
+            } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS3)) {
+                lookupLabels.setAddress3(entity.findLabel());
+            } else if (entity.getEntityType().equals(ConfigurationConstants.INTEREST)) {
+                lookupLabels.setInterest(entity.findLabel());
+            } else if (entity.getEntityType().equals(ConfigurationConstants.EXTERNALID)) {
+                lookupLabels.setExternalId(entity.findLabel());
+            } else if (entity.getEntityType().equals(ConfigurationConstants.BULKENTRY)) {
+                lookupLabels.setBulkEntry(entity.findLabel());
+            }
+        }
+
+        return lookupLabels;
+    }
+
+    private GracePeriodDto assemble(List<GracePeriodTypeEntity> gracePeriodTypes) {
+
+        GracePeriodDto gracePeriods = new GracePeriodDto();
+
+        for (GracePeriodTypeEntity entity : gracePeriodTypes) {
+            GraceType periodType = GraceType.fromInt(entity.getId());
+            switch (periodType) {
+            case NONE:
+                gracePeriods.setNone(entity.getLookUpValue().getMessageText());
+                break;
+            case GRACEONALLREPAYMENTS:
+                gracePeriods.setGraceOnAllRepayments(entity.getLookUpValue().getMessageText());
+                break;
+            case PRINCIPALONLYGRACE:
+                gracePeriods.setPrincipalOnlyGrace(entity.getLookUpValue().getMessageText());
+                break;
+            default:
+                break;
+            }
+        }
+
+        return gracePeriods;
     }
 }

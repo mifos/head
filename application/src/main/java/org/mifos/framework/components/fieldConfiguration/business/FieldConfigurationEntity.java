@@ -21,6 +21,7 @@
 package org.mifos.framework.components.fieldConfiguration.business;
 
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.exceptions.PersistenceException;

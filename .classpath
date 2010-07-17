@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="common/src/main/java"/>
+	<classpathentry kind="src" path="questionnaire/src/main/java"/>
+	<classpathentry kind="src" path="questionnaire/src/test/java"/>
 	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/resources"/>
 	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/java"/>
 	<classpathentry kind="src" path="userInterface/src/main/java"/>
