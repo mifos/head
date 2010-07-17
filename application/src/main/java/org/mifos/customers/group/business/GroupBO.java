@@ -130,7 +130,7 @@ public class GroupBO extends CustomerBO {
         GroupBO group = new GroupBO(userContext, groupName, formedBy, meeting, loanOfficer, office, customerStatus,
                 mfiJoiningDate);
 
-        final String searchId = GroupConstants.PREFIX_SEARCH_STRING + String.valueOf(numberOfCustomersInOfficeAlready + 1);
+        final String searchId = GroupConstants.PREFIX_SEARCH_STRING + (numberOfCustomersInOfficeAlready + 1);
         group.setSearchId(searchId);
         group.setExternalId(externalId);
         group.updateAddress(address);
@@ -543,7 +543,7 @@ public class GroupBO extends CustomerBO {
         }
 
         receivingCenter.incrementChildCount();
-        this.setSearchId(receivingCenter.getSearchId() + "." + String.valueOf(receivingCenter.getMaxChildCount()));
+        this.setSearchId(receivingCenter.getSearchId() + "." + receivingCenter.getMaxChildCount());
 
         return regenerateGroupSchedules;
     }

@@ -1237,7 +1237,7 @@ public class ClientBO extends CustomerBO {
 
         this.addGroupMembership();
         receivingGroup.incrementChildCount();
-        this.setSearchId(receivingGroup.getSearchId() + "." + String.valueOf(receivingGroup.getMaxChildCount()));
+        this.setSearchId(receivingGroup.getSearchId() + "." + receivingGroup.getMaxChildCount());
 
         return regenerateClientSchedules;
     }

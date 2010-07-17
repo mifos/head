@@ -228,10 +228,10 @@ public class AuditConfigurtion {
                 for (Short localeId : locales) {
                     if (propertyName.getParentName() != null) {
                         propertyMap.put(propertyName.getParentName().concat(propertyName.getName()).concat(
-                                "_" + String.valueOf(localeId)), createValueMap(propertyName.getEntityName(),
+                                "_" + localeId), createValueMap(propertyName.getEntityName(),
                                 localeId));
                     } else {
-                        propertyMap.put(propertyName.getName().concat("_" + String.valueOf(localeId)),
+                        propertyMap.put(propertyName.getName().concat("_" + localeId),
                                 createValueMap(propertyName.getEntityName(), localeId));
                     }
                 }
@@ -240,10 +240,10 @@ public class AuditConfigurtion {
                 for (Short localeId : locales) {
                     if (propertyName.getParentName() != null) {
                         propertyMap.put(propertyName.getParentName().concat(propertyName.getName()).concat(
-                                "_" + String.valueOf(localeId)), callMethodToCreateValueMap(propertyName
+                                "_" + localeId), callMethodToCreateValueMap(propertyName
                                 .getMethodName(), localeId));
                     } else {
-                        propertyMap.put(propertyName.getName().concat("_" + String.valueOf(localeId)),
+                        propertyMap.put(propertyName.getName().concat("_" + localeId),
                                 callMethodToCreateValueMap(propertyName.getMethodName(), localeId));
                     }
                 }
