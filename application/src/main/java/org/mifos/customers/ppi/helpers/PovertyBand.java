@@ -45,7 +45,7 @@ public class PovertyBand {
 
         public static PovertyBandEnum fromString(String band) {
             for (PovertyBandEnum candidate : PovertyBandEnum.values()) {
-                if (band.toLowerCase().equals(candidate.getValue())) {
+                if (band.equalsIgnoreCase(candidate.getValue())) {
                     return candidate;
                 }
             }
