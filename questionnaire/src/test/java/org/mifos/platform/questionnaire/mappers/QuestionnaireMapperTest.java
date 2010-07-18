@@ -83,12 +83,24 @@ public class QuestionnaireMapperTest {
     }
 
     @Test
-    public void shouldMapMultipleChoiceQuestionDetailToQuestion() {
+    public void shouldMapMultiSelectQuestionDetailToQuestion() {
         String choice1 = "choice1";
         String choice2 = "choice2";
         QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.MULTI_SELECT, Arrays.asList(choice1, choice2));
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
         assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.MULTISELECT));
+        assertThat(question.getQuestionText(), is(TITLE));
+        assertThat(question.getShortName(), is(TITLE));
+        assertThat(question.getChoices(), new QuestionChoicesMatcher(Arrays.asList(new QuestionChoiceEntity(choice1), new QuestionChoiceEntity(choice2))));
+    }
+    
+    @Test
+    public void shouldMapSingleSelectQuestionDetailToQuestion() {
+        String choice1 = "choice1";
+        String choice2 = "choice2";
+        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.SINGLE_SELECT, Arrays.asList(choice1, choice2));
+        QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
+        assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.SINGLESELECT));
         assertThat(question.getQuestionText(), is(TITLE));
         assertThat(question.getShortName(), is(TITLE));
         assertThat(question.getChoices(), new QuestionChoicesMatcher(Arrays.asList(new QuestionChoiceEntity(choice1), new QuestionChoiceEntity(choice2))));

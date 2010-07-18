@@ -21,80 +21,23 @@
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
 [#import "macros.ftl" as mifosMacros]
+
+[#assign freeText][@spring.message "questionnaire.quesiton.choices.freetext"/][/#assign]
+[#assign date][@spring.message "questionnaire.quesiton.choices.date"/][/#assign]
+[#assign multiSelect][@spring.message "questionnaire.quesiton.choices.multiselect"/][/#assign]
+[#assign singleSelect][@spring.message "questionnaire.quesiton.choices.singleselect"/][/#assign]
+
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-    <style type="text/css">
-       .mandatoryField {
-          color:#FF0000;
-        }
-	    .normalFontFixedDiv {
-		  color:#000000;
-		  font-family:Arial,Verdana,Helvetica,sans-serif;
-		  font-size:9pt;
-		  font-weight:normal;
-		  padding:1em 1em 0;
-		  text-decoration:none;
-		  width:600px;
-		}
-        .choiceStyle{
-            float:left;
-            margin-right:1em;
-            margin-left:1em;
-            width:20em;
-            word-wrap:break-word;
-        }
-        .choiceHeaderStyle{
-            background-color:#D7DEEE;
-            border-top:1px solid #D7DEEE;
-            font-family:Arial,Verdana,Helvetica,sans-serif;
-            font-size:9pt;
-            font-weight:bold;
-            padding:2px 0px;
-            text-decoration:none;
-        }
-        .choiceOlStyle{
-            margin-left:10em;
-            width:50%
-        }
-    </style>
-    <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
-    <script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            disableSubmitButtonOnEmptyQuestionList();
-
-            $("a[href*=removeQuestion#]").click(function(event) {
-                var questionToDeleteBtn = document.getElementById('_eventId_removeQuestion');
-                questionToDeleteBtn.value = $(this).attr("title");
-                event.preventDefault();
-                questionToDeleteBtn.click();
-            });
-
-            $("a[href*=removeChoice#]").click(function(event) {
-                var choiceToDeleteBtn = document.getElementById('_eventId_removeChoice');
-                choiceToDeleteBtn.value = $(this).attr("choiceIndex");
-                event.preventDefault();
-                choiceToDeleteBtn.click();
-            });
-
-            $("#currentQuestion\\.type").change(function(){
-                var selectedOption = $(this).val();
-                if(selectedOption == $("#multiSelect").val()  ||  selectedOption == $("#singleSelect").val()) {
-                    $("#choiceDiv").show();
-                }else{
-                    $("#choiceDiv").hide();
-                }
-            });
-
-            $("#currentQuestion\\.type").change();
-        });
-     </script>
+<STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
+    <script src="pages/questionnaire/js/createQuestion.js" type="text/javascript"></script>
 <div class="sidebar ht950">
     [#include "adminLeftPane.ftl" /]
 </div>
 <div class="content leftMargin180">
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.add.questions":""}/]
     [@mifos.crumbpairs breadcrumb/]
+
     <div class="fontnormal marginLeft30">
         <div class="orangeheading marginTop15">
             [@spring.message "questionnaire.add.questions"/]
@@ -102,95 +45,74 @@
         <div id="allErrorsDiv" class="allErrorsDiv">
             [@mifosMacros.showAllErrors "questionDefinition.*"/]
         </div>
-        <form name="createquestionform" action="createQuestion.ftl?execution=${flowExecutionKey}" method="POST" focus="questionText">
+        <form name="createquestionform" action="createQuestion.ftl?execution=${flowExecutionKey}" method="POST" focus="currentQuestion.title">
+            <input type="hidden" id="multiSelect" name="multiSelect" value="${multiSelect}"/>
+            <input type="hidden" id="singleSelect" name="singleSelect" value="${singleSelect}" />
+            <input type="submit" id="_eventId_removeQuestion" name="_eventId_removeQuestion" value="" style="visibility:hidden"/>
+            <input type="submit" id="_eventId_removeChoice" name="_eventId_removeChoice" value="" style="visibility:hidden"/>
             <fieldset>
 			 <ol>
 			    <li>
-				  <label for="title"><span class="mandatoryField">*</span>Question Title: </label>
-				  <script src="pages/framework/js/func.js"></script>
-				  <script src="pages/framework/js/func_en_GB.js"></script>
-				  [@spring.formInput "questionDefinition.currentQuestion.title",
-				     'maxlength="50" onkeypress="return FnCheckNumCharsOnPress(event,this);"
-				        onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"' /]
+				  <label for="currentQuestion.title"><span class="red">*</span>[@spring.message "questionnaire.question.title"/]: </label>
+				  [@spring.formInput "questionDefinition.currentQuestion.title", 'maxlength="50"' /]
 			    </li>
 			    <li>
-				  <label for="eventSourceId"><span class="mandatoryField">*</span>Answer Type: </label>
-                  [#assign freeText][@spring.message "questionnaire.quesiton.choices.freetext"/][/#assign]
-                  [#assign date][@spring.message "questionnaire.quesiton.choices.date"/][/#assign]
-                  [#assign multiSelect][@spring.message "questionnaire.quesiton.choices.multiselect"/][/#assign]
-                  [#assign singleSelect][@spring.message "questionnaire.quesiton.choices.singleselect"/][/#assign]
-				  [@spring.formSingleSelect "questionDefinition.currentQuestion.type",
-                    [freeText, date, multiSelect, singleSelect],
-                    ''
-                  /]
-                    <input type="hidden" id="multiSelect" name="multiSelect" value="${multiSelect}"/>
-                    <input type="hidden" id="singleSelect" name="singleSelect" value="${singleSelect}" />
+				  <label for="currentQuestion.type"><span class="red">*</span>[@spring.message "questionnaire.answer.type"/]: </label>
+				  [@spring.formSingleSelect "questionDefinition.currentQuestion.type", [freeText, date, multiSelect, singleSelect], ''/]
 			    </li>
 			    <li>
                     <div id="choiceDiv">
-                        <label for="choice"><span class="mandatoryField">*</span>Answer Choice: </label>
-                        [@spring.formInput "questionDefinition.currentQuestion.choice", 'maxlength="200"' /]
-                        <input type="submit" name="_eventId_addChoice" value="Add >>" class="insidebuttn"
-                               id="_eventId_addChoice">
+                        <label for="currentQuestion.choice"><span class="red">*</span>[@spring.message "questionnaire.quesiton.choice"/]: </label>
+                        [@spring.formInput "questionDefinition.currentQuestion.choice", 'maxlength="200"'/]
+                        <input type="submit" id="_eventId_addChoice" name="_eventId_addChoice" class="buttn"
+                               value="[@spring.message "questionnaire.quesiton.add"/] >>">
                         <fieldset>
                             <ol class="choiceOlStyle">
                                 <li class="choiceHeaderStyle">
-                                    <span class="choiceStyle">Choice</span>Remove
+                                    <span class="choiceStyle">[@spring.message "questionnaire.choice"/]</span>Remove
                                 </li>
                                 [#list questionDefinition.currentQuestion.choices as choice]
                                 <li>
                                     <span class="choiceStyle">${choice}&nbsp;</span>
-                                    <a href="removeChoice#" choiceIndex="${choice_index}">remove</a>
+                                    <a href="removeChoice#" choiceIndex="${choice_index}">[@spring.message "questionnaire.remove.link"/]</a>
                                 </li>
                                 [/#list]
-                                <input type="submit" id="_eventId_removeChoice" name="_eventId_removeChoice" value=""
-                                       style="visibility:hidden"/>
                             </ol>
                         </fieldset>
                     </div>
 			    </li>
+                <li class="buttonWidth">
+                    <input type="submit" name="_eventId_addQuestion" value="Add Question" class="buttn" id="_eventId_addQuestion">
+                </li>
+                <li>
+                    <table id="questions.table" name="questions.table">
+                      <tr>
+                        <td class="drawtablehd" style="width:35%">[@spring.message "questionnaire.question.title"/]</td>
+                        <td class="drawtablehd" style="width:10%">[@spring.message "questionnaire.answer.type"/]</td>
+                        <td class="drawtablehd" style="width:45%">[@spring.message "questionnaire.choices"/]</td>
+                        <td class="drawtablehd" style="width:10%">[@spring.message "questionnaire.remove"/]</td>
+                      </tr>
+                      [#list questionDefinition.questions as question]
+                      <tr>
+                        <td class="drawtablerow">${question.title}</td>
+                        <td class="drawtablerow">${question.type}</td>
+                            [#if question.commaSeparateChoices == '']
+                              <td class="drawtablerow"><i>[@spring.message "questionnaire.quesiton.choices.notapplicable"/]</i></td>
+                            [#else]
+                              <td class="drawtablerow">${question.commaSeparateChoices}</td>
+                            [/#if]
+                        <td class="drawtablerow"><a href="removeQuestion#" title="${question.title}">[@spring.message "questionnaire.remove.link"/]</a></td>
+                      </tr>
+                      [/#list]
+                    </table>
+                </li>
+                 <li class="buttonWidth">
+                     <input type="submit" id="_eventId_createQuestions" name="_eventId_createQuestions" value="[@spring.message "questionnaire.submit"/]" class="buttn"/>
+                     &nbsp;
+                     <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "questionnaire.canecl"/]" class="cancelbuttn"/>
+                 </li>
 			 </ol>
             </fieldset>
-            <fieldset id="submitQuestion" class="submit">
-                 <input type="submit" name="_eventId_addQuestion" value="Add Question" class="buttn" id="_eventId_addQuestion">
-            </fieldset>
-		    <div id="divQuestions" class="normalFontFixedDiv" style="width:98%;">
-			  <table id="questions.table" name="questions.table">
-			    <tr>
-			      <td class="drawtablehd" style="width:35%">Question Title</td>
-			      <td class="drawtablehd" style="width:10%">Answer type</td>
-			      <td class="drawtablehd" style="width:45%">Choices</td>
-			      <td class="drawtablehd" style="width:10%">Remove</td>
-			    </tr>
-			    [#list questionDefinition.questions as question]
-			    <tr>
-			      <td class="drawtablerow">${question.title}</td>
-                  <td class="drawtablerow">${question.type}</td>
-                  [#if question.commaSeparateChoices == '']
-                    <td class="drawtablerow"><i>[@spring.message "questionnaire.quesiton.choices.notapplicable"/]</i></td>
-                  [#else]
-                    <td class="drawtablerow">${question.commaSeparateChoices}</td>
-                  [/#if]
-			      <td class="drawtablerow"><a href="removeQuestion#" title="${question.title}">remove</a></td>
-			    </tr>
-			    [/#list]
-			    <tr>
-			      <td class="drawtablerow">&nbsp;</td>
-			      <td class="drawtablerow">&nbsp;</td>
-			      <td class="drawtablerow">&nbsp;</td>
-			      <td class="drawtablerow">&nbsp;</td>
-			    </tr>
-			  </table>
-			  <input type="submit" id="_eventId_removeQuestion" name="_eventId_removeQuestion" value="" style="visibility:hidden"/>
-		    </div>
-		    <div id="divSumitQD">
-		      <fieldset class="submit">
-		        <input type="submit" id="_eventId_createQuestions" name="_eventId_createQuestions" value="Submit" class="buttn"/>
-		        &nbsp;
-		        <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="Cancel" class="cancelbuttn"/>
-		      </fieldset>
-	        </div>
-		    <input type="hidden" name="h_user_locale" value="en_GB"/>
 	    </form>
     </div>
     <span id="page.id" title="createQuestion"/>

@@ -23,8 +23,8 @@
 [#import "macros.ftl" as mifosmacros]
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-<script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
 <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
+<script src="pages/questionnaire/js/createQuestionGroup.js" type="text/javascript"></script>
 <div class="sidebar ht950">
     [#include "adminLeftPane.ftl" /]
 </div>
@@ -76,13 +76,13 @@
                 </ol>
             </fieldset>
             <div class="marginLeft15em">
-                    <input type="submit" name="_eventId_addSection" id="_eventId_addSection" value='[@spring.message "questionnaire.addSection"/]' class="buttn"/>
+                    <input type="submit" name="_eventId_addSection" id="_eventId_addSection" value='[@spring.message "questionnaire.add.questions"/]' class="buttn"/>
             </div>
             <div id="divSections">
                 [#assign reversedSections=questionGroupForm.sections?reverse]
                 [#list reversedSections as section]
                 <b>${section.name}:&nbsp;&nbsp;</b>
-                <a href="javascript:removeSection('${section.name}')">[@spring.message
+                <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')">[@spring.message
                     "questionnaire.remove.link"/]</a>
                 <br/>
                 <table id="sections.table" name="sections.table">
@@ -97,7 +97,7 @@
                         <td align="center" valign="center" class="drawtablerow" style="text-align:center">
                             [@mifosmacros.formCheckbox "questionGroupForm.sections[${reversedSections?size - section_index - 1}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
                         </td>
-                        <td class="drawtablerow"><a href="javascript:removeQuestion('${section.name}','${sectionQuestion.questionId}')">[@spring.message "questionnaire.remove.link"/]</a></td>
+                        <td class="drawtablerow"><a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')">[@spring.message "questionnaire.remove.link"/]</a></td>
                     </tr>
                     [/#list]
                     <tr>
