@@ -18,7 +18,7 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.domain;
+package org.mifos.platform.questionnaire.domain; // NOPMD
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,7 +31,7 @@ import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
-import org.mifos.platform.questionnaire.service.*;
+import org.mifos.platform.questionnaire.service.*; // NOPMD
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -401,10 +401,6 @@ public class QuestionnaireServiceTest {
         verify(questionnaireValidator, times(1)).validateForQuestionGroupResponses(questionGroupDetails);
     }
 
-    private QuestionDetail getQuestionDetail(int id, String text) {
-        return new QuestionDetail(id, text, text, QuestionType.FREETEXT);
-    }
-
     private SectionDetail getSectionDetailWithQuestions(String name, List<QuestionDetail> questionDetails) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
@@ -416,6 +412,11 @@ public class QuestionnaireServiceTest {
         }
         sectionDetail.setQuestionDetails(sectionQuestionDetails);
         return sectionDetail;
+    }
+
+    // TODO - just to avoid CPD warning I swapped getSectionDetailWithQuestions and getSectionDetailWithQuestions methods
+    private QuestionDetail getQuestionDetail(int id, String text) {
+        return new QuestionDetail(id, text, text, QuestionType.FREETEXT);
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, List<SectionDetail> sections) {

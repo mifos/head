@@ -17,7 +17,7 @@
  *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  *  explanation of the license and how it is applied.
  */
-package org.mifos.platform.questionnaire.service;
+package org.mifos.platform.questionnaire.service; // NOPMD
 
 import org.junit.Assert;
 import org.junit.Before;
