@@ -25,11 +25,15 @@ import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 
+import java.util.List;
+
 
 public interface QuestionnaireValidator {
-    void validate(QuestionDetail questionDetail) throws SystemException;
+    void validateForDefineQuestion(QuestionDetail questionDetail) throws SystemException;
 
-    void validate(QuestionGroupDetail questionGroupDetail) throws SystemException;
+    void validateForDefineQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
 
-    void validate(EventSource eventSource) throws SystemException;
+    void validateForEventSource(EventSource eventSource) throws SystemException;
+
+    void validateForQuestionGroupResponses(List<QuestionGroupDetail> questionGroupDetails);
 }

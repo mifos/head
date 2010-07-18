@@ -68,7 +68,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Override
     public QuestionDetail defineQuestion(QuestionDetail questionDetail) throws SystemException {
-        questionnaireValidator.validate(questionDetail);
+        questionnaireValidator.validateForDefineQuestion(questionDetail);
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDetail);
         persistQuestion(question);
         return questionnaireMapper.mapToQuestionDetail(question);
@@ -82,7 +82,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Override
     public QuestionGroupDetail defineQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
-        questionnaireValidator.validate(questionGroupDetail);
+        questionnaireValidator.validateForDefineQuestionGroup(questionGroupDetail);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         questionGroupDao.create(questionGroup);
         return questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
@@ -125,9 +125,14 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Override
     public List<QuestionGroupDetail> getQuestionGroups(EventSource eventSource) throws SystemException {
-        questionnaireValidator.validate(eventSource);
+        questionnaireValidator.validateForEventSource(eventSource);
         List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSource.getEvent(), eventSource.getSource());
         return questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
+    }
+
+    @Override
+    public void saveResponses(List<QuestionGroupDetail> questionGroupDetails) {
+        questionnaireValidator.validateForQuestionGroupResponses(questionGroupDetails);
     }
 
     private void persistQuestion(QuestionEntity question) throws SystemException {

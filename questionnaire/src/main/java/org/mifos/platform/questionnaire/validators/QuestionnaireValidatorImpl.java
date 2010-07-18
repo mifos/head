@@ -49,23 +49,28 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     @Override
-    public void validate(QuestionDetail questionDetail) throws SystemException {
+    public void validateForDefineQuestion(QuestionDetail questionDetail) throws SystemException {
         validateQuestionTitle(questionDetail);
         validateQuestionType(questionDetail);
     }
 
     @Override
-    public void validate(QuestionGroupDetail questionGroupDetail) throws SystemException {
+    public void validateForDefineQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
         validateQuestionGroupTitle(questionGroupDetail);
         validateQuestionGroupSections(questionGroupDetail.getSectionDetails());
-        validate(questionGroupDetail.getEventSource());
+        validateForEventSource(questionGroupDetail.getEventSource());
     }
 
     @Override
-    public void validate(EventSource eventSource) throws SystemException {
+    public void validateForEventSource(EventSource eventSource) throws SystemException {
         if (eventSource == null || StringUtils.isEmpty(eventSource.getSource()) || StringUtils.isEmpty(eventSource.getEvent()))
             throw new SystemException(QuestionnaireConstants.INVALID_EVENT_SOURCE);
         validateEventSource(eventSource);
+    }
+
+    @Override
+    public void validateForQuestionGroupResponses(List<QuestionGroupDetail> questionGroupDetails) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     private void validateEventSource(EventSource eventSource) throws SystemException {
