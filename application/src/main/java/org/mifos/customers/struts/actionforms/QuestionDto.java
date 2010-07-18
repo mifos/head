@@ -30,7 +30,6 @@ public class QuestionDto implements DataTransferObject {
     private static final long serialVersionUID = 1759235897826098794L;
 
     private SectionQuestionDetail sectionQuestionDetail;
-    private String value;
 
     public QuestionDto(SectionQuestionDetail sectionQuestionDetail) {
         this.sectionQuestionDetail = sectionQuestionDetail;
@@ -65,6 +64,10 @@ public class QuestionDto implements DataTransferObject {
     }
 
     public String getValue() {
-        return value;
+        return sectionQuestionDetail.getValue();
+    }
+
+    public void setValue(String value) {
+        this.sectionQuestionDetail.setValue(value);
     }
 }

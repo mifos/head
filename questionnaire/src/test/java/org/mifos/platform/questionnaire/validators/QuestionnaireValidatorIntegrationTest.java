@@ -49,7 +49,7 @@ public class QuestionnaireValidatorIntegrationTest {
     public void shouldCheckForInValidEventSource() {
         EventSource eventSource = new EventSource("Disburse", "Client", "Disburse Client");
         try {
-            questionnaireValidator.validate(eventSource);
+            questionnaireValidator.validateForEventSource(eventSource);
             fail("Should have raised a validation error for invalid event");
         } catch (SystemException e) {
             assertThat(e.getKey(), is(QuestionnaireConstants.INVALID_EVENT_SOURCE));
@@ -61,7 +61,7 @@ public class QuestionnaireValidatorIntegrationTest {
     public void shouldCheckForValidEventSource() {
         EventSource eventSource = new EventSource("Create", "Client", "Create Client");
         try {
-            questionnaireValidator.validate(eventSource);
+            questionnaireValidator.validateForEventSource(eventSource);
         } catch (SystemException e) {
             fail("Should not have raised a validation error for this event");
         }

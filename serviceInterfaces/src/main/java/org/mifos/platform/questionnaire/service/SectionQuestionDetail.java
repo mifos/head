@@ -29,6 +29,7 @@ public class SectionQuestionDetail implements Serializable {
 
     private boolean mandatory;
     private QuestionDetail questionDetail;
+    private String value;
 
     public SectionQuestionDetail() {
         //FIXEME: why does spring crib for not having a default constructor
@@ -65,6 +66,14 @@ public class SectionQuestionDetail implements Serializable {
 
     public List<String> getAnswerChoices() {
         return questionDetail.getAnswerChoices();
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     @Override
