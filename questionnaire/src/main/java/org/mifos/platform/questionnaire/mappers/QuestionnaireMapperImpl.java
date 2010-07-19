@@ -43,7 +43,6 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     @Autowired
     private QuestionDao questionDao;
 
-    //@SuppressWarnings({"UnusedDeclaration"})
     public QuestionnaireMapperImpl() {
         this(null, null);
     }
@@ -93,8 +92,6 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return question;
     }
 
-
-    //@SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops"})
     private List<QuestionChoiceEntity> mapToChoices(List<String> choices) {
         List<QuestionChoiceEntity> questionChoices = new LinkedList<QuestionChoiceEntity>();
         for (String choice : choices) {

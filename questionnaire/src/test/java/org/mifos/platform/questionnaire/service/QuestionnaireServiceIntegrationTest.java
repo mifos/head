@@ -345,6 +345,19 @@ public class QuestionnaireServiceIntegrationTest {
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldNotGetInActiveQuestionGroupsByEventAndSource() throws SystemException {
+        String title = "QG1" + System.currentTimeMillis();
+        List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
+        QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details);
+        setState(expectedQGDetail.getId(), QuestionGroupState.INACTIVE);
+        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
+        assertThat(questionGroups, is(notNullValue()));
+        QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
+        assertThat(actualQGDetail, is(nullValue()));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
     public void shouldPersistQuestionGroupInstance() throws SystemException {
         String title = "QG1" + System.currentTimeMillis();
         List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
@@ -371,6 +384,12 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(groupInstance.getQuestionGroupResponses(), is(notNullValue()));
         assertThat(groupInstance.getQuestionGroupResponses().get(0).getSectionQuestion(), is(notNullValue()));
         assertThat(groupInstance.getQuestionGroupResponses().get(0).getResponse(), is("Foo Bar"));
+    }
+
+    private void setState(Integer id, QuestionGroupState questionGroupState) {
+        QuestionGroup questionGroup = questionGroupDao.getDetails(id);
+        questionGroup.setState(questionGroupState);
+        questionGroupDao.update(questionGroup);
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws SystemException {
