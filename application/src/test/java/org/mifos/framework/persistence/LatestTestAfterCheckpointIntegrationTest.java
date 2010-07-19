@@ -88,7 +88,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
 
         loadLatest();
         IDataSet latestDump = dbUnitConnection.createDataSet();
-        connection.createStatement().execute("drop table foo");
+        connection.createStatement().execute("drop table database_upgrade_test");
         connection.commit();
         applyUpgrades();
         IDataSet upgradeDump = dbUnitConnection.createDataSet();
@@ -206,17 +206,17 @@ public class LatestTestAfterCheckpointIntegrationTest {
     }
 
     private void applyUpgrades() throws Exception {
-        connection.createStatement().execute("create table foo(x integer)");
-        connection.createStatement().execute("insert into foo(x) values(5)");
-        connection.createStatement().execute("alter table foo add column y integer default 7");
+        connection.createStatement().execute("create table database_upgrade_test(x integer)");
+        connection.createStatement().execute("insert into database_upgrade_test(x) values(5)");
+        connection.createStatement().execute("alter table database_upgrade_test add column y integer default 7");
         connection.commit();
     }
 
     private void loadLatest() throws Exception {
-        connection.createStatement().execute("drop table if exists foo");
+        connection.createStatement().execute("drop table if exists database_upgrade_test");
         connection.commit();
-        connection.createStatement().execute("create table foo(x integer, y integer default 7)");
-        connection.createStatement().execute("insert into foo(x, y) values(5,7)");
+        connection.createStatement().execute("create table database_upgrade_test(x integer, y integer default 7)");
+        connection.createStatement().execute("insert into database_upgrade_test(x, y) values(5,7)");
         connection.commit();
     }
 
