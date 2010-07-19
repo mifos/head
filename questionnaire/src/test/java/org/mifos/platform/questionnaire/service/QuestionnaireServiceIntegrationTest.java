@@ -85,7 +85,7 @@ public class QuestionnaireServiceIntegrationTest {
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
-    public void shouldDefineQuestionWithAnswerChoices() throws SystemException {
+    public void shouldDefineMultiSelectQuestion() throws SystemException {
         String questionTitle = TITLE + System.currentTimeMillis();
         QuestionDetail questionDetail = defineQuestion(questionTitle, MULTI_SELECT, asList("choice1", "choice2"));
         assertNotNull(questionDetail);
@@ -96,6 +96,22 @@ public class QuestionnaireServiceIntegrationTest {
         assertEquals(questionTitle, questionEntity.getShortName());
         assertEquals(questionTitle, questionEntity.getQuestionText());
         assertEquals(AnswerType.MULTISELECT, questionEntity.getAnswerTypeAsEnum());
+        assertThat(questionEntity.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2"))));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldDefineSingleSelectQuestion() throws SystemException {
+        String questionTitle = TITLE + System.currentTimeMillis();
+        QuestionDetail questionDetail = defineQuestion(questionTitle, QuestionType.SINGLE_SELECT, asList("choice1", "choice2"));
+        assertNotNull(questionDetail);
+        Integer questionId = questionDetail.getId();
+        assertNotNull(questionId);
+        QuestionEntity questionEntity = questionDao.getDetails(questionId);
+        assertNotNull(questionEntity);
+        assertEquals(questionTitle, questionEntity.getShortName());
+        assertEquals(questionTitle, questionEntity.getQuestionText());
+        assertEquals(AnswerType.SINGLESELECT, questionEntity.getAnswerTypeAsEnum());
         assertThat(questionEntity.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2"))));
     }
 

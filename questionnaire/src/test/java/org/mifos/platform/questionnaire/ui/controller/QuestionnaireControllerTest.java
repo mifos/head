@@ -179,6 +179,37 @@ public class QuestionnaireControllerTest {
     }
 
     @Test
+    public void testAddQuestionForFailureWhenLessThanTwoChoicesAreGivenForMultiSelect() throws Exception {
+        QuestionForm questionForm = new QuestionForm();
+        questionForm.getCurrentQuestion().setTitle("  " + TITLE + "    ");
+        questionForm.getCurrentQuestion().setType("Multi Select");
+        questionForm.getCurrentQuestion().setChoice("C1");
+        questionForm.getCurrentQuestion().addAnswerChoice();
+        Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionnaireController.addQuestion(questionForm, requestContext);
+        Assert.assertThat(result, Is.is(notNullValue()));
+        Assert.assertThat(result, Is.is("failure"));
+        Mockito.verify(requestContext).getMessageContext();
+        Mockito.verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.question.choices")));
+    }
+
+    @Test
+    public void testAddQuestionForSuccessWhenTwoChoicesAreGivenForSigleSelect() throws Exception {
+        QuestionForm questionForm = new QuestionForm();
+        questionForm.getCurrentQuestion().setTitle("  " + TITLE + "    ");
+        questionForm.getCurrentQuestion().setType("Single Select");
+        questionForm.getCurrentQuestion().setChoice("C1");
+        questionForm.getCurrentQuestion().addAnswerChoice();
+        questionForm.getCurrentQuestion().setChoice("C2");
+        questionForm.getCurrentQuestion().addAnswerChoice();
+        Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionnaireController.addQuestion(questionForm, requestContext);
+        Assert.assertThat(result, Is.is(notNullValue()));
+        Assert.assertThat(result, Is.is("success"));
+        Assert.assertThat(questionForm.getQuestions().size(), Is.is(1));
+    }
+
+    @Test
     public void testDeleteSection() {
         QuestionGroupForm questionGroup = new QuestionGroupForm();
         String sectionName = "sectionName";

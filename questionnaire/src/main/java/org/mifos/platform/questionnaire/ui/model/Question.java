@@ -52,7 +52,7 @@ public class Question implements Serializable {
     }
 
     @org.hibernate.validator.constraints.NotEmpty
-    @javax.validation.constraints.Size(min = 1, max = 50)
+    @javax.validation.constraints.Size(max = 50)
     public String getTitle() {
         return questionDetail.getTitle();
     }

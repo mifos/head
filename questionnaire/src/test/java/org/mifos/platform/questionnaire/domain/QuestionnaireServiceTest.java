@@ -31,19 +31,34 @@ import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
-import org.mifos.platform.questionnaire.service.*; // NOPMD
+import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.QuestionDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.SectionDetail;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;  //NOPMD
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.anyString;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -337,7 +352,7 @@ public class QuestionnaireServiceTest {
     }
 
     @Test
-    public void testGetQuestionWithAnswerChoicesById() throws SystemException {
+    public void testGetMultiSelectQuestionById() throws SystemException {
         int questionId = 1;
         String title = "Title";
         when(questionDao.getDetails(questionId)).thenReturn(getQuestion(questionId, title, AnswerType.MULTISELECT, asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2"))));
@@ -348,6 +363,20 @@ public class QuestionnaireServiceTest {
         assertThat(questionDetail.getType(), is(QuestionType.MULTI_SELECT));
         Assert.assertEquals(questionDetail.getAnswerChoices(),asList("choice1","choice2"));
         verify(questionDao, times(1)).getDetails(questionId);
+    }
+
+    @Test
+    public void testGetSingleSelectQuestionById() throws SystemException {
+        int questionId = 1;
+        String title = "Title";
+        Mockito.when(questionDao.getDetails(questionId)).thenReturn(getQuestion(questionId, title, AnswerType.SINGLESELECT, Arrays.asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2"))));
+        QuestionDetail questionDetail = questionnaireService.getQuestion(questionId);
+        Assert.assertNotNull(questionDetail);
+        Assert.assertThat(questionDetail.getShortName(), is(title));
+        Assert.assertThat(questionDetail.getText(), is(title));
+        Assert.assertThat(questionDetail.getType(), is(QuestionType.SINGLE_SELECT));
+        Assert.assertEquals(questionDetail.getAnswerChoices(),Arrays.asList("choice1","choice2"));
+        Mockito.verify(questionDao, Mockito.times(1)).getDetails(questionId);
     }
 
     @Test
