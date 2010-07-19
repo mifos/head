@@ -105,7 +105,7 @@
     	<constructor-arg ref="officeDao" />
     </bean>
     
-    <bean id="mandatoryHiddenFieldService" class="org.mifos.customers.office.business.service.MandatoryHiddenFieldService" >
+    <bean id="mandatoryHiddenFieldService" class="org.mifos.customers.office.business.service.MandatoryHiddenFieldServiceImpl" >
     </bean>
 
     <bean id="personnelService" class="org.mifos.customers.personnel.business.service.PersonnelServiceImpl" >
