@@ -105,6 +105,27 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         editPreviewLoanAccountPage.verifyErrorInForm("Please specify valid Grace period for repayments. Grace period for repayments should be a value less than 12");
     }
 
+    @Test(sequential = true, groups = {"loan","acceptance","ui"})
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void newWeeklyClientLoanAccountWithDateTypeCustomField() throws Exception {
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Client - Veronica Abisya");
+        searchParameters.setLoanProduct("Flat Interest Loan Product With Fee");
+
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setAmount("1012.0");
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_014_dbunit.xml.zip", dataSource, selenium);
+
+        String loanId = createLoanAndCheckAmount(searchParameters, submitAccountParameters);
+
+        submitAccountParameters.setAmount("1666.0");
+        EditLoanAccountInformationParameters editAccountParameters = new EditLoanAccountInformationParameters();
+        editAccountParameters.setGracePeriod("5");
+        EditPreviewLoanAccountPage editPreviewLoanAccountPage = tryToEditLoan(loanId, submitAccountParameters, editAccountParameters);
+        LoanAccountPage loanAccountPage = editPreviewLoanAccountPage.submitAndNavigateToLoanAccountPage();
+        loanAccountPage.verifyPage();
+    }
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     public void newMonthlyClientLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {

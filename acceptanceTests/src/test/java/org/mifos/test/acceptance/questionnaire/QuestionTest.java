@@ -36,6 +36,9 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.testng.Assert.assertEquals;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
@@ -51,9 +54,13 @@ public class QuestionTest extends UiTestCaseBase {
     private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
     private String title;
     private static final String TITLE_MISSING = "Please specify the question title.";
-    private static final String DUPLICATE_TITLE = "The name specified already exists.";
+    private static final String AT_LEAST_2_CHOICES = "Please specify at least 2 choices.";
+    private static final String DUPLICATE_TITLE = "Question title already exists.";
     private CreateQuestionParameters createQuestionParameters;
-    private static final String DATE_TYPE = "Date";
+    private static final String DATE = "Date";
+    private static final String FREE_TEXT = "Free Text";
+    private static final String MULTI_SELECT = "Multi Select";
+    private static final String SINGLE_SELECT = "Single Select";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -76,19 +83,40 @@ public class QuestionTest extends UiTestCaseBase {
         CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage().verifyPage();
         testSubmitButtonDisabled(createQuestionPage);
         testMissingTitle(createQuestionPage);
-        testAddQuestion(createQuestionPage);
+        testAddQuestions(createQuestionPage);
         testDuplicateTitle(createQuestionPage);
         adminPage = testCreateQuestions(createQuestionPage);
         adminPage = testDuplicateTitleForExistingQuestionInDB(adminPage);
         ViewAllQuestionsPage viewAllQuestionsPage = testViewQuestions(adminPage);
-        testViewQuestionDetail(viewAllQuestionsPage);
+        testViewQuestions(viewAllQuestionsPage);
     }
 
-    private void testViewQuestionDetail(ViewAllQuestionsPage viewAllQuestionsPage) {
-        QuestionDetailPage questionDetailPage = viewAllQuestionsPage.navigateToQuestionDetail(title);
+    private void testViewQuestions(ViewAllQuestionsPage viewAllQuestionsPage) {
+        testViewQuestionDetail(viewAllQuestionsPage, DATE);
+        testViewQuestionDetail(viewAllQuestionsPage, FREE_TEXT);
+        testViewQuestionDetail(viewAllQuestionsPage, MULTI_SELECT, "choice2", "choice3");
+        testViewQuestionDetail(viewAllQuestionsPage, SINGLE_SELECT, "choice1", "choice2");
+    }
+
+    private void testAddQuestions(CreateQuestionPage createQuestionPage) {
+        testAddQuestion(createQuestionPage, DATE, title);
+        testAddQuestion(createQuestionPage, FREE_TEXT, title);
+        testAddQuestion(createQuestionPage, SINGLE_SELECT, title, "choice1", "choice2");
+        testAddQuestion(createQuestionPage, MULTI_SELECT, title, "choice2", "choice3");
+        testAddQuestion(createQuestionPage, MULTI_SELECT, title + 1, "choice2");
+    }
+
+    private void testViewQuestionDetail(ViewAllQuestionsPage viewAllQuestionsPage, String type, String... choices) {//NOPMD
+        QuestionDetailPage questionDetailPage = viewAllQuestionsPage.navigateToQuestionDetail(title + type);
         questionDetailPage.verifyPage();
-        Assert.assertTrue(selenium.isTextPresent("Question: "+title), "Title is missing");
-        Assert.assertTrue(selenium.isTextPresent("Answer Type: "+DATE_TYPE), "Answer type is missing");
+        Assert.assertTrue(selenium.isTextPresent("Question: " + title + type), "Title is missing");
+        Assert.assertTrue(selenium.isTextPresent("Answer Type: " + type), "Answer type is missing");
+        if (questionHasAnswerChoices(type)) {
+            Assert.assertTrue(selenium.isTextPresent("Answer Choices: " + choices[0] + ", " + choices[1]));
+        } else {
+            Assert.assertFalse(selenium.isTextPresent("Answer Choices: "), "Answer type should not be present");
+        }
+        viewAllQuestionsPage = questionDetailPage.navigateToViewAllQuestionsPage();
     }
 
     private ViewAllQuestionsPage testViewQuestions(AdminPage adminPage) {
@@ -106,7 +134,7 @@ public class QuestionTest extends UiTestCaseBase {
     private AdminPage testDuplicateTitleForExistingQuestionInDB(AdminPage adminPage) {
         CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage();
         createQuestionPage.verifyPage();
-        createQuestionParameters.setTitle(title);
+        createQuestionParameters.setTitle(title + DATE);
         createQuestionPage.addQuestion(createQuestionParameters);
         Assert.assertTrue(selenium.isTextPresent(DUPLICATE_TITLE), "Duplicate title error should appear");
         return createQuestionPage.navigateToAdminPage();
@@ -120,19 +148,51 @@ public class QuestionTest extends UiTestCaseBase {
     }
 
     private void testDuplicateTitle(CreateQuestionPage createQuestionPage) {
-        createQuestionParameters.setTitle(title);
+        createQuestionParameters.setTitle(title + FREE_TEXT);
         createQuestionPage.addQuestion(createQuestionParameters);
         Assert.assertTrue(selenium.isTextPresent(DUPLICATE_TITLE), "Duplicate title error should appear");
     }
 
-    private void testAddQuestion(CreateQuestionPage createQuestionPage) {
+    private void testAddQuestion(CreateQuestionPage createQuestionPage, String type, String title, String... choices) {
+        setupQuestionParameters(title + type, type, Arrays.asList(choices));
+        testAddQuestion(createQuestionPage);
+    }
+
+    private void setupQuestionParameters(String title, String type, List<String> choices) {
         createQuestionParameters.setTitle(title);
-        createQuestionParameters.setType(DATE_TYPE);
+        createQuestionParameters.setType(type);
+        createQuestionParameters.setChoices(choices);
+    }
+
+    private void testAddQuestion(CreateQuestionPage createQuestionPage) {
         createQuestionPage.addQuestion(createQuestionParameters);
         Assert.assertFalse(selenium.isTextPresent(TITLE_MISSING), "Missing title error should not appear");
-        assertEquals(title, selenium.getTable("questions.table.1.0"));
-        assertEquals(DATE_TYPE, selenium.getTable("questions.table.1.1"));
+        List<String> choices = createQuestionParameters.getChoices();
+        if (questionHasAnswerChoices() && choices.size() < 2) {
+            Assert.assertTrue(selenium.isTextPresent(AT_LEAST_2_CHOICES), "Missing warning for giving at least 2 choices");
+        } else {
+            assertLastAddedQuestion(createQuestionPage);
+        }
+    }
+
+    private void assertLastAddedQuestion(CreateQuestionPage createQuestionPage) {
+        CreateQuestionParameters question = createQuestionPage.getLastAddedQuestion();
+        assertEquals(createQuestionParameters.getTitle(), question.getTitle());
+        assertEquals(createQuestionParameters.getType(), question.getType());
+        if (questionHasAnswerChoices()) {
+            Assert.assertEquals(createQuestionParameters.getChoices(), question.getChoices());
+        } else {
+            Assert.assertEquals(Arrays.asList("Not Applicable"), question.getChoices());
+        }
         testSubmitButtonEnabled(createQuestionPage);
+    }
+
+    private boolean questionHasAnswerChoices() {
+        return MULTI_SELECT.equals(createQuestionParameters.getType()) || SINGLE_SELECT.equals(createQuestionParameters.getType());
+    }
+
+    private boolean questionHasAnswerChoices(String type) {
+        return MULTI_SELECT.equals(type) || SINGLE_SELECT.equals(type);
     }
 
     private void testSubmitButtonDisabled(CreateQuestionPage createQuestionPage) {
@@ -147,7 +207,7 @@ public class QuestionTest extends UiTestCaseBase {
 
     private void testMissingTitle(CreateQuestionPage createQuestionPage) {
         createQuestionParameters.setTitle("");
-        createQuestionParameters.setType(DATE_TYPE);
+        createQuestionParameters.setType(DATE);
         createQuestionPage.addQuestion(createQuestionParameters);
         assertTextFoundOnPage(TITLE_MISSING);
     }

@@ -39,27 +39,3 @@ function submitSurveyInstanceForm(method) {
 	form.action='surveyInstanceAction.do?method=' + method;
 	form.submit();
 }
-	
-function disableSubmitButtonOnEmptyQuestionList() {
-    var qtable = document.getElementById('questions.table');
-    if (qtable != null && qtable.rows.length <= 2) {
-        var submitBtn = document.getElementById('_eventId_createQuestions');
-        if (submitBtn != null) {
-            submitBtn.disabled = true;
-            submitBtn.className = 'disabledbuttn';
-        }
-    }
-}
-
-function removeSection(sectionName){
-    var sectionToDeleteBtn = document.getElementById('_eventId_deleteSection');
-    sectionToDeleteBtn.value = sectionName;
-    sectionToDeleteBtn.click();
-}
-
-function removeQuestion(sectionName, questionId){
-    var questionToDeleteBtn = document.getElementById('_eventId_deleteQuestion');
-    questionToDeleteBtn.value = questionId;
-    document.getElementById('questionSection').value = sectionName;
-    questionToDeleteBtn.click();
-}

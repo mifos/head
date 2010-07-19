@@ -928,6 +928,14 @@
                                 <exclude>**/web.xml</exclude>
                             </excludes>
                         </resource>
+                        <resource>
+                            <directory>${modules.root.dir}/questionnaire/src/main/webapp/pages</directory>
+                            <targetPath>pages</targetPath>
+                        </resource>
+                        <resource>
+                            <directory>${modules.root.dir}/questionnaire/src/main/webapp/WEB-INF</directory>
+                            <targetPath>WEB-INF</targetPath>
+                        </resource>
                     </webResources>
                 </configuration>
             </plugin>

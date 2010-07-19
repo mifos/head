@@ -42,13 +42,13 @@ import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.struts.actionforms.QuestionGroupDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
-import org.mifos.framework.MifosApplicationContext;
+import org.mifos.service.MifosServiceFactory;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.*;
-import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
@@ -182,11 +182,15 @@ public class ClientCustAction extends CustAction {
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
         }
+        List<QuestionGroupDto> questionGroups = getQuestionGroups(getQuestionnaireServiceFacade(request));
+        actionForm.setQuestionGroupDtos(questionGroups);
+        SessionUtils.setCollectionAttribute(CustomerConstants.QUESTION_GROUPS_LIST, questionGroups, request);
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
-    // intentionally made public to aid testing !!!
+    // intentionally made 'public' to aid testing !!!
     public List<QuestionGroupDto> getQuestionGroups(QuestionnaireServiceFacade questionnaireServiceFacade) throws ApplicationException {
+        if (questionnaireServiceFacade == null) return null;
         List<QuestionGroupDto> questionGroupDtos = new ArrayList<QuestionGroupDto>();
         List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getQuestionGroups(EVENT_CREATE, SOURCE_CLIENT);
         for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
@@ -802,7 +806,13 @@ public class ClientCustAction extends CustAction {
         return FieldConfig.getInstance().isFieldManadatory("Client." + HiddenMandatoryFieldNamesConstants.FAMILY_DETAILS);
     }
 
-    private QuestionnaireServiceFacade getQuestionnaireServiceFacade() {
-        return (QuestionnaireServiceFacade) new MifosApplicationContext().getBean("questionnaireServiceFacade");
+    private QuestionnaireServiceFacade getQuestionnaireServiceFacade(HttpServletRequest request) {
+        QuestionnaireServiceFacade questionnaireServiceFacade;
+        try {
+            questionnaireServiceFacade = (QuestionnaireServiceFacade) MifosServiceFactory.getSpringBean(request, "questionnaireServiceFacade");
+        } catch (Exception e) {
+            questionnaireServiceFacade = null;
+        }
+        return questionnaireServiceFacade;
     }
 }

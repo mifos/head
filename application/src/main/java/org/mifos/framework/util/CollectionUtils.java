@@ -130,25 +130,5 @@ public class CollectionUtils {
         return result;
     }
 
-    public static <K, V> Map<K, V> asOrderedMap(Map.Entry<K, V>... entry) {
-        Map<K, V> map = new LinkedHashMap<K, V>();
-        fillEntries(map, entry);
-        return map;
-    }
 
-    public static <K, V> Map<K, V> asMap(Map.Entry<K, V>... entry) {
-        Map<K, V> map = new HashMap<K, V>();
-        fillEntries(map, entry);
-        return map;
-    }
-
-    private static <K, V> void fillEntries(Map<K, V> map, Map.Entry<K, V>... entry) {
-        for (Map.Entry<K, V> _entry : entry) {
-            map.put(_entry.getKey(), _entry.getValue());
-        }
-    }
-
-    public static <T> boolean isEmpty(Collection<T> collection) {
-        return collection == null || collection.isEmpty();
-    }
 }

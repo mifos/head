@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+       <class name="org.mifos.platform.questionnaire.domain.QuestionChoiceEntity" table="question_choices"
+       		discriminator-value="N">
+               <id name="choiceId" column="choice_id" type="integer" unsaved-value="0" access="field">
+                       <generator class="native"/>
+               </id>
+               <discriminator column="ppi" type="yes_no"/>
+               <property name="choiceText" column="choice_text" not-null="true"/>
+       </class>
+</hibernate-mapping>

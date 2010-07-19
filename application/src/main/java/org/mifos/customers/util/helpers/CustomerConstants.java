@@ -273,5 +273,6 @@ public interface CustomerConstants {
     String AMOUNT_OF_LOAN_KEY = "label.amountofloanLabel";
     String INTEREST_PAID_KEY = "Customer.History.InterestPaid";
     String TOTAL_AMOUNT_PAID_KEY = "label.totalamountpaidLabel";
+    String QUESTION_GROUPS_LIST = "questionGroups";
 
 }

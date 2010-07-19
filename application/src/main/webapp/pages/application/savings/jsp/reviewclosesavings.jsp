@@ -71,9 +71,7 @@ explanation of the license and how it is applied.
             </tr>
             <tr>
               <td colspan="2" class="fontnormal"><mifos:mifoslabel name="Savings.reviewDetails"/>
-              <mifos:mifoslabel name="Savings.clickSubmitIfSatisfied"/>
-              <mifos:mifoslabel name="Savings.clickCancelToReturn"/>
-              <mifos:mifoslabel name="Savings.detailsWithOutClosing"/>
+              <mifos:mifoslabel name="Savings.clickSubmitIfSatisfied.return.closing"/>
 			</td>
             </tr>
              <tr>

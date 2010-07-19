@@ -50,7 +50,7 @@ explanation of the license and how it is applied.
 						<tr>
 							<td class="fontnormalbold">
 								<mifos:mifoslabel name="loan.plz_note" />
-								<span class="fontnormal"> <mifos:mifoslabel name="loan.new" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.accs" /> <mifos:mifoslabel name="loan.withfollid" isColonRequired="Yes" /> <br> <br> </span>
+								<span class="fontnormal"> <mifos:mifoslabel name="loan.new" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.accsWithFollowingIdCreated" isColonRequired="Yes" /> <br> <br> </span>
 								<c:forEach var="loanGlobalNum" items="${requestScope.accountsList}" varStatus="status" >
 								<html-el:link href="loanAccountAction.do?globalAccountNum=${loanGlobalNum}&method=get" styleId="CreateMultipleLoanAccountsConfirm.link.account.${status.index}"><mifos:mifoslabel name="loan.accountNumber" />${loanGlobalNum}</html-el:link>
 								<br>
@@ -60,8 +60,7 @@ explanation of the license and how it is applied.
 								<span class="fontnormalboldorange"><mifos:mifoslabel name="loan.suggested_steps" /></span>
 								<br>
 								<span class="fontnormal"> <html-el:link styleId="CreateMultipleLoanAccountsConfirmation.link.createMultipleLoanAccounts" href="multipleloansaction.do?method=load">
-										<mifos:mifoslabel name="loan.create" />
-										<mifos:mifoslabel name="loan.multiple" />
+										<mifos:mifoslabel name="loan.createMultiple" />
 										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 										<mifos:mifoslabel name="loan.accs" />
 									</html-el:link></span>

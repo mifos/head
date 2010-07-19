@@ -21,8 +21,8 @@
 package org.mifos.customers.struts.actionforms;
 
 import org.mifos.framework.business.service.DataTransferObject;
-import org.mifos.platform.questionnaire.contract.QuestionType;
-import org.mifos.platform.questionnaire.contract.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 
 import java.util.List;
 
@@ -51,7 +51,23 @@ public class QuestionDto implements DataTransferObject {
         return sectionQuestionDetail.getQuestionType();
     }
 
+    public int getQuestionTypeAsNum() {
+        return sectionQuestionDetail.getQuestionType().ordinal();
+    }
+
     public List<String> getAnswerChoices() {
         return sectionQuestionDetail.getAnswerChoices();
+    }
+
+    public String getRequiredString() {
+        return String.valueOf(sectionQuestionDetail.isMandatory());
+    }
+
+    public String getValue() {
+        return sectionQuestionDetail.getValue();
+    }
+
+    public void setValue(String value) {
+        this.sectionQuestionDetail.setValue(value);
     }
 }

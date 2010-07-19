@@ -19,58 +19,16 @@
 	
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="mappingResources">
-            <list>
-                <value>/org/mifos/accounts/fees/business/FeeStatusEntity.hbm.xml</value>
-                <value>/org/mifos/accounts/fees/business/CategoryTypeEntity.hbm.xml</value>
-                <value>/org/mifos/accounts/fees/business/FeeFrequencyTypeEntity.hbm.xml</value>
-                <value>/org/mifos/accounts/fees/business/FeeFormulaEntity.hbm.xml</value>
-                <value>/org/mifos/accounts/fees/business/FeePaymentEntity.hbm.xml</value>
-
-                <value>/org/mifos/customers/office/business/OfficeBO.hbm.xml</value>
-                <value>/org/mifos/customers/office/business/OfficeCustomFieldEntity.hbm.xml</value>
-                <value>/org/mifos/customers/office/business/OfficeAddressEntity.hbm.xml</value>
-                <value>/org/mifos/customers/office/business/OfficeLevelEntity.hbm.xml</value>
-                <value>/org/mifos/customers/office/business/OfficeStatusEntity.hbm.xml</value>
-
-                <value>/org/mifos/application/master/business/LookUpValueEntity.hbm.xml</value>
-                <value>/org/mifos/application/master/business/LookUpValueLocaleEntity.hbm.xml</value>
-                <value>/org/mifos/application/master/business/LookUpLabelEntity.hbm.xml</value>
-                <value>/org/mifos/application/master/business/SupportedLocalesEntity.hbm.xml</value>
-                <value>/org/mifos/application/master/business/LanguageEntity.hbm.xml</value>
-
-                <value>/org/mifos/application/meeting/business/MeetingBO.hbm.xml</value>
-                <value>/org/mifos/application/meeting/business/MeetingDetailsEntity.hbm.xml</value>
-                <value>/org/mifos/application/meeting/business/MeetingRecurrenceEntity.hbm.xml</value>
-                <value>/org/mifos/application/meeting/business/MeetingTypeEntity.hbm.xml</value>
-                <value>/org/mifos/application/meeting/business/RecurrenceTypeEntity.hbm.xml</value>
-                <value>/org/mifos/application/holiday/business/HolidayBO.hbm.xml</value>
-
-                <value>/org/mifos/accounts/financial/business/COABO.hbm.xml</value>
-                <value>/org/mifos/accounts/financial/business/COAHierarchyEntity.hbm.xml</value>
-
-                <value>/org/mifos/customers/surveys/business/Question.hbm.xml</value>
-                <value>/org/mifos/customers/surveys/business/QuestionChoice.hbm.xml</value>
-
-                <value>/org/mifos/platform/questionnaire/domain/QuestionGroup.hbm.xml</value>
-                <value>/org/mifos/platform/questionnaire/domain/Section.hbm.xml</value>
-                <value>/org/mifos/platform/questionnaire/domain/SectionQuestion.hbm.xml</value>
-                <value>/org/mifos/platform/questionnaire/domain/QuestionGroupInstance.hbm.xml</value>
-                <value>/org/mifos/platform/questionnaire/domain/QuestionGroupResponse.hbm.xml</value>
-            </list>
-        </property>
-
         <property name="annotatedClasses">
-            <list>
-                <value>org.mifos.accounts.financial.business.GLCodeEntity</value>
-                <value>org.mifos.application.master.business.LookUpEntity</value>
-                <value>org.mifos.application.master.business.CountryEntity</value>
-                <value>org.mifos.framework.components.fieldConfiguration.business.EntityMaster</value>
-                <value>org.mifos.platform.questionnaire.domain.EventEntity</value>
-                <value>org.mifos.platform.questionnaire.domain.EventSourceEntity</value>
-            </list>
+           <list>
+                <value>org.mifos.framework.business.EntityMaster</value>
+           </list>
         </property>
-
+        <property name="configLocations">
+          <list>
+              <value>classpath:org/mifos/platform/questionnaire/domain/questionnaire_hibernate.cfg.xml</value>
+          </list>
+        </property>
         <property name="hibernateProperties">
             <ref bean="dbSpecificHibernateProperties"/>
         </property>
@@ -106,7 +64,7 @@
         <constructor-arg ref="queryInterceptor"/>
     </bean>
 
-    <bean id="abstractDaoTarget" class="org.mifos.platform.persistence.GenericDaoHibernateImpl" abstract="true">
+    <bean id="abstractDaoTarget" class="org.mifos.platform.persistence.support.GenericDaoHibernateImpl" abstract="true">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
