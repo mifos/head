@@ -57,8 +57,7 @@ explanation of the license and how it is applied.
 								<td colspan="2">
 									<mifos:mifoslabel name="loan.search" />
 									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-									<mifos:mifoslabel name="loan.account" />
-									<mifos:mifoslabel name="loan.byid" />
+									<mifos:mifoslabel name="loan.accountById" />
 								</td>
 							</tr>
 							<tr class="fontnormal8pt">
