@@ -61,9 +61,7 @@ explanation of the license and how it is applied.
               </tr>
               <tr>
                 <td class="fontnormal">
-	                <mifos:mifoslabel name="Savings.editFields"/>
-	                <mifos:mifoslabel name="Savings.clickPreview"/>
-	                <mifos:mifoslabel name="Savings.clickCancelToReturn"/>
+	                <mifos:mifoslabel name="Savings.editFields.clickPreview.clickCancelToReturn"/>
 	                <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
 	                <mifos:mifoslabel name="Savings.accountDetailsPage"/>
              		<br>

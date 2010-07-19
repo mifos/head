@@ -57,8 +57,8 @@ explanation of the license and how it is applied.
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td valign="top" class="fontnormal">
-									<font color="#FF0000"> <mifos:mifoslabel name="loan.areyousure" /><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.already" /> <mifos:mifoslabel name="loan.disbursed" />. <mifos:mifoslabel
-											name="loan.ifyouclicksubmit" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.account" /> <mifos:mifoslabel name="loan.statuschanged" /> <mifos:mifoslabel name="loan.clickcanceladmin" /></font>
+									<font color="#FF0000"> <mifos:mifoslabel name="loan.areyousure" /><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.alreadyDisbursed" />. <mifos:mifoslabel
+											name="loan.ifyouclicksubmit" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.accountStatuschanged" /> <mifos:mifoslabel name="loan.clickcanceladmin" /></font>
 								</td>
 							</tr>
 							<font class="fontnormalRedBold"> <span id="undoloandisbursalpreview.error.message"><html-el:errors bundle="loanUIResources" /></span> </font>
@@ -88,7 +88,7 @@ explanation of the license and how it is applied.
 										 <c:out value="${BusinessKey.customer.parentCustomer.displayName}"/>
 									</p>
 									<p>
-										<span class="fontnormalbold"><mifos:mifoslabel name="loan.amount" /> <mifos:mifoslabel name="loan.disbursed" isColonRequired="Yes" /></span> <c:out value="${BusinessKey.loanAmount}"/>
+										<span class="fontnormalbold"><mifos:mifoslabel name="loan.amountDisbursed" isColonRequired="Yes" /></span> <c:out value="${BusinessKey.loanAmount}"/>
 										<br>
 										<span class="fontnormalbold"><mifos:mifoslabel name="loan.proposed_date" isColonRequired="Yes" /></span> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.disbursementDate)}" />
 										<br>
