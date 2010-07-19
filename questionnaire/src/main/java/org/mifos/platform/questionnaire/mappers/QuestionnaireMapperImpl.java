@@ -229,6 +229,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
                 makeEntry(AnswerType.DATE, QuestionType.DATE),
                 makeEntry(AnswerType.NUMBER, QuestionType.NUMERIC),
                 makeEntry(AnswerType.SINGLESELECT, QuestionType.SINGLE_SELECT),
+                makeEntry(AnswerType.CHOICE, QuestionType.SINGLE_SELECT),
                 makeEntry(AnswerType.MULTISELECT, QuestionType.MULTI_SELECT));
     }
 
