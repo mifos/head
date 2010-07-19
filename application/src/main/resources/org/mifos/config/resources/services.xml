@@ -16,6 +16,7 @@
     <bean id="adminServiceFacade" class="org.mifos.application.servicefacade.AdminServiceFacadeWebTier">
        	<constructor-arg ref="productService" />
     	<constructor-arg ref="officeHierarchyService" />
+		<constructor-arg ref="mandatoryHiddenFieldService" />    	
     	<constructor-arg ref="loanProductDao" />
     	<constructor-arg ref="savingsProductDao" />
     	<constructor-arg ref="officeDao" />
@@ -104,6 +105,9 @@
     	<constructor-arg ref="officeDao" />
     </bean>
     
+    <bean id="mandatoryHiddenFieldService" class="org.mifos.customers.office.business.service.MandatoryHiddenFieldService" >
+    </bean>
+
     <bean id="personnelService" class="org.mifos.customers.personnel.business.service.PersonnelServiceImpl" >
     	<constructor-arg ref="personnelDao" />
     </bean>
