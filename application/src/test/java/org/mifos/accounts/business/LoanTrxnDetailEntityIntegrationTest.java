@@ -26,6 +26,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanSummaryEntity;
 import org.mifos.accounts.persistence.AccountPersistence;
@@ -54,21 +57,22 @@ public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCas
 
     private AccountBO account;
 
-    @Override
+    @Before
     protected void setUp() throws Exception {
-        super.setUp();
+
     }
 
-    @Override
+    @After
     protected void tearDown() throws Exception {
         TestObjectFactory.cleanUp(account);
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
+
     }
 
+    @Test
     public void testSuccessSetRunningBalance() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active", meeting);
