@@ -51,6 +51,22 @@ public class GroupPerformanceHistoryEntityIntegrationTest extends MifosIntegrati
     private CustomerBO customerMock;
     private ClientPerformanceHistoryEntity clientPerfHistoryMock;
 
+    public void testUpdateOnDisbursementGetsCoSigningClientsForGlim() throws Exception {
+        expect(configServiceMock.isGlimEnabled()).andReturn(true);
+        clientPerfHistoryMock.updateOnDisbursement(loanOffering);
+
+        expect(customerMock.getPerformanceHistory()).andReturn(clientPerfHistoryMock);
+        expectLastCall().atLeastOnce();
+
+        expect(accountBusinessServiceMock.getCoSigningClientsForGlim(loan.getAccountId())).andReturn(
+                Arrays.asList(customerMock));
+        replay(configServiceMock, accountBusinessServiceMock, customerMock, clientPerfHistoryMock);
+
+        new GroupPerformanceHistoryEntity(configServiceMock, accountBusinessServiceMock).updateOnDisbursement(loan,
+                zero());
+        verify(configServiceMock, accountBusinessServiceMock, customerMock, clientPerfHistoryMock);
+    }
+
     public void testUpdateOnDisbursementDoesNotGetCoSigningClientsIfNotGlim() throws Exception {
         expect(configServiceMock.isGlimEnabled()).andReturn(false);
         replay(configServiceMock, accountBusinessServiceMock);
