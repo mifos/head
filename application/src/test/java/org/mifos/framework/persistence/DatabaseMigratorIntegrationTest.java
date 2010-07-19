@@ -36,8 +36,10 @@ import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
@@ -55,11 +57,15 @@ public class DatabaseMigratorIntegrationTest {
 
     }
 
-    @After
-    public void afterClass() throws Exception {
-        connection.close();
-        StaticHibernateUtil.flushAndCloseSession();
-    }
+    @AfterClass
+     public static void afterClass() throws Exception {
+            // Cleaning the database using FK check disabled connection
+            // If any one of the test fails or throws error it could lead to
+            // multiple failures in other tests during test build
+            TestDatabase.createMySQLTestDatabase();
+            FinancialInitializer.initialize();
+            StaticHibernateUtil.flushAndCloseSession();
+        }
 
     /**
      * Demonstrate the simplest possible non-sequential database upgrade works. For example, upgrading a schema from
