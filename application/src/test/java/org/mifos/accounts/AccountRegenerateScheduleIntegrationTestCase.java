@@ -43,6 +43,9 @@ import junit.framework.Assert;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.AccountPersistence;
@@ -97,13 +100,13 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
     // hard coded number of loan installments that are created (in TestObjectFactory)
     private int numberOfLoanInstallments = 6;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
+
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         try {
             TestObjectFactory.cleanUp(savingsBO);
             TestObjectFactory.cleanUp(accountBO);
@@ -118,7 +121,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         } finally {
             StaticHibernateUtil.closeSession();
         }
-        super.tearDown();
+
         new DateTimeService().resetToCurrentSystemDateTime();
     }
 
@@ -148,6 +151,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
     /*
      * original schedule dates: 5/23, 5/30, 6/6, 6/13, 6/20, 6/27
      */
+    @Test
     public void testChangeMeetingInFirstWeekOfSchedule() throws Exception {
         List<LocalDate> expectedMeetingDates = new ArrayList<LocalDate>();
         expectedMeetingDates.add(new LocalDate(2008,MAY,23));
@@ -166,7 +170,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         validateSchedules(expectedMeetingDates);
     }
 
-
+    @Test
     public void testChangeMeetingInSecondWeekOfSchedule() throws Exception {
         List<LocalDate> expectedMeetingDates = new ArrayList<LocalDate>();
         expectedMeetingDates.add(new LocalDate(2008,MAY,23));
@@ -184,6 +188,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         validateSchedules(expectedMeetingDates);
     }
 
+    @Test
     public void testChangeMeetingInSecondWeekOfScheduleOnOldMeetingDay() throws Exception {
         List<LocalDate> expectedMeetingDates = new ArrayList<LocalDate>();
         expectedMeetingDates.add(new LocalDate(2008,MAY,23));
@@ -204,6 +209,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
 
 
     // a change in the last week of a schedule should not change the schedule
+    @Test
     public void testChangeMeetingInLastWeekOfSchedule() throws Exception {
         List<LocalDate> expectedMeetingDates = new ArrayList<LocalDate>();
         expectedMeetingDates.add(new LocalDate(2008,MAY,23));
@@ -223,6 +229,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
     }
 
     // for closed and canceled accounts, we expect no change to the schedule
+    @Test
     public void testChangeMeetingScheduleForClosedAndCancelledAccounts() throws Exception {
 
         List<LocalDate> expectedUnchangedMeetingDates = new ArrayList<LocalDate>();
@@ -242,6 +249,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
 
     }
 
+    @Test
     public void testChangeInFirstPeriodOfBiWeeklyMeetingSchedule() throws Exception {
         List<LocalDate> expectedMeetingDates = new ArrayList<LocalDate>();
         expectedMeetingDates.add(new LocalDate(2008,MAY,23));
@@ -258,6 +266,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         validateSchedules(expectedMeetingDates);
     }
 
+    @Test
     public void testChangeInSecondPeriodOfBiWeeklyMeetingSchedule() throws Exception {
         List<LocalDate> expectedMeetingDates = new ArrayList<LocalDate>();
         expectedMeetingDates.add(new LocalDate(2008,MAY,23));
@@ -274,7 +283,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         validateSchedules(expectedMeetingDates);
     }
 
-
+    @Test
     public void testChangeMonthlyMeetingScheduleOnADateInFirstMonthBeforeMeetingDate() throws Exception {
         List<LocalDate> expectedMeetingDates = new ArrayList<LocalDate>();
         expectedMeetingDates.add(new LocalDate(2008,APRIL,9));
@@ -292,6 +301,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         validateSchedules(expectedMeetingDates);
     }
 
+    @Test
     public void testChangeMonthlyMeetingScheduleOnADateInFirstMonthAfterMeetingDate() throws Exception {
         List<LocalDate> expectedMeetingDates = new ArrayList<LocalDate>();
         expectedMeetingDates.add(new LocalDate(2008,APRIL,9));
@@ -309,6 +319,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         validateSchedules(expectedMeetingDates);
     }
 
+    @Test
     public void testChangeMonthlyMeetingScheduleOnADateInSecondMonth() throws Exception {
         List<LocalDate> expectedMeetingDates = new ArrayList<LocalDate>();
         expectedMeetingDates.add(new LocalDate(2008,APRIL,9));
@@ -326,6 +337,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         validateSchedules(expectedMeetingDates);
     }
 
+    @Test
     // original schedule 11/20/08, 12/18/08, 1/15/09, 2/19/09, 3/19/09, 4/16/09
     public void testChangeThirdThursdayMonthlyMeetingScheduleOnADateInFirstMonthAfterMeetingDate() throws Exception {
         List<LocalDate> expectedMeetingDates = new ArrayList<LocalDate>();
@@ -346,6 +358,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         validateSchedules(expectedMeetingDates);
     }
 
+    @Test
     // original schedule 11/20/08, 1/15/09, 3/19/09, 5/21/09, 7/16/09, 9/17/09
     public void testChangeThirdThursdayBiMonthlyMeetingScheduleOnADateInThirdMonthAfterMeetingDate() throws Exception {
         List<LocalDate> expectedMeetingDates = new ArrayList<LocalDate>();
@@ -385,12 +398,14 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
 
     }
 
-    protected void testChangeInMeetingScheduleForDates(MeetingBO meeting, MeetingBO newMeeting, LocalDate startDate,
+    @Test
+    public void testChangeInMeetingScheduleForDates(MeetingBO meeting, MeetingBO newMeeting, LocalDate startDate,
             LocalDate dateWhenMeetingWillBeChanged) throws Exception {
         testChangeInMeetingScheduleForDates(meeting, meeting, newMeeting, startDate, dateWhenMeetingWillBeChanged, false);
     }
 
-    protected void testChangeInMeetingScheduleForDates(MeetingBO customerMeeting, MeetingBO loanMeeting, MeetingBO newMeeting, LocalDate startDate, LocalDate dateWhenMeetingWillBeChanged,
+    @Test
+    public void testChangeInMeetingScheduleForDates(MeetingBO customerMeeting, MeetingBO loanMeeting, MeetingBO newMeeting, LocalDate startDate, LocalDate dateWhenMeetingWillBeChanged,
             boolean useClosedAndCancelled) throws Exception {
         log("Start: " + startDate + ", Test: " + dateWhenMeetingWillBeChanged);
         accountBO = createLoanAccount(customerMeeting, loanMeeting);
@@ -472,7 +487,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
             ++count;
         }
         log("---");
-        assertEquals(numberOfLoanInstallments , accountBO.getAccountActionDates().size());
+        org.junit.Assert.assertEquals(numberOfLoanInstallments ,(accountBO.getAccountActionDates().size()));
         count = 0;
         for (AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()) {
             if (count < expectedLoanMeetingDates.size()) {

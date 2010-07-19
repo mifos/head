@@ -53,7 +53,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * integration test. If a test is not an integration test and does not need the database, then it should not derive from
  * this class.
  */
-public class MifosIntegrationTestCase extends TestCase {
+public class MifosIntegrationTestCase{
 
     protected MifosIntegrationTestCase() throws Exception {
         new TestCaseInitializer().initialize();
