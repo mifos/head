@@ -17,13 +17,15 @@ public class ProductMixController {
     @Autowired
     AdminServiceFacade adminservicefacade;
 
-    public AdminServiceFacade getAdminservicefacade() {
-        return this.adminservicefacade;
+    protected ProductMixController(){
+        //spring autowiring
     }
 
-    public void setAdminservicefacade(AdminServiceFacade adminservicefacade) {
-        this.adminservicefacade = adminservicefacade;
+    public ProductMixController(final AdminServiceFacade adminServiceFacade){
+        this.adminservicefacade=adminServiceFacade;
+
     }
+
 
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("breadcrumbs")
@@ -36,7 +38,7 @@ public class ProductMixController {
         try {
             model.put("mix", adminservicefacade.retrieveAllProductMix().getProductMixList());
         } catch (Exception e) {
-           model.put("mix", "got some strings");
+           model.put("mix", "List could not be retrieved.");
         }
         return model;
     }
