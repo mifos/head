@@ -364,8 +364,21 @@ public class QuestionnaireServiceIntegrationTest {
         questionGroupDetail.getSectionDetail(0).getQuestionDetail(0).setValue("value1");
         questionGroupDetail.getSectionDetail(1).getQuestionDetail(0).setValue("value2");
         questionnaireService.saveResponses(new QuestionGroupDetails(1, 1, Arrays.asList(questionGroupDetail)));
-        Assert.assertEquals(questionGroupInstanceDao.getDetailsAll().get(0).getQuestionGroupResponses().get(0).getResponse(),"value1");
-        Assert.assertEquals(questionGroupInstanceDao.getDetailsAll().get(0).getQuestionGroupResponses().get(1).getResponse(),"value2");
+        Assert.assertEquals(questionGroupInstanceDao.getDetailsAll().get(0).getQuestionGroupResponses().get(0).getResponse(), "value1");
+        Assert.assertEquals(questionGroupInstanceDao.getDetailsAll().get(0).getQuestionGroupResponses().get(1).getResponse(), "value2");
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldNotGetInActiveQuestionGroupsByEventAndSource() throws SystemException {
+        String title = "QG1" + System.currentTimeMillis();
+        List<SectionDetail> details = Arrays.asList(getSection("S1"), getSection("S2"));
+        QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details);
+        setState(expectedQGDetail.getId(), QuestionGroupState.INACTIVE);
+        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
+        Assert.assertThat(questionGroups, is(notNullValue()));
+        QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
+        Assert.assertThat(actualQGDetail, is(Matchers.nullValue()));
     }
 
     @Test
@@ -406,6 +419,12 @@ public class QuestionnaireServiceIntegrationTest {
         Assert.assertThat(groupInstance.getQuestionGroupResponses().get(1).getSectionQuestion(), is(notNullValue()));
         Assert.assertThat(groupInstance.getQuestionGroupResponses().get(1).getSectionQuestion(), is(questionGroup.getSections().get(1).getQuestions().get(0)));
         Assert.assertThat(groupInstance.getQuestionGroupResponses().get(1).getResponse(), is("Foo Bar2"));
+    }
+
+    private void setState(Integer id, QuestionGroupState questionGroupState) {
+        QuestionGroup questionGroup = questionGroupDao.getDetails(id);
+        questionGroup.setState(questionGroupState);
+        questionGroupDao.update(questionGroup);
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws SystemException {

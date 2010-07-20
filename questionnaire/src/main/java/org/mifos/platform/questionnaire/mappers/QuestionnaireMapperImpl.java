@@ -125,8 +125,6 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return question;
     }
 
-
-    //@SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops"})
     private List<QuestionChoiceEntity> mapToChoices(List<String> choices) {
         List<QuestionChoiceEntity> questionChoices = new LinkedList<QuestionChoiceEntity>();
         for (String choice : choices) {
