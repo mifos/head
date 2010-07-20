@@ -37,6 +37,7 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
+import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
@@ -136,5 +137,31 @@ public class ApplicationConfigurationDaoHibernate implements ApplicationConfigur
             Hibernate.initialize(customerStatus.getLookUpValue());
         }
         return queryResult;
+    }
+
+    @Override
+    public LookUpEntity findLookupValueByEntityType(final String entityType) {
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("entityType", entityType);
+
+        LookUpEntity entity = (LookUpEntity) this.genericDao.executeUniqueResultNamedQuery("findLookupEntityByEntityType", queryParameters);
+
+        return entity;
+    }
+
+    @Override
+    public void save(LookUpEntity entity) {
+        this.genericDao.createOrUpdate(entity);
+    }
+
+    @Override
+    public void save(MasterDataEntity entity) {
+        this.genericDao.createOrUpdate(entity);
+    }
+
+    @Override
+    public void save(LookUpValueEntity entity) {
+        this.genericDao.createOrUpdate(entity);
     }
 }

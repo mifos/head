@@ -66,6 +66,10 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
+/**
+ * delete after define labels is brought in along with actionForm, configuration and tests.
+ */
+@Deprecated
 public class LabelConfigurationAction extends BaseAction {
 
     private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
@@ -292,15 +296,15 @@ public class LabelConfigurationAction extends BaseAction {
         List<OfficeLevelEntity> officeLevels = new OfficeHierarchyPersistence().getOfficeLevels(localeId);
         for (OfficeLevelEntity officeLevelEntity : officeLevels) {
             if (officeLevelEntity.getLevel().equals(OfficeLevel.HEADOFFICE)) {
-                officeLevelEntity.update(labelConfigurationActionForm.getHeadOffice());
+                officeLevelEntity.setName(labelConfigurationActionForm.getHeadOffice());
             } else if (officeLevelEntity.getLevel().equals(OfficeLevel.REGIONALOFFICE)) {
-                officeLevelEntity.update(labelConfigurationActionForm.getRegionalOffice());
+                officeLevelEntity.setName(labelConfigurationActionForm.getRegionalOffice());
             } else if (officeLevelEntity.getLevel().equals(OfficeLevel.SUBREGIONALOFFICE)) {
-                officeLevelEntity.update(labelConfigurationActionForm.getSubRegionalOffice());
+                officeLevelEntity.setName(labelConfigurationActionForm.getSubRegionalOffice());
             } else if (officeLevelEntity.getLevel().equals(OfficeLevel.AREAOFFICE)) {
-                officeLevelEntity.update(labelConfigurationActionForm.getAreaOffice());
+                officeLevelEntity.setName(labelConfigurationActionForm.getAreaOffice());
             } else if (officeLevelEntity.getLevel().equals(OfficeLevel.BRANCHOFFICE)) {
-                officeLevelEntity.update(labelConfigurationActionForm.getBranchOffice());
+                officeLevelEntity.setName(labelConfigurationActionForm.getBranchOffice());
             }
         }
     }
@@ -311,11 +315,11 @@ public class LabelConfigurationAction extends BaseAction {
         for (GracePeriodTypeEntity masterDataEntity : gracePeriodTypes) {
             GracePeriodTypeEntity gracePeriodType = masterDataEntity;
             if (gracePeriodType.getId().equals(GraceType.NONE.getValue())) {
-                gracePeriodType.update(labelConfigurationActionForm.getNone());
+                gracePeriodType.setName(labelConfigurationActionForm.getNone());
             } else if (gracePeriodType.getId().equals(GraceType.PRINCIPALONLYGRACE.getValue())) {
-                gracePeriodType.update(labelConfigurationActionForm.getPrincipalOnlyGrace());
+                gracePeriodType.setName(labelConfigurationActionForm.getPrincipalOnlyGrace());
             } else if (gracePeriodType.getId().equals(GraceType.GRACEONALLREPAYMENTS.getValue())) {
-                gracePeriodType.update(labelConfigurationActionForm.getGraceOnAllRepayments());
+                gracePeriodType.setName(labelConfigurationActionForm.getGraceOnAllRepayments());
             }
         }
     }
@@ -383,7 +387,7 @@ public class LabelConfigurationAction extends BaseAction {
 
     private void updateStatusData(LabelConfigurationActionForm labelConfigurationActionForm, Short localeId,
             List<LookUpValueEntity> values) throws Exception {
-        ApplicationConfigurationPersistence configurationPersistence = new ApplicationConfigurationPersistence();
+
         for (LookUpValueEntity value : values) {
             String name = null;
             if (isPartialApplicationLookup(value)) {
@@ -429,7 +433,6 @@ public class LabelConfigurationAction extends BaseAction {
 
             if (name != null) {
                 MessageLookup.getInstance().updateLookupValue(value, name);
-
             }
         }
     }

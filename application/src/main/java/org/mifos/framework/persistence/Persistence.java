@@ -53,6 +53,10 @@ public abstract class Persistence {
         return hibernateUtil;
     }
 
+    /**
+     * @deprecated - move away from using this as starts transaction but doesn't not commit..
+     */
+    @Deprecated
     public Object createOrUpdate(final Object object) throws PersistenceException {
         try {
             Session session = getHibernateUtil().getSessionTL();
