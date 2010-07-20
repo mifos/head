@@ -48,6 +48,7 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
         super.setUp();
         session = StaticHibernateUtil.getSessionTL();
         connection = session.connection();
+        connection.setAutoCommit(true);
     }
 
     @Override
@@ -83,7 +84,7 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
         short newId = 31000;
         AddAccountAction upgrade = null;
         try {
-                        // use deprecated construtor
+                        // use deprecated constructor
                         upgrade = new AddAccountAction(newId, TEST_LOCALE,
                                 "NewAccountAction");
                     } catch (Exception e) {

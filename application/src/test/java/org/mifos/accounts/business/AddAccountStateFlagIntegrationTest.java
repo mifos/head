@@ -43,13 +43,21 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
 
     private Session session;
 
+    private Connection connection;
     @Override
-    public void setUp() {
+    public void setUp() throws Exception {
+        super.setUp();
         session = StaticHibernateUtil.getSessionTL();
+        connection = session.connection();
+        connection.setAutoCommit(true);
     }
 
     @Override
     public void tearDown() throws Exception {
+        StaticHibernateUtil.closeSession();
+        connection = null;
+        session = null;
+        super.tearDown();
         TestDatabase.resetMySQLDatabase();
     }
 
@@ -63,7 +71,7 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
     }
 
     private void upgradeAndCheck(Upgrade upgrade) throws Exception {
-        upgrade.upgrade(session.connection());
+        upgrade.upgrade(connection);
         MifosConfiguration.getInstance().init();
         session = StaticHibernateUtil.getSessionTL();
         AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(AccountStateFlagEntity.class,
@@ -99,11 +107,10 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
            Assert.assertEquals(e.getMessage(), AddAccountStateFlag.wrongLookupValueKeyFormat);
         }
         String goodKey = "AccountFlags-NewAccountStateFlag";
-        // use valid construtor and valid key
+        // use valid constructor and valid key
         upgrade = new AddAccountStateFlag( newId, goodKey, goodKey);
-        Connection conn = session.connection();
-        conn.setAutoCommit(true);
-        upgrade.upgrade(conn);
+
+        upgrade.upgrade(connection);
         AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(AccountStateFlagEntity.class, newId);
         Assert.assertEquals(goodKey, flag.getLookUpValue().getLookUpName());
         MifosConfiguration.getInstance().init();

@@ -21,6 +21,9 @@
 package org.mifos.accounts.productdefinition.business;
 
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
+
+import java.sql.Connection;
+
 import junit.framework.Assert;
 
 import org.hibernate.Session;
@@ -31,8 +34,11 @@ import org.mifos.framework.persistence.TestDatabase;
 
 public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase {
 
+    Connection connection;
+
     public AddInterestCalcRuleIntegrationTest() throws Exception {
         super();
+        connection.setAutoCommit(true);
     }
 
     public void testValidateLookupValueKeyTest() throws Exception {
@@ -58,12 +64,12 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
            Assert.assertEquals(e.getMessage(), AddInterestCalcRule.wrongLookupValueKeyFormat);
         }
         String goodKey = "InterestTypes-NewDecliningBalance";
-        // use valid construtor and valid key
+        // use valid constructor and valid key
         upgrade = new AddInterestCalcRule(newRuleId, categoryId,
                 goodKey, description);
         try {
             Session session = StaticHibernateUtil.getSessionTL();
-            upgrade.upgrade(session.connection());
+            upgrade.upgrade(connection);
             InterestTypesEntity entity = (InterestTypesEntity) session.get(InterestTypesEntity.class, newRuleId);
             Assert.assertEquals(goodKey, entity.getLookUpValue().getLookUpName());
         } finally {
