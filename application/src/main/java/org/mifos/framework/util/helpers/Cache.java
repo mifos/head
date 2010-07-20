@@ -148,10 +148,7 @@ public class Cache {
          * call another helper method to add and remove the page which is out of
          * bound.
          */
-        if ((current == 0 || current == 1 || current == 2)) {
-        }
-
-        else {
+        if (current != 0 && current != 1 && current != 2) {
             if (current == 3) {
                 if ("previous".equalsIgnoreCase(methodValue)) {
                     removeFromCacheMap(current + 3);

@@ -26,11 +26,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.customers.office.exceptions.OfficeException;
-import org.mifos.customers.office.persistence.OfficeHierarchyPersistence;
-import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
-import org.mifos.framework.exceptions.PersistenceException;
 
 /**
  * As with the other *Entity classes, this one corresponds to
@@ -88,25 +84,6 @@ public class OfficeLevelEntity extends MasterDataEntity {
         addConfigured(configuredChange);
     }
 
-    /**
-     * remove when you have removed struts action around view office hierarchy.
-     */
-    @Deprecated
-    public void update(boolean configured) throws OfficeException {
-        try {
-            if (!configured && new OfficeHierarchyPersistence().isOfficePresentForLevel(getLevel())) {
-                throw new OfficeException(OfficeConstants.KEYHASACTIVEOFFICEWITHLEVEL);
-            }
-            if ((configured && !isConfigured()) || (!configured && isConfigured())) {
-                addConfigured(configured);
-                new OfficeHierarchyPersistence().createOrUpdate(this);
-            }
-        } catch (PersistenceException e) {
-            throw new OfficeException(e);
-        }
-
-    }
-
     private Short localeId;
 
     /** The composite primary key value */
@@ -152,11 +129,11 @@ public class OfficeLevelEntity extends MasterDataEntity {
         return getLookUpValue().getLookUpValueLocales();
     }
 
-    protected void setName(String name) {
+    /**
+     * use update
+     */
+    @Deprecated
+    public void setName(String name) {
         MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
-    }
-
-    public void update(String name) {
-        setName(name);
     }
 }

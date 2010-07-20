@@ -11,157 +11,360 @@
  
    <!--  Main Content Begins-->  
   <div class=" content leftMargin180">
-  <div class="bluedivs paddingLeft"><a href="admin.html">Admin</a>&nbsp;/&nbsp;<span class="fontBold">Define Labels</span></div>
-  	<form method="" action="" name="formname">  	
+  
+  [@mifos.crumbs breadcrumbs/]
+  
+  	<form method="post" action="defineLabels.ftl" name="formname">  	
     <div class="span-16">  		
         <div class="clear">&nbsp;</div>
         <div class="fontBold"><span class="orangeheading"> Define Labels</span></div>
-        <p class="error"></p>
+        [@spring.bind "formBean" /]
+  		[@spring.showErrors "<br>" /]
+  		
 		<p class="fontBold">Office Hierarchy </p>
         <div class="span-16 last">
-        	<div class="span-16"><span class="span-4 rightAlign">Head office&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Head office" /></span>
+        	<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="headoffice">Head office:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.headOffice" /]
+						<input type="text" id="headoffice" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Regional office&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Regional office" /></span>
+  			
+			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="regionaloffice">Regional office:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.regionalOffice" /]
+						<input type="text" id="regionaloffice" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Sub regional office&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Sub regional office" /></span>
+  			
+			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="subregionaloffice">Sub regional office:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.subRegionalOffice" /]
+						<input type="text" id="subregionaloffice" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Area office&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Area office" /></span>
-  			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Branch office&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Branch office" /></span>
-  			</div>
+
+			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="areaoffice">Area office:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.areaOffice" /]
+						<input type="text" id="areaoffice" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
+  			</div>  			
+
+			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="branchoffice">Branch office:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.branchOffice" /]
+						<input type="text" id="branchoffice" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
+  			</div>  
         </div>
+        
         <p class="fontBold">Clients </p>
         <div class="span-16 last">
-        	<div class="span-16"><span class="span-4 rightAlign">Client&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Client" /></span>
+        	<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="client">Client:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.client" /]
+						<input type="text" id="client" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Group&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Group" /></span>
+  			
+			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="group">Group:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.group" /]
+						<input type="text" id="group" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Center&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Center" /></span>
+        
+        	<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="center">Center:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.center" /]
+						<input type="text" id="center" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
         </div>
+        
         <p class="fontBold">Product Types </p>
+        
         <div class="span-16 last">
-        	<div class="span-16"><span class="span-4 rightAlign">Loans&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Loans" /></span>
+        
+        	<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="loans">Loans:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.loans" /]
+						<input type="text" id="loans" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Savings&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Savings" /></span>
+        
+            <div class="span-16">
+        			<span class="span-4 rightAlign"><label for="savings">Savings:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.savings" /]
+						<input type="text" id="savings" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
         </div>
+        
         <p class="fontBold">Personal Information </p>
+        
         <div class="span-16 last">
-        	<div class="span-16"><span class="span-4 rightAlign">State&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="State" /></span>
+        
+            <div class="span-16">
+        			<span class="span-4 rightAlign"><label for="state">State:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.state" /]
+						<input type="text" id="state" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Postal code&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Postal code" /></span>
+  			
+			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="postalcode">Postal code:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.postalCode" /]
+						<input type="text" id="postalcode" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Ethnicity&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Ethnicity" /></span>
+  			
+  			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="ethnicity">Ethnicity:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.ethnicity" /]
+						<input type="text" id="ethnicity" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Citizenship&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Citizenship" /></span>
+  			
+  			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="citizenship">Citizenship:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.citizenship" /]
+						<input type="text" id="citizenship" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Handicapped&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Handicapped" /></span>
+  			
+  			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="handicapped">Handicapped:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.handicapped" /]
+						<input type="text" id="handicapped" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Government ID&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Government ID" /></span>
+  			
+			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="govtid">Government ID:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.govtId" /]
+						<input type="text" id="govtid" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
         </div>
+        
         <p class="fontBold">Address  </p>
         <div class="span-16 last">
-        	<div class="span-16"><span class="span-4 rightAlign">Address 1&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Address1" /></span>
+        	<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="address1">Address 1:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.address1" /]
+						<input type="text" id="address1" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Address 2&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Address2" /></span>
+
+        	<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="address2">Address 2:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.address2" /]
+						<input type="text" id="address2" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Address 3&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Address3" /></span>
-  			</div>
+  			
+  			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="address3">Address 3:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.address3" /]
+						<input type="text" id="address3" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
+  			</div>        
+        
         </div>
+        
         <p class="fontBold">Statuses </p>
         <div class="span-16 last">
-        	<div class="span-16"><span class="span-4 rightAlign">Partial Application&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Partial Application" /></span>
+        
+        	<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="partialapplication">Partial Application:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.partialApplication" /]
+						<input type="text" id="partialapplication" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Pending Approval&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Application Pending Approval" /></span>
+  			
+			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="pendingapproval">Pending Approval:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.pendingApproval" /]
+						<input type="text" id="pendingapproval" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Approved&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Application Approved" /></span>
+  			
+			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="approved">Approved:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.approved" /]
+						<input type="text" id="approved" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Cancel&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Cancel" /></span>
+
+			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="cancel">Cancel:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.cancel" /]
+						<input type="text" id="cancel" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Closed&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Closed" /></span>
+ 
+ 			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="closed">Closed:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.closed" /]
+						<input type="text" id="closed" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">On hold&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="On Hold" /></span>
+
+ 			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="onhold">On hold:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.onhold" /]
+						<input type="text" id="onhold" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Active&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Active" /></span>
+  			
+ 			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="active">Active:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.active" /]
+						<input type="text" id="active" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Inactive&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Inactive" /></span>
+
+ 			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="inactive">Inactive:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.inActive" /]
+						<input type="text" id="inactive" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Active in good standing&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Active in Good Standing" /></span>
+  			
+ 			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="activeInGoodStanding">Active in good standing:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.activeInGoodStanding" /]
+						<input type="text" id="activeInGoodStanding" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Active in bad standing&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Active in Bad Standing" /></span>
+
+ 			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="activeInBadStanding">Active in bad standing:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.activeInBadStanding" /]
+						<input type="text" id="activeInBadStanding" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Closed-obligation met&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Closed- Obligation met" /></span>
+
+ 			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="closedObligationMet">Closed-obligation met:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.closedObligationMet" /]
+						<input type="text" id="closedObligationMet" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Closed-rescheduled&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Closed- Rescheduled" /></span>
+  			
+ 			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="closedRescheduled">Closed-rescheduled:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.closedRescheduled" /]
+						<input type="text" id="closedRescheduled" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Closed-written off&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Closed- Written Off" /></span>
+  			
+ 			<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="closedWrittenOff">Closed-written off:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.closedWrittenOff" /]
+						<input type="text" id="closedWrittenOff" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
         </div>
         <p class="fontBold">Grace types </p>
         <div class="span-16 last">
-        	<div class="span-16"><span class="span-4 rightAlign">None&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="None" /></span>
+        	<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="gracenone">None:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.none" /]
+						<input type="text" id="gracenone" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Grace on all repayments&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Grace on all repayments" /></span>
+        	
+        	<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="graceallrepayments">Grace on all repayments:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.graceOnAllRepayments" /]
+						<input type="text" id="graceallrepayments" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Principal only grace&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Principal only grace" /></span>
+        	
+        	<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="graceprincipalonly">Principal only grace:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.principalOnlyGrace" /]
+						<input type="text" id="graceprincipalonly" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
         </div>
+        
         <p class="fontBold">Miscellaneous </p>
+        
         <div class="span-16 last">
-        	<div class="span-16"><span class="span-4 rightAlign">Interest&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Interest" /></span>
+        	<div class="span-16">
+        			<span class="span-4 rightAlign"><label for="interest">Interest:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.interest" /]
+						<input type="text" id="interest" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">External ID&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="External Id" /></span>
+        
+            <div class="span-16">
+        			<span class="span-4 rightAlign"><label for="externalId">External ID:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.externalId" /]
+						<input type="text" id="externalId" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
-            <div class="span-16"><span class="span-4 rightAlign">Bulk entry&nbsp;:</span>
-    				<span class="span-3"><input type="text" value="Bulk entry" /></span>
+
+            <div class="span-16">
+        			<span class="span-4 rightAlign"><label for="bulkEntry">Bulk entry:</label></span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.bulkEntry" /]
+						<input type="text" id="bulkEntry" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
   			</div>
         </div>
+        
         <div class="clear">&nbsp;</div>
         <hr />
         <div class="span-20 last">
+        
+        
         <div class="prepend-7">
-          <input class="buttn" type="button" name="submit" value="Submit" onclick="location.href='admin.html'"/>
-          <input class="buttn2" type="button" name="cancel" value="Cancel" onclick="location.href='admin.html'"/>
+             <input class="buttn"  type="submit" name="submit" value="[@spring.message "submit"/]"/>
+            <input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]"/>
         </div>
+        
         </div>
 	</div>
    	</form> 

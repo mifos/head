@@ -59,8 +59,7 @@ explanation of the license and how it is applied.
                     <html-el:link styleId="createsavingsaccountconfirmation.link.viewSavingsAccount" href="savingsAction.do?method=get&globalAccountNum=${requestScope.globalAccountNum}&recordOfficeId=${requestScope.recordOfficeId}&recordLoanOfficerId=${sessionScope.UserContext.id}">
 	                    <mifos:mifoslabel name="Savings.View"/>
 		            	<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
-		            	<mifos:mifoslabel name="Savings.account"/>
-		            	<mifos:mifoslabel name="Savings.detailsNow"/>
+		            	<mifos:mifoslabel name="Savings.accountdetails"/>
                    </html-el:link><br><br>
                    <span class="fontnormalboldorange">
                    <mifos:mifoslabel name="Savings.suggestedNextSteps"/>

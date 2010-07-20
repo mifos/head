@@ -26,7 +26,7 @@ import junit.framework.Assert;
 
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
+import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 
