@@ -25,8 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.mifos.accounts.acceptedpaymenttype.business.AcceptedPaymentType;
+import org.mifos.accounts.acceptedpaymenttype.business.TransactionTypeEntity;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.struts.actionform.AcceptedPaymentTypeActionForm;
+import org.mifos.accounts.acceptedpaymenttype.util.helpers.AcceptedPaymentTypeConstants;
+import org.mifos.accounts.acceptedpaymenttype.util.helpers.PaymentTypeData;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
@@ -79,6 +85,7 @@ import org.mifos.dto.screen.ProductMixDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.util.helpers.SessionUtils;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
@@ -885,13 +892,14 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
     @Override
     public AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes() throws Exception {
-        List<PaymentTypeDto> payments = getAllPaymentTypes((short)0);
+        List<PaymentTypeDto> payments = getAllPaymentTypes(null);
         // acceptedPaymentTypeActionForm.setAllPaymentTypes(payments);
         AcceptedPaymentTypePersistence paymentTypePersistence = new AcceptedPaymentTypePersistence();
+        AcceptedPaymentTypeDto dto = new AcceptedPaymentTypeDto();
         for (int i = 0; i < TrxnTypes.values().length; i++) {
-            setPaymentTypesForATransaction(payments, TrxnTypes.values()[i], paymentTypePersistence, new AcceptedPaymentTypeDto());
+            setPaymentTypesForATransaction(payments, TrxnTypes.values()[i], paymentTypePersistence, dto);
         }
-        return null;
+        return dto;
     }
 
     private List<PaymentTypeDto> getAllPaymentTypes(Short localeId) throws Exception {
@@ -902,7 +910,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         for (PaymentTypeEntity masterDataEntity : paymentTypes) {
             PaymentTypeEntity paymentType = masterDataEntity;
             id = paymentType.getId();
-            payment = new PaymentTypeDto(id, paymentType.getName());
+            payment = new PaymentTypeDto(id, paymentType.getLookUpValue().getLookUpName());
             paymentTypeList.add(payment);
         }
 
@@ -925,7 +933,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         PaymentTypeDto data = null;
         for (AcceptedPaymentType paymentType : paymentTypeList) {
             Short paymentTypeId = paymentType.getPaymentTypeEntity().getId();
-            data = new PaymentTypeDto(paymentTypeId, paymentType.getPaymentTypeEntity().getName());
+            data = new PaymentTypeDto(paymentTypeId, paymentType.getPaymentTypeEntity().getName(), paymentType.getAcceptedPaymentTypeId());
             outList.add(data);
             RemoveFromInList(inList, paymentTypeId);
         }
@@ -955,5 +963,110 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                 list.remove(i);
             }
         }
+    }
+
+    @Override
+    public void updateAcceptedPaymentTypes(AcceptedPaymentTypeDto acceptedPaymentTypeDto) throws Exception {
+
+        AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
+
+        List<AcceptedPaymentType> deletedPaymentTypeList = new ArrayList<AcceptedPaymentType>();
+        List<AcceptedPaymentType> addedPaymentTypeList = new ArrayList<AcceptedPaymentType>();
+        for (int i = 0; i < TrxnTypes.values().length; i++) {
+            processOneAccountActionAcceptedPaymentTypes(TrxnTypes.values()[i], acceptedPaymentTypeDto,
+                    deletedPaymentTypeList, addedPaymentTypeList, persistence);
+        }
+
+        if (addedPaymentTypeList.size() > 0) {
+            persistence.addAcceptedPaymentTypes(addedPaymentTypeList);
+        }
+        if (deletedPaymentTypeList.size() > 0) {
+            persistence.deleteAcceptedPaymentTypes(deletedPaymentTypeList);
+        }
+    }
+
+    private void processOneAccountActionAcceptedPaymentTypes(TrxnTypes transactionType,
+            AcceptedPaymentTypeDto acceptedPaymentTypeDto,
+            List<AcceptedPaymentType> deletedPaymentTypeList, List<AcceptedPaymentType> addedPaymentTypeList,
+            AcceptedPaymentTypePersistence persistence) throws Exception {
+        // new accepted payments
+        List<PaymentTypeDto> selectedPaymentTypes = null;
+        // old accepted payments
+        List<PaymentTypeDto> outList = null;
+        AcceptedPaymentTypeDto OldAcceptedPaymentTypeDto = retrieveAcceptedPaymentTypes();
+
+        if (transactionType == TrxnTypes.fee) {
+            selectedPaymentTypes = acceptedPaymentTypeDto.getOutFeeList();
+            outList = OldAcceptedPaymentTypeDto.getOutFeeList();
+        } else if (transactionType == TrxnTypes.loan_disbursement) {
+            selectedPaymentTypes = acceptedPaymentTypeDto.getOutDisbursementList();
+            outList = OldAcceptedPaymentTypeDto.getOutDisbursementList();
+        } else if (transactionType == TrxnTypes.loan_repayment) {
+            selectedPaymentTypes = acceptedPaymentTypeDto.getOutRepaymentList();
+            outList = OldAcceptedPaymentTypeDto.getOutRepaymentList();
+        } else if (transactionType == TrxnTypes.savings_deposit) {
+            selectedPaymentTypes = acceptedPaymentTypeDto.getOutDepositList();
+            outList = OldAcceptedPaymentTypeDto.getOutDepositList();
+        } else if (transactionType == TrxnTypes.savings_withdrawal) {
+            selectedPaymentTypes = acceptedPaymentTypeDto.getOutWithdrawalList();
+            outList = OldAcceptedPaymentTypeDto.getOutWithdrawalList();
+        } else {
+            throw new Exception("Unknow account action for accepted payment type " + transactionType.toString());
+        }
+        process(selectedPaymentTypes, outList, deletedPaymentTypeList, addedPaymentTypeList, persistence,
+                transactionType);
+    }
+
+    private void process(List<PaymentTypeDto> selectedPaymentTypes, List<PaymentTypeDto> outList,
+            List<AcceptedPaymentType> deletedPaymentTypeList, List<AcceptedPaymentType> addedPaymentTypeList,
+            AcceptedPaymentTypePersistence persistence, TrxnTypes transactionType) {
+        AcceptedPaymentType acceptedPaymentType = null;
+        if ((outList != null) && (outList.size() > 0)) {
+            for (PaymentTypeDto paymentType : outList) {
+                if (findDelete(paymentType, selectedPaymentTypes)) {
+                    acceptedPaymentType = persistence.getAcceptedPaymentType(paymentType.getAcceptedPaymentTypeId());
+                    deletedPaymentTypeList.add(acceptedPaymentType);
+                }
+            }
+        }
+        if (selectedPaymentTypes != null) {
+            for (PaymentTypeDto selectedPaymentType : selectedPaymentTypes) {
+                Short paymentTypeId = selectedPaymentType.getId();
+                if (findNew(paymentTypeId, outList)) {
+                    acceptedPaymentType = new AcceptedPaymentType();
+                    PaymentTypeEntity paymentTypeEntity = new PaymentTypeEntity(paymentTypeId);
+                    acceptedPaymentType.setPaymentTypeEntity(paymentTypeEntity);
+                    TransactionTypeEntity transactionEntity = new TransactionTypeEntity();
+                    transactionEntity.setTransactionId(transactionType.getValue());
+                    acceptedPaymentType.setTransactionTypeEntity(transactionEntity);
+                    addedPaymentTypeList.add(acceptedPaymentType);
+                }
+            }
+        }
+    }
+
+    private boolean findDelete(PaymentTypeDto paymentType, List<PaymentTypeDto> paymentTypes) {
+        if (paymentTypes == null) {
+            return true;
+        }
+        Short paymentTypeId = paymentType.getId();
+        for (PaymentTypeDto paymentType2 : paymentTypes) {
+            Short paymentId = paymentType2.getId();
+            if (paymentId.shortValue() == paymentTypeId.shortValue()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean findNew(Short paymentTypeId, List<PaymentTypeDto> paymentTypes) {
+
+        for (PaymentTypeDto paymentTypeData : paymentTypes) {
+            Short paymentId = paymentTypeData.getId();
+            if (paymentId.shortValue() == paymentTypeId.shortValue()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

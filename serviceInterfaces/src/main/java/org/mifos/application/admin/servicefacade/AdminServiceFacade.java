@@ -74,5 +74,8 @@ public interface AdminServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes() throws Exception;
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateAcceptedPaymentTypes(AcceptedPaymentTypeDto acceptedPaymentTypeDto) throws Exception;
 }
 
