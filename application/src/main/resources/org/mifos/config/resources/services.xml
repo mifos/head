@@ -103,6 +103,7 @@
 
     <bean id="officeHierarchyService" class="org.mifos.customers.office.business.service.OfficeHierarchyServiceImpl" >
     	<constructor-arg ref="officeDao" />
+    	<constructor-arg ref="applicationConfigurationDao" />
     </bean>
     
     <bean id="mandatoryHiddenFieldService" class="org.mifos.customers.office.business.service.MandatoryHiddenFieldServiceImpl" >

@@ -12,10 +12,10 @@
   <!--  Main Content Begins-->  
    <div>
   <div class=" content leftMargin180">
-    <div class="orangeheading font14">[@spring.message "administrativeTasks" /]</div>
-    <p>[@spring.message "administrativeTasksWelcome" /] </p>
+    <div class="orangeheading font14 marginLeft30">[@spring.message "administrativeTasks" /]</div>
+    <p class="marginLeft30">[@spring.message "administrativeTasksWelcome" /] </p>
     <div class="marginTop20"></div>
-    <div class="span-10 floatLT">
+    <div class="span-10 floatLT marginLeft30">
       <p class="orangeheading">[@spring.message "manageOrganization" /]</p>
       <p class="fontBold">[@spring.message "systemusers"/]</p>
       <ul>
@@ -57,7 +57,7 @@
        <li type="circle"> <a id="admin.link.shutdownMifos" href="shutdownAction.do?method=load">[@spring.message "shutDown"/]</a></li>
       </ul>
     </div>
-    <div class="span-10 last">
+    <div class="span-10 last leftMargin180">
       <p class="orangeheading">[@spring.message "manageProducts"/]</p>
       <p><span class="fontBold">[@spring.message "productrulesattributes"/]</span>
       <ul>

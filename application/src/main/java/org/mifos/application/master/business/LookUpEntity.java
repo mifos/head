@@ -58,6 +58,10 @@ import org.mifos.framework.business.AbstractEntity;
          + "where entity.entityId = label.lookUpEntity.entityId and entity.entityType=:entityType"
   ),
   @NamedQuery(
+          name = "findLookupEntityByEntityType",
+          query = "from LookUpEntity entity where entity.entityType=:entityType"
+  ),
+  @NamedQuery(
     name = "masterdata.entitylookupvalue",
     query = "select new org.mifos.application.master.business.CustomValueListElementDto(lookup.lookUpId,lookup.lookUpName, lookup.lookUpName) "
                 + "from LookUpValueEntity lookup, LookUpEntity entity "

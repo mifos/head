@@ -345,19 +345,6 @@ public class QuestionnaireServiceIntegrationTest {
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
-    public void shouldNotGetInActiveQuestionGroupsByEventAndSource() throws SystemException {
-        String title = "QG1" + System.currentTimeMillis();
-        List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
-        QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details);
-        setState(expectedQGDetail.getId(), QuestionGroupState.INACTIVE);
-        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
-        assertThat(questionGroups, is(notNullValue()));
-        QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
-        assertThat(actualQGDetail, is(nullValue()));
-    }
-
-    @Test
-    @Transactional(rollbackFor = DataAccessException.class)
     public void shouldPersistQuestionGroupInstance() throws SystemException {
         String title = "QG1" + System.currentTimeMillis();
         List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));

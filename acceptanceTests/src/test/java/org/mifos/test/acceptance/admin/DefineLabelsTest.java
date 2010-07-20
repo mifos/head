@@ -50,6 +50,7 @@ public class DefineLabelsTest  extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    @Test
     public void defineLabelsTest() {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         DefineLabelsPage defineLabelsPage = adminPage.navigateToDefineLabelsPage();
@@ -70,7 +71,5 @@ public class DefineLabelsTest  extends UiTestCaseBase {
         defineLabelsPage.setLabelValue( "citizenship", "Citizenship" );
         defineLabelsPage.setLabelValue( "govtId", "Government ID" );
         adminPage = defineLabelsPage.submit();
-
     }
-
 }

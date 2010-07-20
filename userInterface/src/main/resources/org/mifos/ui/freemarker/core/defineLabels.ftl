@@ -11,6 +11,7 @@
  
    <!--  Main Content Begins-->  
   <div class=" content leftMargin180">
+  <span id="page.id" title="definelabels" />
   
   [@mifos.crumbs breadcrumbs/]
   
@@ -141,10 +142,10 @@
   			</div>
   			
   			<div class="span-16">
-        			<span class="span-4 rightAlign"><label for="citizenship">Citizenship:</label></span>
+        			<span class="span-4 rightAlign"><label for="definelabels.input.citizenship">Citizenship:</label></span>
     				<span class="span-3">
     				    [@spring.bind "formBean.citizenship" /]
-						<input type="text" id="citizenship" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+						<input type="text" id="definelabels.input.citizenship" name="${spring.status.expression}" value="${spring.status.value?default("")}">
     				</span>
   			</div>
   			
@@ -157,10 +158,10 @@
   			</div>
   			
 			<div class="span-16">
-        			<span class="span-4 rightAlign"><label for="govtid">Government ID:</label></span>
+        			<span class="span-4 rightAlign"><label for="definelabels.input.govtId">Government ID:</label></span>
     				<span class="span-3">
     				    [@spring.bind "formBean.govtId" /]
-						<input type="text" id="govtid" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+						<input type="text" id="definelabels.input.govtId" name="${spring.status.expression}" value="${spring.status.value?default("")}">
     				</span>
   			</div>
         </div>
@@ -361,7 +362,7 @@
         
         
         <div class="prepend-7">
-             <input class="buttn"  type="submit" name="submit" value="[@spring.message "submit"/]"/>
+             <input class="buttn"  type="submit" id="definelabels.button.submit" name="submit" value="[@spring.message "submit"/]"/>
             <input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]"/>
         </div>
         

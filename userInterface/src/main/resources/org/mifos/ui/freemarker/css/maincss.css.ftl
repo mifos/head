@@ -276,7 +276,7 @@ padding-top:5px;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-size: 8pt;
 	font-weight: bold;
-	margin-right:1px;
+	margin-right:-2px;
 	
 	/*border-top-left-radius: 8px;
 	-moz-border-radius-topleft: 8px;

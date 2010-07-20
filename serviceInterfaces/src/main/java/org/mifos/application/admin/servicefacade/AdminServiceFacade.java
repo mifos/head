@@ -60,8 +60,10 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     ProductDto retrieveAllProductMix() throws Exception;
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
     ConfigureApplicationLabelsDto retrieveConfigurableLabels();
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
     void updateApplicationLabels(ConfigureApplicationLabelsDto applicationLabels);
 
     @PreAuthorize("isFullyAuthenticated()")
