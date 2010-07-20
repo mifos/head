@@ -661,7 +661,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             StaticHibernateUtil.closeSession();
         }
 
-        return new LoanCreationResultDto(new ConfigurationPersistence().isGlimEnabled(), loan.getAccountId(), loan
+        return new LoanCreationResultDto(new ConfigurationPersistence().isGlimEnabled() && customer.isGroup(), loan.getAccountId(), loan
                 .getGlobalAccountNum(), loan, customer);
     }
 
