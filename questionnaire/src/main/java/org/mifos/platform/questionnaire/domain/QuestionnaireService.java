@@ -48,4 +48,6 @@ public interface QuestionnaireService {
     List<QuestionGroupDetail> getQuestionGroups(EventSource eventSource) throws SystemException;
 
     void saveResponses(QuestionGroupDetails questionGroupDetails);
+
+    void validateResponses(List<QuestionGroupDetail> questionGroupDetails);
 }

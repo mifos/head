@@ -54,9 +54,13 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.platform.util.CollectionUtils;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.MifosServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -395,7 +399,39 @@ public class ClientCustActionForm extends CustomerActionForm {
             validateFamilyRelationship(errors);
             validateFamilyLivingStatus(errors);
         }
+        validateForQuestionGroupResponses(method, errors, getQuestionnaireServiceFacade(request));
         return errors;
+    }
+
+    // intentionally made 'public' to aid testing !!!
+    public void validateForQuestionGroupResponses(String method, ActionErrors errors, QuestionnaireServiceFacade questionnaireServiceFacade) {
+        if (method.equals(Methods.next.toString())
+                && questionnaireServiceFacade != null
+                && !CollectionUtils.isEmpty(getQuestionGroupDtos())) {
+            try {
+                List<QuestionGroupDetail> groupDetails = new ArrayList<QuestionGroupDetail>();
+                for (QuestionGroupDto questionGroupDto : getQuestionGroupDtos()) {
+                    groupDetails.add(questionGroupDto.getQuestionGroupDetail());
+                }
+                questionnaireServiceFacade.validateResponses(groupDetails);
+            } catch (ValidationException e) {
+                if (e.containsChildExceptions()) {
+                    for (ValidationException validationException : e.getChildExceptions()) {
+                        errors.add(validationException.getKey(), new ActionMessage(validationException.getKey()));
+                    }
+                }
+            }
+        }
+    }
+
+    private QuestionnaireServiceFacade getQuestionnaireServiceFacade(HttpServletRequest request) {
+        QuestionnaireServiceFacade questionnaireServiceFacade;
+        try {
+            questionnaireServiceFacade = (QuestionnaireServiceFacade) MifosServiceFactory.getSpringBean(request, "questionnaireServiceFacade");
+        } catch (Exception e) {
+            questionnaireServiceFacade = null;
+        }
+        return questionnaireServiceFacade;
     }
 
     private void validatePicture(HttpServletRequest request, ActionErrors errors) throws PageExpiredException {

@@ -64,6 +64,7 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.platform.util.CollectionUtils;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
@@ -467,15 +468,20 @@ public class ClientCustAction extends CustAction {
         actionForm.setCustomerId(clientDetails.getId().toString());
         actionForm.setGlobalCustNum(clientDetails.getGlobalCustNum());
         actionForm.setEditFamily("notEdit");
-        QuestionnaireServiceFacade questionnaireServiceFacade = getQuestionnaireServiceFacade(request);
-        PersonnelPersistence personnelPersistence = new PersonnelPersistence();
-        PersonnelBO currentUser = personnelPersistence.findPersonnelById(userContext.getId());
-        if (questionnaireServiceFacade != null) {
-            List<QuestionGroupDetail> questionGroupDetails = actionForm.getQuestionGroupDetails();
-            questionnaireServiceFacade.saveResponses(
-                    new QuestionGroupDetails(clientDetails.getId(), currentUser.getPersonnelId(), questionGroupDetails));
-        }
+        saveQuestionResponses(request, actionForm.getQuestionGroupDetails(), userContext.getId(), clientDetails.getId());
         return mapping.findForward(ActionForwards.create_success.toString());
+    }
+
+    private void saveQuestionResponses(HttpServletRequest request, List<QuestionGroupDetail> questionGroupDetails, short userId, int clientId) {
+        if (!CollectionUtils.isEmpty(questionGroupDetails)) {
+            PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+            PersonnelBO currentUser = personnelPersistence.findPersonnelById(userId);
+            QuestionnaireServiceFacade questionnaireServiceFacade = getQuestionnaireServiceFacade(request);
+            if (questionnaireServiceFacade != null) {
+                questionnaireServiceFacade.saveResponses(
+                        new QuestionGroupDetails(currentUser.getPersonnelId(), clientId, questionGroupDetails));
+            }
+        }
     }
 
     @TransactionDemarcate(joinToken = true)

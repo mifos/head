@@ -141,6 +141,11 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         questionGroupInstanceDao.saveOrUpdateAll(questionnaireMapper.mapToQuestionGroupInstances(questionGroupDetails));
     }
 
+    @Override
+    public void validateResponses(List<QuestionGroupDetail> questionGroupDetails) {
+        questionnaireValidator.validateForQuestionGroupResponses(questionGroupDetails);
+    }
+
     private void persistQuestion(QuestionEntity question) throws SystemException {
         try {
             questionDao.create(question);
