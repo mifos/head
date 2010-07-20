@@ -23,9 +23,11 @@ package org.mifos.platform.questionnaire.mappers;
 import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
+import org.mifos.platform.questionnaire.domain.QuestionGroupInstance;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 
 import java.util.List;
 
@@ -43,4 +45,6 @@ public interface QuestionnaireMapper {
     List<QuestionGroupDetail> mapToQuestionGroupDetails(List<QuestionGroup> questionGroups);
 
     List<EventSource> mapToEventSources(List<EventSourceEntity> eventSourceEntities);
+
+    List<QuestionGroupInstance> mapToQuestionGroupInstances(QuestionGroupDetails questionGroupDetails);
 }
