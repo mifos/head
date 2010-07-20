@@ -82,7 +82,7 @@ i=i+counter;numberOfItems=i;}
 				    </select></span>
 			</div>
             <div class="span-20"><span class="span-6 rightAlign"><span class="red">* </span>[@spring.message "items" /]</span><span class="span-10">[@spring.message "entertextforeachitemandclickAddtosavetheiteminthelistbelow." /]<br />
-            	<p><TEXTAREA name="text" cols="50" rows="5" onKeyPress="return restrictScript(event);"></TEXTAREA><INPUT type="button" name="button" value="Add&gt;&gt;" onClick="createCheckList();isButtonRequired()"></span></p>
+            	<p><TEXTAREA name="text" cols="50" rows="5" onKeyPress="return restrictScript(event);"></TEXTAREA><INPUT type="button" name="button" value="Add&gt;&gt;" onClick="createCheckList();isButtonRequired()" class="buttn2"></span></p>
 			</div>
             <div class="span-20">
             	<div id="myDiv" class="span-18"></div>
