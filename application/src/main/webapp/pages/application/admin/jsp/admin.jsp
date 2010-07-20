@@ -173,9 +173,11 @@ while(enn.hasMoreElements()){
 						<table width="90%" border="0" cellspacing="0" cellpadding="0">
 							<tr class="fontnormal">
 								<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-								<td width="97%"><html-el:link styleId="admin.link.defineLabels"
-								action="labelconfigurationaction.do?method=load&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.definelabels" /></html-el:link></td>
+								<td width="97%">
+								<a id="admin.link.defineLabels" href="defineLabels.ftl"><mifos:mifoslabel name="admin.definelabels" /></a>
+								
+								<!-- <html-el:link styleId="admin.link.defineLabels" action="labelconfigurationaction.do?method=load&randomNUm=${sessionScope.randomNUm}"></html-el:link> -->
+								</td>
 							</tr>
 							<tr class="fontnormal">
 								<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>

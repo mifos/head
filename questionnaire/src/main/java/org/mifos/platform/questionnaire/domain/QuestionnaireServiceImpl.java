@@ -23,14 +23,13 @@ package org.mifos.platform.questionnaire.domain;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
+import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
-import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -51,9 +50,6 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     private EventSourceDao eventSourceDao;
 
     @Autowired
-    private QuestionGroupInstanceDao questionGroupInstanceDao;
-
-    @Autowired
     private QuestionnaireMapper questionnaireMapper;
 
     @SuppressWarnings({"UnusedDeclaration"})
@@ -61,14 +57,13 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     public QuestionnaireServiceImpl(QuestionnaireValidator questionnaireValidator, QuestionDao questionDao,
-                                    QuestionnaireMapper questionnaireMapper, QuestionGroupDao questionGroupDao,
-                                    EventSourceDao eventSourceDao, QuestionGroupInstanceDao questionGroupInstanceDao) {
+                                    QuestionnaireMapperImpl questionnaireMapper, QuestionGroupDao questionGroupDao,
+                                    EventSourceDao eventSourceDao) {
         this.questionnaireValidator = questionnaireValidator;
         this.questionDao = questionDao;
         this.questionnaireMapper = questionnaireMapper;
         this.questionGroupDao = questionGroupDao;
         this.eventSourceDao = eventSourceDao;
-        this.questionGroupInstanceDao = questionGroupInstanceDao;
     }
 
     @Override
@@ -136,9 +131,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public void saveResponses(QuestionGroupDetails questionGroupDetails) {
-        questionnaireValidator.validateForQuestionGroupResponses(questionGroupDetails.getDetails());
-        questionGroupInstanceDao.saveOrUpdateAll(questionnaireMapper.mapToQuestionGroupInstances(questionGroupDetails));
+    public void saveResponses(List<QuestionGroupDetail> questionGroupDetails) {
+        questionnaireValidator.validateForQuestionGroupResponses(questionGroupDetails);
     }
 
     private void persistQuestion(QuestionEntity question) throws SystemException {

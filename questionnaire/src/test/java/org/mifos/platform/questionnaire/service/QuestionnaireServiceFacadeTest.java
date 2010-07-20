@@ -38,14 +38,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.argThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when; //NOPMD
+import static org.mockito.Mockito.when;
+
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("PMD")
@@ -78,10 +80,10 @@ public class QuestionnaireServiceFacadeTest {
         String title2 = title + 2;
         questionnaireServiceFacade.createQuestions(Arrays.asList(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT),
                 getQuestionDetail(0, title2, title2, QuestionType.DATE),
-                getQuestionDetail(0, title2, title2, QuestionType.MULTI_SELECT, Arrays.asList("choice1", "choice2"))));
+                getQuestionDetail(0, title2, title2, QuestionType.MULTI_SELECT, Arrays.asList("choice1","choice2"))));
         Mockito.verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT))));
         Mockito.verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, QuestionType.DATE))));
-        Mockito.verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, QuestionType.MULTI_SELECT, Arrays.asList("choice1", "choice2")))));
+        Mockito.verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, QuestionType.MULTI_SELECT, Arrays.asList("choice1","choice2")))));
     }
 
     @Test
@@ -158,10 +160,10 @@ public class QuestionnaireServiceFacadeTest {
     public void testGetQuestionWithAnswerChoicesById() throws SystemException {
         int questionId = 1;
         String title = "Title";
-        when(questionnaireService.getQuestion(questionId)).thenReturn(new QuestionDetail(questionId, title, title, QuestionType.MULTI_SELECT, Arrays.asList("choice1", "choice2")));
+        when(questionnaireService.getQuestion(questionId)).thenReturn(new QuestionDetail(questionId, title, title, QuestionType.MULTI_SELECT, Arrays.asList("choice1","choice2")));
         QuestionDetail questionDetail = questionnaireServiceFacade.getQuestionDetail(questionId);
         Assert.assertNotNull("Question group should not be null", questionDetail);
-        assertThat(questionDetail, new QuestionDetailMatcher(new QuestionDetail(questionId, title, title, QuestionType.MULTI_SELECT, Arrays.asList("choice1", "choice2"))));
+        assertThat(questionDetail, new QuestionDetailMatcher(new QuestionDetail(questionId, title, title, QuestionType.MULTI_SELECT, Arrays.asList("choice1","choice2"))));
         Mockito.verify(questionnaireService).getQuestion(questionId);
     }
 
@@ -193,8 +195,8 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void shouldRetrieveQuestionGroupsByEventSource() throws SystemException {
-        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE + 1, "Create", "Client", Arrays.asList(getSectionDetailWithQuestionIds("Section1", 11, 22, 33)));
-        when(questionnaireService.getQuestionGroups(any(EventSource.class))).thenReturn(Arrays.asList(questionGroupDetail));
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE + 1, "Create", "Client", asList(getSectionDetailWithQuestionIds("Section1", 11, 22, 33)));
+        when(questionnaireService.getQuestionGroups(any(EventSource.class))).thenReturn(asList(questionGroupDetail));
         List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getQuestionGroups("Create", "Client");
         assertThat(questionGroupDetails, is(notNullValue()));
         assertThat(questionGroupDetails.size(), is(1));
@@ -219,12 +221,14 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void shouldSaveQuestionGroupDetail() {
-        List<QuestionDetail> questionDetails = Arrays.asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
-        List<SectionDetail> sectionDetails = Arrays.asList(getSectionDetailWithQuestions("Sec1", questionDetails));
-        QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(1, 1,
-                Arrays.asList(getQuestionGroupDetail("QG1", "Create", "Client", sectionDetails)));
+        List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", asList(getQuestionDetail(12, "Question 1"))));
+        List<QuestionGroupDetail> questionGroupDetails = asList(getQuestionGroupDetail("QG1", "Create", "Client", sectionDetails));
         questionnaireServiceFacade.saveResponses(questionGroupDetails);
         verify(questionnaireService, times(1)).saveResponses(questionGroupDetails);
+    }
+
+    private QuestionDetail getQuestionDetail(int id, String text) {
+        return new QuestionDetail(id, text, text, QuestionType.FREETEXT);
     }
 
     private SectionDetail getSectionDetailWithQuestions(String name, List<QuestionDetail> questionDetails) {
