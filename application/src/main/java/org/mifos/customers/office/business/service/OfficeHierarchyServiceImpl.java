@@ -20,6 +20,14 @@
 
 package org.mifos.customers.office.business.service;
 
+import java.util.List;
+
+import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.config.business.MifosConfiguration;
+import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.customers.office.persistence.OfficeDao;
@@ -33,10 +41,12 @@ import org.mifos.service.BusinessRuleException;
 public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
 
     private final OfficeDao officeDao;
+    private final ApplicationConfigurationDao applicationConfigurationDao;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
-    public OfficeHierarchyServiceImpl(OfficeDao officeDao) {
+    public OfficeHierarchyServiceImpl(OfficeDao officeDao, ApplicationConfigurationDao applicationConfigurationDao) {
         this.officeDao = officeDao;
+        this.applicationConfigurationDao = applicationConfigurationDao;
     }
 
     @Override
@@ -80,6 +90,48 @@ public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
             }
 
             transactionHelper.commitTransaction();
+        } catch (BusinessRuleException e) {
+            transactionHelper.rollbackTransaction();
+            throw e;
+        } catch (Exception e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            transactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public void updateApplicationLabels(List<OfficeLevelEntity> changedOfficeLabels, List<LookUpEntity> lookupEntities, List<GracePeriodTypeEntity> gracePeriods, List<LookUpValueEntity> accountStatuses) {
+
+        try {
+            transactionHelper.startTransaction();
+
+            for (OfficeLevelEntity entity : changedOfficeLabels) {
+                officeDao.save(entity);
+                MessageLookup.getInstance().updateLookupValueInCache(entity.getLookUpValue().getLookUpName(), entity.getLookUpValue().getMessageText());
+            }
+
+            for (GracePeriodTypeEntity entity : gracePeriods) {
+                applicationConfigurationDao.save(entity);
+                MessageLookup.getInstance().updateLookupValueInCache(entity.getLookUpValue().getLookUpName(), entity.getLookUpValue().getMessageText());
+            }
+
+            for (LookUpEntity entity : lookupEntities) {
+                applicationConfigurationDao.save(entity);
+                MifosConfiguration.getInstance().updateKey(entity.getEntityType(), entity.findLabel());
+            }
+
+            for (LookUpValueEntity entity : accountStatuses) {
+                applicationConfigurationDao.save(entity);
+            }
+
+            transactionHelper.commitTransaction();
+
+            if (!accountStatuses.isEmpty()) {
+                MifosConfiguration.getInstance().init();
+            }
+
         } catch (BusinessRuleException e) {
             transactionHelper.rollbackTransaction();
             throw e;

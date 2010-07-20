@@ -20,13 +20,10 @@
 
 package org.mifos.customers.office.persistence;
 
-import java.util.HashMap;
 import java.util.List;
 
-import org.hibernate.HibernateException;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.customers.office.business.OfficeLevelEntity;
-import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
@@ -44,24 +41,4 @@ public class OfficeHierarchyPersistence extends Persistence {
         }
         return officeLevels;
     }
-
-    public boolean isOfficePresentForLevel(Short levelId) throws PersistenceException {
-        try {
-            HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-            queryParameters.put("LEVEL_ID", levelId);
-            Number count = (Number) execUniqueResultNamedQuery(NamedQueryConstants.GET_OFFICE_COUNT, queryParameters);
-            if (count != null) {
-                return count.longValue() > 0;
-            }
-        } catch (HibernateException e) {
-            throw new PersistenceException(e);
-        }
-
-        return false;
-    }
-
-    public boolean isOfficePresentForLevel(OfficeLevel level) throws PersistenceException {
-        return isOfficePresentForLevel(level.getValue());
-    }
-
 }
