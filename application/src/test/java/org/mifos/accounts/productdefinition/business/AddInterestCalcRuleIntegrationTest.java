@@ -33,11 +33,12 @@ import org.mifos.framework.persistence.TestDatabase;
 public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase {
 
     Connection connection;
-
+    Session session;
 
     public AddInterestCalcRuleIntegrationTest() throws Exception {
         super();
-        connection = StaticHibernateUtil.getSessionTL().connection();
+        session = StaticHibernateUtil.getSessionTL();
+        connection = session.connection();
         connection.setAutoCommit(true);
     }
 
@@ -68,7 +69,6 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
         upgrade = new AddInterestCalcRule(newRuleId, categoryId,
                 goodKey, description);
         try {
-            Session session = StaticHibernateUtil.getSessionTL();
             upgrade.upgrade(connection);
             InterestTypesEntity entity = (InterestTypesEntity) session.get(InterestTypesEntity.class, newRuleId);
             Assert.assertEquals(goodKey, entity.getLookUpValue().getLookUpName());
