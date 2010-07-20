@@ -7,7 +7,7 @@
         <id name="id" column="id" type="integer" unsaved-value="0" access="field">
             <generator class="native" />
         </id>
-        <many-to-one name="questionGroup" column="question_group_id"/>
+        <many-to-one name="questionGroup" column="question_group_id" access="field" cascade="save-update" not-null="true" />
         <property name="entityId" column="entity_id" type="integer" />
         <property name="dateConducted" column="date_conducted" type="date" />
         <property name="completedStatus" column="completed_status" type="integer"/>

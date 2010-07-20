@@ -27,7 +27,6 @@ public class QuestionGroupResponse implements Serializable {
     private static final long serialVersionUID = 3649495389577852936L;
 
     private int id;
-
     private SectionQuestion sectionQuestion;
     private String response;
     private QuestionGroupInstance questionGroupInstance;

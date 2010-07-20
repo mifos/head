@@ -15,7 +15,4 @@ public class QuestionnaireConstants {
     public static final String NO_QUESTIONS_FOUND_IN_SECTION = "questionnaire.error.no.questions.found.in.section";
     public static final String DUPLICATE_QUESTION_FOUND_IN_SECTION = "questionnaire.error.duplicate.question.found.in.section";
     public static final String DEFAULT_APPLIES_TO_OPTION = "--select one--";
-    public static final String MANDATORY_QUESTION_HAS_NO_ANSWER = "questionnaire.error.mandatory.question.has.no.answer";
-    public static final String NO_ANSWERS_PROVIDED = "questionnaire.error.no.answers.provided";
-    public static final String GENERIC_VALIDATION = "questionnaire.error.generic.validation";
 }
