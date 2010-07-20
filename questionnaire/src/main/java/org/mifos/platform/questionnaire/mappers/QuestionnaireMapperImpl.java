@@ -20,14 +20,38 @@
 
 package org.mifos.platform.questionnaire.mappers;
 
-import org.mifos.platform.questionnaire.domain.*;  //NOPMD
+import org.mifos.platform.questionnaire.domain.AnswerType;
+import org.mifos.platform.questionnaire.domain.EventSourceEntity;
+import org.mifos.platform.questionnaire.domain.QuestionChoiceEntity;
+import org.mifos.platform.questionnaire.domain.QuestionEntity;
+import org.mifos.platform.questionnaire.domain.QuestionGroup;
+import org.mifos.platform.questionnaire.domain.QuestionGroupInstance;
+import org.mifos.platform.questionnaire.domain.QuestionGroupResponse;
+import org.mifos.platform.questionnaire.domain.QuestionGroupState;
+import org.mifos.platform.questionnaire.domain.QuestionState;
+import org.mifos.platform.questionnaire.domain.Section;
+import org.mifos.platform.questionnaire.domain.SectionQuestion;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
-import org.mifos.platform.questionnaire.service.*; //NOPMD
+import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
+import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
+import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.QuestionDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.SectionDetail;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.mifos.platform.util.CollectionUtils.asMap;
 import static org.mifos.platform.util.MapEntry.makeEntry;
@@ -43,16 +67,24 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     @Autowired
     private QuestionDao questionDao;
 
+    @Autowired
+    private QuestionGroupDao questionGroupDao;
+
+    @Autowired
+    private SectionQuestionDao sectionQuestionDao;
+
     //@SuppressWarnings({"UnusedDeclaration"})
     public QuestionnaireMapperImpl() {
-        this(null, null);
+        this(null, null, null, null);
     }
 
-    public QuestionnaireMapperImpl(EventSourceDao eventSourceDao, QuestionDao questionDao) {
+    public QuestionnaireMapperImpl(EventSourceDao eventSourceDao, QuestionDao questionDao, QuestionGroupDao questionGroupDao, SectionQuestionDao sectionQuestionDao) {
         populateAnswerToQuestionTypeMap();
         populateQuestionToAnswerTypeMap();
         this.eventSourceDao = eventSourceDao;
         this.questionDao = questionDao;
+        this.questionGroupDao = questionGroupDao;
+        this.sectionQuestionDao = sectionQuestionDao;
     }
 
     @Override
@@ -118,7 +150,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         Set<EventSourceEntity> eventSources = new HashSet<EventSourceEntity>();
         EventSource eventSource = questionGroupDetail.getEventSource();
         List list = eventSourceDao.retrieveByEventAndSource(eventSource.getEvent(), eventSource.getSource());
-        for (Object obj : list) { 
+        for (Object obj : list) {
             eventSources.add((EventSourceEntity) obj);
         }
         return eventSources;
@@ -187,7 +219,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
             QuestionType type = mapToQuestionType(question.getAnswerTypeAsEnum());
             boolean required = sectionQuestion.isRequired();
             QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type);
-            sectionDetail.addQuestion(new SectionQuestionDetail(questionDetail, required));
+            sectionDetail.addQuestion(new SectionQuestionDetail(sectionQuestion.getId(), questionDetail, required));
         }
         return sectionDetail;
     }
@@ -208,6 +240,42 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
             eventSources.add(mapEventSource(eventSourceEntity));
         }
         return eventSources;
+    }
+
+    @Override
+    public List<QuestionGroupInstance> mapToQuestionGroupInstances(QuestionGroupDetails questionGroupDetails) {
+        List<QuestionGroupInstance> questionGroupInstances = new ArrayList<QuestionGroupInstance>();
+        for (QuestionGroupDetail questionGroupDetail : questionGroupDetails.getDetails()) {
+            questionGroupInstances.add(mapToQuestionGroupInstance(questionGroupDetails.getCreatorId(),
+                    questionGroupDetails.getEntityId(), questionGroupDetail));
+        }
+        return questionGroupInstances;
+    }
+
+    private QuestionGroupInstance mapToQuestionGroupInstance(int creatorId, int entityId, QuestionGroupDetail questionGroupDetail) {
+        QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
+        questionGroupInstance.setDateConducted(Calendar.getInstance().getTime());
+        questionGroupInstance.setCompletedStatus(1);
+        questionGroupInstance.setVersionNum(1);
+        questionGroupInstance.setCreatorId(creatorId);
+        questionGroupInstance.setEntityId(entityId);
+        questionGroupInstance.setQuestionGroup(questionGroupDao.getDetails(questionGroupDetail.getId()));
+        questionGroupInstance.setQuestionGroupResponses(mapToQuestionGroupResponses(questionGroupDetail, questionGroupInstance));
+        return questionGroupInstance;
+    }
+
+    private List<QuestionGroupResponse> mapToQuestionGroupResponses(QuestionGroupDetail questionGroupDetail, QuestionGroupInstance questionGroupInstance) {
+        List<QuestionGroupResponse> questionGroupResponses = new LinkedList<QuestionGroupResponse>();
+        for (SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()) {
+            for (SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()) {
+                QuestionGroupResponse questionGroupResponse = new QuestionGroupResponse();
+                questionGroupResponse.setSectionQuestion(sectionQuestionDao.getDetails(sectionQuestionDetail.getId()));
+                questionGroupResponse.setResponse(sectionQuestionDetail.getValue());
+                questionGroupResponse.setQuestionGroupInstance(questionGroupInstance);
+                questionGroupResponses.add(questionGroupResponse);
+            }
+        }
+        return questionGroupResponses;
     }
 
     private EventSource mapEventSource(EventSourceEntity eventSourceEntity) {

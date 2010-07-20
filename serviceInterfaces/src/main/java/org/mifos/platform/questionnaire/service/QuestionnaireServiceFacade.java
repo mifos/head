@@ -43,5 +43,5 @@ public interface QuestionnaireServiceFacade {
 
     List<QuestionGroupDetail> getQuestionGroups(String event, String source) throws SystemException;
 
-    void saveResponses(List<QuestionGroupDetail> questionGroupDetails);
+    void saveResponses(QuestionGroupDetails questionGroupDetails);
 }
