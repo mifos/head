@@ -43,6 +43,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     @Autowired
     private QuestionDao questionDao;
 
+    //@SuppressWarnings({"UnusedDeclaration"})
     public QuestionnaireMapperImpl() {
         this(null, null);
     }
