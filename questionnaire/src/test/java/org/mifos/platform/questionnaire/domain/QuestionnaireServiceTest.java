@@ -231,7 +231,7 @@ public class QuestionnaireServiceTest {
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String event, String source, String... sectionNames) {
-        return new QuestionGroupDetail(0, QUESTION_GROUP_TITLE, getEventSource(event, source), getSectionDefinitions(sectionNames));
+        return new QuestionGroupDetail(0, QUESTION_GROUP_TITLE, getEventSource(event, source), getSectionDefinitions(sectionNames),false);
     }
 
     private List<SectionDetail> getSectionDefinitions(String... sectionNames) {
@@ -268,7 +268,7 @@ public class QuestionnaireServiceTest {
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test(expected = SystemException.class)
     public void shouldThrowValidationExceptionWhenQuestionGroupTitleIsNull() throws SystemException {
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, null, null, asList(getSectionDefinition("S1")));
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, null, null, asList(getSectionDefinition("S1")), false);
         doThrow(new SystemException(QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED)).when(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDetail);
         questionnaireService.defineQuestionGroup(questionGroupDetail);
         verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDetail);
@@ -449,6 +449,6 @@ public class QuestionnaireServiceTest {
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, List<SectionDetail> sections) {
-        return new QuestionGroupDetail(1, title, new EventSource(event, source, null), sections);
+        return new QuestionGroupDetail(1, title, new EventSource(event, source, null), sections,false);
     }
 }

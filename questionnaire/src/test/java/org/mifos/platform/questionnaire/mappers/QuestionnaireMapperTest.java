@@ -144,9 +144,10 @@ public class QuestionnaireMapperTest {
         Mockito.when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
         EventSource eventSource = getEventSource("Create", "Client");
         List<SectionDetail> sectionDetails = Arrays.asList(getSectionDefinition(SECTION_NAME));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, TITLE, eventSource, sectionDetails);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, TITLE, eventSource, sectionDetails, true);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         assertQuestionGroup(questionGroup);
+        assertThat(questionGroup.isEditable(), is(true));
         Mockito.verify(eventSourceDao, Mockito.times(1)).retrieveByEventAndSource(anyString(), anyString());
         Mockito.verify(questionDao, Mockito.times(1)).getDetails(12);
     }

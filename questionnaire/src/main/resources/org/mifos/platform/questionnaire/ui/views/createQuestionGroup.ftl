@@ -57,7 +57,11 @@
                             "questionnaire.questionGroupAppliesTo"/]:</label>
                         [@mifosmacros.formSingleSelectWithPrompt "questionGroupForm.eventSourceId", EventSources,
                         "--select one--" /]
-                    </li>
+                    </li
+                    <li>
+                        <label for="editable">[@spring.message "questionnaire.editable"/]:</label>
+                        [@mifosmacros.formCheckbox "questionGroupForm.editable", ""/]
+                    </li>>
                     <li>
                         <label for="sectionName">[@spring.message "questionnaire.currentSectionTitle"/]:</label>
                         [@spring.formInput "questionGroupForm.sectionName",

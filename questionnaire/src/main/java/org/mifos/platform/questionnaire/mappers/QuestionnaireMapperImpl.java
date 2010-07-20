@@ -111,6 +111,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setDateOfCreation(Calendar.getInstance().getTime());
         questionGroup.setSections(mapToSections(questionGroupDetail.getSectionDetails()));
         questionGroup.setEventSources(mapToEventSources(questionGroupDetail));
+        questionGroup.setEditable(questionGroupDetail.isEditable());
         return questionGroup;
     }
 
@@ -160,7 +161,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     public QuestionGroupDetail mapToQuestionGroupDetail(QuestionGroup questionGroup) {
         List<SectionDetail> sectionDetails = mapToSectionDefinitions(questionGroup.getSections());
         EventSource eventSource = mapToEventSource(questionGroup.getEventSources());
-        return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), eventSource, sectionDetails);
+        return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), eventSource, sectionDetails, questionGroup.isEditable());
     }
 
     private EventSource mapToEventSource(Set<EventSourceEntity> eventSources) {

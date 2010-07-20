@@ -51,7 +51,7 @@ public class QuestionGroupFormTest {
     @Test
     public void shouldGetEventSourceId() {
         EventSource eventSource = new EventSource("Create", "Client", "Create Client");
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, "Title", eventSource, new ArrayList<SectionDetail>());
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, "Title", eventSource, new ArrayList<SectionDetail>(), false);
         QuestionGroupForm questionGroupForm = new QuestionGroupForm(questionGroupDetail);
         assertThat(questionGroupForm.getEventSourceId(), Matchers.is("Create.Client"));
     }
@@ -60,7 +60,7 @@ public class QuestionGroupFormTest {
     public void shouldGetSections() {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName("Section1");
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, "Title", null, Arrays.asList(sectionDetail));
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, "Title", null, Arrays.asList(sectionDetail), false);
         QuestionGroupForm questionGroupForm = new QuestionGroupForm(questionGroupDetail);
         List<SectionDetailForm> sections = questionGroupForm.getSections();
         assertThat(sections, Matchers.notNullValue());

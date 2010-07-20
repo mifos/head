@@ -245,7 +245,7 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, List<SectionDetail> sections) {
-        return new QuestionGroupDetail(1, title, new EventSource(event, source, null), sections);
+        return new QuestionGroupDetail(1, title, new EventSource(event, source, null), sections, false);
     }
 
     private SectionDetail getSectionDetailWithQuestionIds(String name, int... questionIds) {

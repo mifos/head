@@ -56,7 +56,7 @@ public class QuestionnaireMapperIntegrationTest {
     public void shouldMapEventSources() {
         EventSource eventSource = new EventSource("Create", "Client", "Create Client");
         List<SectionDetail> sectionDetails = getSectionDefinitions();
-        QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(new QuestionGroupDetail(0, "Title", eventSource, sectionDetails));
+        QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(new QuestionGroupDetail(0, "Title", eventSource, sectionDetails, false));
         Set<EventSourceEntity> eventSources = questionGroup.getEventSources();
         assertThat(eventSources, is(not(nullValue())));
         assertThat(eventSources.size(), is(1));

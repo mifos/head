@@ -149,7 +149,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenEventSourceIsNotProvided() {
         try {
-            questionnaireValidator.validateForDefineQuestionGroup(new QuestionGroupDetail(0, "Title", null, asList(getSection("S1"))));
+            questionnaireValidator.validateForDefineQuestionGroup(new QuestionGroupDetail(0, "Title", null, asList(getSection("S1")), false));
             fail("Should have thrown the application exception");
         } catch (SystemException e) {
             assertEquals(INVALID_EVENT_SOURCE, e.getKey());
@@ -187,7 +187,7 @@ public class QuestionValidatorTest {
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(int id, String title, String event, String source, List<SectionDetail> sectionDetails) {
-        return new QuestionGroupDetail(id, title, getEventSource(event, source), sectionDetails);
+        return new QuestionGroupDetail(id, title, getEventSource(event, source), sectionDetails, false);
     }
 
     private SectionDetail getSection(String name) {
