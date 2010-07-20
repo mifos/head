@@ -20,8 +20,6 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
-
 import java.sql.Connection;
 
 import junit.framework.Assert;
@@ -36,8 +34,10 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
 
     Connection connection;
 
+
     public AddInterestCalcRuleIntegrationTest() throws Exception {
         super();
+        connection = StaticHibernateUtil.getSessionTL().connection();
         connection.setAutoCommit(true);
     }
 
