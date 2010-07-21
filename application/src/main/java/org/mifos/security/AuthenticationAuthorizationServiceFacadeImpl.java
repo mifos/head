@@ -7,7 +7,6 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.login.util.helpers.LoginConstants;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +14,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public class AuthenticationAuthorizationServiceFacadeImpl implements AuthenticationAuthorizationServiceFacade {
 
     private final PersonnelDao personnelDao;
-    private final RolesPermissionsPersistence permissionsPersistence = new RolesPermissionsPersistence();
 
     public AuthenticationAuthorizationServiceFacadeImpl(PersonnelDao personnelDao) {
         this.personnelDao = personnelDao;

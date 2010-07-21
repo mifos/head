@@ -154,6 +154,9 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         //Product definition -> Product Categories
         authoritiesMap.put(SecurityConstants.UPDATE_LATENESS_DORMANCY, new GrantedAuthorityImpl(MifosUser.UPDATE_LATENESS_DORMANCY));
 
+        // Manage Organisation -> Data display and rules
+        authoritiesMap.put(SecurityConstants.CAN_DEFINE_LABELS, new GrantedAuthorityImpl(MifosUser.CAN_DEFINE_LABELS));
+
         // System Information
         authoritiesMap.put(SecurityConstants.CAN_VIEW_SYSTEM_INFO, new GrantedAuthorityImpl(MifosUser.VIEW_SYSTEM_INFO));
 
