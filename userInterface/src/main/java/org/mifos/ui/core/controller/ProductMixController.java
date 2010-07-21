@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class ProductMixController {
 
     @Autowired
-    AdminServiceFacade adminservicefacade;
+    private AdminServiceFacade adminservicefacade;
 
     protected ProductMixController(){
         //spring autowiring
@@ -23,23 +23,18 @@ public class ProductMixController {
 
     public ProductMixController(final AdminServiceFacade adminServiceFacade){
         this.adminservicefacade=adminServiceFacade;
-
     }
-
 
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
         return new AdminBreadcrumbBuilder().withLink("viewProductMix", "viewProductMix.ftl").build();
     }
+
     @ModelAttribute("mixList")
     public Map<String, Object> getList() {
         Map<String, Object> model = new HashMap<String, Object>();
-        try {
-            model.put("mix", adminservicefacade.retrieveAllProductMix().getProductMixList());
-        } catch (Exception e) {
-           model.put("mix", "List could not be retrieved.");
-        }
+        model.put("mix", adminservicefacade.retrieveAllProductMix().getProductMixList());
         return model;
     }
 
