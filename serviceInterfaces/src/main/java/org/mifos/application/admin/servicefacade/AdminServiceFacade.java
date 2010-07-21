@@ -53,10 +53,10 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     List<ProductDisplayDto> retrieveSavingsProducts();
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_PRODUCT_MIX')")
     ProductMixDetailsDto retrieveProductMixDetails(Short prdOfferingId, String productType);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_PRODUCT_MIX')")
     ProductDto retrieveAllProductMix();
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
