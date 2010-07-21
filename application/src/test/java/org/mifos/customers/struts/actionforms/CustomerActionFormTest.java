@@ -21,13 +21,17 @@
 package org.mifos.customers.struts.actionforms;
 
 import junit.framework.Assert;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
+import org.hamcrest.Description;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.internal.matchers.TypeSafeMatcher;
 import org.junit.runner.RunWith;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
+import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.service.EventSource;
@@ -91,11 +95,11 @@ public class CustomerActionFormTest {
         questionGroupDtos.add(questionGroupDto);
         clientCustActionForm.setQuestionGroupDtos(questionGroupDtos);
         ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
-        validationException.addChildException(new ValidationException(MANDATORY_QUESTION_HAS_NO_ANSWER, new SectionQuestionDetail()));
+        validationException.addChildException(new ValidationException(MANDATORY_QUESTION_HAS_NO_ANSWER, sectionDetails.get(0).getQuestionDetail(0)));
         Mockito.doThrow(validationException).when(questionnaireServiceFacade).validateResponses(Mockito.anyList());
         clientCustActionForm.validateForQuestionGroupResponses(Methods.next.toString(), actionErrors, questionnaireServiceFacade);
-        Mockito.verify(actionErrors, Mockito.times(1)).add(Mockito.eq(MANDATORY_QUESTION_HAS_NO_ANSWER),
-                Mockito.<ActionMessage>anyObject());
+        Mockito.verify(actionErrors, Mockito.times(1)).add(Mockito.eq(ClientConstants.ERROR_REQUIRED),
+                Mockito.argThat(new ActionMessageMatcher(ClientConstants.ERROR_REQUIRED, "Question 1")));
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, List<SectionDetail> sections) {
@@ -115,4 +119,24 @@ public class CustomerActionFormTest {
         return sectionDetail;
     }
 
+    private class ActionMessageMatcher extends TypeSafeMatcher<ActionMessage> {
+        private String errorCode;
+        private String questionTitle;
+
+        public ActionMessageMatcher(String errorCode, String questionTitle) {
+            this.errorCode = errorCode;
+            this.questionTitle = questionTitle;
+        }
+
+        @Override
+        public boolean matchesSafely(ActionMessage actionMessage) {
+            return StringUtils.equalsIgnoreCase(errorCode, actionMessage.getKey()) &&
+                    StringUtils.equalsIgnoreCase(questionTitle, String.valueOf(actionMessage.getValues()[0]));
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("ActionMessage doesn't match");
+        }
+    }
 }
