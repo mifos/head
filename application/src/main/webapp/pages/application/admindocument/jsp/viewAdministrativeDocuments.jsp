@@ -60,9 +60,7 @@ explanation of the license and how it is applied.
             	<tr>
               		<td valign="top" class="fontnormalbold"> 
               			<span class="fontnormal">
-				 			<mifos:mifoslabel name="admin.belowisthelistof" />
-				 			<mifos:mifoslabel name="admin.administrativedocuments" />
-				 			<mifos:mifoslabel name="reports.dot" bundle="reportsUIResources"/>
+				 			<mifos:mifoslabel name="admin.belowislistofadministrativedocuments"  bundle="adminUIResources" />
 				 			<mifos:mifoslabel name="reports.toeditclickon" bundle="reportsUIResources"/>
 				 			<html-el:link href="birtAdminDocumentUploadAction.do?method=getBirtAdminDocumentUploadPage&viewPath=administerreports_path">
 								<mifos:mifoslabel name="reports.uploadanewadmindoc" bundle="reportsUIResources" />

@@ -21,8 +21,8 @@
 package org.mifos.customers.struts.actionforms;
 
 import org.mifos.framework.business.service.DataTransferObject;
-import org.mifos.platform.questionnaire.contract.SectionDetail;
-import org.mifos.platform.questionnaire.contract.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.SectionDetail;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,5 +46,10 @@ public class SectionDto implements DataTransferObject {
             questions.add(new QuestionDto(sectionQuestionDetail));
         }
         return questions;
+    }
+
+    public QuestionDto getQuestion(int i) {
+        List<QuestionDto> questions = getQuestions();
+        return i < questions.size() ? questions.get(i) : new QuestionDto(sectionDetail.getQuestionDetail(i));
     }
 }

@@ -104,7 +104,7 @@ explanation of the license and how it is applied.
 										 <c:out value="${BusinessKey.customer.parentCustomer.displayName}"/>
 									</p>
 									<p>
-										<span class="fontnormalbold"><mifos:mifoslabel name="loan.amount" /> <mifos:mifoslabel name="loan.disbursed" isColonRequired="Yes" /></span> <c:out value="${BusinessKey.loanAmount}"/>
+										<span class="fontnormalbold"><mifos:mifoslabel name="loan.amountDisbursed" isColonRequired="Yes" /></span> <c:out value="${BusinessKey.loanAmount}"/>
 										<br>
 										<span class="fontnormalbold"><mifos:mifoslabel name="loan.proposed_date" isColonRequired="Yes" /></span> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.disbursementDate)}" />
 										<br>

@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
+import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
 import org.mifos.framework.exceptions.HibernateProcessException;

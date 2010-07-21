@@ -22,6 +22,7 @@ package org.mifos.application.master.business;
 
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.business.AbstractEntity;
@@ -106,4 +107,17 @@ public class LookUpValueEntity extends AbstractEntity implements LocalizedTextLo
         return getLookUpName();
     }
 
+    public void update(String newValue) {
+        Set<LookUpValueLocaleEntity> lookUpValueLocales = getLookUpValueLocales();
+        if ((lookUpValueLocales != null) && StringUtils.isNotBlank(newValue)) {
+            for (LookUpValueLocaleEntity entity : lookUpValueLocales) {
+                if (entity.getLookUpId().equals(getLookUpId())
+                        && (entity.getLookUpValue() == null || !entity.getLookUpValue().equals(newValue))) {
+                    entity.setLookUpValue(newValue);
+                    break;
+                }
+            }
+        }
+
+    }
 }

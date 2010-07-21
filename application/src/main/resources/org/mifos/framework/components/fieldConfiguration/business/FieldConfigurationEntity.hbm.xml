@@ -12,7 +12,7 @@
      </id>
     <property name="fieldName" column="field_name" />
     <many-to-one
-        class="org.mifos.framework.components.fieldConfiguration.business.EntityMaster" 
+        class="org.mifos.framework.business.EntityMaster"
         name="entityMaster" column="entity_id" />
     <property name="mandatoryFlag" column="mandatory_flag"/>
     <property name="hiddenFlag" column="hidden_flag"/>

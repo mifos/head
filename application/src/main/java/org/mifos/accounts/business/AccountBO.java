@@ -461,10 +461,13 @@ public class AccountBO extends AbstractBusinessObject {
                         && org.apache.commons.lang.StringUtils.isNotBlank(view.getFieldValue())) {
                     SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, getUserContext().getPreferredLocale());
                     String userfmt = DateUtils.convertToCurrentDateFormat(format.toPattern());
-                    view.setFieldValue(DateUtils.convertUserToDbFmt(view.getFieldValue(), userfmt));
+                    this.getAccountCustomFields().add(new AccountCustomFieldEntity(this, view.getFieldId(),
+                            DateUtils.convertUserToDbFmt(view.getFieldValue(), userfmt)));
                 }
-                this.getAccountCustomFields().add(
-                        new AccountCustomFieldEntity(this, view.getFieldId(), view.getFieldValue()));
+                else {
+                    this.getAccountCustomFields().add(
+                            new AccountCustomFieldEntity(this, view.getFieldId(), view.getFieldValue()));
+                }
             }
         }
     }

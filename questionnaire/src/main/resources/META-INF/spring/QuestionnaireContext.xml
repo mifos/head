@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+      http://www.springframework.org/schema/tx
+      http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-3.0.xsd
+      http://www.springframework.org/schema/aop
+      http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+
+    <context:annotation-config/>
+
+    <bean id="questionDao" parent="abstractDao">
+        <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.QuestionDao"/>
+        <property name="target">
+            <bean parent="abstractDaoTarget">
+                <constructor-arg>
+                    <value>org.mifos.platform.questionnaire.domain.QuestionEntity</value>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="questionGroupDao" parent="abstractDao">
+        <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.QuestionGroupDao"/>
+        <property name="target">
+            <bean parent="abstractDaoTarget">
+                <constructor-arg>
+                    <value>org.mifos.platform.questionnaire.domain.QuestionGroup</value>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="eventSourceDao" parent="abstractDao">
+        <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.EventSourceDao"/>
+        <property name="target">
+            <bean parent="abstractDaoTarget">
+                <constructor-arg>
+                    <value>org.mifos.platform.questionnaire.domain.EventSourceEntity</value>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="questionGroupInstanceDao" parent="abstractDao">
+        <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao"/>
+        <property name="target">
+            <bean parent="abstractDaoTarget">
+                <constructor-arg>
+                    <value>org.mifos.platform.questionnaire.domain.QuestionGroupInstance</value>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="sectionQuestionDao" parent="abstractDao">
+        <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.SectionQuestionDao"/>
+        <property name="target">
+            <bean parent="abstractDaoTarget">
+                <constructor-arg>
+                    <value>org.mifos.platform.questionnaire.domain.SectionQuestion</value>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean name="questionnaireService" class="org.mifos.platform.questionnaire.domain.QuestionnaireServiceImpl"/>
+    <bean name="questionnaireServiceFacade" class="org.mifos.platform.questionnaire.service.QuestionnaireServiceFacadeImpl"/>
+    <bean name="questionnaireValidator" class="org.mifos.platform.questionnaire.validators.QuestionnaireValidatorImpl"/>
+    <bean name="questionnaireMapper" class="org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl"/>
+
+</beans>

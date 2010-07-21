@@ -22,6 +22,7 @@ package org.mifos.application.master.business;
 
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.business.AbstractEntity;
 
@@ -46,4 +47,18 @@ public abstract class MasterDataEntity extends AbstractEntity {
     public abstract void setLocaleId(Short locale);
 
     public abstract LookUpValueEntity getLookUpValue();
+
+    public void update(String newValue) {
+        Set<LookUpValueLocaleEntity> lookUpValueLocales = getLookUpValue().getLookUpValueLocales();
+        if ((lookUpValueLocales != null) && StringUtils.isNotBlank(newValue)) {
+            for (LookUpValueLocaleEntity entity : lookUpValueLocales) {
+                if (entity.getLookUpId().equals(getLookUpValue().getLookUpId())
+                        && (entity.getLookUpValue() == null || !entity.getLookUpValue().equals(newValue))) {
+                    entity.setLookUpValue(newValue);
+                    break;
+                }
+            }
+        }
+
+    }
 }

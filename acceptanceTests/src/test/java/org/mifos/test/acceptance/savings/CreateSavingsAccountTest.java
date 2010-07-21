@@ -95,6 +95,21 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
+    public void newMandatoryClientSavingsAccountWithDateTypeCustomField() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml.zip", dataSource, selenium);
+
+        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+        searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
+        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+
+        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
+        submitAccountParameters.setAmount("248.0");
+
+        verifySavingsAccountCreation(searchParameters, submitAccountParameters);
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
     public void newMandatoryGroupSavingsAccount() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml.zip", dataSource, selenium);
 

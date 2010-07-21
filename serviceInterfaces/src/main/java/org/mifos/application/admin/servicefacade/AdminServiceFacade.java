@@ -22,8 +22,11 @@ package org.mifos.application.admin.servicefacade;
 
 import java.util.List;
 
+import org.mifos.dto.domain.AcceptedPaymentTypeDto;
+import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
+import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductDto;
@@ -57,4 +60,22 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     ProductDto retrieveAllProductMix() throws Exception;
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
+    ConfigureApplicationLabelsDto retrieveConfigurableLabels();
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
+    void updateApplicationLabels(ConfigureApplicationLabelsDto applicationLabels);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields() throws Exception;
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto) throws Exception;
+
+    @PreAuthorize("isFullyAuthenticated()")
+    AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes() throws Exception;
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateAcceptedPaymentTypes(AcceptedPaymentTypeDto acceptedPaymentTypeDto) throws Exception;
 }
+

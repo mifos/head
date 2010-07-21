@@ -47,6 +47,7 @@ public class ConfigurationLocator {
 
     @SuppressWarnings("PMD.ImmutableField")
     private ConfigurationLocatorHelper configurationLocatorHelper;
+    private String defaultConfigPath;
 
     public ConfigurationLocator() {
         super();
@@ -111,7 +112,7 @@ public class ConfigurationLocator {
                 }
             }
         }
-        return new ClassPathResource(DEFAULT_CONFIGURATION_PATH + filename).getFile();
+        return new ClassPathResource(getDefaultConfigPath() + filename).getFile();
     }
 
     private String getHomeProperty() {
@@ -134,6 +135,14 @@ public class ConfigurationLocator {
 
     public void setConfigurationLocatorHelper(ConfigurationLocatorHelper fileFactory) {
         this.configurationLocatorHelper = fileFactory;
+    }
+
+    public void setDefaultConfigPath(String path) {
+        this.defaultConfigPath = path;
+    }
+
+    private String getDefaultConfigPath() {
+        return StringUtils.isBlank(this.defaultConfigPath) ? DEFAULT_CONFIGURATION_PATH : this.defaultConfigPath; 
     }
 
 }

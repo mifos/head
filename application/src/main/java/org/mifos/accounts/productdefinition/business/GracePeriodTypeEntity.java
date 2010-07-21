@@ -38,10 +38,6 @@ public class GracePeriodTypeEntity extends MasterDataEntity {
         super();
     }
 
-    public void update(String name) {
-        setName(name);
-    }
-
     public GraceType asEnum() {
         return GraceType.fromInt(getId());
     }
@@ -90,7 +86,11 @@ public class GracePeriodTypeEntity extends MasterDataEntity {
         return getLookUpValue().getLookUpValueLocales();
     }
 
-    protected void setName(String name) {
+    /**
+     * use update.
+     */
+    @Deprecated
+    public void setName(String name) {
         MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
     }
 }

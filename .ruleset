@@ -202,7 +202,7 @@
    <rule ref="rulesets/codesize.xml/ExcessiveParameterList"/>
    <rule ref="rulesets/codesize.xml/ExcessiveClassLength"/>
    <rule ref="rulesets/codesize.xml/CyclomaticComplexity"/>
-   <rule ref="rulesets/codesize.xml/ExcessivePublicCount"/>
+   <!-- <rule ref="rulesets/codesize.xml/ExcessivePublicCount"/> ignored as could not suppress using pmd annotation and wasn't valid for form backing beans in userInterfaces module -keithw- -->
    <rule ref="rulesets/codesize.xml/TooManyFields"/>
    <rule ref="rulesets/codesize.xml/NcssMethodCount"/>
    <rule ref="rulesets/codesize.xml/NcssTypeCount"/>

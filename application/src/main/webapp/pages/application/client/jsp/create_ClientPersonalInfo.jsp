@@ -673,7 +673,8 @@ explanation of the license and how it is applied.
 
 							</table>
 							<br>
-							<!-- Address end --> <!-- Custom Fields -->
+							<!-- Address end -->
+							<!-- Custom Fields -->
 							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
@@ -714,6 +715,61 @@ explanation of the license and how it is applied.
 							</table>
 							<br>
 							</c:if>
+							<!-- Custom Fields end -->
+							<!-- Question Groups -->
+							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'questionGroups')}">
+                                <table width="93%" border="0" cellpadding="3" cellspacing="0">
+                                    <c:forEach var="qg" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'questionGroups')}"
+                                        varStatus="qgLoopStatus">
+                                        <bean:define id="qgCtr">
+                                            <c:out value="${qgLoopStatus.index}" />
+                                        </bean:define>
+                                        <c:forEach var="sec" items="${qg.sections}" varStatus="secLoopStatus">
+                                            <bean:define id="secCtr">
+                                                <c:out value="${secLoopStatus.index}" />
+                                            </bean:define>
+                                            <tr><td>&nbsp;</td></tr>
+                                            <tr>
+                                                <td colspan="2" class="fontnormalbold">
+                                                    <c:out value="${sec.name}" />
+                                                    <br>
+                                                </td>
+                                            </tr>
+                                            <c:forEach var="ques" items="${sec.questions}" varStatus="quesLoopStatus">
+                                                <bean:define id="quesCtr">
+                                                    <c:out value="${quesLoopStatus.index}" />
+                                                </bean:define>
+                                                <tr class="fontnormal">
+                                                    <td width="17%" align="right">
+                                                        <span id="create_ClientPersonalInfo.label.question">
+                                                            <c:if test="${ques.requiredString == 'true'}">
+                                                                <span class="mandatorytext">
+                                                                    <font color="#FF0000">*</font>
+                                                                </span>
+                                                            </c:if>
+                                                            <c:out value="${ques.text}" />
+                                                        </span>:
+                                                    </td>
+                                                    <td width="83%">
+                                                    <html-el:hidden property='questionGroup[${qgCtr}].section[${secCtr}].question[${quesCtr}].id' value="${ques.id}"></html-el:hidden>
+                                                    <html-el:hidden property='fieldTypeList' value='${ques.questionTypeAsNum}' />
+                                                    <c:if test="${ques.questionTypeAsNum == 1}">
+                                                        <mifos:mifosalphanumtext styleId="create_ClientPersonalInfo.input.customField" name="clientCustActionForm"
+                                                            property='questionGroup[${qgCtr}].section[${secCtr}].question[${quesCtr}].value' maxlength="200" />
+                                                    </c:if> <c:if test="${ques.questionTypeAsNum == 2}">
+                                                        <mifos:mifosnumbertext styleId="create_ClientPersonalInfo.input.customField" name="clientCustActionForm"
+                                                            property='questionGroup[${qgCtr}].section[${secCtr}].question[${quesCtr}].value' maxlength="200" />
+                                                    </c:if> <c:if test="${ques.questionTypeAsNum == 5}">
+                                                        <date:datetag property="questionGroup[${qgCtr}].section[${secCtr}].question[${quesCtr}].value" />
+                                                    </c:if>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </c:forEach>
+                                    </c:forEach>
+                                </table>
+							</c:if>
+							<!-- Question Groups end -->
 							<!-- Buttons -->
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
