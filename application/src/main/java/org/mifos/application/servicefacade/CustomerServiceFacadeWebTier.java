@@ -492,7 +492,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             DateTime dob = new DateTime(dateOfBirth);
             boolean trainedBool = isTrained(trained);
-            DateTime trainedDateTime = new DateTime(trainedDate);
+            DateTime trainedDateTime = null;
+            if (trainedDate != null) {
+                trainedDateTime = new DateTime(trainedDate);
+            }
             String clientFirstName = clientNameDetailDto.getFirstName();
             String clientLastName = clientNameDetailDto.getLastName();
             String secondLastName = clientNameDetailDto.getSecondLastName();
@@ -1134,9 +1137,12 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             trained = true;
         }
 
-        DateTime trainedDate;
+        DateTime trainedDate = null;
         try {
-            trainedDate = new DateTime(trainedDate(actionForm));
+            java.sql.Date inputDate = trainedDate(actionForm);
+            if (inputDate != null) {
+                trainedDate = new DateTime(trainedDate(actionForm));
+            }
         } catch (InvalidDateException e) {
             throw new CustomerException(ClientConstants.TRAINED_DATE_MANDATORY);
         }
