@@ -199,5 +199,5 @@ public interface ClientConstants {
 
     String EVENT_CREATE = "Create";
     String SOURCE_CLIENT = "Client";
-
+    String ERROR_REQUIRED = "errors.required";
 }
