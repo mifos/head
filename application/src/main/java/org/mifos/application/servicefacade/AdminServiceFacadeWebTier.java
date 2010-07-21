@@ -25,14 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.mifos.accounts.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.accounts.acceptedpaymenttype.business.TransactionTypeEntity;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
-import org.mifos.accounts.acceptedpaymenttype.struts.actionform.AcceptedPaymentTypeActionForm;
-import org.mifos.accounts.acceptedpaymenttype.util.helpers.AcceptedPaymentTypeConstants;
-import org.mifos.accounts.acceptedpaymenttype.util.helpers.PaymentTypeData;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
@@ -60,6 +55,7 @@ import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
 import org.mifos.config.util.helpers.LabelConfigurations;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.customers.office.business.service.MandatoryHiddenFieldService;
@@ -84,8 +80,8 @@ import org.mifos.dto.screen.ProductMixDetailsDto;
 import org.mifos.dto.screen.ProductMixDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.util.helpers.SessionUtils;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
@@ -181,48 +177,58 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public ProductDto retrieveAllProductMix() throws Exception {
-        List<ProductCategoryBO> productCategoryList = new ProductCategoryBusinessService().getAllCategories();
-        List<PrdOfferingBO> prdOfferingList = new ProductMixBusinessService().getPrdOfferingMix();
+    public ProductDto retrieveAllProductMix() {
+        try {
+            List<ProductCategoryBO> productCategoryList = new ProductCategoryBusinessService().getAllCategories();
 
-        List<ProductCategoryDto> pcList = new ArrayList<ProductCategoryDto>();
-        for(ProductCategoryBO pcBO: productCategoryList) {
-            ProductCategoryDto pcDto = new ProductCategoryDto(pcBO.getProductType().getProductTypeID(),
-                                        pcBO.getProductType().getLookUpValue().getLookUpName());
-            pcList.add(pcDto);
+            List<PrdOfferingBO> prdOfferingList = new ProductMixBusinessService().getPrdOfferingMix();
+
+            List<ProductCategoryDto> pcList = new ArrayList<ProductCategoryDto>();
+            for(ProductCategoryBO pcBO: productCategoryList) {
+                ProductCategoryDto pcDto = new ProductCategoryDto(pcBO.getProductType().getProductTypeID(),
+                                            pcBO.getProductType().getLookUpValue().getLookUpName());
+                pcList.add(pcDto);
+            }
+
+            List<ProductMixDto> pmList = new ArrayList<ProductMixDto>();
+            for(PrdOfferingBO poBO: prdOfferingList) {
+                ProductMixDto pmDto = new ProductMixDto(poBO.getPrdCategory().getProductType().getProductTypeID(), poBO.getPrdOfferingId(),
+                                        poBO.getPrdType().getProductTypeID(), poBO.getPrdOfferingName());
+                pmList.add(pmDto);
+            }
+
+            ProductDto productDto = new ProductDto(pcList, pmList);
+            return productDto;
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
         }
-
-        List<ProductMixDto> pmList = new ArrayList<ProductMixDto>();
-        for(PrdOfferingBO poBO: prdOfferingList) {
-            ProductMixDto pmDto = new ProductMixDto(poBO.getPrdCategory().getProductType().getProductTypeID(), poBO.getPrdOfferingId(),
-                                    poBO.getPrdType().getProductTypeID(), poBO.getPrdOfferingName());
-            pmList.add(pmDto);
-        }
-
-        ProductDto productDto = new ProductDto(pcList, pmList);
-        return productDto;
     }
 
     @Override
-    public ProductMixDetailsDto retrieveProductMixDetails(Short prdOfferingId, String productType) throws Exception {
+    public ProductMixDetailsDto retrieveProductMixDetails(Short prdOfferingId, String productType) {
 
-        ProductMixBusinessService service = new ProductMixBusinessService();
-        PrdOfferingBO prdOfferingBO = service.getPrdOfferingByID(prdOfferingId);
-        List<PrdOfferingBO> allowedPrdOfferingList = service.getAllowedPrdOfferingsByType(prdOfferingId.toString(), productType);
-        List<PrdOfferingBO> notAllowedPrdOfferingList = service.getNotAllowedPrdOfferingsByType(prdOfferingId.toString());
+        try {
+            ProductMixBusinessService service = new ProductMixBusinessService();
+            PrdOfferingBO product = service.getPrdOfferingByID(prdOfferingId);
 
-        List<String> allowedPrdOfferingNames = new ArrayList<String>();
-        List<String> notAllowedPrdOfferingNames = new ArrayList<String>();
-        for(PrdOfferingBO prdOffering: allowedPrdOfferingList) {
-            allowedPrdOfferingNames.add(prdOffering.getPrdOfferingName());
+            List<PrdOfferingBO> allowedPrdOfferingList = service.getAllowedPrdOfferingsByType(prdOfferingId.toString(), productType);
+            List<PrdOfferingBO> notAllowedPrdOfferingList = service.getNotAllowedPrdOfferingsByType(prdOfferingId.toString());
+
+            List<String> allowedPrdOfferingNames = new ArrayList<String>();
+            List<String> notAllowedPrdOfferingNames = new ArrayList<String>();
+            for(PrdOfferingBO prdOffering: allowedPrdOfferingList) {
+                allowedPrdOfferingNames.add(prdOffering.getPrdOfferingName());
+            }
+            for(PrdOfferingBO prdOffering: notAllowedPrdOfferingList) {
+                notAllowedPrdOfferingNames.add(prdOffering.getPrdOfferingName());
+            }
+
+            ProductMixDetailsDto dto = new ProductMixDetailsDto(prdOfferingId, product.getPrdOfferingName(),
+                                        product.getPrdType().getProductTypeID(), allowedPrdOfferingNames, notAllowedPrdOfferingNames);
+            return dto;
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
         }
-        for(PrdOfferingBO prdOffering: notAllowedPrdOfferingList) {
-            notAllowedPrdOfferingNames.add(prdOffering.getPrdOfferingName());
-        }
-
-        ProductMixDetailsDto dto = new ProductMixDetailsDto(prdOfferingId, prdOfferingBO.getPrdOfferingName(),
-                                    prdOfferingBO.getPrdType().getProductTypeID(), allowedPrdOfferingNames, notAllowedPrdOfferingNames);
-        return dto;
     }
 
     @Override
@@ -747,12 +753,17 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         return gracePeriods;
     }
 
-    public MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields() throws Exception {
-        List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence().getAllConfigurationFieldList();
-        MandatoryHiddenFieldsDto dto = new MandatoryHiddenFieldsDto();
-        populateDto(dto, confFieldList);
-        dto.setFamilyDetailsRequired(ClientRules.isFamilyDetailsRequired());
-        return dto;
+    public MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields() {
+
+        try {
+            List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence().getAllConfigurationFieldList();
+            MandatoryHiddenFieldsDto dto = new MandatoryHiddenFieldsDto();
+            populateDto(dto, confFieldList);
+            dto.setFamilyDetailsRequired(ClientRules.isFamilyDetailsRequired());
+            return dto;
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 
     private void populateDto(MandatoryHiddenFieldsDto dto, List<FieldConfigurationEntity> confFieldList) {
@@ -885,13 +896,17 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto) throws Exception {
-        List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence().getAllConfigurationFieldList();
-        mandatoryHiddenFieldService.updateMandatoryHiddenFields(dto, confFieldList);
+    public void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto) {
+        try {
+            List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence().getAllConfigurationFieldList();
+            mandatoryHiddenFieldService.updateMandatoryHiddenFields(dto, confFieldList);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 
     @Override
-    public AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes() throws Exception {
+    public AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes() {
         List<PaymentTypeDto> payments = getAllPaymentTypes(null);
         // acceptedPaymentTypeActionForm.setAllPaymentTypes(payments);
         AcceptedPaymentTypePersistence paymentTypePersistence = new AcceptedPaymentTypePersistence();
@@ -902,7 +917,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         return dto;
     }
 
-    private List<PaymentTypeDto> getAllPaymentTypes(Short localeId) throws Exception {
+    private List<PaymentTypeDto> getAllPaymentTypes(Short localeId) {
         List<PaymentTypeDto> paymentTypeList = new ArrayList<PaymentTypeDto>();
         PaymentTypeDto payment = null;
         Short id = 0;
@@ -917,43 +932,51 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         return paymentTypeList;
     }
 
-    private <T extends MasterDataEntity>  List<T> getMasterEntities(Class<T> type, Short localeId) throws ServiceException {
-        return new MasterDataService().retrieveMasterEntities(type, localeId);
-    }
-    private void setPaymentTypesForATransaction(List<PaymentTypeDto> payments, TrxnTypes transactionType,
-            AcceptedPaymentTypePersistence paymentTypePersistence, AcceptedPaymentTypeDto dto)
-            throws Exception {
-
-        Short transactionId = transactionType.getValue();
-        List<AcceptedPaymentType> paymentTypeList = paymentTypePersistence
-                .getAcceptedPaymentTypesForATransaction(transactionId);
-        List<PaymentTypeDto> inList = new ArrayList<PaymentTypeDto>(payments);
-        List<PaymentTypeDto> outList = new ArrayList<PaymentTypeDto>();
-
-        PaymentTypeDto data = null;
-        for (AcceptedPaymentType paymentType : paymentTypeList) {
-            Short paymentTypeId = paymentType.getPaymentTypeEntity().getId();
-            data = new PaymentTypeDto(paymentTypeId, paymentType.getPaymentTypeEntity().getName(), paymentType.getAcceptedPaymentTypeId());
-            outList.add(data);
-            RemoveFromInList(inList, paymentTypeId);
+    private <T extends MasterDataEntity>  List<T> getMasterEntities(Class<T> type, Short localeId) {
+        try {
+            return new MasterDataService().retrieveMasterEntities(type, localeId);
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
         }
-        if (transactionType == TrxnTypes.loan_repayment) {
-            dto.setInRepaymentList(inList);
-            dto.setOutRepaymentList(outList);
-        } else if (transactionType == TrxnTypes.fee) {
-            dto.setInFeeList(inList);
-            dto.setOutFeeList(outList);
-        } else if (transactionType == TrxnTypes.loan_disbursement) {
-            dto.setInDisbursementList(inList);
-            dto.setOutDisbursementList(outList);
-        } else if (transactionType == TrxnTypes.savings_deposit) {
-            dto.setInDepositList(inList);
-            dto.setOutDepositList(outList);
-        } else if (transactionType == TrxnTypes.savings_withdrawal) {
-            dto.setInWithdrawalList(inList);
-            dto.setOutWithdrawalList(outList);
-        } else {
-            throw new Exception("Unknow account action for accepted payment type " + transactionType.toString());
+    }
+
+    private void setPaymentTypesForATransaction(List<PaymentTypeDto> payments, TrxnTypes transactionType,
+            AcceptedPaymentTypePersistence paymentTypePersistence, AcceptedPaymentTypeDto dto) {
+
+        try {
+            Short transactionId = transactionType.getValue();
+            List<AcceptedPaymentType> paymentTypeList = paymentTypePersistence.getAcceptedPaymentTypesForATransaction(transactionId);
+
+            List<PaymentTypeDto> inList = new ArrayList<PaymentTypeDto>(payments);
+            List<PaymentTypeDto> outList = new ArrayList<PaymentTypeDto>();
+
+            PaymentTypeDto data = null;
+            for (AcceptedPaymentType paymentType : paymentTypeList) {
+                Short paymentTypeId = paymentType.getPaymentTypeEntity().getId();
+                data = new PaymentTypeDto(paymentTypeId, paymentType.getPaymentTypeEntity().getName(), paymentType.getAcceptedPaymentTypeId());
+                outList.add(data);
+                RemoveFromInList(inList, paymentTypeId);
+            }
+            if (transactionType == TrxnTypes.loan_repayment) {
+                dto.setInRepaymentList(inList);
+                dto.setOutRepaymentList(outList);
+            } else if (transactionType == TrxnTypes.fee) {
+                dto.setInFeeList(inList);
+                dto.setOutFeeList(outList);
+            } else if (transactionType == TrxnTypes.loan_disbursement) {
+                dto.setInDisbursementList(inList);
+                dto.setOutDisbursementList(outList);
+            } else if (transactionType == TrxnTypes.savings_deposit) {
+                dto.setInDepositList(inList);
+                dto.setOutDepositList(outList);
+            } else if (transactionType == TrxnTypes.savings_withdrawal) {
+                dto.setInWithdrawalList(inList);
+                dto.setOutWithdrawalList(outList);
+            } else {
+                throw new MifosRuntimeException("Unknown account action for accepted payment type " + transactionType.toString());
+            }
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
         }
     }
 
@@ -966,7 +989,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public void updateAcceptedPaymentTypes(AcceptedPaymentTypeDto acceptedPaymentTypeDto) throws Exception {
+    public void updateAcceptedPaymentTypes(AcceptedPaymentTypeDto acceptedPaymentTypeDto) {
 
         AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
 
@@ -977,18 +1000,23 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                     deletedPaymentTypeList, addedPaymentTypeList, persistence);
         }
 
-        if (addedPaymentTypeList.size() > 0) {
-            persistence.addAcceptedPaymentTypes(addedPaymentTypeList);
-        }
-        if (deletedPaymentTypeList.size() > 0) {
-            persistence.deleteAcceptedPaymentTypes(deletedPaymentTypeList);
+        try {
+            if (addedPaymentTypeList.size() > 0) {
+                persistence.addAcceptedPaymentTypes(addedPaymentTypeList);
+            }
+
+            if (deletedPaymentTypeList.size() > 0) {
+                persistence.deleteAcceptedPaymentTypes(deletedPaymentTypeList);
+            }
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
         }
     }
 
     private void processOneAccountActionAcceptedPaymentTypes(TrxnTypes transactionType,
             AcceptedPaymentTypeDto acceptedPaymentTypeDto,
             List<AcceptedPaymentType> deletedPaymentTypeList, List<AcceptedPaymentType> addedPaymentTypeList,
-            AcceptedPaymentTypePersistence persistence) throws Exception {
+            AcceptedPaymentTypePersistence persistence) {
         // new accepted payments
         List<PaymentTypeDto> selectedPaymentTypes = null;
         // old accepted payments
@@ -1011,7 +1039,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             selectedPaymentTypes = acceptedPaymentTypeDto.getOutWithdrawalList();
             outList = OldAcceptedPaymentTypeDto.getOutWithdrawalList();
         } else {
-            throw new Exception("Unknow account action for accepted payment type " + transactionType.toString());
+            throw new MifosRuntimeException("Unknown account action for accepted payment type " + transactionType.toString());
         }
         process(selectedPaymentTypes, outList, deletedPaymentTypeList, addedPaymentTypeList, persistence,
                 transactionType);
