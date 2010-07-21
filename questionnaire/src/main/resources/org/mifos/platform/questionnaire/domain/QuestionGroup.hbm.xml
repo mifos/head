@@ -9,7 +9,6 @@
         </id>
         <property name="title" column="title"/>
         <property name="dateOfCreation" column="date_of_creation"/>
-        <property name="editable" column="is_editable"/>
         <property name="state" column="state">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">org.mifos.platform.questionnaire.domain.QuestionGroupState</param>
