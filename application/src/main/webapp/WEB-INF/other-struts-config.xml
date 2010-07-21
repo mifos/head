@@ -38,8 +38,6 @@
         <!-- Your Settings Action form -->
         <form-bean name="personnelSettingsActionForm"
                    type="org.mifos.customers.personnel.struts.actionforms.PersonnelSettingsActionForm"/>
-        <form-bean name="labelconfigurationactionform"
-                   type="org.mifos.config.struts.actionform.LabelConfigurationActionForm"/>
         <form-bean name="hiddenmandatoryconfigurationactionform"
                    type="org.mifos.config.struts.actionform.HiddenMandatoryConfigurationActionForm"/>
         <form-bean name="lookupoptionsactionform"
@@ -332,18 +330,6 @@
             <forward name="cancel_success" path="/AdminAction.do?method=load"/>
         </action>
 
-        <action path="/labelconfigurationaction"
-                type="org.mifos.config.struts.action.LabelConfigurationAction"
-                name="labelconfigurationactionform" parameter="method"
-                input="/labelconfigurationaction.do?method=validate"
-                validate="true" scope="session">
-            <forward name="load_success" path="/pages/application/configuration/jsp/definelabels.jsp"/>
-            <forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp"/>
-            <forward name="update_success" path="/pages/application/admin/jsp/admin.jsp"/>
-            <forward name="update_failure" path="/pages/application/configuration/jsp/definelabels.jsp"/>
-            <forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp"/>
-            <forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp"/>
-        </action>
         <action path="/hiddenmandatoryconfigurationaction"
                 type="org.mifos.config.struts.action.HiddenMandatoryConfigurationAction"
                 name="hiddenmandatoryconfigurationactionform" parameter="method"
