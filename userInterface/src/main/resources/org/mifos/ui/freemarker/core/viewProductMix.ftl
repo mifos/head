@@ -23,9 +23,9 @@
    	<div>
    	 <span class="fontBold">[@spring.message "loan" /]</span> 
    		[#if text_has_next]
-                <ul><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"><a href="viewProductMix/${text.prdOfferingId}">${text.prdOfferingName} </a></ul>
+                <ul><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"><a href="viewProductMix/${text.prdOfferingId}.ftl">${text.prdOfferingName} </a></ul>
 				[#else]
-	          <ul><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"><a href="viewProductMix/${text.prdOfferingId}">${text.prdOfferingName} </a></ul>
+	          <ul><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"><a href="viewProductMix/${text.prdOfferingId}.ftl">${text.prdOfferingName} </a></ul>
   		[/#if]
   	</div>
   	
