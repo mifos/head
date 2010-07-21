@@ -22,7 +22,6 @@ package org.mifos.platform.questionnaire.service;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
@@ -64,7 +63,6 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration(locations = {"/test-questionnaire-dbContext.xml", "/test-questionnaire-persistenceContext.xml", "/META-INF/spring/QuestionnaireContext.xml"})
 @TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
 @SuppressWarnings("PMD")
-@Ignore
 public class QuestionnaireServiceIntegrationTest {
 
     @Autowired
@@ -145,7 +143,7 @@ public class QuestionnaireServiceIntegrationTest {
         assertNotNull(questionGroup);
         Assert.assertEquals(title, questionGroup.getTitle());
         Assert.assertEquals(QuestionGroupState.ACTIVE, questionGroup.getState());
-        /*TODO: FIXME Assert.assertEquals(true, questionGroup.isEditable());*/
+        Assert.assertEquals(true, questionGroup.isEditable());
         List<Section> sections = questionGroup.getSections();
         Assert.assertEquals(2, sections.size());
         Assert.assertEquals("S1", sections.get(0).getName());
