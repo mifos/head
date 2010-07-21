@@ -145,7 +145,7 @@ public class QuestionnaireServiceIntegrationTest {
         assertNotNull(questionGroup);
         Assert.assertEquals(title, questionGroup.getTitle());
         Assert.assertEquals(QuestionGroupState.ACTIVE, questionGroup.getState());
-        /*TODO: FIXME Assert.assertEquals(true, questionGroup.isEditable());*/
+        Assert.assertEquals(true, questionGroup.isEditable());
         List<Section> sections = questionGroup.getSections();
         Assert.assertEquals(2, sections.size());
         Assert.assertEquals("S1", sections.get(0).getName());
