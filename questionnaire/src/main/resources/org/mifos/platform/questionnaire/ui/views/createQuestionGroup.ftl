@@ -59,6 +59,10 @@
                         "--select one--" /]
                     </li>
                     <li>
+                        <label for="editable">[@spring.message "questionnaire.editable"/]:</label>
+                        [@mifosmacros.formCheckbox "questionGroupForm.editable", ""/]
+                    </li>
+                    <li>
                         <label for="sectionName">[@spring.message "questionnaire.currentSectionTitle"/]:</label>
                         [@spring.formInput "questionGroupForm.sectionName",
                         'maxlength="50"

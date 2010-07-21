@@ -106,7 +106,7 @@ public class QuestionnaireServiceTest {
         QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, QuestionType.FREETEXT);
         try {
             QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
-            verify(questionDao, times(1)).create(any(QuestionEntity.class));
+            Mockito.verify(questionDao, times(1)).create(any(QuestionEntity.class));
             Assert.assertNotNull(questionDetail);
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
@@ -115,8 +115,8 @@ public class QuestionnaireServiceTest {
         } catch (SystemException e) {
             Assert.fail("Should not have thrown the validation exception");
         }
-        verify(questionnaireValidator).validateForDefineQuestion(questionDefinition);
-        verify(questionDao).create(any(QuestionEntity.class));
+        Mockito.verify(questionnaireValidator).validateForDefineQuestion(questionDefinition);
+        Mockito.verify(questionDao).create(any(QuestionEntity.class));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class QuestionnaireServiceTest {
         QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, QuestionType.MULTI_SELECT, Arrays.asList(choice1, choice2));
         try {
             QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
-            verify(questionDao, times(1)).create(any(QuestionEntity.class));
+            Mockito.verify(questionDao, times(1)).create(any(QuestionEntity.class));
             Assert.assertNotNull(questionDetail);
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
@@ -135,8 +135,8 @@ public class QuestionnaireServiceTest {
         } catch (SystemException e) {
             Assert.fail("Should not have thrown the validation exception");
         }
-        verify(questionnaireValidator).validateForDefineQuestion(questionDefinition);
-        verify(questionDao).create(any(QuestionEntity.class));
+        Mockito.verify(questionnaireValidator).validateForDefineQuestion(questionDefinition);
+        Mockito.verify(questionDao).create(any(QuestionEntity.class));
     }
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
@@ -150,10 +150,10 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldGetAllQuestions() {
-        when(questionDao.retrieveByState(1)).thenReturn(Arrays.asList(getQuestion(1, "q1", AnswerType.DATE), getQuestion(2, "q2", AnswerType.FREETEXT)));
+        Mockito.when(questionDao.retrieveByState(1)).thenReturn(Arrays.asList(getQuestion(1, "q1", AnswerType.DATE), getQuestion(2, "q2", AnswerType.FREETEXT)));
         List<QuestionDetail> questionDetails = questionnaireService.getAllQuestions();
         Assert.assertNotNull("getAllQuestions should not return null", questionDetails);
-        verify(questionDao, times(1)).retrieveByState(1);
+        Mockito.verify(questionDao, times(1)).retrieveByState(1);
 
         assertThat(questionDetails.get(0).getText(), is("q1"));
         assertThat(questionDetails.get(0).getShortName(), is("q1"));
@@ -187,14 +187,14 @@ public class QuestionnaireServiceTest {
     public void shouldDefineQuestionGroup() throws SystemException {
         QuestionGroupDetail questionGroupDefinition = getQuestionGroupDetail(EVENT_CREATE, SOURCE_CLIENT, "S1", "S2");
         setUpEventSourceExpectations(EVENT_CREATE, SOURCE_CLIENT);
-        when(questionDao.getDetails(anyInt())).thenReturn(getQuestion(11), getQuestion(12), getQuestion(11), getQuestion(12));
+        Mockito.when(questionDao.getDetails(anyInt())).thenReturn(getQuestion(11), getQuestion(12), getQuestion(11), getQuestion(12));
         try {
             QuestionGroupDetail questionGroupDetail = questionnaireService.defineQuestionGroup(questionGroupDefinition);
             assertQuestionGroupDetail(questionGroupDetail);
-            verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDefinition);
-            verify(questionGroupDao, times(1)).create(any(QuestionGroup.class));
-            verify(eventSourceDao, times(1)).retrieveByEventAndSource(anyString(), anyString());
-            verify(questionDao, times(4)).getDetails(anyInt());
+            Mockito.verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDefinition);
+            Mockito.verify(questionGroupDao, times(1)).create(any(QuestionGroup.class));
+            Mockito.verify(eventSourceDao, times(1)).retrieveByEventAndSource(anyString(), anyString());
+            Mockito.verify(questionDao, times(4)).getDetails(anyInt());
         } catch (SystemException e) {
             Assert.fail("Should not have thrown the validation exception");
         }
@@ -238,11 +238,11 @@ public class QuestionnaireServiceTest {
 
     private void setUpEventSourceExpectations(String event, String source) {
         EventSourceEntity eventSourceEntity = getEventSourceEntity(event, source);
-        when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(Collections.singletonList(eventSourceEntity));
+        Mockito.when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(Collections.singletonList(eventSourceEntity));
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String event, String source, String... sectionNames) {
-        return new QuestionGroupDetail(0, QUESTION_GROUP_TITLE, getEventSource(event, source), getSectionDefinitions(sectionNames));
+        return new QuestionGroupDetail(0, QUESTION_GROUP_TITLE, getEventSource(event, source), getSectionDefinitions(sectionNames),false);
     }
 
     private List<SectionDetail> getSectionDefinitions(String... sectionNames) {
@@ -279,7 +279,7 @@ public class QuestionnaireServiceTest {
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test(expected = SystemException.class)
     public void shouldThrowValidationExceptionWhenQuestionGroupTitleIsNull() throws SystemException {
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, null, null, Arrays.asList(getSectionDefinition("S1")));
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, null, null, Arrays.asList(getSectionDefinition("S1")), false);
         doThrow(new SystemException(QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED)).when(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDetail);
         questionnaireService.defineQuestionGroup(questionGroupDetail);
         verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDetail);
@@ -438,7 +438,7 @@ public class QuestionnaireServiceTest {
     public void shouldSaveResponses() {
         List<QuestionDetail> questionDetails = Arrays.asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
         List<SectionDetail> sectionDetails = Arrays.asList(getSectionDetailWithQuestions("Sec1", questionDetails, "value", false));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails,true);
         questionnaireService.saveResponses(new QuestionGroupDetails(1, 1, Arrays.asList(questionGroupDetail)));
         verify(questionnaireValidator, times(1)).validateForQuestionGroupResponses(Arrays.asList(questionGroupDetail));
         verify(questionGroupInstanceDao, times(1)).saveOrUpdateAll(Matchers.<List<QuestionGroupInstance>>any()); // TODO: Verify the contents using a custom matcher
@@ -448,7 +448,7 @@ public class QuestionnaireServiceTest {
     public void testValidateResponse() {
         List<QuestionDetail> questionDetails = Arrays.asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
         List<SectionDetail> sectionDetails = Arrays.asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails, true);
         try {
             Mockito.doThrow(new ValidationException(MANDATORY_QUESTION_HAS_NO_ANSWER, new SectionQuestionDetail())).
                     when(questionnaireValidator).validateForQuestionGroupResponses(Arrays.asList(questionGroupDetail));
@@ -471,4 +471,5 @@ public class QuestionnaireServiceTest {
         sectionDetail.setQuestionDetails(sectionQuestionDetails);
         return sectionDetail;
     }
+
 }

@@ -44,6 +44,9 @@ public class CreateQuestionGroupPage extends MifosPage {
 
     public void submit(CreateQuestionGroupParameters createQuestionGroupParameters) {
         selenium.type("name=title", createQuestionGroupParameters.getTitle());
+        if (createQuestionGroupParameters.isAnswerEditable()) {
+           selenium.click("id=editable");
+        }
         selenium.select("id=eventSourceId", createQuestionGroupParameters.getAppliesTo());
         selenium.click("id=_eventId_defineQuestionGroup");
         waitForPageToLoad();

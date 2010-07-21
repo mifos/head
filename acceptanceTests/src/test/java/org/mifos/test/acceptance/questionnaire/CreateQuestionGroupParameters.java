@@ -28,6 +28,12 @@ public class CreateQuestionGroupParameters {
     private String sectionName = "";
     private List<String> sectionQuestions;
 
+    public boolean isAnswerEditable() {
+        return answerEditable;
+    }
+
+    private boolean answerEditable = false;
+
     public String getTitle() {
         return title;
     }
@@ -58,5 +64,9 @@ public class CreateQuestionGroupParameters {
 
     public List<String> getSectionQuestions() {
         return sectionQuestions;
+    }
+
+    public void setAnswerEditable(boolean editable) {
+        this.answerEditable = editable;
     }
 }

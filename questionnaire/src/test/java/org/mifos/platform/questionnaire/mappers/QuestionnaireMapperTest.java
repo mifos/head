@@ -160,9 +160,10 @@ public class QuestionnaireMapperTest {
         Mockito.when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
         EventSource eventSource = getEventSource("Create", "Client");
         List<SectionDetail> sectionDetails = Arrays.asList(getSectionDefinition(SECTION_NAME));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, TITLE, eventSource, sectionDetails);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, TITLE, eventSource, sectionDetails, true);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         assertQuestionGroup(questionGroup);
+        assertThat(questionGroup.isEditable(), is(true));
         Mockito.verify(eventSourceDao, Mockito.times(1)).retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString());
         Mockito.verify(questionDao, Mockito.times(1)).getDetails(12);
     }
@@ -306,7 +307,7 @@ public class QuestionnaireMapperTest {
         
         List<QuestionDetail> questionDetails = Arrays.asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
         List<SectionDetail> sectionDetails = Arrays.asList(getSectionDetailWithQuestions("Sec1", questionDetails));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(10, "QG1", new EventSource("Create", "Client", null), sectionDetails);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(10, "QG1", new EventSource("Create", "Client", null), sectionDetails, true);
         List<QuestionGroupInstance> questionGroupInstances =
                 questionnaireMapper.mapToQuestionGroupInstances(new QuestionGroupDetails(101, 201, Arrays.asList(questionGroupDetail)));
         assertThat(questionGroupInstances, is(notNullValue()));

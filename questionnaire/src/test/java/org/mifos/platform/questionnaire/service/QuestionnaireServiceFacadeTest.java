@@ -233,7 +233,7 @@ public class QuestionnaireServiceFacadeTest {
     public void testValidateResponse() {
         List<QuestionDetail> questionDetails = Arrays.asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
         List<SectionDetail> sectionDetails = Arrays.asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails, true);
         try {
             Mockito.doThrow(new ValidationException(MANDATORY_QUESTION_HAS_NO_ANSWER, new SectionQuestionDetail())).
                     when(questionnaireService).validateResponses(Arrays.asList(questionGroupDetail));
@@ -258,7 +258,7 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, List<SectionDetail> sections) {
-        return new QuestionGroupDetail(1, title, new EventSource(event, source, null), sections);
+        return new QuestionGroupDetail(1, title, new EventSource(event, source, null), sections, false);
     }
 
     private SectionDetail getSectionDetailWithQuestionIds(String name, int... questionIds) {

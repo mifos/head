@@ -37,6 +37,7 @@ import org.mifos.platform.questionnaire.ui.model.Question;
 import org.mifos.platform.questionnaire.ui.model.QuestionForm;
 import org.mifos.platform.questionnaire.ui.model.QuestionGroupForm;
 import org.mifos.platform.questionnaire.ui.model.SectionDetailForm;
+import org.mifos.platform.validation.MifosBeanValidator;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -80,12 +81,14 @@ public class QuestionnaireControllerTest {
     @Mock
     private HttpServletRequest httpServletRequest;
 
-    LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+    MifosBeanValidator validator = new MifosBeanValidator();
+    LocalValidatorFactoryBean targetValidator = new LocalValidatorFactoryBean();
 
     @Before
     public void setUp() throws Exception {
         questionnaireController = new QuestionnaireController(questionnaireServiceFacade);
-        validator.afterPropertiesSet();
+        targetValidator.afterPropertiesSet();
+        validator.setTargetValidator(targetValidator);
     }
 
     @After
@@ -131,14 +134,14 @@ public class QuestionnaireControllerTest {
         Assert.assertThat(result, Is.is(notNullValue()));
         Assert.assertThat(result, Is.is("failure"));
         Mockito.verify(requestContext).getMessageContext();
-        Mockito.verify(messageContext).addMessage(argThat(new MessageMatcher("NotEmpty.QuestionForm.currentQuestion.title")));
+        Mockito.verify(messageContext).addMessage(argThat(new MessageMatcher("NotNull.QuestionForm.currentQuestion.title")));
     }
 
     @Test
     public void testAddQuestionForFailureWhenQuestionTitleProvidedWithAllBlanks() throws Exception {
         QuestionForm qform = new QuestionForm();
         qform.setValidator(validator);
-        qform.getCurrentQuestion().setTitle("      ");
+        qform.getCurrentQuestion().setTitle("   ");
         qform.getCurrentQuestion().setType("Free Text");
         Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
         Mockito.when(messageContext.hasErrorMessages()).thenReturn(true);
@@ -148,7 +151,9 @@ public class QuestionnaireControllerTest {
         Assert.assertThat(result, Is.is("failure"));
         Mockito.verify(requestContext).getMessageContext();
         // TODO: Assert for message code content
-        //verify(messageContext).addMessage(argThat(new MessageMatcher("NotEmpty.QuestionForm.currentQuestion.title")));
+        verify(messageContext).addMessage(argThat(new MessageMatcher("Pattern.QuestionForm.currentQuestion.title")));
+        //verify(messageContext).addMessage(argThat(new MessageMatcher("NotNull.QuestionForm.currentQuestion.type")));
+
     }
 
     @Test

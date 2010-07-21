@@ -35,11 +35,16 @@
             [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":"viewQuestionGroups.ftl",Request.questionGroupDetail.title:""}/]
             [@mifos.crumbpairs breadcrumb/]
             <div class="marginLeft30">
+            	[#assign boolean_text_yes][@spring.message "questionnaire.yes"/][/#assign]
+		        [#assign boolean_text_no][@spring.message "questionnaire.no"/][/#assign]
                 <div id="questionGroup.title" class="orangeheading marginTop15">
                     ${Request.questionGroupDetail.title}
                 </div>
                 <div id="questionGroup.appliesTo" class="marginTop15">
                     [@spring.message "questionnaire.questionGroupAppliesTo"/]: ${Request.eventSources[Request.questionGroupDetail.eventSourceId]}
+                </div>
+                <div id="questionGroup.editable">
+                    [@spring.message "questionnaire.editable"/]: ${Request.questionGroupDetail.editable?string(boolean_text_yes, boolean_text_no)}
                 </div>
                 <div id="questionGroup.sections" class="marginTop15">
                     [#list Request.questionGroupDetail.sections as section]
