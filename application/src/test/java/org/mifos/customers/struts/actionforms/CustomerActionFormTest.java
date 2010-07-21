@@ -99,7 +99,7 @@ public class CustomerActionFormTest {
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, List<SectionDetail> sections) {
-        return new QuestionGroupDetail(1, title, new EventSource(event, source, null), sections);
+        return new QuestionGroupDetail(1, title, new EventSource(event, source, null), sections, true);
     }
 
     private SectionDetail getSectionDetailWithQuestions(String name, List<QuestionDetail> questionDetails, String value, boolean mandatory) {
