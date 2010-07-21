@@ -39,9 +39,9 @@ public abstract class LanguageUpgrade extends Upgrade {
     private int upgradeTimeStamp;
 
 
-    public LanguageUpgrade(int upgraeTimestamp) {
+    public LanguageUpgrade(int upgradeTimestamp) {
         super();
-        this.upgradeTimeStamp = upgraeTimestamp;
+        this.upgradeTimeStamp = upgradeTimestamp;
     }
 
     /**

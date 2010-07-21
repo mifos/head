@@ -58,5 +58,6 @@ public class Upgrade1277571837 extends Upgrade {
             }
         }
         return skipUpdate;
+
     }
 }
