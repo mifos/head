@@ -20,20 +20,6 @@
 
 package org.mifos.customers.client.struts.actionforms;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.StringTokenizer;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
@@ -47,12 +33,13 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
-import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.ClientFamilyDetailDto;
 import org.mifos.customers.client.business.ClientNameDetailDto;
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.FamilyDetailDTO;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
+import org.mifos.customers.struts.actionforms.QuestionGroupDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.dto.domain.CustomFieldDto;
@@ -67,8 +54,27 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.platform.questionnaire.exceptions.ValidationException;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.platform.util.CollectionUtils;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.MifosServiceFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.StringTokenizer;
 
 public class ClientCustActionForm extends CustomerActionForm {
 
@@ -336,7 +342,7 @@ public class ClientCustActionForm extends CustomerActionForm {
         if ((method.equals(Methods.previewPersonalInfo.toString()) || method.equals(Methods.next.toString()) || method
                 .equals(Methods.previewEditPersonalInfo.toString()))
                 && (ClientConstants.INPUT_PERSONAL_INFO.equals(input) || ClientConstants.INPUT_EDIT_PERSONAL_INFO
-                        .equals(input))) {
+                .equals(input))) {
             validateClientNames(errors, resources);
             validateDateOfBirth(errors, resources);
             validateGender(errors, resources);
@@ -393,7 +399,39 @@ public class ClientCustActionForm extends CustomerActionForm {
             validateFamilyRelationship(errors);
             validateFamilyLivingStatus(errors);
         }
+        validateForQuestionGroupResponses(method, errors, getQuestionnaireServiceFacade(request));
         return errors;
+    }
+
+    // intentionally made 'public' to aid testing !!!
+    public void validateForQuestionGroupResponses(String method, ActionErrors errors, QuestionnaireServiceFacade questionnaireServiceFacade) {
+        if (method.equals(Methods.next.toString())
+                && questionnaireServiceFacade != null
+                && !CollectionUtils.isEmpty(getQuestionGroupDtos())) {
+            try {
+                List<QuestionGroupDetail> groupDetails = new ArrayList<QuestionGroupDetail>();
+                for (QuestionGroupDto questionGroupDto : getQuestionGroupDtos()) {
+                    groupDetails.add(questionGroupDto.getQuestionGroupDetail());
+                }
+                questionnaireServiceFacade.validateResponses(groupDetails);
+            } catch (ValidationException e) {
+                if (e.containsChildExceptions()) {
+                    for (ValidationException validationException : e.getChildExceptions()) {
+                        errors.add(validationException.getKey(), new ActionMessage(validationException.getKey()));
+                    }
+                }
+            }
+        }
+    }
+
+    private QuestionnaireServiceFacade getQuestionnaireServiceFacade(HttpServletRequest request) {
+        QuestionnaireServiceFacade questionnaireServiceFacade;
+        try {
+            questionnaireServiceFacade = (QuestionnaireServiceFacade) MifosServiceFactory.getSpringBean(request, "questionnaireServiceFacade");
+        } catch (Exception e) {
+            questionnaireServiceFacade = null;
+        }
+        return questionnaireServiceFacade;
     }
 
     private void validatePicture(HttpServletRequest request, ActionErrors errors) throws PageExpiredException {
@@ -448,7 +486,7 @@ public class ClientCustActionForm extends CustomerActionForm {
         List<FieldConfigurationEntity> mandatoryfieldList = entityMandatoryFieldMap.get(EntityType.CLIENT.getValue());
         for (FieldConfigurationEntity fieldConfigurationEntity : mandatoryfieldList) {
             if (HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_INFORMATION.equals(fieldConfigurationEntity.getFieldName())) {
-                 if (fieldConfigurationEntity.isMandatory()) {
+                if (fieldConfigurationEntity.isMandatory()) {
                     mandatorySpouseType = true;
                     break;
                 }
@@ -460,7 +498,7 @@ public class ClientCustActionForm extends CustomerActionForm {
         if (spouseName.getMiddleName() == null) spouseName.setMiddleName("");
         if (spouseName.getSecondLastName() == null) spouseName.setSecondLastName("");
         if (spouseName.getLastName() == null) spouseName.setLastName("");
-        
+
         if (spouseName.getNameType() == null && (mandatorySpouseType ||
                 !StringUtils.isBlank(spouseName.getFirstName()) || !StringUtils.isBlank(spouseName.getMiddleName()) ||
                 !StringUtils.isBlank(spouseName.getSecondLastName()) || !StringUtils.isBlank(spouseName.getLastName()))) {
@@ -492,9 +530,7 @@ public class ClientCustActionForm extends CustomerActionForm {
             }
         } else if (!isValid(getDateOfBirthDD()) || !isValid(getDateOfBirthMM()) || !isValid(getDateOfBirthYY())) {
             errors.add(ClientConstants.INVALID_DOB_EXCEPTION, new ActionMessage(ClientConstants.INVALID_DOB_EXCEPTION));
-        }
-
-        else {
+        } else {
             try {
                 Date date = DateUtils.getDateAsSentFromBrowser(getDateOfBirth());
                 setAge(DateUtils.DateDiffInYears(DateUtils.getDateAsSentFromBrowser(getDateOfBirth())));
@@ -1112,5 +1148,17 @@ public class ClientCustActionForm extends CustomerActionForm {
 
     public void setParentCustomerMeeting(MeetingBO parentCustomerMeeting) {
         this.parentCustomerMeeting = parentCustomerMeeting;
+    }
+
+
+    public List<QuestionGroupDetail> getQuestionGroupDetails() {
+        List<QuestionGroupDetail> questionGroupDetails = new LinkedList<QuestionGroupDetail>();
+        List<QuestionGroupDto> groupDtos = getQuestionGroupDtos();
+        if (groupDtos != null) {
+            for (QuestionGroupDto questionGroupDto : groupDtos) {
+                questionGroupDetails.add(questionGroupDto.getQuestionGroupDetail());
+            }
+        }
+        return questionGroupDetails;
     }
 }

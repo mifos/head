@@ -88,7 +88,12 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public void saveResponses(List<QuestionGroupDetail> questionGroupDetails) {
+    public void saveResponses(QuestionGroupDetails questionGroupDetails) {
         questionnaireService.saveResponses(questionGroupDetails);
+    }
+
+    @Override
+    public void validateResponses(List<QuestionGroupDetail> questionGroupDetails) {
+        questionnaireService.validateResponses(questionGroupDetails);
     }
 }

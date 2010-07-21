@@ -26,7 +26,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
-import org.mifos.platform.questionnaire.domain.*;//NOPMD
+import org.mifos.platform.questionnaire.domain.AnswerType;
+import org.mifos.platform.questionnaire.domain.EventSourceEntity;
+import org.mifos.platform.questionnaire.domain.QuestionChoiceEntity;
+import org.mifos.platform.questionnaire.domain.QuestionEntity;
+import org.mifos.platform.questionnaire.domain.QuestionGroup;
+import org.mifos.platform.questionnaire.domain.QuestionGroupInstance;
+import org.mifos.platform.questionnaire.domain.QuestionGroupResponse;
+import org.mifos.platform.questionnaire.domain.QuestionGroupState;
+import org.mifos.platform.questionnaire.domain.QuestionnaireService;
+import org.mifos.platform.questionnaire.domain.Section;
 import org.mifos.platform.questionnaire.matchers.EventSourcesMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionChoicesMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
@@ -40,12 +49,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;      //NOPMD
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Set;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.*;  //NOPMD
-import static org.junit.Assert.*;   //NOPMD
-import static org.mifos.platform.questionnaire.service.QuestionType.*;   //NOPMD
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/test-questionnaire-dbContext.xml", "/test-questionnaire-persistenceContext.xml", "/META-INF/spring/QuestionnaireContext.xml"})
@@ -71,16 +83,16 @@ public class QuestionnaireServiceIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldDefineQuestion() throws SystemException {
         String questionTitle = TITLE + System.currentTimeMillis();
-        QuestionDetail questionDetail = defineQuestion(questionTitle, DATE);
+        QuestionDetail questionDetail = defineQuestion(questionTitle, QuestionType.DATE);
         assertNotNull(questionDetail);
         Integer questionId = questionDetail.getId();
         assertNotNull(questionId);
         QuestionEntity questionEntity = questionDao.getDetails(questionId);
         assertNotNull(questionEntity);
-        assertEquals(questionTitle, questionEntity.getShortName());
-        assertEquals(questionTitle, questionEntity.getQuestionText());
-        assertEquals(AnswerType.DATE, questionEntity.getAnswerTypeAsEnum());
-        assertEquals(questionDetail.getAnswerChoices(), asList());
+        Assert.assertEquals(questionTitle, questionEntity.getShortName());
+        Assert.assertEquals(questionTitle, questionEntity.getQuestionText());
+        Assert.assertEquals(AnswerType.DATE, questionEntity.getAnswerTypeAsEnum());
+        Assert.assertEquals(questionDetail.getAnswerChoices(), Arrays.asList());
     }
 
     @Test
@@ -93,34 +105,34 @@ public class QuestionnaireServiceIntegrationTest {
         assertNotNull(questionId);
         QuestionEntity questionEntity = questionDao.getDetails(questionId);
         assertNotNull(questionEntity);
-        assertEquals(questionTitle, questionEntity.getShortName());
-        assertEquals(questionTitle, questionEntity.getQuestionText());
-        assertEquals(AnswerType.MULTISELECT, questionEntity.getAnswerTypeAsEnum());
-        assertThat(questionEntity.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2"))));
+        Assert.assertEquals(questionTitle, questionEntity.getShortName());
+        Assert.assertEquals(questionTitle, questionEntity.getQuestionText());
+        Assert.assertEquals(AnswerType.MULTISELECT, questionEntity.getAnswerTypeAsEnum());
+        Assert.assertThat(questionEntity.getChoices(), new QuestionChoicesMatcher(Arrays.asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2"))));
     }
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldDefineSingleSelectQuestion() throws SystemException {
         String questionTitle = TITLE + System.currentTimeMillis();
-        QuestionDetail questionDetail = defineQuestion(questionTitle, QuestionType.SINGLE_SELECT, asList("choice1", "choice2"));
+        QuestionDetail questionDetail = defineQuestion(questionTitle, QuestionType.SINGLE_SELECT, Arrays.asList("choice1", "choice2"));
         assertNotNull(questionDetail);
         Integer questionId = questionDetail.getId();
         assertNotNull(questionId);
         QuestionEntity questionEntity = questionDao.getDetails(questionId);
         assertNotNull(questionEntity);
-        assertEquals(questionTitle, questionEntity.getShortName());
-        assertEquals(questionTitle, questionEntity.getQuestionText());
-        assertEquals(AnswerType.SINGLESELECT, questionEntity.getAnswerTypeAsEnum());
-        assertThat(questionEntity.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2"))));
+        Assert.assertEquals(questionTitle, questionEntity.getShortName());
+        Assert.assertEquals(questionTitle, questionEntity.getQuestionText());
+        Assert.assertEquals(AnswerType.SINGLESELECT, questionEntity.getAnswerTypeAsEnum());
+        Assert.assertThat(questionEntity.getChoices(), new QuestionChoicesMatcher(Arrays.asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2"))));
     }
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldDefineQuestionGroup() throws SystemException {
         String title = TITLE + System.currentTimeMillis();
-        QuestionDetail questionDetail1 = defineQuestion(title + 1, NUMERIC);
-        QuestionDetail questionDetail2 = defineQuestion(title + 2, FREETEXT);
+        QuestionDetail questionDetail1 = defineQuestion(title + 1, QuestionType.NUMERIC);
+        QuestionDetail questionDetail2 = defineQuestion(title + 2, QuestionType.FREETEXT);
         SectionDetail section1 = getSectionWithQuestionId("S1", questionDetail1.getId());
         SectionDetail section2 = getSectionWithQuestionId("S2", questionDetail2.getId());
         QuestionGroupDetail questionGroupDetail = defineQuestionGroup(title, "Create", "Client", Arrays.asList(section1, section2), true);
@@ -133,11 +145,11 @@ public class QuestionnaireServiceIntegrationTest {
         Assert.assertEquals(QuestionGroupState.ACTIVE, questionGroup.getState());
         Assert.assertEquals(true, questionGroup.isEditable());
         List<Section> sections = questionGroup.getSections();
-        assertEquals(2, sections.size());
-        assertEquals("S1", sections.get(0).getName());
-        assertEquals(title + 1, sections.get(0).getQuestions().get(0).getQuestion().getShortName());
-        assertEquals("S2", sections.get(1).getName());
-        assertEquals(title + 2, sections.get(1).getQuestions().get(0).getQuestion().getShortName());
+        Assert.assertEquals(2, sections.size());
+        Assert.assertEquals("S1", sections.get(0).getName());
+        Assert.assertEquals(title + 1, sections.get(0).getQuestions().get(0).getQuestion().getShortName());
+        Assert.assertEquals("S2", sections.get(1).getName());
+        Assert.assertEquals(title + 2, sections.get(1).getQuestions().get(0).getQuestion().getShortName());
         verifyCreationDate(questionGroup);
         verifyEventSources(questionGroup);
     }
@@ -146,20 +158,20 @@ public class QuestionnaireServiceIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldGetAllQuestions() throws SystemException {
         int initialCountOfQuestions = questionnaireService.getAllQuestions().size();
-        QuestionDetail questionDetail2 = defineQuestion("Q2" + System.currentTimeMillis(), FREETEXT);
-        QuestionDetail questionDetail1 = defineQuestion("Q1" + System.currentTimeMillis(), NUMERIC);
+        QuestionDetail questionDetail2 = defineQuestion("Q2" + System.currentTimeMillis(), QuestionType.FREETEXT);
+        QuestionDetail questionDetail1 = defineQuestion("Q1" + System.currentTimeMillis(), QuestionType.NUMERIC);
         List<String> expectedOrderTitles = Arrays.asList(questionDetail1.getShortName(), questionDetail2.getShortName());
         List<Integer> expectedOrderIds = Arrays.asList(questionDetail1.getId(), questionDetail2.getId());
         List<QuestionDetail> questionDetails = questionnaireService.getAllQuestions();
         int finalCountOfQuestions = questionDetails.size();
-        assertThat(finalCountOfQuestions - initialCountOfQuestions, is(2));
+        Assert.assertThat(finalCountOfQuestions - initialCountOfQuestions, is(2));
         List<QuestionDetail> actualQuestions = new ArrayList<QuestionDetail>();
         for (QuestionDetail questionDetail : questionDetails) {
             if (expectedOrderIds.contains(questionDetail.getId()))
                 actualQuestions.add(questionDetail);
         }
-        assertThat(actualQuestions.get(0).getShortName(), is(expectedOrderTitles.get(0)));
-        assertThat(actualQuestions.get(1).getShortName(), is(expectedOrderTitles.get(1)));
+        Assert.assertThat(actualQuestions.get(0).getShortName(), is(expectedOrderTitles.get(0)));
+        Assert.assertThat(actualQuestions.get(1).getShortName(), is(expectedOrderTitles.get(1)));
     }
 
     @Test
@@ -174,8 +186,8 @@ public class QuestionnaireServiceIntegrationTest {
         defineQuestionGroup(questionGroupTitle2, "Create", "Client", sectionsForQG2,false);
         List<QuestionGroupDetail> questionGroups = questionnaireService.getAllQuestionGroups();
         int finalCount = questionGroups.size();
-        assertThat(finalCount - initialCount, is(2));
-        assertThat(questionGroups, Matchers.hasItems(getQuestionGroupDetailMatcher(questionGroupTitle1, sectionsForQG1),
+        Assert.assertThat(finalCount - initialCount, is(2));
+        Assert.assertThat(questionGroups, Matchers.hasItems(getQuestionGroupDetailMatcher(questionGroupTitle1, sectionsForQG1),
                 getQuestionGroupDetailMatcher(questionGroupTitle2, sectionsForQG2)));
     }
 
@@ -186,18 +198,18 @@ public class QuestionnaireServiceIntegrationTest {
         List<SectionDetail> details = Arrays.asList(getSection("S1"), getSection("S2"));
         QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title, "Create", "Client", details,true);
         QuestionGroupDetail retrievedQuestionGroupDetail = questionnaireService.getQuestionGroup(createdQuestionGroupDetail.getId());
-        assertNotSame(createdQuestionGroupDetail, retrievedQuestionGroupDetail);
-        assertThat(retrievedQuestionGroupDetail.getTitle(), is(title));
+        Assert.assertNotSame(createdQuestionGroupDetail, retrievedQuestionGroupDetail);
+        Assert.assertThat(retrievedQuestionGroupDetail.getTitle(), is(title));
         List<SectionDetail> sectionDetails = retrievedQuestionGroupDetail.getSectionDetails();
-        assertThat(sectionDetails, is(not(nullValue())));
-        assertThat(sectionDetails.size(), is(2));
+        Assert.assertThat(sectionDetails, is(notNullValue()));
+        Assert.assertThat(sectionDetails.size(), is(2));
         List<SectionDetail> sectionDetailList = retrievedQuestionGroupDetail.getSectionDetails();
-        assertThat(sectionDetailList.get(0).getName(), is("S1"));
-        assertThat(sectionDetailList.get(1).getName(), is("S2"));
+        Assert.assertThat(sectionDetailList.get(0).getName(), is("S1"));
+        Assert.assertThat(sectionDetailList.get(1).getName(), is("S2"));
         EventSource eventSource = retrievedQuestionGroupDetail.getEventSource();
-        assertThat(eventSource, is(not(nullValue())));
-        assertThat(eventSource.getEvent(), is("Create"));
-        assertThat(eventSource.getSource(), is("Client"));
+        Assert.assertThat(eventSource, is(notNullValue()));
+        Assert.assertThat(eventSource.getEvent(), is("Create"));
+        Assert.assertThat(eventSource.getSource(), is("Client"));
     }
 
     @Test
@@ -208,45 +220,45 @@ public class QuestionnaireServiceIntegrationTest {
         SectionDetail sectionDefinition1 = new SectionDetail();
         sectionDefinition1.setName("Section1");
         String section1Question1 = "Q2_" + System.currentTimeMillis();
-        sectionDefinition1.addQuestion(new SectionQuestionDetail(defineQuestion(section1Question1, FREETEXT), false));
+        sectionDefinition1.addQuestion(new SectionQuestionDetail(defineQuestion(section1Question1, QuestionType.FREETEXT), false));
         String section1Question2 = "Q1_" + System.currentTimeMillis();
-        sectionDefinition1.addQuestion(new SectionQuestionDetail(defineQuestion(section1Question2, NUMERIC), true));
+        sectionDefinition1.addQuestion(new SectionQuestionDetail(defineQuestion(section1Question2, QuestionType.NUMERIC), true));
         String section1Question3 = "Q3_" + System.currentTimeMillis();
-        sectionDefinition1.addQuestion(new SectionQuestionDetail(defineQuestion(section1Question3, DATE), true));
+        sectionDefinition1.addQuestion(new SectionQuestionDetail(defineQuestion(section1Question3, QuestionType.DATE), true));
 
         SectionDetail sectionDefinition2 = new SectionDetail();
         sectionDefinition2.setName("Section2");
         String section2Question1 = "S2_" + System.currentTimeMillis();
-        sectionDefinition2.addQuestion(new SectionQuestionDetail(defineQuestion(section2Question1, FREETEXT), false));
+        sectionDefinition2.addQuestion(new SectionQuestionDetail(defineQuestion(section2Question1, QuestionType.FREETEXT), false));
         String section2Question2 = "S3_" + System.currentTimeMillis();
-        sectionDefinition2.addQuestion(new SectionQuestionDetail(defineQuestion(section2Question2, DATE), true));
+        sectionDefinition2.addQuestion(new SectionQuestionDetail(defineQuestion(section2Question2, QuestionType.DATE), true));
         String section2Question3 = "S1_" + System.currentTimeMillis();
-        sectionDefinition2.addQuestion(new SectionQuestionDetail(defineQuestion(section2Question3, NUMERIC), true));
+        sectionDefinition2.addQuestion(new SectionQuestionDetail(defineQuestion(section2Question3, QuestionType.NUMERIC), true));
 
         int questionGroupId = defineQuestionGroup(qgTitle, "Create", "Client", Arrays.asList(sectionDefinition1, sectionDefinition2), false).getId();
         QuestionGroupDetail questionGroupDetail = questionnaireService.getQuestionGroup(questionGroupId);
-        assertThat(questionGroupDetail, Matchers.notNullValue());
+        Assert.assertThat(questionGroupDetail, Matchers.notNullValue());
         List<SectionDetail> sectionDetails = questionGroupDetail.getSectionDetails();
-        assertThat(sectionDetails, Matchers.notNullValue());
-        assertThat(sectionDetails.size(), is(2));
+        Assert.assertThat(sectionDetails, Matchers.notNullValue());
+        Assert.assertThat(sectionDetails.size(), is(2));
 
         SectionDetail section1 = sectionDetails.get(0);
-        assertThat(section1.getName(), is("Section1"));
+        Assert.assertThat(section1.getName(), is("Section1"));
         List<SectionQuestionDetail> questions1 = section1.getQuestions();
-        assertThat(questions1, Matchers.notNullValue());
-        assertThat(questions1.size(), is(3));
-        assertThat(questions1.get(0).getTitle(), is(section1Question1));
-        assertThat(questions1.get(1).getTitle(), is(section1Question2));
-        assertThat(questions1.get(2).getTitle(), is(section1Question3));
+        Assert.assertThat(questions1, Matchers.notNullValue());
+        Assert.assertThat(questions1.size(), is(3));
+        Assert.assertThat(questions1.get(0).getTitle(), is(section1Question1));
+        Assert.assertThat(questions1.get(1).getTitle(), is(section1Question2));
+        Assert.assertThat(questions1.get(2).getTitle(), is(section1Question3));
 
         SectionDetail section2 = sectionDetails.get(1);
-        assertThat(section2.getName(), is("Section2"));
+        Assert.assertThat(section2.getName(), is("Section2"));
         List<SectionQuestionDetail> questions2 = section2.getQuestions();
-        assertThat(questions2, Matchers.notNullValue());
-        assertThat(questions2.size(), is(3));
-        assertThat(questions2.get(0).getTitle(), is(section2Question1));
-        assertThat(questions2.get(1).getTitle(), is(section2Question2));
-        assertThat(questions2.get(2).getTitle(), is(section2Question3));
+        Assert.assertThat(questions2, Matchers.notNullValue());
+        Assert.assertThat(questions2.size(), is(3));
+        Assert.assertThat(questions2.get(0).getTitle(), is(section2Question1));
+        Assert.assertThat(questions2.get(1).getTitle(), is(section2Question2));
+        Assert.assertThat(questions2.get(2).getTitle(), is(section2Question3));
     }
 
     @Test
@@ -258,7 +270,7 @@ public class QuestionnaireServiceIntegrationTest {
         try {
             questionnaireService.getQuestionGroup(maxQuestionGroupId + 1);
         } catch (SystemException e) {
-            assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
+            Assert.assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
         }
     }
 
@@ -268,33 +280,33 @@ public class QuestionnaireServiceIntegrationTest {
         String title = "Q1" + System.currentTimeMillis();
         QuestionDetail createdQuestionDetail = defineQuestion(title, QuestionType.FREETEXT);
         QuestionDetail retrievedQuestionDetail = questionnaireService.getQuestion(createdQuestionDetail.getId());
-        assertNotSame(createdQuestionDetail, retrievedQuestionDetail);
-        assertThat(retrievedQuestionDetail.getText(), is(title));
-        assertThat(retrievedQuestionDetail.getShortName(), is(title));
-        assertThat(retrievedQuestionDetail.getType(), is(QuestionType.FREETEXT));
+        Assert.assertNotSame(createdQuestionDetail, retrievedQuestionDetail);
+        Assert.assertThat(retrievedQuestionDetail.getText(), is(title));
+        Assert.assertThat(retrievedQuestionDetail.getShortName(), is(title));
+        Assert.assertThat(retrievedQuestionDetail.getType(), is(QuestionType.FREETEXT));
     }
 
     public void shouldGetQuestionWithAnswerChoicesById() throws SystemException {
         String title = "Q1" + System.currentTimeMillis();
-        QuestionDetail createdQuestionDetail = defineQuestion(title, QuestionType.MULTI_SELECT, asList("choice1", "choice2"));
+        QuestionDetail createdQuestionDetail = defineQuestion(title, QuestionType.MULTI_SELECT, Arrays.asList("choice1", "choice2"));
         QuestionDetail retrievedQuestionDetail = questionnaireService.getQuestion(createdQuestionDetail.getId());
-        assertNotSame(createdQuestionDetail, retrievedQuestionDetail);
-        assertThat(retrievedQuestionDetail.getText(), is(title));
-        assertThat(retrievedQuestionDetail.getShortName(), is(title));
-        assertThat(retrievedQuestionDetail.getType(), is(QuestionType.MULTI_SELECT));
-        assertEquals(retrievedQuestionDetail.getAnswerChoices(), asList("choice1", "choice2"));
+        Assert.assertNotSame(createdQuestionDetail, retrievedQuestionDetail);
+        Assert.assertThat(retrievedQuestionDetail.getText(), is(title));
+        Assert.assertThat(retrievedQuestionDetail.getShortName(), is(title));
+        Assert.assertThat(retrievedQuestionDetail.getType(), is(QuestionType.MULTI_SELECT));
+        Assert.assertEquals(retrievedQuestionDetail.getAnswerChoices(), Arrays.asList("choice1", "choice2"));
     }
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void testGetQuestionByIdFailure() throws SystemException {
         String title = "Q1" + System.currentTimeMillis();
-        QuestionDetail createdQuestionDetail = defineQuestion(title, DATE);
+        QuestionDetail createdQuestionDetail = defineQuestion(title, QuestionType.DATE);
         Integer maxQuestionId = createdQuestionDetail.getId();
         try {
             questionnaireService.getQuestion(maxQuestionId + 1);
         } catch (SystemException e) {
-            assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_NOT_FOUND));
+            Assert.assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_NOT_FOUND));
         }
     }
 
@@ -303,9 +315,9 @@ public class QuestionnaireServiceIntegrationTest {
     public void shouldThrowExceptionForDuplicateQuestion() throws SystemException {
         long offset = System.currentTimeMillis();
         String questionTitle = TITLE + offset;
-        defineQuestion(questionTitle, DATE);
+        defineQuestion(questionTitle, QuestionType.DATE);
         try {
-            defineQuestion(questionTitle, FREETEXT);
+            defineQuestion(questionTitle, QuestionType.FREETEXT);
             Assert.fail("Exception should have been thrown for duplicate question title");
         } catch (SystemException e) {
             Assert.assertEquals(QuestionnaireConstants.DUPLICATE_QUESTION, e.getKey());
@@ -317,10 +329,10 @@ public class QuestionnaireServiceIntegrationTest {
     public void testIsDuplicateQuestion() throws SystemException {
         String questionTitle = TITLE + System.currentTimeMillis();
         boolean result = questionnaireService.isDuplicateQuestionTitle(questionTitle);
-        assertThat(result, is(false));
-        defineQuestion(questionTitle, DATE);
+        Assert.assertThat(result, is(false));
+        defineQuestion(questionTitle, QuestionType.DATE);
         result = questionnaireService.isDuplicateQuestionTitle(questionTitle);
-        assertThat(result, is(true));
+        Assert.assertThat(result, is(true));
     }
 
     @Test
@@ -328,7 +340,7 @@ public class QuestionnaireServiceIntegrationTest {
     public void shouldRetrieveAllEventSources() {
         List<EventSource> eventSources = questionnaireService.getAllEventSources();
         assertNotNull(eventSources);
-        assertThat(eventSources, new EventSourcesMatcher(asList(new EventSource("Create", "Client", "Create Client"))));
+        Assert.assertThat(eventSources, new EventSourcesMatcher(Arrays.asList(new EventSource("Create", "Client", "Create Client"))));
     }
 
     @Test
@@ -338,10 +350,36 @@ public class QuestionnaireServiceIntegrationTest {
         List<SectionDetail> details = Arrays.asList(getSection("S1"), getSection("S2"));
         QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details, false);
         List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
-        assertThat(questionGroups, is(notNullValue()));
+        Assert.assertThat(questionGroups, is(notNullValue()));
         QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
         Assert.assertThat(actualQGDetail, is(notNullValue()));
         Assert.assertThat(actualQGDetail.getTitle(), is(title));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldSaveResponse() throws SystemException {
+        String title = "QG1" + System.currentTimeMillis();
+        List<SectionDetail> details = Arrays.asList(getSection("S1"), getSection("S2"));
+        QuestionGroupDetail questionGroupDetail = defineQuestionGroup(title, "Create", "Client", details, true);
+        questionGroupDetail.getSectionDetail(0).getQuestionDetail(0).setValue("value1");
+        questionGroupDetail.getSectionDetail(1).getQuestionDetail(0).setValue("value2");
+        questionnaireService.saveResponses(new QuestionGroupDetails(1, 1, Arrays.asList(questionGroupDetail)));
+        Assert.assertEquals(questionGroupInstanceDao.getDetailsAll().get(0).getQuestionGroupResponses().get(0).getResponse(), "value1");
+        Assert.assertEquals(questionGroupInstanceDao.getDetailsAll().get(0).getQuestionGroupResponses().get(1).getResponse(), "value2");
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldNotGetInActiveQuestionGroupsByEventAndSource() throws SystemException {
+        String title = "QG1" + System.currentTimeMillis();
+        List<SectionDetail> details = Arrays.asList(getSection("S1"), getSection("S2"));
+        QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details, true);
+        setState(expectedQGDetail.getId(), QuestionGroupState.INACTIVE);
+        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
+        Assert.assertThat(questionGroups, is(notNullValue()));
+        QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
+        Assert.assertThat(actualQGDetail, is(Matchers.nullValue()));
     }
 
     @Test
@@ -359,19 +397,29 @@ public class QuestionnaireServiceIntegrationTest {
         questionGroupInstance.setEntityId(101);
         questionGroupInstance.setVersionNum(1);
         List<QuestionGroupResponse> groupResponses = new ArrayList<QuestionGroupResponse>();
-        QuestionGroupResponse questionGroupResponse = new QuestionGroupResponse();
-        questionGroupResponse.setResponse("Foo Bar");
+        QuestionGroupResponse questionGroupResponse;
+        questionGroupResponse = new QuestionGroupResponse();
+        questionGroupResponse.setResponse("Foo Bar1");
         questionGroupResponse.setQuestionGroupInstance(questionGroupInstance);
         questionGroupResponse.setSectionQuestion(questionGroup.getSections().get(0).getQuestions().get(0));
+        groupResponses.add(questionGroupResponse);
+        questionGroupResponse = new QuestionGroupResponse();
+        questionGroupResponse.setResponse("Foo Bar2");
+        questionGroupResponse.setQuestionGroupInstance(questionGroupInstance);
         questionGroupResponse.setSectionQuestion(questionGroup.getSections().get(1).getQuestions().get(0));
         groupResponses.add(questionGroupResponse);
         questionGroupInstance.setQuestionGroupResponses(groupResponses);
-        Integer id = questionGroupInstanceDao.create(questionGroupInstance);
-        QuestionGroupInstance groupInstance = questionGroupInstanceDao.getDetails(id);
-        assertThat(groupInstance, is(notNullValue()));
-        assertThat(groupInstance.getQuestionGroupResponses(), is(notNullValue()));
-        assertThat(groupInstance.getQuestionGroupResponses().get(0).getSectionQuestion(), is(notNullValue()));
-        assertThat(groupInstance.getQuestionGroupResponses().get(0).getResponse(), is("Foo Bar"));
+        questionGroupInstanceDao.saveOrUpdateAll(Arrays.asList(questionGroupInstance));
+        QuestionGroupInstance groupInstance = questionGroupInstanceDao.getDetails(questionGroupInstance.getId());
+        Assert.assertThat(groupInstance, is(notNullValue()));
+        Assert.assertThat(groupInstance.getQuestionGroupResponses(), is(notNullValue()));
+        Assert.assertThat(groupInstance.getQuestionGroupResponses().size(), is(2));
+        Assert.assertThat(groupInstance.getQuestionGroupResponses().get(0).getSectionQuestion(), is(notNullValue()));
+        Assert.assertThat(groupInstance.getQuestionGroupResponses().get(0).getSectionQuestion(), is(questionGroup.getSections().get(0).getQuestions().get(0)));
+        Assert.assertThat(groupInstance.getQuestionGroupResponses().get(0).getResponse(), is("Foo Bar1"));
+        Assert.assertThat(groupInstance.getQuestionGroupResponses().get(1).getSectionQuestion(), is(notNullValue()));
+        Assert.assertThat(groupInstance.getQuestionGroupResponses().get(1).getSectionQuestion(), is(questionGroup.getSections().get(1).getQuestions().get(0)));
+        Assert.assertThat(groupInstance.getQuestionGroupResponses().get(1).getResponse(), is("Foo Bar2"));
     }
 
     private void setState(Integer id, QuestionGroupState questionGroupState) {
@@ -396,7 +444,7 @@ public class QuestionnaireServiceIntegrationTest {
         SectionDetail section = new SectionDetail();
         section.setName(name);
         String questionTitle = "Question" + name + System.currentTimeMillis();
-        QuestionDetail questionDetail = defineQuestion(questionTitle, NUMERIC);
+        QuestionDetail questionDetail = defineQuestion(questionTitle, QuestionType.NUMERIC);
         section.addQuestion(new SectionQuestionDetail(questionDetail, true));
         return section;
     }
@@ -412,19 +460,19 @@ public class QuestionnaireServiceIntegrationTest {
         Calendar creationDate = Calendar.getInstance();
         creationDate.setTime(questionGroup.getDateOfCreation());
         Calendar currentDate = Calendar.getInstance();
-        assertThat(creationDate.get(Calendar.DATE), is(currentDate.get(Calendar.DATE)));
-        assertThat(creationDate.get(Calendar.MONTH), is(currentDate.get(Calendar.MONTH)));
-        assertThat(creationDate.get(Calendar.YEAR), is(currentDate.get(Calendar.YEAR)));
+        Assert.assertThat(creationDate.get(Calendar.DATE), is(currentDate.get(Calendar.DATE)));
+        Assert.assertThat(creationDate.get(Calendar.MONTH), is(currentDate.get(Calendar.MONTH)));
+        Assert.assertThat(creationDate.get(Calendar.YEAR), is(currentDate.get(Calendar.YEAR)));
     }
 
     private void verifyEventSources(QuestionGroup questionGroup) {
         Set<EventSourceEntity> eventSources = questionGroup.getEventSources();
         assertNotNull(eventSources);
-        assertEquals(1, eventSources.size());
+        Assert.assertEquals(1, eventSources.size());
         EventSourceEntity eventSourceEntity = eventSources.toArray(new EventSourceEntity[eventSources.size()])[0];
-        assertEquals("Create", eventSourceEntity.getEvent().getName());
-        assertEquals("Client", eventSourceEntity.getSource().getEntityType());
-        assertEquals("Create Client", eventSourceEntity.getDescription());
+        Assert.assertEquals("Create", eventSourceEntity.getEvent().getName());
+        Assert.assertEquals("Client", eventSourceEntity.getSource().getEntityType());
+        Assert.assertEquals("Create Client", eventSourceEntity.getDescription());
     }
 
     private QuestionGroupDetailMatcher getQuestionGroupDetailMatcher(String questionGroupTitle, List<SectionDetail> sectionDetails) {
