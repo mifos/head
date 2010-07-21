@@ -32,7 +32,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"admin","acceptance","ui"})
+@Test(sequential = true, groups = {"admin","acceptance","ui"}, enabled=false)
 public class DefineLabelsTest  extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -50,6 +50,7 @@ public class DefineLabelsTest  extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    @Test(enabled=false)
     public void defineLabelsTest() {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         DefineLabelsPage defineLabelsPage = adminPage.navigateToDefineLabelsPage();

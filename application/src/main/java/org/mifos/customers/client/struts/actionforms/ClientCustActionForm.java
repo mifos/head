@@ -1153,8 +1153,11 @@ public class ClientCustActionForm extends CustomerActionForm {
 
     public List<QuestionGroupDetail> getQuestionGroupDetails() {
         List<QuestionGroupDetail> questionGroupDetails = new LinkedList<QuestionGroupDetail>();
-        for (QuestionGroupDto questionGroupDto : getQuestionGroupDtos()) {
-            questionGroupDetails.add(questionGroupDto.getQuestionGroupDetail());
+        List<QuestionGroupDto> groupDtos = getQuestionGroupDtos();
+        if (groupDtos != null) {
+            for (QuestionGroupDto questionGroupDto : groupDtos) {
+                questionGroupDetails.add(questionGroupDto.getQuestionGroupDetail());
+            }
         }
         return questionGroupDetails;
     }
