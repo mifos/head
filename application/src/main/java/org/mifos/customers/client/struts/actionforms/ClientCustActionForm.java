@@ -417,7 +417,8 @@ public class ClientCustActionForm extends CustomerActionForm {
             } catch (ValidationException e) {
                 if (e.containsChildExceptions()) {
                     for (ValidationException validationException : e.getChildExceptions()) {
-                        errors.add(validationException.getKey(), new ActionMessage(validationException.getKey()));
+                        ActionMessage actionMessage = new ActionMessage(ClientConstants.ERROR_REQUIRED, validationException.getSectionQuestionDetail().getTitle());
+                        errors.add(ClientConstants.ERROR_REQUIRED, actionMessage);
                     }
                 }
             }
