@@ -26,6 +26,8 @@ import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 import junit.framework.Assert;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
@@ -50,6 +52,7 @@ public class ReportProductOfferingServiceIntegrationTest extends MifosIntegratio
     private SavingsPrdBusinessService savingsProductBusinessServiceMock;
     private ClassPathResource reportProductOfferingConfig;
 
+    @Test
     public void testGetLoanOffering1ReturnsLoanOffering() throws Exception {
         LoanOfferingBO loanOffering1 = LoanOfferingBO.createInstanceForTest(LOAN_OFFERING_1_ID);
         expect(loanPrdBusinessServiceMock.getLoanOffering(LOAN_OFFERING_1_ID)).andReturn(loanOffering1);
@@ -59,6 +62,7 @@ public class ReportProductOfferingServiceIntegrationTest extends MifosIntegratio
        Assert.assertEquals(loanOffering1, retrievedLoanOffering);
     }
 
+    @Test
     public void testGetLoanOffering2ReturnsLoanOffering() throws Exception {
         LoanOfferingBO loanOffering2 = LoanOfferingBO.createInstanceForTest(LOAN_OFFERING_2_ID);
         expect(loanPrdBusinessServiceMock.getLoanOffering(LOAN_OFFERING_2_ID)).andReturn(loanOffering2);
@@ -68,6 +72,7 @@ public class ReportProductOfferingServiceIntegrationTest extends MifosIntegratio
        Assert.assertEquals(loanOffering2, retrievedLoanOffering);
     }
 
+    @Test
     public void testGetSavingsOffering1ReturnsSavingsOffering() throws Exception {
         SavingsOfferingBO savingsOffering1 = SavingsOfferingBO.createInstanceForTest(SAVINGS_OFFERING_1_ID);
         expect(savingsProductBusinessServiceMock.getSavingsProduct(SAVINGS_OFFERING_1_ID)).andReturn(savingsOffering1);
@@ -77,6 +82,7 @@ public class ReportProductOfferingServiceIntegrationTest extends MifosIntegratio
        Assert.assertEquals(savingsOffering1, retrievedSavingsOffering);
     }
 
+    @Test
     public void testGetSavingsOffering2ReturnsSavingsOffering() throws Exception {
         SavingsOfferingBO savingsOffering2 = SavingsOfferingBO.createInstanceForTest(SAVINGS_OFFERING_2_ID);
         expect(savingsProductBusinessServiceMock.getSavingsProduct(SAVINGS_OFFERING_2_ID)).andReturn(savingsOffering2);
@@ -86,6 +92,7 @@ public class ReportProductOfferingServiceIntegrationTest extends MifosIntegratio
        Assert.assertEquals(savingsOffering2, retrievedSavingsOffering);
     }
 
+    @Test
     public void testFindsReportProductOfferingConfigFile() throws Exception {
         try {
             reportProductOfferingService = new ReportProductOfferingService(null, null, reportProductOfferingConfig);
@@ -94,6 +101,7 @@ public class ReportProductOfferingServiceIntegrationTest extends MifosIntegratio
         }
     }
 
+    @Test
     public void testFindsSignatureConfigProperties() throws Exception {
         retrieveAndAssertSignatureColumn("1");
         retrieveAndAssertSignatureColumn("2");
@@ -108,6 +116,7 @@ public class ReportProductOfferingServiceIntegrationTest extends MifosIntegratio
                 .isPropertyPresent(ReportConfigServiceConstants.DISPLAY_SIGNATURE_COLUMN + "." + signatureColumnNumber));
     }
 
+    @Test
     public void testThrowsExceptionIfConfigFileNotFound() throws Exception {
         try {
             reportProductOfferingService = new ReportProductOfferingService(null, null, new ClassPathResource(
@@ -117,9 +126,8 @@ public class ReportProductOfferingServiceIntegrationTest extends MifosIntegratio
         }
     }
 
-    @Override
+    @Before
     protected void setUp() throws Exception {
-        super.setUp();
         loanPrdBusinessServiceMock = createMock(LoanPrdBusinessService.class);
         savingsProductBusinessServiceMock = createMock(SavingsPrdBusinessService.class);
         reportProductOfferingConfig = new ClassPathResource(FilePaths.REPORT_PRODUCT_OFFERING_CONFIG);

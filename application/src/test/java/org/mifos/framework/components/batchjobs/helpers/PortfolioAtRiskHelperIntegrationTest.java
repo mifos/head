@@ -25,6 +25,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -62,13 +65,12 @@ public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCa
 
     protected CustomerBO client = null;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         try {
             TestObjectFactory.cleanUp(account2);
             TestObjectFactory.cleanUp(account1);
@@ -80,7 +82,6 @@ public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCa
             TestDatabase.resetMySQLDatabase();
         }
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
     // PortfolioAtRisk needs this LoanArrearsTask to run successfully first
@@ -98,6 +99,7 @@ public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCa
 
     }
 
+    @Test
     public void testExecute() throws Exception {
         Task task = insertLoanArrearsTask();
         createInitialObject();

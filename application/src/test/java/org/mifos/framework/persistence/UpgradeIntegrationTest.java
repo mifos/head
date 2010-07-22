@@ -26,6 +26,8 @@ import java.sql.Statement;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.testng.annotations.Test;
@@ -39,28 +41,30 @@ public class UpgradeIntegrationTest extends MifosIntegrationTestCase {
 
     private Connection connection;
 
-    @Override
+    @Before
     public void setUp() {
         connection = StaticHibernateUtil.getSessionTL().connection();
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         databaseWithVersion();
     }
 
-
+    @Test
     public void testIncrementVersion() throws Exception {
         databaseWithVersion();
         new DummyUpgrade(DatabaseVersionPersistence.APPLICATION_VERSION + 1).upgradeVersion(connection);
        Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION + 1, new DatabaseVersionPersistence(connection).read());
     }
 
+    @Test
     public void testNotReadyToIncrement() throws Exception {
         new DummyUpgrade(DatabaseVersionPersistence.APPLICATION_VERSION + 2).upgradeVersion(connection);
        Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, new DatabaseVersionPersistence(connection).read());
     }
 
+    @Test
     public void testValidateLookupValueKey() throws Exception {
         String validKey = "Permissions-Groups-CanBlacklistAGroup";
         String format = "Permissions-";

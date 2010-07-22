@@ -22,6 +22,9 @@ package org.mifos.framework.components.fieldConfiguration.util.helpers;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -37,16 +40,17 @@ public class FieldConfigurationHelperIntegrationTest extends MifosIntegrationTes
 
     private UserContext userContext = TestUtils.makeUser();
 
-    @Override
+    @Before
     protected void setUp() throws Exception {
         MessageLookup.getInstance().setCustomLabel(ConfigurationConstants.ADDRESS3, "Village", userContext);
     }
 
-    @Override
+    @After
     protected void tearDown() throws Exception {
         MessageLookup.getInstance().setCustomLabel(ConfigurationConstants.ADDRESS3, "NULL", userContext);
     }
 
+    @Test
     public void testGetConfiguredFieldName() throws Exception {
         String fieldName = FieldConfigurationHelper.getConfiguredFieldName("Center.Address3", TestUtils
                 .makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
@@ -56,6 +60,7 @@ public class FieldConfigurationHelperIntegrationTest extends MifosIntegrationTes
        Assert.assertEquals(null, fieldName);
     }
 
+    @Test
     public void testGetLocalSpecificFieldNames() throws Exception {
         String fieldName = FieldConfigurationHelper.getLocalSpecificFieldNames("Center.Address3", TestUtils
                 .makeUser(RolesAndPermissionConstants.ADMIN_ROLE));

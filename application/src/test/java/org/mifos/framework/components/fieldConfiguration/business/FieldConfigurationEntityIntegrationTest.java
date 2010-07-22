@@ -22,6 +22,7 @@ package org.mifos.framework.components.fieldConfiguration.business;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
@@ -31,6 +32,7 @@ public class FieldConfigurationEntityIntegrationTest extends MifosIntegrationTes
         super();
     }
 
+    @Test
     public void testGetFieldConfigurationEntity() {
         FieldConfigurationEntity fieldConfigurationEntity = (FieldConfigurationEntity) StaticHibernateUtil
                 .getSessionTL().get(FieldConfigurationEntity.class, Integer.valueOf("3"));

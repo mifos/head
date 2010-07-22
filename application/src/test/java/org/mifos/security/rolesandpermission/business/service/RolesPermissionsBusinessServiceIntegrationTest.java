@@ -22,6 +22,8 @@ package org.mifos.security.rolesandpermission.business.service;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -37,16 +39,18 @@ public class RolesPermissionsBusinessServiceIntegrationTest extends MifosIntegra
 
     RolesPermissionsBusinessService rolesPermissionsBusinessService = new RolesPermissionsBusinessService();
 
-    @Override
-    protected void tearDown() throws Exception {
+    @Before
+    public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
-        super.tearDown();
+
     }
 
+    @Test
     public void testGetRoles() throws Exception {
        Assert.assertEquals(2, rolesPermissionsBusinessService.getRoles().size());
     }
 
+    @Test
     public void testGetRolesFailure() {
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -57,10 +61,12 @@ public class RolesPermissionsBusinessServiceIntegrationTest extends MifosIntegra
         }
     }
 
+    @Test
     public void testGetActivities() throws Exception {
        Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT, rolesPermissionsBusinessService.getActivities().size());
     }
 
+    @Test
     public void testGetActivitiesFailure() {
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -71,12 +77,14 @@ public class RolesPermissionsBusinessServiceIntegrationTest extends MifosIntegra
         }
     }
 
+    @Test
     public void testGetRoleForGivenId() throws Exception {
         RoleBO role = rolesPermissionsBusinessService.getRole(Short.valueOf("1"));
         Assert.assertNotNull(role);
        Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE, role.getActivities().size());
     }
 
+    @Test
     public void testGetRoleForGivenIdFailure() {
         TestObjectFactory.simulateInvalidConnection();
         try {

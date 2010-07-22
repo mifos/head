@@ -23,6 +23,7 @@ package org.mifos.framework.struts.tags;
 import junit.framework.Assert;
 
 import org.apache.struts.util.MessageResources;
+import org.junit.Test;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -35,6 +36,7 @@ public class MifosPropertyMessageResourcesIntegrationTest extends MifosIntegrati
         super();
     }
 
+    @Test
     public void testGetMessageLocaleString() {
         MifosPropertyMessageResourcesFactory factory = new MifosPropertyMessageResourcesFactory();
         MessageResources resource = factory.createResources(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);

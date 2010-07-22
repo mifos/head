@@ -25,6 +25,7 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
@@ -44,6 +45,7 @@ public class FieldConfigIntegrationTest extends MifosIntegrationTestCase {
 
     private FieldConfig fieldConfig = FieldConfig.getInstance();
 
+    @Test
     public void testIsFieldHidden() throws HibernateProcessException, PersistenceException {
         EntityMasterData.getInstance().init();
         List<EntityMaster> entityMasterList = persistence.getEntityMasterList();
@@ -56,6 +58,7 @@ public class FieldConfigIntegrationTest extends MifosIntegrationTestCase {
         fieldConfig.getEntityFieldMap().clear();
     }
 
+    @Test
     public void testIsFieldMandatory() throws HibernateProcessException, PersistenceException {
         EntityMasterData.getInstance().init();
         List<EntityMaster> entityMasterList = persistence.getEntityMasterList();
@@ -67,6 +70,7 @@ public class FieldConfigIntegrationTest extends MifosIntegrationTestCase {
         fieldConfig.getEntityFieldMap().clear();
     }
 
+    @Test
     public void testInit() throws HibernateProcessException, ApplicationException {
         EntityMasterData.getInstance().init();
         fieldConfig.init();
