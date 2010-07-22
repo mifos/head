@@ -34,7 +34,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"core","acceptance"})
+@Test(enabled = false, sequential = true, groups = {"core","acceptance"})
 public class DatasetVersionTest extends UiTestCaseBase {
 
     @Autowired
@@ -82,7 +82,7 @@ public class DatasetVersionTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private void verifyDatabaseVersion(String acceptanceDataSetFile) throws Exception {
-        String[] tablesToValidate = { "DATABASE_VERSION" };
+        String[] tablesToValidate = { "applied_upgrades" };
 
         IDataSet acceptanceDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(acceptanceDataSetFile);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
