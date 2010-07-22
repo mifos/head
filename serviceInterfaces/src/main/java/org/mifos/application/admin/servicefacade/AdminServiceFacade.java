@@ -33,7 +33,6 @@ import org.mifos.dto.screen.ProductDto;
 import org.mifos.dto.screen.ProductMixDetailsDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-@SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public interface AdminServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
@@ -54,11 +53,11 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     List<ProductDisplayDto> retrieveSavingsProducts();
 
-    @PreAuthorize("isFullyAuthenticated()")
-    ProductMixDetailsDto retrieveProductMixDetails(Short prdOfferingId, String productType) throws Exception;
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_PRODUCT_MIX')")
+    ProductMixDetailsDto retrieveProductMixDetails(Short prdOfferingId, String productType);
 
-    @PreAuthorize("isFullyAuthenticated()")
-    ProductDto retrieveAllProductMix() throws Exception;
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_PRODUCT_MIX')")
+    ProductDto retrieveAllProductMix();
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
     ConfigureApplicationLabelsDto retrieveConfigurableLabels();
@@ -67,15 +66,14 @@ public interface AdminServiceFacade {
     void updateApplicationLabels(ConfigureApplicationLabelsDto applicationLabels);
 
     @PreAuthorize("isFullyAuthenticated()")
-    MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields() throws Exception;
+    MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields();
 
     @PreAuthorize("isFullyAuthenticated()")
-    void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto) throws Exception;
+    void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto);
 
     @PreAuthorize("isFullyAuthenticated()")
-    AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes() throws Exception;
+    AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes();
 
     @PreAuthorize("isFullyAuthenticated()")
-    void updateAcceptedPaymentTypes(AcceptedPaymentTypeDto acceptedPaymentTypeDto) throws Exception;
+    void updateAcceptedPaymentTypes(AcceptedPaymentTypeDto acceptedPaymentTypeDto);
 }
-

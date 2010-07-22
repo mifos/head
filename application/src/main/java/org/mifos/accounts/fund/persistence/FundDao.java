@@ -23,7 +23,6 @@ package org.mifos.accounts.fund.persistence;
 import java.util.List;
 
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.fund.exception.FundException;
 import org.mifos.application.master.business.FundCodeEntity;
 
 public interface FundDao {
@@ -40,6 +39,6 @@ public interface FundDao {
 
     public void save(FundBO fund);
 
-    public void update(FundBO fund, String fundName) throws FundException;
+    public void update(FundBO fund, String fundName);
 
 }

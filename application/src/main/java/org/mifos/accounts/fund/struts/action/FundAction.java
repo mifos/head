@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.accounts.fund.exception.FundException;
 import org.mifos.accounts.fund.struts.actionforms.FundActionForm;
 import org.mifos.accounts.fund.util.helpers.FundConstants;
 import org.mifos.accounts.fund.servicefacade.FundDto;
@@ -43,6 +44,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
+import org.mifos.service.BusinessRuleException;
 
 public class FundAction extends BaseAction {
 
@@ -169,7 +171,11 @@ public class FundAction extends BaseAction {
         fundDto.setId(fundActionForm.getFundCodeId());
         fundDto.setName(fundActionForm.getFundName());
 
-        this.fundServiceFacade.updateFund(fundDto);
+        try {
+            this.fundServiceFacade.updateFund(fundDto);
+        } catch (BusinessRuleException e) {
+            throw new FundException(e.getMessageKey());
+        }
 
         return mapping.findForward(ActionForwards.update_success.toString());
     }
