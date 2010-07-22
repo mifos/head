@@ -23,6 +23,7 @@ package org.mifos.platform.questionnaire.ui.controller;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -42,7 +43,11 @@ public class QuestionGroupController {
     }
 
     @RequestMapping("/questionGroupResponses.ftl")
-    public String getAllQuestionGroupResponses(@RequestParam("globalCustNum") String globalCustomerNumber) {
-        return questionnaireServiceFacade.toString();
+    public ModelMap getAllQuestionGroupResponses(@RequestParam("entityId") Integer entityId,
+                                               @RequestParam("event") String event,
+                                               @RequestParam("source") String source) {
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("questionGroupDetails", questionnaireServiceFacade.getQuestionGroups(entityId, event, source));
+        return modelMap;
     }
 }

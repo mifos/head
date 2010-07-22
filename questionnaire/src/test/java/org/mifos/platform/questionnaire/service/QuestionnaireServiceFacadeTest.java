@@ -199,6 +199,20 @@ public class QuestionnaireServiceFacadeTest {
         QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE + 1, "Create", "Client", Arrays.asList(getSectionDetailWithQuestionIds("Section1", 11, 22, 33)));
         when(questionnaireService.getQuestionGroups(Matchers.<Integer>any(), any(EventSource.class))).thenReturn(Arrays.asList(questionGroupDetail));
         List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getQuestionGroups("Create", "Client");
+        assertQuestionGroupDetails(questionGroupDetails);
+        Mockito.verify(questionnaireService, times(1)).getQuestionGroups(Matchers.<Integer>any(), argThat(new EventSourceMatcher("Create", "Client", "Create.Client")));
+    }
+
+    @Test
+    public void shouldRetrieveQuestionGroupsByEventSourceAndEntityId() throws SystemException {
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE + 1, "Create", "Client", Arrays.asList(getSectionDetailWithQuestionIds("Section1", 11, 22, 33)));
+        when(questionnaireService.getQuestionGroups(Matchers.eq(101), any(EventSource.class))).thenReturn(Arrays.asList(questionGroupDetail));
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getQuestionGroups(101, "Create", "Client");
+        assertQuestionGroupDetails(questionGroupDetails);
+        Mockito.verify(questionnaireService, times(1)).getQuestionGroups(Matchers.eq(101), argThat(new EventSourceMatcher("Create", "Client", "Create.Client")));
+    }
+
+    private void assertQuestionGroupDetails(List<QuestionGroupDetail> questionGroupDetails) {
         assertThat(questionGroupDetails, is(notNullValue()));
         assertThat(questionGroupDetails.size(), is(1));
         QuestionGroupDetail questionGroupDetail1 = questionGroupDetails.get(0);
@@ -217,7 +231,6 @@ public class QuestionnaireServiceFacadeTest {
         assertThat(question1.getTitle(), is("Q11"));
         assertThat(question1.isMandatory(), is(false));
         assertThat(question1.getQuestionType(), is(QuestionType.DATE));
-        Mockito.verify(questionnaireService, times(1)).getQuestionGroups(Matchers.<Integer>any(), argThat(new EventSourceMatcher("Create", "Client", "Create.Client")));
     }
 
     @Test

@@ -46,4 +46,6 @@ public interface QuestionnaireServiceFacade {
     void saveResponses(QuestionGroupDetails questionGroupDetails);
 
     void validateResponses(List<QuestionGroupDetail> questionGroupDetails);
+
+    List<QuestionGroupDetail> getQuestionGroups(Integer entityId, String event, String source);
 }

@@ -267,11 +267,13 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         List<QuestionGroupResponse> questionGroupResponses = new LinkedList<QuestionGroupResponse>();
         for (SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()) {
             for (SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()) {
-                QuestionGroupResponse questionGroupResponse = new QuestionGroupResponse();
-                questionGroupResponse.setSectionQuestion(sectionQuestionDao.getDetails(sectionQuestionDetail.getId()));
-                questionGroupResponse.setResponse(sectionQuestionDetail.getValue());
-                questionGroupResponse.setQuestionGroupInstance(questionGroupInstance);
-                questionGroupResponses.add(questionGroupResponse);
+                if (sectionQuestionDetail.hasAnswer()) {
+                    QuestionGroupResponse questionGroupResponse = new QuestionGroupResponse();
+                    questionGroupResponse.setSectionQuestion(sectionQuestionDao.getDetails(sectionQuestionDetail.getId()));
+                    questionGroupResponse.setResponse(sectionQuestionDetail.getValue());
+                    questionGroupResponse.setQuestionGroupInstance(questionGroupInstance);
+                    questionGroupResponses.add(questionGroupResponse);
+                }
             }
         }
         return questionGroupResponses;

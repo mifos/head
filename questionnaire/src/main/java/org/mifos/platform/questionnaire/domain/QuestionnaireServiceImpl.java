@@ -34,10 +34,11 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
-import org.mifos.platform.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 
 public class QuestionnaireServiceImpl implements QuestionnaireService {
 
@@ -135,28 +136,29 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public List<QuestionGroupDetail> getQuestionGroups(Integer entityId, EventSource eventSource) throws SystemException {
         questionnaireValidator.validateForEventSource(eventSource);
         List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSource.getEvent(), eventSource.getSource());
-        List<QuestionGroupDetail> questionGroupDetails = questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
-        populateResponses(entityId, questionGroups, questionGroupDetails);
-        return questionGroupDetails;
+        return getQuestionGroupDetailsAndResponses(entityId, questionGroups);
     }
 
-    private void populateResponses(Integer entityId, List<QuestionGroup> questionGroups, List<QuestionGroupDetail> questionGroupDetails) {
+    private List<QuestionGroupDetail> getQuestionGroupDetailsAndResponses(Integer entityId, List<QuestionGroup> questionGroups) {
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
         if (entityId != null) {
             for (int i = 0, questionGroupsSize = questionGroups.size(); i < questionGroupsSize; i++) {
                 QuestionGroup questionGroup = questionGroups.get(i);
                 List list = questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(entityId, questionGroup.getId());
-                if (CollectionUtils.isNotEmpty(list)) {
+                if (isNotEmpty(list)) {
                     QuestionGroupInstance questionGroupInstance = (QuestionGroupInstance) list.get(0);
-                    QuestionGroupDetail questionGroupDetail = questionGroupDetails.get(i);
-                    setResponseOnSectionDetails(questionGroupInstance.getQuestionGroupResponses(), questionGroupDetail.getSectionDetails());
+                    setResponseOnSectionDetails(questionGroupInstance.getQuestionGroupResponses(), questionGroupDetails.get(i));
                 }
             }
         }
+        return questionGroupDetails;
     }
 
-    private void setResponseOnSectionDetails(List<QuestionGroupResponse> questionGroupResponses, List<SectionDetail> sectionDetails) {
-        for (SectionDetail sectionDetail : sectionDetails) {
-            setResponseOnSectionDetail(questionGroupResponses, sectionDetail);
+    private void setResponseOnSectionDetails(List<QuestionGroupResponse> questionGroupResponses, QuestionGroupDetail questionGroupDetail) {
+        if (isNotEmpty(questionGroupResponses)) {
+            for (SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()) {
+                setResponseOnSectionDetail(questionGroupResponses, sectionDetail);
+            }
         }
     }
 

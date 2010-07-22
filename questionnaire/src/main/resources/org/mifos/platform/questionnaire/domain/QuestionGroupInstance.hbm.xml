@@ -19,8 +19,9 @@
         </bag>
     </class>
     <query name="QuestionGroupInstance.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity">
-              <![CDATA[from QuestionGroupInstance as instance where instance.versionNum =
-                        (select max(qgi.versionNum) from QuestionGroupInstance as qgi where
+              <![CDATA[from QuestionGroupInstance as instance where instance.entityId = :ENTITY_ID and
+                        instance.questionGroup.id = :QUESTION_GROUP_ID and instance.versionNum =
+                            (select max(qgi.versionNum) from QuestionGroupInstance as qgi where
                                 qgi.entityId = :ENTITY_ID and qgi.questionGroup.id = :QUESTION_GROUP_ID)
               ]]>
     </query>

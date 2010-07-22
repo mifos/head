@@ -368,8 +368,12 @@ public class QuestionnaireServiceIntegrationTest {
         questionGroupDetail.getSectionDetail(0).getQuestionDetail(0).setValue("value1");
         questionGroupDetail.getSectionDetail(1).getQuestionDetail(0).setValue("value2");
         questionnaireService.saveResponses(new QuestionGroupDetails(1, 1, Arrays.asList(questionGroupDetail)));
-        Assert.assertEquals(questionGroupInstanceDao.getDetailsAll().get(0).getQuestionGroupResponses().get(0).getResponse(), "value1");
-        Assert.assertEquals(questionGroupInstanceDao.getDetailsAll().get(0).getQuestionGroupResponses().get(1).getResponse(), "value2");
+        List<QuestionGroupInstance> instances = questionGroupInstanceDao.getDetailsAll();
+        QuestionGroupInstance instance = getMatchingQuestionGroupInstance(questionGroupDetail.getId(), 1, instances);
+        Assert.assertThat(instance, is(notNullValue()));
+        List<QuestionGroupResponse> groupResponses = instance.getQuestionGroupResponses();
+        Assert.assertEquals(groupResponses.get(0).getResponse(), "value1");
+        Assert.assertEquals(groupResponses.get(1).getResponse(), "value2");
     }
 
     @Test
@@ -428,6 +432,14 @@ public class QuestionnaireServiceIntegrationTest {
         Assert.assertThat(qGResponses.size(), is(2));
         Assert.assertThat(qGResponses.get(0).getResponse(), is("Hello World1"));
         Assert.assertThat(qGResponses.get(1).getResponse(), is("Hello World2"));
+    }
+
+    private QuestionGroupInstance getMatchingQuestionGroupInstance(Integer questionGroupId, Integer entityId, List<QuestionGroupInstance> instances) {
+        for (QuestionGroupInstance questionGroupInstance : instances) {
+            if (questionGroupInstance.getQuestionGroup().getId() == questionGroupId && questionGroupInstance.getEntityId() == entityId)
+                return questionGroupInstance;
+        }
+        return null;
     }
 
     private QuestionGroupResponse getQuestionGroupResponse(String responses, QuestionGroupInstance questionGroupInstance, SectionQuestion sectionQuestion) {
