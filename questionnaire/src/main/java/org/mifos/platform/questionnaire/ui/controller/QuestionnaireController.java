@@ -162,7 +162,6 @@ public class QuestionnaireController {
             return "failure";
         }
         try {
-            questionGroupForm.trimTitle();
             questionnaireServiceFacade.createQuestionGroup(questionGroupForm.getQuestionGroupDetail());
         } catch (SystemException e) {
             constructAndLogSystemError(requestContext.getMessageContext(), e);

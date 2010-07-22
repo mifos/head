@@ -232,7 +232,9 @@ public class ClientBO extends CustomerBO {
         } else {
             setTrained(YesNoFlag.NO.getValue());
         }
-        setTrainedDate(trainedDate.toDate());
+        if (trainedDate != null) {
+            setTrainedDate(trainedDate.toDate());
+        }
 
         this.groupFlag = groupFlag;
         this.firstName = clientFirstName;
@@ -706,7 +708,9 @@ public class ClientBO extends CustomerBO {
 
         setExternalId(clientMfiInfoUpdate.getExternalId());
         setTrained(clientMfiInfoUpdate.isTrained());
-        setTrainedDate(clientMfiInfoUpdate.getTrainedDate().toDate());
+        if (clientMfiInfoUpdate.getTrainedDate() != null) {
+            setTrainedDate(clientMfiInfoUpdate.getTrainedDate().toDate());
+        }
 
         setPersonnel(personnel);
         if (isActive() || isOnHold()) {
@@ -1237,7 +1241,7 @@ public class ClientBO extends CustomerBO {
 
         this.addGroupMembership();
         receivingGroup.incrementChildCount();
-        this.setSearchId(receivingGroup.getSearchId() + "." + String.valueOf(receivingGroup.getMaxChildCount()));
+        this.setSearchId(receivingGroup.getSearchId() + "." + receivingGroup.getMaxChildCount());
 
         return regenerateClientSchedules;
     }

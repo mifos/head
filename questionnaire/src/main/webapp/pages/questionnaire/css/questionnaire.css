@@ -47,14 +47,30 @@ label {
     list-style-type: disc;
 }
 
-input {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 9pt;
-	font-weight: normal;
+.choiceStyle{
+    float:left;
+    margin-right:1em;
+    margin-left:1em;
+    width:20em;
+    word-wrap:break-word;
 }
 
-select {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 9pt;
-	font-weight: normal;
+.choiceHeaderStyle{
+    background-color:#D7DEEE;
+    border-top:1px solid #D7DEEE;
+    font-family:Arial,Verdana,Helvetica,sans-serif;
+    font-size:9pt;
+    font-weight:bold;
+    padding:2px 0px;
+    text-decoration:none;
+}
+
+.choiceOlStyle{
+    margin-left:6em;
+    width:60%
+}
+
+.buttonWidth{
+    margin-left:10em;
+    width:50%
 }

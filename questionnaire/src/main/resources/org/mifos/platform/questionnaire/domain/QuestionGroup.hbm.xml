@@ -9,9 +9,11 @@
         </id>
         <property name="title" column="title"/>
         <property name="dateOfCreation" column="date_of_creation"/>
+        <property name="editable" column="is_editable"/>
         <property name="state" column="state">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">org.mifos.platform.questionnaire.domain.QuestionGroupState</param>
+                <param name="type">4</param>
             </type>
         </property>
         <list name="sections" cascade="all">
@@ -27,7 +29,7 @@
     </class>
     <query name="QuestionGroup.retrieveQuestionGroupsByEventSource">
               <![CDATA[select questionGroup from QuestionGroup as questionGroup join questionGroup.eventSources eventSource
-                       where eventSource.event.name = :EVENT and eventSource.source.entityType = :SOURCE
+                       where eventSource.event.name = :EVENT and eventSource.source.entityType = :SOURCE and questionGroup.state = 1
               ]]>
     </query>
 </hibernate-mapping>

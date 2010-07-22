@@ -25,7 +25,16 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.*;
+import org.mifos.application.servicefacade.ClientDetailDto;
+import org.mifos.application.servicefacade.ClientFamilyDetailsDto;
+import org.mifos.application.servicefacade.ClientFamilyInfoDto;
+import org.mifos.application.servicefacade.ClientFormCreationDto;
+import org.mifos.application.servicefacade.ClientMfiInfoDto;
+import org.mifos.application.servicefacade.ClientPersonalInfoDto;
+import org.mifos.application.servicefacade.ClientRulesDto;
+import org.mifos.application.servicefacade.CustomerDetailsDto;
+import org.mifos.application.servicefacade.OnlyBranchOfficeHierarchyDto;
+import org.mifos.application.servicefacade.ProcessRulesDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
@@ -38,20 +47,28 @@ import org.mifos.customers.client.business.service.ClientInformationDto;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.group.util.helpers.GroupConstants;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.struts.actionforms.QuestionGroupDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
-import org.mifos.service.MifosServiceFactory;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.util.helpers.*;
+import org.mifos.framework.util.helpers.CloseSession;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.platform.util.CollectionUtils;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.MifosServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -110,7 +127,7 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward chooseOffice(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                      @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         actionForm.setGroupFlag(ClientConstants.NO);
@@ -127,7 +144,7 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                              @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
 
         actionForm.clearMostButNotAllFieldsOnActionForm();
@@ -158,12 +175,12 @@ public class ClientCustAction extends CustAction {
         SessionUtils.setCollectionAttribute(ClientConstants.SALUTATION_ENTITY, clientFormCreationDto.getClientDropdowns().getSalutations(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, clientFormCreationDto.getClientDropdowns().getGenders(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.MARITAL_STATUS_ENTITY, clientFormCreationDto.getClientDropdowns().getMaritalStatuses(), request);
-        SessionUtils.setCollectionAttribute(ClientConstants.CITIZENSHIP_ENTITY, clientFormCreationDto.getClientDropdowns().getCitizenship(),request);
-        SessionUtils.setCollectionAttribute(ClientConstants.ETHINICITY_ENTITY, clientFormCreationDto.getClientDropdowns().getEthinicity(),request);
+        SessionUtils.setCollectionAttribute(ClientConstants.CITIZENSHIP_ENTITY, clientFormCreationDto.getClientDropdowns().getCitizenship(), request);
+        SessionUtils.setCollectionAttribute(ClientConstants.ETHINICITY_ENTITY, clientFormCreationDto.getClientDropdowns().getEthinicity(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY, clientFormCreationDto.getClientDropdowns().getEducationLevels(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY, clientFormCreationDto.getClientDropdowns().getBusinessActivity(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.POVERTY_STATUS, clientFormCreationDto.getClientDropdowns().getPoverty(), request);
-        SessionUtils.setCollectionAttribute(ClientConstants.HANDICAPPED_ENTITY, clientFormCreationDto.getClientDropdowns().getHandicapped(),request);
+        SessionUtils.setCollectionAttribute(ClientConstants.HANDICAPPED_ENTITY, clientFormCreationDto.getClientDropdowns().getHandicapped(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, clientFormCreationDto.getClientDropdowns().getSpouseFather(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, clientFormCreationDto.getCustomFieldViews(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, clientFormCreationDto.getPersonnelList(), request);
@@ -173,12 +190,11 @@ public class ClientCustAction extends CustAction {
         SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, ClientRules.getCenterHierarchyExists(), request);
         SessionUtils.setAttribute(ClientConstants.MAXIMUM_NUMBER_OF_FAMILY_MEMBERS, ClientRules.getMaximumNumberOfFamilyMembers(), request);
         boolean isFamilyDetailsRequired = ClientRules.isFamilyDetailsRequired();
-        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired,request);
+        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired, request);
         if (isFamilyDetailsRequired) {
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isFamilyDetailsMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, false, request);
-        }
-        else {
+        } else {
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
         }
@@ -201,7 +217,7 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward next(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                              @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
 
@@ -209,7 +225,7 @@ public class ClientCustAction extends CustAction {
 
         if (clientFamilyDetails.isFamilyDetailsRequired()) {
 
-            SessionUtils.setCollectionAttribute(ClientConstants.LIVING_STATUS_ENTITY, clientFamilyDetails.getLivingStatus() , request);
+            SessionUtils.setCollectionAttribute(ClientConstants.LIVING_STATUS_ENTITY, clientFamilyDetails.getLivingStatus(), request);
             SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, clientFamilyDetails.getGenders(), request);
 
             actionForm.setFamilyDetailBean(clientFamilyDetails.getFamilyDetails());
@@ -222,8 +238,8 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward familyInfoNext(ActionMapping mapping, ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                        @SuppressWarnings("unused") HttpServletRequest request,
+                                        @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         actionForm.setFamilyDateOfBirth();
         actionForm.constructFamilyDetails();
@@ -232,8 +248,8 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward addFamilyRow(ActionMapping mapping, ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                      @SuppressWarnings("unused") HttpServletRequest request,
+                                      @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         if (actionForm.getFamilyNames().size() < ClientRules.getMaximumNumberOfFamilyMembers()) {
             actionForm.addFamilyMember();
@@ -243,8 +259,8 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward deleteFamilyRow(ActionMapping mapping, ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                         @SuppressWarnings("unused") HttpServletRequest request,
+                                         @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         if (Integer.parseInt(actionForm.getDeleteThisRow()) < actionForm.getFamilyFirstName().size()) {
             actionForm.removeFamilyMember(Integer.parseInt(actionForm.getDeleteThisRow()));
@@ -254,8 +270,8 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward editAddFamilyRow(ActionMapping mapping, ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                          @SuppressWarnings("unused") HttpServletRequest request,
+                                          @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         if (actionForm.getFamilyNames().size() < ClientRules.getMaximumNumberOfFamilyMembers()) {
             actionForm.addFamilyMember();
@@ -265,8 +281,8 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward editDeleteFamilyRow(ActionMapping mapping, ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                             @SuppressWarnings("unused") HttpServletRequest request,
+                                             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         if (Integer.parseInt(actionForm.getDeleteThisRow()) < actionForm.getFamilyFirstName().size()) {
             actionForm.removeFamilyMember(Integer.parseInt(actionForm.getDeleteThisRow()));
@@ -276,7 +292,7 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                 @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         String governmentId = actionForm.getGovernmentId();
         String clientName = actionForm.getClientName().getDisplayName();
@@ -286,7 +302,7 @@ public class ClientCustAction extends CustAction {
         }
         DateTime dateOfBirth = new DateTime(DateUtils.getDateAsSentFromBrowser(givenDateOfBirth));
         ProcessRulesDto processRules = this.customerServiceFacade.previewClient(governmentId, dateOfBirth, clientName);
-        String pendingApprovalState = processRules.isClientPendingApprovalStateEnabled()? CustomerConstants.YES: CustomerConstants.NO;
+        String pendingApprovalState = processRules.isClientPendingApprovalStateEnabled() ? CustomerConstants.YES : CustomerConstants.NO;
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, pendingApprovalState, request);
         addWarningMessages(request, processRules);
         actionForm.setEditFamily("edit");
@@ -311,8 +327,8 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward cancel(ActionMapping mapping, ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                @SuppressWarnings("unused") HttpServletRequest request,
+                                @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         String forward = null;
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
@@ -330,14 +346,14 @@ public class ClientCustAction extends CustAction {
     }
 
     public ActionForward editPreviewEditFamilyInfo(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                                   @SuppressWarnings("unused") HttpServletRequest request,
+                                                   @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.editPreviewEditFamilyInfo_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward retrievePictureOnPreview(ActionMapping mapping, ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request, HttpServletResponse response) throws Exception {
+                                                  @SuppressWarnings("unused") HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         InputStream in = actionForm.getPicture().getInputStream();
@@ -359,7 +375,7 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward retrievePicture(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
-            HttpServletRequest request, HttpServletResponse response) throws Exception {
+                                         HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         ClientBO clientBO = getClientFromSession(request);
         InputStream in = clientBO.getCustomerPicture().getPicture().getBinaryStream();
@@ -382,8 +398,8 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward previewPersonalInfo(ActionMapping mapping, ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                             @SuppressWarnings("unused") HttpServletRequest request,
+                                             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
         return mapping.findForward(ActionForwards.previewPersonalInfo_success.toString());
@@ -392,15 +408,15 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward prevFamilyInfo(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
+                                        @SuppressWarnings("unused") HttpServletRequest request,
+                                        @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
         return mapping.findForward(ActionForwards.prevFamilyInfo_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward prevFamilyInfoNext(ActionMapping mapping, ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
+                                            @SuppressWarnings("unused") HttpServletRequest request,
+                                            @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         actionForm.setFamilyDateOfBirth();
         actionForm.constructFamilyDetails();
@@ -409,36 +425,36 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward prevPersonalInfo(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
+                                          @SuppressWarnings("unused") HttpServletRequest request,
+                                          @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
         return mapping.findForward(ActionForwards.prevPersonalInfo_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward prevMFIInfo(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
+                                     @SuppressWarnings("unused") HttpServletRequest request,
+                                     @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
         return mapping.findForward(ActionForwards.prevMFIInfo_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward prevMeeting(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                     @SuppressWarnings("unused") HttpServletRequest request,
+                                     @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         return mapping.findForward(ActionForwards.next_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadMeeting(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                     @SuppressWarnings("unused") HttpServletRequest request,
+                                     @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.loadMeeting_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         UserContext userContext = getUserContext(request);
@@ -452,19 +468,32 @@ public class ClientCustAction extends CustAction {
         actionForm.setCustomerId(clientDetails.getId().toString());
         actionForm.setGlobalCustNum(clientDetails.getGlobalCustNum());
         actionForm.setEditFamily("notEdit");
+        saveQuestionResponses(request, actionForm.getQuestionGroupDetails(), userContext.getId(), clientDetails.getId());
         return mapping.findForward(ActionForwards.create_success.toString());
+    }
+
+    private void saveQuestionResponses(HttpServletRequest request, List<QuestionGroupDetail> questionGroupDetails, short userId, int clientId) {
+        if (!CollectionUtils.isEmpty(questionGroupDetails)) {
+            PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+            PersonnelBO currentUser = personnelPersistence.findPersonnelById(userId);
+            QuestionnaireServiceFacade questionnaireServiceFacade = getQuestionnaireServiceFacade(request);
+            if (questionnaireServiceFacade != null) {
+                questionnaireServiceFacade.saveResponses(
+                        new QuestionGroupDetails(currentUser.getPersonnelId(), clientId, questionGroupDetails));
+            }
+        }
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
-            HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                  HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
         return mapping.findForward(method + "_failure");
     }
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         // John W - UserContext object passed because some status' need to be looked up for internationalisation based
         // on UserContext info
@@ -481,8 +510,8 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward showPicture(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                     @SuppressWarnings("unused") HttpServletRequest request,
+                                     @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         String forward = ClientConstants.CUSTOMER_PICTURE_PAGE;
         return mapping.findForward(forward);
@@ -490,7 +519,7 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward editPersonalInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                          @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         actionForm.clearMostButNotAllFieldsOnActionForm();
@@ -503,21 +532,20 @@ public class ClientCustAction extends CustAction {
         SessionUtils.setCollectionAttribute(ClientConstants.SALUTATION_ENTITY, personalInfo.getClientDropdowns().getSalutations(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, personalInfo.getClientDropdowns().getGenders(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.MARITAL_STATUS_ENTITY, personalInfo.getClientDropdowns().getMaritalStatuses(), request);
-        SessionUtils.setCollectionAttribute(ClientConstants.CITIZENSHIP_ENTITY, personalInfo.getClientDropdowns().getCitizenship(),request);
-        SessionUtils.setCollectionAttribute(ClientConstants.ETHINICITY_ENTITY, personalInfo.getClientDropdowns().getEthinicity(),request);
+        SessionUtils.setCollectionAttribute(ClientConstants.CITIZENSHIP_ENTITY, personalInfo.getClientDropdowns().getCitizenship(), request);
+        SessionUtils.setCollectionAttribute(ClientConstants.ETHINICITY_ENTITY, personalInfo.getClientDropdowns().getEthinicity(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY, personalInfo.getClientDropdowns().getEducationLevels(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY, personalInfo.getClientDropdowns().getBusinessActivity(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.POVERTY_STATUS, personalInfo.getClientDropdowns().getPoverty(), request);
-        SessionUtils.setCollectionAttribute(ClientConstants.HANDICAPPED_ENTITY, personalInfo.getClientDropdowns().getHandicapped(),request);
+        SessionUtils.setCollectionAttribute(ClientConstants.HANDICAPPED_ENTITY, personalInfo.getClientDropdowns().getHandicapped(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, personalInfo.getClientDropdowns().getSpouseFather(), request);
 
         boolean isFamilyDetailsRequired = personalInfo.getClientRules().isFamilyDetailsRequired();
-        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired,request);
+        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired, request);
         if (isFamilyDetailsRequired) {
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isFamilyDetailsMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, false, request);
-        }
-        else {
+        } else {
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
         }
@@ -546,7 +574,7 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward previewEditPersonalInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
+                                                 @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
 
         String governmentId = actionForm.getGovernmentId();
@@ -558,12 +586,11 @@ public class ClientCustAction extends CustAction {
         ClientRulesDto clientRules = this.customerServiceFacade.retrieveClientDetailsForPreviewingEditOfPersonalInfo(clientDetailDto);
 
         boolean isFamilyDetailsRequired = clientRules.isFamilyDetailsRequired();
-        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired,request);
+        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired, request);
         if (isFamilyDetailsRequired) {
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isFamilyDetailsMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, false, request);
-        }
-        else {
+        } else {
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
         }
@@ -572,15 +599,14 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward prevEditPersonalInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
+                                              @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         boolean isFamilyDetailsRequired = ClientRules.isFamilyDetailsRequired();
-        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired,request);
+        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired, request);
         if (isFamilyDetailsRequired) {
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isFamilyDetailsMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, false, request);
-        }
-        else {
+        } else {
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
         }
@@ -591,7 +617,7 @@ public class ClientCustAction extends CustAction {
     @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward updatePersonalInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws ApplicationException {
+                                            @SuppressWarnings("unused") HttpServletResponse response) throws ApplicationException {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         ClientBO clientInSession = getClientFromSession(request);
@@ -606,7 +632,7 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward editFamilyInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                        @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         actionForm.clearMostButNotAllFieldsOnActionForm();
         ClientBO clientFromSession = getClientFromSession(request);
@@ -684,8 +710,8 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward previewEditFamilyInfo(ActionMapping mapping, ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
+                                               @SuppressWarnings("unused") HttpServletRequest request,
+                                               @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         actionForm.setFamilyDateOfBirth();
         actionForm.constructFamilyDetails();
@@ -695,7 +721,7 @@ public class ClientCustAction extends CustAction {
     @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward updateFamilyInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                          @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         UserContext userContext = getUserContext(request);
@@ -713,7 +739,7 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward editMfiInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                     @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         actionForm.clearMostButNotAllFieldsOnActionForm();
@@ -748,22 +774,22 @@ public class ClientCustAction extends CustAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward previewEditMfiInfo(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
+                                            @SuppressWarnings("unused") HttpServletRequest request,
+                                            @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
         return mapping.findForward(ActionForwards.previewEditMfiInfo_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward prevEditMfiInfo(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
+                                         @SuppressWarnings("unused") HttpServletRequest request,
+                                         @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
         return mapping.findForward(ActionForwards.prevEditMfiInfo_success.toString());
     }
 
     @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward updateMfiInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+                                       @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         UserContext userContext = getUserContext(request);
         ClientCustActionForm actionForm = (ClientCustActionForm) form;

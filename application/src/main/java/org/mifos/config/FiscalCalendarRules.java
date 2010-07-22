@@ -56,7 +56,7 @@ public class FiscalCalendarRules {
         WeekDay[] weekDays = WeekDay.values(); // all weekdays
 
         for (WeekDay weekDay : weekDays) {
-            if (weekDay.name().toUpperCase().equals(workingDay.toUpperCase())) {
+            if (weekDay.name().equalsIgnoreCase(workingDay)) {
                 return weekDay;
             }
         }
@@ -101,7 +101,7 @@ public class FiscalCalendarRules {
 
     private boolean isWorkingDay(final WeekDay weekDay) {
         for (String configWorkingDay : configWorkingDays) {
-            if (configWorkingDay.toUpperCase().equals(weekDay.name().toUpperCase())) {
+            if (configWorkingDay.equalsIgnoreCase(weekDay.name())) {
                 return true;
             }
         }

@@ -25,11 +25,19 @@ import java.util.List;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 
 public interface ApplicationConfigurationDao {
 
-    List<GracePeriodTypeEntity> findGracePeriodTypes();
+    void save(MasterDataEntity entity);
+
+    void save(LookUpValueEntity entity);
+
+    void save(LookUpEntity entity);
+
+    LookUpEntity findLookupValueByEntityType(String client);
 
     List<LookUpEntity> findLookupValueTypes();
 
@@ -37,4 +45,5 @@ public interface ApplicationConfigurationDao {
 
     List<CustomerStatusEntity> findAllCustomerStatuses();
 
+    List<GracePeriodTypeEntity> findGracePeriodTypes();
 }

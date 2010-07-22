@@ -36,4 +36,9 @@ public class CollectionUtilsTest extends TestCase {
         assertEquals(true, CollectionUtils.isEmpty(null));
     }
 
+    public void testCollectionNotEmpty() {
+        assertEquals(true, CollectionUtils.isNotEmpty(Arrays.asList("Hi", "Bye")));
+        assertEquals(false, CollectionUtils.isNotEmpty(Collections.EMPTY_SET));
+        assertEquals(false, CollectionUtils.isNotEmpty(null));
+    }
 }

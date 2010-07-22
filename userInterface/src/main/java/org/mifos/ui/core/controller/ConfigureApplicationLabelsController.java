@@ -158,9 +158,50 @@ public class ConfigureApplicationLabelsController {
         } else {
 
             OfficeLevelDto officeLevels = officeLevelDtoFrom(formBean);
+
             GracePeriodDto gracePeriodDto = new GracePeriodDto();
+            gracePeriodDto.setNone(formBean.getNone());
+            gracePeriodDto.setGraceOnAllRepayments(formBean.getGraceOnAllRepayments());
+            gracePeriodDto.setPrincipalOnlyGrace(formBean.getPrincipalOnlyGrace());
+
             ConfigurableLookupLabelDto lookupLabels = new ConfigurableLookupLabelDto();
+            lookupLabels.setClient(formBean.getClient());
+            lookupLabels.setGroup(formBean.getGroup());
+            lookupLabels.setCenter(formBean.getCenter());
+
+            lookupLabels.setLoans(formBean.getLoans());
+            lookupLabels.setSavings(formBean.getSavings());
+
+            lookupLabels.setState(formBean.getState());
+            lookupLabels.setPostalCode(formBean.getPostalCode());
+            lookupLabels.setEthnicity(formBean.getEthnicity());
+            lookupLabels.setCitizenship(formBean.getCitizenship());
+            lookupLabels.setHandicapped(formBean.getHandicapped());
+            lookupLabels.setGovtId(formBean.getGovtId());
+
+            lookupLabels.setAddress1(formBean.getAddress1());
+            lookupLabels.setAddress2(formBean.getAddress2());
+            lookupLabels.setAddress3(formBean.getAddress3());
+
+            lookupLabels.setInterest(formBean.getInterest());
+            lookupLabels.setExternalId(formBean.getExternalId());
+            lookupLabels.setBulkEntry(formBean.getBulkEntry());
+
             AccountStatusesLabelDto accountStatusLabels = new AccountStatusesLabelDto();
+            accountStatusLabels.setPartialApplication(formBean.getPartialApplication());
+            accountStatusLabels.setPendingApproval(formBean.getPendingApproval());
+            accountStatusLabels.setApproved(formBean.getApproved());
+            accountStatusLabels.setCancel(formBean.getCancel());
+            accountStatusLabels.setClosed(formBean.getClosed());
+            accountStatusLabels.setOnhold(formBean.getOnhold());
+            accountStatusLabels.setActive(formBean.getActive());
+            accountStatusLabels.setInActive(formBean.getInActive());
+            accountStatusLabels.setActiveInGoodStanding(formBean.getActiveInGoodStanding());
+            accountStatusLabels.setActiveInBadStanding(formBean.getActiveInBadStanding());
+            accountStatusLabels.setClosedObligationMet(formBean.getClosedObligationMet());
+            accountStatusLabels.setClosedRescheduled(formBean.getClosedRescheduled());
+            accountStatusLabels.setClosedWrittenOff(formBean.getClosedWrittenOff());
+
             ConfigureApplicationLabelsDto applicationLabels = new ConfigureApplicationLabelsDto(officeLevels, gracePeriodDto, lookupLabels, accountStatusLabels);
 
             adminServiceFacade.updateApplicationLabels(applicationLabels);

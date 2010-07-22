@@ -18,15 +18,15 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.validators;
+package org.mifos.platform.questionnaire.validators; // NOPMD
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
-import org.mifos.platform.questionnaire.service.*;//NOPMD
+import org.mifos.platform.questionnaire.service.*; // NOPMD
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -34,11 +34,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import java.util.Arrays; //NOPMD
-import static org.junit.Assert.fail;      //NOPMD
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.*; //NOPMD
-import static org.mockito.Matchers.anyString;   //NOPMD
-import org.mockito.Mockito;   //NOPMD
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.*; // NOPMD
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*; //NOPMD
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("PMD")
@@ -57,7 +57,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldNotThrowExceptionWhenQuestionTitleIsProvided() {
         try {
-            questionnaireValidator.validate(new QuestionDetail("Title", QuestionType.FREETEXT));
+            questionnaireValidator.validateForDefineQuestion(new QuestionDetail("Title", QuestionType.FREETEXT));
         } catch (SystemException e) {
             fail("Should not have thrown the exception");
         }
@@ -66,107 +66,107 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenQuestionTitleIsProvided() {
         try {
-            questionnaireValidator.validate(new QuestionDetail(null, QuestionType.FREETEXT));
+            questionnaireValidator.validateForDefineQuestion(new QuestionDetail(null, QuestionType.FREETEXT));
             fail("Should have thrown the application exception");
         } catch (SystemException e) {
-            Assert.assertEquals(QUESTION_TITLE_NOT_PROVIDED, e.getKey());
+            assertEquals(QUESTION_TITLE_NOT_PROVIDED, e.getKey());
         }
     }
 
     @Test
     public void shouldThrowExceptionWhenQuestionTypeNotProvided() {
         try {
-            questionnaireValidator.validate(new QuestionDetail("Title 123", QuestionType.INVALID));
+            questionnaireValidator.validateForDefineQuestion(new QuestionDetail("Title 123", QuestionType.INVALID));
             fail("Should have thrown the application exception");
         } catch (SystemException e) {
-            Assert.assertEquals(QUESTION_TYPE_NOT_PROVIDED, e.getKey());
+            assertEquals(QUESTION_TYPE_NOT_PROVIDED, e.getKey());
         }
     }
 
     @Test
     public void shouldNotThrowExceptionWhenQuestionGroupTitleIsProvided() {
-        Mockito.when(eventSourceDao.retrieveCountByEventAndSource(anyString(), anyString())).thenReturn(Arrays.asList((long) 1));
+        when(eventSourceDao.retrieveCountByEventAndSource(anyString(), anyString())).thenReturn(Arrays.asList((long) 1));
         try {
-            questionnaireValidator.validate(new QuestionGroupDetail(0, "Title", getEventSource("Create", "Client"), Arrays.asList(getSection("S1"))));
+            questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client"));
         } catch (SystemException e) {
             fail("shouldNotThrowExceptionWhenQuestionGroupTitleIsProvided:Should not have thrown the exception");
         }
-        Mockito.verify(eventSourceDao, Mockito.times(1)).retrieveCountByEventAndSource(anyString(), anyString());
+        verify(eventSourceDao, times(1)).retrieveCountByEventAndSource(anyString(), anyString());
     }
 
     @Test
     public void shouldThrowExceptionWhenQuestionGroupTitleIsProvided() {
         try {
-            questionnaireValidator.validate(new QuestionGroupDetail(0, null, getEventSource("Create", "Client"), Arrays.asList(getSection("S1"))));
+            questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, null, "Create", "Client"));
             fail("Should have thrown the application exception");
         } catch (SystemException e) {
-            Assert.assertEquals(QUESTION_GROUP_TITLE_NOT_PROVIDED, e.getKey());
+            assertEquals(QUESTION_GROUP_TITLE_NOT_PROVIDED, e.getKey());
         }
     }
 
     @Test
     public void shouldNotThrowExceptionWhenQuestionGroupHasAtLeastOneSection() {
-        Mockito.when(eventSourceDao.retrieveCountByEventAndSource(anyString(), anyString())).thenReturn(Arrays.asList((long) 1));
+        when(eventSourceDao.retrieveCountByEventAndSource(anyString(), anyString())).thenReturn(Arrays.asList((long) 1));
         try {
-            questionnaireValidator.validate(new QuestionGroupDetail(0, "Title", getEventSource("Create", "Client"), Arrays.asList(getSection("S1"))));
+            questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client"));
         } catch (SystemException e) {
             fail("shouldNotThrowExceptionWhenQuestionGroupHasAtLeastOneSection:Should not have thrown the exception");
         }
-        Mockito.verify(eventSourceDao, Mockito.times(1)).retrieveCountByEventAndSource(anyString(), anyString());
+        verify(eventSourceDao, times(1)).retrieveCountByEventAndSource(anyString(), anyString());
     }
 
     @Test
     public void shouldThrowExceptionWhenQuestionGroupHasNoSections() {
         try {
-            questionnaireValidator.validate(new QuestionGroupDetail(0, "Title", getEventSource("Create", "Client"), new ArrayList<SectionDetail>()));
+            questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client", new ArrayList<SectionDetail>()));
             fail("Should have thrown the application exception");
         } catch (SystemException e) {
-            Assert.assertEquals(QUESTION_GROUP_SECTION_NOT_PROVIDED, e.getKey());
+            assertEquals(QUESTION_GROUP_SECTION_NOT_PROVIDED, e.getKey());
         }
     }
 
     @Test
     public void shouldThrowExceptionWhenEventIsNotProvided() {
         try {
-            questionnaireValidator.validate(new QuestionGroupDetail(0, "Title", getEventSource(null, "Client"), Arrays.asList(getSection("S1"))));
+            questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", null, "Client"));
             fail("Should have thrown the application exception");
         } catch (SystemException e) {
-            Assert.assertEquals(INVALID_EVENT_SOURCE, e.getKey());
+            assertEquals(INVALID_EVENT_SOURCE, e.getKey());
         }
-        Mockito.verify(eventSourceDao, Mockito.never()).retrieveCountByEventAndSource(anyString(), anyString());
+        verify(eventSourceDao, never()).retrieveCountByEventAndSource(anyString(), anyString());
     }
 
     @Test
     public void shouldThrowExceptionWhenSourceIsNotProvided() {
         try {
-            questionnaireValidator.validate(new QuestionGroupDetail(0, "Title", getEventSource("Create", null), Arrays.asList(getSection("S1"))));
+            questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", null));
             fail("Should have thrown the application exception");
         } catch (SystemException e) {
-            Assert.assertEquals(INVALID_EVENT_SOURCE, e.getKey());
+            assertEquals(INVALID_EVENT_SOURCE, e.getKey());
         }
-        Mockito.verify(eventSourceDao, Mockito.never()).retrieveCountByEventAndSource(anyString(), anyString());
+        verify(eventSourceDao, never()).retrieveCountByEventAndSource(anyString(), anyString());
     }
 
     @Test
     public void shouldThrowExceptionWhenEventSourceIsNotProvided() {
         try {
-            questionnaireValidator.validate(new QuestionGroupDetail(0, "Title", null, Arrays.asList(getSection("S1"))));
+            questionnaireValidator.validateForDefineQuestionGroup(new QuestionGroupDetail(0, "Title", null, Arrays.asList(getSection("S1")), false));
             fail("Should have thrown the application exception");
         } catch (SystemException e) {
-            Assert.assertEquals(INVALID_EVENT_SOURCE, e.getKey());
+            assertEquals(INVALID_EVENT_SOURCE, e.getKey());
         }
-        Mockito.verify(eventSourceDao, Mockito.never()).retrieveCountByEventAndSource(anyString(), anyString());
+        verify(eventSourceDao, never()).retrieveCountByEventAndSource(anyString(), anyString());
     }
 
     @Test
     public void shouldThrowExceptionWhenAGivenSectionHasNoQuestions() {
         try {
-            questionnaireValidator.validate(new QuestionGroupDetail(0, "Title", getEventSource("Create", "Client"), Arrays.asList(getSectionWithQuestions("S1"))));
+            questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client", Arrays.asList(getSectionWithQuestions("S1"))));
             fail("Should have thrown the application exception");
         } catch (SystemException e) {
-            Assert.assertEquals(NO_QUESTIONS_FOUND_IN_SECTION, e.getKey());
+            assertEquals(NO_QUESTIONS_FOUND_IN_SECTION, e.getKey());
         }
-        Mockito.verify(eventSourceDao, Mockito.never()).retrieveCountByEventAndSource(anyString(), anyString());
+        verify(eventSourceDao, never()).retrieveCountByEventAndSource(anyString(), anyString());
     }
 
     @Test
@@ -175,18 +175,53 @@ public class QuestionValidatorTest {
             SectionDetail sectionDefinition1 = getSectionWithQuestions("S1", 1, 3);
             SectionDetail sectionDefinition2 = getSectionWithQuestions("S2", 3, 2);
             List<SectionDetail> sectionDetails = Arrays.asList(sectionDefinition1, sectionDefinition2);
-            questionnaireValidator.validate(new QuestionGroupDetail(0, "Title", getEventSource("Create", "Client"), sectionDetails));
+            questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client", sectionDetails));
             fail("Should have thrown the application exception");
         } catch (SystemException e) {
-            Assert.assertEquals(DUPLICATE_QUESTION_FOUND_IN_SECTION, e.getKey());
+            assertEquals(DUPLICATE_QUESTION_FOUND_IN_SECTION, e.getKey());
         }
-        Mockito.verify(eventSourceDao, Mockito.never()).retrieveCountByEventAndSource(anyString(), anyString());
+        verify(eventSourceDao, never()).retrieveCountByEventAndSource(anyString(), anyString());
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenNoAnswersProvided() {
+        try {
+            questionnaireValidator.validateForQuestionGroupResponses(null);
+            fail("Should have thrown the application exception");
+        } catch (SystemException e) {
+            assertEquals(NO_ANSWERS_PROVIDED, e.getKey());
+        }
+    }
+
+    @SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
+    @Test
+    public void shouldThrowExceptionWhenAMandatoryQuestionHasNoAnswer() {
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(0, "Title", "Create", "Client");
+        try {
+            questionnaireValidator.validateForQuestionGroupResponses(Arrays.asList(questionGroupDetail));
+            fail("Should have thrown the application exception");
+        } catch (ValidationException e) {
+            assertEquals(GENERIC_VALIDATION, e.getKey());
+            assertEquals(true, e.containsChildExceptions());
+            assertEquals(1, e.getChildExceptions().size());
+            ValidationException childException = e.getChildExceptions().get(0);
+            assertEquals(MANDATORY_QUESTION_HAS_NO_ANSWER, childException.getKey());
+            assertEquals(questionGroupDetail.getSectionDetail(0).getQuestionDetail(0), childException.getSectionQuestionDetail());
+        }
+    }
+
+    private QuestionGroupDetail getQuestionGroupDetail(int id, String title, String event, String source) {
+        return getQuestionGroupDetail(id, title, event, source, Arrays.asList(getSection("S1")));
+    }
+
+    private QuestionGroupDetail getQuestionGroupDetail(int id, String title, String event, String source, List<SectionDetail> sectionDetails) {
+        return new QuestionGroupDetail(id, title, getEventSource(event, source), sectionDetails, false);
     }
 
     private SectionDetail getSection(String name) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID), true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID), true, null));
         return section;
     }
 
@@ -195,7 +230,7 @@ public class QuestionValidatorTest {
         section.setName(name);
         if (questionIds != null) {
             for (int questionId : questionIds) {
-                section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, null, null, QuestionType.INVALID), true));
+                section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, null, null, QuestionType.INVALID), true, null));
             }
         }
         return section;

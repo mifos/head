@@ -56,4 +56,8 @@ public class QuestionGroupDto implements DataTransferObject {
     public int getId() {
         return questionGroupDetail.getId();
     }
+
+    public QuestionGroupDetail getQuestionGroupDetail() {
+        return questionGroupDetail;
+    }
 }

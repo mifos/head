@@ -89,7 +89,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         AdminPage adminPage = createQuestions(qTitle1, qTitle2, qTitle3);
         CreateQuestionGroupPage createQuestionGroupPage = getCreateQuestionGroupPage(adminPage);
         testMissingMandatoryInputs(createQuestionGroupPage);
-        testCreateQuestionGroup(createQuestionGroupPage, qgTitle1, APPLIES_TO_CREATE_CLIENT, SECTION_DEFAULT, asList(qTitle1, qTitle2), asList(qTitle3));
+        testCreateQuestionGroup(createQuestionGroupPage, qgTitle1, APPLIES_TO_CREATE_CLIENT, true, SECTION_DEFAULT, asList(qTitle1, qTitle2), asList(qTitle3));
         testShouldAllowDuplicateTitlesForQuestionGroup();
         testCancelCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)));
         testViewQuestionGroups();
@@ -161,15 +161,16 @@ public class QuestionGroupTest extends UiTestCaseBase {
     }
 
     private void testShouldAllowDuplicateTitlesForQuestionGroup() {
-        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, APPLIES_TO_CREATE_CLIENT, "", asList(qTitle1, qTitle3), asList(qTitle2));
-        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, "Create Client", "Hello", asList(qTitle2), asList(qTitle1, qTitle3));
+        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, APPLIES_TO_CREATE_CLIENT, false, "", asList(qTitle1, qTitle3), asList(qTitle2));
+        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, APPLIES_TO_CREATE_CLIENT, false, "Hello", asList(qTitle2), asList(qTitle1, qTitle3));
     }
 
-    private void testCreateQuestionGroup(CreateQuestionGroupPage createQuestionGroupPage, String title, String appliesTo,
+    private void testCreateQuestionGroup(CreateQuestionGroupPage createQuestionGroupPage, String title, String appliesTo, boolean isAnswerEditable,
                                          String sectionName, List<String> questionsToSelect, List<String> questionsNotToSelect) {
         CreateQuestionGroupParameters parameters = new CreateQuestionGroupParameters();
         parameters.setTitle(title);
         parameters.setAppliesTo(appliesTo);
+        parameters.setAnswerEditable(isAnswerEditable);
         parameters.setSectionName(sectionName);
         parameters.setQuestions(questionsToSelect);
         createQuestionGroupPage.addSection(parameters);

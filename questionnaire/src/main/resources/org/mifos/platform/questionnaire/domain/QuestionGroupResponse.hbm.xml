@@ -8,7 +8,7 @@
             <generator class="native" />
         </id>
         <many-to-one name="questionGroupInstance" column="question_group_instance_id" cascade="save-update" access="field" not-null="true"/>
-        <many-to-one name="sectionQuestion" column="sections_questions_id" access="field" cascade="save-update" not-null="true"/>
+        <many-to-one name="sectionQuestion" column="sections_questions_id"/>
         <property name="response" column="response" />
     </class>
 </hibernate-mapping>

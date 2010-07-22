@@ -62,13 +62,9 @@ public class QuestionGroupForm implements Serializable {
     }
 
     public void setTitle(String title) {
-        this.questionGroupDetail.setTitle(title);
+        this.questionGroupDetail.setTitle(trim(title));
     }
-
-    public void trimTitle() {
-        setTitle(trim(getTitle()));
-    }
-
+    
     public String getEventSourceId() {
         EventSource eventSource = this.questionGroupDetail.getEventSource();
         if (eventSource == null || isEmpty(eventSource.getEvent()) || isEmpty(eventSource.getSource())) return null;
@@ -226,5 +222,13 @@ public class QuestionGroupForm implements Serializable {
             questions.remove(questionToRemove);
             questionPool.add(questionToRemove);
         }
+    }
+
+    public boolean isEditable() {
+        return questionGroupDetail.isEditable();
+    }
+
+    public void setEditable(boolean editable) {
+       questionGroupDetail.setEditable(editable); 
     }
 }

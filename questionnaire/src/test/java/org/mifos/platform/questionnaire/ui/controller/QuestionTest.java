@@ -20,6 +20,7 @@
 
 package org.mifos.platform.questionnaire.ui.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,10 +29,10 @@ import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.ui.model.Question;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import java.util.Arrays;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -50,6 +51,7 @@ public class QuestionTest {
         question.addAnswerChoice();
         Assert.assertThat(question.getChoices().size(), is(4));
         Assert.assertEquals(question.getChoices(), Arrays.asList("choice1", "choice2", "choice1", "choice3"));
+        Assert.assertTrue(StringUtils.equals(question.getCommaSeparateChoices(), "choice1, choice2, choice1, choice3"));
     }
 
     @Test

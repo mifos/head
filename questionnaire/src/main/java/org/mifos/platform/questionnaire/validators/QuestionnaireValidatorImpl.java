@@ -22,18 +22,19 @@ package org.mifos.platform.questionnaire.validators;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
-import org.mifos.platform.questionnaire.service.*;  //NOPMD
+import org.mifos.platform.questionnaire.service.*; //NOPMD
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.*;    //NOPMD
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.*; //NOPMD
 import static org.mifos.platform.questionnaire.service.QuestionType.INVALID;
 import static org.mifos.platform.util.CollectionUtils.isEmpty;
+
 @SuppressWarnings("PMD")
 public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
 
@@ -49,35 +50,62 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     @Override
-    public void validate(QuestionDetail questionDetail) throws SystemException {
+    public void validateForDefineQuestion(QuestionDetail questionDetail) throws SystemException {
         validateQuestionTitle(questionDetail);
         validateQuestionType(questionDetail);
     }
 
     @Override
-    public void validate(QuestionGroupDetail questionGroupDetail) throws SystemException {
+    public void validateForDefineQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
         validateQuestionGroupTitle(questionGroupDetail);
         validateQuestionGroupSections(questionGroupDetail.getSectionDetails());
-        validate(questionGroupDetail.getEventSource());
+        validateForEventSource(questionGroupDetail.getEventSource());
     }
 
     @Override
-    public void validate(EventSource eventSource) throws SystemException {
+    public void validateForEventSource(EventSource eventSource) throws SystemException {
         if (eventSource == null || StringUtils.isEmpty(eventSource.getSource()) || StringUtils.isEmpty(eventSource.getEvent()))
-            throw new SystemException(QuestionnaireConstants.INVALID_EVENT_SOURCE);
+            throw new SystemException(INVALID_EVENT_SOURCE);
         validateEventSource(eventSource);
+    }
+
+    @Override
+    public void validateForQuestionGroupResponses(List<QuestionGroupDetail> questionGroupDetails) {
+        if (isEmpty(questionGroupDetails)) throw new SystemException(NO_ANSWERS_PROVIDED);
+        ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
+        for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
+            validateResponsesInQuestionGroup(questionGroupDetail, validationException);
+        }
+        if (validationException.containsChildExceptions()) throw validationException;
+    }
+
+    private void validateResponsesInQuestionGroup(QuestionGroupDetail questionGroupDetail, ValidationException validationException) {
+        for (SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()) {
+            for (SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()) {
+                validateSectionQuestionDetail(validationException, sectionQuestionDetail);
+            }
+        }
+    }
+
+    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
+    private void validateSectionQuestionDetail(ValidationException validationException, SectionQuestionDetail sectionQuestionDetail) {
+        // TODO: When there are additional such validations, use a chain of validators
+        if (sectionQuestionDetail.isMandatory() && sectionQuestionDetail.hasNoAnswer()) {
+            ValidationException childException = new ValidationException(MANDATORY_QUESTION_HAS_NO_ANSWER, sectionQuestionDetail);
+            validationException.addChildException(childException);
+        }
     }
 
     private void validateEventSource(EventSource eventSource) throws SystemException {
         List result = eventSourceDao.retrieveCountByEventAndSource(eventSource.getEvent(), eventSource.getSource());
         if (isEmpty(result) || ((Long) result.get(0) == 0)) {
-            throw new SystemException(QuestionnaireConstants.INVALID_EVENT_SOURCE);
+            throw new SystemException(INVALID_EVENT_SOURCE);
         }
     }
 
     private void validateQuestionGroupSections(List<SectionDetail> sectionDetails) throws SystemException {
         if(isEmpty(sectionDetails)) {
-            throw new SystemException(QuestionnaireConstants.QUESTION_GROUP_SECTION_NOT_PROVIDED);
+            throw new SystemException(QUESTION_GROUP_SECTION_NOT_PROVIDED);
         }
         validateSectionDefinitions(sectionDetails);
     }
