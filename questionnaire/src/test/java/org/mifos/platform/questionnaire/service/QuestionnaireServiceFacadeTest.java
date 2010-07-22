@@ -196,7 +196,7 @@ public class QuestionnaireServiceFacadeTest {
     @Test
     public void shouldRetrieveQuestionGroupsByEventSource() throws SystemException {
         QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE + 1, "Create", "Client", Arrays.asList(getSectionDetailWithQuestionIds("Section1", 11, 22, 33)));
-        when(questionnaireService.getQuestionGroups(any(EventSource.class))).thenReturn(Arrays.asList(questionGroupDetail));
+        when(questionnaireService.getQuestionGroups(null, any(EventSource.class))).thenReturn(Arrays.asList(questionGroupDetail));
         List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getQuestionGroups("Create", "Client");
         assertThat(questionGroupDetails, is(notNullValue()));
         assertThat(questionGroupDetails.size(), is(1));
@@ -216,7 +216,7 @@ public class QuestionnaireServiceFacadeTest {
         assertThat(question1.getTitle(), is("Q11"));
         assertThat(question1.isMandatory(), is(false));
         assertThat(question1.getQuestionType(), is(QuestionType.DATE));
-        Mockito.verify(questionnaireService, times(1)).getQuestionGroups(argThat(new EventSourceMatcher("Create", "Client", "Create.Client")));
+        Mockito.verify(questionnaireService, times(1)).getQuestionGroups(null, argThat(new EventSourceMatcher("Create", "Client", "Create.Client")));
     }
 
     @Test

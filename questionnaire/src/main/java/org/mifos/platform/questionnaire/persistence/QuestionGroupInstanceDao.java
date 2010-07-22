@@ -23,5 +23,8 @@ package org.mifos.platform.questionnaire.persistence;
 import org.mifos.platform.persistence.GenericDao;
 import org.mifos.platform.questionnaire.domain.QuestionGroupInstance;
 
+import java.util.List;
+
 public interface QuestionGroupInstanceDao extends GenericDao<QuestionGroupInstance, Integer> {
+    List retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(int entityId, int questionGroupId);
 }

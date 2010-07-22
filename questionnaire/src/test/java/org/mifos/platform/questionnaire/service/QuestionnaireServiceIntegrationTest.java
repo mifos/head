@@ -37,6 +37,7 @@ import org.mifos.platform.questionnaire.domain.QuestionGroupResponse;
 import org.mifos.platform.questionnaire.domain.QuestionGroupState;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
 import org.mifos.platform.questionnaire.domain.Section;
+import org.mifos.platform.questionnaire.domain.SectionQuestion;
 import org.mifos.platform.questionnaire.matchers.EventSourcesMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionChoicesMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
@@ -351,7 +352,7 @@ public class QuestionnaireServiceIntegrationTest {
         String title = "QG1" + System.currentTimeMillis();
         List<SectionDetail> details = Arrays.asList(getSection("S1"), getSection("S2"));
         QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details, false);
-        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
+        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(null, new EventSource("Create", "Client", "Create.Client"));
         Assert.assertThat(questionGroups, is(notNullValue()));
         QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
         Assert.assertThat(actualQGDetail, is(notNullValue()));
@@ -378,7 +379,7 @@ public class QuestionnaireServiceIntegrationTest {
         List<SectionDetail> details = Arrays.asList(getSection("S1"), getSection("S2"));
         QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details, true);
         setState(expectedQGDetail.getId(), QuestionGroupState.INACTIVE);
-        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
+        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(null, new EventSource("Create", "Client", "Create.Client"));
         Assert.assertThat(questionGroups, is(notNullValue()));
         QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
         Assert.assertThat(actualQGDetail, is(Matchers.nullValue()));
@@ -391,26 +392,7 @@ public class QuestionnaireServiceIntegrationTest {
         List<SectionDetail> details = Arrays.asList(getSection("S1"), getSection("S2"));
         QuestionGroupDetail questionGroupDetail = defineQuestionGroup(title, "Create", "Client", details, false);
         QuestionGroup questionGroup = questionGroupDao.getDetails(questionGroupDetail.getId());
-        QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
-        questionGroupInstance.setQuestionGroup(questionGroup);
-        questionGroupInstance.setCompletedStatus(1);
-        questionGroupInstance.setCreatorId(122);
-        questionGroupInstance.setDateConducted(Calendar.getInstance().getTime());
-        questionGroupInstance.setEntityId(101);
-        questionGroupInstance.setVersionNum(1);
-        List<QuestionGroupResponse> groupResponses = new ArrayList<QuestionGroupResponse>();
-        QuestionGroupResponse questionGroupResponse;
-        questionGroupResponse = new QuestionGroupResponse();
-        questionGroupResponse.setResponse("Foo Bar1");
-        questionGroupResponse.setQuestionGroupInstance(questionGroupInstance);
-        questionGroupResponse.setSectionQuestion(questionGroup.getSections().get(0).getQuestions().get(0));
-        groupResponses.add(questionGroupResponse);
-        questionGroupResponse = new QuestionGroupResponse();
-        questionGroupResponse.setResponse("Foo Bar2");
-        questionGroupResponse.setQuestionGroupInstance(questionGroupInstance);
-        questionGroupResponse.setSectionQuestion(questionGroup.getSections().get(1).getQuestions().get(0));
-        groupResponses.add(questionGroupResponse);
-        questionGroupInstance.setQuestionGroupResponses(groupResponses);
+        QuestionGroupInstance questionGroupInstance = getQuestionGroupInstance(1, questionGroup, 101, "Foo Bar1", "Foo Bar2");
         questionGroupInstanceDao.saveOrUpdateAll(Arrays.asList(questionGroupInstance));
         QuestionGroupInstance groupInstance = questionGroupInstanceDao.getDetails(questionGroupInstance.getId());
         Assert.assertThat(groupInstance, is(notNullValue()));
@@ -424,6 +406,38 @@ public class QuestionnaireServiceIntegrationTest {
         Assert.assertThat(groupInstance.getQuestionGroupResponses().get(1).getResponse(), is("Foo Bar2"));
     }
 
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldGetLatestQuestionGroupInstancesBasedOnQuestionGroupAndEntity() {
+        String title = "QG1" + System.currentTimeMillis();
+        List<SectionDetail> details = Arrays.asList(getSection("S1"), getSection("S2"));
+        QuestionGroupDetail questionGroupDetail = defineQuestionGroup(title, "Create", "Client", details, false);
+        QuestionGroup questionGroup = questionGroupDao.getDetails(questionGroupDetail.getId());
+        QuestionGroupInstance instance1 = getQuestionGroupInstance(1, questionGroup, 101, "Foo Bar1", "Foo Bar2");
+        QuestionGroupInstance instance2 = getQuestionGroupInstance(2, questionGroup, 101, "Hello World1", "Hello World2");
+        questionGroupInstanceDao.saveOrUpdateAll(Arrays.asList(instance1, instance2));
+        List instances = questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(101, questionGroupDetail.getId());
+        Assert.assertThat(instances, is(notNullValue()));
+        Assert.assertThat(instances.size(), is(1));
+        QuestionGroupInstance qGInst = (QuestionGroupInstance) instances.get(0);
+        Assert.assertThat(qGInst.getVersionNum(), is(2));
+        Assert.assertThat(qGInst.getEntityId(), is(101));
+        Assert.assertThat(qGInst.getQuestionGroup().getId(), is(questionGroupDetail.getId()));
+        List<QuestionGroupResponse> qGResponses = qGInst.getQuestionGroupResponses();
+        Assert.assertThat(qGResponses, is(notNullValue()));
+        Assert.assertThat(qGResponses.size(), is(2));
+        Assert.assertThat(qGResponses.get(0).getResponse(), is("Hello World1"));
+        Assert.assertThat(qGResponses.get(1).getResponse(), is("Hello World2"));
+    }
+
+    private QuestionGroupResponse getQuestionGroupResponse(String responses, QuestionGroupInstance questionGroupInstance, SectionQuestion sectionQuestion) {
+        QuestionGroupResponse response = new QuestionGroupResponse();
+        response.setResponse(responses);
+        response.setQuestionGroupInstance(questionGroupInstance);
+        response.setSectionQuestion(sectionQuestion);
+        return response;
+    }
+
     private void setState(Integer id, QuestionGroupState questionGroupState) {
         QuestionGroup questionGroup = questionGroupDao.getDetails(id);
         questionGroup.setState(questionGroupState);
@@ -432,6 +446,23 @@ public class QuestionnaireServiceIntegrationTest {
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws SystemException {
         return questionnaireService.defineQuestion(new QuestionDetail(questionTitle, questionType));
+    }
+
+    private QuestionGroupInstance getQuestionGroupInstance(int version, QuestionGroup questionGroup, int entityId, String... responses) {
+        QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
+        questionGroupInstance.setCompletedStatus(1);
+        questionGroupInstance.setQuestionGroup(questionGroup);
+        questionGroupInstance.setDateConducted(Calendar.getInstance().getTime());
+        questionGroupInstance.setCreatorId(122);
+        questionGroupInstance.setVersionNum(version);
+        questionGroupInstance.setEntityId(entityId);
+        List<QuestionGroupResponse> questionGroupResponses = new ArrayList<QuestionGroupResponse>();
+        for (int index=0; index<responses.length; index++) {
+            SectionQuestion sectionQuestion = questionGroup.getSections().get(index).getQuestions().get(0);
+            questionGroupResponses.add(getQuestionGroupResponse(responses[index], questionGroupInstance, sectionQuestion));
+        }
+        questionGroupInstance.setQuestionGroupResponses(questionGroupResponses);
+        return questionGroupInstance;
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType type, List<String> choices) throws SystemException {

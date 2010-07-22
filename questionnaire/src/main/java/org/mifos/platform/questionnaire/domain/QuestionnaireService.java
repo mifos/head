@@ -45,7 +45,7 @@ public interface QuestionnaireService {
 
     List<EventSource> getAllEventSources();
 
-    List<QuestionGroupDetail> getQuestionGroups(EventSource eventSource) throws SystemException;
+    List<QuestionGroupDetail> getQuestionGroups(Integer entityId, EventSource eventSource) throws SystemException;
 
     void saveResponses(QuestionGroupDetails questionGroupDetails);
 

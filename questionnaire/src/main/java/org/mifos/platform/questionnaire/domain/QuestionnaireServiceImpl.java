@@ -31,7 +31,10 @@ import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.SectionDetail;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
+import org.mifos.platform.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -129,10 +132,46 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public List<QuestionGroupDetail> getQuestionGroups(EventSource eventSource) throws SystemException {
+    public List<QuestionGroupDetail> getQuestionGroups(Integer entityId, EventSource eventSource) throws SystemException {
         questionnaireValidator.validateForEventSource(eventSource);
         List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSource.getEvent(), eventSource.getSource());
-        return questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
+        populateResponses(entityId, questionGroups, questionGroupDetails);
+        return questionGroupDetails;
+    }
+
+    private void populateResponses(Integer entityId, List<QuestionGroup> questionGroups, List<QuestionGroupDetail> questionGroupDetails) {
+        if (entityId != null) {
+            for (int i = 0, questionGroupsSize = questionGroups.size(); i < questionGroupsSize; i++) {
+                QuestionGroup questionGroup = questionGroups.get(i);
+                List list = questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(entityId, questionGroup.getId());
+                if (CollectionUtils.isNotEmpty(list)) {
+                    QuestionGroupInstance questionGroupInstance = (QuestionGroupInstance) list.get(0);
+                    QuestionGroupDetail questionGroupDetail = questionGroupDetails.get(i);
+                    setResponseOnSectionDetails(questionGroupInstance.getQuestionGroupResponses(), questionGroupDetail.getSectionDetails());
+                }
+            }
+        }
+    }
+
+    private void setResponseOnSectionDetails(List<QuestionGroupResponse> questionGroupResponses, List<SectionDetail> sectionDetails) {
+        for (SectionDetail sectionDetail : sectionDetails) {
+            setResponseOnSectionDetail(questionGroupResponses, sectionDetail);
+        }
+    }
+
+    private void setResponseOnSectionDetail(List<QuestionGroupResponse> questionGroupResponses, SectionDetail sectionDetail) {
+        for (SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()) {
+            setResponseOnSectionQuestionDetail(questionGroupResponses, sectionQuestionDetail);
+        }
+    }
+
+    private void setResponseOnSectionQuestionDetail(List<QuestionGroupResponse> questionGroupResponses, SectionQuestionDetail sectionQuestionDetail) {
+        for (QuestionGroupResponse questionGroupResponse : questionGroupResponses) {
+            if (questionGroupResponse.getSectionQuestion().getId() == sectionQuestionDetail.getId()) {
+                sectionQuestionDetail.setValue(questionGroupResponse.getResponse());
+            }
+        }
     }
 
     @Override

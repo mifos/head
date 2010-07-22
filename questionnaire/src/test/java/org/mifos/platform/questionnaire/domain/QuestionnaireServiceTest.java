@@ -50,6 +50,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -314,6 +315,23 @@ public class QuestionnaireServiceTest {
         return sectionList;
     }
 
+    private Section getSectionWithQuestions(int sectionQuestionId, String sectionName, String... questionNames) {
+        Section section = new Section(sectionName);
+        List<SectionQuestion> sectionQuestions = new ArrayList<SectionQuestion>();
+        for (String questionName : questionNames) {
+            SectionQuestion sectionQuestion = new SectionQuestion();
+            sectionQuestion.setId(sectionQuestionId);
+            sectionQuestion.setSection(section);
+            QuestionEntity questionEntity = new QuestionEntity();
+            questionEntity.setQuestionText(questionName);
+            questionEntity.setShortName(questionName);
+            sectionQuestion.setQuestion(questionEntity);
+            sectionQuestions.add(sectionQuestion);
+        }
+        section.setQuestions(sectionQuestions);
+        return section;
+    }
+
     @Test
     public void shouldGetAllEventSources() {
         when(eventSourceDao.getDetailsAll()).thenReturn(Arrays.asList(getEventSourceEntity("Create", "Client")));
@@ -404,14 +422,6 @@ public class QuestionnaireServiceTest {
         }
     }
 
-    private QuestionGroup getQuestionGroup(int questionGroupId, String title, List<Section> sections) {
-        QuestionGroup questionGroup = new QuestionGroup();
-        questionGroup.setId(questionGroupId);
-        questionGroup.setTitle(title);
-        questionGroup.setSections(sections);
-        return questionGroup;
-    }
-
     @Test
     public void shouldCheckDuplicates() {
         QuestionDefinition questionDefinition = new QuestionDefinition(QUESTION_TITLE, QuestionType.FREETEXT);
@@ -425,13 +435,54 @@ public class QuestionnaireServiceTest {
     public void shouldGetAllQuestionGroupsByEventSource() throws SystemException {
         List<QuestionGroup> questionGroups = Arrays.asList(getQuestionGroup(1, "Title1", getSections("Section1")), getQuestionGroup(2, "Title2", getSections("Section2")));
         when(questionGroupDao.retrieveQuestionGroupsByEventSource("Create", "Client")).thenReturn(questionGroups);
-        List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(null, new EventSource("Create", "Client", "Create.Client"));
         assertThat(questionGroupDetails, is(notNullValue()));
         assertThat(questionGroupDetails.size(), is(2));
         assertThat(questionGroupDetails.get(0).getTitle(), is("Title1"));
         assertThat(questionGroupDetails.get(1).getTitle(), is("Title2"));
         verify(questionnaireValidator, times(1)).validateForEventSource(any(EventSource.class));
         verify(questionGroupDao, times(1)).retrieveQuestionGroupsByEventSource("Create", "Client");
+    }
+
+    @Test
+    public void shouldGetAllQuestionGroupsByEventSourceAndEntityId() {
+        QuestionGroup questionGroup1 = getQuestionGroup(1, "Title1", Arrays.asList(getSectionWithQuestions(222, "Section1", "Question1")));
+        QuestionGroup questionGroup2 = getQuestionGroup(2, "Title2", Arrays.asList(getSectionWithQuestions(222, "Section2", "Question2")));
+        List<QuestionGroup> questionGroups = Arrays.asList(questionGroup1, questionGroup2);
+        when(questionGroupDao.retrieveQuestionGroupsByEventSource("Create", "Client")).thenReturn(questionGroups);
+        QuestionGroupInstance questionGroupInstance1 = getQuestionGroupInstance(101, 1, questionGroup1, "Hello World");
+        QuestionGroupInstance questionGroupInstance2 = getQuestionGroupInstance(101, 2, questionGroup2, "Foo Bar");
+        when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(101, 1)).thenReturn(Arrays.asList(questionGroupInstance1));
+        when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(101, 2)).thenReturn(Arrays.asList(questionGroupInstance2));
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(101, new EventSource("Create", "Client", "Create.Client"));
+        assertThat(questionGroupDetails, is(notNullValue()));
+        assertThat(questionGroupDetails.size(), is(2));
+        assertThat(questionGroupDetails.get(0).getSectionDetail(0).getQuestionDetail(0).getValue(), is("Hello World"));
+        assertThat(questionGroupDetails.get(1).getSectionDetail(0).getQuestionDetail(0).getValue(), is("Foo Bar"));
+    }
+
+    private QuestionGroupInstance getQuestionGroupInstance(int entityId, int version, QuestionGroup questionGroup, String... responses) {
+        QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
+        questionGroupInstance.setQuestionGroup(questionGroup);
+        questionGroupInstance.setCompletedStatus(1);
+        questionGroupInstance.setCreatorId(122);
+        questionGroupInstance.setDateConducted(Calendar.getInstance().getTime());
+        questionGroupInstance.setEntityId(entityId);
+        questionGroupInstance.setVersionNum(version);
+        List<QuestionGroupResponse> groupResponses = new ArrayList<QuestionGroupResponse>();
+        for (int i=0; i<responses.length; i++) {
+            groupResponses.add(getQuestionGroupResponse(responses[i], questionGroupInstance, questionGroup.getSections().get(i).getQuestions().get(0)));
+        }
+        questionGroupInstance.setQuestionGroupResponses(groupResponses);
+        return questionGroupInstance;
+    }
+
+    private QuestionGroupResponse getQuestionGroupResponse(String responses, QuestionGroupInstance questionGroupInstance, SectionQuestion sectionQuestion) {
+        QuestionGroupResponse questionGroupResponse = new QuestionGroupResponse();
+        questionGroupResponse.setResponse(responses);
+        questionGroupResponse.setQuestionGroupInstance(questionGroupInstance);
+        questionGroupResponse.setSectionQuestion(sectionQuestion);
+        return questionGroupResponse;
     }
 
     @Test
@@ -457,6 +508,14 @@ public class QuestionnaireServiceTest {
         } catch (ValidationException e) {
             verify(questionnaireValidator, times(1)).validateForQuestionGroupResponses(Arrays.asList(questionGroupDetail));
         }
+    }
+
+    private QuestionGroup getQuestionGroup(int questionGroupId, String title, List<Section> sections) {
+        QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setId(questionGroupId);
+        questionGroup.setTitle(title);
+        questionGroup.setSections(sections);
+        return questionGroup;
     }
 
     private SectionDetail getSectionDetailWithQuestions(String name, List<QuestionDetail> questionDetails, String value, boolean mandatory) {
