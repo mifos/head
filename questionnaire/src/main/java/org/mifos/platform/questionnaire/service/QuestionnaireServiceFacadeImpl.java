@@ -84,7 +84,7 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public List<QuestionGroupDetail> getQuestionGroups(String event, String source) throws SystemException {
-        return questionnaireService.getQuestionGroups(new EventSource(event, source, String.format("%s.%s", event, source)));
+        return questionnaireService.getQuestionGroups(null, new EventSource(event, source, String.format("%s.%s", event, source)));
     }
 
     @Override

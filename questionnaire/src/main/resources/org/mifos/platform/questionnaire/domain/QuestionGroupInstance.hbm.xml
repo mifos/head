@@ -18,4 +18,10 @@
             <one-to-many class="org.mifos.platform.questionnaire.domain.QuestionGroupResponse" />
         </bag>
     </class>
+    <query name="QuestionGroupInstance.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity">
+              <![CDATA[from QuestionGroupInstance as instance where instance.versionNum =
+                        (select max(qgi.versionNum) from QuestionGroupInstance as qgi where
+                                qgi.entityId = :ENTITY_ID and qgi.questionGroup.id = :QUESTION_GROUP_ID)
+              ]]>
+    </query>
 </hibernate-mapping>

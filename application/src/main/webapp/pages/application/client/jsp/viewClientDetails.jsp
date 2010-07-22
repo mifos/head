@@ -688,8 +688,11 @@ explanation of the license and how it is applied.
 								</c:forEach>
   							</c:if>
 							<tr><td class="paddingL10"> <br>
-							<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${clientInformationDto.clientDisplay.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel
-								name="client.HistoricalDataLink" bundle="ClientUIResources"></mifos:mifoslabel>
+							<a id="viewClientDetails.link.questionGroups" href="questionGroupResponses.ftl?globalCustNum=<c:out value="${clientInformationDto.clientDisplay.globalCustNum}"/>">
+							    <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
+							</a> <br>
+							<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${clientInformationDto.clientDisplay.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+							    <mifos:mifoslabel name="client.HistoricalDataLink" bundle="ClientUIResources" />
 							</a> <br>
 							<html-el:link styleId="viewClientDetails.link.viewChangeLog" href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=${clientInformationDto.clientDisplay.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="client.ChangeLogLink" bundle="ClientUIResources"/>
