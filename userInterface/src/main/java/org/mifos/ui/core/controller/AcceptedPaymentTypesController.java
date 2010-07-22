@@ -63,6 +63,7 @@ public class AcceptedPaymentTypesController {
     @ModelAttribute("formBean")
     public AcceptedPaymentTypesBean showPopulatedForm() {
         AcceptedPaymentTypeDto acceptedPaymentTypeDto = adminServiceFacade.retrieveAcceptedPaymentTypes();
+        acceptedPaymentTypeDto.getInDepositList();
 
         // FIXME - keithw - for this form bean to bind to 'spring freemarker macro' controls I think that the data should
         // be represented as maps and you can then use @spring.formMultiSelect path, options, attributes/>
