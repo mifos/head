@@ -31,6 +31,7 @@ import org.mifos.platform.questionnaire.matchers.EventSourceMatcher;
 import org.mifos.platform.questionnaire.matchers.EventSourcesMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionDetailMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -196,7 +197,7 @@ public class QuestionnaireServiceFacadeTest {
     @Test
     public void shouldRetrieveQuestionGroupsByEventSource() throws SystemException {
         QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE + 1, "Create", "Client", Arrays.asList(getSectionDetailWithQuestionIds("Section1", 11, 22, 33)));
-        when(questionnaireService.getQuestionGroups(null, any(EventSource.class))).thenReturn(Arrays.asList(questionGroupDetail));
+        when(questionnaireService.getQuestionGroups(Matchers.<Integer>any(), any(EventSource.class))).thenReturn(Arrays.asList(questionGroupDetail));
         List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getQuestionGroups("Create", "Client");
         assertThat(questionGroupDetails, is(notNullValue()));
         assertThat(questionGroupDetails.size(), is(1));
@@ -216,7 +217,7 @@ public class QuestionnaireServiceFacadeTest {
         assertThat(question1.getTitle(), is("Q11"));
         assertThat(question1.isMandatory(), is(false));
         assertThat(question1.getQuestionType(), is(QuestionType.DATE));
-        Mockito.verify(questionnaireService, times(1)).getQuestionGroups(null, argThat(new EventSourceMatcher("Create", "Client", "Create.Client")));
+        Mockito.verify(questionnaireService, times(1)).getQuestionGroups(Matchers.<Integer>any(), argThat(new EventSourceMatcher("Create", "Client", "Create.Client")));
     }
 
     @Test
