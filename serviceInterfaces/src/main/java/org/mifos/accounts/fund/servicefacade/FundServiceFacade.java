@@ -22,7 +22,6 @@ package org.mifos.accounts.fund.servicefacade;
 
 import java.util.List;
 
-@SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public interface FundServiceFacade {
 
     FundDto getFund(Short fundId);
@@ -31,7 +30,7 @@ public interface FundServiceFacade {
 
     List<FundCodeDto> getFundCodes();
 
-    void updateFund(FundDto fundDto) throws Exception;
+    void updateFund(FundDto fundDto);
 
-    void createFund(FundDto fundDto) throws Exception;
+    void createFund(FundDto fundDto);
 }

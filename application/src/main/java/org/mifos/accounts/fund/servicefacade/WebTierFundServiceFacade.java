@@ -20,16 +20,16 @@
 
 package org.mifos.accounts.fund.servicefacade;
 
-import org.mifos.accounts.fund.persistence.FundDao;
-import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.fund.exception.FundException;
-import org.mifos.application.master.business.FundCodeEntity;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.core.MifosRuntimeException;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.fund.persistence.FundDao;
+import org.mifos.accounts.fund.util.helpers.FundConstants;
+import org.mifos.application.master.business.FundCodeEntity;
+import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.service.BusinessRuleException;
 
 public class WebTierFundServiceFacade implements FundServiceFacade {
 
@@ -55,16 +55,16 @@ public class WebTierFundServiceFacade implements FundServiceFacade {
     }
 
     @Override
-    public void updateFund(FundDto fundDto) throws ApplicationException {
+    public void updateFund(FundDto fundDto) {
         Short fundId = Short.valueOf(fundDto.getId());
         FundBO fundBO = this.fundDao.findById(fundId);
         try {
             StaticHibernateUtil.startTransaction();
             this.fundDao.update(fundBO, fundDto.getName());
             StaticHibernateUtil.commitTransaction();
-        } catch (ApplicationException e) {
+        } catch (BusinessRuleException e) {
             StaticHibernateUtil.rollbackTransaction();
-            throw new ApplicationException(e.getKey(), e);
+            throw new BusinessRuleException(e.getMessageKey(), e);
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e.getMessage(), e);
@@ -74,7 +74,7 @@ public class WebTierFundServiceFacade implements FundServiceFacade {
     }
 
     @Override
-    public void createFund(FundDto fundDto) throws FundException {
+    public void createFund(FundDto fundDto) {
         List<FundCodeEntity> fundCodeEntities = fundDao.findAllFundCodes();
         Short fundCodeId = Short.valueOf(fundDto.getCode().getId());
         FundCodeEntity fundCode = null;
@@ -85,6 +85,10 @@ public class WebTierFundServiceFacade implements FundServiceFacade {
             }
         }
         FundBO fundBO = new FundBO(fundCode, fundDto.getName());
+        if (this.fundDao.countOfFundByName(fundDto.getName().trim()) > 0) {
+            throw new org.mifos.service.BusinessRuleException(FundConstants.DUPLICATE_FUNDNAME_EXCEPTION);
+        }
+
 
         try {
             StaticHibernateUtil.startTransaction();

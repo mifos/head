@@ -57,7 +57,7 @@
        <li type="circle"> <a id="admin.link.shutdownMifos" href="shutdownAction.do?method=load">[@spring.message "shutDown"/]</a></li>
       </ul>
     </div>
-    <div class="span-10 last leftMargin180">
+    <div class="span-10 last">
       <p class="orangeheading">[@spring.message "manageProducts"/]</p>
       <p><span class="fontBold">[@spring.message "productrulesattributes"/]</span>
       <ul>
