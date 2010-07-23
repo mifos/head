@@ -72,7 +72,10 @@ import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.dto.screen.PaymentTypeDto;
+import org.mifos.dto.screen.ProductCategoryDetailsDto;
+import org.mifos.dto.screen.ProductCategoryDisplayDto;
 import org.mifos.dto.screen.ProductCategoryDto;
+import org.mifos.dto.screen.ProductCategoryTypeDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductDto;
@@ -183,9 +186,9 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
             List<PrdOfferingBO> prdOfferingList = new ProductMixBusinessService().getPrdOfferingMix();
 
-            List<ProductCategoryDto> pcList = new ArrayList<ProductCategoryDto>();
+            List<ProductCategoryTypeDto> pcList = new ArrayList<ProductCategoryTypeDto>();
             for(ProductCategoryBO pcBO: productCategoryList) {
-                ProductCategoryDto pcDto = new ProductCategoryDto(pcBO.getProductType().getProductTypeID(),
+                ProductCategoryTypeDto pcDto = new ProductCategoryTypeDto(pcBO.getProductType().getProductTypeID(),
                                             pcBO.getProductType().getLookUpValue().getLookUpName());
                 pcList.add(pcDto);
             }
@@ -1096,5 +1099,47 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             }
         }
         return true;
+    }
+
+    @Override
+    public ProductCategoryDisplayDto retrieveAllProductCategories() {
+        try {
+            List<ProductCategoryBO> productCategoryList = new ProductCategoryBusinessService().getAllCategories();
+
+            List<ProductCategoryTypeDto> pcTypeList = new ArrayList<ProductCategoryTypeDto>();
+            List<ProductCategoryDto> pcList = new ArrayList<ProductCategoryDto>();
+            for(ProductCategoryBO pcBO: productCategoryList) {
+                ProductCategoryTypeDto pcTypeDto = new ProductCategoryTypeDto(pcBO.getProductType().getProductTypeID(),
+                                            pcBO.getProductType().getLookUpValue().getLookUpName());
+                pcTypeList.add(pcTypeDto);
+
+                ProductCategoryDto pcDto = new ProductCategoryDto(pcBO.getProductCategoryName(), pcBO.getPrdCategoryStatus().getId(),
+                                                                    pcBO.getGlobalPrdCategoryNum());
+                pcList.add(pcDto);
+            }
+
+            ProductCategoryDisplayDto productCategoryDisplayDto = new ProductCategoryDisplayDto(pcTypeList, pcList);
+            return productCategoryDisplayDto;
+
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public ProductCategoryDetailsDto retrieveProductCateogry(String globalProductCategoryNumber) {
+
+        ProductCategoryBusinessService service = new ProductCategoryBusinessService();
+        try {
+            ProductCategoryBO pcBO = service.findByGlobalNum(globalProductCategoryNumber);
+            String productTypeName = service.getProductType(pcBO.getProductType().getProductTypeID()).getLookUpValue().getLookUpName();
+            ProductCategoryDetailsDto productCategoryDetailsDto = new ProductCategoryDetailsDto(pcBO.getProductCategoryName(),
+                                                                    pcBO.getPrdCategoryStatus().getId(),
+                                                                    pcBO.getProductType().getProductTypeID(), pcBO.getProductCategoryDesc(),
+                                                                    productTypeName);
+            return productCategoryDetailsDto;
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 }
