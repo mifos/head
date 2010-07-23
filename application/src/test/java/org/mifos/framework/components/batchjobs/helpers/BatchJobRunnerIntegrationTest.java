@@ -20,6 +20,7 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 
 public class BatchJobRunnerIntegrationTest extends MifosIntegrationTestCase {
@@ -27,7 +28,7 @@ public class BatchJobRunnerIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
-    public void testRunBatch() throws Exception {
+    @Test public void testRunBatch() throws Exception {
         new BranchReportHelper(new BranchReportTask()).execute(System.currentTimeMillis());
     }
 }

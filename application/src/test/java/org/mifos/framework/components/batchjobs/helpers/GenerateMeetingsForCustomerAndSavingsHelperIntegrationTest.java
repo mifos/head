@@ -26,6 +26,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -66,13 +69,12 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
 
     private UserContext userContext;
 
-    @Override
+    @Before
     protected void setUp() throws Exception {
-        super.setUp();
         userContext = TestObjectFactory.getContext();
     }
 
-    @Override
+    @After
     protected void tearDown() throws Exception {
         TestObjectFactory.cleanUp(savings);
         TestObjectFactory.cleanUp(client1);
@@ -80,10 +82,9 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    public void testExecuteForCustomerAccount() throws Exception {
+    @Test public void testExecuteForCustomerAccount() throws Exception {
         StaticHibernateUtil.startTransaction();
         createCenter();
         StaticHibernateUtil.commitTransaction();
@@ -102,7 +103,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         Assert.assertEquals(noOfInstallments + 10, center.getCustomerAccount().getAccountActionDates().size());
     }
 
-    public void testExecuteForSavingsAccount() throws Exception {
+    @Test public void testExecuteForSavingsAccount() throws Exception {
         int configuredValue = GeneralConfig.getOutputIntervalForBatchJobs();
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         int outputInterval = 1;
@@ -126,7 +127,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         }
     }
 
-    public void testExecuteForCustomerAndSavingsAccount() throws Exception {
+    @Test public void testExecuteForCustomerAndSavingsAccount() throws Exception {
         // jpw - this test is similar to testExecuteForSavingsAccount
         // Re-using much of it to test that customer and savings accounts are processed as have made separate queries to
         // return the two different types of accounts.
@@ -176,7 +177,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         }
     }
 
-    public void testExecuteForSavingsAccountForGroup() throws Exception {
+    @Test public void testExecuteForSavingsAccountForGroup() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE,

@@ -31,6 +31,9 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.hibernate.exception.ConstraintViolationException;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -87,15 +90,14 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
 
     PersonnelBO personnel;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
         branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         name = new Name("XYZ", null, null, null);
     }
 
-    @Override
+    @After
     protected void tearDown() throws Exception {
         office = null;
         branchOffice = null;
@@ -106,10 +108,9 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.cleanUp(personnel);
         TestObjectFactory.cleanUp(createdBranchOffice);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    public void testCreateFailureWithNullName() throws PersistenceException {
+    @Test public void testCreateFailureWithNullName() throws PersistenceException {
         try {
             new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD",
                     null, null, null, null, name, null, null, null, null, null, null, null,
@@ -120,7 +121,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testCreateFailureWithDuplicateName() throws PersistenceException {
+    @Test public void testCreateFailureWithDuplicateName() throws PersistenceException {
         try {
 
             new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD",
@@ -133,7 +134,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testCreateFailureWithDuplicateGovernMentId() throws PersistenceException {
+    @Test public void testCreateFailureWithDuplicateGovernMentId() throws PersistenceException {
         try {
             new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD",
                     "Raj", null, null, null, name, "123", null, null, null, null, null, null,
@@ -145,7 +146,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testCreateFailureWithDuplicateDisplayNameAndDOB() throws Exception {
+    @Test public void testCreateFailureWithDuplicateDisplayNameAndDOB() throws Exception {
         try {
 
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -160,7 +161,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testGetDateSucess() throws Exception {
+    @Test public void testGetDateSucess() throws Exception {
         Date date = new Date();
         PersonnelBO personnel = new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer.valueOf("1"), Short
                 .valueOf("1"), "ABCD", "RAJ", "rajendersaini@yahoo.com", ((PersonnelBusinessService) ServiceFactory
@@ -171,7 +172,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testGetDateFailure() throws Exception {
+    @Test public void testGetDateFailure() throws Exception {
         Date date = new Date();
         PersonnelBO personnel = new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer.valueOf("1"), Short
                 .valueOf("1"), "ABCD", "RAJ", "rajendersaini@yahoo.com", ((PersonnelBusinessService) ServiceFactory
@@ -182,7 +183,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testSaveFailure() throws Exception {
+    @Test public void testSaveFailure() throws Exception {
         Date date = new Date();
         PersonnelBO personnel = new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer.valueOf("1"), Short
                 .valueOf("1"), "ABCD", "RAJ", "rajendersaini@yahoo.com", ((PersonnelBusinessService) ServiceFactory
@@ -198,7 +199,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testCreateSucess() throws Exception {
+    @Test public void testCreateSucess() throws Exception {
         Date date = new Date();
 
         PersonnelBO personnel = new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer.valueOf("1"), Short
@@ -240,7 +241,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testUpdateFailureForBranchTransferWithActiveCustomer() throws Exception {
+    @Test public void testUpdateFailureForBranchTransferWithActiveCustomer() throws Exception {
 
         createdBranchOffice = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
         StaticHibernateUtil.closeSession();
@@ -267,7 +268,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateFailureForBranchTransferWithLoanOfficerInNonBranch() throws Exception {
+    @Test public void testUpdateFailureForBranchTransferWithLoanOfficerInNonBranch() throws Exception {
 
         createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
        Assert.assertEquals(branchOffice.getOfficeId(), personnel.getOffice().getOfficeId());
@@ -286,7 +287,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateFailureForUserHierarchyChangeWithLoanOfficerInNonBranch() throws Exception {
+    @Test public void testUpdateFailureForUserHierarchyChangeWithLoanOfficerInNonBranch() throws Exception {
 
         createPersonnel(office, PersonnelLevel.NON_LOAN_OFFICER);
         try {
@@ -300,7 +301,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateFailureForUserHierarchyChangeWithCustomersPresentForLoanOfficer() throws Exception {
+    @Test public void testUpdateFailureForUserHierarchyChangeWithCustomersPresentForLoanOfficer() throws Exception {
 
         createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
         createInitialObjects(branchOffice.getOfficeId(), personnel.getPersonnelId());
@@ -318,7 +319,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateFailureForStatusChangeWithCustomersPresentForLoanOfficer() throws Exception {
+    @Test public void testUpdateFailureForStatusChangeWithCustomersPresentForLoanOfficer() throws Exception {
 
         createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
         createInitialObjects(branchOffice.getOfficeId(), personnel.getPersonnelId());
@@ -336,7 +337,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateSucess() throws Exception {
+    @Test public void testUpdateSucess() throws Exception {
 
         createdBranchOffice = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
         StaticHibernateUtil.closeSession();
@@ -379,7 +380,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testSuccessUpdateUserSettings() throws Exception {
+    @Test public void testSuccessUpdateUserSettings() throws Exception {
         createdBranchOffice = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
         StaticHibernateUtil.closeSession();
         createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(OfficeBO.class,
@@ -410,7 +411,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals("xyz@aditi.com", personnel.getEmailId());
     }
 
-    public void testAddNotes() throws Exception {
+    @Test public void testAddNotes() throws Exception {
         createdBranchOffice = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
         StaticHibernateUtil.closeSession();
         createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(OfficeBO.class,
@@ -441,7 +442,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testSuccessfullLogin() throws Exception {
+    @Test public void testSuccessfullLogin() throws Exception {
         personnel = createPersonnel();
         String password = "ABCD";
         UserContext userContext = personnel.login(password);
@@ -466,7 +467,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(getRoles(personnel).size(), userContext.getRoles().size());
     }
 
-    public void testLoginForInvalidPassword() throws Exception {
+    @Test public void testLoginForInvalidPassword() throws Exception {
         personnel = createPersonnel();
         String password = "WRONG_PASSWORD";
         try {
@@ -479,7 +480,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testLoginForInactivePersonnel() throws Exception {
+    @Test public void testLoginForInactivePersonnel() throws Exception {
         personnel = createPersonnel();
         personnel.update(PersonnelStatus.INACTIVE, personnel.getLevelEnum(), personnel.getOffice(), personnel
                 .getTitle(), personnel.getPreferredLocale().getLocaleId(), "PASSWORD", personnel.getEmailId(), null,
@@ -501,7 +502,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testLoginFourConsecutiveWrongPasswordEntered() throws Exception {
+    @Test public void testLoginFourConsecutiveWrongPasswordEntered() throws Exception {
         personnel = createPersonnel();
         try {
             loginWithWrongPassword();
@@ -520,7 +521,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testLoginFourConsecutiveWrongPasswordEnteredFifthOneCorrect() throws Exception {
+    @Test public void testLoginFourConsecutiveWrongPasswordEnteredFifthOneCorrect() throws Exception {
         personnel = createPersonnel();
         loginWithWrongPassword();
         loginWithWrongPassword();
@@ -537,7 +538,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals("No of tries should be reseted to 0", 0, personnel.getNoOfTries().intValue());
     }
 
-    public void testLoginForLockedPersonnel() throws Exception {
+    @Test public void testLoginForLockedPersonnel() throws Exception {
         personnel = createPersonnel();
         String password = "WRONG_PASSWORD";
         try {
@@ -562,7 +563,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdatePasswordWithOldPassword() throws Exception {
+    @Test public void testUpdatePasswordWithOldPassword() throws Exception {
         personnel = createPersonnel();
         Assert.assertNull(personnel.getLastLogin());
         personnel.updatePassword("ABCD", "NEW_PASSWORD", Short.valueOf("1"));
@@ -573,7 +574,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertNotNull(personnel.getLastLogin());
     }
 
-    public void testUpdatePasswordWithWrongOldPassword() throws Exception {
+    @Test public void testUpdatePasswordWithWrongOldPassword() throws Exception {
         personnel = createPersonnel();
         Assert.assertNull(personnel.getLastLogin());
         try {
@@ -585,7 +586,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUnlockPersonnel() throws Exception {
+    @Test public void testUnlockPersonnel() throws Exception {
         personnel = createPersonnel();
         loginWithWrongPassword();
         loginWithWrongPassword();
@@ -605,7 +606,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(0, personnel.getNoOfTries().intValue());
     }
 
-    public void testUnlockPersonnelFailure() throws Exception {
+    @Test public void testUnlockPersonnelFailure() throws Exception {
         try {
             personnel = createPersonnel();
             loginWithWrongPassword();
@@ -627,7 +628,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testReLoginAfterUnlock() throws Exception {
+    @Test public void testReLoginAfterUnlock() throws Exception {
         personnel = createPersonnel();
         loginWithWrongPassword();
         loginWithWrongPassword();
@@ -650,13 +651,13 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(0, personnel.getNoOfTries().intValue());
     }
 
-    public void testPersonnelView() throws Exception {
+    @Test public void testPersonnelView() throws Exception {
         PersonnelDto personnelDto = new PersonnelDto(Short.valueOf("1"), "Raj");
        Assert.assertEquals(Short.valueOf("1"), personnelDto.getPersonnelId());
        Assert.assertEquals("Raj", personnelDto.getDisplayName());
     }
 
-    public void testGetLocaleId() throws Exception {
+    @Test public void testGetLocaleId() throws Exception {
         Short localeId = 1;
         PersonnelBO personnel = new PersonnelBO();
         personnel.setPreferredLocale(new SupportedLocalesEntity(localeId));
@@ -664,7 +665,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(localeId, personnel.getLocaleId());
     }
 
-    public void testCreateFailureWithDuplicateUserName() throws Exception {
+    @Test public void testCreateFailureWithDuplicateUserName() throws Exception {
         try {
 
             PersonnelBO person1 = new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer.valueOf("1"), Short

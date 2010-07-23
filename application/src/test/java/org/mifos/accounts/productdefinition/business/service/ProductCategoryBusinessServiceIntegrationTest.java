@@ -26,6 +26,9 @@ import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
@@ -46,22 +49,20 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
 
     private UserContext userContext = null;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         productCategoryBusinessService = new ProductCategoryBusinessService();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         productCategoryBusinessService = null;
         userContext = null;
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
 
-    public void testGetProductTypes() throws Exception {
+    @Test public void testGetProductTypes() throws Exception {
         UserContext context = TestUtils.makeUser();
 
         List<ProductTypeEntity> productTypeList = productCategoryBusinessService.getProductTypes();
@@ -76,7 +77,7 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
         }
     }
 
-    public void testGetProductTypesFailure() throws Exception {
+    @Test public void testGetProductTypesFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             productCategoryBusinessService.getProductTypes();
@@ -86,13 +87,13 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
         }
     }
 
-    public void testFindByGlobalNum() throws Exception {
+    @Test public void testFindByGlobalNum() throws Exception {
         ProductCategoryBO productCategoryBO = createProductCategory();
         Assert.assertNotNull(productCategoryBusinessService.findByGlobalNum(productCategoryBO.getGlobalPrdCategoryNum()));
         deleteProductCategory(productCategoryBO);
     }
 
-    public void testFindByGlobalNumFailure() throws Exception {
+    @Test public void testFindByGlobalNumFailure() throws Exception {
         ProductCategoryBO productCategoryBO = createProductCategory();
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -104,11 +105,11 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
         }
     }
 
-    public void testGetProductCategoryStatusList() throws Exception {
+    @Test public void testGetProductCategoryStatusList() throws Exception {
        Assert.assertEquals(2, productCategoryBusinessService.getProductCategoryStatusList().size());
     }
 
-    public void testGetProductCategoryStatusListFailure() throws Exception {
+    @Test public void testGetProductCategoryStatusListFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             productCategoryBusinessService.getProductCategoryStatusList();
@@ -118,14 +119,14 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
         }
     }
 
-    public void testGetAllCategories() throws Exception {
+    @Test public void testGetAllCategories() throws Exception {
        Assert.assertEquals(2, productCategoryBusinessService.getAllCategories().size());
         ProductCategoryBO productCategoryBO = createProductCategory();
        Assert.assertEquals(3, productCategoryBusinessService.getAllCategories().size());
         deleteProductCategory(productCategoryBO);
     }
 
-    public void testGetAllCategoriesFailure() throws Exception {
+    @Test public void testGetAllCategoriesFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             productCategoryBusinessService.getAllCategories();

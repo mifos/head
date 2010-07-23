@@ -44,6 +44,9 @@ import junit.framework.Assert;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.joda.time.Days;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountBO;
@@ -136,23 +139,21 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         return MoneyUtils.currencyRound(new Money(TestUtils.RUPEE, value.toString()));
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         StaticHibernateUtil.disableCommits();
         userContext = TestUtils.makeUser();
         createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         StaticHibernateUtil.enableCommits();
         StaticHibernateUtil.rollbackTransaction();
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    public void testInterestAdjustmentOnLaterWithdrawal() throws Exception {
+    @Test public void testInterestAdjustmentOnLaterWithdrawal() throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.MANDATORY,
                 InterestCalcType.MINIMUM_BALANCE, MONTHLY, EVERY_MONTH);
@@ -204,7 +205,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            fail();
+            Assert.fail();
         }
         StaticHibernateUtil.flushAndClearSession();
         savings = savingsPersistence.findById(savings.getAccountId());
@@ -264,7 +265,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
      * FIXME: notice the hardcoded dates in the year 2030, below. This is likely a time bomb, but perhaps not as much of
      * a problem as when we reach the year 2038.
      */
-    public void testInterestAdjustmentOnLaterDeposit() throws Exception {
+    @Test public void testInterestAdjustmentOnLaterDeposit() throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.MANDATORY,
                 InterestCalcType.MINIMUM_BALANCE, MONTHLY, EVERY_MONTH);
@@ -394,7 +395,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testInterestAdjustmentOnFirstDeposit() throws Exception {
+    @Test public void testInterestAdjustmentOnFirstDeposit() throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.MANDATORY,
                 InterestCalcType.MINIMUM_BALANCE, MONTHLY, EVERY_MONTH);
@@ -530,7 +531,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
                 minAmtToCalculateInterest, savingsType, interestCalcType, meetingIntCalc, meetingIntPost);
     }
 
-    public void testCalcDateAndPostDatesAreSameForDaily() throws Exception {
+    @Test public void testCalcDateAndPostDatesAreSameForDaily() throws Exception {
 
         createInitialObjects();
         Date startDate = DateUtils.getCurrentDateWithoutTimeStamp();
@@ -561,7 +562,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testCalcDateAndPostDatesAreSameForWeekly() throws Exception {
+    @Test public void testCalcDateAndPostDatesAreSameForWeekly() throws Exception {
 
         createInitialObjects();
         Date startDate = DateUtils.getCurrentDateWithoutTimeStamp();
@@ -592,7 +593,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testCalcDateAndPostDatesAreSameForMonthly() throws Exception {
+    @Test public void testCalcDateAndPostDatesAreSameForMonthly() throws Exception {
 
         createInitialObjects();
         Date startDate = DateUtils.getCurrentDateWithoutTimeStamp();
@@ -621,7 +622,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testCalculateInterest_IntCalcFreqMonthly_minbal() throws Exception {
+    @Test public void testCalculateInterest_IntCalcFreqMonthly_minbal() throws Exception {
 
         createInitialObjects();
         Short savedDigits = AccountingRules.getDigitsAfterDecimal();
@@ -708,7 +709,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         return TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
     }
 
-    public void testInterestAdjustment_LastDepositPaymentNullify_AfterMultiple_Interest_Calculation_WithMinBal()
+    @Test public void testInterestAdjustment_LastDepositPaymentNullify_AfterMultiple_Interest_Calculation_WithMinBal()
             throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.MANDATORY,
@@ -836,7 +837,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testInterestAdjustment_LastWithdrawalPaymentNullify_AfterMultiple_Interest_Calculation_WithMinBal()
+    @Test public void testInterestAdjustment_LastWithdrawalPaymentNullify_AfterMultiple_Interest_Calculation_WithMinBal()
             throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.MANDATORY,
@@ -928,7 +929,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testInterestAdjustment_LastPaymentBefore_InterestCalc_has_MultipleTrxns() throws Exception {
+    @Test public void testInterestAdjustment_LastPaymentBefore_InterestCalc_has_MultipleTrxns() throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.MANDATORY,
                 InterestCalcType.AVERAGE_BALANCE, MONTHLY, EVERY_MONTH);
@@ -1045,7 +1046,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testInterestAdjustment_LastDepositPaymentModified_AfterMultiple_Interest_Calculation_WithAvgBal()
+    @Test public void testInterestAdjustment_LastDepositPaymentModified_AfterMultiple_Interest_Calculation_WithAvgBal()
             throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.MANDATORY,
@@ -1173,7 +1174,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testInterestAdjustment_LastDepositPaymentNullify_AfterMultiple_Interest_Calculation_WithAvgBal()
+    @Test public void testInterestAdjustment_LastDepositPaymentNullify_AfterMultiple_Interest_Calculation_WithAvgBal()
             throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.MANDATORY,
@@ -1302,7 +1303,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testInterestAdjustment_LastDepositPaymentModified_AfterMultiple_Interest_Calculation_WithMinBal()
+    @Test public void testInterestAdjustment_LastDepositPaymentModified_AfterMultiple_Interest_Calculation_WithMinBal()
             throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.VOLUNTARY,
@@ -1384,7 +1385,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testSavingsTrxnDetailsWithZeroAmt() throws Exception {
+    @Test public void testSavingsTrxnDetailsWithZeroAmt() throws Exception {
         savings = createSavingsAccountPayment();
         for (AccountPaymentEntity accountPaymentEntity : savings.getAccountPayments()) {
             for (AccountTrxnEntity accountTrxnEntity : accountPaymentEntity.getAccountTrxns()) {
@@ -1491,7 +1492,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(group.getPersonnel().getPersonnelId(), savings.getPersonnel().getPersonnelId());
     }
 
-    public void testInterestAdjustment_LastWithdrawalPaymentNullified_WithMinBal() throws Exception {
+    @Test public void testInterestAdjustment_LastWithdrawalPaymentNullified_WithMinBal() throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.VOLUNTARY,
                 InterestCalcType.MINIMUM_BALANCE, MONTHLY, EVERY_MONTH);
@@ -1575,7 +1576,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testInterestAdjustment_LastWithdrawalPaymentNullified_WithAvgBal() throws Exception {
+    @Test public void testInterestAdjustment_LastWithdrawalPaymentNullified_WithAvgBal() throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.VOLUNTARY,
                 InterestCalcType.AVERAGE_BALANCE, MONTHLY, EVERY_MONTH);
@@ -1655,7 +1656,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testInterestAdjustment_LastDepositPaymentNullified_WithAvgBal() throws Exception {
+    @Test public void testInterestAdjustment_LastDepositPaymentNullified_WithAvgBal() throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.VOLUNTARY,
                 InterestCalcType.AVERAGE_BALANCE, MONTHLY, EVERY_MONTH);
@@ -1732,7 +1733,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testInterestAdjustment_LastDepositPaymentNullified_WithMinBal() throws Exception {
+    @Test public void testInterestAdjustment_LastDepositPaymentNullified_WithMinBal() throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.VOLUNTARY,
                 InterestCalcType.MINIMUM_BALANCE, MONTHLY, EVERY_MONTH);
@@ -1792,7 +1793,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testIsTrxnDateValid_BeforeFirstMeeting() throws Exception {
+    @Test public void testIsTrxnDateValid_BeforeFirstMeeting() throws Exception {
         createInitialObjects();
         savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
                 RecommendedAmountUnit.COMPLETE_GROUP);
@@ -1815,7 +1816,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
 
-    public void testIsTrxnDateValid_AfterFirstMeeting() throws Exception {
+    @Test public void testIsTrxnDateValid_AfterFirstMeeting() throws Exception {
         createInitialObjects();
         savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
                 RecommendedAmountUnit.COMPLETE_GROUP);
@@ -1840,7 +1841,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
 
-    public void testSuccessfulSave() throws Exception {
+    @Test public void testSuccessfulSave() throws Exception {
         createInitialObjects();
         savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
                 RecommendedAmountUnit.PER_INDIVIDUAL);
@@ -1855,7 +1856,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(TestUtils.createMoney(100.0), savings.getRecommendedAmount());
     }
 
-    public void testSuccessfulSaveInApprovedState() throws Exception {
+    @Test public void testSuccessfulSaveInApprovedState() throws Exception {
         center = helper.createCenter();
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
         client1 = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_CLOSED, group);
@@ -1874,7 +1875,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testSuccessfulUpdate() throws Exception {
+    @Test public void testSuccessfulUpdate() throws Exception {
         createInitialObjects();
         savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
                 RecommendedAmountUnit.PER_INDIVIDUAL);
@@ -1888,7 +1889,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(TestUtils.createMoney(700.0), savings.getRecommendedAmount());
     }
 
-    public void testSuccessfulUpdateDepositSchedule() throws Exception {
+    @Test public void testSuccessfulUpdateDepositSchedule() throws Exception {
         createInitialObjects();
         savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
                 RecommendedAmountUnit.COMPLETE_GROUP);
@@ -1910,7 +1911,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testGetMinimumBalance() throws Exception {
+    @Test public void testGetMinimumBalance() throws Exception {
         savings = createSavingsWithAccountPayments();
         SavingsTrxnDetailEntity initialTrxn = new SavingsPersistence().retrieveFirstTransaction(savings.getAccountId());
         boolean initialBalance = false;
@@ -1928,7 +1929,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     // (16/02/2006 - 05/03/06) 17 4000*17 + (05/03/2006 - 05/04/06) 31 4200*31 +
     // (05/04/2006 - 10/04/06) 05 4000*5 = 523200 Avg = 523200/95 = 5507.3
 
-    public void testGetAverageBalance() throws Exception {
+    @Test public void testGetAverageBalance() throws Exception {
         savings = createSavingsWithAccountPayments();
         SavingsTrxnDetailEntity initialTrxn = new SavingsPersistence().retrieveLastTransaction(savings.getAccountId(),
                 helper.getDate("05/01/2006"));
@@ -1941,7 +1942,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = TestObjectFactory.getCenter(group.getParentCustomer().getCustomerId());
     }
 
-    public void testCalculateInterestForClosureAvgBal() throws Exception {
+    @Test public void testCalculateInterestForClosureAvgBal() throws Exception {
         createInitialObjects();
         savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
                 RecommendedAmountUnit.PER_INDIVIDUAL);
@@ -1967,7 +1968,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testCalculateInterestForClosureWithMinValueForIntCalc() throws Exception {
+    @Test public void testCalculateInterestForClosureWithMinValueForIntCalc() throws Exception {
         createInitialObjects();
         savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
                 RecommendedAmountUnit.PER_INDIVIDUAL);
@@ -1993,7 +1994,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testCalculateInterestForClosure() throws Exception {
+    @Test public void testCalculateInterestForClosure() throws Exception {
         // using min balance for interest calculation
         // from 15/01/2006 to 10/03/2006 = 85 no of days
         // interest Rate 24% per anum
@@ -2048,7 +2049,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(getRoundedMoney(78.3), roundedInterestForClosure);
     }
 
-    public void testIsMandatory() throws Exception {
+    @Test public void testIsMandatory() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -2056,7 +2057,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(Boolean.valueOf(false).booleanValue(), savings.isMandatory());
     }
 
-    public void testIsDepositScheduleBeRegenerated() throws Exception {
+    @Test public void testIsDepositScheduleBeRegenerated() throws Exception {
         createInitialObjects();
         savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
                 RecommendedAmountUnit.PER_INDIVIDUAL);
@@ -2065,7 +2066,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(Boolean.valueOf(false).booleanValue(), savings.isMandatory());
     }
 
-    public void testGenerateAndUpdateDepositActionsForClient() throws Exception {
+    @Test public void testGenerateAndUpdateDepositActionsForClient() throws Exception {
         center = helper.createCenter();
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
         savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
@@ -2091,7 +2092,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testSuccessfulWithdraw() throws AccountException, Exception {
+    @Test public void testSuccessfulWithdraw() throws AccountException, Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
@@ -2117,7 +2118,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.getAccountPayments().clear();
     }
 
-    public void testSuccessfulApplyPayment() throws AccountException, Exception {
+    @Test public void testSuccessfulApplyPayment() throws AccountException, Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
@@ -2148,7 +2149,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         client1 = customerPersistence.getCustomer(client1.getCustomerId());
     }
 
-    public void testSuccessfulDepositForCenterAccount() throws AccountException, Exception {
+    @Test public void testSuccessfulDepositForCenterAccount() throws AccountException, Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
@@ -2191,7 +2192,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         client1 = customerPersistence.getCustomer(client1.getCustomerId());
     }
 
-    public void testSuccessfulApplyPaymentWhenNoDepositDue() throws Exception {
+    @Test public void testSuccessfulApplyPaymentWhenNoDepositDue() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000X00000000013", savingsOffering, group,
@@ -2224,7 +2225,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         return new SavingsPaymentData(bulkEntryAccountActionView);
     }
 
-    public void testMaxWithdrawAmount() throws AccountException, Exception {
+    @Test public void testMaxWithdrawAmount() throws AccountException, Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
@@ -2255,7 +2256,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.getAccountPayments().clear();
     }
 
-    public void testSuccessfulFlagSave() throws Exception {
+    @Test public void testSuccessfulFlagSave() throws Exception {
         Session session = StaticHibernateUtil.getSessionTL();
         StaticHibernateUtil.startTransaction();
         createInitialObjects();
@@ -2280,7 +2281,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testChangeStatusPermissionToPendingApprovalSucess() throws Exception {
+    @Test public void testChangeStatusPermissionToPendingApprovalSucess() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -2291,7 +2292,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testChangeStatusPermissionToCancelBlacklistedSucess() throws Exception {
+    @Test public void testChangeStatusPermissionToCancelBlacklistedSucess() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -2304,7 +2305,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testIsAdjustPossibleOnLastTrxn_OnPartialAccount() throws Exception {
+    @Test public void testIsAdjustPossibleOnLastTrxn_OnPartialAccount() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -2316,7 +2317,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
     }
 
-    public void testIsAdjustPossibleOnLastTrxn_NoLastPayment() throws Exception {
+    @Test public void testIsAdjustPossibleOnLastTrxn_NoLastPayment() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -2328,7 +2329,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
     }
 
-    public void testIsAdjustPossibleOnLastTrxn_LastPaymentIsInterestPosting() throws Exception {
+    @Test public void testIsAdjustPossibleOnLastTrxn_LastPaymentIsInterestPosting() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -2346,7 +2347,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
     }
 
-    public void testIsAdjustPossibleOnLastTrxn_AmountSame() throws Exception {
+    @Test public void testIsAdjustPossibleOnLastTrxn_AmountSame() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -2364,7 +2365,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
     }
 
-    public void testIsAdjustPossibleOnLastTrxn_MaxWithdrawalAmntIsLess() throws Exception {
+    @Test public void testIsAdjustPossibleOnLastTrxn_MaxWithdrawalAmntIsLess() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -2383,7 +2384,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
     }
 
-    public void testIsAdjustPossibleOnLastTrxn_Balance_Negative() throws Exception {
+    @Test public void testIsAdjustPossibleOnLastTrxn_Balance_Negative() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -2407,7 +2408,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     // When IsAdjustPossibleOnLastTrxn returns false.
 
-    public void testAdjustPmntFailure() throws Exception {
+    @Test public void testAdjustPmntFailure() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -2433,7 +2434,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getSavingsBalance(), new Money(currency, "400.0"));
     }
 
-    public void testAdjustPmnt_LastPaymentNullified() throws Exception {
+    @Test public void testAdjustPmnt_LastPaymentNullified() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -2471,7 +2472,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testAdjustPmnt_LastPaymentDecreasedForWithdrawal() throws Exception {
+    @Test public void testAdjustPmnt_LastPaymentDecreasedForWithdrawal() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savingsOffering.setMaxAmntWithdrawl(new Money(getCurrency(), "2500"));
@@ -2525,7 +2526,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testAdjustPmnt_LastPaymentIncreasedForWithdrawal() throws Exception {
+    @Test public void testAdjustPmnt_LastPaymentIncreasedForWithdrawal() throws Exception {
         createInitialObjects();
         client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
@@ -2576,7 +2577,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         client1 = TestObjectFactory.getClient(client1.getCustomerId());
     }
 
-    public void testAdjustPmnt_LastPaymentDepositVol_without_schedule() throws Exception {
+    @Test public void testAdjustPmnt_LastPaymentDepositVol_without_schedule() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savingsOffering.setMaxAmntWithdrawl(new Money(getCurrency(), "2500"));
@@ -2630,7 +2631,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testAdjustPmnt_LastPaymentDepositMandatory_PaidAllDue() throws Exception {
+    @Test public void testAdjustPmnt_LastPaymentDepositMandatory_PaidAllDue() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -2719,7 +2720,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testAdjustPmnt_LastPaymentDepositMandatory_PaidSomeDueInstallments() throws Exception {
+    @Test public void testAdjustPmnt_LastPaymentDepositMandatory_PaidSomeDueInstallments() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -2788,7 +2789,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testAdjustPmnt_LastPaymentDepositMandatory_PaidPartialDueAmount() throws Exception {
+    @Test public void testAdjustPmnt_LastPaymentDepositMandatory_PaidPartialDueAmount() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("prd143", InterestCalcType.MINIMUM_BALANCE,
                 SavingsType.MANDATORY);
@@ -2861,7 +2862,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testAdjustPmnt_LastPaymentDepositVol_PaidDueExactAmount() throws Exception {
+    @Test public void testAdjustPmnt_LastPaymentDepositVol_PaidDueExactAmount() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -2923,7 +2924,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testAdjustPmnt_LastPaymentDepositVol_PaidDueExcessAmount() throws Exception {
+    @Test public void testAdjustPmnt_LastPaymentDepositVol_PaidDueExcessAmount() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -2985,7 +2986,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testGetOverDueDepositAmountForMandatoryAccounts() throws Exception {
+    @Test public void testGetOverDueDepositAmountForMandatoryAccounts() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
@@ -3013,7 +3014,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testGetOverDueDepositAmountForVoluntaryAccounts() throws Exception {
+    @Test public void testGetOverDueDepositAmountForVoluntaryAccounts() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         SavingsOfferingBO savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
@@ -3033,7 +3034,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testGetRecentAccountActivity() throws Exception {
+    @Test public void testGetRecentAccountActivity() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -3078,12 +3079,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     // +
     // amount to be paid for next installment)
 
-    public void testGetTotalAmountInArrearsForCurrentDateMeeting() throws Exception {
+    @Test public void testGetTotalAmountInArrearsForCurrentDateMeeting() throws Exception {
         savings = getSavingsAccount();
         Assert.assertEquals(savings.getTotalAmountInArrears(), getRoundedMoney(0.0));
     }
 
-    public void testGetTotalAmountInArrearsForSingleInstallmentDue() throws Exception {
+    @Test public void testGetTotalAmountInArrearsForSingleInstallmentDue() throws Exception {
         savings = getSavingsAccount();
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate((short) 1);
         ((SavingsScheduleEntity) accountActionDateEntity).setActionDate(offSetCurrentDate(1));
@@ -3091,7 +3092,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(TestUtils.createMoney(200.0), savings.getTotalAmountInArrears());
     }
 
-    public void testGetTotalAmountInArrearsWithPartialPayment() throws Exception {
+    @Test public void testGetTotalAmountInArrearsWithPartialPayment() throws Exception {
         savings = getSavingsAccount();
         SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
         accountActionDateEntity.setDepositPaid(new Money(getCurrency(), "20.0"));
@@ -3101,7 +3102,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(TestUtils.createMoney(180.0), savings.getTotalAmountInArrears());
     }
 
-    public void testGetTotalAmountInArrearsWithPaymentDone() throws Exception {
+    @Test public void testGetTotalAmountInArrearsWithPaymentDone() throws Exception {
         savings = getSavingsAccount();
 
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate(Short.valueOf("1"));
@@ -3111,7 +3112,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getTotalAmountInArrears(), TestUtils.createMoney());
     }
 
-    public void testGetTotalAmountDueForTwoInstallmentsDue() throws Exception {
+    @Test public void testGetTotalAmountDueForTwoInstallmentsDue() throws Exception {
         savings = getSavingsAccount();
 
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate((short) 1);
@@ -3124,12 +3125,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getTotalAmountInArrears(), TestUtils.createMoney(400.0));
     }
 
-    public void testGetTotalAmountDueForCurrentDateMeeting() throws Exception {
+    @Test public void testGetTotalAmountDueForCurrentDateMeeting() throws Exception {
         savings = getSavingsAccount();
         Assert.assertEquals(savings.getTotalAmountDue(), TestUtils.createMoney(200.0));
     }
 
-    public void testGetTotalAmountDueForSingleInstallment() throws Exception {
+    @Test public void testGetTotalAmountDueForSingleInstallment() throws Exception {
         savings = getSavingsAccount();
 
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate((short) 1);
@@ -3139,7 +3140,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getTotalAmountDue(), TestUtils.createMoney(400.0));
     }
 
-    public void testGetTotalAmountDueWithPartialPayment() throws Exception {
+    @Test public void testGetTotalAmountDueWithPartialPayment() throws Exception {
         savings = getSavingsAccount();
 
         SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
@@ -3150,7 +3151,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getTotalAmountDue(), TestUtils.createMoney(380.0));
     }
 
-    public void testGetTotalAmountDueWithPaymentDone() throws Exception {
+    @Test public void testGetTotalAmountDueWithPaymentDone() throws Exception {
         savings = getSavingsAccount();
 
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate((short) 1);
@@ -3162,7 +3163,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getTotalAmountDue(), TestUtils.createMoney(200.0));
     }
 
-    public void testGetTotalAmountDueForTwoInstallments() throws Exception {
+    @Test public void testGetTotalAmountDueForTwoInstallments() throws Exception {
         savings = getSavingsAccount();
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate((short) 1);
         ((SavingsScheduleEntity) accountActionDateEntity).setActionDate(offSetCurrentDate(2));
@@ -3199,7 +3200,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
     }
 
-    public void testGetTotalAmountDueForCenter() throws Exception {
+    @Test public void testGetTotalAmountDueForCenter() throws Exception {
         savings = getSavingsAccountForCenter();
         Money dueAmount = new Money(getCurrency());
         for (AccountActionDateEntity actionDate : savings.getAccountActionDates()) {
@@ -3210,12 +3211,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(dueAmount, savings.getTotalAmountDue());
     }
 
-    public void testGetTotalAmountDueForNextInstallmentForCurrentDateMeeting() throws Exception {
+    @Test public void testGetTotalAmountDueForNextInstallmentForCurrentDateMeeting() throws Exception {
         savings = getSavingsAccount();
         Assert.assertEquals(savings.getTotalAmountDueForNextInstallment(), TestUtils.createMoney(200.0));
     }
 
-    public void testGetTotalAmountDueForNextInstallmentWithPartialPayment() throws Exception {
+    @Test public void testGetTotalAmountDueForNextInstallmentWithPartialPayment() throws Exception {
         savings = getSavingsAccount();
         SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
         accountActionDateEntity.setDepositPaid(new Money(getCurrency(), "20.0"));
@@ -3224,7 +3225,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getTotalAmountDueForNextInstallment(), getRoundedMoney(180.0));
     }
 
-    public void testGetTotalAmountDueForNextInstallmentPaymentDone() throws Exception {
+    @Test public void testGetTotalAmountDueForNextInstallmentPaymentDone() throws Exception {
         savings = getSavingsAccount();
 
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate(Short.valueOf("1"));
@@ -3233,12 +3234,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getTotalAmountDueForNextInstallment(), TestUtils.createMoney());
     }
 
-    public void testGetDetailsOfInstallmentsInArrearsForCurrentDateMeeting() throws Exception {
+    @Test public void testGetDetailsOfInstallmentsInArrearsForCurrentDateMeeting() throws Exception {
         savings = getSavingsAccount();
         Assert.assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 0);
     }
 
-    public void testGetDetailsOfInstallmentsInArrearsForSingleInstallmentDue() throws Exception {
+    @Test public void testGetDetailsOfInstallmentsInArrearsForSingleInstallmentDue() throws Exception {
         savings = getSavingsAccount();
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate((short) 1);
         ((SavingsScheduleEntity) accountActionDateEntity).setActionDate(offSetCurrentDate(1));
@@ -3246,7 +3247,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 1);
     }
 
-    public void testGetDetailsOfInstallmentsInArrearsWithPaymentDone() throws Exception {
+    @Test public void testGetDetailsOfInstallmentsInArrearsWithPaymentDone() throws Exception {
         savings = getSavingsAccount();
 
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate(Short.valueOf("1"));
@@ -3256,7 +3257,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 0);
     }
 
-    public void testGetDetailsOfInstallmentsInArrearsForTwoInstallmentsDue() throws Exception {
+    @Test public void testGetDetailsOfInstallmentsInArrearsForTwoInstallmentsDue() throws Exception {
         savings = getSavingsAccount();
 
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate((short) 1);
@@ -3269,7 +3270,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 2);
     }
 
-    public void testWaiveAmountOverDueForSingleInstallmentDue() throws Exception {
+    @Test public void testWaiveAmountOverDueForSingleInstallmentDue() throws Exception {
         savings = getSavingsAccount();
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate((short) 1);
         ((SavingsScheduleEntity) accountActionDateEntity).setActionDate(offSetCurrentDate(1));
@@ -3281,7 +3282,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getSavingsActivityDetails().size(), 1);
     }
 
-    public void testWaiveAmountOverDueWithPartialPayment() throws Exception {
+    @Test public void testWaiveAmountOverDueWithPartialPayment() throws Exception {
         savings = getSavingsAccount();
         SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
         accountActionDateEntity.setDepositPaid(new Money(getCurrency(), "20.0"));
@@ -3296,7 +3297,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getSavingsActivityDetails().size(), 1);
     }
 
-    public void testWaiveAmountOverDueForTwoInstallmentsDue() throws Exception {
+    @Test public void testWaiveAmountOverDueForTwoInstallmentsDue() throws Exception {
         savings = getSavingsAccount();
 
         SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
@@ -3315,7 +3316,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getSavingsActivityDetails().size(), 1);
     }
 
-    public void testWaiveAmountDueForCurrentDateMeeting() throws Exception {
+    @Test public void testWaiveAmountDueForCurrentDateMeeting() throws Exception {
         savings = getSavingsAccount();
         Assert.assertEquals(savings.getTotalAmountDueForNextInstallment(), TestUtils.createMoney(200.0));
         savings.waiveAmountDue(WaiveEnum.ALL);
@@ -3324,7 +3325,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getSavingsActivityDetails().size(), 1);
     }
 
-    public void testWaiveAmountDueWithPartialPayment() throws Exception {
+    @Test public void testWaiveAmountDueWithPartialPayment() throws Exception {
         savings = getSavingsAccount();
         SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
         accountActionDateEntity.setDepositPaid(new Money(getCurrency(), "20.0"));
@@ -3347,7 +3348,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_ACTIVE, group);
     }
 
-    public void testCalculateInterest_IntCalcFreqOneDay_minbal() throws Exception {
+    @Test public void testCalculateInterest_IntCalcFreqOneDay_minbal() throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.VOLUNTARY,
                 InterestCalcType.MINIMUM_BALANCE, DAILY, EVERY_DAY);
@@ -3383,7 +3384,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(helper.getDate("08/03/2006"), savings.getNextIntCalcDate());
     }
 
-    public void testCalculateInterest_IntCalcFreqOneDay_avgBal() throws Exception {
+    @Test public void testCalculateInterest_IntCalcFreqOneDay_avgBal() throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.VOLUNTARY,
                 InterestCalcType.AVERAGE_BALANCE, DAILY, EVERY_DAY);
@@ -3419,7 +3420,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(helper.getDate("08/03/2006"), savings.getNextIntCalcDate());
     }
 
-    public void testCalculateInterest_IntCalcFreqTenDays_minbal() throws Exception {
+    @Test public void testCalculateInterest_IntCalcFreqTenDays_minbal() throws Exception {
         final short TEN_DAYS = 10;
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.VOLUNTARY,
@@ -3466,7 +3467,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(helper.getDate("01/04/2006"), savings.getNextIntCalcDate());
     }
 
-    public void testCalculateInterest_IntCalcFreqTenDays_avg() throws Exception {
+    @Test public void testCalculateInterest_IntCalcFreqTenDays_avg() throws Exception {
         final short TEN_DAYS = 10;
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.VOLUNTARY,
@@ -3547,7 +3548,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         return new java.sql.Date(currentDateCalendar.getTimeInMillis());
     }
 
-    public void testInterestAdjustment_LastWithdrawalPaymentModified_WithMinBal() throws Exception {
+    @Test public void testInterestAdjustment_LastWithdrawalPaymentModified_WithMinBal() throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.VOLUNTARY,
                 InterestCalcType.MINIMUM_BALANCE, MONTHLY, EVERY_MONTH);
@@ -3617,7 +3618,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testInterestAdjustment_LastDepositPaymentModified_WithAvgBal() throws Exception {
+    @Test public void testInterestAdjustment_LastDepositPaymentModified_WithAvgBal() throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh", SavingsType.VOLUNTARY,
                 InterestCalcType.AVERAGE_BALANCE, MONTHLY, EVERY_MONTH);
@@ -3710,7 +3711,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         return savings;
     }
 
-    public void testGetTotalPaymentDueForVol() throws Exception {
+    @Test public void testGetTotalPaymentDueForVol() throws Exception {
         createObjectToCheckForTotalInstallmentDue(SavingsType.VOLUNTARY);
         savings = savingsPersistence.findById(savings.getAccountId());
         Money recommendedAmnt = new Money(currency, "500.0");
@@ -3720,7 +3721,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testGetTotalInstallmentDueForVol() throws Exception {
+    @Test public void testGetTotalInstallmentDueForVol() throws Exception {
         createObjectToCheckForTotalInstallmentDue(SavingsType.VOLUNTARY);
         savings = savingsPersistence.findById(savings.getAccountId());
         List<AccountActionDateEntity> dueInstallment = savings.getTotalInstallmentsDue(group.getCustomerId());
@@ -3730,7 +3731,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testGetTotalPaymentDueForMan() throws Exception {
+    @Test public void testGetTotalPaymentDueForMan() throws Exception {
         createObjectToCheckForTotalInstallmentDue(SavingsType.MANDATORY);
         savings = savingsPersistence.findById(savings.getAccountId());
         Money amount = new Money(currency, "1000.0");
@@ -3740,7 +3741,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    public void testGetTotalInstallmentDueForMan() throws Exception {
+    @Test public void testGetTotalInstallmentDueForMan() throws Exception {
         createObjectToCheckForTotalInstallmentDue(SavingsType.MANDATORY);
         savings = savingsPersistence.findById(savings.getAccountId());
         List<AccountActionDateEntity> dueInstallment = savings.getTotalInstallmentsDue(group.getCustomerId());
@@ -3773,7 +3774,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testSuccessfulCloseAccount() throws Exception {
+    @Test public void testSuccessfulCloseAccount() throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
@@ -3840,7 +3841,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         return helper.createSavingsAccount(savingsOffering, center, AccountState.SAVINGS_ACTIVE, userContext);
     }
 
-    public void testGetRecentAccountNotes() throws Exception {
+    @Test public void testGetRecentAccountNotes() throws Exception {
         savings = getSavingsAccountForCenter();
         addNotes("note1");
         addNotes("note2");
@@ -3859,7 +3860,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testGenerateMeetingForNextYear() throws Exception {
+    @Test public void testGenerateMeetingForNextYear() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
 

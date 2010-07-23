@@ -29,6 +29,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
@@ -61,106 +64,104 @@ public class PrdOfferingPersistenceIntegrationTest extends MifosIntegrationTestC
     ProductMixBO prdmix;
     ProductMixBO prdmix2;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         persistence = new PrdOfferingPersistence();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.removeObject(prdmix);
         TestObjectFactory.removeObject(prdmix2);
         TestObjectFactory.removeObject(loanOffering);
         TestObjectFactory.removeObject(loanOffering2);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    public void testretrieveLatenessForPrd() throws Exception {
+    @Test public void testretrieveLatenessForPrd() throws Exception {
         Short latenessDays = null;
         latenessDays = new LoanPrdPersistence().retrieveLatenessForPrd();
         Assert.assertNotNull(latenessDays);
        Assert.assertEquals(Short.valueOf("10"), latenessDays);
     }
 
-    public void testGetAllPrdOffringByType() throws Exception {
+    @Test public void testGetAllPrdOffringByType() throws Exception {
         Assert.assertNotNull(new PrdOfferingPersistence().getAllPrdOffringByType(ProductType.LOAN.getValue().toString()));
     }
 
-    public void testGetMaxPrdOfferingWithouProduct() throws PersistenceException {
+    @Test public void testGetMaxPrdOfferingWithouProduct() throws PersistenceException {
         Assert.assertNull(new PrdOfferingPersistence().getMaxPrdOffering());
     }
 
-    public void testGetAllowedPrdOfferingsByType() throws PersistenceException {
+    @Test public void testGetAllowedPrdOfferingsByType() throws PersistenceException {
         SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering("Eddikhar", "Edkh");
         Assert.assertNotNull(new PrdOfferingPersistence().getAllowedPrdOfferingsByType(savingsOffering.getPrdOfferingId()
                 .toString(), ProductType.SAVINGS.getValue().toString()));
         TestObjectFactory.removeObject(savingsOffering);
     }
 
-    public void testGetAllowedPrdOfferingsForMixProduct() throws PersistenceException {
+    @Test public void testGetAllowedPrdOfferingsForMixProduct() throws PersistenceException {
         SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering("Eddikhar", "Edkh");
         Assert.assertNotNull(new PrdOfferingPersistence().getAllowedPrdOfferingsForMixProduct(savingsOffering
                 .getPrdOfferingId().toString(), ProductType.SAVINGS.getValue().toString()));
         TestObjectFactory.removeObject(savingsOffering);
     }
 
-    public void testGetMaxPrdOfferingWithProduct() throws PersistenceException {
+    @Test public void testGetMaxPrdOfferingWithProduct() throws PersistenceException {
         SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering("fsaf6", "ads6");
         Assert.assertNotNull(new PrdOfferingPersistence().getMaxPrdOffering());
         TestObjectFactory.removeObject(savingsOffering);
     }
 
-    public void testGetPrdStatus() throws PersistenceException {
+    @Test public void testGetPrdStatus() throws PersistenceException {
         PrdStatusEntity prdStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.SAVINGS_ACTIVE);
         Assert.assertNotNull(prdStatus);
        Assert.assertEquals(ProductType.SAVINGS.getValue(), prdStatus.getPrdType().getProductTypeID());
        Assert.assertEquals(Short.valueOf("1"), prdStatus.getPrdState().getId());
     }
 
-    public void testGetPrdOfferingNameCountWithoutData() throws PersistenceException {
+    @Test public void testGetPrdOfferingNameCountWithoutData() throws PersistenceException {
        Assert.assertEquals(Integer.valueOf("0"), new PrdOfferingPersistence().getProductOfferingNameCount("Savings product"));
     }
 
-    public void testGetPrdOfferingNameCountWithDifferentName() throws PersistenceException {
+    @Test public void testGetPrdOfferingNameCountWithDifferentName() throws PersistenceException {
         SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering("fsaf6", "ads6");
        Assert.assertEquals(Integer.valueOf("0"), new PrdOfferingPersistence().getProductOfferingNameCount("Savings product"));
         TestObjectFactory.removeObject(savingsOffering);
 
     }
 
-    public void testGetPrdOfferingNameCountWithSameName() throws PersistenceException {
+    @Test public void testGetPrdOfferingNameCountWithSameName() throws PersistenceException {
         SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering("Savings product", "ads6");
        Assert.assertEquals(Integer.valueOf("1"), new PrdOfferingPersistence().getProductOfferingNameCount("Savings product"));
         TestObjectFactory.removeObject(savingsOffering);
 
     }
 
-    public void testGetPrdOfferingShortNameCountWithoutData() throws PersistenceException {
+    @Test public void testGetPrdOfferingShortNameCountWithoutData() throws PersistenceException {
        Assert.assertEquals(Integer.valueOf("0"), new PrdOfferingPersistence().getProductOfferingShortNameCount("SAVP"));
     }
 
-    public void testGetPrdOfferingShortNameCountWithDifferentName() throws PersistenceException {
+    @Test public void testGetPrdOfferingShortNameCountWithDifferentName() throws PersistenceException {
         SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering("fsaf6", "ads6");
        Assert.assertEquals(Integer.valueOf("0"), new PrdOfferingPersistence().getProductOfferingShortNameCount("SAVP"));
         TestObjectFactory.removeObject(savingsOffering);
 
     }
 
-    public void testGetPrdOfferingShortNameCountWithSameName() throws PersistenceException {
+    @Test public void testGetPrdOfferingShortNameCountWithSameName() throws PersistenceException {
         SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering("Savings product", "SAVP");
        Assert.assertEquals(Integer.valueOf("1"), new PrdOfferingPersistence().getProductOfferingShortNameCount("SAVP"));
         TestObjectFactory.removeObject(savingsOffering);
 
     }
 
-    public void testGetApplicableProductCategories() throws PersistenceException {
+    @Test public void testGetApplicableProductCategories() throws PersistenceException {
        Assert.assertEquals(1, new PrdOfferingPersistence().getApplicableProductCategories(ProductType.SAVINGS,
                 PrdCategoryStatus.ACTIVE).size());
     }
 
-    public void testGetApplicablePrdStatus() throws PersistenceException {
+    @Test public void testGetApplicablePrdStatus() throws PersistenceException {
         List<PrdStatusEntity> prdStatusList = new PrdOfferingPersistence().getApplicablePrdStatus(ProductType.LOAN,
                 (short) 1);
         StaticHibernateUtil.closeSession();
@@ -175,7 +176,7 @@ public class PrdOfferingPersistenceIntegrationTest extends MifosIntegrationTestC
         }
     }
 
-    public void testGetPrdOfferingMix() throws ServiceException, PersistenceException {
+    @Test public void testGetPrdOfferingMix() throws ServiceException, PersistenceException {
         createLoanProductMixed();
         createsecondLoanProductMixed();
         prdmix = createNotAllowedProductForAProductOffering(loanOffering, loanOffering);

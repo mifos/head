@@ -29,6 +29,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
@@ -55,17 +59,17 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
     private static CollectionSheetService collectionSheetService;
     private TestCollectionSheetRetrieveSavingsAccountsUtils collectionSheetRetrieveSavingsAccountsUtils;
 
-    @Override
+    @Before
     protected void setUp() throws Exception {
-        super.setUp();
         collectionSheetRetrieveSavingsAccountsUtils = new TestCollectionSheetRetrieveSavingsAccountsUtils();
     }
 
-    @Override
+    @After
     protected void tearDown() throws Exception {
         TestDatabase.resetMySQLDatabase();
     }
 
+    @Test
     public void testRetrievedCollectionSheetHasAnEntryForCentreSavingsAccountsWhenCenterIsOnlyCustomerInHierarchy()
             throws Exception {
 
@@ -79,6 +83,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
 
     }
 
+    @Test
     public void testCollectionSheetRetrieveOnlyReturnsActiveAndInactiveSavingsAccounts() throws Exception {
 
         AccountPersistence accountPersistence = new AccountPersistence();
@@ -116,12 +121,13 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
                         || (accountBO.getState().equals(AccountState.SAVINGS_INACTIVE))) {
                     accountIsActiveOrInactive = true;
                 }
-                assertTrue("Found Account State: " + accountBO.getState().toString()
+                Assert.assertTrue("Found Account State: " + accountBO.getState().toString()
                         + " - Only Active and Inactive Savings Accounts are Allowed", accountIsActiveOrInactive);
             }
         }
     }
 
+    @Test
     public void testAllSavingsAccountsEntriesReturnedWithCorrectTotalDepositAmount() throws Exception {
 
         CollectionSheetDto collectionSheet = collectionSheetRetrieveSavingsAccountsUtils
@@ -134,10 +140,10 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
         // check group with complete_group savings account
         assertThat(customers.get(1).getCollectionSheetCustomerSaving().get(0).getTotalDepositAmount(), is(2.0));
         // check complete_group client
-//        assertThat(customers.get(2).getCollectionSheetCustomerSaving().get(0).getTotalDepositAmount(), is(3.0));
+        // assertThat(customers.get(2).getCollectionSheetCustomerSaving().get(0).getTotalDepositAmount(), is(3.0));
         assertThat(customers.get(2).getIndividualSavingAccounts().get(0).getTotalDepositAmount(), is(1.0));
         // check per_individual client
-//        assertThat(customers.get(4).getCollectionSheetCustomerSaving().get(0).getTotalDepositAmount(), is(5.0));
+        // assertThat(customers.get(4).getCollectionSheetCustomerSaving().get(0).getTotalDepositAmount(), is(5.0));
 
         // The individual accounts could be returned in any order
         Integer centerAccountId = customers.get(0).getCollectionSheetCustomerSaving().get(0).getAccountId();
@@ -157,6 +163,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
                 is(secondIndividualAccountAmount));
     }
 
+    @Test
     public void testSavingsAccountsEntriesReturnedWithZeroTotalDepositAmountWhenNoOutstandingInstallmentExists()
             throws Exception {
 
@@ -185,6 +192,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
                 is(zeroDouble));
     }
 
+    @Test
     public void testPartPayingVoluntarySavingsAccountResultsInAZeroTotalDepositAmountWhenCollectionSheetRetrievedAgain()
             throws Exception {
 
@@ -192,8 +200,8 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
                 .createSampleCollectionSheetDto();
 
         // pay 0.5 of the 2.0 voluntary group complete_group savings account amount due
-        collectionSheet.getCollectionSheetCustomer().get(1).getCollectionSheetCustomerSaving().get(0).setDepositDue(
-                new BigDecimal("0.5"));
+        collectionSheet.getCollectionSheetCustomer().get(1).getCollectionSheetCustomerSaving().get(0)
+                .setDepositDue(new BigDecimal("0.5"));
 
         // process
         List<CollectionSheetCustomerDto> customersAfterProcessing = convertSaveRetrieveVerifyAndReturnProcessedCollectionSheetCustomers(collectionSheet);
@@ -202,6 +210,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
                 is(0.0));
     }
 
+    @Test
     public void testPartPayingMandatorySavingsAccountResultsInAReducedTotalDepositAmountWhenCollectionSheetRetrievedAgain()
             throws Exception {
 
@@ -210,8 +219,8 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
 
         // pay 0.2 of the 1.0 mandatory client individual savings amount due (derived from center mandatory savings
         // account)
-        collectionSheet.getCollectionSheetCustomer().get(2).getIndividualSavingAccounts().get(0).setDepositDue(
-                new BigDecimal("0.2"));
+        collectionSheet.getCollectionSheetCustomer().get(2).getIndividualSavingAccounts().get(0)
+                .setDepositDue(new BigDecimal("0.2"));
 
         // process
         List<CollectionSheetCustomerDto> customersAfterProcessing = convertSaveRetrieveVerifyAndReturnProcessedCollectionSheetCustomers(collectionSheet);
@@ -220,6 +229,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
                 is(0.8));
     }
 
+    @Test
     public void testNotPayingVoluntarySavingsAccountForClientUnderPerIndividualGroupResultsInAFullTotalDepositAmountWhenCollectionSheetRetrievedAgain()
             throws Exception {
 
@@ -233,8 +243,8 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
                 .get(4).getIndividualSavingAccounts(), groupPerIndividualAccountId);
 
         // pay none of the 4.0 voluntary group individual savings amount due account)
-        collectionSheet.getCollectionSheetCustomer().get(4).getIndividualSavingAccounts().get(
-                clientIndividualSavingsIndex).setDepositDue(BigDecimal.ZERO);
+        collectionSheet.getCollectionSheetCustomer().get(4).getIndividualSavingAccounts()
+                .get(clientIndividualSavingsIndex).setDepositDue(BigDecimal.ZERO);
 
         // process
         List<CollectionSheetCustomerDto> customersAfterProcessing = convertSaveRetrieveVerifyAndReturnProcessedCollectionSheetCustomers(collectionSheet);
@@ -287,14 +297,18 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
         perIndividualAccountIds.add(customers.get(0).getCollectionSheetCustomerSaving().get(0).getAccountId());
         perIndividualAccountIds.add(customers.get(3).getCollectionSheetCustomerSaving().get(0).getAccountId());
         CollectionSheetCustomerDto customer4 = customers.get(4);
-        assertTrue("Client Id: " + customer4.getCustomerId() + " Account Id: "
-                + customer4.getIndividualSavingAccounts().get(0).getAccountId() + " Product: "
-                + customer4.getIndividualSavingAccounts().get(0).getProductShortName(), isPerIndividualAccount(
-                perIndividualAccountIds, customer4.getIndividualSavingAccounts().get(0).getAccountId()));
-        assertTrue("Client Id: " + customer4.getCustomerId() + " Account Id: "
-                + customer4.getIndividualSavingAccounts().get(1).getAccountId() + " Product: "
-                + customer4.getIndividualSavingAccounts().get(1).getProductShortName(), isPerIndividualAccount(
-                perIndividualAccountIds, customer4.getIndividualSavingAccounts().get(1).getAccountId()));
+        Assert.assertTrue(
+                "Client Id: " + customer4.getCustomerId() + " Account Id: "
+                        + customer4.getIndividualSavingAccounts().get(0).getAccountId() + " Product: "
+                        + customer4.getIndividualSavingAccounts().get(0).getProductShortName(),
+                isPerIndividualAccount(perIndividualAccountIds, customer4.getIndividualSavingAccounts().get(0)
+                        .getAccountId()));
+        Assert.assertTrue(
+                "Client Id: " + customer4.getCustomerId() + " Account Id: "
+                        + customer4.getIndividualSavingAccounts().get(1).getAccountId() + " Product: "
+                        + customer4.getIndividualSavingAccounts().get(1).getProductShortName(),
+                isPerIndividualAccount(perIndividualAccountIds, customer4.getIndividualSavingAccounts().get(1)
+                        .getAccountId()));
     }
 
     /*
@@ -339,13 +353,13 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
         } catch (SaveCollectionSheetException e) {
             throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
         }
-        assertNotNull("'errors' should not be null", errors);
+        Assert.assertNotNull("'errors' should not be null", errors);
         assertThat(errors.getSavingsDepNames().size(), is(0));
         assertThat(errors.getSavingsWithNames().size(), is(0));
         assertThat(errors.getLoanDisbursementAccountNumbers().size(), is(0));
         assertThat(errors.getLoanRepaymentAccountNumbers().size(), is(0));
         assertThat(errors.getCustomerAccountNumbers().size(), is(0));
-        assertNull("There shouldn't have been a database error", errors.getDatabaseError());
+        Assert.assertNull("There shouldn't have been a database error", errors.getDatabaseError());
     }
 
     private Integer getIndexMatchingAccountId(List<CollectionSheetCustomerSavingDto> savingsAccounts, Integer accountId) {

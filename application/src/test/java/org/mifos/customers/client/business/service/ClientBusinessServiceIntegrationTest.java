@@ -24,6 +24,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
@@ -53,53 +56,57 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     private ClientBO client;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         service = new ClientBusinessService();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.removeObject(savingsOffering1);
         TestObjectFactory.removeObject(savingsOffering2);
         TestObjectFactory.removeObject(savingsOffering3);
         TestObjectFactory.removeObject(savingsOffering4);
         TestObjectFactory.cleanUp(client);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testGetClient() throws Exception {
         client = createClient(this.getClass().getSimpleName() + " abc");
         StaticHibernateUtil.closeSession();
         client = service.getClient(client.getCustomerId());
         Assert.assertNotNull(client);
-       Assert.assertEquals(this.getClass().getSimpleName() + " abc", client.getClientName().getName().getFirstName());
-       Assert.assertEquals(this.getClass().getSimpleName() + " abc", client.getClientName().getName().getLastName());
+        Assert.assertEquals(this.getClass().getSimpleName() + " abc", client.getClientName().getName().getFirstName());
+        Assert.assertEquals(this.getClass().getSimpleName() + " abc", client.getClientName().getName().getLastName());
     }
 
+    @Test
     public void testFailureGetClient() throws Exception {
         client = createClient(this.getClass().getSimpleName() + " abc");
         StaticHibernateUtil.closeSession();
         TestObjectFactory.simulateInvalidConnection();
         try {
             client = service.getClient(client.getCustomerId());
-           Assert.assertTrue(false);
+            Assert.assertTrue(false);
         } catch (ServiceException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         }
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testGetActiveClientsUnderGroup() throws ServiceException {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         CenterBO center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
-        GroupBO group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
-        ClientBO client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client", CustomerStatus.CLIENT_ACTIVE, group);
-        ClientBO client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client Two", CustomerStatus.CLIENT_ACTIVE, group);
+        GroupBO group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
+                CustomerStatus.GROUP_ACTIVE, center);
+        ClientBO client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client",
+                CustomerStatus.CLIENT_ACTIVE, group);
+        ClientBO client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client Two",
+                CustomerStatus.CLIENT_ACTIVE, group);
         List<ClientBO> clients = new ClientBusinessService().getActiveClientsUnderGroup(group.getCustomerId());
-       Assert.assertEquals(2, clients.size());
+        Assert.assertEquals(2, clients.size());
 
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(client1);
@@ -107,15 +114,19 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         TestObjectFactory.cleanUp(center);
     }
 
+    @Test
     public void testGetActiveClientsUnderParent() throws ServiceException {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         CenterBO center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
-        GroupBO group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
-        ClientBO client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client", CustomerStatus.CLIENT_ACTIVE, group);
-        ClientBO client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client Two", CustomerStatus.CLIENT_ACTIVE, group);
+        GroupBO group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
+                CustomerStatus.GROUP_ACTIVE, center);
+        ClientBO client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client",
+                CustomerStatus.CLIENT_ACTIVE, group);
+        ClientBO client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client Two",
+                CustomerStatus.CLIENT_ACTIVE, group);
         List<ClientBO> clients = new ClientBusinessService().getActiveClientsUnderParent(center.getSearchId(), center
                 .getOffice().getOfficeId());
-       Assert.assertEquals(2, clients.size());
+        Assert.assertEquals(2, clients.size());
 
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(client1);
@@ -123,12 +134,16 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         TestObjectFactory.cleanUp(center);
     }
 
+    @Test
     public void testGetActiveClientsUnderParentforInvalidConnection() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         CenterBO center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
-        GroupBO group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
-        ClientBO client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client", CustomerStatus.CLIENT_ACTIVE, group);
-        ClientBO client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client Two", CustomerStatus.CLIENT_ACTIVE, group);
+        GroupBO group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
+                CustomerStatus.GROUP_ACTIVE, center);
+        ClientBO client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client",
+                CustomerStatus.CLIENT_ACTIVE, group);
+        ClientBO client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client Two",
+                CustomerStatus.CLIENT_ACTIVE, group);
         TestObjectFactory.simulateInvalidConnection();
 
         try {
@@ -136,7 +151,7 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
                     .getOfficeId());
             Assert.fail();
         } catch (ServiceException e) {
-           Assert.assertEquals("exception.framework.ApplicationException", e.getKey());
+            Assert.assertEquals("exception.framework.ApplicationException", e.getKey());
         }
         StaticHibernateUtil.closeSession();
         TestObjectFactory.cleanUp(client);

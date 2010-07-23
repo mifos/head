@@ -467,7 +467,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
             } else {
-                //--fail("There should not be any other entry");
+                Assert.fail("There should not be any other entry");
             }
         }
     }

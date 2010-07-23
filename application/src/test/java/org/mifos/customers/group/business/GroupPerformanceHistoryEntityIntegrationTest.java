@@ -29,6 +29,8 @@ import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 
 import java.util.Arrays;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -36,7 +38,6 @@ import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
-
 
 public class GroupPerformanceHistoryEntityIntegrationTest extends MifosIntegrationTestCase {
 
@@ -51,6 +52,7 @@ public class GroupPerformanceHistoryEntityIntegrationTest extends MifosIntegrati
     private CustomerBO customerMock;
     private ClientPerformanceHistoryEntity clientPerfHistoryMock;
 
+    @Test
     public void testUpdateOnDisbursementGetsCoSigningClientsForGlim() throws Exception {
         expect(configServiceMock.isGlimEnabled()).andReturn(true);
         clientPerfHistoryMock.updateOnDisbursement(loanOffering);
@@ -67,6 +69,7 @@ public class GroupPerformanceHistoryEntityIntegrationTest extends MifosIntegrati
         verify(configServiceMock, accountBusinessServiceMock, customerMock, clientPerfHistoryMock);
     }
 
+    @Test
     public void testUpdateOnDisbursementDoesNotGetCoSigningClientsIfNotGlim() throws Exception {
         expect(configServiceMock.isGlimEnabled()).andReturn(false);
         replay(configServiceMock, accountBusinessServiceMock);
@@ -75,6 +78,7 @@ public class GroupPerformanceHistoryEntityIntegrationTest extends MifosIntegrati
         verify(configServiceMock, accountBusinessServiceMock);
     }
 
+    @Test
     public void testUpdateOnWriteOffDoesNotGetCoSigningClientsIfNotGlim() throws Exception {
         expect(configServiceMock.isGlimEnabled()).andReturn(false);
         replay(configServiceMock, accountBusinessServiceMock);
@@ -82,6 +86,7 @@ public class GroupPerformanceHistoryEntityIntegrationTest extends MifosIntegrati
         verify(configServiceMock, accountBusinessServiceMock);
     }
 
+    @Test
     public void testUpdateOnWriteOffGetsCoSigningClientsForGlim() throws Exception {
         expect(configServiceMock.isGlimEnabled()).andReturn(true);
         expect(customerMock.getPerformanceHistory()).andReturn(clientPerfHistoryMock);
@@ -94,9 +99,9 @@ public class GroupPerformanceHistoryEntityIntegrationTest extends MifosIntegrati
         verify(configServiceMock, accountBusinessServiceMock, customerMock, clientPerfHistoryMock);
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
+
         loanOffering = LoanOfferingBO.createInstanceForTest((short) 1);
         loan = LoanBO.createInstanceForTest(loanOffering);
         configServiceMock = createMock(ConfigurationBusinessService.class);

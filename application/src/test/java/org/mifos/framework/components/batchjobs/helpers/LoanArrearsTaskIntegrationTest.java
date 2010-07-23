@@ -28,6 +28,9 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.hibernate.Query;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
@@ -62,9 +65,8 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
 
     AccountBO loanAccount = null;
 
-    @Override
+    @Before
     protected void setUp() throws Exception {
-        super.setUp();
         TestDatabase.resetMySQLDatabase();
         loanArrearTask = new LoanArrearsTask();
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -73,17 +75,16 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
         loanAccount = getLoanAccount(group, meeting);
     }
 
-    @Override
+    @After
     protected void tearDown() throws Exception {
         TestObjectFactory.cleanUp(loanAccount);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         loanArrearTask = null;
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    public void testExecute() throws Exception {
+    @Test public void testExecute() throws Exception {
         int statusChangeHistorySize = loanAccount.getAccountStatusChangeHistory().size();
         loanArrearTask.run();
         Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());

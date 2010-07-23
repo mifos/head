@@ -25,9 +25,12 @@ import static junitx.framework.StringAssert.assertContains;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanActivityDto;
+import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -53,23 +56,21 @@ public class LoanActivityTagIntegrationTest extends MifosIntegrationTestCase {
     AccountBO accountBO;
     UserContext userContext;
 
-    @Override
-    protected void tearDown() throws Exception {
+    @Before
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(accountBO);
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    @Override
-    protected void setUp() throws Exception {
+    @After
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
-        super.setUp();
     }
 
-    public void testBuildLeftHeaderRows() throws Exception {
+    @Test public void testBuildLeftHeaderRows() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
         List<LoanActivityDto> activityViews = new LoanBusinessService().getAllActivityView(accountBO
@@ -78,7 +79,7 @@ public class LoanActivityTagIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testBuildRightHeaderRows() throws Exception {
+    @Test public void testBuildRightHeaderRows() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
         List<LoanActivityDto> activityViews = new LoanBusinessService().getAllActivityView(accountBO

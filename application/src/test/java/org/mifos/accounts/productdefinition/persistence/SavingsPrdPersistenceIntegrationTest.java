@@ -25,6 +25,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -60,21 +62,16 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
 
     private SavingsOfferingBO savingsOffering;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(savings);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    public void testRetrieveSavingsAccountsForPrd() throws Exception {
+    @Test public void testRetrieveSavingsAccountsForPrd() throws Exception {
         SavingsTestHelper helper = new SavingsTestHelper();
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("fsaf6", "ads6");
@@ -89,7 +86,7 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
         savings = new SavingsPersistence().findById(savings.getAccountId());
     }
 
-    public void testGetTimePerForIntCalcAndFreqPost() throws PersistenceException, ProductDefinitionException {
+    @Test public void testGetTimePerForIntCalcAndFreqPost() throws PersistenceException, ProductDefinitionException {
         savingsOffering = createSavingsOfferingBO();
         savingsOffering = new SavingsPrdPersistence().getSavingsProduct(savingsOffering.getPrdOfferingId());
         Assert.assertNotNull("The time period for Int calc should not be null", savingsOffering.getTimePerForInstcalc());
@@ -97,27 +94,27 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
         TestObjectFactory.removeObject(savingsOffering);
     }
 
-    public void testDormancyDays() throws Exception {
+    @Test public void testDormancyDays() throws Exception {
        Assert.assertEquals(Short.valueOf("30"), new SavingsPrdPersistence().retrieveDormancyDays());
     }
 
-    public void testGetSavingsOfferingsNotMixed() throws Exception {
+    @Test public void testGetSavingsOfferingsNotMixed() throws Exception {
         savingsOffering = createSavingsOfferingBO();
        Assert.assertEquals(1, new SavingsPrdPersistence().getSavingsOfferingsNotMixed(Short.valueOf("1")).size());
         TestObjectFactory.removeObject(savingsOffering);
     }
 
-    public void testGetAllActiveSavingsProducts() throws Exception {
+    @Test public void testGetAllActiveSavingsProducts() throws Exception {
         savingsOffering = createSavingsOfferingBO();
        Assert.assertEquals(1, new SavingsPrdPersistence().getAllActiveSavingsProducts().size());
         TestObjectFactory.removeObject(savingsOffering);
     }
 
-    public void testGetSavingsApplicableRecurrenceTypes() throws Exception {
+    @Test public void testGetSavingsApplicableRecurrenceTypes() throws Exception {
        Assert.assertEquals(2, new SavingsPrdPersistence().getSavingsApplicableRecurrenceTypes().size());
     }
 
-    public void testGetAllSavingsProducts() throws Exception {
+    @Test public void testGetAllSavingsProducts() throws Exception {
         savingsOffering = createSavingsOfferingBO();
        Assert.assertEquals(1, new SavingsPrdPersistence().getAllSavingsProducts().size());
         TestObjectFactory.removeObject(savingsOffering);

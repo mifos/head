@@ -34,6 +34,8 @@ import java.util.List;
 import junit.framework.Assert;
 import junitx.framework.StringAssert;
 
+import org.junit.After;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -47,8 +49,8 @@ import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -94,12 +96,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
 
     private SavingsBO clientSavingsAccount;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
+    @After
     public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(centerSavingsAccount);
         TestObjectFactory.cleanUp(groupSavingsAccount);
@@ -111,10 +108,9 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    public void testBuildTableHeadings() {
+    @Test public void testBuildTableHeadings() {
         LoanOfferingBO loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
         java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
         SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("Savings Offering", "SAVP",
@@ -144,7 +140,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         TestObjectFactory.removeObject(savingsOffering);
     }
 
-    public void testGetEndTable() {
+    @Test public void testGetEndTable() {
         String result = new BulkEntryDisplayHelper().getEndTable(3).toString();
         StringAssert.assertContains("</table>", result);
         StringAssert.assertContains("</tr>", result);
@@ -153,7 +149,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         StringAssert.assertContains("</td", result);
     }
 
-    public void testBuildForCenterForGetMethod() throws Exception {
+    @Test public void testBuildForCenterForGetMethod() throws Exception {
         CollectionSheetEntryGridDto bulkEntry = createBulkEntry();
         StringBuilder builder = new StringBuilder();
 

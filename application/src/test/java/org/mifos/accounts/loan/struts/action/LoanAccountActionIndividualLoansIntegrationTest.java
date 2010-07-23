@@ -29,6 +29,7 @@ import static org.easymock.classextension.EasyMock.verify;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Test;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
@@ -43,7 +44,7 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
         super();
     }
 
-    public void testShouldCallCreateMethodIfNewMembersSelected() throws Exception {
+    @Test public void testShouldCallCreateMethodIfNewMembersSelected() throws Exception {
         GlimLoanUpdater glimLoanUpdaterMock = createMock(GlimLoanUpdater.class);
         LoanAccountAction loanAccountAction = new LoanAccountAction(new LoanBusinessService(),
                 new ConfigurationBusinessService(), glimLoanUpdaterMock);
@@ -63,7 +64,7 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
 
     }
 
-    public void testShouldCallUpdateMethodIfExistingMembersChanged() throws Exception {
+    @Test public void testShouldCallUpdateMethodIfExistingMembersChanged() throws Exception {
         GlimLoanUpdater glimLoanUpdaterMock = createMock(GlimLoanUpdater.class);
         LoanAccountAction loanAccountAction = new LoanAccountAction(new LoanBusinessService(),
                 new ConfigurationBusinessService(), glimLoanUpdaterMock);
@@ -86,7 +87,7 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
         verify(glimLoanUpdaterMock, loanMock, customerMock);
     }
 
-    public void testShouldCallDeleteMethodIfExistingMembersRemoved() throws Exception {
+    @Test public void testShouldCallDeleteMethodIfExistingMembersRemoved() throws Exception {
         GlimLoanUpdater glimLoanUpdaterMock = createMock(GlimLoanUpdater.class);
         LoanAccountAction loanAccountAction = new LoanAccountAction(new LoanBusinessService(),
                 new ConfigurationBusinessService(), glimLoanUpdaterMock);

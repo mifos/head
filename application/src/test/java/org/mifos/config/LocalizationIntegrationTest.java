@@ -25,10 +25,9 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
+import org.junit.After;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @Test(groups={"integration", "configTestSuite"})
@@ -38,17 +37,10 @@ public class LocalizationIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
-    @BeforeMethod
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
 
-    @AfterMethod
-    @Override
+    @After
     protected void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
     private void restoreConfigSetup(Localization localization, ConfigLocale savedConfigLocale) {

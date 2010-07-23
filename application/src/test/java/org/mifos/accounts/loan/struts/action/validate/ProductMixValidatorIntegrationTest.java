@@ -30,6 +30,8 @@ import java.util.Collections;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -50,16 +52,15 @@ public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase
     private LoanBO loanMock;
     private CustomerBO customerMock;
 
-    @Override
+    @Before
     protected void setUp() throws Exception {
-        super.setUp();
         configServiceMock = createMock(ConfigurationBusinessService.class);
         productMixBusinessServiceMock = createMock(ProductMixBusinessService.class);
         loanMock = createMock(LoanBO.class);
         customerMock = createMock(CustomerBO.class);
     }
 
-    public void testShouldDetectProductMixConflicts() throws Exception {
+    @Test public void testShouldDetectProductMixConflicts() throws Exception {
         short PRD_OFFERING_ID_TWO = (short) 2;
 
         LoanBO loanMock1 = createMock(LoanBO.class);
@@ -88,7 +89,7 @@ public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase
         }
     }
 
-    public void testShouldAllowValidProductMix() throws Exception {
+    @Test public void testShouldAllowValidProductMix() throws Exception {
         LoanBO loanMock1 = createMock(LoanBO.class);
         LoanBO loanMock2 = createMock(LoanBO.class);
         LoanOfferingBO loanOfferingMock1 = createMock(LoanOfferingBO.class);
@@ -110,7 +111,7 @@ public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase
         }
     }
 
-    public void testShouldGetLoansIfCustomerIsCoSigningClientInGlimMode() throws Exception {
+    @Test public void testShouldGetLoansIfCustomerIsCoSigningClientInGlimMode() throws Exception {
         expect(configServiceMock.isGlimEnabled()).andReturn(true);
         replay(loanMock, customerMock, configServiceMock);
        Assert.assertEquals(Arrays.asList(loanMock), getProductMixValidatorWithCosigningClientTrue()
@@ -118,7 +119,7 @@ public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase
         verify(loanMock, customerMock, configServiceMock);
     }
 
-    public void testShouldReturnEmptyListIfCustomerIsNotACoSigningClientInGlimMode() throws Exception {
+    @Test public void testShouldReturnEmptyListIfCustomerIsNotACoSigningClientInGlimMode() throws Exception {
         expect(configServiceMock.isGlimEnabled()).andReturn(true);
         replay(loanMock, customerMock, configServiceMock);
        Assert.assertEquals(Collections.EMPTY_LIST, getProductMixValidatorWithCosigningClientFalse()
@@ -126,7 +127,7 @@ public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase
         verify(loanMock, customerMock, configServiceMock);
     }
 
-    public void testShouldReturnAllLoansIfNotGlim() throws Exception {
+    @Test public void testShouldReturnAllLoansIfNotGlim() throws Exception {
         expect(configServiceMock.isGlimEnabled()).andReturn(false);
         replay(loanMock, customerMock, configServiceMock);
        Assert.assertEquals(Arrays.asList(loanMock), new ProductMixValidator(configServiceMock,

@@ -32,6 +32,8 @@ import java.sql.Date;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -72,16 +74,15 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
     ProductMixBO prdmix;
     ProductMixBO prdmix2;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         createSavingProduct();
         service = (ProductMixBusinessService) ServiceFactory.getInstance().getBusinessService(
                 BusinessServiceName.PrdMix);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.removeObject(prdmix);
         TestObjectFactory.removeObject(prdmix2);
         TestObjectFactory.removeObject(loanOffering);
@@ -91,31 +92,30 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
         TestObjectFactory.cleanUp(center);
         TestObjectFactory.cleanUp(center2);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    public void testGetBusinessObject() throws ServiceException {
+    @Test public void testGetBusinessObject() throws ServiceException {
         Assert.assertNull(service.getBusinessObject(null));
     }
 
-    public void testGetAllPrdOfferingsByType_Success() throws ServiceException {
+    @Test public void testGetAllPrdOfferingsByType_Success() throws ServiceException {
         Assert.assertEquals(1, service.getAllPrdOfferingsByType(ProductType.SAVINGS.getValue().toString()).size());
         StaticHibernateUtil.closeSession();
 
     }
 
-    public void testGetAllowedPrdOfferingsForMixProduct_Success() throws ServiceException {
+    @Test public void testGetAllowedPrdOfferingsForMixProduct_Success() throws ServiceException {
         Assert.assertEquals(1, service.getAllowedPrdOfferingsForMixProduct(
                 savingsOffering.getPrdOfferingId().toString(), ProductType.SAVINGS.getValue().toString()).size());
         StaticHibernateUtil.closeSession();
     }
 
-    public void testGetAllPrdOfferingsByType_failure() throws ServiceException {
+    @Test public void testGetAllPrdOfferingsByType_failure() throws ServiceException {
         Assert.assertEquals(0, service.getAllPrdOfferingsByType(ProductType.LOAN.getValue().toString()).size());
         StaticHibernateUtil.closeSession();
     }
 
-    public void testGetAllowedPrdOfferingsByType() throws ServiceException {
+    @Test public void testGetAllowedPrdOfferingsByType() throws ServiceException {
         createSecondSavingProduct();
         Assert.assertEquals(2, service.getAllowedPrdOfferingsByType(savingsOffering.getPrdOfferingId().toString(),
                 ProductType.SAVINGS.getValue().toString()).size());
@@ -133,7 +133,7 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
 
     }
 
-    public void testGetNotAllowedPrdOfferingsForMixProduct() throws ServiceException {
+    @Test public void testGetNotAllowedPrdOfferingsForMixProduct() throws ServiceException {
 
         createSecondSavingProduct();
         prdmix2 = createNotAllowedProductForAProductOffering(savingsOffering, savingsOffering);
@@ -144,7 +144,7 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
 
     }
 
-    public void testGetNotAllowedPrdOfferingsByType_success() throws ServiceException {
+    @Test public void testGetNotAllowedPrdOfferingsByType_success() throws ServiceException {
         createSecondSavingProduct();
         prdmix2 = createNotAllowedProductForAProductOffering(savingsOffering, savingsOffering);
         prdmix = createNotAllowedProductForAProductOffering(savingsOffering, secondSavingsOffering);
@@ -204,7 +204,7 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
 
     }
 
-    public void testGetPrdOfferingMix() throws ServiceException, PersistenceException {
+    @Test public void testGetPrdOfferingMix() throws ServiceException, PersistenceException {
         createLoanProductMixed();
         createsecondLoanProductMixed();
         prdmix = createNotAllowedProductForAProductOffering(loanOffering, loanOffering);
@@ -241,7 +241,7 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
 
     }
 
-    public void testCanProductsExist() throws Exception {
+    @Test public void testCanProductsExist() throws Exception {
         ProductMixPersistence productMixPersistenceMock = createMock(ProductMixPersistence.class);
         short PRD_OFFERING_ID_ONE = (short) 1;
         short PRD_OFFERING_ID_TWO = (short) 2;

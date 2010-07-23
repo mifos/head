@@ -30,6 +30,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -63,15 +65,15 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
 
     private UserContext userContext;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
+
         userContext = TestObjectFactory.getContext();
         initializeStatisticsService();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         if (loan != null) {
             loan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, loan.getAccountId());
         }
@@ -90,7 +92,6 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.cleanUp(center);
 
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
     private void createInitialCustomers() {
@@ -163,13 +164,6 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
-    /*
-     * TODO: fn_calc_test_fix remove this empty test after adding the tests
-     * below back in.
-     */
-    public void testNothing() {
-
-    }
     /*
      * TODO: fn_calc_test_fix
      *

@@ -25,6 +25,8 @@ import junit.framework.Assert;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.junit.After;
+import org.junit.Before;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
@@ -54,13 +56,13 @@ public class CustomFieldsBackfillerIntegrationTest extends MifosIntegrationTestC
     private static final String CUSTOM_FIELD_LABEL2 = "Lucky Number";
 
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         // create client
         client = TestObjectFactory.createClient("Joe Client", null, CustomerStatus.CLIENT_PARTIAL);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         Session session = StaticHibernateUtil.getSessionTL();
 

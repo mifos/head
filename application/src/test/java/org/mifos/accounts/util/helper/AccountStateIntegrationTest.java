@@ -27,6 +27,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
@@ -42,9 +44,8 @@ public class AccountStateIntegrationTest extends MifosIntegrationTestCase {
 
     private AccountPersistence accountPersistence;
 
-    @Override
+    @Before
     protected void setUp() throws Exception {
-        super.setUp();
         accountPersistence = new AccountPersistence();
     }
 
@@ -53,7 +54,7 @@ public class AccountStateIntegrationTest extends MifosIntegrationTestCase {
      * Entity values in terms of ids, state names, and the text that they
      * eventually resolve to.
      */
-    public void testRetrieveAllAccountStateList() throws NumberFormatException, PersistenceException {
+    @Test public void testRetrieveAllAccountStateList() throws NumberFormatException, PersistenceException {
         List<AccountStateEntity> accountStateEntityList = accountPersistence
                 .retrieveAllAccountStateList(ProductType.SAVINGS.getValue());
         Assert.assertNotNull(accountStateEntityList);

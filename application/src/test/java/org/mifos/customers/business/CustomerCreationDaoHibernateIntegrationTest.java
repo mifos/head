@@ -29,6 +29,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
@@ -65,12 +68,11 @@ public class CustomerCreationDaoHibernateIntegrationTest extends MifosIntegratio
 
     // test data
     private MeetingBO weeklyMeeting;
-    
+
     private CenterBO center;
-  
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+
+    @Before
+    public void setUp() throws Exception {
 
         // jdbc
         // delete from customer_fee_schedule
@@ -79,22 +81,21 @@ public class CustomerCreationDaoHibernateIntegrationTest extends MifosIntegratio
         // delete from account
         // delete from customer_meeting
         // delete from customer
-        
+
         weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
 
         IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 
         customerDao = new CustomerDaoHibernate(genericDao);
     }
-    
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(center);
     }
-    
-    public void testShouldCreateCustomerAndCustomerAccount() throws Exception {
-        
+
+    @Test public void testShouldCreateCustomerAndCustomerAccount() throws Exception {
+
         String displayName = "centerCascade";
         Address address = null;
         final List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
@@ -107,13 +108,13 @@ public class CustomerCreationDaoHibernateIntegrationTest extends MifosIntegratio
         userContext.setId(loanOfficer.getPersonnelId());
         userContext.setBranchId(existingOffice.getOfficeId());
         userContext.setBranchGlobalNum(existingOffice.getGlobalOfficeNum());
-        
+
         center = new CenterBO(userContext, displayName, address, customFields, fees, externalId, mfiJoiningDate, existingOffice, weeklyMeeting, loanOfficer, new CustomerPersistence());
-        
+
         StaticHibernateUtil.startTransaction();
         customerDao.save(center);
         StaticHibernateUtil.commitTransaction();
-        
+
         assertThat(center.getCustomerAccount(), is(notNullValue()));
         assertThat(center.getGlobalCustNum(), is(nullValue()));
     }

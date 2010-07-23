@@ -37,6 +37,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.CategoryTypeEntity;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -96,21 +99,19 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
     private InterestTypesEntity interestTypes;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.removeObject(product);
         TestObjectFactory.cleanUp(periodicFee);
         TestObjectFactory.cleanUp(oneTimeFee);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    public void testUpdateLoanOfferingFeeTypesForLogging() throws Exception {
+    @Test public void testUpdateLoanOfferingFeeTypesForLogging() throws Exception {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(2);
@@ -165,7 +166,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testUpdateLoanOfferingForLogging() throws ProductDefinitionException, FeeException {
+    @Test public void testUpdateLoanOfferingForLogging() throws ProductDefinitionException, FeeException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(2);
@@ -210,7 +211,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testBuildloanOfferingWithoutDataForMandatoryFields() {
+    @Test public void testBuildloanOfferingWithoutDataForMandatoryFields() {
         try {
             new LoanOfferingBO(null, null, null, null, null, null, null, null, null, null, null, null, null, null,
                     null, false, false, false, null, null, null);
@@ -219,7 +220,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildloanOfferingWithoutDataForAllFields() {
+    @Test public void testBuildloanOfferingWithoutDataForAllFields() {
         try {
             new LoanOfferingBO(null, null, null, null, null, null, null, null, null, null, null, null, null, null,
                     null, null, null, null, null, null, false, false, false, null, null, null, null, null);
@@ -228,7 +229,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildloanOfferingWithoutName() throws SystemException, ApplicationException {
+    @Test public void testBuildloanOfferingWithoutName() throws SystemException, ApplicationException {
         createIntitalObjects();
         try {
             new LoanOfferingBO(TestObjectFactory.getContext(), null, "S", productCategory, prdApplicableMaster,
@@ -240,7 +241,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildloanOfferingWithShortNameGreaterThanFourDig() throws SystemException, ApplicationException {
+    @Test public void testBuildloanOfferingWithShortNameGreaterThanFourDig() throws SystemException, ApplicationException {
         createIntitalObjects();
         try {
             new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOANOFF", productCategory,
@@ -252,7 +253,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildloanOfferingWithStartDateLessThanCurrentDate() throws SystemException, ApplicationException {
+    @Test public void testBuildloanOfferingWithStartDateLessThanCurrentDate() throws SystemException, ApplicationException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(-2);
         try {
@@ -265,7 +266,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildWithStartDateEqualToCurrentDate() throws SystemException, ApplicationException {
+    @Test public void testBuildWithStartDateEqualToCurrentDate() throws SystemException, ApplicationException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         LoanOfferingBO product = new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAN",
@@ -276,7 +277,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
     }
 
-    public void testStartDateGreaterThanCurrentDate() throws SystemException, ApplicationException {
+    @Test public void testStartDateGreaterThanCurrentDate() throws SystemException, ApplicationException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(2);
         LoanOfferingBO product = new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAN",
@@ -288,7 +289,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testBuildloanOfferingWithDuplicatePrdOfferingName() throws SystemException, ApplicationException {
+    @Test public void testBuildloanOfferingWithDuplicatePrdOfferingName() throws SystemException, ApplicationException {
         product = createLoanOfferingBO("Loan Product", "LOAP");
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
@@ -302,7 +303,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildloanOfferingWithDuplicatePrdOfferingShortName() throws SystemException, ApplicationException {
+    @Test public void testBuildloanOfferingWithDuplicatePrdOfferingShortName() throws SystemException, ApplicationException {
         product = createLoanOfferingBO("Loan Product", "LOAP");
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
@@ -316,7 +317,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildloanOfferingWithEndDateLessThanStartDate() throws SystemException, ApplicationException {
+    @Test public void testBuildloanOfferingWithEndDateLessThanStartDate() throws SystemException, ApplicationException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(-2);
@@ -330,7 +331,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildloanOfferingWithNoInterestTypes() throws SystemException, ApplicationException {
+    @Test public void testBuildloanOfferingWithNoInterestTypes() throws SystemException, ApplicationException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         try {
@@ -343,7 +344,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildloanOfferingWithNoMaxAmount() throws SystemException, ApplicationException {
+    @Test public void testBuildloanOfferingWithNoMaxAmount() throws SystemException, ApplicationException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         try {
@@ -356,7 +357,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildloanOfferingWithoutGLCode() throws SystemException, ApplicationException {
+    @Test public void testBuildloanOfferingWithoutGLCode() throws SystemException, ApplicationException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         try {
@@ -368,7 +369,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testDefAmountNotBetweenMinMaxAmounts() {
+    @Test public void testDefAmountNotBetweenMinMaxAmounts() {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.CLIENTS);
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
@@ -383,7 +384,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testMinAmountGreaterThanMaxAmount() {
+    @Test public void testMinAmountGreaterThanMaxAmount() {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(2);
@@ -397,7 +398,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testDefInterestRateNotBetweenMinMaxRates() {
+    @Test public void testDefInterestRateNotBetweenMinMaxRates() {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(2);
@@ -411,7 +412,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testMinInterestRateGretaterThanMaxRate() {
+    @Test public void testMinInterestRateGretaterThanMaxRate() {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(2);
@@ -425,7 +426,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testMinInstallmentsGreaterThanMaxInstallments() {
+    @Test public void testMinInstallmentsGreaterThanMaxInstallments() {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(2);
@@ -439,7 +440,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testDefInstallmentsNotBetweenMinMaxInstallments() {
+    @Test public void testDefInstallmentsNotBetweenMinMaxInstallments() {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(2);
@@ -453,7 +454,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testGracePeriodForIntDedAtDisb() throws ProductDefinitionException {
+    @Test public void testGracePeriodForIntDedAtDisb() throws ProductDefinitionException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(2);
@@ -467,7 +468,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(Short.valueOf("0"), loanOffering.getGracePeriodDuration());
     }
 
-    public void testNullGracePeriodDurationWithGraceType() throws ProductDefinitionException {
+    @Test public void testNullGracePeriodDurationWithGraceType() throws ProductDefinitionException {
         createIntitalObjects();
         GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GraceType.PRINCIPALONLYGRACE);
         Date startDate = offSetCurrentDate(0);
@@ -482,7 +483,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testNullGracePeriodDurationForNoneGraceType() throws ProductDefinitionException {
+    @Test public void testNullGracePeriodDurationForNoneGraceType() throws ProductDefinitionException {
         createIntitalObjects();
         GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GraceType.NONE);
         Date startDate = offSetCurrentDate(0);
@@ -496,7 +497,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(Short.valueOf("0"), loanOffering.getGracePeriodDuration());
     }
 
-    public void testFeeNotMatchingFrequencyOfLoanOffering() throws ProductDefinitionException, FeeException {
+    @Test public void testFeeNotMatchingFrequencyOfLoanOffering() throws ProductDefinitionException, FeeException {
         createIntitalObjects();
         GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GraceType.NONE);
         Date startDate = offSetCurrentDate(0);
@@ -517,7 +518,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testWithFundsAndOneTimeFee() throws ProductDefinitionException, FeeException {
+    @Test public void testWithFundsAndOneTimeFee() throws ProductDefinitionException, FeeException {
         createIntitalObjects();
         GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GraceType.GRACEONALLREPAYMENTS);
         Date startDate = offSetCurrentDate(0);
@@ -542,7 +543,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(1, loanOffering.getLoanOfferingFunds().size());
     }
 
-    public void testCreateLoanOffering() throws ProductDefinitionException, FeeException {
+    @Test public void testCreateLoanOffering() throws ProductDefinitionException, FeeException {
         createIntitalObjects();
         GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GraceType.GRACEONALLREPAYMENTS);
         Date startDate = offSetCurrentDate(0);
@@ -598,7 +599,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertNotNull(product.getInterestGLcode());
     }
 
-    public void testUpdateloanOfferingWithoutDataForMandatoryFields() {
+    @Test public void testUpdateloanOfferingWithoutDataForMandatoryFields() {
         product = createLoanOfferingBO("Loan Product", "LOAP");
         try {
             product.update(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
@@ -608,7 +609,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateloanOfferingWithoutName() throws SystemException, ApplicationException {
+    @Test public void testUpdateloanOfferingWithoutName() throws SystemException, ApplicationException {
         createIntitalObjects();
         product = createLoanOfferingBO("Loan Product", "LOAP");
         try {
@@ -621,7 +622,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateloanOfferingWithShortNameGreaterThanFourDig() throws SystemException, ApplicationException {
+    @Test public void testUpdateloanOfferingWithShortNameGreaterThanFourDig() throws SystemException, ApplicationException {
         createIntitalObjects();
         product = createLoanOfferingBO("Loan Product", "LOAP");
         try {
@@ -634,7 +635,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testupdateloanOfferingWithStartDateLessThanCurrentDate() throws SystemException, ApplicationException {
+    @Test public void testupdateloanOfferingWithStartDateLessThanCurrentDate() throws SystemException, ApplicationException {
         createIntitalObjects();
         product = createLoanOfferingBO("Loan Product", "LOAP");
         Date startDate = offSetCurrentDate(-2);
@@ -648,7 +649,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateloanOfferingWithStartDateEqualToCurrentDate() throws SystemException, ApplicationException {
+    @Test public void testUpdateloanOfferingWithStartDateEqualToCurrentDate() throws SystemException, ApplicationException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         product = createLoanOfferingBO("Loan Product", "LOAP");
@@ -662,7 +663,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testUpdateloanOfferingWithStartDateGreaterThanCurrentDate() throws SystemException,
+    @Test public void testUpdateloanOfferingWithStartDateGreaterThanCurrentDate() throws SystemException,
             ApplicationException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(2);
@@ -678,7 +679,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testUpdateloanOfferingWithDuplicatePrdOfferingName() throws SystemException, ApplicationException {
+    @Test public void testUpdateloanOfferingWithDuplicatePrdOfferingName() throws SystemException, ApplicationException {
         product = createLoanOfferingBO("Loan Product", "LOAP");
         LoanOfferingBO loanOffering1 = createLoanOfferingBO("Loan Product1", "LOA1");
         createIntitalObjects();
@@ -694,7 +695,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.removeObject(loanOffering1);
     }
 
-    public void testUpdateloanOfferingWithDuplicatePrdOfferingShortName() throws SystemException, ApplicationException {
+    @Test public void testUpdateloanOfferingWithDuplicatePrdOfferingShortName() throws SystemException, ApplicationException {
         product = createLoanOfferingBO("Loan Product", "LOAP");
         LoanOfferingBO loanOffering1 = createLoanOfferingBO("Loan Product1", "LOA1");
         createIntitalObjects();
@@ -710,7 +711,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.removeObject(loanOffering1);
     }
 
-    public void testUpdateloanOfferingWithEndDateLessThanStartDate() throws SystemException, ApplicationException {
+    @Test public void testUpdateloanOfferingWithEndDateLessThanStartDate() throws SystemException, ApplicationException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(-2);
@@ -725,7 +726,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateloanOfferingWithNoInterestTypes() throws SystemException, ApplicationException {
+    @Test public void testUpdateloanOfferingWithNoInterestTypes() throws SystemException, ApplicationException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         product = createLoanOfferingBO("Loan Product", "LOAP");
@@ -739,7 +740,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testupdateloanOfferingWithNoMaxAmount() throws SystemException, ApplicationException {
+    @Test public void testupdateloanOfferingWithNoMaxAmount() throws SystemException, ApplicationException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         product = createLoanOfferingBO("Loan Product", "LOAP");
@@ -753,7 +754,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testupdateloanOfferingInvalidConnection() throws SystemException, ApplicationException {
+    @Test public void testupdateloanOfferingInvalidConnection() throws SystemException, ApplicationException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         product = createLoanOfferingBO("Loan Product", "LOAP");
@@ -771,7 +772,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateDefAmountNotBetweenMinMaxAmounts() {
+    @Test public void testUpdateDefAmountNotBetweenMinMaxAmounts() {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.CLIENTS);
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
@@ -787,7 +788,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateMinAmountGreaterThanMaxAmount() {
+    @Test public void testUpdateMinAmountGreaterThanMaxAmount() {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(2);
@@ -802,7 +803,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateDefInterestRateNotBetweenMinMaxRates() {
+    @Test public void testUpdateDefInterestRateNotBetweenMinMaxRates() {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         product = createLoanOfferingBO("Loan Product", "LOAP");
@@ -816,7 +817,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateMinInterestRateGretaterThanMaxRate() {
+    @Test public void testUpdateMinInterestRateGretaterThanMaxRate() {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(2);
@@ -831,7 +832,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateMinInstallmentsGreaterThanMaxInstallments() {
+    @Test public void testUpdateMinInstallmentsGreaterThanMaxInstallments() {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(2);
@@ -846,7 +847,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateDefInstallmentsNotBetweenMinMaxInstallments() {
+    @Test public void testUpdateDefInstallmentsNotBetweenMinMaxInstallments() {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(2);
@@ -861,7 +862,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateGracePeriodForIntDedAtDisb() throws ProductDefinitionException {
+    @Test public void testUpdateGracePeriodForIntDedAtDisb() throws ProductDefinitionException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(2);
@@ -879,7 +880,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(Short.valueOf("0"), product.getGracePeriodDuration());
     }
 
-    public void testUpdateFeeNotMatchingFrequencyOfLoanOffering() throws ProductDefinitionException, FeeException {
+    @Test public void testUpdateFeeNotMatchingFrequencyOfLoanOffering() throws ProductDefinitionException, FeeException {
         createIntitalObjects();
         GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GraceType.NONE);
         Date startDate = offSetCurrentDate(0);
@@ -901,7 +902,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testUpdateWithFundsAndOneTimeFee() throws ProductDefinitionException, FeeException {
+    @Test public void testUpdateWithFundsAndOneTimeFee() throws ProductDefinitionException, FeeException {
         createIntitalObjects();
         GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GraceType.GRACEONALLREPAYMENTS);
         Date startDate = offSetCurrentDate(0);
@@ -926,7 +927,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(1, product.getLoanOfferingFunds().size());
     }
 
-    public void testUpdateLoanOffering() throws ProductDefinitionException, FeeException {
+    @Test public void testUpdateLoanOffering() throws ProductDefinitionException, FeeException {
         createIntitalObjects();
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(2);
@@ -970,7 +971,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertNotNull(product.getInterestGLcode());
     }
 
-    public void testLoanOfferingWithDecliningInterestDeductionAtDisbursement() {
+    @Test public void testLoanOfferingWithDecliningInterestDeductionAtDisbursement() {
         try {
             createIntitalObjects();
             interestTypes = new InterestTypesEntity(InterestType.DECLINING);
@@ -986,7 +987,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testLoanOfferingWithDecliningInterestNoDeductionAtDisbursement() throws Exception {
+    @Test public void testLoanOfferingWithDecliningInterestNoDeductionAtDisbursement() throws Exception {
         createIntitalObjects();
         interestTypes = new InterestTypesEntity(InterestType.DECLINING);
         Date startDate = offSetCurrentDate(0);
@@ -998,7 +999,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(InterestType.DECLINING, loanOffering.getInterestType());
     }
 
-    public void testLoanOfferingWithEqualPrincipalDecliningInterestDeductionAtDisbursement() {
+    @Test public void testLoanOfferingWithEqualPrincipalDecliningInterestDeductionAtDisbursement() {
         try {
             createIntitalObjects();
             interestTypes = new InterestTypesEntity(InterestType.DECLINING_EPI);
@@ -1014,7 +1015,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testLoanOfferingWithEqualPrincipalDecliningInterestNoDeductionAtDisbursement() throws Exception {
+    @Test public void testLoanOfferingWithEqualPrincipalDecliningInterestNoDeductionAtDisbursement() throws Exception {
         createIntitalObjects();
         interestTypes = new InterestTypesEntity(InterestType.DECLINING_EPI);
         Date startDate = offSetCurrentDate(0);
@@ -1026,7 +1027,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(InterestType.DECLINING_EPI, loanOffering.getInterestType());
     }
 
-    public void testPrdOfferingView() {
+    @Test public void testPrdOfferingView() {
         PrdOfferingDto prdOfferingDto = new PrdOfferingDto();
         prdOfferingDto.setGlobalPrdOfferingNum("1234");
        Assert.assertEquals("1234", prdOfferingDto.getGlobalPrdOfferingNum());
@@ -1066,7 +1067,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         interestTypes = new InterestTypesEntity(InterestType.FLAT);
     }
 
-    public void testCreateLoanOfferingSameForAllLoan() throws ProductDefinitionException, FeeException {
+    @Test public void testCreateLoanOfferingSameForAllLoan() throws ProductDefinitionException, FeeException {
         createIntitalObjects();
         GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GraceType.GRACEONALLREPAYMENTS);
         Date startDate = offSetCurrentDate(0);
@@ -1123,7 +1124,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertNotNull(product.getInterestGLcode());
     }
 
-    public void testCreateLoanOfferingByLastLoanAmount() throws ProductDefinitionException, FeeException {
+    @Test public void testCreateLoanOfferingByLastLoanAmount() throws ProductDefinitionException, FeeException {
         createIntitalObjects();
         GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GraceType.GRACEONALLREPAYMENTS);
         Date startDate = offSetCurrentDate(0);
@@ -1259,7 +1260,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertNotNull(product.getInterestGLcode());
     }
 
-    public void testCreateLoanOfferingFromLoanCycle() throws ProductDefinitionException, FeeException {
+    @Test public void testCreateLoanOfferingFromLoanCycle() throws ProductDefinitionException, FeeException {
         createIntitalObjects();
         GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GraceType.GRACEONALLREPAYMENTS);
         Date startDate = offSetCurrentDate(0);

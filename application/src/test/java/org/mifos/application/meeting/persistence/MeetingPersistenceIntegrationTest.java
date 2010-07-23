@@ -24,6 +24,7 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
@@ -35,7 +36,7 @@ public class MeetingPersistenceIntegrationTest extends MifosIntegrationTestCase 
         super();
     }
 
-    public void testGetMeeting() throws Exception {
+    @Test public void testGetMeeting() throws Exception {
         MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMER_MEETING,
                 "Delhi");
 

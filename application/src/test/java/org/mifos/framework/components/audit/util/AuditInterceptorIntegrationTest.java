@@ -27,6 +27,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -60,7 +61,7 @@ public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
     /*
      * Note: since this loan is active the disbursement date will not be updated
      */
-    public void testUpdateLoanForLogging() throws Exception {
+    @Test public void testUpdateLoanForLogging() throws Exception {
         Date newDate = incrementCurrentDate(14);
         accountBO = getLoanAccount();
         accountBO.setUserContext(TestUtils.makeUser());
@@ -93,7 +94,7 @@ public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.cleanUp(center);
     }
 
-    public void testAuditLogView() {
+    @Test public void testAuditLogView() {
         AuditLogView auditLogView = new AuditLogView();
         long currentTime = System.currentTimeMillis();
         Date date = new Date(currentTime);

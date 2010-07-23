@@ -26,6 +26,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.AmountFeeBO;
@@ -83,14 +85,13 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
     private OfficeBO office;
     private OfficeBO officeBo;
 
-    @Override
+    @Before
     protected void setUp() throws Exception {
-        super.setUp();
         personnel = getTestUser();
         officeBo = getHeadOffice();
     }
 
-    @Override
+    @After
     protected void tearDown() throws Exception {
         try {
             TestObjectFactory.cleanUp(accountBO);
@@ -106,7 +107,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
             TestDatabase.resetMySQLDatabase();
         }
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
     public void testPovertyLikelihoodHibernateMapping() throws Exception {
@@ -134,7 +134,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 getMeeting(), new Short("1"));
         try {
             client.validateBeforeAddingClientToGroup(group1);
-            fail();
+            Assert.fail();
         } catch (CustomerException expected) {
             Assert.assertEquals(CustomerConstants.CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION, expected.getKey());
             Assert.assertTrue(true);
@@ -153,8 +153,8 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
             client.validateBeforeAddingClientToGroup(group1);
             Assert.fail();
         } catch (CustomerException expected) {
-            assertEquals(CustomerConstants.CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION, expected.getKey());
-            assertNotSame(CustomerConstants.CLIENT_HAVE_OPEN_LOAN_ACCOUNT_EXCEPTION, expected.getKey());
+            Assert.assertEquals(CustomerConstants.CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION, expected.getKey());
+            Assert.assertNotSame(CustomerConstants.CLIENT_HAVE_OPEN_LOAN_ACCOUNT_EXCEPTION, expected.getKey());
             Assert.assertTrue(true);
         }
 

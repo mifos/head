@@ -22,6 +22,9 @@ package org.mifos.customers.group.persistence;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
@@ -51,60 +54,62 @@ public class GroupPersistenceIntegrationTest extends MifosIntegrationTestCase {
     private OfficePersistence officePersistence;
     private CenterPersistence centerPersistence;
 
-    @Override
+    @Before
     protected void setUp() throws Exception {
         this.officePersistence = new OfficePersistence();
         this.centerPersistence = new CenterPersistence();
         this.groupPersistence = new GroupPersistence();
         initializeStatisticsService();
-        super.setUp();
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testUpdateGroupInfoAndGroupPerformanceHistoryForPortfolioAtRisk() throws Exception {
         createGroup();
         double portfolioAtRisk = 0.567;
         Integer groupId = group.getCustomerId();
         boolean result = getGroupPersistence().updateGroupInfoAndGroupPerformanceHistoryForPortfolioAtRisk(
                 portfolioAtRisk, groupId);
-       Assert.assertTrue(result);
+        Assert.assertTrue(result);
         group = TestObjectFactory.getGroup(group.getCustomerId());
-       Assert.assertEquals(1, group.getUpdatedBy().intValue());
+        Assert.assertEquals(1, group.getUpdatedBy().intValue());
         java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
-       Assert.assertEquals(1, group.getUpdatedBy().intValue());
-       Assert.assertEquals(currentDate.toString(), group.getUpdatedDate().toString());
-       Assert.assertEquals(new Money(getCurrency(), "0.567"), group.getGroupPerformanceHistory().getPortfolioAtRisk());
+        Assert.assertEquals(1, group.getUpdatedBy().intValue());
+        Assert.assertEquals(currentDate.toString(), group.getUpdatedDate().toString());
+        Assert.assertEquals(new Money(getCurrency(), "0.567"), group.getGroupPerformanceHistory().getPortfolioAtRisk());
 
     }
 
+    @Test
     public void testGetGroupBySystemId() throws PersistenceException {
         createGroup();
         group = groupPersistence.findBySystemId(group.getGlobalCustNum());
-       Assert.assertEquals("Group_Active_test", group.getDisplayName());
+        Assert.assertEquals("Group_Active_test", group.getDisplayName());
     }
 
+    @Test
     public void testSearch() throws Exception {
         createGroup();
         QueryResult queryResult = groupPersistence.search(group.getDisplayName(), Short.valueOf("1"));
         Assert.assertNotNull(queryResult);
-       Assert.assertEquals(1, queryResult.getSize());
-       Assert.assertEquals(1, queryResult.get(0, 10).size());
+        Assert.assertEquals(1, queryResult.getSize());
+        Assert.assertEquals(1, queryResult.get(0, 10).size());
     }
 
+    @Test
     public void testSearchForAddingClientToGroup() throws Exception {
         createGroup_ON_HOLD_STATUS();
-        QueryResult queryResult = groupPersistence.searchForAddingClientToGroup(group.getDisplayName(), Short
-                .valueOf("1"));
+        QueryResult queryResult = groupPersistence.searchForAddingClientToGroup(group.getDisplayName(),
+                Short.valueOf("1"));
         Assert.assertNotNull(queryResult);
-       Assert.assertEquals(0, queryResult.getSize());
-       Assert.assertEquals(0, queryResult.get(0, 10).size());
+        Assert.assertEquals(0, queryResult.getSize());
+        Assert.assertEquals(0, queryResult.get(0, 10).size());
     }
 
     private CenterBO createCenter() {
@@ -118,14 +123,16 @@ public class GroupPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     private void createGroup() {
         center = createCenter();
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE,
+                center);
         StaticHibernateUtil.closeSession();
 
     }
 
     private void createGroup_ON_HOLD_STATUS() {
         center = createCenter();
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_ON_HOLD_test", CustomerStatus.GROUP_HOLD, center);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_ON_HOLD_test", CustomerStatus.GROUP_HOLD,
+                center);
         StaticHibernateUtil.closeSession();
 
     }

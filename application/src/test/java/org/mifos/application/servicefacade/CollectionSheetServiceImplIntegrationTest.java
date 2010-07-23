@@ -21,13 +21,16 @@
 package org.mifos.application.servicefacade;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -46,13 +49,12 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
     private static CollectionSheetService collectionSheetService;
     private TestSaveCollectionSheetUtils saveCollectionSheetUtils;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         saveCollectionSheetUtils = new TestSaveCollectionSheetUtils();
     }
 
-    @Override
+    @After
     protected void tearDown() throws Exception {
         try {
             saveCollectionSheetUtils.clearObjects();
@@ -63,7 +65,6 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
 
         new DateTimeService().resetToCurrentSystemDateTime();
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
     CenterBO center;
@@ -71,6 +72,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
     BigDecimal injectedLoanPayment;
     BigDecimal injectedDisbursement;
 
+    @Test
     public void testIllegalArgumentExceptionIsThrownForANullCustomerId() {
 
         Boolean illegalArgumentExceptionThrown = false;
@@ -80,10 +82,11 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
             illegalArgumentExceptionThrown = true;
         }
 
-        assertTrue("IllegalArgumentException should have been thrown for a null customer Id",
+        Assert.assertTrue("IllegalArgumentException should have been thrown for a null customer Id",
                 illegalArgumentExceptionThrown);
     }
 
+    @Test
     public void testIllegalArgumentExceptionIsThrownForANullTransactionDate() {
 
         Integer anyCustomerId = 500000;
@@ -94,10 +97,11 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
             illegalArgumentExceptionThrown = true;
         }
 
-        assertTrue("IllegalArgumentException should have been thrown for an invalid transaction date",
+        Assert.assertTrue("IllegalArgumentException should have been thrown for an invalid transaction date",
                 illegalArgumentExceptionThrown);
     }
 
+    @Test
     public void testIllegalArgumentExceptionIsThrownForAnInvalidTopCustomer() {
 
         Integer invalidTopCustomer = 500000;
@@ -108,10 +112,11 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
             illegalArgumentExceptionThrown = true;
         }
 
-        assertTrue("IllegalArgumentException should have been thrown for an invalid top customer",
+        Assert.assertTrue("IllegalArgumentException should have been thrown for an invalid top customer",
                 illegalArgumentExceptionThrown);
     }
 
+    @Test
     public void testLoanOverPaymentIsIdentified() throws Exception {
 
         SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
@@ -139,13 +144,14 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         }
 
         if (errors != null && errors.getLoanRepaymentAccountNumbers() != null) {
-            assertThat("There should have been one loan account repayment error", errors
+            Assert.assertThat("There should have been one loan account repayment error", errors
                     .getLoanRepaymentAccountNumbers().size(), is(1));
         } else {
-            assertTrue("There should have been one loan account repayment error", false);
+            Assert.assertTrue("There should have been one loan account repayment error", false);
         }
     }
 
+    @Test
     public void testAccountCollectionFeeOverPaymentIsIdentified() throws Exception {
 
         saveCollectionSheetUtils.setOverpayFirstClientAccountCollectionFee();
@@ -159,14 +165,15 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         }
 
         if (errors != null && errors.getCustomerAccountNumbers() != null) {
-            assertThat("There should have been one customer account error", errors.getCustomerAccountNumbers().size(),
+            Assert.assertThat("There should have been one customer account error", errors.getCustomerAccountNumbers().size(),
                     is(1));
         } else {
-            assertTrue("There should have been one customer account error", false);
+            Assert.assertTrue("There should have been one customer account error", false);
         }
 
     }
 
+    @Test
     public void testAccountCollectionFeeUnderPaymentIsIdentified() throws Exception {
 
         saveCollectionSheetUtils.setUnderpayFirstClientAccountCollectionFee();
@@ -179,14 +186,15 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         }
 
         if (errors != null && errors.getCustomerAccountNumbers() != null) {
-            assertThat("There should have been one customer account error", errors.getCustomerAccountNumbers().size(),
+            Assert.assertThat("There should have been one customer account error", errors.getCustomerAccountNumbers().size(),
                     is(1));
         } else {
-            assertTrue("There should have been one customer account error", false);
+            Assert.assertTrue("There should have been one customer account error", false);
         }
 
     }
 
+    @Test
     public void testDisbursalDoesntSucceedIfLoanStatusIncorrect() throws Exception {
 
         SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
@@ -207,14 +215,15 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         }
 
         if (errors != null && errors.getLoanDisbursementAccountNumbers() != null) {
-            assertThat("There should have been one loan disbursement account error", errors
+            Assert.assertThat("There should have been one loan disbursement account error", errors
                     .getLoanDisbursementAccountNumbers().size(), is(1));
         } else {
-            assertTrue("There should have been one loan disbursement account error", false);
+            Assert.assertTrue("There should have been one loan disbursement account error", false);
         }
 
     }
 
+    @Test
     public void testInvalidDisbursalAmountIsIdentified() throws Exception {
 
         saveCollectionSheetUtils.setInvalidDisbursalAmountFirstClient();
@@ -228,13 +237,14 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         }
 
         if (errors != null && errors.getLoanDisbursementAccountNumbers() != null) {
-            assertThat("There should have been one loan disbursement account error", errors
+            Assert.assertThat("There should have been one loan disbursement account error", errors
                     .getLoanDisbursementAccountNumbers().size(), is(1));
         } else {
-            assertTrue("There should have been one loan disbursement account error", false);
+            Assert.assertTrue("There should have been one loan disbursement account error", false);
         }
     }
 
+    @Test
     public void testRepaymentNotAllowedUnlessLoanStatusCorrect() throws Exception {
 
         SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
@@ -255,10 +265,10 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         }
 
         if (errors != null && errors.getLoanRepaymentAccountNumbers() != null) {
-            assertThat("There should have been one loan account repayment error", errors
+            Assert.assertThat("There should have been one loan account repayment error", errors
                     .getLoanRepaymentAccountNumbers().size(), is(1));
         } else {
-            assertTrue("There should have been one loan account repayment error", false);
+            Assert.assertTrue("There should have been one loan account repayment error", false);
         }
     }
 

@@ -23,6 +23,7 @@ package org.mifos.application.holiday.persistence;
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
@@ -33,7 +34,7 @@ public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
-    public void testValidateLookupValueKey() throws Exception {
+    @Test public void testValidateLookupValueKey() throws Exception {
         String validKey = "RepaymentRule-NewSameDay";
         String format = "RepaymentRule-";
        Assert.assertTrue(AddRepaymentRule.validateLookupValueKey(format, validKey));
@@ -41,7 +42,7 @@ public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertFalse(AddRepaymentRule.validateLookupValueKey(format, invalidKey));
     }
 
-    public void testConstructor() throws Exception {
+    @Test public void testConstructor() throws Exception {
         AddRepaymentRule upgrade = null;
         try {
             // use deprecated construtor

@@ -22,6 +22,8 @@ package org.mifos.accounts.productsmix.business;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
@@ -42,29 +44,27 @@ public class ProductMixBOIntegrationTest extends MifosIntegrationTestCase {
     private SavingsTestHelper helper = new SavingsTestHelper();
     private ProductMixBO prdMix;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         savingsOffering = helper.createSavingsOffering("Eddikhar", "Edd");
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
 
         TestObjectFactory.removeObject(prdMix);
         TestObjectFactory.removeObject(savingsOffering);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    public void testUpdate() throws PersistenceException, ProductDefinitionException {
+    @Test public void testUpdate() throws PersistenceException, ProductDefinitionException {
         prdMix = new ProductMixBO(savingsOffering, savingsOffering);
         prdMix.update();
        Assert.assertEquals(savingsOffering.getPrdOfferingId(), prdMix.getPrdOfferingId().getPrdOfferingId());
        Assert.assertEquals(savingsOffering.getPrdOfferingId(), prdMix.getPrdOfferingNotAllowedId().getPrdOfferingId());
     }
 
-    public void testDelete() throws PersistenceException, ProductDefinitionException {
+    @Test public void testDelete() throws PersistenceException, ProductDefinitionException {
         prdMix = new ProductMixBO(savingsOffering, savingsOffering);
         prdMix.update();
        Assert.assertEquals(savingsOffering.getPrdOfferingId(), prdMix.getPrdOfferingId().getPrdOfferingId());

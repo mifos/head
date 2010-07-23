@@ -34,6 +34,9 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -77,15 +80,14 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
 
     protected LoanBusinessService loanBusinessService;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         loanBusinessService = new LoanBusinessService();
         accountPersistence = new AccountPersistence();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         try {
             accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
             group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
@@ -99,10 +101,9 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         }
 
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    public void testFindBySystemId() throws Exception {
+    @Test public void testFindBySystemId() throws Exception {
         accountBO = getLoanAccount();
         loanBusinessService = new LoanBusinessService();
         LoanBO loanBO = loanBusinessService.findBySystemId(accountBO.getGlobalAccountNum());
@@ -110,14 +111,14 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         Assert.assertEquals(loanBO.getAccountId(), accountBO.getAccountId());
     }
 
-    public void testFindIndividualLoans() throws Exception {
+    @Test public void testFindIndividualLoans() throws Exception {
         accountBO = getLoanAccount();
         loanBusinessService = new LoanBusinessService();
         List<LoanBO> listLoanBO = loanBusinessService.findIndividualLoans(accountBO.getAccountId().toString());
         Assert.assertEquals(0, listLoanBO.size());
     }
 
-    public void testGetLoanAccountsActiveInGoodBadStanding() throws Exception {
+    @Test public void testGetLoanAccountsActiveInGoodBadStanding() throws Exception {
         accountBO = getLoanAccount();
         loanBusinessService = new LoanBusinessService();
         List<LoanBO> loanBO = loanBusinessService.getLoanAccountsActiveInGoodBadStanding(accountBO.getCustomer()
@@ -127,7 +128,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
 
     }
 
-    public void testGetRecentActivityView() throws SystemException, NumberFormatException, ApplicationException {
+    @Test public void testGetRecentActivityView() throws SystemException, NumberFormatException, ApplicationException {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + "_Center_Active", meeting);
@@ -161,7 +162,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         }
     }
 
-    public void testGetAllActivityView() throws SystemException, NumberFormatException, ApplicationException {
+    @Test public void testGetAllActivityView() throws SystemException, NumberFormatException, ApplicationException {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + "_Center_Active", meeting);
@@ -201,7 +202,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         Assert.assertEquals(new Money(getCurrency(), "200.0"), view.getRunningBalancePrinciple());
     }
 
-    public void testGetAllLoanAccounts() throws Exception {
+    @Test public void testGetAllLoanAccounts() throws Exception {
         accountBO = getLoanAccount();
         loanBusinessService = new LoanBusinessService();
         List<LoanBO> loanAccounts = loanBusinessService.getAllLoanAccounts();
@@ -228,7 +229,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         return paymentData;
     }
 
-    public void testgetActiveLoansForAllClientsUnderGroup() throws Exception {
+    @Test public void testgetActiveLoansForAllClientsUnderGroup() throws Exception {
         int groupLoanAccountId = 1;
         GroupBO groupMock = createMock(GroupBO.class);
         CustomerBO clientMock = createMock(ClientBO.class);

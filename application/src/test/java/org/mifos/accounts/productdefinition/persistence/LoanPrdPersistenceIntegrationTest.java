@@ -25,6 +25,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
@@ -45,38 +47,32 @@ public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase 
     private LoanOfferingBO loanOffering2;
     private LoanOfferingBO loanOffering3;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.removeObject(loanOffering1);
         TestObjectFactory.removeObject(loanOffering2);
         TestObjectFactory.removeObject(loanOffering3);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    public void testretrieveLatenessForPrd() throws Exception {
+    @Test public void testretrieveLatenessForPrd() throws Exception {
         Short latenessDays = null;
         latenessDays = new LoanPrdPersistence().retrieveLatenessForPrd();
         Assert.assertNotNull(latenessDays);
        Assert.assertEquals(Short.valueOf("10"), latenessDays);
     }
 
-    public void testGetAllActiveLoanOfferings() throws PersistenceException {
+    @Test public void testGetAllActiveLoanOfferings() throws PersistenceException {
         List<LoanOfferingBO> loanOfferingList = new LoanPrdPersistence().getAllActiveLoanOfferings(Short.valueOf("1"));
         Assert.assertNotNull(loanOfferingList);
     }
 
-    public void testGetLoanOfferingsNotMixed() throws PersistenceException {
+    @Test public void testGetLoanOfferingsNotMixed() throws PersistenceException {
         List<LoanOfferingBO> loanOfferingList = new LoanPrdPersistence().getLoanOfferingsNotMixed(Short.valueOf("1"));
         Assert.assertNotNull(loanOfferingList);
     }
 
-    public void testGetLoanOffering() throws PersistenceException {
+    @Test public void testGetLoanOffering() throws PersistenceException {
         loanOffering1 = createLoanOfferingBO("Loan Offering", "Loan");
         StaticHibernateUtil.closeSession();
 
@@ -86,7 +82,7 @@ public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase 
        Assert.assertEquals("Loan", loanOffering1.getPrdOfferingShortName());
     }
 
-    public void testGetLoanOfferingWithLocaleId() throws PersistenceException {
+    @Test public void testGetLoanOfferingWithLocaleId() throws PersistenceException {
         loanOffering1 = createLoanOfferingBO("Loan Offering", "Loan");
         StaticHibernateUtil.closeSession();
 
@@ -103,7 +99,7 @@ public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase 
        Assert.assertEquals("Flat", loanOffering1.getInterestTypes().getName());
     }
 
-    public void testGetAllLoanOfferingsShouldReturnLoanOfferingListSortedByName() throws PersistenceException {
+    @Test public void testGetAllLoanOfferingsShouldReturnLoanOfferingListSortedByName() throws PersistenceException {
         String[] loanPrdNamesSortedByName = new String[] { "firstLoanOffering", "secondLoanOffering",
                 "thirdLoanOffering" };
         loanOffering1 = createLoanOfferingBO(loanPrdNamesSortedByName[1], "Loa1");

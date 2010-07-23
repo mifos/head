@@ -24,6 +24,9 @@ import static junitx.framework.StringAssert.assertContains;
 
 import java.util.Date;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
@@ -49,23 +52,21 @@ public class LoanRepayTagIntegrationTest extends MifosIntegrationTestCase {
     LoanBO accountBO;
     UserContext userContext;
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(accountBO);
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
-        super.setUp();
     }
 
-    public void testX() {
+    @Test public void testX() {
 
     }
 

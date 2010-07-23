@@ -22,6 +22,7 @@ package org.mifos.accounts.productsmix.persistence;
 
 import junit.framework.Assert;
 
+import org.junit.After;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.productsmix.util.ProductMixTestHelper;
@@ -46,21 +47,15 @@ public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTestCa
     ProductMixBO prdmix;
     ProductMixPersistence productMixPersistence = new ProductMixPersistence();
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
+    @After
     protected void tearDown() throws Exception {
         TestObjectFactory.cleanUp(prdmix);
         TestObjectFactory.cleanUp(saving1);
         TestObjectFactory.cleanUp(saving2);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    public void testGetAllProductMix() throws PersistenceException {
+    @Test public void testGetAllProductMix() throws PersistenceException {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         meeting1 = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         saving1 = ProductMixTestHelper.createSavingOffering("Savings Product1", "S1", meeting, meeting);
@@ -70,7 +65,7 @@ public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTestCa
 
     }
 
-    public void testGetNotAllowedProducts() throws PersistenceException {
+    @Test public void testGetNotAllowedProducts() throws PersistenceException {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         meeting1 = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         saving1 = ProductMixTestHelper.createSavingOffering("Savings Product1", "S1", meeting, meeting);

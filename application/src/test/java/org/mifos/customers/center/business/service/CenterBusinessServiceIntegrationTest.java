@@ -22,6 +22,9 @@ package org.mifos.customers.center.business.service;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
@@ -33,7 +36,7 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CenterBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
-    
+
     public CenterBusinessServiceIntegrationTest() throws Exception {
         super();
     }
@@ -48,13 +51,12 @@ public class CenterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     private CenterBusinessService service;
 
-    @Override
+    @Before
     protected void setUp() throws Exception {
-        super.setUp();
         service = new CenterBusinessService();
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         try {
             TestObjectFactory.cleanUp(savingsBO);
@@ -66,10 +68,9 @@ public class CenterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
             TestDatabase.resetMySQLDatabase();
         }
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    public void testFailureFindBySystemId() throws Exception {
+    @Test public void testFailureFindBySystemId() throws Exception {
         center = createCenter("Center1");
         StaticHibernateUtil.closeSession();
         TestObjectFactory.simulateInvalidConnection();

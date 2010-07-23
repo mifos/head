@@ -37,6 +37,8 @@ import junit.framework.Assert;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficecFixture;
@@ -61,7 +63,7 @@ public class BranchReportLoanArrearsAgingHelperIntegrationTest extends BranchRep
     private List<LoanArrearsAgingPeriod> expectedPeriods;
     private BranchReportConfigService branchReportConfigServiceMock;
 
-    public void testLoanArrearsAgingHelperPopulatesAgingFields() throws Exception {
+    @Test public void testLoanArrearsAgingHelperPopulatesAgingFields() throws Exception {
         BranchReportBO branchReportLoanArrearsBatchBO = BranchReportBOFixture.createBranchReport(Integer.valueOf(1),
                 Short.valueOf("3"), DateUtils.currentDate());
 
@@ -92,17 +94,17 @@ public class BranchReportLoanArrearsAgingHelperIntegrationTest extends BranchRep
         assertSameCollections(expectedPeriods, foundPeriods);
     }
 
-    public void testLoanArrearsContructor() throws Exception {
+    @Test public void testLoanArrearsContructor() throws Exception {
         Money agingAmount = createMoney(TestUtils.RUPEE, 3.3333);
         BranchReportLoanArrearsAgingBO loanArrears = new BranchReportLoanArrearsAgingBO(null, null, null, agingAmount,
                 createMoney(TestUtils.RUPEE, 3.3333), createMoney(TestUtils.RUPEE, 666.70));
-       Assert.assertEquals(agingAmount.getAmount().setScale(AccountingRules.getDigitsAfterDecimal(),
-                RoundingMode.HALF_UP), loanArrears.getAmountAging());
+        Assert.assertEquals(
+                agingAmount.getAmount().setScale(AccountingRules.getDigitsAfterDecimal(), RoundingMode.HALF_UP),
+                loanArrears.getAmountAging());
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         branchReportServiceMock = createMock(BranchReportService.class);
         branchReportConfigServiceMock = createMock(BranchReportConfigService.class);
         expectedPeriods = Arrays.asList(LoanArrearsAgingPeriod.values());

@@ -24,6 +24,8 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Test;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.group.util.helpers.GroupSearchResults;
@@ -40,19 +42,14 @@ public class CustomerHelpersIntegrationTest extends MifosIntegrationTestCase {
     private static final double DELTA = 0.00000001;
     private CustomerBO center;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
 
-    @Override
+    @After
     protected void tearDown() throws Exception {
         TestObjectFactory.cleanUp(center);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    public void testCustomerView() {
+    @Test public void testCustomerView() {
         createCenter();
         CustomerDto customerDto = new CustomerDto(center.getCustomerId(), center.getDisplayName(), center
                 .getGlobalCustNum(), center.getStatus().getValue());
@@ -73,7 +70,7 @@ public class CustomerHelpersIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(center.getPersonnel().getPersonnelId(), customerDto.getPersonnelId());
     }
 
-    public void testCustomerViewDefaultConstructor() {
+    @Test public void testCustomerViewDefaultConstructor() {
         createCenter();
         CustomerDto customerDto = new CustomerDto();
         customerDto.setCustomerId(center.getCustomerId());
@@ -94,7 +91,7 @@ public class CustomerHelpersIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals("1", customerDto.getVersionNo().toString());
     }
 
-    public void testIdGenerator() {
+    @Test public void testIdGenerator() {
         createCenter();
         IdGenerator idGenerator = new IdGenerator();
        Assert.assertEquals("TestBranchOffice-000000003", idGenerator.generateSystemId(center.getOffice().getOfficeName(), 2));
@@ -102,7 +99,7 @@ public class CustomerHelpersIntegrationTest extends MifosIntegrationTestCase {
                 .getOfficeName(), 2));
     }
 
-    public void testLoanCycleCounter() {
+    @Test public void testLoanCycleCounter() {
         LoanCycleCounter loanCycleCounter = new LoanCycleCounter();
         loanCycleCounter.setCounter(1);
         loanCycleCounter.setOfferingName("offeringName");
@@ -115,7 +112,7 @@ public class CustomerHelpersIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertFalse(loanCycleCounter.equals(loanCycleCounter2));
     }
 
-    public void testCustomerRecentActivityView() throws Exception {
+    @Test public void testCustomerRecentActivityView() throws Exception {
         java.sql.Date sampleDate = new java.sql.Date(System.currentTimeMillis());
         CustomerRecentActivityDto customerRecentActivityDto = new CustomerRecentActivityDto(sampleDate,
                 "description", "1000", "mifos");
@@ -127,7 +124,7 @@ public class CustomerHelpersIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals("1", customerRecentActivityDto.getLocale().toString());
     }
 
-    public void testGroupSearchResults() {
+    @Test public void testGroupSearchResults() {
         createCenter();
         GroupSearchResults groupSearchResults = new GroupSearchResults();
         groupSearchResults.setCenterName(center.getDisplayName());

@@ -26,6 +26,8 @@ import java.sql.Timestamp;
 import junit.framework.Assert;
 
 import org.hibernate.exception.ConstraintViolationException;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.importexport.business.ImportedFilesEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -38,14 +40,14 @@ public class HibernateImportedFilesDaoIntegrationTest extends MifosIntegrationTe
         super();
     }
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         StaticHibernateUtil.flushAndClearSession();
         Connection connection = StaticHibernateUtil.getSessionTL().connection();
         connection.createStatement().execute("truncate table imported_transactions_files");
     }
 
-    public void testSaveAndFind() throws Exception {
+    @Test public void testSaveAndFind() throws Exception {
         Short personnelId = new Short("1");
         PersonnelBO personnelBO = TestObjectFactory.getPersonnel(personnelId);
         Timestamp timeStamp = new Timestamp(123134554L);
@@ -61,7 +63,7 @@ public class HibernateImportedFilesDaoIntegrationTest extends MifosIntegrationTe
         Assert.assertEquals(timeStamp, actual.getSubmittedOn());
     }
 
-    public void testSaveConstraintVoilation() throws Exception {
+    @Test public void testSaveConstraintVoilation() throws Exception {
         Short personnelId = new Short("1");
         PersonnelBO personnelBO = TestObjectFactory.getPersonnel(personnelId);
         Timestamp timeStamp = new Timestamp(123134554L);

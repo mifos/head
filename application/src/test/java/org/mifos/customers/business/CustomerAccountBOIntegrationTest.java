@@ -332,9 +332,9 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
                     .getAccountFeesActionDetails()) {
                 if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
-                    assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
+                    Assert.assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
                 } else {
-                    assertEquals(new Money(getCurrency(), "100"), accountFeesActionDetailEntity.getFeeAmount());
+                    Assert.assertEquals(new Money(getCurrency(), "100"), accountFeesActionDetailEntity.getFeeAmount());
                 }
             }
         }
@@ -359,9 +359,9 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
                     .getAccountFeesActionDetails()) {
                 if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
-                    assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
+                    Assert.assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
                 } else {
-                    assertEquals(new Money(getCurrency(), "100"), accountFeesActionDetailEntity.getFeeAmount());
+                    Assert.assertEquals(new Money(getCurrency(), "100"), accountFeesActionDetailEntity.getFeeAmount());
                 }
             }
         }

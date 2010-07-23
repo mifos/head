@@ -27,6 +27,7 @@ import junit.framework.Assert;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -43,7 +44,7 @@ public class BranchReportStaffingLevelSummaryHelperIntegrationTest extends Mifos
 
     public static final Short BRANCH_ID = Short.valueOf("2");
 
-    public void testPopulateStaffingLevelSummary() throws BatchJobException, ServiceException {
+    @Test public void testPopulateStaffingLevelSummary() throws BatchJobException, ServiceException {
         BranchReportBO branchReport = BranchReportBOFixture.createBranchReport(Integer.valueOf(1), BRANCH_ID, DateUtils
                 .currentDate());
         new BranchReportStaffingLevelSummaryHelper(branchReport, new BranchReportService())

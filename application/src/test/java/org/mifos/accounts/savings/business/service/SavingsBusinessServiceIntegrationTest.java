@@ -25,6 +25,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
@@ -65,24 +68,22 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
 
     private SavingsOfferingBO savingsOffering2;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         service = new SavingsBusinessService();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(savings);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         TestObjectFactory.removeObject(savingsOffering1);
         TestObjectFactory.removeObject(savingsOffering2);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
-    public void testGetSavingProducts() throws Exception {
+    @Test public void testGetSavingProducts() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
         savingsOffering1 = TestObjectFactory.createSavingsProduct("SavingPrd1", "cadf", currentDate,
@@ -98,7 +99,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
                 "SavingPrd2");
     }
 
-    public void testGetSavingProductsForInvalidConnection() {
+    @Test public void testGetSavingProductsForInvalidConnection() {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
         savingsOffering1 = TestObjectFactory.createSavingsProduct("SavingPrd1", "cadf", currentDate,
@@ -116,7 +117,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         }
     }
 
-    public void testRetrieveCustomFieldsDefinitionForInvalidConnection() {
+    @Test public void testRetrieveCustomFieldsDefinitionForInvalidConnection() {
         TestObjectFactory.simulateInvalidConnection();
         try {
             service.retrieveCustomFieldsDefinition();
@@ -129,7 +130,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    public void testFindById() throws Exception {
+    @Test public void testFindById() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
         savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "kh6y", currentDate,
@@ -139,7 +140,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         Assert.assertNotNull(savings1);
     }
 
-    public void testFindByIdForInvalidConnection() throws Exception {
+    @Test public void testFindByIdForInvalidConnection() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
         savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "kh6y", currentDate,
@@ -157,7 +158,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    public void testFindBySystemId() throws Exception {
+    @Test public void testFindBySystemId() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
         savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "cadf", currentDate,
@@ -168,7 +169,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         Assert.assertEquals(savings.getAccountId(), savings1.getAccountId());
     }
 
-    public void testFindBySystemIdForInvalidConnection() throws Exception {
+    @Test public void testFindBySystemIdForInvalidConnection() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
         savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "cadf", currentDate,
@@ -185,7 +186,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         }
     }
 
-    public void testGetAllClosedAccounts() throws Exception {
+    @Test public void testGetAllClosedAccounts() throws Exception {
         createInitialObjects();
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -200,7 +201,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         Assert.assertEquals(1, savingsAccounts.size());
     }
 
-    public void testGetAllClosedAccountsForInvalidConnection() throws Exception {
+    @Test public void testGetAllClosedAccountsForInvalidConnection() throws Exception {
         createInitialObjects();
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -222,7 +223,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         }
     }
 
-    public void testGetAllSavingsAccount() throws Exception {
+    @Test public void testGetAllSavingsAccount() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
         savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "kh6y", currentDate,
