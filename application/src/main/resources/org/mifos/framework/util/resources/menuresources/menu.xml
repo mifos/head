@@ -99,7 +99,7 @@
 						<namefragment>label.createnew</namefragment> 
 						<namefragment>Client</namefragment>
 					</displayname>
-					<linkvalue> groupCustAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createClient</linkvalue>
+					<linkvalue>groupCustAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createClient</linkvalue>
 				</menuitem>
 						
 			</menugroup>
@@ -123,7 +123,7 @@
 						<namefragment>Loan</namefragment>
 						<namefragment>label.createLoanAccountSuffix</namefragment>  
 					</displayname>
-					<linkvalue>	custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan</linkvalue>
+					<linkvalue>custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan</linkvalue>
 				</menuitem>		
 				
 				<menuitem>
