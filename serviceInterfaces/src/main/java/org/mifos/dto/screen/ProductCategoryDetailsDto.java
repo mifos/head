@@ -1,5 +1,6 @@
 package org.mifos.dto.screen;
 
+@edu.umd.cs.findbugs.annotations.SuppressWarnings
 public class ProductCategoryDetailsDto {
 
     private final String productCategoryName;
