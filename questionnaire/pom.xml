@@ -171,7 +171,7 @@
                     <rulesets>
                         <ruleset>${modules.root.dir}/.ruleset</ruleset>
                     </rulesets>
-                    <includeTests>true</includeTests>
+                    <includeTests>false</includeTests>
                 </configuration>
                 <executions>
                     <execution>
