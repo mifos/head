@@ -341,7 +341,10 @@ public class QuestionnaireServiceIntegrationTest {
     public void shouldRetrieveAllEventSources() {
         List<EventSource> eventSources = questionnaireService.getAllEventSources();
         assertNotNull(eventSources);
-        Assert.assertThat(eventSources, new EventSourcesMatcher(Arrays.asList(new EventSource("Create", "Client", "Create Client"))));
+        Assert.assertThat(eventSources, new EventSourcesMatcher(
+                Arrays.asList(new EventSource("Create", "Client", "Create Client"),
+                        new EventSource("View", "Client", "View Client"),
+                        new EventSource("Create", "Loan", "Create Loan"))));
     }
 
     @Test

@@ -62,6 +62,10 @@ public class QuestionnaireValidatorIntegrationTest {
         EventSource eventSource = new EventSource("Create", "Client", "Create Client");
         try {
             questionnaireValidator.validateForEventSource(eventSource);
+            eventSource = new EventSource("View", "Client", "View Client");
+            questionnaireValidator.validateForEventSource(eventSource);
+            eventSource = new EventSource("Create", "Loan", "Create Loan");
+            questionnaireValidator.validateForEventSource(eventSource);
         } catch (SystemException e) {
             fail("Should not have raised a validation error for this event");
         }
