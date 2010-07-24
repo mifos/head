@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2005-2010 Grameen Foundation USA
-
  *  All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,32 +20,35 @@
 
 package org.mifos.platform.questionnaire.matchers;
 
-import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
-import org.mifos.platform.questionnaire.ui.model.Question;
+import org.junit.Assert;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+
+import java.util.List;
 
 @SuppressWarnings("PMD")
-public class QuestionMatcher extends TypeSafeMatcher<Question> {
-    private String id;
-    private String title;
-    private String type;
+public class QuestionGroupDetailListMatcher extends TypeSafeMatcher<List<QuestionGroupDetail>> {
+    private List<QuestionGroupDetail> questionGroupDetails;
 
-    public QuestionMatcher(String id, String title, String type) {
-        this.id = id;
-        this.title = title;
-        this.type = type;
+    public QuestionGroupDetailListMatcher(List<QuestionGroupDetail> questionGroupDetails) {
+        this.questionGroupDetails = questionGroupDetails;
     }
 
     @Override
-    public boolean matchesSafely(Question question) {
-        return (StringUtils.equalsIgnoreCase(type, question.getType())
-                && StringUtils.equalsIgnoreCase(id, question.getId())
-                && StringUtils.equalsIgnoreCase(title, question.getTitle()));
+    public boolean matchesSafely(List<QuestionGroupDetail> questionGroupDetails) {
+        if (this.questionGroupDetails.size() == questionGroupDetails.size()) {
+            for (QuestionGroupDetail questionGroupDetail : this.questionGroupDetails) {
+                Assert.assertThat(questionGroupDetails, org.hamcrest.Matchers.hasItem(new QuestionGroupDetailMatcher(questionGroupDetail)));
+            }
+        } else {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("Question does not match");
+        description.appendText("List of question group details do not match");
     }
 }

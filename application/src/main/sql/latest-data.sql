@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-insert into database_version(database_version) values(264);
+insert into database_version(database_version) values(265);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -3149,3 +3149,7 @@ insert into events (id, name) values (1, 'Create'), (2, 'View');
 insert into event_sources (id, entity_type_id, event_id, description) values
     (1, (select entity_type_id from entity_master where entity_type = 'Client'), 1, 'Create Client');
 /* Upgrade 260 END */
+/* Upgrade 265 START */
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (2, (select entity_type_id from entity_master where entity_type = 'Loan'), 1, 'Create Loan');
+/* Upgrade 265 END */

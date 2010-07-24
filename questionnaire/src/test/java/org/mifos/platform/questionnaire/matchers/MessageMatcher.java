@@ -25,6 +25,7 @@ import org.hamcrest.TypeSafeMatcher;
 import org.springframework.binding.message.DefaultMessageResolver;
 import org.springframework.binding.message.MessageResolver;
 
+@SuppressWarnings("PMD")
 public class MessageMatcher extends TypeSafeMatcher<MessageResolver> {
     private String errorCode;
 

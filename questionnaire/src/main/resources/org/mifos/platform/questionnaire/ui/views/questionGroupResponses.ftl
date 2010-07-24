@@ -21,39 +21,39 @@
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
 [@mifos.header "title" /]
-[@mifos.topNavigationNoSecurity currentTab="Admin" /]
+[@mifos.topNavigationNoSecurity currentTab="ClientsAndAccounts" /]
+<STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
 <div class="sidebar ht950">
-    [#include "adminLeftPane.ftl" /]
+    [#include "ClientLeftPane.ftl" /]
 </div>
 <div class="content leftMargin180">
-    <span id="page.id" title="view_question_group_reponses"/></span>
+    <span id="page.id" title="view_question_group_reponses"></span>
+    [#--assign breadcrumb = Session.urlMap/]
+    [@mifos.crumbpairs breadcrumb "true"/--]
     <div class=" fontnormal marginLeft30">
         <div class="orangeheading marginTop15">
             [@spring.message "questionnaire.view.question.group.responses"/]
         </div>
-            <div id="questionGroupList" class="marginTop15">
-                [#list questionGroupDetails as questionGroupDetail]
-                <table class="bluetableborderFull" cellspacing="0" cellpadding="0" border="0" align="center" width="90%">
-                    <tr>
-                        <td>
-                            <div id="questionGroup.sections" class="marginTop15">
-                                [#list questionGroupDetail.sectionDetails as sectionDetail]
-                                <b>${sectionDetail.name}</b><br/>
-                                [#list sectionDetail.questions as sectionQuestionDetail]
-                                <div>
-                                    [#if sectionQuestionDetail.mandatory]
-                                    <font color="#FF0000">*</font>
-                                    [/#if]
-                                    ${sectionQuestionDetail.title}:<span class="fontnormal">${sectionQuestionDetail.value?default("")}</span>
-                                </div>
-                                [/#list]
-                                [/#list]
-                            </div>
-                        </td>
-                    </tr>
-                </table>
+        <div id="questionGroupList" class="marginTop15">
+            [#list questionGroupDetails as questionGroupDetail]
+            <fieldset id="questionGroup.sections" class="bluetableborderFull">
+                [#list questionGroupDetail.sectionDetails as sectionDetail]
+                <br/>
+                <span class="paddingleft10 fontnormalbold">${sectionDetail.name}</span>
+                <ol>
+                    [#list sectionDetail.questions as sectionQuestionDetail]
+                    <li>
+                        <label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
+                        ${sectionQuestionDetail.title}:</label>
+                        <label class="rightCol"><span class="fontnormal">${sectionQuestionDetail.value?default("")}</span></label>
+                    </li>
+                    [/#list]
+                    <br/>
+                </ol>
                 [/#list]
-            </div>
+            </fieldset>
+            [/#list]
+        </div>
     </div>
 </div>
 [@mifos.footer/]

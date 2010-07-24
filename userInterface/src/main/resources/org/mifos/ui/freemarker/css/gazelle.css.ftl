@@ -604,7 +604,14 @@ select {
 
 }
 
+.rightCol {
+    text-align:left;
+    width: 100em;
+    word-wrap: break-word;
+    word-break: break-all;
+}
 
-
-
-	
+.paddingleft10{
+	padding-left: 10px;
+	padding-top: 5px;
+}
