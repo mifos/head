@@ -64,7 +64,7 @@ explanation of the license and how it is applied.
 		                     <table width="93%" border="0" cellpadding="3" cellspacing="0">
 					              <tr class="fontnormal">
 					                <td width="30%" align="right"><c:out value="${requestScope.lookupType}"></c:out>:</td>
-					                <td width="70%" valign="top"><input type="text" name="lookupValue" maxlength="300" value="" onkeydown="doKeyPress(event);" />
+					                <td width="70%" valign="top"><input type="text" name="lookupValue" value='<c:out value="${lookupoptionsactionform.lookupValue}" />' maxlength="300" onkeydown="doKeyPress(event);" />
 									</td>
 					              </tr>
 							</table>

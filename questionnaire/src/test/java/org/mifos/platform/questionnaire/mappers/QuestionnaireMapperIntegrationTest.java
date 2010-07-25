@@ -20,7 +20,6 @@
 
 package org.mifos.platform.questionnaire.mappers;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.platform.questionnaire.domain.EventSourceEntity;
@@ -47,25 +46,33 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/test-questionnaire-dbContext.xml", "/test-questionnaire-persistenceContext.xml", "/META-INF/spring/QuestionnaireContext.xml"})
 @TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
-@Ignore
 public class QuestionnaireMapperIntegrationTest {
 
     @Autowired
     private QuestionnaireMapper questionnaireMapper;
-    
+
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldMapEventSources() {
-        EventSource eventSource = new EventSource("Create", "Client", "Create Client");
+        testMapEventSource("Create", "Client", "Create Client");
+        testMapEventSource("View", "Client", "View Client");
+        testMapEventSource("Create", "Loan", "Create Loan");
+    }
+
+    private void testMapEventSource(String event, String source, String description) {
+        EventSource eventSource = new EventSource(event, source, description);
         List<SectionDetail> sectionDetails = getSectionDefinitions();
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(new QuestionGroupDetail(0, "Title", eventSource, sectionDetails, false));
         Set<EventSourceEntity> eventSources = questionGroup.getEventSources();
         assertThat(eventSources, is(not(nullValue())));
         assertThat(eventSources.size(), is(1));
         EventSourceEntity eventSourceEntity = eventSources.toArray(new EventSourceEntity[eventSources.size()])[0];
-        assertThat(eventSourceEntity.getEvent().getName(), is("Create"));
-        assertThat(eventSourceEntity.getSource().getEntityType(), is("Client"));
-        assertThat(eventSourceEntity.getDescription(), is("Create Client"));
+        assertThat(eventSourceEntity.getEvent().getName(), is(event));
+        assertThat(eventSourceEntity.getSource().getEntityType(), is(source));
+        assertThat(eventSourceEntity.getDescription(), is(description));
+        assertThat(eventSourceEntity.getEvent().getName(), is(event));
+        assertThat(eventSourceEntity.getSource().getEntityType(), is(source));
+        assertThat(eventSourceEntity.getDescription(), is(description));
     }
 
     private List<SectionDetail> getSectionDefinitions() {

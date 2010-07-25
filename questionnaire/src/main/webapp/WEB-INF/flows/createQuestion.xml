@@ -15,7 +15,7 @@
 	</view-state>
 
     <action-state id="addQuestion">
-        <evaluate expression="questionnaireController.addQuestion(questionDefinition, flowRequestContext)"/>
+        <evaluate expression="questionController.addQuestion(questionDefinition, flowRequestContext)"/>
         <transition to="createQuestion" />
     </action-state>
 
@@ -35,7 +35,7 @@
     </action-state>
 
     <action-state id="createQuestions">
-        <evaluate expression="questionnaireController.createQuestions(questionDefinition, flowRequestContext)"/>
+        <evaluate expression="questionController.createQuestions(questionDefinition, flowRequestContext)"/>
         <transition on="success" to="createQuestionSuccess" />
         <transition on="failure" to="createQuestion" />
     </action-state>

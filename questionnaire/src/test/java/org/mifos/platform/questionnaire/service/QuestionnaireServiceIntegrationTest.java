@@ -22,7 +22,6 @@ package org.mifos.platform.questionnaire.service;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
@@ -65,7 +64,6 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration(locations = {"/test-questionnaire-dbContext.xml", "/test-questionnaire-persistenceContext.xml", "/META-INF/spring/QuestionnaireContext.xml"})
 @TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
 @SuppressWarnings("PMD")
-@Ignore
 public class QuestionnaireServiceIntegrationTest {
 
     @Autowired
@@ -184,9 +182,9 @@ public class QuestionnaireServiceIntegrationTest {
         String questionGroupTitle1 = "QG1" + System.currentTimeMillis();
         String questionGroupTitle2 = "QG2" + System.currentTimeMillis();
         List<SectionDetail> sectionsForQG1 = Arrays.asList(getSection("Section1"));
-        defineQuestionGroup(questionGroupTitle1, "Create", "Client", sectionsForQG1,false);
+        defineQuestionGroup(questionGroupTitle1, "Create", "Client", sectionsForQG1, false);
         List<SectionDetail> sectionsForQG2 = Arrays.asList(getSection("S2"), getSection("Section2"));
-        defineQuestionGroup(questionGroupTitle2, "Create", "Client", sectionsForQG2,false);
+        defineQuestionGroup(questionGroupTitle2, "Create", "Client", sectionsForQG2, false);
         List<QuestionGroupDetail> questionGroups = questionnaireService.getAllQuestionGroups();
         int finalCount = questionGroups.size();
         Assert.assertThat(finalCount - initialCount, is(2));
@@ -199,7 +197,7 @@ public class QuestionnaireServiceIntegrationTest {
     public void shouldGetQuestionGroupById() throws SystemException {
         String title = "QG1" + System.currentTimeMillis();
         List<SectionDetail> details = Arrays.asList(getSection("S1"), getSection("S2"));
-        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title, "Create", "Client", details,true);
+        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title, "Create", "Client", details, true);
         QuestionGroupDetail retrievedQuestionGroupDetail = questionnaireService.getQuestionGroup(createdQuestionGroupDetail.getId());
         Assert.assertNotSame(createdQuestionGroupDetail, retrievedQuestionGroupDetail);
         Assert.assertThat(retrievedQuestionGroupDetail.getTitle(), is(title));
@@ -268,7 +266,7 @@ public class QuestionnaireServiceIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void testGetQuestionGroupByIdFailure() throws SystemException {
         String title = "QG1" + System.currentTimeMillis();
-        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title, "Create", "Client", Arrays.asList(getSection("S1")),true);
+        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title, "Create", "Client", Arrays.asList(getSection("S1")), true);
         Integer maxQuestionGroupId = createdQuestionGroupDetail.getId();
         try {
             questionnaireService.getQuestionGroup(maxQuestionGroupId + 1);
@@ -343,7 +341,10 @@ public class QuestionnaireServiceIntegrationTest {
     public void shouldRetrieveAllEventSources() {
         List<EventSource> eventSources = questionnaireService.getAllEventSources();
         assertNotNull(eventSources);
-        Assert.assertThat(eventSources, new EventSourcesMatcher(Arrays.asList(new EventSource("Create", "Client", "Create Client"))));
+        Assert.assertThat(eventSources, new EventSourcesMatcher(
+                Arrays.asList(new EventSource("Create", "Client", "Create Client"),
+                        new EventSource("View", "Client", "View Client"),
+                        new EventSource("Create", "Loan", "Create Loan"))));
     }
 
     @Test
@@ -469,7 +470,7 @@ public class QuestionnaireServiceIntegrationTest {
         questionGroupInstance.setVersionNum(version);
         questionGroupInstance.setEntityId(entityId);
         List<QuestionGroupResponse> questionGroupResponses = new ArrayList<QuestionGroupResponse>();
-        for (int index=0; index<responses.length; index++) {
+        for (int index = 0; index < responses.length; index++) {
             SectionQuestion sectionQuestion = questionGroup.getSections().get(index).getQuestions().get(0);
             questionGroupResponses.add(getQuestionGroupResponse(responses[index], questionGroupInstance, sectionQuestion));
         }
@@ -482,7 +483,7 @@ public class QuestionnaireServiceIntegrationTest {
     }
 
     private QuestionGroupDetail defineQuestionGroup(String title, String event, String source, List<SectionDetail> sectionDetails, boolean editable) throws SystemException {
-        return questionnaireService.defineQuestionGroup(new QuestionGroupDetail(0, title, new EventSource(event, source, null), sectionDetails,editable));
+        return questionnaireService.defineQuestionGroup(new QuestionGroupDetail(0, title, new EventSource(event, source, null), sectionDetails, editable));
     }
 
     private SectionDetail getSection(String name) throws SystemException {
