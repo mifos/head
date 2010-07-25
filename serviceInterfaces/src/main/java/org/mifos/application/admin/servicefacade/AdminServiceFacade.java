@@ -23,12 +23,14 @@ package org.mifos.application.admin.servicefacade;
 import java.util.List;
 
 import org.mifos.dto.domain.AcceptedPaymentTypeDto;
+import org.mifos.dto.domain.CreateOrUpdateProductCategory;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.dto.screen.ProductCategoryDetailsDto;
 import org.mifos.dto.screen.ProductCategoryDisplayDto;
+import org.mifos.dto.screen.ProductCategoryTypeDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductDto;
@@ -84,4 +86,13 @@ public interface AdminServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     ProductCategoryDetailsDto retrieveProductCateogry(String globalProductCategoryNumber);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<ProductCategoryTypeDto> retrieveProductCategoryTypes();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void createProductCategory(CreateOrUpdateProductCategory productCategory);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateProductCategory(CreateOrUpdateProductCategory productCategory);
 }

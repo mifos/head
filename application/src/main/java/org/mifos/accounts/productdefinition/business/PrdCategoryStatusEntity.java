@@ -34,7 +34,7 @@ public class PrdCategoryStatusEntity extends MasterDataEntity {
         super();
     }
 
-    PrdCategoryStatusEntity(PrdCategoryStatus prdCategoryStatus) {
+    public PrdCategoryStatusEntity(PrdCategoryStatus prdCategoryStatus) {
         this.id = prdCategoryStatus.getValue();
     }
 
