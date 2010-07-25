@@ -102,7 +102,7 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
-								name="loan.dateofdisb/payment" mandatory="true" />:&nbsp;</td>
+								name="loan.dateofdisb/payment" mandatory="true" isColonRequired="Yes" /></td>
 							<td class="fontnormal">
 
 							 <date:datetag property="transactionDate" />
@@ -112,15 +112,16 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><span id="DisburseLoan.label.receiptId"><mifos:mifoslabel
-								name="loan.receiptId" /></span>:&nbsp;</td>
+								name="loan.receiptId" keyhm="Loan.ReceiptId" isColonRequired="Yes"/></span></td>
 							<td class="fontnormal"><mifos:mifosalphanumtext
+                                                                keyhm="Loan.ReceiptId"
 								styleId="DisburseLoan.input.receiptId"
 								maxlength="25" property="receiptId" /></td>
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
-								name="loan.receiptdate" />:&nbsp;</td>
-							<td class="fontnormal"><date:datetag property="receiptDate" /></td>
+								name="loan.receiptdate" isColonRequired="true" keyhm="Loan.ReceiptDate" /></td>
+							<td class="fontnormal"><date:datetag property="receiptDate" keyhm="Loan.ReceiptDate"/></td>
 						</tr>
 						<tr>
 							<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
