@@ -198,6 +198,7 @@ public class DateTag extends BaseInputTag {
             output = "<!-- normal style -->"
                     + this.prepareOutputString(format, propertyVal, ddValue, mmValue, yyValue, separator, userfmt);
         }
+        output = "<BDO dir='LTR'>" + output + "</BDO>";
         return output;
     }
 

@@ -95,12 +95,12 @@ public class DateTagTest extends TestCase {
         dateTag.setRenderstyle("simple");
         dateTag.setProperty("testdate");
 
-        String output = "<!-- simple style -->" + "<input type=\"text\" id=\"testdateDD\" name=\"testdateDD\" "
+        String output = "<BDO dir='LTR'><!-- simple style -->" + "<input type=\"text\" id=\"testdateDD\" name=\"testdateDD\" "
                 + "maxlength=\"2\" size=\"2\" value=\"16\" " + "style=\"width:1.5em\"" + " />\u00a0DD\u00a0" + ""
                 + "<input type=\"text\" id=\"testdateMM\" name=\"testdateMM\" "
                 + "maxlength=\"2\" size=\"2\" value=\"08\" " + "style=\"width:1.5em\"" + " />\u00a0MM\u00a0" + ""
                 + "<input type=\"text\" id=\"testdateYY\" name=\"testdateYY\" "
-                + "maxlength=\"4\" size=\"4\" value=\"2007\" " + "style=\"width:3em\"" + " />\u00a0YYYY\u00a0";
+                + "maxlength=\"4\" size=\"4\" value=\"2007\" " + "style=\"width:3em\"" + " />\u00a0YYYY\u00a0</BDO>";
        Assert.assertEquals(output, dateTag.render(DEFAULT_LOCALE, DEFAULT_LOCALE_DATE));
         assertWellFormedFragment(dateTag.render(DEFAULT_LOCALE, DEFAULT_LOCALE_DATE));
 
