@@ -358,7 +358,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
         LoanOfferingBO loanOffering = loan.getLoanOffering();
         updateLoanCounter(loanOffering, YesNoFlag.YES);
         try {
-            if (configService.isGlimEnabled()) {
+            if (configService.isGlimEnabled() && loan.getAccountId() != null) {
                 CollectionUtils.forAllDo(accountBusinessService.getCoSigningClientsForGlim(loan.getAccountId()),
                         new UpdateClientPerfHistoryForGroupLoanOnDisbursement(loan));
             }
