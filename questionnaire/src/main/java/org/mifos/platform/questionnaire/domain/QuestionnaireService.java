@@ -25,6 +25,7 @@ import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 
 import java.util.List;
 
@@ -50,4 +51,6 @@ public interface QuestionnaireService {
     void saveResponses(QuestionGroupDetails questionGroupDetails);
 
     void validateResponses(List<QuestionGroupDetail> questionGroupDetails);
+
+    List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSource eventSource);
 }

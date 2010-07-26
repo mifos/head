@@ -25,4 +25,11 @@
                                 qgi.entityId = :ENTITY_ID and qgi.questionGroup.id = :QUESTION_GROUP_ID)
               ]]>
     </query>
+    <query name="QuestionGroupInstance.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId">
+              <![CDATA[from QuestionGroupInstance as instance where instance.entityId = :ENTITY_ID and
+                        instance.questionGroup.id in (select questionGroup.id from QuestionGroup as questionGroup
+                        join questionGroup.eventSources eventSource where eventSource.id = :EVENT_SOURCE_ID)
+                        order by instance.dateConducted, instance.questionGroup.title
+              ]]>
+    </query>
 </hibernate-mapping>

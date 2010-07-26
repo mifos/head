@@ -17,7 +17,7 @@
  *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  *  explanation of the license and how it is applied.
  */
-package org.mifos.platform.questionnaire.service; // NOPMD
+package org.mifos.platform.questionnaire.service;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -44,14 +44,14 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.MANDATORY_QUESTION_HAS_NO_ANSWER;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when; //NOPMD
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("PMD")
 public class QuestionnaireServiceFacadeTest {
 
     private QuestionnaireServiceFacade questionnaireServiceFacade;
@@ -256,6 +256,13 @@ public class QuestionnaireServiceFacadeTest {
         } catch (ValidationException e) {
             verify(questionnaireService, times(1)).validateResponses(Arrays.asList(questionGroupDetail));
         }
+    }
+
+    @Test
+    public void testGetQuestionGroupInstances() {
+        when(questionnaireService.getQuestionGroupInstances(101, new EventSource("View", "Client", "View.Client"))).thenReturn(new ArrayList<QuestionGroupInstanceDetail>());
+        assertThat(questionnaireServiceFacade.getQuestionGroupInstances(101, "View", "Client"), is(notNullValue()));
+        verify(questionnaireService).getQuestionGroupInstances(eq(101), any(EventSource.class));
     }
 
     private SectionDetail getSectionDetailWithQuestions(String name, List<QuestionDetail> questionDetails, String value, boolean mandatory) {
