@@ -101,6 +101,10 @@ public class SectionQuestionDetail implements Serializable {
         return isEmpty(this.value);
     }
 
+    public boolean hasAnswer() {
+        return !isEmpty(this.value);
+    }
+
     @Override
     @SuppressWarnings("PMD.OnlyOneReturn")
     public boolean equals(Object o) {

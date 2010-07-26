@@ -30,6 +30,7 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Autowired
     private QuestionnaireService questionnaireService;
+    public static final Integer INVALID_ENTITY_ID = null;
 
     public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService) {
         this.questionnaireService = questionnaireService;
@@ -83,11 +84,6 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public List<QuestionGroupDetail> getQuestionGroups(String event, String source) throws SystemException {
-        return questionnaireService.getQuestionGroups(null, new EventSource(event, source, String.format("%s.%s", event, source)));
-    }
-
-    @Override
     public void saveResponses(QuestionGroupDetails questionGroupDetails) {
         questionnaireService.saveResponses(questionGroupDetails);
     }
@@ -95,5 +91,19 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     @Override
     public void validateResponses(List<QuestionGroupDetail> questionGroupDetails) {
         questionnaireService.validateResponses(questionGroupDetails);
+    }
+
+    @Override
+    public List<QuestionGroupDetail> getQuestionGroups(String event, String source) throws SystemException {
+        return questionnaireService.getQuestionGroups(INVALID_ENTITY_ID, getEventSource(event, source));
+    }
+
+    @Override
+    public List<QuestionGroupDetail> getQuestionGroups(Integer entityId, String event, String source) {
+        return questionnaireService.getQuestionGroups(entityId, getEventSource(event, source));
+    }
+
+    private EventSource getEventSource(String event, String source) {
+        return new EventSource(event, source, String.format("%s.%s", event, source));
     }
 }

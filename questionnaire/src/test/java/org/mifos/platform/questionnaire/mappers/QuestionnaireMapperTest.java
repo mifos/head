@@ -297,44 +297,68 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapToQuestionGroupInstances() {
-        QuestionGroup questionGroup = new QuestionGroup();
-        questionGroup.setId(10);
-        Mockito.when(questionGroupDao.getDetails(10)).thenReturn(questionGroup);
+        QuestionGroup questionGroup1 = new QuestionGroup();
+        questionGroup1.setId(10);
+        Mockito.when(questionGroupDao.getDetails(10)).thenReturn(questionGroup1);
 
-        SectionQuestion sectionQuestion = new SectionQuestion();
-        sectionQuestion.setId(14);
-        Mockito.when(sectionQuestionDao.getDetails(14)).thenReturn(sectionQuestion);
+        QuestionGroup questionGroup2 = new QuestionGroup();
+        questionGroup2.setId(11);
+        Mockito.when(questionGroupDao.getDetails(11)).thenReturn(questionGroup2);
+
+        SectionQuestion sectionQuestion1 = new SectionQuestion();
+        sectionQuestion1.setId(14);
+        Mockito.when(sectionQuestionDao.getDetails(14)).thenReturn(sectionQuestion1);
         
-        List<QuestionDetail> questionDetails = Arrays.asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
-        List<SectionDetail> sectionDetails = Arrays.asList(getSectionDetailWithQuestions("Sec1", questionDetails));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(10, "QG1", new EventSource("Create", "Client", null), sectionDetails, true);
+        SectionQuestion sectionQuestion2 = new SectionQuestion();
+        sectionQuestion2.setId(15);
+        Mockito.when(sectionQuestionDao.getDetails(15)).thenReturn(sectionQuestion2);
+
+        List<QuestionDetail> questionDetails1 = Arrays.asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
+        List<SectionDetail> sectionDetails1 = Arrays.asList(getSectionDetailWithQuestions(14, "Sec1", questionDetails1, "value"));
+        QuestionGroupDetail questionGroupDetail1 = new QuestionGroupDetail(10, "QG1", new EventSource("Create", "Client", null), sectionDetails1, true);
+
+        List<QuestionDetail> questionDetails2 = Arrays.asList(new QuestionDetail(13, "Question 2", "Question 2", QuestionType.DATE));
+        List<SectionDetail> sectionDetails2 = Arrays.asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails2, null));
+        QuestionGroupDetail questionGroupDetail2 = new QuestionGroupDetail(11, "QG2", new EventSource("Create", "Client", null), sectionDetails2, true);
+
         List<QuestionGroupInstance> questionGroupInstances =
-                questionnaireMapper.mapToQuestionGroupInstances(new QuestionGroupDetails(101, 201, Arrays.asList(questionGroupDetail)));
+                questionnaireMapper.mapToQuestionGroupInstances(new QuestionGroupDetails(101, 201, Arrays.asList(questionGroupDetail1, questionGroupDetail2)));
         assertThat(questionGroupInstances, is(notNullValue()));
-        assertThat(questionGroupInstances.size(), is(1));
-        QuestionGroupInstance questionGroupInstance = questionGroupInstances.get(0);
-        assertThat(questionGroupInstance.getQuestionGroup().getId(), is(10));
-        assertThat(questionGroupInstance.getCompletedStatus(), is(1));
-        assertThat(questionGroupInstance.getCreatorId(), is(101));
-        assertThat(questionGroupInstance.getDateConducted(), is(notNullValue()));
-        assertThat(questionGroupInstance.getEntityId(), is(201));
-        assertThat(questionGroupInstance.getVersionNum(), is(1));
-        List<QuestionGroupResponse> questionGroupResponses = questionGroupInstance.getQuestionGroupResponses();
-        assertThat(questionGroupResponses, is(notNullValue()));
-        assertThat(questionGroupResponses.size(), is(1));
-        QuestionGroupResponse questionGroupResponse = questionGroupResponses.get(0);
+        assertThat(questionGroupInstances.size(), is(2));
+        QuestionGroupInstance questionGroupInstance1 = questionGroupInstances.get(0);
+        assertThat(questionGroupInstance1.getQuestionGroup().getId(), is(10));
+        assertThat(questionGroupInstance1.getCompletedStatus(), is(1));
+        assertThat(questionGroupInstance1.getCreatorId(), is(101));
+        assertThat(questionGroupInstance1.getDateConducted(), is(notNullValue()));
+        assertThat(questionGroupInstance1.getEntityId(), is(201));
+        assertThat(questionGroupInstance1.getVersionNum(), is(1));
+        List<QuestionGroupResponse> questionGroupResponses1 = questionGroupInstance1.getQuestionGroupResponses();
+        assertThat(questionGroupResponses1, is(notNullValue()));
+        assertThat(questionGroupResponses1.size(), is(1));
+        QuestionGroupResponse questionGroupResponse = questionGroupResponses1.get(0);
         assertThat(questionGroupResponse.getResponse(), is("value"));
         assertThat(questionGroupResponse.getSectionQuestion().getId(), is(14));
+
+        QuestionGroupInstance questionGroupInstance2 = questionGroupInstances.get(1);
+        assertThat(questionGroupInstance2.getQuestionGroup().getId(), is(11));
+        assertThat(questionGroupInstance2.getCompletedStatus(), is(1));
+        assertThat(questionGroupInstance2.getCreatorId(), is(101));
+        assertThat(questionGroupInstance2.getDateConducted(), is(notNullValue()));
+        assertThat(questionGroupInstance2.getEntityId(), is(201));
+        assertThat(questionGroupInstance2.getVersionNum(), is(1));
+        List<QuestionGroupResponse> questionGroupResponses2 = questionGroupInstance2.getQuestionGroupResponses();
+        assertThat(questionGroupResponses2, is(notNullValue()));
+        assertThat(questionGroupResponses2.size(), is(0));
     }
 
-    private SectionDetail getSectionDetailWithQuestions(String name, List<QuestionDetail> questionDetails) {
+    private SectionDetail getSectionDetailWithQuestions(int id, String name, List<QuestionDetail> questionDetails, String answer) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
         List<SectionQuestionDetail> sectionQuestionDetails = new ArrayList<SectionQuestionDetail>();
         for (QuestionDetail questionDetail : questionDetails) {
             SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(questionDetail, false);
-            sectionQuestionDetail.setValue("value");
-            sectionQuestionDetail.setId(14);
+            sectionQuestionDetail.setValue(answer);
+            sectionQuestionDetail.setId(id);
             sectionQuestionDetails.add(sectionQuestionDetail);
         }
         sectionDetail.setQuestionDetails(sectionQuestionDetails);

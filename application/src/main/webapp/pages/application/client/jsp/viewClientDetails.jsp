@@ -688,7 +688,7 @@ explanation of the license and how it is applied.
 								</c:forEach>
   							</c:if>
 							<tr><td class="paddingL10"> <br>
-							<a id="viewClientDetails.link.questionGroups" href="questionGroupResponses.ftl?globalCustNum=<c:out value="${clientInformationDto.clientDisplay.globalCustNum}"/>">
+							<a id="viewClientDetails.link.questionGroups" href="questionGroupResponses.ftl?entityId=<c:out value="${clientInformationDto.clientDisplay.customerId}"/>&event=Create&source=Client">
 							    <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
 							</a> <br>
 							<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${clientInformationDto.clientDisplay.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
