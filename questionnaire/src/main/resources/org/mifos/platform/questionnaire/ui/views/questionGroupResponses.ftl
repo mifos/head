@@ -26,34 +26,39 @@
 <div class="sidebar ht950">
     [#include "ClientLeftPane.ftl" /]
 </div>
-<div class="content leftMargin180">
-    <span id="page.id" title="view_question_group_reponses"></span>
-    [#--assign breadcrumb = Session.urlMap/]
-    [@mifos.crumbpairs breadcrumb "true"/--]
-    <div class=" fontnormal marginLeft30">
-        <div class="orangeheading marginTop15">
-            [@spring.message "questionnaire.view.question.group.responses"/]
-        </div>
-        <div id="questionGroupList" class="marginTop15">
-            [#list questionGroupDetails as questionGroupDetail]
-            <fieldset id="questionGroup.sections" class="bluetableborderFull">
-                [#list questionGroupDetail.sectionDetails as sectionDetail]
-                <br/>
-                <span class="paddingleft10 fontnormalbold">${sectionDetail.name}</span>
-                <ol>
-                    [#list sectionDetail.questions as sectionQuestionDetail]
-                    <li>
-                        <label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
-                        ${sectionQuestionDetail.title}:</label>
-                        <label class="rightCol"><span class="fontnormal">${sectionQuestionDetail.value?default("")}</span></label>
-                    </li>
-                    [/#list]
+<form action="${backPageUrl}" id="questionGroupResponseForm" name="questionGroupResponseForm" method="post">
+    <div class="content leftMargin180">
+        <span id="page.id" title="view_question_group_reponses"></span>
+        [#--assign breadcrumb = Session.urlMap/]
+        [@mifos.crumbpairs breadcrumb "true"/--]
+        <div class=" fontnormal marginLeft30">
+            <div class="orangeheading marginTop15">
+                [@spring.message "questionnaire.view.question.group.responses"/]
+            </div>
+            <div id="questionGroupList" class="marginTop15">
+                [#list questionGroupDetails as questionGroupDetail]
+                <fieldset id="questionGroup.sections" class="bluetableborderFull">
+                    [#list questionGroupDetail.sectionDetails as sectionDetail]
                     <br/>
-                </ol>
+                    <span class="paddingleft10 fontnormalbold">${sectionDetail.name}</span>
+                    <ol>
+                        [#list sectionDetail.questions as sectionQuestionDetail]
+                        <li>
+                            <label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
+                            ${sectionQuestionDetail.title}:</label>
+                            <label class="rightCol"><span class="fontnormal">${sectionQuestionDetail.value?default("")}</span></label>
+                        </li>
+                        [/#list]
+                        <br/>
+                    </ol>
+                    [/#list]
+                </fieldset>
                 [/#list]
-            </fieldset>
-            [/#list]
+            </div>
+            <div class="buttonWidth">
+                <input id="backToDetailsPage" name="backToDetailsPage" type="submit" class="buttn" value="[@spring.message "questionnaire.back.to.details"/]"/>
+            </div>
         </div>
     </div>
-</div>
+</form>
 [@mifos.footer/]

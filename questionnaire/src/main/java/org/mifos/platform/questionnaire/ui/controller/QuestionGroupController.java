@@ -38,6 +38,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,9 +61,11 @@ public class QuestionGroupController extends QuestionnaireController {
     @RequestMapping("/questionGroupResponses.ftl")
     public ModelMap getAllQuestionGroupResponses(@RequestParam("entityId") Integer entityId,
                                                @RequestParam("event") String event,
-                                               @RequestParam("source") String source) {
+                                               @RequestParam("source") String source,
+                                               @RequestParam("backPageUrl") String backPageUrl) throws UnsupportedEncodingException {
         ModelMap modelMap = new ModelMap();
         modelMap.addAttribute("questionGroupDetails", questionnaireServiceFacade.getQuestionGroups(entityId, event, source));
+        modelMap.addAttribute("backPageUrl", URLDecoder.decode(backPageUrl, "UTF-8"));
         return modelMap;
     }
 

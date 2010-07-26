@@ -38,6 +38,7 @@ import org.mifos.application.servicefacade.ProcessRulesDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
@@ -74,6 +75,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -505,7 +508,16 @@ public class ClientCustAction extends CustAction {
         ClientBO clientBO = (ClientBO) this.customerDao.findCustomerById(clientInformationDto.getClientDisplay().getCustomerId());
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, clientBO, request);
 
+        SessionUtils.removeThenSetAttribute("currentPageUrl", constructCurrentPageUrl(request, clientBO), request);
         return mapping.findForward(ActionForwards.get_success.toString());
+    }
+
+    private String constructCurrentPageUrl(HttpServletRequest request, CustomerBO clientBO) throws UnsupportedEncodingException {
+        String officerId = request.getParameter("recordOfficeId");
+        String loanOfficerId = request.getParameter("recordLoanOfficerId");
+        String url = String.format("clientCustAction.do?globalCustNum=%s&recordOfficeId=%s&recordLoanOfficerId=%s",
+                                    clientBO.getGlobalCustNum(), officerId, loanOfficerId);
+        return URLEncoder.encode(url, "UTF-8");
     }
 
     @TransactionDemarcate(joinToken = true)

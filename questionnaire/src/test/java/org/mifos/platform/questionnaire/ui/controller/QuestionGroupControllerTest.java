@@ -50,6 +50,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -90,13 +91,13 @@ public class QuestionGroupControllerTest {
     }
 
     @Test
-    public void shouldGetAllQuestionGroupResponses() {
+    public void shouldGetAllQuestionGroupResponses() throws UnsupportedEncodingException {
         List<QuestionGroupDetail> questionGroupDetails = Arrays.asList(new QuestionGroupDetail());
         when(questionnaireServiceFacade.getQuestionGroups(101, "Create", "Client")).thenReturn(questionGroupDetails);
-        ModelMap modelMap = questionGroupController.getAllQuestionGroupResponses(101, "Create", "Client");
+        ModelMap modelMap = questionGroupController.getAllQuestionGroupResponses(101, "Create", "Client", "http://some.url");
         Assert.assertThat(modelMap, is(notNullValue()));
-        Assert.assertThat(modelMap.containsAttribute("questionGroupDetails"), is(true));
         Assert.assertThat((List<QuestionGroupDetail>) modelMap.get("questionGroupDetails"), is(questionGroupDetails));
+        Assert.assertThat((String) modelMap.get("backPageUrl"), is("http://some.url"));
         Mockito.verify(questionnaireServiceFacade, Mockito.times(1)).getQuestionGroups(101, "Create", "Client");
     }
 
