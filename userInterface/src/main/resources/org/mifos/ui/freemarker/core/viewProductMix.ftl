@@ -19,20 +19,24 @@
    	
    	<br/> 
    	
-   	[#list mixList.mix as text]
+   	
    	<div>
-   	 <span class="fontBold">[@spring.message "loan" /]</span> 
+   	 <span class="fontBold">[@spring.message "loan" /]</span>
+   	 <ul>
+   	 [#list mixList.mix as text] 
    		[#if text_has_next]
-                <ul><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"><a href="productMixAction.do?method=get&prdOfferingId=${text.prdOfferingId}&productType=${text.productTypeID}">${text.prdOfferingName} </a></ul>
+            <li><a href="productMixDetails.ftl?prdOfferingId=${text.prdOfferingId}&productType=${text.productTypeID}">${text.prdOfferingName} </a></li>
 				[#else]
-	          <ul><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"><a href="productMixAction.do?method=get&prdOfferingId=${text.prdOfferingId}&productType=${text.productTypeID}">${text.prdOfferingName} </a></ul>
+	          <li><a href="productMixDetails.ftl?prdOfferingId=${text.prdOfferingId}&productType=${text.productTypeID}">${text.prdOfferingName} </a></li>
   		[/#if]
+  	[/#list]
+  	</ul>
   	</div>
   	
   	<div>
   	 <span class="fontBold">[@spring.message "savings" /]</span>
   	</div>
-  	 [/#list]
+  	 
   	 
   	 </div>
   	 

@@ -4,81 +4,46 @@
 [#import "blueprintmacros.ftl" as mifos]
 [#assign mifostag=JspTaglibs["/tags/mifos-html"]]
  <script type="text/javascript">
- var leftIdArray=new  Array();
- leftIdArray[0]="feesLeft";
- leftIdArray[1]="disbursementsLeft";
- leftIdArray[2]="repaymentsLeft";
- leftIdArray[3]="withdrawalsLeft";
- leftIdArray[4]="depositsLeft";
- 
- var rightIdArray=new  Array();
- rightIdArray[0]="feesRight";
- rightIdArray[1]="disbursementsRight";
- rightIdArray[2]="repaymentsRight";
- rightIdArray[3]="withdrawalsRight";
- rightIdArray[4]="depositsRight";
-function SecListBox(ListBox,text,value){
-	try{
-		var option=document.createElement("OPTION");
-		option.value=value;option.text=text;
-		ListBox.options.add(option)
-		}
-	catch(er){alert(er)}
-}
-function FirstListBox(num){
-	try{
-		var count=document.getElementById(leftIdArray[num]).options.length;
-		for(i=0;i<count;i++){
-			if(document.getElementById(leftIdArray[num]).options[i].selected){
-				SecListBox(document.getElementById(rightIdArray[num]),document.getElementById(leftIdArray[num]).options[i].value,document.getElementById(leftIdArray[num]).options[i].value);
-				document.getElementById(leftIdArray[num]).remove(i);
-				break
-			}
-		}
-	}
-	catch(er){alert(er)}
-}
-function SortAllItems(num){
-	var arr=new Array();
-	for(i=0;i<document.getElementById(leftIdArray[num]).options.length;i++){
-		arr[i]=document.getElementById(leftIdArray[num]).options[i].value
-	}
-	arr.sort();
-	RemoveAll(num);
-	for(i=0;i<arr.length;i++){
-		SecListBox(document.getElementById(leftIdArray[num]),arr[i],arr[i])
-	}
-}
-function RemoveAll(num){
-	try{
-		document.getElementById(leftIdArray[num]).options.length=0
-	}
-	catch(er){alert(er)}
-}
-function SecondListBox(num){
-	try{
-		var count=document.getElementById(rightIdArray[num]).options.length;
-		for(i=0;i<count;i++){
-			if(document.getElementById(rightIdArray[num]).options[i].selected){
-				SecListBox(document.getElementById(leftIdArray[num]),document.getElementById(rightIdArray[num]).options[i].value,document.getElementById(rightIdArray[num]).options[i].value);
-				document.getElementById(rightIdArray[num]).remove(i);
-				break
-			}
-		}
-		SortAllItems(num)
-	}catch(er){alert(er)}
+ function addOption(root, text, value)
+{
+  var newOpt = new Option(text, value);
+  var rootLength = root.length;
+  root.options[rootLength] = newOpt;
 }
 
-function selectAllOptions()
-{
-for(var j=0;j<rightIdArray.length;j++){
-	var selObj = document.getElementById(rightIdArray[j]);
-	for (var i=0; i<selObj.options.length; i++) {
-		selObj.options[i].selected = true;
-	}
-	}
+function deleteOption(root, index)
+{ 
+  var rootLength= root.length;
+  if(rootLength>0)
+  {
+    root.options[index] = null;
+  }
 }
-</script>
+
+function moveOptions(root, destination)
+{
+  
+  var rootLength= root.length;
+  var rootText = new Array();
+  var rootValues = new Array();
+  var rootCount = 0;
+  
+  var i; 
+  for(i=rootLength-1; i>=0; i--)
+  {
+    if(root.options[i].selected)
+    {
+      rootText[rootCount] = root.options[i].text;
+      rootValues[rootCount] = root.options[i].value;
+      deleteOption(root, i);
+      rootCount++;
+    }
+  }  
+  for(i=rootCount-1; i>=0; i--)
+  {
+    addOption(destination, rootText[i], rootValues[i]);
+  }  
+}</script>
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Left Sidebar Begins-->
@@ -103,12 +68,12 @@ for(var j=0;j<rightIdArray.length;j++){
         <div class="span-22 last"> 
         	<div class="span-21 prepend-3 "><span class="span-4 rightAlign">[@spring.message "fees" /] </span>        	
         	<span class="span-4">
-                 	<select name="feesLeft" id="feesLeft" multiple="multiple" class="listSize">
+                 	<select name="infeesList" id="infeesList" multiple="multiple" class="listSize">
                  	</select></span>
-                    <span class="span-3"><br /><input class="buttn2" name="add" type="button" value="Add >> " onclick="FirstListBox(0);" /><br /><br />
-					<input class="buttn2" name="remove" type="button" value="<<Remove" onclick="SecondListBox(0);" /></span>
+                    <span class="span-3"><br /><input class="buttn2" name="add" type="button" value="Add >> " onclick="moveOptions(this.form.infeesList, this.form.outfeesList);" /><br /><br />
+					<input class="buttn2" name="remove" type="button" value="<<Remove" onclick="moveOptions(this.form.outfeesList, this.form.infeesList);" /></span>
 					<span class="span-4">
-            		<select name="feesRight" id="feesRight" multiple="multiple" class="listSize">
+            		<select name="outfeesList" id="outfeesList" multiple="multiple" class="listSize">
 						<option >[@spring.message "cash" /]</option>
                         <option >[@spring.message "voucher" /]</option>
                         <option >[@spring.message "cheque" /]</option>
@@ -118,26 +83,26 @@ for(var j=0;j<rightIdArray.length;j++){
         <p class="span-21 fontBold">Loans :</p>
         <div class="span-22 last"> 
         	<div class="span-21 prepend-3 "><span class="span-4 rightAlign">[@spring.message "disbursements" /]: </span><span class="span-4">
-            	<select name="disbursementsLeft" id="disbursementsLeft" multiple="multiple" class="listSize">
+            	<select name="indisbursementsList" id="indisbursementsList" multiple="multiple" class="listSize">
       					
 					</select></span>
-                    <span class="span-3"><br /><input class="buttn2" name="add" type="button" value="Add >>" onclick="FirstListBox(1);" /><br /><br />
-<input class="buttn2" name="remove" type="button" value="<< Remove" onclick="SecondListBox(1);" /></span>
+                    <span class="span-3"><br /><input class="buttn2" name="add" type="button" value="Add >>" onclick="moveOptions(this.form.indisbursementsList, this.form.outdisbursementsList);" /><br /><br />
+<input class="buttn2" name="remove" type="button" value="<< Remove" onclick="moveOptions(this.form.outdisbursementsList, this.form.indisbursementsList);" /></span>
 					<span class="span-4">
-            		<select name="disbursementsRight" id="disbursementsRight" multiple="multiple" class="listSize">
+            		<select name="outdisbursementsList" id="outdisbursementsList" multiple="multiple" class="listSize">
 						<option >[@spring.message "cash" /]</option>
                         <option >[@spring.message "voucher" /]</option>
                         <option >[@spring.message "cheque" /]</option>
 					</select></span>
             </div>
             <div class="span-21 prepend-3 "><span class="span-4 rightAlign">[@spring.message "repayments"/] : </span><span class="span-4">
-            	<select name="repaymentsLeft" id="repaymentsLeft" multiple="multiple" class="listSize">
+            	<select name="inrepaymentsList" id="inrepaymentsList" multiple="multiple" class="listSize">
                 
 					</select></span>
-                    <span class="span-3"><br /><input class="buttn2" name="add" type="button" value="Add >>" onclick="FirstListBox(2);" /><br /><br />
-<input class="buttn2" name="remove" type="button" value="<< Remove" onclick="SecondListBox(2);" /></span>
+                    <span class="span-3"><br /><input class="buttn2" name="add" type="button" value="Add >>" onclick="moveOptions(this.form.inrepaymentsList, this.form.outrepaymentsList);" /><br /><br />
+<input class="buttn2" name="remove" type="button" value="<< Remove" onclick="moveOptions(this.form.outrepaymentsList, this.form.inrepaymentsList);" /></span>
 					<span class="span-4">
-            		<select name="repaymentsRight" id="repaymentsRight" multiple="multiple" class="listSize">
+            		<select name="outrepaymentsList" id="outrepaymentsList" multiple="multiple" class="listSize">
 						<option >[@spring.message "cash" /]</option>
                         <option >[@spring.message "voucher" /]</option>
                         <option >[@spring.message "cheque" /]</option>
@@ -147,25 +112,25 @@ for(var j=0;j<rightIdArray.length;j++){
         <p class="span-21 fontBold">Savings :</p>
         <div class="span-22 last"> 
         	<div class="span-21 prepend-3 "><span class="span-4 rightAlign">[@spring.message "withdrawals"/] : </span><span class="span-4">
-            	<select name="withdrawalsLeft" id="withdrawalsLeft" multiple="multiple" class="listSize">
+            	<select name="inwithdrawalsList" id="inwithdrawalsList" multiple="multiple" class="listSize">
       					<option >[@spring.message "voucher" /]</option>
                         <option >[@spring.message "cheque" /]</option>
 					</select></span>
-                    <span class="span-3"><br /><input class="buttn2" name="add" type="button" value="Add >>" onclick="FirstListBox(3);" /><br /><br />
-<input class="buttn2" name="remove" type="button" value="<< Remove" onclick="SecondListBox(3);" /></span>
+                    <span class="span-3"><br /><input class="buttn2" name="add" type="button" value="Add >>" onclick="moveOptions(this.form.inwithdrawalsList, this.form.outwithdrawalsList);" /><br /><br />
+<input class="buttn2" name="remove" type="button" value="<< Remove" onclick="moveOptions(this.form.outwithdrawalsList, this.form.inwithdrawalsList);" /></span>
 					<span class="span-4">
-            		<select name="withdrawalsRight" id="withdrawalsRight" multiple="multiple" class="listSize">
+            		<select name="outwithdrawalsList" id="outwithdrawalsList" multiple="multiple" class="listSize">
 						<option >[@spring.message "cash" /]</option>
 					</select></span>
             </div>
             <div class="span-21 prepend-3 "><span class="span-4 rightAlign">[@spring.message "deposits"/] : </span><span class="span-4">
-            	<select name="depositsLeft" id="depositsLeft" multiple="multiple" class="listSize">
+            	<select name="indepositsList" id="indepositsList" multiple="multiple" class="listSize">
       					
 					</select></span>
-                    <span class="span-3"><br /><input class="buttn2" name="add" type="button" value="Add >>" onclick="FirstListBox(4);" /><br /><br />
-<input class="buttn2" name="remove" type="button" value="<< Remove" onclick="SecondListBox(4);" /></span>
+                    <span class="span-3"><br /><input class="buttn2" name="add" type="button" value="Add >>" onclick="moveOptions(this.form.indepositsList, this.form.outdepositsList);" /><br /><br />
+<input class="buttn2" name="remove" type="button" value="<< Remove" onclick="moveOptions(this.form.outdepositsList, this.form.indepositsList);" /></span>
 					<span class="span-4">
-            		<select name="depositsRight" id="depositsRight" multiple="multiple" class="listSize">
+            		<select name="outdepositsList" id="outdepositsList" multiple="multiple" class="listSize">
 						<option >[@spring.message "cash" /]</option>
                         <option >[@spring.message "voucher" /]</option>
                         <option >[@spring.message "cheque" /]</option>
