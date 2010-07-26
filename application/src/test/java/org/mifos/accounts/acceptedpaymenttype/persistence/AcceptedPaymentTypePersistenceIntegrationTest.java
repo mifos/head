@@ -25,6 +25,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.accounts.acceptedpaymenttype.business.TransactionTypeEntity;
@@ -45,20 +48,18 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
     private List<TransactionAcceptedPaymentTypes> allAcceptedPaymentTypes = null;
     private Short DEFAULT_LOCALE_ID = 1;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         StaticHibernateUtil.startTransaction();
         acceptedPaymentTypePersistence = new AcceptedPaymentTypePersistence();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         StaticHibernateUtil.rollbackTransaction();
-        super.tearDown();
     }
 
-    public void testGetAcceptedPaymentTypes() throws Exception {
+    @Test public void testGetAcceptedPaymentTypes() throws Exception {
         // get all accepted payment types and store in
         // currentAcceptedPaymentTypes
         currentAcceptedPaymentTypes = new ArrayList<TransactionAcceptedPaymentTypes>();
@@ -183,7 +184,7 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
 
     }
 
-    public void testAddDeleteAcceptedPaymentTypes() throws Exception {
+    @Test public void testAddDeleteAcceptedPaymentTypes() throws Exception {
         testGetAcceptedPaymentTypes();
         List<AcceptedPaymentType> addAcceptedPaymentTypes = new ArrayList<AcceptedPaymentType>();
         for (TrxnTypes transactionType : TrxnTypes.values()) {
@@ -235,7 +236,7 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
 
     }
 
-    public void testRetrieveAcceptedPaymentTypes() throws Exception {
+    @Test public void testRetrieveAcceptedPaymentTypes() throws Exception {
         for (TrxnTypes transactionType : TrxnTypes.values()) {
             Short transactionId = transactionType.getValue();
             List<AcceptedPaymentType> acceptedPaymentTypes = acceptedPaymentTypePersistence

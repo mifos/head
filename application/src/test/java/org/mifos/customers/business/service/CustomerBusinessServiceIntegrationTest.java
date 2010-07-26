@@ -109,14 +109,14 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     private CustomerBusinessService customerBusinessServiceWithMock;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         service = new CustomerBusinessService();
         customerPersistenceMock = createMock(CustomerPersistence.class);
         customerBusinessServiceWithMock = new CustomerBusinessService(customerPersistenceMock);
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         try {
             // if there is an additional currency code defined, then clear it
             ConfigurationManager.getInstance().clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
