@@ -129,11 +129,11 @@ public class OfficeLevelEntity extends MasterDataEntity {
         return getLookUpValue().getLookUpValueLocales();
     }
 
-    protected void setName(String name) {
+    /**
+     * use update
+     */
+    @Deprecated
+    public void setName(String name) {
         MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
-    }
-
-    public void update(String name) {
-        setName(name);
     }
 }

@@ -24,20 +24,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.service.*; // NOPMD
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.*; // NOPMD
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;   //NOPMD
+import static org.mockito.Mockito.*; //NOPMD
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("PMD")
@@ -84,7 +85,7 @@ public class QuestionValidatorTest {
 
     @Test
     public void shouldNotThrowExceptionWhenQuestionGroupTitleIsProvided() {
-        when(eventSourceDao.retrieveCountByEventAndSource(anyString(), anyString())).thenReturn(asList((long) 1));
+        when(eventSourceDao.retrieveCountByEventAndSource(anyString(), anyString())).thenReturn(Arrays.asList((long) 1));
         try {
             questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client"));
         } catch (SystemException e) {
@@ -105,7 +106,7 @@ public class QuestionValidatorTest {
 
     @Test
     public void shouldNotThrowExceptionWhenQuestionGroupHasAtLeastOneSection() {
-        when(eventSourceDao.retrieveCountByEventAndSource(anyString(), anyString())).thenReturn(asList((long) 1));
+        when(eventSourceDao.retrieveCountByEventAndSource(anyString(), anyString())).thenReturn(Arrays.asList((long) 1));
         try {
             questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client"));
         } catch (SystemException e) {
@@ -149,7 +150,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenEventSourceIsNotProvided() {
         try {
-            questionnaireValidator.validateForDefineQuestionGroup(new QuestionGroupDetail(0, "Title", null, asList(getSection("S1"))));
+            questionnaireValidator.validateForDefineQuestionGroup(new QuestionGroupDetail(0, "Title", null, Arrays.asList(getSection("S1")), false));
             fail("Should have thrown the application exception");
         } catch (SystemException e) {
             assertEquals(INVALID_EVENT_SOURCE, e.getKey());
@@ -160,7 +161,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenAGivenSectionHasNoQuestions() {
         try {
-            questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client", asList(getSectionWithQuestions("S1"))));
+            questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client", Arrays.asList(getSectionWithQuestions("S1"))));
             fail("Should have thrown the application exception");
         } catch (SystemException e) {
             assertEquals(NO_QUESTIONS_FOUND_IN_SECTION, e.getKey());
@@ -173,7 +174,7 @@ public class QuestionValidatorTest {
         try {
             SectionDetail sectionDefinition1 = getSectionWithQuestions("S1", 1, 3);
             SectionDetail sectionDefinition2 = getSectionWithQuestions("S2", 3, 2);
-            List<SectionDetail> sectionDetails = asList(sectionDefinition1, sectionDefinition2);
+            List<SectionDetail> sectionDetails = Arrays.asList(sectionDefinition1, sectionDefinition2);
             questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client", sectionDetails));
             fail("Should have thrown the application exception");
         } catch (SystemException e) {
@@ -182,18 +183,45 @@ public class QuestionValidatorTest {
         verify(eventSourceDao, never()).retrieveCountByEventAndSource(anyString(), anyString());
     }
 
+    @Test
+    public void shouldThrowExceptionWhenNoAnswersProvided() {
+        try {
+            questionnaireValidator.validateForQuestionGroupResponses(null);
+            fail("Should have thrown the application exception");
+        } catch (SystemException e) {
+            assertEquals(NO_ANSWERS_PROVIDED, e.getKey());
+        }
+    }
+
+    @SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
+    @Test
+    public void shouldThrowExceptionWhenAMandatoryQuestionHasNoAnswer() {
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(0, "Title", "Create", "Client");
+        try {
+            questionnaireValidator.validateForQuestionGroupResponses(Arrays.asList(questionGroupDetail));
+            fail("Should have thrown the application exception");
+        } catch (ValidationException e) {
+            assertEquals(GENERIC_VALIDATION, e.getKey());
+            assertEquals(true, e.containsChildExceptions());
+            assertEquals(1, e.getChildExceptions().size());
+            ValidationException childException = e.getChildExceptions().get(0);
+            assertEquals(MANDATORY_QUESTION_HAS_NO_ANSWER, childException.getKey());
+            assertEquals(questionGroupDetail.getSectionDetail(0).getQuestionDetail(0), childException.getSectionQuestionDetail());
+        }
+    }
+
     private QuestionGroupDetail getQuestionGroupDetail(int id, String title, String event, String source) {
-        return getQuestionGroupDetail(id, title, event, source, asList(getSection("S1")));
+        return getQuestionGroupDetail(id, title, event, source, Arrays.asList(getSection("S1")));
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(int id, String title, String event, String source, List<SectionDetail> sectionDetails) {
-        return new QuestionGroupDetail(id, title, getEventSource(event, source), sectionDetails);
+        return new QuestionGroupDetail(id, title, getEventSource(event, source), sectionDetails, false);
     }
 
     private SectionDetail getSection(String name) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID), true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID), true, null));
         return section;
     }
 
@@ -202,7 +230,7 @@ public class QuestionValidatorTest {
         section.setName(name);
         if (questionIds != null) {
             for (int questionId : questionIds) {
-                section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, null, null, QuestionType.INVALID), true));
+                section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, null, null, QuestionType.INVALID), true, null));
             }
         }
         return section;

@@ -23,17 +23,22 @@ package org.mifos.platform.questionnaire.domain;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
-import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
+import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.SectionDetail;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 
 public class QuestionnaireServiceImpl implements QuestionnaireService {
 
@@ -50,6 +55,9 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     private EventSourceDao eventSourceDao;
 
     @Autowired
+    private QuestionGroupInstanceDao questionGroupInstanceDao;
+
+    @Autowired
     private QuestionnaireMapper questionnaireMapper;
 
     @SuppressWarnings({"UnusedDeclaration"})
@@ -57,13 +65,14 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     public QuestionnaireServiceImpl(QuestionnaireValidator questionnaireValidator, QuestionDao questionDao,
-                                    QuestionnaireMapperImpl questionnaireMapper, QuestionGroupDao questionGroupDao,
-                                    EventSourceDao eventSourceDao) {
+                                    QuestionnaireMapper questionnaireMapper, QuestionGroupDao questionGroupDao,
+                                    EventSourceDao eventSourceDao, QuestionGroupInstanceDao questionGroupInstanceDao) {
         this.questionnaireValidator = questionnaireValidator;
         this.questionDao = questionDao;
         this.questionnaireMapper = questionnaireMapper;
         this.questionGroupDao = questionGroupDao;
         this.eventSourceDao = eventSourceDao;
+        this.questionGroupInstanceDao = questionGroupInstanceDao;
     }
 
     @Override
@@ -124,14 +133,57 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public List<QuestionGroupDetail> getQuestionGroups(EventSource eventSource) throws SystemException {
+    public List<QuestionGroupDetail> getQuestionGroups(Integer entityId, EventSource eventSource) throws SystemException {
         questionnaireValidator.validateForEventSource(eventSource);
         List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSource.getEvent(), eventSource.getSource());
-        return questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
+        return getQuestionGroupDetailsAndResponses(entityId, questionGroups);
+    }
+
+    private List<QuestionGroupDetail> getQuestionGroupDetailsAndResponses(Integer entityId, List<QuestionGroup> questionGroups) {
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
+        if (entityId != null) {
+            for (int i = 0, questionGroupsSize = questionGroups.size(); i < questionGroupsSize; i++) {
+                QuestionGroup questionGroup = questionGroups.get(i);
+                List list = questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(entityId, questionGroup.getId());
+                if (isNotEmpty(list)) {
+                    QuestionGroupInstance questionGroupInstance = (QuestionGroupInstance) list.get(0);
+                    setResponseOnSectionDetails(questionGroupInstance.getQuestionGroupResponses(), questionGroupDetails.get(i));
+                }
+            }
+        }
+        return questionGroupDetails;
+    }
+
+    private void setResponseOnSectionDetails(List<QuestionGroupResponse> questionGroupResponses, QuestionGroupDetail questionGroupDetail) {
+        if (isNotEmpty(questionGroupResponses)) {
+            for (SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()) {
+                setResponseOnSectionDetail(questionGroupResponses, sectionDetail);
+            }
+        }
+    }
+
+    private void setResponseOnSectionDetail(List<QuestionGroupResponse> questionGroupResponses, SectionDetail sectionDetail) {
+        for (SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()) {
+            setResponseOnSectionQuestionDetail(questionGroupResponses, sectionQuestionDetail);
+        }
+    }
+
+    private void setResponseOnSectionQuestionDetail(List<QuestionGroupResponse> questionGroupResponses, SectionQuestionDetail sectionQuestionDetail) {
+        for (QuestionGroupResponse questionGroupResponse : questionGroupResponses) {
+            if (questionGroupResponse.getSectionQuestion().getId() == sectionQuestionDetail.getId()) {
+                sectionQuestionDetail.setValue(questionGroupResponse.getResponse());
+            }
+        }
     }
 
     @Override
-    public void saveResponses(List<QuestionGroupDetail> questionGroupDetails) {
+    public void saveResponses(QuestionGroupDetails questionGroupDetails) {
+        questionnaireValidator.validateForQuestionGroupResponses(questionGroupDetails.getDetails());
+        questionGroupInstanceDao.saveOrUpdateAll(questionnaireMapper.mapToQuestionGroupInstances(questionGroupDetails));
+    }
+
+    @Override
+    public void validateResponses(List<QuestionGroupDetail> questionGroupDetails) {
         questionnaireValidator.validateForQuestionGroupResponses(questionGroupDetails);
     }
 

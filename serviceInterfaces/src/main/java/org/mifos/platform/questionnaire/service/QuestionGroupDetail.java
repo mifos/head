@@ -32,20 +32,22 @@ public class QuestionGroupDetail implements Serializable {
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<SectionDetail> sectionDetails;
     private EventSource eventSource;
+    private boolean editable;
 
     public QuestionGroupDetail() {
-        this(0, null, null, new ArrayList<SectionDetail>());
+        this(0, null, null, new ArrayList<SectionDetail>(), false);
     }
 
     public QuestionGroupDetail(int id, String title, List<SectionDetail> sectionDetails) {
-        this(id, title, null, sectionDetails);
+        this(id, title, null, sectionDetails, false);
     }
 
-    public QuestionGroupDetail(int id, String title, EventSource eventSource, List<SectionDetail> sectionDetails) {
+    public QuestionGroupDetail(int id, String title, EventSource eventSource, List<SectionDetail> sectionDetails, boolean editable) {
         this.id = id;
         this.title = title;
         this.sectionDetails = sectionDetails;
         this.eventSource = eventSource;
+        this.editable = editable;
     }
 
     public String getTitle() {
@@ -85,5 +87,13 @@ public class QuestionGroupDetail implements Serializable {
             this.sectionDetails.add(new SectionDetail());
         }
         return this.sectionDetails.get(i);
+    }
+
+    public boolean isEditable() {
+        return this.editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 }

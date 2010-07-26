@@ -59,19 +59,30 @@
                         "--select one--" /]
                     </li>
                     <li>
+                        <label for="editable">[@spring.message "questionnaire.editable"/]:</label>
+                        [@mifosmacros.formCheckbox "questionGroupForm.editable", ""/]
+                    </li>
+                    <li>
                         <label for="sectionName">[@spring.message "questionnaire.currentSectionTitle"/]:</label>
                         [@spring.formInput "questionGroupForm.sectionName",
                         'maxlength="50"
                         onkeypress="return FnCheckNumCharsOnPress(event,this);"
                         onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
                     </li>
-                    <li>
-                        <label for="selectedQuestionIds"><span class="red">*</span>[@spring.message "questionnaire.select.questions"/]:</label>
-                        <select multiple="multiple" size="10" id="selectedQuestionIds" name="selectedQuestionIds" style="width:35em">
+                    <li style="padding-bottom: 0pt;">
+                        <label for="txtListSearch"><span class="red">*</span>[@spring.message "questionnaire.select.questions"/]:</label>
+                        <input type="text" autocomplete="off" id="txtListSearch" name="txtListSearch" style="width:21em;"/>
+                    </li>
+                    <li style="padding-top: 0pt;">
+                        <label for="questionList">&nbsp;</label>
+                        <ol class="questionList" id="questionList" style="overflow:auto; width:19em; height:180px; border:1px solid #336699; padding-left:5px">
                             [#list questionGroupForm.questionPool as sectionQuestion]
-                                <option value="${sectionQuestion.questionId?c}">${sectionQuestion.title}</option>
+                            <li style="padding-bottom: 0pt;">
+                               <input type="checkbox" id="${sectionQuestion.questionId?c}" name="selectedQuestionIds" value="${sectionQuestion.questionId?c}"/>
+                                &nbsp;<label style="float:none;" for="${sectionQuestion.questionId?c}">${sectionQuestion.title}</label>
+                            </li>
                             [/#list]
-                        </select>
+                        </ol>
                     </li>
                 </ol>
             </fieldset>
@@ -107,19 +118,15 @@
                     </tr>
                 </table>
                 [/#list]
-                <input type="submit" id="_eventId_deleteSection" name="_eventId_deleteSection" value=""
-                       style="visibility:hidden"/>
-                <input type="submit" id="_eventId_deleteQuestion" name="_eventId_deleteQuestion" value=""
-                       style="visibility:hidden"/>
+                <input type="submit" id="_eventId_deleteSection" name="_eventId_deleteSection" value="" style="visibility:hidden"/>
+                <input type="submit" id="_eventId_deleteQuestion" name="_eventId_deleteQuestion" value="" style="visibility:hidden"/>
                 <input type="hidden" id="questionSection" name="questionSection" value=""/>
             </div>
 
             <div class="marginLeft12em">
-                    <input type="submit" name="_eventId_defineQuestionGroup"
-                           id="_eventId_defineQuestionGroup" value='[@spring.message "submit"/]' class="buttn"/>
-                    &nbsp;
-                    <input type="submit" name="_eventId_cancel" id="_eventId_cancel" value='[@spring.message "cancel"/]'
-                           class="cancelbuttn"/>
+                 <input type="submit" name="_eventId_defineQuestionGroup" id="_eventId_defineQuestionGroup" value='[@spring.message "submit"/]' class="buttn"/>
+                 &nbsp;
+                 <input type="submit" name="_eventId_cancel" id="_eventId_cancel" value='[@spring.message "cancel"/]' class="cancelbuttn"/>
             </div>
         </form>
     </div>

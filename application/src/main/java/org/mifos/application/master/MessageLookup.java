@@ -24,18 +24,18 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.Localization;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ApplicationConfigurationPersistence;
-import org.mifos.config.struts.action.LabelConfigurationAction;
+import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -54,7 +54,7 @@ import org.springframework.context.MessageSourceAware;
  * Also see {@link ApplicationConfigurationPersistence}.
  * <p>
  * The word "label" might be better than "message"; at least that's what we call
- * them in places like {@link LabelConfigurationAction}.
+ * them in places like LabelConfigurationAction.
  * <p>
  * An initial pass has been made at moving to resource bundle based
  * localization. A Spring MessageSource is injected into the single instance of
@@ -199,6 +199,12 @@ public class MessageLookup implements MessageSourceAware {
         MifosConfiguration.getInstance().updateKey(lookupKey, newLookupValue);
     }
 
+    /**
+     * @deprecated - don't use from pojo domain model for updating entities lookup values
+     *
+     * @see OfficeLevelEntity#update(String)
+     */
+    @Deprecated
     public void updateLookupValue(LookUpValueEntity lookupValueEntity, String newValue) {
 
         Set<LookUpValueLocaleEntity> lookUpValueLocales = lookupValueEntity.getLookUpValueLocales();

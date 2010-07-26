@@ -22,6 +22,8 @@ package org.mifos.application.admin.servicefacade;
 
 import java.util.List;
 
+import org.mifos.dto.domain.AcceptedPaymentTypeDto;
+import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
@@ -31,7 +33,6 @@ import org.mifos.dto.screen.ProductDto;
 import org.mifos.dto.screen.ProductMixDetailsDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-@SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public interface AdminServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
@@ -52,13 +53,27 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     List<ProductDisplayDto> retrieveSavingsProducts();
 
-    @PreAuthorize("isFullyAuthenticated()")
-    ProductMixDetailsDto retrieveProductMixDetails(Short prdOfferingId, String productType) throws Exception;
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_PRODUCT_MIX')")
+    ProductMixDetailsDto retrieveProductMixDetails(Short prdOfferingId, String productType);
 
-    @PreAuthorize("isFullyAuthenticated()")
-    ProductDto retrieveAllProductMix() throws Exception;
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_PRODUCT_MIX')")
+    ProductDto retrieveAllProductMix();
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
     ConfigureApplicationLabelsDto retrieveConfigurableLabels();
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
     void updateApplicationLabels(ConfigureApplicationLabelsDto applicationLabels);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateAcceptedPaymentTypes(AcceptedPaymentTypeDto acceptedPaymentTypeDto);
 }

@@ -23,6 +23,8 @@ package org.mifos.platform.questionnaire.service;
 import java.io.Serializable;
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 @SuppressWarnings("PMD")
 public class SectionQuestionDetail implements Serializable {
     private static final long serialVersionUID = -6756173977268032788L;
@@ -30,18 +32,37 @@ public class SectionQuestionDetail implements Serializable {
     private boolean mandatory;
     private QuestionDetail questionDetail;
     private String value;
+    private int id;
 
     public SectionQuestionDetail() {
-        //FIXEME: why does spring crib for not having a default constructor
-        //for this class, when this class is not hooked onto spring?
-        //TODO: Investigate later
-        //super();
         this(new QuestionDetail(), false);
     }
 
     public SectionQuestionDetail(QuestionDetail questionDetail, boolean mandatory) {
+        this(questionDetail, mandatory, null);
+    }
+
+    public SectionQuestionDetail(QuestionDetail questionDetail, boolean mandatory, String value) {
+        this(0,questionDetail, mandatory, value);
+    }
+
+    public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean required) {
+        this(id,questionDetail, required, null);
+    }
+
+    public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean mandatory, String value) {
+        this.id = id;
         this.questionDetail = questionDetail;
         this.mandatory = mandatory;
+        this.value = value;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getQuestionId() {
@@ -74,6 +95,14 @@ public class SectionQuestionDetail implements Serializable {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public boolean hasNoAnswer() {
+        return isEmpty(this.value);
+    }
+
+    public boolean hasAnswer() {
+        return !isEmpty(this.value);
     }
 
     @Override

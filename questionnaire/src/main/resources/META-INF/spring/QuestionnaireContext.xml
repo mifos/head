@@ -59,6 +59,17 @@
         </property>
     </bean>
 
+    <bean id="sectionQuestionDao" parent="abstractDao">
+        <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.SectionQuestionDao"/>
+        <property name="target">
+            <bean parent="abstractDaoTarget">
+                <constructor-arg>
+                    <value>org.mifos.platform.questionnaire.domain.SectionQuestion</value>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
     <bean name="questionnaireService" class="org.mifos.platform.questionnaire.domain.QuestionnaireServiceImpl"/>
     <bean name="questionnaireServiceFacade" class="org.mifos.platform.questionnaire.service.QuestionnaireServiceFacadeImpl"/>
     <bean name="questionnaireValidator" class="org.mifos.platform.questionnaire.validators.QuestionnaireValidatorImpl"/>

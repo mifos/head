@@ -51,8 +51,9 @@ public class Question implements Serializable {
         this.questionDetail = questionDetail;
     }
 
-    @org.hibernate.validator.constraints.NotEmpty
-    @javax.validation.constraints.Size(max = 50)
+    @javax.validation.constraints.NotNull
+    @javax.validation.constraints.Pattern(regexp="^.*[^\\s]+.*$")
+    @javax.validation.constraints.Size(max = 200)
     public String getTitle() {
         return questionDetail.getTitle();
     }
@@ -66,7 +67,8 @@ public class Question implements Serializable {
         questionDetail.trimTitle();
     }
 
-    @org.hibernate.validator.constraints.NotEmpty
+    @javax.validation.constraints.Pattern(regexp="^.*[^\\s]+.*$")
+    @javax.validation.constraints.NotNull
     public String getType() {
         return questionTypeToStringMap.get(questionDetail.getType());
     }

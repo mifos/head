@@ -28,6 +28,7 @@ import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
+import org.mifos.customers.office.business.service.MandatoryHiddenFieldService;
 import org.mifos.customers.office.business.service.OfficeHierarchyService;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mockito.Mock;
@@ -46,6 +47,9 @@ public class AdminServiceFacadeWebTierTest {
     private OfficeHierarchyService officeHierarchyService;
 
     @Mock
+    private MandatoryHiddenFieldService mandatoryHiddenFieldService;
+
+    @Mock
     private LoanProductDao loanProductDao;
 
     @Mock
@@ -60,8 +64,8 @@ public class AdminServiceFacadeWebTierTest {
     @Before
     public void setupSUTAndInjectMocksAsDependencies() {
 
-        adminServiceFacade = new AdminServiceFacadeWebTier(productService, officeHierarchyService, loanProductDao, savingsProductDao,
-                                                           officeDao, applicationConfigurationDao);
+        adminServiceFacade = new AdminServiceFacadeWebTier(productService, officeHierarchyService, mandatoryHiddenFieldService,
+                                                            loanProductDao, savingsProductDao, officeDao, applicationConfigurationDao);
     }
 
     @Test

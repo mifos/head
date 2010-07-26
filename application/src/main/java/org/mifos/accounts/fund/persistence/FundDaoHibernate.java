@@ -25,11 +25,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.fund.exception.FundException;
 import org.mifos.accounts.fund.util.helpers.FundConstants;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.FundCodeEntity;
+import org.mifos.service.BusinessRuleException;
 import org.springframework.util.Assert;
 
 public class FundDaoHibernate implements FundDao {
@@ -76,10 +76,12 @@ public class FundDaoHibernate implements FundDao {
     }
 
     @Override
-    public void update(FundBO fund, String fundName) throws FundException {
+    public void update(FundBO fund, String fundName) {
         fund.validateFundName(fundName);
         if (fund.isDifferent(fundName)) {
-            fund.validateDuplicateFundName(fundName);
+            if (countOfFundByName(fundName.trim()) > 0) {
+                throw new BusinessRuleException(FundConstants.DUPLICATE_FUNDNAME_EXCEPTION);
+            }
         }
 
         fund.setFundName(fundName);

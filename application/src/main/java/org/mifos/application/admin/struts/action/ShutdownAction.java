@@ -52,6 +52,7 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.security.util.ActivityMapper;
 
 public class ShutdownAction extends BaseAction {
     private static final String DEFAULT_SHUTDOWN_TIMEOUT = "600"; // 10 minutes
@@ -67,22 +68,24 @@ public class ShutdownAction extends BaseAction {
                 .getName());
         Collection<HttpSession> sessions = shutdownManager.getActiveSessions();
         List<PersonnelInfo> loggedUsers = new ArrayList<PersonnelInfo>();
-        PersonnelBusinessService personnelBusinessService = new PersonnelBusinessService();
-        for (HttpSession session : sessions) {
-            UserContext userContext = (UserContext) session.getAttribute(LoginConstants.USERCONTEXT);
-            if (userContext == null) {
-                continue;
+        if (ActivityMapper.getInstance().isViewActiveSessionsPermitted(getUserContext(request), getUserContext(request).getBranchId())) {
+            PersonnelBusinessService personnelBusinessService = new PersonnelBusinessService();
+            for (HttpSession session : sessions) {
+                UserContext userContext = (UserContext) session.getAttribute(LoginConstants.USERCONTEXT);
+                if (userContext == null) {
+                    continue;
+                }
+                PersonnelBO personnel = personnelBusinessService.getPersonnel(userContext.getId());
+                String offices = generateOfficeChain(personnel.getOffice());
+                String names = personnel.getPersonnelDetails().getName().getFirstName() + " "
+                        + personnel.getPersonnelDetails().getName().getLastName();
+                DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withOffsetParsed().withLocale(locale);
+                String activityTime = formatter.print(session.getLastAccessedTime());
+                ActivityContext activityContext = (ActivityContext) session.getAttribute(LoginConstants.ACTIVITYCONTEXT);
+                String activityDesc = "[" + activityContext.getLastForward().getName() + "] "
+                        + activityContext.getLastForward().getPath();
+                loggedUsers.add(new PersonnelInfo(offices, names, activityTime, activityDesc));
             }
-            PersonnelBO personnel = personnelBusinessService.getPersonnel(userContext.getId());
-            String offices = generateOfficeChain(personnel.getOffice());
-            String names = personnel.getPersonnelDetails().getName().getFirstName() + " "
-                    + personnel.getPersonnelDetails().getName().getLastName();
-            DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withOffsetParsed().withLocale(locale);
-            String activityTime = formatter.print(session.getLastAccessedTime());
-            ActivityContext activityContext = (ActivityContext) session.getAttribute(LoginConstants.ACTIVITYCONTEXT);
-            String activityDesc = "[" + activityContext.getLastForward().getName() + "] "
-                    + activityContext.getLastForward().getPath();
-            loggedUsers.add(new PersonnelInfo(offices, names, activityTime, activityDesc));
         }
         Collections.sort(loggedUsers);
         request.setAttribute("activeSessions", loggedUsers);
@@ -118,9 +121,9 @@ public class ShutdownAction extends BaseAction {
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("shutdownAction");
-        security.allow("load", SecurityConstants.CAN_SHUTDOWN_MIFOS);
-        security.allow("shutdown", SecurityConstants.CAN_SHUTDOWN_MIFOS);
-        security.allow("cancelShutdown", SecurityConstants.CAN_SHUTDOWN_MIFOS);
+        security.allow("load", SecurityConstants.CAN_OPEN_SHUTDOWN_PAGE);
+        security.allow("shutdown", SecurityConstants.CAN_SHUT_DOWN_MIFOS);
+        security.allow("cancelShutdown", SecurityConstants.CAN_SHUT_DOWN_MIFOS);
         return security;
     }
 

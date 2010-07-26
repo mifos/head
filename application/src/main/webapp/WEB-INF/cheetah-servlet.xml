@@ -64,6 +64,10 @@
     
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
+    <bean id="mifosBeanValidator" class="org.mifos.platform.validation.MifosBeanValidator">
+        <property name="targetValidator" ref="validator"/>
+    </bean>
+
     <bean name="testingService" class="org.mifos.framework.util.StandardTestingService"/>
 
     <context:component-scan base-package="org.mifos.ui.core.controller"/>
@@ -73,7 +77,6 @@
 
     <bean name="genericController" class="org.mifos.ui.core.controller.GenericController"/>
 
-    <!-- <bean name="questionnaireController" class="org.mifos.platform.questionnaire.ui.controller.QuestionnaireController"/> -->
 
     <bean name="initializeApplicationController" class="org.mifos.ui.core.controller.InitializeApplicationController">
         <property name="testingService" ref="testingService" />
