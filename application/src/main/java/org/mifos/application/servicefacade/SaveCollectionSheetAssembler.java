@@ -49,6 +49,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -139,6 +140,7 @@ public class SaveCollectionSheetAssembler {
                                 logger.warn("Savings deposit on account [" + account.getAccountId()
                                         + "] failed. Account changes will not be persisted due to: " + e.getMessage());
                                 failedSavingsDepositAccountNums.add(account.getAccountId().toString());
+                                StaticHibernateUtil.getSessionTL().evict(account);
                             }
                         }
 
@@ -155,6 +157,7 @@ public class SaveCollectionSheetAssembler {
                                 logger.warn("Savings withdrawal on account [" + account.getAccountId()
                                         + "] failed. Account changes will not be persisted due to: " + e.getMessage());
                                 failedSavingsWithdrawalNums.add(account.getAccountId().toString());
+                                StaticHibernateUtil.getSessionTL().evict(account);
                             }
                         }
 
@@ -162,6 +165,10 @@ public class SaveCollectionSheetAssembler {
                             if (!savingsList.contains(account)) {
                                 savingsList.add(account);
                             }
+                        }
+                        else {
+
+                            StaticHibernateUtil.getSessionTL().evict(account);
                         }
                     } catch (PersistenceException e) {
                         throw new MifosRuntimeException(e);
@@ -189,7 +196,7 @@ public class SaveCollectionSheetAssembler {
                 for (SaveCollectionSheetCustomerLoanDto saveCollectionSheetCustomerLoan : saveCollectionSheetCustomer
                         .getSaveCollectionSheetCustomerLoans()) {
                     final Integer accountId = saveCollectionSheetCustomerLoan.getAccountId();
-                    final LoanBO account = findLoanAccountById(accountId);
+                    LoanBO account = findLoanAccountById(accountId);
                     final String globalAccountNum = account.getGlobalAccountNum();
 
                     final BigDecimal disbursalAmount = saveCollectionSheetCustomerLoan.getTotalDisbursement();
@@ -208,10 +215,12 @@ public class SaveCollectionSheetAssembler {
                             logger.warn("Disbursal of loan on account [" + globalAccountNum
                                     + "] failed. Account changes will not be persisted due to: " + ae.getMessage());
                             failedLoanDisbursementAccountNumbers.add(globalAccountNum);
+                            StaticHibernateUtil.getSessionTL().evict(account);
                         } catch (PersistenceException e) {
                             logger.warn("Disbursal of loan on account [" + globalAccountNum
                                     + "] failed. Account changes will not be persisted due to: " + e.getMessage());
                             failedLoanDisbursementAccountNumbers.add(globalAccountNum);
+                            StaticHibernateUtil.getSessionTL().evict(account);
                         }
 
                     } else {
@@ -227,6 +236,7 @@ public class SaveCollectionSheetAssembler {
                                 logger.warn("Loan repayment on account [" + globalAccountNum
                                         + "] failed. Account changes will not be persisted due to: " + ae.getMessage());
                                 failedLoanRepaymentAccountNumbers.add(globalAccountNum);
+                                StaticHibernateUtil.getSessionTL().evict(account);
                             }
                         }
                     }
@@ -256,14 +266,16 @@ public class SaveCollectionSheetAssembler {
                     final Integer accountId = saveCollectionSheetCustomer.getSaveCollectionSheetCustomerAccount()
                             .getAccountId();
 
+                    CustomerAccountBO account = null;
                     try {
-                        final CustomerAccountBO account = findCustomerAccountById(accountId);
+                        account = findCustomerAccountById(accountId);
                         account.applyPayment(accountPaymentDataView, false);
                         customerAccountList.add(account);
                     } catch (AccountException ae) {
                         logger.warn("Payment of collection/fee on account [" + accountId
                                 + "] failed. Account changes will not be persisted due to: " + ae.getMessage());
                         failedCustomerAccountPaymentNums.add(accountId.toString());
+                        StaticHibernateUtil.getSessionTL().evict(account);
                     }
                 }
             }
