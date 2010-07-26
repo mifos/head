@@ -39,6 +39,7 @@ import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
@@ -47,6 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -249,6 +251,21 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
                     questionGroupDetails.getEntityId(), questionGroupDetail));
         }
         return questionGroupInstances;
+    }
+
+    @Override
+    public List<QuestionGroupInstanceDetail> mapToQuestionGroupInstanceDetails(List<QuestionGroupInstance> questionGroupInstances) {
+        List<QuestionGroupInstanceDetail> questionGroupInstanceDetails = new ArrayList<QuestionGroupInstanceDetail>();
+        for (QuestionGroupInstance questionGroupInstance : questionGroupInstances) {
+            questionGroupInstanceDetails.add(mapToQuestionGroupInstanceDetail(questionGroupInstance));
+        }
+        return questionGroupInstanceDetails;
+    }
+
+    private QuestionGroupInstanceDetail mapToQuestionGroupInstanceDetail(QuestionGroupInstance questionGroupInstance) {
+        String questionGroupTitle = questionGroupInstance.getQuestionGroup().getTitle();
+        Date dateConducted = questionGroupInstance.getDateConducted();
+        return new QuestionGroupInstanceDetail(questionGroupTitle, dateConducted);
     }
 
     private QuestionGroupInstance mapToQuestionGroupInstance(int creatorId, int entityId, QuestionGroupDetail questionGroupDetail) {

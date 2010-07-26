@@ -31,6 +31,7 @@ import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
@@ -139,6 +140,25 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         return getQuestionGroupDetailsAndResponses(entityId, questionGroups);
     }
 
+    @Override
+    public void saveResponses(QuestionGroupDetails questionGroupDetails) {
+        questionnaireValidator.validateForQuestionGroupResponses(questionGroupDetails.getDetails());
+        questionGroupInstanceDao.saveOrUpdateAll(questionnaireMapper.mapToQuestionGroupInstances(questionGroupDetails));
+    }
+
+    @Override
+    public void validateResponses(List<QuestionGroupDetail> questionGroupDetails) {
+        questionnaireValidator.validateForQuestionGroupResponses(questionGroupDetails);
+    }
+
+    @Override
+    public List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSource eventSource) {
+        questionnaireValidator.validateForEventSource(eventSource);
+        Integer eventSourceId = getEventSourceEntity(eventSource).getId();
+        List questionGroupInstances = questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(entityId, eventSourceId);
+        return questionnaireMapper.mapToQuestionGroupInstanceDetails(questionGroupInstances);
+    }
+
     private List<QuestionGroupDetail> getQuestionGroupDetailsAndResponses(Integer entityId, List<QuestionGroup> questionGroups) {
         List<QuestionGroupDetail> questionGroupDetails = questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
         if (entityId != null) {
@@ -176,15 +196,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         }
     }
 
-    @Override
-    public void saveResponses(QuestionGroupDetails questionGroupDetails) {
-        questionnaireValidator.validateForQuestionGroupResponses(questionGroupDetails.getDetails());
-        questionGroupInstanceDao.saveOrUpdateAll(questionnaireMapper.mapToQuestionGroupInstances(questionGroupDetails));
-    }
-
-    @Override
-    public void validateResponses(List<QuestionGroupDetail> questionGroupDetails) {
-        questionnaireValidator.validateForQuestionGroupResponses(questionGroupDetails);
+    private EventSourceEntity getEventSourceEntity(EventSource eventSource) {
+        return (EventSourceEntity) eventSourceDao.retrieveByEventAndSource(eventSource.getEvent(), eventSource.getSource()).get(0);
     }
 
     private void persistQuestion(QuestionEntity question) throws SystemException {

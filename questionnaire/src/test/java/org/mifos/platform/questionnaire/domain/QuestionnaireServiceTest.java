@@ -18,7 +18,7 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.domain; // NOPMD
+package org.mifos.platform.questionnaire.domain;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,6 +39,7 @@ import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
@@ -52,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -68,7 +70,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("PMD")
 public class QuestionnaireServiceTest {
 
     private QuestionnaireService questionnaireService;
@@ -477,6 +478,24 @@ public class QuestionnaireServiceTest {
         return questionGroupInstance;
     }
 
+    private QuestionGroupInstance getQuestionGroupInstance(int entityId, int year, int month, int day, QuestionGroup questionGroup, String... responses) {
+        QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
+        questionGroupInstance.setQuestionGroup(questionGroup);
+        questionGroupInstance.setCompletedStatus(1);
+        questionGroupInstance.setCreatorId(122);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+        questionGroupInstance.setDateConducted(calendar.getTime());
+        questionGroupInstance.setEntityId(entityId);
+        questionGroupInstance.setVersionNum(1);
+        List<QuestionGroupResponse> groupResponses = new ArrayList<QuestionGroupResponse>();
+        for (int i=0; i<responses.length; i++) {
+            groupResponses.add(getQuestionGroupResponse(responses[i], questionGroupInstance, questionGroup.getSections().get(i).getQuestions().get(0)));
+        }
+        questionGroupInstance.setQuestionGroupResponses(groupResponses);
+        return questionGroupInstance;
+    }
+
     private QuestionGroupResponse getQuestionGroupResponse(String responses, QuestionGroupInstance questionGroupInstance, SectionQuestion sectionQuestion) {
         QuestionGroupResponse questionGroupResponse = new QuestionGroupResponse();
         questionGroupResponse.setResponse(responses);
@@ -508,6 +527,54 @@ public class QuestionnaireServiceTest {
         } catch (ValidationException e) {
             verify(questionnaireValidator, times(1)).validateForQuestionGroupResponses(Arrays.asList(questionGroupDetail));
         }
+    }
+
+    @Test
+    public void shouldGetQuestionGroupInstances() {
+        List<QuestionGroupInstance> questionGroupInstances = Arrays.asList(getQuestionGroupInstance(3031, 2010, 7, 24, getQuestionGroup(4041, "QG1", null)),
+                                                                           getQuestionGroupInstance(3032, 2010, 7, 24, getQuestionGroup(4042, "QG2", null)),
+                                                                           getQuestionGroupInstance(3033, 2010, 7, 24, getQuestionGroup(4043, "QG3", null)),
+                                                                           getQuestionGroupInstance(3034, 2010, 7, 25, getQuestionGroup(4041, "QG1", null)),
+                                                                           getQuestionGroupInstance(3035, 2010, 7, 25, getQuestionGroup(4042, "QG2", null)),
+                                                                           getQuestionGroupInstance(3036, 2010, 7, 26, getQuestionGroup(4042, "QG2", null)),
+                                                                           getQuestionGroupInstance(3037, 2010, 7, 26, getQuestionGroup(4043, "QG3", null)));
+        when(questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202)).thenReturn(questionGroupInstances);
+        when(eventSourceDao.retrieveByEventAndSource("View", "Client")).thenReturn(Arrays.asList(getEventSourceEntity(202)));
+        EventSource eventSource = new EventSource("View", "Client", "View.Client");
+        List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSource);
+        assertThat(instances, is(notNullValue()));
+        assertThat(instances.size(), is(7));
+        assertQuestionGroupInstanceDetail(instances.get(0), "QG1", 2010, 7, 24);
+        assertQuestionGroupInstanceDetail(instances.get(1), "QG2", 2010, 7, 24);
+        assertQuestionGroupInstanceDetail(instances.get(2), "QG3", 2010, 7, 24);
+        assertQuestionGroupInstanceDetail(instances.get(3), "QG1", 2010, 7, 25);
+        assertQuestionGroupInstanceDetail(instances.get(4), "QG2", 2010, 7, 25);
+        assertQuestionGroupInstanceDetail(instances.get(5), "QG2", 2010, 7, 26);
+        assertQuestionGroupInstanceDetail(instances.get(6), "QG3", 2010, 7, 26);
+        verify(questionGroupInstanceDao, times(1)).retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202);
+        verify(questionnaireValidator, times(1)).validateForEventSource(eventSource);
+        verify(eventSourceDao, times(1)).retrieveByEventAndSource("View", "Client");
+    }
+
+    private EventSourceEntity getEventSourceEntity(int id) {
+        EventSourceEntity eventSource = new EventSourceEntity();
+        eventSource.setId(id);
+        return eventSource;
+    }
+
+    private void assertQuestionGroupInstanceDetail(QuestionGroupInstanceDetail instanceDetail, String questionGroupTitle, int year, int month, int day) {
+        assertThat(instanceDetail.getQuestionGroupTitle(), is(questionGroupTitle));
+        Date date = instanceDetail.getDataCompleted();
+        assertDate(date, year, month, day);
+    }
+
+    private void assertDate(Date date, int year, int month, int day) {
+        assertThat(date, is(notNullValue()));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        assertThat(calendar.get(Calendar.YEAR), is(year));
+        assertThat(calendar.get(Calendar.MONTH), is(month));
+        assertThat(calendar.get(Calendar.DATE), is(day));
     }
 
     private QuestionGroup getQuestionGroup(int questionGroupId, String title, List<Section> sections) {
