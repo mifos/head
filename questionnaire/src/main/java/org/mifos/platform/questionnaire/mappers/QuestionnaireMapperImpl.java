@@ -217,7 +217,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
             QuestionEntity question = sectionQuestion.getQuestion();
             QuestionType type = mapToQuestionType(question.getAnswerTypeAsEnum());
             boolean required = sectionQuestion.isRequired();
-            QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type);
+            QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type, mapToAnswerChoices(question.getChoices()));
             sectionDetail.addQuestion(new SectionQuestionDetail(sectionQuestion.getId(), questionDetail, required));
         }
         return sectionDetail;

@@ -23,9 +23,11 @@ package org.mifos.platform.questionnaire.ui.controller;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.ui.model.QuestionGroupForm;
@@ -41,6 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,9 +63,9 @@ public class QuestionGroupController extends QuestionnaireController {
 
     @RequestMapping("/questionGroupResponses.ftl")
     public ModelMap getAllQuestionGroupResponses(@RequestParam("entityId") Integer entityId,
-                                               @RequestParam("event") String event,
-                                               @RequestParam("source") String source,
-                                               @RequestParam("backPageUrl") String backPageUrl) throws UnsupportedEncodingException {
+                                                 @RequestParam("event") String event,
+                                                 @RequestParam("source") String source,
+                                                 @RequestParam("backPageUrl") String backPageUrl) throws UnsupportedEncodingException {
         ModelMap modelMap = new ModelMap();
         modelMap.addAttribute("questionGroupDetails", questionnaireServiceFacade.getQuestionGroups(entityId, event, source));
         modelMap.addAttribute("backPageUrl", URLDecoder.decode(backPageUrl, "UTF-8"));
@@ -120,7 +123,7 @@ public class QuestionGroupController extends QuestionnaireController {
     }
 
     public String addSection(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
-        if(questionGroupForm.hasQuestionsInCurrentSection()){
+        if (questionGroupForm.hasQuestionsInCurrentSection()) {
             constructErrorMessage(requestContext.getMessageContext(),
                     "questionnaire.error.no.question.in.section", "currentSectionTitle", "Section should have at least one question.");
             return "failure";
@@ -135,7 +138,7 @@ public class QuestionGroupController extends QuestionnaireController {
     }
 
     public String deleteQuestion(QuestionGroupForm questionGroupForm, String sectionName, String questionId) {
-        questionGroupForm.removeQuestion(sectionName,questionId);
+        questionGroupForm.removeQuestion(sectionName, questionId);
         return "success";
     }
 
@@ -152,6 +155,24 @@ public class QuestionGroupController extends QuestionnaireController {
             }
         }
         return sectionQuestionDetails;
+    }
+
+    public String saveQuestionGroup(QuestionGroupDetails questionGroupDetails, int questionGroupIndex, RequestContext requestContext) {
+        QuestionGroupDetail questionGroupDetail = questionGroupDetails.getDetails().get(questionGroupIndex);
+        try {
+            questionnaireServiceFacade.saveResponses(new QuestionGroupDetails(questionGroupDetails.getCreatorId(),
+                    questionGroupDetails.getEntityId(), Arrays.asList(questionGroupDetail)));
+        } catch (ValidationException e) {
+            if (e.containsChildExceptions()) {
+                for (ValidationException validationException : e.getChildExceptions()) {
+                    String title = validationException.getSectionQuestionDetail().getTitle();
+                    constructErrorMessage("questionnaire.group.noresponse", "Please specify Question Group title" + title,
+                            requestContext.getMessageContext(), title);
+                }
+            }
+            return "failure";
+        }
+        return "success";
     }
 
     private boolean questionGroupHasErrors(QuestionGroupForm questionGroup, RequestContext requestContext) {

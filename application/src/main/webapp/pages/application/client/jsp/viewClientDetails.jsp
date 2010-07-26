@@ -820,6 +820,9 @@ explanation of the license and how it is applied.
                   <a id="viewClientDetails.link.attachSurvey" href="surveyInstanceAction.do?method=choosesurvey&globalNum=${clientInformationDto.clientDisplay.globalCustNum}&surveyType=client">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
+                  <a id="viewClientDetails.link.attachSurvey" href="selectSurvey.ftl">
+                    Select QuestionGroups
+                  </a> <br>
                   <a id="viewClientDetails.link.viewAllSurveys" href="surveysAction.do?method=mainpage">
                     <mifos:mifoslabel name="Surveys.viewallsurveys" bundle="SurveysUIResources"/>
                   </a>

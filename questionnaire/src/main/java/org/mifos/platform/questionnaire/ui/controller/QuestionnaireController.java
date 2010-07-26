@@ -52,6 +52,11 @@ public class QuestionnaireController {
         context.addMessage(messageResolver);
     }
 
+    protected void constructErrorMessage(String code, String message, MessageContext context, Object... args) {
+        MessageResolver messageResolver = new MessageBuilder().error().code(code).defaultText(message).args(args).build();
+        context.addMessage(messageResolver);
+    }
+
     protected boolean isInvalidNumber(String id) {
         return (StringUtils.isEmpty(id) || !isInteger(id));
     }

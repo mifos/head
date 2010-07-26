@@ -204,6 +204,7 @@ public class QuestionnaireServiceTest {
     private QuestionEntity getQuestion(int questionId) {
         QuestionEntity question = new QuestionEntity();
         question.setQuestionId(questionId);
+        question.setChoices(new LinkedList<QuestionChoiceEntity>());
         return question;
     }
 
@@ -308,7 +309,9 @@ public class QuestionnaireServiceTest {
         for (String name : names) {
             Section section = new Section(name);
             SectionQuestion sectionQuestion = new SectionQuestion();
-            sectionQuestion.setQuestion(new QuestionEntity());
+            QuestionEntity questionEntity = new QuestionEntity();
+            questionEntity.setChoices(new LinkedList<QuestionChoiceEntity>());
+            sectionQuestion.setQuestion(questionEntity);
             section.setQuestions(Arrays.asList(sectionQuestion));
             sectionList.add(section);
         }
@@ -325,6 +328,7 @@ public class QuestionnaireServiceTest {
             QuestionEntity questionEntity = new QuestionEntity();
             questionEntity.setQuestionText(questionName);
             questionEntity.setShortName(questionName);
+            questionEntity.setChoices(new LinkedList<QuestionChoiceEntity>());
             sectionQuestion.setQuestion(questionEntity);
             sectionQuestions.add(sectionQuestion);
         }

@@ -240,6 +240,7 @@ public class QuestionnaireMapperTest {
         QuestionEntity question = new QuestionEntity();
         question.setShortName(sectionName);
         question.setAnswerType(AnswerType.DATE);
+        question.setChoices(new LinkedList<QuestionChoiceEntity>());
         sectionQuestion.setQuestion(question);
         section.setQuestions(Arrays.asList(sectionQuestion));
         return section;

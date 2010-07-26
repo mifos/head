@@ -73,6 +73,7 @@ import org.mifos.service.MifosServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -80,12 +81,14 @@ import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.mifos.customers.client.util.helpers.ClientConstants.EVENT_CREATE;
 import static org.mifos.customers.client.util.helpers.ClientConstants.SOURCE_CLIENT;
-
+import static org.mifos.framework.struts.tags.MifosTagUtils.xmlEscape;
 public class ClientCustAction extends CustAction {
 
     public static ActionSecurity getSecurity() {
@@ -509,6 +512,9 @@ public class ClientCustAction extends CustAction {
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, clientBO, request);
 
         SessionUtils.removeThenSetAttribute("currentPageUrl", constructCurrentPageUrl(request, clientBO), request);
+
+        prepareSurveySelection(request, clientBO);
+        
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 
@@ -518,6 +524,30 @@ public class ClientCustAction extends CustAction {
         String url = String.format("clientCustAction.do?globalCustNum=%s&recordOfficeId=%s&recordLoanOfficerId=%s",
                                     clientBO.getGlobalCustNum(), officerId, loanOfficerId);
         return URLEncoder.encode(url, "UTF-8");
+    }
+
+    private void prepareSurveySelection(HttpServletRequest request, ClientBO clientBO) throws PageExpiredException {
+        HttpSession session = request.getSession();
+        Object randomNumber = session.getAttribute(Constants.RANDOMNUM);
+        String officeName = xmlEscape(clientBO.getOffice().getOfficeName());
+        String officeUrl = "custSearchAction.do?method=getOfficeHomePage&officeId=" + clientBO.getOfficeId()
+                + "&officeName=" + officeName
+                + "&randomNum=" + randomNumber;
+        String clientUrl = "clientCustAction.do?method=get&globalCustNum=" + xmlEscape(clientBO.getGlobalCustNum())
+                + "&randomNum=" + randomNumber;
+        HashMap urlMap = new LinkedHashMap<String, String>();
+        urlMap.put(xmlEscape(clientBO.getOffice().getOfficeName()), officeUrl);
+        String clientName = xmlEscape(clientBO.getDisplayName());
+        urlMap.put(clientName, clientUrl);
+        session.setAttribute("source", "Client");
+        session.setAttribute("event", "View");
+        session.setAttribute("urlMap", urlMap);
+        session.setAttribute("surveyFor", clientName);
+        session.setAttribute("entityId", clientBO.getCustomerId());
+        UserContext userContext = getUserContext(request);
+        PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+        PersonnelBO currentUser = personnelPersistence.findPersonnelById(userContext.getId());
+        session.setAttribute("creatorId", currentUser.getPersonnelId());
     }
 
     @TransactionDemarcate(joinToken = true)
