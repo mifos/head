@@ -108,6 +108,11 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         return questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source));
     }
 
+    @Override
+    public QuestionGroupInstanceDetail getQuestionGroupInstance(int questionGroupInstanceId) {
+        return questionnaireService.getQuestionGroupInstance(questionGroupInstanceId);
+    }
+
     private EventSource getEventSource(String event, String source) {
         return new EventSource(event, source, String.format("%s.%s", event, source));
     }

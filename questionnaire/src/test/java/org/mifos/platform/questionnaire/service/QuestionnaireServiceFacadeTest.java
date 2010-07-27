@@ -265,6 +265,15 @@ public class QuestionnaireServiceFacadeTest {
         verify(questionnaireService).getQuestionGroupInstances(eq(101), any(EventSource.class));
     }
 
+    @Test
+    public void testGetQuestionGroupInstance() {
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail();
+        int questionGroupInstanceId = 1212;
+        when(questionnaireService.getQuestionGroupInstance(questionGroupInstanceId)).thenReturn(new QuestionGroupInstanceDetail(questionGroupDetail));
+        assertThat(questionnaireServiceFacade.getQuestionGroupInstance(questionGroupInstanceId), is(notNullValue()));
+        verify(questionnaireService, times(1)).getQuestionGroupInstance(questionGroupInstanceId);
+    }
+
     private SectionDetail getSectionDetailWithQuestions(String name, List<QuestionDetail> questionDetails, String value, boolean mandatory) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);

@@ -26,21 +26,28 @@ import java.util.Date;
 public class QuestionGroupInstanceDetail implements Serializable {
     private static final long serialVersionUID = -7157295411344619153L;
 
-    private final String questionGroupTitle;
-    private final Date dataCompleted;
+    private final QuestionGroupDetail questionGroupDetail;
+    private Date dataCompleted;
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP2", justification="Date is mutable, but needs initialization.")
-    public QuestionGroupInstanceDetail(String questionGroupTitle, Date dataCompleted) {
-        this.questionGroupTitle = questionGroupTitle;
-        this.dataCompleted = dataCompleted;
+    public QuestionGroupInstanceDetail(QuestionGroupDetail questionGroupDetail) {
+        this.questionGroupDetail = questionGroupDetail;
     }
 
     public String getQuestionGroupTitle() {
-        return questionGroupTitle;
+        return questionGroupDetail.getTitle();
+    }
+
+    public QuestionGroupDetail getQuestionGroupDetail() {
+        return questionGroupDetail;
     }
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="Date is mutable, but can't help method returning date.")
     public Date getDataCompleted() {
         return dataCompleted;
+    }
+
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP2", justification="Date is mutable, but needs initialization.")
+    public void setDataCompleted(Date dataCompleted) {
+        this.dataCompleted = dataCompleted;
     }
 }

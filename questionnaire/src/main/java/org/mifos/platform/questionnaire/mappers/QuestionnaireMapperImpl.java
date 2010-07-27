@@ -48,7 +48,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -262,10 +261,12 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return questionGroupInstanceDetails;
     }
 
-    private QuestionGroupInstanceDetail mapToQuestionGroupInstanceDetail(QuestionGroupInstance questionGroupInstance) {
-        String questionGroupTitle = questionGroupInstance.getQuestionGroup().getTitle();
-        Date dateConducted = questionGroupInstance.getDateConducted();
-        return new QuestionGroupInstanceDetail(questionGroupTitle, dateConducted);
+    @Override
+    public QuestionGroupInstanceDetail mapToQuestionGroupInstanceDetail(QuestionGroupInstance questionGroupInstance) {
+        QuestionGroupDetail questionGroupDetail = mapToQuestionGroupDetail(questionGroupInstance.getQuestionGroup());
+        QuestionGroupInstanceDetail questionGroupInstanceDetail = new QuestionGroupInstanceDetail(questionGroupDetail);
+        questionGroupInstanceDetail.setDataCompleted(questionGroupInstance.getDateConducted());
+        return questionGroupInstanceDetail;
     }
 
     private QuestionGroupInstance mapToQuestionGroupInstance(int creatorId, int entityId, QuestionGroupDetail questionGroupDetail) {

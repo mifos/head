@@ -26,9 +26,9 @@
 <div class="sidebar ht950">
     [#include "ClientLeftPane.ftl" /]
 </div>
-<form action="${backPageUrl}" id="questionGroupResponseForm" name="questionGroupResponseForm" method="post">
+<form action="${backPageUrl}" id="displayResponsesForm" name="displayResponsesForm" method="post">
     <div class="content leftMargin180">
-        <span id="page.id" title="view_question_group_reponses"></span>
+        <span id="page.id" title="display_question_group_reponses"></span>
         [#--assign breadcrumb = Session.urlMap/]
         [@mifos.crumbpairs breadcrumb "true"/--]
         <div class=" fontnormal marginLeft30">

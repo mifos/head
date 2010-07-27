@@ -53,4 +53,6 @@ public interface QuestionnaireService {
     void validateResponses(List<QuestionGroupDetail> questionGroupDetails);
 
     List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSource eventSource);
+
+    QuestionGroupInstanceDetail getQuestionGroupInstance(int questionGroupInstanceId);
 }

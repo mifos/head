@@ -61,7 +61,7 @@ public class QuestionGroupController extends QuestionnaireController {
         super(questionnaireServiceFacade);
     }
 
-    @RequestMapping("/questionGroupResponses.ftl")
+    @RequestMapping("/displayResponses.ftl")
     public ModelMap getAllQuestionGroupResponses(@RequestParam("entityId") Integer entityId,
                                                  @RequestParam("event") String event,
                                                  @RequestParam("source") String source,

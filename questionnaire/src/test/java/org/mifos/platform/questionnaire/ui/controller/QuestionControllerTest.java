@@ -56,7 +56,6 @@ import static org.mockito.Mockito.anyListOf;
 import static org.mockito.Mockito.argThat;
 
 @RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("PMD")
 public class QuestionControllerTest {
 
     private QuestionController questionController;

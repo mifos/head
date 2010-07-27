@@ -81,7 +81,7 @@ public class ClientCustActionTest {
 
     @Test
     public void shouldGetQuestionGroupsByEventSource() throws ApplicationException {
-        when(questionnaireServiceFacade.getQuestionGroups(EVENT_CREATE, SOURCE_CLIENT)).thenReturn(asList(getQuestionGroupDetail()));
+        when(questionnaireServiceFacade.getQuestionGroups(EVENT_CREATE, SOURCE_CLIENT)).thenReturn(asList(getQuestionGroupDetail("QG1")));
         List<QuestionGroupDto> questionGroups = clientCustAction.getQuestionGroups(questionnaireServiceFacade);
         assertThat(questionGroups, is(notNullValue()));
         assertThat(questionGroups.size(), is(1));
@@ -121,11 +121,14 @@ public class ClientCustActionTest {
     }
 
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail(String questionGroupTitle) {
-        return new QuestionGroupInstanceDetail(questionGroupTitle, Calendar.getInstance().getTime());
+        QuestionGroupInstanceDetail detail = new QuestionGroupInstanceDetail(getQuestionGroupDetail(questionGroupTitle));
+        detail.setDataCompleted(Calendar.getInstance().getTime());
+        return detail;
     }
 
-    private QuestionGroupDetail getQuestionGroupDetail() {
+    private QuestionGroupDetail getQuestionGroupDetail(String title) {
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail();
+        questionGroupDetail.setTitle(title);
         questionGroupDetail.setId(123);
         questionGroupDetail.setSectionDetails(asList(getSectionDetail("Section1", "Question1")));
         return questionGroupDetail;

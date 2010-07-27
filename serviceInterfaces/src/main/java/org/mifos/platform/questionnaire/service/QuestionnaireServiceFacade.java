@@ -50,4 +50,6 @@ public interface QuestionnaireServiceFacade {
     List<QuestionGroupDetail> getQuestionGroups(Integer entityId, String event, String source);
 
     List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, String event, String source);
+
+    QuestionGroupInstanceDetail getQuestionGroupInstance(int questionGroupInstanceId);
 }

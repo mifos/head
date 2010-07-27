@@ -159,6 +159,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         return questionnaireMapper.mapToQuestionGroupInstanceDetails(questionGroupInstances);
     }
 
+    @Override
+    public QuestionGroupInstanceDetail getQuestionGroupInstance(int questionGroupInstanceId) {
+        QuestionGroupInstance questionGroupInstance = questionGroupInstanceDao.getDetails(questionGroupInstanceId);
+        return questionnaireMapper.mapToQuestionGroupInstanceDetail(questionGroupInstance);
+    }
+
     private List<QuestionGroupDetail> getQuestionGroupDetailsAndResponses(Integer entityId, List<QuestionGroup> questionGroups) {
         List<QuestionGroupDetail> questionGroupDetails = questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
         if (entityId != null) {
