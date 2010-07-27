@@ -60,7 +60,7 @@ public class GroupPerformanceHistoryEntityIntegrationTest extends MifosIntegrati
         expect(customerMock.getPerformanceHistory()).andReturn(clientPerfHistoryMock);
         expectLastCall().atLeastOnce();
 
-        expect(accountBusinessServiceMock.getCoSigningClientsForGlim(loan.getAccountId())).andReturn(
+        //expect(accountBusinessServiceMock.getCoSigningClientsForGlim(loan.getAccountId())).andReturn(
                 Arrays.asList(customerMock));
         replay(configServiceMock, accountBusinessServiceMock, customerMock, clientPerfHistoryMock);
 
