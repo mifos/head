@@ -536,26 +536,26 @@ public class QuestionnaireServiceTest {
     @Test
     public void shouldGetQuestionGroupInstances() {
         List<Section> sections = new ArrayList<Section>();
-        List<QuestionGroupInstance> questionGroupInstances = asList(getQuestionGroupInstance(3031, 2010, 7, 24, getQuestionGroup(4041, "QG1", sections)),
-                                                                           getQuestionGroupInstance(3032, 2010, 7, 24, getQuestionGroup(4042, "QG2", sections)),
-                                                                           getQuestionGroupInstance(3033, 2010, 7, 24, getQuestionGroup(4043, "QG3", sections)),
+        List<QuestionGroupInstance> questionGroupInstances = asList(getQuestionGroupInstance(3031, 2010, 7, 26, getQuestionGroup(4041, "QG1", sections)),
+                                                                           getQuestionGroupInstance(3032, 2010, 7, 26, getQuestionGroup(4042, "QG2", sections)),
+                                                                           getQuestionGroupInstance(3033, 2010, 7, 26, getQuestionGroup(4043, "QG3", sections)),
                                                                            getQuestionGroupInstance(3034, 2010, 7, 25, getQuestionGroup(4041, "QG1", sections)),
                                                                            getQuestionGroupInstance(3035, 2010, 7, 25, getQuestionGroup(4042, "QG2", sections)),
-                                                                           getQuestionGroupInstance(3036, 2010, 7, 26, getQuestionGroup(4042, "QG2", sections)),
-                                                                           getQuestionGroupInstance(3037, 2010, 7, 26, getQuestionGroup(4043, "QG3", sections)));
+                                                                           getQuestionGroupInstance(3036, 2010, 7, 24, getQuestionGroup(4042, "QG2", sections)),
+                                                                           getQuestionGroupInstance(3037, 2010, 7, 24, getQuestionGroup(4043, "QG3", sections)));
         when(questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202)).thenReturn(questionGroupInstances);
         when(eventSourceDao.retrieveByEventAndSource("View", "Client")).thenReturn(asList(getEventSourceEntity(202)));
         EventSource eventSource = new EventSource("View", "Client", "View.Client");
         List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSource);
         assertThat(instances, is(notNullValue()));
         assertThat(instances.size(), is(7));
-        assertQuestionGroupInstanceDetail(instances.get(0), "QG1", 2010, 7, 24);
-        assertQuestionGroupInstanceDetail(instances.get(1), "QG2", 2010, 7, 24);
-        assertQuestionGroupInstanceDetail(instances.get(2), "QG3", 2010, 7, 24);
+        assertQuestionGroupInstanceDetail(instances.get(0), "QG1", 2010, 7, 26);
+        assertQuestionGroupInstanceDetail(instances.get(1), "QG2", 2010, 7, 26);
+        assertQuestionGroupInstanceDetail(instances.get(2), "QG3", 2010, 7, 26);
         assertQuestionGroupInstanceDetail(instances.get(3), "QG1", 2010, 7, 25);
         assertQuestionGroupInstanceDetail(instances.get(4), "QG2", 2010, 7, 25);
-        assertQuestionGroupInstanceDetail(instances.get(5), "QG2", 2010, 7, 26);
-        assertQuestionGroupInstanceDetail(instances.get(6), "QG3", 2010, 7, 26);
+        assertQuestionGroupInstanceDetail(instances.get(5), "QG2", 2010, 7, 24);
+        assertQuestionGroupInstanceDetail(instances.get(6), "QG3", 2010, 7, 24);
         verify(questionGroupInstanceDao, times(1)).retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202);
         verify(questionnaireValidator, times(1)).validateForEventSource(eventSource);
         verify(eventSourceDao, times(1)).retrieveByEventAndSource("View", "Client");

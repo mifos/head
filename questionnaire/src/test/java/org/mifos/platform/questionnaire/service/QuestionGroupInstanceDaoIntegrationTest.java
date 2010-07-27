@@ -132,13 +132,13 @@ public class QuestionGroupInstanceDaoIntegrationTest {
         List list = questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, eventSourceId);
         assertThat(list, is(notNullValue()));
         assertThat(list.size(), is(7));
-        assertThat(((QuestionGroupInstance) list.get(0)).getId(), is(questionGroupInstances.get(2).getId()));
-        assertThat(((QuestionGroupInstance) list.get(1)).getId(), is(questionGroupInstances.get(0).getId()));
-        assertThat(((QuestionGroupInstance) list.get(2)).getId(), is(questionGroupInstances.get(5).getId()));
-        assertThat(((QuestionGroupInstance) list.get(3)).getId(), is(questionGroupInstances.get(3).getId()));
-        assertThat(((QuestionGroupInstance) list.get(4)).getId(), is(questionGroupInstances.get(1).getId()));
-        assertThat(((QuestionGroupInstance) list.get(5)).getId(), is(questionGroupInstances.get(4).getId()));
-        assertThat(((QuestionGroupInstance) list.get(6)).getId(), is(questionGroupInstances.get(6).getId()));
+        assertThat(((QuestionGroupInstance) list.get(0)).getId(), is(questionGroupInstances.get(4).getId()));
+        assertThat(((QuestionGroupInstance) list.get(1)).getId(), is(questionGroupInstances.get(6).getId()));
+        assertThat(((QuestionGroupInstance) list.get(2)).getId(), is(questionGroupInstances.get(3).getId()));
+        assertThat(((QuestionGroupInstance) list.get(3)).getId(), is(questionGroupInstances.get(1).getId()));
+        assertThat(((QuestionGroupInstance) list.get(4)).getId(), is(questionGroupInstances.get(2).getId()));
+        assertThat(((QuestionGroupInstance) list.get(5)).getId(), is(questionGroupInstances.get(0).getId()));
+        assertThat(((QuestionGroupInstance) list.get(6)).getId(), is(questionGroupInstances.get(5).getId()));
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws SystemException {
