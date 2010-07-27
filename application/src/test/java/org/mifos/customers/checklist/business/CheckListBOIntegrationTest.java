@@ -54,11 +54,11 @@ public class CheckListBOIntegrationTest extends MifosIntegrationTestCase {
     private AccountCheckListBO accountCheckList = null;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(customerCheckList);
         TestObjectFactory.cleanUp(accountCheckList);
         StaticHibernateUtil.closeSession();

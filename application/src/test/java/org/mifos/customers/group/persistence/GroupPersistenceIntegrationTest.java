@@ -55,7 +55,7 @@ public class GroupPersistenceIntegrationTest extends MifosIntegrationTestCase {
     private CenterPersistence centerPersistence;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         this.officePersistence = new OfficePersistence();
         this.centerPersistence = new CenterPersistence();
         this.groupPersistence = new GroupPersistence();

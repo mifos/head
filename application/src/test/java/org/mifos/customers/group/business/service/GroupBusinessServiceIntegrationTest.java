@@ -75,7 +75,7 @@ public class GroupBusinessServiceIntegrationTest extends MifosIntegrationTestCas
     private GroupBusinessService groupBusinessService;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         StaticHibernateUtil.getSessionTL().clear();
         groupBusinessService = (GroupBusinessService) ServiceFactory.getInstance().getBusinessService(
                 BusinessServiceName.Group);

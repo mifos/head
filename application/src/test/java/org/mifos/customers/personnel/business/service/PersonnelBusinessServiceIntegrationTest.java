@@ -59,12 +59,12 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
     private PersonnelBusinessService personnelBusinessService;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         personnelBusinessService = new PersonnelBusinessService();
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(personnelBO);
         TestObjectFactory.cleanUp(personnel);
         StaticHibernateUtil.closeSession();

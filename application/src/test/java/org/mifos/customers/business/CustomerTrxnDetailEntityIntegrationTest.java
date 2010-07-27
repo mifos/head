@@ -68,7 +68,7 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
     private UserContext userContext = null;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
 
         OfficeBO office = IntegrationTestObjectMother.sampleBranchOffice();
@@ -91,7 +91,7 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         IntegrationTestObjectMother.cleanCustomerHierarchyWithMeeting(client, group, center, weeklyMeeting);
     }
 

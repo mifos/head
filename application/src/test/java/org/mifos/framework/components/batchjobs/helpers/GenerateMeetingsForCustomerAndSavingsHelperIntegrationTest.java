@@ -70,12 +70,12 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
     private UserContext userContext;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(savings);
         TestObjectFactory.cleanUp(client1);
         TestObjectFactory.cleanUp(client2);

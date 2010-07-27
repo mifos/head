@@ -96,7 +96,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
     private LoanOfferingBO loanOffering;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
         IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 
@@ -132,7 +132,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
 
         IntegrationTestObjectMother.cleanSavingsProductAndAssociatedSavingsAccounts(savingsAccount, savingsAccount2);
         TestObjectFactory.cleanUp(loan);

@@ -52,7 +52,7 @@ public class CenterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     private CenterBusinessService service;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         service = new CenterBusinessService();
     }
 

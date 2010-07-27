@@ -127,7 +127,7 @@ public class ReportProductOfferingServiceIntegrationTest extends MifosIntegratio
     }
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         loanPrdBusinessServiceMock = createMock(LoanPrdBusinessService.class);
         savingsProductBusinessServiceMock = createMock(SavingsPrdBusinessService.class);
         reportProductOfferingConfig = new ClassPathResource(FilePaths.REPORT_PRODUCT_OFFERING_CONFIG);

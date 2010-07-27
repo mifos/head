@@ -43,7 +43,7 @@ public class CustomFieldsListTagIntegrationTest extends MifosIntegrationTestCase
     private UserContext userContext;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
     }
 

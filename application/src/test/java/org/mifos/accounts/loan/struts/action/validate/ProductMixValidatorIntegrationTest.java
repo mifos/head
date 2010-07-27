@@ -53,7 +53,7 @@ public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase
     private CustomerBO customerMock;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         configServiceMock = createMock(ConfigurationBusinessService.class);
         productMixBusinessServiceMock = createMock(ProductMixBusinessService.class);
         loanMock = createMock(LoanBO.class);

@@ -66,7 +66,7 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
     AccountBO loanAccount = null;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         TestDatabase.resetMySQLDatabase();
         loanArrearTask = new LoanArrearsTask();
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());

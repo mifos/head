@@ -60,12 +60,12 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
     private TestCollectionSheetRetrieveSavingsAccountsUtils collectionSheetRetrieveSavingsAccountsUtils;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         collectionSheetRetrieveSavingsAccountsUtils = new TestCollectionSheetRetrieveSavingsAccountsUtils();
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         TestDatabase.resetMySQLDatabase();
     }
 

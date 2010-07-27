@@ -228,7 +228,7 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         transaction.rollback();
     }
 }

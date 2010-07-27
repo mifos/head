@@ -45,7 +45,7 @@ public class AccountStateIntegrationTest extends MifosIntegrationTestCase {
     private AccountPersistence accountPersistence;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         accountPersistence = new AccountPersistence();
     }
 

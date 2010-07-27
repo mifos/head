@@ -61,14 +61,14 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
     ProductStatusHelper productStatusHelper;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         ProductStatus productStatus = new ProductStatus();
         productStatus.name = "ProductStatus";
         productStatusHelper = (ProductStatusHelper) productStatus.getTaskHelper();
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         TestObjectFactory.removeObject(product);
         StaticHibernateUtil.closeSession();
     }

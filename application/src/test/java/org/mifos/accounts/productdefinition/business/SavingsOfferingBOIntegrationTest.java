@@ -65,7 +65,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
     private SavingsOfferingBO savingsOffering1;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
     }
 
     @After
