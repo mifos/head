@@ -64,7 +64,6 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
         upgradeAndCheck(upgrade);
     }
 
-    @Test
     private void upgradeAndCheck(Upgrade upgrade) throws Exception {
         upgrade.upgrade(session.connection());
         MifosConfiguration.getInstance().init();
