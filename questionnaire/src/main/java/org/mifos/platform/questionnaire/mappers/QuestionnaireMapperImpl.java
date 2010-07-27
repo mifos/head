@@ -264,8 +264,10 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     @Override
     public QuestionGroupInstanceDetail mapToQuestionGroupInstanceDetail(QuestionGroupInstance questionGroupInstance) {
         QuestionGroupDetail questionGroupDetail = mapToQuestionGroupDetail(questionGroupInstance.getQuestionGroup());
-        QuestionGroupInstanceDetail questionGroupInstanceDetail = new QuestionGroupInstanceDetail(questionGroupDetail);
-        questionGroupInstanceDetail.setDataCompleted(questionGroupInstance.getDateConducted());
+        QuestionGroupInstanceDetail questionGroupInstanceDetail = new QuestionGroupInstanceDetail();
+        questionGroupInstanceDetail.setId(questionGroupInstance.getId());
+        questionGroupInstanceDetail.setDateCompleted(questionGroupInstance.getDateConducted());
+        questionGroupInstanceDetail.setQuestionGroupDetail(questionGroupDetail);
         return questionGroupInstanceDetail;
     }
 

@@ -852,14 +852,14 @@ explanation of the license and how it is applied.
               <tr>
                 <td width="70%" class="paddingL10">
                   <span class="fontnormal8pt">
-                    <!--<a id="viewClientDetails.link.survey" href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=client">-->
+                    <a id="viewQuestionGroupResponse.link" href="displayResponse.ftl?instanceId=${questionGroupInstance.id}&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>">
                       <c:out value="${questionGroupInstance.questionGroupTitle}"/>
-                    <!--</a>-->
+                    </a>
                   </span>
                 </td>
                 <td width="30%" align="left" class="paddingL10">
                   <span class="fontnormal8pt">
-                    <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale, questionGroupInstance.dataCompleted)}" />
+                    <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale, questionGroupInstance.dateCompleted)}" />
                   </span>
                 </td>
               </tr>

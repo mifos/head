@@ -121,8 +121,9 @@ public class ClientCustActionTest {
     }
 
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail(String questionGroupTitle) {
-        QuestionGroupInstanceDetail detail = new QuestionGroupInstanceDetail(getQuestionGroupDetail(questionGroupTitle));
-        detail.setDataCompleted(Calendar.getInstance().getTime());
+        QuestionGroupInstanceDetail detail = new QuestionGroupInstanceDetail();
+        detail.setDateCompleted(Calendar.getInstance().getTime());
+        detail.setQuestionGroupDetail(getQuestionGroupDetail(questionGroupTitle));
         return detail;
     }
 

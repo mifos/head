@@ -55,6 +55,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -96,6 +97,7 @@ public class QuestionnaireServiceTest {
     private static final String QUESTION_GROUP_TITLE = "Question Group Title";
     public static final String EVENT_CREATE = "Create";
     public static final String SOURCE_CLIENT = "Client";
+    private static final Random random = new Random();
 
     @Before
     public void setUp() {
@@ -484,6 +486,7 @@ public class QuestionnaireServiceTest {
 
     private QuestionGroupInstance getQuestionGroupInstance(int entityId, int year, int month, int day, QuestionGroup questionGroup, String... responses) {
         QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
+        questionGroupInstance.setId(random.nextInt());
         questionGroupInstance.setQuestionGroup(questionGroup);
         questionGroupInstance.setCompletedStatus(1);
         questionGroupInstance.setCreatorId(122);
@@ -549,13 +552,13 @@ public class QuestionnaireServiceTest {
         List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSource);
         assertThat(instances, is(notNullValue()));
         assertThat(instances.size(), is(7));
-        assertQuestionGroupInstanceDetail(instances.get(0), "QG1", 2010, 7, 26);
-        assertQuestionGroupInstanceDetail(instances.get(1), "QG2", 2010, 7, 26);
-        assertQuestionGroupInstanceDetail(instances.get(2), "QG3", 2010, 7, 26);
-        assertQuestionGroupInstanceDetail(instances.get(3), "QG1", 2010, 7, 25);
-        assertQuestionGroupInstanceDetail(instances.get(4), "QG2", 2010, 7, 25);
-        assertQuestionGroupInstanceDetail(instances.get(5), "QG2", 2010, 7, 24);
-        assertQuestionGroupInstanceDetail(instances.get(6), "QG3", 2010, 7, 24);
+        assertQuestionGroupInstanceDetail(instances.get(0), "QG1", 2010, 7, 26, questionGroupInstances.get(0).getId());
+        assertQuestionGroupInstanceDetail(instances.get(1), "QG2", 2010, 7, 26, questionGroupInstances.get(1).getId());
+        assertQuestionGroupInstanceDetail(instances.get(2), "QG3", 2010, 7, 26, questionGroupInstances.get(2).getId());
+        assertQuestionGroupInstanceDetail(instances.get(3), "QG1", 2010, 7, 25, questionGroupInstances.get(3).getId());
+        assertQuestionGroupInstanceDetail(instances.get(4), "QG2", 2010, 7, 25, questionGroupInstances.get(4).getId());
+        assertQuestionGroupInstanceDetail(instances.get(5), "QG2", 2010, 7, 24, questionGroupInstances.get(5).getId());
+        assertQuestionGroupInstanceDetail(instances.get(6), "QG3", 2010, 7, 24, questionGroupInstances.get(6).getId());
         verify(questionGroupInstanceDao, times(1)).retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202);
         verify(questionnaireValidator, times(1)).validateForEventSource(eventSource);
         verify(eventSourceDao, times(1)).retrieveByEventAndSource("View", "Client");
@@ -577,9 +580,10 @@ public class QuestionnaireServiceTest {
         return eventSource;
     }
 
-    private void assertQuestionGroupInstanceDetail(QuestionGroupInstanceDetail instanceDetail, String questionGroupTitle, int year, int month, int day) {
+    private void assertQuestionGroupInstanceDetail(QuestionGroupInstanceDetail instanceDetail, String questionGroupTitle, int year, int month, int day, int id) {
+        assertThat(instanceDetail.getId(), is(id));
         assertThat(instanceDetail.getQuestionGroupTitle(), is(questionGroupTitle));
-        Date date = instanceDetail.getDataCompleted();
+        Date date = instanceDetail.getDateCompleted();
         assertDate(date, year, month, day);
     }
 

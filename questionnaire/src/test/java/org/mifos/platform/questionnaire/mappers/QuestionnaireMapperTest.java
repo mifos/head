@@ -73,7 +73,7 @@ public class QuestionnaireMapperTest {
     private static final String TITLE = "Title";
     private QuestionnaireMapper questionnaireMapper;
     private static final String SECTION_NAME = "S1";
-    private String SECTION = "section";
+    private static final String SECTION = "section";
 
     @Mock
     private EventSourceDao eventSourceDao;
@@ -364,7 +364,7 @@ public class QuestionnaireMapperTest {
 
     private void assertQuestionGroupInstanceDetail(QuestionGroupInstanceDetail questionGroupInstanceDetail, String questionGroupTitle, int year, int month, int day) {
         assertThat(questionGroupInstanceDetail.getQuestionGroupTitle(), is(questionGroupTitle));
-        Date date = questionGroupInstanceDetail.getDataCompleted();
+        Date date = questionGroupInstanceDetail.getDateCompleted();
         assertDate(date, year, month, day);
     }
 
