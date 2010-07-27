@@ -67,7 +67,7 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
 
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         createInitialCustomerAccounts();
         groupLoan = createGroupLoanAccount();
         clientLoan = createClientLoanAccount();
@@ -75,7 +75,7 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         try {
             this.getBranchOffice().setHolidays(null);
             TestObjectFactory.cleanUp(holiday);

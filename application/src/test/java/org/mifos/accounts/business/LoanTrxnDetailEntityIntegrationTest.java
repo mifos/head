@@ -58,12 +58,12 @@ public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCas
     private AccountBO account;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
 
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(account);
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(group);

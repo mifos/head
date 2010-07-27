@@ -64,6 +64,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
 
     @Before
     public void setUp() throws Exception {
+        super.setUp();
         StaticHibernateUtil.startTransaction();
         standardAccountService = new StandardAccountService(new AccountPersistence(), new LoanPersistence(),
                 new AcceptedPaymentTypePersistence(), new PersonnelDaoHibernate(new GenericDaoHibernate()));

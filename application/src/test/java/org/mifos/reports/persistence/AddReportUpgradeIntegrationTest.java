@@ -46,7 +46,7 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
     private Connection connection;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         session = StaticHibernateUtil.getSessionTL();
         connection = session.connection();
         transaction = session.beginTransaction();

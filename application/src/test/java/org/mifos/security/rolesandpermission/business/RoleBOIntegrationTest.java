@@ -446,7 +446,6 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    @Test
     private RoleActivityEntity getRoleActivity(Short roleId, Short activityId) {
         Query query = StaticHibernateUtil
                 .getSessionTL()
