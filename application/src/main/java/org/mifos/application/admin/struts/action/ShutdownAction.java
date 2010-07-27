@@ -35,7 +35,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.mifos.application.admin.business.service.ShutdownService;
 import org.mifos.application.admin.struts.actionforms.ShutdownActionForm;
 import org.mifos.application.admin.system.PersonnelInfo;
 import org.mifos.application.admin.system.ShutdownManager;
@@ -129,7 +128,7 @@ public class ShutdownAction extends BaseAction {
 
     @Override
     protected BusinessService getService() throws ServiceException {
-        return new ShutdownService();
+        return null;
     }
 
     @Override
