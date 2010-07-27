@@ -64,6 +64,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.util.CollectionUtils;
 import org.mifos.security.util.ActionSecurity;
@@ -204,7 +205,7 @@ public class ClientCustAction extends CustAction {
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
         }
-        List<QuestionGroupDto> questionGroups = getQuestionGroups(getQuestionnaireServiceFacade(request));
+        List<QuestionGroupDto> questionGroups = getQuestionGroups(MifosServiceFactory.getQuestionnaireServiceFacade(request));
         actionForm.setQuestionGroupDtos(questionGroups);
         SessionUtils.setCollectionAttribute(CustomerConstants.QUESTION_GROUPS_LIST, questionGroups, request);
         return mapping.findForward(ActionForwards.load_success.toString());
@@ -482,7 +483,7 @@ public class ClientCustAction extends CustAction {
         if (!CollectionUtils.isEmpty(questionGroupDetails)) {
             PersonnelPersistence personnelPersistence = new PersonnelPersistence();
             PersonnelBO currentUser = personnelPersistence.findPersonnelById(userId);
-            QuestionnaireServiceFacade questionnaireServiceFacade = getQuestionnaireServiceFacade(request);
+            QuestionnaireServiceFacade questionnaireServiceFacade = MifosServiceFactory.getQuestionnaireServiceFacade(request);
             if (questionnaireServiceFacade != null) {
                 questionnaireServiceFacade.saveResponses(
                         new QuestionGroupDetails(currentUser.getPersonnelId(), clientId, questionGroupDetails));
@@ -511,11 +512,27 @@ public class ClientCustAction extends CustAction {
         ClientBO clientBO = (ClientBO) this.customerDao.findCustomerById(clientInformationDto.getClientDisplay().getCustomerId());
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, clientBO, request);
 
-        SessionUtils.removeThenSetAttribute("currentPageUrl", constructCurrentPageUrl(request, clientBO), request);
-
+        setCurrentPageUrl(request, clientBO);
         prepareSurveySelection(request, clientBO);
+        setQuestionGroupInstances(request, clientBO);
         
         return mapping.findForward(ActionForwards.get_success.toString());
+    }
+
+    private void setQuestionGroupInstances(HttpServletRequest request, ClientBO clientBO) throws PageExpiredException {
+        QuestionnaireServiceFacade questionnaireServiceFacade = MifosServiceFactory.getQuestionnaireServiceFacade(request);
+        if (questionnaireServiceFacade == null) return;
+        setQuestionGroupInstances(questionnaireServiceFacade, request, clientBO.getCustomerId());
+    }
+
+    // Intentionally made public to aid testing !
+    public void setQuestionGroupInstances(QuestionnaireServiceFacade questionnaireServiceFacade, HttpServletRequest request, Integer customerId) throws PageExpiredException {
+        List<QuestionGroupInstanceDetail> instanceDetails = questionnaireServiceFacade.getQuestionGroupInstances(customerId, "View", "Client");
+        SessionUtils.setCollectionAttribute("questionGroupInstances", instanceDetails, request);
+    }
+
+    private void setCurrentPageUrl(HttpServletRequest request, ClientBO clientBO) throws PageExpiredException, UnsupportedEncodingException {
+        SessionUtils.removeThenSetAttribute("currentPageUrl", constructCurrentPageUrl(request, clientBO), request);
     }
 
     private String constructCurrentPageUrl(HttpServletRequest request, CustomerBO clientBO) throws UnsupportedEncodingException {
@@ -874,13 +891,4 @@ public class ClientCustAction extends CustAction {
         return FieldConfig.getInstance().isFieldManadatory("Client." + HiddenMandatoryFieldNamesConstants.FAMILY_DETAILS);
     }
 
-    private QuestionnaireServiceFacade getQuestionnaireServiceFacade(HttpServletRequest request) {
-        QuestionnaireServiceFacade questionnaireServiceFacade;
-        try {
-            questionnaireServiceFacade = (QuestionnaireServiceFacade) MifosServiceFactory.getSpringBean(request, "questionnaireServiceFacade");
-        } catch (Exception e) {
-            questionnaireServiceFacade = null;
-        }
-        return questionnaireServiceFacade;
-    }
 }

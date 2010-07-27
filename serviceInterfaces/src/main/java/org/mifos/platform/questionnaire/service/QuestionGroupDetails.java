@@ -30,6 +30,7 @@ public class QuestionGroupDetails implements Serializable {
 
     private int entityId;
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<QuestionGroupDetail> details;
 
     public QuestionGroupDetails() {

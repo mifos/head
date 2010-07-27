@@ -834,6 +834,44 @@ explanation of the license and how it is applied.
 						</tr>
 					</table>
 		</c:if>
+          <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'questionGroupInstances')}"
+			   var="questionGroupInstances" />
+          <c:if test="${!empty questionGroupInstances}">
+          <table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
+            <tr>
+              <td colspan="2" class="bluetablehead05">
+                <span class="fontnormalbold">
+                  <mifos:mifoslabel name="client.QuestionGroupInstances" bundle="ClientUIResources"/>
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" class="paddingL10"><img src="pages/framework/images/trans.gif" width="10" height="2"></td>
+            </tr>
+            <c:forEach items="${questionGroupInstances}" var="questionGroupInstance">
+              <tr>
+                <td width="70%" class="paddingL10">
+                  <span class="fontnormal8pt">
+                    <!--<a id="viewClientDetails.link.survey" href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=client">-->
+                      <c:out value="${questionGroupInstance.questionGroupTitle}"/>
+                    <!--</a>-->
+                  </span>
+                </td>
+                <td width="30%" align="left" class="paddingL10">
+                  <span class="fontnormal8pt">
+                    <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale, questionGroupInstance.dataCompleted)}" />
+                  </span>
+                </td>
+              </tr>
+            </c:forEach>
+          </table>
+        <table width="95%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td><img src="pages/framework/images/trans.gif" width="7"
+                    height="8"></td>
+            </tr>
+        </table>
+		</c:if>
 					<table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
 						<tr>
 							<td class="bluetablehead05"><span class="fontnormalbold"> <mifos:mifoslabel
