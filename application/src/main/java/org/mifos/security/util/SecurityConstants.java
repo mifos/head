@@ -494,9 +494,11 @@ public interface SecurityConstants {
 
     short CAN_IMPORT_TRANSACTIONS = 233;
 
-    /** Can shutdown Mifos */
-    short CAN_SHUTDOWN_MIFOS = 234;
-
     /** Can define new holidays */
     short CAN_DEFINE_HOLIDAY = 235;
+
+    /** Can shutdown Mifos */
+    short CAN_OPEN_SHUTDOWN_PAGE = 234;
+    short CAN_VIEW_ACTIVE_SESSIONS = 238;
+    short CAN_SHUT_DOWN_MIFOS = 239;
 }

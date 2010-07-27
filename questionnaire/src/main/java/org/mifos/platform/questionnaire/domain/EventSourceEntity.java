@@ -58,7 +58,7 @@ public class EventSourceEntity implements Serializable {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private Short id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "entity_type_id")
@@ -71,11 +71,11 @@ public class EventSourceEntity implements Serializable {
     @Column(name = "description")
     private String description;
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -47,6 +47,7 @@ import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
@@ -68,7 +69,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("PMD")
 public class QuestionnaireMapperTest {
     private static final String TITLE = "Title";
     private QuestionnaireMapper questionnaireMapper;
@@ -240,6 +240,7 @@ public class QuestionnaireMapperTest {
         QuestionEntity question = new QuestionEntity();
         question.setShortName(sectionName);
         question.setAnswerType(AnswerType.DATE);
+        question.setChoices(new LinkedList<QuestionChoiceEntity>());
         sectionQuestion.setQuestion(question);
         section.setQuestions(Arrays.asList(sectionQuestion));
         return section;
@@ -349,6 +350,40 @@ public class QuestionnaireMapperTest {
         List<QuestionGroupResponse> questionGroupResponses2 = questionGroupInstance2.getQuestionGroupResponses();
         assertThat(questionGroupResponses2, is(notNullValue()));
         assertThat(questionGroupResponses2.size(), is(0));
+    }
+
+    @Test
+    public void shouldMapToQuestionGroupInstanceDetails() {
+        List<QuestionGroupInstance> questionGroupInstances = Arrays.asList(getQuestionGroupInstance("QG1", 2010, 7, 25), getQuestionGroupInstance("QG3", 2009, 2, 12));
+        List<QuestionGroupInstanceDetail> questionGroupInstanceDetails = questionnaireMapper.mapToQuestionGroupInstanceDetails(questionGroupInstances);
+        assertThat(questionGroupInstanceDetails, is(notNullValue()));
+        assertThat(questionGroupInstanceDetails.size(), is(2));
+        assertQuestionGroupInstanceDetail(questionGroupInstanceDetails.get(0), "QG1", 2010, 7, 25);
+        assertQuestionGroupInstanceDetail(questionGroupInstanceDetails.get(1), "QG3", 2009, 2, 12);
+    }
+
+    private void assertQuestionGroupInstanceDetail(QuestionGroupInstanceDetail questionGroupInstanceDetail, String questionGroupTitle, int year, int month, int day) {
+        assertThat(questionGroupInstanceDetail.getQuestionGroupTitle(), is(questionGroupTitle));
+        Date date = questionGroupInstanceDetail.getDataCompleted();
+        assertDate(date, year, month, day);
+    }
+
+    private void assertDate(Date date, int year, int month, int day) {
+        assertThat(date, is(notNullValue()));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        assertThat(calendar.get(Calendar.YEAR), is(year));
+        assertThat(calendar.get(Calendar.MONTH), is(month));
+        assertThat(calendar.get(Calendar.DATE), is(day));
+    }
+
+    private QuestionGroupInstance getQuestionGroupInstance(String questionGroupTitle, int year, int month, int date) {
+        QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, date);
+        questionGroupInstance.setDateConducted(calendar.getTime());
+        questionGroupInstance.setQuestionGroup(getQuestionGroup(questionGroupTitle));
+        return questionGroupInstance;
     }
 
     private SectionDetail getSectionDetailWithQuestions(int id, String name, List<QuestionDetail> questionDetails, String answer) {

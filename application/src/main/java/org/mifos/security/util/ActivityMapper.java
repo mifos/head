@@ -761,6 +761,12 @@ public class ActivityMapper {
                         recordLoanOfficerId));
     }
 
+    public boolean isViewActiveSessionsPermitted(UserContext userContext, Short officeId) {
+        return AuthorizationManager.getInstance().isActivityAllowed(
+                userContext,
+                new ActivityContext(SecurityConstants.CAN_VIEW_ACTIVE_SESSIONS, officeId));
+    }
+
     private short getActivityIdForRemoveFees(AccountTypes accountTypes, CustomerLevel customerLevel) {
         short activityId = -1;
         if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {

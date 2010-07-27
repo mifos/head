@@ -177,7 +177,8 @@ public class QuestionGroupForm implements Serializable {
     }
 
     public void setQuestionPool(List<SectionQuestionDetail> questionPool) {
-        this.questionPool = questionPool;
+        this.questionPool.clear();
+        this.questionPool.addAll(questionPool);
     }
 
     public List<String> getSelectedQuestionIds() {

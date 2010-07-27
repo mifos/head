@@ -20,13 +20,25 @@
 
 package org.mifos.service;
 
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
+@SuppressWarnings("PMD")
 public class MifosServiceFactory {
 
     public static Object getSpringBean(HttpServletRequest request, String beanName) {
         return WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext()).getBean(beanName);
+    }
+
+    public static QuestionnaireServiceFacade getQuestionnaireServiceFacade(HttpServletRequest request) {
+        QuestionnaireServiceFacade questionnaireServiceFacade;
+        try {
+            questionnaireServiceFacade = (QuestionnaireServiceFacade) getSpringBean(request, "questionnaireServiceFacade");
+        } catch (Exception e) {
+            questionnaireServiceFacade = null;
+        }
+        return questionnaireServiceFacade;
     }
 }

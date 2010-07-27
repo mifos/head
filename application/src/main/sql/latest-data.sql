@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-insert into database_version(database_version) values(266);
+insert into database_version(database_version) values(267);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -1606,8 +1606,14 @@ insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value
 values(950, 1, 608, null);
 insert into lookup_value (lookup_id, entity_id, lookup_name) values(619, 87, 'Permissions-CanImportTransactions');
 insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(955, 1, 619, null);
+
 insert into lookup_value (lookup_id, entity_id, lookup_name) values(625, 87, 'Permissions-CanShutdownMifos');
 insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(956, 1, 625, null);
+insert into lookup_value (lookup_id, entity_id, lookup_name) values(630, 87, 'Permissions-CanViewActiveSessions');
+insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(960, 1, 630, null);
+insert into lookup_value (lookup_id, entity_id, lookup_name) values(631, 87, 'Permissions-CanStartMifosShutDown');
+insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(961, 1, 631, null);
+
 insert into lookup_value (lookup_id, entity_id, lookup_name) values(627, 87, 'Permissions-CanDefineHoliday');
 insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(957, 1, 627, null);
 
@@ -2962,10 +2968,20 @@ insert into activity(activity_id,parent_id,activity_name_lookup_id,description_l
 values(233,196,619,619);
 insert into roles_activity values (233,1);
 
--- For permission "Can shut down Mifos" under System Information category
+-- For permission "Can open shutdown page" under System Information category
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(234,227,625,625);
 insert into roles_activity values (234,1);
+
+-- For permission "Can view active sessions" under System Information category
+insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
+values(238,227,630,630);
+insert into roles_activity values (238,1);
+
+-- For permission "Can shut down Mifos" under System Information category
+insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
+values(239,227,631,631);
+insert into roles_activity values (239,1);
 
 -- For permission "Can define holiday" under Organization Management category
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)

@@ -27,10 +27,23 @@ import org.mifos.customers.struts.actionforms.QuestionDto;
 import org.mifos.customers.struts.actionforms.QuestionGroupDto;
 import org.mifos.customers.struts.actionforms.SectionDto;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.platform.questionnaire.service.*;
+import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.platform.questionnaire.service.QuestionDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
+import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.platform.questionnaire.service.SectionDetail;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Calendar;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -39,7 +52,9 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mifos.customers.client.util.helpers.ClientConstants.EVENT_CREATE;
 import static org.mifos.customers.client.util.helpers.ClientConstants.SOURCE_CLIENT;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ClientCustActionTest {
@@ -47,7 +62,17 @@ public class ClientCustActionTest {
     @Mock
     private QuestionnaireServiceFacade questionnaireServiceFacade;
 
+    @Mock
+    private HttpServletRequest request;
+
+    @Mock
+    private HttpSession session;
+
+    @Mock
+    private FlowManager flowManager;
+
     private ClientCustAction clientCustAction;
+    public static final String FLOW_KEY = "FlowKey";
 
     @Before
     public void setUp() {
@@ -56,7 +81,7 @@ public class ClientCustActionTest {
 
     @Test
     public void shouldGetQuestionGroupsByEventSource() throws ApplicationException {
-        when(questionnaireServiceFacade.getQuestionGroups(EVENT_CREATE, SOURCE_CLIENT)).thenReturn(asList(getQuestionGroupDetail()));
+        when(questionnaireServiceFacade.getQuestionGroups(EVENT_CREATE, SOURCE_CLIENT)).thenReturn(asList(getQuestionGroupDetail("QG1")));
         List<QuestionGroupDto> questionGroups = clientCustAction.getQuestionGroups(questionnaireServiceFacade);
         assertThat(questionGroups, is(notNullValue()));
         assertThat(questionGroups.size(), is(1));
@@ -77,9 +102,33 @@ public class ClientCustActionTest {
         assertThat(question1.isRequired(), is(true));
         verify(questionnaireServiceFacade, times(1)).getQuestionGroups(EVENT_CREATE, SOURCE_CLIENT);
     }
+    
+    @Test
+    public void shouldSetQuestionGroupInstanceDetailsInSession() throws PageExpiredException {
+        List<QuestionGroupInstanceDetail> instanceDetails = asList(getQuestionGroupInstanceDetail("QG1"), getQuestionGroupInstanceDetail("QG2"));
+        when(questionnaireServiceFacade.getQuestionGroupInstances(101, "View", "Client")).thenReturn(instanceDetails);
+        when(request.getAttribute(Constants.CURRENTFLOWKEY)).thenReturn(FLOW_KEY);
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute(Constants.FLOWMANAGER)).thenReturn(flowManager);
+        Flow flow = new Flow();
+        when(flowManager.getFlowWithValidation(FLOW_KEY)).thenReturn(flow);
+        clientCustAction.setQuestionGroupInstances(questionnaireServiceFacade, request, 101);
+        assertThat((List<QuestionGroupInstanceDetail>) flow.getObjectFromSession("questionGroupInstances"), is(instanceDetails));
+        verify(questionnaireServiceFacade, times(1)).getQuestionGroupInstances(101, "View", "Client");
+        verify(request, times(1)).getAttribute(Constants.CURRENTFLOWKEY);
+        verify(request, times(1)).getSession();
+        verify(session, times(1)).getAttribute(Constants.FLOWMANAGER);
+    }
 
-    private QuestionGroupDetail getQuestionGroupDetail() {
+    private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail(String questionGroupTitle) {
+        QuestionGroupInstanceDetail detail = new QuestionGroupInstanceDetail(getQuestionGroupDetail(questionGroupTitle));
+        detail.setDataCompleted(Calendar.getInstance().getTime());
+        return detail;
+    }
+
+    private QuestionGroupDetail getQuestionGroupDetail(String title) {
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail();
+        questionGroupDetail.setTitle(title);
         questionGroupDetail.setId(123);
         questionGroupDetail.setSectionDetails(asList(getSectionDetail("Section1", "Question1")));
         return questionGroupDetail;
