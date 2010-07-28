@@ -43,20 +43,13 @@ public class EditFundsController {
     @ModelAttribute("formBean")
     public FundFormBean showFund(HttpServletRequest request) {
         Integer code=Integer.parseInt(request.getParameter("fundId"));
-        //System.out.println("got fund id::::::::::::"+request.getParameter("fundId"));
+
         FundDto fundDto=fundServiceFacade.getFund(code.shortValue());
-        //System.out.println("got dtoooooooooo"+fundDto.getId());
-        //System.out.println("got dtoooooooooosssssssssssssssssssssss"+fundDto.getName());
-        FundFormBean ff=new FundFormBean();
-        ff.setCode(fundDto.getCode());
-        ff.setId(fundDto.getId());
-        ff.setName(fundDto.getName());
-        /*FundFormBean formBean=new FundFormBean();
+        FundFormBean formBean=new FundFormBean();
         formBean.setCode(fundDto.getCode());
-        formBean.setId(formBean.getId());
-        formBean.setName(formBean.getName());
-        System.out.println("aname saodasdbnasldbasdbasdbaslvdlashdu"+formBean.getName());*/
-     return ff;
+        formBean.setId(fundDto.getId());
+        formBean.setName(fundDto.getName());
+     return formBean;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -71,15 +64,6 @@ public class EditFundsController {
         } else if (result.hasErrors()) {
             modelAndView.setViewName("editFunds");
         } else {
-            /*Integer fundCode=Integer.parseInt(formBean.getId());
-            System.out.println("fund code is "+formBean.getId());
-            System.out.println("fund name is "+formBean.getName());
-            FundDto fundUpdate=fundServiceFacade.getFund(fundCode.shortValue());
-            fundUpdate.setId(formBean.getId());
-            fundUpdate.setName(formBean.getName());
-            fundUpdate.setCode(formBean.getCode());
-            this.fundServiceFacade.updateFund(fundUpdate);
-            status.setComplete();*/
             modelAndView.setViewName(TO_FUND_PREVIEW);
             modelAndView.addObject("formBean",formBean);
         }
