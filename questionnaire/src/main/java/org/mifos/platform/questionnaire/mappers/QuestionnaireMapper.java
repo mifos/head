@@ -28,6 +28,7 @@ import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 
 import java.util.List;
 
@@ -47,4 +48,8 @@ public interface QuestionnaireMapper {
     List<EventSource> mapToEventSources(List<EventSourceEntity> eventSourceEntities);
 
     List<QuestionGroupInstance> mapToQuestionGroupInstances(QuestionGroupDetails questionGroupDetails);
+
+    List<QuestionGroupInstanceDetail> mapToQuestionGroupInstanceDetails(List<QuestionGroupInstance> questionGroupInstances);
+
+    QuestionGroupInstanceDetail mapToQuestionGroupInstanceDetail(QuestionGroupInstance questionGroupInstance);
 }

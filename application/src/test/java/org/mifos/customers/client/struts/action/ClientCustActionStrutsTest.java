@@ -20,15 +20,7 @@
 
 package org.mifos.customers.client.struts.action;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Locale;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
@@ -88,6 +80,13 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
 
 public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     public ClientCustActionStrutsTest() throws Exception {
@@ -990,6 +989,8 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "get");
         addRequestParameter("globalCustNum", client.getGlobalCustNum());
+        addRequestParameter("recordOfficeId", "12");
+        addRequestParameter("recordLoanOfficerId", "28");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyForward(ActionForwards.get_success.toString());
@@ -1000,11 +1001,20 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
                 .getAge());
 
         Assert.assertEquals("No of active loan accounts should be 1",1, clientInformationDto.getLoanAccountsInUse().size());
+        assertCurrentPageUrl(client.getGlobalCustNum(), 12, 28);
         StaticHibernateUtil.closeSession();
         group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
         center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
         client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class, client.getCustomerId());
         accountBO = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
+    }
+
+    private void assertCurrentPageUrl(String globalCustNum, int officerId, int loanOfficerId) throws PageExpiredException {
+        String currentPageUrl = (String) SessionUtils.getAttribute("currentPageUrl", request);
+        Assert.assertTrue("currentPageUrl must contain clientCustAction.do", currentPageUrl.contains("clientCustAction.do"));
+        Assert.assertTrue("currentPageUrl must contain globalCustNum", currentPageUrl.contains("globalCustNum%3D" + globalCustNum));
+        Assert.assertTrue("currentPageUrl must contain recordOfficeId", currentPageUrl.contains("recordOfficeId%3D" + officerId));
+        Assert.assertTrue("currentPageUrl must contain recordLoanOfficerId", currentPageUrl.contains("recordLoanOfficerId%3D" + loanOfficerId));
     }
 
     public void testEditPersonalInfo() throws Exception {

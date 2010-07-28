@@ -44,6 +44,7 @@ import org.mifos.config.Localization;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.domain.builders.HolidayBuilder;
+import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -258,7 +259,7 @@ public class HolidayDaoHibernateIntegrationTest {
         OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
 
         HolidayDetails holidayDetails = new HolidayDetails("HolidayDaoTest", holiday.getFromDate().toDate(), holiday
-                .getThruDate().toDate(), holiday.getRepaymentRuleType());
+                .getThruDate().toDate(), holiday.getRepaymentRuleType().getValue());
 
         List<Short> officeIds = Arrays.asList(headOffice.getOfficeId());
         IntegrationTestObjectMother.createHoliday(holidayDetails, officeIds);

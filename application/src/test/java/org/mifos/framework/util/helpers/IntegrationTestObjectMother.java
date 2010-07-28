@@ -38,7 +38,6 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
@@ -56,6 +55,7 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
+import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -450,11 +450,7 @@ public class IntegrationTestObjectMother {
     }
 
     public static void createHoliday(HolidayDetails holidayDetails, List<Short> officeIds) {
-        try {
-            holidayService.create(holidayDetails, officeIds);
-        } catch (ApplicationException e) {
-            throw new MifosRuntimeException(e.getMessage(), e);
-        }
+        holidayService.create(holidayDetails, officeIds);
     }
 
     public static OfficeBO findOfficeById(Short officeId) {

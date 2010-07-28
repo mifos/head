@@ -38,6 +38,7 @@ import org.mifos.application.servicefacade.ProcessRulesDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
@@ -63,6 +64,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.util.CollectionUtils;
 import org.mifos.security.util.ActionSecurity;
@@ -72,17 +74,22 @@ import org.mifos.service.MifosServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedOutputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.mifos.customers.client.util.helpers.ClientConstants.EVENT_CREATE;
 import static org.mifos.customers.client.util.helpers.ClientConstants.SOURCE_CLIENT;
-
+import static org.mifos.framework.struts.tags.MifosTagUtils.xmlEscape;
 public class ClientCustAction extends CustAction {
 
     public static ActionSecurity getSecurity() {
@@ -198,7 +205,7 @@ public class ClientCustAction extends CustAction {
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
         }
-        List<QuestionGroupDto> questionGroups = getQuestionGroups(getQuestionnaireServiceFacade(request));
+        List<QuestionGroupDto> questionGroups = getQuestionGroups(MifosServiceFactory.getQuestionnaireServiceFacade(request));
         actionForm.setQuestionGroupDtos(questionGroups);
         SessionUtils.setCollectionAttribute(CustomerConstants.QUESTION_GROUPS_LIST, questionGroups, request);
         return mapping.findForward(ActionForwards.load_success.toString());
@@ -476,7 +483,7 @@ public class ClientCustAction extends CustAction {
         if (!CollectionUtils.isEmpty(questionGroupDetails)) {
             PersonnelPersistence personnelPersistence = new PersonnelPersistence();
             PersonnelBO currentUser = personnelPersistence.findPersonnelById(userId);
-            QuestionnaireServiceFacade questionnaireServiceFacade = getQuestionnaireServiceFacade(request);
+            QuestionnaireServiceFacade questionnaireServiceFacade = MifosServiceFactory.getQuestionnaireServiceFacade(request);
             if (questionnaireServiceFacade != null) {
                 questionnaireServiceFacade.saveResponses(
                         new QuestionGroupDetails(currentUser.getPersonnelId(), clientId, questionGroupDetails));
@@ -505,7 +512,59 @@ public class ClientCustAction extends CustAction {
         ClientBO clientBO = (ClientBO) this.customerDao.findCustomerById(clientInformationDto.getClientDisplay().getCustomerId());
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, clientBO, request);
 
+        setCurrentPageUrl(request, clientBO);
+        prepareSurveySelection(request, clientBO);
+        setQuestionGroupInstances(request, clientBO);
+        
         return mapping.findForward(ActionForwards.get_success.toString());
+    }
+
+    private void setQuestionGroupInstances(HttpServletRequest request, ClientBO clientBO) throws PageExpiredException {
+        QuestionnaireServiceFacade questionnaireServiceFacade = MifosServiceFactory.getQuestionnaireServiceFacade(request);
+        if (questionnaireServiceFacade == null) return;
+        setQuestionGroupInstances(questionnaireServiceFacade, request, clientBO.getCustomerId());
+    }
+
+    // Intentionally made public to aid testing !
+    public void setQuestionGroupInstances(QuestionnaireServiceFacade questionnaireServiceFacade, HttpServletRequest request, Integer customerId) throws PageExpiredException {
+        List<QuestionGroupInstanceDetail> instanceDetails = questionnaireServiceFacade.getQuestionGroupInstances(customerId, "View", "Client");
+        SessionUtils.setCollectionAttribute("questionGroupInstances", instanceDetails, request);
+    }
+
+    private void setCurrentPageUrl(HttpServletRequest request, ClientBO clientBO) throws PageExpiredException, UnsupportedEncodingException {
+        SessionUtils.removeThenSetAttribute("currentPageUrl", constructCurrentPageUrl(request, clientBO), request);
+    }
+
+    private String constructCurrentPageUrl(HttpServletRequest request, CustomerBO clientBO) throws UnsupportedEncodingException {
+        String officerId = request.getParameter("recordOfficeId");
+        String loanOfficerId = request.getParameter("recordLoanOfficerId");
+        String url = String.format("clientCustAction.do?globalCustNum=%s&recordOfficeId=%s&recordLoanOfficerId=%s",
+                                    clientBO.getGlobalCustNum(), officerId, loanOfficerId);
+        return URLEncoder.encode(url, "UTF-8");
+    }
+
+    private void prepareSurveySelection(HttpServletRequest request, ClientBO clientBO) throws PageExpiredException {
+        HttpSession session = request.getSession();
+        Object randomNumber = session.getAttribute(Constants.RANDOMNUM);
+        String officeName = xmlEscape(clientBO.getOffice().getOfficeName());
+        String officeUrl = "custSearchAction.do?method=getOfficeHomePage&officeId=" + clientBO.getOfficeId()
+                + "&officeName=" + officeName
+                + "&randomNum=" + randomNumber;
+        String clientUrl = "clientCustAction.do?method=get&globalCustNum=" + xmlEscape(clientBO.getGlobalCustNum())
+                + "&randomNum=" + randomNumber;
+        HashMap urlMap = new LinkedHashMap<String, String>();
+        urlMap.put(xmlEscape(clientBO.getOffice().getOfficeName()), officeUrl);
+        String clientName = xmlEscape(clientBO.getDisplayName());
+        urlMap.put(clientName, clientUrl);
+        session.setAttribute("source", "Client");
+        session.setAttribute("event", "View");
+        session.setAttribute("urlMap", urlMap);
+        session.setAttribute("surveyFor", clientName);
+        session.setAttribute("entityId", clientBO.getCustomerId());
+        UserContext userContext = getUserContext(request);
+        PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+        PersonnelBO currentUser = personnelPersistence.findPersonnelById(userContext.getId());
+        session.setAttribute("creatorId", currentUser.getPersonnelId());
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -832,13 +891,4 @@ public class ClientCustAction extends CustAction {
         return FieldConfig.getInstance().isFieldManadatory("Client." + HiddenMandatoryFieldNamesConstants.FAMILY_DETAILS);
     }
 
-    private QuestionnaireServiceFacade getQuestionnaireServiceFacade(HttpServletRequest request) {
-        QuestionnaireServiceFacade questionnaireServiceFacade;
-        try {
-            questionnaireServiceFacade = (QuestionnaireServiceFacade) MifosServiceFactory.getSpringBean(request, "questionnaireServiceFacade");
-        } catch (Exception e) {
-            questionnaireServiceFacade = null;
-        }
-        return questionnaireServiceFacade;
-    }
 }

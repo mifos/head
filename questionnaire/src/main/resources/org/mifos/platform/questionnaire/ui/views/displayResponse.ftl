@@ -26,16 +26,15 @@
 <div class="sidebar ht950">
     [#include "ClientLeftPane.ftl" /]
 </div>
-<div class="content leftMargin180">
-    <span id="page.id" title="view_question_group_reponses"></span>
-    [#--assign breadcrumb = Session.urlMap/]
-    [@mifos.crumbpairs breadcrumb "true"/--]
-    <div class=" fontnormal marginLeft30">
-        <div class="orangeheading marginTop15">
-            [@spring.message "questionnaire.view.question.group.responses"/]
-        </div>
-        <div id="questionGroupList" class="marginTop15">
-            [#list questionGroupDetails as questionGroupDetail]
+<form action="${backPageUrl}" id="displayResponseForm" name="displayResponseForm" method="post">
+    <div class="content leftMargin180">
+        <span id="page.id" title="display_question_group_reponse"></span>
+        [#--assign breadcrumb = Session.urlMap/]
+        [@mifos.crumbpairs breadcrumb "true"/--]
+        <div class=" fontnormal marginLeft30">
+            <div class="orangeheading marginTop15">
+                [@spring.message "questionnaire.view.question.group.responses"/]
+            </div>
             <fieldset id="questionGroup.sections" class="bluetableborderFull">
                 [#list questionGroupDetail.sectionDetails as sectionDetail]
                 <br/>
@@ -52,8 +51,10 @@
                 </ol>
                 [/#list]
             </fieldset>
-            [/#list]
+            <div class="buttonWidth">
+                <input id="backToDetailsPage" name="backToDetailsPage" type="submit" class="buttn" value="[@spring.message "questionnaire.back.to.details"/]"/>
+            </div>
         </div>
     </div>
-</div>
+</form>
 [@mifos.footer/]

@@ -47,8 +47,7 @@ public class ProductMixDetailsController {
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("mixDetails")
     public ProductMixDetailsDto getList(HttpServletRequest request) {
-        Integer prdOfferingId=Integer.parseInt(request.getParameter("prdOfferingId"));
-        //model.put("mix", adminServiceFacade.retrieveAllProductMix().getProductMixList());
+        Integer prdOfferingId = Integer.parseInt(request.getParameter("prdOfferingId"));
         return adminServiceFacade.retrieveProductMixDetails(prdOfferingId.shortValue(), request.getParameter("productType"));
     }
 

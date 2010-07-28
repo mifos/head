@@ -46,14 +46,6 @@ public class ProductMixController {
         this.adminServiceFacade=adminServiceFacade;
     }
 
-//    @RequestMapping(value="/{productId}", method = RequestMethod.GET)
-//    public String displayProductMix(@PathVariable Integer productId, Model model) {
-//        ProductMixDetailsDto productMix = this.adminServiceFacade.retrieveProductMixDetails(productId.shortValue(), "1");
-//        model.addAttribute("productMixDetails", productMix);
-//        model.addAttribute("breadcrumbs", new AdminBreadcrumbBuilder().withLink("viewProductMix", "viewProductMix.ftl").build());
-//        return "redirect:viewProductMixDetails.ftl";
-//    }
-
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {

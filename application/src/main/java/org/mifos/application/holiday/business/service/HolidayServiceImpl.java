@@ -25,12 +25,12 @@ import java.util.List;
 
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.holiday.persistence.HolidayDetails;
+import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ValidationException;
+import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.service.BusinessRuleException;
 
 public class HolidayServiceImpl implements HolidayService {
 
@@ -45,7 +45,7 @@ public class HolidayServiceImpl implements HolidayService {
     }
 
     @Override
-    public void create(HolidayDetails holidayDetails, List<Short> officeIds) throws ApplicationException {
+    public void create(HolidayDetails holidayDetails, List<Short> officeIds) {
         HolidayBO holiday = HolidayBO.fromDto(holidayDetails);
         holiday.validate();
 
@@ -54,7 +54,8 @@ public class HolidayServiceImpl implements HolidayService {
             OfficeBO office = officeDao.findOfficeById(officeId);
             offices.add(office);
             if (office.hasChildWithAnyOf(officeIds)) {
-                throw new ValidationException("Holidays can only be associated with one level of office in an office hierarchy.");
+                throw new BusinessRuleException(HolidayConstants.HOLIDAY_CREATION_EXCEPTION);
+                // "Holidays can only be associated with one level of office in an office hierarchy."
             }
         }
 

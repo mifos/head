@@ -52,7 +52,6 @@ import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -63,6 +62,7 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
@@ -285,9 +285,9 @@ public class SavingsScheduleIntegrationTest {
     }
 
     private void buildAndPersistHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) throws Exception {
-        HolidayDetails holidayDetails = new HolidayDetails("testHoliday", start.toDate(), through.toDate(), rule);
+        HolidayDetails holidayDetails = new HolidayDetails("testHoliday", start.toDate(), through.toDate(), rule.getValue());
         List<Short> officeIds = new LinkedList<Short>();
         officeIds.add((short)1);
-        DependencyInjectedServiceLocator.locateHolidayServiceFacade().createHoliday(holidayDetails, officeIds);
+        IntegrationTestObjectMother.createHoliday(holidayDetails, officeIds);
     }
 }

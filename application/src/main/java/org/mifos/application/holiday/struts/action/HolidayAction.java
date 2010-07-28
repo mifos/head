@@ -34,12 +34,12 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.holiday.business.service.HolidayBusinessService;
-import org.mifos.application.holiday.persistence.HolidayDetails;
-import org.mifos.application.holiday.persistence.OfficeHoliday;
 import org.mifos.application.holiday.struts.actionforms.HolidayActionForm;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.dto.domain.HolidayDetails;
+import org.mifos.dto.domain.OfficeHoliday;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
@@ -200,7 +200,9 @@ public class HolidayAction extends BaseAction {
 
     private HolidayDetails assembleHolidayDetails(HolidayActionForm holidayActionForm,
             RepaymentRuleTypes repaymentRuleType) {
-        return new HolidayDetails(holidayActionForm.getHolidayName(), holidayActionForm.getFromDate(), holidayActionForm.getThruDate(), repaymentRuleType);
+        HolidayDetails details = new HolidayDetails(holidayActionForm.getHolidayName(), holidayActionForm.getFromDate(), holidayActionForm.getThruDate(), repaymentRuleType.getValue());
+        details.setRepaymentRuleName(repaymentRuleType.getName());
+        return details;
     }
 
     @TransactionDemarcate(validateAndResetToken = true)

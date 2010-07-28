@@ -36,7 +36,7 @@ import java.util.*;
 
 public class DatabaseVersionPersistence {
 
-    public static final int APPLICATION_VERSION = 266;
+    public static final int APPLICATION_VERSION = 267;
     public static final int LATEST_CHECKPOINT_VERSION = 212;
     private final Connection connection;
     private final Map<Integer, Upgrade> registeredUpgrades;
@@ -64,6 +64,7 @@ public class DatabaseVersionPersistence {
         register248(register);
         register255(register);
         register256(register);
+        register267(register);
         return Collections.unmodifiableMap(register);
     }
 
@@ -77,7 +78,7 @@ public class DatabaseVersionPersistence {
 
     private static void register236(Map<Integer, Upgrade> register) {
         register(register, new AddActivity(236, "Permissions-CanShutdownMifos",
-                SecurityConstants.CAN_SHUTDOWN_MIFOS, SecurityConstants.SYSTEM_INFORMATION));
+                SecurityConstants.CAN_OPEN_SHUTDOWN_PAGE, SecurityConstants.SYSTEM_INFORMATION));
     }
 
     private static void register248(Map<Integer, Upgrade> register) {
@@ -99,6 +100,14 @@ public class DatabaseVersionPersistence {
         register(register, new AddReport(256, ReportsCategoryBO.ANALYSIS,
                 "General Ledger Report",
                 "GeneralLedgerReport.rptdesign"));
+    }
+
+    private static void register267(Map<Integer, Upgrade> register) {
+        register(register, new CompositeUpgrade(
+                new AddActivity(267, "Permissions-CanViewActiveSessions",
+                        SecurityConstants.CAN_VIEW_ACTIVE_SESSIONS, SecurityConstants.SYSTEM_INFORMATION),
+                new AddActivity(267, "Permissions-CanStartMifosShutDown",
+                        SecurityConstants.CAN_SHUT_DOWN_MIFOS, SecurityConstants.SYSTEM_INFORMATION)));
     }
 
     public DatabaseVersionPersistence() {

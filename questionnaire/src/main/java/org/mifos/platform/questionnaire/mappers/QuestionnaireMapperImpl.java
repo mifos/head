@@ -39,6 +39,7 @@ import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
@@ -217,7 +218,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
             QuestionEntity question = sectionQuestion.getQuestion();
             QuestionType type = mapToQuestionType(question.getAnswerTypeAsEnum());
             boolean required = sectionQuestion.isRequired();
-            QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type);
+            QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type, mapToAnswerChoices(question.getChoices()));
             sectionDetail.addQuestion(new SectionQuestionDetail(sectionQuestion.getId(), questionDetail, required));
         }
         return sectionDetail;
@@ -249,6 +250,23 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
                     questionGroupDetails.getEntityId(), questionGroupDetail));
         }
         return questionGroupInstances;
+    }
+
+    @Override
+    public List<QuestionGroupInstanceDetail> mapToQuestionGroupInstanceDetails(List<QuestionGroupInstance> questionGroupInstances) {
+        List<QuestionGroupInstanceDetail> questionGroupInstanceDetails = new ArrayList<QuestionGroupInstanceDetail>();
+        for (QuestionGroupInstance questionGroupInstance : questionGroupInstances) {
+            questionGroupInstanceDetails.add(mapToQuestionGroupInstanceDetail(questionGroupInstance));
+        }
+        return questionGroupInstanceDetails;
+    }
+
+    @Override
+    public QuestionGroupInstanceDetail mapToQuestionGroupInstanceDetail(QuestionGroupInstance questionGroupInstance) {
+        QuestionGroupDetail questionGroupDetail = mapToQuestionGroupDetail(questionGroupInstance.getQuestionGroup());
+        QuestionGroupInstanceDetail questionGroupInstanceDetail = new QuestionGroupInstanceDetail(questionGroupDetail);
+        questionGroupInstanceDetail.setDataCompleted(questionGroupInstance.getDateConducted());
+        return questionGroupInstanceDetail;
     }
 
     private QuestionGroupInstance mapToQuestionGroupInstance(int creatorId, int entityId, QuestionGroupDetail questionGroupDetail) {

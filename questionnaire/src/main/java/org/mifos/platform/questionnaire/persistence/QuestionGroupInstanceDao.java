@@ -27,4 +27,5 @@ import java.util.List;
 
 public interface QuestionGroupInstanceDao extends GenericDao<QuestionGroupInstance, Integer> {
     List retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(int entityId, int questionGroupId);
+    List retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(int entityId, int eventSourceId);
 }

@@ -18,7 +18,7 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.validators; // NOPMD
+package org.mifos.platform.questionnaire.validators;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,10 +38,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.*; // NOPMD
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*; //NOPMD
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("PMD")
 public class QuestionValidatorTest {
 
     private QuestionnaireValidator questionnaireValidator;
