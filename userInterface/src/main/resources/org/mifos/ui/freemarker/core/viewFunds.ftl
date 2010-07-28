@@ -26,7 +26,7 @@
 		<div class="span-15 borderbtm paddingLeft">
         	<span class="span-5 ">${fund.name}</span>
            	<span class="span-8">${fund.code.value}</span>
-           	<span class="span-1 "><a class="floatRT" href="fundAction.do?method=manage&fundCodeId=${fund.id}">[@spring.message "edit"/]</a></span>
+           	<span class="span-1 "><a class="floatRT" href="editFunds.ftl?fundId=${fund.id}">[@spring.message "edit"/]</a></span>
         </div>    		
         [/#list] 
     </div>

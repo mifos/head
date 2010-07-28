@@ -78,8 +78,7 @@
 <html>
   <head>
     <title id="${pageTitle}">[@spring.message "${pageTitle}" /]</title>
-    <link href="maincss.css.ftl" rel="stylesheet" type="text/css" />
-    <link href="gazelle.css.ftl" rel="stylesheet" type="text/css" />
+    <link href="maincss.css.ftl" rel="stylesheet" type="text/css" />    
     <link href="screen.css.ftl" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="pages/framework/js/jquery/jquery-1.4.2.min.js"></script>   
   </head>

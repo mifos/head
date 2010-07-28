@@ -68,8 +68,10 @@ function moveOptions(root, destination)
         <div class="span-22 last"> 
         	<div class="span-21 prepend-3 "><span class="span-4 rightAlign">[@spring.message "fees" /] </span>        	
         	<span class="span-4">
-                 	<select name="infeesList" id="infeesList" multiple="multiple" class="listSize">
-                 	</select></span>
+        	[@spring.bind "formBean.feesList"/]
+                 	[@spring.formMultiSelect "formBean.feesList", formBean.feesList, "" /]
+            [@spring.showErrors "<br/>"/] 	
+                 	</span>
                     <span class="span-3"><br /><input class="buttn2" name="add" type="button" value="Add >> " onclick="moveOptions(this.form.infeesList, this.form.outfeesList);" /><br /><br />
 					<input class="buttn2" name="remove" type="button" value="<<Remove" onclick="moveOptions(this.form.outfeesList, this.form.infeesList);" /></span>
 					<span class="span-4">
