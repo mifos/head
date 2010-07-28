@@ -25,10 +25,13 @@ import java.util.Map;
 
 import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.dto.domain.OfficeHoliday;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface HolidayServiceFacade {
 
+    @PreAuthorize("isFullyAuthenticated()")
     void createHoliday(HolidayDetails holidayDetails, List<Short> branchIds);
 
+    @PreAuthorize("isFullyAuthenticated()")
     Map<String, List<OfficeHoliday>> holidaysByYear();
 }
