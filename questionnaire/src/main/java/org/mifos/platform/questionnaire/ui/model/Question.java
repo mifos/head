@@ -94,8 +94,7 @@ public class Question implements Serializable {
     }
 
     public String getCommaSeparateChoices() {
-        String listAsString = this.questionDetail.getAnswerChoices().toString();
-        return listAsString.substring(1, listAsString.length() - 1);
+        return CollectionUtils.toString(this.questionDetail.getAnswerChoices());
     }
 
     public String getChoice() {

@@ -28,7 +28,7 @@ import java.util.List;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.apache.commons.lang.StringUtils.isEmpty;
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 
 @SuppressWarnings("PMD")
 public class SectionQuestionDetail implements Serializable {
@@ -168,11 +168,6 @@ public class SectionQuestionDetail implements Serializable {
 
     public String getAnswer() {
         List<String> answers = getAnswers();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String answer : answers) {
-            stringBuilder.append(String.format("%s, ", answer));
-        }
-        String result = stringBuilder.toString().trim();
-        return isNotEmpty(result) ? result.substring(0, result.length() - 1) : EMPTY;
+        return isNotEmpty(answers) ? CollectionUtils.toString(answers) : EMPTY;
     }
 }
