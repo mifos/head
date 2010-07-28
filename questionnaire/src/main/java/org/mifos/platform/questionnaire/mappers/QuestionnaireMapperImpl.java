@@ -55,6 +55,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.mifos.platform.util.CollectionUtils.asMap;
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 import static org.mifos.platform.util.MapEntry.makeEntry;
 
 @SuppressWarnings({"PMD", "UnusedDeclaration"})
@@ -74,7 +75,6 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     @Autowired
     private SectionQuestionDao sectionQuestionDao;
 
-    //@SuppressWarnings({"UnusedDeclaration"})
     public QuestionnaireMapperImpl() {
         this(null, null, null, null);
     }
@@ -99,10 +99,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     @Override
     public QuestionDetail mapToQuestionDetail(QuestionEntity question) {
-        return new QuestionDetail(question.getQuestionId(),
-                question.getQuestionText(),
-                question.getShortName(),
-                mapToQuestionType(question.getAnswerTypeAsEnum()), mapToAnswerChoices(question.getChoices()));
+        return mapToQuestionDetail(question, mapToQuestionType(question.getAnswerTypeAsEnum()));
     }
 
     private List<String> mapToAnswerChoices(List<QuestionChoiceEntity> choices) {
@@ -190,7 +187,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     @Override
     public QuestionGroupDetail mapToQuestionGroupDetail(QuestionGroup questionGroup) {
-        List<SectionDetail> sectionDetails = mapToSectionDefinitions(questionGroup.getSections());
+        List<SectionDetail> sectionDetails = mapToSectionDetails(questionGroup.getSections());
         EventSource eventSource = mapToEventSource(questionGroup.getEventSources());
         return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), eventSource, sectionDetails, questionGroup.isEditable());
     }
@@ -203,32 +200,41 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return new EventSource(eventSourceEntity.getEvent().getName(), eventSourceEntity.getSource().getEntityType(), eventSourceEntity.getDescription());
     }
 
-    private List<SectionDetail> mapToSectionDefinitions(List<Section> sections) {
+    private List<SectionDetail> mapToSectionDetails(List<Section> sections) {
         List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
         for (Section section : sections) {
-            sectionDetails.add(mapToSectionDefinition(section));
+            sectionDetails.add(mapToSectionDetail(section));
         }
         return sectionDetails;
     }
 
-    private SectionDetail mapToSectionDefinition(Section section) {
+    private SectionDetail mapToSectionDetail(Section section) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(section.getName());
         for (SectionQuestion sectionQuestion : section.getQuestions()) {
             QuestionEntity question = sectionQuestion.getQuestion();
             QuestionType type = mapToQuestionType(question.getAnswerTypeAsEnum());
             boolean required = sectionQuestion.isRequired();
-            QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type, mapToAnswerChoices(question.getChoices()));
-            sectionDetail.addQuestion(new SectionQuestionDetail(sectionQuestion.getId(), questionDetail, required));
+            QuestionDetail questionDetail = mapToQuestionDetail(question, type);
+            sectionDetail.addQuestion(mapToSectionQuestionDetail(sectionQuestion, required, questionDetail));
         }
         return sectionDetail;
+    }
+
+    private SectionQuestionDetail mapToSectionQuestionDetail(SectionQuestion sectionQuestion, boolean required, QuestionDetail questionDetail) {
+        return new SectionQuestionDetail(sectionQuestion.getId(), questionDetail, required);
+    }
+
+    private QuestionDetail mapToQuestionDetail(QuestionEntity question, QuestionType type) {
+        List<String> answerChoices = mapToAnswerChoices(question.getChoices());
+        return new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type, answerChoices);
     }
 
     @Override
     public List<QuestionGroupDetail> mapToQuestionGroupDetails(List<QuestionGroup> questionGroups) {
         List<QuestionGroupDetail> questionGroupDetails = new ArrayList<QuestionGroupDetail>();
         for (QuestionGroup questionGroup : questionGroups) {
-            questionGroupDetails.add(new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), mapToSectionDefinitions(questionGroup.getSections())));
+            questionGroupDetails.add(new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), mapToSectionDetails(questionGroup.getSections())));
         }
         return questionGroupDetails;
     }
@@ -268,7 +274,26 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroupInstanceDetail.setId(questionGroupInstance.getId());
         questionGroupInstanceDetail.setDateCompleted(questionGroupInstance.getDateConducted());
         questionGroupInstanceDetail.setQuestionGroupDetail(questionGroupDetail);
+        mapQuestionGroupResponses(questionGroupInstanceDetail, questionGroupInstance.getQuestionGroupResponses());
         return questionGroupInstanceDetail;
+    }
+
+    private void mapQuestionGroupResponses(QuestionGroupInstanceDetail questionGroupInstanceDetail, List<QuestionGroupResponse> questionGroupResponses) {
+        if (isNotEmpty(questionGroupResponses)) {
+            for (SectionDetail sectionDetail : questionGroupInstanceDetail.getQuestionGroupDetail().getSectionDetails()) {
+                for (SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()) {
+                    mapQuestionGroupResponse(sectionQuestionDetail, questionGroupResponses);
+                }
+            }
+        }
+    }
+
+    private void mapQuestionGroupResponse(SectionQuestionDetail sectionQuestionDetail, List<QuestionGroupResponse> questionGroupResponses) {
+        for (QuestionGroupResponse questionGroupResponse : questionGroupResponses) {
+            if (questionGroupResponse.getSectionQuestion().getId() == sectionQuestionDetail.getId()) {
+                sectionQuestionDetail.setValue(questionGroupResponse.getResponse());
+            }
+        }
     }
 
     private QuestionGroupInstance mapToQuestionGroupInstance(int creatorId, int entityId, QuestionGroupDetail questionGroupDetail) {
