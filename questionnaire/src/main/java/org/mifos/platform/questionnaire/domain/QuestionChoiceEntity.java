@@ -9,7 +9,7 @@ public class QuestionChoiceEntity {
     // defining the null constructor avoids some harmless hibernate error
     // messages during testing
     @SuppressWarnings("PMD.UncommentedEmptyConstructor")
-    protected QuestionChoiceEntity() {
+    public QuestionChoiceEntity() {
     }
 
     public QuestionChoiceEntity(String text) {

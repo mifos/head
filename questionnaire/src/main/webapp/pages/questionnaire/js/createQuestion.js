@@ -27,7 +27,7 @@ $(document).ready(function(){
         choiceToDeleteBtn.click();
     });
 
-    $("#currentQuestion\\.type").bind("change keypress click", function(){
+    $("#currentQuestion\\.type").bind("change keypress click blur", function(){
         var selectedOption = $(this).val();
         if(selectedOption == $("#multiSelect").val()  ||  selectedOption == $("#singleSelect").val()) {
             $("#choiceDiv").show();

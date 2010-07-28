@@ -26,7 +26,9 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 @SuppressWarnings("PMD")
 public class SectionQuestionDetail implements Serializable {
@@ -36,6 +38,7 @@ public class SectionQuestionDetail implements Serializable {
     private QuestionDetail questionDetail;
     private String value;
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<String> values;
 
     private int id;
@@ -117,11 +120,11 @@ public class SectionQuestionDetail implements Serializable {
     }
 
     public boolean hasNoAnswer() {
-        return isEmpty(this.value) && CollectionUtils.isEmpty(this.values);
+        return !hasAnswer();
     }
 
     public boolean hasAnswer() {
-        return !isEmpty(this.value);
+        return !isEmpty(this.value) || !CollectionUtils.isEmpty(this.values);
     }
 
     @Override
@@ -145,5 +148,31 @@ public class SectionQuestionDetail implements Serializable {
     @Override
     public int hashCode() {
         return questionDetail != null ? questionDetail.hashCode() : 0;
+    }
+
+    public boolean isMultiSelectQuestion() {
+        return QuestionType.MULTI_SELECT.equals(getQuestionType());
+    }
+
+    public List<String> getAnswers() {
+        List<String> answers = new LinkedList<String>();
+        if (hasAnswer()) {
+            if (isMultiSelectQuestion()) {
+                answers.addAll(getValues());
+            } else {
+                answers.add(getValue());
+            }
+        }
+        return answers;
+    }
+
+    public String getAnswer() {
+        List<String> answers = getAnswers();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String answer : answers) {
+            stringBuilder.append(String.format("%s, ", answer));
+        }
+        String result = stringBuilder.toString().trim();
+        return isNotEmpty(result) ? result.substring(0, result.length() - 1) : EMPTY;
     }
 }
