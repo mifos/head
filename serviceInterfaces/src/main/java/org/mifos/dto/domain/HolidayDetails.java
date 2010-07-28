@@ -28,7 +28,7 @@ public class HolidayDetails {
 
     private final String name;
     private final LocalDate fromDate;
-    private final LocalDate thruDate;
+    private LocalDate thruDate;
     private final Short repaymentRuleType;
     private final boolean holidayChangesApplied;
     private String repaymentRuleName;
@@ -36,7 +36,9 @@ public class HolidayDetails {
     public HolidayDetails(String name, Date fromDate, Date thruDate, Short repaymentRuleType) {
         this.name = name;
         this.fromDate = new LocalDate(fromDate);
-        this.thruDate = new LocalDate(thruDate);
+        if (thruDate != null) {
+            this.thruDate = new LocalDate(thruDate);
+        }
         this.repaymentRuleType = repaymentRuleType;
         this.holidayChangesApplied = false;
     }
@@ -44,7 +46,9 @@ public class HolidayDetails {
     public HolidayDetails(String name, Date fromDate, Date thruDate, Short repaymentRuleType, boolean holidayChangesApplied) {
         this.name = name;
         this.fromDate = new LocalDate(fromDate);
-        this.thruDate = new LocalDate(thruDate);
+        if (thruDate != null) {
+            this.thruDate = new LocalDate(thruDate);
+        }
         this.repaymentRuleType = repaymentRuleType;
         this.holidayChangesApplied = holidayChangesApplied;
     }

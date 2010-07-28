@@ -87,7 +87,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
      * This is test TC-07.
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(enabled = false)
     public void createHolidayFromViewHolidays() throws Exception {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
