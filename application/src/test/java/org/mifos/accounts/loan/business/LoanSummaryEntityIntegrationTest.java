@@ -24,7 +24,7 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -90,7 +90,7 @@ public class LoanSummaryEntityIntegrationTest extends MifosIntegrationTestCase {
                 startDate, loanOffering);
     }
 
-    @Before
+    @After
     public void tearDown() throws Exception {
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
         group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
