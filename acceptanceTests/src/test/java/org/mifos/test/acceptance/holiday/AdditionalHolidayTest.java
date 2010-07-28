@@ -49,7 +49,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"holiday","schedules", "acceptance","ui"})
+@Test(sequential=true, groups={"holiday","schedules", "acceptance","ui", "smoke"})
 public class AdditionalHolidayTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -87,6 +87,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
      * This is test TC-07.
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    @Test(enabled = false)
     public void createHolidayFromViewHolidays() throws Exception {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
