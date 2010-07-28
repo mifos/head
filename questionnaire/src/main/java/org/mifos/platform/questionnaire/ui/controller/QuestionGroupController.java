@@ -166,7 +166,7 @@ public class QuestionGroupController extends QuestionnaireController {
         return sectionQuestionDetails;
     }
 
-    public String saveQuestionGroup(QuestionGroupDetails questionGroupDetails, int questionGroupIndex, RequestContext requestContext) {
+    public String saveQuestionnaire(QuestionGroupDetails questionGroupDetails, int questionGroupIndex, RequestContext requestContext) {
         QuestionGroupDetail questionGroupDetail = questionGroupDetails.getDetails().get(questionGroupIndex);
         try {
             questionnaireServiceFacade.saveResponses(new QuestionGroupDetails(questionGroupDetails.getCreatorId(),
@@ -175,7 +175,7 @@ public class QuestionGroupController extends QuestionnaireController {
             if (e.containsChildExceptions()) {
                 for (ValidationException validationException : e.getChildExceptions()) {
                     String title = validationException.getSectionQuestionDetail().getTitle();
-                    constructErrorMessage("questionnaire.group.noresponse", "Please specify " + title,
+                    constructErrorMessage("questionnaire.noresponse", "Please specify " + title,
                             requestContext.getMessageContext(), title);
                 }
             }

@@ -819,7 +819,7 @@ explanation of the license and how it is applied.
             <tr>
               <td colspan="2" align="right" class="paddingleft05">
                 <span class="fontnormal8pt">
-                  <a id="viewClientDetails.link.attachSurvey" href="survey.ftl">
+                  <a id="viewClientDetails.link.attachSurvey" href="questionnaire.ftl">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
                 </span>

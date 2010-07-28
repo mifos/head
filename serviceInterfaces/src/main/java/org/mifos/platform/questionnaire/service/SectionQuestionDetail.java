@@ -53,15 +53,11 @@ public class SectionQuestionDetail implements Serializable {
     }
 
     public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean required) {
-        this(id, questionDetail, required, (String) null);
+        this(id, questionDetail, required, null);
     }
 
     public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean mandatory, String value) {
         this(id, questionDetail, mandatory, value, new LinkedList<String>());
-    }
-
-    public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean mandatory, List<String> values) {
-        this(id, questionDetail, mandatory, null, values);
     }
 
     public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean mandatory, String value, List<String> values) {

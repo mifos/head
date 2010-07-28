@@ -36,7 +36,7 @@ $(document).ready(function(){
         }
     });
 
-    $("#currentQuestion\\.choice").bind("past cut keyup", function(){
+    $("#currentQuestion\\.choice").bind("past cut keyup blur", function(){
         var val = $(this).val();
         var addChoiceButton = $("#_eventId_addChoice");
         if(val==null||val.match(/^(\s)*$/)) {
