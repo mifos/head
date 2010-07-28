@@ -23,6 +23,9 @@ package org.mifos.customers.client.struts.action;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.struts.actionforms.QuestionDto;
 import org.mifos.customers.struts.actionforms.QuestionGroupDto;
 import org.mifos.customers.struts.actionforms.SectionDto;
@@ -39,6 +42,7 @@ import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +56,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mifos.customers.client.util.helpers.ClientConstants.EVENT_CREATE;
 import static org.mifos.customers.client.util.helpers.ClientConstants.SOURCE_CLIENT;
+import static org.mifos.framework.struts.tags.MifosTagUtils.xmlEscape;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -70,6 +75,12 @@ public class ClientCustActionTest {
 
     @Mock
     private FlowManager flowManager;
+
+    @Mock
+    private ClientBO clientBO;
+
+    @Mock
+    private PersonnelBO personnelBO;
 
     private ClientCustAction clientCustAction;
     public static final String FLOW_KEY = "FlowKey";
@@ -93,7 +104,7 @@ public class ClientCustActionTest {
         assertThat(section1.getName(), is("Section1"));
         List<QuestionDto> questions1 = section1.getQuestions();
         assertThat(questions1, is(notNullValue()));
-        assertThat(questions1.size(),  is(1));
+        assertThat(questions1.size(), is(1));
         QuestionDto question1 = questions1.get(0);
         assertThat(question1.getId(), is(111));
         assertThat(question1.getText(), is("Question1"));
@@ -102,7 +113,7 @@ public class ClientCustActionTest {
         assertThat(question1.isRequired(), is(true));
         verify(questionnaireServiceFacade, times(1)).getQuestionGroups(EVENT_CREATE, SOURCE_CLIENT);
     }
-    
+
     @Test
     public void shouldSetQuestionGroupInstanceDetailsInSession() throws PageExpiredException {
         List<QuestionGroupInstanceDetail> instanceDetails = asList(getQuestionGroupInstanceDetail("QG1"), getQuestionGroupInstanceDetail("QG2"));
@@ -118,6 +129,33 @@ public class ClientCustActionTest {
         verify(request, times(1)).getAttribute(Constants.CURRENTFLOWKEY);
         verify(request, times(1)).getSession();
         verify(session, times(1)).getAttribute(Constants.FLOWMANAGER);
+    }
+
+    @Test
+    public void testPrepareSurveySelection() {
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute(Constants.RANDOMNUM)).thenReturn("123");
+        when(personnelBO.getPersonnelId()).thenReturn((short) 2);
+        when(clientBO.getDisplayName()).thenReturn("displayName");
+        when(clientBO.getCustomerId()).thenReturn(1);
+        when(clientBO.getOffice()).thenReturn(getOffice());
+        when(clientBO.getOfficeId()).thenReturn((short) 1);
+        when(clientBO.getGlobalCustNum()).thenReturn("globalCustomerNumber");
+
+        clientCustAction.prepareSurveySelection(request, clientBO, personnelBO);
+
+        verify(session, times(1)).setAttribute("source", "Client");
+        verify(session, times(1)).setAttribute("event", "View");
+        verify(session, times(1)).setAttribute("questionnaireFor", xmlEscape("displayName"));
+        verify(session, times(1)).setAttribute("entityId", 1);
+        verify(session, times(1)).setAttribute("creatorId", new Short("2"));
+        verify(session, times(1)).setAttribute(Mockito.eq("urlMap"), Mockito.anyMap());
+    }
+
+    private OfficeBO getOffice() {
+        OfficeBO office = new OfficeBO();
+        office.setOfficeName("officeName");
+        return office;
     }
 
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail(String questionGroupTitle) {

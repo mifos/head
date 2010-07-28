@@ -27,13 +27,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.matchers.MessageMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailFormMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailListMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
+import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailsMatcher;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -59,6 +62,8 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.GENERIC_VALIDATION;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.MANDATORY_QUESTION_HAS_NO_ANSWER;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -360,6 +365,36 @@ public class QuestionGroupControllerTest {
         assertThat((QuestionGroupInstanceDetail) modelMap.get("questionGroupInstance"), is(questionGroupInstance));
         assertThat((String) modelMap.get("backPageUrl"), is("http://some.url"));
         verify(questionnaireServiceFacade, times(1)).getQuestionGroupInstance(instanceId);
+    }
+
+    @Test
+    public void testSaveQuestionnaireSuccess() {
+        String result = questionGroupController.saveQuestionnaire(
+                getQuestionGroupDetails(), 1, requestContext);
+        Mockito.verify(questionnaireServiceFacade, times(1)).saveResponses(argThat(new QuestionGroupDetailsMatcher(
+                new QuestionGroupDetails(1, 2, Arrays.asList(
+                        getQuestionGroupDetail(TITLE, "View", "Client", "S1", "S3"))))));
+        assertThat(result, is("success"));
+    }
+
+    @Test
+    public void testSaveQuestionnaireFailure() {
+        ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
+        validationException.addChildException(new ValidationException(MANDATORY_QUESTION_HAS_NO_ANSWER, getSectionQuestionDetail(1, "q1")));
+        Mockito.doThrow(validationException).when(questionnaireServiceFacade).saveResponses(Mockito.<QuestionGroupDetails>any());
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionGroupController.saveQuestionnaire(getQuestionGroupDetails(), 1, requestContext);
+        assertThat(result, is("failure"));
+        verify(requestContext, times(1)).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.noresponse")));
+    }
+
+    private QuestionGroupDetails getQuestionGroupDetails() {
+        QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(1, 2, Arrays.asList(
+                getQuestionGroupDetail(TITLE, "View", "Client", "S1", "S2"),
+                getQuestionGroupDetail(TITLE, "View", "Client", "S1", "S3")
+        ));
+        return questionGroupDetails;
     }
 
     private QuestionGroupInstanceDetail getQuestionGroupInstance(int id, String qgTitle) {

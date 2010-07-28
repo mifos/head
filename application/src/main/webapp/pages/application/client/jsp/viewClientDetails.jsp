@@ -788,7 +788,6 @@ explanation of the license and how it is applied.
 					</table>
           <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'questionGroupInstances')}"
 			   var="questionGroupInstances" />
-          <c:if test="${!empty questionGroupInstances}">
           <table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
             <tr>
               <td colspan="2" class="bluetablehead05">
@@ -800,6 +799,7 @@ explanation of the license and how it is applied.
             <tr>
               <td colspan="2" class="paddingL10"><img src="pages/framework/images/trans.gif" width="10" height="2"></td>
             </tr>
+          <c:if test="${!empty questionGroupInstances}">
             <c:forEach items="${questionGroupInstances}" var="questionGroupInstance">
               <tr>
                 <td width="70%" class="paddingL10">
@@ -816,10 +816,11 @@ explanation of the license and how it is applied.
                 </td>
               </tr>
             </c:forEach>
+		  </c:if>
             <tr>
               <td colspan="2" align="right" class="paddingleft05">
                 <span class="fontnormal8pt">
-                  <a id="viewClientDetails.link.attachSurvey" href="survey.ftl">
+                  <a id="viewClientDetails.link.attachSurvey" href="questionnaire.ftl">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
                 </span>
@@ -832,7 +833,6 @@ explanation of the license and how it is applied.
                     height="8"></td>
             </tr>
         </table>
-		</c:if>
 					<table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
 						<tr>
 							<td class="bluetablehead05"><span class="fontnormalbold"> <mifos:mifoslabel

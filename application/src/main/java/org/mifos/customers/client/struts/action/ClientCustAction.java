@@ -90,6 +90,7 @@ import java.util.Map;
 import static org.mifos.customers.client.util.helpers.ClientConstants.EVENT_CREATE;
 import static org.mifos.customers.client.util.helpers.ClientConstants.SOURCE_CLIENT;
 import static org.mifos.framework.struts.tags.MifosTagUtils.xmlEscape;
+
 public class ClientCustAction extends CustAction {
 
     public static ActionSecurity getSecurity() {
@@ -504,8 +505,9 @@ public class ClientCustAction extends CustAction {
 
         // John W - UserContext object passed because some status' need to be looked up for internationalisation based
         // on UserContext info
+        UserContext userContext = getUserContext(request);
         ClientInformationDto clientInformationDto = clientDetailsServiceFacade.getClientInformationDto(
-                ((ClientCustActionForm) form).getGlobalCustNum(), getUserContext(request));
+                ((ClientCustActionForm) form).getGlobalCustNum(), userContext);
         SessionUtils.removeThenSetAttribute("clientInformationDto", clientInformationDto, request);
 
         // John W - for breadcrumb or another other action downstream that exists business_key set (until refactored)
@@ -513,9 +515,10 @@ public class ClientCustAction extends CustAction {
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, clientBO, request);
 
         setCurrentPageUrl(request, clientBO);
-        prepareSurveySelection(request, clientBO);
+        final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+        prepareSurveySelection(request, clientBO, personnelPersistence.findPersonnelById(userContext.getId()));
         setQuestionGroupInstances(request, clientBO);
-        
+
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 
@@ -539,32 +542,33 @@ public class ClientCustAction extends CustAction {
         String officerId = request.getParameter("recordOfficeId");
         String loanOfficerId = request.getParameter("recordLoanOfficerId");
         String url = String.format("clientCustAction.do?globalCustNum=%s&recordOfficeId=%s&recordLoanOfficerId=%s",
-                                    clientBO.getGlobalCustNum(), officerId, loanOfficerId);
+                clientBO.getGlobalCustNum(), officerId, loanOfficerId);
         return URLEncoder.encode(url, "UTF-8");
     }
 
-    private void prepareSurveySelection(HttpServletRequest request, ClientBO clientBO) throws PageExpiredException {
+    void prepareSurveySelection(HttpServletRequest request, ClientBO clientBO, PersonnelBO currentUser) {
         HttpSession session = request.getSession();
-        Object randomNumber = session.getAttribute(Constants.RANDOMNUM);
+        session.setAttribute("source", "Client");
+        session.setAttribute("event", "View");
+        session.setAttribute("questionnaireFor", xmlEscape(clientBO.getDisplayName()));
+        session.setAttribute("entityId", clientBO.getCustomerId());
+        session.setAttribute("creatorId", currentUser.getPersonnelId());
+        session.setAttribute("urlMap", getUrlMap(clientBO, session));
+    }
+
+    private HashMap getUrlMap(ClientBO clientBO, HttpSession session) {
+        HashMap<String, String> urlMap = new LinkedHashMap<String, String>();
         String officeName = xmlEscape(clientBO.getOffice().getOfficeName());
+        String clientName = xmlEscape(clientBO.getDisplayName());
+        Object randomNumber = session.getAttribute(Constants.RANDOMNUM);
         String officeUrl = "custSearchAction.do?method=getOfficeHomePage&officeId=" + clientBO.getOfficeId()
                 + "&officeName=" + officeName
                 + "&randomNum=" + randomNumber;
         String clientUrl = "clientCustAction.do?method=get&globalCustNum=" + xmlEscape(clientBO.getGlobalCustNum())
                 + "&randomNum=" + randomNumber;
-        HashMap urlMap = new LinkedHashMap<String, String>();
-        urlMap.put(xmlEscape(clientBO.getOffice().getOfficeName()), officeUrl);
-        String clientName = xmlEscape(clientBO.getDisplayName());
+        urlMap.put(officeName, officeUrl);
         urlMap.put(clientName, clientUrl);
-        session.setAttribute("source", "Client");
-        session.setAttribute("event", "View");
-        session.setAttribute("urlMap", urlMap);
-        session.setAttribute("surveyFor", clientName);
-        session.setAttribute("entityId", clientBO.getCustomerId());
-        UserContext userContext = getUserContext(request);
-        PersonnelPersistence personnelPersistence = new PersonnelPersistence();
-        PersonnelBO currentUser = personnelPersistence.findPersonnelById(userContext.getId());
-        session.setAttribute("creatorId", currentUser.getPersonnelId());
+        return urlMap;
     }
 
     @TransactionDemarcate(joinToken = true)

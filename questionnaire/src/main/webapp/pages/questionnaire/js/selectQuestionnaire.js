@@ -1,8 +1,8 @@
 $(document).ready(function(){
 
-    $("#questionGroupId").bind("change keypress click", function(){
+    $("#questionGroupId").bind("change keypress click blur", function(){
         var selectedOption = $(this).val();
-        var addChoiceButton = $("#_eventId_selectSurvey");
+        var addChoiceButton = $("#_eventId_selectQuestionnaire");
         if(selectedOption == 'selectOne') {
             addChoiceButton.attr('disabled', 'disabled');
             addChoiceButton.attr('class', 'disabledbuttn');

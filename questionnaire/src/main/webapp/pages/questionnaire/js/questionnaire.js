@@ -6,7 +6,7 @@ $(document).ready(function(){
 
     $('.date-pick').keyfilter(/[0-9,\/]/);
 
-    $("#survey").validate(
+    $("#questionnaire").validate(
         {
             errorPlacement: function(error, element) {
                 error.appendTo( element.parent() );
