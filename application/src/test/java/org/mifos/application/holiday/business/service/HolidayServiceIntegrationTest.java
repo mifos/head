@@ -32,19 +32,18 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
-import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.Localization;
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.service.BusinessRuleException;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,11 +101,11 @@ public class HolidayServiceIntegrationTest {
         createOfficeHierarchy();
     }
 
-    @Test(expected = ValidationException.class)
-    public void shouldFailToCreateHolidayAgainstOfficesOfDifferentLevelThatExistInSameOfficeHierarchySubTree() throws ApplicationException {
+    @Test(expected = BusinessRuleException.class)
+    public void shouldFailToCreateHolidayAgainstOfficesOfDifferentLevelThatExistInSameOfficeHierarchySubTree() throws Exception {
 
         // setup
-        HolidayDetails holidayDetails = new HolidayDetails("test", new DateTime().plusDays(1).toDate(), new DateTime().plusDays(1).toDate(), RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT);
+        HolidayDetails holidayDetails = new HolidayDetails("test", new DateTime().plusDays(1).toDate(), new DateTime().plusDays(1).toDate(), RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT.getValue());
         List<Short> officeIds = Arrays.asList(headOffice.getOfficeId(), regionalOffice.getOfficeId());
 
         // exercise test
@@ -114,10 +113,10 @@ public class HolidayServiceIntegrationTest {
     }
 
     @Test
-    public void shouldCreateHolidayAgainstOfficesOfDifferentLevelThatDoNotExistInSameOfficeHierarchySubTree() throws ApplicationException {
+    public void shouldCreateHolidayAgainstOfficesOfDifferentLevelThatDoNotExistInSameOfficeHierarchySubTree() throws Exception {
 
         // setup
-        HolidayDetails holidayDetails = new HolidayDetails("test", new DateTime().plusDays(1).toDate(), new DateTime().plusDays(1).toDate(), RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT);
+        HolidayDetails holidayDetails = new HolidayDetails("test", new DateTime().plusDays(1).toDate(), new DateTime().plusDays(1).toDate(), RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT.getValue());
         List<Short> officeIds = Arrays.asList(areaOffice.getOfficeId(), branch3.getOfficeId());
 
         // exercise test
@@ -125,10 +124,10 @@ public class HolidayServiceIntegrationTest {
     }
 
     @Test
-    public void shouldCreateHolidayAgainstOfficesOfDifferentLevelThatDoNotExistInSameOfficeHierarchySubTree_Allbranches() throws ApplicationException {
+    public void shouldCreateHolidayAgainstOfficesOfDifferentLevelThatDoNotExistInSameOfficeHierarchySubTree_Allbranches() throws Exception {
 
         // setup
-        HolidayDetails holidayDetails = new HolidayDetails("test", new DateTime().plusDays(1).toDate(), new DateTime().plusDays(1).toDate(), RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT);
+        HolidayDetails holidayDetails = new HolidayDetails("test", new DateTime().plusDays(1).toDate(), new DateTime().plusDays(1).toDate(), RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT.getValue());
         List<Short> officeIds = Arrays.asList(branch1.getOfficeId(), branch2.getOfficeId(), branch3.getOfficeId());
 
         // exercise test

@@ -18,15 +18,17 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.holiday.persistence;
+package org.mifos.application.admin.servicefacade;
 
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.dto.domain.HolidayDetails;
+import org.mifos.dto.domain.OfficeHoliday;
 
 public interface HolidayServiceFacade {
-    void createHoliday(HolidayDetails holidayDetails, List<Short> branchIds) throws ApplicationException;
 
-    Map<String, List<OfficeHoliday>> holidaysByYear() throws ApplicationException;
+    void createHoliday(HolidayDetails holidayDetails, List<Short> branchIds);
+
+    Map<String, List<OfficeHoliday>> holidaysByYear();
 }

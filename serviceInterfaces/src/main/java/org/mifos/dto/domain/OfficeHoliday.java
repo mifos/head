@@ -17,14 +17,15 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.application.holiday.persistence;
+package org.mifos.dto.domain;
 
 import java.util.Iterator;
 import java.util.List;
 
 public class OfficeHoliday {
-    private HolidayDetails holidayDetails;
-    private List<String> officeNames;
+
+    private final HolidayDetails holidayDetails;
+    private final List<String> officeNames;
 
     public OfficeHoliday(HolidayDetails holidayDetails, List<String> officeNames) {
         this.holidayDetails = holidayDetails;
