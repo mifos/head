@@ -76,7 +76,7 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(loanAccount);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);

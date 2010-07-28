@@ -44,7 +44,7 @@ public class CustomerHelpersIntegrationTest extends MifosIntegrationTestCase {
 
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(center);
         StaticHibernateUtil.closeSession();
     }

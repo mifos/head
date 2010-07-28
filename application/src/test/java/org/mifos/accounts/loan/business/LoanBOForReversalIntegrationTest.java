@@ -32,6 +32,7 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -162,6 +163,15 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
         loan.adjustPmnt("loan account has been adjusted by test code");
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
+    }
+
+    /*
+     * TODO: fn_calc_test_fix remove this empty test after adding the tests
+     * below back in.
+     */
+    @Test
+    public void testNothing() {
+
     }
 
     /*

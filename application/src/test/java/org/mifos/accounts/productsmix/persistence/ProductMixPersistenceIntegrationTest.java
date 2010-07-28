@@ -23,6 +23,7 @@ package org.mifos.accounts.productsmix.persistence;
 import junit.framework.Assert;
 
 import org.junit.After;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.productsmix.util.ProductMixTestHelper;
@@ -31,9 +32,8 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.testng.annotations.Test;
 
-@Test(groups={"integration", "productMixTestSuite"},  dependsOnGroups={"configTestSuite"})
+
 public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public ProductMixPersistenceIntegrationTest() throws Exception {
@@ -48,7 +48,7 @@ public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTestCa
     ProductMixPersistence productMixPersistence = new ProductMixPersistence();
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(prdmix);
         TestObjectFactory.cleanUp(saving1);
         TestObjectFactory.cleanUp(saving2);

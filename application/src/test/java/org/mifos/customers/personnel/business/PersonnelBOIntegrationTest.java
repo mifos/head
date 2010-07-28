@@ -98,7 +98,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         office = null;
         branchOffice = null;
         name = null;

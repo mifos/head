@@ -34,6 +34,7 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -51,9 +52,8 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.testng.annotations.Test;
 
-@Test(groups = { "integration", "productMixTestSuite" }, dependsOnGroups = { "configTestSuite" })
+
 public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
     public ProductMixBusinessServiceIntegrationTest() throws Exception {

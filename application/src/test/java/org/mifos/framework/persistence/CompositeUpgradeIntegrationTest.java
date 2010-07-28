@@ -29,11 +29,11 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.testng.annotations.Test;
 
-@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
+
 public class CompositeUpgradeIntegrationTest extends MifosIntegrationTestCase {
 
     public CompositeUpgradeIntegrationTest() throws Exception {

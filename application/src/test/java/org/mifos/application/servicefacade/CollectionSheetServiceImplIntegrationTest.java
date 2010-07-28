@@ -55,7 +55,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         try {
             saveCollectionSheetUtils.clearObjects();
         } catch (Exception e) {

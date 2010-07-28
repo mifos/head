@@ -206,7 +206,7 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
         }
     }
 
-    @Test
+
     private void createInactiveLoanOffering() throws PersistenceException {
         Date startDate = new Date(System.currentTimeMillis());
 
