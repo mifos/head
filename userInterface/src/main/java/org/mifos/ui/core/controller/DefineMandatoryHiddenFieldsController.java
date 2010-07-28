@@ -1,8 +1,7 @@
 package org.mifos.ui.core.controller;
 
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,59 +35,52 @@ public class DefineMandatoryHiddenFieldsController {
 
 
     @ModelAttribute("fields")
-    public Map<String, Boolean> getDetails(){
-        Map<String, Boolean> map=new HashMap<String, Boolean>();
-        map.put("hideSystemExternalId",adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemExternalId());
-        map.put("mandatorySystemExternalId",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatorySystemExternalId());
-        map.put("mandatorySystemExternalId",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatorySystemExternalId());
-        map.put("hideSystemEthnicity",adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemEthnicity());
-        map.put("mandatorySystemEthnicity",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatorySystemEthnicity());
-        map.put("hideSystemCitizenShip",adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemCitizenShip());
-        map.put("mandatorySystemCitizenShip",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatorySystemCitizenShip());
-        map.put("hideSystemHandicapped",adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemHandicapped());
-        map.put("mandatorySystemHandicapped",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatorySystemHandicapped());
-        map.put("hideSystemEducationLevel",adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemEducationLevel());
-        map.put("mandatorySystemEducationLevel",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatorySystemEducationLevel());
-        map.put("hideSystemPhoto",adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemPhoto());
-        map.put("mandatorySystemPhoto",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatorySystemPhoto());
-        map.put("hideSystemAssignClientPostions",adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemAssignClientPostions());
-        map.put("mandatorySystemAddress1",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatorySystemAddress1());
-        map.put("hideSystemAddress2",adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemAddress2());
-        map.put("hideSystemAddress3",adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemAddress3());
-        map.put("hideSystemCity",adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemCity());
-        map.put("hideSystemState",adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemState());
-        map.put("hideSystemCountry",adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemCountry());
-        map.put("hideSystemPostalCode",adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemPostalCode());
-        map.put("hideSystemReceiptIdDate",adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemReceiptIdDate());
-        map.put("hideSystemCollateralTypeNotes",adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemCollateralTypeNotes());
-        map.put("hideClientMiddleName",adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientMiddleName());
-        map.put("mandatoryClientMiddleName",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientMiddleName());
-        map.put("hideClientSecondLastName",adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientSecondLastName());
-        map.put("mandatoryClientSecondLastName",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientSecondLastName());
-        map.put("hideClientGovtId",adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientGovtId());
-        map.put("mandatoryClientGovtId",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientGovtId());
-        map.put("mandatoryMaritalStatus",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryMaritalStatus());
-        map.put("hideClientPovertyStatus",adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientPovertyStatus());
-        map.put("mandatoryClientPovertyStatus",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientPovertyStatus());
-        map.put("mandatoryClientFamilyDetails",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientFamilyDetails());
-        map.put("hideClientSpouseFatherInformation",adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientSpouseFatherInformation());
-        map.put("mandatoryClientSpouseFatherInformation",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientSpouseFatherInformation());
-        map.put("hideClientSpouseFatherMiddleName",adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientSpouseFatherMiddleName());
-        map.put("hideClientSpouseFatherSecondLastName",adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientSpouseFatherSecondLastName());
-        map.put("mandatoryClientSpouseFatherSecondLastName",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientSpouseFatherSecondLastName());
-        map.put("hideClientPhone",adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientPhone());
-        map.put("mandatoryClientPhone",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientPhone());
-        map.put("hideClientTrained",adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientTrained());
-        map.put("mandatoryClientTrained",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientTrained());
-        map.put("mandatoryClientTrainedOn",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientTrainedOn());
-        map.put("mandatoryClientBusinessWorkActivities",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientBusinessWorkActivities());
-        map.put("hideClientBusinessWorkActivities",adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientBusinessWorkActivities());
-        map.put("mandatoryNumberOfChildren",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryNumberOfChildren());
-        map.put("hideGroupTrained",adminServiceFacade.retrieveHiddenMandatoryFields().isHideGroupTrained());
-        map.put("mandatoryLoanAccountPurpose",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryLoanAccountPurpose());
-        map.put("mandatoryLoanSourceOfFund",adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryLoanSourceOfFund());
-        map.put("familyDetailsRequired",adminServiceFacade.retrieveHiddenMandatoryFields().isFamilyDetailsRequired());
-     return map;
+    public DefineMandatoryHiddenFieldsFormBean getDetails(){
+        DefineMandatoryHiddenFieldsFormBean formBean =new DefineMandatoryHiddenFieldsFormBean();
+        formBean.setFamilyDetailsRequired(adminServiceFacade.retrieveHiddenMandatoryFields().isFamilyDetailsRequired());
+        formBean.setHideClientBusinessWorkActivities(adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientBusinessWorkActivities());
+        formBean.setHideClientGovtId(adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientGovtId());
+        formBean.setHideClientMiddleName(adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientMiddleName());
+        formBean.setHideClientPhone(adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientPhone());
+        formBean.setHideClientPovertyStatus(adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientPovertyStatus());
+        formBean.setHideClientSecondLastName(adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientSecondLastName());
+        formBean.setHideClientSpouseFatherInformation(adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientSpouseFatherInformation());
+        formBean.setHideClientSpouseFatherMiddleName(adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientSpouseFatherMiddleName());
+        formBean.setHideClientSpouseFatherSecondLastName(adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientSpouseFatherSecondLastName());
+        formBean.setHideClientTrained(adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientTrained());
+        formBean.setHideGroupTrained(adminServiceFacade.retrieveHiddenMandatoryFields().isHideGroupTrained());
+        formBean.setHideSystemAddress2(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemAddress2());
+        formBean.setHideSystemAddress3(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemAddress3());
+        formBean.setHideSystemAssignClientPostions(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemAssignClientPostions());
+        formBean.setHideSystemCitizenShip(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemCitizenShip());
+        formBean.setHideSystemCity(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemCity());
+        formBean.setHideSystemCollateralTypeNotes(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemCollateralTypeNotes());
+        formBean.setHideSystemCountry(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemCountry());
+        formBean.setHideSystemEducationLevel(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemEducationLevel());
+        formBean.setHideSystemEthnicity(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemEthnicity());
+        formBean.setHideSystemExternalId(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemExternalId());
+        formBean.setHideSystemHandicapped(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemHandicapped());
+        formBean.setHideSystemPhoto(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemPhoto());
+        formBean.setHideSystemPostalCode(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemPostalCode());
+        formBean.setHideSystemReceiptIdDate(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemReceiptIdDate());
+        formBean.setHideSystemState(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemState());
+
+        formBean.setMandatoryClientBusinessWorkActivities(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientBusinessWorkActivities());
+        formBean.setMandatoryClientGovtId(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientGovtId());
+        formBean.setMandatoryClientMiddleName(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientMiddleName());
+        formBean.setMandatoryClientPhone(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientPhone());
+        formBean.setMandatoryClientPovertyStatus(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientPovertyStatus());
+        formBean.setMandatoryClientSecondLastName(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientSecondLastName());
+        formBean.setMandatoryClientSpouseFatherInformation(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientSpouseFatherInformation());
+        formBean.setMandatoryClientSpouseFatherSecondLastName(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientSpouseFatherSecondLastName());
+        formBean.setMandatoryClientTrained(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientTrained());
+        formBean.setMandatorySystemCitizenShip(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatorySystemCitizenShip());
+        formBean.setMandatorySystemEducationLevel(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatorySystemEducationLevel());
+        formBean.setMandatorySystemEthnicity(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatorySystemEthnicity());
+        formBean.setMandatorySystemExternalId(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatorySystemExternalId());
+        formBean.setMandatorySystemHandicapped(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatorySystemHandicapped());
+        formBean.setMandatorySystemPhoto(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatorySystemPhoto());
+     return formBean;
     }
 
 
