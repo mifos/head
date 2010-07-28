@@ -109,12 +109,7 @@
 	[@spring.bind path /]
     [#list options as value]
     [#assign id="${spring.status.expression}${value_index}"]
-    [#if spring.status.value??]
-        [#assign values=spring.status.value?split(",")]
-    [#else]
-        [#assign values=[""]]
-    [/#if]
-    [#assign isSelected = spring.contains(values, value)]
+    [#assign isSelected = spring.contains(spring.status.value?default([""]), value)]
     <input type="checkbox" id="${id}" name="${spring.status.expression}" value="${value?html}"[#if isSelected] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
     <label for="${id}" style="float:none;">${value?html}</label>${separator}
     [/#list]

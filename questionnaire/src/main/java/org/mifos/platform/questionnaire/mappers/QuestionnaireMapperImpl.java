@@ -287,16 +287,30 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         List<QuestionGroupResponse> questionGroupResponses = new LinkedList<QuestionGroupResponse>();
         for (SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()) {
             for (SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()) {
-                if (sectionQuestionDetail.hasAnswer()) {
+                for (String value : valuesToSave(sectionQuestionDetail)) {
                     QuestionGroupResponse questionGroupResponse = new QuestionGroupResponse();
                     questionGroupResponse.setSectionQuestion(sectionQuestionDao.getDetails(sectionQuestionDetail.getId()));
-                    questionGroupResponse.setResponse(sectionQuestionDetail.getValue());
+                    questionGroupResponse.setResponse(value);
                     questionGroupResponse.setQuestionGroupInstance(questionGroupInstance);
                     questionGroupResponses.add(questionGroupResponse);
                 }
             }
         }
         return questionGroupResponses;
+    }
+
+    private List<String> valuesToSave(SectionQuestionDetail sectionQuestionDetail) {
+        List<String> valuesToSave = new LinkedList<String>();
+        if (sectionQuestionDetail.hasAnswer()) {
+            valuesToSave.add(sectionQuestionDetail.getValue());
+        } else if (multiSelectQuestion(sectionQuestionDetail)) {
+            valuesToSave = sectionQuestionDetail.getValues();
+        }
+        return valuesToSave;
+    }
+
+    private boolean multiSelectQuestion(SectionQuestionDetail sectionQuestionDetail) {
+        return QuestionType.MULTI_SELECT.equals(sectionQuestionDetail.getQuestionType());
     }
 
     private EventSource mapEventSource(EventSourceEntity eventSourceEntity) {

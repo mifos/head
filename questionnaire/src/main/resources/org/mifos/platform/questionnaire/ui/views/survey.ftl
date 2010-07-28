@@ -26,7 +26,10 @@
 <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/datepicker.css); --></STYLE>
 <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
 <script type="text/javascript" src="pages/questionnaire/js/jquery.datePicker.min-2.1.2.js"></script>
+<script type="text/javascript" src="pages/questionnaire/js/jquery.keyfilter-1.7.js"></script>
+<script type="text/javascript" src="pages/questionnaire/js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="pages/questionnaire/js/date.js"></script>
+<script type="text/javascript" src="pages/questionnaire/js/dateConfiguration.js"></script>
 <!--[if IE]><script type="text/javascript" src="scripts/jquery.bgiframe.js"></script><![endif]-->
 <script src="pages/questionnaire/js/survey.js" type="text/javascript"></script>
 <div class="sidebar ht950">
@@ -43,10 +46,7 @@
         <div class="allErrorsDiv">
             [@mifosMacros.showAllErrors "questionGroupDetails.*"/]
         </div>
-        <div class="marginTop15">
-            [@spring.message "questionnaire.survey.instructions"/]
-        </div>
-        <form name="survey" action="selectSurvey.ftl?execution=${flowExecutionKey}" method="POST">
+        <form id="survey" name="survey" action="survey.ftl?execution=${flowExecutionKey}" method="POST">
             [#list questionGroupDetails.details[selectedSurveyIndex].sectionDetails as sectionDetail]
             <div class="marginTop15">
                 <b>${sectionDetail.name}</b>
@@ -58,11 +58,11 @@
                         <label for="details[${selectedSurveyIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value">
                             [#if question.mandatory]<span class="red">*</span>[/#if]
                             ${question.title}
-                            [#if question.questionType=="DATE"](DD/MM/YYYY)[/#if]:
+                            [#if question.questionType=="DATE"](dd/mm/yyyy) [/#if]:
                         </label>
                         [#switch question.questionType]
                           [#case "FREETEXT"]
-                            [@spring.formTextarea "questionGroupDetails.details[${selectedSurveyIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", 'rows="4" cols="50"' /]
+                            [@spring.formTextarea "questionGroupDetails.details[${selectedSurveyIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", 'rows="4" cols="50" maxlength="200"' /]
                           [#break]
                           [#case "NUMERIC"]
                             [@spring.formInput "questionGroupDetails.details[${selectedSurveyIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", 'maxlength="30"' /]
@@ -74,7 +74,7 @@
                           <fieldset style="width:70%">
                             <ol class="noPadding">
                               <li class="noPadding">
-                                [@mifosMacros.formCheckboxes "questionGroupDetails.details[${selectedSurveyIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", question.answerChoices ,'</li><li class="noPadding">', ''/]
+                                [@mifosMacros.formCheckboxes "questionGroupDetails.details[${selectedSurveyIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,'</li><li class="noPadding">', ''/]
                               </li>
                             </ol>
                           </fieldset>
@@ -103,7 +103,7 @@
                                value="[@spring.message "questionnaire.submit"/]" class="buttn"/>
                         &nbsp;
                         <input type="submit" id="_eventId_cancel" name="_eventId_cancel"
-                               value="[@spring.message "questionnaire.canecl"/]" class="cancelbuttn"/>
+                               value="[@spring.message "questionnaire.cancel"/]" class="cancel cancelbuttn"/>
                     </li>
                 </ol>
             </fieldset>

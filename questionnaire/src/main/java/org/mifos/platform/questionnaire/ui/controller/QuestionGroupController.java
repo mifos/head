@@ -175,7 +175,7 @@ public class QuestionGroupController extends QuestionnaireController {
             if (e.containsChildExceptions()) {
                 for (ValidationException validationException : e.getChildExceptions()) {
                     String title = validationException.getSectionQuestionDetail().getTitle();
-                    constructErrorMessage("questionnaire.group.noresponse", "Please specify Question Group title" + title,
+                    constructErrorMessage("questionnaire.group.noresponse", "Please specify " + title,
                             requestContext.getMessageContext(), title);
                 }
             }

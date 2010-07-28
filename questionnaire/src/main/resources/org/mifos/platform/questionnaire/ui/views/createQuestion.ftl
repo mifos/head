@@ -109,7 +109,7 @@
                  <li class="buttonWidth">
                      <input type="submit" id="_eventId_createQuestions" name="_eventId_createQuestions" value="[@spring.message "questionnaire.submit"/]" class="buttn"/>
                      &nbsp;
-                     <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "questionnaire.canecl"/]" class="cancelbuttn"/>
+                     <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
                  </li>
 			 </ol>
             </fieldset>

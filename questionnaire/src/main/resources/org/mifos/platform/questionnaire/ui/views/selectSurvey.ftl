@@ -40,7 +40,7 @@
         <div class="marginTop15">
             [@spring.message "questionnaire.selectsurvey.instructions"/]
         </div>
-        <form name="selectQuestionGroup" action="selectSurvey.ftl?execution=${flowExecutionKey}" method="POST">
+        <form name="selectQuestionGroup" action="survey.ftl?execution=${flowExecutionKey}" method="POST">
             <fieldset>
                 <ol>
                     <li>
@@ -55,10 +55,10 @@
                     </li>
                     <li class="buttonWidth">
                         <input type="submit" id="_eventId_selectSurvey" name="_eventId_selectSurvey"
-                               value="[@spring.message "questionnaire.submit"/]" class="buttn"/>
+                               value="[@spring.message "questionnaire.continue"/]" class="buttn"/>
                         &nbsp;
                         <input type="submit" id="_eventId_cancel" name="_eventId_cancel"
-                               value="[@spring.message "questionnaire.canecl"/]" class="cancelbuttn"/>
+                               value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
                     </li>
                 </ol>
             </fieldset>
