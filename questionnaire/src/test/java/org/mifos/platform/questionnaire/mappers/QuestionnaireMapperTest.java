@@ -64,6 +64,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -354,12 +355,71 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapToQuestionGroupInstanceDetails() {
-        List<QuestionGroupInstance> questionGroupInstances = Arrays.asList(getQuestionGroupInstance("QG1", 2010, 7, 25), getQuestionGroupInstance("QG3", 2009, 2, 12));
+        QuestionGroupInstance questionGroupInstance1 = getQuestionGroupInstance("QG1", 2010, 7, 25);
+        QuestionGroupInstance questionGroupInstance2 = getQuestionGroupInstance("QG3", 2009, 2, 12);
+        QuestionGroup questionGroup = getQuestionGroup("QG5", getSectionWithOneMultiSelectQuestion(222, "Section3", "Question3", "Choice1", "Choice2", "Choice3", "Choice4"));
+        QuestionGroupInstance questionGroupInstance3 = getQuestionGroupInstanceWithSingleMultiSelectQuestion(101, 3, questionGroup, "Choice1", "Choice3", "Choice4");
+        List<QuestionGroupInstance> questionGroupInstances = asList(questionGroupInstance1, questionGroupInstance2, questionGroupInstance3);
         List<QuestionGroupInstanceDetail> questionGroupInstanceDetails = questionnaireMapper.mapToQuestionGroupInstanceDetails(questionGroupInstances);
         assertThat(questionGroupInstanceDetails, is(notNullValue()));
-        assertThat(questionGroupInstanceDetails.size(), is(2));
+        assertThat(questionGroupInstanceDetails.size(), is(3));
         assertQuestionGroupInstanceDetail(questionGroupInstanceDetails.get(0), "QG1", 2010, 7, 25);
         assertQuestionGroupInstanceDetail(questionGroupInstanceDetails.get(1), "QG3", 2009, 2, 12);
+        QuestionGroupInstanceDetail detail = questionGroupInstanceDetails.get(2);
+        assertThat(detail.getQuestionGroupTitle(), is("QG5"));
+        List<String> values = detail.getQuestionGroupDetail().getSectionDetail(0).getQuestionDetail(0).getValues();
+        assertThat(values, is(notNullValue()));
+        assertThat(values.size(), is(3));
+        assertThat(values.get(0), is("Choice1"));
+        assertThat(values.get(1), is("Choice3"));
+        assertThat(values.get(2), is("Choice4"));
+    }
+
+    private QuestionGroupInstance getQuestionGroupInstanceWithSingleMultiSelectQuestion(int entityId, int version, QuestionGroup questionGroup, String... responses) {
+        QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
+        questionGroupInstance.setQuestionGroup(questionGroup);
+        questionGroupInstance.setCompletedStatus(1);
+        questionGroupInstance.setCreatorId(122);
+        questionGroupInstance.setDateConducted(Calendar.getInstance().getTime());
+        questionGroupInstance.setEntityId(entityId);
+        questionGroupInstance.setVersionNum(version);
+        List<QuestionGroupResponse> groupResponses = new ArrayList<QuestionGroupResponse>();
+        for (int i=0; i<responses.length; i++) {
+            groupResponses.add(getQuestionGroupResponse(responses[i], questionGroupInstance, questionGroup.getSections().get(0).getQuestions().get(0)));
+        }
+        questionGroupInstance.setQuestionGroupResponses(groupResponses);
+        return questionGroupInstance;
+    }
+
+    private QuestionGroupResponse getQuestionGroupResponse(String response, QuestionGroupInstance instance, SectionQuestion sectionQuestion) {
+        QuestionGroupResponse questionGroupResponse = new QuestionGroupResponse();
+        questionGroupResponse.setResponse(response);
+        questionGroupResponse.setQuestionGroupInstance(instance);
+        questionGroupResponse.setSectionQuestion(sectionQuestion);
+        return questionGroupResponse;
+    }
+
+    private Section getSectionWithOneMultiSelectQuestion(int sectionQuestionId, String sectionName, String questionName, String... choices) {
+        Section section = new Section(sectionName);
+        List<SectionQuestion> sectionQuestions = new ArrayList<SectionQuestion>();
+        SectionQuestion sectionQuestion = new SectionQuestion();
+        sectionQuestion.setId(sectionQuestionId);
+        sectionQuestion.setSection(section);
+        QuestionEntity questionEntity = new QuestionEntity();
+        questionEntity.setQuestionText(questionName);
+        questionEntity.setShortName(questionName);
+        questionEntity.setAnswerType(AnswerType.MULTISELECT);
+        LinkedList<QuestionChoiceEntity> questionChoiceEntities = new LinkedList<QuestionChoiceEntity>();
+        for (String choice : choices) {
+            QuestionChoiceEntity questionChoiceEntity = new QuestionChoiceEntity();
+            questionChoiceEntity.setChoiceText(choice);
+            questionChoiceEntities.add(questionChoiceEntity);
+        }
+        questionEntity.setChoices(questionChoiceEntities);
+        sectionQuestion.setQuestion(questionEntity);
+        sectionQuestions.add(sectionQuestion);
+        section.setQuestions(sectionQuestions);
+        return section;
     }
 
     private void assertQuestionGroupInstanceDetail(QuestionGroupInstanceDetail questionGroupInstanceDetail, String questionGroupTitle, int year, int month, int day) {

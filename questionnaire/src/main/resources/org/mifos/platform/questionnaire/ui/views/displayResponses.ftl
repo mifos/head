@@ -46,7 +46,7 @@
                         <li>
                             <label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
                             ${sectionQuestionDetail.title}:</label>
-                            <label class="rightCol"><span class="fontnormal">${sectionQuestionDetail.value?default("")}</span></label>
+                            <label class="rightCol"><span class="fontnormal">${sectionQuestionDetail.answer}</span></label>
                         </li>
                         [/#list]
                         <br/>

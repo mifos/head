@@ -274,26 +274,45 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroupInstanceDetail.setId(questionGroupInstance.getId());
         questionGroupInstanceDetail.setDateCompleted(questionGroupInstance.getDateConducted());
         questionGroupInstanceDetail.setQuestionGroupDetail(questionGroupDetail);
-        mapQuestionGroupResponses(questionGroupInstanceDetail, questionGroupInstance.getQuestionGroupResponses());
+        mapQuestionResponses(questionGroupInstanceDetail, questionGroupInstance.getQuestionGroupResponses());
         return questionGroupInstanceDetail;
     }
 
-    private void mapQuestionGroupResponses(QuestionGroupInstanceDetail questionGroupInstanceDetail, List<QuestionGroupResponse> questionGroupResponses) {
+    @Override
+    public void mapQuestionResponse(SectionQuestionDetail sectionQuestionDetail, List<QuestionGroupResponse> questionGroupResponses) {
+        if (sectionQuestionDetail.isMultiSelectQuestion()) {
+            setMultiChoiceResponses(questionGroupResponses, sectionQuestionDetail);
+        } else {
+            setResponse(questionGroupResponses, sectionQuestionDetail);
+        }
+    }
+
+    private void mapQuestionResponses(QuestionGroupInstanceDetail questionGroupInstanceDetail, List<QuestionGroupResponse> questionGroupResponses) {
         if (isNotEmpty(questionGroupResponses)) {
             for (SectionDetail sectionDetail : questionGroupInstanceDetail.getQuestionGroupDetail().getSectionDetails()) {
                 for (SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()) {
-                    mapQuestionGroupResponse(sectionQuestionDetail, questionGroupResponses);
+                    mapQuestionResponse(sectionQuestionDetail, questionGroupResponses);
                 }
             }
         }
     }
 
-    private void mapQuestionGroupResponse(SectionQuestionDetail sectionQuestionDetail, List<QuestionGroupResponse> questionGroupResponses) {
+    private void setResponse(List<QuestionGroupResponse> questionGroupResponses, SectionQuestionDetail sectionQuestionDetail) {
         for (QuestionGroupResponse questionGroupResponse : questionGroupResponses) {
             if (questionGroupResponse.getSectionQuestion().getId() == sectionQuestionDetail.getId()) {
                 sectionQuestionDetail.setValue(questionGroupResponse.getResponse());
             }
         }
+    }
+
+    private void setMultiChoiceResponses(List<QuestionGroupResponse> questionGroupResponses, SectionQuestionDetail sectionQuestionDetail) {
+        List<String> answers = new ArrayList<String>();
+        for (QuestionGroupResponse questionGroupResponse : questionGroupResponses) {
+            if (questionGroupResponse.getSectionQuestion().getId() == sectionQuestionDetail.getId()) {
+                answers.add(questionGroupResponse.getResponse());
+            }
+        }
+        sectionQuestionDetail.setValues(answers);
     }
 
     private QuestionGroupInstance mapToQuestionGroupInstance(int creatorId, int entityId, QuestionGroupDetail questionGroupDetail) {
@@ -312,30 +331,21 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         List<QuestionGroupResponse> questionGroupResponses = new LinkedList<QuestionGroupResponse>();
         for (SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()) {
             for (SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()) {
-                for (String value : valuesToSave(sectionQuestionDetail)) {
-                    QuestionGroupResponse questionGroupResponse = new QuestionGroupResponse();
-                    questionGroupResponse.setSectionQuestion(sectionQuestionDao.getDetails(sectionQuestionDetail.getId()));
-                    questionGroupResponse.setResponse(value);
-                    questionGroupResponse.setQuestionGroupInstance(questionGroupInstance);
-                    questionGroupResponses.add(questionGroupResponse);
+                for (String value : sectionQuestionDetail.getAnswers()) {
+                    SectionQuestion sectionQuestion = sectionQuestionDao.getDetails(sectionQuestionDetail.getId());
+                    questionGroupResponses.add(mapToQuestionGroupResponse(questionGroupInstance, sectionQuestion, value));
                 }
             }
         }
         return questionGroupResponses;
     }
 
-    private List<String> valuesToSave(SectionQuestionDetail sectionQuestionDetail) {
-        List<String> valuesToSave = new LinkedList<String>();
-        if (sectionQuestionDetail.hasAnswer()) {
-            valuesToSave.add(sectionQuestionDetail.getValue());
-        } else if (multiSelectQuestion(sectionQuestionDetail)) {
-            valuesToSave = sectionQuestionDetail.getValues();
-        }
-        return valuesToSave;
-    }
-
-    private boolean multiSelectQuestion(SectionQuestionDetail sectionQuestionDetail) {
-        return QuestionType.MULTI_SELECT.equals(sectionQuestionDetail.getQuestionType());
+    private QuestionGroupResponse mapToQuestionGroupResponse(QuestionGroupInstance questionGroupInstance, SectionQuestion sectionQuestion, String value) {
+        QuestionGroupResponse questionGroupResponse = new QuestionGroupResponse();
+        questionGroupResponse.setSectionQuestion(sectionQuestion);
+        questionGroupResponse.setResponse(value);
+        questionGroupResponse.setQuestionGroupInstance(questionGroupInstance);
+        return questionGroupResponse;
     }
 
     private EventSource mapEventSource(EventSourceEntity eventSourceEntity) {
