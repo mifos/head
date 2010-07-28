@@ -40,7 +40,7 @@ public class BatchJobHelper {
     }
 
     public void runSomeBatchJobs(List<String> jobsToRun) {
-        selenium.open(SERVICE + "?" + StringUtils.join(jobsToRun, '&'));
+        selenium.open(SERVICE + "?job=" + StringUtils.join(jobsToRun, "&job="));
     }
 
 }

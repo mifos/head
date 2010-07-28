@@ -20,8 +20,16 @@
 
 package org.mifos.test.acceptance.holiday;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
+import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
@@ -39,6 +47,7 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.login.LoginPage;
+import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +57,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"holiday","schedules", "acceptance","ui"})
+@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
+@Test(sequential = true, groups = { "smoke","holiday", "schedules", "acceptance", "ui" })
 public class AdditionalHolidayTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -64,13 +73,15 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     private static final String LOAN_SCHEDULE = "LOAN_SCHEDULE";
 
     @Override
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
 
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009,3,11,0,0,0,0);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(
+                selenium);
+        DateTime targetTime = new DateTime(2009, 3, 11, 0, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         appLauncher = new AppLauncher(selenium);
@@ -82,11 +93,12 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     }
 
     /*
-     * jhil comment:
-     * no db test is needed for this test since the actual test is just to click a link ?
-     * This is test TC-07.
+     * jhil comment: no db test is needed for this test since the actual test is just to click a link ? This is test
+     * TC-07.
      */
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    @Test(enabled = false)
     public void createHolidayFromViewHolidays() throws Exception {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
@@ -105,7 +117,8 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         params.setRepaymentRule(CreateHolidaySubmitParameters.SAME_DAY);
         params.setSelectedOfficeIds("1");
 
-        CreateHolidayConfirmationPage confirmHolidayPage = createHolidayPage.submitAndNavigateToHolidayConfirmationPage(params);
+        CreateHolidayConfirmationPage confirmHolidayPage = createHolidayPage
+                .submitAndNavigateToHolidayConfirmationPage(params);
         confirmHolidayPage.verifyPage();
         confirmHolidayPage.submitAndNavigateToViewHolidaysPage();
 
@@ -113,42 +126,81 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     }
 
     // the following tests depend on being able to run batch jobs from acceptance tests.
+
+    // TC08
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+
+    public void createHolidayOnAMeetingWithRepaymentSameDay() throws Exception {
+        initRemote
+                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+        // create loan paid on the 1st of every month and a holiday on 1st July
+        createMonthlyLoanScheduleWithMeetingOnAHoliday(CreateHolidaySubmitParameters.SAME_DAY);
+
+        List<String> jobsToRun = new ArrayList<String>();
+        jobsToRun.add("ApplyHolidayChangesTask");
+        new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
+
+        verifyLoanSchedule("AdditionalHolidayTest_010_result_dbunit.xml.zip");
+    }
+
     /*
-     * // TC08 public void createHolidayOnAMeetingWithRepaymentSameDay() {
-     * CreateHolidaySubmitParameters sameDayRepaymentParameters =
-     * getParametersForHolidayOnAMeeting(SAME_DAY);
-     * this.createHoliday(sameDayRepaymentParameters);
-     *
-     * TODO: missing test cases (commented out test shells) 1. Run batch jobs
-     * (how do I do this from the test?) 2. Navigate to the repayment schedule
-     * for the loan (or check the db?). Perhaps DB is better and easier.
-     *
-     *
-     * }
-     *
-     * // TC09 public void createHolidayOnAMeetingWithRepaymentNextWorkingDay()
-     * { CreateHolidaySubmitParameters nextWorkingDayRepaymentParameters =
-     * getParametersForHolidayOnAMeeting(NEXT_WORKING_DAY);
-     * this.createHoliday(nextWorkingDayRepaymentParameters);
-     *
-     *
-     * }
-     *
-     * // TC10 public void createHolidayOnAMeetingWithRepaymentNextMeeting() {
-     * CreateHolidaySubmitParameters nextMeetingRepaymentParameters =
-     * getParametersForHolidayOnAMeeting(NEXT_MEETING_OR_REPAYMENT);
-     * this.createHoliday(nextMeetingRepaymentParameters);
-     *
-     *
-     * }
+     * TODO: missing test cases (commented out test shells) 1. Run batch jobs (how do I do this from the test?) 2.
+     * Navigate to the repayment schedule for the loan (or check the db?). Perhaps DB is better and easier.
      */
 
+    // TC09
+    @Test(enabled = true)
+    public void createHolidayOnAMeetingWithRepaymentNextWorkingDay() throws Exception {
+        initRemote
+        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+
+        createWeeklyLoanScheduleWithMeetingOnAHoliday(CreateHolidaySubmitParameters.NEXT_WORKING_DAY);
+
+        List<String> jobsToRun = new ArrayList<String>();
+        jobsToRun.add("ApplyHolidayChangesTask");
+        new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
+
+        verifyLoanSchedule("AdditionalHolidayTest_011_result_dbunit.xml.zip");
+
+    }
+
+    // TC10
+    @Test(enabled = true)
+    public void createHolidayOnAMeetingWithRepaymentNextMeeting() throws Exception {
+        initRemote
+        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+
+        createWeeklyLoanScheduleWithTwoMeetingsDuringAHoliday(CreateHolidaySubmitParameters.NEXT_MEETING_OR_REPAYMENT);
+
+        List<String> jobsToRun = new ArrayList<String>();
+        jobsToRun.add("ApplyHolidayChangesTask");
+        new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
+
+        verifyLoanSchedule("AdditionalHolidayTest_012_result_dbunit.xml.zip");
+
+    }
+
+    private CreateHolidaySubmitParameters getParametersForHolidayOnAMeeting(String repaymentRule) {
+        CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
+
+        params.setName("sixthJuneHoliday");
+        params.setFromDateDD("06");
+        params.setFromDateMM("06");
+        params.setFromDateYYYY("2009");
+        params.setRepaymentRule(repaymentRule);
+        params.setSelectedOfficeIds("1,2,3");
+
+        return params;
+    }
+
     // TC11
+    @Test(enabled = true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createWeeklyLoanScheduleWithMeetingOnAHolidayWithRepaymentSameDay() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote
+                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
-        // create a holiday on 1st of july and a loan with a meeeting on 1st of july.
+        // create a holiday on 1st of July and a loan with a meeting on 1st of July.
         createWeeklyLoanScheduleWithMeetingOnAHoliday(CreateHolidaySubmitParameters.SAME_DAY);
 
         // verify against db to make sure that the schedule is correct.
@@ -157,10 +209,12 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
     // TC12
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = true)
     public void createMonthlyLoanScheduleWithMeetingOnAHolidayWithRepaymentSameDay() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+        initRemote
+                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
 
-        // create a holiday on 1st of july and a loan with a meeeting on 1st of july.
+        // create a holiday on 1st of july and a loan with a meeting on 1st of July.
         createMonthlyLoanScheduleWithMeetingOnAHoliday(CreateHolidaySubmitParameters.SAME_DAY);
 
         verifyLoanSchedule("AdditionalHolidayTest_001_result_dbunit.xml.zip");
@@ -169,8 +223,10 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
     // TC13
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = false)
     public void createWeeklyLoanScheduleWithMeetingOnAHolidayWithRepaymentNextMeeting() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote
+                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
         createWeeklyLoanScheduleWithMeetingOnAHoliday(CreateHolidaySubmitParameters.NEXT_MEETING_OR_REPAYMENT);
 
@@ -178,16 +234,18 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = false)
     public void createWeeklyLoanScheduleNoFeesWithSecondInstallmentInAMoratorium() throws Exception {
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote
+                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
         // April 1st 2009 is a Wednesday
         this.createHolidayOn("April Fools Day", CreateHolidaySubmitParameters.MORATORIUM, "01", "04", "2009");
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        //This client meets weekly on Wednesdays
+        // This client meets weekly on Wednesdays
         searchParameters.setSearchString("Stu1233171716380 Client1233171716380");
-        //This loan product is a weekly flat-interest loan without fees that defaults to 11 installments.
+        // This loan product is a weekly flat-interest loan without fees that defaults to 11 installments.
         searchParameters.setLoanProduct("MyLoanProduct1232993826860");
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
@@ -198,16 +256,18 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         /*
          * Expected result: Without moratorium, 11 installments scheduled every Wednesday from 2010-03-18 through
          * 2010-5-27. The moratorium on the date of the third installment, 2010-04-01, causes it and all future
-         * installments to be pushed out to 2010-04-8 through 2010-6-3. Principal and interest payments should
-         * be the same as if there were no moratorium.
+         * installments to be pushed out to 2010-04-8 through 2010-6-3. Principal and interest payments should be the
+         * same as if there were no moratorium.
          */
         verifyLoanSchedule("CreateLoanScheduleWithMoratorium_001_result_dbunit.xml.zip");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = false)
     public void createMonthlyLoanScheduleNoFeesWithFirstInstallmentOnAMoratorium() throws Exception {
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+        initRemote
+                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
         this.createHolidayOn("May Day", CreateHolidaySubmitParameters.MORATORIUM, "01", "05", "2009");
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Mary Monthly");
@@ -222,8 +282,10 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
     // TC14
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = false)
     public void createMonthlyLoanScheduleWithMeetingOnAHolidayWithRepaymentNextMeeting() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+        initRemote
+                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
 
         createMonthlyLoanScheduleWithMeetingOnAHoliday(CreateHolidaySubmitParameters.NEXT_MEETING_OR_REPAYMENT);
 
@@ -232,8 +294,10 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
     // TC15
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = false)
     public void createWeeklyLoanScheduleWithMeetingOnAHolidayWithRepaymentNextDay() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote
+                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
         createWeeklyLoanScheduleWithMeetingOnAHoliday(CreateHolidaySubmitParameters.NEXT_WORKING_DAY);
 
@@ -242,8 +306,10 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
     // TC16
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = false)
     public void createMonthlyLoanScheduleWithMeetingOnAHolidayWithRepaymentNextDay() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+        initRemote
+                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
 
         createMonthlyLoanScheduleWithMeetingOnAHoliday(CreateHolidaySubmitParameters.NEXT_WORKING_DAY);
 
@@ -251,10 +317,11 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     }
 
     // TC19
-    @Test(enabled=false)
+    @Test(enabled = false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createWeeklyLoanScheduleWithTwoMeetingsDuringAHolidayWithRepaymentNextMeeting() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+        initRemote
+                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
 
         createWeeklyLoanScheduleWithTwoMeetingsDuringAHoliday(CreateHolidaySubmitParameters.NEXT_MEETING_OR_REPAYMENT);
 
@@ -263,8 +330,10 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
     // TC20
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = false)
     public void createWeeklyLoanScheduleWithTwoMeetingsDuringAHolidayWithRepaymentNextDay() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+        initRemote
+                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
 
         createWeeklyLoanScheduleWithTwoMeetingsDuringAHoliday(CreateHolidaySubmitParameters.NEXT_WORKING_DAY);
 
@@ -273,14 +342,17 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
     // TC21
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = false)
     public void createWeeklyLoanScheduleWithTwoMeetingsDuringAHolidayWithRepaymentSameDay() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+        initRemote
+                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
 
         createWeeklyLoanScheduleWithTwoMeetingsDuringAHoliday(CreateHolidaySubmitParameters.SAME_DAY);
 
         verifyLoanSchedule("AdditionalHolidayTest_009_result_dbunit.xml.zip");
     }
 
+    @Test(enabled = false)
     private void createMonthlyLoanScheduleWithMeetingOnAHoliday(final String repaymentRule) {
         // create a holiday on 1st of july
         this.createHolidayOn1stJuly(repaymentRule);
@@ -296,6 +368,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         this.createLoan(searchParameters, submitAccountParameters);
     }
 
+    @Test(enabled = false)
     private void createWeeklyLoanScheduleWithMeetingOnAHoliday(final String repaymentRule) {
         // create a holiday on July 1st 2009, a Wednesday
         this.createHolidayOn1stJuly(repaymentRule);
@@ -312,6 +385,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         this.createLoan(searchParameters, submitAccountParameters);
     }
 
+    @Test(enabled = false)
     private void createWeeklyLoanScheduleWithTwoMeetingsDuringAHoliday(final String repaymentRule) {
         // create a holiday that overlaps two Wednesdays
         this.createHolidayFrom14thJulyThru23rd(repaymentRule);
@@ -328,19 +402,21 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         this.createLoan(searchParameters, submitAccountParameters);
     }
 
-    private void createHoliday(final CreateHolidaySubmitParameters params)
-    {
+    @Test(enabled = false)
+    private void createHoliday(final CreateHolidaySubmitParameters params) {
         logOut();
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         CreateHolidayEntryPage createHolidayEntryPage = adminPage.navigateToDefineHolidayPage();
         createHolidayEntryPage.verifyPage();
 
-        CreateHolidayConfirmationPage confirmationPage = createHolidayEntryPage.submitAndNavigateToHolidayConfirmationPage(params);
+        CreateHolidayConfirmationPage confirmationPage = createHolidayEntryPage
+                .submitAndNavigateToHolidayConfirmationPage(params);
         confirmationPage.verifyPage();
         confirmationPage.submitAndNavigateToViewHolidaysPage();
     }
 
+    @Test(enabled = false)
     private void createHolidayOn1stJuly(final String repaymentRule) {
         CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
 
@@ -354,8 +430,9 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         createHoliday(params);
     }
 
-    private void createHolidayOn(final String name, final String repaymentRule, final String day,
-            final String month, final String year) {
+    @Test(enabled = false)
+    private void createHolidayOn(final String name, final String repaymentRule, final String day, final String month,
+            final String year) {
         CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
 
         params.setName(name);
@@ -368,6 +445,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         createHoliday(params);
     }
 
+    @Test(enabled = false)
     private void createHolidayFrom14thJulyThru23rd(final String repaymentRule) {
         CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
 
@@ -384,6 +462,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         createHoliday(params);
     }
 
+    @Test(enabled = false)
     private void createLoan(final CreateLoanAccountSearchParameters searchParameters,
             final CreateLoanAccountSubmitParameters submitAccountParameters) {
         logOut();
@@ -396,14 +475,15 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void verifyLoanSchedule (final String resultDataSet) throws Exception
-    {
+    @Test(enabled = false)
+    private void verifyLoanSchedule(final String resultDataSet) throws Exception {
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSet);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { LOAN_SCHEDULE });
 
         dbUnitUtilities.verifyTable(LOAN_SCHEDULE, databaseDataSet, expectedDataSet);
     }
 
+    @Test(enabled = false)
     private CreateLoanAccountSearchPage navigateToCreateLoanAccountSearchPage() {
         LoginPage loginPage = appLauncher.launchMifos();
         loginPage.verifyPage();
@@ -413,9 +493,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     }
 
     private AdminPage loginAndNavigateToAdminPage() {
-        return appLauncher
-         .launchMifos()
-         .loginSuccessfullyUsingDefaultCredentials()
-         .navigateToAdminPage();
+        return appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials().navigateToAdminPage();
     }
 }
