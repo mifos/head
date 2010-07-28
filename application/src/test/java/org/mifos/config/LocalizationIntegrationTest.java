@@ -26,11 +26,11 @@ import java.util.Locale;
 import junit.framework.Assert;
 
 import org.junit.After;
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.testng.annotations.Test;
 
-@Test(groups={"integration", "configTestSuite"})
+
 public class LocalizationIntegrationTest extends MifosIntegrationTestCase {
 
     public LocalizationIntegrationTest() throws Exception {

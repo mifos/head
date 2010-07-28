@@ -23,6 +23,7 @@ package org.mifos.config;
 import junit.framework.Assert;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -32,12 +33,11 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.testng.annotations.Test;
 
 /**
  * Validate configuration override logic for optional process flow states.
  */
-@Test(groups={"integration", "configTestSuite"})
+
 public class ProcessFlowRulesIntegrationTest extends MifosIntegrationTestCase {
     public ProcessFlowRulesIntegrationTest() throws Exception {
         super();

@@ -30,14 +30,14 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.financial.business.GLCategoryType;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-@Test(groups = { "integration", "configTestSuite" })
+
 public class ChartOfAccountsConfigIntegrationTest extends MifosIntegrationTestCase {
 
     public ChartOfAccountsConfigIntegrationTest() throws Exception {

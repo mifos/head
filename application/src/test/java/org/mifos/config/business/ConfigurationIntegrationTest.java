@@ -94,7 +94,6 @@ public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(true, ClientRules.getGroupCanApplyLoans().booleanValue());
     }
 
-    @Test
     private void assertForAccountConfig(AccountConfig accountConfig) {
        Assert.assertEquals(Short.valueOf("10"), accountConfig.getLatenessDays());
        Assert.assertEquals(Short.valueOf("30"), accountConfig.getDormancyDays());

@@ -23,6 +23,7 @@ package org.mifos.config.persistence;
 import junit.framework.Assert;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -39,7 +40,7 @@ public class ConfigurationPersistenceIntegrationTest extends MifosIntegrationTes
         StaticHibernateUtil.closeSession();
     }
 
-    public void testGetCurrencyForCurrencyId() throws Exception {
+    @Test public void testGetCurrencyForCurrencyId() throws Exception {
         ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
         MifosCurrency currency = (MifosCurrency) configurationPersistence.getPersistentObject(MifosCurrency.class,
                 Short.valueOf("2"));
@@ -47,12 +48,12 @@ public class ConfigurationPersistenceIntegrationTest extends MifosIntegrationTes
        Assert.assertEquals("Indian Rupee", currency.getCurrencyName());
     }
 
-    public void testCheckIndividualMonitoringKeyExists() throws Exception {
+    @Test public void testCheckIndividualMonitoringKeyExists() throws Exception {
         Assert.assertNotNull(new ConfigurationPersistence()
                 .getConfigurationKeyValueInteger(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED));
     }
 
-    public void testIfGroupLoanWithIndividualMonitoringIsEnabled() throws Exception {
+    @Test public void testIfGroupLoanWithIndividualMonitoringIsEnabled() throws Exception {
         Assert.assertFalse(new ConfigurationPersistence().isGlimEnabled());
     }
 
