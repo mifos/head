@@ -20,7 +20,10 @@
 
 package org.mifos.platform.questionnaire.service;
 
+import org.mifos.platform.util.CollectionUtils;
+
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
@@ -32,6 +35,9 @@ public class SectionQuestionDetail implements Serializable {
     private boolean mandatory;
     private QuestionDetail questionDetail;
     private String value;
+
+    private List<String> values;
+
     private int id;
 
     public SectionQuestionDetail() {
@@ -43,18 +49,27 @@ public class SectionQuestionDetail implements Serializable {
     }
 
     public SectionQuestionDetail(QuestionDetail questionDetail, boolean mandatory, String value) {
-        this(0,questionDetail, mandatory, value);
+        this(0, questionDetail, mandatory, value);
     }
 
     public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean required) {
-        this(id,questionDetail, required, null);
+        this(id, questionDetail, required, (String) null);
     }
 
     public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean mandatory, String value) {
+        this(id, questionDetail, mandatory, value, new LinkedList<String>());
+    }
+
+    public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean mandatory, List<String> values) {
+        this(id, questionDetail, mandatory, null, values);
+    }
+
+    public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean mandatory, String value, List<String> values) {
         this.id = id;
         this.questionDetail = questionDetail;
         this.mandatory = mandatory;
         this.value = value;
+        this.values = values;
     }
 
     public int getId() {
@@ -97,8 +112,16 @@ public class SectionQuestionDetail implements Serializable {
         this.value = value;
     }
 
+    public List<String> getValues() {
+        return values;
+    }
+
+    public void setValues(List<String> values) {
+        this.values = values;
+    }
+
     public boolean hasNoAnswer() {
-        return isEmpty(this.value);
+        return isEmpty(this.value) && CollectionUtils.isEmpty(this.values);
     }
 
     public boolean hasAnswer() {

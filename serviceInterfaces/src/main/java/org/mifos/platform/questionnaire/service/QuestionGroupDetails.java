@@ -19,12 +19,23 @@
  */
 package org.mifos.platform.questionnaire.service;
 
+import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
-public class QuestionGroupDetails {
-    private final int creatorId;
-    private final int entityId;
-    private final List<QuestionGroupDetail> details;
+public class QuestionGroupDetails implements Serializable {
+    private static final long serialVersionUID = 960031464763237188L;
+
+    private int creatorId;
+
+    private int entityId;
+
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
+    private List<QuestionGroupDetail> details;
+
+    public QuestionGroupDetails() {
+        this(0, 0, new LinkedList<QuestionGroupDetail>());
+    }
 
     public QuestionGroupDetails(int creatorId, int entityId, List<QuestionGroupDetail> details) {
         this.creatorId = creatorId;
@@ -36,11 +47,23 @@ public class QuestionGroupDetails {
         return details;
     }
 
+    public void setDetails(List<QuestionGroupDetail> details) {
+        this.details = details;
+    }
+
     public int getCreatorId() {
         return creatorId;
     }
 
     public int getEntityId() {
         return entityId;
+    }
+
+    public void setEntityId(int entityId) {
+        this.entityId = entityId;
+    }
+
+    public void setCreatorId(int creatorId) {
+        this.creatorId = creatorId;
     }
 }

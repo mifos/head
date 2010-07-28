@@ -20,7 +20,6 @@
 
 package org.mifos.platform.questionnaire.validators;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
@@ -40,7 +39,6 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/test-questionnaire-dbContext.xml", "/test-questionnaire-persistenceContext.xml", "/META-INF/spring/QuestionnaireContext.xml"})
 @TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
-@Ignore
 public class QuestionnaireValidatorIntegrationTest {
 
     @Autowired
@@ -63,6 +61,10 @@ public class QuestionnaireValidatorIntegrationTest {
     public void shouldCheckForValidEventSource() {
         EventSource eventSource = new EventSource("Create", "Client", "Create Client");
         try {
+            questionnaireValidator.validateForEventSource(eventSource);
+            eventSource = new EventSource("View", "Client", "View Client");
+            questionnaireValidator.validateForEventSource(eventSource);
+            eventSource = new EventSource("Create", "Loan", "Create Loan");
             questionnaireValidator.validateForEventSource(eventSource);
         } catch (SystemException e) {
             fail("Should not have raised a validation error for this event");

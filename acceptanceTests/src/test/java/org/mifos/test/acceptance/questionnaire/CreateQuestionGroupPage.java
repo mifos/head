@@ -27,6 +27,7 @@ import java.util.List;
 
 public class CreateQuestionGroupPage extends MifosPage {
     public static final String PAGE_ID = "createQuestionGroup";
+    public static final String selectQuestionCmd = "window.$('#questionList li label').each(function(){ if(window.$.trim(window.$(this).html()) == \"%s\") { var question = window.$(this).parent().find(\"input\"); if (question) { question.click(); }}});";
 
     public CreateQuestionGroupPage(Selenium selenium) {
         super(selenium);
@@ -60,10 +61,11 @@ public class CreateQuestionGroupPage extends MifosPage {
     }
 
     public List<String> getAvailableQuestions() {
-        int numAvailQuestions = Integer.valueOf(selenium.getEval("window.document.getElementById('selectedQuestionIds').length"));
+        int numAvailQuestions = Integer.valueOf(selenium.getEval("window.$('#questionList li').length"));
         List<String> availQuestions = new ArrayList<String>();
         for (int i=0; i<numAvailQuestions; i++){
-            availQuestions.add(selenium.getEval("window.document.getElementById('selectedQuestionIds').options[" + i + "].text"));
+            availQuestions.add(selenium.getEval(String.format("window.$(\"#questionList li label\").get(%d).innerHTML",i)));
+            //availQuestions.add(selenium.getEval("window.document.getElementById('selectedQuestionIds').options[" + i + "].text"));
         }
         return availQuestions;
     }
@@ -72,7 +74,8 @@ public class CreateQuestionGroupPage extends MifosPage {
         List<String> sectionQuestions = createQuestionGroupParameters.getSectionQuestions();
         if (sectionQuestions != null && !sectionQuestions.isEmpty()) {
             for (String qTitle : sectionQuestions) {
-                selenium.addSelection("id=selectedQuestionIds", "label=" + qTitle);
+                selenium.getEval(String.format(selectQuestionCmd, qTitle));
+                //selenium.addSelection("id=selectedQuestionIds", "label=" + qTitle);
             }
         }
     }

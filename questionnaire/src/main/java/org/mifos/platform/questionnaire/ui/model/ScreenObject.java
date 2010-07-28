@@ -16,9 +16,8 @@ public class ScreenObject implements java.io.Serializable {
     }
 
     public void validateConstraints(MessageContext context, Class<?>...groups) {
-        if (validator == null) {
-            return;
+        if (validator != null) {
+            validator.validate(this, context, groups);
         }
-        validator.validate(this, context, groups);
     }
 }
