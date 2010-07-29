@@ -115,9 +115,8 @@ while(enn.hasMoreElements()){
 						<tr class="fontnormal">
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
-							<td><html-el:link styleId="admin.link.viewFunds"
-								action="/fundAction.do?method=viewAllFunds&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.viewfunds" /></html-el:link>
+							<td>
+							<a id="admin.link.viewFunds" href="viewFunds.ftl"><mifos:mifoslabel name="admin.viewfunds" /></a>
 							| <html-el:link styleId="admin.link.defineNewFund"
 								action="/fundAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.defnewfund" /></html-el:link></td>

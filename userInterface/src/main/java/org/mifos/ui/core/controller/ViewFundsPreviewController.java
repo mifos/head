@@ -20,6 +20,7 @@
 
 package org.mifos.ui.core.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.fund.servicefacade.FundDto;
 import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +41,7 @@ public class ViewFundsPreviewController {
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
     private static final String REDIRECT_TO_VIEW_FUNDS = "redirect:/viewFunds.ftl";
     private static final String CANCEL_PARAM = "CANCEL";
-    private static final String CANCEL_PARAM_VALUE = "Cancel";
     private static final String EDIT_PARAM = "EDIT";
-    private static final String EDIT_PARAM_VALUE = "Edit fund information";
 
     @Autowired
     private FundServiceFacade fundServiceFacade;
@@ -61,11 +60,11 @@ public class ViewFundsPreviewController {
             BindingResult result, SessionStatus status) {
         String viewName = REDIRECT_TO_ADMIN_SCREEN;
         ModelAndView modelAndView = new ModelAndView();
-        if (EDIT_PARAM_VALUE.equals(edit)) {
+        if (StringUtils.isNotBlank(edit)) {
             viewName = "editFunds";
             modelAndView.setViewName(viewName);
             modelAndView.addObject("formBean", formBean);
-        } else if (CANCEL_PARAM_VALUE.equals(cancel)) {
+        } else if (StringUtils.isNotBlank(cancel)) {
             viewName = REDIRECT_TO_VIEW_FUNDS;
             modelAndView.setViewName(viewName);
             status.setComplete();

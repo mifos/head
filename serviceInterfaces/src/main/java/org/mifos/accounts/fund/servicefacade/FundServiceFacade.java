@@ -22,15 +22,22 @@ package org.mifos.accounts.fund.servicefacade;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 public interface FundServiceFacade {
 
+    @PreAuthorize("isFullyAuthenticated()")
     FundDto getFund(Short fundId);
 
+    @PreAuthorize("isFullyAuthenticated()")
     List<FundDto> getFunds();
 
+    @PreAuthorize("isFullyAuthenticated()")
     List<FundCodeDto> getFundCodes();
 
+    @PreAuthorize("isFullyAuthenticated()")
     void updateFund(FundDto fundDto);
 
+    @PreAuthorize("isFullyAuthenticated()")
     void createFund(FundDto fundDto);
 }

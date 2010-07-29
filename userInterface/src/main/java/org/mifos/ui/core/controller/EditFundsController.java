@@ -22,6 +22,8 @@ package org.mifos.ui.core.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.fund.servicefacade.FundDto;
 import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +45,6 @@ public class EditFundsController {
     private static final String REDIRECT_TO_VIEW_FUNDS = "redirect:/viewFunds.ftl";
     private static final String TO_FUND_PREVIEW = "fundPreview";
     private static final String CANCEL_PARAM = "CANCEL";
-    private static final String CANCEL_PARAM_VALUE = "Cancel";
 
     @Autowired
     private FundServiceFacade fundServiceFacade;
@@ -78,7 +79,7 @@ public class EditFundsController {
     public ModelAndView processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
             @ModelAttribute("formBean") FundFormBean formBean, BindingResult result, SessionStatus status) {
         ModelAndView modelAndView = new ModelAndView(REDIRECT_TO_VIEW_FUNDS);
-        if (CANCEL_PARAM_VALUE.equals(cancel)) {
+        if (StringUtils.isNotBlank(cancel)) {
             modelAndView.setViewName(REDIRECT_TO_VIEW_FUNDS);
             status.setComplete();
         } else if (result.hasErrors()) {

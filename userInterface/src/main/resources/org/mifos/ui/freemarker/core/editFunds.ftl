@@ -27,8 +27,12 @@
                 <p class="fontBold">[@spring.message "funddetails"/]</p>
                 <p>&nbsp;</p>
         <div class="prepend-3 span-22 last">
+        [@spring.bind "formBean.id"/]
+        <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
+        
         [@spring.bind "formBean.name"/]
-        	<span class="span-4 rightAlign"><span class="red"> * </span>[@spring.message "name"/]</span><span class="span-4"><input type="text" name="${spring.status.expression}" value="${spring.status.value?default("")}"/></span>
+        	<span class="span-4 rightAlign"><span class="red"> * </span>[@spring.message "name"/]</span>
+        	<span class="span-4"><input type="text" name="${spring.status.expression}" value="${spring.status.value?default("")}"/></span>
         [@spring.showErrors "<br />"/]
         </div>
         <div class="prepend-3 span-22 last">
