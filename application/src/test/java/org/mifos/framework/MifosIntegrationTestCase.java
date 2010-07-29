@@ -25,8 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import junit.framework.ComparisonFailure;
-import junit.framework.TestCase;
-
 import org.hibernate.stat.Statistics;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.office.business.OfficeBO;
@@ -37,6 +35,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
+
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -53,7 +52,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * integration test. If a test is not an integration test and does not need the database, then it should not derive from
  * this class.
  */
-public class MifosIntegrationTestCase{
+public class MifosIntegrationTestCase {
 
     protected MifosIntegrationTestCase() throws Exception {
         new TestCaseInitializer().initialize();
