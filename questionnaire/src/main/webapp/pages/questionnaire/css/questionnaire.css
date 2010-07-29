@@ -79,3 +79,8 @@ label {
 .noPadding{
     padding:0pt;
 }
+
+.validationErr{
+	color:#FF0000;
+	float:left;
+}

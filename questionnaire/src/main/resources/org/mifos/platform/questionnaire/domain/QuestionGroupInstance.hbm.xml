@@ -29,7 +29,7 @@
               <![CDATA[from QuestionGroupInstance as instance where instance.entityId = :ENTITY_ID and
                         instance.questionGroup.id in (select questionGroup.id from QuestionGroup as questionGroup
                         join questionGroup.eventSources eventSource where eventSource.id = :EVENT_SOURCE_ID)
-                        order by instance.dateConducted, instance.questionGroup.title
+                        order by instance.dateConducted desc, instance.questionGroup.title
               ]]>
     </query>
 </hibernate-mapping>

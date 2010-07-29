@@ -25,7 +25,6 @@ import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
-import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
@@ -92,7 +91,7 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         attachSurveyPage.verifyPage();
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+/*    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void attachSurveyToClient() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_005_dbunit.xml.zip", dataSource, selenium);
 
@@ -100,7 +99,7 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
 
         AttachSurveyPage attachSurveyPage = clientViewDetailsPage.navigateToAttachSurveyPage();
         attachSurveyPage.verifyPage();
-    }
+    }*/
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void attachSurveyToGroup() throws Exception {

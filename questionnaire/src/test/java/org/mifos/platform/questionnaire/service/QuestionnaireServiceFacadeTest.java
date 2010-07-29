@@ -267,11 +267,16 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testGetQuestionGroupInstance() {
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail();
         int questionGroupInstanceId = 1212;
-        when(questionnaireService.getQuestionGroupInstance(questionGroupInstanceId)).thenReturn(new QuestionGroupInstanceDetail(questionGroupDetail));
+        when(questionnaireService.getQuestionGroupInstance(questionGroupInstanceId)).thenReturn(getQuestionGroupInstanceDetail());
         assertThat(questionnaireServiceFacade.getQuestionGroupInstance(questionGroupInstanceId), is(notNullValue()));
         verify(questionnaireService, times(1)).getQuestionGroupInstance(questionGroupInstanceId);
+    }
+
+    private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail() {
+        QuestionGroupInstanceDetail groupInstanceDetail = new QuestionGroupInstanceDetail();
+        groupInstanceDetail.setQuestionGroupDetail(new QuestionGroupDetail());
+        return groupInstanceDetail;
     }
 
     private SectionDetail getSectionDetailWithQuestions(String name, List<QuestionDetail> questionDetails, String value, boolean mandatory) {

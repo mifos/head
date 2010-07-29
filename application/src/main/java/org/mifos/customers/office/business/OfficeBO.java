@@ -242,7 +242,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         return officeName;
     }
 
-    void setOfficeName(final String officeName) {
+    public void setOfficeName(final String officeName) {
         this.officeName = officeName;
     }
 

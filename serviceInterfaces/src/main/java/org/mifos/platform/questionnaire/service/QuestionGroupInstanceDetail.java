@@ -21,17 +21,16 @@
 package org.mifos.platform.questionnaire.service;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class QuestionGroupInstanceDetail implements Serializable {
     private static final long serialVersionUID = -7157295411344619153L;
 
-    private final QuestionGroupDetail questionGroupDetail;
-    private Date dataCompleted;
-
-    public QuestionGroupInstanceDetail(QuestionGroupDetail questionGroupDetail) {
-        this.questionGroupDetail = questionGroupDetail;
-    }
+    private QuestionGroupDetail questionGroupDetail;
+    private Date dateCompleted;
+    private Integer id;
 
     public String getQuestionGroupTitle() {
         return questionGroupDetail.getTitle();
@@ -41,13 +40,29 @@ public class QuestionGroupInstanceDetail implements Serializable {
         return questionGroupDetail;
     }
 
+    public void setQuestionGroupDetail(QuestionGroupDetail questionGroupDetail) {
+        this.questionGroupDetail = questionGroupDetail;
+    }
+
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="Date is mutable, but can't help method returning date.")
-    public Date getDataCompleted() {
-        return dataCompleted;
+    public Date getDateCompleted() {
+        return dateCompleted;
     }
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP2", justification="Date is mutable, but needs initialization.")
-    public void setDataCompleted(Date dataCompleted) {
-        this.dataCompleted = dataCompleted;
+    public void setDateCompleted(Date dateCompleted) {
+        this.dateCompleted = dateCompleted;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getDateCompletedAsString() {
+        return new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(dateCompleted);
     }
 }

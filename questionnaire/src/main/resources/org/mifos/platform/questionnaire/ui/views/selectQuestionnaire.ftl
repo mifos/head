@@ -25,27 +25,27 @@
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
 <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
-<script src="pages/questionnaire/js/selectQuestionGroup.js" type="text/javascript"></script>
+<script src="pages/questionnaire/js/selectQuestionnaire.js" type="text/javascript"></script>
 <div class="sidebar ht950">
     [#include "adminLeftPane.ftl" /]
 </div>
 <div class="content leftMargin180">
-    <span id="page.id" title="selectSurvey"></span>
+    <span id="page.id" title="selectQuestionnaire"></span>
     [#assign breadcrumb = Session.urlMap/]
     [@mifos.crumbpairs breadcrumb "false"/]
     <div class="marginLeft30">
         <div class="orangeheading marginTop15">
-            ${Session.surveyFor} - [@spring.message "questionnaire.selectsurvey.attachsurvey"/]
+            ${Session.questionnaireFor} - [@spring.message "questionnaire.attach"/]
         </div>
         <div class="marginTop15">
-            [@spring.message "questionnaire.selectsurvey.instructions"/]
+            [@spring.message "questionnaire.instructions"/]
         </div>
-        <form name="selectQuestionGroup" action="selectSurvey.ftl?execution=${flowExecutionKey}" method="POST">
+        <form name="selectQuestionGroup" action="questionnaire.ftl?execution=${flowExecutionKey}" method="POST">
             <fieldset>
                 <ol>
                     <li>
                         <label for="questionGroupId"><span class="red">*</span>[@spring.message
-                            "questionnaire.selectsurvey"/]:</label>
+                            "questionnaire.selectquestionnaire"/]:</label>
                         <select id="questionGroupId" name="questionGroupId">
                             <option value="selectOne">--[@spring.message "questionnaire.selectone"/]--</option>
                             [#list questionGroupDetails.details as questionGroup]
@@ -54,11 +54,11 @@
                         </select>
                     </li>
                     <li class="buttonWidth">
-                        <input type="submit" id="_eventId_selectSurvey" name="_eventId_selectSurvey"
-                               value="[@spring.message "questionnaire.submit"/]" class="buttn"/>
+                        <input type="submit" id="_eventId_selectQuestionnaire" name="_eventId_selectQuestionnaire"
+                               value="[@spring.message "questionnaire.continue"/]" class="buttn"/>
                         &nbsp;
                         <input type="submit" id="_eventId_cancel" name="_eventId_cancel"
-                               value="[@spring.message "questionnaire.canecl"/]" class="cancelbuttn"/>
+                               value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
                     </li>
                 </ol>
             </fieldset>

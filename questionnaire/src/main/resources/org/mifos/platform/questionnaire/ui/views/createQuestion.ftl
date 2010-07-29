@@ -96,11 +96,11 @@
                       <tr>
                         <td class="drawtablerow">${question.title}</td>
                         <td class="drawtablerow">${question.type}</td>
-                            [#if question.commaSeparateChoices == '']
-                              <td class="drawtablerow"><i>[@spring.message "questionnaire.quesiton.choices.notapplicable"/]</i></td>
-                            [#else]
-                              <td class="drawtablerow">${question.commaSeparateChoices}</td>
-                            [/#if]
+                          [#if question.commaSeparateChoices?exists]
+                          <td class="drawtablerow">${question.commaSeparateChoices}</td>
+                          [#else]
+                          <td class="drawtablerow"><i>[@spring.message "questionnaire.quesiton.choices.notapplicable"/]</i></td>
+                          [/#if]
                         <td class="drawtablerow"><a href="removeQuestion#" title="${question.title}">[@spring.message "questionnaire.remove.link"/]</a></td>
                       </tr>
                       [/#list]
@@ -109,7 +109,7 @@
                  <li class="buttonWidth">
                      <input type="submit" id="_eventId_createQuestions" name="_eventId_createQuestions" value="[@spring.message "questionnaire.submit"/]" class="buttn"/>
                      &nbsp;
-                     <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "questionnaire.canecl"/]" class="cancelbuttn"/>
+                     <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
                  </li>
 			 </ol>
             </fieldset>

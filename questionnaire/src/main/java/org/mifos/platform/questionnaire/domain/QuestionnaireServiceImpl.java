@@ -190,15 +190,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     private void setResponseOnSectionDetail(List<QuestionGroupResponse> questionGroupResponses, SectionDetail sectionDetail) {
         for (SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()) {
-            setResponseOnSectionQuestionDetail(questionGroupResponses, sectionQuestionDetail);
-        }
-    }
-
-    private void setResponseOnSectionQuestionDetail(List<QuestionGroupResponse> questionGroupResponses, SectionQuestionDetail sectionQuestionDetail) {
-        for (QuestionGroupResponse questionGroupResponse : questionGroupResponses) {
-            if (questionGroupResponse.getSectionQuestion().getId() == sectionQuestionDetail.getId()) {
-                sectionQuestionDetail.setValue(questionGroupResponse.getResponse());
-            }
+            questionnaireMapper.mapQuestionResponse(sectionQuestionDetail, questionGroupResponses);
         }
     }
 

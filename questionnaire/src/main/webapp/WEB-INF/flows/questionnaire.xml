@@ -12,25 +12,25 @@
         <set name="flowScope.questionGroupDetails.entityId" value="externalContext.sessionMap.entityId" type="int"></set>
     </on-start>
 
-    <view-state id="selectSurvey">
-        <transition on="selectSurvey" to="recordSelection"/>
+    <view-state id="selectQuestionnaire">
+        <transition on="selectQuestionnaire" to="recordSelection"/>
 		<transition on="cancel" to="viewClientDetails" bind="false" history="discard"/>
     </view-state>
 
     <action-state id="recordSelection">
-        <set name="flowScope.selectedSurveyIndex" value="requestParameters.questionGroupId" type="int"></set>
-        <transition  to="survey"/>
+        <set name="flowScope.selectedQuestionnaireIndex" value="requestParameters.questionGroupId" type="int"></set>
+        <transition  to="questionnaire"/>
     </action-state>
 
-    <view-state id="survey" model="questionGroupDetails">
-		<transition on="saveSurvey" to="saveSurvey"/>
+    <view-state id="questionnaire" model="questionGroupDetails">
+		<transition on="saveQuestionnaire" to="saveQuestionnaire"/>
 		<transition on="cancel" to="viewClientDetails" bind="false" history="discard"/>
     </view-state>
 
-    <action-state id="saveSurvey">
-        <evaluate expression="questionGroupController.saveQuestionGroup(questionGroupDetails, flowScope.selectedSurveyIndex, flowRequestContext)"/>
+    <action-state id="saveQuestionnaire">
+        <evaluate expression="questionGroupController.saveQuestionnaire(questionGroupDetails, flowScope.selectedQuestionnaireIndex, flowRequestContext)"/>
         <transition on="success" to="viewClientDetails"/>
-        <transition on="failure" to="survey"/>
+        <transition on="failure" to="questionnaire"/>
     </action-state>
 
     <end-state id="viewClientDetails" view="externalRedirect:contextRelative:/clientCustAction.do?method=get" />

@@ -29,8 +29,8 @@
 <form action="${backPageUrl}" id="displayResponsesForm" name="displayResponsesForm" method="post">
     <div class="content leftMargin180">
         <span id="page.id" title="display_question_group_reponses"></span>
-        [#--assign breadcrumb = Session.urlMap/]
-        [@mifos.crumbpairs breadcrumb "true"/--]
+        [#assign breadcrumb = Session.urlMap/]
+        [@mifos.crumbpairs breadcrumb "false"/]
         <div class=" fontnormal marginLeft30">
             <div class="orangeheading marginTop15">
                 [@spring.message "questionnaire.view.question.group.responses"/]
@@ -46,7 +46,7 @@
                         <li>
                             <label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
                             ${sectionQuestionDetail.title}:</label>
-                            <label class="rightCol"><span class="fontnormal">${sectionQuestionDetail.value?default("")}</span></label>
+                            <label class="rightCol"><span class="fontnormal">${sectionQuestionDetail.answer}</span></label>
                         </li>
                         [/#list]
                         <br/>

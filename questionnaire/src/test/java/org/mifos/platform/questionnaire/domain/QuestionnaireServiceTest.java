@@ -55,6 +55,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -96,6 +97,7 @@ public class QuestionnaireServiceTest {
     private static final String QUESTION_GROUP_TITLE = "Question Group Title";
     public static final String EVENT_CREATE = "Create";
     public static final String SOURCE_CLIENT = "Client";
+    private static final Random random = new Random();
 
     @Before
     public void setUp() {
@@ -337,6 +339,29 @@ public class QuestionnaireServiceTest {
         return section;
     }
 
+    private Section getSectionWithOneMultiSelectQuestion(int sectionQuestionId, String sectionName, String questionName, String... choices) {
+        Section section = new Section(sectionName);
+        List<SectionQuestion> sectionQuestions = new ArrayList<SectionQuestion>();
+        SectionQuestion sectionQuestion = new SectionQuestion();
+        sectionQuestion.setId(sectionQuestionId);
+        sectionQuestion.setSection(section);
+        QuestionEntity questionEntity = new QuestionEntity();
+        questionEntity.setQuestionText(questionName);
+        questionEntity.setShortName(questionName);
+        questionEntity.setAnswerType(AnswerType.MULTISELECT);
+        LinkedList<QuestionChoiceEntity> questionChoiceEntities = new LinkedList<QuestionChoiceEntity>();
+        for (String choice : choices) {
+            QuestionChoiceEntity questionChoiceEntity = new QuestionChoiceEntity();
+            questionChoiceEntity.setChoiceText(choice);
+            questionChoiceEntities.add(questionChoiceEntity);
+        }
+        questionEntity.setChoices(questionChoiceEntities);
+        sectionQuestion.setQuestion(questionEntity);
+        sectionQuestions.add(sectionQuestion);
+        section.setQuestions(sectionQuestions);
+        return section;
+    }
+
     @Test
     public void shouldGetAllEventSources() {
         when(eventSourceDao.getDetailsAll()).thenReturn(asList(getEventSourceEntity("Create", "Client")));
@@ -453,17 +478,26 @@ public class QuestionnaireServiceTest {
     public void shouldGetAllQuestionGroupsByEventSourceAndEntityId() {
         QuestionGroup questionGroup1 = getQuestionGroup(1, "Title1", asList(getSectionWithQuestions(222, "Section1", "Question1")));
         QuestionGroup questionGroup2 = getQuestionGroup(2, "Title2", asList(getSectionWithQuestions(222, "Section2", "Question2")));
-        List<QuestionGroup> questionGroups = asList(questionGroup1, questionGroup2);
+        QuestionGroup questionGroup3 = getQuestionGroup(3, "Title3", asList(getSectionWithOneMultiSelectQuestion(222, "Section3", "Question3", "Choice1", "Choice2", "Choice3", "Choice4")));
+        List<QuestionGroup> questionGroups = asList(questionGroup1, questionGroup2, questionGroup3);
         when(questionGroupDao.retrieveQuestionGroupsByEventSource("Create", "Client")).thenReturn(questionGroups);
         QuestionGroupInstance questionGroupInstance1 = getQuestionGroupInstance(101, 1, questionGroup1, "Hello World");
         QuestionGroupInstance questionGroupInstance2 = getQuestionGroupInstance(101, 2, questionGroup2, "Foo Bar");
+        QuestionGroupInstance questionGroupInstance3 = getQuestionGroupInstanceWithSingleMultiSelectQuestion(101, 3, questionGroup3, "Choice1", "Choice3", "Choice4");
         when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(101, 1)).thenReturn(asList(questionGroupInstance1));
         when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(101, 2)).thenReturn(asList(questionGroupInstance2));
+        when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(101, 3)).thenReturn(asList(questionGroupInstance3));
         List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(101, new EventSource("Create", "Client", "Create.Client"));
         assertThat(questionGroupDetails, is(notNullValue()));
-        assertThat(questionGroupDetails.size(), is(2));
+        assertThat(questionGroupDetails.size(), is(3));
         assertThat(questionGroupDetails.get(0).getSectionDetail(0).getQuestionDetail(0).getValue(), is("Hello World"));
         assertThat(questionGroupDetails.get(1).getSectionDetail(0).getQuestionDetail(0).getValue(), is("Foo Bar"));
+        List<String> values = questionGroupDetails.get(2).getSectionDetail(0).getQuestionDetail(0).getValues();
+        assertThat(values, is(notNullValue()));
+        assertThat(values.size(), is(3));
+        assertThat(values.get(0), is("Choice1"));
+        assertThat(values.get(1), is("Choice3"));
+        assertThat(values.get(2), is("Choice4"));
     }
 
     private QuestionGroupInstance getQuestionGroupInstance(int entityId, int version, QuestionGroup questionGroup, String... responses) {
@@ -482,8 +516,25 @@ public class QuestionnaireServiceTest {
         return questionGroupInstance;
     }
 
+    private QuestionGroupInstance getQuestionGroupInstanceWithSingleMultiSelectQuestion(int entityId, int version, QuestionGroup questionGroup, String... responses) {
+        QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
+        questionGroupInstance.setQuestionGroup(questionGroup);
+        questionGroupInstance.setCompletedStatus(1);
+        questionGroupInstance.setCreatorId(122);
+        questionGroupInstance.setDateConducted(Calendar.getInstance().getTime());
+        questionGroupInstance.setEntityId(entityId);
+        questionGroupInstance.setVersionNum(version);
+        List<QuestionGroupResponse> groupResponses = new ArrayList<QuestionGroupResponse>();
+        for (int i=0; i<responses.length; i++) {
+            groupResponses.add(getQuestionGroupResponse(responses[i], questionGroupInstance, questionGroup.getSections().get(0).getQuestions().get(0)));
+        }
+        questionGroupInstance.setQuestionGroupResponses(groupResponses);
+        return questionGroupInstance;
+    }
+
     private QuestionGroupInstance getQuestionGroupInstance(int entityId, int year, int month, int day, QuestionGroup questionGroup, String... responses) {
         QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
+        questionGroupInstance.setId(random.nextInt());
         questionGroupInstance.setQuestionGroup(questionGroup);
         questionGroupInstance.setCompletedStatus(1);
         questionGroupInstance.setCreatorId(122);
@@ -536,26 +587,26 @@ public class QuestionnaireServiceTest {
     @Test
     public void shouldGetQuestionGroupInstances() {
         List<Section> sections = new ArrayList<Section>();
-        List<QuestionGroupInstance> questionGroupInstances = asList(getQuestionGroupInstance(3031, 2010, 7, 24, getQuestionGroup(4041, "QG1", sections)),
-                                                                           getQuestionGroupInstance(3032, 2010, 7, 24, getQuestionGroup(4042, "QG2", sections)),
-                                                                           getQuestionGroupInstance(3033, 2010, 7, 24, getQuestionGroup(4043, "QG3", sections)),
+        List<QuestionGroupInstance> questionGroupInstances = asList(getQuestionGroupInstance(3031, 2010, 7, 26, getQuestionGroup(4041, "QG1", sections)),
+                                                                           getQuestionGroupInstance(3032, 2010, 7, 26, getQuestionGroup(4042, "QG2", sections)),
+                                                                           getQuestionGroupInstance(3033, 2010, 7, 26, getQuestionGroup(4043, "QG3", sections)),
                                                                            getQuestionGroupInstance(3034, 2010, 7, 25, getQuestionGroup(4041, "QG1", sections)),
                                                                            getQuestionGroupInstance(3035, 2010, 7, 25, getQuestionGroup(4042, "QG2", sections)),
-                                                                           getQuestionGroupInstance(3036, 2010, 7, 26, getQuestionGroup(4042, "QG2", sections)),
-                                                                           getQuestionGroupInstance(3037, 2010, 7, 26, getQuestionGroup(4043, "QG3", sections)));
+                                                                           getQuestionGroupInstance(3036, 2010, 7, 24, getQuestionGroup(4042, "QG2", sections)),
+                                                                           getQuestionGroupInstance(3037, 2010, 7, 24, getQuestionGroup(4043, "QG3", sections)));
         when(questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202)).thenReturn(questionGroupInstances);
         when(eventSourceDao.retrieveByEventAndSource("View", "Client")).thenReturn(asList(getEventSourceEntity(202)));
         EventSource eventSource = new EventSource("View", "Client", "View.Client");
         List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSource);
         assertThat(instances, is(notNullValue()));
         assertThat(instances.size(), is(7));
-        assertQuestionGroupInstanceDetail(instances.get(0), "QG1", 2010, 7, 24);
-        assertQuestionGroupInstanceDetail(instances.get(1), "QG2", 2010, 7, 24);
-        assertQuestionGroupInstanceDetail(instances.get(2), "QG3", 2010, 7, 24);
-        assertQuestionGroupInstanceDetail(instances.get(3), "QG1", 2010, 7, 25);
-        assertQuestionGroupInstanceDetail(instances.get(4), "QG2", 2010, 7, 25);
-        assertQuestionGroupInstanceDetail(instances.get(5), "QG2", 2010, 7, 26);
-        assertQuestionGroupInstanceDetail(instances.get(6), "QG3", 2010, 7, 26);
+        assertQuestionGroupInstanceDetail(instances.get(0), "QG1", 2010, 7, 26, questionGroupInstances.get(0).getId());
+        assertQuestionGroupInstanceDetail(instances.get(1), "QG2", 2010, 7, 26, questionGroupInstances.get(1).getId());
+        assertQuestionGroupInstanceDetail(instances.get(2), "QG3", 2010, 7, 26, questionGroupInstances.get(2).getId());
+        assertQuestionGroupInstanceDetail(instances.get(3), "QG1", 2010, 7, 25, questionGroupInstances.get(3).getId());
+        assertQuestionGroupInstanceDetail(instances.get(4), "QG2", 2010, 7, 25, questionGroupInstances.get(4).getId());
+        assertQuestionGroupInstanceDetail(instances.get(5), "QG2", 2010, 7, 24, questionGroupInstances.get(5).getId());
+        assertQuestionGroupInstanceDetail(instances.get(6), "QG3", 2010, 7, 24, questionGroupInstances.get(6).getId());
         verify(questionGroupInstanceDao, times(1)).retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202);
         verify(questionnaireValidator, times(1)).validateForEventSource(eventSource);
         verify(eventSourceDao, times(1)).retrieveByEventAndSource("View", "Client");
@@ -577,9 +628,10 @@ public class QuestionnaireServiceTest {
         return eventSource;
     }
 
-    private void assertQuestionGroupInstanceDetail(QuestionGroupInstanceDetail instanceDetail, String questionGroupTitle, int year, int month, int day) {
+    private void assertQuestionGroupInstanceDetail(QuestionGroupInstanceDetail instanceDetail, String questionGroupTitle, int year, int month, int day, int id) {
+        assertThat(instanceDetail.getId(), is(id));
         assertThat(instanceDetail.getQuestionGroupTitle(), is(questionGroupTitle));
-        Date date = instanceDetail.getDataCompleted();
+        Date date = instanceDetail.getDateCompleted();
         assertDate(date, year, month, day);
     }
 
