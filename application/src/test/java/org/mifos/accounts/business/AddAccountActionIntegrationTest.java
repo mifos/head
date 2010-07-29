@@ -27,6 +27,9 @@ import java.sql.Connection;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
@@ -44,19 +47,17 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
 
     private static final short SEND_TO_ORPHANS = 43;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         session = StaticHibernateUtil.getSessionTL();
         connection = session.connection();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
         connection = null;
         session = null;
-        super.tearDown();
     }
 
     public void startFromStandardStore() throws Exception {
@@ -72,6 +73,7 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(" ", action.getLookUpValue().getLookUpName());
     }
 
+    @Test
     public void testValidateLookupValueKey() throws Exception {
         String validKey = "AccountAction-LoanRepayment";
         String format = "AccountAction-";
@@ -80,6 +82,7 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertFalse(AddAccountAction.validateLookupValueKey(format, invalidKey));
     }
 
+    @Test
     public void testConstructor() throws Exception {
         short newId = 31000;
         AddAccountAction upgrade = null;

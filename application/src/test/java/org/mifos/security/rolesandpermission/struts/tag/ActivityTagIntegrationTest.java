@@ -27,6 +27,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.security.rolesandpermission.RoleTestUtil;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
@@ -38,12 +39,14 @@ public class ActivityTagIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
+    @Test
     public void testConvertToIdSet() throws Exception {
         Set<Short> activities = new ActivityTag().convertToIdSet(getActivities());
         Assert.assertNotNull(activities);
        Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT, activities.size());
     }
 
+    @Test
     public void testGetActivities() throws Exception {
         List<ActivityEntity> activities = new ActivityTag().getActivities(getActivities(), getUiActivities());
         Assert.assertNotNull(activities);

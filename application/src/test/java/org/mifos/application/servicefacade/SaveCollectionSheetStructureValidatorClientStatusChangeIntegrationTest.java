@@ -25,6 +25,10 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
@@ -38,15 +42,14 @@ public class SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationT
     private SaveCollectionSheetStructureValidator savecollectionSheetStructureValidator;
     private TestSaveCollectionSheetUtils saveCollectionSheetUtils;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         saveCollectionSheetUtils = new TestSaveCollectionSheetUtils();
         savecollectionSheetStructureValidator = new SaveCollectionSheetStructureValidator();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         try {
             saveCollectionSheetUtils.clearObjects();
         } catch (Exception e) {
@@ -55,45 +58,33 @@ public class SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationT
         }
 
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testShouldGetINVALID_CUSTOMER_STATUSIfClientClosed() throws Exception {
 
         /*
-         * JPW - this test commented out because of the follower error which occurs
-         * when changing the first clients status to closed:
+         * JPW - this test commented out because of the follower error which occurs when changing the first clients
+         * status to closed:
          *
-         * org.hibernate.LazyInitializationException: could not initialize proxy
-         * - no Session at
-         * org.hibernate.proxy.AbstractLazyInitializer.initialize
-         * (AbstractLazyInitializer.java:57) at
-         * org.hibernate.proxy.AbstractLazyInitializer
-         * .getImplementation(AbstractLazyInitializer.java:111) at
-         * org.hibernate.
-         * proxy.pojo.cglib.CGLIBLazyInitializer.invoke(CGLIBLazyInitializer
-         * .java:150) atorg.mifos.customers.personnel.business.
-         * PersonnelStatusEntity$$EnhancerByCGLIB$$78c4a612.getId(<generated>)
-         * at
-         * org.mifos.customers.personnel.business.PersonnelBO.getStatusAsEnum
-         * (PersonnelBO.java:369)
+         * org.hibernate.LazyInitializationException: could not initialize proxy - no Session at
+         * org.hibernate.proxy.AbstractLazyInitializer.initialize (AbstractLazyInitializer.java:57) at
+         * org.hibernate.proxy.AbstractLazyInitializer .getImplementation(AbstractLazyInitializer.java:111) at
+         * org.hibernate. proxy.pojo.cglib.CGLIBLazyInitializer.invoke(CGLIBLazyInitializer .java:150)
+         * atorg.mifos.customers.personnel.business. PersonnelStatusEntity$$EnhancerByCGLIB$$78c4a612.getId(<generated>)
+         * at org.mifos.customers.personnel.business.PersonnelBO.getStatusAsEnum (PersonnelBO.java:369)
          */
         /*
-         * The test runs in eclipse. The test runs singly on command line using
-         * mvn integration-test-Dtest=
-         * SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationTest
-         * but not when run in mvn install
+         * The test runs in eclipse. The test runs singly on command line using mvn integration-test-Dtest=
+         * SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationTest but not when run in mvn install
          *
          *
-         * This test used to be in
-         * SaveCollectionSheetStructureValidatorIntegrationTest but was taken
-         * out to isolate it
+         * This test used to be in SaveCollectionSheetStructureValidatorIntegrationTest but was taken out to isolate it
          */
 
-
-//         saveCollectionSheetUtils.setFirstClientClosed();
-//
-//         createSampleCollectionSheetAndVerifyInvalidReason(InvalidSaveCollectionSheetReason.INVALID_CUSTOMER_STATUS);
+        // saveCollectionSheetUtils.setFirstClientClosed();
+        //
+        // createSampleCollectionSheetAndVerifyInvalidReason(InvalidSaveCollectionSheetReason.INVALID_CUSTOMER_STATUS);
     }
 
     private void createSampleCollectionSheetAndVerifyInvalidReason(InvalidSaveCollectionSheetReason invalidReason)
@@ -115,7 +106,7 @@ public class SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationT
             InvalidSaveCollectionSheetReasons = e.getInvalidSaveCollectionSheetReasons();
         }
 
-        assertNotNull("List was not set", InvalidSaveCollectionSheetReasons);
+        Assert.assertNotNull("List was not set", InvalidSaveCollectionSheetReasons);
         assertThat(InvalidSaveCollectionSheetReasons.size(), is(1));
         assertThat(InvalidSaveCollectionSheetReasons.get(0), is(invalidReason));
     }

@@ -32,6 +32,7 @@ import static org.mifos.reports.branchreport.BranchReportClientSummaryBO.ACTIVE_
 import static org.mifos.reports.branchreport.BranchReportClientSummaryBO.ACTIVE_CLIENTS_COUNT;
 import static org.mifos.reports.branchreport.BranchReportClientSummaryBO.CENTER_COUNT;
 import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.IS_NOT_TOTAL;
+import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.IS_TOTAL;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,6 +43,9 @@ import junit.framework.Assert;
 import org.apache.commons.collections.PredicateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficecFixture;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
@@ -59,7 +63,6 @@ import org.mifos.reports.branchreport.LoanArrearsAgingPeriod;
 import org.mifos.reports.branchreport.persistence.BranchReportPersistence;
 import org.mifos.reports.business.dto.BranchReportHeaderDTO;
 import org.mifos.reports.util.helpers.ReportUtils;
-import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.IS_TOTAL;
 public class BranchReportServiceIntegrationTest extends BranchReportIntegrationTestCase {
 
     public BranchReportServiceIntegrationTest() throws Exception {
@@ -79,6 +82,7 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
     private BranchReportLoanArrearsAgingBO loanArrearReportForSecondWeek;
     private BranchReportLoanArrearsAgingBO loanArrearReportForThirdWeek;
 
+    @Test
     public void testReturnsClientSummaryForGivenBranchAndRunDate() throws Exception {
         session.save(branchReport);
         List<BranchReportClientSummaryBO> retrievedClientSummaries = branchReportService.getClientSummaryInfo(
@@ -93,6 +97,7 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
        Assert.assertTrue(exists(retrievedClientSummaries, PredicateUtils.equalPredicate(activeBorrowersCountSummary)));
     }
 
+    @Test
     public void testReturnsLoanArrearsAgingInfo() throws Exception {
         session.save(branchReport);
         List<BranchReportLoanArrearsAgingBO> retrievedLoanArrearsAgingInfo = branchReportService
@@ -103,6 +108,7 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
        Assert.assertTrue(exists(retrievedLoanArrearsAgingInfo, PredicateUtils.equalPredicate(loanArrearReportForThirdWeek)));
     }
 
+    @Test
     public void testServiceReturnsHeaderInformation() throws Exception {
         session.save(branchReport);
         OfficeBO office = OfficecFixture.createOffice(BRANCH_ID_SHORT);
@@ -114,6 +120,7 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
                 returnedHeaderDTO);
     }
 
+    @Test
     public void testRemovesSpecifiedBranchReport() throws Exception {
         session.save(branchReport);
         branchReportService.removeBranchReport(branchReport);
@@ -129,24 +136,29 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
        Assert.assertEquals(0, loanArrearsAgingInfo.size());
     }
 
+    @Test
     public void testServiceReturnsFalseIfBranchReportDataNotPresent() throws Exception {
         Assert.assertFalse(branchReportService.isReportDataPresentForRundateAndBranchId("2", "01/01/2008"));
     }
 
+    @Test
     public void testServiceReturnsTrueIfBranchReportDataPresent() throws Exception {
         session.save(branchReport);
        Assert.assertTrue(branchReportService.isReportDataPresentForRundateAndBranchId(BRANCH_ID.toString(), RUN_DATE_STR));
     }
 
+    @Test
     public void testServiceReturnsFalseIfBranchReportDataNotPresentForGivenDate() throws Exception {
         Assert.assertFalse(branchReportService.isReportDataPresentForRundate(DateUtils.getDate(2008, Calendar.JANUARY, 1)));
     }
 
+    @Test
     public void testServiceReturnsTrueIfBranchReportDataPresentForGivenDate() throws Exception {
         session.save(branchReport);
        Assert.assertTrue(branchReportService.isReportDataPresentForRundate(RUN_DATE));
     }
 
+    @Test
     public void testGetStaffSummaryReportReturnsStaffSummaryForBranchAndDate() throws Exception {
         BranchReportBO branchReportWithStaffSummary = createBranchReportWithStaffSummary(BRANCH_ID_SHORT, RUN_DATE);
         BranchReportBO otherBranchReportWithStaffSummary = createBranchReportWithStaffSummary(BRANCH_ID_SHORT,
@@ -160,6 +172,7 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
     }
 
     // TODO TW Add test data and have better test
+    @Test
     public void testExtractLoanArrearsAgingInPeriod() throws Exception {
         BranchReportLoanArrearsAgingBO loanArrearsAgingInfoInPeriod = branchReportService
                 .extractLoanArrearsAgingInfoInPeriod(BRANCH_ID_SHORT, LoanArrearsAgingPeriod.ONE_WEEK, DEFAULT_CURRENCY);
@@ -167,6 +180,7 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
         // TODO TW more assertions based on test data
     }
 
+    @Test
     public void testResultsForStaffingLevelAreSorted() throws PersistenceException, ServiceException {
         BranchReportPersistence branchReportPersistenceMock = createMock(BranchReportPersistence.class);
         branchReportService = new BranchReportService(officeBusinessServiceMock, new PersonnelBusinessService(),
@@ -192,8 +206,8 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
        Assert.assertEquals(0, totalStaffSummaryBO.compareTo(lastBO));
     }
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         branchReport = new BranchReportBO(BRANCH_ID_SHORT, RUN_DATE);
         populateClientSummary();
@@ -224,9 +238,8 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
         branchReport.addLoanArrearsAging(loanArrearReportForThirdWeek);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         transaction.rollback();
-        super.tearDown();
     }
 }

@@ -25,7 +25,9 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
+import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
@@ -38,11 +40,12 @@ public class LookUpValueEntityIntegrationTest extends MifosIntegrationTestCase {
 
     private Session session;
 
-    @Override
+    @Before
     public void setUp() {
         session = StaticHibernateUtil.getSessionTL();
     }
 
+    @Test
     public void testReadFromMasterData() throws Exception {
         LookUpValueEntity readEntity = (LookUpValueEntity) session.get(LookUpValueEntity.class, 404);
        Assert.assertEquals(" ", readEntity.getLookUpName());
@@ -53,6 +56,7 @@ public class LookUpValueEntityIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals("Can make payments to Client accounts", locales.iterator().next().getLookUpValue());
     }
 
+    @Test
     public void testWriteAndRead() throws Exception {
 
         LookUpValueEntity entity = new LookUpValueEntity();

@@ -27,6 +27,10 @@ import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testU
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
@@ -78,9 +82,8 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
     private GenericDao baseDao;
     private CustomerHierarchyParams customerHierarchyParams;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
 
         weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
         IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
@@ -119,14 +122,14 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         savingsDao = new SavingsDaoHibernate(baseDao);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         IntegrationTestObjectMother.cleanSavingsProductAndAssociatedSavingsAccounts(savingsAccount);
         IntegrationTestObjectMother.cleanSavingsProductAndAssociatedSavingsAccounts(secondSavingsAccount);
         IntegrationTestObjectMother.cleanCustomerHierarchyWithMeeting(client, group, center, weeklyMeeting);
     }
 
+    @Test
     public void testShouldReturnEmptyListWhenNoMandatorySavingsAccountsExistForClientsOrGroupsWithCompleteGroupStatus() {
 
         // exercise test
@@ -134,9 +137,10 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
                 .findAllMandatorySavingAccountsForClientsOrGroupsWithCompleteGroupStatusForCustomerHierarchy(customerHierarchyParams);
 
         // verification
-        assertTrue(mandatorySavingAccounts.isEmpty());
+        Assert.assertTrue(mandatorySavingAccounts.isEmpty());
     }
 
+    @Test
     public void testShouldFindExistingMandatorySavingsAccountsForGroupsWithCompleteGroupStatusWhenCenterIsTopOfCustomerHierarchy() {
 
         // setup
@@ -153,6 +157,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         assertThat(mandatorySavingAccounts.size(), is(1));
     }
 
+    @Test
     public void testShouldFindExistingMandatorySavingsAccountsForClientsWhenCenterIsTopOfCustomerHierarchy() {
 
         // setup
@@ -169,6 +174,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         assertThat(mandatorySavingAccounts.size(), is(1));
     }
 
+    @Test
     public void testShouldReturnEmptyListWhenNoVoluntarySavingsAccountsForClientsOrGroupsWithCompleteGroupStatusExist() {
 
         // exercise test
@@ -176,9 +182,10 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
                 .findAllVoluntarySavingAccountsForClientsAndGroupsWithCompleteGroupStatusForCustomerHierarchy(customerHierarchyParams);
 
         // verification
-        assertTrue(mandatorySavingAccounts.isEmpty());
+        Assert.assertTrue(mandatorySavingAccounts.isEmpty());
     }
 
+    @Test
     public void testShouldFindExistingVoluntarySavingsAccountsForGroupsWithCompleteGroupStatusWhenCenterIsTopOfCustomerHierarchy() {
 
         // setup
@@ -195,6 +202,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         assertThat(mandatorySavingAccounts.size(), is(1));
     }
 
+    @Test
     public void testShouldFindExistingVoluntarySavingsAccountsForClientsWhenCenterIsTopOfCustomerHierarchy() {
 
         // setup
@@ -211,6 +219,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         assertThat(mandatorySavingAccounts.size(), is(1));
     }
 
+    @Test
     public void testShouldReturnEmptyListWhenNoMandatorySavingsAccountsForCentersOrGroupsWithPerIndividualStatusExist() {
 
         // exercise test
@@ -218,9 +227,10 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
                 .findAllMandatorySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
 
         // verification
-        assertTrue(mandatorySavingAccounts.isEmpty());
+        Assert.assertTrue(mandatorySavingAccounts.isEmpty());
     }
 
+    @Test
     public void testShouldFindOnlyMandatorySavingsAccountsForCentersOrGroupThatToBePaidIndividuallyByTheirClients() {
 
         // setup
@@ -245,6 +255,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         assertThat(mandatorySavingAccounts.size(), is(1));
     }
 
+    @Test
     public void testShouldReturnEmptyListWhenNoVoluntarySavingsAccountsForCentersOrGroupsWithPerIndividualStatusExist() {
 
         // exercise test
@@ -252,9 +263,10 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
                 .findAllVoluntarySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
 
         // verification
-        assertTrue(mandatorySavingAccounts.isEmpty());
+        Assert.assertTrue(mandatorySavingAccounts.isEmpty());
     }
 
+    @Test
     public void testShouldFindOnlyVoluntarySavingsAccountsForIndividualClientsOfTheVoluntaryCentersOrVoluntaryGroupsWithPerIndividualStatus() {
 
         // setup

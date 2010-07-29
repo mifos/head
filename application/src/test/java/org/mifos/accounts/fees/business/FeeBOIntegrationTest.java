@@ -25,6 +25,8 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Test;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
@@ -54,13 +56,14 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
 
     private FeeBO fee;
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(fee);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
+
     }
 
+    @Test
     public void testCreateWithoutFeeName() throws Exception {
         try {
             fee = new AmountFeeBO(TestUtils.makeUser(), "", new CategoryTypeEntity(FeeCategory.CENTER),
@@ -73,6 +76,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testCreateWithoutFeeCategory() throws Exception {
         try {
             fee = new AmountFeeBO(TestUtils.makeUser(), "Customer Fee", null, new FeeFrequencyTypeEntity(
@@ -85,6 +89,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testCreateFeeWithoutFeeFrequency() throws Exception {
         try {
             fee = new AmountFeeBO(TestUtils.makeUser(), "Customer Fee", new CategoryTypeEntity(FeeCategory.CENTER),
@@ -97,6 +102,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testCreateAmountFeeWithoutAmount() throws Exception {
         try {
             fee = new AmountFeeBO(TestUtils.makeUser(), "Customer Fee", new CategoryTypeEntity(FeeCategory.CENTER),
@@ -109,6 +115,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testCreateRateFeeWithoutRate() throws Exception {
         try {
             FeeFormulaEntity feeFormula = new FeeFormulaEntity(FeeFormula.AMOUNT);
@@ -122,6 +129,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testCreateRateFeeWithoutFormula() throws Exception {
         try {
             fee = new RateFeeBO(TestUtils.makeUser(), "Customer Fee", new CategoryTypeEntity(FeeCategory.CENTER),
@@ -134,6 +142,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testCreateOneTimeAmountFee() throws Exception {
         String name = "Customer_OneTime_AmountFee";
         fee = createOneTimeAmountFee(name, FeeCategory.CENTER, "100", false, FeePayment.UPFRONT);
@@ -146,6 +155,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testDoesFeeInvolveFractionalAmountsForWholeAmountFee() throws Exception {
         String name = "Customer_OneTime_AmountFee";
         fee = createOneTimeAmountFee(name, FeeCategory.CENTER, "100", false, FeePayment.UPFRONT);
@@ -159,6 +169,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testDoesFeeInvolveFractionalAmountsForFractionalAmountFee() throws Exception {
         String name = "Customer_OneTime_AmountFee";
         fee = createOneTimeAmountFee(name, FeeCategory.CENTER, "100.23", false, FeePayment.UPFRONT);
@@ -172,6 +183,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testDoesFeeInvolveFractionalAmountsForRateFee() throws Exception {
         fee = createOneTimeRateFee("Customer_OneTime_RateFee", FeeCategory.CENTER, 100.0, FeeFormula.AMOUNT, false,
                 FeePayment.UPFRONT);
@@ -183,6 +195,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testCreateOneTimeRateFee() throws Exception {
         fee = createOneTimeRateFee("Customer_OneTime_RateFee", FeeCategory.CENTER, 100.0, FeeFormula.AMOUNT, false,
                 FeePayment.UPFRONT);
@@ -195,6 +208,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testCreatePeriodicAmountFee() throws Exception {
         MeetingBO feefrequency = new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"), new Date(),
                 MeetingType.PERIODIC_FEE);
@@ -208,6 +222,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testCreatePeriodicRateFee() throws Exception {
         MeetingBO feefrequency = new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"), new Date(),
                 MeetingType.PERIODIC_FEE);
@@ -222,6 +237,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testCreateOneTimeDefaultFee() throws Exception {
         fee = createOneTimeAmountFee("Customer_OneTime_DefaultFee", FeeCategory.GROUP, "100", true, FeePayment.UPFRONT);
         fee.save();
@@ -235,6 +251,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testCreatePeriodicDefaultFee() throws Exception {
         MeetingBO feefrequency = new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"), new Date(),
                 MeetingType.PERIODIC_FEE);
@@ -251,6 +268,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testSaveFailure() throws Exception {
 
         try {
@@ -268,6 +286,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testCreateFeeFailure() throws Exception {
 
         try {
@@ -283,6 +302,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testFeeLevel() {
        Assert.assertEquals(FeeLevel.CENTERLEVEL, FeeLevel.getFeeLevel(FeeLevel.CENTERLEVEL.getValue()));
        Assert.assertEquals(null, FeeLevel.getFeeLevel(Short.valueOf("99")));
@@ -357,6 +377,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testAmountFeeBOUpdateChangeTypeSetsNotUpdated() throws Exception {
         AmountFeeBO feeToChange = createAmountFeeToTestChangeFeeType();
         AmountFeeBO newFee = createAmountFeeToTestChangeFeeType();
@@ -364,6 +385,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         assertFeeChangeType(FeeChangeType.NOT_UPDATED, feeToChange);
     }
 
+    @Test
     public void testAmountFeeBOUpdateChangeTypeSetsAmountUpdated() throws Exception {
         AmountFeeBO feeToChange = createAmountFeeToTestChangeFeeType();
         AmountFeeBO newFee = (AmountFeeBO) createPeriodicAmountFee("fee", FeeCategory.ALLCUSTOMERS, "2000", true,
@@ -373,6 +395,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         assertFeeChangeType(FeeChangeType.AMOUNT_UPDATED, feeToChange);
     }
 
+    @Test
     public void testAmountFeeBOUpdateChangeTypeSetsStatusUpdated() throws Exception {
         AmountFeeBO feeToChange = createAmountFeeToTestChangeFeeType();
         AmountFeeBO newFee = createAmountFeeToTestChangeFeeType();
@@ -382,6 +405,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         assertFeeChangeType(FeeChangeType.STATUS_UPDATED, feeToChange);
     }
 
+    @Test
     public void testAmountFeeBOUpdateChangeTypeSetsAmountAndStatusUpdated() throws Exception {
         AmountFeeBO feeToChange = createAmountFeeToTestChangeFeeType();
         AmountFeeBO newFee = (AmountFeeBO) createPeriodicAmountFee("fee", FeeCategory.ALLCUSTOMERS, "2000", true,
@@ -392,6 +416,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         assertFeeChangeType(FeeChangeType.AMOUNT_AND_STATUS_UPDATED, feeToChange);
     }
 
+    @Test
     public void testRateFeeBOUpdateChangeTypeSetsNotUpdated() throws Exception {
         RateFeeBO feeToChange = createRateFeeToTestChangeFeeType();
         RateFeeBO newFee = createRateFeeToTestChangeFeeType();
@@ -399,6 +424,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         assertFeeChangeType(FeeChangeType.NOT_UPDATED, feeToChange);
     }
 
+    @Test
     public void testRateFeeBOUpdateChangeTypeSetsAmountUpdated() throws Exception {
         RateFeeBO feeToChange = createRateFeeToTestChangeFeeType();
         RateFeeBO newFee = new RateFeeBO(TestUtils.makeUser(), "Customer Fee", new CategoryTypeEntity(
@@ -408,6 +434,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         assertFeeChangeType(FeeChangeType.AMOUNT_UPDATED, feeToChange);
     }
 
+    @Test
     public void testRateFeeBOUpdateChangeTypeSetsStatusUpdated() throws Exception {
         RateFeeBO feeToChange = createRateFeeToTestChangeFeeType();
         RateFeeBO newFee = createRateFeeToTestChangeFeeType();
@@ -416,6 +443,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         assertFeeChangeType(FeeChangeType.STATUS_UPDATED, feeToChange);
     }
 
+    @Test
     public void testRateFeeBOUpdateChangeTypeSetsAmountAndStatusUpdated() throws Exception {
         RateFeeBO feeToChange = createRateFeeToTestChangeFeeType();
         RateFeeBO newFee = new RateFeeBO(TestUtils.makeUser(), "Customer Fee", new CategoryTypeEntity(

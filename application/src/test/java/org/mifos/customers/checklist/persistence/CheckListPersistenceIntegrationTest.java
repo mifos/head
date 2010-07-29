@@ -24,6 +24,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
@@ -43,50 +45,49 @@ public class CheckListPersistenceIntegrationTest extends MifosIntegrationTestCas
         super();
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
-        super.tearDown();
+
     }
 
+    @Test
     public void testGetCheckListMasterData() throws Exception {
         List<CheckListMasterDto> masterCheckList = null;
 
         masterCheckList = new CheckListPersistence().getCheckListMasterData((short) 1);
 
         Assert.assertNotNull(masterCheckList);
-       Assert.assertEquals(masterCheckList.size(), 5);
+        Assert.assertEquals(masterCheckList.size(), 5);
     }
 
+    @Test
     public void testGetCustomerStates() throws Exception {
-        List<CheckListStatesView> customerStates = new CheckListPersistence().retrieveAllCustomerStatusList(Short
-                .valueOf("1"), (short) 1);
-       Assert.assertEquals(customerStates.size(), 5);
+        List<CheckListStatesView> customerStates = new CheckListPersistence().retrieveAllCustomerStatusList(
+                Short.valueOf("1"), (short) 1);
+        Assert.assertEquals(customerStates.size(), 5);
         customerStates = new CheckListPersistence().retrieveAllCustomerStatusList(Short.valueOf("2"), (short) 1);
         Assert.assertNotNull(customerStates);
-       Assert.assertEquals(customerStates.size(), 5);
+        Assert.assertEquals(customerStates.size(), 5);
         customerStates = new CheckListPersistence().retrieveAllCustomerStatusList(Short.valueOf("3"), (short) 1);
         Assert.assertNotNull(customerStates);
-       Assert.assertEquals(customerStates.size(), 2);
+        Assert.assertEquals(customerStates.size(), 2);
 
     }
 
+    @Test
     public void testGetAccountStates() throws Exception {
-        List<CheckListStatesView> accountStates = new CheckListPersistence().retrieveAllAccountStateList(Short
-                .valueOf("1"), (short) 1);
+        List<CheckListStatesView> accountStates = new CheckListPersistence().retrieveAllAccountStateList(
+                Short.valueOf("1"), (short) 1);
         Assert.assertNotNull(accountStates);
-       Assert.assertEquals(6, accountStates.size());
+        Assert.assertEquals(6, accountStates.size());
         accountStates = new CheckListPersistence().retrieveAllAccountStateList(Short.valueOf("2"), (short) 1);
         Assert.assertNotNull(accountStates);
-       Assert.assertEquals(accountStates.size(), 4);
+        Assert.assertEquals(accountStates.size(), 4);
 
     }
 
+    @Test
     public void testRetreiveAllAccountCheckLists() throws Exception {
         CheckListBO checkList = TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
@@ -94,11 +95,12 @@ public class CheckListPersistenceIntegrationTest extends MifosIntegrationTestCas
                 CustomerStatus.CENTER_ACTIVE.getValue(), (short) 1);
         List<AccountCheckListBO> checkLists = new CheckListPersistence().retreiveAllAccountCheckLists();
         Assert.assertNotNull(checkLists);
-       Assert.assertEquals(1, checkLists.size());
+        Assert.assertEquals(1, checkLists.size());
         TestObjectFactory.cleanUp(checkList);
         TestObjectFactory.cleanUp(checkList1);
     }
 
+    @Test
     public void testRetreiveAllCustomerCheckLists() throws Exception {
         CheckListBO checkList = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
                 CustomerStatus.CENTER_ACTIVE.getValue(), (short) 1);
@@ -106,24 +108,26 @@ public class CheckListPersistenceIntegrationTest extends MifosIntegrationTestCas
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
         List<CustomerCheckListBO> checkLists = new CheckListPersistence().retreiveAllCustomerCheckLists();
         Assert.assertNotNull(checkLists);
-       Assert.assertEquals(1, checkLists.size());
+        Assert.assertEquals(1, checkLists.size());
         TestObjectFactory.cleanUp(checkList);
         TestObjectFactory.cleanUp(checkList1);
     }
 
+    @Test
     public void testCheckListMasterView() {
         CheckListMasterDto checkListMasterDto = new CheckListMasterDto(Short.valueOf("1"), "Loan");
         checkListMasterDto.setIsCustomer(true);
-       Assert.assertEquals(Short.valueOf("1"), checkListMasterDto.getMasterTypeId());
-       Assert.assertEquals("Loan", checkListMasterDto.getMasterTypeName());
-       Assert.assertEquals(true, checkListMasterDto.getIsCustomer());
+        Assert.assertEquals(Short.valueOf("1"), checkListMasterDto.getMasterTypeId());
+        Assert.assertEquals("Loan", checkListMasterDto.getMasterTypeName());
+        Assert.assertEquals(true, checkListMasterDto.getIsCustomer());
     }
 
+    @Test
     public void testCheckListStatesView() {
-        CheckListStatesView checkListStatesView = new CheckListStatesView(Short.valueOf("13"), "Active", Short
-                .valueOf("1"));
-       Assert.assertEquals(Short.valueOf("13"), checkListStatesView.getStateId());
-       Assert.assertEquals("Active", checkListStatesView.getStateName());
-       Assert.assertEquals(Short.valueOf("1"), checkListStatesView.getId());
+        CheckListStatesView checkListStatesView = new CheckListStatesView(Short.valueOf("13"), "Active",
+                Short.valueOf("1"));
+        Assert.assertEquals(Short.valueOf("13"), checkListStatesView.getStateId());
+        Assert.assertEquals("Active", checkListStatesView.getStateName());
+        Assert.assertEquals(Short.valueOf("1"), checkListStatesView.getId());
     }
 }

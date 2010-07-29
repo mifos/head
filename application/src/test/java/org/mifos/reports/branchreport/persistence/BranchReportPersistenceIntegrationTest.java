@@ -41,6 +41,9 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
@@ -75,6 +78,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
     private BranchReportBO branchReportWithClientSummaries;
     private BranchReportBO branchReportWithStaffSummary;
 
+    @Test
     public void testGetBranchReportBatchForDateAndBranch() throws Exception {
         BranchReportBO branchReportBO = new BranchReportBO(BRANCH_ID, runDate);
         session.save(branchReportBO);
@@ -82,16 +86,19 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         assertListSizeAndTrueCondition(1, retrievedBranchReports, PredicateUtils.equalPredicate(branchReportBO));
     }
 
+    @Test
     public void testRetrievesEmptyListIfNoBranchReportBatchForDateAndBranch() throws Exception {
         List<BranchReportBO> retrievedBranchReports = branchReportPersistence.getBranchReport(BRANCH_ID, runDate);
         assertListSizeAndTrueCondition(0, retrievedBranchReports, PredicateUtils.truePredicate());
     }
 
+    @Test
     public void testRetrievesEmptyListIfNoBranchReportsForGivenDate() throws Exception {
         List<BranchReportBO> retrievedBranchReports = branchReportPersistence.getBranchReport(runDate);
         assertListSizeAndTrueCondition(0, retrievedBranchReports, PredicateUtils.truePredicate());
     }
 
+    @Test
     public void testRetrievesBranchReportsForGivenDate() throws Exception {
         BranchReportBO branchReportBO = new BranchReportBO(BRANCH_ID, runDate);
         session.save(branchReportBO);
@@ -99,51 +106,60 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         assertListSizeAndTrueCondition(1, retrievedBranchReports, PredicateUtils.equalPredicate(branchReportBO));
     }
 
+    @Test
     public void testSaveBranchReportWithLoanArrearsAndRetrieveUsingBranchReport() throws Exception {
         session.save(branchReportWithLoanArrears);
         List<BranchReportBO> retrievedBranchReports = branchReportPersistence.getBranchReport(BRANCH_ID, runDate);
-        assertListSizeAndTrueCondition(1, retrievedBranchReports, PredicateUtils
-                .equalPredicate(branchReportWithLoanArrears));
+        assertListSizeAndTrueCondition(1, retrievedBranchReports,
+                PredicateUtils.equalPredicate(branchReportWithLoanArrears));
     }
 
+    @Test
     public void testSaveBranchReportWithClientSummaryAndRetrieveUsingBranchReport() throws Exception {
         session.save(branchReportWithClientSummaries);
         List<BranchReportBO> retrievedBranchReports = branchReportPersistence.getBranchReport(BRANCH_ID, runDate);
-        assertListSizeAndTrueCondition(1, retrievedBranchReports, PredicateUtils
-                .equalPredicate(branchReportWithClientSummaries));
+        assertListSizeAndTrueCondition(1, retrievedBranchReports,
+                PredicateUtils.equalPredicate(branchReportWithClientSummaries));
     }
 
+    @Test
     public void testReturnsEmptyListIfNoBranchReportClientSummaryBatchForDateAndBranch() throws Exception {
         retrieveAndAssertBranchReportClientSummaryForBranchAndDate(0, PredicateUtils.truePredicate());
     }
 
+    @Test
     public void testGetLoanArrearsReportReturnsEmptyListIfReportNotFound() throws Exception {
         retrieveAndAssertLoanArrearsReportForBranchAndDate(0, PredicateUtils.truePredicate());
     }
 
+    @Test
     public void testGetLoanArrearsReportForDateAndBranch() throws Exception {
         session.save(branchReportWithLoanArrears);
-        retrieveAndAssertLoanArrearsReportForBranchAndDate(1, PredicateUtils.equalPredicate(CollectionUtils
-                .first(branchReportWithLoanArrears.getLoanArrearsAging())));
+        retrieveAndAssertLoanArrearsReportForBranchAndDate(1,
+                PredicateUtils.equalPredicate(CollectionUtils.first(branchReportWithLoanArrears.getLoanArrearsAging())));
     }
 
+    @Test
     public void testRetrieveStaffSummaryForDateAndBranchReturnsEmptyListIfNoDataPresent() throws Exception {
         retrieveAndAssertBranchReportStaffSummaryForBranchAndDate(0, PredicateUtils.truePredicate());
     }
 
+    @Test
     public void testRetrieveStaffSummaryForDateAndBranch() throws Exception {
         session.save(branchReportWithStaffSummary);
-        retrieveAndAssertBranchReportStaffSummaryForBranchAndDate(1, PredicateUtils.equalPredicate(CollectionUtils
-                .first(branchReportWithStaffSummary.getStaffSummaries())));
+        retrieveAndAssertBranchReportStaffSummaryForBranchAndDate(1,
+                PredicateUtils.equalPredicate(CollectionUtils.first(branchReportWithStaffSummary.getStaffSummaries())));
     }
 
     // TODO TW Add test data and have better test
+    @Test
     public void testExtractStaffSummaryActiveBorrowersCountReturnsEmptyListIfNoDataPresent() throws Exception {
-        List<BranchReportStaffSummaryBO> staffSummary = branchReportPersistence.extractBranchReportStaffSummary(Short
-                .valueOf("2"), Integer.valueOf(1), DEFAULT_CURRENCY);
-       Assert.assertTrue(staffSummary.isEmpty());
+        List<BranchReportStaffSummaryBO> staffSummary = branchReportPersistence.extractBranchReportStaffSummary(
+                Short.valueOf("2"), Integer.valueOf(1), DEFAULT_CURRENCY);
+        Assert.assertTrue(staffSummary.isEmpty());
     }
 
+    @Test
     public void testPopulateCustomersFormedByLoanOfficerReturnsIfSummaryListIsEmpty() throws Exception {
         HashMap staffSummariesMock = createMock(HashMap.class);
         expect(staffSummariesMock.isEmpty()).andReturn(true);
@@ -152,6 +168,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         verify(staffSummariesMock);
     }
 
+    @Test
     public void testPopulateCustomersFormedByLoanOfficerReadsSummaries() throws Exception {
         HashSet<Short> personnelIds = new HashSet<Short>();
         personnelIds.add(LOAN_OFFICER_ID_SHORT);
@@ -172,6 +189,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         return map;
     }
 
+    @Test
     public void testPopulateCustomersFormedBySetsTotalClientsEnrolledBy() throws Exception {
         Map<Short, BranchReportStaffSummaryBO> staffSummaries = createStaffSummariesMap();
         branchReportPersistence.populateTotalClientsEnrolledByPersonnel(staffSummaries);
@@ -182,6 +200,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         }));
     }
 
+    @Test
     public void testPopulateCustomersFormedThisMonthSetsCustomersEnrolledThisMonth() throws Exception {
         HashMap staffSummariesMock = createMock(HashMap.class);
         expect(staffSummariesMock.isEmpty()).andReturn(true);
@@ -190,6 +209,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         verify(staffSummariesMock);
     }
 
+    @Test
     public void testPopulateCustomersEnrolledByLoanOfficerThisMonthReadsSummaries() throws Exception {
         HashSet<Short> personnelIds = new HashSet<Short>();
         personnelIds.add(LOAN_OFFICER_ID_SHORT);
@@ -201,6 +221,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         verify(staffSummariesMock);
     }
 
+    @Test
     public void testPopulateLoanArrearsAmountReturnsIfSummaryListisEmpty() throws Exception {
         HashMap staffSummariesMock = createMock(HashMap.class);
         expect(staffSummariesMock.isEmpty()).andReturn(true);
@@ -209,6 +230,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         verify(staffSummariesMock);
     }
 
+    @Test
     public void testPopulateLoanArrearsAmountReadsSummaries() throws Exception {
         HashSet<Short> personnelIds = new HashSet<Short>();
         personnelIds.add(LOAN_OFFICER_ID_SHORT);
@@ -220,6 +242,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         verify(staffSummariesMock);
     }
 
+    @Test
     public void testPopulateLoanArrearsAmountSetsLoanArrearsAmount() throws Exception {
         Map<Short, BranchReportStaffSummaryBO> staffSummaries = createStaffSummariesMap();
         branchReportPersistence.populateLoanArrearsAmountForPersonnel(staffSummaries, DEFAULT_CURRENCY);
@@ -231,19 +254,21 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         }));
     }
 
+    @Test
     public void testRetrieveLoanArrearsAging() throws Exception {
         BranchReportLoanArrearsAgingBO loanArrears = branchReportPersistence.extractLoanArrearsAgingInfoInPeriod(
                 LoanArrearsAgingPeriod.FIVE_TO_EIGHT_WEEK, Short.valueOf("2"), DEFAULT_CURRENCY);
         Assert.assertNotNull(loanArrears);
     }
 
+    @Test
     public void testSaveLoanArrearsBOWithLargeValueForAmountOutstanding() throws Exception {
         BranchReportLoanArrearsAgingBO branchReportLoanArrearsAgingBO = new BranchReportLoanArrearsAgingBO(
-                LoanArrearsAgingPeriod.FIVE_TO_EIGHT_WEEK, Integer.valueOf(1), Integer.valueOf(2),
-                createMoney(TestUtils.RUPEE, 15724323.10), createMoney(TestUtils.RUPEE,1283439.70),
-                createMoney(TestUtils.RUPEE, 459625.70));
-        BranchReportBO branchReport = BranchReportBOFixture.createBranchReport(null, Short.valueOf("2"), DateUtils
-                .currentDate());
+                LoanArrearsAgingPeriod.FIVE_TO_EIGHT_WEEK, Integer.valueOf(1), Integer.valueOf(2), createMoney(
+                        TestUtils.RUPEE, 15724323.10), createMoney(TestUtils.RUPEE, 1283439.70), createMoney(
+                        TestUtils.RUPEE, 459625.70));
+        BranchReportBO branchReport = BranchReportBOFixture.createBranchReport(null, Short.valueOf("2"),
+                DateUtils.currentDate());
         branchReport.addLoanArrearsAging(branchReportLoanArrearsAgingBO);
         try {
             session.save(branchReport);
@@ -256,18 +281,20 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         }
     }
 
+    @Test
     public void testExtractingLoanArrears() throws Exception {
         BranchReportLoanArrearsAgingBO result = branchReportPersistence.extractLoanArrearsAgingInfoInPeriod(
                 LoanArrearsAgingPeriod.ONE_WEEK, Short.valueOf("2"), DEFAULT_CURRENCY);
         Assert.assertNotNull(result);
     }
 
+    @Test
     public void testExtractStaffingSummaryLevels() throws Exception {
         List<BranchReportStaffingLevelSummaryBO> staffingLevels = branchReportPersistence
                 .extractBranchReportStaffingLevelSummary(LOAN_OFFICER_ID_SHORT);
-       Assert.assertEquals(2, staffingLevels.size());
-        Assert.assertNull("Should not extract roles with zero personnel count", org.apache.commons.collections.CollectionUtils
-                .find(staffingLevels, new Predicate() {
+        Assert.assertEquals(2, staffingLevels.size());
+        Assert.assertNull("Should not extract roles with zero personnel count",
+                org.apache.commons.collections.CollectionUtils.find(staffingLevels, new Predicate() {
                     public boolean evaluate(Object arg0) {
                         BranchReportStaffingLevelSummaryBO summary = (BranchReportStaffingLevelSummaryBO) arg0;
                         return !TOTAL_STAFF_ROLENAME_STR.equals(summary.getTitleName())
@@ -276,18 +303,19 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
                 }));
         for (BranchReportStaffingLevelSummaryBO summaryBO : staffingLevels) {
             if (TOTAL_STAFF_ROLENAME_STR.equals(summaryBO.getTitleName())) {
-               Assert.assertEquals(Integer.valueOf(2), summaryBO.getPersonnelCount());
+                Assert.assertEquals(Integer.valueOf(2), summaryBO.getPersonnelCount());
             }
         }
     }
 
+    @Test
     public void testExtractStaffSummaryGetsOnlyLoanOfficers() throws Exception {
         List<BranchReportStaffSummaryBO> staffSummaries = branchReportPersistence.extractBranchReportStaffSummary(
                 BRANCH_ID, Integer.valueOf(1), DEFAULT_CURRENCY);
         for (BranchReportStaffSummaryBO summaryBO : staffSummaries) {
             PersonnelLevel retrievedPersonnelLevel = new PersonnelBusinessService().getPersonnel(
                     summaryBO.getPersonnelId()).getLevelEnum();
-           Assert.assertEquals(PersonnelLevel.LOAN_OFFICER, retrievedPersonnelLevel);
+            Assert.assertEquals(PersonnelLevel.LOAN_OFFICER, retrievedPersonnelLevel);
         }
     }
 
@@ -319,18 +347,17 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
     }
 
     private void assertListSizeAndTrueCondition(int resultCount, List retrievedReports, Predicate mustBeTrue) {
-       Assert.assertEquals(resultCount, retrievedReports.size());
-       Assert.assertTrue(mustBeTrue.evaluate(CollectionUtils.first(retrievedReports)));
+        Assert.assertEquals(resultCount, retrievedReports.size());
+        Assert.assertTrue(mustBeTrue.evaluate(CollectionUtils.first(retrievedReports)));
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         transaction.rollback();
-        super.tearDown();
     }
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         branchReportPersistence = new BranchReportPersistence();
         runDate = DateUtils.getDate(2008, Calendar.JANUARY, 1);

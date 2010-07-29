@@ -22,6 +22,7 @@ package org.mifos.framework.components.mifosmenu;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 
 public class MenuParserIntegrationTest extends MifosIntegrationTestCase {
@@ -30,6 +31,7 @@ public class MenuParserIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
+    @Test
     public void testParse() {
         // TODO: we probably want two tests, one for the live
         // menu.xml, and one (or more) which passes in XML from the test.

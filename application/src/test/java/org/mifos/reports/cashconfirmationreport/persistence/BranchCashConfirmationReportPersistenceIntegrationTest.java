@@ -28,6 +28,9 @@ import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.AssertionUtils;
 import org.mifos.framework.util.CollectionUtils;
@@ -49,8 +52,8 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends Bran
     private BranchCashConfirmationReportBO reportBO;
     private BranchCashConfirmationReportBO firstJanReportBO;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         session = StaticHibernateUtil.getSessionTL();
         transaction = session.beginTransaction();
@@ -61,12 +64,12 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends Bran
         firstJanReportBO = new BranchCashConfirmationReportBO(BRANCH_ID_SHORT, FIRST_JAN_2008);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         transaction.rollback();
-        super.tearDown();
     }
 
+    @Test
     public void testReturnsEmptyListIfReportForGivenDateAndBranchDoesNotExist() throws Exception {
         List<BranchCashConfirmationReportBO> report = persistence.getBranchCashConfirmationReportsForDateAndBranch(
                 Short.valueOf("3"), FIRST_JAN_2008);
@@ -74,6 +77,7 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends Bran
         Assert.assertTrue(report.isEmpty());
     }
 
+    @Test
     public void testReturnsReportListIfReportForGivenDateAndBranchExist() throws Exception {
         session.save(firstJanReportBO);
         List<BranchCashConfirmationReportBO> report = persistence.getBranchCashConfirmationReportsForDateAndBranch(
@@ -82,6 +86,7 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends Bran
         Assert.assertEquals(1, report.size());
     }
 
+    @Test
     public void testRetrieveIssueReportForGivenDateAndBranch() throws Exception {
         BranchCashConfirmationInfoBO issueBO = new BranchCashConfirmationIssueBO("SOME PRODUCT", zero());
         reportBO.addCenterIssue(issueBO);
@@ -95,6 +100,7 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends Bran
         Assert.assertTrue(retrievedIssues.contains(anotherIssue));
     }
 
+    @Test
     public void testRetrievesCenterRecoveryReport() throws Exception {
         BranchCashConfirmationCenterRecoveryBO recoveryReport = new BranchCashConfirmationCenterRecoveryBO("PRDOFF1",
                 zero(), zero(), zero());
@@ -107,6 +113,7 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends Bran
         Assert.assertEquals(recoveryReport, retrievedRecoveryReport.get(0));
     }
 
+    @Test
     public void testRetrievesDisbursementsReturnsEmptyListIfNoneExists() throws Exception {
         List<BranchCashConfirmationDisbursementBO> disbursements = persistence.getDisbursements(BRANCH_ID_SHORT,
                 RUN_DATE);
@@ -114,6 +121,7 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends Bran
         Assert.assertTrue("retrieved disbursements should be empty", disbursements.isEmpty());
     }
 
+    @Test
     public void testRetrievesDisbursementsForGivenDateAndBranch() throws Exception {
         BranchCashConfirmationDisbursementBO disbursement = new BranchCashConfirmationDisbursementBO("SOME PRODUCT",
                 zero());

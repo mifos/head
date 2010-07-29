@@ -29,6 +29,9 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -53,13 +56,13 @@ public class AccountFeesEntityIntegrationTest extends MifosIntegrationTestCase {
     private CustomerBO center = null;
     private CustomerBO group = null;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
+        //super.setUp();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         try {
             TestObjectFactory.cleanUp(accountBO);
             TestObjectFactory.cleanUp(group);
@@ -68,9 +71,10 @@ public class AccountFeesEntityIntegrationTest extends MifosIntegrationTestCase {
             TestDatabase.resetMySQLDatabase();
         }
         StaticHibernateUtil.closeSession();
-        super.tearDown();
+        //super.tearDown();
     }
 
+    @Test
     public void testChangeFeesStatus() {
         accountBO = getLoanAccount();
         Set<AccountFeesEntity> accountFeesEntitySet = accountBO.getAccountFees();

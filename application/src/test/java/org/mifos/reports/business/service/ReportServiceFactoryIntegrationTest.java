@@ -22,6 +22,7 @@ package org.mifos.reports.business.service;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 
 public class ReportServiceFactoryIntegrationTest extends MifosIntegrationTestCase {
@@ -29,6 +30,7 @@ public class ReportServiceFactoryIntegrationTest extends MifosIntegrationTestCas
         super();
     }
 
+    @Test
     public void testInitializingServiceFactoryDoesNotThrowAnyErrors() throws Exception {
         try {
             ReportServiceFactory.getCacheEnabledCollectionSheetReportService();
@@ -37,6 +39,7 @@ public class ReportServiceFactoryIntegrationTest extends MifosIntegrationTestCas
         }
     }
 
+    @Test
     public void testFetchingBranchReportService() throws Exception {
         try {
             ReportServiceFactory.getLoggingEnabledBranchReportService(Integer.valueOf(1));
@@ -46,6 +49,7 @@ public class ReportServiceFactoryIntegrationTest extends MifosIntegrationTestCas
         }
     }
 
+    @Test
     public void testBranchCashConfirmationReportService() throws Exception {
         try {
             ReportServiceFactory.getBranchCashConfirmationReportService(Integer.valueOf(0));

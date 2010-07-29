@@ -23,6 +23,7 @@ package org.mifos.security.rolesandpermission.business;
 import junit.framework.Assert;
 
 import org.hibernate.Query;
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
@@ -32,6 +33,7 @@ public class RoleActivityEntityIntegrationTest extends MifosIntegrationTestCase 
         super();
     }
 
+    @Test
     public void testGetRoleActivity() {
         RoleActivityEntity roleActivityEntity = getRoleActivity((short) 1, (short) 1);
         Assert.assertNull(roleActivityEntity);

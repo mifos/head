@@ -23,6 +23,7 @@ package org.mifos.reports.business.service;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.junit.Before;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.business.Configuration;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -44,9 +45,9 @@ public class BranchReportIntegrationTestCase extends MifosIntegrationTestCase {
         super();
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
+
         DEFAULT_CURRENCY = Configuration.getInstance().getSystemConfig().getCurrency();
         CURRENCY_ID = DEFAULT_CURRENCY.getCurrencyId();
     }

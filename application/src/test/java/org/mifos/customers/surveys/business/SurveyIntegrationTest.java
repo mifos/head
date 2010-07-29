@@ -28,6 +28,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -67,9 +70,8 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
     private static final double DELTA = 0.00000001;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
 
         // Force loading the chart of accounts since this data would otherwise
         // not be present in a Mayfly database freshly initialized from
@@ -78,13 +80,13 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         FinancialInitializer.loadCOA();
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
         TestDatabase.resetMySQLDatabase();
-        super.tearDown();
     }
 
+    @Test
     public void testCreateSurveyInstance() throws Exception {
         Survey survey = new Survey();
         SurveyInstance instance = survey.createSurveyInstance();
@@ -92,6 +94,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
                 .isInstance(survey)));
     }
 
+    @Test
     public void testSurveyType() {
        Assert.assertEquals("client", SurveyType.CLIENT.getValue());
        Assert.assertEquals("group", SurveyType.GROUP.getValue());
@@ -107,6 +110,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(SurveyType.SAVINGS, SurveyType.fromString("savings"));
     }
 
+    @Test
     public void testRetrieveQuestionsByState() throws Exception {
         SurveysPersistence surveysPersistence = new SurveysPersistence();
         String questionText1 = "testGetQuestionsByState question 1";
@@ -133,6 +137,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(questionText2, results.get(0).getQuestionText());
     }
 
+    @Test
     public void testRetrieveInstances() throws Exception {
         SurveysPersistence surveysPersistence = new SurveysPersistence();
         SurveyInstance instance1 = makeSurveyInstance("survey1");
@@ -183,6 +188,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals("survey2", retrievedInstances.get(0).getSurvey().getName());
     }
 
+    @Test
     public void testRetrieveQuestionsByAnswerType() throws Exception {
         SurveysPersistence surveysPersistence = new SurveysPersistence();
         String questionText1 = "testGetQuestionsByState question 1";
@@ -221,6 +227,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testGetSurveysByType() throws Exception {
         SurveysPersistence surveysPersistence = new SurveysPersistence();
         Survey survey1 = new Survey("Survey 1", SurveyState.ACTIVE, SurveyType.CLIENT);
@@ -254,6 +261,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testCreateSurvey() throws Exception {
         Survey survey = new Survey("testsurvey", SurveyState.ACTIVE, SurveyType.CLIENT);
 
@@ -271,6 +279,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(SurveyType.CLIENT, read_survey.getAppliesToAsEnum());
     }
 
+    @Test
     public void testCreateQuestion() {
         String questionText = "Why did the chicken cross the road?";
 
@@ -289,6 +298,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(QuestionState.ACTIVE, retrieved.getQuestionStateAsEnum());
     }
 
+    @Test
     public void testRetrieveQuestions() throws Exception {
         String questionText1 = "test question 1";
         String questionText2 = "test question 2";
@@ -316,6 +326,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testRetrieveQuestionsByName() throws Exception {
         String name1 = "name1";
         Question question1 = new Question(name1, "test question text", AnswerType.FREETEXT);
@@ -361,6 +372,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         return instance;
     }
 
+    @Test
     public void testSurveyResponseWithChoices() throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
         SurveyInstance instance = makeSurveyInstance("Test choice type survey response");
@@ -388,6 +400,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
     // this test was created because of problems persisting number survey
     // responses
+    @Test
     public void testNumberSurveyResponse() throws Exception {
         SurveyInstance instance = makeSurveyInstance("Test number survey response");
         Survey survey = instance.getSurvey();
@@ -407,6 +420,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(questionText, responses.get(0).getQuestion().getQuestionText());
     }
 
+    @Test
     public void testSurveyResponseTypechecks() throws Exception {
         SurveyInstance instance = makeSurveyInstance("Test survey response typechecks");
         Survey survey = instance.getSurvey();
@@ -473,6 +487,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testCreateRetrieveSurveyResponse() throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
         SurveyInstance instance1 = makeSurveyInstance("Test survey create response1");
@@ -536,6 +551,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(2, responses.size());
     }
 
+    @Test
     public void testSerialize() throws Exception {
         Survey survey = new Survey("my survey", SurveyState.ACTIVE, SurveyType.CLIENT);
         Question question = new Question("Can I be written to the session?");

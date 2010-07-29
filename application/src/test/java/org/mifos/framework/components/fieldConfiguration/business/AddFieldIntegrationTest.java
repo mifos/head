@@ -23,6 +23,8 @@ package org.mifos.framework.components.fieldConfiguration.business;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -36,7 +38,7 @@ public class AddFieldIntegrationTest extends MifosIntegrationTestCase {
 
     private Session session;
 
-    @Override
+    @Before
     public void setUp() {
         session = StaticHibernateUtil.getSessionTL();
     }
@@ -46,6 +48,7 @@ public class AddFieldIntegrationTest extends MifosIntegrationTestCase {
      * FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG
      * ,HIDDEN_FLAG) VALUES(74,'AssignClients',1,0,0);
      */
+    @Test
     public void testStartFromStandardStore() throws Exception {
         int newId = 203;
         AddField upgrade = new AddField(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, "AssignClients",

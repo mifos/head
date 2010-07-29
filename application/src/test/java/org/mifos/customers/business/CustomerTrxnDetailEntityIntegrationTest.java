@@ -24,6 +24,9 @@ import java.sql.Date;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
@@ -64,9 +67,8 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
     private ClientBO client = null;
     private UserContext userContext = null;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
 
         OfficeBO office = IntegrationTestObjectMother.sampleBranchOffice();
@@ -88,11 +90,12 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
         IntegrationTestObjectMother.createClient(client, weeklyMeeting);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         IntegrationTestObjectMother.cleanCustomerHierarchyWithMeeting(client, group, center, weeklyMeeting);
     }
 
+    @Test
     public void testGenerateReverseTrxn() throws Exception {
         accountBO = client.getCustomerAccount();
         Date currentDate = new Date(System.currentTimeMillis());

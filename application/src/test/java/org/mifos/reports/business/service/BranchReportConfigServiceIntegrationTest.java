@@ -22,6 +22,8 @@ package org.mifos.reports.business.service;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
@@ -41,34 +43,38 @@ public class BranchReportConfigServiceIntegrationTest extends MifosIntegrationTe
         Assert.assertNotNull(daysInArrears);
     }
 
+    @Test
     public void testGetLoanCyclePeriod() throws Exception {
         Integer loanCyclePeriod = branchReportConfigService.getLoanCyclePeriod();
         Assert.assertNotNull(loanCyclePeriod);
     }
 
+    @Test
     public void testGetReplacementFieldId() throws Exception {
         Short replacementFieldId = branchReportConfigService.getReplacementFieldId();
         Assert.assertNotNull(replacementFieldId);
     }
 
+    @Test
     public void testGetReplacementFieldValue() throws Exception {
         String replacementFieldValue = branchReportConfigService.getReplacementFieldValue();
         Assert.assertNotNull(replacementFieldValue);
     }
 
+    @Test
     public void testGetCurrency() throws Exception {
         MifosCurrency currency = branchReportConfigService.getCurrency();
         Assert.assertNotNull(currency);
     }
 
+    @Test
     public void testGetDaysInArrearsForRisk() throws Exception {
         Integer daysInArrearsForRisk = branchReportConfigService.getDaysInArrearsForRisk();
         Assert.assertNotNull(daysInArrearsForRisk);
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         ClassPathResource branchReportConfig = new ClassPathResource(FilePaths.BRANCH_REPORT_CONFIG);
         branchReportConfigService = new BranchReportConfigService(branchReportConfig);
     }

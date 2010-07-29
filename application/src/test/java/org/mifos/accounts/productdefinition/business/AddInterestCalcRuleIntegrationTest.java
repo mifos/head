@@ -24,6 +24,7 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
+import org.junit.Test;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -36,6 +37,7 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
         super();
     }
 
+    @Test
     public void testValidateLookupValueKeyTest() throws Exception {
         String validKey = "InterestTypes-DecliningBalance";
         String format = "InterestTypes-";
@@ -44,6 +46,7 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
         Assert.assertFalse(AddInterestCalcRule.validateLookupValueKey(format, invalidKey));
     }
 
+    @Test
     public void testConstructor() throws Exception {
         short newRuleId = 2555;
         short categoryId = 1;
