@@ -96,11 +96,11 @@
                       <tr>
                         <td class="drawtablerow">${question.title}</td>
                         <td class="drawtablerow">${question.type}</td>
-                            [#if question.commaSeparateChoices == '']
-                              <td class="drawtablerow"><i>[@spring.message "questionnaire.quesiton.choices.notapplicable"/]</i></td>
-                            [#else]
-                              <td class="drawtablerow">${question.commaSeparateChoices}</td>
-                            [/#if]
+                          [#if question.commaSeparateChoices?exists]
+                          <td class="drawtablerow">${question.commaSeparateChoices}</td>
+                          [#else]
+                          <td class="drawtablerow"><i>[@spring.message "questionnaire.quesiton.choices.notapplicable"/]</i></td>
+                          [/#if]
                         <td class="drawtablerow"><a href="removeQuestion#" title="${question.title}">[@spring.message "questionnaire.remove.link"/]</a></td>
                       </tr>
                       [/#list]
