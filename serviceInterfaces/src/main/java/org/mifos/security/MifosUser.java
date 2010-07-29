@@ -36,6 +36,8 @@ public class MifosUser implements UserDetails {
     public static final String UPDATE_LATENESS_DORMANCY = "ROLE_UPDATE_LATENESS_DORMANCY";
     public static final String CAN_DEFINE_LABELS = "ROLE_CAN_DEFINE_LABELS";
     public static final String ROLE_CAN_DEFINE_PRODUCT_MIX = "ROLE_CAN_DEFINE_PRODUCT_MIX";
+    public static final String CAN_EDIT_FUNDS = "ROLE_CAN_EDIT_FUNDS";
+    public static final String CAN_CREATE_FUNDS = "ROLE_CAN_CREATE_FUNDS";
 
     private final String username;
     private final byte[] password;

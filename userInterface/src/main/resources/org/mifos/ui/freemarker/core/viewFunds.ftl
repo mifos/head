@@ -9,12 +9,12 @@
   </div>  
    <!--  Main Content Begins-->  
   <div class=" content leftMargin180">
-   
+    <span id="page.id" title="viewFunds" />
     [@mifos.crumb "viewFunds"/]
     
     <p class="font15 orangeheading">[@spring.message "viewfunds"/]</p>
     <p>&nbsp;&nbsp;</p> 
-    <div class="span-15">
+    <div class="span-15" id="fundDetailsList">
     
     	<div class="span-15 fontBold borderbtm paddingLeft">
      		<span class="span-5 ">[@spring.message "name"/]</span>
