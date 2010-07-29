@@ -52,7 +52,7 @@
                 <b>${sectionDetail.name}</b>
             </div>
             <fieldset>
-                <ol>
+                <ol id="responses">
                     [#list sectionDetail.questions as question]
                     <li class="marginTop15">
                         <label for="details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value">

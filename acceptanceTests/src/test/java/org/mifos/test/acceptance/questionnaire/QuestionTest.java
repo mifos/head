@@ -36,9 +36,9 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
@@ -154,7 +154,7 @@ public class QuestionTest extends UiTestCaseBase {
     }
 
     private void testAddQuestion(CreateQuestionPage createQuestionPage, String type, String title, String... choices) {
-        setupQuestionParameters(title + type, type, Arrays.asList(choices));
+        setupQuestionParameters(title + type, type, asList(choices));
         testAddQuestion(createQuestionPage);
     }
 
@@ -182,7 +182,7 @@ public class QuestionTest extends UiTestCaseBase {
         if (questionHasAnswerChoices()) {
             Assert.assertEquals(createQuestionParameters.getChoices(), question.getChoices());
         } else {
-            Assert.assertEquals(Arrays.asList("Not Applicable"), question.getChoices());
+            Assert.assertEquals(asList("Not Applicable"), question.getChoices());
         }
         testSubmitButtonEnabled(createQuestionPage);
     }
