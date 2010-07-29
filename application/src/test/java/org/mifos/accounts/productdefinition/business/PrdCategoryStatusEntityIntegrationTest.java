@@ -26,6 +26,9 @@ import junit.framework.Assert;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -40,29 +43,30 @@ public class PrdCategoryStatusEntityIntegrationTest extends MifosIntegrationTest
     private PrdCategoryStatusEntity prdCategoryStatusEntity;
     private Session session;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         session = StaticHibernateUtil.getSessionTL();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public  void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
         session = null;
-        super.tearDown();
     }
 
+    @Test
     public void testGetInactiveName() {
         prdCategoryStatusEntity = getPrdCategoryStatus(PrdCategoryStatus.INACTIVE.getValue());
         Assert.assertEquals("Inactive", prdCategoryStatusEntity.getName());
     }
 
+    @Test
     public void testGetActiveName() {
         prdCategoryStatusEntity = getPrdCategoryStatus(PrdCategoryStatus.ACTIVE.getValue());
         Assert.assertEquals("Active", prdCategoryStatusEntity.getName());
     }
 
+    @Test
     public void testGetNamesSuccess() {
         prdCategoryStatusEntity = getPrdCategoryStatus(PrdCategoryStatus.ACTIVE.getValue());
         Set<LookUpValueLocaleEntity> lookUpValueLocaleEntitySet = prdCategoryStatusEntity.getNames();

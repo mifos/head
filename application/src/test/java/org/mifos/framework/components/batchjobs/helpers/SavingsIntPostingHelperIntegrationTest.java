@@ -31,6 +31,9 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -90,14 +93,13 @@ public class SavingsIntPostingHelperIntegrationTest extends MifosIntegrationTest
 
     SavingsPersistence persistence = new SavingsPersistence();
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(savings1);
         TestObjectFactory.cleanUp(savings2);
         TestObjectFactory.cleanUp(savings3);
@@ -105,9 +107,9 @@ public class SavingsIntPostingHelperIntegrationTest extends MifosIntegrationTest
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testInterestPosting() throws Exception {
         createInitialObjects();
         SavingBOTestUtils.setNextIntPostDate(savings1, helper.getDate("31/03/2006"));

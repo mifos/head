@@ -33,6 +33,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountBO;
@@ -96,15 +99,14 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
 
     private AccountBusinessService service;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         accountPersistence = new AccountPersistence();
         service = new AccountBusinessService();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         try {
             TestObjectFactory.cleanUp(accountBO);
             TestObjectFactory.cleanUp(savingsBO);
@@ -116,9 +118,9 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
             TestDatabase.resetMySQLDatabase();
         }
         StaticHibernateUtil.closeSession();
-        super.tearDown();
-    }
+        }
 
+    @Test
     public void testGetTrxnHistory() throws Exception {
         AccountBusinessService accountBusinessService = new AccountBusinessService();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -167,6 +169,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testGetAccountAction() throws Exception {
         AccountBusinessService service = new AccountBusinessService();
         AccountActionEntity accountaction = service.getAccountAction(AccountActionTypes.SAVINGS_DEPOSIT.getValue(),
@@ -175,6 +178,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(Short.valueOf("1"), accountaction.getLocaleId());
     }
 
+    @Test
     public void testGetAppllicableFees() throws Exception {
         AccountBusinessService accountBusinessService = new AccountBusinessService();
         accountBO = getLoanAccount();
@@ -188,6 +192,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(2, applicableChargeList.size());
     }
 
+    @Test
     public void testGetAppllicableFeesForInstallmentStartingOnCurrentDate() throws Exception {
         AccountBusinessService accountBusinessService = new AccountBusinessService();
         accountBO = getLoanAccountWithAllTypesOfFees();
@@ -218,6 +223,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testGetAppllicableFeesForInstallmentStartingAfterCurrentDate() throws Exception {
         AccountBusinessService accountBusinessService = new AccountBusinessService();
         accountBO = getLoanAccountWithAllTypesOfFees();
@@ -252,6 +258,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testGetAppllicableFeesForMeetingStartingOnCurrentDate() throws Exception {
         // FIXME some test leaves database table (apart from CUSTOMER and
         // PRD_OFFERING) in dirty state Failures are noticed on windows xp
@@ -286,6 +293,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testGetStatusName() throws Exception {
         AccountStateMachines.getInstance().initialize(Short.valueOf("1"), Short.valueOf("1"),
                 AccountTypes.SAVINGS_ACCOUNT, null);
@@ -300,6 +308,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertNotNull(statusNameForLoan);
     }
 
+    @Test
     public void testGetFlagName() throws Exception {
         AccountStateMachines.getInstance().initialize(Short.valueOf("1"), Short.valueOf("1"),
                 AccountTypes.SAVINGS_ACCOUNT, null);
@@ -315,6 +324,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testGetStatusList() throws Exception {
         AccountStateMachines.getInstance().initialize(Short.valueOf("1"), Short.valueOf("1"),
                 AccountTypes.SAVINGS_ACCOUNT, null);
@@ -331,6 +341,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testRetrieveCustomFieldsDefinitionForInvalidConnection() {
         TestObjectFactory.simulateInvalidConnection();
         try {

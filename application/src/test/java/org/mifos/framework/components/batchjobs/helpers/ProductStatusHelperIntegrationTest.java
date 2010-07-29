@@ -32,6 +32,9 @@ import junit.framework.Assert;
 
 import org.hibernate.Query;
 import org.hibernate.SessionException;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingTestUtils;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
@@ -57,21 +60,20 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
 
     ProductStatusHelper productStatusHelper;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         ProductStatus productStatus = new ProductStatus();
         productStatus.name = "ProductStatus";
         productStatusHelper = (ProductStatusHelper) productStatus.getTaskHelper();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.removeObject(product);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testExecute() throws PersistenceException, BatchJobException {
         createInactiveLoanOffering();
 
@@ -81,6 +83,7 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
        Assert.assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
     }
 
+    @Test
     public void testExecuteFailure() throws PersistenceException {
         createInactiveLoanOffering();
 
@@ -99,6 +102,7 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
        Assert.assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
     }
 
+    @Test
     public void testExecuteTask() throws PersistenceException, BatchJobException {
         createInactiveLoanOffering();
 
@@ -119,6 +123,7 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
        Assert.assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
     }
 
+    @Test
     public void testExecuteTaskFailure() throws PersistenceException {
         createInactiveLoanOffering();
 
@@ -134,6 +139,7 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
        Assert.assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
     }
 
+    @Test
     public void testRegisterStartup() throws BatchJobException {
         productStatusHelper.registerStartup(System.currentTimeMillis());
         Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
@@ -148,10 +154,12 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
         }
     }
 
+    @Test
     public void testIsTaskAllowedToRun() {
        Assert.assertTrue(productStatusHelper.isTaskAllowedToRun());
     }
 
+    @Test
     public void testRegisterStartupFailure() {
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -162,6 +170,7 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
         }
     }
 
+    @Test
     public void testRegisterCompletion() throws BatchJobException {
         productStatusHelper.registerStartup(System.currentTimeMillis());
         productStatusHelper.registerCompletion(0, SchedulerConstants.FINISHED_SUCCESSFULLY, TaskStatus.COMPLETE);
@@ -177,6 +186,7 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
         }
     }
 
+    @Test
     public void testRegisterCompletionFailure() throws BatchJobException {
         productStatusHelper.registerStartup(System.currentTimeMillis());
 
@@ -195,6 +205,7 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
             TestObjectFactory.removeObject(task);
         }
     }
+
 
     private void createInactiveLoanOffering() throws PersistenceException {
         Date startDate = new Date(System.currentTimeMillis());

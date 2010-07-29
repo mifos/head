@@ -33,6 +33,8 @@ import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -51,6 +53,7 @@ public class BranchCashConfirmationReportServiceIntegrationTest extends BranchRe
     private BranchCashConfirmationReportPersistence persistenceMock;
     private BranchCashConfirmationReportService service;
 
+    @Test
     public void testGetCenterIssues() throws ServiceException {
         BranchCashConfirmationReportBO reportBO = new BranchCashConfirmationReportBO(BRANCH_ID_SHORT, RUN_DATE);
         BranchCashConfirmationInfoBO issueBO = new BranchCashConfirmationIssueBO("SOME PRODUCT", zero());
@@ -69,6 +72,7 @@ public class BranchCashConfirmationReportServiceIntegrationTest extends BranchRe
         transaction.rollback();
     }
 
+    @Test
     public void testGetDisbursements() throws Exception {
         expect(persistenceMock.getDisbursements(BRANCH_ID_SHORT, RUN_DATE)).andReturn(
                 new ArrayList<BranchCashConfirmationDisbursementBO>());
@@ -77,8 +81,8 @@ public class BranchCashConfirmationReportServiceIntegrationTest extends BranchRe
         verify(persistenceMock);
     }
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         persistenceMock = createMock(BranchCashConfirmationReportPersistence.class);
         service = new BranchCashConfirmationReportService(persistenceMock, new OfficeBusinessService());

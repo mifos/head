@@ -28,6 +28,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.persistence.AccountPersistence;
@@ -54,17 +58,15 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
     private TestSaveCollectionSheetUtils saveCollectionSheetUtils;
     private TestCollectionSheetRetrieveSavingsAccountsUtils collectionSheetRetrieveSavingsAccountsUtils;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-
+    @Before
+    public void setUp() throws Exception {
         saveCollectionSheetUtils = new TestSaveCollectionSheetUtils();
         savecollectionSheetStructureValidator = new SaveCollectionSheetStructureValidator();
         collectionSheetRetrieveSavingsAccountsUtils = new TestCollectionSheetRetrieveSavingsAccountsUtils();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         try {
             saveCollectionSheetUtils.clearObjects();
             collectionSheetRetrieveSavingsAccountsUtils.clearObjects();
@@ -73,9 +75,9 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
         }
 
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testShouldBeNoStructureValidationErrorsWithValidInput() throws Exception {
 
         SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
@@ -90,6 +92,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
         assertThat("There were structure validation errors.", newSuccess, is(true));
     }
 
+    @Test
     public void testShouldGetINVALID_TOP_CUSTOMERIfTopCustomerNotFound() throws Exception {
 
         LocalDate validDate = new LocalDate();
@@ -113,6 +116,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
         verifyInvalidReason(saveCollectionSheet, InvalidSaveCollectionSheetReason.INVALID_TOP_CUSTOMER);
     }
 
+    @Test
     public void testShouldGetCUSTOMER_NOT_FOUNDIfInvalidCustomerIdInjected() throws Exception {
 
         saveCollectionSheetUtils.setFirstClientDoesntExist();
@@ -120,6 +124,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
         createSampleCollectionSheetAndVerifyInvalidReason(InvalidSaveCollectionSheetReason.CUSTOMER_NOT_FOUND);
     }
 
+    @Test
     public void testShouldGetATTENDANCE_TYPE_NULLIfNullClientAttendanceTypeInjected() throws Exception {
 
         saveCollectionSheetUtils.setFirstClientAttendanceType(null);
@@ -128,6 +133,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     }
 
+    @Test
     public void testShouldGetUNSUPPORTED_ATTENDANCE_TYPEIfInvalidClientAttendanceTypeInjected() throws Exception {
 
         saveCollectionSheetUtils.setFirstClientAttendanceType(Short.valueOf("99"));
@@ -136,6 +142,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     }
 
+    @Test
     public void testShouldGetATTENDANCE_TYPE_ONLY_VALID_FOR_CLIENTSIfNonNullGroupAttendanceTypeInjected()
             throws Exception {
 
@@ -145,6 +152,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     }
 
+    @Test
     public void testShouldGetINDIVIDUAL_SAVINGS_ACCOUNTS_ONLY_VALID_FOR_CLIENTSIfGroupHasIndividualSavingsAccount()
             throws Exception {
 
@@ -154,6 +162,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     }
 
+    @Test
     public void testShouldGetINVALID_CUSTOMER_PARENTIfClientParentInvalid() throws Exception {
 
         saveCollectionSheetUtils.setFirstClientParentIdInvalid();
@@ -162,6 +171,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     }
 
+    @Test
     public void testShouldGetCUSTOMER_IS_NOT_PART_OF_TOPCUSTOMER_HIERARCHYIfCustomerIdFromAnotherCenterInjected()
             throws Exception {
 
@@ -171,6 +181,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     }
 
+    @Test
     public void testShouldGetINVALID_CURRENCYIfNotDefaultCurrency() throws Exception {
 
         saveCollectionSheetUtils.setLoanAccountInvalidCurrency();
@@ -179,6 +190,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     }
 
+    @Test
     public void testShouldGetACCOUNT_NOT_FOUNDIfInvalidLoanAccountIdInjected() throws Exception {
 
         saveCollectionSheetUtils.setLoanAccountIdInvalid();
@@ -187,6 +199,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     }
 
+    @Test
     public void testShouldGetINVALID_LOAN_ACCOUNT_STATUSIfLoanAccountCancelled() throws Exception {
 
         saveCollectionSheetUtils.setLoanAccountCancelled();
@@ -229,6 +242,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
         verifyInvalidReason(saveCollectionSheet, InvalidSaveCollectionSheetReason.INVALID_SAVINGS_ACCOUNT_STATUS);
     }
 
+    @Test
     public void testShouldGetACCOUNT_DOESNT_BELONG_TO_CUSTOMERIfLoanAccountIdPlacedUnderGroup() throws Exception {
 
         saveCollectionSheetUtils.setLoanAccountUnderFirstGroupWithFirstClientLoanId();
@@ -246,6 +260,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     }
 
+    @Test
     public void testShouldGetACCOUNT_NOT_A_LOAN_ACCOUNTIfCustomerAccountIdReplacesLoanAccountIdForFirstClient()
             throws Exception {
 
@@ -255,6 +270,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     }
 
+    @Test
     public void testShouldGetACCOUNT_NOT_A_SAVINGS_ACCOUNTIfLoanAccountIdReplacesSavingsAccountIdForFirstClient()
             throws Exception {
 
@@ -264,6 +280,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     }
 
+    @Test
     public void testShouldGetINVALID_DATEIfInvalidTransactionDateTwoDaysInFuture() throws Exception {
 
         saveCollectionSheetUtils.setInvalidTransactionDate();
@@ -291,7 +308,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
             invalidSaveCollectionSheetReasons = e.getInvalidSaveCollectionSheetReasons();
         }
 
-        assertNotNull("List was not set", invalidSaveCollectionSheetReasons);
+        Assert.assertNotNull("List was not set", invalidSaveCollectionSheetReasons);
         assertThat(invalidSaveCollectionSheetReasons.size(), is(1));
         assertThat(invalidSaveCollectionSheetReasons.get(0), is(invalidReason));
     }

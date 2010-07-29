@@ -25,6 +25,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
@@ -65,23 +68,22 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
 
     private SavingsOfferingBO savingsOffering2;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         service = new SavingsBusinessService();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(savings);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         TestObjectFactory.removeObject(savingsOffering1);
         TestObjectFactory.removeObject(savingsOffering2);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testGetSavingProducts() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -98,6 +100,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
                 "SavingPrd2");
     }
 
+    @Test
     public void testGetSavingProductsForInvalidConnection() {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -116,6 +119,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         }
     }
 
+    @Test
     public void testRetrieveCustomFieldsDefinitionForInvalidConnection() {
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -129,6 +133,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
 
     }
 
+    @Test
     public void testFindById() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -139,6 +144,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         Assert.assertNotNull(savings1);
     }
 
+    @Test
     public void testFindByIdForInvalidConnection() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -157,6 +163,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
 
     }
 
+    @Test
     public void testFindBySystemId() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -168,6 +175,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         Assert.assertEquals(savings.getAccountId(), savings1.getAccountId());
     }
 
+    @Test
     public void testFindBySystemIdForInvalidConnection() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -185,6 +193,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         }
     }
 
+    @Test
     public void testGetAllClosedAccounts() throws Exception {
         createInitialObjects();
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -200,6 +209,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         Assert.assertEquals(1, savingsAccounts.size());
     }
 
+    @Test
     public void testGetAllClosedAccountsForInvalidConnection() throws Exception {
         createInitialObjects();
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -222,6 +232,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         }
     }
 
+    @Test
     public void testGetAllSavingsAccount() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());

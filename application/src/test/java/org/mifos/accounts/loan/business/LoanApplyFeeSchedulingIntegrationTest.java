@@ -37,6 +37,9 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
@@ -88,13 +91,12 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
     private DateTimeService dateTimeService = new DateTimeService();
     private FeeBO periodicFee;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         try {
             TestObjectFactory.removeObject(loanOffering);
             if (accountBO != null) {
@@ -294,6 +296,7 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
                     .getOriginalFees());
     }
 
+    @Test
     public void testApplyPeriodicFeeNoHolidayShouldApplyToFourthAndLaterInstallments() throws Exception {
         DateTime startDate = date(2008,5,23); //Friday
         dateTimeService.setCurrentDateTime(startDate);
@@ -546,7 +549,7 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
         if (holidayBOToDelete != null) {
             StaticHibernateUtil.getSessionTL().delete(holidayBOToDelete);
         }
-        StaticHibernateUtil.getTransaction().commit();
+        StaticHibernateUtil.commitTransaction();
     }
 
 

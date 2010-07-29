@@ -26,6 +26,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
@@ -72,19 +75,18 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
     private final OfficePersistence officePersistence = new OfficePersistence();
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         officeBo = officePersistence.getOffice(officeId);
         personnelBo = new PersonnelPersistence().getPersonnel(personnelId);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestDatabase.resetMySQLDatabase();
-        super.tearDown();
     }
 
+    @Test
     public void testCreateWithoutName() throws Exception {
         try {
             meeting = getMeeting();
@@ -98,6 +100,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.removeObject(meeting);
     }
 
+    @Test
     public void testSuccessfulCreateWithoutFeeAndCustomField() throws Exception {
         String name = "Center";
         meeting = getMeeting();
@@ -111,6 +114,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(officeId, center.getOffice().getOfficeId());
     }
 
+    @Test
     public void testSuccessfulCreateWithoutFee() throws Exception {
         String name = "Center";
         meeting = getMeeting();
@@ -125,6 +129,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(2, center.getCustomFields().size());
     }
 
+    @Test
     public void testFailureDuplicateName() throws Exception {
         String name = "Center";
         center = TestObjectFactory.createWeeklyFeeCenter(name, getMeeting());
@@ -146,6 +151,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testSuccessfulCreate() throws Exception {
         String name = "Center";
         String externalId = "12345";
@@ -172,6 +178,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testCenterSearchResultsView() {
 
         CenterSearchResultsDto searchResults = new CenterSearchResultsDto();
@@ -186,6 +193,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testSearchIdOnlyUniquePerOffice() throws Exception {
         Date startDate = new Date();
 

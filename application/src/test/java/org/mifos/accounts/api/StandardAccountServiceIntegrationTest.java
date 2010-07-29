@@ -26,6 +26,9 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.joda.time.LocalDate;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
@@ -59,8 +62,8 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         super();
     }
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         StaticHibernateUtil.startTransaction();
         standardAccountService = new StandardAccountService(new AccountPersistence(), new LoanPersistence(),
@@ -69,12 +72,13 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         defaultPaymentType = paymentTypeDtos.get(0);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         super.tearDown();
         StaticHibernateUtil.rollbackTransaction();
     }
 
+    @Test
     public void testMakePayment() throws Exception {
         String paymentAmount = "700";
         standardAccountService.setAccountPersistence(new AccountPersistence());
@@ -89,6 +93,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
                 .parseDouble(paymentAmount), groupLoan.getLastPmntAmnt());
     }
 
+    @Test
     public void testValidateValidPayment() throws Exception {
         String paymentAmount = "10";
         standardAccountService.setAccountPersistence(new AccountPersistence());
@@ -101,6 +106,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         Assert.assertEquals(0, errors.size());
     }
 
+    @Test
     public void testValidatePaymentWithInvalidDate() throws Exception {
         String paymentAmount = "700";
         standardAccountService.setAccountPersistence(new AccountPersistence());
@@ -113,6 +119,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         Assert.assertTrue(errors.contains(InvalidPaymentReason.INVALID_DATE));
     }
 
+    @Test
     public void testMakePaymentComment() throws Exception {
         String paymentAmount = "700";
         String comment = "test comment";
@@ -127,6 +134,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         Assert.assertEquals("We should get the comment back", comment, groupLoan.getLastPmnt().getComment());
     }
 
+    @Test
     public void testLookupLoanIdFromExternalId() throws Exception {
         String externalId = "ABC";
         groupLoan.setExternalId(externalId);
@@ -142,6 +150,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         Assert.assertEquals(groupLoan.getAccountId().intValue(), accountReferenceDto.getAccountId());
     }
 
+    @Test
     public void testLookupLoanFromClientGovernmentIdAndLoanProductShortName() throws Exception {
         String clientGovernmentId = client.getGovernmentId();
         String loanProductShortName = clientLoan.getLoanOffering().getPrdOfferingShortName();
@@ -151,6 +160,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         Assert.assertEquals(clientLoan.getAccountId().intValue(), account.getAccountId());
     }
 
+    @Test
     public void testFailureOfLookupLoanFromClientGovernmentIdAndLoanProductShortName() throws Exception {
         try {
             standardAccountService.lookupLoanAccountReferenceFromClientGovernmentIdAndLoanProductShortName(client
@@ -178,6 +188,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         }
     }
 
+    @Test
     public void testLookupSavingsFromClientGovernmentIdAndSavingsProductShortName() throws Exception {
         savingsBO = createSavingsAccount();
         String clientGovernmentId = client.getGovernmentId();
@@ -188,6 +199,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         Assert.assertEquals(savingsBO.getAccountId().intValue(), account.getAccountId());
     }
 
+    @Test
     public void testFailureOfLookupSavingsFromClientGovernmentIdAndSavingsProductShortName() throws Exception {
         savingsBO = createSavingsAccount();
         try {
@@ -216,6 +228,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         }
     }
 
+    @Test
     public void testValidatePaymentWithInvalidPaymentType() throws Exception {
         String paymentAmount = "700";
         standardAccountService.setAccountPersistence(new AccountPersistence());
@@ -229,6 +242,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         Assert.assertTrue(errors.contains(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE));
     }
 
+    @Test
     public void testValidatePaymentWithInvalidLargePaymentAmount() throws Exception {
         String paymentAmount = "700000";
         standardAccountService.setAccountPersistence(new AccountPersistence());
@@ -241,6 +255,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         Assert.assertTrue(errors.contains(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT));
     }
 
+    @Test
     public void testValidatePaymentWithInvalidNegativePaymentAmount() throws Exception {
         String paymentAmount = "-1";
         standardAccountService.setAccountPersistence(new AccountPersistence());

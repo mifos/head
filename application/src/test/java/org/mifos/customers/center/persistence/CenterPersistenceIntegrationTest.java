@@ -24,6 +24,9 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
@@ -41,21 +44,20 @@ public class CenterPersistenceIntegrationTest extends MifosIntegrationTestCase {
     private OfficePersistence officePersistence;
     private CenterPersistence centerPersistence;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         officePersistence = new OfficePersistence();
         centerPersistence = new CenterPersistence();
         initializeStatisticsService();
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(center);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testGetCenter() throws Exception {
         String centerName = "NewCenter";
         center = TestObjectFactory.createWeeklyFeeCenter(centerName, getMeeting());
@@ -69,6 +71,7 @@ public class CenterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         return meeting;
     }
 
+    @Test
     public void testSearch() throws Exception {
         String centerName = "NewCenter";
         center = TestObjectFactory.createWeeklyFeeCenter(centerName, getMeeting());

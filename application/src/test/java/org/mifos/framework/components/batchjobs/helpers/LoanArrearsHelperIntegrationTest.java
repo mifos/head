@@ -26,6 +26,9 @@ import java.util.GregorianCalendar;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
@@ -57,9 +60,8 @@ public class LoanArrearsHelperIntegrationTest extends MifosIntegrationTestCase {
 
     AccountBO loanAccount = null;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         LoanArrearsTask arrearsTask = new LoanArrearsTask();
         loanArrearHelper = (LoanArrearsHelper) arrearsTask.getTaskHelper();
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -68,16 +70,16 @@ public class LoanArrearsHelperIntegrationTest extends MifosIntegrationTestCase {
         loanAccount = getLoanAccount(group, meeting);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(loanAccount);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         loanArrearHelper = null;
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testExecute() throws Exception {
         int statusChangeHistorySize = loanAccount.getAccountStatusChangeHistory().size();
         loanArrearHelper.execute(System.currentTimeMillis());

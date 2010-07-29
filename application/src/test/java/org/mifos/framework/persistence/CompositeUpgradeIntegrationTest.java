@@ -27,11 +27,13 @@ import java.sql.Statement;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.testng.annotations.Test;
 
-@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
+
 public class CompositeUpgradeIntegrationTest extends MifosIntegrationTestCase {
 
     public CompositeUpgradeIntegrationTest() throws Exception {
@@ -40,16 +42,17 @@ public class CompositeUpgradeIntegrationTest extends MifosIntegrationTestCase {
 
     private Connection connection;
 
-    @Override
+    @Before
     public void setUp() {
         connection = StaticHibernateUtil.getSessionTL().connection();
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         databaseWithVersion();
     }
 
+    @Test
     public void testBasics() throws Exception {
         databaseWithVersion();
         DummyUpgrade upgradeOne = new DummyUpgrade(DatabaseVersionPersistence.APPLICATION_VERSION+1);
@@ -62,6 +65,7 @@ public class CompositeUpgradeIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals((DatabaseVersionPersistence.APPLICATION_VERSION+1), new DatabaseVersionPersistence(connection).read());
     }
 
+    @Test
     public void testMismatch() throws Exception {
         DummyUpgrade upgradeOne = new DummyUpgrade(111);
         DummyUpgrade upgradeTwo = new DummyUpgrade(112);
@@ -73,6 +77,7 @@ public class CompositeUpgradeIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testEmpty() throws Exception {
         try {
             new CompositeUpgrade();
@@ -84,6 +89,7 @@ public class CompositeUpgradeIntegrationTest extends MifosIntegrationTestCase {
 
     StringBuilder log;
 
+    @Test
     public void testOrder() throws Exception {
         log = new StringBuilder();
         Upgrade composite = new CompositeUpgrade(new MyUpgrade("first"), new MyUpgrade("second"),

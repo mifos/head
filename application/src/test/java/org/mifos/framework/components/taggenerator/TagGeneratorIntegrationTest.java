@@ -26,6 +26,9 @@ import java.util.Random;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
@@ -68,25 +71,24 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
 
     Object randomNum = null;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
 
         randomNum = new Random().nextLong();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         branchOffice = null;
         TestObjectFactory.cleanUp(savings);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         TestObjectFactory.cleanUp(personnel);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testSavingsAccountLinkWithoutSelfLink() throws Exception {
         createInitialObjectsForSavings();
         String createdLink = TagGenerator.createHeaderLinks(savings, false, randomNum);
@@ -99,6 +101,7 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(true, createdLink.contains("prd1"));
     }
 
+    @Test
     public void testSavingsAccountLinkWithSelfLink() throws Exception {
         createInitialObjectsForSavings();
         String createdLink = TagGenerator.createHeaderLinks(savings, true, randomNum);
@@ -111,6 +114,7 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(true, createdLink.contains("savingsAction"));
     }
 
+    @Test
     public void testPersonnelLinkWithoutSelfLink() throws Exception {
         branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
@@ -119,6 +123,7 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(true, createdLink.contains("TestBranchOffice"));
     }
 
+    @Test
     public void testPersonnelLinkWithSelfLink() throws Exception {
         branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
@@ -127,6 +132,7 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(true, createdLink.contains("TestBranchOffice"));
     }
 
+    @Test
     public void testTagGeneratorFactory() throws Exception {
         createInitialObjectsForSavings();
         TagGenerator tagGenerator = TagGeneratorFactory.getInstance().getGenerator(center);
@@ -146,6 +152,7 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testTagGeneratorFactoryPageExpired() throws Exception {
         try {
             TagGeneratorFactory.getInstance().getGenerator(null);
@@ -155,6 +162,7 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testTagGeneratorFactoryForPersonnel() throws Exception {
         branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);

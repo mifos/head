@@ -26,6 +26,7 @@ import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.service.ProductCategoryBusinessService;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
@@ -44,6 +45,7 @@ public class ProductCategoryBOIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
+    @Test
     public void testCreateProductCategory() throws SystemException, ApplicationException {
         UserContext userContext = TestUtils.makeUser();
         List<ProductTypeEntity> productTypeList = new ProductCategoryBusinessService().getProductTypes();
@@ -65,6 +67,7 @@ public class ProductCategoryBOIntegrationTest extends MifosIntegrationTestCase {
         deleteProductCategory(productCategoryBO);
     }
 
+    @Test
     public void testUpdateProductCategory() throws SystemException, ApplicationException {
         UserContext userContext = TestUtils.makeUser();
         List<ProductTypeEntity> productTypeList = new ProductCategoryBusinessService().getProductTypes();

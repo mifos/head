@@ -27,6 +27,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.hibernate.Query;
+import org.junit.Test;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -43,6 +44,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
+    @Test
     public void testGetRole() throws Exception {
         RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
         RoleBO roleBO = persistence.getRole("Admin");
@@ -51,6 +53,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE, roleBO.getActivities().size());
     }
 
+    @Test
     public void testCreateRole() throws Exception {
         RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
         List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
@@ -72,6 +75,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertNull(roleBO);
     }
 
+    @Test
     public void testCreateFailureWhenRoleNameIsNull() throws Exception {
         RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
         List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
@@ -98,6 +102,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testCreateFailureForEmptyRoleName() throws Exception {
         RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
         List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
@@ -114,6 +119,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testCreateFailureForDuplicateRoleName() throws Exception {
         RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
         List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
@@ -130,6 +136,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testCreateFailureForNullActivities() throws Exception {
         RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
         List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
@@ -146,6 +153,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testCreateFailureForEmptyActivities() throws Exception {
         RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
         List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
@@ -162,6 +170,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testDeleteRole() throws Exception {
         RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
         List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
@@ -182,6 +191,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertNull(roleBO);
     }
 
+    @Test
     public void testDeleteRoleFailureForRoleAssignedToPersonnel() throws Exception {
         RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
         RoleBO roleBO = RolesPermissionsPersistence.getRole("Admin");
@@ -198,6 +208,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testUpdateRemoveActivities() throws Exception {
         RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
         List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
@@ -243,6 +254,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testUpdateAddingActivities() throws Exception {
         RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
         List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
@@ -288,6 +300,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testUpdateForChangingName() throws Exception {
         RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
         List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
@@ -313,6 +326,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testUpdateFailureForDuplicateName() throws Exception {
         RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
         List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
@@ -336,6 +350,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testUpdateFailureForRoleNameAsNull() throws Exception {
         RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
         List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
@@ -359,6 +374,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testUpdateFailureForRoleNameAsEmptyString() throws Exception {
         RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
         List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
@@ -382,6 +398,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testUpdateFailureForNullActivities() throws Exception {
         RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
         List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
@@ -405,6 +422,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testUpdateFailureForEmptyActivities() throws Exception {
         RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
         List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
@@ -439,6 +457,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         return roleActivityEntity;
     }
 
+    @Test
     public void testSaveRoleForInvalidConnection() throws Exception {
         try {
             RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
