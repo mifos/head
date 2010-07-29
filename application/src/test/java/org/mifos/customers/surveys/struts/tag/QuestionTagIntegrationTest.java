@@ -25,6 +25,9 @@ import java.sql.Statement;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
@@ -42,21 +45,20 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
 
     XmlBuilder result;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         session = StaticHibernateUtil.getSessionTL();
         result = new XmlBuilder();
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         Statement stmt = session.connection().createStatement();
         stmt.execute("truncate questions");
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testFreetext() throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
         String questionText = "question";
@@ -70,6 +72,7 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(expectedMarkup, markup);
     }
 
+    @Test
     public void testNumber() throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
         String questionText = "question";
@@ -85,6 +88,7 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testDate() throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
         String questionText = "question";

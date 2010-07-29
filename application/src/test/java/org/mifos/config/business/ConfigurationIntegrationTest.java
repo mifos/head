@@ -24,6 +24,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
@@ -45,18 +48,17 @@ public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
 
     private Configuration configuration;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         configuration = Configuration.getInstance();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @After
     public void testSystemConfiguration() throws Exception {
         SystemConfiguration systemConfig = configuration.getSystemConfig();
         Assert.assertNotNull(systemConfig);
@@ -64,24 +66,28 @@ public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertNotNull(systemConfig.getMifosTimeZone());
     }
 
+    @Test
     public void testHeadOfficeConfiguration() throws Exception {
         OfficeBO headOffice = new OfficePersistence().getHeadOffice();
         OfficeConfig officeConfig = configuration.getOfficeConfig(headOffice.getOfficeId());
         assertForAccountConfig(officeConfig.getAccountConfig());
     }
 
+    @Test
     public void testAreaOfficeConfiguration() throws Exception {
         OfficeBO areaOffice = new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_AREA_OFFICE);
         OfficeConfig officeConfig = configuration.getOfficeConfig(areaOffice.getOfficeId());
         assertForAccountConfig(officeConfig.getAccountConfig());
     }
 
+    @Test
     public void testBranchOfficeConfiguration() throws Exception {
         OfficeBO branchOffice = new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         OfficeConfig officeConfig = configuration.getOfficeConfig(branchOffice.getOfficeId());
         assertForAccountConfig(officeConfig.getAccountConfig());
     }
 
+    @Test
     public void testClientRules() throws Exception {
        Assert.assertEquals(true, ClientRules.getCenterHierarchyExists().booleanValue());
        Assert.assertEquals(true, ClientRules.getClientCanExistOutsideGroup());
@@ -94,6 +100,7 @@ public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(true, AccountingRules.isBackDatedTxnAllowed());
     }
 
+    @Test
     public void testFiscalCalendarRules() {
        Assert.assertEquals(Short.valueOf("2"), new FiscalCalendarRules().getStartOfWeek());
        Assert.assertEquals("same_day", new FiscalCalendarRules().getScheduleTypeForMeetingOnHoliday());

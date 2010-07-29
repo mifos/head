@@ -26,6 +26,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.AmountFeeBO;
@@ -83,15 +86,14 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
     private OfficeBO office;
     private OfficeBO officeBo;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         personnel = getTestUser();
         officeBo = getHeadOffice();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         try {
             TestObjectFactory.cleanUp(accountBO);
             TestObjectFactory.cleanUp(client);
@@ -106,9 +108,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
             TestDatabase.resetMySQLDatabase();
         }
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testPovertyLikelihoodHibernateMapping() throws Exception {
         createInitialObjects();
         Double pct = new Double(55.0);
@@ -125,6 +127,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testSuccessfulValidateBeforeAddingClientToGroup_Client() throws Exception {
         String oldMeetingPlace = "Tunisia";
         MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(),
@@ -134,7 +137,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 getMeeting(), new Short("1"));
         try {
             client.validateBeforeAddingClientToGroup(group1);
-            fail();
+            Assert.fail();
         } catch (CustomerException expected) {
             Assert.assertEquals(CustomerConstants.CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION, expected.getKey());
             Assert.assertTrue(true);
@@ -142,6 +145,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testSuccessfulValidateBeforeAddingClientToGroup_Amount() throws Exception {
         String oldMeetingPlace = "Tunis";
         MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(),
@@ -153,13 +157,14 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
             client.validateBeforeAddingClientToGroup(group1);
             Assert.fail();
         } catch (CustomerException expected) {
-            assertEquals(CustomerConstants.CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION, expected.getKey());
-            assertNotSame(CustomerConstants.CLIENT_HAVE_OPEN_LOAN_ACCOUNT_EXCEPTION, expected.getKey());
+            Assert.assertEquals(CustomerConstants.CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION, expected.getKey());
+            Assert.assertNotSame(CustomerConstants.CLIENT_HAVE_OPEN_LOAN_ACCOUNT_EXCEPTION, expected.getKey());
             Assert.assertTrue(true);
         }
 
     }
 
+    @Test
     public void testGenerateScheduleForClient_OnClientCreate() throws Exception {
         SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("Offering1", "s1",
                 SavingsType.MANDATORY, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()));
@@ -183,6 +188,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         center = TestObjectFactory.getCenter(center.getCustomerId());
     }
 
+    @Test
     public void testFailure_InitialSavingsOfferingAtCreate() throws Exception {
         savingsOffering1 = TestObjectFactory.createSavingsProduct("Offering1", "s1", SavingsType.MANDATORY,
                 ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
@@ -207,6 +213,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 .getPrdOfferingId());
     }
 
+    @Test
     public void testInitialSavingsOfferingAtCreate() throws Exception {
         savingsOffering1 = TestObjectFactory.createSavingsProduct("Offering1", "s1", SavingsType.MANDATORY,
                 ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
@@ -245,6 +252,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 .getPrdOfferingId());
     }
 
+    @Test
     public void testCreateClientWithoutName() throws Exception {
         try {
             ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
@@ -263,6 +271,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testCreateClientWithoutOffice() throws Exception {
         try {
             ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
@@ -282,6 +291,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testSuccessfulCreateWithoutFeeAndCustomField() throws Exception {
         String name = "Client 1";
         Short povertyStatus = Short.valueOf("41");
@@ -304,6 +314,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(officeId, client.getOffice().getOfficeId());
     }
 
+    @Test
     public void testSuccessfulCreateInActiveState_WithAssociatedSavingsOffering() throws Exception {
         savingsOffering1 = TestObjectFactory.createSavingsProduct("offering1", "s1", SavingsType.MANDATORY,
                 ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
@@ -344,6 +355,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         savingsOffering1 = null;
     }
 
+    @Test
     public void testSuccessfulCreateWithParentGroup() throws Exception {
         String name = "Client 1";
         ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
@@ -365,6 +377,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(client.getOffice().getOfficeId(), group.getOffice().getOfficeId());
     }
 
+    @Test
     public void testFailureCreatePendingClientWithParentGroupInLowerStatus() throws Exception {
         try {
             ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
@@ -385,6 +398,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testFailureCreateActiveClientWithParentGroupInLowerStatus() throws Exception {
         try {
             ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
@@ -405,6 +419,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testFailureCreateActiveClientWithoutLO() throws Exception {
         List<FeeDto> fees = getFees();
         try {
@@ -427,6 +442,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         removeFees(fees);
     }
 
+    @Test
     public void testFailureCreateActiveClientWithoutMeeting() throws Exception {
         try {
             ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
@@ -447,6 +463,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testSuccessfulCreateClientInBranch() throws Exception {
         OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.HEAD_OFFICE);
         String firstName = "Client";
@@ -472,6 +489,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(officeId, client.getOffice().getOfficeId());
     }
 
+    @Test
     public void testUpdateBranchFailure_OfficeNULL() throws Exception {
         createInitialObjects();
         try {
@@ -482,6 +500,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testUpdateBranchFailure_TransferInSameOffice() throws Exception {
         createInitialObjects();
         try {
@@ -492,6 +511,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testUpdateBranchFirstTime() throws Exception {
         createObjectsForClientTransfer();
         Assert.assertNull(client.getActiveCustomerMovement());
@@ -507,6 +527,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         office = client.getOffice();
     }
 
+    @Test
     public void testUpdateBranchSecondTime() throws Exception {
         createObjectsForClientTransfer();
         Assert.assertNull(client.getActiveCustomerMovement());
@@ -536,6 +557,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         office = new OfficePersistence().getOffice(office.getOfficeId());
     }
 
+    @Test
     public void testGetClientAndSpouseName() throws Exception {
         createObjectsForClient("Client 1", CustomerStatus.CLIENT_ACTIVE);
         Assert.assertEquals(client.getClientName().getName().getFirstName(), "Client 1");

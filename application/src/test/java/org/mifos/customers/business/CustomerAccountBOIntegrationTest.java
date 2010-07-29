@@ -37,7 +37,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
@@ -91,15 +94,14 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     private CustomerBO client;
     private UserContext userContext;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         TestDatabase.resetMySQLDatabase();
         userContext = TestObjectFactory.getContext();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         try {
             TestObjectFactory.cleanUp(client);
             TestObjectFactory.cleanUp(group);
@@ -108,9 +110,9 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             TestDatabase.resetMySQLDatabase();
         }
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testSuccessfulMakePayment() throws Exception {
         createCenter();
         CustomerAccountBO customerAccount = center.getCustomerAccount();
@@ -148,6 +150,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testFailureMakePayment() throws Exception {
         createCenter();
         CustomerAccountBO customerAccount = center.getCustomerAccount();
@@ -174,6 +177,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testIsAdjustPossibleOnLastTrxn_NotActiveState() throws Exception {
         userContext = TestUtils.makeUser();
         createInitialObjects();
@@ -185,6 +189,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testIsAdjustPossibleOnLastTrxn_LastPaymentNull() throws Exception {
         userContext = TestUtils.makeUser();
         createInitialObjects();
@@ -195,6 +200,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testIsAdjustPossibleOnLastTrxn_LastPaymentWasAdjustment() throws Exception {
         userContext = TestUtils.makeUser();
         createInitialObjects();
@@ -209,6 +215,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testUpdateInstallmentAfterAdjustment() throws Exception {
         userContext = TestUtils.makeUser();
         createInitialObjects();
@@ -232,6 +239,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testAdjustPmnt() throws Exception {
         userContext = TestUtils.makeUser();
         createInitialObjects();
@@ -259,6 +267,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testWaiveForIntallmentOncePaid() throws Exception {
         createCenter();
         CustomerAccountBO customerAccount = center.getCustomerAccount();
@@ -309,6 +318,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testWaiveChargeDue() throws Exception {
         createInitialObjects();
         TestObjectFactory.flushandCloseSession();
@@ -322,14 +332,15 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
                     .getAccountFeesActionDetails()) {
                 if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
-                    assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
+                    Assert.assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
                 } else {
-                    assertEquals(new Money(getCurrency(), "100"), accountFeesActionDetailEntity.getFeeAmount());
+                    Assert.assertEquals(new Money(getCurrency(), "100"), accountFeesActionDetailEntity.getFeeAmount());
                 }
             }
         }
     }
 
+    @Test
     public void testWaiveChargeOverDue() throws Exception {
         createInitialObjects();
         TestObjectFactory.flushandCloseSession();
@@ -348,14 +359,15 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
                     .getAccountFeesActionDetails()) {
                 if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
-                    assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
+                    Assert.assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
                 } else {
-                    assertEquals(new Money(getCurrency(), "100"), accountFeesActionDetailEntity.getFeeAmount());
+                    Assert.assertEquals(new Money(getCurrency(), "100"), accountFeesActionDetailEntity.getFeeAmount());
                 }
             }
         }
     }
 
+    @Test
     public void testRemoveFees() throws NumberFormatException, SystemException, ApplicationException {
         createInitialObjects();
         CustomerAccountBO customerAccountBO = group.getCustomerAccount();
@@ -381,6 +393,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         return accountFeesEntity;
     }
 
+    @Test
     public void testRemoveFeeWithNonActiveCustomer() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
@@ -414,6 +427,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(expectedAmount, customerActivityEntity.getAmount());
     }
 
+    @Test
     public void testUpdateAccountActivity() throws NumberFormatException, SystemException, ApplicationException {
         createInitialObjects();
         CustomerAccountBO customerAccountBO = group.getCustomerAccount();
@@ -430,6 +444,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testApplyMiscCharge() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
@@ -458,6 +473,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testApplyMiscChargeWithNonActiveCustomer() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
@@ -477,6 +493,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testApplyMiscChargeWithFirstInstallmentPaid() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
@@ -571,6 +588,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 //        }
 //    }
 
+    @Test
     public void testApplyPeriodicFeeToPartialPending() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
@@ -620,6 +638,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 .getDateWithoutTimeStamp(accountFeesEntity.getStatusChangeDate().getTime()));
     }
 
+    @Test
     public void testApplyUpfrontFee() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
@@ -659,6 +678,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testGetNextDueAmount() throws Exception {
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
@@ -667,6 +687,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(100.00, center.getCustomerAccount().getNextDueAmount().getAmountDoubleValue(), DELTA);
     }
 
+    @Test
     public void testGenerateMeetingSchedule() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
@@ -707,6 +728,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testGenerateMeetingScheduleWithRecurAfterEveryTwoWeeks() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
                 EVERY_SECOND_WEEK, CUSTOMER_MEETING));
@@ -747,6 +769,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testActivityForMultiplePayments() throws Exception {
 
         // setup
@@ -785,6 +808,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testGenerateMeetingScheduleWhenFirstTwoMeeingDatesOfCenterIsPassed() throws ApplicationException,
             SystemException {
         MeetingBO meetingBO = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
@@ -808,6 +832,8 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+
+    @Test
     public void testGenerateMeetingScheduleForGroupWhenMeeingDatesOfCenterIsPassed() throws ApplicationException,
             SystemException {
         MeetingBO meetingBO = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
@@ -831,6 +857,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testAccountTrxnsAreZeroWhenOnlyCustomerAccountFeesAreDueForMultipleInstallments() throws Exception {
         createCenter();
         CustomerAccountBO customerAccount = center.getCustomerAccount();
@@ -845,6 +872,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testAccountExceptionThrownForAZeroCustomerAccountPayment() throws Exception {
         createCenter();
         String expectedErrorMessage = "Attempting to pay a customer account balance of zero for customer: "
@@ -852,12 +880,14 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         verifyExpectedMessageThrown(center, new Money(getCurrency(), "0.0"), 1, expectedErrorMessage);
     }
 
+    @Test
     public void testAccountExceptionThrownForAPaymentNotEqualToTheTotalOutstandingCustomerAccountAmount()
             throws Exception {
         createCenter();
         verifyExpectedDetailMessageThrown(center, new Money(getCurrency(), "299.99"), 14, "errors.paymentmismatch");
     }
 
+    @Test
     public void testAccountExceptionThrownForAPaymentWithNoOutstandingCustomerAccountInstallments() throws Exception {
         createCenter();
         verifyExpectedMessageThrown(center, new Money(getCurrency(), "8.54"), -2,
@@ -902,6 +932,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
 
+    @Test
     public void testTrxnDetailEntityObjectsForMultipleInstallmentsWhenOnlyCustomerAccountFeesAreDue() throws Exception {
         createCenter();
         CustomerAccountBO customerAccount = center.getCustomerAccount();
@@ -947,6 +978,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testTrxnDetailEntityObjectsForMultipleInstallmentsWhenOnlyCustomerAccountChargesAreDue()
             throws Exception {
 
@@ -1007,6 +1039,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testTrxnDetailEntityObjectsForMultipleInstallmentsWhenBothCustomerAccountChargesAndFeesAreDue()
             throws Exception {
         createCenter();
@@ -1085,6 +1118,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testCustomerActivitDetailsSortingByDate()
             throws Exception {
         userContext = TestUtils.makeUser();

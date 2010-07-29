@@ -24,6 +24,8 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -46,6 +48,7 @@ public class LoanSummaryEntityIntegrationTest extends MifosIntegrationTestCase {
     protected CustomerBO center = null;
     protected CustomerBO group = null;
 
+    @Test
     public void testDecreaseBy() {
         accountBO = getLoanAccount();
         LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
@@ -64,6 +67,7 @@ public class LoanSummaryEntityIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(loanSummaryEntity.getOriginalPenalty().add(penalty), originalPenalty);
     }
 
+    @Test
     public void testUpdatePaymentDetails() {
         accountBO = getLoanAccount();
         LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
@@ -88,8 +92,8 @@ public class LoanSummaryEntityIntegrationTest extends MifosIntegrationTestCase {
                 startDate, loanOffering);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
         group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
         center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
@@ -98,7 +102,6 @@ public class LoanSummaryEntityIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.cleanUp(center);
 
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
 }

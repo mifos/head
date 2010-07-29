@@ -62,20 +62,6 @@ public class HibernateUtil {
         }
     }
 
-    /**
-     * Close a session. Do nothing if the session is null or already closed.
-     * @deprecated use only {@link StaticHibernateUtil#closeSession()} for session retrieved by {@link StaticHibernateUtil#getSessionTL()}
-     */
-    @Deprecated
-    public void closeSession(Session session) throws HibernateProcessException {
-        try {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        } catch (HibernateException e) {
-            throw new HibernateProcessException(HibernateConstants.FAILED_CLOSINGSESSION, e);
-        }
-    }
 
     /**
      * Return the hibernate session factory

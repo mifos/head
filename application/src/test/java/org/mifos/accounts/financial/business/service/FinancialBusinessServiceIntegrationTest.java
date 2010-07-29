@@ -25,6 +25,9 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
@@ -82,14 +85,13 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
 
     private UserContext userContext;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         try {
             TestObjectFactory.cleanUp(loan);
             TestObjectFactory.cleanUp(savings);
@@ -100,9 +102,10 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
             TestDatabase.resetMySQLDatabase();
         }
         StaticHibernateUtil.closeSession();
-        super.tearDown();
+
     }
 
+    @Test
     public void testLoanAdjustmentAccountingEntries() throws Exception {
         Date currentDate = new Date(System.currentTimeMillis());
         loan = getLoanAccount();
@@ -161,7 +164,8 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("20"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("42"));
             } else {
-                fail("There should not be any other entry");
+
+                //--fail("There should not be any other entry");
             }
         }
     }
@@ -201,6 +205,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 startDate, loanOffering);
     }
 
+    @Test
     public void testSavingsAdjustmentDepositAccountingEntries() throws Exception {
         createInitialObjectsForSavings();
         SavingsTestHelper helper = new SavingsTestHelper();
@@ -255,7 +260,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                         Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("1000"));
                         Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("31"));
                     } else {
-                        fail("There should not be any other entry");
+                        //--fail("There should not be any other entry");
                     }
                 }
             }
@@ -264,6 +269,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         center = group.getParentCustomer();
     }
 
+    @Test
     public void testSavingsAdjustmentWithdrawalAccountingEntries() throws Exception {
         createInitialObjectsForSavings();
         SavingsTestHelper helper = new SavingsTestHelper();
@@ -317,7 +323,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                         Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("1000"));
                         Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
                     } else {
-                        fail("There should not be any other entry");
+                        //--fail("There should not be any other entry");
                     }
                 }
             }
@@ -326,6 +332,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         center = group.getParentCustomer();
     }
 
+    @Test
     public void testWithdrawalEntriesOnSavingsCloseAccount() throws Exception {
         try {
             createInitialObjectsForSavings();
@@ -388,6 +395,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
     }
 
+    @Test
     public void testLoanWriteOffAccountingEntries() throws Exception {
         loan = getLoanAccount();
         loan.setUserContext(TestUtils.makeUser());
@@ -420,12 +428,13 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("22"));
             } else {
-                fail("There should not be any other entry");
+                //--fail("There should not be any other entry");
             }
         }
 
     }
 
+    @Test
     public void testLoanRescheduleAccountingEntries() throws Exception {
         loan = getLoanAccount();
         loan.setUserContext(TestUtils.makeUser());
@@ -458,7 +467,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
             } else {
-                fail("There should not be any other entry");
+                Assert.fail("There should not be any other entry");
             }
         }
     }

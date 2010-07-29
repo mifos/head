@@ -31,6 +31,9 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -93,14 +96,13 @@ public class SavingsIntCalcHelperIntegrationTest extends MifosIntegrationTestCas
 
     SavingsPersistence persistence = new SavingsPersistence();
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(savings1);
         TestObjectFactory.cleanUp(savings2);
         TestObjectFactory.cleanUp(savings3);
@@ -108,9 +110,9 @@ public class SavingsIntCalcHelperIntegrationTest extends MifosIntegrationTestCas
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testIntCalculation() throws Exception {
         Short savedDigits = AccountingRules.getDigitsAfterDecimal();
         AccountingRules.setDigitsAfterDecimal(new Short("3"));

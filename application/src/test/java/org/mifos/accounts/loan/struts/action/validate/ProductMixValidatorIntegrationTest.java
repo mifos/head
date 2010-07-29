@@ -30,6 +30,8 @@ import java.util.Collections;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -50,15 +52,15 @@ public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase
     private LoanBO loanMock;
     private CustomerBO customerMock;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         configServiceMock = createMock(ConfigurationBusinessService.class);
         productMixBusinessServiceMock = createMock(ProductMixBusinessService.class);
         loanMock = createMock(LoanBO.class);
         customerMock = createMock(CustomerBO.class);
     }
 
+    @Test
     public void testShouldDetectProductMixConflicts() throws Exception {
         short PRD_OFFERING_ID_TWO = (short) 2;
 
@@ -88,6 +90,7 @@ public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase
         }
     }
 
+    @Test
     public void testShouldAllowValidProductMix() throws Exception {
         LoanBO loanMock1 = createMock(LoanBO.class);
         LoanBO loanMock2 = createMock(LoanBO.class);
@@ -110,6 +113,7 @@ public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase
         }
     }
 
+    @Test
     public void testShouldGetLoansIfCustomerIsCoSigningClientInGlimMode() throws Exception {
         expect(configServiceMock.isGlimEnabled()).andReturn(true);
         replay(loanMock, customerMock, configServiceMock);
@@ -118,6 +122,7 @@ public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase
         verify(loanMock, customerMock, configServiceMock);
     }
 
+    @Test
     public void testShouldReturnEmptyListIfCustomerIsNotACoSigningClientInGlimMode() throws Exception {
         expect(configServiceMock.isGlimEnabled()).andReturn(true);
         replay(loanMock, customerMock, configServiceMock);
@@ -126,6 +131,7 @@ public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase
         verify(loanMock, customerMock, configServiceMock);
     }
 
+    @Test
     public void testShouldReturnAllLoansIfNotGlim() throws Exception {
         expect(configServiceMock.isGlimEnabled()).andReturn(false);
         replay(loanMock, customerMock, configServiceMock);

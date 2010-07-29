@@ -24,6 +24,7 @@ import junit.framework.Assert;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.junit.Test;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -43,6 +44,7 @@ public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
+    @Test
     public void testShouldInsertSuccessActivity() throws Exception {
         Session session = StaticHibernateUtil.getSessionTL();
 
@@ -66,6 +68,7 @@ public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testShouldSuccessWhenChangeActivityParent() throws PersistenceException {
         RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
         ActivityEntity activity = (ActivityEntity) rpp.getPersistentObject(ActivityEntity.class, Short
@@ -77,6 +80,7 @@ public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
         ActivityGenerator.reparentActivityUsingHibernate((short) 2, (short) 1);
     }
 
+    @Test
     public void testShouldSuccessWhenChangeActivityMessage() throws Exception {
         RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
         MasterPersistence mp = new MasterPersistence();
@@ -98,6 +102,7 @@ public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testShouldGenerateMinActivityIdWhenCalculate() throws Exception {
         short minActivityId = -32767;
         ActivityEntity activity = ActivityTestUtil.insertActivityForTest(minActivityId);

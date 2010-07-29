@@ -28,6 +28,8 @@ import junit.framework.Assert;
 import junitx.framework.ObjectAssert;
 
 import org.joda.time.DateMidnight;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
@@ -53,12 +55,12 @@ public class PPIChoiceIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         TestDatabase.resetMySQLDatabase();
     }
 
+    @Test
     public void testRetrievePPIChoice() throws Exception {
         Question question = new Question("question1", "what is your question", AnswerType.CHOICE);
         PPIChoice ppiChoice = new PPIChoice("Hello World");
@@ -71,6 +73,7 @@ public class PPIChoiceIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals("Hello World", retrievedChoice.getChoiceText());
     }
 
+    @Test
     public void testRetrieveRegularChoice() throws Exception {
         Question question = new Question("question2", "what is your question", AnswerType.CHOICE);
         QuestionChoice regularChoice = new QuestionChoice("Hello World");
@@ -86,6 +89,7 @@ public class PPIChoiceIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(null, new PPIPersistence().getPPIChoice(choiceId));
     }
 
+    @Test
     public void testNotFound() throws Exception {
         QuestionChoice retrieved = new PPIPersistence().getPPIChoice(123456);
        Assert.assertEquals(null, retrieved);

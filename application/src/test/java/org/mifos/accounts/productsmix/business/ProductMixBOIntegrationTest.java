@@ -22,6 +22,9 @@ package org.mifos.accounts.productsmix.business;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
@@ -29,9 +32,8 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.testng.annotations.Test;
 
-@Test(groups={"integration", "productMixTestSuite"},  dependsOnGroups={"configTestSuite"})
+
 public class ProductMixBOIntegrationTest extends MifosIntegrationTestCase {
 
     public ProductMixBOIntegrationTest() throws Exception {
@@ -42,21 +44,20 @@ public class ProductMixBOIntegrationTest extends MifosIntegrationTestCase {
     private SavingsTestHelper helper = new SavingsTestHelper();
     private ProductMixBO prdMix;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         savingsOffering = helper.createSavingsOffering("Eddikhar", "Edd");
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
 
         TestObjectFactory.removeObject(prdMix);
         TestObjectFactory.removeObject(savingsOffering);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testUpdate() throws PersistenceException, ProductDefinitionException {
         prdMix = new ProductMixBO(savingsOffering, savingsOffering);
         prdMix.update();
@@ -64,6 +65,7 @@ public class ProductMixBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(savingsOffering.getPrdOfferingId(), prdMix.getPrdOfferingNotAllowedId().getPrdOfferingId());
     }
 
+    @Test
     public void testDelete() throws PersistenceException, ProductDefinitionException {
         prdMix = new ProductMixBO(savingsOffering, savingsOffering);
         prdMix.update();

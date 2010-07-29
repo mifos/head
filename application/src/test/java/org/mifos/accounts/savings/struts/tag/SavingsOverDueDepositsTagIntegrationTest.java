@@ -25,6 +25,8 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
@@ -51,15 +53,15 @@ public class SavingsOverDueDepositsTagIntegrationTest extends MifosIntegrationTe
     SavingsOfferingBO savingsOffering;
     SavingsBO savings;
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(savings);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testBuildDateUI() {
         Date date = new Date(System.currentTimeMillis());
        Assert.assertTrue(new SavingsOverDueDepositsTag().buildDateUI(new Locale("en", "GB"), date).toString().contains(
@@ -67,11 +69,13 @@ public class SavingsOverDueDepositsTagIntegrationTest extends MifosIntegrationTe
 
     }
 
+    @Test
     public void testBuildAmountUI() {
        Assert.assertTrue(new SavingsOverDueDepositsTag().buildAmountUI(new Money(getCurrency(), "1000")).toString().contains("1000"));
 
     }
 
+    @Test
     public void testBuildDepositDueUIRow() {
         Date date = new Date(System.currentTimeMillis());
 
@@ -82,6 +86,7 @@ public class SavingsOverDueDepositsTagIntegrationTest extends MifosIntegrationTe
        Assert.assertTrue(outString.contains("1000"));
     }
 
+    @Test
     public void testbuildUI() throws Exception {
         createInitialObjects();
         Assert.assertNotNull(new SavingsOverDueDepositsTag().buildUI(savings.getDetailsOfInstallmentsInArrears(), new Locale(

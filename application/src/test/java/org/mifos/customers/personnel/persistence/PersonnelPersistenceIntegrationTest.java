@@ -29,6 +29,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
@@ -45,10 +48,10 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.business.PersonnelNotesEntity;
 import org.mifos.customers.personnel.business.PersonnelTemplate;
 import org.mifos.customers.personnel.business.PersonnelTemplateImpl;
-import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -88,13 +91,12 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
     private CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
     private CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         initializeStatisticsService();
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         office = null;
         branchOffice = null;
@@ -105,9 +107,9 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         TestObjectFactory.cleanUp(personnel);
         TestObjectFactory.cleanUp(createdBranchOffice);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testCreatePersonnel() throws Exception {
         UserContext userContext = TestUtils.makeUser();
         OfficeTemplate officeTemplate = OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
@@ -126,6 +128,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         Assert.assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
     }
 
+    @Test
     public void testCreatePersonnelValidationFailure() throws Exception {
         UserContext userContext = TestUtils.makeUser();
         PersonnelTemplate template = PersonnelTemplateImpl.createNonUniquePersonnelTemplate(new Short((short) -1));
@@ -141,6 +144,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         Assert.assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
     }
 
+    @Test
     public void testActiveLoanOfficersInBranch() throws Exception {
         List<PersonnelDto> personnels = personnelPersistence.getActiveLoanOfficersInBranch(
                 PersonnelConstants.LOAN_OFFICER, Short.valueOf("3"), Short.valueOf("3"),
@@ -148,6 +152,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         Assert.assertEquals(1, personnels.size());
     }
 
+    @Test
     public void testNonLoanOfficerInBranch() throws Exception {
         List<PersonnelDto> personnels = personnelPersistence.getActiveLoanOfficersInBranch(
                 PersonnelConstants.LOAN_OFFICER, Short.valueOf("3"), OFFICE_WITH_BRANCH_MANAGER,
@@ -155,38 +160,46 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         Assert.assertEquals(1, personnels.size());
     }
 
+    @Test
     public void testIsUserExistSucess() throws Exception {
         Assert.assertTrue(personnelPersistence.isUserExist("mifos"));
     }
 
+    @Test
     public void testIsUserExistFailure() throws Exception {
         Assert.assertFalse(personnelPersistence.isUserExist("XXX"));
     }
 
+    @Test
     public void testIsUserExistWithGovernmentIdSucess() throws Exception {
         Assert.assertTrue(personnelPersistence.isUserExistWithGovernmentId("123"));
     }
 
+    @Test
     public void testIsUserExistWithGovernmentIdFailure() throws Exception {
         Assert.assertFalse(personnelPersistence.isUserExistWithGovernmentId("XXX"));
     }
 
+    @Test
     public void testIsUserExistWithDobAndDisplayNameSucess() throws Exception {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Assert.assertTrue(personnelPersistence.isUserExist("mifos", dateFormat.parse("1979-12-12")));
     }
 
+    @Test
     public void testIsUserExistWithDobAndDisplayNameFailure() throws Exception {
         Assert.assertFalse(personnelPersistence.isUserExist("mifos", new GregorianCalendar(1989, 12, 12, 0, 0, 0)
                 .getTime()));
     }
 
+    @Test
     public void testActiveCustomerUnderLO() throws Exception {
         createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
         Assert.assertTrue(personnelPersistence.getActiveChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
     }
 
+    @Test
     public void testGetAllCustomerUnderLO() throws Exception {
         createCustomers(CustomerStatus.GROUP_CLOSED, CustomerStatus.CLIENT_CANCELLED);
         Assert.assertTrue(personnelPersistence.getAllChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
@@ -201,6 +214,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         Assert.assertTrue(personnelPersistence.getAllChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
     }
 
+    @Test
     public void testGetAllPersonnelNotes() throws Exception {
         office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
         branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
@@ -226,6 +240,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         Assert.assertEquals(1, personnelPersistence.getAllPersonnelNotes(personnel.getPersonnelId()).getSize());
     }
 
+    @Test
     public void testSuccessfullGetPersonnel() throws Exception {
         branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         personnel = createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
@@ -234,10 +249,12 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         Assert.assertEquals(oldUserName, personnel.getUserName());
     }
 
+    @Test
     public void testGetPersonnelByGlobalPersonnelNum() throws Exception {
         Assert.assertNotNull(personnelPersistence.getPersonnelByGlobalPersonnelNum("1"));
     }
 
+    @Test
     public void testGetPersonnelRoleCount() throws Exception {
         Integer count = personnelPersistence.getPersonnelRoleCount((short) 2);
         Assert.assertEquals(0, (int) count);
@@ -245,6 +262,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         Assert.assertEquals(3, (int) count);
     }
 
+    @Test
     public void testSearch() throws Exception {
         branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         personnel = createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
@@ -254,6 +272,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         Assert.assertEquals(1, queryResult.get(0, 10).size());
     }
 
+    @Test
     public void testSearchFirstNameAndLastName() throws Exception {
         branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         personnel = createPersonnelWithName(branchOffice, PersonnelLevel.LOAN_OFFICER, new Name("Rajender", null,
@@ -265,6 +284,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         Assert.assertEquals(1, queryResult.get(0, 10).size());
     }
 
+    @Test
     public void testGetActiveLoanOfficersUnderOffice() throws Exception {
         branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         personnel = createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
@@ -276,11 +296,13 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         Assert.assertEquals("XYZ", loanOfficers.get(1).getDisplayName());
     }
 
+    @Test
     public void testGetSupportedLocale() throws Exception {
         // asserting only on not null as suppored locales can be added by user
         Assert.assertNotNull(personnelPersistence.getSupportedLocales());
     }
 
+    @Test
     public void testGetAllPersonnel() throws Exception {
         List<PersonnelBO> personnel = personnelPersistence.getAllPersonnel();
         Assert.assertNotNull(personnel);
@@ -328,6 +350,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         client = TestObjectFactory.createClient("client", clientStatus, group, new Date());
     }
 
+    @Test
     public void testGetActiveBranchManagerUnderOffice() throws Exception {
         List<PersonnelBO> activeBranchManagersUnderOffice = new PersonnelPersistence()
                 .getActiveBranchManagersUnderOffice(OFFICE_WITH_BRANCH_MANAGER, new RolesPermissionsPersistence()

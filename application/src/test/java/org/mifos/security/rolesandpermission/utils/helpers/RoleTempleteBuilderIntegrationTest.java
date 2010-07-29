@@ -26,6 +26,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
@@ -39,12 +40,14 @@ public class RoleTempleteBuilderIntegrationTest extends MifosIntegrationTestCase
         super();
     }
 
+    @Test
     public void testLocaleId() {
         RoleTempleteBuilder roleTempleteBuilder = new RoleTempleteBuilder();
         roleTempleteBuilder.setLocaleId(Short.valueOf("1"));
        Assert.assertEquals(Short.valueOf("1"), roleTempleteBuilder.getLocaleId());
     }
 
+    @Test
     public void testSetCurrentActivites() {
         Set<Short> activities = new HashSet<Short>();
         activities.add(Short.valueOf("1"));
@@ -54,6 +57,7 @@ public class RoleTempleteBuilderIntegrationTest extends MifosIntegrationTestCase
        Assert.assertEquals(1, activities.size());
     }
 
+    @Test
     public void testGetRolesTemplete() throws Exception {
         List<ActivityEntity> activities = new RolesPermissionsBusinessService().getActivities();
         StringBuilder stringBuilder = new RoleTempleteBuilder().getRolesTemplete(activities);
@@ -63,12 +67,14 @@ public class RoleTempleteBuilderIntegrationTest extends MifosIntegrationTestCase
        Assert.assertTrue(stringBuilder.toString().contains("Can delete a role"));
     }
 
+    @Test
     public void testActivityChangeEvent() {
         ActivityChangeEvent activityChangeEvent = new ActivityChangeEvent("event", "stringObject");
        Assert.assertEquals("value of event", "event", activityChangeEvent.getEventType());
        Assert.assertEquals("value of object", "stringObject", activityChangeEvent.getObject());
     }
 
+    @Test
     public void testRoleChangeEvent() {
         RoleChangeEvent roleChangeEvent = new RoleChangeEvent("event", "stringObject");
        Assert.assertEquals("value of event", "event", roleChangeEvent.getEventType());

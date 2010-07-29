@@ -44,7 +44,7 @@ public class SavingsBusinessService implements BusinessService {
     private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
     @Override
-    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused")UserContext userContext) {
         return null;
     }
 

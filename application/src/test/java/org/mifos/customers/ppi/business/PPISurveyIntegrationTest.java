@@ -28,6 +28,9 @@ import junit.framework.Assert;
 import junitx.framework.ObjectAssert;
 
 import org.joda.time.DateMidnight;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.config.GeneralConfig;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -59,24 +62,24 @@ public class PPISurveyIntegrationTest extends MifosIntegrationTestCase {
     private static final double DELTA = 0.00000001;
     private PPIPersistence persistence;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         persistence = new PPIPersistence();
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         TestDatabase.resetMySQLDatabase();
-        super.tearDown();
     }
 
+    @Test
     public void testCreateSurveyInstance() throws Exception {
         Survey survey = new PPISurvey();
         survey.createSurveyInstance();
        Assert.assertTrue("Instance should be instance of PpiSurveyInstance", PPISurvey.class.isInstance(survey));
     }
 
+    @Test
     public void testCreateSurvey() throws Exception {
         PPISurvey ppiSurvey = makePPISurvey("PPI Test Survey");
         Survey regularSurvey = new Survey("NON-PPI Test Survey", SurveyState.ACTIVE, SurveyType.CLIENT);
@@ -132,6 +135,7 @@ public class PPISurveyIntegrationTest extends MifosIntegrationTestCase {
         survey.setLikelihoods(likelihoods);
     }
 
+    @Test
     public void testDefaultPovertyBandLimits() throws Exception {
         PPISurvey ppiSurvey = new PPISurvey("PPI Test Survey", SurveyState.ACTIVE, SurveyType.CLIENT, Country.INDIA);
         ppiSurvey.populateDefaultValues();
@@ -148,6 +152,7 @@ public class PPISurveyIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertTrue(ppiSurvey.getNonPoorMax() == nonPoorMax);
     }
 
+    @Test
     public void testRetrieve() throws Exception {
         PPISurvey ppiSurvey = new PPISurvey("PPI Test Survey", SurveyState.ACTIVE, SurveyType.CLIENT, Country.INDIA);
         addLikelihoods(ppiSurvey);
@@ -157,6 +162,7 @@ public class PPISurveyIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals("PPI Test Survey", retrievedPPISurvey.getName());
     }
 
+    @Test
     public void testRetrieveById() throws Exception {
         PPISurvey ppiSurvey = new PPISurvey("PPI Test Survey", SurveyState.ACTIVE, SurveyType.CLIENT, Country.INDIA);
         addLikelihoods(ppiSurvey);
@@ -166,6 +172,7 @@ public class PPISurveyIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals("PPI Test Survey", retrievedPPISurvey.getName());
     }
 
+    @Test
     public void testRetrieveRegularSurvey() throws Exception {
         Survey regularSurvey = new Survey("PPI Test Survey", SurveyState.ACTIVE, SurveyType.CLIENT);
         persistence.createOrUpdate(regularSurvey);
@@ -178,11 +185,13 @@ public class PPISurveyIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(null, new PPIPersistence().getPPISurvey(surveyId));
     }
 
+    @Test
     public void testNotFound() throws Exception {
         Survey retrieved = persistence.getSurvey(23423);
        Assert.assertEquals(null, retrieved);
     }
 
+    @Test
     public void testViaInstance() throws Exception {
         PPISurvey ppiSurvey = makePPISurvey("survey name");
         persistence.createOrUpdate(ppiSurvey);
@@ -205,6 +214,7 @@ public class PPISurveyIntegrationTest extends MifosIntegrationTestCase {
         ObjectAssert.assertInstanceOf(PPISurvey.class, retrievedSurvey);
     }
 
+    @Test
     public void testLoadFromXmlAndStoreToDatabase() throws Exception {
         XmlPPISurveyParser parser = new XmlPPISurveyParser();
         PPISurvey survey = new PPISurvey();

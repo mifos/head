@@ -24,6 +24,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 
@@ -33,6 +34,7 @@ public class LoanAccountPersistenceIntegrationTest extends MifosIntegrationTestC
         super();
     }
 
+    @Test
     public void testSelectCoSigningClients() throws Exception {
         List<CustomerBO> coSigningClients = new AccountPersistence().getCoSigningClientsForGlim(1);
         Assert.assertNotNull(coSigningClients);

@@ -41,7 +41,7 @@
                 <div class="marginTop15">
                     [@spring.message "questionnaire.question"/]: ${Request.questionDetail.title}<br/>
                     [@spring.message "questionnaire.answer.type"/]: ${Request.questionDetail.type}<br/>
-                    [#if Request.questionDetail.commaSeparateChoices != '']
+                    [#if Request.questionDetail.commaSeparateChoices?exists]
                         <td class="drawtablerow">[@spring.message "questionnaire.quesiton.choices"/]: ${Request.questionDetail.commaSeparateChoices}</td>
                     [/#if]
                 </div>

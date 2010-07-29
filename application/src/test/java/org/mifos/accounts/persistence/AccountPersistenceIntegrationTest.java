@@ -34,6 +34,7 @@ import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.junit.Test;
 import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
@@ -91,6 +92,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
     private static final String DIRECT_EXPENDITURE_GL_ACCOUNT_CODE = "41000";
     private AccountPersistence accountPersistence = new AccountPersistence();
 
+    @Test
     public void testAddDuplicateGlAccounts() {
         String name = "New Account Name";
         String name2 = "New Account Name 2";
@@ -110,6 +112,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
     }
 
+    @Test
     public void testAddGlAccount() {
         String name = "New Account Name";
         String glCode = "999999";
@@ -129,6 +132,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
      * The Chart of Accounts hierarchy is created when TestCaseInitializer is instantiated in parent class static
      * initializer. Verify it worked as planned.
      */
+    @Test
     public void testAddCoaHierarchy() {
         short id = TestGeneralLedgerCode.COST_OF_FUNDS;
         COAHierarchyEntity h = (COAHierarchyEntity) StaticHibernateUtil.getSessionTL().load(COAHierarchyEntity.class,
@@ -141,15 +145,18 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
      * The top-level "ASSETS" general ledger account should always be the first one inserted. This will hopefully be
      * reliable enough for testing purposes.
      */
+    @Test
     public void testGetAccountIdForGLCode() {
         Assert.assertEquals(new Short((short) 1), TestGeneralLedgerCode.ASSETS);
     }
 
+    @Test
     public void testTopLevelAccountPersisted() throws Exception {
         COABO incomeCategory = accountPersistence.getCategory(GLCategoryType.INCOME);
         Assert.assertEquals(GLCategoryType.INCOME, incomeCategory.getCategoryType());
     }
 
+    @Test
     public void testDumpChartOfAccounts() throws Exception {
         String expected_chart = "<configuration>" + "  <ChartOfAccounts>"
                 + "    <GLAssetsAccount code=\"10000\" name=\"ASSETS\">"
@@ -225,16 +232,19 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         XMLUnit.setIgnoreWhitespace(ignoreWhitespace);
     }
 
+    @Test
     public void testSuccessGetNextInstallmentList() {
         List<AccountActionDateEntity> installmentIdList = groupLoan.getApplicableIdsForFutureInstallments();
         Assert.assertEquals(5, installmentIdList.size());
     }
 
+    @Test
     public void testSuccessLoadBusinessObject() throws Exception {
         AccountBO readAccount = accountPersistence.getAccount(groupLoan.getAccountId());
         Assert.assertEquals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, readAccount.getState());
     }
 
+    @Test
     public void testFailureLoadBusinessObject() {
         try {
             accountPersistence.getAccount(null);
@@ -243,20 +253,24 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         }
     }
 
+    @Test
     public void testGetAccountAction() throws Exception {
         AccountActionEntity accountAction = (AccountActionEntity) new MasterPersistence().getPersistentObject(
                 AccountActionEntity.class, AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue());
         Assert.assertNotNull(accountAction);
     }
 
+    @Test
     public void testOptionalAccountStates() throws Exception {
         Assert.assertEquals(1, accountPersistence.getAccountStates(Short.valueOf("0")).size());
     }
 
+    @Test
     public void testAccountStatesInUse() throws Exception {
         Assert.assertEquals(17, accountPersistence.getAccountStates(Short.valueOf("1")).size());
     }
 
+    @Test
     public void testSearchAccount() throws Exception {
         savingsBO = createSavingsAccount();
 
@@ -268,12 +282,14 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         Assert.assertEquals(1, queryResult.get(0, 10).size());
     }
 
+    @Test
     public void testSearchCustomerAccount() throws Exception {
         QueryResult queryResult = null;
         queryResult = accountPersistence.search(center.getCustomerAccount().getGlobalAccountNum(), (short) 3);
         Assert.assertNull(queryResult);
     }
 
+    @Test
     public void testRetrieveCustomFieldsDefinition() throws Exception {
         List<CustomFieldDefinitionEntity> customFields = accountPersistence
                 .retrieveCustomFieldsDefinition(EntityType.LOAN.getValue());
@@ -282,6 +298,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
     }
 
 
+    @Test
     public void testGetListOfAccountIdsHavingLoanSchedulesWithinAHoliday() throws Exception {
 
         Set<HolidayBO> holidays;
@@ -309,6 +326,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         assertThat(AccountIds.size(), is(2));
     }
 
+    @Test
     public void testGetListOfAccountIdsHavingCustomerSchedulesWithinAHoliday() throws Exception {
 
         Set<HolidayBO> holidays;
@@ -336,6 +354,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         assertThat(AccountIds.size(), is(3));
     }
 
+    @Test
     public void testGetLoanSchedulesForAccountThatAreWithinDates() throws Exception {
 
         DateTime fromDate = new DateMidnight().toDateTime().plusDays(1);
@@ -347,6 +366,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         Assert.assertEquals(4, affectedDates.size());
     }
 
+    @Test
     public void testGetCustomerSchedulesForAccountThatAreWithinDates() throws Exception {
 
         DateTime fromDate = new DateMidnight().toDateTime().plusDays(1);
@@ -359,6 +379,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         Assert.assertEquals(3, affectedDates.size());
     }
 
+    @Test
     public void testGetSavingsSchedulesForAccountThatAreWithinDates() throws Exception {
 
         savingsBO = new TestCollectionSheetRetrieveSavingsAccountsUtils().createSavingsAccount(group, "clm", "3.0",
@@ -373,6 +394,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
     }
 
+    @Test
     public void testGetActiveCustomerAndSavingsAccountIdsForGenerateMeetingTaskShouldReturnNothing() throws Exception {
         // Superclass creates a center, a group, and a client that start meeting today
         // They should have 10 current or future meeting dates. Savings account should also have 10 deposit installments
@@ -386,6 +408,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
     }
 
 
+    @Test
     public void testGetActiveCustomerAndSavingsAccountIdsForGenerateMeetingTaskShouldReturnThreeCustomerAccounts()
                     throws Exception {
 
@@ -401,6 +424,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         assertThat(accountIds.contains(client.getCustomerAccount().getAccountId()), is(true));
     }
 
+    @Test
     public void testGetActiveCustomerAndSavingsAccountIdsForGenerateMeetingTaskShouldReturnThreeCustomerAccountsAndOneSavingsAccount()
                     throws Exception {
 

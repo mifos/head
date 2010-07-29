@@ -26,6 +26,9 @@ import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
@@ -42,9 +45,8 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
     private Transaction transaction;
     private Connection connection;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         session = StaticHibernateUtil.getSessionTL();
         connection = session.connection();
         transaction = session.beginTransaction();
@@ -54,6 +56,7 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
         return new AddReport(version, ReportsCategoryBO.ANALYSIS, "TestReportForUpgrade", "XYZ.rptdesign");
     }
 
+    @Test
     public void testShouldUpgrade() throws Exception {
         AddReport addReport = createReport(DatabaseVersionPersistence.APPLICATION_VERSION + 1);
         addReport.upgrade(connection);
@@ -62,9 +65,8 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertTrue(report.getIsActive() == (short)1);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         transaction.rollback();
-        super.tearDown();
     }
 }

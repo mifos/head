@@ -23,6 +23,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
@@ -35,17 +37,18 @@ public class AdminDocAccStateMixPersistenceIntegrationTest extends MifosIntegrat
 
     private AdminDocAccStateMixPersistence reportsPersistence;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         reportsPersistence = new AdminDocAccStateMixPersistence();
     }
 
+    @Test
     public void testGetAllAdminDocuments() throws PersistenceException {
         List<AdminDocAccStateMixBO> listadmindoc = reportsPersistence.getAllMixedAdminDocuments();
        Assert.assertEquals(0, listadmindoc.size());
     }
 
+    @Test
     public void testGetAdminDocumentById() throws NumberFormatException, PersistenceException {
         List<AdminDocAccStateMixBO> admindoc = reportsPersistence.getMixByAdminDocuments(Short.valueOf("1"));
        Assert.assertEquals(0, admindoc.size());

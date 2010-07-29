@@ -27,6 +27,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
@@ -41,6 +42,7 @@ public class AuditBusinessServiceIntegrationTest extends MifosIntegrationTestCas
         super();
     }
 
+    @Test
     public void testGetAuditLogRecords() throws Exception {
         AuditLog auditLog = new AuditLog(1, (short) 2, "Mifos", new Date(System.currentTimeMillis()), (short) 3);
         Set<AuditLogRecord> auditLogRecords = new HashSet<AuditLogRecord>();
@@ -55,6 +57,7 @@ public class AuditBusinessServiceIntegrationTest extends MifosIntegrationTestCas
         TestObjectFactory.cleanUp(auditLog);
     }
 
+    @Test
     public void testGetAuditLogRecordsPasswordChange() throws Exception {
         AuditLog auditLog = new AuditLog(1, (short) 2, "Mifos", new Date(System.currentTimeMillis()), (short) 3);
         Set<AuditLogRecord> auditLogRecords = new HashSet<AuditLogRecord>();

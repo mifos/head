@@ -22,6 +22,7 @@ package org.mifos.security.rolesandpermission.business;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -33,6 +34,7 @@ public class ActivityEntityIntegrationTest extends MifosIntegrationTestCase {
 
     private ActivityEntity activityEntity = null;
 
+    @Test
     public void testGetActivity() {
         activityEntity = getActivityEntity(Short.valueOf("1"));
        Assert.assertEquals("Organization Management", activityEntity.getActivityName());

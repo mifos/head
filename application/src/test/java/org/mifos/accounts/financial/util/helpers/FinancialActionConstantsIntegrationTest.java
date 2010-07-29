@@ -23,6 +23,7 @@ package org.mifos.accounts.financial.util.helpers;
 import junit.framework.Assert;
 
 import org.hibernate.Query;
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
@@ -37,6 +38,7 @@ public class FinancialActionConstantsIntegrationTest extends MifosIntegrationTes
      * FinancialActionConstants} matches the number of elements in the
      * corresponding table "financial_actions".
      */
+    @Test
     public void testGetFinancialAction() {
         Query queryFinancialAction = StaticHibernateUtil.getSessionTL().getNamedQuery(
                 FinancialQueryConstants.GET_ALL_FINANCIAL_ACTION);
