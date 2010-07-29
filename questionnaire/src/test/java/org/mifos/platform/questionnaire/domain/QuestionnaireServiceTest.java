@@ -27,7 +27,7 @@ import org.junit.runner.RunWith;
 import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
-import org.mifos.platform.questionnaire.exceptions.ValidationException;
+import org.mifos.platform.questionnaire.service.ValidationException;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;

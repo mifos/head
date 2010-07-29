@@ -33,7 +33,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
-import org.mifos.platform.questionnaire.exceptions.ValidationException;
+import org.mifos.platform.questionnaire.service.ValidationException;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;

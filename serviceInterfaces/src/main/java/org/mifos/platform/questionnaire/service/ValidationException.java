@@ -18,10 +18,9 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.exceptions;
+package org.mifos.platform.questionnaire.service;
 
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +30,7 @@ import static org.mifos.platform.util.CollectionUtils.isEmpty;
 
 @SuppressWarnings("PMD")
 public class ValidationException extends SystemException {
+    //TODO FIXEME rename to QuestionnaireValidationException for disambiguation with org.mifos.framework.exception.ValidationException
     private static final long serialVersionUID = -8094463668575047971L;
     private List<ValidationException> childExceptions;
     private SectionQuestionDetail sectionQuestionDetail;

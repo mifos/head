@@ -20,7 +20,6 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.ADDITIONAL_FEES_LIST;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.ADMINISTRATIVE_DOCUMENT_IS_ENABLED;
@@ -35,10 +34,8 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_INDIVIDUAL
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.NEXTMEETING_DATE;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.NOTES;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.PROPOSED_DISBURSAL_DATE;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECENTACCOUNTACTIVITIES;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECURRENCEID;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECURRENCENAME;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.REPAYMENTSCHEDULEINSTALLMENTS;
@@ -68,6 +65,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -111,6 +109,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.LoanCreationLoanDetailsDto;
 import org.mifos.application.servicefacade.LoanCreationLoanScheduleDetailsDto;
@@ -233,6 +232,8 @@ public class LoanAccountAction extends AccountAppAction {
     public static final String ACCOUNT_ID = "accountId";
     public static final String GLOBAL_ACCOUNT_NUM = "globalAccountNum";
 
+    private QuestionnaireFlowAdapter questionnaireAdapter = new QuestionnaireFlowAdapter("Create", "Loan", ActionForwards.schedulePreview_success);
+
     public LoanAccountAction() throws Exception {
         this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
                 new LoanPrdBusinessService(), new ClientBusinessService(), new MasterDataService(),
@@ -280,6 +281,15 @@ public class LoanAccountAction extends AccountAppAction {
         return loanBusinessService;
     }
 
+    /**
+     * @Deprecated - test only.
+     * @param questionflowAdapter
+     */
+    @Deprecated
+    public void setQuestionnaireFlowAdapter(QuestionnaireFlowAdapter questionflowAdapter) {
+        this.questionnaireAdapter = questionflowAdapter;
+    }
+
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("loanAccountAction");
         security.allow("getAllActivity", SecurityConstants.VIEW);
@@ -305,6 +315,7 @@ public class LoanAccountAction extends AccountAppAction {
         security.allow("forwardWaiveCharge", SecurityConstants.VIEW);
         security.allow("waiveChargeOverDue", SecurityConstants.VIEW);
         security.allow("redoLoanBegin", SecurityConstants.CAN_REDO_LOAN_DISPURSAL);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
         return security;
     }
 
@@ -419,6 +430,7 @@ public class LoanAccountAction extends AccountAppAction {
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
+
     @TransactionDemarcate(joinToken = true)
     public ActionForward schedulePreview(final ActionMapping mapping, final ActionForm form,
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
@@ -456,8 +468,11 @@ public class LoanAccountAction extends AccountAppAction {
                 request);
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, loanScheduleDetailsDto
                 .isLoanPendingApprovalDefined(), request);
-
-        return mapping.findForward(ActionForwards.schedulePreview_success.toString());
+        
+        return questionnaireAdapter.mapToAppliedQuestions(
+                mapping, loanActionForm, request,
+                ActionForwards.schedulePreview_success,
+                "custSearchAction.do?method=loadMainSearch");
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -767,6 +782,7 @@ public class LoanAccountAction extends AccountAppAction {
             FundBO fund = getFund(request, loanActionForm.getLoanOfferingFundValue());
             loanCreationResultDto = this.loanServiceFacade.createLoan(userContext, customerId, disbursementDate, fund,
                     loanActionForm);
+            questionnaireAdapter.saveQuestionResponses(request, loanActionForm, loanCreationResultDto.getAccountId());
         }
 
         if (loanCreationResultDto.isGlimApplicable()) {
@@ -1465,4 +1481,19 @@ public class LoanAccountAction extends AccountAppAction {
         return masterDataService.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES, getUserContext(request)
                 .getLocaleId());
     }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward captureQuestionResponses(
+            final ActionMapping mapping, final ActionForm form,
+            @SuppressWarnings("unused") final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response)
+            throws Exception {
+        ActionErrors errors = questionnaireAdapter.validateQuestionGroupResponses(request, (LoanAccountActionForm) form);
+        if (!errors.isEmpty()) {
+            addErrors(request, errors);
+            return new ActionForward(mapping.getInput());
+        }
+        return questionnaireAdapter.rejoin(mapping);
+    }
+
 }

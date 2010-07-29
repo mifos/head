@@ -58,6 +58,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -66,6 +67,7 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
+import org.mifos.customers.struts.actionforms.QuestionGroupDto;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
@@ -80,9 +82,10 @@ import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.util.UserContext;
 
-public class LoanAccountActionForm extends BaseActionForm {
+public class LoanAccountActionForm extends BaseActionForm implements QuestionResponseCapturer {
 
     public LoanAccountActionForm() {
         super();
@@ -189,6 +192,10 @@ public class LoanAccountActionForm extends BaseActionForm {
     private ConfigurationBusinessService configService;
 
     private Date originalDisbursementDate;
+
+    /*private List<QuestionGroupDto> questionGroupDtos;*/
+
+    private List<QuestionGroupDetail> questionGroups;
 
     public Date getOriginalDisbursementDate() {
         return this.originalDisbursementDate;
@@ -1473,4 +1480,31 @@ public class LoanAccountActionForm extends BaseActionForm {
         this.businessActivityId = null;
         this.collateralTypeId = null;
     }
+
+    /*@Override
+    public void setQuestionGroupDtos(List<QuestionGroupDto> questionGroups) {
+        this.questionGroupDtos = questionGroups;
+    }
+
+    @Override
+    public List<QuestionGroupDto> getQuestionGroupDtos() {
+        return questionGroupDtos;
+    }*/
+
+    @Override
+    public void setQuestionGroups(List<QuestionGroupDetail> questionGroups) {
+        this.questionGroups = questionGroups;
+    }
+
+    @Override
+    public List<QuestionGroupDetail> getQuestionGroups() {
+        return questionGroups;
+    }
+
+    /*public QuestionGroupDto getQuestionGroup(int i) {
+        if (i >= questionGroupDtos.size()) {
+            questionGroupDtos.add(new QuestionGroupDto());
+        }
+        return questionGroupDtos.get(i);
+    }*/
 }

@@ -22,7 +22,7 @@ package org.mifos.platform.questionnaire.validators;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.questionnaire.exceptions.ValidationException;
+import org.mifos.platform.questionnaire.service.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.service.*; //NOPMD
 import org.springframework.beans.factory.annotation.Autowired;

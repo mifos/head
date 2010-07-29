@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
-import org.mifos.platform.questionnaire.exceptions.ValidationException;
+import org.mifos.platform.questionnaire.service.ValidationException;
 import org.mifos.platform.questionnaire.matchers.MessageMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailFormMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailListMatcher;
