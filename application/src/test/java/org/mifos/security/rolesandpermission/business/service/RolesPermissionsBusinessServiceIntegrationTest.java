@@ -22,7 +22,7 @@ package org.mifos.security.rolesandpermission.business.service;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
@@ -39,7 +39,7 @@ public class RolesPermissionsBusinessServiceIntegrationTest extends MifosIntegra
 
     RolesPermissionsBusinessService rolesPermissionsBusinessService = new RolesPermissionsBusinessService();
 
-    @Before
+    @After
     public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
 

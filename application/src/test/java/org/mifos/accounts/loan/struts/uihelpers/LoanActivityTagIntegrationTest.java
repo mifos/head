@@ -56,7 +56,7 @@ public class LoanActivityTagIntegrationTest extends MifosIntegrationTestCase {
     AccountBO accountBO;
     UserContext userContext;
 
-    @Before
+    @After
     public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(accountBO);
         TestObjectFactory.cleanUp(client);
@@ -65,7 +65,7 @@ public class LoanActivityTagIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
-    @After
+    @Before
     public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
     }

@@ -22,7 +22,7 @@ package org.mifos.config.persistence;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.MifosCurrency;
@@ -35,7 +35,7 @@ public class ConfigurationPersistenceIntegrationTest extends MifosIntegrationTes
         super();
     }
 
-    @Before
+    @After
     public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
     }

@@ -25,7 +25,7 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -53,7 +53,7 @@ public class SavingsOverDueDepositsTagIntegrationTest extends MifosIntegrationTe
     SavingsOfferingBO savingsOffering;
     SavingsBO savings;
 
-    @Before
+    @After
     public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(savings);
         TestObjectFactory.cleanUp(group);

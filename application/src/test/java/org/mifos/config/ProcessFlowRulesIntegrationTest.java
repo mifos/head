@@ -22,7 +22,7 @@ package org.mifos.config;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.persistence.AccountPersistence;
@@ -43,7 +43,7 @@ public class ProcessFlowRulesIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
-    @Before
+    @After
     public void tearDown() {
         AccountPersistence ap = new AccountPersistence();
         AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class,
