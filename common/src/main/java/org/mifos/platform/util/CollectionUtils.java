@@ -50,4 +50,13 @@ public class CollectionUtils {
     public static <T> boolean isNotEmpty(Collection<T> collection) {
         return !isEmpty(collection);
     }
+
+    public static <T> String toString(Collection<T> collection) {
+        String result = null;
+        if (isNotEmpty(collection)) {
+            String collStr = collection.toString();
+            result = collStr.substring(1, collStr.length() - 1);
+        }
+        return result;
+    }
 }

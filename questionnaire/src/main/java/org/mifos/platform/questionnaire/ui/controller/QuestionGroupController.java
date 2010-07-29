@@ -68,7 +68,16 @@ public class QuestionGroupController extends QuestionnaireController {
                                                  @RequestParam("backPageUrl") String backPageUrl) throws UnsupportedEncodingException {
         ModelMap modelMap = new ModelMap();
         modelMap.addAttribute("questionGroupDetails", questionnaireServiceFacade.getQuestionGroups(entityId, event, source));
-        modelMap.addAttribute("backPageUrl", URLDecoder.decode(backPageUrl, "UTF-8"));
+        modelMap.addAttribute("backPageUrl", decodeUrl(backPageUrl));
+        return modelMap;
+    }
+
+    @RequestMapping("/displayResponse.ftl")
+    public ModelMap getQuestionGroupResponse(@RequestParam("instanceId") Integer instanceId,
+                                             @RequestParam("backPageUrl") String backPageUrl) throws UnsupportedEncodingException {
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("questionGroupInstance", questionnaireServiceFacade.getQuestionGroupInstance(instanceId));
+        modelMap.addAttribute("backPageUrl", decodeUrl(backPageUrl));
         return modelMap;
     }
 
@@ -157,7 +166,7 @@ public class QuestionGroupController extends QuestionnaireController {
         return sectionQuestionDetails;
     }
 
-    public String saveQuestionGroup(QuestionGroupDetails questionGroupDetails, int questionGroupIndex, RequestContext requestContext) {
+    public String saveQuestionnaire(QuestionGroupDetails questionGroupDetails, int questionGroupIndex, RequestContext requestContext) {
         QuestionGroupDetail questionGroupDetail = questionGroupDetails.getDetails().get(questionGroupIndex);
         try {
             questionnaireServiceFacade.saveResponses(new QuestionGroupDetails(questionGroupDetails.getCreatorId(),
@@ -166,7 +175,7 @@ public class QuestionGroupController extends QuestionnaireController {
             if (e.containsChildExceptions()) {
                 for (ValidationException validationException : e.getChildExceptions()) {
                     String title = validationException.getSectionQuestionDetail().getTitle();
-                    constructErrorMessage("questionnaire.group.noresponse", "Please specify Question Group title" + title,
+                    constructErrorMessage("questionnaire.noresponse", "Please specify " + title,
                             requestContext.getMessageContext(), title);
                 }
             }
@@ -203,4 +212,9 @@ public class QuestionGroupController extends QuestionnaireController {
     private boolean isInvalidTitle(String title) {
         return StringUtils.isEmpty(StringUtils.trimToNull(title));
     }
+
+    private String decodeUrl(String backPageUrl) throws UnsupportedEncodingException {
+        return URLDecoder.decode(backPageUrl, "UTF-8");
+    }
+
 }

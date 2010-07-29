@@ -27,7 +27,7 @@ $(document).ready(function(){
         choiceToDeleteBtn.click();
     });
 
-    $("#currentQuestion\\.type").bind("change keypress click", function(){
+    $("#currentQuestion\\.type").bind("change keypress click blur", function(){
         var selectedOption = $(this).val();
         if(selectedOption == $("#multiSelect").val()  ||  selectedOption == $("#singleSelect").val()) {
             $("#choiceDiv").show();
@@ -36,7 +36,7 @@ $(document).ready(function(){
         }
     });
 
-    $("#currentQuestion\\.choice").bind("past cut keyup", function(){
+    $("#currentQuestion\\.choice").bind("past cut keyup blur", function(){
         var val = $(this).val();
         var addChoiceButton = $("#_eventId_addChoice");
         if(val==null||val.match(/^(\s)*$/)) {

@@ -214,21 +214,6 @@ padding-top:5px;
 	margin-top:15px;
 }
 
-.buttn {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 9pt;
-	font-weight: normal;
-	color: #000000;
-	border-right: #926030 1px solid;
-	border-bottom: #926030 1px solid;
-	border-left: #C29F7C 1px solid;
-	border-top: #C29F7C 1px solid;
-	background-image: url(pages/framework/images/buttons/buttonbg.jpg);
-	background-repeat: repeat-x;
-	cursor: pointer;
-	height: 20px;
-	margin-right:34px;
-}
 .floatLeft{
 	float:left;
 }
@@ -493,37 +478,4 @@ padding-top:5px;
 	border-top-width: 1px;
 	border-top-style: solid;
 	border-top-color: #D7DEEE;
-}
-
-.cancelbuttn
-{
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 9pt;
-	font-weight: normal;
-	color: #000000;
-    border-right: #696969 1px solid;
-	border-bottom: #696969 1px solid;
-	border-left: #A2A2A2 1px solid;
-	border-top: #A2A2A2 1px solid;
-    background-image: url(pages/framework/images/buttons/buttonbgcancel.jpg);
-	background-repeat: repeat-x;
-    cursor: pointer;
-    height: 20px
-}
-
-
-.insidebuttn
-{
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 8pt;
-	font-weight: normal;
-	color: #000000;
-    border-right: #696969 1px solid;
-	border-bottom: #696969 1px solid;
-	border-left: #A2A2A2 1px solid;
-	border-top: #A2A2A2 1px solid;
-    background-image: url(../images/buttons/buttonbgcancel.jpg);
-	background-repeat: repeat-x;
-    cursor: pointer;
-    height: 17px
 }

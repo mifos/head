@@ -19,29 +19,25 @@
  */
 package org.mifos.platform.questionnaire.matchers;
 
-import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Description;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
-import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.service.SectionDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 
 import static org.junit.Assert.assertThat;
 
-@SuppressWarnings("PMD")
-public class QuestionGroupDetailMatcher extends TypeSafeMatcher<QuestionGroupDetail> {
-    private QuestionGroupDetail questionGroupDetail;
+public class QuestionGroupDetailsMatcher extends TypeSafeMatcher<QuestionGroupDetails> {
+    private QuestionGroupDetails questionGroupDetails;
 
-    public QuestionGroupDetailMatcher(QuestionGroupDetail questionGroupDetail) {
-        this.questionGroupDetail = questionGroupDetail;
+    public QuestionGroupDetailsMatcher(QuestionGroupDetails questionGroupDetails) {
+        this.questionGroupDetails = questionGroupDetails;
     }
 
     @Override
-    public boolean matchesSafely(QuestionGroupDetail questionGroupDetail) {
-        if (StringUtils.equals(this.questionGroupDetail.getTitle(), questionGroupDetail.getTitle())) {
-            for (SectionDetail sectionDetail : this.questionGroupDetail.getSectionDetails()) {
-                assertThat(questionGroupDetail.getSectionDetails(), Matchers.hasItem(new QuestionGroupSectionMatcher(sectionDetail)));
-            }
+    public boolean matchesSafely(QuestionGroupDetails questionGroupDetails) {
+        if (this.questionGroupDetails.getCreatorId() == questionGroupDetails.getCreatorId() &&
+                this.questionGroupDetails.getEntityId() == questionGroupDetails.getEntityId()) {
+            assertThat(this.questionGroupDetails.getDetails(), Matchers.is(new QuestionGroupDetailListMatcher(questionGroupDetails.getDetails())));
             return true;
         }
         return false;
@@ -49,6 +45,6 @@ public class QuestionGroupDetailMatcher extends TypeSafeMatcher<QuestionGroupDet
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("QuestionGroupDetail do not match.");
+        description.appendText("QuestionGroupDetails do not match.");
     }
 }
