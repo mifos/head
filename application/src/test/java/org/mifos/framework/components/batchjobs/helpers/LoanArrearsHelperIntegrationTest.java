@@ -79,7 +79,8 @@ public class LoanArrearsHelperIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testExecute() throws Exception {
+    @Test
+    public void testExecute() throws Exception {
         int statusChangeHistorySize = loanAccount.getAccountStatusChangeHistory().size();
         loanArrearHelper.execute(System.currentTimeMillis());
         loanAccount = new AccountPersistence().getAccount(loanAccount.getAccountId());

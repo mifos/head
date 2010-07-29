@@ -94,7 +94,8 @@ public class CustomerCreationDaoHibernateIntegrationTest extends MifosIntegratio
         TestObjectFactory.cleanUp(center);
     }
 
-    @Test public void testShouldCreateCustomerAndCustomerAccount() throws Exception {
+    @Test
+    public void testShouldCreateCustomerAndCustomerAccount() throws Exception {
 
         String displayName = "centerCascade";
         Address address = null;

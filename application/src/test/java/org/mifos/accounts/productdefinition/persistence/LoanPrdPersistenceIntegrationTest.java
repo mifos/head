@@ -55,24 +55,28 @@ public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase 
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testretrieveLatenessForPrd() throws Exception {
+    @Test
+    public void testretrieveLatenessForPrd() throws Exception {
         Short latenessDays = null;
         latenessDays = new LoanPrdPersistence().retrieveLatenessForPrd();
         Assert.assertNotNull(latenessDays);
        Assert.assertEquals(Short.valueOf("10"), latenessDays);
     }
 
-    @Test public void testGetAllActiveLoanOfferings() throws PersistenceException {
+    @Test
+    public void testGetAllActiveLoanOfferings() throws PersistenceException {
         List<LoanOfferingBO> loanOfferingList = new LoanPrdPersistence().getAllActiveLoanOfferings(Short.valueOf("1"));
         Assert.assertNotNull(loanOfferingList);
     }
 
-    @Test public void testGetLoanOfferingsNotMixed() throws PersistenceException {
+    @Test
+    public void testGetLoanOfferingsNotMixed() throws PersistenceException {
         List<LoanOfferingBO> loanOfferingList = new LoanPrdPersistence().getLoanOfferingsNotMixed(Short.valueOf("1"));
         Assert.assertNotNull(loanOfferingList);
     }
 
-    @Test public void testGetLoanOffering() throws PersistenceException {
+    @Test
+    public void testGetLoanOffering() throws PersistenceException {
         loanOffering1 = createLoanOfferingBO("Loan Offering", "Loan");
         StaticHibernateUtil.closeSession();
 
@@ -82,7 +86,8 @@ public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase 
        Assert.assertEquals("Loan", loanOffering1.getPrdOfferingShortName());
     }
 
-    @Test public void testGetLoanOfferingWithLocaleId() throws PersistenceException {
+    @Test
+    public void testGetLoanOfferingWithLocaleId() throws PersistenceException {
         loanOffering1 = createLoanOfferingBO("Loan Offering", "Loan");
         StaticHibernateUtil.closeSession();
 
@@ -99,7 +104,8 @@ public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase 
        Assert.assertEquals("Flat", loanOffering1.getInterestTypes().getName());
     }
 
-    @Test public void testGetAllLoanOfferingsShouldReturnLoanOfferingListSortedByName() throws PersistenceException {
+    @Test
+    public void testGetAllLoanOfferingsShouldReturnLoanOfferingListSortedByName() throws PersistenceException {
         String[] loanPrdNamesSortedByName = new String[] { "firstLoanOffering", "secondLoanOffering",
                 "thirdLoanOffering" };
         loanOffering1 = createLoanOfferingBO(loanPrdNamesSortedByName[1], "Loa1");

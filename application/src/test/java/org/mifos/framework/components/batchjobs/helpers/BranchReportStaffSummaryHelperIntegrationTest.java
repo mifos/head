@@ -47,7 +47,8 @@ public class BranchReportStaffSummaryHelperIntegrationTest extends MifosIntegrat
     private static final Date RUN_DATE = DateUtils.currentDate();
     private static final Short BRANCH_ID_SHORT = Short.valueOf("2");
 
-    @Test public void testPopulateStaffSummary() throws BatchJobException {
+    @Test
+    public void testPopulateStaffSummary() throws BatchJobException {
         BranchReportBO branchReportBO = new BranchReportBO(BRANCH_ID_SHORT, RUN_DATE);
         BranchReportStaffSummaryHelper staffSummaryHelper = new BranchReportStaffSummaryHelper(branchReportBO,
                 new BranchReportService(), getConfigServiceStub());

@@ -84,7 +84,8 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testExecute() throws Exception {
+    @Test
+    public void testExecute() throws Exception {
         int statusChangeHistorySize = loanAccount.getAccountStatusChangeHistory().size();
         loanArrearTask.run();
         Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());

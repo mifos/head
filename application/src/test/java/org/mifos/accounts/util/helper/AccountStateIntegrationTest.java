@@ -54,7 +54,8 @@ public class AccountStateIntegrationTest extends MifosIntegrationTestCase {
      * Entity values in terms of ids, state names, and the text that they
      * eventually resolve to.
      */
-    @Test public void testRetrieveAllAccountStateList() throws NumberFormatException, PersistenceException {
+    @Test
+    public void testRetrieveAllAccountStateList() throws NumberFormatException, PersistenceException {
         List<AccountStateEntity> accountStateEntityList = accountPersistence
                 .retrieveAllAccountStateList(ProductType.SAVINGS.getValue());
         Assert.assertNotNull(accountStateEntityList);

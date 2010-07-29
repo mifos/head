@@ -66,14 +66,16 @@ public class MasterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testGetListOfActiveLoanOfficers() throws Exception {
+    @Test
+    public void testGetListOfActiveLoanOfficers() throws Exception {
         List<PersonnelDto> loanOfficers = masterService.getListOfActiveLoanOfficers(PersonnelConstants.LOAN_OFFICER,
                 Short
                 .valueOf("3"), Short.valueOf("3"), PersonnelConstants.LOAN_OFFICER);
        Assert.assertEquals(1, loanOfficers.size());
     }
 
-    @Test public void testGetListOfActiveLoanOfficersForInvalidConnection() throws Exception {
+    @Test
+    public void testGetListOfActiveLoanOfficersForInvalidConnection() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             masterService.getListOfActiveLoanOfficers(PersonnelConstants.LOAN_OFFICER, Short.valueOf("3"), Short
@@ -86,12 +88,14 @@ public class MasterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         }
     }
 
-    @Test public void testGetActiveBranches() throws Exception {
+    @Test
+    public void testGetActiveBranches() throws Exception {
         List<OfficeDetailsDto> branches = masterService.getActiveBranches(Short.valueOf("1"));
        Assert.assertEquals(1, branches.size());
     }
 
-    @Test public void testGetActiveBranchesForInvalidConnection() throws Exception {
+    @Test
+    public void testGetActiveBranchesForInvalidConnection() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             masterService.getActiveBranches(Short.valueOf("1"));
@@ -103,7 +107,8 @@ public class MasterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         }
     }
 
-    @Test public void testGetListOfActiveParentsUnderLoanOfficer() throws Exception {
+    @Test
+    public void testGetListOfActiveParentsUnderLoanOfficer() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         CustomerBO center = TestObjectFactory.createWeeklyFeeCenter("Center_Active", meeting);
@@ -113,7 +118,8 @@ public class MasterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         TestObjectFactory.cleanUp(center);
     }
 
-    @Test public void testGetListOfActiveParentsUnderLoanOfficerForInvalidConnection() throws Exception {
+    @Test
+    public void testGetListOfActiveParentsUnderLoanOfficerForInvalidConnection() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         CustomerBO center = TestObjectFactory.createWeeklyFeeCenter("Center_Active", meeting);
@@ -130,11 +136,13 @@ public class MasterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         TestObjectFactory.cleanUp(center);
     }
 
-    @Test public void testGetMasterEntityName() throws NumberFormatException, ServiceException {
+    @Test
+    public void testGetMasterEntityName() throws NumberFormatException, ServiceException {
        Assert.assertEquals("Partial Application", masterService.retrieveMasterEntities(1, Short.valueOf("1")));
     }
 
-    @Test public void testGetMasterEntityNameForInvalidConnection() throws Exception {
+    @Test
+    public void testGetMasterEntityNameForInvalidConnection() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             masterService.retrieveMasterEntities(1, Short.valueOf("1"));
@@ -146,7 +154,8 @@ public class MasterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         }
     }
 
-    @Test public void testretrieveCustomFieldsDefinition() {
+    @Test
+    public void testretrieveCustomFieldsDefinition() {
         TestObjectFactory.simulateInvalidConnection();
         try {
             masterService.retrieveCustomFieldsDefinition(EntityType.CENTER);
@@ -158,7 +167,8 @@ public class MasterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         }
     }
 
-    @Test public void testGetMasterDataEntity() {
+    @Test
+    public void testGetMasterDataEntity() {
         TestObjectFactory.simulateInvalidConnection();
         try {
             masterService.getMasterDataEntity(AccountStateEntity.class, AccountState.LOAN_PARTIAL_APPLICATION

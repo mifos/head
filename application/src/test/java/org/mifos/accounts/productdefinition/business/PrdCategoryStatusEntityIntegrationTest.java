@@ -54,17 +54,20 @@ public class PrdCategoryStatusEntityIntegrationTest extends MifosIntegrationTest
         session = null;
     }
 
-    @Test public void testGetInactiveName() {
+    @Test
+    public void testGetInactiveName() {
         prdCategoryStatusEntity = getPrdCategoryStatus(PrdCategoryStatus.INACTIVE.getValue());
         Assert.assertEquals("Inactive", prdCategoryStatusEntity.getName());
     }
 
-    @Test public void testGetActiveName() {
+    @Test
+    public void testGetActiveName() {
         prdCategoryStatusEntity = getPrdCategoryStatus(PrdCategoryStatus.ACTIVE.getValue());
         Assert.assertEquals("Active", prdCategoryStatusEntity.getName());
     }
 
-    @Test public void testGetNamesSuccess() {
+    @Test
+    public void testGetNamesSuccess() {
         prdCategoryStatusEntity = getPrdCategoryStatus(PrdCategoryStatus.ACTIVE.getValue());
         Set<LookUpValueLocaleEntity> lookUpValueLocaleEntitySet = prdCategoryStatusEntity.getNames();
         int size = lookUpValueLocaleEntitySet.size();

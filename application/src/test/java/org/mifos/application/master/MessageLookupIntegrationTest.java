@@ -49,7 +49,8 @@ public class MessageLookupIntegrationTest extends MifosIntegrationTestCase {
         messageLookup = MessageLookup.getInstance();
     }
 
-    @Test public void testWeekDayLookup() {
+    @Test
+    public void testWeekDayLookup() {
         // default locale
        Assert.assertEquals("Monday", messageLookup.lookup(WeekDay.MONDAY, Locale.US));
        Assert.assertEquals("Tuesday", messageLookup.lookup(WeekDay.TUESDAY, Locale.US));
@@ -72,7 +73,8 @@ public class MessageLookupIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    @Test public void testLabelLookup() throws PersistenceException {
+    @Test
+    public void testLabelLookup() throws PersistenceException {
         Localization localization = Localization.getInstance();
         ConfigLocale originalConfig = localization.getConfigLocale();
         UserContext userContext = TestUtils.makeUserWithLocales();

@@ -49,7 +49,8 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
 
     private static final double DELTA = 0.00000001;
 
-    @Test public void testGetPrincipal() {
+    @Test
+    public void testGetPrincipal() {
         Set<AccountActionDateEntity> accountActionDates = groupLoan.getAccountActionDates();
         for (AccountActionDateEntity accountActionDate : accountActionDates) {
             Money principal = ((LoanScheduleEntity) accountActionDate).getPrincipal();
@@ -57,7 +58,8 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
         }
     }
 
-    @Test public void testWaiveCharges() {
+    @Test
+    public void testWaiveCharges() {
         StaticHibernateUtil.closeSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
 
@@ -77,7 +79,8 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
         groupLoan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
     }
 
-    @Test public void testApplyPeriodicFees() {
+    @Test
+    public void testApplyPeriodicFees() {
         FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "100",
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
 

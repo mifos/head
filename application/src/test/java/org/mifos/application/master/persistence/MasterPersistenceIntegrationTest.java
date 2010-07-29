@@ -52,7 +52,8 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testEntityMasterRetrieval() throws Exception {
+    @Test
+    public void testEntityMasterRetrieval() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
         CustomValueDto paymentTypes = masterPersistence.getCustomValueList(MasterConstants.ATTENDENCETYPES,
                 "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId");
@@ -61,7 +62,8 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    @Test public void testEntityMasterRetrievalForInvalidConnection() throws Exception {
+    @Test
+    public void testEntityMasterRetrievalForInvalidConnection() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -75,7 +77,8 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    @Test public void testGetLookUpEntity() throws Exception {
+    @Test
+    public void testGetLookUpEntity() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
         CustomValueDto gender = masterPersistence.getLookUpEntity(MasterConstants.GENDER, Short.valueOf("1"));
         List<CustomValueListElementDto> genderValues = gender.getCustomValueListElements();
@@ -83,7 +86,8 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    @Test public void testRetrieveMasterEntities() throws NumberFormatException, PersistenceException {
+    @Test
+    public void testRetrieveMasterEntities() throws NumberFormatException, PersistenceException {
         MasterPersistence masterPersistence = new MasterPersistence();
         List<ValueListElement> masterEntity = masterPersistence.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES,
                 Short.valueOf("1"));
@@ -91,7 +95,8 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(131, masterEntity.size());
     }
 
-    @Test public void testRetrieveMasterEntitiesForInvalidConnection() throws Exception {
+    @Test
+    public void testRetrieveMasterEntitiesForInvalidConnection() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -117,12 +122,14 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    @Test public void testGetMasterEntityName() throws NumberFormatException, PersistenceException {
+    @Test
+    public void testGetMasterEntityName() throws NumberFormatException, PersistenceException {
         MasterPersistence masterPersistence = new MasterPersistence();
        Assert.assertEquals("Partial Application", masterPersistence.retrieveMasterEntities(1, Short.valueOf("1")));
     }
 
-    @Test public void testRetrieveMasterDataEntity() throws Exception {
+    @Test
+    public void testRetrieveMasterDataEntity() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
         List<MasterDataEntity> masterDataList = masterPersistence
                 .retrieveMasterDataEntity("org.mifos.accounts.business.AccountStateEntity");
@@ -135,7 +142,8 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    @Test public void testRetrieveMasterDataEntityForInvalidConnection() throws Exception {
+    @Test
+    public void testRetrieveMasterDataEntityForInvalidConnection() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -172,7 +180,8 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         return elementId;
     }
 
-    @Test public void testAddAndDeleteValueListElement() throws Exception {
+    @Test
+    public void testAddAndDeleteValueListElement() throws Exception {
         // get the CustomValueDto that we want to add to
         MasterPersistence masterPersistence = new MasterPersistence();
         CustomValueDto salutationValueList = masterPersistence.getLookUpEntity(MasterConstants.SALUTATION,
@@ -200,7 +209,8 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
                 DEFAULT_LOCALE));
     }
 
-    @Test public void testUpdateValueListElement() throws Exception {
+    @Test
+    public void testUpdateValueListElement() throws Exception {
         // get a CustomValueListElementDto (as a BusinessActivityEntity)
         MasterPersistence masterPersistence = new MasterPersistence();
         List<ValueListElement> salutations = masterPersistence.retrieveMasterEntities(MasterConstants.SALUTATION,

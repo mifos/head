@@ -47,7 +47,8 @@ public class HibernateImportedFilesDaoIntegrationTest extends MifosIntegrationTe
         connection.createStatement().execute("truncate table imported_transactions_files");
     }
 
-    @Test public void testSaveAndFind() throws Exception {
+    @Test
+    public void testSaveAndFind() throws Exception {
         Short personnelId = new Short("1");
         PersonnelBO personnelBO = TestObjectFactory.getPersonnel(personnelId);
         Timestamp timeStamp = new Timestamp(123134554L);
@@ -63,7 +64,8 @@ public class HibernateImportedFilesDaoIntegrationTest extends MifosIntegrationTe
         Assert.assertEquals(timeStamp, actual.getSubmittedOn());
     }
 
-    @Test public void testSaveConstraintVoilation() throws Exception {
+    @Test
+    public void testSaveConstraintVoilation() throws Exception {
         Short personnelId = new Short("1");
         PersonnelBO personnelBO = TestObjectFactory.getPersonnel(personnelId);
         Timestamp timeStamp = new Timestamp(123134554L);

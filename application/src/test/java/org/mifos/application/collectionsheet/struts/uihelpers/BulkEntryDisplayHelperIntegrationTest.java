@@ -110,7 +110,8 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testBuildTableHeadings() {
+    @Test
+    public void testBuildTableHeadings() {
         LoanOfferingBO loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
         java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
         SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("Savings Offering", "SAVP",
@@ -140,7 +141,8 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         TestObjectFactory.removeObject(savingsOffering);
     }
 
-    @Test public void testGetEndTable() {
+    @Test
+    public void testGetEndTable() {
         String result = new BulkEntryDisplayHelper().getEndTable(3).toString();
         StringAssert.assertContains("</table>", result);
         StringAssert.assertContains("</tr>", result);
@@ -149,7 +151,8 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         StringAssert.assertContains("</td", result);
     }
 
-    @Test public void testBuildForCenterForGetMethod() throws Exception {
+    @Test
+    public void testBuildForCenterForGetMethod() throws Exception {
         CollectionSheetEntryGridDto bulkEntry = createBulkEntry();
         StringBuilder builder = new StringBuilder();
 

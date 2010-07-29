@@ -84,7 +84,8 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testExecuteForCustomerAccount() throws Exception {
+    @Test
+    public void testExecuteForCustomerAccount() throws Exception {
         StaticHibernateUtil.startTransaction();
         createCenter();
         StaticHibernateUtil.commitTransaction();
@@ -103,7 +104,8 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         Assert.assertEquals(noOfInstallments + 10, center.getCustomerAccount().getAccountActionDates().size());
     }
 
-    @Test public void testExecuteForSavingsAccount() throws Exception {
+    @Test
+    public void testExecuteForSavingsAccount() throws Exception {
         int configuredValue = GeneralConfig.getOutputIntervalForBatchJobs();
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         int outputInterval = 1;
@@ -127,7 +129,8 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         }
     }
 
-    @Test public void testExecuteForCustomerAndSavingsAccount() throws Exception {
+    @Test
+    public void testExecuteForCustomerAndSavingsAccount() throws Exception {
         // jpw - this test is similar to testExecuteForSavingsAccount
         // Re-using much of it to test that customer and savings accounts are processed as have made separate queries to
         // return the two different types of accounts.
@@ -177,7 +180,8 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         }
     }
 
-    @Test public void testExecuteForSavingsAccountForGroup() throws Exception {
+    @Test
+    public void testExecuteForSavingsAccountForGroup() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE,

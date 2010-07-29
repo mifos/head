@@ -66,7 +66,8 @@ public class LoanRepayTagIntegrationTest extends MifosIntegrationTestCase {
         userContext = TestObjectFactory.getContext();
     }
 
-    @Test public void testX() {
+    @Test
+    public void testX() {
 
     }
 

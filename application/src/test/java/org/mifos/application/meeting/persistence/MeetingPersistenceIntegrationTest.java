@@ -36,7 +36,8 @@ public class MeetingPersistenceIntegrationTest extends MifosIntegrationTestCase 
         super();
     }
 
-    @Test public void testGetMeeting() throws Exception {
+    @Test
+    public void testGetMeeting() throws Exception {
         MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMER_MEETING,
                 "Delhi");
 

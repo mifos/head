@@ -61,19 +61,22 @@ public class SavingsOverDueDepositsTagIntegrationTest extends MifosIntegrationTe
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testBuildDateUI() {
+    @Test
+    public void testBuildDateUI() {
         Date date = new Date(System.currentTimeMillis());
        Assert.assertTrue(new SavingsOverDueDepositsTag().buildDateUI(new Locale("en", "GB"), date).toString().contains(
                 DateUtils.getUserLocaleDate(new Locale("en", "GB"), date.toString())));
 
     }
 
-    @Test public void testBuildAmountUI() {
+    @Test
+    public void testBuildAmountUI() {
        Assert.assertTrue(new SavingsOverDueDepositsTag().buildAmountUI(new Money(getCurrency(), "1000")).toString().contains("1000"));
 
     }
 
-    @Test public void testBuildDepositDueUIRow() {
+    @Test
+    public void testBuildDepositDueUIRow() {
         Date date = new Date(System.currentTimeMillis());
 
         String outString = new SavingsOverDueDepositsTag().buildDepositDueUIRow(new Locale("en", "GB"), date,
@@ -83,7 +86,8 @@ public class SavingsOverDueDepositsTagIntegrationTest extends MifosIntegrationTe
        Assert.assertTrue(outString.contains("1000"));
     }
 
-    @Test public void testbuildUI() throws Exception {
+    @Test
+    public void testbuildUI() throws Exception {
         createInitialObjects();
         Assert.assertNotNull(new SavingsOverDueDepositsTag().buildUI(savings.getDetailsOfInstallmentsInArrears(), new Locale(
                 "en", "GB")));

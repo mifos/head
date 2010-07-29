@@ -70,7 +70,8 @@ public class LoanActivityTagIntegrationTest extends MifosIntegrationTestCase {
         userContext = TestObjectFactory.getContext();
     }
 
-    @Test public void testBuildLeftHeaderRows() throws Exception {
+    @Test
+    public void testBuildLeftHeaderRows() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
         List<LoanActivityDto> activityViews = new LoanBusinessService().getAllActivityView(accountBO
@@ -79,7 +80,8 @@ public class LoanActivityTagIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    @Test public void testBuildRightHeaderRows() throws Exception {
+    @Test
+    public void testBuildRightHeaderRows() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
         List<LoanActivityDto> activityViews = new LoanBusinessService().getAllActivityView(accountBO

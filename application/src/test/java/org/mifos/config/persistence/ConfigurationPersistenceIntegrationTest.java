@@ -40,7 +40,8 @@ public class ConfigurationPersistenceIntegrationTest extends MifosIntegrationTes
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testGetCurrencyForCurrencyId() throws Exception {
+    @Test
+    public void testGetCurrencyForCurrencyId() throws Exception {
         ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
         MifosCurrency currency = (MifosCurrency) configurationPersistence.getPersistentObject(MifosCurrency.class,
                 Short.valueOf("2"));
@@ -48,12 +49,14 @@ public class ConfigurationPersistenceIntegrationTest extends MifosIntegrationTes
        Assert.assertEquals("Indian Rupee", currency.getCurrencyName());
     }
 
-    @Test public void testCheckIndividualMonitoringKeyExists() throws Exception {
+    @Test
+    public void testCheckIndividualMonitoringKeyExists() throws Exception {
         Assert.assertNotNull(new ConfigurationPersistence()
                 .getConfigurationKeyValueInteger(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED));
     }
 
-    @Test public void testIfGroupLoanWithIndividualMonitoringIsEnabled() throws Exception {
+    @Test
+    public void testIfGroupLoanWithIndividualMonitoringIsEnabled() throws Exception {
         Assert.assertFalse(new ConfigurationPersistence().isGlimEnabled());
     }
 

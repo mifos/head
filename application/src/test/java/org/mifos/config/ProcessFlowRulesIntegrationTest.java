@@ -52,23 +52,27 @@ public class ProcessFlowRulesIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
     }
 
-    @Test public void testOverrideNeeded() throws Exception {
+    @Test
+    public void testOverrideNeeded() throws Exception {
        Assert.assertTrue(ProcessFlowRules.needsOverride(false, true));
     }
 
-    @Test public void testOverrideNotNecessary() throws Exception {
+    @Test
+    public void testOverrideNotNecessary() throws Exception {
         Assert.assertFalse(ProcessFlowRules.needsOverride(false, false));
         Assert.assertFalse(ProcessFlowRules.needsOverride(true, true));
     }
 
-    @Test public void testOverrideValidation() throws Exception {
+    @Test
+    public void testOverrideValidation() throws Exception {
        Assert.assertTrue(ProcessFlowRules.isValidOverride(true, true));
        Assert.assertTrue(ProcessFlowRules.isValidOverride(false, true));
        Assert.assertTrue(ProcessFlowRules.isValidOverride(false, false));
         Assert.assertFalse(ProcessFlowRules.isValidOverride(true, false));
     }
 
-    @Test public void testInvalidOverride() throws Exception {
+    @Test
+    public void testInvalidOverride() throws Exception {
         try {
             ProcessFlowRules.needsOverride(true, false);
             Assert.fail("Expected ConfigurationException");
@@ -77,7 +81,8 @@ public class ProcessFlowRulesIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    @Test public void testValidOverrideAgainstDb() throws Exception {
+    @Test
+    public void testValidOverrideAgainstDb() throws Exception {
         CustomerPersistence cp = new CustomerPersistence();
         CustomerStatusEntity cse = (CustomerStatusEntity) cp.loadPersistentObject(CustomerStatusEntity.class,
                 CustomerStatus.CLIENT_PENDING.getValue());
@@ -90,7 +95,8 @@ public class ProcessFlowRulesIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertTrue(cse.getIsOptional());
     }
 
-    @Test public void testInvalidOverrideAgainstDb() throws Exception {
+    @Test
+    public void testInvalidOverrideAgainstDb() throws Exception {
         try {
             AccountPersistence ap = new AccountPersistence();
             AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class,

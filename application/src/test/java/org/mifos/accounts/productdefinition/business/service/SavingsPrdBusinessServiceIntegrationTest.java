@@ -53,21 +53,25 @@ public class SavingsPrdBusinessServiceIntegrationTest extends MifosIntegrationTe
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testGetActiveSavingsProductCategories() throws ServiceException {
+    @Test
+    public void testGetActiveSavingsProductCategories() throws ServiceException {
        Assert.assertEquals(1, new SavingsPrdBusinessService().getActiveSavingsProductCategories().size());
     }
 
-    @Test public void testGetSavingsApplicableRecurrenceTypes() throws Exception {
+    @Test
+    public void testGetSavingsApplicableRecurrenceTypes() throws Exception {
        Assert.assertEquals(2, new SavingsPrdBusinessService().getSavingsApplicableRecurrenceTypes().size());
     }
 
-    @Test public void testGetAllSavingsProducts() throws Exception {
+    @Test
+    public void testGetAllSavingsProducts() throws Exception {
         SavingsOfferingBO savingsOffering = createSavingsOfferingBO();
        Assert.assertEquals(1, new SavingsPrdBusinessService().getAllSavingsProducts().size());
         TestObjectFactory.removeObject(savingsOffering);
     }
 
-    @Test public void testGetApplicablePrdStatus() throws ServiceException {
+    @Test
+    public void testGetApplicablePrdStatus() throws ServiceException {
         List<PrdStatusEntity> prdStatusList = new SavingsPrdBusinessService().getApplicablePrdStatus((short) 1);
         StaticHibernateUtil.closeSession();
        Assert.assertEquals(2, prdStatusList.size());
@@ -81,7 +85,8 @@ public class SavingsPrdBusinessServiceIntegrationTest extends MifosIntegrationTe
         }
     }
 
-    @Test public void testGetApplicablePrdStatusForInvalidConnection() {
+    @Test
+    public void testGetApplicablePrdStatusForInvalidConnection() {
         TestObjectFactory.simulateInvalidConnection();
         try {
             new SavingsPrdBusinessService().getApplicablePrdStatus((short) 1);
@@ -91,7 +96,8 @@ public class SavingsPrdBusinessServiceIntegrationTest extends MifosIntegrationTe
         }
     }
 
-    @Test public void testGetAllSavingsProductsFailure() throws Exception {
+    @Test
+    public void testGetAllSavingsProductsFailure() throws Exception {
         SavingsOfferingBO savingsOffering = createSavingsOfferingBO();
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -104,7 +110,8 @@ public class SavingsPrdBusinessServiceIntegrationTest extends MifosIntegrationTe
         }
     }
 
-    @Test public void testGetSavingsApplicableRecurrenceTypesFailure() throws Exception {
+    @Test
+    public void testGetSavingsApplicableRecurrenceTypesFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             new SavingsPrdBusinessService().getSavingsApplicableRecurrenceTypes();
@@ -114,7 +121,8 @@ public class SavingsPrdBusinessServiceIntegrationTest extends MifosIntegrationTe
         }
     }
 
-    @Test public void testGetActiveSavingsProductCategoriesFailure() throws Exception {
+    @Test
+    public void testGetActiveSavingsProductCategoriesFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             new SavingsPrdBusinessService().getActiveSavingsProductCategories();
@@ -124,7 +132,8 @@ public class SavingsPrdBusinessServiceIntegrationTest extends MifosIntegrationTe
         }
     }
 
-    @Test public void testRetrieveDormancyDaysForInvalidConnection() throws Exception {
+    @Test
+    public void testRetrieveDormancyDaysForInvalidConnection() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             new SavingsPrdBusinessService().getActiveSavingsProductCategories();

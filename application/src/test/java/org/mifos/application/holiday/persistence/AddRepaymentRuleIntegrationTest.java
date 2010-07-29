@@ -34,7 +34,8 @@ public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
-    @Test public void testValidateLookupValueKey() throws Exception {
+    @Test
+    public void testValidateLookupValueKey() throws Exception {
         String validKey = "RepaymentRule-NewSameDay";
         String format = "RepaymentRule-";
        Assert.assertTrue(AddRepaymentRule.validateLookupValueKey(format, validKey));
@@ -42,7 +43,8 @@ public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertFalse(AddRepaymentRule.validateLookupValueKey(format, invalidKey));
     }
 
-    @Test public void testConstructor() throws Exception {
+    @Test
+    public void testConstructor() throws Exception {
         AddRepaymentRule upgrade = null;
         try {
             // use deprecated construtor

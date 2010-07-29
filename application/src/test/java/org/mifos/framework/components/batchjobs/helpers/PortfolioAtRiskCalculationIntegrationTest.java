@@ -155,7 +155,8 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
         }
     }
 
-    @Test public void testGeneratePortfolioAtRiskForTaskNoPayment() throws Exception {
+    @Test
+    public void testGeneratePortfolioAtRiskForTaskNoPayment() throws Exception {
         createInitialObject();
         TestObjectFactory.flushandCloseSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -186,7 +187,8 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
         account2 = TestObjectFactory.getObject(AccountBO.class, account2.getAccountId());
     }
 
-    @Test public void testGeneratePortfolioAtRiskForTaskSomePayments() throws Exception {
+    @Test
+    public void testGeneratePortfolioAtRiskForTaskSomePayments() throws Exception {
         createInitialObject();
         TestObjectFactory.flushandCloseSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());

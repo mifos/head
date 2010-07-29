@@ -55,7 +55,8 @@ public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTestCa
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testGetAllProductMix() throws PersistenceException {
+    @Test
+    public void testGetAllProductMix() throws PersistenceException {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         meeting1 = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         saving1 = ProductMixTestHelper.createSavingOffering("Savings Product1", "S1", meeting, meeting);
@@ -65,7 +66,8 @@ public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTestCa
 
     }
 
-    @Test public void testGetNotAllowedProducts() throws PersistenceException {
+    @Test
+    public void testGetNotAllowedProducts() throws PersistenceException {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         meeting1 = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         saving1 = ProductMixTestHelper.createSavingOffering("Savings Product1", "S1", meeting, meeting);

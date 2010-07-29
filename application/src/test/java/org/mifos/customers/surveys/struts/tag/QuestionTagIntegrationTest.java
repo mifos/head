@@ -58,7 +58,8 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testFreetext() throws Exception {
+    @Test
+    public void testFreetext() throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
         String questionText = "question";
         String shortName = "QuestionTagIntegrationTest Name";
@@ -71,7 +72,8 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(expectedMarkup, markup);
     }
 
-    @Test public void testNumber() throws Exception {
+    @Test
+    public void testNumber() throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
         String questionText = "question";
         String shortName = "QuestionTagIntegrationTest Name1";
@@ -86,7 +88,8 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    @Test public void testDate() throws Exception {
+    @Test
+    public void testDate() throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
         String questionText = "question";
         String shortName = "QuestionTagIntegrationTest Name2";

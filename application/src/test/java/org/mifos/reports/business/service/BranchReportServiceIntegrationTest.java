@@ -82,7 +82,8 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
     private BranchReportLoanArrearsAgingBO loanArrearReportForSecondWeek;
     private BranchReportLoanArrearsAgingBO loanArrearReportForThirdWeek;
 
-    @Test public void testReturnsClientSummaryForGivenBranchAndRunDate() throws Exception {
+    @Test
+    public void testReturnsClientSummaryForGivenBranchAndRunDate() throws Exception {
         session.save(branchReport);
         List<BranchReportClientSummaryBO> retrievedClientSummaries = branchReportService.getClientSummaryInfo(
                 BRANCH_ID, RUN_DATE_STR);
@@ -96,7 +97,8 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
        Assert.assertTrue(exists(retrievedClientSummaries, PredicateUtils.equalPredicate(activeBorrowersCountSummary)));
     }
 
-    @Test public void testReturnsLoanArrearsAgingInfo() throws Exception {
+    @Test
+    public void testReturnsLoanArrearsAgingInfo() throws Exception {
         session.save(branchReport);
         List<BranchReportLoanArrearsAgingBO> retrievedLoanArrearsAgingInfo = branchReportService
                 .getLoanArrearsAgingInfo(BRANCH_ID, RUN_DATE_STR);
@@ -106,7 +108,8 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
        Assert.assertTrue(exists(retrievedLoanArrearsAgingInfo, PredicateUtils.equalPredicate(loanArrearReportForThirdWeek)));
     }
 
-    @Test public void testServiceReturnsHeaderInformation() throws Exception {
+    @Test
+    public void testServiceReturnsHeaderInformation() throws Exception {
         session.save(branchReport);
         OfficeBO office = OfficecFixture.createOffice(BRANCH_ID_SHORT);
         expect(officeBusinessServiceMock.getOffice(BRANCH_ID_SHORT)).andReturn(office);
@@ -117,7 +120,8 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
                 returnedHeaderDTO);
     }
 
-    @Test public void testRemovesSpecifiedBranchReport() throws Exception {
+    @Test
+    public void testRemovesSpecifiedBranchReport() throws Exception {
         session.save(branchReport);
         branchReportService.removeBranchReport(branchReport);
 
@@ -132,25 +136,30 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
        Assert.assertEquals(0, loanArrearsAgingInfo.size());
     }
 
-    @Test public void testServiceReturnsFalseIfBranchReportDataNotPresent() throws Exception {
+    @Test
+    public void testServiceReturnsFalseIfBranchReportDataNotPresent() throws Exception {
         Assert.assertFalse(branchReportService.isReportDataPresentForRundateAndBranchId("2", "01/01/2008"));
     }
 
-    @Test public void testServiceReturnsTrueIfBranchReportDataPresent() throws Exception {
+    @Test
+    public void testServiceReturnsTrueIfBranchReportDataPresent() throws Exception {
         session.save(branchReport);
        Assert.assertTrue(branchReportService.isReportDataPresentForRundateAndBranchId(BRANCH_ID.toString(), RUN_DATE_STR));
     }
 
-    @Test public void testServiceReturnsFalseIfBranchReportDataNotPresentForGivenDate() throws Exception {
+    @Test
+    public void testServiceReturnsFalseIfBranchReportDataNotPresentForGivenDate() throws Exception {
         Assert.assertFalse(branchReportService.isReportDataPresentForRundate(DateUtils.getDate(2008, Calendar.JANUARY, 1)));
     }
 
-    @Test public void testServiceReturnsTrueIfBranchReportDataPresentForGivenDate() throws Exception {
+    @Test
+    public void testServiceReturnsTrueIfBranchReportDataPresentForGivenDate() throws Exception {
         session.save(branchReport);
        Assert.assertTrue(branchReportService.isReportDataPresentForRundate(RUN_DATE));
     }
 
-    @Test public void testGetStaffSummaryReportReturnsStaffSummaryForBranchAndDate() throws Exception {
+    @Test
+    public void testGetStaffSummaryReportReturnsStaffSummaryForBranchAndDate() throws Exception {
         BranchReportBO branchReportWithStaffSummary = createBranchReportWithStaffSummary(BRANCH_ID_SHORT, RUN_DATE);
         BranchReportBO otherBranchReportWithStaffSummary = createBranchReportWithStaffSummary(BRANCH_ID_SHORT,
                 FIRST_JAN_2008);
@@ -163,14 +172,16 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
     }
 
     // TODO TW Add test data and have better test
-    @Test public void testExtractLoanArrearsAgingInPeriod() throws Exception {
+    @Test
+    public void testExtractLoanArrearsAgingInPeriod() throws Exception {
         BranchReportLoanArrearsAgingBO loanArrearsAgingInfoInPeriod = branchReportService
                 .extractLoanArrearsAgingInfoInPeriod(BRANCH_ID_SHORT, LoanArrearsAgingPeriod.ONE_WEEK, DEFAULT_CURRENCY);
         Assert.assertNotNull(loanArrearsAgingInfoInPeriod);
         // TODO TW more assertions based on test data
     }
 
-    @Test public void testResultsForStaffingLevelAreSorted() throws PersistenceException, ServiceException {
+    @Test
+    public void testResultsForStaffingLevelAreSorted() throws PersistenceException, ServiceException {
         BranchReportPersistence branchReportPersistenceMock = createMock(BranchReportPersistence.class);
         branchReportService = new BranchReportService(officeBusinessServiceMock, new PersonnelBusinessService(),
                 branchReportPersistenceMock);

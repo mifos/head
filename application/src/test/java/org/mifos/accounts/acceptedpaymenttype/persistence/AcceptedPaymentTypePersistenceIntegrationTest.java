@@ -59,7 +59,8 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
         StaticHibernateUtil.rollbackTransaction();
     }
 
-    @Test public void testGetAcceptedPaymentTypes() throws Exception {
+    @Test
+    public void testGetAcceptedPaymentTypes() throws Exception {
         // get all accepted payment types and store in
         // currentAcceptedPaymentTypes
         currentAcceptedPaymentTypes = new ArrayList<TransactionAcceptedPaymentTypes>();
@@ -184,7 +185,8 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
 
     }
 
-    @Test public void testAddDeleteAcceptedPaymentTypes() throws Exception {
+    @Test
+    public void testAddDeleteAcceptedPaymentTypes() throws Exception {
         testGetAcceptedPaymentTypes();
         List<AcceptedPaymentType> addAcceptedPaymentTypes = new ArrayList<AcceptedPaymentType>();
         for (TrxnTypes transactionType : TrxnTypes.values()) {
@@ -236,7 +238,8 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
 
     }
 
-    @Test public void testRetrieveAcceptedPaymentTypes() throws Exception {
+    @Test
+    public void testRetrieveAcceptedPaymentTypes() throws Exception {
         for (TrxnTypes transactionType : TrxnTypes.values()) {
             Short transactionId = transactionType.getValue();
             List<AcceptedPaymentType> acceptedPaymentTypes = acceptedPaymentTypePersistence

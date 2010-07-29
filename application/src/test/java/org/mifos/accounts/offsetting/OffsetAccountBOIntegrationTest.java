@@ -70,7 +70,8 @@ public class OffsetAccountBOIntegrationTest extends MifosIntegrationTestCase {
          */
     }
 
-    @Test public void testLoanAccountBOOfsetAllowablePersistence() {
+    @Test
+    public void testLoanAccountBOOfsetAllowablePersistence() {
        Assert.assertTrue(accountBO.getOffsettingAllowable().intValue() == 1);
     }
 

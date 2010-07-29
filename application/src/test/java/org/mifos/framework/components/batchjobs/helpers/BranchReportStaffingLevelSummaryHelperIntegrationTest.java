@@ -44,7 +44,8 @@ public class BranchReportStaffingLevelSummaryHelperIntegrationTest extends Mifos
 
     public static final Short BRANCH_ID = Short.valueOf("2");
 
-    @Test public void testPopulateStaffingLevelSummary() throws BatchJobException, ServiceException {
+    @Test
+    public void testPopulateStaffingLevelSummary() throws BatchJobException, ServiceException {
         BranchReportBO branchReport = BranchReportBOFixture.createBranchReport(Integer.valueOf(1), BRANCH_ID, DateUtils
                 .currentDate());
         new BranchReportStaffingLevelSummaryHelper(branchReport, new BranchReportService())

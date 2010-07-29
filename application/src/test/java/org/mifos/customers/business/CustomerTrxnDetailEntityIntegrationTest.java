@@ -95,7 +95,8 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
         IntegrationTestObjectMother.cleanCustomerHierarchyWithMeeting(client, group, center, weeklyMeeting);
     }
 
-    @Test public void testGenerateReverseTrxn() throws Exception {
+    @Test
+    public void testGenerateReverseTrxn() throws Exception {
         accountBO = client.getCustomerAccount();
         Date currentDate = new Date(System.currentTimeMillis());
         CustomerAccountBO customerAccountBO = (CustomerAccountBO) accountBO;

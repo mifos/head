@@ -105,7 +105,8 @@ public class CustomFieldsBackfillerIntegrationTest extends MifosIntegrationTestC
     /**
      * Ensure a newly added field is also added to an existing client.
      */
-    @Test public void testExistingClientGetsNewField() throws Exception {
+    @Test
+    public void testExistingClientGetsNewField() throws Exception {
         createCustomField();
        Assert.assertEquals(CUSTOM_FIELD_LABEL, customField.getLabel());
         CustomFieldsBackfiller cfb = new CustomFieldsBackfiller();
@@ -129,7 +130,8 @@ public class CustomFieldsBackfillerIntegrationTest extends MifosIntegrationTestC
      * Ensure a non-mandatory newly added field (without a default value) is
      * also added to an existing client.
      */
-    @Test public void testExistingClientGetsNewNonmandatoryFieldWithoutDefault() throws Exception {
+    @Test
+    public void testExistingClientGetsNewNonmandatoryFieldWithoutDefault() throws Exception {
         createNonMandatoryCustomFieldWithoutDefault();
        Assert.assertEquals(CUSTOM_FIELD_LABEL2, customField.getLabel());
         CustomFieldsBackfiller cfb = new CustomFieldsBackfiller();

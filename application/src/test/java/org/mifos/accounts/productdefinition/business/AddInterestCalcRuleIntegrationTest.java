@@ -37,7 +37,8 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
         super();
     }
 
-    @Test public void testValidateLookupValueKeyTest() throws Exception {
+    @Test
+    public void testValidateLookupValueKeyTest() throws Exception {
         String validKey = "InterestTypes-DecliningBalance";
         String format = "InterestTypes-";
        Assert.assertTrue(AddInterestCalcRule.validateLookupValueKey(format, validKey));
@@ -45,7 +46,8 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
         Assert.assertFalse(AddInterestCalcRule.validateLookupValueKey(format, invalidKey));
     }
 
-    @Test public void testConstructor() throws Exception {
+    @Test
+    public void testConstructor() throws Exception {
         short newRuleId = 2555;
         short categoryId = 1;
         String description = "DecliningBalance";

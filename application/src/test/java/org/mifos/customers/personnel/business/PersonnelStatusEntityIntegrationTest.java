@@ -33,7 +33,8 @@ public class PersonnelStatusEntityIntegrationTest extends MifosIntegrationTestCa
         super();
     }
 
-    @Test public void testGetPersonnelStatusEntity() throws Exception {
+    @Test
+    public void testGetPersonnelStatusEntity() throws Exception {
         MasterPersistence masterPersistenceService = new MasterPersistence();
         PersonnelStatusEntity personnelStatusEntity = (PersonnelStatusEntity) masterPersistenceService
                 .getPersistentObject(PersonnelStatusEntity.class, (short) 1);

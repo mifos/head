@@ -189,13 +189,15 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         return dateTime;
     }
 
-    @Test public void testThatLoanInPendingApprovalStateDoesNotGenerateArrearsData() throws Exception {
+    @Test
+    public void testThatLoanInPendingApprovalStateDoesNotGenerateArrearsData() throws Exception {
         LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_PENDING_APPROVAL);
 
         Assert.assertNull(ageLoanTenDaysAndGetLoanArrearsAgingEntity(loan));
     }
 
-    @Test public void testThatLoanInActiveInBadStandingStateDoesGenerateArrearsData() throws Exception {
+    @Test
+    public void testThatLoanInActiveInBadStandingStateDoesGenerateArrearsData() throws Exception {
         LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_ACTIVE_IN_BAD_STANDING);
 
         Assert.assertNotNull(ageLoanTenDaysAndGetLoanArrearsAgingEntity(loan));
@@ -224,7 +226,8 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     // create a weekly 10 week loan of 100 with flat 100% interest (total interest is 20 or 2 each week)
     // advance the date by ten days, run the batch job
     // one weeks payment should be in arrears
-    @Test public void testLoanWithOneOverduePayment() throws Exception {
+    @Test
+    public void testLoanWithOneOverduePayment() throws Exception {
         LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 
         LoanArrearsAgingEntity loanArrearsAgingEntity = ageLoanTenDaysAndGetLoanArrearsAgingEntity(loan);
@@ -244,7 +247,8 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Test public void testLoanWithTwoOverduePayments() throws Exception {
+    @Test
+    public void testLoanWithTwoOverduePayments() throws Exception {
         LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 
         int daysOverdue = 10;
@@ -265,7 +269,8 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Test public void testLoanWithOnePaymentMadeAndOneOverduePayments() throws Exception {
+    @Test
+    public void testLoanWithOnePaymentMadeAndOneOverduePayments() throws Exception {
         LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 
         Assert.assertNull(loan.getLoanArrearsAgingEntity());
@@ -301,7 +306,8 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         Assert.assertEquals(Short.valueOf(daysOverdue), loanArrearsAgingEntity.getDaysInArrears());
     }
 
-    @Test public void testLoanWithOnePaymentMadeAndNoOverduePayments() throws Exception {
+    @Test
+    public void testLoanWithOnePaymentMadeAndNoOverduePayments() throws Exception {
         LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_ACTIVE_IN_BAD_STANDING);
 
         Assert.assertNull(loan.getLoanArrearsAgingEntity());
@@ -332,7 +338,8 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Test public void testLoanWithEarlyRepayment() throws Exception {
+    @Test
+    public void testLoanWithEarlyRepayment() throws Exception {
         LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_ACTIVE_IN_BAD_STANDING);
 
         Assert.assertNull(loan.getLoanArrearsAgingEntity());
@@ -364,7 +371,8 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Test public void testLoanWithOnePartialPayment() throws Exception {
+    @Test
+    public void testLoanWithOnePartialPayment() throws Exception {
         LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 
         Assert.assertNull(loan.getLoanArrearsAgingEntity());

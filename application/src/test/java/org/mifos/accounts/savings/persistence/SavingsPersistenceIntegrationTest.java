@@ -130,7 +130,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testGetSavingsProducts() throws Exception {
+    @Test
+    public void testGetSavingsProducts() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
         savingsOffering1 = TestObjectFactory.createSavingsProduct("SavingPrd1", "sdcf", currentDate,
@@ -147,14 +148,16 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
     }
 
-    @Test public void testRetrieveCustomFieldsDefinition() throws Exception {
+    @Test
+    public void testRetrieveCustomFieldsDefinition() throws Exception {
         List<CustomFieldDefinitionEntity> customFields = savingsPersistence
                 .retrieveCustomFieldsDefinition(SavingsConstants.SAVINGS_CUSTOM_FIELD_ENTITY_TYPE);
         Assert.assertNotNull(customFields);
         Assert.assertEquals(SAVINGS_CUSTOMFIELDS_NUMBER, customFields.size());
     }
 
-    @Test public void testFindById() throws Exception {
+    @Test
+    public void testFindById() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
         savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "xdsa", currentDate,
@@ -164,27 +167,31 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         Assert.assertEquals(savingsOffering.getRecommendedAmount(), savings1.getRecommendedAmount());
     }
 
-    @Test public void testGetAccountStatus() throws Exception {
+    @Test
+    public void testGetAccountStatus() throws Exception {
         AccountStateEntity accountState = savingsPersistence.getAccountStatusObject(AccountStates.SAVINGS_ACC_CLOSED);
         Assert.assertNotNull(accountState);
         Assert.assertEquals(accountState.getId().shortValue(), AccountStates.SAVINGS_ACC_CLOSED);
     }
 
-    @Test public void testRetrieveAllAccountStateList() throws NumberFormatException, PersistenceException {
+    @Test
+    public void testRetrieveAllAccountStateList() throws NumberFormatException, PersistenceException {
         List<AccountStateEntity> accountStateEntityList = accountPersistence.retrieveAllAccountStateList(Short
                 .valueOf("2"));
         Assert.assertNotNull(accountStateEntityList);
         Assert.assertEquals(6, accountStateEntityList.size());
     }
 
-    @Test public void testRetrieveAllActiveAccountStateList() throws NumberFormatException, PersistenceException {
+    @Test
+    public void testRetrieveAllActiveAccountStateList() throws NumberFormatException, PersistenceException {
         List<AccountStateEntity> accountStateEntityList = accountPersistence.retrieveAllActiveAccountStateList(Short
                 .valueOf("2"));
         Assert.assertNotNull(accountStateEntityList);
         Assert.assertEquals(6, accountStateEntityList.size());
     }
 
-    @Test public void testGetStatusChecklist() throws Exception {
+    @Test
+    public void testGetStatusChecklist() throws Exception {
         accountCheckList = TestObjectFactory.createAccountChecklist(AccountTypes.SAVINGS_ACCOUNT.getValue(),
                 AccountState.SAVINGS_PARTIAL_APPLICATION, Short.valueOf("1"));
         List statusCheckList = accountPersistence.getStatusChecklist(Short.valueOf("13"), AccountTypes.SAVINGS_ACCOUNT
@@ -194,7 +201,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         Assert.assertEquals(1, statusCheckList.size());
     }
 
-    @Test public void testFindBySystemId() throws Exception {
+    @Test
+    public void testFindBySystemId() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
         savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "v1ws", currentDate,
@@ -205,7 +213,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         Assert.assertEquals(savingsOffering.getRecommendedAmount(), savings1.getRecommendedAmount());
     }
 
-    @Test public void testRetrieveLastTransaction() throws Exception {
+    @Test
+    public void testRetrieveLastTransaction() throws Exception {
         try {
             SavingsTestHelper helper = new SavingsTestHelper();
             createInitialObjects();
@@ -277,7 +286,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         }
     }
 
-    @Test public void testGetAccountsPendingForIntCalc() throws Exception {
+    @Test
+    public void testGetAccountsPendingForIntCalc() throws Exception {
         SavingsTestHelper helper = new SavingsTestHelper();
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -319,7 +329,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         center = group.getParentCustomer();
     }
 
-    @Test public void testGetAccountsPendingForIntPost() throws Exception {
+    @Test
+    public void testGetAccountsPendingForIntPost() throws Exception {
         SavingsTestHelper helper = new SavingsTestHelper();
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -360,7 +371,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         center = group.getParentCustomer();
     }
 
-    @Test public void testGetMissedDeposits() throws Exception {
+    @Test
+    public void testGetMissedDeposits() throws Exception {
         SavingsTestHelper helper = new SavingsTestHelper();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
@@ -386,7 +398,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         Assert.assertEquals(savingsPersistence.getMissedDeposits(savings.getAccountId(), currentDate), 1);
     }
 
-    @Test public void testGetMissedDepositsPaidAfterDueDate() throws Exception {
+    @Test
+    public void testGetMissedDepositsPaidAfterDueDate() throws Exception {
         SavingsTestHelper helper = new SavingsTestHelper();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
@@ -412,7 +425,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         Assert.assertEquals(savingsPersistence.getMissedDepositsPaidAfterDueDate(savings.getAccountId()), 1);
     }
 
-    @Test public void testGetAllSavingsAccount() throws Exception {
+    @Test
+    public void testGetAllSavingsAccount() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
         savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "v1ws", currentDate,

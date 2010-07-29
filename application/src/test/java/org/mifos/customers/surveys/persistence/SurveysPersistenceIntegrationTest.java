@@ -43,7 +43,8 @@ public class SurveysPersistenceIntegrationTest extends MifosIntegrationTestCase 
     private Question question2;
     private Question question3;
 
-    @Test public void testPpi() throws Exception {
+    @Test
+    public void testPpi() throws Exception {
         createQuestions();
         SurveysPersistence persistence = new SurveysPersistence();
 

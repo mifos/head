@@ -45,7 +45,8 @@ public class ProductCategoryBOIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
-    @Test public void testCreateProductCategory() throws SystemException, ApplicationException {
+    @Test
+    public void testCreateProductCategory() throws SystemException, ApplicationException {
         UserContext userContext = TestUtils.makeUser();
         List<ProductTypeEntity> productTypeList = new ProductCategoryBusinessService().getProductTypes();
        Assert.assertEquals(2, productTypeList.size());
@@ -66,7 +67,8 @@ public class ProductCategoryBOIntegrationTest extends MifosIntegrationTestCase {
         deleteProductCategory(productCategoryBO);
     }
 
-    @Test public void testUpdateProductCategory() throws SystemException, ApplicationException {
+    @Test
+    public void testUpdateProductCategory() throws SystemException, ApplicationException {
         UserContext userContext = TestUtils.makeUser();
         List<ProductTypeEntity> productTypeList = new ProductCategoryBusinessService().getProductTypes();
        Assert.assertEquals(2, productTypeList.size());

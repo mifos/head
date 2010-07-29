@@ -45,7 +45,8 @@ public class LookUpValueEntityIntegrationTest extends MifosIntegrationTestCase {
         session = StaticHibernateUtil.getSessionTL();
     }
 
-    @Test public void testReadFromMasterData() throws Exception {
+    @Test
+    public void testReadFromMasterData() throws Exception {
         LookUpValueEntity readEntity = (LookUpValueEntity) session.get(LookUpValueEntity.class, 404);
        Assert.assertEquals(" ", readEntity.getLookUpName());
        Assert.assertEquals(87, (int) readEntity.getLookUpEntity().getEntityId());
@@ -55,7 +56,8 @@ public class LookUpValueEntityIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals("Can make payments to Client accounts", locales.iterator().next().getLookUpValue());
     }
 
-    @Test public void testWriteAndRead() throws Exception {
+    @Test
+    public void testWriteAndRead() throws Exception {
 
         LookUpValueEntity entity = new LookUpValueEntity();
         entity.setLookUpName("my entity");

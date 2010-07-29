@@ -44,7 +44,8 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
         super();
     }
 
-    @Test public void testShouldCallCreateMethodIfNewMembersSelected() throws Exception {
+    @Test
+    public void testShouldCallCreateMethodIfNewMembersSelected() throws Exception {
         GlimLoanUpdater glimLoanUpdaterMock = createMock(GlimLoanUpdater.class);
         LoanAccountAction loanAccountAction = new LoanAccountAction(new LoanBusinessService(),
                 new ConfigurationBusinessService(), glimLoanUpdaterMock);
@@ -64,7 +65,8 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
 
     }
 
-    @Test public void testShouldCallUpdateMethodIfExistingMembersChanged() throws Exception {
+    @Test
+    public void testShouldCallUpdateMethodIfExistingMembersChanged() throws Exception {
         GlimLoanUpdater glimLoanUpdaterMock = createMock(GlimLoanUpdater.class);
         LoanAccountAction loanAccountAction = new LoanAccountAction(new LoanBusinessService(),
                 new ConfigurationBusinessService(), glimLoanUpdaterMock);
@@ -87,7 +89,8 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
         verify(glimLoanUpdaterMock, loanMock, customerMock);
     }
 
-    @Test public void testShouldCallDeleteMethodIfExistingMembersRemoved() throws Exception {
+    @Test
+    public void testShouldCallDeleteMethodIfExistingMembersRemoved() throws Exception {
         GlimLoanUpdater glimLoanUpdaterMock = createMock(GlimLoanUpdater.class);
         LoanAccountAction loanAccountAction = new LoanAccountAction(new LoanBusinessService(),
                 new ConfigurationBusinessService(), glimLoanUpdaterMock);

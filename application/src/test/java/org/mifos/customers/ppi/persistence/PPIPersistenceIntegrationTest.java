@@ -77,7 +77,8 @@ public class PPIPersistenceIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testLikelihoods() throws Exception {
+    @Test
+    public void testLikelihoods() throws Exception {
         int surveyId = createSurveyWithLikelihoods("surveyName");
         PPISurvey retreivedSurvey = (PPISurvey) persistence.getSurvey(surveyId);
         Assert.assertNotNull(retreivedSurvey);
@@ -94,28 +95,33 @@ public class PPIPersistenceIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(70.0, lh.getTopHalfBelowPovertyLinePercent(), DELTA);
     }
 
-    @Test public void testRetrieveActivePPISurvey() throws Exception {
+    @Test
+    public void testRetrieveActivePPISurvey() throws Exception {
         createSurveyWithLikelihoods("surveyName");
        Assert.assertEquals("surveyName", persistence.retrieveActivePPISurvey().getName());
     }
 
-    @Test public void testRetrieveAllPPISurveys() throws Exception {
+    @Test
+    public void testRetrieveAllPPISurveys() throws Exception {
         createSurveyWithLikelihoods("survey1");
        Assert.assertEquals(1, persistence.retrieveAllPPISurveys().size());
     }
 
-    @Test public void testRetrievePPISurveyByCountry() throws Exception {
+    @Test
+    public void testRetrievePPISurveyByCountry() throws Exception {
         createSurveyWithLikelihoods("surveyForIndia");
        Assert.assertEquals(Country.INDIA, persistence.retrievePPISurveyByCountry(Country.INDIA).getCountryAsEnum());
     }
 
-    @Test public void testGetPPISurvey() throws Exception {
+    @Test
+    public void testGetPPISurvey() throws Exception {
         TestDatabase.resetMySQLDatabase();
         createSurveyWithLikelihoods("surveyName");
        Assert.assertEquals("surveyName", persistence.getPPISurvey(1).getName());
     }
 
-    @Test public void testPersistPPISurveyInstance() throws Exception {
+    @Test
+    public void testPersistPPISurveyInstance() throws Exception {
         TestDatabase.resetMySQLDatabase();
         int surveyId = createSurveyWithLikelihoods("surveyName");
         PPISurvey survey = persistence.getPPISurvey(surveyId);

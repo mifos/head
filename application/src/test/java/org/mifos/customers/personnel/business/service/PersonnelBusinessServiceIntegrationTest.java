@@ -70,14 +70,16 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testSuccessfullGetPersonnel() throws Exception {
+    @Test
+    public void testSuccessfullGetPersonnel() throws Exception {
         personnel = createPersonnel();
         String oldUserName = personnel.getUserName();
         personnel = personnelBusinessService.getPersonnel(personnel.getUserName());
         Assert.assertEquals(oldUserName, personnel.getUserName());
     }
 
-    @Test public void testFailureGetPersonnel() throws Exception {
+    @Test
+    public void testFailureGetPersonnel() throws Exception {
         personnel = createPersonnel();
         try {
             personnel = personnelBusinessService.getPersonnel("WRONG_USERNAME");
@@ -88,7 +90,8 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
 
     }
 
-    @Test public void testFailureGetOffice() throws Exception {
+    @Test
+    public void testFailureGetOffice() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             personnelBusinessService.getOffice(TestObjectFactory.HEAD_OFFICE);
@@ -101,7 +104,8 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
 
     }
 
-    @Test public void testSearchFailureWithNoConn() throws Exception {
+    @Test
+    public void testSearchFailureWithNoConn() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             personnelBusinessService.getPersonnel("WRONG_USERNAME");
@@ -114,7 +118,8 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
 
     }
 
-    @Test public void testSearch() throws Exception {
+    @Test
+    public void testSearch() throws Exception {
         personnel = createPersonnel();
         QueryResult queryResult = personnelBusinessService.search(personnel.getUserName(), Short.valueOf("1"), Short
                 .valueOf("1"));
@@ -124,7 +129,8 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
         Assert.assertEquals(1, queryResult.get(0, 10).size());
     }
 
-    @Test public void testSearchFailure() throws Exception {
+    @Test
+    public void testSearchFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             personnelBusinessService.search("Raj", Short.valueOf("1"), Short.valueOf("1"));
@@ -137,7 +143,8 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
 
     }
 
-    @Test public void testGetActiveLoanOfficersUnderOffice() throws Exception {
+    @Test
+    public void testGetActiveLoanOfficersUnderOffice() throws Exception {
         office = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         personnel = createPersonnel(office, PersonnelLevel.NON_LOAN_OFFICER);
         List<PersonnelBO> loanOfficers = personnelBusinessService
@@ -147,7 +154,8 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
 
     }
 
-    @Test public void testGetActiveLoanOfficersUnderOfficeFailure() throws Exception {
+    @Test
+    public void testGetActiveLoanOfficersUnderOfficeFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             personnelBusinessService.getActiveLoanOfficersUnderOffice(Short.valueOf("3"));
@@ -160,7 +168,8 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
 
     }
 
-    @Test public void testGetRolesFailure() throws Exception {
+    @Test
+    public void testGetRolesFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             personnelBusinessService.getRoles();
@@ -173,7 +182,8 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
 
     }
 
-    @Test public void testGetPersonnelFailure() throws Exception {
+    @Test
+    public void testGetPersonnelFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             personnelBusinessService.getPersonnel("12345678");
@@ -186,12 +196,14 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
 
     }
 
-    @Test public void testGetSupportedLocale() throws Exception {
+    @Test
+    public void testGetSupportedLocale() throws Exception {
         // asserting only on not null as suppored locales can be added by user
         Assert.assertNotNull(personnelBusinessService.getSupportedLocales());
     }
 
-    @Test public void testGetAllPersonnel() throws Exception {
+    @Test
+    public void testGetAllPersonnel() throws Exception {
         List<PersonnelBO> personnel = personnelBusinessService.getAllPersonnel();
         Assert.assertNotNull(personnel);
         Assert.assertEquals(3, personnel.size());

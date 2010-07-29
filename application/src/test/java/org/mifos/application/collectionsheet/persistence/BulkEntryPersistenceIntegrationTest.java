@@ -77,7 +77,8 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testGetAccount() throws Exception {
+    @Test
+    public void testGetAccount() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -91,7 +92,8 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
        Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
     }
 
-    @Test public void testSuccessfulApplyPayment() throws Exception {
+    @Test
+    public void testSuccessfulApplyPayment() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -119,7 +121,8 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
 
     }
 
-    @Test public void testSuccessfulLoanUpdate() throws Exception {
+    @Test
+    public void testSuccessfulLoanUpdate() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -144,7 +147,8 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
        Assert.assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid(), TestUtils.createMoney("100.0"));
     }
 
-    @Test public void testFailureApplyPayment() throws Exception {
+    @Test
+    public void testFailureApplyPayment() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active", meeting);

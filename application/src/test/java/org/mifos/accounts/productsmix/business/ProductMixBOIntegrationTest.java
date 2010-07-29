@@ -57,14 +57,16 @@ public class ProductMixBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testUpdate() throws PersistenceException, ProductDefinitionException {
+    @Test
+    public void testUpdate() throws PersistenceException, ProductDefinitionException {
         prdMix = new ProductMixBO(savingsOffering, savingsOffering);
         prdMix.update();
        Assert.assertEquals(savingsOffering.getPrdOfferingId(), prdMix.getPrdOfferingId().getPrdOfferingId());
        Assert.assertEquals(savingsOffering.getPrdOfferingId(), prdMix.getPrdOfferingNotAllowedId().getPrdOfferingId());
     }
 
-    @Test public void testDelete() throws PersistenceException, ProductDefinitionException {
+    @Test
+    public void testDelete() throws PersistenceException, ProductDefinitionException {
         prdMix = new ProductMixBO(savingsOffering, savingsOffering);
         prdMix.update();
        Assert.assertEquals(savingsOffering.getPrdOfferingId(), prdMix.getPrdOfferingId().getPrdOfferingId());

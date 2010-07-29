@@ -63,7 +63,8 @@ public class BranchReportLoanArrearsAgingHelperIntegrationTest extends BranchRep
     private List<LoanArrearsAgingPeriod> expectedPeriods;
     private BranchReportConfigService branchReportConfigServiceMock;
 
-    @Test public void testLoanArrearsAgingHelperPopulatesAgingFields() throws Exception {
+    @Test
+    public void testLoanArrearsAgingHelperPopulatesAgingFields() throws Exception {
         BranchReportBO branchReportLoanArrearsBatchBO = BranchReportBOFixture.createBranchReport(Integer.valueOf(1),
                 Short.valueOf("3"), DateUtils.currentDate());
 
@@ -94,7 +95,8 @@ public class BranchReportLoanArrearsAgingHelperIntegrationTest extends BranchRep
         assertSameCollections(expectedPeriods, foundPeriods);
     }
 
-    @Test public void testLoanArrearsContructor() throws Exception {
+    @Test
+    public void testLoanArrearsContructor() throws Exception {
         Money agingAmount = createMoney(TestUtils.RUPEE, 3.3333);
         BranchReportLoanArrearsAgingBO loanArrears = new BranchReportLoanArrearsAgingBO(null, null, null, agingAmount,
                 createMoney(TestUtils.RUPEE, 3.3333), createMoney(TestUtils.RUPEE, 666.70));

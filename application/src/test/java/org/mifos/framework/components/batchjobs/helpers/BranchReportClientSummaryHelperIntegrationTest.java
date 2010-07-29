@@ -55,7 +55,8 @@ public class BranchReportClientSummaryHelperIntegrationTest extends MifosIntegra
     private static final Integer FIVE = Integer.valueOf(5);
     public static final Short BRANCH_ID = THREE_SHORT;
 
-    @Test public void testPopulatesClientSummary() throws Exception {
+    @Test
+    public void testPopulatesClientSummary() throws Exception {
         BranchReportBO branchReport = BranchReportBOFixture.createBranchReport(Integer.valueOf(1), BRANCH_ID, DateUtils
                 .currentDate());
         new BranchReportClientSummaryHelper(getCustomerBusinessServiceStub(), getBranchReportServiceStub(),

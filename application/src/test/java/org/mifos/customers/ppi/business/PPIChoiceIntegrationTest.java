@@ -60,7 +60,8 @@ public class PPIChoiceIntegrationTest extends MifosIntegrationTestCase {
         TestDatabase.resetMySQLDatabase();
     }
 
-    @Test public void testRetrievePPIChoice() throws Exception {
+    @Test
+    public void testRetrievePPIChoice() throws Exception {
         Question question = new Question("question1", "what is your question", AnswerType.CHOICE);
         PPIChoice ppiChoice = new PPIChoice("Hello World");
         question.addChoice(ppiChoice);
@@ -72,7 +73,8 @@ public class PPIChoiceIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals("Hello World", retrievedChoice.getChoiceText());
     }
 
-    @Test public void testRetrieveRegularChoice() throws Exception {
+    @Test
+    public void testRetrieveRegularChoice() throws Exception {
         Question question = new Question("question2", "what is your question", AnswerType.CHOICE);
         QuestionChoice regularChoice = new QuestionChoice("Hello World");
         question.addChoice(regularChoice);
@@ -87,7 +89,8 @@ public class PPIChoiceIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(null, new PPIPersistence().getPPIChoice(choiceId));
     }
 
-    @Test public void testNotFound() throws Exception {
+    @Test
+    public void testNotFound() throws Exception {
         QuestionChoice retrieved = new PPIPersistence().getPPIChoice(123456);
        Assert.assertEquals(null, retrieved);
     }

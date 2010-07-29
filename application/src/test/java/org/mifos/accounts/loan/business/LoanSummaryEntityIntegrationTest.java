@@ -48,7 +48,8 @@ public class LoanSummaryEntityIntegrationTest extends MifosIntegrationTestCase {
     protected CustomerBO center = null;
     protected CustomerBO group = null;
 
-    @Test public void testDecreaseBy() {
+    @Test
+    public void testDecreaseBy() {
         accountBO = getLoanAccount();
         LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
         Money principal = TestUtils.createMoney(100);
@@ -66,7 +67,8 @@ public class LoanSummaryEntityIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(loanSummaryEntity.getOriginalPenalty().add(penalty), originalPenalty);
     }
 
-    @Test public void testUpdatePaymentDetails() {
+    @Test
+    public void testUpdatePaymentDetails() {
         accountBO = getLoanAccount();
         LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
         Money principal = TestUtils.createMoney(100);

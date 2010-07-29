@@ -44,26 +44,30 @@ public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
         configuration = MifosConfiguration.getInstance();
     }
 
-    @Test public void testInitializeLabelCache() {
+    @Test
+    public void testInitializeLabelCache() {
 
         Map<LabelKey, String> labelCache = configuration.getLabelCache();
        Assert.assertEquals(true, labelCache.size() > 10);
 
     }
 
-    @Test public void testGetLabelValueEnglish() {
+    @Test
+    public void testGetLabelValueEnglish() {
        Assert.assertEquals("Bulk entry", MifosConfiguration.getInstance().getLabelValue(ConfigurationConstants.BULKENTRY,
                 (short) 1));
     }
 
     /*
      * Will be uncommented when spanish values will be entered in master data.
-     * @Test public void testGetLabelValueSpanish(){Assert.assertEquals("Entrada agranel
+     * @Test
+    public void testGetLabelValueSpanish(){Assert.assertEquals("Entrada agranel
      * ",MifosConfiguration.getInstance().getLabelValue(ConfigurationConstants.BULKENTRY,(short)2))
      * ; }
      */
 
-    @Test public void testLabelKey() {
+    @Test
+    public void testLabelKey() {
         LabelKey labelKey = new LabelKey("key", (short) 1);
        Assert.assertEquals("[localeId=1][key=key]", labelKey.toString());
        Assert.assertEquals(false, labelKey.equals(null));

@@ -80,7 +80,8 @@ public class ApplicationConfigurationPersistenceIntegrationTest extends MifosInt
      * 2007/12/24 Code in progress to test dumping of database strings to properties files.
      */
     /*
-     * @Test public void testDump() { List<LookUpEntity> entities=null; try { Session session =
+     * @Test
+    public void testDump() { List<LookUpEntity> entities=null; try { Session session =
      * StaticHibernateUtil.getSessionTL(); entities = session.getNamedQuery( NamedQueryConstants.GET_ENTITIES).list();
      *
      * for (LookUpEntity entity : entities) { Set<LookUpLabelEntity> labels = entity.getLookUpLabels(); for

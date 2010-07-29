@@ -62,7 +62,8 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
     }
 
 
-    @Test public void testGetProductTypes() throws Exception {
+    @Test
+    public void testGetProductTypes() throws Exception {
         UserContext context = TestUtils.makeUser();
 
         List<ProductTypeEntity> productTypeList = productCategoryBusinessService.getProductTypes();
@@ -77,7 +78,8 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
         }
     }
 
-    @Test public void testGetProductTypesFailure() throws Exception {
+    @Test
+    public void testGetProductTypesFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             productCategoryBusinessService.getProductTypes();
@@ -87,13 +89,15 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
         }
     }
 
-    @Test public void testFindByGlobalNum() throws Exception {
+    @Test
+    public void testFindByGlobalNum() throws Exception {
         ProductCategoryBO productCategoryBO = createProductCategory();
         Assert.assertNotNull(productCategoryBusinessService.findByGlobalNum(productCategoryBO.getGlobalPrdCategoryNum()));
         deleteProductCategory(productCategoryBO);
     }
 
-    @Test public void testFindByGlobalNumFailure() throws Exception {
+    @Test
+    public void testFindByGlobalNumFailure() throws Exception {
         ProductCategoryBO productCategoryBO = createProductCategory();
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -105,11 +109,13 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
         }
     }
 
-    @Test public void testGetProductCategoryStatusList() throws Exception {
+    @Test
+    public void testGetProductCategoryStatusList() throws Exception {
        Assert.assertEquals(2, productCategoryBusinessService.getProductCategoryStatusList().size());
     }
 
-    @Test public void testGetProductCategoryStatusListFailure() throws Exception {
+    @Test
+    public void testGetProductCategoryStatusListFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             productCategoryBusinessService.getProductCategoryStatusList();
@@ -119,14 +125,16 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
         }
     }
 
-    @Test public void testGetAllCategories() throws Exception {
+    @Test
+    public void testGetAllCategories() throws Exception {
        Assert.assertEquals(2, productCategoryBusinessService.getAllCategories().size());
         ProductCategoryBO productCategoryBO = createProductCategory();
        Assert.assertEquals(3, productCategoryBusinessService.getAllCategories().size());
         deleteProductCategory(productCategoryBO);
     }
 
-    @Test public void testGetAllCategoriesFailure() throws Exception {
+    @Test
+    public void testGetAllCategoriesFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             productCategoryBusinessService.getAllCategories();

@@ -70,7 +70,8 @@ public class CenterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         StaticHibernateUtil.closeSession();
     }
 
-    @Test public void testFailureFindBySystemId() throws Exception {
+    @Test
+    public void testFailureFindBySystemId() throws Exception {
         center = createCenter("Center1");
         StaticHibernateUtil.closeSession();
         TestObjectFactory.simulateInvalidConnection();

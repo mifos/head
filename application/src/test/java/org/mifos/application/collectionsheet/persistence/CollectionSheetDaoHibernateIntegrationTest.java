@@ -139,7 +139,8 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         IntegrationTestObjectMother.cleanCustomerHierarchyWithMeeting(client, group, center, weeklyMeeting);
     }
 
-    @Test public void testShouldRetrieveCustomerHierarchyWithACenterAsRootByBranchId() throws Exception {
+    @Test
+    public void testShouldRetrieveCustomerHierarchyWithACenterAsRootByBranchId() throws Exception {
 
         // setup
         final Integer customerId = center.getCustomerId();
@@ -171,7 +172,8 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         Assert.assertNull("group should have no attendance against them", customerHierarchy.get(1).getAttendanceId());
     }
 
-    @Test public void testShouldRetrieveCustomerHierarchyWithAGroupAsRootByBranchId() throws Exception {
+    @Test
+    public void testShouldRetrieveCustomerHierarchyWithAGroupAsRootByBranchId() throws Exception {
 
         // setup
         final Integer customerId = group.getCustomerId();
@@ -203,7 +205,8 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         Assert.assertNull("client should have no attendance against them", customerHierarchy.get(1).getAttendanceId());
     }
 
-    @Test public void testShouldFindAllLoanRepaymentInCenterHierarchy() {
+    @Test
+    public void testShouldFindAllLoanRepaymentInCenterHierarchy() {
 
         // setup
         Date startDate = new Date(System.currentTimeMillis());
@@ -236,7 +239,8 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         Assert.assertThat(loansAgainstGroup.get(0).getTotalRepaymentDue(), is(Double.valueOf("112.00")));
     }
 
-    @Test public void testShouldFindOutstandingFeesForLoansInCenterHierarchy() {
+    @Test
+    public void testShouldFindOutstandingFeesForLoansInCenterHierarchy() {
 
         // setup
         Date startDate = new Date(System.currentTimeMillis());
@@ -275,7 +279,8 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         Assert.assertThat(loanFeesAgainstGroupAccountLoan.get(0).getTotalFeeAmountDue(), is(Double.valueOf("100.0")));
     }
 
-    @Test public void testShouldFindAccountCollectionFeesForCustomerAccounts() {
+    @Test
+    public void testShouldFindAccountCollectionFeesForCustomerAccounts() {
 
         // setup
         final Short branchId = center.getOffice().getOfficeId();
@@ -300,7 +305,8 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         Assert.assertThat(accountCollections.get(0).getAccountCollectionPayment(), is(Double.valueOf("0.0")));
     }
 
-    @Test public void testShouldFindOutstandingFeesForCustomerAccountsXXX() {
+    @Test
+    public void testShouldFindOutstandingFeesForCustomerAccountsXXX() {
 
         // setup
         final Short branchId = center.getOffice().getOfficeId();
@@ -326,7 +332,8 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         Assert.assertThat(accountCollectionFees.get(0).getAccountCollectionPayment(), is(Double.valueOf("0.0")));
     }
 
-    @Test public void testShouldFindLoanAccountsInDisbursementState() {
+    @Test
+    public void testShouldFindLoanAccountsInDisbursementState() {
 
         // setup
         Date startDate = new Date(System.currentTimeMillis());
@@ -358,7 +365,8 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         Assert.assertThat(loanDisbursements.get(0).getAmountDueAtDisbursement(), is(Double.valueOf("30.0")));
     }
 
-    @Test public void testShouldFindSavingsDepositsforCustomerHierarchy() {
+    @Test
+    public void testShouldFindSavingsDepositsforCustomerHierarchy() {
 
         // setup
         savingsProduct = new SavingsProductBuilder().mandatory().appliesToCentersOnly().withShortName("SP1")
