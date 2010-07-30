@@ -811,7 +811,9 @@ explanation of the license and how it is applied.
                 </td>
                 <td width="30%" align="left" class="paddingL10">
                   <span class="fontnormal8pt">
-                    <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale, questionGroupInstance.dateCompleted)}" />
+                    <label id="label.${questionGroupInstance.id}">
+                        <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale, questionGroupInstance.dateCompleted)}" />
+                    </label>
                   </span>
                 </td>
               </tr>

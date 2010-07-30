@@ -43,10 +43,10 @@ public class QuestionnairePage extends MifosPage {
         selenium.type("id=" + selenium.getEval(String.format(SELECT_QUESTION_JS, question)), answer);
     }
 
-    public ClientViewDetailsPage submit() {
+    public MifosPage submit() {
         selenium.click("id=_eventId_saveQuestionnaire");
         waitForPageToLoad();
-        return new ClientViewDetailsPage(selenium);
+        return selenium.isElementPresent("id=allErrors") ? new QuestionnairePage(selenium) : new ClientViewDetailsPage(selenium);
     }
 
     public void setResponsesForMultiSelect(String question, int totalChoices, String... choices) {
@@ -60,5 +60,15 @@ public class QuestionnairePage extends MifosPage {
                 selenium.check("id=" + choiceId);
             }
         }
+    }
+
+    public boolean isErrorPresent(String errorMsg) {
+        return selenium.isTextPresent(errorMsg);
+    }
+
+    public ClientViewDetailsPage cancel() {
+        selenium.click("id=_eventId_cancel");
+        waitForPageToLoad();
+        return new ClientViewDetailsPage(selenium);
     }
 }

@@ -30,9 +30,13 @@ import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
 import org.mifos.test.acceptance.questionnaire.QuestionGroupResponsePage;
 import org.testng.Assert;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import static java.lang.String.format;
 
 public class ClientViewDetailsPage extends MifosPage {
+    public static final String QUESTION_GROUP_DATE_JS = "window.document.getElementById('label.%s').innerHTML.trim()";
     public static final String QUESTION_GROUP_NAME_JS = "window.document.getElementById('questionGroupInstances').getElementsByTagName('a')[%d].innerHTML.trim()";
     public static final String QUESTION_GROUP_ID_JS = "window.document.getElementById('questionGroupInstances').getElementsByTagName('a')[%d].id";
 
@@ -156,13 +160,14 @@ public class ClientViewDetailsPage extends MifosPage {
     }
 
 
-    public String[] getQuestionGroupInstances() {
+    public Map<String, String> getQuestionGroupInstances() {
         int rows = Integer.valueOf(selenium.getEval("window.document.getElementById('questionGroupInstances').getElementsByTagName('a').length"));
-        String[] questionGroups = new String[rows - 1];
+        Map<String,String> instances = new LinkedHashMap<String, String>();
         for (int i=0; i<rows-1; i++) {
-            questionGroups[i] = selenium.getEval(format(QUESTION_GROUP_NAME_JS, i));
+            String instanceId = selenium.getEval(format(QUESTION_GROUP_ID_JS, i));
+            instances.put(selenium.getEval(format(QUESTION_GROUP_NAME_JS, i)), selenium.getEval(format(QUESTION_GROUP_DATE_JS, instanceId)));
         }
-        return questionGroups;
+        return instances;
     }
 
     public QuestionGroupResponsePage navigateToQuestionGroupResponsePage(String questionGroupTitle) {
