@@ -20,11 +20,14 @@
 
 package org.mifos.ui.core.controller;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.AcceptedPaymentTypeDto;
+import org.mifos.dto.screen.PaymentTypeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -63,13 +66,95 @@ public class AcceptedPaymentTypesController {
     @ModelAttribute("formBean")
     public AcceptedPaymentTypesBean showPopulatedForm() {
         AcceptedPaymentTypeDto acceptedPaymentTypeDto = adminServiceFacade.retrieveAcceptedPaymentTypes();
-        acceptedPaymentTypeDto.getInDepositList();
 
-        // FIXME - keithw - for this form bean to bind to 'spring freemarker macro' controls I think that the data should
-        // be represented as maps and you can then use @spring.formMultiSelect path, options, attributes/>
-        // SEE - http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/view.html#view-velocity-forms
-        // NOTE - you dont' have to worry about populating bean from DTO info
-        return new AcceptedPaymentTypesBean();
+        AcceptedPaymentTypesBean paymentTypes = populateAcceptedPaymentTypesBean(acceptedPaymentTypeDto);
+        return paymentTypes;
+    }
+
+    private AcceptedPaymentTypesBean populateAcceptedPaymentTypesBean(AcceptedPaymentTypeDto acceptedPaymentTypeDto) {
+
+        Map<String, String> nonAcceptedFees = new LinkedHashMap<String, String>();
+        Map<String, String> acceptedFees = new LinkedHashMap<String, String>();
+
+        List<PaymentTypeDto> outFees = acceptedPaymentTypeDto.getOutFeeList();
+        for (PaymentTypeDto paymentType : outFees) {
+            acceptedFees.put(paymentType.getId().toString(), paymentType.getName());
+        }
+
+        List<PaymentTypeDto> inFees = acceptedPaymentTypeDto.getInFeeList();
+        for (PaymentTypeDto paymentType : inFees) {
+            nonAcceptedFees.put(paymentType.getId().toString(), paymentType.getName());
+        }
+
+        Map<String, String> nonAcceptedLoanDisbursements = new LinkedHashMap<String, String>();
+        Map<String, String> acceptedLoanDisbursements = new LinkedHashMap<String, String>();
+
+        List<PaymentTypeDto> outDisbursements = acceptedPaymentTypeDto.getOutDisbursementList();
+        for (PaymentTypeDto paymentType : outDisbursements) {
+            acceptedLoanDisbursements.put(paymentType.getId().toString(), paymentType.getName());
+        }
+
+        List<PaymentTypeDto> inDibursements = acceptedPaymentTypeDto.getInDisbursementList();
+        for (PaymentTypeDto paymentType : inDibursements) {
+            nonAcceptedLoanDisbursements.put(paymentType.getId().toString(), paymentType.getName());
+        }
+
+        Map<String, String> nonAcceptedLoanRepayments = new LinkedHashMap<String, String>();
+        Map<String, String> acceptedLoanRepayments = new LinkedHashMap<String, String>();
+
+        List<PaymentTypeDto> outRepayments = acceptedPaymentTypeDto.getOutRepaymentList();
+        for (PaymentTypeDto paymentType : outRepayments) {
+            acceptedLoanRepayments.put(paymentType.getId().toString(), paymentType.getName());
+        }
+
+        List<PaymentTypeDto> inRepayments = acceptedPaymentTypeDto.getInRepaymentList();
+        for (PaymentTypeDto paymentType : inRepayments) {
+            nonAcceptedLoanRepayments.put(paymentType.getId().toString(), paymentType.getName());
+        }
+
+        Map<String, String> nonAcceptedSavingWithdrawals = new LinkedHashMap<String, String>();
+        Map<String, String> acceptedSavingWithdrawals = new LinkedHashMap<String, String>();
+
+        List<PaymentTypeDto> outWithdrawals = acceptedPaymentTypeDto.getOutWithdrawalList();
+        for (PaymentTypeDto paymentType : outWithdrawals) {
+            acceptedSavingWithdrawals.put(paymentType.getId().toString(), paymentType.getName());
+        }
+
+        List<PaymentTypeDto> inWithdrawals = acceptedPaymentTypeDto.getInWithdrawalList();
+        for (PaymentTypeDto paymentType : inWithdrawals) {
+            nonAcceptedSavingWithdrawals.put(paymentType.getId().toString(), paymentType.getName());
+        }
+
+        Map<String, String> nonAcceptedSavingDeposits = new LinkedHashMap<String, String>();
+        Map<String, String> acceptedSavingDeposits = new LinkedHashMap<String, String>();
+
+        List<PaymentTypeDto> outDeposits = acceptedPaymentTypeDto.getOutDepositList();
+        for (PaymentTypeDto paymentType : outDeposits) {
+            acceptedSavingDeposits.put(paymentType.getId().toString(), paymentType.getName());
+        }
+
+        List<PaymentTypeDto> inDeposits = acceptedPaymentTypeDto.getInDepositList();
+        for (PaymentTypeDto paymentType : inDeposits) {
+            nonAcceptedSavingDeposits.put(paymentType.getId().toString(), paymentType.getName());
+        }
+
+        AcceptedPaymentTypesBean paymentTypes = new AcceptedPaymentTypesBean();
+        paymentTypes.setNonAcceptedFeePaymentTypes(nonAcceptedFees);
+        paymentTypes.setAcceptedFeePaymentTypes(acceptedFees);
+
+        paymentTypes.setNonAcceptedLoanDisbursementPaymentTypes(nonAcceptedLoanDisbursements);
+        paymentTypes.setAcceptedLoanDisbursementPaymentTypes(acceptedLoanDisbursements);
+
+        paymentTypes.setNonAcceptedLoanRepaymentPaymentTypes(nonAcceptedLoanRepayments);
+        paymentTypes.setAcceptedLoanRepaymentPaymentTypes(acceptedLoanRepayments);
+
+        paymentTypes.setNonAcceptedSavingWithdrawalPaymentTypes(nonAcceptedSavingWithdrawals);
+        paymentTypes.setAcceptedSavingWithdrawalPaymentTypes(acceptedSavingWithdrawals);
+
+        paymentTypes.setNonAcceptedSavingDepositsPaymentTypes(nonAcceptedSavingDeposits);
+        paymentTypes.setAcceptedSavingDepositsPaymentTypes(acceptedSavingDeposits);
+
+        return paymentTypes;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -85,6 +170,7 @@ public class AcceptedPaymentTypesController {
         } else if (result.hasErrors()) {
             viewName = "defineAcceptedPaymentTypes";
         } else {
+            this.adminServiceFacade.updateAcceptedPaymentTypes(formBean.getChosenAcceptedFees(), formBean.getChosenAcceptedLoanDisbursements(), formBean.getChosenAcceptedLoanRepayments(), formBean.getChosenAcceptedSavingDeposits(), formBean.getChosenAcceptedSavingWithdrawals());
             status.setComplete();
         }
         return viewName;

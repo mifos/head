@@ -146,9 +146,8 @@ while(enn.hasMoreElements()){
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<td>
-							 <html-el:link styleId="admin.link.defineAcceptedPaymentType"
-								action="acceptedPaymentTypeAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.defineacceptedpaymenttype" /></html-el:link></td>
+							<a id="admin.link.defineAcceptedPaymentType" href="defineAcceptedPaymentTypes.ftl"><mifos:mifoslabel name="admin.defineacceptedpaymenttype" /></a>
+							</td>
 						</tr>
 						<tr class="fontnormal">
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"

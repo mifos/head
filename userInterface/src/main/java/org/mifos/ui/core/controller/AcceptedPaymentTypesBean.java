@@ -20,51 +20,193 @@
 
 package org.mifos.ui.core.controller;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 public class AcceptedPaymentTypesBean {
 
-    private String feesRight="";
-    private String disbursementsRight="";
-    private String repaymentsRight="";
-    private String withdrawalsRight="";
-    private String depositsRight="";
+    private Map<String, String> acceptedFeePaymentTypes = new LinkedHashMap<String, String>();
+    private Map<String, String> nonAcceptedFeePaymentTypes = new LinkedHashMap<String, String>();
+    private String[] chosenAcceptedFees;
+    private String[] chosenNonAcceptedFees;
 
-    public String getFeesRight() {
-        return this.feesRight;
+    private Map<String, String> acceptedLoanDisbursementPaymentTypes = new LinkedHashMap<String, String>();
+    private Map<String, String> nonAcceptedLoanDisbursementPaymentTypes = new LinkedHashMap<String, String>();
+    private String[] chosenAcceptedLoanDisbursements;
+    private String[] chosenNonAcceptedLoanDisbursements;
+
+    private Map<String, String> acceptedLoanRepaymentPaymentTypes = new LinkedHashMap<String, String>();
+    private Map<String, String> nonAcceptedLoanRepaymentPaymentTypes = new LinkedHashMap<String, String>();
+    private String[] chosenAcceptedLoanRepayments;
+    private String[] chosenNonAcceptedLoanRepayments;
+
+    private Map<String, String> acceptedSavingWithdrawalPaymentTypes = new LinkedHashMap<String, String>();
+    private Map<String, String> nonAcceptedSavingWithdrawalPaymentTypes = new LinkedHashMap<String, String>();
+    private String[] chosenAcceptedSavingWithdrawals;
+    private String[] chosenNonAcceptedSavingWithdrawals;
+
+    private Map<String, String> acceptedSavingDepositsPaymentTypes = new LinkedHashMap<String, String>();
+    private Map<String, String> nonAcceptedSavingDepositsPaymentTypes = new LinkedHashMap<String, String>();
+    private String[] chosenAcceptedSavingDeposits;
+    private String[] chosenNonAcceptedSavingDeposits;
+
+    public Map<String, String> getAcceptedFeePaymentTypes() {
+        return this.acceptedFeePaymentTypes;
     }
 
-    public void setFeesRight(String feesRight) {
-        this.feesRight = feesRight;
+    public void setAcceptedFeePaymentTypes(Map<String, String> acceptedFeePaymentTypes) {
+        this.acceptedFeePaymentTypes = acceptedFeePaymentTypes;
     }
 
-    public String getDisbursementsRight() {
-        return this.disbursementsRight;
+    public Map<String, String> getNonAcceptedFeePaymentTypes() {
+        return this.nonAcceptedFeePaymentTypes;
     }
 
-    public void setDisbursementsRight(String disbursementsRight) {
-        this.disbursementsRight = disbursementsRight;
+    public void setNonAcceptedFeePaymentTypes(Map<String, String> nonAcceptedFeePaymentTypes) {
+        this.nonAcceptedFeePaymentTypes = nonAcceptedFeePaymentTypes;
     }
 
-    public String getRepaymentsRight() {
-        return this.repaymentsRight;
+    public String[] getChosenAcceptedFees() {
+        return this.chosenAcceptedFees;
     }
 
-    public void setRepaymentsRight(String repaymentsRight) {
-        this.repaymentsRight = repaymentsRight;
+    public void setChosenAcceptedFees(String[] chosenAcceptedFees) {
+        this.chosenAcceptedFees = chosenAcceptedFees;
     }
 
-    public String getWithdrawalsRight() {
-        return this.withdrawalsRight;
+    public String[] getChosenNonAcceptedFees() {
+        return this.chosenNonAcceptedFees;
     }
 
-    public void setWithdrawalsRight(String withdrawalsRight) {
-        this.withdrawalsRight = withdrawalsRight;
+    public void setChosenNonAcceptedFees(String[] chosenNonAcceptedFees) {
+        this.chosenNonAcceptedFees = chosenNonAcceptedFees;
     }
 
-    public String getDepositsRight() {
-        return this.depositsRight;
+    public Map<String, String> getAcceptedLoanDisbursementPaymentTypes() {
+        return this.acceptedLoanDisbursementPaymentTypes;
     }
 
-    public void setDepositsRight(String depositsRight) {
-        this.depositsRight = depositsRight;
+    public void setAcceptedLoanDisbursementPaymentTypes(Map<String, String> acceptedLoanDisbursementPaymentTypes) {
+        this.acceptedLoanDisbursementPaymentTypes = acceptedLoanDisbursementPaymentTypes;
+    }
+
+    public Map<String, String> getNonAcceptedLoanDisbursementPaymentTypes() {
+        return this.nonAcceptedLoanDisbursementPaymentTypes;
+    }
+
+    public void setNonAcceptedLoanDisbursementPaymentTypes(Map<String, String> nonAcceptedLoanDisbursementPaymentTypes) {
+        this.nonAcceptedLoanDisbursementPaymentTypes = nonAcceptedLoanDisbursementPaymentTypes;
+    }
+
+    public String[] getChosenAcceptedLoanDisbursements() {
+        return this.chosenAcceptedLoanDisbursements;
+    }
+
+    public void setChosenAcceptedLoanDisbursements(String[] chosenAcceptedLoanDisbursements) {
+        this.chosenAcceptedLoanDisbursements = chosenAcceptedLoanDisbursements;
+    }
+
+    public String[] getChosenNonAcceptedLoanDisbursements() {
+        return this.chosenNonAcceptedLoanDisbursements;
+    }
+
+    public void setChosenNonAcceptedLoanDisbursements(String[] chosenNonAcceptedLoanDisbursements) {
+        this.chosenNonAcceptedLoanDisbursements = chosenNonAcceptedLoanDisbursements;
+    }
+
+    public Map<String, String> getAcceptedLoanRepaymentPaymentTypes() {
+        return this.acceptedLoanRepaymentPaymentTypes;
+    }
+
+    public void setAcceptedLoanRepaymentPaymentTypes(Map<String, String> acceptedLoanRepaymentPaymentTypes) {
+        this.acceptedLoanRepaymentPaymentTypes = acceptedLoanRepaymentPaymentTypes;
+    }
+
+    public Map<String, String> getNonAcceptedLoanRepaymentPaymentTypes() {
+        return this.nonAcceptedLoanRepaymentPaymentTypes;
+    }
+
+    public void setNonAcceptedLoanRepaymentPaymentTypes(Map<String, String> nonAcceptedLoanRepaymentPaymentTypes) {
+        this.nonAcceptedLoanRepaymentPaymentTypes = nonAcceptedLoanRepaymentPaymentTypes;
+    }
+
+    public String[] getChosenAcceptedLoanRepayments() {
+        return this.chosenAcceptedLoanRepayments;
+    }
+
+    public void setChosenAcceptedLoanRepayments(String[] chosenAcceptedLoanRepayments) {
+        this.chosenAcceptedLoanRepayments = chosenAcceptedLoanRepayments;
+    }
+
+    public String[] getChosenNonAcceptedLoanRepayments() {
+        return this.chosenNonAcceptedLoanRepayments;
+    }
+
+    public void setChosenNonAcceptedLoanRepayments(String[] chosenNonAcceptedLoanRepayments) {
+        this.chosenNonAcceptedLoanRepayments = chosenNonAcceptedLoanRepayments;
+    }
+
+    public Map<String, String> getAcceptedSavingWithdrawalPaymentTypes() {
+        return this.acceptedSavingWithdrawalPaymentTypes;
+    }
+
+    public void setAcceptedSavingWithdrawalPaymentTypes(Map<String, String> acceptedSavingWithdrawalPaymentTypes) {
+        this.acceptedSavingWithdrawalPaymentTypes = acceptedSavingWithdrawalPaymentTypes;
+    }
+
+    public Map<String, String> getNonAcceptedSavingWithdrawalPaymentTypes() {
+        return this.nonAcceptedSavingWithdrawalPaymentTypes;
+    }
+
+    public void setNonAcceptedSavingWithdrawalPaymentTypes(Map<String, String> nonAcceptedSavingWithdrawalPaymentTypes) {
+        this.nonAcceptedSavingWithdrawalPaymentTypes = nonAcceptedSavingWithdrawalPaymentTypes;
+    }
+
+    public String[] getChosenAcceptedSavingWithdrawals() {
+        return this.chosenAcceptedSavingWithdrawals;
+    }
+
+    public void setChosenAcceptedSavingWithdrawals(String[] chosenAcceptedSavingWithdrawals) {
+        this.chosenAcceptedSavingWithdrawals = chosenAcceptedSavingWithdrawals;
+    }
+
+    public String[] getChosenNonAcceptedSavingWithdrawals() {
+        return this.chosenNonAcceptedSavingWithdrawals;
+    }
+
+    public void setChosenNonAcceptedSavingWithdrawals(String[] chosenNonAcceptedSavingWithdrawals) {
+        this.chosenNonAcceptedSavingWithdrawals = chosenNonAcceptedSavingWithdrawals;
+    }
+
+    public Map<String, String> getAcceptedSavingDepositsPaymentTypes() {
+        return this.acceptedSavingDepositsPaymentTypes;
+    }
+
+    public void setAcceptedSavingDepositsPaymentTypes(Map<String, String> acceptedSavingDepositsPaymentTypes) {
+        this.acceptedSavingDepositsPaymentTypes = acceptedSavingDepositsPaymentTypes;
+    }
+
+    public Map<String, String> getNonAcceptedSavingDepositsPaymentTypes() {
+        return this.nonAcceptedSavingDepositsPaymentTypes;
+    }
+
+    public void setNonAcceptedSavingDepositsPaymentTypes(Map<String, String> nonAcceptedSavingDepositsPaymentTypes) {
+        this.nonAcceptedSavingDepositsPaymentTypes = nonAcceptedSavingDepositsPaymentTypes;
+    }
+
+    public String[] getChosenAcceptedSavingDeposits() {
+        return this.chosenAcceptedSavingDeposits;
+    }
+
+    public void setChosenAcceptedSavingDeposits(String[] chosenAcceptedSavingDeposits) {
+        this.chosenAcceptedSavingDeposits = chosenAcceptedSavingDeposits;
+    }
+
+    public String[] getChosenNonAcceptedSavingDeposits() {
+        return this.chosenNonAcceptedSavingDeposits;
+    }
+
+    public void setChosenNonAcceptedSavingDeposits(String[] chosenNonAcceptedSavingDeposits) {
+        this.chosenNonAcceptedSavingDeposits = chosenNonAcceptedSavingDeposits;
     }
 }

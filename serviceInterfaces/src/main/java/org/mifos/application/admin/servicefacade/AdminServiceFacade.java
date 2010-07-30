@@ -75,11 +75,13 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_ACCEPTED_PAYMENT_TYPES')")
     AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes();
 
-    @PreAuthorize("isFullyAuthenticated()")
-    void updateAcceptedPaymentTypes(AcceptedPaymentTypeDto acceptedPaymentTypeDto);
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_ACCEPTED_PAYMENT_TYPES')")
+    void updateAcceptedPaymentTypes(String[] chosenAcceptedFees, String[] chosenAcceptedLoanDisbursements,
+            String[] chosenAcceptedLoanRepayments, String[] chosenAcceptedSavingDeposits,
+            String[] chosenAcceptedSavingWithdrawals);
 
     @PreAuthorize("isFullyAuthenticated()")
     ProductCategoryDisplayDto retrieveAllProductCategories();

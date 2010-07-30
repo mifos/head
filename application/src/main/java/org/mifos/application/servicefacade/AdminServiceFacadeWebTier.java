@@ -22,6 +22,7 @@ package org.mifos.application.servicefacade;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -89,6 +90,7 @@ import org.mifos.framework.components.fieldConfiguration.business.FieldConfigura
 import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.util.UserContext;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
@@ -916,7 +918,6 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     @Override
     public AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes() {
         List<PaymentTypeDto> payments = getAllPaymentTypes(null);
-        // acceptedPaymentTypeActionForm.setAllPaymentTypes(payments);
         AcceptedPaymentTypePersistence paymentTypePersistence = new AcceptedPaymentTypePersistence();
         AcceptedPaymentTypeDto dto = new AcceptedPaymentTypeDto();
         for (int i = 0; i < TrxnTypes.values().length; i++) {
@@ -933,7 +934,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         for (PaymentTypeEntity masterDataEntity : paymentTypes) {
             PaymentTypeEntity paymentType = masterDataEntity;
             id = paymentType.getId();
-            payment = new PaymentTypeDto(id, paymentType.getLookUpValue().getLookUpName());
+            payment = new PaymentTypeDto(id, paymentType.getName());
             paymentTypeList.add(payment);
         }
 
@@ -997,65 +998,76 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public void updateAcceptedPaymentTypes(AcceptedPaymentTypeDto acceptedPaymentTypeDto) {
+    public void updateAcceptedPaymentTypes(String[] chosenAcceptedFees, String[] chosenAcceptedLoanDisbursements,
+            String[] chosenAcceptedLoanRepayments, String[] chosenAcceptedSavingDeposits,
+            String[] chosenAcceptedSavingWithdrawals) {
 
         AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
 
         List<AcceptedPaymentType> deletedPaymentTypeList = new ArrayList<AcceptedPaymentType>();
         List<AcceptedPaymentType> addedPaymentTypeList = new ArrayList<AcceptedPaymentType>();
+        List<PaymentTypeDto> allPayments = getAllPaymentTypes(null);
+        AcceptedPaymentTypeDto oldAcceptedPaymentTypeDto = retrieveAcceptedPaymentTypes();
+
         for (int i = 0; i < TrxnTypes.values().length; i++) {
-            processOneAccountActionAcceptedPaymentTypes(TrxnTypes.values()[i], acceptedPaymentTypeDto,
-                    deletedPaymentTypeList, addedPaymentTypeList, persistence);
+
+            TrxnTypes transactionType = TrxnTypes.values()[i];
+            List<PaymentTypeDto> selectedPaymentTypes = new ArrayList<PaymentTypeDto>();
+            List<PaymentTypeDto> outList = null;
+
+            if (transactionType == TrxnTypes.fee) {
+                selectedPaymentTypes = populateSelectedPayments(chosenAcceptedFees, allPayments);
+                outList = oldAcceptedPaymentTypeDto.getOutFeeList();
+            } else if (transactionType == TrxnTypes.loan_disbursement) {
+                selectedPaymentTypes = populateSelectedPayments(chosenAcceptedLoanDisbursements, allPayments);
+                outList = oldAcceptedPaymentTypeDto.getOutDisbursementList();
+            } else if (transactionType == TrxnTypes.loan_repayment) {
+                selectedPaymentTypes = populateSelectedPayments(chosenAcceptedLoanRepayments, allPayments);
+                outList = oldAcceptedPaymentTypeDto.getOutRepaymentList();
+            } else if (transactionType == TrxnTypes.savings_deposit) {
+                selectedPaymentTypes = populateSelectedPayments(chosenAcceptedSavingDeposits, allPayments);
+                outList = oldAcceptedPaymentTypeDto.getOutDepositList();
+            } else if (transactionType == TrxnTypes.savings_withdrawal) {
+                selectedPaymentTypes = populateSelectedPayments(chosenAcceptedSavingWithdrawals, allPayments);
+                outList = oldAcceptedPaymentTypeDto.getOutWithdrawalList();
+            } else {
+                throw new MifosRuntimeException("Unknown account action for accepted payment type " + transactionType.toString());
+            }
+            process(selectedPaymentTypes, outList, deletedPaymentTypeList, addedPaymentTypeList, persistence,transactionType);
         }
 
         try {
             if (addedPaymentTypeList.size() > 0) {
                 persistence.addAcceptedPaymentTypes(addedPaymentTypeList);
+                StaticHibernateUtil.commitTransaction();
             }
 
             if (deletedPaymentTypeList.size() > 0) {
                 persistence.deleteAcceptedPaymentTypes(deletedPaymentTypeList);
+                StaticHibernateUtil.commitTransaction();
             }
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
     }
 
-    private void processOneAccountActionAcceptedPaymentTypes(TrxnTypes transactionType,
-            AcceptedPaymentTypeDto acceptedPaymentTypeDto,
-            List<AcceptedPaymentType> deletedPaymentTypeList, List<AcceptedPaymentType> addedPaymentTypeList,
-            AcceptedPaymentTypePersistence persistence) {
-        // new accepted payments
-        List<PaymentTypeDto> selectedPaymentTypes = null;
-        // old accepted payments
-        List<PaymentTypeDto> outList = null;
-        AcceptedPaymentTypeDto OldAcceptedPaymentTypeDto = retrieveAcceptedPaymentTypes();
+    private List<PaymentTypeDto> populateSelectedPayments(String[] selectedPayments, List<PaymentTypeDto> allPayments) {
 
-        if (transactionType == TrxnTypes.fee) {
-            selectedPaymentTypes = acceptedPaymentTypeDto.getOutFeeList();
-            outList = OldAcceptedPaymentTypeDto.getOutFeeList();
-        } else if (transactionType == TrxnTypes.loan_disbursement) {
-            selectedPaymentTypes = acceptedPaymentTypeDto.getOutDisbursementList();
-            outList = OldAcceptedPaymentTypeDto.getOutDisbursementList();
-        } else if (transactionType == TrxnTypes.loan_repayment) {
-            selectedPaymentTypes = acceptedPaymentTypeDto.getOutRepaymentList();
-            outList = OldAcceptedPaymentTypeDto.getOutRepaymentList();
-        } else if (transactionType == TrxnTypes.savings_deposit) {
-            selectedPaymentTypes = acceptedPaymentTypeDto.getOutDepositList();
-            outList = OldAcceptedPaymentTypeDto.getOutDepositList();
-        } else if (transactionType == TrxnTypes.savings_withdrawal) {
-            selectedPaymentTypes = acceptedPaymentTypeDto.getOutWithdrawalList();
-            outList = OldAcceptedPaymentTypeDto.getOutWithdrawalList();
-        } else {
-            throw new MifosRuntimeException("Unknown account action for accepted payment type " + transactionType.toString());
+        List<PaymentTypeDto> selectedPaymentTypes = new ArrayList<PaymentTypeDto>();
+        List<String> acceptedFees = Arrays.asList(selectedPayments);
+        for (PaymentTypeDto paymentType : allPayments) {
+            if (acceptedFees.contains(paymentType.getId().toString())) {
+                selectedPaymentTypes.add(paymentType);
+            }
         }
-        process(selectedPaymentTypes, outList, deletedPaymentTypeList, addedPaymentTypeList, persistence,
-                transactionType);
+
+        return selectedPaymentTypes;
     }
 
     private void process(List<PaymentTypeDto> selectedPaymentTypes, List<PaymentTypeDto> outList,
             List<AcceptedPaymentType> deletedPaymentTypeList, List<AcceptedPaymentType> addedPaymentTypeList,
             AcceptedPaymentTypePersistence persistence, TrxnTypes transactionType) {
+
         AcceptedPaymentType acceptedPaymentType = null;
         if ((outList != null) && (outList.size() > 0)) {
             for (PaymentTypeDto paymentType : outList) {
@@ -1065,18 +1077,17 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                 }
             }
         }
-        if (selectedPaymentTypes != null) {
-            for (PaymentTypeDto selectedPaymentType : selectedPaymentTypes) {
-                Short paymentTypeId = selectedPaymentType.getId();
-                if (findNew(paymentTypeId, outList)) {
-                    acceptedPaymentType = new AcceptedPaymentType();
-                    PaymentTypeEntity paymentTypeEntity = new PaymentTypeEntity(paymentTypeId);
-                    acceptedPaymentType.setPaymentTypeEntity(paymentTypeEntity);
-                    TransactionTypeEntity transactionEntity = new TransactionTypeEntity();
-                    transactionEntity.setTransactionId(transactionType.getValue());
-                    acceptedPaymentType.setTransactionTypeEntity(transactionEntity);
-                    addedPaymentTypeList.add(acceptedPaymentType);
-                }
+
+        for (PaymentTypeDto selectedPaymentType : selectedPaymentTypes) {
+            Short paymentTypeId = selectedPaymentType.getId();
+            if (findNew(paymentTypeId, outList)) {
+                acceptedPaymentType = new AcceptedPaymentType();
+                PaymentTypeEntity paymentTypeEntity = new PaymentTypeEntity(paymentTypeId);
+                acceptedPaymentType.setPaymentTypeEntity(paymentTypeEntity);
+                TransactionTypeEntity transactionEntity = new TransactionTypeEntity();
+                transactionEntity.setTransactionId(transactionType.getValue());
+                acceptedPaymentType.setTransactionTypeEntity(transactionEntity);
+                addedPaymentTypeList.add(acceptedPaymentType);
             }
         }
     }
