@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+@SuppressWarnings("PMD")
 @Controller
 @RequestMapping("/defineAcceptedPaymentTypes.ftl")
 @SessionAttributes("formBean")
