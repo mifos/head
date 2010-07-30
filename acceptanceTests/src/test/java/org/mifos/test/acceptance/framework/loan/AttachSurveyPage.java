@@ -23,13 +23,17 @@ package org.mifos.test.acceptance.framework.loan;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.questionnaire.QuestionnairePage;
 
 public class AttachSurveyPage extends MifosPage {
     public AttachSurveyPage(Selenium selenium) {
         super(selenium);
     }
 
-    public void verifyPage() {
-        this.verifyPage("create_instance_choosesurvey");
+    public QuestionnairePage selectSurvey(String questionGroupTitle) {
+        selenium.select("id=questionGroupId", "label=" + questionGroupTitle);
+        selenium.click("_eventId_selectQuestionnaire");
+        waitForPageToLoad();
+        return new QuestionnairePage(selenium);
     }
 }

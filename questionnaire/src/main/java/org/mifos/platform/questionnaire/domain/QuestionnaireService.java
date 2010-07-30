@@ -52,7 +52,7 @@ public interface QuestionnaireService {
 
     void validateResponses(List<QuestionGroupDetail> questionGroupDetails);
 
-    List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSource eventSource);
+    List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSource eventSource, Boolean includeUnansweredQuestionGroups);
 
     QuestionGroupInstanceDetail getQuestionGroupInstance(int questionGroupInstanceId);
 }

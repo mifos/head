@@ -20,10 +20,12 @@
 
 package org.mifos.test.acceptance.client;
 
+import org.junit.Assert;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPage;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIParameters;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPreviewPage;
@@ -31,8 +33,15 @@ import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
+import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
+import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupParameters;
+import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
+import org.mifos.test.acceptance.questionnaire.CreateQuestionParameters;
+import org.mifos.test.acceptance.questionnaire.QuestionGroupResponsePage;
+import org.mifos.test.acceptance.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -40,6 +49,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import static java.util.Arrays.asList;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
 @Test(sequential = true, groups = {"client","acceptance","ui"})
@@ -54,6 +70,10 @@ public class ClientTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+    private Random random;
+    private static final String FREE_TEXT = "Free Text";
+    public static final String MULTI_SELECT = "Multi Select";
+    public static final String EXPECTED_DATE_FORMAT = "%02d/%02d/%04d";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -63,6 +83,7 @@ public class ClientTest extends UiTestCaseBase {
         super.setUp();
         navigationHelper = new NavigationHelper(selenium);
         propertiesHelper = new CustomPropertiesHelper(selenium);
+        random = new Random();
     }
 
     @AfterMethod(alwaysRun = true)
@@ -82,6 +103,7 @@ public class ClientTest extends UiTestCaseBase {
 
         clientsAndAccountsPage.changeCustomerStatus(clientDetailsPage);
     }
+
     // implementation of test described in issue 2454
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchForClientAndEditDetailsTest() throws Exception {
@@ -111,7 +133,7 @@ public class ClientTest extends UiTestCaseBase {
         assertTextFoundOnPage("15/12/2008");
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+   @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups = {"smoke"})
     public void createClientWithCorrectAgeTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
@@ -151,5 +173,102 @@ public class ClientTest extends UiTestCaseBase {
         nextPage.verifyPage("CreateClientPersonalInfo");
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void searchForClientAndAddSurveysTest() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+
+        String questionGroupTitle = "QG1" + random.nextInt(100);
+        String question1 = "FT_" + random.nextInt(100);
+        String question2 = "MS_" + random.nextInt(100);
+        String answer1 = "Hello World";
+        createQuestionGroupForViewClient(questionGroupTitle, question1, question2);
+        ClientViewDetailsPage viewDetailsPage = getClientViewDetailsPage("Stu1232993852651", "Stu1232993852651 Client1232993852651: ID 0002-000000003");
+        QuestionnairePage questionnairePage = getQuestionnairePage(questionGroupTitle, viewDetailsPage);
+        viewDetailsPage = verifyCancel(questionnairePage);
+        questionnairePage = checkMandatoryQuestionValidation(questionGroupTitle, question1, question2, viewDetailsPage);
+        questionnairePage.setResponse(question1, answer1);
+        MifosPage mifosPage = questionnairePage.submit();
+        Assert.assertTrue(mifosPage instanceof ClientViewDetailsPage);
+        viewDetailsPage = (ClientViewDetailsPage) mifosPage;
+        viewDetailsPage.verifyPage();
+        verifyQuestionGroupInstances(viewDetailsPage.getQuestionGroupInstances(), questionGroupTitle);
+        QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(questionGroupTitle);
+        questionGroupResponsePage.verifyPage();
+        Assert.assertEquals(answer1, questionGroupResponsePage.getAnswer(question1));
+        Assert.assertEquals("Choice1, Choice3, Choice4", questionGroupResponsePage.getAnswer(question2));
+        viewDetailsPage = questionGroupResponsePage.navigateToViewClientDetailsPage();
+        viewDetailsPage.verifyPage();
+    }
+
+    private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1, String question2, ClientViewDetailsPage viewDetailsPage) {
+        QuestionnairePage questionnairePage = getQuestionnairePage(questionGroupTitle, viewDetailsPage);
+        questionnairePage.setResponsesForMultiSelect(question2, 4, "Choice1", "Choice3", "Choice4");
+        MifosPage mifosPage = questionnairePage.submit();
+        Assert.assertTrue(mifosPage instanceof QuestionnairePage);
+        questionnairePage = (QuestionnairePage) mifosPage;
+        Assert.assertTrue(questionnairePage.isErrorPresent("Please specify " + question1));
+        return questionnairePage;
+    }
+
+    private ClientViewDetailsPage verifyCancel(QuestionnairePage questionnairePage) {
+        ClientViewDetailsPage viewDetailsPage = questionnairePage.cancel();
+        viewDetailsPage.verifyPage();
+        return viewDetailsPage;
+    }
+
+    private QuestionnairePage getQuestionnairePage(String questionGroupTitle, ClientViewDetailsPage viewDetailsPage) {
+        AttachSurveyPage attachSurveyPage = viewDetailsPage.navigateToAttachSurveyPage();
+        QuestionnairePage questionnairePage = attachSurveyPage.selectSurvey(questionGroupTitle);
+        questionnairePage.verifyPage();
+        return questionnairePage;
+    }
+
+    private ClientViewDetailsPage getClientViewDetailsPage(String searchName, String clientName) {
+        ClientsAndAccountsHomepage clientsPage = navigationHelper.navigateToClientsAndAccountsPage();
+        ClientSearchResultsPage searchResultsPage = clientsPage.searchForClient(searchName);
+        searchResultsPage.verifyPage();
+        return searchResultsPage.navigateToSearchResult(clientName);
+    }
+
+    private void verifyQuestionGroupInstances(Map<String, String> questionGroups, String questionGroupTitle) {
+        Assert.assertEquals(1, questionGroups.size());
+        Assert.assertTrue(questionGroups.containsKey(questionGroupTitle));
+        String instanceDate = questionGroups.get(questionGroupTitle);
+        Calendar calendar = Calendar.getInstance();
+        String expectedDate = String.format(EXPECTED_DATE_FORMAT, calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
+        Assert.assertEquals(expectedDate, instanceDate);
+    }
+
+    private void createQuestionGroupForViewClient(String questionGroupTitle, String question1, String question2) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage().verifyPage();
+        createQuestionPage.addQuestion(getCreateQuestionParams(question1, FREE_TEXT, null));
+        createQuestionPage.addQuestion(getCreateQuestionParams(question2, MULTI_SELECT, asList("Choice1", "Choice2", "Choice3", "Choice4")));
+        adminPage = createQuestionPage.submitQuestions();
+
+        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage().verifyPage();
+        CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(questionGroupTitle, question1, question2);
+        createQuestionGroupPage.addSection(parameters);
+        createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
+        createQuestionGroupPage.submit(parameters);
+    }
+
+    private CreateQuestionGroupParameters getCreateQuestionGroupParameters(String questionGroupTitle, String question1, String question2) {
+        CreateQuestionGroupParameters parameters = new CreateQuestionGroupParameters();
+        parameters.setTitle(questionGroupTitle);
+        parameters.setAppliesTo("View Client");
+        parameters.setAnswerEditable(false);
+        parameters.setSectionName("Default Section");
+        parameters.setQuestions(asList(question1, question2));
+        return parameters;
+    }
+
+    private CreateQuestionParameters getCreateQuestionParams(String title, String type, List<String> choices) {
+        CreateQuestionParameters parameters = new CreateQuestionParameters();
+        parameters.setTitle(title);
+        parameters.setType(type);
+        parameters.setChoices(choices);
+        return parameters;
+    }
 
 }

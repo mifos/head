@@ -37,6 +37,7 @@ import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
@@ -152,11 +153,37 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSource eventSource) {
+    public List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSource eventSource, Boolean includeUnansweredQuestionGroups) {
         questionnaireValidator.validateForEventSource(eventSource);
         Integer eventSourceId = getEventSourceEntity(eventSource).getId();
         List questionGroupInstances = questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(entityId, eventSourceId);
-        return questionnaireMapper.mapToQuestionGroupInstanceDetails(questionGroupInstances);
+        List<QuestionGroupInstanceDetail> questionGroupInstanceDetails = questionnaireMapper.mapToQuestionGroupInstanceDetails(questionGroupInstances);
+        if (includeUnansweredQuestionGroups) {
+            List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSource.getEvent(), eventSource.getSource());
+            questionGroupInstanceDetails = mergeUnansweredQuestionGroups(questionGroupInstanceDetails, questionGroups);
+        }
+        return questionGroupInstanceDetails;
+    }
+
+    private List<QuestionGroupInstanceDetail> mergeUnansweredQuestionGroups(List<QuestionGroupInstanceDetail> instancesWithResponses, List<QuestionGroup> questionGroups) {
+        List<QuestionGroupInstanceDetail> allInstances = new ArrayList<QuestionGroupInstanceDetail>(instancesWithResponses);
+        for (QuestionGroup questionGroup : questionGroups) {
+            if (!hasResponse(questionGroup, instancesWithResponses)) {
+                allInstances.add(questionnaireMapper.mapToEmptyQuestionGroupInstanceDetail(questionGroup));
+            }
+        }
+        return allInstances;
+    }
+
+    private boolean hasResponse(QuestionGroup questionGroup, List<QuestionGroupInstanceDetail> questionGroupInstances) {
+        boolean result = false;
+        for (QuestionGroupInstanceDetail questionGroupInstance : questionGroupInstances) {
+            if (questionGroupInstance.getQuestionGroupDetail().getId() == questionGroup.getId()) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
     @Override

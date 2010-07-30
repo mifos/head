@@ -597,9 +597,42 @@ public class QuestionnaireServiceTest {
         when(questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202)).thenReturn(questionGroupInstances);
         when(eventSourceDao.retrieveByEventAndSource("View", "Client")).thenReturn(asList(getEventSourceEntity(202)));
         EventSource eventSource = new EventSource("View", "Client", "View.Client");
-        List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSource);
+        List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSource, false);
         assertThat(instances, is(notNullValue()));
         assertThat(instances.size(), is(7));
+        assertQuestionGroupInstanceDetail(instances.get(0), "QG1", 2010, 7, 26, questionGroupInstances.get(0).getId());
+        assertQuestionGroupInstanceDetail(instances.get(1), "QG2", 2010, 7, 26, questionGroupInstances.get(1).getId());
+        assertQuestionGroupInstanceDetail(instances.get(2), "QG3", 2010, 7, 26, questionGroupInstances.get(2).getId());
+        assertQuestionGroupInstanceDetail(instances.get(3), "QG1", 2010, 7, 25, questionGroupInstances.get(3).getId());
+        assertQuestionGroupInstanceDetail(instances.get(4), "QG2", 2010, 7, 25, questionGroupInstances.get(4).getId());
+        assertQuestionGroupInstanceDetail(instances.get(5), "QG2", 2010, 7, 24, questionGroupInstances.get(5).getId());
+        assertQuestionGroupInstanceDetail(instances.get(6), "QG3", 2010, 7, 24, questionGroupInstances.get(6).getId());
+        verify(questionGroupInstanceDao, times(1)).retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202);
+        verify(questionnaireValidator, times(1)).validateForEventSource(eventSource);
+        verify(eventSourceDao, times(1)).retrieveByEventAndSource("View", "Client");
+    }
+
+    @Test
+    public void shouldGetQuestionGroupInstancesIncludingUnansweredQuestionGroups() {
+        List<Section> sections = new ArrayList<Section>();
+        List<QuestionGroup> questionGroups = asList(getQuestionGroup(4041, "QG1", sections),
+                                                    getQuestionGroup(4042, "QG2", sections),
+                                                    getQuestionGroup(4043, "QG3", sections),
+                                                    getQuestionGroup(4044, "QG4", sections));
+        List<QuestionGroupInstance> questionGroupInstances = asList(getQuestionGroupInstance(3031, 2010, 7, 26, questionGroups.get(0)),
+                                                                    getQuestionGroupInstance(3032, 2010, 7, 26, questionGroups.get(1)),
+                                                                    getQuestionGroupInstance(3033, 2010, 7, 26, questionGroups.get(2)),
+                                                                    getQuestionGroupInstance(3034, 2010, 7, 25, questionGroups.get(0)),
+                                                                    getQuestionGroupInstance(3035, 2010, 7, 25, questionGroups.get(1)),
+                                                                    getQuestionGroupInstance(3036, 2010, 7, 24, questionGroups.get(1)),
+                                                                    getQuestionGroupInstance(3037, 2010, 7, 24, questionGroups.get(2)));
+        when(questionGroupDao.retrieveQuestionGroupsByEventSource("View", "Client")).thenReturn(questionGroups);
+        when(questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202)).thenReturn(questionGroupInstances);
+        when(eventSourceDao.retrieveByEventAndSource("View", "Client")).thenReturn(asList(getEventSourceEntity(202)));
+        EventSource eventSource = new EventSource("View", "Client", "View.Client");
+        List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSource, true);
+        assertThat(instances, is(notNullValue()));
+        assertThat(instances.size(), is(8));
         assertQuestionGroupInstanceDetail(instances.get(0), "QG1", 2010, 7, 26, questionGroupInstances.get(0).getId());
         assertQuestionGroupInstanceDetail(instances.get(1), "QG2", 2010, 7, 26, questionGroupInstances.get(1).getId());
         assertQuestionGroupInstanceDetail(instances.get(2), "QG3", 2010, 7, 26, questionGroupInstances.get(2).getId());

@@ -43,7 +43,7 @@
         <div class="orangeheading marginTop15">
             ${Session.questionnaireFor} - [@spring.message "questionnaire.enterdata"/]
         </div>
-        <div class="allErrorsDiv">
+        <div id="allErrors" class="allErrorsDiv">
             [@mifosMacros.showAllErrors "questionGroupDetails.*"/]
         </div>
         <form id="questionnaire" name="questionnaire" action="questionnaire.ftl?execution=${flowExecutionKey}" method="POST">
@@ -52,7 +52,7 @@
                 <b>${sectionDetail.name}</b>
             </div>
             <fieldset>
-                <ol>
+                <ol id="responses">
                     [#list sectionDetail.questions as question]
                     <li class="marginTop15">
                         <label for="details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value">

@@ -36,9 +36,9 @@
                 [@spring.message "questionnaire.view.question.group.responses"/]
             </div>
             <div id="questionGroupList" class="marginTop15">
-                [#list questionGroupDetails as questionGroupDetail]
+                [#list questionGroupInstanceDetails as questionGroupInstanceDetail]
                 <fieldset id="questionGroup.sections" class="bluetableborderFull">
-                    [#list questionGroupDetail.sectionDetails as sectionDetail]
+                    [#list questionGroupInstanceDetail.questionGroupDetail.sectionDetails as sectionDetail]
                     <br/>
                     <span class="paddingleft10 fontnormalbold">${sectionDetail.name}</span>
                     <ol>

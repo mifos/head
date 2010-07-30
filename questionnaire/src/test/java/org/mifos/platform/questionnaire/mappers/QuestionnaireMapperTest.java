@@ -267,7 +267,7 @@ public class QuestionnaireMapperTest {
         int countOfQuestions = 10;
         List<QuestionGroup> questionGroups = new ArrayList<QuestionGroup>();
         for (int i = 0; i < countOfQuestions; i++) {
-            questionGroups.add(getQuestionGroup(TITLE + i, getSection(SECTION + i), getSection(SECTION + (i + 1))));
+            questionGroups.add(getQuestionGroup(1991, TITLE + i, getSection(SECTION + i), getSection(SECTION + (i + 1))));
         }
         List<QuestionGroupDetail> questionGroupDetails = questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
         assertThat(questionGroupDetails, is(notNullValue()));
@@ -374,7 +374,7 @@ public class QuestionnaireMapperTest {
     public void shouldMapToQuestionGroupInstanceDetails() {
         QuestionGroupInstance questionGroupInstance1 = getQuestionGroupInstance("QG1", 2010, 7, 25);
         QuestionGroupInstance questionGroupInstance2 = getQuestionGroupInstance("QG3", 2009, 2, 12);
-        QuestionGroup questionGroup = getQuestionGroup("QG5", getSectionWithOneMultiSelectQuestion(222, "Section3", "Question3", "Choice1", "Choice2", "Choice3", "Choice4"));
+        QuestionGroup questionGroup = getQuestionGroup(1991, "QG5", getSectionWithOneMultiSelectQuestion(222, "Section3", "Question3", "Choice1", "Choice2", "Choice3", "Choice4"));
         QuestionGroupInstance questionGroupInstance3 = getQuestionGroupInstanceWithSingleMultiSelectQuestion(101, 3, questionGroup, "Choice1", "Choice3", "Choice4");
         List<QuestionGroupInstance> questionGroupInstances = asList(questionGroupInstance1, questionGroupInstance2, questionGroupInstance3);
         List<QuestionGroupInstanceDetail> questionGroupInstanceDetails = questionnaireMapper.mapToQuestionGroupInstanceDetails(questionGroupInstances);
@@ -390,6 +390,15 @@ public class QuestionnaireMapperTest {
         assertThat(values.get(0), is("Choice1"));
         assertThat(values.get(1), is("Choice3"));
         assertThat(values.get(2), is("Choice4"));
+    }
+
+    @Test
+    public void shouldMapToEmptyQuestionGroupInstanceDetail() {
+        QuestionGroupInstanceDetail detail = questionnaireMapper.mapToEmptyQuestionGroupInstanceDetail(getQuestionGroup(1991, "QG1", getSection("Section1")));
+        assertThat(detail, is(notNullValue()));
+        assertThat(detail.getQuestionGroupDetail().getId(), is(1991));
+        assertThat(detail.getQuestionGroupTitle(), is("QG1"));
+        assertThat(detail.getId(), is(0));
     }
 
     private QuestionGroupInstance getQuestionGroupInstanceWithSingleMultiSelectQuestion(int entityId, int version, QuestionGroup questionGroup, String... responses) {
@@ -459,7 +468,7 @@ public class QuestionnaireMapperTest {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, date);
         questionGroupInstance.setDateConducted(calendar.getTime());
-        questionGroupInstance.setQuestionGroup(getQuestionGroup(questionGroupTitle));
+        questionGroupInstance.setQuestionGroup(getQuestionGroup(1991, questionGroupTitle));
         return questionGroupInstance;
     }
 
@@ -489,8 +498,9 @@ public class QuestionnaireMapperTest {
         return events;
     }
 
-    private QuestionGroup getQuestionGroup(String title, Section... sections) {
+    private QuestionGroup getQuestionGroup(int id, String title, Section... sections) {
         QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setId(id);
         questionGroup.setTitle(title);
         questionGroup.setSections(Arrays.asList(sections));
         return questionGroup;
