@@ -35,9 +35,9 @@ public interface QuestionnaireServiceFacade {
 
     List<QuestionGroupDetail> getAllQuestionGroups();
 
-    QuestionGroupDetail getQuestionGroupDetail(int questionGroupId) throws SystemException;
+    QuestionGroupDetail getQuestionGroupDetail(Integer questionGroupId) throws SystemException;
 
-    QuestionDetail getQuestionDetail(int questionId) throws SystemException;
+    QuestionDetail getQuestionDetail(Integer questionId) throws SystemException;
 
     List<EventSource> getAllEventSources();
 
@@ -47,9 +47,9 @@ public interface QuestionnaireServiceFacade {
 
     void validateResponses(List<QuestionGroupDetail> questionGroupDetails);
 
-    List<QuestionGroupDetail> getQuestionGroups(Integer entityId, String event, String source);
-
     List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, String event, String source);
 
-    QuestionGroupInstanceDetail getQuestionGroupInstance(int questionGroupInstanceId);
+    List<QuestionGroupInstanceDetail> getQuestionGroupInstancesWithUnansweredQuestionGroups(Integer entityId, String event, String source);
+
+    QuestionGroupInstanceDetail getQuestionGroupInstance(Integer questionGroupInstanceId);
 }

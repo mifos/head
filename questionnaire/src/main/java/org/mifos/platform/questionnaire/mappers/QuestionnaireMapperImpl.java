@@ -287,6 +287,14 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         }
     }
 
+    @Override
+    public QuestionGroupInstanceDetail mapToEmptyQuestionGroupInstanceDetail(QuestionGroup questionGroup) {
+        QuestionGroupInstanceDetail questionGroupInstanceDetail = new QuestionGroupInstanceDetail();
+        questionGroupInstanceDetail.setId(0);
+        questionGroupInstanceDetail.setQuestionGroupDetail(mapToQuestionGroupDetail(questionGroup));
+        return questionGroupInstanceDetail;
+    }
+
     private void mapQuestionResponses(QuestionGroupInstanceDetail questionGroupInstanceDetail, List<QuestionGroupResponse> questionGroupResponses) {
         if (isNotEmpty(questionGroupResponses)) {
             for (SectionDetail sectionDetail : questionGroupInstanceDetail.getQuestionGroupDetail().getSectionDetails()) {

@@ -28,6 +28,7 @@ import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.ui.model.QuestionGroupForm;
@@ -67,7 +68,8 @@ public class QuestionGroupController extends QuestionnaireController {
                                                  @RequestParam("source") String source,
                                                  @RequestParam("backPageUrl") String backPageUrl) throws UnsupportedEncodingException {
         ModelMap modelMap = new ModelMap();
-        modelMap.addAttribute("questionGroupDetails", questionnaireServiceFacade.getQuestionGroups(entityId, event, source));
+        List<QuestionGroupInstanceDetail> instances = questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(entityId, event, source);
+        modelMap.addAttribute("questionGroupInstanceDetails", instances);
         modelMap.addAttribute("backPageUrl", decodeUrl(backPageUrl));
         return modelMap;
     }
