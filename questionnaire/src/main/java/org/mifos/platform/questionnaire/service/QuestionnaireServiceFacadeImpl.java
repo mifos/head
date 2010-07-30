@@ -69,12 +69,12 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public QuestionGroupDetail getQuestionGroupDetail(int questionGroupId) throws SystemException {
+    public QuestionGroupDetail getQuestionGroupDetail(Integer questionGroupId) throws SystemException {
         return questionnaireService.getQuestionGroup(questionGroupId);
     }
 
     @Override
-    public QuestionDetail getQuestionDetail(int questionId) throws SystemException {
+    public QuestionDetail getQuestionDetail(Integer questionId) throws SystemException {
         return questionnaireService.getQuestion(questionId);
     }
 
@@ -99,17 +99,17 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public List<QuestionGroupDetail> getQuestionGroups(Integer entityId, String event, String source) {
-        return questionnaireService.getQuestionGroups(entityId, getEventSource(event, source));
-    }
-
-    @Override
     public List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, String event, String source) {
-        return questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source));
+        return questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), false);
     }
 
     @Override
-    public QuestionGroupInstanceDetail getQuestionGroupInstance(int questionGroupInstanceId) {
+    public List<QuestionGroupInstanceDetail> getQuestionGroupInstancesWithUnansweredQuestionGroups(Integer entityId, String event, String source) {
+        return questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), true);
+    }
+
+    @Override
+    public QuestionGroupInstanceDetail getQuestionGroupInstance(Integer questionGroupInstanceId) {
         return questionnaireService.getQuestionGroupInstance(questionGroupInstanceId);
     }
 

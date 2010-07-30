@@ -55,10 +55,10 @@ import org.springframework.webflow.execution.RequestContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -112,8 +112,8 @@ public class QuestionGroupControllerTest {
     @Test
     public void testAddSectionForSuccess() throws Exception {
         QuestionGroupForm questionGroup = new QuestionGroupForm();
-        questionGroup.setQuestionPool(new ArrayList<SectionQuestionDetail>(Arrays.asList(getSectionQuestionDetail(1, "Q1"), getSectionQuestionDetail(2, "Q2"))));
-        questionGroup.setSelectedQuestionIds(Arrays.asList("1"));
+        questionGroup.setQuestionPool(new ArrayList<SectionQuestionDetail>(asList(getSectionQuestionDetail(1, "Q1"), getSectionQuestionDetail(2, "Q2"))));
+        questionGroup.setSelectedQuestionIds(asList("1"));
         questionGroup.setTitle("title");
         questionGroup.setSectionName("sectionName");
         String result = questionGroupController.addSection(questionGroup, requestContext);
@@ -127,8 +127,8 @@ public class QuestionGroupControllerTest {
     @Test
     public void testAddSectionsSuccessWhenSectionNameIsNotProvided() {
         QuestionGroupForm questionGroup = new QuestionGroupForm();
-        questionGroup.setQuestionPool(new ArrayList<SectionQuestionDetail>(Arrays.asList(getSectionQuestionDetail(1, "Q1"), getSectionQuestionDetail(2, "Q2"))));
-        questionGroup.setSelectedQuestionIds(Arrays.asList("2"));
+        questionGroup.setQuestionPool(new ArrayList<SectionQuestionDetail>(asList(getSectionQuestionDetail(1, "Q1"), getSectionQuestionDetail(2, "Q2"))));
+        questionGroup.setSelectedQuestionIds(asList("2"));
         String result = questionGroupController.addSection(questionGroup, requestContext);
         assertThat(questionGroup.getSections().size(), Is.is(1));
         assertThat(questionGroup.getSections().get(0).getName(), Is.is("Misc"));
@@ -140,8 +140,8 @@ public class QuestionGroupControllerTest {
     @Test
     public void testAddSectionForSuccessWhenQuestionTitleProvidedWithAllBlanks() throws Exception {
         QuestionGroupForm questionGroup = new QuestionGroupForm();
-        questionGroup.setQuestionPool(new ArrayList<SectionQuestionDetail>(Arrays.asList(getSectionQuestionDetail(1, "Q1"), getSectionQuestionDetail(2, "Q2"))));
-        questionGroup.setSelectedQuestionIds(Arrays.asList("1", "2"));
+        questionGroup.setQuestionPool(new ArrayList<SectionQuestionDetail>(asList(getSectionQuestionDetail(1, "Q1"), getSectionQuestionDetail(2, "Q2"))));
+        questionGroup.setSelectedQuestionIds(asList("1", "2"));
         questionGroup.setSectionName("        ");
         String result = questionGroupController.addSection(questionGroup, requestContext);
         assertThat(questionGroup.getSections().size(), Is.is(1));
@@ -168,7 +168,7 @@ public class QuestionGroupControllerTest {
     public void testRemoveQuestionFromSection() {
         QuestionGroupForm questionGroup = new QuestionGroupForm();
         List<SectionDetailForm> sections = new ArrayList<SectionDetailForm>();
-        sections.add(getSectionSectionDetailForm("sectionName", new ArrayList<SectionQuestionDetail>(Arrays.asList(getSectionQuestionDetail(1, "Q1"), getSectionQuestionDetail(2, "Q2")))));
+        sections.add(getSectionSectionDetailForm("sectionName", new ArrayList<SectionQuestionDetail>(asList(getSectionQuestionDetail(1, "Q1"), getSectionQuestionDetail(2, "Q2")))));
         questionGroup.setSections(sections);
 
         assertThat(questionGroup.getSections().size(), CoreMatchers.is(1));
@@ -257,7 +257,7 @@ public class QuestionGroupControllerTest {
 
     @Test
     public void shouldGetAllQuestionGroups() {
-        List<QuestionGroupDetail> questionGroupDetails = Arrays.asList(
+        List<QuestionGroupDetail> questionGroupDetails = asList(
                 getQuestionGroupDetail(1, TITLE, "title1", "sectionName1"), getQuestionGroupDetail(1, TITLE, "title1", "sectionName1"));
         Mockito.when(questionnaireServiceFacade.getAllQuestionGroups()).thenReturn(questionGroupDetails);
         String view = questionGroupController.getAllQuestionGroups(model, httpServletRequest);
@@ -315,7 +315,7 @@ public class QuestionGroupControllerTest {
 
     @Test
     public void shouldGetAllQgEventSources() {
-        Mockito.when(questionnaireServiceFacade.getAllEventSources()).thenReturn(Arrays.asList(new EventSource("Create", "Client", "Create Client"), new EventSource("View", "Client", "View Client")));
+        Mockito.when(questionnaireServiceFacade.getAllEventSources()).thenReturn(asList(new EventSource("Create", "Client", "Create Client"), new EventSource("View", "Client", "View Client")));
         Map<String, String> eventSources = questionGroupController.getAllQgEventSources();
         verify(questionnaireServiceFacade).getAllEventSources();
         assertThat(eventSources.get("Create.Client"), Is.is("Create Client"));
@@ -324,7 +324,7 @@ public class QuestionGroupControllerTest {
 
     @Test
     public void shouldGetAllSectionQuestions() {
-        Mockito.when(questionnaireServiceFacade.getAllQuestions()).thenReturn(Arrays.asList(getQuestionDetail(1, "Q1", QuestionType.NUMERIC), getQuestionDetail(2, "Q2", QuestionType.DATE)));
+        Mockito.when(questionnaireServiceFacade.getAllQuestions()).thenReturn(asList(getQuestionDetail(1, "Q1", QuestionType.NUMERIC), getQuestionDetail(2, "Q2", QuestionType.DATE)));
         List<SectionQuestionDetail> sectionQuestions = questionGroupController.getAllSectionQuestions();
         assertThat(sectionQuestions, Is.is(notNullValue()));
         assertThat(sectionQuestions.size(), Is.is(2));
@@ -346,13 +346,13 @@ public class QuestionGroupControllerTest {
 
     @Test
     public void shouldGetAllQuestionGroupResponses() throws UnsupportedEncodingException {
-        List<QuestionGroupDetail> questionGroupDetails = Arrays.asList(new QuestionGroupDetail());
-        when(questionnaireServiceFacade.getQuestionGroups(101, "Create", "Client")).thenReturn(questionGroupDetails);
+        List<QuestionGroupInstanceDetail> details = asList(getQuestionGroupInstance(1991, "QG1"));
+        when(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(101, "Create", "Client")).thenReturn(details);
         ModelMap modelMap = questionGroupController.getAllQuestionGroupResponses(101, "Create", "Client", "http://some.url");
         assertThat(modelMap, is(notNullValue()));
-        assertThat((List<QuestionGroupDetail>) modelMap.get("questionGroupDetails"), is(questionGroupDetails));
+        assertThat((List<QuestionGroupInstanceDetail>) modelMap.get("questionGroupInstanceDetails"), is(details));
         assertThat((String) modelMap.get("backPageUrl"), is("http://some.url"));
-        verify(questionnaireServiceFacade, times(1)).getQuestionGroups(101, "Create", "Client");
+        verify(questionnaireServiceFacade, times(1)).getQuestionGroupInstancesWithUnansweredQuestionGroups(101, "Create", "Client");
     }
 
     @Test
@@ -372,7 +372,7 @@ public class QuestionGroupControllerTest {
         String result = questionGroupController.saveQuestionnaire(
                 getQuestionGroupDetails(), 1, requestContext);
         Mockito.verify(questionnaireServiceFacade, times(1)).saveResponses(argThat(new QuestionGroupDetailsMatcher(
-                new QuestionGroupDetails(1, 2, Arrays.asList(
+                new QuestionGroupDetails(1, 2, asList(
                         getQuestionGroupDetail(TITLE, "View", "Client", "S1", "S3"))))));
         assertThat(result, is("success"));
     }
@@ -390,7 +390,7 @@ public class QuestionGroupControllerTest {
     }
 
     private QuestionGroupDetails getQuestionGroupDetails() {
-        QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(1, 2, Arrays.asList(
+        QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(1, 2, asList(
                 getQuestionGroupDetail(TITLE, "View", "Client", "S1", "S2"),
                 getQuestionGroupDetail(TITLE, "View", "Client", "S1", "S3")
         ));

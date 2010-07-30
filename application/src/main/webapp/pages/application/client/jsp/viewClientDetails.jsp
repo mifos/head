@@ -788,7 +788,7 @@ explanation of the license and how it is applied.
 					</table>
           <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'questionGroupInstances')}"
 			   var="questionGroupInstances" />
-          <table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
+          <table id="questionGroupInstances" name="questionGroupInstances" width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
             <tr>
               <td colspan="2" class="bluetablehead05">
                 <span class="fontnormalbold">
@@ -804,14 +804,16 @@ explanation of the license and how it is applied.
               <tr>
                 <td width="70%" class="paddingL10">
                   <span class="fontnormal8pt">
-                    <a id="viewQuestionGroupResponse.link" href="displayResponse.ftl?instanceId=${questionGroupInstance.id}&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>">
+                    <a id="${questionGroupInstance.id}" href="displayResponse.ftl?instanceId=${questionGroupInstance.id}&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>">
                       <c:out value="${questionGroupInstance.questionGroupTitle}"/>
                     </a>
                   </span>
                 </td>
                 <td width="30%" align="left" class="paddingL10">
                   <span class="fontnormal8pt">
-                    <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale, questionGroupInstance.dateCompleted)}" />
+                    <label id="label.${questionGroupInstance.id}">
+                        <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale, questionGroupInstance.dateCompleted)}" />
+                    </label>
                   </span>
                 </td>
               </tr>

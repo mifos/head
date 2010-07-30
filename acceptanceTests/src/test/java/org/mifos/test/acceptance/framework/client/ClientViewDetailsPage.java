@@ -20,16 +20,25 @@
 
 package org.mifos.test.acceptance.framework.client;
 
+import com.thoughtworks.selenium.Selenium;
+import org.apache.commons.lang.StringUtils;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
+import org.mifos.test.acceptance.questionnaire.QuestionGroupResponsePage;
 import org.testng.Assert;
 
-import com.thoughtworks.selenium.Selenium;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import static java.lang.String.format;
 
 public class ClientViewDetailsPage extends MifosPage {
+    public static final String QUESTION_GROUP_DATE_JS = "window.document.getElementById('label.%s').innerHTML.trim()";
+    public static final String QUESTION_GROUP_NAME_JS = "window.document.getElementById('questionGroupInstances').getElementsByTagName('a')[%d].innerHTML.trim()";
+    public static final String QUESTION_GROUP_ID_JS = "window.document.getElementById('questionGroupInstances').getElementsByTagName('a')[%d].id";
 
     public ClientViewDetailsPage(Selenium selenium) {
         super(selenium);
@@ -151,4 +160,26 @@ public class ClientViewDetailsPage extends MifosPage {
     }
 
 
+    public Map<String, String> getQuestionGroupInstances() {
+        int rows = Integer.valueOf(selenium.getEval("window.document.getElementById('questionGroupInstances').getElementsByTagName('a').length"));
+        Map<String,String> instances = new LinkedHashMap<String, String>();
+        for (int i=0; i<rows-1; i++) {
+            String instanceId = selenium.getEval(format(QUESTION_GROUP_ID_JS, i));
+            instances.put(selenium.getEval(format(QUESTION_GROUP_NAME_JS, i)), selenium.getEval(format(QUESTION_GROUP_DATE_JS, instanceId)));
+        }
+        return instances;
+    }
+
+    public QuestionGroupResponsePage navigateToQuestionGroupResponsePage(String questionGroupTitle) {
+        int rows = Integer.valueOf(selenium.getEval("window.document.getElementById('questionGroupInstances').getElementsByTagName('a').length"));
+        for (int i=0; i<rows-1; i++) {
+            String questionGroup = selenium.getEval(format(QUESTION_GROUP_NAME_JS, i)).trim();
+            if (StringUtils.equals(questionGroup, questionGroupTitle)) {
+                selenium.click("id=" + selenium.getEval(format(QUESTION_GROUP_ID_JS, i)));
+                break;
+            }
+        }
+        waitForPageToLoad();
+        return new QuestionGroupResponsePage(selenium);
+    }
 }

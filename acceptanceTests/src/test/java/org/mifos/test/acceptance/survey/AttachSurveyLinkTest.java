@@ -25,6 +25,7 @@ import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
+import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
@@ -77,7 +78,7 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         loanAccountDetailPage.verifyPage();
 
         AttachSurveyPage attachSurveyPage = loanAccountDetailPage.navigateToAttachSurveyPage();
-        attachSurveyPage.verifyPage();
+        attachSurveyPage.verifyPage("create_instance_choosesurvey");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -88,18 +89,18 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         LoanAccountPage loanAccountDetailPage = navigationHelper.navigateToLoanAccountPage("000100000000206");
 
         AttachSurveyPage attachSurveyPage = loanAccountDetailPage.navigateToAttachSurveyPage();
-        attachSurveyPage.verifyPage();
+        attachSurveyPage.verifyPage("create_instance_choosesurvey");
     }
 
-/*    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void attachSurveyToClient() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_005_dbunit.xml.zip", dataSource, selenium);
 
         ClientViewDetailsPage clientViewDetailsPage = navigationHelper.navigateToClientViewDetailsPage("Stu1232993852651 Client1232993852651");
 
         AttachSurveyPage attachSurveyPage = clientViewDetailsPage.navigateToAttachSurveyPage();
-        attachSurveyPage.verifyPage();
-    }*/
+        attachSurveyPage.verifyPage("selectQuestionnaire");
+    }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void attachSurveyToGroup() throws Exception {
@@ -108,7 +109,7 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         GroupViewDetailsPage groupViewDetailsPage = navigationHelper.navigateToGroupViewDetailsPage("MyGroup1233266255641");
 
         AttachSurveyPage attachSurveyPage = groupViewDetailsPage.navigateToAttachSurveyPage();
-        attachSurveyPage.verifyPage();
+        attachSurveyPage.verifyPage("create_instance_choosesurvey");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -118,6 +119,6 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         CenterViewDetailsPage centerViewDetailsPage = navigationHelper.navigateToCenterViewDetailsPage("MyCenter1233266210775");
 
         AttachSurveyPage attachSurveyPage = centerViewDetailsPage.navigateToAttachSurveyPage();
-        attachSurveyPage.verifyPage();
+        attachSurveyPage.verifyPage("create_instance_choosesurvey");
     }
 }
