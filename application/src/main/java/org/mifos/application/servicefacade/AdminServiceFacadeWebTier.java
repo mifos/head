@@ -641,13 +641,13 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         OfficeLevelDto officeLevels = officeDao.findOfficeLevelsWithConfiguration();
 
         List<GracePeriodTypeEntity> gracePeriodTypes = applicationConfigurationDao.findGracePeriodTypes();
-        GracePeriodDto gracePeriodDtos = assemble(gracePeriodTypes);
+        GracePeriodDto gracePeriodDtos = assembleGracePeriod(gracePeriodTypes);
 
         List<LookUpEntity> lookupEntities = applicationConfigurationDao.findLookupValueTypes();
-        ConfigurableLookupLabelDto lookupLabels = assemble(lookupEntities);
+        ConfigurableLookupLabelDto lookupLabels = assembleLookupEntities(lookupEntities);
 
         List<AccountStateEntity> accountStateEntities = applicationConfigurationDao.findAllAccountStateEntities();
-        AccountStatusesLabelDto accountStatusLabels = assemble(accountStateEntities);
+        AccountStatusesLabelDto accountStatusLabels = assembleAccountStateEntities(accountStateEntities);
 
         List<CustomerStatusEntity> customerStatuses = applicationConfigurationDao.findAllCustomerStatuses();
         for (CustomerStatusEntity customerStatus : customerStatuses) {
@@ -659,7 +659,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         return new ConfigureApplicationLabelsDto(officeLevels, gracePeriodDtos, lookupLabels, accountStatusLabels);
     }
 
-    private AccountStatusesLabelDto assemble(List<AccountStateEntity> accountStateEntities) {
+    private AccountStatusesLabelDto assembleAccountStateEntities(List<AccountStateEntity> accountStateEntities) {
 
         AccountStatusesLabelDto loanAccountLabel = new AccountStatusesLabelDto();
 
@@ -694,7 +694,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         return loanAccountLabel;
     }
 
-    private ConfigurableLookupLabelDto assemble(List<LookUpEntity> lookupEntities) {
+    private ConfigurableLookupLabelDto assembleLookupEntities(List<LookUpEntity> lookupEntities) {
 
         ConfigurableLookupLabelDto lookupLabels = new ConfigurableLookupLabelDto();
 
@@ -739,7 +739,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         return lookupLabels;
     }
 
-    private GracePeriodDto assemble(List<GracePeriodTypeEntity> gracePeriodTypes) {
+    private GracePeriodDto assembleGracePeriod(List<GracePeriodTypeEntity> gracePeriodTypes) {
 
         GracePeriodDto gracePeriods = new GracePeriodDto();
 
@@ -763,6 +763,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         return gracePeriods;
     }
 
+    @Override
     public MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields() {
 
         try {

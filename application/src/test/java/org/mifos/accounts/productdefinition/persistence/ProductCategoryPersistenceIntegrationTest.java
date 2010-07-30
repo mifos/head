@@ -26,6 +26,9 @@ import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
@@ -44,28 +47,29 @@ public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationT
 
     private UserContext userContext = null;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         productCategoryPersistence = new ProductCategoryPersistence();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         productCategoryPersistence = null;
         userContext = null;
-        super.tearDown();
     }
 
+    @Test
     public void testGetMaxPrdCategoryId() throws Exception {
        Assert.assertEquals(Short.valueOf("2"), productCategoryPersistence.getMaxPrdCategoryId());
     }
 
+    @Test
     public void testGetProductCategory() throws Exception {
        Assert.assertEquals(Integer.valueOf("0"), productCategoryPersistence.getProductCategory("product"));
     }
 
 
+    @Test
     public void testGetProductTypes() throws Exception {
         List<ProductTypeEntity> productTypeList = productCategoryPersistence.getProductTypes();
        Assert.assertEquals(2, productTypeList.size());
@@ -79,6 +83,7 @@ public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationT
         }
     }
 
+    @Test
     public void testGetProductTypesByType() throws Exception {
         ProductTypeEntity productTypeEntity = productCategoryPersistence.getProductTypes(ProductType.LOAN.getValue());
         Assert.assertNotNull(productTypeEntity);
@@ -89,6 +94,7 @@ public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationT
         }
     }
 
+    @Test
     public void testGetPrdCategory() throws Exception {
        Assert.assertEquals(Integer.valueOf("0"), productCategoryPersistence.getProductCategory("product category",
                 getProductCategory().get(0).getProductCategoryID()));
@@ -100,16 +106,19 @@ public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationT
         deleteProductCategory(productCategoryBO);
     }
 
+    @Test
     public void testFindByGlobalNum() throws Exception {
         ProductCategoryBO productCategoryBO = createProductCategory();
         Assert.assertNotNull(productCategoryPersistence.findByGlobalNum(productCategoryBO.getGlobalPrdCategoryNum()));
         deleteProductCategory(productCategoryBO);
     }
 
+    @Test
     public void testGetProductCategoryStatusList() throws Exception {
        Assert.assertEquals(2, productCategoryPersistence.getProductCategoryStatusList().size());
     }
 
+    @Test
     public void testGetAllCategories() throws Exception {
        Assert.assertEquals(2, productCategoryPersistence.getAllCategories().size());
         ProductCategoryBO productCategoryBO = createProductCategory();

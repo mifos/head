@@ -24,6 +24,9 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -53,6 +56,7 @@ public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrati
 
     protected CustomerBO group = null;
 
+    @Test
     public void testMakeEarlyRepaymentEnteriesForFeePayment() {
         for (AccountActionDateEntity installment : accountBO.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) installment;
@@ -65,6 +69,7 @@ public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrati
         }
     }
 
+    @Test
     public void testMakeEarlyRepaymentEnteriesForNotPayingFee() {
         for (AccountActionDateEntity installment : accountBO.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) installment;
@@ -77,6 +82,7 @@ public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrati
         }
     }
 
+    @Test
     public void testWaiveCharges() {
         StaticHibernateUtil.closeSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -106,8 +112,8 @@ public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrati
                 new Date(System.currentTimeMillis()), loanOffering);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
         group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
         center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
@@ -116,12 +122,12 @@ public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrati
         TestObjectFactory.cleanUp(center);
 
         StaticHibernateUtil.closeSession();
-        super.tearDown();
+
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
+
         accountBO = getLoanAccount();
     }
 

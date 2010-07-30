@@ -24,6 +24,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
@@ -43,18 +46,17 @@ public class AccountStateMachineIntegrationTest extends MifosIntegrationTestCase
 
     private AccountBusinessService service;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         service = new AccountBusinessService();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testGetStatusList() throws Exception {
         AccountStateMachines.getInstance().initialize((short) 1, (short) 1, AccountTypes.LOAN_ACCOUNT, null);
         List<AccountStateEntity> stateList = service.getStatusList(new AccountStateEntity(
@@ -62,16 +64,19 @@ public class AccountStateMachineIntegrationTest extends MifosIntegrationTestCase
        Assert.assertEquals(2, stateList.size());
     }
 
+    @Test
     public void testGetStatusName() throws Exception {
         AccountStateMachines.getInstance().initialize((short) 1, (short) 1, AccountTypes.LOAN_ACCOUNT, null);
         Assert.assertNotNull(service.getStatusName((short) 1, AccountState.LOAN_CLOSED_RESCHEDULED, AccountTypes.LOAN_ACCOUNT));
     }
 
+    @Test
     public void testGetFlagName() throws Exception {
         AccountStateMachines.getInstance().initialize((short) 1, (short) 1, AccountTypes.LOAN_ACCOUNT, null);
         Assert.assertNotNull(service.getFlagName((short) 1, AccountStateFlag.LOAN_WITHDRAW, AccountTypes.LOAN_ACCOUNT));
     }
 
+    @Test
     public void testStatesInitializationException() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -83,6 +88,7 @@ public class AccountStateMachineIntegrationTest extends MifosIntegrationTestCase
         }
     }
 
+    @Test
     public void testServiceUnavailableException() throws Exception {
         try {
             service = (AccountBusinessService) ServiceFactory.getInstance().getBusinessService(null);
@@ -91,6 +97,7 @@ public class AccountStateMachineIntegrationTest extends MifosIntegrationTestCase
         }
     }
 
+    @Test
     public void testFlagForLoanCancelState() throws Exception {
         AccountStateMachines.getInstance().initialize((short) 1, (short) 1, AccountTypes.LOAN_ACCOUNT, null);
         StaticHibernateUtil.closeSession();

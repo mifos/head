@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.AccountPersistence;
@@ -63,17 +65,17 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
     protected Holiday holiday;
     protected AccountPersistence accountPersistence;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+
+    @Before
+    public void setUp() throws Exception {
         createInitialCustomerAccounts();
         groupLoan = createGroupLoanAccount();
         clientLoan = createClientLoanAccount();
         accountPersistence = new AccountPersistence();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         try {
             this.getBranchOffice().setHolidays(null);
             TestObjectFactory.cleanUp(holiday);
@@ -91,7 +93,7 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
             new DateTimeService().resetToCurrentSystemDateTime();
             StaticHibernateUtil.closeSession();
         }
-        super.tearDown();
+
     }
 
     private LoanBO createGroupLoanAccount() {

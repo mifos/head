@@ -22,6 +22,7 @@ package org.mifos.customers.personnel.business;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -32,6 +33,7 @@ public class PersonnelStatusEntityIntegrationTest extends MifosIntegrationTestCa
         super();
     }
 
+    @Test
     public void testGetPersonnelStatusEntity() throws Exception {
         MasterPersistence masterPersistenceService = new MasterPersistence();
         PersonnelStatusEntity personnelStatusEntity = (PersonnelStatusEntity) masterPersistenceService

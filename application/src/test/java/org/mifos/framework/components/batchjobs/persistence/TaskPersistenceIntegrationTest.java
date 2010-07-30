@@ -26,6 +26,9 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.hibernate.Query;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.business.Task;
@@ -40,16 +43,15 @@ public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
     }
 
+    @Test
     public void testHasLoanArrearsTaskRunSuccessfully() throws PersistenceException {
         Task task1 = new Task();
         task1.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
@@ -78,6 +80,7 @@ public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.removeObject(task2);
     }
 
+    @Test
     public void testSaveAndCommit() throws PersistenceException {
         Task task = new Task();
         task.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
@@ -99,6 +102,7 @@ public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testSaveAndCommitForInvalidConnection() {
         Task task = new Task();
         task.setId(1);

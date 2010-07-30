@@ -24,6 +24,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.security.rolesandpermission.RoleTestUtil;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
@@ -31,25 +32,30 @@ import org.mifos.security.rolesandpermission.business.RoleBO;
 
 public class RolesAndPermissionPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
+
     public RolesAndPermissionPersistenceIntegrationTest() throws Exception {
         super();
     }
 
+    @Test
     public void testGetRole() throws Exception {
         RoleBO role = new RolesPermissionsPersistence().getRole("Admin");
        Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE, role.getActivities().size());
     }
 
+    @Test
     public void testGetActivities() throws Exception {
         List<ActivityEntity> activities = new RolesPermissionsPersistence().getActivities();
        Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT, activities.size());
     }
 
+    @Test
     public void testGetRoles() throws Exception {
         List<RoleBO> roles = new RolesPermissionsPersistence().getRoles();
        Assert.assertEquals(2, roles.size());
     }
 
+    @Test
     public void testGetRoleForGivenId() throws Exception {
         RoleBO role = new RolesPermissionsPersistence().getRole((short) 1);
        Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE, role.getActivities().size());

@@ -103,7 +103,7 @@ public class ReportsPersistence extends Persistence {
             trxn.rollback();
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } finally {
-            StaticHibernateUtil.closeSession(session);
+            StaticHibernateUtil.closeSession();
         }
     }
 
@@ -127,7 +127,7 @@ public class ReportsPersistence extends Persistence {
             trxn.rollback();
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } finally {
-            StaticHibernateUtil.closeSession(session);
+            StaticHibernateUtil.closeSession();
         }
     }
 
@@ -157,7 +157,7 @@ public class ReportsPersistence extends Persistence {
             trxn.rollback();
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } finally {
-            StaticHibernateUtil.closeSession(session);
+            StaticHibernateUtil.closeSession();
         }
     }
 
@@ -182,7 +182,7 @@ public class ReportsPersistence extends Persistence {
             trxn.rollback();
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } finally {
-            StaticHibernateUtil.closeSession(session);
+            StaticHibernateUtil.closeSession();
         }
     }
 
@@ -262,7 +262,7 @@ public class ReportsPersistence extends Persistence {
             trxn.rollback();
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } finally {
-            StaticHibernateUtil.closeSession(session);
+            StaticHibernateUtil.closeSession();
         }
     }
 
@@ -290,7 +290,7 @@ public class ReportsPersistence extends Persistence {
             trxn.rollback();
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } finally {
-            StaticHibernateUtil.closeSession(session);
+            StaticHibernateUtil.closeSession();
         }
     }
 
@@ -316,7 +316,7 @@ public class ReportsPersistence extends Persistence {
             trxn.rollback();
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } finally {
-            StaticHibernateUtil.closeSession(session);
+            StaticHibernateUtil.closeSession();
         }
     }
 
@@ -357,7 +357,7 @@ public class ReportsPersistence extends Persistence {
             session = StaticHibernateUtil.getSessionTL();
             createJasperMap(session, map);
         } finally {
-            StaticHibernateUtil.closeSession(session);
+            StaticHibernateUtil.closeSession();
         }
     }
 
@@ -384,7 +384,7 @@ public class ReportsPersistence extends Persistence {
         } catch (Exception e) {
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } finally {
-            StaticHibernateUtil.closeSession(session);
+            StaticHibernateUtil.closeSession();
         }
     }
 

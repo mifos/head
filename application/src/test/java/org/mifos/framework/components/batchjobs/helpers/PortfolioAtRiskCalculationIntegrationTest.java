@@ -27,6 +27,9 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -83,14 +86,13 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
 
     private OfficeBO officeBO;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         StaticHibernateUtil.getSessionTL().clear();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         try {
             TestObjectFactory.cleanUp(account2);
             TestObjectFactory.cleanUp(account1);
@@ -107,7 +109,6 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
             TestDatabase.resetMySQLDatabase();
         }
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
     private void createInitialObject() {
@@ -154,6 +155,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
         }
     }
 
+    @Test
     public void testGeneratePortfolioAtRiskForTaskNoPayment() throws Exception {
         createInitialObject();
         TestObjectFactory.flushandCloseSession();
@@ -185,6 +187,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
         account2 = TestObjectFactory.getObject(AccountBO.class, account2.getAccountId());
     }
 
+    @Test
     public void testGeneratePortfolioAtRiskForTaskSomePayments() throws Exception {
         createInitialObject();
         TestObjectFactory.flushandCloseSession();

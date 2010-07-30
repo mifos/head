@@ -22,6 +22,7 @@ package org.mifos.reports.business.validator;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.reports.business.ReportParameterForm;
 
@@ -38,36 +39,43 @@ public class ReportParameterValidatorFactoryIntegrationTest extends MifosIntegra
     private static final String BRANCH_REPORT_FILENAME = "report/ProgressReport.rptdesign";
     private static final String HO_CASH_CONFIRMATION_REPORT_FILENAME = "report/HOCashConfirmationReport.rptdesign";
 
+    @Test
     public void testReturnsNullIfValidatorNotFound() throws Exception {
         ReportParameterValidator<ReportParameterForm> validator = new ReportParameterValidatorFactory()
                 .getValidator("not-existing-reportname");
         Assert.assertNull(validator);
     }
 
+    @Test
     public void testReturnsCollectionSheetReportValidator() throws Exception {
         retrieveAndAssertValidatorType(BATCH_COLLECTION_SHEET_REPORT_FILENAME,
                 CollectionSheetReportParamValidator.class);
     }
 
+    @Test
     public void testReturnsDetailedAgingPortfolioValidator() throws Exception {
         retrieveAndAssertValidatorType(DETAILED_AGING_PORTFOLIO_REPORT_FILENAME,
                 DetailedAgingPortfolioReportParamValidator.class);
     }
 
+    @Test
     public void testReturnsActiveLoansByLoanOfficerValidator() throws Exception {
         retrieveAndAssertValidatorType(ACTIVE_LOANS_BY_LOAN_OFFICER_REPORT_FILENAME,
                 DetailedAgingPortfolioReportParamValidator.class);
     }
 
+    @Test
     public void testReturnsBranchReportValidator() throws Exception {
         retrieveAndAssertValidatorType(BRANCH_REPORT_FILENAME, BranchReportParamValidator.class);
     }
 
+    @Test
     public void testReturnsBranchCashConfirmationReportValidator() throws Exception {
         retrieveAndAssertValidatorType(HO_CASH_CONFIRMATION_REPORT_FILENAME,
                 BranchCashConfirmationReportParamValidator.class);
     }
 
+    @Test
     public void testReturnsSqlCollectionSheetReportValidator() throws Exception {
         retrieveAndAssertValidatorType(COLLECTION_SHEET_REPORT_FILENAME, SqlCollectionSheetReportParamValidator.class);
     }

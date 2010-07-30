@@ -24,6 +24,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.customers.ppi.business.PPIChoice;
 import org.mifos.customers.surveys.SurveysConstants;
 import org.mifos.customers.surveys.business.Question;
@@ -42,6 +43,7 @@ public class SurveysPersistenceIntegrationTest extends MifosIntegrationTestCase 
     private Question question2;
     private Question question3;
 
+    @Test
     public void testPpi() throws Exception {
         createQuestions();
         SurveysPersistence persistence = new SurveysPersistence();

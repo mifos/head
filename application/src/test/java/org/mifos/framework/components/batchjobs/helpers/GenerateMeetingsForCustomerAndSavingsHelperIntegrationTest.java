@@ -26,6 +26,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -66,23 +69,22 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
 
     private UserContext userContext;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(savings);
         TestObjectFactory.cleanUp(client1);
         TestObjectFactory.cleanUp(client2);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testExecuteForCustomerAccount() throws Exception {
         StaticHibernateUtil.startTransaction();
         createCenter();
@@ -102,6 +104,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         Assert.assertEquals(noOfInstallments + 10, center.getCustomerAccount().getAccountActionDates().size());
     }
 
+    @Test
     public void testExecuteForSavingsAccount() throws Exception {
         int configuredValue = GeneralConfig.getOutputIntervalForBatchJobs();
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
@@ -126,6 +129,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         }
     }
 
+    @Test
     public void testExecuteForCustomerAndSavingsAccount() throws Exception {
         // jpw - this test is similar to testExecuteForSavingsAccount
         // Re-using much of it to test that customer and savings accounts are processed as have made separate queries to
@@ -176,6 +180,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         }
     }
 
+    @Test
     public void testExecuteForSavingsAccountForGroup() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);

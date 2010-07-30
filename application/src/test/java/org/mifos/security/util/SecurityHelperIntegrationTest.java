@@ -25,6 +25,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 
@@ -34,16 +35,19 @@ public class SecurityHelperIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
+    @Test
     public void testGetUserRoles() throws Exception {
         Set<RoleBO> userRoles = SecurityHelper.getUserRoles((short) 1);
        Assert.assertEquals(1, userRoles.size());
     }
 
+    @Test
     public void testGetPersonnelOffices() throws Exception {
         List<OfficeSearch> officeSearchList = SecurityHelper.getPersonnelOffices(Short.valueOf("1"));
        Assert.assertEquals(3, officeSearchList.size());
     }
 
+    @Test
     public void testGetOffices() throws Exception {
         List<OfficeSearch> officeSearchList = SecurityHelper.getOffices();
        Assert.assertEquals(3, officeSearchList.size());

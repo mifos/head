@@ -32,6 +32,7 @@ import junit.framework.Assert;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.junit.Test;
 import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -55,9 +56,8 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
-import org.testng.annotations.Test;
 
-@Test(groups = { "integration" }, dependsOnGroups = { "productMixTestSuite" })
+
 public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
     public AccountBOIntegrationTest() throws Exception {
@@ -79,10 +79,10 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         for (AccountFeesEntity accountFeesEntity : accountFeesEntitySet) {
             groupLoan.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(accountFeesEntity.getFees().getFeeId(), uc.getId());
         }
-        StaticHibernateUtil.getTransaction().commit();
+        StaticHibernateUtil.commitTransaction();
     }
 
-    @Test(dependsOnMethods = { "testFailureRemoveFees" })
+    @Test
     public void testSuccessGetLastPmntAmntToBeAdjusted()  throws Exception {
 
         LoanBO loan = groupLoan;
@@ -112,7 +112,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         groupLoan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
-    @Test(dependsOnMethods = { "testSuccessGetLastPmntAmntToBeAdjusted" })
+    @Test
     public void testSuccessUpdateAccountActionDateEntity() {
         List<Short> installmentIdList;
         installmentIdList = getApplicableInstallmentIdsForRemoveFees(groupLoan);
@@ -124,7 +124,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
     }
 
-    @Test(dependsOnMethods = { "testSuccessUpdateAccountActionDateEntity" })
+    @Test
     public void testSuccessUpdateAccountFeesEntity() {
         Set<AccountFeesEntity> accountFeesEntitySet = groupLoan.getAccountFees();
         Assert.assertEquals(1, accountFeesEntitySet.size());
@@ -136,7 +136,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         }
     }
 
-    @Test(dependsOnMethods = { "testSuccessUpdateAccountFeesEntity" })
+    @Test
     public void testGetLastLoanPmntAmnt() throws Exception {
         Date currentDate = new Date(System.currentTimeMillis());
         LoanBO loan = groupLoan;
@@ -153,7 +153,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         groupLoan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
-    @Test(dependsOnMethods = { "testGetLastLoanPmntAmnt" })
+    @Test
     public void testLoanAdjustment() throws Exception {
         StaticHibernateUtil.closeSession();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -188,7 +188,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         groupLoan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
-    @Test(dependsOnMethods = { "testLoanAdjustment" })
+    @Test
     public void testAdjustmentForClosedAccnt() throws Exception {
         Date currentDate = new Date(System.currentTimeMillis());
         LoanBO loan = groupLoan;
@@ -211,7 +211,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         }
     }
 
-    @Test(dependsOnMethods = { "testAdjustmentForClosedAccnt" })
+    @Test
     public void testRetrievalOfNullMonetaryValue() throws Exception {
         Date currentDate = new Date(System.currentTimeMillis());
         LoanBO loan = groupLoan;
@@ -235,7 +235,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
                 .createMoney(0), accntPmnt.getAmount());
     }
 
-    @Test(dependsOnMethods = { "testRetrievalOfNullMonetaryValue" })
+    @Test
     public void testGetTransactionHistoryView() throws Exception {
         Date currentDate = new Date(System.currentTimeMillis());
         LoanBO loan = groupLoan;
@@ -271,7 +271,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         groupLoan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
-    @Test(dependsOnMethods = { "testGetTransactionHistoryView" })
+    @Test
     public void testGetTransactionHistoryViewByOtherUser() throws Exception {
         Date currentDate = new Date(System.currentTimeMillis());
         LoanBO loan = groupLoan;
@@ -296,7 +296,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         groupLoan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
-    @Test(dependsOnMethods = { "testGetTransactionHistoryViewByOtherUser" })
+    @Test
     public void testGetPeriodicFeeList() throws PersistenceException {
         FeeBO oneTimeFee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.LOAN, "20",
                 FeePayment.TIME_OF_DISBURSEMENT);
@@ -308,7 +308,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         Assert.assertEquals(1, groupLoan.getPeriodicFeeList().size());
     }
 
-    @Test(dependsOnMethods = { "testGetPeriodicFeeList" })
+    @Test
     public void testIsTrxnDateValid() throws Exception {
 
         Calendar calendar = new GregorianCalendar();
@@ -323,19 +323,19 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
     }
 
-    @Test(dependsOnMethods = { "testHandleChangeInMeetingSchedule" })
+    @Test
     public void testDeleteFutureInstallments() throws HibernateException, SystemException, AccountException {
         TestObjectFactory.flushandCloseSession();
         groupLoan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
         groupLoan.deleteFutureInstallments();
-        StaticHibernateUtil.getTransaction().commit();
+        StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         groupLoan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
         Assert.assertEquals(1, groupLoan.getAccountActionDates().size());
 
     }
 
-    @Test(dependsOnMethods = { "testDeleteFutureInstallments" })
+    @Test
     public void testUpdate() throws Exception {
         TestObjectFactory.flushandCloseSession();
         groupLoan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, groupLoan.getAccountId());
@@ -361,7 +361,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         }
     }
 
-    @Test(dependsOnMethods = { "testUpdate" })
+    @Test
     public void testGetPastInstallments() {
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -378,7 +378,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         TestObjectFactory.cleanUp(centerBO);
     }
 
-    @Test(dependsOnMethods = { "testGetPastInstallments" })
+    @Test
     public void testGetAllInstallments() {
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -392,7 +392,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         TestObjectFactory.cleanUp(centerBO);
     }
 
-    @Test(dependsOnMethods = { "testGetAllInstallments" })
+    @Test
     public void testUpdatePerformanceHistoryOnAdjustment() throws Exception {
         Date currentDate = new Date(System.currentTimeMillis());
         StaticHibernateUtil.closeSession();
@@ -424,7 +424,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
     }
 
-    @Test(dependsOnMethods = { "testUpdatePerformanceHistoryOnAdjustment" })
+    @Test
     public void testAccountBOClosedDate() {
         AccountBO account = new AccountBO();
         java.util.Date originalDate = new java.util.Date();
@@ -446,7 +446,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         Assert.assertEquals(account.getClosedDate(), originalDate);
     }
 
-    @Test(dependsOnMethods = { "testAccountBOClosedDate" })
+    @Test
     public void testGetInstalmentDates() throws Exception {
         AccountBO account = new AccountBO();
         MeetingBO meeting = new MeetingBO(RecurrenceType.DAILY, (short) 1, getDate("18/08/2005"),
@@ -457,7 +457,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         account.getInstallmentDates(meeting, (short) 0, (short) 0);
     }
 
-    @Test(dependsOnMethods = { "testGetInstalmentDates" })
+    @Test
     public void testGenerateId() throws Exception {
         AccountBO account = new AccountBO(35);
         String officeGlobalNum = "0567";

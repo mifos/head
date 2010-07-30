@@ -25,6 +25,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -44,22 +46,19 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
 
     private LoanOfferingBO loanOffering;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.removeObject(loanOffering);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testGetBusinessObject() {
         Assert.assertNull(new LoanPrdBusinessService().getBusinessObject(null));
     }
 
+    @Test
     public void testGetActiveLoanProductCategoriesForInvalidConnection() {
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -70,10 +69,12 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         }
     }
 
+    @Test
     public void testGetActiveLoanProductCategories() throws ServiceException {
        Assert.assertEquals(1, new LoanPrdBusinessService().getActiveLoanProductCategories().size());
     }
 
+    @Test
     public void testGetLoanApplicableCustomerTypesForInvalidConnection() {
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -84,10 +85,12 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         }
     }
 
+    @Test
     public void testGetLoanApplicableCustomerTypes() throws ServiceException {
        Assert.assertEquals(2, new LoanPrdBusinessService().getLoanApplicableCustomerTypes((short) 1).size());
     }
 
+    @Test
     public void testGetLoanOffering() throws ServiceException {
         loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
         StaticHibernateUtil.closeSession();
@@ -98,6 +101,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
        Assert.assertEquals("Loan", loanOffering.getPrdOfferingShortName());
     }
 
+    @Test
     public void testGetLoanOfferingForInvalidConnection() {
         loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
         StaticHibernateUtil.closeSession();
@@ -112,6 +116,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testGetApplicablePrdStatus() throws ServiceException {
         List<PrdStatusEntity> prdStatusList = new LoanPrdBusinessService().getApplicablePrdStatus((short) 1);
         StaticHibernateUtil.closeSession();
@@ -126,6 +131,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         }
     }
 
+    @Test
     public void testGetApplicablePrdStatusForInvalidConnection() {
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -135,6 +141,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         }
     }
 
+    @Test
     public void testGetLoanOfferingWithLocaleId() throws ServiceException {
         loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
         StaticHibernateUtil.closeSession();
@@ -152,6 +159,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
        Assert.assertEquals("Flat", loanOffering.getInterestTypes().getName());
     }
 
+    @Test
     public void testGetLoanOfferingWithLocaleIdForInvalidConnection() {
         loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
         StaticHibernateUtil.closeSession();
@@ -166,6 +174,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         StaticHibernateUtil.closeSession();
     }
 
+    @Test
     public void testGetAllLoanOfferings() throws ServiceException {
         loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
         LoanOfferingBO loanOffering1 = createLoanOfferingBO("Loan Offering1", "Loa1");
@@ -183,6 +192,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         TestObjectFactory.removeObject(loanOffering1);
     }
 
+    @Test
     public void testGetAllLoanOfferingsForInvalidConnection() {
         loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
         StaticHibernateUtil.closeSession();

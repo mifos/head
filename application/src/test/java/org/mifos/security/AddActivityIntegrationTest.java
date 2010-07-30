@@ -28,9 +28,12 @@ import java.sql.SQLException;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AddAccountAction;
-import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -55,20 +58,22 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
 
     private Session session;
 
-    @Override
+    @Before
     public void setUp() {
         session = StaticHibernateUtil.getSessionTL();
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         TestDatabase.resetMySQLDatabase();
     }
 
+    @Test
     public void testStartFromStandardStore() throws Exception {
         upgradeAndCheck();
     }
 
+    @Test
     public void testStartFromSystemWithAddedLookupValues() throws Exception {
 
         for (int i = 0; i < 10; ++i) {
@@ -109,6 +114,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
         return upgrade;
     }
 
+    @Test
     public void testNoParent() throws Exception {
         short newId = 17032;
         int databaseVersion = 172;
@@ -119,6 +125,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(null, fetched.getParent());
     }
 
+    @Test
     public void testValidateLookupValueKeyTest() throws Exception {
         String validKey = "Permissions-CanCreateFunds";
         String format = "Permissions-";
@@ -127,6 +134,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertFalse(AddAccountAction.validateLookupValueKey(format, invalidKey));
     }
 
+    @Test
     public void testConstructorTest() throws Exception {
         short newId = 30000;
         AddActivity upgrade = null;

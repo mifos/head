@@ -25,6 +25,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -58,13 +61,12 @@ public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTestCas
     private CustomerBO client = null;
     private UserContext userContext;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         try {
             TestObjectFactory.cleanUp(client);
             TestObjectFactory.cleanUp(group);
@@ -74,9 +76,10 @@ public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTestCas
             TestDatabase.resetMySQLDatabase();
         }
         StaticHibernateUtil.closeSession();
-        super.tearDown();
+
     }
 
+    @Test
     public void testReversalAdjustment() throws Exception {
         userContext = TestObjectFactory.getContext();
         createInitialObjects();

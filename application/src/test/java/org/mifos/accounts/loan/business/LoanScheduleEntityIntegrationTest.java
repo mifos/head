@@ -25,6 +25,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
@@ -40,6 +41,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         super();
     }
 
+    @Test
     public void testGetPrincipalDue() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) groupLoan.getAccountActionDates().toArray()[0];
         accountActionDate.setPrincipalPaid(new Money(getCurrency(), "10.0"));
@@ -47,6 +49,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
 
     }
 
+    @Test
     public void testGetInterestDue() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) groupLoan.getAccountActionDates().toArray()[0];
         accountActionDate.setInterestPaid(new Money(getCurrency(), "2.0"));
@@ -54,6 +57,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
 
     }
 
+    @Test
     public void testGetPenaltyDue() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) groupLoan.getAccountActionDates().toArray()[0];
         accountActionDate.setPenalty(new Money(getCurrency(), "20.0"));
@@ -64,6 +68,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
 
     }
 
+    @Test
     public void testGetTotalDue() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) groupLoan.getAccountActionDates().toArray()[0];
         accountActionDate.setPrincipalPaid(new Money(getCurrency(), "10.0"));
@@ -77,6 +82,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
 
     }
 
+    @Test
     public void testGetTotalDueWithFees() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) groupLoan.getAccountActionDates().toArray()[0];
         accountActionDate.setPrincipalPaid(new Money(getCurrency(), "10.0"));
@@ -90,6 +96,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
 
     }
 
+    @Test
     public void testGetDueAmounts() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) groupLoan.getAccountActionDates().toArray()[0];
         accountActionDate.setPrincipalPaid(new Money(getCurrency(), "10.0"));
@@ -103,6 +110,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
 
     }
 
+    @Test
     public void testGetTotalDueAmounts() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) groupLoan.getAccountActionDates().toArray()[0];
         accountActionDate.setPrincipalPaid(new Money(getCurrency(), "10.0"));
@@ -120,6 +128,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
 
     }
 
+    @Test
     public void testGetTotalScheduleAmountWithFees() {
         LoanScheduleEntity accountActionDate = new LoanScheduleEntity(groupLoan, groupLoan.getCustomer(), Short
                 .valueOf("1"), new java.sql.Date(System.currentTimeMillis()), PaymentStatus.UNPAID, new Money(
@@ -146,6 +155,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         Assert.assertEquals(new Money(getCurrency(), "170"), accountActionDate.getTotalScheduleAmountWithFees());
     }
 
+    @Test
     public void testIsPricipalZero() {
         for (AccountActionDateEntity accountAction : groupLoan.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
@@ -158,6 +168,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         }
     }
 
+    @Test
     public void testMakeEarlyRepaymentEnteriesForFeePayment() {
         for (AccountActionDateEntity accountAction : groupLoan.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
@@ -170,6 +181,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         }
     }
 
+    @Test
     public void testMakeEarlyRepaymentEnteriesForNotPayingFee() {
         for (AccountActionDateEntity accountAction : groupLoan.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
@@ -187,6 +199,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         }
     }
 
+    @Test
     public void testSuccessRemoveFees() {
         Short feeId = null;
         Set<AccountFeesEntity> accountFeesSet = groupLoan.getAccountFees();
