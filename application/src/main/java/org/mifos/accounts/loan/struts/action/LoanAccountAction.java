@@ -232,7 +232,7 @@ public class LoanAccountAction extends AccountAppAction {
     public static final String ACCOUNT_ID = "accountId";
     public static final String GLOBAL_ACCOUNT_NUM = "globalAccountNum";
 
-    private QuestionnaireFlowAdapter questionnaireAdapter = new QuestionnaireFlowAdapter("Create", "Loan", ActionForwards.schedulePreview_success);
+    private QuestionnaireFlowAdapter questionnaireAdapter = new QuestionnaireFlowAdapter("Create", "Loan", ActionForwards.schedulePreview_success, "custSearchAction.do?method=loadMainSearch");
 
     public LoanAccountAction() throws Exception {
         this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
@@ -468,11 +468,10 @@ public class LoanAccountAction extends AccountAppAction {
                 request);
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, loanScheduleDetailsDto
                 .isLoanPendingApprovalDefined(), request);
-        
+
         return questionnaireAdapter.mapToAppliedQuestions(
                 mapping, loanActionForm, request,
-                ActionForwards.schedulePreview_success,
-                "custSearchAction.do?method=loadMainSearch");
+                ActionForwards.schedulePreview_success);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -1489,9 +1488,10 @@ public class LoanAccountAction extends AccountAppAction {
             @SuppressWarnings("unused") final HttpServletResponse response)
             throws Exception {
         ActionErrors errors = questionnaireAdapter.validateQuestionGroupResponses(request, (LoanAccountActionForm) form);
+        request.setAttribute(METHODCALLED, "captureQuestionResponses");
         if (!errors.isEmpty()) {
             addErrors(request, errors);
-            return new ActionForward(mapping.getInput());
+            return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
         }
         return questionnaireAdapter.rejoin(mapping);
     }

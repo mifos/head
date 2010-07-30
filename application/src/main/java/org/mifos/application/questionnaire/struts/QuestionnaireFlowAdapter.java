@@ -1,6 +1,5 @@
 package org.mifos.application.questionnaire.struts;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +12,8 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.platform.questionnaire.service.SectionDetail;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.ValidationException;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
@@ -21,20 +22,24 @@ import org.mifos.platform.util.CollectionUtils;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.MifosServiceFactory;
 
+import antlr.debug.GuessingEvent;
+
 public class QuestionnaireFlowAdapter {
 
     private ActionForwards joinFlowAt;
     private String event;
     private String source;
+    private String cancelToURL;
 
-    public QuestionnaireFlowAdapter(String event, String source, ActionForwards joinFlowAt) {
+    public QuestionnaireFlowAdapter(String event, String source, ActionForwards joinFlowAt, String cancelToURL) {
        this.event = event;
        this.source = source;
        this.joinFlowAt = joinFlowAt;
+       this.cancelToURL = cancelToURL;
     }
 
     public ActionForward mapToAppliedQuestions(ActionMapping mapping, QuestionResponseCapturer form, HttpServletRequest request,
-                                               ActionForwards defaultForward, String cancelToURL) {
+                                               ActionForwards defaultForward) {
         List<QuestionGroupDetail> questionGroups = getQuestionGroups(request);
         if ((questionGroups == null) || (questionGroups.isEmpty()))  {
             return mapping.findForward(defaultForward.toString());
@@ -55,21 +60,8 @@ public class QuestionnaireFlowAdapter {
         if (questionnaireServiceFacade == null) {
             return null;
         }
-        /*List<QuestionGroupDto> questionGroupDtos = new ArrayList<QuestionGroupDto>();
-        List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getQuestionGroups(event, source);
-        for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
-            questionGroupDtos.add(new QuestionGroupDto(questionGroupDetail));
-        }
-        return questionGroupDtos;*/
         return questionnaireServiceFacade.getQuestionGroups(event, source);
     }
-
-    /*public ActionForward captureResponse(ActionMapping mapping, QuestionResponseCapturer form, HttpServletRequest request,
-            HttpServletResponse response) {
-        return mapping.findForward(joinFlowAt.toString());
-    }*/
-
-
 
     public ActionErrors validateQuestionGroupResponses(HttpServletRequest request, QuestionResponseCapturer form) {
             List<QuestionGroupDetail> groups = form.getQuestionGroups();
@@ -88,6 +80,11 @@ public class QuestionnaireFlowAdapter {
                        errors.add(ClientConstants.ERROR_REQUIRED, actionMessage);
                     }
                 }
+            }
+            if (!errors.isEmpty()) {
+                request.setAttribute("questionsHostForm", form);
+                request.setAttribute("origFlowRequestURI", getContextUri(request));
+                request.setAttribute("cancelToURL", cancelToURL);
             }
             return errors;
     }

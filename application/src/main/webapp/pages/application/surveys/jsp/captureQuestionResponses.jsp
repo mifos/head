@@ -36,8 +36,23 @@ explanation of the license and how it is applied.
 		<span id="page.id" title="QuestionGroup"></span>
 		<SCRIPT type="text/javascript" SRC="pages/framework/js/date.js"></SCRIPT>
 		<script type="text/javascript" src="pages/framework/js/jquery/jquery-1.4.2.min.js"></script>
-
+		<STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/datepicker.css); --></STYLE>
+		<STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
+		<script type="text/javascript" src="pages/questionnaire/js/jquery.datePicker.min-2.1.2.js"></script>
+		<script type="text/javascript" src="pages/questionnaire/js/jquery.keyfilter-1.7.js"></script>
+		<script type="text/javascript" src="pages/questionnaire/js/jquery.validate.min.js"></script>
+		<script type="text/javascript" src="pages/questionnaire/js/date.js"></script>
+		<script type="text/javascript" src="pages/questionnaire/js/dateConfiguration.js"></script>
+		<!--[if IE]><script type="text/javascript" src="pages/questionnaire/jquery.bgiframe.js"></script><![endif]-->
+		<script type="text/javascript" src="pages/application/surveys/js/captureQuestionResponses_struts.js"></script>
 		
+		<script type="text/css">
+		  .validationErr{
+	        color:#FF0000;
+	        float:left;
+          }
+		</script>
+            
         <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
 		<html-el:form action="${requestScope.origFlowRequestURI}">
@@ -93,7 +108,28 @@ explanation of the license and how it is applied.
                                              property='questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value' maxlength="200" />
                                      </c:if> 
                                      <c:if test="${question.questionType == 'DATE'}">
-                                         <date:datetag property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value" />
+                                         <mifos:mifosalphanumtext styleId="create_ClientPersonalInfo.input.customField" styleClass="date-pick"
+                                             property='questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value' maxlength="10" />
+                                     </c:if>
+                                     
+                                     <c:if test="${question.questionType == 'SINGLE_SELECT'}">
+                                         <mifos:select	property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value" size="1">
+										   <c:forEach var="choiceValue" items="${question.answerChoices}" >
+											  <html-el:option value="${choiceValue}">${choiceValue}</html-el:option>
+										   </c:forEach>
+									     </mifos:select>
+                                     </c:if>
+                                     
+                                      <c:if test="${question.questionType == 'MULTI_SELECT'}">
+                                         <fieldset style="width:70%">
+				                            <ol class="noPadding">
+				                              <c:forEach var="choiceValue" items="${question.answerChoices}" >
+				                                 <li class="noPadding">
+								    				<html:multibox property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="${choiceValue}" /> ${choiceValue}
+								                 </li>  
+							                  </c:forEach>												
+				                            </ol>
+				                          </fieldset>    
                                      </c:if>
                                      </td>
                                  </tr>
@@ -104,28 +140,17 @@ explanation of the license and how it is applied.
                      <tr>
                         <td>&nbsp;</td>
 						<td align="left">
-							<input type="submit" class="buttn" id="captureQuestionResponses.button.continue" value="Continue" name="continueButton">
-							<input type="button" class="cancelbuttn" id="captureQuestionResponses.button.cancel" value="Cancel" name="cancelButton">
+							<input type="submit" class="buttn" name="captureQuestionResponses.button.continue" id="captureQuestionResponses.button.continue" value="Continue" name="continueButton">
+							<input type="button" class="cancelbuttn" name="captureQuestionResponses_button_cancel" id="captureQuestionResponses_button_cancel" value="Cancel" name="cancelButton">
                         </td>
                     </tr>
                  </table>
 			</c:if>
 			<!-- Question Groups end -->
-			<div style="display: none;" id="hiddenDivBox">
-                <a alt="" href="${requestScope.cancelToURL}" id="captureQuestionResponses.link.cancel">cancel</a>    
-            </div>
-
-
+			<input type="hidden" name="captureResponse_cancel" id="captureResponse_cancel" value="${requestScope.cancelToURL}"/>
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<html-el:hidden property="method" value="captureQuestionResponses" />
 		</html-el:form>
-		<script type="text/javascript">
-            $(document).ready(function(evt){
-                $("#captureQuestionResponses.button.cancel").click(function(event) {
-                    event.preventDefault();
-                    $("#captureQuestionResponses.link.cancel").click();
-                });
-            });
-	    </script>
+		
 	</tiles:put>
 </tiles:insert>
