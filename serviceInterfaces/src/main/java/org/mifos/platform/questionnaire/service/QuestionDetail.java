@@ -36,6 +36,8 @@ public class QuestionDetail implements Serializable {
     private QuestionType type;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<String> answerChoices;
+    private Integer numericMin;
+    private Integer numericMax;
 
     public QuestionDetail() {
         this(null, QuestionType.INVALID);
@@ -120,5 +122,21 @@ public class QuestionDetail implements Serializable {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
+    }
+
+    public void setNumericMin(Integer numericMin) {
+        this.numericMin = numericMin;
+    }
+
+    public void setNumericMax(Integer numericMax) {
+        this.numericMax = numericMax;
+    }
+
+    public Integer getNumericMin() {
+        return numericMin;
+    }
+
+    public Integer getNumericMax() {
+        return numericMax;
     }
 }

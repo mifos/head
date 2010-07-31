@@ -18,4 +18,5 @@ public class QuestionnaireConstants {
     public static final String MANDATORY_QUESTION_HAS_NO_ANSWER = "questionnaire.error.mandatory.question.has.no.answer";
     public static final String NO_ANSWERS_PROVIDED = "questionnaire.error.no.answers.provided";
     public static final String GENERIC_VALIDATION = "questionnaire.error.generic.validation";
+    public static final String INVALID_NUMERIC_BOUNDS = "questionnaire.error.invalid.numeric.bounds";
 }

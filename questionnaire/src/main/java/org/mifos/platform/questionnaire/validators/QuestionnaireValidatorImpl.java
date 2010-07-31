@@ -33,6 +33,7 @@ import java.util.Set;
 
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.*; //NOPMD
 import static org.mifos.platform.questionnaire.service.QuestionType.INVALID;
+import static org.mifos.platform.questionnaire.service.QuestionType.NUMERIC;
 import static org.mifos.platform.util.CollectionUtils.isEmpty;
 
 @SuppressWarnings("PMD")
@@ -133,9 +134,18 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
             throw new SystemException(QUESTION_GROUP_TITLE_NOT_PROVIDED);
     }
 
-    private void validateQuestionType(QuestionDetail questionDefinition) throws SystemException {
-        if (INVALID == questionDefinition.getType())
+    private void validateQuestionType(QuestionDetail questionDetail) throws SystemException {
+        if (INVALID == questionDetail.getType())
             throw new SystemException(QUESTION_TYPE_NOT_PROVIDED);
+        if (NUMERIC == questionDetail.getType())
+            validateForNumericQuestionType(questionDetail);
+    }
+
+    private void validateForNumericQuestionType(QuestionDetail questionDetail) {
+        Integer min = questionDetail.getNumericMin();
+        Integer max = questionDetail.getNumericMax();
+        if (min != null && max != null && min > max)
+            throw new SystemException(INVALID_NUMERIC_BOUNDS);
     }
 
     private void validateQuestionTitle(QuestionDetail questionDefinition) throws SystemException {

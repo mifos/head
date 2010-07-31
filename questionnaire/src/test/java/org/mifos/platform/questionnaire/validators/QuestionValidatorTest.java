@@ -26,7 +26,12 @@ import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
-import org.mifos.platform.questionnaire.service.*; // NOPMD
+import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.QuestionDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.SectionDetail;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -36,9 +41,22 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.*; // NOPMD
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.DUPLICATE_QUESTION_FOUND_IN_SECTION;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.GENERIC_VALIDATION;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.INVALID_EVENT_SOURCE;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.INVALID_NUMERIC_BOUNDS;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.MANDATORY_QUESTION_HAS_NO_ANSWER;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.NO_ANSWERS_PROVIDED;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.NO_QUESTIONS_FOUND_IN_SECTION;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_SECTION_NOT_PROVIDED;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TYPE_NOT_PROVIDED;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionValidatorTest {
@@ -79,6 +97,51 @@ public class QuestionValidatorTest {
             fail("Should have thrown the application exception");
         } catch (SystemException e) {
             assertEquals(QUESTION_TYPE_NOT_PROVIDED, e.getKey());
+        }
+    }
+
+    @Test
+    public void shouldNotThrowExceptionForNumericQuestionType() {
+        try {
+            QuestionDetail questionDetail = new QuestionDetail("Title", QuestionType.NUMERIC);
+            questionnaireValidator.validateForDefineQuestion(questionDetail);
+        } catch (SystemException e) {
+            fail("Should not have thrown the exception");
+        }
+    }
+
+    @Test
+    public void shouldThrowExceptionForNumericQuestionTypeWhenInvalidBoundsGiven() {
+        try {
+            QuestionDetail questionDetail = new QuestionDetail("Title", QuestionType.NUMERIC);
+            questionDetail.setNumericMin(100);
+            questionDetail.setNumericMax(10);
+            questionnaireValidator.validateForDefineQuestion(questionDetail);
+            fail("Should have thrown the exception");
+        } catch (SystemException e) {
+            assertEquals(INVALID_NUMERIC_BOUNDS, e.getKey());
+        }
+    }
+
+    @Test
+    public void shouldNotThrowExceptionForNumericQuestionTypeWhenOnlyMinBoundGiven() {
+        try {
+            QuestionDetail questionDetail = new QuestionDetail("Title", QuestionType.NUMERIC);
+            questionDetail.setNumericMin(10);
+            questionnaireValidator.validateForDefineQuestion(questionDetail);
+        } catch (SystemException e) {
+            fail("Should not have thrown the exception");
+        }
+    }
+    
+    @Test
+    public void shouldNotThrowExceptionForNumericQuestionTypeWhenOnlyMaxBoundGiven() {
+        try {
+            QuestionDetail questionDetail = new QuestionDetail("Title", QuestionType.NUMERIC);
+            questionDetail.setNumericMax(-100);
+            questionnaireValidator.validateForDefineQuestion(questionDetail);
+        } catch (SystemException e) {
+            fail("Should not have thrown the exception");
         }
     }
 
