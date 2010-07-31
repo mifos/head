@@ -20,38 +20,22 @@
 
 package org.mifos.application.admin.struts.action;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import org.mifos.application.admin.business.service.ShutdownServiceFacadeWebTier;
+import org.mifos.application.admin.servicefacade.ShutdownServiceFacade;
 import org.mifos.application.admin.struts.actionforms.ShutdownActionForm;
-import org.mifos.application.admin.system.PersonnelInfo;
-import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.ServletUtils;
-import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.SecurityConstants;
-import org.mifos.security.util.UserContext;
-import org.mifos.security.util.ActivityMapper;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Locale;
 
 public class ShutdownAction extends BaseAction {
     private static final String DEFAULT_SHUTDOWN_TIMEOUT = "600"; // 10 minutes
@@ -63,58 +47,25 @@ public class ShutdownAction extends BaseAction {
             shutdownForm.setShutdownTimeout(DEFAULT_SHUTDOWN_TIMEOUT);
         }
         Locale locale = getUserContext(request).getCurrentLocale();
-        ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class
-                .getName());
-        Collection<HttpSession> sessions = shutdownManager.getActiveSessions();
-        List<PersonnelInfo> loggedUsers = new ArrayList<PersonnelInfo>();
-        if (ActivityMapper.getInstance().isViewActiveSessionsPermitted(getUserContext(request), getUserContext(request).getBranchId())) {
-            PersonnelBusinessService personnelBusinessService = new PersonnelBusinessService();
-            for (HttpSession session : sessions) {
-                UserContext userContext = (UserContext) session.getAttribute(LoginConstants.USERCONTEXT);
-                if (userContext == null) {
-                    continue;
-                }
-                PersonnelBO personnel = personnelBusinessService.getPersonnel(userContext.getId());
-                String offices = generateOfficeChain(personnel.getOffice());
-                String names = personnel.getPersonnelDetails().getName().getFirstName() + " "
-                        + personnel.getPersonnelDetails().getName().getLastName();
-                DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withOffsetParsed().withLocale(locale);
-                String activityTime = formatter.print(session.getLastAccessedTime());
-                ActivityContext activityContext = (ActivityContext) session.getAttribute(LoginConstants.ACTIVITYCONTEXT);
-                String activityDesc = "[" + activityContext.getLastForward().getName() + "] "
-                        + activityContext.getLastForward().getPath();
-                loggedUsers.add(new PersonnelInfo(offices, names, activityTime, activityDesc));
-            }
-        }
-        Collections.sort(loggedUsers);
-        request.setAttribute("activeSessions", loggedUsers);
-        request.setAttribute("shutdownStatus", shutdownManager.getStatus(locale));
-        request.setAttribute("submitButtonDisabled", shutdownManager.isShutdownInProgress());
+        ShutdownServiceFacade shutdownService = new ShutdownServiceFacadeWebTier();
+        request.setAttribute("activeSessions", shutdownService.getLoggedUsers(request));
+        request.setAttribute("shutdownStatus", shutdownService.getStatus(request, locale));
+        request.setAttribute("submitButtonDisabled", shutdownService.isShutdownInProgress(request));
         return mapping.findForward(ActionForwards.load_success.toString());
-    }
-
-    private String generateOfficeChain(OfficeBO office) {
-        /* MIFOS-2789: only list the branch offfice if there is one, and if no branch office then list the head office.
-        if (office.getParentOffice() != null) {
-            return generateOfficeChain(office.getParentOffice()) + " / " + office.getOfficeName();
-        }*/
-        return office.getOfficeName();
     }
 
     public ActionForward shutdown(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         ShutdownActionForm shutdownForm = (ShutdownActionForm) form;
-        ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class
-                .getName());
-        shutdownManager.scheduleShutdown(Long.parseLong(shutdownForm.getShutdownTimeout()) * 1000);
+        ShutdownServiceFacade shutdownService = new ShutdownServiceFacadeWebTier();
+        shutdownService.scheduleShutdown(request, Long.parseLong(shutdownForm.getShutdownTimeout()) * 1000);
         return load(mapping, form, request, response);
     }
 
     public ActionForward cancelShutdown(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class
-                .getName());
-        shutdownManager.cancelShutdown();
+        ShutdownServiceFacade shutdownService = new ShutdownServiceFacadeWebTier();
+        shutdownService.cancelShutdown(request);
         return load(mapping, form, request, response);
     }
 
