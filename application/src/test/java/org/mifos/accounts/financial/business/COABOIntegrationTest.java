@@ -60,14 +60,14 @@ public class COABOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testEquals() throws Exception {
-        COABO chart53 = new COABO(53, "Example 1");
-        COABO chart54 = new COABO(54, "Example 1");
-        COABO chart53b = new COABO(53, "ChangedName");
-        COABO subclass = new COABO(53, "Example 1") {
+    public void testEqualsAndHasCode() throws Exception {
+        COABO x = new COABO(53, "Example 1");
+        COABO notx = new COABO(54, "Example 1");
+        COABO y = new COABO(53, "ChangedName");
+        COABO z = new COABO(53, "Example 1") {
         };
 
-        TestUtils.verifyBasicEqualsContract(new COABO[] { chart53, chart53b, subclass }, new COABO[] { chart54 });
+        TestUtils.assertEqualsAndHashContract(x, notx, y, z);
     }
 
     @Test

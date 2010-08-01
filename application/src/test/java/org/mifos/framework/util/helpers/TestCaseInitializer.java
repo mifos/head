@@ -28,6 +28,7 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
@@ -81,7 +82,7 @@ public class TestCaseInitializer {
 
         Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
 
-        TestUtils.initializeSpring();
+        SpringUtil.initializeSpring();
         // Spring must be initialized before FinancialInitializer
         FinancialInitializer.initialize();
         ActivityMapper.getInstance().init();

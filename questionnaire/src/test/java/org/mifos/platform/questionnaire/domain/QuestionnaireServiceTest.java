@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
@@ -61,7 +62,6 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.MANDATORY_QUESTION_HAS_NO_ANSWER;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyString;
@@ -411,6 +411,24 @@ public class QuestionnaireServiceTest {
     }
 
     @Test
+    public void testGetNumericQuestionByIdSuccess() throws SystemException {
+        int questionId = 1;
+        String title = "Title";
+        QuestionEntity question = getQuestion(questionId, title, AnswerType.NUMBER);
+        question.setNumericMin(10);
+        question.setNumericMax(100);
+        when(questionDao.getDetails(questionId)).thenReturn(question);
+        QuestionDetail questionDetail = questionnaireService.getQuestion(questionId);
+        Assert.assertNotNull(questionDetail);
+        assertThat(questionDetail.getShortName(), is(title));
+        assertThat(questionDetail.getText(), is(title));
+        assertThat(questionDetail.getType(), is(QuestionType.NUMERIC));
+        assertThat(questionDetail.getNumericMin(), is(10));
+        assertThat(questionDetail.getNumericMax(), is(100));
+        verify(questionDao, times(1)).getDetails(questionId);
+    }
+
+    @Test
     public void testGetMultiSelectQuestionById() throws SystemException {
         int questionId = 1;
         String title = "Title";
@@ -579,7 +597,7 @@ public class QuestionnaireServiceTest {
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails, true);
         try {
-            Mockito.doThrow(new ValidationException(MANDATORY_QUESTION_HAS_NO_ANSWER, new SectionQuestionDetail())).
+            doThrow(new MandatoryAnswerNotFoundException("Title")).
                     when(questionnaireValidator).validateForQuestionGroupResponses(asList(questionGroupDetail));
             questionnaireService.validateResponses(asList(questionGroupDetail));
             Assert.fail("Should not have thrown the validation exception");

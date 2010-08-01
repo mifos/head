@@ -127,6 +127,19 @@ public class QuestionnaireMapperTest {
     }
 
     @Test
+    public void shouldMapNumericQuestionDetailToQuestion() {
+        QuestionDetail questionDetail = new QuestionDetail(TITLE, QuestionType.NUMERIC);
+        questionDetail.setNumericMin(10);
+        questionDetail.setNumericMax(100);
+        QuestionEntity questionEntity = questionnaireMapper.mapToQuestion(questionDetail);
+        assertThat(questionEntity, is(notNullValue()));
+        assertThat(questionEntity.getQuestionText(), is(TITLE));
+        assertThat(questionEntity.getAnswerTypeAsEnum(), is(AnswerType.NUMBER));
+        assertThat(questionEntity.getNumericMin(), is(10));
+        assertThat(questionEntity.getNumericMax(), is(100));
+    }
+
+    @Test
     public void shouldMapQuestionToQuestionDetail() {
         QuestionEntity question = getQuestion(TITLE, AnswerType.FREETEXT);
         QuestionDetail questionDetail = questionnaireMapper.mapToQuestionDetail(question);
@@ -135,6 +148,14 @@ public class QuestionnaireMapperTest {
         question = getQuestion(TITLE, AnswerType.MULTISELECT, Arrays.asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2")));
         questionDetail = questionnaireMapper.mapToQuestionDetail(question);
         assertQuestionDetail(questionDetail, TITLE, QuestionType.MULTI_SELECT, Arrays.asList("choice1", "choice2"));
+
+        question = getQuestion(TITLE, AnswerType.NUMBER);
+        question.setNumericMin(10);
+        question.setNumericMax(100);
+        questionDetail = questionnaireMapper.mapToQuestionDetail(question);
+        assertQuestionDetail(questionDetail, TITLE, QuestionType.NUMERIC);
+        assertThat(questionDetail.getNumericMin(), is(10));
+        assertThat(questionDetail.getNumericMax(), is(100));
     }
 
     @Test

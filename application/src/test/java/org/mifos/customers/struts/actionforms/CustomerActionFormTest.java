@@ -20,7 +20,6 @@
 
 package org.mifos.customers.struts.actionforms;
 
-import junit.framework.Assert;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
@@ -33,6 +32,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
+import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
@@ -51,8 +51,14 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.fail;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.GENERIC_VALIDATION;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.MANDATORY_QUESTION_HAS_NO_ANSWER;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CustomerActionFormTest {
@@ -77,11 +83,11 @@ public class CustomerActionFormTest {
     public void testNullInCustomerId() throws Exception {
         CustomerActionForm form = new GroupCustActionForm();
         form.setCustomerId(null);
-        Assert.assertNull(form.getCustomerId());
+        assertNull(form.getCustomerId());
 
         try {
             form.getCustomerIdAsInt();
-            Assert.fail();
+            fail();
         } catch (NullPointerException expected) {
         }
     }
@@ -95,11 +101,11 @@ public class CustomerActionFormTest {
         questionGroupDtos.add(questionGroupDto);
         clientCustActionForm.setQuestionGroupDtos(questionGroupDtos);
         ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
-        validationException.addChildException(new ValidationException(MANDATORY_QUESTION_HAS_NO_ANSWER, sectionDetails.get(0).getQuestionDetail(0)));
-        Mockito.doThrow(validationException).when(questionnaireServiceFacade).validateResponses(Mockito.anyList());
+        validationException.addChildException(new MandatoryAnswerNotFoundException("Question 1"));
+        doThrow(validationException).when(questionnaireServiceFacade).validateResponses(anyList());
         clientCustActionForm.validateForQuestionGroupResponses(Methods.next.toString(), actionErrors, questionnaireServiceFacade);
-        Mockito.verify(actionErrors, Mockito.times(1)).add(Mockito.eq(ClientConstants.ERROR_REQUIRED),
-                Mockito.argThat(new ActionMessageMatcher(ClientConstants.ERROR_REQUIRED, "Question 1")));
+        verify(actionErrors, times(1)).add(Mockito.eq(ClientConstants.ERROR_REQUIRED),
+                argThat(new ActionMessageMatcher(ClientConstants.ERROR_REQUIRED, "Question 1")));
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, List<SectionDetail> sections) {
@@ -120,8 +126,8 @@ public class CustomerActionFormTest {
     }
 
     private class ActionMessageMatcher extends TypeSafeMatcher<ActionMessage> {
-        private String errorCode;
-        private String questionTitle;
+        private final String errorCode;
+        private final String questionTitle;
 
         public ActionMessageMatcher(String errorCode, String questionTitle) {
             this.errorCode = errorCode;

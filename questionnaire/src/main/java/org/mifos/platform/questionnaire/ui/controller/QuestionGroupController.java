@@ -23,6 +23,8 @@ package org.mifos.platform.questionnaire.ui.controller;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
+import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
@@ -46,6 +48,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.text.MessageFormat.format;
 
 @Controller
 @SuppressWarnings("PMD")
@@ -153,14 +157,45 @@ public class QuestionGroupController extends QuestionnaireController {
         } catch (ValidationException e) {
             if (e.containsChildExceptions()) {
                 for (ValidationException validationException : e.getChildExceptions()) {
-                    String title = validationException.getSectionQuestionDetail().getTitle();
-                    constructErrorMessage("questionnaire.noresponse", "Please specify " + title,
-                            requestContext.getMessageContext(), title);
+                    if (validationException instanceof MandatoryAnswerNotFoundException) {
+                        populateError(requestContext, (MandatoryAnswerNotFoundException) validationException);
+                    } else if (validationException instanceof BadNumericResponseException) {
+                        populateError(requestContext, (BadNumericResponseException) validationException);
+                    }
                 }
             }
             return "failure";
         }
         return "success";
+    }
+
+    private void populateError(RequestContext requestContext, BadNumericResponseException exception) {
+        String title = exception.getQuestionTitle();
+        String code, message;
+        Integer allowedMinValue = exception.getAllowedMinValue();
+        Integer allowedMaxValue = exception.getAllowedMaxValue();
+        if (allowedMinValue != null && allowedMaxValue != null) {
+            code = "questionnaire.invalid.numeric.range.response";
+            message = format("Please specify a number between {0} and {1} for {2}", allowedMinValue, allowedMaxValue, title);
+            constructErrorMessage(code, message, requestContext.getMessageContext(), allowedMinValue, allowedMaxValue, title);
+        } else if (allowedMinValue != null) {
+            code = "questionnaire.invalid.numeric.min.response";
+            message = format("Please specify a number greater than {0} for {1}", allowedMinValue, title);
+            constructErrorMessage(code, message, requestContext.getMessageContext(), allowedMinValue, title);
+        } else if (allowedMaxValue != null) {
+            code = "questionnaire.invalid.numeric.max.response";
+            message = format("Please specify a number lesser than {0} for {1}", allowedMaxValue, title);
+            constructErrorMessage(code, message, requestContext.getMessageContext(), allowedMaxValue, title);
+        } else {
+            code = "questionnaire.invalid.numeric.response";
+            message = format("Please specify a number for {0}", title);
+            constructErrorMessage(code, message, requestContext.getMessageContext(), title);
+        }
+    }
+
+    private void populateError(RequestContext requestContext, MandatoryAnswerNotFoundException exception) {
+        String title = exception.getQuestionTitle();
+        constructErrorMessage("questionnaire.noresponse", format("Please specify {0}", title), requestContext.getMessageContext(), title);
     }
 
     private boolean questionGroupHasErrors(QuestionGroupForm questionGroup, RequestContext requestContext) {

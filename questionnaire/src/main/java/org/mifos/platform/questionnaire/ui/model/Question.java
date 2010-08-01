@@ -125,6 +125,22 @@ public class Question implements Serializable {
         return answerChoicesApplicableFor(questionDetail.getType()) && getChoices().size() < 2;
     }
 
+    public Integer getNumericMin() {
+        return questionDetail.getNumericMin();
+    }
+
+    public Integer getNumericMax() {
+        return questionDetail.getNumericMax();
+    }
+
+    public void setNumericMin(Integer numericMin) {
+        questionDetail.setNumericMin(numericMin);
+    }
+
+    public void setNumericMax(Integer numericMax) {
+        questionDetail.setNumericMax(numericMax);
+    }
+
     private boolean answerChoicesApplicableFor(QuestionType type) {
         return QuestionType.MULTI_SELECT.equals(type) || QuestionType.SINGLE_SELECT.equals(questionDetail.getType());
     }
@@ -150,5 +166,15 @@ public class Question implements Serializable {
     private static String getResource(String key) {
         ResourceBundle resourceBundle = ResourceBundle.getBundle("org.mifos.platform.questionnaire.ui.localizedProperties.questionnaire_messages");
         return resourceBundle.getString(key);
+    }
+
+    public boolean numericBoundsAreInvalid() {
+        boolean result = false;
+        if (QuestionType.NUMERIC.equals(questionDetail.getType())) {
+            Integer min = getNumericMin();
+            Integer max = getNumericMax();
+            result = min != null && max != null && min > max;
+        }
+        return result;
     }
 }
