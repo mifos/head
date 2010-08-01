@@ -31,9 +31,6 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.master.business.CustomFieldType;
@@ -59,7 +56,7 @@ import org.mifos.security.util.OfficeSearch;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
-public class OfficeBO extends AbstractBusinessObject {
+public class OfficeBO extends AbstractBusinessObject implements Comparable<OfficeBO> {
 
     private final Short officeId;
     private final Short operationMode;
@@ -600,47 +597,14 @@ public class OfficeBO extends AbstractBusinessObject {
         return offices;
     }
 
+    /* FIXME: we also need to implement hashCode() */
     @Override
-    public int hashCode() {
-        return new HashCodeBuilder(43, 11) //
-                .append(this.getOfficeId()) //
-                .append(this.getOfficeName()) //
-                .append(this.getShortName()) //
-                .append(this.getGlobalOfficeNum()) //
-                .append(this.getSearchId()) //
-                .toHashCode();
+    public boolean equals(final Object o) {
+        return officeId.equals(((OfficeBO) o).getOfficeId());
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        if (obj.getClass() != getClass()) {
-            return false;
-        }
-        final OfficeBO otherObject = (OfficeBO) obj;
-        return new EqualsBuilder() //
-                .append(this.getOfficeId(), otherObject.getOfficeId()) //
-                .append(this.getOfficeName(), otherObject.getOfficeName()) //
-                .append(this.getShortName(), otherObject.getShortName()) //
-                .append(this.getGlobalOfficeNum(), otherObject.getGlobalOfficeNum()) //
-                .append(this.getSearchId(), otherObject.getSearchId()) //
-                .isEquals();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)//
-                .append(this.getOfficeId()) //
-                .append(this.getOfficeName()) //
-                .append(this.getShortName()) //
-                .append(this.getGlobalOfficeNum()) //
-                .append(this.getSearchId()) //
-                .toString();
+    public int compareTo(final OfficeBO o) {
+        return officeId.compareTo(o.getOfficeId());
     }
 
     public OfficeBO getIfChildPresent(final OfficeBO parent, final OfficeBO child) {
