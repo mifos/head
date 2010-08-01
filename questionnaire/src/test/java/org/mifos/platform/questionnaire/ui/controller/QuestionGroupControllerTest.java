@@ -53,7 +53,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -342,29 +341,6 @@ public class QuestionGroupControllerTest {
         assertThat(sectionQuestions, Is.is(notNullValue()));
         assertThat(sectionQuestions.size(), Is.is(0));
         verify(questionnaireServiceFacade).getAllQuestions();
-    }
-
-    @Test
-    public void shouldGetAllQuestionGroupResponses() throws UnsupportedEncodingException {
-        List<QuestionGroupInstanceDetail> details = asList(getQuestionGroupInstance(1991, "QG1"));
-        when(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(101, "Create", "Client")).thenReturn(details);
-        ModelMap modelMap = questionGroupController.getAllQuestionGroupResponses(101, "Create", "Client", "http://some.url");
-        assertThat(modelMap, is(notNullValue()));
-        assertThat((List<QuestionGroupInstanceDetail>) modelMap.get("questionGroupInstanceDetails"), is(details));
-        assertThat((String) modelMap.get("backPageUrl"), is("http://some.url"));
-        verify(questionnaireServiceFacade, times(1)).getQuestionGroupInstancesWithUnansweredQuestionGroups(101, "Create", "Client");
-    }
-
-    @Test
-    public void shouldGetQuestionGroupResponse() throws UnsupportedEncodingException {
-        int instanceId = 12232;
-        QuestionGroupInstanceDetail questionGroupInstance = getQuestionGroupInstance(345, "QG1");
-        when(questionnaireServiceFacade.getQuestionGroupInstance(instanceId)).thenReturn(questionGroupInstance);
-        ModelMap modelMap = questionGroupController.getQuestionGroupResponse(instanceId, "http://some.url");
-        assertThat(modelMap, is(notNullValue()));
-        assertThat((QuestionGroupInstanceDetail) modelMap.get("questionGroupInstance"), is(questionGroupInstance));
-        assertThat((String) modelMap.get("backPageUrl"), is("http://some.url"));
-        verify(questionnaireServiceFacade, times(1)).getQuestionGroupInstance(instanceId);
     }
 
     @Test

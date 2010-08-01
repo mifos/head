@@ -251,9 +251,9 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testGetQuestionGroupInstances() {
-        when(questionnaireService.getQuestionGroupInstances(101, new EventSource("View", "Client", "View.Client"), false)).thenReturn(new ArrayList<QuestionGroupInstanceDetail>());
+        when(questionnaireService.getQuestionGroupInstances(101, new EventSource("View", "Client", "View.Client"), false, false)).thenReturn(new ArrayList<QuestionGroupInstanceDetail>());
         assertThat(questionnaireServiceFacade.getQuestionGroupInstances(101, "View", "Client"), is(notNullValue()));
-        verify(questionnaireService).getQuestionGroupInstances(eq(101), any(EventSource.class), eq(false));
+        verify(questionnaireService).getQuestionGroupInstances(eq(101), any(EventSource.class), eq(false), eq(false));
     }
 
     @Test
@@ -266,9 +266,9 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testGetQuestionGroupInstancesIncludingNoResponses() {
-        when(questionnaireService.getQuestionGroupInstances(101, new EventSource("Create", "Client", "Create.Client"), true)).thenReturn(new ArrayList<QuestionGroupInstanceDetail>());
+        when(questionnaireService.getQuestionGroupInstances(101, new EventSource("Create", "Client", "Create.Client"), true, false)).thenReturn(new ArrayList<QuestionGroupInstanceDetail>());
         questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(101, "Create", "Client");
-        verify(questionnaireService).getQuestionGroupInstances(eq(101), any(EventSource.class), eq(true));
+        verify(questionnaireService).getQuestionGroupInstances(eq(101), any(EventSource.class), eq(true), eq(true));
     }
 
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail() {
