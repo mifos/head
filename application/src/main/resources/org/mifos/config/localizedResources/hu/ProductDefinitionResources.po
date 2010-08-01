@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:09+0530\n"
+"POT-Creation-Date: 2010-08-02 03:49+0800\n"
 "PO-Revision-Date: 2009-11-12 14:05+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -557,12 +557,14 @@ msgid "Submit"
 msgstr "Érvényesítés"
 
 #: product.bylastloanamount
-msgid "By last loan Amount"
+#, fuzzy
+msgctxt "product.bylastloanamount"
+msgid "By last loan amount"
 msgstr "Utolsó hitel összeg szerint"
 
 #: product.byloancycle
-msgctxt "product.byloancycle"
-msgid "By loan Cycle"
+#, fuzzy
+msgid "By loan cycle"
 msgstr "Hitel ciklus szerint"
 
 #: product.calc
@@ -1009,11 +1011,13 @@ msgid "product information"
 msgstr "termékinformációk"
 
 #: product.installbylastloanamount
+#, fuzzy
+msgctxt "product.installbylastloanamount"
 msgid "By last loan amount"
 msgstr "Utolsó hitel összeg szerint"
 
 #: product.installbyloancycle
-msgctxt "product.installbyloancycle"
+#, fuzzy
 msgid "By loan Cycle"
 msgstr "Hitel ciklus szerint"
 
@@ -1046,7 +1050,8 @@ msgid "Interest rate type"
 msgstr "Kamatláb típusa"
 
 #: product.lastloanamount
-msgid "Last Loan Amount"
+#, fuzzy
+msgid "Last loan amount"
 msgstr "Utolsó hitel összeg"
 
 #: product.latenessDays
@@ -1085,7 +1090,8 @@ msgid "Calculate loan amount as "
 msgstr "Hitelösszeg kiszámítása"
 
 #: product.loancycleno
-msgid "Loan Cycle No."
+#, fuzzy
+msgid "Loan cycle no."
 msgstr "Hitelciklus száma"
 
 #: product.loandefprd
@@ -1780,3 +1786,6 @@ msgstr "Igen"
 msgctxt "produt.edit"
 msgid "Edit"
 msgstr "Szerkesztés"
+
+#~ msgid "By last loan Amount"
+#~ msgstr "Utolsó hitel összeg szerint"

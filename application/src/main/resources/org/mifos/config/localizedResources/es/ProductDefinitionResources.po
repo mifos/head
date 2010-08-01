@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:10+0530\n"
+"POT-Creation-Date: 2010-08-02 03:49+0800\n"
 "PO-Revision-Date: 2009-09-07 20:49-0700\n"
 "Last-Translator: Jesus Fernandez-Munoz <jfernandezmunoz@yahoo.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -557,12 +557,12 @@ msgid "Submit"
 msgstr ""
 
 #: product.bylastloanamount
-msgid "By last loan Amount"
+msgctxt "product.bylastloanamount"
+msgid "By last loan amount"
 msgstr ""
 
 #: product.byloancycle
-msgctxt "product.byloancycle"
-msgid "By loan Cycle"
+msgid "By loan cycle"
 msgstr ""
 
 #: product.calc
@@ -965,11 +965,11 @@ msgid "product information"
 msgstr ""
 
 #: product.installbylastloanamount
+msgctxt "product.installbylastloanamount"
 msgid "By last loan amount"
 msgstr ""
 
 #: product.installbyloancycle
-msgctxt "product.installbyloancycle"
 msgid "By loan Cycle"
 msgstr ""
 
@@ -1002,7 +1002,7 @@ msgid "Interest rate type"
 msgstr ""
 
 #: product.lastloanamount
-msgid "Last Loan Amount"
+msgid "Last loan amount"
 msgstr ""
 
 #: product.latenessDays
@@ -1040,7 +1040,7 @@ msgid "Calculate loan amount as "
 msgstr ""
 
 #: product.loancycleno
-msgid "Loan Cycle No."
+msgid "Loan cycle no."
 msgstr ""
 
 #: product.loandefprd
