@@ -29,18 +29,17 @@ import org.testng.annotations.Test;
 public class LoanCycleCounterTest extends TestCase {
 
     public void testEqualsObject() {
-        LoanCycleCounter loanCycleCounter1 = new LoanCycleCounter();
-        LoanCycleCounter loanCycleCounter2 = new LoanCycleCounter();
-        LoanCycleCounter loanCycleCounter1b = new LoanCycleCounter();
-        LoanCycleCounter loanCycleCounter4 = new LoanCycleCounter();
+        LoanCycleCounter x = new LoanCycleCounter();
+        LoanCycleCounter notx = new LoanCycleCounter();
+        LoanCycleCounter y = new LoanCycleCounter();
+        LoanCycleCounter z = new LoanCycleCounter();
 
-        loanCycleCounter1.setOfferingName("Loan1");
-        loanCycleCounter2.setOfferingName("Loan2");
-        loanCycleCounter1b.setOfferingName("Loan1");
-        loanCycleCounter4.setOfferingName("Loan4");
+        x.setOfferingName("Loan1");
+        notx.setOfferingName("Loan2");
+        y.setOfferingName("Loan1");
+        z.setOfferingName("Loan1");
 
-        TestUtils.verifyBasicEqualsContract(new LoanCycleCounter[] { loanCycleCounter1, loanCycleCounter1b },
-                new LoanCycleCounter[] { loanCycleCounter2, loanCycleCounter4 });
+        TestUtils.assertEqualsAndHashContract(x, notx, y, z);
 
     }
 

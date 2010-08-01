@@ -23,26 +23,22 @@ package org.mifos.customers.surveys.business;
 import junit.framework.TestCase;
 
 import org.mifos.framework.TestUtils;
-import org.testng.annotations.Test;
 
-@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class QuestionTest extends TestCase {
 
     public void testEquals() {
-        Question question1 = new Question("what color?");
-        question1.setQuestionId(5);
+        Question x = new Question("what shape?");
+        x.setQuestionId(5);
 
-        Question question2 = new Question("what shape?");
-        question2.setQuestionId(5);
+        Question notx = new Question("what shape?");
+        notx.setQuestionId(7);
 
-        Question subclass = new Question("what goes there?") {
-        };
-        subclass.setQuestionId(5);
+        Question y = new Question("what shape?");
+        y.setQuestionId(5);
 
-        Question question3 = new Question("what shape?");
-        question3.setQuestionId(7);
+        Question z = new Question("what shape?");
+        z.setQuestionId(5);
 
-        TestUtils.verifyBasicEqualsContract(new Question[] { question1, question2, subclass },
-                new Question[] { question3 });
+        TestUtils.assertEqualsAndHashContract(x, notx, y, z);
     }
 }
