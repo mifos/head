@@ -54,6 +54,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -417,12 +418,18 @@ public class ClientCustActionForm extends CustomerActionForm {
             } catch (ValidationException e) {
                 if (e.containsChildExceptions()) {
                     for (ValidationException validationException : e.getChildExceptions()) {
-                        ActionMessage actionMessage = new ActionMessage(ClientConstants.ERROR_REQUIRED, validationException.getSectionQuestionDetail().getTitle());
-                        errors.add(ClientConstants.ERROR_REQUIRED, actionMessage);
+                        if (validationException instanceof MandatoryAnswerNotFoundException) {
+                            populateError(errors, (MandatoryAnswerNotFoundException) validationException);
+                        }
                     }
                 }
             }
         }
+    }
+
+    private void populateError(ActionErrors errors, MandatoryAnswerNotFoundException exception) {
+        ActionMessage actionMessage = new ActionMessage(ClientConstants.ERROR_REQUIRED, exception.getQuestionTitle());
+        errors.add(ClientConstants.ERROR_REQUIRED, actionMessage);
     }
 
     private QuestionnaireServiceFacade getQuestionnaireServiceFacade(HttpServletRequest request) {

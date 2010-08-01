@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
@@ -61,7 +62,6 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.MANDATORY_QUESTION_HAS_NO_ANSWER;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyString;
@@ -575,7 +575,7 @@ public class QuestionnaireServiceTest {
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails, true);
         try {
-            Mockito.doThrow(new ValidationException(MANDATORY_QUESTION_HAS_NO_ANSWER, new SectionQuestionDetail())).
+            doThrow(new MandatoryAnswerNotFoundException("Title")).
                     when(questionnaireValidator).validateForQuestionGroupResponses(asList(questionGroupDetail));
             questionnaireService.validateResponses(asList(questionGroupDetail));
             Assert.fail("Should not have thrown the validation exception");

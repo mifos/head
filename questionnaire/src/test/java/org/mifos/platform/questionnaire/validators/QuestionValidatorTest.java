@@ -24,6 +24,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
+import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.service.EventSource;
@@ -36,10 +38,12 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.DUPLICATE_QUESTION_FOUND_IN_SECTION;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.GENERIC_VALIDATION;
@@ -48,6 +52,7 @@ import static org.mifos.platform.questionnaire.QuestionnaireConstants.INVALID_NU
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.MANDATORY_QUESTION_HAS_NO_ANSWER;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.NO_ANSWERS_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.NO_QUESTIONS_FOUND_IN_SECTION;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.NUMERIC_QUESTION_HAS_BAD_ANSWER;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_SECTION_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
@@ -84,7 +89,7 @@ public class QuestionValidatorTest {
     public void shouldThrowExceptionWhenQuestionTitleIsProvided() {
         try {
             questionnaireValidator.validateForDefineQuestion(new QuestionDetail(null, QuestionType.FREETEXT));
-            fail("Should have thrown the application exception");
+            fail("Should have thrown the validation exception");
         } catch (SystemException e) {
             assertEquals(QUESTION_TITLE_NOT_PROVIDED, e.getKey());
         }
@@ -94,7 +99,7 @@ public class QuestionValidatorTest {
     public void shouldThrowExceptionWhenQuestionTypeNotProvided() {
         try {
             questionnaireValidator.validateForDefineQuestion(new QuestionDetail("Title 123", QuestionType.INVALID));
-            fail("Should have thrown the application exception");
+            fail("Should have thrown the validation exception");
         } catch (SystemException e) {
             assertEquals(QUESTION_TYPE_NOT_PROVIDED, e.getKey());
         }
@@ -147,7 +152,7 @@ public class QuestionValidatorTest {
 
     @Test
     public void shouldNotThrowExceptionWhenQuestionGroupTitleIsProvided() {
-        when(eventSourceDao.retrieveCountByEventAndSource(anyString(), anyString())).thenReturn(Arrays.asList((long) 1));
+        when(eventSourceDao.retrieveCountByEventAndSource(anyString(), anyString())).thenReturn(asList((long) 1));
         try {
             questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client"));
         } catch (SystemException e) {
@@ -160,7 +165,7 @@ public class QuestionValidatorTest {
     public void shouldThrowExceptionWhenQuestionGroupTitleIsProvided() {
         try {
             questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, null, "Create", "Client"));
-            fail("Should have thrown the application exception");
+            fail("Should have thrown the validation exception");
         } catch (SystemException e) {
             assertEquals(QUESTION_GROUP_TITLE_NOT_PROVIDED, e.getKey());
         }
@@ -168,7 +173,7 @@ public class QuestionValidatorTest {
 
     @Test
     public void shouldNotThrowExceptionWhenQuestionGroupHasAtLeastOneSection() {
-        when(eventSourceDao.retrieveCountByEventAndSource(anyString(), anyString())).thenReturn(Arrays.asList((long) 1));
+        when(eventSourceDao.retrieveCountByEventAndSource(anyString(), anyString())).thenReturn(asList((long) 1));
         try {
             questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client"));
         } catch (SystemException e) {
@@ -181,7 +186,7 @@ public class QuestionValidatorTest {
     public void shouldThrowExceptionWhenQuestionGroupHasNoSections() {
         try {
             questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client", new ArrayList<SectionDetail>()));
-            fail("Should have thrown the application exception");
+            fail("Should have thrown the validation exception");
         } catch (SystemException e) {
             assertEquals(QUESTION_GROUP_SECTION_NOT_PROVIDED, e.getKey());
         }
@@ -191,7 +196,7 @@ public class QuestionValidatorTest {
     public void shouldThrowExceptionWhenEventIsNotProvided() {
         try {
             questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", null, "Client"));
-            fail("Should have thrown the application exception");
+            fail("Should have thrown the validation exception");
         } catch (SystemException e) {
             assertEquals(INVALID_EVENT_SOURCE, e.getKey());
         }
@@ -202,7 +207,7 @@ public class QuestionValidatorTest {
     public void shouldThrowExceptionWhenSourceIsNotProvided() {
         try {
             questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", null));
-            fail("Should have thrown the application exception");
+            fail("Should have thrown the validation exception");
         } catch (SystemException e) {
             assertEquals(INVALID_EVENT_SOURCE, e.getKey());
         }
@@ -212,8 +217,8 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenEventSourceIsNotProvided() {
         try {
-            questionnaireValidator.validateForDefineQuestionGroup(new QuestionGroupDetail(0, "Title", null, Arrays.asList(getSection("S1")), false));
-            fail("Should have thrown the application exception");
+            questionnaireValidator.validateForDefineQuestionGroup(new QuestionGroupDetail(0, "Title", null, asList(getSection("S1")), false));
+            fail("Should have thrown the validation exception");
         } catch (SystemException e) {
             assertEquals(INVALID_EVENT_SOURCE, e.getKey());
         }
@@ -223,8 +228,8 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenAGivenSectionHasNoQuestions() {
         try {
-            questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client", Arrays.asList(getSectionWithQuestions("S1"))));
-            fail("Should have thrown the application exception");
+            questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client", asList(getSectionWithQuestions("S1"))));
+            fail("Should have thrown the validation exception");
         } catch (SystemException e) {
             assertEquals(NO_QUESTIONS_FOUND_IN_SECTION, e.getKey());
         }
@@ -236,9 +241,9 @@ public class QuestionValidatorTest {
         try {
             SectionDetail sectionDefinition1 = getSectionWithQuestions("S1", 1, 3);
             SectionDetail sectionDefinition2 = getSectionWithQuestions("S2", 3, 2);
-            List<SectionDetail> sectionDetails = Arrays.asList(sectionDefinition1, sectionDefinition2);
+            List<SectionDetail> sectionDetails = asList(sectionDefinition1, sectionDefinition2);
             questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client", sectionDetails));
-            fail("Should have thrown the application exception");
+            fail("Should have thrown the validation exception");
         } catch (SystemException e) {
             assertEquals(DUPLICATE_QUESTION_FOUND_IN_SECTION, e.getKey());
         }
@@ -249,7 +254,7 @@ public class QuestionValidatorTest {
     public void shouldThrowExceptionWhenNoAnswersProvided() {
         try {
             questionnaireValidator.validateForQuestionGroupResponses(null);
-            fail("Should have thrown the application exception");
+            fail("Should have thrown the validation exception");
         } catch (SystemException e) {
             assertEquals(NO_ANSWERS_PROVIDED, e.getKey());
         }
@@ -260,20 +265,114 @@ public class QuestionValidatorTest {
     public void shouldThrowExceptionWhenAMandatoryQuestionHasNoAnswer() {
         QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(0, "Title", "Create", "Client");
         try {
-            questionnaireValidator.validateForQuestionGroupResponses(Arrays.asList(questionGroupDetail));
-            fail("Should have thrown the application exception");
+            questionnaireValidator.validateForQuestionGroupResponses(asList(questionGroupDetail));
+            fail("Should have thrown the validation exception");
         } catch (ValidationException e) {
             assertEquals(GENERIC_VALIDATION, e.getKey());
             assertEquals(true, e.containsChildExceptions());
             assertEquals(1, e.getChildExceptions().size());
             ValidationException childException = e.getChildExceptions().get(0);
             assertEquals(MANDATORY_QUESTION_HAS_NO_ANSWER, childException.getKey());
-            assertEquals(questionGroupDetail.getSectionDetail(0).getQuestionDetail(0), childException.getSectionQuestionDetail());
+            assertTrue(childException instanceof MandatoryAnswerNotFoundException);
+            assertEquals("Q1", childException.getQuestionTitle());
         }
     }
 
+    @SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
+    @Test
+    public void shouldThrowExceptionWhenANumericQuestionHasInvalidAnswer() {
+        QuestionDetail questionDetail = getNumericQuestionDetail("Numeric Question", 10, 100);
+        SectionDetail sectionWithOneQuestion = getSectionWithOneQuestion("Sec1", questionDetail, "123ab");
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(0, "Title", "Create", "Client", asList(sectionWithOneQuestion));
+        try {
+            questionnaireValidator.validateForQuestionGroupResponses(asList(questionGroupDetail));
+            fail("Should have thrown the validation exception");
+        } catch (ValidationException e) {
+            assertEquals(GENERIC_VALIDATION, e.getKey());
+            assertEquals(true, e.containsChildExceptions());
+            assertEquals(1, e.getChildExceptions().size());
+            ValidationException childException = e.getChildExceptions().get(0);
+            assertEquals(NUMERIC_QUESTION_HAS_BAD_ANSWER, childException.getKey());
+            assertTrue(childException instanceof BadNumericResponseException);
+            assertEquals("Numeric Question", childException.getQuestionTitle());
+            assertEquals(Integer.valueOf(10), ((BadNumericResponseException)childException).getAllowedMinValue());
+            assertEquals(Integer.valueOf(100), ((BadNumericResponseException)childException).getAllowedMaxValue());
+        }
+    }
+
+    @SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
+    @Test
+    public void shouldThrowExceptionWhenANumericQuestionHasAnswerLessThanMin() {
+        QuestionDetail questionDetail = getNumericQuestionDetail("Numeric Question", 10, null);
+        SectionDetail sectionWithOneQuestion = getSectionWithOneQuestion("Sec1", questionDetail, "9");
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(0, "Title", "Create", "Client", asList(sectionWithOneQuestion));
+        try {
+            questionnaireValidator.validateForQuestionGroupResponses(asList(questionGroupDetail));
+            fail("Should have thrown the validation exception");
+        } catch (ValidationException e) {
+            assertEquals(GENERIC_VALIDATION, e.getKey());
+            assertEquals(true, e.containsChildExceptions());
+            assertEquals(1, e.getChildExceptions().size());
+            ValidationException childException = e.getChildExceptions().get(0);
+            assertEquals(NUMERIC_QUESTION_HAS_BAD_ANSWER, childException.getKey());
+            assertTrue(childException instanceof BadNumericResponseException);
+            assertEquals("Numeric Question", childException.getQuestionTitle());
+            assertEquals(Integer.valueOf(10), ((BadNumericResponseException)childException).getAllowedMinValue());
+            assertNull(((BadNumericResponseException)childException).getAllowedMaxValue());
+        }
+    }
+
+    @SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
+    @Test
+    public void shouldThrowExceptionWhenANumericQuestionHasAnswerMoreThanMax() {
+        QuestionDetail questionDetail = getNumericQuestionDetail("Numeric Question", null, 100);
+        SectionDetail sectionWithOneQuestion = getSectionWithOneQuestion("Sec1", questionDetail, "101");
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(0, "Title", "Create", "Client", asList(sectionWithOneQuestion));
+        try {
+            questionnaireValidator.validateForQuestionGroupResponses(asList(questionGroupDetail));
+            fail("Should have thrown the validation exception");
+        } catch (ValidationException e) {
+            assertEquals(GENERIC_VALIDATION, e.getKey());
+            assertEquals(true, e.containsChildExceptions());
+            assertEquals(1, e.getChildExceptions().size());
+            ValidationException childException = e.getChildExceptions().get(0);
+            assertEquals(NUMERIC_QUESTION_HAS_BAD_ANSWER, childException.getKey());
+            assertTrue(childException instanceof BadNumericResponseException);
+            assertEquals("Numeric Question", childException.getQuestionTitle());
+            assertNull(((BadNumericResponseException)childException).getAllowedMinValue());
+            assertEquals(Integer.valueOf(100), ((BadNumericResponseException)childException).getAllowedMaxValue());
+        }
+    }
+
+    @SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
+    @Test
+    public void shouldNotThrowExceptionWhenANumericQuestionWithNoBoundsHasAnswer() {
+        QuestionDetail questionDetail = getNumericQuestionDetail("Numeric Question", null, null);
+        SectionDetail sectionWithOneQuestion = getSectionWithOneQuestion("Sec1", questionDetail, "121");
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(0, "Title", "Create", "Client", asList(sectionWithOneQuestion));
+        try {
+            questionnaireValidator.validateForQuestionGroupResponses(asList(questionGroupDetail));
+        } catch (ValidationException e) {
+            fail("Should not have thrown the validation exception");
+        }
+    }
+
+    private QuestionDetail getNumericQuestionDetail(String title, Integer numericMin, Integer numericMax) {
+        QuestionDetail questionDetail = new QuestionDetail(title, QuestionType.NUMERIC);
+        questionDetail.setNumericMin(numericMin);
+        questionDetail.setNumericMax(numericMax);
+        return questionDetail;
+    }
+
+    private SectionDetail getSectionWithOneQuestion(String name, QuestionDetail questionDetail, String response) {
+        SectionDetail sectionDetail = new SectionDetail();
+        sectionDetail.setName(name);
+        sectionDetail.setQuestionDetails(asList(new SectionQuestionDetail(questionDetail, true, response)));
+        return sectionDetail;
+    }
+
     private QuestionGroupDetail getQuestionGroupDetail(int id, String title, String event, String source) {
-        return getQuestionGroupDetail(id, title, event, source, Arrays.asList(getSection("S1")));
+        return getQuestionGroupDetail(id, title, event, source, asList(getSection("S1")));
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(int id, String title, String event, String source, List<SectionDetail> sectionDetails) {
@@ -283,7 +382,7 @@ public class QuestionValidatorTest {
     private SectionDetail getSection(String name) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID), true, null));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, "Q1", "Q1", QuestionType.INVALID), true, null));
         return section;
     }
 

@@ -22,6 +22,8 @@ package org.mifos.platform.questionnaire.validators;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
+import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.service.*; //NOPMD
@@ -90,11 +92,28 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     private void validateSectionQuestionDetail(ValidationException validationException, SectionQuestionDetail sectionQuestionDetail) {
-        // TODO: When there are additional such validations, use a chain of validators
+        // TODO: When there are more such validations, use a chain of validators
+        String questionTitle = sectionQuestionDetail.getTitle();
         if (sectionQuestionDetail.isMandatory() && sectionQuestionDetail.hasNoAnswer()) {
-            ValidationException childException = new ValidationException(MANDATORY_QUESTION_HAS_NO_ANSWER, sectionQuestionDetail);
-            validationException.addChildException(childException);
+            validationException.addChildException(new MandatoryAnswerNotFoundException(questionTitle));
+        } else if (sectionQuestionDetail.hasAnswer() && sectionQuestionDetail.isNumeric()) {
+            Integer allowedMinValue = sectionQuestionDetail.getNumericMin();
+            Integer allowedMaxValue = sectionQuestionDetail.getNumericMax();
+            if (invalidNumericAnswer(sectionQuestionDetail.getAnswer(), allowedMinValue, allowedMaxValue)) {
+                validationException.addChildException(new BadNumericResponseException(questionTitle, allowedMinValue, allowedMaxValue));
+            }
         }
+    }
+
+    private boolean invalidNumericAnswer(String answer, Integer allowedMin, Integer allowedMax) {
+        boolean result;
+        try {
+            Integer answerAsInt = Integer.parseInt(answer, 10);
+            result = (allowedMin != null && answerAsInt < allowedMin) || (allowedMax != null && answerAsInt > allowedMax);
+        } catch (NumberFormatException e) {
+            result = true;
+        }
+        return result;
     }
 
     private void validateEventSource(EventSource eventSource) throws SystemException {
