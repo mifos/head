@@ -73,12 +73,12 @@ public class DatabaseMigrator {
     public static final String METHOD_UPGRADE_TYPE = "method";
     public static final String SCRIPT_UPGRADE_TYPE = "sql";
 
-    private static MifosLogger LOG = null;
+    private static MifosLogger log = null;
 
 
     public DatabaseMigrator() {
         this(StaticHibernateUtil.getSessionTL().connection(), getAvailableUpgrades(), "org.mifos.application.master.persistence");
-        LOG = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
+        log = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
 
     }
 
@@ -118,7 +118,7 @@ public class DatabaseMigrator {
             }
 
         } catch (IOException e) {
-            LOG.error("An error occurred whilst reading the upgrades.txt file");
+            log.error("An error occurred whilst reading the upgrades.txt file");
 
         } finally {
             if (reader != null) {
@@ -168,7 +168,7 @@ public class DatabaseMigrator {
     }
 
     public boolean checkForUnAppliedUpgrades() throws Exception {
-        if (false == this.isNSDU()) {
+        if (!this.isNSDU()) {
             createAppliedUpgradesTable();
         }
 
