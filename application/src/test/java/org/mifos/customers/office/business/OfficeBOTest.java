@@ -1,5 +1,6 @@
 package org.mifos.customers.office.business;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
@@ -7,6 +8,7 @@ import org.mifos.framework.TestUtils;
 
 public class OfficeBOTest {
 
+    @Ignore // see MIFOS-2750
     @Test
     public void verifyEqualAndHashcodeContract() {
         OfficeBO x = new OfficeBO(null, "A", "B", "1", null, OfficeLevel.AREAOFFICE, "S", OfficeStatus.ACTIVE);
