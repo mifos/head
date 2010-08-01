@@ -102,7 +102,11 @@ public class ReverseLoanDisbursalAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         logger.debug("Inside load method");
         ReverseLoanDisbursalActionForm actionForm = (ReverseLoanDisbursalActionForm) form;
-        LoanBO loan = getLoanAccount(actionForm.getSearchString(), getUserContext(request));
+        String searchString = actionForm.getSearchString();
+        if (searchString != null) {
+            searchString = searchString.trim();
+        }
+        LoanBO loan = getLoanAccount(searchString, getUserContext(request));
         if (loan == null) {
             throw new ApplicationException(LoanConstants.NOSEARCHRESULTS);
         }
