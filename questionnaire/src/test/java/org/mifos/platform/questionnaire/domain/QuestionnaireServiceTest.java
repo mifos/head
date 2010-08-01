@@ -411,6 +411,24 @@ public class QuestionnaireServiceTest {
     }
 
     @Test
+    public void testGetNumericQuestionByIdSuccess() throws SystemException {
+        int questionId = 1;
+        String title = "Title";
+        QuestionEntity question = getQuestion(questionId, title, AnswerType.NUMBER);
+        question.setNumericMin(10);
+        question.setNumericMax(100);
+        when(questionDao.getDetails(questionId)).thenReturn(question);
+        QuestionDetail questionDetail = questionnaireService.getQuestion(questionId);
+        Assert.assertNotNull(questionDetail);
+        assertThat(questionDetail.getShortName(), is(title));
+        assertThat(questionDetail.getText(), is(title));
+        assertThat(questionDetail.getType(), is(QuestionType.NUMERIC));
+        assertThat(questionDetail.getNumericMin(), is(10));
+        assertThat(questionDetail.getNumericMax(), is(100));
+        verify(questionDao, times(1)).getDetails(questionId);
+    }
+
+    @Test
     public void testGetMultiSelectQuestionById() throws SystemException {
         int questionId = 1;
         String title = "Title";

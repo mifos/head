@@ -149,11 +149,16 @@ public class QuestionnaireServiceFacadeTest {
     public void testGetQuestionById() throws SystemException {
         int questionId = 1;
         String title = "Title";
-        when(questionnaireService.getQuestion(questionId)).thenReturn(new QuestionDetail(questionId, title, title, QuestionType.NUMERIC));
+        QuestionDetail question = new QuestionDetail(questionId, title, title, QuestionType.NUMERIC);
+        question.setNumericMin(10);
+        question.setNumericMax(100);
+        when(questionnaireService.getQuestion(questionId)).thenReturn(question);
         QuestionDetail questionDetail = questionnaireServiceFacade.getQuestionDetail(questionId);
         Assert.assertNotNull("Question group should not be null", questionDetail);
         assertThat(questionDetail.getShortName(), is(title));
         assertThat(questionDetail.getType(), is(QuestionType.NUMERIC));
+        assertThat(questionDetail.getNumericMin(), is(10));
+        assertThat(questionDetail.getNumericMax(), is(100));
         Mockito.verify(questionnaireService).getQuestion(questionId);
     }
 
