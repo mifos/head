@@ -120,7 +120,15 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         question.setAnswerType(mapToAnswerType(type));
         question.setQuestionState(QuestionState.ACTIVE);
         question.setChoices(mapToChoices(questionDetail.getAnswerChoices()));
+        mapBoundsForNumericQuestionDetail(questionDetail, question);
         return question;
+    }
+
+    private void mapBoundsForNumericQuestionDetail(QuestionDetail questionDetail, QuestionEntity question) {
+        if (questionDetail.getType() == QuestionType.NUMERIC) {
+            question.setNumericMin(questionDetail.getNumericMin());
+            question.setNumericMax(questionDetail.getNumericMax());
+        }
     }
 
     private List<QuestionChoiceEntity> mapToChoices(List<String> choices) {
@@ -227,7 +235,16 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     private QuestionDetail mapToQuestionDetail(QuestionEntity question, QuestionType type) {
         List<String> answerChoices = mapToAnswerChoices(question.getChoices());
-        return new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type, answerChoices);
+        QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type, answerChoices);
+        mapBoundsForNumericQuestion(question, questionDetail);
+        return questionDetail;
+    }
+
+    private void mapBoundsForNumericQuestion(QuestionEntity question, QuestionDetail questionDetail) {
+        if (question.getAnswerTypeAsEnum() == AnswerType.NUMBER) {
+            questionDetail.setNumericMin(question.getNumericMin());
+            questionDetail.setNumericMax(question.getNumericMax());
+        }
     }
 
     @Override

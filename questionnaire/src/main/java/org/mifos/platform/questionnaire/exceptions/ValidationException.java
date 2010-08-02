@@ -21,7 +21,6 @@
 package org.mifos.platform.questionnaire.exceptions;
 
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +32,15 @@ import static org.mifos.platform.util.CollectionUtils.isEmpty;
 public class ValidationException extends SystemException {
     private static final long serialVersionUID = -8094463668575047971L;
     private List<ValidationException> childExceptions;
-    private SectionQuestionDetail sectionQuestionDetail;
+    protected final String questionTitle;
 
     public ValidationException(String key) {
         this(key, null);
     }
 
-    public ValidationException(String key, SectionQuestionDetail sectionQuestionDetail) {
+    protected ValidationException(String key, String questionTitle) {
         super(key);
-        this.sectionQuestionDetail = sectionQuestionDetail;
+        this.questionTitle = questionTitle;
     }
 
     public void addChildException(ValidationException validationException) {
@@ -70,7 +69,7 @@ public class ValidationException extends SystemException {
         return !isEmpty(childExceptions);
     }
 
-    public SectionQuestionDetail getSectionQuestionDetail() {
-        return sectionQuestionDetail;
+    public String getQuestionTitle() {
+        return questionTitle;
     }
 }

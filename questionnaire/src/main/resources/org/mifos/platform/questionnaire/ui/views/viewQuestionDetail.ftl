@@ -44,6 +44,12 @@
                     [#if Request.questionDetail.commaSeparateChoices?exists]
                         <td class="drawtablerow">[@spring.message "questionnaire.quesiton.choices"/]: ${Request.questionDetail.commaSeparateChoices}</td>
                     [/#if]
+                    [#if Request.questionDetail.numericMin?exists]
+                        [@spring.message "questionnaire.quesiton.numeric.min"/]: ${Request.questionDetail.numericMin}<br/>
+                    [/#if]
+                    [#if Request.questionDetail.numericMax?exists]
+                        [@spring.message "questionnaire.quesiton.numeric.max"/]: ${Request.questionDetail.numericMax}<br/>
+                    [/#if]
                 </div>
             </div>
         [/#if]

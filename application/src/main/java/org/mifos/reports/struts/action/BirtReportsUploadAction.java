@@ -84,10 +84,10 @@ public class BirtReportsUploadAction extends BaseAction {
         security.allow("previous", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
         security.allow("upload", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
         security.allow("getViewReportPage", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
-        security.allow("edit", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
-        security.allow("editpreview", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
-        security.allow("editprevious", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
-        security.allow("editThenUpload", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+        security.allow("edit", SecurityConstants.EDIT_REPORT_INFORMATION);
+        security.allow("editpreview", SecurityConstants.EDIT_REPORT_INFORMATION);
+        security.allow("editprevious", SecurityConstants.EDIT_REPORT_INFORMATION);
+        security.allow("editThenUpload", SecurityConstants.EDIT_REPORT_INFORMATION);
         security.allow("downloadBirtReport", SecurityConstants.DOWNLOAD_REPORT_TEMPLATE);
         return security;
     }

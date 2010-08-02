@@ -24,6 +24,7 @@
 
 [#assign freeText][@spring.message "questionnaire.quesiton.choices.freetext"/][/#assign]
 [#assign date][@spring.message "questionnaire.quesiton.choices.date"/][/#assign]
+[#assign number][@spring.message "questionnaire.quesiton.choices.number"/][/#assign]
 [#assign multiSelect][@spring.message "questionnaire.quesiton.choices.multiselect"/][/#assign]
 [#assign singleSelect][@spring.message "questionnaire.quesiton.choices.singleselect"/][/#assign]
 
@@ -46,6 +47,7 @@
             [@mifosMacros.showAllErrors "questionDefinition.*"/]
         </div>
         <form name="createquestionform" action="createQuestion.ftl?execution=${flowExecutionKey}" method="POST" focus="currentQuestion.title">
+            <input type="hidden" id="number" name="number" value="${number}"/>
             <input type="hidden" id="multiSelect" name="multiSelect" value="${multiSelect}"/>
             <input type="hidden" id="singleSelect" name="singleSelect" value="${singleSelect}" />
             <input type="submit" id="_eventId_removeQuestion" name="_eventId_removeQuestion" value="" style="visibility:hidden"/>
@@ -58,8 +60,17 @@
 			    </li>
 			    <li>
 				  <label for="currentQuestion.type"><span class="red">*</span>[@spring.message "questionnaire.answer.type"/]: </label>
-				  [@spring.formSingleSelect "questionDefinition.currentQuestion.type", [freeText, date, multiSelect, singleSelect], ''/]
+				  [@spring.formSingleSelect "questionDefinition.currentQuestion.type", [freeText, date, number, multiSelect, singleSelect], ''/]
 			    </li>
+                <li>
+                    <div id="numericDiv">
+                        <label for="currentQuestion.numericMin">[@spring.message "questionnaire.quesiton.numeric.min"/]: </label>
+                        [@spring.formInput "questionDefinition.currentQuestion.numericMin", 'maxlength="5"'/]
+                        <br>
+                        <label for="currentQuestion.numericMax">[@spring.message "questionnaire.quesiton.numeric.max"/]: </label>
+                        [@spring.formInput "questionDefinition.currentQuestion.numericMax", 'maxlength="5"'/]
+                    </div>
+                </li>
 			    <li>
                     <div id="choiceDiv">
                         <label for="currentQuestion.choice"><span class="red">*</span>[@spring.message "questionnaire.quesiton.choice"/]: </label>
