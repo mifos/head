@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:10+0530\n"
+"POT-Creation-Date: 2010-08-02 03:49+0800\n"
 "PO-Revision-Date: 2010-02-24 11:13-0800\n"
 "Last-Translator: Daniel fdec <ddshore@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1903,3 +1903,12 @@ msgid ""
 msgstr ""
 "Se encontró un registro similar al de este cliente en la lista negra. Por "
 "favor revise el registro de ese cliente antes de continuar."
+
+#: client.ViewQuestionGroupResponsesLink
+#, fuzzy
+msgid "View Additional Information"
+msgstr "Información adicional"
+
+#: client.QuestionGroupInstances
+msgid "Question Groups"
+msgstr ""

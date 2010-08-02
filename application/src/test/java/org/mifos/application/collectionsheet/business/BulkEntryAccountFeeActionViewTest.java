@@ -29,13 +29,12 @@ import org.testng.annotations.Test;
 public class BulkEntryAccountFeeActionViewTest extends TestCase {
 
     public void testEqualsObject() {
-        CollectionSheetEntryAccountFeeActionDto bulk1 = new CollectionSheetEntryAccountFeeActionDto(1);
-        CollectionSheetEntryAccountFeeActionDto bulk1b = new CollectionSheetEntryAccountFeeActionDto(1);
-        CollectionSheetEntryAccountFeeActionDto bulk2 = new CollectionSheetEntryAccountFeeActionDto(2);
-        CollectionSheetEntryAccountFeeActionDto bulk3 = new CollectionSheetEntryAccountFeeActionDto(3);
+        CollectionSheetEntryAccountFeeActionDto x = new CollectionSheetEntryAccountFeeActionDto(1);
+        CollectionSheetEntryAccountFeeActionDto notx = new CollectionSheetEntryAccountFeeActionDto(2);
+        CollectionSheetEntryAccountFeeActionDto y = new CollectionSheetEntryAccountFeeActionDto(1);
+        CollectionSheetEntryAccountFeeActionDto z = new CollectionSheetEntryAccountFeeActionDto(1);
 
-        TestUtils.verifyBasicEqualsContract(new CollectionSheetEntryAccountFeeActionDto[] { bulk1, bulk1b },
-                new CollectionSheetEntryAccountFeeActionDto[] { bulk2, bulk3 });
+        TestUtils.assertEqualsAndHashContract(x, notx, y, z);
     }
 
 }
