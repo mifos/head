@@ -44,4 +44,10 @@ public class QuestionGroupResponsePage extends MifosPage {
         waitForPageToLoad();
         return new ClientViewDetailsPage(selenium);
     }
+
+    public QuestionnairePage navigateToEditResponses() {
+        selenium.click("link=Edit");
+        waitForPageToLoad();
+        return new QuestionnairePage(selenium);
+    }
 }

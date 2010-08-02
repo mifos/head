@@ -33,6 +33,7 @@ import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
+import org.mifos.test.acceptance.framework.client.QuestionGroup;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
@@ -57,8 +58,8 @@ import java.util.Random;
 
 import static java.util.Arrays.asList;
 
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"client","acceptance","ui","smoke"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
 public class ClientTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -133,7 +134,7 @@ public class ClientTest extends UiTestCaseBase {
         assertTextFoundOnPage("15/12/2008");
     }
 
-   @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups = {"smoke"})
     public void createClientWithCorrectAgeTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
@@ -142,8 +143,8 @@ public class ClientTest extends UiTestCaseBase {
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
         ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientsAndAccountsPage.createClient("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227","11","12","1987");
-        CreateClientEnterMfiDataPage nextPage=clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientsAndAccountsPage.createClient("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227", "11", "12", "1987");
+        CreateClientEnterMfiDataPage nextPage = clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
         nextPage.verifyPage("CreateClientMfiInfo");
     }
 
@@ -155,8 +156,8 @@ public class ClientTest extends UiTestCaseBase {
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
         ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientsAndAccountsPage.createClient("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227","11","12","1940");
-        CreateClientEnterPersonalDataPage nextPage=clientPersonalDataPage.dontLoadNext();
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientsAndAccountsPage.createClient("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227", "11", "12", "1940");
+        CreateClientEnterPersonalDataPage nextPage = clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
     }
 
@@ -168,8 +169,8 @@ public class ClientTest extends UiTestCaseBase {
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
         ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientsAndAccountsPage.createClient("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227","11","12","1995");
-        CreateClientEnterPersonalDataPage nextPage=clientPersonalDataPage.dontLoadNext();
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientsAndAccountsPage.createClient("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227", "11", "12", "1995");
+        CreateClientEnterPersonalDataPage nextPage = clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
     }
 
@@ -181,23 +182,46 @@ public class ClientTest extends UiTestCaseBase {
         String question1 = "FT_" + random.nextInt(100);
         String question2 = "MS_" + random.nextInt(100);
         String answer1 = "Hello World";
+
         createQuestionGroupForViewClient(questionGroupTitle, question1, question2);
         ClientViewDetailsPage viewDetailsPage = getClientViewDetailsPage("Stu1232993852651", "Stu1232993852651 Client1232993852651: ID 0002-000000003");
+        testAttachSurvey(questionGroupTitle, question1, question2, answer1, viewDetailsPage);
+        verifyQuestionGroupInstances(viewDetailsPage.getQuestionGroupInstances(), questionGroupTitle, 1);
+        testViewSurvey(1, question1, question2, answer1, viewDetailsPage);
+        editViewSurvey(question1, answer1 + 1, viewDetailsPage);
+        verifyQuestionGroupInstances(viewDetailsPage.getQuestionGroupInstances(), questionGroupTitle, 2);
+        testViewSurvey(2, question1, question2, answer1 + 1, viewDetailsPage);
+    }
+
+    private void editViewSurvey(String question1, String answer1, ClientViewDetailsPage viewDetailsPage) {
+        QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(1);
+        QuestionnairePage questionnairePage = questionGroupResponsePage.navigateToEditResponses();
+        verifyCancel(questionnairePage);
+        questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(1);
+        questionnairePage = questionGroupResponsePage.navigateToEditResponses();
+        questionnairePage.setResponse(question1, answer1);
+        MifosPage mifosPage = questionnairePage.submit();
+        Assert.assertTrue(mifosPage instanceof ClientViewDetailsPage);
+        ((ClientViewDetailsPage) mifosPage).verifyPage();
+    }
+
+    private void testViewSurvey(int instanceId, String question1, String question2, String answer1, ClientViewDetailsPage viewDetailsPage) {
+        QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
+        questionGroupResponsePage.verifyPage();
+        Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question1).contains(answer1));
+        Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice1, Choice3, Choice4"));
+        questionGroupResponsePage.navigateToViewClientDetailsPage();
+        viewDetailsPage.verifyPage();
+    }
+
+    private void testAttachSurvey(String questionGroupTitle, String question1, String question2, String answer1, ClientViewDetailsPage viewDetailsPage) {
         QuestionnairePage questionnairePage = getQuestionnairePage(questionGroupTitle, viewDetailsPage);
-        viewDetailsPage = verifyCancel(questionnairePage);
+        verifyCancel(questionnairePage);
         questionnairePage = checkMandatoryQuestionValidation(questionGroupTitle, question1, question2, viewDetailsPage);
         questionnairePage.setResponse(question1, answer1);
         MifosPage mifosPage = questionnairePage.submit();
         Assert.assertTrue(mifosPage instanceof ClientViewDetailsPage);
-        viewDetailsPage = (ClientViewDetailsPage) mifosPage;
-        viewDetailsPage.verifyPage();
-        verifyQuestionGroupInstances(viewDetailsPage.getQuestionGroupInstances(), questionGroupTitle);
-        QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(questionGroupTitle);
-        questionGroupResponsePage.verifyPage();
-        Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question1).contains(answer1));
-        Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice1, Choice3, Choice4"));
-        viewDetailsPage = questionGroupResponsePage.navigateToViewClientDetailsPage();
-        viewDetailsPage.verifyPage();
+        ((ClientViewDetailsPage) mifosPage).verifyPage();
     }
 
     private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1, String question2, ClientViewDetailsPage viewDetailsPage) {
@@ -230,13 +254,14 @@ public class ClientTest extends UiTestCaseBase {
         return searchResultsPage.navigateToSearchResult(clientName);
     }
 
-    private void verifyQuestionGroupInstances(Map<String, String> questionGroups, String questionGroupTitle) {
-        Assert.assertEquals(1, questionGroups.size());
-        Assert.assertTrue(questionGroups.containsKey(questionGroupTitle));
-        String instanceDate = questionGroups.get(questionGroupTitle);
+    private void verifyQuestionGroupInstances(Map<Integer, QuestionGroup> questionGroups, String questionGroupTitle, int instanceId) {
+        Assert.assertEquals(instanceId, questionGroups.size());
+        Assert.assertTrue(questionGroups.containsKey(instanceId));
+        QuestionGroup questionGroup = questionGroups.get(instanceId);
         Calendar calendar = Calendar.getInstance();
         String expectedDate = String.format(EXPECTED_DATE_FORMAT, calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
-        Assert.assertEquals(expectedDate, instanceDate);
+        Assert.assertEquals(questionGroupTitle, questionGroup.getName());
+        Assert.assertEquals(expectedDate, questionGroup.getDate());
     }
 
     private void createQuestionGroupForViewClient(String questionGroupTitle, String question1, String question2) {
@@ -257,7 +282,7 @@ public class ClientTest extends UiTestCaseBase {
         CreateQuestionGroupParameters parameters = new CreateQuestionGroupParameters();
         parameters.setTitle(questionGroupTitle);
         parameters.setAppliesTo("View Client");
-        parameters.setAnswerEditable(false);
+        parameters.setAnswerEditable(true);
         parameters.setSectionName("Default Section");
         parameters.setQuestions(asList(question1, question2));
         return parameters;
