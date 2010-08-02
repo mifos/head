@@ -32,4 +32,33 @@
                         order by instance.dateConducted desc, instance.questionGroup.title
               ]]>
     </query>
+
+    <sql-query name="QuestionGroupInstance.retrieveLatestQuestionGroupInstancesByEntityIdAndEventSourceId">
+        <return class="org.mifos.platform.questionnaire.domain.QuestionGroupInstance"/>
+              <![CDATA[
+                    select
+                        question_group_instance.id,
+                        question_group_instance.question_group_id,
+                        question_group_instance.entity_id,
+                        question_group_instance.date_conducted,
+                        question_group_instance.completed_status,
+                        question_group_instance.created_by,
+                        question_group_instance.version_id
+                    from question_group_instance join
+                    (
+                        select
+                            question_group.id id,max(version_id) version_id
+                        from
+                            question_group_instance
+                            join question_group on (question_group_instance.question_group_id = question_group.id and entity_id = :ENTITY_ID)
+                            join question_group_event_sources on (question_group.id = question_group_event_sources.question_group_id
+                                and event_source_id = :EVENT_SOURCE_ID)
+                        group by question_group.title, question_group.id
+                    )t
+                    join question_group on (question_group_instance.question_group_id = question_group.id and question_group.id=t.id)
+                    where
+                    question_group_instance.version_id = t.version_id
+                    order by question_group_instance.date_conducted desc, question_group.title
+              ]]>
+    </sql-query>
 </hibernate-mapping>

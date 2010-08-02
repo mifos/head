@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-insert into database_version(database_version) values(267);
+insert into database_version(database_version) values(268);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -3155,7 +3155,7 @@ insert into roles_activity (activity_id, role_id) values
 insert into report (report_id, report_category_id, report_name, report_identifier, activity_id, report_active) values 
 (4,6,'Detailed Aging Of Portfolio At Risk Report','detailed_aging_of_portfolio_at_risk_report',236,1),
 (5,6,'General Ledger Report','general_ledger_report',237,1);
-insert into report_jasper_map (report_id, report_category_id, report_name, report_identifier, report_jasper) values 
+insert into report_jasper_map (report_id, report_category_id, report_name, report_identifier, report_jasper) values
 (4,6,'Detailed Aging Of Portfolio At Risk Report','detailed_aging_of_portfolio_at_risk_report','DetailedAgingPortfolioAtRiskReport.rptdesign'),
 (5,6,'General Ledger Report','general_ledger_report','GeneralLedgerReport.rptdesign');
 /* Upgrade 255,256 END*/
@@ -3175,3 +3175,13 @@ insert into event_sources (id, entity_type_id, event_id, description) values
 insert into event_sources (id, entity_type_id, event_id, description) values
     (3, (select entity_type_id from entity_master where entity_type = 'Client'), 2, 'View Client');
 /* Upgrade 266 END */
+
+/* Upgrade 268 START */
+insert into events (id, name) values (3, 'Approve'), (4, 'Close');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (4, (select entity_type_id from entity_master where entity_type = 'Group'), 1, 'Create Group');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (5, (select entity_type_id from entity_master where entity_type = 'Loan'), 3, 'Approve Loan');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (6, (select entity_type_id from entity_master where entity_type = 'Client'), 4, 'Close Client');
+/* Upgrade 268 END */

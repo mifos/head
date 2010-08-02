@@ -23,19 +23,27 @@
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="ClientsAndAccounts" /]
 <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
+<script src="pages/questionnaire/js/display.js" type="text/javascript"></script>        
 <div class="sidebar ht950">
     [#include "ClientLeftPane.ftl" /]
 </div>
-<form action="${backPageUrl}" id="displayResponseForm" name="displayResponseForm" method="post">
-    <div class="content leftMargin180">
-        <span id="page.id" title="display_question_group_reponse"></span>
-        [#assign breadcrumb = Session.urlMap/]
-        [@mifos.crumbpairs breadcrumb "false"/]
-        <div class=" fontnormal marginLeft30">
-            <div class="orangeheading marginTop15">
-                ${questionGroupInstance.questionGroupTitle} - ${questionGroupInstance.dateCompletedAsString}
-            </div>
-            <fieldset id="questionGroupInstance.questionGroupDetail.sections" class="bluetableborderFull">
+<div class="content leftMargin180">
+    <span id="page.id" title="display_question_group_reponse"></span>
+    [#assign breadcrumb = Session.urlMap/]
+    [@mifos.crumbpairs breadcrumb "false"/]
+    <div class=" fontnormal marginLeft30">
+        <div class="orangeheading marginTop15">
+            ${questionGroupInstance.questionGroupTitle} - ${questionGroupInstance.dateCompletedAsString}
+        </div>
+        <form action="viewAndEditQuestionnaire.ftl?execution=${flowExecutionKey}" id="displayResponseForm"
+              name="displayResponseForm" method="post">
+            <input type="submit" id="_eventId_questionnaire" name="_eventId_questionnaire" value="" style="visibility:hidden"/>
+            <fieldset id="questionGroupInstance.questionGroupDetail.sections" class="bluetableborderFull marginTop15">
+                [#if questionGroupInstance.questionGroupDetail.active && questionGroupInstance.questionGroupDetail.editable]
+                    <span class="topRight">
+                        <a href="editQuestionnaire#" questionGroupInstanceDetailIndex="0">[@spring.message "questionnaire.edit"/]</a>
+                    </span>
+                [/#if]
                 [#list questionGroupInstance.questionGroupDetail.sectionDetails as sectionDetail]
                 <br/>
                 <span class="paddingleft10 fontnormalbold">${sectionDetail.name}</span>
@@ -43,18 +51,16 @@
                     [#list sectionDetail.questions as sectionQuestionDetail]
                     <li>
                         <label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
-                        ${sectionQuestionDetail.title}:</label>
-                        <label class="rightCol"><span class="fontnormal">${sectionQuestionDetail.answer}</span></label>
+                            ${sectionQuestionDetail.title}:</label>${sectionQuestionDetail.answer}
                     </li>
                     [/#list]
-                    <br/>
                 </ol>
                 [/#list]
             </fieldset>
             <div class="buttonWidth">
-                <input id="backToDetailsPage" name="backToDetailsPage" type="submit" class="buttn" value="[@spring.message "questionnaire.back.to.details"/]"/>
+                <input id="_eventId_cancel" name="_eventId_cancel" type="submit" class="buttn" value="[@spring.message "questionnaire.back.to.details"/]"/>
             </div>
-        </div>
+        </form>
     </div>
-</form>
+</div>
 [@mifos.footer/]

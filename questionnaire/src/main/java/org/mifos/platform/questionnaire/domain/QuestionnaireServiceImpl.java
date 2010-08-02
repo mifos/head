@@ -153,10 +153,15 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSource eventSource, Boolean includeUnansweredQuestionGroups) {
+    public List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSource eventSource, Boolean includeUnansweredQuestionGroups, boolean fetchLastVersion) {
         questionnaireValidator.validateForEventSource(eventSource);
         Integer eventSourceId = getEventSourceEntity(eventSource).getId();
-        List questionGroupInstances = questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(entityId, eventSourceId);
+        List questionGroupInstances = null;
+        if(fetchLastVersion){
+            questionGroupInstances = questionGroupInstanceDao.retrieveLatestQuestionGroupInstancesByEntityIdAndEventSourceId(entityId, eventSourceId);
+        }else{
+            questionGroupInstances = questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(entityId, eventSourceId);
+        }
         List<QuestionGroupInstanceDetail> questionGroupInstanceDetails = questionnaireMapper.mapToQuestionGroupInstanceDetails(questionGroupInstances);
         if (includeUnansweredQuestionGroups) {
             List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSource.getEvent(), eventSource.getSource());

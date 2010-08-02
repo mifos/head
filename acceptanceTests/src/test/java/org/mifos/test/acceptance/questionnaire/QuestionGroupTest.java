@@ -59,10 +59,10 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
     private String qgTitle1, qgTitle2;
     private String qTitle1, qTitle2, qTitle3;
-    private static final String TITLE_MISSING = "Please specify Question Group title";
-    private static final String APPLIES_TO_MISSING = "Please choose a valid 'Applies To' value";
-    private static final String SECTION_MISSING = "Please add at least one section";
-    private static final String QUESTION_MISSING = "Section should have at least one question";
+    private static final String TITLE_MISSING = "Please specify Question Group title.";
+    private static final String APPLIES_TO_MISSING = "Please choose a valid 'Applies To' value.";
+    private static final String SECTION_MISSING = "Please add at least one section.";
+    private static final String QUESTION_MISSING = "Section should have at least one question.";
     public static final String APPLIES_TO_CREATE_CLIENT = "Create Client";
     public static final String SECTION_DEFAULT = "Default";
 

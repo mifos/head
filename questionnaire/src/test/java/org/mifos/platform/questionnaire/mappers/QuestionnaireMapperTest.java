@@ -42,6 +42,7 @@ import org.mifos.platform.questionnaire.matchers.QuestionChoicesMatcher;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
+import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
@@ -85,10 +86,12 @@ public class QuestionnaireMapperTest {
     private QuestionGroupDao questionGroupDao;
     @Mock
     private SectionQuestionDao sectionQuestionDao;
+    @Mock
+    private QuestionGroupInstanceDao questionGroupInstanceDao;
 
     @Before
     public void setUp() {
-        questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao);
+        questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao,questionGroupInstanceDao);
     }
 
     @Test
@@ -229,6 +232,8 @@ public class QuestionnaireMapperTest {
         QuestionGroupDetail questionGroupDetail = questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
         assertThat(questionGroupDetail, is(notNullValue()));
         assertThat(questionGroupDetail.getTitle(), is(TITLE));
+        assertThat(questionGroupDetail.isEditable(), is(true));
+        assertThat(questionGroupDetail.isActive(), is(true));
         List<SectionDetail> sectionDetails = questionGroupDetail.getSectionDetails();
         assertThat(sectionDetails, is(notNullValue()));
         assertThat(questionGroupDetail.getSectionDetails().size(), is(2));
@@ -243,6 +248,8 @@ public class QuestionnaireMapperTest {
     private QuestionGroup getQuestionGroup(String event, String source, String... sectionNames) {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setTitle(TITLE);
+        questionGroup.setEditable(true);
+        questionGroup.setState(QuestionGroupState.ACTIVE);
         questionGroup.setSections(getSections(sectionNames));
         questionGroup.setEventSources(getEventSources(event, source));
         return questionGroup;
@@ -336,6 +343,11 @@ public class QuestionnaireMapperTest {
         sectionQuestion2.setId(15);
         Mockito.when(sectionQuestionDao.getDetails(15)).thenReturn(sectionQuestion2);
 
+        QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
+        questionGroupInstance.setVersionNum(3);
+        Mockito.when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,10)).thenReturn(asList(questionGroupInstance));
+        Mockito.when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,11)).thenReturn(asList(questionGroupInstance));
+
         List<QuestionDetail> questionDetails1 = Arrays.asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
         List<SectionDetail> sectionDetails1 = Arrays.asList(getSectionDetailWithQuestions(14, "Sec1", questionDetails1, "value",null));
         QuestionGroupDetail questionGroupDetail1 = new QuestionGroupDetail(10, "QG1", new EventSource("Create", "Client", null), sectionDetails1, true);
@@ -358,7 +370,7 @@ public class QuestionnaireMapperTest {
         assertThat(questionGroupInstance1.getCreatorId(), is(101));
         assertThat(questionGroupInstance1.getDateConducted(), is(notNullValue()));
         assertThat(questionGroupInstance1.getEntityId(), is(201));
-        assertThat(questionGroupInstance1.getVersionNum(), is(1));
+        assertThat(questionGroupInstance1.getVersionNum(), is(4));
         List<QuestionGroupResponse> questionGroupResponses1 = questionGroupInstance1.getQuestionGroupResponses();
         assertThat(questionGroupResponses1, is(notNullValue()));
         assertThat(questionGroupResponses1.size(), is(1));
@@ -372,7 +384,7 @@ public class QuestionnaireMapperTest {
         assertThat(questionGroupInstance2.getCreatorId(), is(101));
         assertThat(questionGroupInstance2.getDateConducted(), is(notNullValue()));
         assertThat(questionGroupInstance2.getEntityId(), is(201));
-        assertThat(questionGroupInstance2.getVersionNum(), is(1));
+        assertThat(questionGroupInstance2.getVersionNum(), is(4));
         List<QuestionGroupResponse> questionGroupResponses2 = questionGroupInstance2.getQuestionGroupResponses();
         assertThat(questionGroupResponses2, is(notNullValue()));
         assertThat(questionGroupResponses2.size(), is(0));
@@ -383,12 +395,15 @@ public class QuestionnaireMapperTest {
         assertThat(questionGroupInstance3.getCreatorId(), is(101));
         assertThat(questionGroupInstance3.getDateConducted(), is(notNullValue()));
         assertThat(questionGroupInstance3.getEntityId(), is(201));
-        assertThat(questionGroupInstance3.getVersionNum(), is(1));
+        assertThat(questionGroupInstance3.getVersionNum(), is(4));
         List<QuestionGroupResponse> questionGroupResponses3 = questionGroupInstance3.getQuestionGroupResponses();
         assertThat(questionGroupInstance3, is(notNullValue()));
         assertThat(questionGroupResponses3.size(), is(2));
         assertThat(questionGroupResponses3.get(0).getResponse(), is("a2"));
         assertThat(questionGroupResponses3.get(1).getResponse(), is("a3"));
+
+        Mockito.verify(questionGroupInstanceDao,Mockito.times(1)).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,10);
+        Mockito.verify(questionGroupInstanceDao,Mockito.times(2)).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,11);
     }
 
     @Test

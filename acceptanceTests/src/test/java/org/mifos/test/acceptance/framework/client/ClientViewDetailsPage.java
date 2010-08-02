@@ -21,7 +21,6 @@
 package org.mifos.test.acceptance.framework.client;
 
 import com.thoughtworks.selenium.Selenium;
-import org.apache.commons.lang.StringUtils;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
@@ -85,10 +84,10 @@ public class ClientViewDetailsPage extends MifosPage {
     }
 
     public void verifyDateOfBirth(String dd, String mm, String yyyy) {
-      String dateOfBirth = getDateOfBirth();
-      Assert.assertTrue(dateOfBirth.contains(dd));
-      Assert.assertTrue(dateOfBirth.contains(mm));
-      Assert.assertTrue(dateOfBirth.contains(yyyy));
+        String dateOfBirth = getDateOfBirth();
+        Assert.assertTrue(dateOfBirth.contains(dd));
+        Assert.assertTrue(dateOfBirth.contains(mm));
+        Assert.assertTrue(dateOfBirth.contains(yyyy));
     }
 
     public void verifySpouseFather(String spouseFatherName) {
@@ -125,13 +124,13 @@ public class ClientViewDetailsPage extends MifosPage {
         return new ClientEditMFIPage(selenium);
     }
 
-    public ClientNotesPage navigateToNotesPage(){
+    public ClientNotesPage navigateToNotesPage() {
         selenium.click("viewClientDetails.link.notesLink");
         waitForPageToLoad();
         return new ClientNotesPage(selenium);
     }
 
-    public void verifyTextOnPage(String text){
+    public void verifyTextOnPage(String text) {
         Assert.assertTrue(selenium.isTextPresent(text));
     }
 
@@ -160,26 +159,21 @@ public class ClientViewDetailsPage extends MifosPage {
     }
 
 
-    public Map<String, String> getQuestionGroupInstances() {
+    public Map<Integer, QuestionGroup> getQuestionGroupInstances() {
         int rows = Integer.valueOf(selenium.getEval("window.document.getElementById('questionGroupInstances').getElementsByTagName('a').length"));
-        Map<String,String> instances = new LinkedHashMap<String, String>();
-        for (int i=0; i<rows-1; i++) {
+        Map<Integer, QuestionGroup> instances = new LinkedHashMap<Integer, QuestionGroup>();
+        for (int i = 0; i < rows - 1; i++) {
             String instanceId = selenium.getEval(format(QUESTION_GROUP_ID_JS, i));
-            instances.put(selenium.getEval(format(QUESTION_GROUP_NAME_JS, i)), selenium.getEval(format(QUESTION_GROUP_DATE_JS, instanceId)));
+            instances.put(new Integer(instanceId), new QuestionGroup(selenium.getEval(format(QUESTION_GROUP_NAME_JS, i)), //NOPMD
+                    selenium.getEval(format(QUESTION_GROUP_DATE_JS, instanceId))));
         }
         return instances;
     }
 
-    public QuestionGroupResponsePage navigateToQuestionGroupResponsePage(String questionGroupTitle) {
-        int rows = Integer.valueOf(selenium.getEval("window.document.getElementById('questionGroupInstances').getElementsByTagName('a').length"));
-        for (int i=0; i<rows-1; i++) {
-            String questionGroup = selenium.getEval(format(QUESTION_GROUP_NAME_JS, i)).trim();
-            if (StringUtils.equals(questionGroup, questionGroupTitle)) {
-                selenium.click("id=" + selenium.getEval(format(QUESTION_GROUP_ID_JS, i)));
-                break;
-            }
-        }
+    public QuestionGroupResponsePage navigateToQuestionGroupResponsePage(int instanceId) {
+        selenium.click("id=" + instanceId);
         waitForPageToLoad();
         return new QuestionGroupResponsePage(selenium);
     }
 }
+

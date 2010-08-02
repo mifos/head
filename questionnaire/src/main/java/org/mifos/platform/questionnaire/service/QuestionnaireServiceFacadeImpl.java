@@ -100,12 +100,12 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, String event, String source) {
-        return questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), false);
+        return questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), false, false);
     }
 
     @Override
     public List<QuestionGroupInstanceDetail> getQuestionGroupInstancesWithUnansweredQuestionGroups(Integer entityId, String event, String source) {
-        return questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), true);
+        return questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), true, true);
     }
 
     @Override
