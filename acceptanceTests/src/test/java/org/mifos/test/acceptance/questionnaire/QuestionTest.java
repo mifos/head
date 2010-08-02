@@ -62,7 +62,7 @@ public class QuestionTest extends UiTestCaseBase {
     private static final String MULTI_SELECT = "Multi Select";
     private static final String SINGLE_SELECT = "Single Select";
     private static final String NUMBER = "Number";
-    public static final String INVALID_BOUNDS_ERR = "Please specify valid numeric bounds.";
+    public static final String INVALID_BOUNDS_ERR = "Please ensure maximum value is greater than minimum value.";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
