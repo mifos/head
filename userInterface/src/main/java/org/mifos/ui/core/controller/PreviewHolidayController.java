@@ -81,6 +81,8 @@ public class PreviewHolidayController {
             modelAndView.setViewName("previewHoliday");
         } else {
             // successful submit.
+            this.holidayServiceFacade.holidaysByYear();
+
             viewName = REDIRECT_TO_ADMIN_SCREEN;
             modelAndView.setViewName(viewName);
             status.setComplete();
