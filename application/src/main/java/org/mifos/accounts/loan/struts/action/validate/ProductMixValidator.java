@@ -66,7 +66,7 @@ public class ProductMixValidator {
 
     private List<LoanBO> populateLoanListForCustomer(LoanBO loan, CustomerBO customer) throws ServiceException {
         List<LoanBO> loanList = new ArrayList<LoanBO>();
-        if (customer.isGroup()) {
+        if (customer.isGroup() && loan.getAccountId() != null) {
             loanList = loanBusinessService.getActiveLoansForAllClientsAssociatedWithGroupLoan(loan);
         } else if (customer.isClient() && customer.getParentCustomer() != null) {
             List<LoanBO> groupLoans = loanBusinessService.getLoanAccountsActiveInGoodBadStanding(customer
