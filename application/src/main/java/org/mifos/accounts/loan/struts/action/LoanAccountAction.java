@@ -140,12 +140,15 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacadeLocator;
 import org.mifos.reports.admindocuments.persistence.AdminDocAccStateMixPersistence;
 import org.mifos.reports.admindocuments.persistence.AdminDocumentPersistence;
 import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.MifosServiceFactory;
 
 /**
  * Creation and management of loan accounts.
@@ -232,7 +235,16 @@ public class LoanAccountAction extends AccountAppAction {
     public static final String ACCOUNT_ID = "accountId";
     public static final String GLOBAL_ACCOUNT_NUM = "globalAccountNum";
 
-    private QuestionnaireFlowAdapter questionnaireAdapter = new QuestionnaireFlowAdapter("Create", "Loan", ActionForwards.schedulePreview_success, "custSearchAction.do?method=loadMainSearch");
+    private QuestionnaireFlowAdapter createLoanQuestionnaire =
+        new QuestionnaireFlowAdapter("Create","Loan",
+                ActionForwards.schedulePreview_success,
+                "custSearchAction.do?method=loadMainSearch",
+                new QuestionnaireServiceFacadeLocator() {
+                    @Override
+                    public QuestionnaireServiceFacade getService(HttpServletRequest request) {
+                        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
+                    }
+                });
 
     public LoanAccountAction() throws Exception {
         this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
@@ -279,15 +291,6 @@ public class LoanAccountAction extends AccountAppAction {
     @Override
     protected BusinessService getService() {
         return loanBusinessService;
-    }
-
-    /**
-     * @Deprecated - test only.
-     * @param questionflowAdapter
-     */
-    @Deprecated
-    public void setQuestionnaireFlowAdapter(QuestionnaireFlowAdapter questionflowAdapter) {
-        this.questionnaireAdapter = questionflowAdapter;
     }
 
     public static ActionSecurity getSecurity() {
@@ -469,9 +472,8 @@ public class LoanAccountAction extends AccountAppAction {
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, loanScheduleDetailsDto
                 .isLoanPendingApprovalDefined(), request);
 
-        return questionnaireAdapter.mapToAppliedQuestions(
-                mapping, loanActionForm, request,
-                ActionForwards.schedulePreview_success);
+        return createLoanQuestionnaire.fetchAppliedQuestions(
+                mapping, loanActionForm, request, ActionForwards.schedulePreview_success);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -781,7 +783,7 @@ public class LoanAccountAction extends AccountAppAction {
             FundBO fund = getFund(request, loanActionForm.getLoanOfferingFundValue());
             loanCreationResultDto = this.loanServiceFacade.createLoan(userContext, customerId, disbursementDate, fund,
                     loanActionForm);
-            questionnaireAdapter.saveQuestionResponses(request, loanActionForm, loanCreationResultDto.getAccountId());
+            createLoanQuestionnaire.saveResponses(request, loanActionForm, loanCreationResultDto.getAccountId());
         }
 
         if (loanCreationResultDto.isGlimApplicable()) {
@@ -1483,17 +1485,25 @@ public class LoanAccountAction extends AccountAppAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward captureQuestionResponses(
-            final ActionMapping mapping, final ActionForm form,
-            @SuppressWarnings("unused") final HttpServletRequest request,
-            @SuppressWarnings("unused") final HttpServletResponse response)
-            throws Exception {
-        ActionErrors errors = questionnaireAdapter.validateQuestionGroupResponses(request, (LoanAccountActionForm) form);
+            final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         request.setAttribute(METHODCALLED, "captureQuestionResponses");
-        if (!errors.isEmpty()) {
+        ActionErrors errors = createLoanQuestionnaire.validateResponses(request, (LoanAccountActionForm) form);
+        if (errors != null && !errors.isEmpty()) {
             addErrors(request, errors);
             return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
         }
-        return questionnaireAdapter.rejoin(mapping);
+        ActionForward join = createLoanQuestionnaire.rejoinFlow(mapping);
+        return join;
     }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward editQuestionResponses(
+            final ActionMapping mapping, final ActionForm form,
+            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        return createLoanQuestionnaire.editResponses(mapping, request, (LoanAccountActionForm) form);
+    }
+
+
 
 }

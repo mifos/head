@@ -140,8 +140,8 @@ explanation of the license and how it is applied.
                      <tr>
                         <td>&nbsp;</td>
 						<td align="left">
-							<input type="submit" class="buttn" name="captureQuestionResponses.button.continue" id="captureQuestionResponses.button.continue" value="Continue" name="continueButton">
-							<input type="button" class="cancelbuttn" name="captureQuestionResponses_button_cancel" id="captureQuestionResponses_button_cancel" value="Cancel" name="cancelButton">
+							<input type="submit" class="buttn" name="captureQuestionResponses.button.continue" id="captureQuestionResponses.button.continue" value="Continue"/>
+							<input type="button" class="cancelbuttn" name="captureQuestionResponses_button_cancel" id="captureQuestionResponses_button_cancel" value="Cancel"/>
                         </td>
                     </tr>
                  </table>

@@ -18,9 +18,10 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.service;
+package org.mifos.platform.questionnaire.exceptions;
 
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 
 import java.util.ArrayList;
 import java.util.List;

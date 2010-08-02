@@ -409,6 +409,7 @@ explanation of the license and how it is applied.
 													</c:if>
 												</c:forEach>
 												<span class="fontnormal"> <br> <br> </span>
+												
 												<table width="80%" border="0" cellspacing="0" cellpadding="0">
 													<tr>
 														<td class="headingorange">
@@ -447,6 +448,10 @@ explanation of the license and how it is applied.
 											</td>
 										</tr>
 									</table>
+									<c:set var="questionsHostForm" value="${loanAccountActionForm}" scope="request" />
+									<c:import url="/pages/application/surveys/jsp/viewQuestionResponses.jsp">
+									   <c:param name="editResponseURL" value="loanAccountAction.do?method=editQuestionResponses"/>
+									</c:import>
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center" class="blueline">

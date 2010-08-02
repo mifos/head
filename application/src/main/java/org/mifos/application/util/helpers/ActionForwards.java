@@ -192,5 +192,6 @@ public enum ActionForwards {
     previewEdit_failure,
     confirm_delete,
     download_success,
-    captureQuestionResponses;
+    captureQuestionResponses,
+    editQuestionResponses;
 }

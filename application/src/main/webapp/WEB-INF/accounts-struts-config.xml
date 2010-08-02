@@ -223,7 +223,6 @@
             <forward name="viewLoanChangeLog" path="/pages/application/loan/jsp/viewChangeLog.jsp"/>
             <forward name="cancelLoanChangeLog" path="/loanAccountAction.do?method=get"/>
             <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
-
         </action>
         <action path="/savingsDepositWithdrawalAction"
                 type="org.mifos.accounts.savings.struts.action.SavingsDepositWithdrawalAction"
