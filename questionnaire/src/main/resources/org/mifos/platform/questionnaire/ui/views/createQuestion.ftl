@@ -31,7 +31,8 @@
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
 <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
-    <script src="pages/questionnaire/js/createQuestion.js" type="text/javascript"></script>
+<script type="text/javascript" src="pages/questionnaire/js/jquery.keyfilter-1.7.js"></script>
+<script src="pages/questionnaire/js/createQuestion.js" type="text/javascript"></script>
 <div class="sidebar ht950">
     [#include "adminLeftPane.ftl" /]
 </div>
@@ -65,10 +66,10 @@
                 <li>
                     <div id="numericDiv">
                         <label for="currentQuestion.numericMin">[@spring.message "questionnaire.quesiton.numeric.min"/]: </label>
-                        [@spring.formInput "questionDefinition.currentQuestion.numericMin", 'maxlength="5"'/]
+                        [@spring.formInput "questionDefinition.currentQuestion.numericMin", 'maxlength="5" class="numeric"'/]
                         <br>
                         <label for="currentQuestion.numericMax">[@spring.message "questionnaire.quesiton.numeric.max"/]: </label>
-                        [@spring.formInput "questionDefinition.currentQuestion.numericMax", 'maxlength="5"'/]
+                        [@spring.formInput "questionDefinition.currentQuestion.numericMax", 'maxlength="5" class="numeric"'/]
                     </div>
                 </li>
 			    <li>
