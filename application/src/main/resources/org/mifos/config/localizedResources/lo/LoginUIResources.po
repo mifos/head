@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:10+0530\n"
+"POT-Creation-Date: 2010-08-02 03:50+0800\n"
 "PO-Revision-Date: 2009-05-07 17:27-0700\n"
 "Last-Translator: Kay Chau <kchau@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -147,4 +147,9 @@ msgstr ""
 
 #: login.welcome
 msgid "Welcome to mifos"
+msgstr ""
+
+#: AbstractUserDetailsAuthenticationProvider.badCredentials
+msgctxt "AbstractUserDetailsAuthenticationProvider.badCredentials"
+msgid "Please specify valid username/password to access the application."
 msgstr ""

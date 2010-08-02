@@ -41,8 +41,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -225,10 +223,6 @@ public class QuestionGroupController extends QuestionnaireController {
 
     private boolean isInvalidTitle(String title) {
         return StringUtils.isEmpty(StringUtils.trimToNull(title));
-    }
-
-    private String decodeUrl(String backPageUrl) throws UnsupportedEncodingException {
-        return URLDecoder.decode(backPageUrl, "UTF-8");
     }
 
 }
