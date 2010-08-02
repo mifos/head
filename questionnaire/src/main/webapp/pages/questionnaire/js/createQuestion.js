@@ -56,4 +56,5 @@ $(document).ready(function(){
     CreateQuestion.disableSubmitButtonOnEmptyQuestionList();
     $("#currentQuestion\\.type").change();
     $("#currentQuestion\\.choice").keyup();
+    $(".numeric").keyfilter(/[\d\-]/);
 });
