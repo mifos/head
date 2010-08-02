@@ -688,8 +688,11 @@ explanation of the license and how it is applied.
 								</c:forEach>
   							</c:if>
 							<tr><td class="paddingL10"> <br>
-							<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${clientInformationDto.clientDisplay.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel
-								name="client.HistoricalDataLink" bundle="ClientUIResources"></mifos:mifoslabel>
+							<a id="viewClientDetails.link.questionGroups" href="displayResponses.ftl?entityId=<c:out value="${clientInformationDto.clientDisplay.customerId}"/>&event=Create&source=Client&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>">
+							    <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
+							</a> <br>
+							<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${clientInformationDto.clientDisplay.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+							    <mifos:mifoslabel name="client.HistoricalDataLink" bundle="ClientUIResources" />
 							</a> <br>
 							<html-el:link styleId="viewClientDetails.link.viewChangeLog" href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=${clientInformationDto.clientDisplay.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="client.ChangeLogLink" bundle="ClientUIResources"/>
@@ -783,8 +786,9 @@ explanation of the license and how it is applied.
 								height="8"></td>
 						</tr>
 					</table>
-          <c:if test="${clientInformationDto.activeSurveys}">
-          <table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
+          <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'questionGroupInstances')}"
+			   var="questionGroupInstances" />
+          <table id="questionGroupInstances" name="questionGroupInstances" width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
             <tr>
               <td colspan="2" class="bluetablehead05">
                 <span class="fontnormalbold">
@@ -795,39 +799,42 @@ explanation of the license and how it is applied.
             <tr>
               <td colspan="2" class="paddingL10"><img src="pages/framework/images/trans.gif" width="10" height="2"></td>
             </tr>
-            <c:forEach items="${clientInformationDto.customerSurveys}" var="surveyInstance">
+          <c:if test="${!empty questionGroupInstances}">
+            <c:forEach items="${questionGroupInstances}" var="questionGroupInstance">
               <tr>
                 <td width="70%" class="paddingL10">
                   <span class="fontnormal8pt">
-                    <a id="viewClientDetails.link.survey" href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=client">
-                      <c:out value="${surveyInstance.surveyName}"/>
+                    <a id="${questionGroupInstance.id}" href="displayResponse.ftl?instanceId=${questionGroupInstance.id}&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>">
+                      <c:out value="${questionGroupInstance.questionGroupTitle}"/>
                     </a>
                   </span>
                 </td>
                 <td width="30%" align="left" class="paddingL10">
                   <span class="fontnormal8pt">
-                    <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,surveyInstance.dateConducted)}" />
+                    <label id="label.${questionGroupInstance.id}">
+                        <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale, questionGroupInstance.dateCompleted)}" />
+                    </label>
                   </span>
                 </td>
               </tr>
             </c:forEach>
+		  </c:if>
             <tr>
               <td colspan="2" align="right" class="paddingleft05">
                 <span class="fontnormal8pt">
-                  <a id="viewClientDetails.link.attachSurvey" href="surveyInstanceAction.do?method=choosesurvey&globalNum=${clientInformationDto.clientDisplay.globalCustNum}&surveyType=client">
+                  <a id="viewClientDetails.link.attachSurvey" href="questionnaire.ftl">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
-                  <a id="viewClientDetails.link.viewAllSurveys" href="surveysAction.do?method=mainpage">
-                    <mifos:mifoslabel name="Surveys.viewallsurveys" bundle="SurveysUIResources"/>
-                  </a>
+                </span>
+              </td>
+            </tr>
           </table>
-					<table width="95%" border="0" cellspacing="0" cellpadding="0">
-						<tr>
-							<td><img src="pages/framework/images/trans.gif" width="7"
-								height="8"></td>
-						</tr>
-					</table>
-		</c:if>
+        <table width="95%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td><img src="pages/framework/images/trans.gif" width="7"
+                    height="8"></td>
+            </tr>
+        </table>
 					<table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
 						<tr>
 							<td class="bluetablehead05"><span class="fontnormalbold"> <mifos:mifoslabel

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:08+0530\n"
+"POT-Creation-Date: 2010-08-02 03:47+0800\n"
 "PO-Revision-Date: 2009-09-22 10:17-0700\n"
 "Last-Translator: Ryan Sturgill <sturgillr@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -666,12 +666,8 @@ msgstr "تغيير"
 
 #: loan.EditStatus
 #, fuzzy
-msgid "Edit status "
+msgid "Edit status"
 msgstr "غيّر الوضع."
-
-#: loan.Enter
-msgid "Enter"
-msgstr "أدخل"
 
 #: loan.Fieldsmarkedwithanasteriskarerequired
 msgctxt "loan.Fieldsmarkedwithanasteriskarerequired"
@@ -746,6 +742,15 @@ msgstr "ملخص الحساب"
 msgid "account"
 msgstr "الحساب"
 
+#: loan.accountById
+msgid "account by ID  "
+msgstr ""
+
+#: loan.accountStatuschanged
+#, fuzzy
+msgid "account status will be changed to cancelled."
+msgstr "الوضع ستتغير ألى 'ملغى'"
+
 #: loan.accountAssigned
 #, fuzzy
 msgid ""
@@ -776,6 +781,11 @@ msgstr "الحسابات"
 #: loan.accs
 msgid "accounts"
 msgstr "الحسابات"
+
+#: loan.accsWithFollowingIdCreated
+#, fuzzy
+msgid "accounts with the following IDs have been created"
+msgstr "خلق مع الأرقام التالي "
 
 #: loan.accwithoutsub
 msgid "Accounts without submitting information."
@@ -846,14 +856,18 @@ msgstr "عدد الأقساط المسموحة/:"
 msgid "and all payments made against this "
 msgstr "وكل الدفعات لهذا القرض."
 
-#: loan.already
-msgid "already"
-msgstr "سابقا"
+#: loan.alreadyDisbursed
+msgid "already disbursed"
+msgstr ""
 
 #: loan.amount
 msgctxt "loan.amount"
 msgid "Amount"
 msgstr "المبلغ"
+
+#: loan.amountDisbursed
+msgid "Amount disbursed"
+msgstr ""
 
 #: loan.amount_due
 msgid "Amount due"
@@ -961,10 +975,6 @@ msgstr "فرع 01"
 msgid "Purpose of"
 msgstr "الغرض من"
 
-#: loan.byid
-msgid "by ID"
-msgstr "برقم هوية"
-
 #: loan.cancel
 msgid "Cancel"
 msgstr "ألغي"
@@ -1002,6 +1012,10 @@ msgstr "أضغط للإبعاد"
 #: loan.checkboxpaymentvalue
 msgid "Check to revert the last payment"
 msgstr "أضغط للرجوع إلى الدفعة الأخيرة"
+
+#: loan.clickCancelReturn
+msgid "Click Cancel to return to"
+msgstr ""
 
 #: loan.clickcanceladmin
 msgid "Click cancel to return to Admin page without any modification."
@@ -1074,6 +1088,10 @@ msgstr "استمرّ"
 #: loan.create
 msgid "Create"
 msgstr "أخلق"
+
+#: loan.createMultiple
+msgid "Create multiple"
+msgstr ""
 
 #: loan.createAccount
 msgid "Create {0} account"
@@ -1162,10 +1180,6 @@ msgctxt "loan.description"
 msgid "Description"
 msgstr "الوصف"
 
-#: loan.detailssearch
-msgid "details and click Search. Click Cancel to return to"
-msgstr "تفاصيل و أضغط 'أبحث'.  أضغط 'إلغاء' لرجوع إلى"
-
 #: loan.dis_date
 msgid "Proposed/Actual disbursement date"
 msgstr "تاريخ التوزيع المقترح/الواقعي"
@@ -1197,10 +1211,6 @@ msgstr "وزّع"
 #: loan.disburseLoan
 msgid "Disburse {0}"
 msgstr "وزّع {0}"
-
-#: loan.disbursed
-msgid "disbursed"
-msgstr "موزّع"
 
 #: loan.disburseloan
 msgid "Disburse Loan"
@@ -1266,6 +1276,10 @@ msgid ""
 msgstr ""
 "أدخل إسم زبون أو مجموعة ثمّ إضغط على 'بحث'. إضغط على 'إلغاء' للعودة إلى "
 "قائمة 'الزبائن و الحسابات' وعدم تقديم معلومات."
+
+#: loan.enterDetailsSearch
+msgid "Enter details and click Search."
+msgstr ""
 
 #: loan.enter_loan_accinfo
 msgid "Enter loan account information"
@@ -1606,10 +1620,6 @@ msgstr "شهر(شهور)"
 #: loan.more_details
 msgid "More account and transaction details"
 msgstr "تفاصيل إضافية للحساب و المعاملة"
-
-#: loan.multiple
-msgid "multiple"
-msgstr "متعدد"
 
 #: loan.new
 msgid "New"
@@ -2096,10 +2106,6 @@ msgstr "منشط"
 msgid "Status history"
 msgstr "تاريخ الوضع"
 
-#: loan.statuschanged
-msgid "status will be changed to cancelled."
-msgstr "الوضع ستتغير ألى 'ملغى'"
-
 #: loan.subTotal
 msgid "subTotal"
 msgstr "المجموع غير الكلي"
@@ -2249,13 +2255,27 @@ msgstr "اتنازل عن"
 msgid "Week(s)"
 msgstr "أسبوع (أسابيع)"
 
-#: loan.withfollid
-msgid "with the following IDs have been created"
-msgstr "خلق مع الأرقام التالي "
-
 #: loan.yes
 msgid "Yes"
 msgstr "نعم"
+
+#~ msgid "Enter"
+#~ msgstr "أدخل"
+
+#~ msgid "already"
+#~ msgstr "سابقا"
+
+#~ msgid "by ID"
+#~ msgstr "برقم هوية"
+
+#~ msgid "details and click Search. Click Cancel to return to"
+#~ msgstr "تفاصيل و أضغط 'أبحث'.  أضغط 'إلغاء' لرجوع إلى"
+
+#~ msgid "disbursed"
+#~ msgstr "موزّع"
+
+#~ msgid "multiple"
+#~ msgstr "متعدد"
 
 #~ msgid "Please specify required additional information."
 #~ msgstr "حدّد معلومات مطلوبة إضافية من فضلك"

@@ -20,15 +20,18 @@
 
 package org.mifos.reports.struts.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
 
+import org.apache.struts.Globals;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.upload.FormFile;
-import org.junit.Ignore;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseMigrator;
@@ -41,13 +44,16 @@ import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.reports.struts.actionforms.BirtReportsUploadActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
 import org.mifos.security.AddActivity;
+import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
+import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.security.rolesandpermission.utils.ActivityTestUtil;
+import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.SecurityConstants;
+import org.mifos.security.util.UserContext;
 
-@Ignore
 public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
     public BirtReportsUploadActionStrutsTest() throws Exception {
@@ -57,6 +63,12 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+    }
+
+    @Override
+    protected void setStrutsConfig() {
+        super.setStrutsConfig();
+        setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/reports-struts-config.xml");
     }
 
     public void testGetBirtReportsUploadPage() {
@@ -271,6 +283,46 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
         removeReport(newReport.getReportId());
 
+    }
+
+    public void testEditWithPermissionIsAllowed() throws Exception {
+        setupReportEditPermission(true);
+        actionPerform();
+        verifyForward(ActionForwards.edit_success.toString());
+    }
+
+    public void testEditWithoutPermissionIsDenied() throws Exception {
+        setupReportEditPermission(false);
+        actionPerform();
+        Assert.assertNotNull(request.getAttribute(Globals.ERROR_KEY));
+        ActionErrors errors = (ActionErrors) request.getAttribute(Globals.ERROR_KEY);
+        Assert.assertNotNull(errors.get(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED));
+    }
+
+    private void setupReportEditPermission(boolean allowReportEdit) throws Exception {
+        UserContext userContext = TestUtils.makeUser();
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+
+        ActivityContext ac = new ActivityContext((short) 0, userContext.getBranchId().shortValue(), userContext.getId().shortValue());
+        request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT, ac);
+
+        RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
+
+        RoleBO role = rolesPermissionsPersistence.getRole(userContext.getRoles().iterator().next());
+        List<ActivityEntity> roleActivities = role.getActivities();
+        List<ActivityEntity> updatedRoleActivities = new ArrayList<ActivityEntity>();
+        for (ActivityEntity ae : roleActivities) {
+            if (ae.getId() != SecurityConstants.EDIT_REPORT_INFORMATION || allowReportEdit) {
+                updatedRoleActivities.add(ae);
+            }
+        }
+        role.update(userContext.getId(), "test", updatedRoleActivities);
+        role.save();
+        AuthorizationManager.getInstance().updateRole(role);
+
+        setRequestPathInfo("/birtReportsUploadAction.do");
+        addRequestParameter("method", "edit");
+        addRequestParameter("reportId", "1");
     }
 
     private void removeReport(Short reportId) throws PersistenceException {

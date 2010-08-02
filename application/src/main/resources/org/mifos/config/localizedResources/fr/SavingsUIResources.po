@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:09+0530\n"
+"POT-Creation-Date: 2010-08-02 03:49+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -234,6 +234,15 @@ msgctxt "Savings.clickContinue"
 msgid "Then click Continue."
 msgstr "Puis cliquer sur Continuer."
 
+#: Savings.clickContinueOrCancel
+#, fuzzy
+msgid ""
+"Then click Continue. Click Cancel to return to Clients &amp; Accounts "
+"without submitting information."
+msgstr ""
+"Cliquer sur Annuler pour retourner aux Clients et amp; Comptes sans Valider "
+"l'information."
+
 #: Savings.clickPreview
 #, fuzzy
 msgid "Then click Preview. "
@@ -248,6 +257,12 @@ msgstr ""
 #: Savings.clickSubmitIfSatisfied
 msgid "If satisfied click Submit"
 msgstr "Si vous êtes satisfait cliquer sur Valider"
+
+#: Savings.clickSubmitIfSatisfied.return.closing
+msgid ""
+"If satisfied click Submit. Click Cancel to return to account details without "
+"closing the account."
+msgstr ""
 
 #: Savings.clickSubmitOnPreview
 msgid "Click Submit if you are satisfied or click '"
@@ -297,6 +312,11 @@ msgstr "Description"
 msgid "details now"
 msgstr "détails maintenant"
 
+#: Savings.accountdetails
+#, fuzzy
+msgid "account details now"
+msgstr "détails de compte"
+
 #: Savings.detailsWithOutClosing
 msgid "account details without closing the account."
 msgstr "détails de compte sans clôturer le compte."
@@ -307,8 +327,12 @@ msgstr "Edite le statut du compte"
 
 #: Savings.editFields
 #, fuzzy
-msgid "Edit the fields below. "
+msgid "Edit the fields below."
 msgstr "Editer les champs ci-dessous."
+
+#: Savings.editFields.clickPreview.clickCancelToReturn
+msgid "Edit the fields below. Then click Preview. Click Cancel to return to"
+msgstr ""
 
 #: Savings.editTransaction
 msgid "Edit Transaction"
@@ -571,6 +595,12 @@ msgstr "'pour faire des changements."
 msgid "Total amount due"
 msgstr "Total de montant prévu en"
 
+#: Savings.totalAmountDue.on
+#, fuzzy
+msgctxt "Savings.totalAmountDue.on"
+msgid "Total amount due on"
+msgstr "Montant total prévu en"
+
 #: Savings.totalDeposits
 msgid "Total deposits"
 msgstr "Total des dépôts"
@@ -584,6 +614,8 @@ msgid "Total withdrawals"
 msgstr "Total de retraits"
 
 #: Savings.totalamountdue
+#, fuzzy
+msgctxt "Savings.totalamountdue"
 msgid "Total amount due on"
 msgstr "Montant total prévu en"
 

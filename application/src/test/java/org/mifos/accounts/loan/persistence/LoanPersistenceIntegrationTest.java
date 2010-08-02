@@ -32,6 +32,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -74,9 +77,8 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
     private LoanBO badAccount;
     private LoanBO goodAccount;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         loanPersistence = new LoanPersistence();
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
@@ -88,7 +90,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         goodAccount = getGoodAccount();
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
 
         try {
@@ -103,9 +105,9 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         } finally {
             StaticHibernateUtil.closeSession();
         }
-        super.tearDown();
     }
 
+    @Test
     public void testFindBySystemId() throws Exception {
         LoanPersistence loanPersistance = new LoanPersistence();
         LoanBO loanBO = loanPersistance.findBySystemId(loanAccount.getGlobalAccountNum());
@@ -113,6 +115,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(loanAccount.getAccountId(), loanBO.getAccountId());
     }
 
+    @Test
     public void testFindByExternalId() throws Exception {
         String externalId = "ABC";
         StaticHibernateUtil.startTransaction();
@@ -125,6 +128,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(loanAccount.getAccountId(), loanBO.getAccountId());
     }
 
+    @Test
     public void testFindIndividualLoans() throws Exception {
         LoanPersistence loanPersistance = new LoanPersistence();
         List<LoanBO> listLoanBO = loanPersistance.findIndividualLoans(loanAccount.getAccountId().toString());
@@ -132,12 +136,14 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(0, listLoanBO.size());
     }
 
+    @Test
     public void testGetFeeAmountAtDisbursement() throws Exception {
         loanAccountForDisbursement = getLoanAccount("cdfg", group, meeting, AccountState.LOAN_APPROVED);
         Assert.assertEquals(30.0,
                 loanPersistence.getFeeAmountAtDisbursement(loanAccountForDisbursement.getAccountId(), getCurrency()).getAmountDoubleValue(), DELTA);
     }
 
+    @Test
     public void testGetLoanAccountsInArrearsInGoodStanding() throws PersistenceException, InvalidDateException {
         Short latenessDays = 1;
         Calendar actionDate = new GregorianCalendar();
@@ -169,17 +175,20 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertFalse(actionDates.isPaid());
     }
 
+    @Test
     public void testGetAccount() throws Exception {
         LoanBO loanBO = loanPersistence.getAccount(loanAccount.getAccountId());
         Assert.assertEquals(loanBO.getAccountId(), loanAccount.getAccountId());
     }
 
+    @Test
     public void testGetLoanAccountsActiveInGoodBadStanding() throws PersistenceException {
         List<LoanBO> loanBO1 = loanPersistence.getLoanAccountsActiveInGoodBadStanding(loanAccount.getCustomer()
                 .getCustomerId());
         Assert.assertEquals(3, loanBO1.size());
     }
 
+    @Test
     public void testGetLastPaymentAction() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
         loanAccountForDisbursement = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
@@ -188,6 +197,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
                 loanPersistence.getLastPaymentAction(loanAccountForDisbursement.getAccountId()));
     }
 
+    @Test
     public void testGetLoanOffering() throws Exception {
         LoanOfferingBO loanOffering = TestObjectFactory.createCompleteLoanOfferingObject();
         LoanOfferingBO loanOfferingBO = loanPersistence.getLoanOffering(loanOffering.getPrdOfferingId(),
@@ -245,12 +255,14 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
                 startDate, loanOffering);
     }
 
+    @Test
     public void testGetLoanAccountsInActiveBadStandingShouldReturnLoanBOInActiveBadByBranchId() throws Exception {
         short branchId = 3;
         List<LoanBO> loanList = loanPersistence.getLoanAccountsInActiveBadStanding(branchId, (short) -1, (short) -1);
         Assert.assertEquals(1, loanList.size());
     }
 
+    @Test
     public void testGetLoanAccountsInActiveBadStandingShouldReturnLoanBOInActiveBadByBranchIdAndLoanOfficerId()
             throws Exception {
         short branchId = 3;
@@ -260,6 +272,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testGetLoanAccountsInActiveBadStandingShouldReturnLoanBOInActiveBadByBranchIdLoanOfficerIdAndLoanProductId()
             throws Exception {
         short branchId = 3;
@@ -271,6 +284,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingByBranchId() throws Exception {
         short branchId = 3;
         BigDecimal money = loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,
@@ -278,6 +292,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(0, new BigDecimal(600).compareTo(money));
     }
 
+    @Test
     public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingByBranchIdAndLoanOfficerId()
             throws Exception {
         short branchId = 3;
@@ -287,6 +302,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(0, new BigDecimal(600).compareTo(money));
     }
 
+    @Test
     public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingByBranchIdLoanOfficerIdAndLoanProductId()
             throws Exception {
         short branchId = 3;
@@ -297,6 +313,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(0, new BigDecimal(300).compareTo(money));
     }
 
+    @Test
     public void testGetActiveLoansBothInGoodAndBadStandingByLoanOfficer() throws Exception {
         short branchId = 3;
         short loanOfficerId = 3;
@@ -305,6 +322,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(3, loanList.size());
     }
 
+    @Test
     public void testGetActiveLoansBothInGoodAndBadStandingByLoanOfficerAndLoanProduct() throws Exception {
         short branchId = 3;
         short loanOfficerId = 3;
@@ -319,6 +337,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(1, badLoanList.size());
     }
 
+    @Test
     public void testGetAllLoanAccounts() throws Exception {
         List<LoanBO> loanAccounts = loanPersistence.getAllLoanAccounts();
         Assert.assertEquals(3, loanAccounts.size());

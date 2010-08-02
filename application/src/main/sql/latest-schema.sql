@@ -3879,7 +3879,7 @@ create table questions (
   question_text varchar(1000) not null,
   numeric_min integer,
   numeric_max integer,
-  short_name varchar(50) not null,
+  short_name varchar(200) not null,
   primary key(question_id),
   unique(short_name)
 ) engine=innodb character set utf8;
@@ -4318,6 +4318,7 @@ create table question_group(
   title varchar(200) not null,
   date_of_creation date not null,
   state integer not null,
+  is_editable tinyint not null default 0,
   primary key (id)
 ) engine=innodb character set utf8;
 

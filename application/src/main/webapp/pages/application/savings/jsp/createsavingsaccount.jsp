@@ -93,8 +93,7 @@ explanation of the license and how it is applied.
                 <mifos:mifoslabel name="Savings.selectA"/>
                 <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
                 <mifos:mifoslabel name="Savings.instance"/>
-				<mifos:mifoslabel name="Savings.clickContinue"/>
-				<mifos:mifoslabel name="Savings.clickCancel"/>
+				<mifos:mifoslabel name="Savings.clickContinueOrCancel"/>
 <br>            <mifos:mifoslabel name="Savings.fieldsRequired" mandatory="yes"/> </td>
               </tr>
 

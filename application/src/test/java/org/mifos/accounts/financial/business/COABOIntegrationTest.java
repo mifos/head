@@ -25,6 +25,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.ChartOfAccountsCache;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -39,6 +40,7 @@ public class COABOIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
+    @Test
     public void testGetCOAHead() throws FinancialException {
         String interestOnLoansGlCode = "31101";
         COABO coaInterestLoans = ChartOfAccountsCache.get(interestOnLoansGlCode);
@@ -46,6 +48,7 @@ public class COABOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(GLCategoryType.INCOME, coaHead.getCategoryType());
     }
 
+    @Test
     public void testGetCurrentSubCategory() throws FinancialException {
         String directIncomeGlCode = "31000";
         COABO coaDirectIncome = ChartOfAccountsCache.get(directIncomeGlCode);
@@ -56,16 +59,18 @@ public class COABOIntegrationTest extends MifosIntegrationTestCase {
         System.out.println(g.getGlcode());
     }
 
-    public void testEquals() throws Exception {
-        COABO chart53 = new COABO(53, "Example 1");
-        COABO chart54 = new COABO(54, "Example 1");
-        COABO chart53b = new COABO(53, "ChangedName");
-        COABO subclass = new COABO(53, "Example 1") {
+    @Test
+    public void testEqualsAndHasCode() throws Exception {
+        COABO x = new COABO(53, "Example 1");
+        COABO notx = new COABO(54, "Example 1");
+        COABO y = new COABO(53, "ChangedName");
+        COABO z = new COABO(53, "Example 1") {
         };
 
-        TestUtils.verifyBasicEqualsContract(new COABO[] { chart53, chart53b, subclass }, new COABO[] { chart54 });
+        TestUtils.assertEqualsAndHashContract(x, notx, y, z);
     }
 
+    @Test
     public void testGetSubCategoryCOABOs() throws FinancialException {
         String[] SUB_CATEGORY_NAMES = { "Petty Cash Accounts", "Bank Balances" };
         String[] SUB_CATEGORY_GLCODES = { "11100", "11200" };

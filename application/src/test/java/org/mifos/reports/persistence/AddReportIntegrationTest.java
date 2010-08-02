@@ -23,7 +23,10 @@ package org.mifos.reports.persistence;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
@@ -40,16 +43,17 @@ public class AddReportIntegrationTest extends MifosIntegrationTestCase {
 
     private Session session;
 
-    @Override
+    @Before
     public void setUp() {
         session = StaticHibernateUtil.getSessionTL();
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         TestDatabase.resetMySQLDatabase();
     }
 
+    @Test
     public void testStartFromStandardStore() throws Exception {
         short newId = 17032;
         AddReport upgrade = new AddReport(ReportsCategoryBO.ANALYSIS, "Detailed Aging of Portfolio at Risk",

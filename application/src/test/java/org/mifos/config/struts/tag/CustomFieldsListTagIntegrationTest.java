@@ -24,6 +24,8 @@ import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 import junit.framework.Assert;
 import junitx.framework.StringAssert;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.EntityType;
@@ -40,13 +42,12 @@ public class CustomFieldsListTagIntegrationTest extends MifosIntegrationTestCase
 
     private UserContext userContext;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-
+    @Before
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
     }
 
+    @Test
     public void testGetListRow() throws Exception {
         String categoryName = "Personnel";
         CustomFieldsListTag tag = new CustomFieldsListTag("action", "method", "flow", categoryName, categoryName);
@@ -70,6 +71,7 @@ public class CustomFieldsListTagIntegrationTest extends MifosIntegrationTestCase
                 + "&amp;currentFlowKey=flow\">Edit</a>" + "</td>\n" + "</tr>\n", link.getOutput());
     }
 
+    @Test
     public void testGetCustomFieldsList() throws Exception {
         String categoryName = "Personnel";
         CustomFieldsListTag tag = new CustomFieldsListTag("action", "method", "flow", categoryName, categoryName);

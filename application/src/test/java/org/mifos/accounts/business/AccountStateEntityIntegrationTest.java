@@ -26,6 +26,9 @@ import junit.framework.Assert;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -41,30 +44,32 @@ public class AccountStateEntityIntegrationTest extends MifosIntegrationTestCase 
     private AccountStateEntity accountStateEntity;
     private Session session;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         session = StaticHibernateUtil.getSessionTL();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
         session = null;
     }
 
+    @Test
     public void testGetNameFailure() {
         accountStateEntity = getAccountStateEntityObject(Short.valueOf("1"));
         String name = accountStateEntity.getName();
         Assert.assertFalse("This should fail, name is Partial Application", !("Partial Application".equals(name)));
     }
 
+    @Test
     public void testGetNameSuccess() {
         accountStateEntity = getAccountStateEntityObject(Short.valueOf("1"));
         String name = accountStateEntity.getName();
        Assert.assertEquals("Partial Application", name);
     }
 
+    @Test
     public void testGetNamesSuccess() {
         accountStateEntity = getAccountStateEntityObject(Short.valueOf("1"));
         Set<LookUpValueLocaleEntity> lookUpValueLocaleEntitySet = accountStateEntity.getNames();
@@ -72,6 +77,7 @@ public class AccountStateEntityIntegrationTest extends MifosIntegrationTestCase 
        Assert.assertEquals(1, size);
     }
 
+    @Test
     public void testGetNamesFailure() {
         accountStateEntity = getAccountStateEntityObject(Short.valueOf("1"));
         Set<LookUpValueLocaleEntity> lookUpValueLocaleEntitySet = accountStateEntity.getNames();
@@ -79,12 +85,14 @@ public class AccountStateEntityIntegrationTest extends MifosIntegrationTestCase 
         Assert.assertFalse("This should fail, the size is 1", !(size == 1));
     }
 
+    @Test
     public void testGetNameWithLocaleSuccess() {
         accountStateEntity = getAccountStateEntityObject(Short.valueOf("3"));
         String name = accountStateEntity.getName();
        Assert.assertEquals(APPROVED, name);
     }
 
+    @Test
     public void testGetNameWithLocaleFailure() {
         accountStateEntity = getAccountStateEntityObject(Short.valueOf("3"));
         String name = accountStateEntity.getName();

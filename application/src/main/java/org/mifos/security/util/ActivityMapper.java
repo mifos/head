@@ -60,7 +60,6 @@ import org.mifos.application.importexport.struts.action.ImportTransactionsAction
 import org.mifos.application.meeting.struts.action.MeetingAction;
 import org.mifos.config.struts.action.CustomFieldsAction;
 import org.mifos.config.struts.action.HiddenMandatoryConfigurationAction;
-import org.mifos.config.struts.action.LabelConfigurationAction;
 import org.mifos.config.struts.action.LookupOptionsAction;
 import org.mifos.customers.center.struts.action.CenterCustAction;
 import org.mifos.customers.checklist.struts.action.ChkListAction;
@@ -235,7 +234,6 @@ public class ActivityMapper {
         parseActionSecurity(ReportsParamsMapAction.getSecurity());
         parseActionSecurity(ReportsUploadAction.getSecurity());
         parseActionSecurity(ReportsUserParamsAction.getSecurity());
-        parseActionSecurity(LabelConfigurationAction.getSecurity());
         parseActionSecurity(HolidayAction.getSecurity());
         parseActionSecurity(SurveysAction.getSecurity());
         parseActionSecurity(QuestionsAction.getSecurity());
@@ -761,6 +759,12 @@ public class ActivityMapper {
                 userContext,
                 new ActivityContext(getActivityIdForRemoveFees(accountTypes, customerLevel), recordOfficeId,
                         recordLoanOfficerId));
+    }
+
+    public boolean isViewActiveSessionsPermitted(UserContext userContext, Short officeId) {
+        return AuthorizationManager.getInstance().isActivityAllowed(
+                userContext,
+                new ActivityContext(SecurityConstants.CAN_VIEW_ACTIVE_SESSIONS, officeId));
     }
 
     private short getActivityIdForRemoveFees(AccountTypes accountTypes, CustomerLevel customerLevel) {

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:09+0530\n"
+"POT-Creation-Date: 2010-08-02 03:48+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -616,11 +616,7 @@ msgid "Edit"
 msgstr ""
 
 #: loan.EditStatus
-msgid "Edit status "
-msgstr ""
-
-#: loan.Enter
-msgid "Enter"
+msgid "Edit status"
 msgstr ""
 
 #: loan.Fieldsmarkedwithanasteriskarerequired
@@ -695,6 +691,14 @@ msgstr ""
 msgid "account"
 msgstr ""
 
+#: loan.accountById
+msgid "account by ID  "
+msgstr ""
+
+#: loan.accountStatuschanged
+msgid "account status will be changed to cancelled."
+msgstr ""
+
 #: loan.accountAssigned
 msgid ""
 "A new {0} account for {1} has been assigned account # {2}. You can enter an "
@@ -720,6 +724,10 @@ msgstr ""
 
 #: loan.accs
 msgid "accounts"
+msgstr ""
+
+#: loan.accsWithFollowingIdCreated
+msgid "accounts with the following IDs have been created"
 msgstr ""
 
 #: loan.accwithoutsub
@@ -786,13 +794,17 @@ msgstr ""
 msgid "and all payments made against this "
 msgstr ""
 
-#: loan.already
-msgid "already"
+#: loan.alreadyDisbursed
+msgid "already disbursed"
 msgstr ""
 
 #: loan.amount
 msgctxt "loan.amount"
 msgid "Amount"
+msgstr ""
+
+#: loan.amountDisbursed
+msgid "Amount disbursed"
 msgstr ""
 
 #: loan.amount_due
@@ -897,10 +909,6 @@ msgstr ""
 msgid "Purpose of"
 msgstr ""
 
-#: loan.byid
-msgid "by ID"
-msgstr ""
-
 #: loan.cancel
 msgid "Cancel"
 msgstr ""
@@ -937,6 +945,10 @@ msgstr ""
 
 #: loan.checkboxpaymentvalue
 msgid "Check to revert the last payment"
+msgstr ""
+
+#: loan.clickCancelReturn
+msgid "Click Cancel to return to"
 msgstr ""
 
 #: loan.clickcanceladmin
@@ -1002,6 +1014,10 @@ msgstr ""
 
 #: loan.create
 msgid "Create"
+msgstr ""
+
+#: loan.createMultiple
+msgid "Create multiple"
 msgstr ""
 
 #: loan.createAccount
@@ -1089,10 +1105,6 @@ msgctxt "loan.description"
 msgid "Description"
 msgstr ""
 
-#: loan.detailssearch
-msgid "details and click Search. Click Cancel to return to"
-msgstr ""
-
 #: loan.dis_date
 msgid "Proposed/Actual disbursement date"
 msgstr ""
@@ -1119,10 +1131,6 @@ msgstr ""
 
 #: loan.disburseLoan
 msgid "Disburse {0}"
-msgstr ""
-
-#: loan.disbursed
-msgid "disbursed"
 msgstr ""
 
 #: loan.disburseloan
@@ -1180,6 +1188,10 @@ msgstr ""
 msgid ""
 "Enter a client/group name and click Search. Click Cancel to return to "
 "Clients & Accounts without submitting information."
+msgstr ""
+
+#: loan.enterDetailsSearch
+msgid "Enter details and click Search."
 msgstr ""
 
 #: loan.enter_loan_accinfo
@@ -1503,10 +1515,6 @@ msgstr ""
 
 #: loan.more_details
 msgid "More account and transaction details"
-msgstr ""
-
-#: loan.multiple
-msgid "multiple"
 msgstr ""
 
 #: loan.new
@@ -1960,10 +1968,6 @@ msgstr ""
 msgid "Status history"
 msgstr ""
 
-#: loan.statuschanged
-msgid "status will be changed to cancelled."
-msgstr ""
-
 #: loan.subTotal
 msgid "subTotal"
 msgstr ""
@@ -2106,10 +2110,6 @@ msgstr ""
 
 #: loan.week(s)
 msgid "Week(s)"
-msgstr ""
-
-#: loan.withfollid
-msgid "with the following IDs have been created"
 msgstr ""
 
 #: loan.yes

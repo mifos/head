@@ -23,10 +23,14 @@ package org.mifos.accounts.business;
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import junit.framework.Assert;
 
 import org.hibernate.Session;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -42,25 +46,24 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
     private static final short FLAG_FEET_TOO_BIG = 12;
 
     private Session session;
-
     private Connection connection;
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
+
+    @Before
+    public void setUp() throws SQLException {
         session = StaticHibernateUtil.getSessionTL();
         connection = session.connection();
         connection.setAutoCommit(true);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
         connection = null;
         session = null;
-        super.tearDown();
         TestDatabase.resetMySQLDatabase();
     }
 
+    @Test
     public void testStartFromStandardStore() throws Exception {
 
 
@@ -86,6 +89,7 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
        Assert.assertEquals("Rejected because feet are too big", flag.getName());
     }
 
+    @Test
     public void testValidateLookupValueKeyTest() throws Exception {
         String validKey = "AccountFlags-Withdraw";
         String format = "AccountFlags-";
@@ -94,6 +98,7 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
         Assert.assertFalse(AddAccountStateFlag.validateLookupValueKey(format, invalidKey));
     }
 
+    @Test
     public void testConstructor() throws Exception {
         short newId = 31500;
         AddAccountStateFlag upgrade = null;

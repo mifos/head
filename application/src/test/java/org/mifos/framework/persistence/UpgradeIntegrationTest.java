@@ -26,11 +26,13 @@ import java.sql.Statement;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.testng.annotations.Test;
 
-@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
+
 public class UpgradeIntegrationTest extends MifosIntegrationTestCase {
 
     public UpgradeIntegrationTest() throws Exception {
@@ -39,12 +41,13 @@ public class UpgradeIntegrationTest extends MifosIntegrationTestCase {
 
     private Connection connection;
 
-    @Override
+    @Before
     public void setUp() {
         connection = StaticHibernateUtil.getSessionTL().connection();
     }
 
 
+    @Test
     public void testValidateLookupValueKey() throws Exception {
         String validKey = "Permissions-Groups-CanBlacklistAGroup";
         String format = "Permissions-";

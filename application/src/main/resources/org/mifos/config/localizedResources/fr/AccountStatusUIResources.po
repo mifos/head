@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:09+0530\n"
+"POT-Creation-Date: 2010-08-02 03:48+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,9 +109,9 @@ msgstr "Pas de résultats trouvés."
 msgid "Note:"
 msgstr "Note\\:"
 
-#: accountStatus.results
-msgid "results"
-msgstr "résultats"
+#: accountStatus.resultsIn
+msgid "results in"
+msgstr ""
 
 #: accountStatus.search
 msgid "Search"
@@ -142,3 +142,6 @@ msgid "7 results in All branches found for Loans in Pending approval"
 msgstr ""
 "7 résultats trouvés dans toutes les antennes pour les prêts en attente "
 "d'approbation"
+
+#~ msgid "results"
+#~ msgstr "résultats"

@@ -25,11 +25,14 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
-import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
@@ -42,25 +45,27 @@ public class AccountActionEntityIntegrationTest extends MifosIntegrationTestCase
     private Session session;
     private AccountActionEntity accountActionEntity;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
+        //super.setUp();
         session = StaticHibernateUtil.getSessionTL();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
         session = null;
-        super.tearDown();
+        //super.tearDown();
     }
 
+    @Test
     public void testGetAccountAction() {
         Short id = 1;
         accountActionEntity = getAccountActionEntityObject(id);
        Assert.assertEquals("Loan Repayment", accountActionEntity.getName());
     }
 
+    @Test
     public void testBasics() throws Exception {
         AccountActionEntity action = (AccountActionEntity) session.get(AccountActionEntity.class,
                 AccountActionTypes.PAYMENT.getValue());
@@ -83,6 +88,7 @@ public class AccountActionEntityIntegrationTest extends MifosIntegrationTestCase
         session.close();
     }
 
+    @Test
     public void testEnum() throws Exception {
         AccountActionTypes myEnum = AccountActionTypes.FEE_REPAYMENT;
         AccountActionEntity entity = new AccountActionEntity(myEnum);
@@ -92,6 +98,7 @@ public class AccountActionEntityIntegrationTest extends MifosIntegrationTestCase
        Assert.assertEquals(myEnum, out);
     }
 
+    @Test
     public void testFromBadInt() throws Exception {
         try {
             AccountActionTypes.fromInt(9999);

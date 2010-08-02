@@ -34,6 +34,8 @@ public class MifosUser implements UserDetails {
 
     public static final String VIEW_SYSTEM_INFO = "ROLE_VIEW_SYSTEM_INFO";
     public static final String UPDATE_LATENESS_DORMANCY = "ROLE_UPDATE_LATENESS_DORMANCY";
+    public static final String CAN_DEFINE_LABELS = "ROLE_CAN_DEFINE_LABELS";
+    public static final String ROLE_CAN_DEFINE_PRODUCT_MIX = "ROLE_CAN_DEFINE_PRODUCT_MIX";
 
     private final String username;
     private final byte[] password;

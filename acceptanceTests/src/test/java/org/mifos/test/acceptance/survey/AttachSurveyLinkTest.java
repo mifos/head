@@ -78,7 +78,7 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         loanAccountDetailPage.verifyPage();
 
         AttachSurveyPage attachSurveyPage = loanAccountDetailPage.navigateToAttachSurveyPage();
-        attachSurveyPage.verifyPage();
+        attachSurveyPage.verifyPage("create_instance_choosesurvey");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -89,7 +89,7 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         LoanAccountPage loanAccountDetailPage = navigationHelper.navigateToLoanAccountPage("000100000000206");
 
         AttachSurveyPage attachSurveyPage = loanAccountDetailPage.navigateToAttachSurveyPage();
-        attachSurveyPage.verifyPage();
+        attachSurveyPage.verifyPage("create_instance_choosesurvey");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -99,7 +99,7 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         ClientViewDetailsPage clientViewDetailsPage = navigationHelper.navigateToClientViewDetailsPage("Stu1232993852651 Client1232993852651");
 
         AttachSurveyPage attachSurveyPage = clientViewDetailsPage.navigateToAttachSurveyPage();
-        attachSurveyPage.verifyPage();
+        attachSurveyPage.verifyPage("selectQuestionnaire");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -109,7 +109,7 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         GroupViewDetailsPage groupViewDetailsPage = navigationHelper.navigateToGroupViewDetailsPage("MyGroup1233266255641");
 
         AttachSurveyPage attachSurveyPage = groupViewDetailsPage.navigateToAttachSurveyPage();
-        attachSurveyPage.verifyPage();
+        attachSurveyPage.verifyPage("create_instance_choosesurvey");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -119,6 +119,6 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         CenterViewDetailsPage centerViewDetailsPage = navigationHelper.navigateToCenterViewDetailsPage("MyCenter1233266210775");
 
         AttachSurveyPage attachSurveyPage = centerViewDetailsPage.navigateToAttachSurveyPage();
-        attachSurveyPage.verifyPage();
+        attachSurveyPage.verifyPage("create_instance_choosesurvey");
     }
 }

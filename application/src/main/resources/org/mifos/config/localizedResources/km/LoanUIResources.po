@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:08+0530\n"
+"POT-Creation-Date: 2010-08-02 03:48+0800\n"
 "PO-Revision-Date: 2009-08-25 21:02-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -673,12 +673,8 @@ msgstr "កែប្រែ"
 
 #: loan.EditStatus
 #, fuzzy
-msgid "Edit status "
+msgid "Edit status"
 msgstr "កែប្រែលក្ខ័ណ"
-
-#: loan.Enter
-msgid "Enter"
-msgstr "កែប្រែ"
 
 #: loan.Fieldsmarkedwithanasteriskarerequired
 msgctxt "loan.Fieldsmarkedwithanasteriskarerequired"
@@ -753,6 +749,15 @@ msgstr "សង្ខេបនៃគណនី"
 msgid "account"
 msgstr "គណនី"
 
+#: loan.accountById
+msgid "account by ID  "
+msgstr ""
+
+#: loan.accountStatuschanged
+#, fuzzy
+msgid "account status will be changed to cancelled."
+msgstr "លក្ខ័ណនឺងប្តូរទៅជាបោះបង់"
+
 #: loan.accountAssigned
 msgid ""
 "A new {0} account for {1} has been assigned account # {2}. You can enter an "
@@ -780,6 +785,11 @@ msgstr "គណនី"
 #: loan.accs
 msgid "accounts"
 msgstr "គណនី"
+
+#: loan.accsWithFollowingIdCreated
+#, fuzzy
+msgid "accounts with the following IDs have been created"
+msgstr "ជាមួយនិងលេខកូដទាំងនេះដែលបានបង្កើត"
 
 #: loan.accwithoutsub
 msgid "Accounts without submitting information."
@@ -850,14 +860,18 @@ msgstr "តំលៃលេខសងរំលោះដែលអនុញាត"
 msgid "and all payments made against this "
 msgstr "ការសងទាំងអស់ដែលបានធ្វើធៀបនិង"
 
-#: loan.already
-msgid "already"
-msgstr "រួចរាល់"
+#: loan.alreadyDisbursed
+msgid "already disbursed"
+msgstr ""
 
 #: loan.amount
 msgctxt "loan.amount"
 msgid "Amount"
 msgstr "ចំនួន"
+
+#: loan.amountDisbursed
+msgid "Amount disbursed"
+msgstr ""
 
 #: loan.amount_due
 msgid "Amount due"
@@ -965,10 +979,6 @@ msgstr "សាខា​0១"
 msgid "Purpose of"
 msgstr "គោលបំនង"
 
-#: loan.byid
-msgid "by ID"
-msgstr "តាមលេខកូដ"
-
 #: loan.cancel
 msgid "Cancel"
 msgstr "បោះបង់"
@@ -1006,6 +1016,10 @@ msgstr "ពិនិត្យដើម្បីដកចេញ"
 #: loan.checkboxpaymentvalue
 msgid "Check to revert the last payment"
 msgstr "ពិនិត្យដើម្បីត្រលប់ទៅការចំនាយពីមុន"
+
+#: loan.clickCancelReturn
+msgid "Click Cancel to return to"
+msgstr ""
 
 #: loan.clickcanceladmin
 msgid "Click cancel to return to Admin page without any modification."
@@ -1080,6 +1094,10 @@ msgstr "បន្ត"
 #: loan.create
 msgid "Create"
 msgstr "បង្កើត"
+
+#: loan.createMultiple
+msgid "Create multiple"
+msgstr ""
 
 #: loan.createAccount
 msgid "Create {0} account"
@@ -1168,10 +1186,6 @@ msgctxt "loan.description"
 msgid "Description"
 msgstr "ការពិពណ៍នា"
 
-#: loan.detailssearch
-msgid "details and click Search. Click Cancel to return to"
-msgstr "លំអិតនិងចុចស្វែងរក។ចុចបោះបង់ដើម្បីត្រលប់ទៅ"
-
 #: loan.dis_date
 msgid "Proposed/Actual disbursement date"
 msgstr "ស្នើ/ការបរិច្ឆេទសងពិតប្រាកដ"
@@ -1200,10 +1214,6 @@ msgstr "ចំនាយសង"
 #: loan.disburseLoan
 msgid "Disburse {0}"
 msgstr "ចំនាយសង{0}"
-
-#: loan.disbursed
-msgid "disbursed"
-msgstr "ចំនាយសង"
 
 #: loan.disburseloan
 msgid "Disburse Loan"
@@ -1270,6 +1280,10 @@ msgid ""
 msgstr ""
 "ដាក់បញ្ចូលអតិថិជន/ក្រុមឈ្មោះនិងចុចស្វែងរក។ចុចបោះបង់ដើម្បីត្រលប់ទៅអតិថិជននិងគ"
 "ណនីដោយពុំចាំបាច់ដាក់បញ្ចូលពត៍មាន"
+
+#: loan.enterDetailsSearch
+msgid "Enter details and click Search."
+msgstr ""
 
 #: loan.enter_loan_accinfo
 msgid "Enter loan account information"
@@ -1609,10 +1623,6 @@ msgstr "ខែ"
 #: loan.more_details
 msgid "More account and transaction details"
 msgstr "គណនីនិងពត៍មានលំអិតនៃប្រតិបត្តិការថែមទៀត"
-
-#: loan.multiple
-msgid "multiple"
-msgstr "ពហុគុណ"
 
 #: loan.new
 msgid "New"
@@ -2094,10 +2104,6 @@ msgstr "សកម្ម"
 msgid "Status history"
 msgstr "ប្រវត្តិលក្ខ័ណ"
 
-#: loan.statuschanged
-msgid "status will be changed to cancelled."
-msgstr "លក្ខ័ណនឺងប្តូរទៅជាបោះបង់"
-
 #: loan.subTotal
 msgid "subTotal"
 msgstr "សរុបទាំងអស់"
@@ -2247,13 +2253,27 @@ msgstr "លើកលែង"
 msgid "Week(s)"
 msgstr "សប្តាហ៍"
 
-#: loan.withfollid
-msgid "with the following IDs have been created"
-msgstr "ជាមួយនិងលេខកូដទាំងនេះដែលបានបង្កើត"
-
 #: loan.yes
 msgid "Yes"
 msgstr "បាទ​ឬចាស"
+
+#~ msgid "Enter"
+#~ msgstr "កែប្រែ"
+
+#~ msgid "already"
+#~ msgstr "រួចរាល់"
+
+#~ msgid "by ID"
+#~ msgstr "តាមលេខកូដ"
+
+#~ msgid "details and click Search. Click Cancel to return to"
+#~ msgstr "លំអិតនិងចុចស្វែងរក។ចុចបោះបង់ដើម្បីត្រលប់ទៅ"
+
+#~ msgid "disbursed"
+#~ msgstr "ចំនាយសង"
+
+#~ msgid "multiple"
+#~ msgstr "ពហុគុណ"
 
 #~ msgid "Please specify required additional information."
 #~ msgstr "សូមបញ្ជាក់ព៍តមានបន្ថែមដែលត្រូវការ"

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:09+0530\n"
+"POT-Creation-Date: 2010-08-02 03:49+0800\n"
 "PO-Revision-Date: 2009-11-09 23:31+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -698,12 +698,8 @@ msgstr "Szerkesztés"
 
 #: loan.EditStatus
 #, fuzzy
-msgid "Edit status "
+msgid "Edit status"
 msgstr "Státusz szerkesztése"
-
-#: loan.Enter
-msgid "Enter"
-msgstr "Rögzítés"
 
 #: loan.Fieldsmarkedwithanasteriskarerequired
 msgctxt "loan.Fieldsmarkedwithanasteriskarerequired"
@@ -778,6 +774,15 @@ msgstr "Összesített számlakivonat"
 msgid "account"
 msgstr "számla"
 
+#: loan.accountById
+msgid "account by ID  "
+msgstr ""
+
+#: loan.accountStatuschanged
+#, fuzzy
+msgid "account status will be changed to cancelled."
+msgstr "a státusz töröltre módosul."
+
 #: loan.accountAssigned
 #, fuzzy
 msgid ""
@@ -808,6 +813,11 @@ msgstr "Számlák"
 #: loan.accs
 msgid "accounts"
 msgstr "számlák"
+
+#: loan.accsWithFollowingIdCreated
+#, fuzzy
+msgid "accounts with the following IDs have been created"
+msgstr "az alábbi azonosítókkal létrehozásra kerültek"
 
 #: loan.accwithoutsub
 msgid "Accounts without submitting information."
@@ -878,14 +888,18 @@ msgstr "(Törlesztőrészletek megengedett száma\\:"
 msgid "and all payments made against this "
 msgstr "és valamennyi fizetési tranzakció, amelyre sor került szemben a"
 
-#: loan.already
-msgid "already"
-msgstr "már"
+#: loan.alreadyDisbursed
+msgid "already disbursed"
+msgstr ""
 
 #: loan.amount
 msgctxt "loan.amount"
 msgid "Amount"
 msgstr "Összeg"
+
+#: loan.amountDisbursed
+msgid "Amount disbursed"
+msgstr ""
 
 #: loan.amount_due
 msgid "Amount due"
@@ -993,10 +1007,6 @@ msgstr "Fiók 01"
 msgid "Purpose of"
 msgstr "Célja"
 
-#: loan.byid
-msgid "by ID"
-msgstr "azonosító szerint"
-
 #: loan.cancel
 msgid "Cancel"
 msgstr "Mégsem"
@@ -1034,6 +1044,10 @@ msgstr "Törlésre kijelöl"
 #: loan.checkboxpaymentvalue
 msgid "Check to revert the last payment"
 msgstr "Az utolsó fizetési tranzakció visszaállításához jelölje be a négyzetet"
+
+#: loan.clickCancelReturn
+msgid "Click Cancel to return to"
+msgstr ""
 
 #: loan.clickcanceladmin
 msgid "Click cancel to return to Admin page without any modification."
@@ -1109,6 +1123,10 @@ msgstr "Folytatás"
 #: loan.create
 msgid "Create"
 msgstr "Létrehozás"
+
+#: loan.createMultiple
+msgid "Create multiple"
+msgstr ""
 
 #: loan.createAccount
 msgid "Create {0} account"
@@ -1197,12 +1215,6 @@ msgctxt "loan.description"
 msgid "Description"
 msgstr "Leírás"
 
-#: loan.detailssearch
-msgid "details and click Search. Click Cancel to return to"
-msgstr ""
-"adatokat, majd kattintson a Keresés gombra. Kattintson a Mégsem gombra, ha "
-"szeretne visszatérni a(z)"
-
 #: loan.dis_date
 msgid "Proposed/Actual disbursement date"
 msgstr "Folyósítás előirányzott/tényleges napja"
@@ -1231,10 +1243,6 @@ msgstr "Folyósítás"
 #: loan.disburseLoan
 msgid "Disburse {0}"
 msgstr "{0} folyósítása"
-
-#: loan.disbursed
-msgid "disbursed"
-msgstr "folyósítva"
 
 #: loan.disburseloan
 msgid "Disburse Loan"
@@ -1304,6 +1312,10 @@ msgstr ""
 "Adja meg az ügyfél/csoport nevét, majd kattintson a Keresés gombra. "
 "Amennyiben az információk mentése nélkül kíván visszatérni az Ügyfelek és "
 "számlák laphoz, kattintson a Mégsem gombra."
+
+#: loan.enterDetailsSearch
+msgid "Enter details and click Search."
+msgstr ""
 
 #: loan.enter_loan_accinfo
 msgid "Enter loan account information"
@@ -1644,10 +1656,6 @@ msgstr "Hónap"
 #: loan.more_details
 msgid "More account and transaction details"
 msgstr "További számla- és tranzakció adatok"
-
-#: loan.multiple
-msgid "multiple"
-msgstr "többszörös"
 
 #: loan.new
 msgid "New"
@@ -2138,10 +2146,6 @@ msgstr "Aktív"
 msgid "Status history"
 msgstr "Státusztörténet"
 
-#: loan.statuschanged
-msgid "status will be changed to cancelled."
-msgstr "a státusz töröltre módosul."
-
 #: loan.subTotal
 msgid "subTotal"
 msgstr "részösszesen"
@@ -2291,13 +2295,29 @@ msgstr "Elvetés"
 msgid "Week(s)"
 msgstr "Hét"
 
-#: loan.withfollid
-msgid "with the following IDs have been created"
-msgstr "az alábbi azonosítókkal létrehozásra kerültek"
-
 #: loan.yes
 msgid "Yes"
 msgstr "Igen"
+
+#~ msgid "Enter"
+#~ msgstr "Rögzítés"
+
+#~ msgid "already"
+#~ msgstr "már"
+
+#~ msgid "by ID"
+#~ msgstr "azonosító szerint"
+
+#~ msgid "details and click Search. Click Cancel to return to"
+#~ msgstr ""
+#~ "adatokat, majd kattintson a Keresés gombra. Kattintson a Mégsem gombra, ha "
+#~ "szeretne visszatérni a(z)"
+
+#~ msgid "disbursed"
+#~ msgstr "folyósítva"
+
+#~ msgid "multiple"
+#~ msgstr "többszörös"
 
 #~ msgid "Please specify required additional information."
 #~ msgstr "Adja meg a szükséges kiegészítő információ(ka)t."

@@ -78,7 +78,7 @@ explanation of the license and how it is applied.
 					<td>
 						<span class="headingorange"> <c:set value="0" var="count" /> <c:forEach var="loan" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'searchResults')}" varStatus="loopStatus1">
 								<c:set value="${loopStatus1.count}" var="count" />
-							</c:forEach> <span class="headingorange">${count} <mifos:mifoslabel name="accountStatus.results" /> <mifos:mifoslabel name="accountStatus.in" /> </span> <span class="heading"> <c:forEach items="${sessionScope.allBranches}" var="office">
+							</c:forEach> <span class="headingorange">${count} <mifos:mifoslabel name="accountStatus.resultsIn" /> </span> <span class="heading"> <c:forEach items="${sessionScope.allBranches}" var="office">
 									<c:if test="${office.officeId == sessionScope.accountStatusActionForm.officeId}">
 										<c:out value="${office.officeName}" />
 									</c:if>

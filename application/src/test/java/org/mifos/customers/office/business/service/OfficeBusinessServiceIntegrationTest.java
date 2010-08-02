@@ -24,6 +24,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -43,16 +45,16 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     private String officeSearchId;
     private PersonnelBO personnel;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         officeSearchId = "1.1.";
         personnel = PersonnelFixture.createPersonnel(officeSearchId);
     }
 
+    @Test
     public void testGetActiveParents() throws NumberFormatException, ServiceException {
-        List<OfficeDetailsDto> parents = officeBusinessService.getActiveParents(OfficeLevel.BRANCHOFFICE, Short
-                .valueOf("1"));
+        List<OfficeDetailsDto> parents = officeBusinessService.getActiveParents(OfficeLevel.BRANCHOFFICE,
+                Short.valueOf("1"));
         Assert.assertEquals(2, parents.size());
         for (OfficeDetailsDto view : parents) {
             if (view.getLevelId().equals(OfficeLevel.HEADOFFICE)) {
@@ -63,6 +65,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         }
     }
 
+    @Test
     public void testGetActiveParentsFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -76,10 +79,12 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     }
 
+    @Test
     public void testGetActiveLevels() throws NumberFormatException, ServiceException {
         Assert.assertEquals(4, officeBusinessService.getConfiguredLevels(Short.valueOf("1")).size());
     }
 
+    @Test
     public void testGetActiveLevelsFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -93,10 +98,12 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     }
 
+    @Test
     public void testGetOffice() throws Exception {
         Assert.assertNotNull(officeBusinessService.getOffice(TestObjectFactory.HEAD_OFFICE));
     }
 
+    @Test
     public void testGetOfficeFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -110,10 +117,12 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     }
 
+    @Test
     public void testGetStatusList() throws NumberFormatException, ServiceException {
         Assert.assertEquals(2, officeBusinessService.getStatusList(Short.valueOf("1")).size());
     }
 
+    @Test
     public void testGetStatusListFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -127,10 +136,12 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     }
 
+    @Test
     public void testGetBranchOffices() throws ServiceException {
         Assert.assertEquals(1, officeBusinessService.getBranchOffices().size());
     }
 
+    @Test
     public void testGetBranchOfficesFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -144,10 +155,12 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     }
 
+    @Test
     public void testGetOfficesTillBranchOffice() throws ServiceException {
         Assert.assertEquals(2, officeBusinessService.getOfficesTillBranchOffice().size());
     }
 
+    @Test
     public void testGetOfficesTillBranchOfficeFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -161,6 +174,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     }
 
+    @Test
     public void testGetChildOffices() throws ServiceException {
         OfficeBO headOffice = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
         List<OfficeDetailsDto> officeList = officeBusinessService.getChildOffices(headOffice.getSearchId());
@@ -169,6 +183,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         headOffice = null;
     }
 
+    @Test
     public void testGetChildOfficesFailure() throws Exception {
         OfficeBO headOffice = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
         TestObjectFactory.simulateInvalidConnection();
@@ -183,12 +198,14 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     }
 
+    @Test
     public void testGetBranchesUnderUser() throws Exception {
         List<OfficeBO> officeList = officeBusinessService.getActiveBranchesUnderUser(personnel);
         Assert.assertNotNull(officeList);
         Assert.assertEquals(1, officeList.size());
     }
 
+    @Test
     public void testGetBranchesUnderUserFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -202,6 +219,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     }
 
+    @Test
     public void testGetAllofficesForCustomFIeld() throws Exception {
         List<OfficeBO> officeList = officeBusinessService.getAllofficesForCustomFIeld();
         Assert.assertNotNull(officeList);

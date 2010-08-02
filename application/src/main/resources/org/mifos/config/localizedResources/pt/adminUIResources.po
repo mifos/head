@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:08+0530\n"
+"POT-Creation-Date: 2010-08-02 03:48+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,6 +46,10 @@ msgstr ""
 msgid "accounts"
 msgstr ""
 
+#: admin.manage.accounts
+msgid "Manage accounts"
+msgstr ""
+
 #: admin.admin
 msgid "admin"
 msgstr ""
@@ -60,6 +64,10 @@ msgstr ""
 
 #: admin.belowisthelistof
 msgid "Below is the list of"
+msgstr ""
+
+#: admin.belowislistofadministrativedocuments
+msgid "Below is the list of administrative documents."
 msgstr ""
 
 #: admin.category
@@ -117,7 +125,7 @@ msgid "Define Lookup Options"
 msgstr ""
 
 #: admin.definenew
-msgid "Define new"
+msgid "Add New"
 msgstr ""
 
 #: admin.definenewquestion
@@ -289,19 +297,23 @@ msgid "products"
 msgstr ""
 
 #: admin.questions
-msgid "questions"
+msgid "Questions"
 msgstr ""
 
 #: admin.question
-msgid "question"
+msgid "Question"
 msgstr ""
 
 #: admin.questiongroups
-msgid "question groups"
+msgid "Question Groups"
 msgstr ""
 
 #: admin.questiongroup
-msgid "question group"
+msgid "Question Group"
+msgstr ""
+
+#: admin.define.questions
+msgid "Define questions"
 msgstr ""
 
 #: admin.redo
@@ -314,6 +326,10 @@ msgstr ""
 
 #: admin.reports
 msgid "reports"
+msgstr ""
+
+#: admin.manage.reports
+msgid "Manage reports"
 msgstr ""
 
 #: admin.reverse
@@ -334,6 +350,15 @@ msgstr ""
 
 #: admin.surveys
 msgid "surveys"
+msgstr ""
+
+#: admin.manage.surveys
+msgid "Manage surveys"
+msgstr ""
+
+#: admin.view.surveys
+msgctxt "admin.view.surveys"
+msgid "View surveys"
 msgstr ""
 
 #: admin.shutdown.title
@@ -472,6 +497,10 @@ msgstr ""
 msgid "System Information"
 msgstr ""
 
+#: admin.view.sysinfo.title
+msgid "View System Information"
+msgstr ""
+
 #: admin.sysinfo.welcome
 msgid "Welcome to the Mifos system information area."
 msgstr ""
@@ -586,6 +615,7 @@ msgid "View savings products"
 msgstr ""
 
 #: admin.viewsurvey
+msgctxt "admin.viewsurvey"
 msgid "View surveys"
 msgstr ""
 

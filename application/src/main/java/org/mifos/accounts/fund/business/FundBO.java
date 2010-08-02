@@ -23,15 +23,9 @@ package org.mifos.accounts.fund.business;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.mifos.accounts.fund.exception.FundException;
-import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.util.helpers.FundConstants;
 import org.mifos.application.master.business.FundCodeEntity;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.framework.business.AbstractBusinessObject;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 
 public class FundBO extends AbstractBusinessObject {
 
@@ -39,16 +33,11 @@ public class FundBO extends AbstractBusinessObject {
     private final FundCodeEntity fundCode;
     private String fundName;
 
-    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FUNDLOGGER);
-
-    public FundBO(FundCodeEntity fundCode, String fundName) throws FundException {
-        logger.debug("building fund");
+    public FundBO(FundCodeEntity fundCode, String fundName) {
         this.fundId = null;
         validate(fundCode, fundName);
-        validateDuplicateFundName(fundName);
         this.fundCode = fundCode;
         this.fundName = fundName;
-        logger.debug("Fund build :" + getFundName());
     }
 
     /**
@@ -75,35 +64,20 @@ public class FundBO extends AbstractBusinessObject {
         return fundCode;
     }
 
-    public void validate(FundCodeEntity fundCode, String fundName) throws FundException {
-        logger.debug("Validating the fields in Fund");
+    public void validate(FundCodeEntity fundCode, String fundName) {
         validateFundName(fundName);
         validateFundCode(fundCode);
-        logger.debug("Validating the fields in Fund done");
     }
 
-    /**
-     * FIXME - keithw - loan refactoring - pull up to Dao or service level after refactoring fund creation flow.
-     */
-    @Deprecated
-    public void validateDuplicateFundName(String fundName) throws FundException {
-        FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
-        if (fundDao.countOfFundByName(fundName.trim()) > 0) {
-            throw new FundException(FundConstants.DUPLICATE_FUNDNAME_EXCEPTION);
-        }
-    }
-
-    public void validateFundName(String fundName) throws FundException {
-        logger.debug("Checking for empty Fund name");
+    public void validateFundName(String fundName) {
         if (StringUtils.isBlank(fundName)) {
-            throw new FundException(FundConstants.INVALID_FUND_NAME);
+            throw new org.mifos.service.BusinessRuleException(FundConstants.INVALID_FUND_NAME);
         }
     }
 
-    private void validateFundCode(FundCodeEntity fundCode) throws FundException {
-        logger.debug("Checking for empty Fund Code");
+    private void validateFundCode(FundCodeEntity fundCode) {
         if (fundCode == null) {
-            throw new FundException(FundConstants.INVALID_FUND_CODE);
+            throw new org.mifos.service.BusinessRuleException(FundConstants.INVALID_FUND_CODE);
         }
     }
 

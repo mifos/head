@@ -690,6 +690,7 @@
                     <nosuffix>true</nosuffix>
                     <!-- Whether to obfuscate compressed files -->
                     <nomunge>true</nomunge>
+                    <statistics>false</statistics>
                     <!-- Files to exclude -->
                     <excludes>
                       <exclude>**/**.min.js</exclude>
@@ -792,7 +793,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <testNGArtifactName>null</testNGArtifactName>
-                    <printSummary>true</printSummary>
+                    <printSummary>false</printSummary>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <includes>
                         <include>**/*Test.java</include>
@@ -813,7 +814,7 @@
                         </goals>
                         <configuration>
                             <testNGArtifactName>null</testNGArtifactName>
-                            <printSummary>true</printSummary>
+                            <printSummary>false</printSummary>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
                             <!-- override exclude integration test classes    -->
                             <excludes>
@@ -927,6 +928,14 @@
                                 <exclude>*.rptdesign</exclude>
                                 <exclude>**/web.xml</exclude>
                             </excludes>
+                        </resource>
+                        <resource>
+                            <directory>${modules.root.dir}/questionnaire/src/main/webapp/pages</directory>
+                            <targetPath>pages</targetPath>
+                        </resource>
+                        <resource>
+                            <directory>${modules.root.dir}/questionnaire/src/main/webapp/WEB-INF</directory>
+                            <targetPath>WEB-INF</targetPath>
                         </resource>
                     </webResources>
                 </configuration>

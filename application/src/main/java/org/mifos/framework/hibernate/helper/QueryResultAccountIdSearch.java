@@ -99,6 +99,8 @@ public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl {
         }
     }
 
+
+    //---Watch out for closeSession block as the cne commendted out here is no longer in codebase
     /*
      * public List accountIdSearch(String searchString,Short officeId) throws
      * SystemException { this.searchString = searchString;

@@ -24,9 +24,10 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
+import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 
@@ -38,11 +39,13 @@ public class FieldConfigurationPersistenceIntegrationTest extends MifosIntegrati
 
     private FieldConfigurationPersistence fieldConfigurationPersistence = new FieldConfigurationPersistence();
 
+    @Test
     public void testGetEntityMasterList() throws PersistenceException {
         List<EntityMaster> entityMasterList = fieldConfigurationPersistence.getEntityMasterList();
        Assert.assertEquals(22, entityMasterList.size());
     }
 
+    @Test
     public void testGetListOfFields() throws NumberFormatException, PersistenceException {
         List<FieldConfigurationEntity> fieldList = fieldConfigurationPersistence.getListOfFields(EntityType.LOAN
                 .getValue());

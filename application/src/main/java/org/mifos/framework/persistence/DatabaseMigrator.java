@@ -75,9 +75,9 @@ public class DatabaseMigrator {
 
     private static MifosLogger log = null;
 
-
     public DatabaseMigrator() {
-        this(StaticHibernateUtil.getSessionTL().connection(), getAvailableUpgrades(), "org.mifos.application.master.persistence");
+        this(StaticHibernateUtil.getSessionTL().connection(), getAvailableUpgrades(),
+                "org.mifos.application.master.persistence");
         log = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
 
     }
@@ -109,7 +109,7 @@ public class DatabaseMigrator {
 
             while (true) {
                 String line = bufferedReader.readLine();
-                if (line == null){
+                if (line == null) {
                     break;
                 }
                 String upgradeType = line.substring(0, line.indexOf(':'));
@@ -151,7 +151,7 @@ public class DatabaseMigrator {
 
         for (int i : availableUpgrades.keySet()) {
             if (!appliedUpgrades.contains(i)) {
-                System.out.println("applying upgrade with timestamp: "+ i);
+                System.out.println("applying upgrade with timestamp: " + i);
                 applyUpgrade(i, availableUpgrades.get(i));
             }
         }
@@ -263,7 +263,10 @@ public class DatabaseMigrator {
         legacyUpgrades.put(261, 1278542171);
         legacyUpgrades.put(262, 1279140399);
         legacyUpgrades.put(263, 1279272090);
-
+        legacyUpgrades.put(264, 1280719328);
+        legacyUpgrades.put(265, 1280719447);
+        legacyUpgrades.put(266, 1280719676);
+        legacyUpgrades.put(267, 1280721170);
 
         return legacyUpgrades;
     }
@@ -298,14 +301,13 @@ public class DatabaseMigrator {
 
     private void applyUpgrade(int upgradeNumber, String type) throws Exception {
 
-
         if (SCRIPT_UPGRADE_TYPE.equals(type)) {
             URL url = SqlResource.getInstance().getUrl("upgrade" + upgradeNumber + ".sql");
             SqlUpgrade sqlUpgrade = new SqlUpgrade(url);
             sqlUpgrade.upgrade(connection);
 
         } else if (CLASS_UPGRADE_TYPE.equals(type)) {
-            String className = upgradesPackage +".Upgrade"+ upgradeNumber;
+            String className = upgradesPackage + ".Upgrade" + upgradeNumber;
 
             Upgrade upgradeClass = getInstanceOfUpgradeClass(className);
             upgradeClass.upgrade(connection);
@@ -313,7 +315,7 @@ public class DatabaseMigrator {
         } else if (METHOD_UPGRADE_TYPE.equals(type)) {
 
             Method method = DatabaseMigrator.class.getDeclaredMethod("upgrade" + upgradeNumber);
-            Upgrade up = (Upgrade)method.invoke(this);
+            Upgrade up = (Upgrade) method.invoke(this);
             up.upgrade(connection);
         }
 
@@ -399,8 +401,8 @@ public class DatabaseMigrator {
 
     @SuppressWarnings("unused")
     private static Upgrade upgrade1277571792() {
-        return new AddActivity("Permissions-CanShutdownMifos",
-                SecurityConstants.CAN_SHUTDOWN_MIFOS, SecurityConstants.SYSTEM_INFORMATION);
+        return new AddActivity("Permissions-CanShutdownMifos", SecurityConstants.CAN_OPEN_SHUTDOWN_PAGE,
+                SecurityConstants.SYSTEM_INFORMATION);
     }
 
     @SuppressWarnings("unused")
@@ -425,11 +427,5 @@ public class DatabaseMigrator {
     private static Upgrade upgrade1278540832() {
         return new AddReport(ReportsCategoryBO.ANALYSIS, "General Ledger Report", "GeneralLedgerReport.rptdesign");
     }
-
-    // TODO remove
-    // public void upgrade1277124044() throws IOException, SQLException{
-    // Upgrade upgrade = new DummyUpgrade();
-    // upgrade.upgrade(connection);
-    // }
 
 }

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:08+0530\n"
+"POT-Creation-Date: 2010-08-02 03:47+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,6 +43,11 @@ msgstr "查看报表模板"
 msgid "accounts"
 msgstr "账户"
 
+#: admin.manage.accounts
+#, fuzzy
+msgid "Manage accounts"
+msgstr "管理{0}账户"
+
 #: admin.admin
 msgid "admin"
 msgstr "管理"
@@ -58,6 +63,10 @@ msgstr "管理作业"
 #: admin.belowisthelistof
 msgid "Below is the list of"
 msgstr "以下的列表属于"
+
+#: admin.belowislistofadministrativedocuments
+msgid "Below is the list of administrative documents."
+msgstr ""
 
 #: admin.category
 msgid "category"
@@ -114,8 +123,8 @@ msgid "Define Lookup Options"
 msgstr "定义下拉列表选项"
 
 #: admin.definenew
-msgid "Define new"
-msgstr "定义新的"
+msgid "Add New"
+msgstr ""
 
 #: admin.definenewquestion
 msgid "Define new question"
@@ -286,20 +295,25 @@ msgid "products"
 msgstr "产品"
 
 #: admin.questions
-msgid "questions"
+#, fuzzy
+msgid "Questions"
 msgstr "问题"
 
 #: admin.question
 #, fuzzy
-msgid "question"
+msgid "Question"
 msgstr "问题"
 
 #: admin.questiongroups
-msgid "question groups"
+msgid "Question Groups"
 msgstr ""
 
 #: admin.questiongroup
-msgid "question group"
+msgid "Question Group"
+msgstr ""
+
+#: admin.define.questions
+msgid "Define questions"
 msgstr ""
 
 #: admin.redo
@@ -313,6 +327,11 @@ msgstr "重做{0}支出"
 #: admin.reports
 msgid "reports"
 msgstr "报表"
+
+#: admin.manage.reports
+#, fuzzy
+msgid "Manage reports"
+msgstr "管理导入"
 
 #: admin.reverse
 msgid "Reverse"
@@ -333,6 +352,16 @@ msgstr "调查"
 #: admin.surveys
 msgid "surveys"
 msgstr "调查"
+
+#: admin.manage.surveys
+msgid "Manage surveys"
+msgstr ""
+
+#: admin.view.surveys
+#, fuzzy
+msgctxt "admin.view.surveys"
+msgid "View surveys"
+msgstr "查看调查"
 
 #: admin.shutdown.title
 msgid "Shutdown Information"
@@ -470,6 +499,11 @@ msgstr ""
 msgid "System Information"
 msgstr "系统信息"
 
+#: admin.view.sysinfo.title
+#, fuzzy
+msgid "View System Information"
+msgstr "系统信息"
+
 #: admin.sysinfo.welcome
 msgid "Welcome to the Mifos system information area."
 msgstr "欢迎来到Mifos系统信息区。"
@@ -584,6 +618,8 @@ msgid "View savings products"
 msgstr "查看储蓄产品"
 
 #: admin.viewsurvey
+#, fuzzy
+msgctxt "admin.viewsurvey"
 msgid "View surveys"
 msgstr "查看调查"
 
@@ -638,6 +674,9 @@ msgstr "请选择要上传的文件。"
 #: errors.importexport.already_submitted
 msgid "Same file has been already imported."
 msgstr "已导入过该文件。"
+
+#~ msgid "Define new"
+#~ msgstr "定义新的"
 
 #~ msgid "Subversion Revision Number"
 #~ msgstr "Subversion修订号"

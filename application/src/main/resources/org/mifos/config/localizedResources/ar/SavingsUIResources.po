@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:08+0530\n"
+"POT-Creation-Date: 2010-08-02 03:48+0800\n"
 "PO-Revision-Date: 2009-09-03 12:40-0700\n"
 "Last-Translator: Ryan Sturgill <sturgillr@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -221,6 +221,12 @@ msgctxt "Savings.clickContinue"
 msgid "Then click Continue."
 msgstr ""
 
+#: Savings.clickContinueOrCancel
+msgid ""
+"Then click Continue. Click Cancel to return to Clients &amp; Accounts "
+"without submitting information."
+msgstr ""
+
 #: Savings.clickPreview
 msgid "Then click Preview. "
 msgstr ""
@@ -231,6 +237,12 @@ msgstr ""
 
 #: Savings.clickSubmitIfSatisfied
 msgid "If satisfied click Submit"
+msgstr ""
+
+#: Savings.clickSubmitIfSatisfied.return.closing
+msgid ""
+"If satisfied click Submit. Click Cancel to return to account details without "
+"closing the account."
 msgstr ""
 
 #: Savings.clickSubmitOnPreview
@@ -277,6 +289,10 @@ msgstr ""
 msgid "details now"
 msgstr ""
 
+#: Savings.accountdetails
+msgid "account details now"
+msgstr ""
+
 #: Savings.detailsWithOutClosing
 msgid "account details without closing the account."
 msgstr ""
@@ -286,7 +302,11 @@ msgid "Edit account status"
 msgstr ""
 
 #: Savings.editFields
-msgid "Edit the fields below. "
+msgid "Edit the fields below."
+msgstr ""
+
+#: Savings.editFields.clickPreview.clickCancelToReturn
+msgid "Edit the fields below. Then click Preview. Click Cancel to return to"
 msgstr ""
 
 #: Savings.editTransaction
@@ -541,6 +561,11 @@ msgstr ""
 msgid "Total amount due"
 msgstr ""
 
+#: Savings.totalAmountDue.on
+msgctxt "Savings.totalAmountDue.on"
+msgid "Total amount due on"
+msgstr ""
+
 #: Savings.totalDeposits
 msgid "Total deposits"
 msgstr ""
@@ -554,6 +579,7 @@ msgid "Total withdrawals"
 msgstr ""
 
 #: Savings.totalamountdue
+msgctxt "Savings.totalamountdue"
 msgid "Total amount due on"
 msgstr ""
 

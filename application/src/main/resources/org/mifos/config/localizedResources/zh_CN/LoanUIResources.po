@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:08+0530\n"
+"POT-Creation-Date: 2010-08-02 03:47+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -615,12 +615,9 @@ msgid "Edit"
 msgstr "编辑"
 
 #: loan.EditStatus
-msgid "Edit status "
+#, fuzzy
+msgid "Edit status"
 msgstr "编辑状态"
-
-#: loan.Enter
-msgid "Enter"
-msgstr "输入"
 
 #: loan.Fieldsmarkedwithanasteriskarerequired
 msgctxt "loan.Fieldsmarkedwithanasteriskarerequired"
@@ -695,6 +692,15 @@ msgstr "账户概况"
 msgid "account"
 msgstr "账户"
 
+#: loan.accountById
+msgid "account by ID  "
+msgstr ""
+
+#: loan.accountStatuschanged
+#, fuzzy
+msgid "account status will be changed to cancelled."
+msgstr "状态将被改为已取消。"
+
 #: loan.accountAssigned
 msgid ""
 "A new {0} account for {1} has been assigned account # {2}. You can enter an "
@@ -721,6 +727,11 @@ msgstr "账户"
 #: loan.accs
 msgid "accounts"
 msgstr "账户"
+
+#: loan.accsWithFollowingIdCreated
+#, fuzzy
+msgid "accounts with the following IDs have been created"
+msgstr "下列ID已创建"
 
 #: loan.accwithoutsub
 msgid "Accounts without submitting information."
@@ -786,14 +797,18 @@ msgstr "（允许的分期期数："
 msgid "and all payments made against this "
 msgstr "所有针对于……的还款"
 
-#: loan.already
-msgid "already"
-msgstr "已经"
+#: loan.alreadyDisbursed
+msgid "already disbursed"
+msgstr ""
 
 #: loan.amount
 msgctxt "loan.amount"
 msgid "Amount"
 msgstr "金额"
+
+#: loan.amountDisbursed
+msgid "Amount disbursed"
+msgstr ""
 
 #: loan.amount_due
 msgid "Amount due"
@@ -897,10 +912,6 @@ msgstr "部门01"
 msgid "Purpose of"
 msgstr "用途"
 
-#: loan.byid
-msgid "by ID"
-msgstr "通过ID"
-
 #: loan.cancel
 msgid "Cancel"
 msgstr "取消"
@@ -938,6 +949,10 @@ msgstr "勾选以删除"
 #: loan.checkboxpaymentvalue
 msgid "Check to revert the last payment"
 msgstr "勾选以撤销最后一笔还款"
+
+#: loan.clickCancelReturn
+msgid "Click Cancel to return to"
+msgstr ""
 
 #: loan.clickcanceladmin
 msgid "Click cancel to return to Admin page without any modification."
@@ -1003,6 +1018,10 @@ msgstr "继续"
 #: loan.create
 msgid "Create"
 msgstr "创建"
+
+#: loan.createMultiple
+msgid "Create multiple"
+msgstr ""
 
 #: loan.createAccount
 msgid "Create {0} account"
@@ -1089,10 +1108,6 @@ msgctxt "loan.description"
 msgid "Description"
 msgstr "描述"
 
-#: loan.detailssearch
-msgid "details and click Search. Click Cancel to return to"
-msgstr "详情并点击“搜索”按钮。点击“取消”按钮返回至"
-
 #: loan.dis_date
 msgid "Proposed/Actual disbursement date"
 msgstr "计划/实际付款日期"
@@ -1120,10 +1135,6 @@ msgstr "发放"
 #: loan.disburseLoan
 msgid "Disburse {0}"
 msgstr "发放{0}"
-
-#: loan.disbursed
-msgid "disbursed"
-msgstr "发放"
 
 #: loan.disburseloan
 msgid "Disburse Loan"
@@ -1181,6 +1192,10 @@ msgid ""
 "Enter a client/group name and click Search. Click Cancel to return to "
 "Clients & Accounts without submitting information."
 msgstr "输入客户/组名称并点击“搜索”按钮。点击“取消”按钮放弃信息的提交并返回至客户及账户页面。"
+
+#: loan.enterDetailsSearch
+msgid "Enter details and click Search."
+msgstr ""
 
 #: loan.enter_loan_accinfo
 msgid "Enter loan account information"
@@ -1504,10 +1519,6 @@ msgstr "月"
 #: loan.more_details
 msgid "More account and transaction details"
 msgstr "更多账户及交易详情"
-
-#: loan.multiple
-msgid "multiple"
-msgstr "倍数"
 
 #: loan.new
 msgid "New"
@@ -1960,10 +1971,6 @@ msgstr "活动的"
 msgid "Status history"
 msgstr "状态历史"
 
-#: loan.statuschanged
-msgid "status will be changed to cancelled."
-msgstr "状态将被改为已取消。"
-
 #: loan.subTotal
 msgid "subTotal"
 msgstr "小计"
@@ -2108,10 +2115,24 @@ msgstr "免除"
 msgid "Week(s)"
 msgstr "周"
 
-#: loan.withfollid
-msgid "with the following IDs have been created"
-msgstr "下列ID已创建"
-
 #: loan.yes
 msgid "Yes"
 msgstr "是"
+
+#~ msgid "Enter"
+#~ msgstr "输入"
+
+#~ msgid "already"
+#~ msgstr "已经"
+
+#~ msgid "by ID"
+#~ msgstr "通过ID"
+
+#~ msgid "details and click Search. Click Cancel to return to"
+#~ msgstr "详情并点击“搜索”按钮。点击“取消”按钮返回至"
+
+#~ msgid "disbursed"
+#~ msgstr "发放"
+
+#~ msgid "multiple"
+#~ msgstr "倍数"

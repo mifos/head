@@ -24,6 +24,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Test;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
@@ -45,17 +47,12 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     final private static short DEFAULT_LOCALE = (short) 1;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
+    @After
     public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testEntityMasterRetrieval() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
         CustomValueDto paymentTypes = masterPersistence.getCustomValueList(MasterConstants.ATTENDENCETYPES,
@@ -65,6 +62,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testEntityMasterRetrievalForInvalidConnection() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
         TestObjectFactory.simulateInvalidConnection();
@@ -79,6 +77,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testGetLookUpEntity() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
         CustomValueDto gender = masterPersistence.getLookUpEntity(MasterConstants.GENDER, Short.valueOf("1"));
@@ -87,6 +86,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testRetrieveMasterEntities() throws NumberFormatException, PersistenceException {
         MasterPersistence masterPersistence = new MasterPersistence();
         List<ValueListElement> masterEntity = masterPersistence.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES,
@@ -95,6 +95,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(131, masterEntity.size());
     }
 
+    @Test
     public void testRetrieveMasterEntitiesForInvalidConnection() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
         TestObjectFactory.simulateInvalidConnection();
@@ -121,11 +122,13 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testGetMasterEntityName() throws NumberFormatException, PersistenceException {
         MasterPersistence masterPersistence = new MasterPersistence();
        Assert.assertEquals("Partial Application", masterPersistence.retrieveMasterEntities(1, Short.valueOf("1")));
     }
 
+    @Test
     public void testRetrieveMasterDataEntity() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
         List<MasterDataEntity> masterDataList = masterPersistence
@@ -139,6 +142,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
     public void testRetrieveMasterDataEntityForInvalidConnection() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
         TestObjectFactory.simulateInvalidConnection();
@@ -176,6 +180,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         return elementId;
     }
 
+    @Test
     public void testAddAndDeleteValueListElement() throws Exception {
         // get the CustomValueDto that we want to add to
         MasterPersistence masterPersistence = new MasterPersistence();
@@ -204,6 +209,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
                 DEFAULT_LOCALE));
     }
 
+    @Test
     public void testUpdateValueListElement() throws Exception {
         // get a CustomValueListElementDto (as a BusinessActivityEntity)
         MasterPersistence masterPersistence = new MasterPersistence();

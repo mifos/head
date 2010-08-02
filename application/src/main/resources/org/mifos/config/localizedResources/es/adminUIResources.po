@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:09+0530\n"
+"POT-Creation-Date: 2010-08-02 03:49+0800\n"
 "PO-Revision-Date: 2010-02-24 11:08-0800\n"
 "Last-Translator: Daniel fdec <ddshore@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,6 +45,11 @@ msgstr "Ver los reportes de las plantillas"
 msgid "accounts"
 msgstr "cuentas"
 
+#: admin.manage.accounts
+#, fuzzy
+msgid "Manage accounts"
+msgstr "Administra {0} cuentas"
+
 #: admin.admin
 msgid "admin"
 msgstr "administrador"
@@ -60,6 +65,10 @@ msgstr "Tareas administrativas"
 #: admin.belowisthelistof
 msgid "Below is the list of"
 msgstr "Debajo está la lista de "
+
+#: admin.belowislistofadministrativedocuments
+msgid "Below is the list of administrative documents."
+msgstr ""
 
 #: admin.category
 msgid "category"
@@ -116,8 +125,8 @@ msgid "Define Lookup Options"
 msgstr "Definir opciones de búsqueda"
 
 #: admin.definenew
-msgid "Define new"
-msgstr "Definir nuevo"
+msgid "Add New"
+msgstr ""
 
 #: admin.definenewquestion
 msgid "Define new question"
@@ -290,20 +299,25 @@ msgid "products"
 msgstr "productos"
 
 #: admin.questions
-msgid "questions"
+#, fuzzy
+msgid "Questions"
 msgstr "preguntas"
 
 #: admin.question
 #, fuzzy
-msgid "question"
+msgid "Question"
 msgstr "preguntas"
 
 #: admin.questiongroups
-msgid "question groups"
+msgid "Question Groups"
 msgstr ""
 
 #: admin.questiongroup
-msgid "question group"
+msgid "Question Group"
+msgstr ""
+
+#: admin.define.questions
+msgid "Define questions"
 msgstr ""
 
 #: admin.redo
@@ -317,6 +331,11 @@ msgstr "Volver a hacer {0} desembolso"
 #: admin.reports
 msgid "reports"
 msgstr "reportes"
+
+#: admin.manage.reports
+#, fuzzy
+msgid "Manage reports"
+msgstr "Administrar importaciones"
 
 #: admin.reverse
 msgid "Reverse"
@@ -337,6 +356,16 @@ msgstr "encuesta"
 #: admin.surveys
 msgid "surveys"
 msgstr "encuestas"
+
+#: admin.manage.surveys
+msgid "Manage surveys"
+msgstr ""
+
+#: admin.view.surveys
+#, fuzzy
+msgctxt "admin.view.surveys"
+msgid "View surveys"
+msgstr "Ver encuestas"
 
 #: admin.shutdown.title
 msgid "Shutdown Information"
@@ -477,6 +506,11 @@ msgstr "Fecha de version"
 msgid "System Information"
 msgstr "Información de sistemas"
 
+#: admin.view.sysinfo.title
+#, fuzzy
+msgid "View System Information"
+msgstr "Información de sistemas"
+
 #: admin.sysinfo.welcome
 msgid "Welcome to the Mifos system information area."
 msgstr "Bienvenidos al área informativa del sistema Mifos."
@@ -592,6 +626,8 @@ msgid "View savings products"
 msgstr "Ver productos de ahorros"
 
 #: admin.viewsurvey
+#, fuzzy
+msgctxt "admin.viewsurvey"
 msgid "View surveys"
 msgstr "Ver encuestas"
 
@@ -651,6 +687,9 @@ msgstr "Seleccione un archivo para cargar"
 #: errors.importexport.already_submitted
 msgid "Same file has been already imported."
 msgstr "El archivo ya ha sido importado"
+
+#~ msgid "Define new"
+#~ msgstr "Definir nuevo"
 
 # I'm using subversion as an application/software. Not known translation.
 #~ msgid "Subversion Revision Number"

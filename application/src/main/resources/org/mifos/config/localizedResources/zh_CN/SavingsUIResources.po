@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:08+0530\n"
+"POT-Creation-Date: 2010-08-02 03:47+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -219,6 +219,13 @@ msgctxt "Savings.clickContinue"
 msgid "Then click Continue."
 msgstr "然后点击“继续”按钮。"
 
+#: Savings.clickContinueOrCancel
+#, fuzzy
+msgid ""
+"Then click Continue. Click Cancel to return to Clients &amp; Accounts "
+"without submitting information."
+msgstr "点击“取消”按钮放弃信息的提交并返回至客户及账户详情页面。"
+
 #: Savings.clickPreview
 msgid "Then click Preview. "
 msgstr "然后点击“预览”按钮。"
@@ -230,6 +237,12 @@ msgstr "如果满意点击“提交”按钮，或者点击“编辑”按钮进
 #: Savings.clickSubmitIfSatisfied
 msgid "If satisfied click Submit"
 msgstr "如果满意点击“提交”按钮"
+
+#: Savings.clickSubmitIfSatisfied.return.closing
+msgid ""
+"If satisfied click Submit. Click Cancel to return to account details without "
+"closing the account."
+msgstr ""
 
 #: Savings.clickSubmitOnPreview
 msgid "Click Submit if you are satisfied or click '"
@@ -275,6 +288,11 @@ msgstr "描述"
 msgid "details now"
 msgstr "详情"
 
+#: Savings.accountdetails
+#, fuzzy
+msgid "account details now"
+msgstr "账户详情"
+
 #: Savings.detailsWithOutClosing
 msgid "account details without closing the account."
 msgstr "账户详情页面并放弃关闭账户。"
@@ -284,8 +302,13 @@ msgid "Edit account status"
 msgstr "编辑账户状态"
 
 #: Savings.editFields
-msgid "Edit the fields below. "
+#, fuzzy
+msgid "Edit the fields below."
 msgstr "编辑下面的栏位。"
+
+#: Savings.editFields.clickPreview.clickCancelToReturn
+msgid "Edit the fields below. Then click Preview. Click Cancel to return to"
+msgstr ""
 
 #: Savings.editTransaction
 msgid "Edit Transaction"
@@ -539,6 +562,12 @@ msgstr "来做出修改。"
 msgid "Total amount due"
 msgstr "总计应缴款"
 
+#: Savings.totalAmountDue.on
+#, fuzzy
+msgctxt "Savings.totalAmountDue.on"
+msgid "Total amount due on"
+msgstr "总计应缴款"
+
 #: Savings.totalDeposits
 msgid "Total deposits"
 msgstr "总计存款"
@@ -552,6 +581,8 @@ msgid "Total withdrawals"
 msgstr "总计取兑"
 
 #: Savings.totalamountdue
+#, fuzzy
+msgctxt "Savings.totalamountdue"
 msgid "Total amount due on"
 msgstr "总计应缴款"
 

@@ -26,6 +26,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
@@ -59,22 +62,22 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
 
     private AccountBO account;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
+
         accountPersistence = new AccountPersistence();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(account);
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testGetAccount() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
 
@@ -89,6 +92,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
        Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
     }
 
+    @Test
     public void testSuccessfulApplyPayment() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active", meeting);
@@ -117,6 +121,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
 
     }
 
+    @Test
     public void testSuccessfulLoanUpdate() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
 
@@ -142,6 +147,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
        Assert.assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid(), TestUtils.createMoney("100.0"));
     }
 
+    @Test
     public void testFailureApplyPayment() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());

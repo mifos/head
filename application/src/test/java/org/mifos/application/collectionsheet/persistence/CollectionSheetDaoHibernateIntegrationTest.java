@@ -22,7 +22,6 @@ package org.mifos.application.collectionsheet.persistence;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
@@ -32,6 +31,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.joda.time.LocalDate;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -92,9 +95,8 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
     private LoanBO loan;
     private LoanOfferingBO loanOffering;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
         IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 
@@ -129,15 +131,15 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         collectionSheetDao = new CollectionSheetDaoHibernate(savingsDao);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
 
         IntegrationTestObjectMother.cleanSavingsProductAndAssociatedSavingsAccounts(savingsAccount, savingsAccount2);
         TestObjectFactory.cleanUp(loan);
         IntegrationTestObjectMother.cleanCustomerHierarchyWithMeeting(client, group, center, weeklyMeeting);
     }
 
+    @Test
     public void testShouldRetrieveCustomerHierarchyWithACenterAsRootByBranchId() throws Exception {
 
         // setup
@@ -149,27 +151,28 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
                 transactionDate);
 
         // verification
-        assertNotNull(customerHierarchy);
-        assertFalse(customerHierarchy.isEmpty());
-        assertNotNull(customerHierarchy.get(0));
+        Assert.assertNotNull(customerHierarchy);
+        Assert.assertFalse(customerHierarchy.isEmpty());
+        Assert.assertNotNull(customerHierarchy.get(0));
 
-        assertEquals(center.getCustomerId(), customerHierarchy.get(0).getCustomerId());
-        assertThat(customerHierarchy.get(0).getParentCustomerId(), is(nullValue()));
-        assertEquals(center.getDisplayName(), customerHierarchy.get(0).getName());
-        assertEquals(center.getSearchId(), customerHierarchy.get(0).getSearchId());
-        assertEquals(center.getLevel().getValue(), customerHierarchy.get(0).getLevelId());
-        assertNull("center should have no attendance against them", customerHierarchy.get(0).getAttendanceId());
+        Assert.assertEquals(center.getCustomerId(), customerHierarchy.get(0).getCustomerId());
+        Assert.assertThat(customerHierarchy.get(0).getParentCustomerId(), is(nullValue()));
+        Assert.assertEquals(center.getDisplayName(), customerHierarchy.get(0).getName());
+        Assert.assertEquals(center.getSearchId(), customerHierarchy.get(0).getSearchId());
+        Assert.assertEquals(center.getLevel().getValue(), customerHierarchy.get(0).getLevelId());
+        Assert.assertNull("center should have no attendance against them", customerHierarchy.get(0).getAttendanceId());
 
-        assertNotNull(customerHierarchy.get(1));
+        Assert.assertNotNull(customerHierarchy.get(1));
 
-        assertEquals(group.getCustomerId(), customerHierarchy.get(1).getCustomerId());
-        assertThat(customerHierarchy.get(1).getParentCustomerId(), is(center.getCustomerId()));
-        assertEquals(group.getDisplayName(), customerHierarchy.get(1).getName());
-        assertEquals(group.getSearchId(), customerHierarchy.get(1).getSearchId());
-        assertEquals(group.getLevel().getValue(), customerHierarchy.get(1).getLevelId());
-        assertNull("group should have no attendance against them", customerHierarchy.get(1).getAttendanceId());
+        Assert.assertEquals(group.getCustomerId(), customerHierarchy.get(1).getCustomerId());
+        Assert.assertThat(customerHierarchy.get(1).getParentCustomerId(), is(center.getCustomerId()));
+        Assert.assertEquals(group.getDisplayName(), customerHierarchy.get(1).getName());
+        Assert.assertEquals(group.getSearchId(), customerHierarchy.get(1).getSearchId());
+        Assert.assertEquals(group.getLevel().getValue(), customerHierarchy.get(1).getLevelId());
+        Assert.assertNull("group should have no attendance against them", customerHierarchy.get(1).getAttendanceId());
     }
 
+    @Test
     public void testShouldRetrieveCustomerHierarchyWithAGroupAsRootByBranchId() throws Exception {
 
         // setup
@@ -181,27 +184,28 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
                 transactionDate);
 
         // verification
-        assertNotNull(customerHierarchy);
-        assertFalse(customerHierarchy.isEmpty());
-        assertNotNull(customerHierarchy.get(0));
+        Assert.assertNotNull(customerHierarchy);
+        Assert.assertFalse(customerHierarchy.isEmpty());
+        Assert.assertNotNull(customerHierarchy.get(0));
 
-        assertNotNull(customerHierarchy.get(0));
+        Assert.assertNotNull(customerHierarchy.get(0));
 
-        assertEquals(group.getCustomerId(), customerHierarchy.get(0).getCustomerId());
-        assertEquals(group.getDisplayName(), customerHierarchy.get(0).getName());
-        assertEquals(group.getSearchId(), customerHierarchy.get(0).getSearchId());
-        assertEquals(group.getLevel().getValue(), customerHierarchy.get(0).getLevelId());
-        assertNull("group should have no attendance against them", customerHierarchy.get(0).getAttendanceId());
+        Assert.assertEquals(group.getCustomerId(), customerHierarchy.get(0).getCustomerId());
+        Assert.assertEquals(group.getDisplayName(), customerHierarchy.get(0).getName());
+        Assert.assertEquals(group.getSearchId(), customerHierarchy.get(0).getSearchId());
+        Assert.assertEquals(group.getLevel().getValue(), customerHierarchy.get(0).getLevelId());
+        Assert.assertNull("group should have no attendance against them", customerHierarchy.get(0).getAttendanceId());
 
-        assertNotNull(customerHierarchy.get(1));
+        Assert.assertNotNull(customerHierarchy.get(1));
 
-        assertEquals(client.getCustomerId(), customerHierarchy.get(1).getCustomerId());
-        assertEquals(client.getDisplayName(), customerHierarchy.get(1).getName());
-        assertEquals(client.getSearchId(), customerHierarchy.get(1).getSearchId());
-        assertEquals(client.getLevel().getValue(), customerHierarchy.get(1).getLevelId());
-        assertNull("client should have no attendance against them", customerHierarchy.get(1).getAttendanceId());
+        Assert.assertEquals(client.getCustomerId(), customerHierarchy.get(1).getCustomerId());
+        Assert.assertEquals(client.getDisplayName(), customerHierarchy.get(1).getName());
+        Assert.assertEquals(client.getSearchId(), customerHierarchy.get(1).getSearchId());
+        Assert.assertEquals(client.getLevel().getValue(), customerHierarchy.get(1).getLevelId());
+        Assert.assertNull("client should have no attendance against them", customerHierarchy.get(1).getAttendanceId());
     }
 
+    @Test
     public void testShouldFindAllLoanRepaymentInCenterHierarchy() {
 
         // setup
@@ -223,18 +227,19 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
                         customerAtTopOfHierarchyId);
 
         // verification
-        assertNotNull(allLoanRepayments);
-        assertNotNull(allLoanRepayments.get(group.getCustomerId()));
+        Assert.assertNotNull(allLoanRepayments);
+        Assert.assertNotNull(allLoanRepayments.get(group.getCustomerId()));
 
         List<CollectionSheetCustomerLoanDto> loansAgainstGroup = allLoanRepayments.get(group.getCustomerId());
-        assertThat(loansAgainstGroup.size(), is(1));
-        assertThat(loansAgainstGroup.get(0).getAccountId(), is(loan.getAccountId()));
-        assertThat(loansAgainstGroup.get(0).getAccountStateId(), is(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING
+        Assert.assertThat(loansAgainstGroup.size(), is(1));
+        Assert.assertThat(loansAgainstGroup.get(0).getAccountId(), is(loan.getAccountId()));
+        Assert.assertThat(loansAgainstGroup.get(0).getAccountStateId(), is(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING
                 .getValue()));
-        assertThat(loansAgainstGroup.get(0).getProductShortName(), is(loanOffering.getPrdOfferingShortName()));
-        assertThat(loansAgainstGroup.get(0).getTotalRepaymentDue(), is(Double.valueOf("112.00")));
+        Assert.assertThat(loansAgainstGroup.get(0).getProductShortName(), is(loanOffering.getPrdOfferingShortName()));
+        Assert.assertThat(loansAgainstGroup.get(0).getTotalRepaymentDue(), is(Double.valueOf("112.00")));
     }
 
+    @Test
     public void testShouldFindOutstandingFeesForLoansInCenterHierarchy() {
 
         // setup
@@ -256,24 +261,25 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
                         customerAtTopOfHierarchyId);
 
         // verification
-        assertNotNull(allOutstandingFeesByCustomerThenAccountId);
-        assertNotNull(allOutstandingFeesByCustomerThenAccountId.get(group.getCustomerId()));
+        Assert.assertNotNull(allOutstandingFeesByCustomerThenAccountId);
+        Assert.assertNotNull(allOutstandingFeesByCustomerThenAccountId.get(group.getCustomerId()));
         final Map<Integer, List<CollectionSheetLoanFeeDto>> loanFeesByAccountId = allOutstandingFeesByCustomerThenAccountId
                 .get(group.getCustomerId());
 
-        assertThat(loanFeesByAccountId.size(), is(1));
+        Assert.assertThat(loanFeesByAccountId.size(), is(1));
 
         final List<CollectionSheetLoanFeeDto> loanFeesAgainstGroupAccountLoan = loanFeesByAccountId.get(loan
                 .getAccountId());
-        assertThat(loanFeesAgainstGroupAccountLoan.size(), is(1));
+        Assert.assertThat(loanFeesAgainstGroupAccountLoan.size(), is(1));
 
-        assertThat(loanFeesAgainstGroupAccountLoan.get(0).getCustomerId(), is(group.getCustomerId()));
-        assertThat(loanFeesAgainstGroupAccountLoan.get(0).getAccountId(), is(loan.getAccountId()));
-        assertThat(loanFeesAgainstGroupAccountLoan.get(0).getFeeAmountDue(), is(new BigDecimal("100.0000")));
-        assertThat(loanFeesAgainstGroupAccountLoan.get(0).getFeeAmountPaid(), is(new BigDecimal("0.0000")));
-        assertThat(loanFeesAgainstGroupAccountLoan.get(0).getTotalFeeAmountDue(), is(Double.valueOf("100.0")));
+        Assert.assertThat(loanFeesAgainstGroupAccountLoan.get(0).getCustomerId(), is(group.getCustomerId()));
+        Assert.assertThat(loanFeesAgainstGroupAccountLoan.get(0).getAccountId(), is(loan.getAccountId()));
+        Assert.assertThat(loanFeesAgainstGroupAccountLoan.get(0).getFeeAmountDue(), is(new BigDecimal("100.0000")));
+        Assert.assertThat(loanFeesAgainstGroupAccountLoan.get(0).getFeeAmountPaid(), is(new BigDecimal("0.0000")));
+        Assert.assertThat(loanFeesAgainstGroupAccountLoan.get(0).getTotalFeeAmountDue(), is(Double.valueOf("100.0")));
     }
 
+    @Test
     public void testShouldFindAccountCollectionFeesForCustomerAccounts() {
 
         // setup
@@ -286,19 +292,20 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
                 .findAccountCollectionsOnCustomerAccount(branchId, searchId, transactionDate, center.getCustomerId());
 
         // verification
-        assertNotNull(allCustomerAccountCollectionFees);
+        Assert.assertNotNull(allCustomerAccountCollectionFees);
         final List<CollectionSheetCustomerAccountCollectionDto> accountCollections = allCustomerAccountCollectionFees
                 .get(group.getCustomerId());
 
-        assertNotNull(accountCollections);
-        assertThat(accountCollections.size(), is(1));
-        assertThat(accountCollections.get(0).getAccountId(), is(group.getCustomerAccount().getAccountId()));
-        assertThat(accountCollections.get(0).getCustomerId(), is(group.getCustomerId()));
-        assertThat(accountCollections.get(0).getMiscFeesDue(), is(new BigDecimal("0.0000")));
-        assertThat(accountCollections.get(0).getMiscFeesPaid(), is(new BigDecimal("0.0000")));
-        assertThat(accountCollections.get(0).getAccountCollectionPayment(), is(Double.valueOf("0.0")));
+        Assert.assertNotNull(accountCollections);
+        Assert.assertThat(accountCollections.size(), is(1));
+        Assert.assertThat(accountCollections.get(0).getAccountId(), is(group.getCustomerAccount().getAccountId()));
+        Assert.assertThat(accountCollections.get(0).getCustomerId(), is(group.getCustomerId()));
+        Assert.assertThat(accountCollections.get(0).getMiscFeesDue(), is(new BigDecimal("0.0000")));
+        Assert.assertThat(accountCollections.get(0).getMiscFeesPaid(), is(new BigDecimal("0.0000")));
+        Assert.assertThat(accountCollections.get(0).getAccountCollectionPayment(), is(Double.valueOf("0.0")));
     }
 
+    @Test
     public void testShouldFindOutstandingFeesForCustomerAccountsXXX() {
 
         // setup
@@ -312,19 +319,20 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
                         .getCustomerId());
 
         // verification
-        assertNotNull(allOutstandingFeesByCustomerId);
+        Assert.assertNotNull(allOutstandingFeesByCustomerId);
         final List<CollectionSheetCustomerAccountCollectionDto> accountCollectionFees = allOutstandingFeesByCustomerId
                 .get(group.getCustomerId());
 
-        assertNotNull(accountCollectionFees);
-        assertThat(accountCollectionFees.size(), is(1));
-        assertThat(accountCollectionFees.get(0).getAccountId(), is(group.getCustomerAccount().getAccountId()));
-        assertThat(accountCollectionFees.get(0).getCustomerId(), is(group.getCustomerId()));
-        assertThat(accountCollectionFees.get(0).getMiscFeesDue(), is(new BigDecimal("0")));
-        assertThat(accountCollectionFees.get(0).getMiscFeesPaid(), is(new BigDecimal("0")));
-        assertThat(accountCollectionFees.get(0).getAccountCollectionPayment(), is(Double.valueOf("0.0")));
+        Assert.assertNotNull(accountCollectionFees);
+        Assert.assertThat(accountCollectionFees.size(), is(1));
+        Assert.assertThat(accountCollectionFees.get(0).getAccountId(), is(group.getCustomerAccount().getAccountId()));
+        Assert.assertThat(accountCollectionFees.get(0).getCustomerId(), is(group.getCustomerId()));
+        Assert.assertThat(accountCollectionFees.get(0).getMiscFeesDue(), is(new BigDecimal("0")));
+        Assert.assertThat(accountCollectionFees.get(0).getMiscFeesPaid(), is(new BigDecimal("0")));
+        Assert.assertThat(accountCollectionFees.get(0).getAccountCollectionPayment(), is(Double.valueOf("0.0")));
     }
 
+    @Test
     public void testShouldFindLoanAccountsInDisbursementState() {
 
         // setup
@@ -346,17 +354,18 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
                         customerAtTopOfHierarchyId);
 
         // verification
-        assertNotNull(allLoanDisbursements);
+        Assert.assertNotNull(allLoanDisbursements);
         final List<CollectionSheetCustomerLoanDto> loanDisbursements = allLoanDisbursements.get(group.getCustomerId());
-        assertThat(loanDisbursements.size(), is(1));
-        assertThat(loanDisbursements.get(0).getAccountId(), is(loan.getAccountId()));
-        assertThat(loanDisbursements.get(0).getAccountStateId(), is(AccountState.LOAN_APPROVED.getValue()));
-        assertThat(loanDisbursements.get(0).getCustomerId(), is(group.getCustomerId()));
-        assertThat(loanDisbursements.get(0).getPayInterestAtDisbursement(), is(Constants.NO));
-        assertThat(loanDisbursements.get(0).getTotalDisbursement(), is(Double.valueOf("300.0")));
-        assertThat(loanDisbursements.get(0).getAmountDueAtDisbursement(), is(Double.valueOf("30.0")));
+        Assert.assertThat(loanDisbursements.size(), is(1));
+        Assert.assertThat(loanDisbursements.get(0).getAccountId(), is(loan.getAccountId()));
+        Assert.assertThat(loanDisbursements.get(0).getAccountStateId(), is(AccountState.LOAN_APPROVED.getValue()));
+        Assert.assertThat(loanDisbursements.get(0).getCustomerId(), is(group.getCustomerId()));
+        Assert.assertThat(loanDisbursements.get(0).getPayInterestAtDisbursement(), is(Constants.NO));
+        Assert.assertThat(loanDisbursements.get(0).getTotalDisbursement(), is(Double.valueOf("300.0")));
+        Assert.assertThat(loanDisbursements.get(0).getAmountDueAtDisbursement(), is(Double.valueOf("30.0")));
     }
 
+    @Test
     public void testShouldFindSavingsDepositsforCustomerHierarchy() {
 
         // setup
@@ -385,7 +394,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
                 .findAllSavingAccountsForCustomerHierarchy(customerHierarchyParams);
 
         // verification
-        assertThat(allSavingsDeposits.size(), is(2));
+        Assert.assertThat(allSavingsDeposits.size(), is(2));
     }
 
 }

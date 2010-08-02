@@ -25,6 +25,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
@@ -50,19 +53,18 @@ public class CheckListBOIntegrationTest extends MifosIntegrationTestCase {
 
     private AccountCheckListBO accountCheckList = null;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.cleanUp(customerCheckList);
         TestObjectFactory.cleanUp(accountCheckList);
         StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
+    @Test
     public void testCreateCheckListForCustomer() throws Exception {
         CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(CustomerLevel.CENTER);
         CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(CustomerStatus.CENTER_ACTIVE);
@@ -75,32 +77,34 @@ public class CheckListBOIntegrationTest extends MifosIntegrationTestCase {
         customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(CustomerCheckListBO.class,
                 customerCheckList.getChecklistId());
 
-       Assert.assertEquals("Customer CheckList", customerCheckList.getChecklistName());
-       Assert.assertEquals(CheckListConstants.STATUS_ACTIVE, customerCheckList.getChecklistStatus());
-       Assert.assertEquals(3, customerCheckList.getChecklistDetails().size());
-       Assert.assertEquals(CheckListType.CUSTOMER_CHECKLIST, customerCheckList.getCheckListType());
+        Assert.assertEquals("Customer CheckList", customerCheckList.getChecklistName());
+        Assert.assertEquals(CheckListConstants.STATUS_ACTIVE, customerCheckList.getChecklistStatus());
+        Assert.assertEquals(3, customerCheckList.getChecklistDetails().size());
+        Assert.assertEquals(CheckListType.CUSTOMER_CHECKLIST, customerCheckList.getCheckListType());
 
     }
 
+    @Test
     public void testCreateCheckListForProduct() throws Exception {
         ProductTypeEntity productTypeEntity = (ProductTypeEntity) TestObjectFactory.getObject(ProductTypeEntity.class,
                 (short) 2);
         AccountStateEntity accountStateEntity = new AccountStateEntity(AccountState.SAVINGS_PARTIAL_APPLICATION);
-        accountCheckList = new AccountCheckListBO(productTypeEntity, accountStateEntity, "Account CheckList", Short
-                .valueOf("1"), getCheckListDetails(), Short.valueOf("1"), (short) 1);
+        accountCheckList = new AccountCheckListBO(productTypeEntity, accountStateEntity, "Account CheckList",
+                Short.valueOf("1"), getCheckListDetails(), Short.valueOf("1"), (short) 1);
         accountCheckList.save();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
-        accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(AccountCheckListBO.class, accountCheckList
-                .getChecklistId());
+        accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(AccountCheckListBO.class,
+                accountCheckList.getChecklistId());
 
-       Assert.assertEquals("Account CheckList", accountCheckList.getChecklistName());
-       Assert.assertEquals(3, accountCheckList.getChecklistDetails().size());
-       Assert.assertEquals(CheckListConstants.STATUS_ACTIVE, accountCheckList.getChecklistStatus());
-       Assert.assertEquals(CheckListType.ACCOUNT_CHECKLIST, accountCheckList.getCheckListType());
+        Assert.assertEquals("Account CheckList", accountCheckList.getChecklistName());
+        Assert.assertEquals(3, accountCheckList.getChecklistDetails().size());
+        Assert.assertEquals(CheckListConstants.STATUS_ACTIVE, accountCheckList.getChecklistStatus());
+        Assert.assertEquals(CheckListType.ACCOUNT_CHECKLIST, accountCheckList.getCheckListType());
     }
 
+    @Test
     public void testUpdateForNullCheckListName() throws Exception {
         customerCheckList = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
                 CustomerStatus.CENTER_ACTIVE.getValue(), CheckListConstants.STATUS_ACTIVE);
@@ -109,13 +113,14 @@ public class CheckListBOIntegrationTest extends MifosIntegrationTestCase {
                     customerCheckList.getChecklistStatus(), getCheckListDetails(), (short) 1, (short) 1);
             Assert.fail();
         } catch (CheckListException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         }
         StaticHibernateUtil.closeSession();
         customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(CustomerCheckListBO.class,
                 customerCheckList.getChecklistId());
     }
 
+    @Test
     public void testUpdateForNullCheckListDetails() throws Exception {
         customerCheckList = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
                 CustomerStatus.CENTER_ACTIVE.getValue(), CheckListConstants.STATUS_ACTIVE);
@@ -125,13 +130,14 @@ public class CheckListBOIntegrationTest extends MifosIntegrationTestCase {
                     (short) 1);
             Assert.fail();
         } catch (CheckListException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         }
         StaticHibernateUtil.closeSession();
         customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(CustomerCheckListBO.class,
                 customerCheckList.getChecklistId());
     }
 
+    @Test
     public void testUpdateForEmptyCheckListDetails() throws Exception {
         customerCheckList = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
                 CustomerStatus.CENTER_ACTIVE.getValue(), CheckListConstants.STATUS_ACTIVE);
@@ -141,13 +147,14 @@ public class CheckListBOIntegrationTest extends MifosIntegrationTestCase {
                     new ArrayList<String>(), (short) 1, (short) 1);
             Assert.fail();
         } catch (CheckListException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         }
         StaticHibernateUtil.closeSession();
         customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(CustomerCheckListBO.class,
                 customerCheckList.getChecklistId());
     }
 
+    @Test
     public void testUpdateCustomerCheckList() throws Exception {
         customerCheckList = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
                 CustomerStatus.CENTER_ACTIVE.getValue(), CheckListConstants.STATUS_ACTIVE);
@@ -162,32 +169,34 @@ public class CheckListBOIntegrationTest extends MifosIntegrationTestCase {
         customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(CustomerCheckListBO.class,
                 customerCheckList.getChecklistId());
 
-       Assert.assertEquals("Customer CheckList", customerCheckList.getChecklistName());
-       Assert.assertEquals(CheckListConstants.STATUS_INACTIVE, customerCheckList.getChecklistStatus());
-       Assert.assertEquals(3, customerCheckList.getChecklistDetails().size());
-       Assert.assertEquals(CheckListType.CUSTOMER_CHECKLIST, customerCheckList.getCheckListType());
+        Assert.assertEquals("Customer CheckList", customerCheckList.getChecklistName());
+        Assert.assertEquals(CheckListConstants.STATUS_INACTIVE, customerCheckList.getChecklistStatus());
+        Assert.assertEquals(3, customerCheckList.getChecklistDetails().size());
+        Assert.assertEquals(CheckListType.CUSTOMER_CHECKLIST, customerCheckList.getCheckListType());
     }
 
+    @Test
     public void testUpdateAccountCheckList() throws Exception {
         accountCheckList = TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, CheckListConstants.STATUS_ACTIVE);
         StaticHibernateUtil.closeSession();
-        accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(AccountCheckListBO.class, accountCheckList
-                .getChecklistId());
+        accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(AccountCheckListBO.class,
+                accountCheckList.getChecklistId());
 
         accountCheckList.update(accountCheckList.getProductTypeEntity(), accountCheckList.getAccountStateEntity(),
                 "Account CheckList", CheckListConstants.STATUS_INACTIVE, getCheckListDetails(), (short) 1, (short) 1);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
-        accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(AccountCheckListBO.class, accountCheckList
-                .getChecklistId());
+        accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(AccountCheckListBO.class,
+                accountCheckList.getChecklistId());
 
-       Assert.assertEquals("Account CheckList", accountCheckList.getChecklistName());
-       Assert.assertEquals(CheckListConstants.STATUS_INACTIVE, accountCheckList.getChecklistStatus());
-       Assert.assertEquals(3, accountCheckList.getChecklistDetails().size());
-       Assert.assertEquals(CheckListType.ACCOUNT_CHECKLIST, accountCheckList.getCheckListType());
+        Assert.assertEquals("Account CheckList", accountCheckList.getChecklistName());
+        Assert.assertEquals(CheckListConstants.STATUS_INACTIVE, accountCheckList.getChecklistStatus());
+        Assert.assertEquals(3, accountCheckList.getChecklistDetails().size());
+        Assert.assertEquals(CheckListType.ACCOUNT_CHECKLIST, accountCheckList.getCheckListType());
     }
 
+    @Test
     public void testSaveInValidConnection() throws CheckListException {
         ProductTypeEntity productTypeEntity = (ProductTypeEntity) TestObjectFactory.getObject(ProductTypeEntity.class,
                 (short) 2);
@@ -201,12 +210,13 @@ public class CheckListBOIntegrationTest extends MifosIntegrationTestCase {
             accountCheckList.save();
             Assert.fail();
         } catch (CheckListException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
     }
 
+    @Test
     public void testCreateCheckListExceptionForCustomer() throws Exception {
         CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(CustomerLevel.CENTER);
         CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(CustomerStatus.CENTER_ACTIVE);
@@ -215,10 +225,11 @@ public class CheckListBOIntegrationTest extends MifosIntegrationTestCase {
                     CheckListConstants.STATUS_ACTIVE, getCheckListDetails(), (short) 1, (short) 1);
             Assert.fail();
         } catch (CheckListException ce) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         }
     }
 
+    @Test
     public void testCreateCheckListExceptionForCustomerZeroDetails() throws Exception {
         CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(CustomerLevel.CENTER);
         CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(CustomerStatus.CENTER_ACTIVE);
@@ -227,10 +238,11 @@ public class CheckListBOIntegrationTest extends MifosIntegrationTestCase {
                     CheckListConstants.STATUS_ACTIVE, new ArrayList<String>(), (short) 1, (short) 1);
             Assert.fail();
         } catch (CheckListException ce) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         }
     }
 
+    @Test
     public void testUpdateAccountCheckListInvalidState() throws Exception {
         AccountCheckListBO accountCheckList1 = TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
                 AccountState.LOAN_APPROVED, CheckListConstants.STATUS_ACTIVE);
@@ -238,27 +250,29 @@ public class CheckListBOIntegrationTest extends MifosIntegrationTestCase {
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, CheckListConstants.STATUS_ACTIVE);
         AccountStateEntity accountStateEntity = new AccountStateEntity(AccountState.LOAN_APPROVED);
         StaticHibernateUtil.closeSession();
-        accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(AccountCheckListBO.class, accountCheckList
-                .getChecklistId());
+        accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(AccountCheckListBO.class,
+                accountCheckList.getChecklistId());
         try {
             accountCheckList.update(accountCheckList.getProductTypeEntity(), accountStateEntity, "Account CheckList",
                     CheckListConstants.STATUS_INACTIVE, getCheckListDetails(), (short) 1, (short) 1);
             Assert.fail();
         } catch (CheckListException ce) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             TestObjectFactory.deleteChecklist(accountCheckList1);
             StaticHibernateUtil.closeSession();
         }
     }
 
+    @Test
     public void testUpdateCustomerCheckListInvalidState() throws Exception {
-        CustomerCheckListBO customerCheckList1 = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER
-                .getValue(), CustomerStatus.CENTER_INACTIVE.getValue(), CheckListConstants.STATUS_ACTIVE);
+        CustomerCheckListBO customerCheckList1 = TestObjectFactory.createCustomerChecklist(
+                CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_INACTIVE.getValue(),
+                CheckListConstants.STATUS_ACTIVE);
         customerCheckList = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
                 CustomerStatus.CENTER_ACTIVE.getValue(), CheckListConstants.STATUS_ACTIVE);
-        CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(CustomerStatus
-                .fromInt(CustomerStatus.CENTER_INACTIVE.getValue()));
+        CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(
+                CustomerStatus.fromInt(CustomerStatus.CENTER_INACTIVE.getValue()));
         StaticHibernateUtil.closeSession();
         customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(CustomerCheckListBO.class,
                 customerCheckList.getChecklistId());
@@ -267,7 +281,7 @@ public class CheckListBOIntegrationTest extends MifosIntegrationTestCase {
                     CheckListConstants.STATUS_INACTIVE, getCheckListDetails(), (short) 1, (short) 1);
             Assert.fail();
         } catch (CheckListException ce) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             TestObjectFactory.deleteChecklist(customerCheckList1);
             StaticHibernateUtil.closeSession();

@@ -12,10 +12,10 @@
   <!--  Main Content Begins-->  
    <div>
   <div class=" content leftMargin180">
-    <div class="orangeheading font14">[@spring.message "administrativeTasks" /]</div>
-    <p>[@spring.message "administrativeTasksWelcome" /] </p>
+    <div class="orangeheading font14 marginLeft30">[@spring.message "administrativeTasks" /]</div>
+    <p class="marginLeft30">[@spring.message "administrativeTasksWelcome" /] </p>
     <div class="marginTop20"></div>
-    <div class="span-10 floatLT">
+    <div class="span-10 floatLT marginLeft30">
       <p class="orangeheading">[@spring.message "manageOrganization" /]</p>
       <p class="fontBold">[@spring.message "systemusers"/]</p>
       <ul>

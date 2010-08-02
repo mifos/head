@@ -20,9 +20,17 @@
 
 package org.mifos.customers.office.business.service;
 
+import java.util.List;
+
+import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 
 public interface OfficeHierarchyService {
 
     void updateOfficeHierarchyConfiguration(UpdateConfiguredOfficeLevelRequest updateRequest);
+
+    void updateApplicationLabels(List<OfficeLevelEntity> changedOfficeLabels, List<LookUpEntity> lookupEntities, List<GracePeriodTypeEntity> gracePeriods, List<LookUpValueEntity> accountStatuses);
 }

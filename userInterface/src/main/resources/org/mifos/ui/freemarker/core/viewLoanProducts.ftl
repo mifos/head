@@ -9,13 +9,20 @@
   </div> 
     <!--  Main Content Begins-->  
   <div class="content leftMargin180">
-<div class="bluedivs paddingLeft">
-	    <a href="admin.ftl">[@spring.message "admin" /]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "viewLoanProducts" /]</span>  		
- </div><br/>
+  [@mifos.crumbs breadcrumbs/]
   <p>&nbsp;&nbsp;</p>
-  	<form method="" action="" name="formname">
-  <p class="font15 orangeheading">[@spring.message "viewLoanProducts"/]</p>
-    <p>[@spring.message "clickonaLoanproductbelowtoviewdetailsandmakechangesor"/] <a href="loanproductaction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "defineanewLoanproduct"/] </a></p>
+  	<form method="POST" action="viewLoanproducts.ftl" name="viewLoanproducts">
+  <p class="marginLeft30 font15 orangeheading">[@spring.message "viewLoanProducts"/]</p>
+    <p class="marginLeft30">[@spring.message "clickonaLoanproductbelowtoviewdetailsandmakechangesor"/] <a href="#">[@spring.message "defineanewLoanproduct"/] </a></p>
+    <div class="marginTop15">
+    <div class="span-22 marginLeft30"> 
+    	<ul>
+    	[#list formBean as loans]
+    	<li><a href="loanproductaction.do?method=get&prdOfferingId=${loans.prdOfferingId}">${loans.prdOfferingName}</a></li>
+    	[/#list]        	 
+        </ul>	
+    </div> 
+    </div>
        	</form> 
   </div><!--Main Content Ends-->
 [@mifos.footer/]

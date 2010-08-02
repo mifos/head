@@ -46,6 +46,10 @@ explanation of the license and how it is applied.
 						<td colspan="2"><span class="headingorange"><mifos:mifoslabel name="admin.shutdown.title" bundle="adminUIResources" /></span><br />
 							<span class="fontnormal"><mifos:mifoslabel name="admin.shutdown.welcome" bundle="adminUIResources" /></span></td>
 					</tr>
+                    <tr width="100%">
+					<td align="left" valign="top" colspan="2"><font class="fontnormalRedBold"><span id="admin.error.message"><html-el:errors
+						bundle="adminUIResources" /></span> </font></td>
+                    </tr>
 					<tr><td colspan="2">&nbsp;</td></tr>
                     <tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.shutdown.status" bundle="adminUIResources" /></span></td>

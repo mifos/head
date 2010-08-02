@@ -25,6 +25,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
@@ -38,6 +39,7 @@ public class FinancialBOIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
+    @Test
     public void testGetApplicableDebit() throws FinancialException {
         FinancialActionTypeEntity finActionPrincipal = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
@@ -54,6 +56,7 @@ public class FinancialBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Test
     public void testGetApplicableCredit() throws FinancialException {
         FinancialActionTypeEntity finActionPrincipal = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
@@ -63,6 +66,7 @@ public class FinancialBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(FINANCIAL_PRINCIPALPOSTING_SIZE, applicableCreditCategory.size());
     }
 
+    @Test
     public void testRoundingCredit() throws FinancialException {
         FinancialActionTypeEntity finActionRounding = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.ROUNDING);

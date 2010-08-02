@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:10+0530\n"
+"POT-Creation-Date: 2010-08-02 03:49+0800\n"
 "PO-Revision-Date: 2009-08-07 19:55-0700\n"
 "Last-Translator: Aida Ocana <aocana@att.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1020,6 +1020,14 @@ msgid "Can reverse Loan disbursals"
 msgstr "Puede revocar el desembolso del préstamo"
 
 #: Permissions-CanShutdownMifos
+msgid "Can open shutdown page"
+msgstr ""
+
+#: Permissions-CanViewActiveSessions
+msgid "Can view active sessions"
+msgstr ""
+
+#: Permissions-CanStartMifosShutDown
 msgid "Can shut down Mifos"
 msgstr "Puede apagar Mifos"
 

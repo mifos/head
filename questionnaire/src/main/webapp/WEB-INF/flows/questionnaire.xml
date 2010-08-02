@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <var name="questionGroupDetails" class="org.mifos.platform.questionnaire.service.QuestionGroupDetails" />
+
+    <on-start>
+        <evaluate expression="questionnaireServiceFacade.getQuestionGroups(externalContext.sessionMap.event, externalContext.sessionMap.source)"
+                result="questionGroupDetails.details"/>
+        <set name="flowScope.questionGroupDetails.creatorId" value="externalContext.sessionMap.creatorId" type="int"></set>
+        <set name="flowScope.questionGroupDetails.entityId" value="externalContext.sessionMap.entityId" type="int"></set>
+    </on-start>
+
+    <view-state id="selectQuestionnaire">
+        <transition on="selectQuestionnaire" to="recordSelection"/>
+		<transition on="cancel" to="viewClientDetails" bind="false" history="discard"/>
+    </view-state>
+
+    <action-state id="recordSelection">
+        <set name="flowScope.selectedQuestionnaireIndex" value="requestParameters.questionGroupId" type="int"></set>
+        <transition  to="questionnaire"/>
+    </action-state>
+
+    <view-state id="questionnaire" model="questionGroupDetails">
+		<transition on="saveQuestionnaire" to="saveQuestionnaire"/>
+		<transition on="cancel" to="viewClientDetails" bind="false" history="discard"/>
+    </view-state>
+
+    <action-state id="saveQuestionnaire">
+        <evaluate expression="questionGroupController.saveQuestionnaire(questionGroupDetails, flowScope.selectedQuestionnaireIndex, flowRequestContext)"/>
+        <transition on="success" to="viewClientDetails"/>
+        <transition on="failure" to="questionnaire"/>
+    </action-state>
+
+    <end-state id="viewClientDetails" view="externalRedirect:contextRelative:/clientCustAction.do?method=get" />
+
+</flow>

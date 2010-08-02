@@ -12,6 +12,13 @@
 
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
+        <test.database.properties.file>${modules.root.dir}/application/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</test.database.properties.file>
+        <sql.resources.target.directory>${modules.root.dir}/application/src/main/sql</sql.resources.target.directory>
+        <!-- mimics ConfigurationLocator directory search behavior -->
+        <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
+        <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
+        <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
+        <maven.surefire.memory>-Xmx1024m</maven.surefire.memory>
     </properties>
 
     <parent>
@@ -31,6 +38,83 @@
             <artifactId>spring-context</artifactId>
             <version>3.0.2.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+            <version>3.5.2-Final</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>4.0.2.GA</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.webflow</groupId>
+            <artifactId>spring-binding</artifactId>
+            <version>2.0.9.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>3.0.2.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.webflow</groupId>
+            <artifactId>spring-webflow</artifactId>
+            <version>2.0.9.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-serviceInterfaces</artifactId>
+            <version>1.7-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-c3p0</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.4.GA</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.11</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -48,6 +132,88 @@
 
         <plugins>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-1</version>
+                <executions>
+                    <execution>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <quiet>true</quiet>
+                            <files>
+                                <file>${test.database.properties.file}</file>
+                                <file>${mifos.overrides.conf}</file>
+                                <file>${mifos.overrides.env}</file>
+                                <file>${mifos.overrides.home}</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.2</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>5.1.11</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <driver>com.mysql.jdbc.Driver</driver>
+                    <url>jdbc:mysql://${integration.database.host}:${integration.database.port}/?${integration.database.params}</url>
+                    <username>${integration.database.user}</username>
+                    <password>${integration.database.password}</password>
+                    <autocommit>true</autocommit>
+                    <skip>${maven.test.skip}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>drop_db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>DROP DATABASE IF EXISTS
+                                ${integration.database}</sqlCommand>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create_db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>CREATE DATABASE
+                                ${integration.database}</sqlCommand>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>populate_db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>USE ${integration.database}</sqlCommand>
+                            <srcFiles>
+                                <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
+                                <srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
+                                <srcFile>${sql.resources.target.directory}/custom_data.sql</srcFile>
+                                <srcFile>${sql.resources.target.directory}/testdbinsertionscript.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -62,10 +228,42 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.4.3</version>
                 <configuration>
-                    <includedGroups>unit</includedGroups>
-                    <excludedGroups>workInProgress</excludedGroups>
+                    <printSummary>true</printSummary>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <!-- Exclude integration test classes    -->
+                    <excludes>
+                        <exclude>**/*IntegrationTest.java</exclude>
+                    </excludes>
                     <reportsDirectory>${project.build.directory}/surefire-reports/unit</reportsDirectory>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <printSummary>true</printSummary>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <!-- override exclude integration test classes    -->
+                            <excludes>
+                                <exclude>none</exclude>
+                            </excludes>
+                            <includes>
+                                <include>**/*IntegrationTest.java</include>
+                            </includes>
+                            <systemProperties>
+                                <mifos.mode>integration</mifos.mode>
+                            </systemProperties>
+                            <argLine>${maven.surefire.memory}</argLine>
+                            <reportsDirectory>${project.build.directory}/surefire-reports/integration</reportsDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -94,7 +292,7 @@
                     <rulesets>
                         <ruleset>${modules.root.dir}/.ruleset</ruleset>
                     </rulesets>
-                    <includeTests>true</includeTests>
+                    <includeTests>false</includeTests>
                 </configuration>
                 <executions>
                     <execution>
@@ -108,5 +306,35 @@
             </plugin>
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <linkXref>true</linkXref>
+                    <sourceEncoding>utf-8</sourceEncoding>
+                    <targetJdk>1.6</targetJdk>
+                    <includeTests>true</includeTests>
+                    <rulesets>
+                        <ruleset>${modules.root.dir}/.ruleset</ruleset>
+                    </rulesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jdepend-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>

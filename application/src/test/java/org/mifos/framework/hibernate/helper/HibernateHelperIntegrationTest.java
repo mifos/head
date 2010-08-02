@@ -26,6 +26,7 @@ import java.util.GregorianCalendar;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 
 public class HibernateHelperIntegrationTest extends MifosIntegrationTestCase {
@@ -34,12 +35,14 @@ public class HibernateHelperIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
+    @Test
     public void testDTOBuilderCapitalize() {
         DTOBuilder dtoBuilder = new DTOBuilder();
        Assert.assertEquals("String", dtoBuilder.capitalize("string"));
        Assert.assertEquals("", dtoBuilder.capitalize(""));
     }
 
+    @Test
     public void testDTOBuilderGetParameterTypes() throws Exception {
         DTOBuilder dtoBuilder = new DTOBuilder();
         Class[] classParams = dtoBuilder.getParameterTypes("long");
@@ -64,6 +67,7 @@ public class HibernateHelperIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertNull(classParams);
     }
 
+    @Test
     public void testDTOBuilderGetValue() {
         DTOBuilder dtoBuilder = new DTOBuilder();
        Assert.assertEquals("string", dtoBuilder.getValue("string", "string"));

@@ -22,7 +22,7 @@ package org.mifos.test.acceptance.framework.admin;
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
 
-public class QuestionDetailPage extends MifosPage{
+public class QuestionDetailPage extends MifosPage {
     public QuestionDetailPage(Selenium selenium) {
         super(selenium);
     }
@@ -30,5 +30,11 @@ public class QuestionDetailPage extends MifosPage{
     public QuestionDetailPage verifyPage() {
         verifyPage("view_question_details");
         return this;
+    }
+
+    public ViewAllQuestionsPage navigateToViewAllQuestionsPage() {
+        selenium.click("link=View Questions");
+        waitForPageToLoad();
+        return new ViewAllQuestionsPage(selenium);
     }
 }

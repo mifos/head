@@ -28,6 +28,9 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -52,9 +55,8 @@ public class OffsetAccountBOIntegrationTest extends MifosIntegrationTestCase {
     protected CustomerBO group = null;
     protected AccountPersistence accountPersistence;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
 
         accountBO = createLoanAccount();
         accountPersistence = new AccountPersistence();
@@ -68,12 +70,13 @@ public class OffsetAccountBOIntegrationTest extends MifosIntegrationTestCase {
          */
     }
 
+    @Test
     public void testLoanAccountBOOfsetAllowablePersistence() {
        Assert.assertTrue(accountBO.getOffsettingAllowable().intValue() == 1);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         try {
             TestObjectFactory.cleanUp(accountBO);
             TestObjectFactory.cleanUp(group);
@@ -83,7 +86,6 @@ public class OffsetAccountBOIntegrationTest extends MifosIntegrationTestCase {
             // throwing here tends to mask failures
             e.printStackTrace();
         }
-        super.tearDown();
     }
 
     private LoanBO createLoanAccount() {

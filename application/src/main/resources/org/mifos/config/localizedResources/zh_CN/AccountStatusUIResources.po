@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 13:07+0530\n"
+"POT-Creation-Date: 2010-08-02 03:47+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -102,9 +102,9 @@ msgstr "没有找到搜索的结果。"
 msgid "Note:"
 msgstr "注释："
 
-#: accountStatus.results
-msgid "results"
-msgstr "结果"
+#: accountStatus.resultsIn
+msgid "results in"
+msgstr ""
 
 #: accountStatus.search
 msgid "Search"
@@ -133,3 +133,6 @@ msgstr "类型"
 #: accountStauts.searchheader
 msgid "7 results in All branches found for Loans in Pending approval"
 msgstr "在所有部门中找到7个待审批状态贷款"
+
+#~ msgid "results"
+#~ msgstr "结果"

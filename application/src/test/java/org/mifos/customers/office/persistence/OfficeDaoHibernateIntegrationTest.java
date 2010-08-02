@@ -60,6 +60,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/integration-test-context.xml",
+                                    "/org/mifos/config/resources/messageSourceBean.xml",
                                     "/org/mifos/config/resources/hibernate-daos.xml"})
 public class OfficeDaoHibernateIntegrationTest {
 
@@ -223,6 +224,8 @@ public class OfficeDaoHibernateIntegrationTest {
         // verification
         assertThat(allOffices.isHeadOfficeEnabled(), is(true));
         assertThat(allOffices.isBranchOfficeEnabled(), is(true));
+        assertThat(allOffices.getHeadOfficeNameKey(), is(notNullValue()));
+        assertThat(allOffices.getBranchOfficeNameKey(), is(notNullValue()));
     }
 
     @Test

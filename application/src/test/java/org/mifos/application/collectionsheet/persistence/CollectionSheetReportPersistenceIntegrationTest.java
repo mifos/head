@@ -28,6 +28,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.reports.business.dto.CollectionSheetReportData;
@@ -43,6 +44,7 @@ public class CollectionSheetReportPersistenceIntegrationTest extends MifosIntegr
     private static final Date MEETING_DATE = DateUtils.getDate(2007, Calendar.JUNE, 22);
     private static final Integer BRANCH_ID = Integer.valueOf("12");
 
+    @Test
     public void testReportQueryIsValid() throws Exception {
         try {
             new BirtCollectionSheetReportPersistence().extractReportData(BRANCH_ID, MEETING_DATE, PERSONNEL_ID, CENTER_ID);
@@ -51,6 +53,7 @@ public class CollectionSheetReportPersistenceIntegrationTest extends MifosIntegr
         }
     }
 
+    @Test
     public void testConvertResultToDTO() throws Exception {
         ArrayList<Object[]> results = new ArrayList<Object[]>();
         results.add(new Object[] { "22-06-2007", 12, " Office 12", 4, " system user 4", 19, " center-19", 199,

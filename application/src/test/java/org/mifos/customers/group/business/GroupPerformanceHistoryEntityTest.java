@@ -24,14 +24,20 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Arrays;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.business.service.ConfigurationBusinessService;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
@@ -51,6 +57,17 @@ public class GroupPerformanceHistoryEntityTest {
     @Mock
     private AccountBusinessService accountBusinessService;
 
+    @Mock
+    private AccountBusinessService accountBusinessServiceMock;
+
+    @Mock
+    private LoanOfferingBO loanOffering;
+
+    @Mock
+    private CustomerBO customerMock;
+
+    @Mock
+    private ClientPerformanceHistoryEntity clientPerfHistoryMock;
 
     private static MifosCurrency oldDefaultCurrency;
 
@@ -66,6 +83,58 @@ public class GroupPerformanceHistoryEntityTest {
         Money.setDefaultCurrency(oldDefaultCurrency);
     }
 
+    @Test
+    public void testUpdateOnDisbursementGetsCoSigningClientsForGlim() throws Exception {
+        when(configurationBusinessService.isGlimEnabled()).thenReturn(true);
+        clientPerfHistoryMock.updateOnDisbursement(loanOffering);
+
+        when(customerMock.getPerformanceHistory()).thenReturn(clientPerfHistoryMock);
+
+        when(accountBusinessServiceMock.getCoSigningClientsForGlim(loan.getAccountId())).thenReturn(
+                Arrays.asList(customerMock));
+
+        new GroupPerformanceHistoryEntity(configurationBusinessService, accountBusinessServiceMock)
+                .updateOnDisbursement(loan, TestUtils.createMoney());
+
+        verify(configurationBusinessService, atLeastOnce()).isGlimEnabled();
+        verify(customerMock, atLeastOnce()).getPerformanceHistory();
+        verify(accountBusinessServiceMock).getCoSigningClientsForGlim(anyInt());
+        verify(clientPerfHistoryMock).updateOnDisbursement(loanOffering);
+    }
+
+    @Test
+    public void testUpdateOnDisbursementDoesNotGetCoSigningClientsIfNotGlim() throws Exception {
+        when(configurationBusinessService.isGlimEnabled()).thenReturn(false);
+        new GroupPerformanceHistoryEntity(configurationBusinessService, accountBusinessServiceMock)
+                .updateOnDisbursement(loan, TestUtils.createMoney());
+        verify(configurationBusinessService, atLeastOnce()).isGlimEnabled();
+        verify(accountBusinessServiceMock, never()).getCoSigningClientsForGlim(anyInt());
+    }
+
+    @Test
+    public void testUpdateOnWriteOffDoesNotGetCoSigningClientsIfNotGlim() throws Exception {
+        when(configurationBusinessService.isGlimEnabled()).thenReturn(false);
+        new GroupPerformanceHistoryEntity(configurationBusinessService, accountBusinessServiceMock)
+                .updateOnWriteOff(loan);
+        verify(configurationBusinessService, atLeastOnce()).isGlimEnabled();
+        verify(accountBusinessServiceMock, never()).getCoSigningClientsForGlim(anyInt());
+    }
+
+    @Test
+    public void testUpdateOnWriteOffGetsCoSigningClientsForGlim() throws Exception {
+        when(configurationBusinessService.isGlimEnabled()).thenReturn(true);
+        when(customerMock.getPerformanceHistory()).thenReturn(clientPerfHistoryMock);
+        clientPerfHistoryMock.updateOnWriteOff(loanOffering);
+        when(accountBusinessServiceMock.getCoSigningClientsForGlim(loan.getAccountId())).thenReturn(
+                Arrays.asList(customerMock));
+
+        new GroupPerformanceHistoryEntity(configurationBusinessService, accountBusinessServiceMock)
+                .updateOnWriteOff(loan);
+        verify(configurationBusinessService, atLeastOnce()).isGlimEnabled();
+        verify(customerMock, atLeastOnce()).getPerformanceHistory();
+        verify(accountBusinessServiceMock).getCoSigningClientsForGlim(anyInt());
+        verify(clientPerfHistoryMock).updateOnWriteOff(loanOffering);
+    }
 
     @Test
     public void shouldUpdateLastLoanAmountWhenLoanIsFullyPaid() throws Exception {
@@ -73,7 +142,8 @@ public class GroupPerformanceHistoryEntityTest {
         Money loanAmount = new Money(Money.getDefaultCurrency(), "55.6");
 
         // setup
-        groupPerformanceHistoryEntity = new GroupPerformanceHistoryEntity(configurationBusinessService, accountBusinessService);
+        groupPerformanceHistoryEntity = new GroupPerformanceHistoryEntity(configurationBusinessService,
+                accountBusinessService);
 
         when(loan.getLoanAmount()).thenReturn(loanAmount);
 
@@ -82,6 +152,7 @@ public class GroupPerformanceHistoryEntityTest {
 
         // verification
         assertThat(groupPerformanceHistoryEntity.getLastGroupLoanAmount(), is(notNullValue()));
-        assertThat(groupPerformanceHistoryEntity.getLastGroupLoanAmount().getAmountDoubleValue(), is(loanAmount.getAmountDoubleValue()));
+        assertThat(groupPerformanceHistoryEntity.getLastGroupLoanAmount().getAmountDoubleValue(),
+                is(loanAmount.getAmountDoubleValue()));
     }
 }

@@ -25,6 +25,8 @@ import java.sql.Connection;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -39,9 +41,8 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
         super();
     }
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         session = StaticHibernateUtil.getSessionTL();
         connection = session.connection();
         connection.setAutoCommit(true);
@@ -55,6 +56,7 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
         Assert.assertFalse(AddInterestCalcRule.validateLookupValueKey(format, invalidKey));
     }
 
+    @Test
     public void testConstructor() throws Exception {
         short newRuleId = 2555;
         short categoryId = 1;
