@@ -344,6 +344,9 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(eventSources, new EventSourcesMatcher(
                 asList(new EventSource("Create", "Client", "Create Client"),
                         new EventSource("View", "Client", "View Client"),
+                        new EventSource("Create", "Group", "Create Group"),
+                        new EventSource("Approve", "Loan", "Approve Loan"),
+                        new EventSource("Close", "Client", "Close Client"),
                         new EventSource("Create", "Loan", "Create Loan"))));
     }
 
