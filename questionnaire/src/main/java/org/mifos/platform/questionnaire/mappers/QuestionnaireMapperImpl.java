@@ -34,6 +34,7 @@ import org.mifos.platform.questionnaire.domain.SectionQuestion;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
+import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
@@ -75,17 +76,21 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     @Autowired
     private SectionQuestionDao sectionQuestionDao;
 
+    @Autowired
+    private QuestionGroupInstanceDao questionGroupInstanceDao;
+
     public QuestionnaireMapperImpl() {
-        this(null, null, null, null);
+        this(null, null, null, null,null);
     }
 
-    public QuestionnaireMapperImpl(EventSourceDao eventSourceDao, QuestionDao questionDao, QuestionGroupDao questionGroupDao, SectionQuestionDao sectionQuestionDao) {
+    public QuestionnaireMapperImpl(EventSourceDao eventSourceDao, QuestionDao questionDao, QuestionGroupDao questionGroupDao, SectionQuestionDao sectionQuestionDao, QuestionGroupInstanceDao questionGroupInstanceDao) {
         populateAnswerToQuestionTypeMap();
         populateQuestionToAnswerTypeMap();
         this.eventSourceDao = eventSourceDao;
         this.questionDao = questionDao;
         this.questionGroupDao = questionGroupDao;
         this.sectionQuestionDao = sectionQuestionDao;
+        this.questionGroupInstanceDao = questionGroupInstanceDao;
     }
 
     @Override
@@ -197,7 +202,9 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     public QuestionGroupDetail mapToQuestionGroupDetail(QuestionGroup questionGroup) {
         List<SectionDetail> sectionDetails = mapToSectionDetails(questionGroup.getSections());
         EventSource eventSource = mapToEventSource(questionGroup.getEventSources());
-        return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), eventSource, sectionDetails, questionGroup.isEditable());
+        return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(),
+                eventSource, sectionDetails, questionGroup.isEditable(),
+                QuestionGroupState.ACTIVE.equals(questionGroup.getState()));
     }
 
     private EventSource mapToEventSource(Set<EventSourceEntity> eventSources) {
@@ -344,12 +351,23 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
         questionGroupInstance.setDateConducted(Calendar.getInstance().getTime());
         questionGroupInstance.setCompletedStatus(1);
-        questionGroupInstance.setVersionNum(1);
+        Integer questionGroupId = questionGroupDetail.getId();
+        questionGroupInstance.setVersionNum(
+                nextQuestionGroupInstanceVersion(entityId, questionGroupId));
         questionGroupInstance.setCreatorId(creatorId);
         questionGroupInstance.setEntityId(entityId);
-        questionGroupInstance.setQuestionGroup(questionGroupDao.getDetails(questionGroupDetail.getId()));
+        questionGroupInstance.setQuestionGroup(questionGroupDao.getDetails(questionGroupId));
         questionGroupInstance.setQuestionGroupResponses(mapToQuestionGroupResponses(questionGroupDetail, questionGroupInstance));
         return questionGroupInstance;
+    }
+
+    private int nextQuestionGroupInstanceVersion(int entityId, Integer questionGroupId) {
+        int nextVersion = 0;
+        List questionGroupInstances = questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(entityId, questionGroupId);
+        if (isNotEmpty(questionGroupInstances)) {
+            nextVersion = ((QuestionGroupInstance) questionGroupInstances.get(0)).getVersionNum() + 1;
+        }
+        return nextVersion;
     }
 
     private List<QuestionGroupResponse> mapToQuestionGroupResponses(QuestionGroupDetail questionGroupDetail, QuestionGroupInstance questionGroupInstance) {
