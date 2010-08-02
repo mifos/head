@@ -10,6 +10,7 @@ fieldset {
 
 fieldset ol {
     padding: 1em 1em 0 1em;
+    overflow: hidden;
     list-style: none;
 }
 
@@ -18,6 +19,13 @@ fieldset li {
     clear: left;
     width: 100%;
     padding-bottom: 1em;
+}
+fieldset.right_section {
+    margin: 0;
+}
+fieldset.right_section label{
+    text-align: left;
+    width: auto;
 }
 
 fieldset.submit {
