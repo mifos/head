@@ -62,6 +62,7 @@ public class QuestionTest extends UiTestCaseBase {
     private static final String MULTI_SELECT = "Multi Select";
     private static final String SINGLE_SELECT = "Single Select";
     private static final String NUMBER = "Number";
+    public static final String INVALID_BOUNDS_ERR = "Please specify valid numeric bounds.";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -84,12 +85,19 @@ public class QuestionTest extends UiTestCaseBase {
         CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage().verifyPage();
         testSubmitButtonDisabled(createQuestionPage);
         testMissingTitle(createQuestionPage);
+        testInvalidNumericBounds(createQuestionPage);
         testAddQuestions(createQuestionPage);
         testDuplicateTitle(createQuestionPage);
         adminPage = testCreateQuestions(createQuestionPage);
         adminPage = testDuplicateTitleForExistingQuestionInDB(adminPage);
         ViewAllQuestionsPage viewAllQuestionsPage = testViewQuestions(adminPage);
         testViewQuestions(viewAllQuestionsPage);
+    }
+
+    private void testInvalidNumericBounds(CreateQuestionPage createQuestionPage) {
+        setupQuestionParameters(title + NUMBER, NUMBER, null, 100, 10);
+        createQuestionPage.addQuestion(createQuestionParameters);
+        assertTextFoundOnPage(INVALID_BOUNDS_ERR);
     }
 
     private void testAddQuestions(CreateQuestionPage createQuestionPage) {
