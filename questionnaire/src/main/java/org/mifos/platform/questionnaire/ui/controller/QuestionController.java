@@ -89,10 +89,17 @@ public class QuestionController extends QuestionnaireController {
             result = "failure";
         }
 
-        else if(questionForm.answerChoicesAreInvalid()){
+        else if(questionForm.answerChoicesAreInvalid()) {
             constructErrorMessage(
                     context, "questionnaire.error.question.choices",
                     "currentQuestion.choice", "Please specify at least 2 choices.");
+            result = "failure";
+        }
+
+        else if (questionForm.numericBoundsAreInvalid()) {
+            constructErrorMessage(
+                    context, QuestionnaireConstants.INVALID_NUMERIC_BOUNDS,
+                    "currentQuestion.numericMin", "Please ensure maximum value is greater than minimum value.");
             result = "failure";
         }
 

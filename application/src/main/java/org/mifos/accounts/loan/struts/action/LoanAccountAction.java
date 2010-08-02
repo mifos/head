@@ -141,7 +141,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
-import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacadeLocator;
+import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.reports.admindocuments.persistence.AdminDocAccStateMixPersistence;
 import org.mifos.reports.admindocuments.persistence.AdminDocumentPersistence;
 import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
@@ -319,6 +319,7 @@ public class LoanAccountAction extends AccountAppAction {
         security.allow("waiveChargeOverDue", SecurityConstants.VIEW);
         security.allow("redoLoanBegin", SecurityConstants.CAN_REDO_LOAN_DISPURSAL);
         security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
         return security;
     }
 
@@ -1501,6 +1502,7 @@ public class LoanAccountAction extends AccountAppAction {
     public ActionForward editQuestionResponses(
             final ActionMapping mapping, final ActionForm form,
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "editQuestionResponses");
         return createLoanQuestionnaire.editResponses(mapping, request, (LoanAccountActionForm) form);
     }
 

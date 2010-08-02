@@ -1,4 +1,6 @@
-package org.mifos.platform.questionnaire.service;
+package org.mifos.application.questionnaire.struts;
+
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 
 import javax.servlet.http.HttpServletRequest;
 

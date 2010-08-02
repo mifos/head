@@ -29,10 +29,15 @@ $(document).ready(function(){
 
     $("#currentQuestion\\.type").bind("change keypress click blur", function(){
         var selectedOption = $(this).val();
-        if(selectedOption == $("#multiSelect").val()  ||  selectedOption == $("#singleSelect").val()) {
+        if(selectedOption == $("#multiSelect").val() || selectedOption == $("#singleSelect").val()) {
             $("#choiceDiv").show();
         }else{
             $("#choiceDiv").hide();
+        }
+        if(selectedOption == $("#number").val()) {
+            $("#numericDiv").show();
+        }else{
+            $("#numericDiv").hide();
         }
     });
 
@@ -51,4 +56,5 @@ $(document).ready(function(){
     CreateQuestion.disableSubmitButtonOnEmptyQuestionList();
     $("#currentQuestion\\.type").change();
     $("#currentQuestion\\.choice").keyup();
+    $(".numeric").keyfilter(/[\d\-]/);
 });

@@ -27,6 +27,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
+import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.matchers.MessageMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailFormMatcher;
@@ -53,7 +55,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -63,8 +64,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.GENERIC_VALIDATION;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.MANDATORY_QUESTION_HAS_NO_ANSWER;
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -345,29 +346,6 @@ public class QuestionGroupControllerTest {
     }
 
     @Test
-    public void shouldGetAllQuestionGroupResponses() throws UnsupportedEncodingException {
-        List<QuestionGroupInstanceDetail> details = asList(getQuestionGroupInstance(1991, "QG1"));
-        when(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(101, "Create", "Client")).thenReturn(details);
-        ModelMap modelMap = questionGroupController.getAllQuestionGroupResponses(101, "Create", "Client", "http://some.url");
-        assertThat(modelMap, is(notNullValue()));
-        assertThat((List<QuestionGroupInstanceDetail>) modelMap.get("questionGroupInstanceDetails"), is(details));
-        assertThat((String) modelMap.get("backPageUrl"), is("http://some.url"));
-        verify(questionnaireServiceFacade, times(1)).getQuestionGroupInstancesWithUnansweredQuestionGroups(101, "Create", "Client");
-    }
-
-    @Test
-    public void shouldGetQuestionGroupResponse() throws UnsupportedEncodingException {
-        int instanceId = 12232;
-        QuestionGroupInstanceDetail questionGroupInstance = getQuestionGroupInstance(345, "QG1");
-        when(questionnaireServiceFacade.getQuestionGroupInstance(instanceId)).thenReturn(questionGroupInstance);
-        ModelMap modelMap = questionGroupController.getQuestionGroupResponse(instanceId, "http://some.url");
-        assertThat(modelMap, is(notNullValue()));
-        assertThat((QuestionGroupInstanceDetail) modelMap.get("questionGroupInstance"), is(questionGroupInstance));
-        assertThat((String) modelMap.get("backPageUrl"), is("http://some.url"));
-        verify(questionnaireServiceFacade, times(1)).getQuestionGroupInstance(instanceId);
-    }
-
-    @Test
     public void testSaveQuestionnaireSuccess() {
         String result = questionGroupController.saveQuestionnaire(
                 getQuestionGroupDetails(), 1, requestContext);
@@ -380,13 +358,65 @@ public class QuestionGroupControllerTest {
     @Test
     public void testSaveQuestionnaireFailure() {
         ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
-        validationException.addChildException(new ValidationException(MANDATORY_QUESTION_HAS_NO_ANSWER, getSectionQuestionDetail(1, "q1")));
+        validationException.addChildException(new MandatoryAnswerNotFoundException("q1"));
         Mockito.doThrow(validationException).when(questionnaireServiceFacade).saveResponses(Mockito.<QuestionGroupDetails>any());
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionGroupController.saveQuestionnaire(getQuestionGroupDetails(), 1, requestContext);
         assertThat(result, is("failure"));
         verify(requestContext, times(1)).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.noresponse")));
+    }
+
+    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
+    @Test
+    public void testSaveQuestionnaireFailureForNumericResponseWithoutBounds() {
+        ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
+        validationException.addChildException(new BadNumericResponseException("q1", null, null));
+        doThrow(validationException).when(questionnaireServiceFacade).saveResponses(Mockito.<QuestionGroupDetails>any());
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionGroupController.saveQuestionnaire(getQuestionGroupDetails(), 1, requestContext);
+        assertThat(result, is("failure"));
+        verify(requestContext, times(1)).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.invalid.numeric.response")));
+    }
+
+    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
+    @Test
+    public void testSaveQuestionnaireFailureForNumericResponseNotWithinBounds() {
+        ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
+        validationException.addChildException(new BadNumericResponseException("q1", 10, 100));
+        doThrow(validationException).when(questionnaireServiceFacade).saveResponses(Mockito.<QuestionGroupDetails>any());
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionGroupController.saveQuestionnaire(getQuestionGroupDetails(), 1, requestContext);
+        assertThat(result, is("failure"));
+        verify(requestContext, times(1)).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.invalid.numeric.range.response")));
+    }
+
+    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
+    @Test
+    public void testSaveQuestionnaireFailureForNumericResponseLessThanMinBound() {
+        ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
+        validationException.addChildException(new BadNumericResponseException("q1", 10, null));
+        doThrow(validationException).when(questionnaireServiceFacade).saveResponses(Mockito.<QuestionGroupDetails>any());
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionGroupController.saveQuestionnaire(getQuestionGroupDetails(), 1, requestContext);
+        assertThat(result, is("failure"));
+        verify(requestContext, times(1)).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.invalid.numeric.min.response")));
+    }
+
+    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
+    @Test
+    public void testSaveQuestionnaireFailureForNumericResponseGreaterThanMaxBound() {
+        ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
+        validationException.addChildException(new BadNumericResponseException("q1", null, 100));
+        doThrow(validationException).when(questionnaireServiceFacade).saveResponses(Mockito.<QuestionGroupDetails>any());
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionGroupController.saveQuestionnaire(getQuestionGroupDetails(), 1, requestContext);
+        assertThat(result, is("failure"));
+        verify(requestContext, times(1)).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.invalid.numeric.max.response")));
     }
 
     private QuestionGroupDetails getQuestionGroupDetails() {

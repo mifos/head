@@ -65,6 +65,16 @@ explanation of the license and how it is applied.
 				}
 		}
 		</SCRIPT>
+		<STYLE TYPE="text/css">
+		   	.viewQuestionResponseDiv {
+		   	     padding : 0pt;
+	         }
+	   		  
+	         .viewQuestionResponseDiv ul {
+	   	        list-style-type : none;
+	   	        padding : 0pt; 
+             }	
+		</STYLE>
 		<html-el:form action="/loanAccountAction.do">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOffering')}" var="LoanOffering" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountOwner')}" var="customer" />
@@ -450,7 +460,8 @@ explanation of the license and how it is applied.
 									</table>
 									<c:set var="questionsHostForm" value="${loanAccountActionForm}" scope="request" />
 									<c:import url="/pages/application/surveys/jsp/viewQuestionResponses.jsp">
-									   <c:param name="editResponseURL" value="loanAccountAction.do?method=editQuestionResponses"/>
+									   <c:param name="editResponseURL" value="loanAccountAction.do?method=editQuestionResponses&currentFlowKey=${requestScope.currentFlowKey}"/>
+									   <c:param name="responseDivStyleClass" value="viewQuestionResponseDiv"/>									   
 									</c:import>
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>

@@ -46,12 +46,12 @@ explanation of the license and how it is applied.
 		<!--[if IE]><script type="text/javascript" src="pages/questionnaire/jquery.bgiframe.js"></script><![endif]-->
 		<script type="text/javascript" src="pages/application/surveys/js/captureQuestionResponses_struts.js"></script>
 		
-		<script type="text/css">
+		<STYLE type="text/css">
 		  .validationErr{
 	        color:#FF0000;
 	        float:left;
           }
-		</script>
+		</STYLE>
             
         <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>

@@ -173,6 +173,18 @@ public class SectionQuestionDetail implements Serializable {
         return isNotEmpty(answers) ? CollectionUtils.toString(answers) : EMPTY;
     }
 
+    public boolean isNumeric() {
+        return QuestionType.NUMERIC.equals(getQuestionType());
+    }
+
+    public Integer getNumericMin() {
+        return questionDetail.getNumericMin();
+    }
+
+    public Integer getNumericMax() {
+        return questionDetail.getNumericMax();
+    }
+
     //Used for legacy Struts binding support.
     @Deprecated
     public String[] getValuesAsArray() {

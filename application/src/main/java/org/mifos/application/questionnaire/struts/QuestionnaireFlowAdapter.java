@@ -12,8 +12,9 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
+import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
-import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacadeLocator;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -42,6 +43,8 @@ public class QuestionnaireFlowAdapter {
             HttpServletRequest request, ActionForwards defaultForward) {
         List<QuestionGroupDetail> questionGroups = getQuestionGroups(request);
         if ((questionGroups == null) || (questionGroups.isEmpty()))  {
+            //NOTE: this is done, because the ActionForm is stored in session and when recycled still has the previous questionGroup lists!
+            form.setQuestionGroups(null);
             return mapping.findForward(defaultForward.toString());
         }
         form.setQuestionGroups(questionGroups);
@@ -60,10 +63,13 @@ public class QuestionnaireFlowAdapter {
             questionnaireServiceFacade.validateResponses(groups);
         } catch (ValidationException e) {
             if (e.containsChildExceptions()) {
-                for (ValidationException validationException : e.getChildExceptions()) {
-                   ActionMessage actionMessage =
-                     new ActionMessage(ClientConstants.ERROR_REQUIRED, validationException.getSectionQuestionDetail().getTitle());
-                   errors.add(ClientConstants.ERROR_REQUIRED, actionMessage);
+                for (ValidationException ve : e.getChildExceptions()) {
+                   if (ve instanceof MandatoryAnswerNotFoundException) {
+                       errors.add(ClientConstants.ERROR_REQUIRED,new ActionMessage(ClientConstants.ERROR_REQUIRED, ve.getQuestionTitle()));
+                   }
+                   else if (ve instanceof BadNumericResponseException) {
+                       errors.add(ClientConstants.ERROR_REQUIRED,new ActionMessage(ClientConstants.ERROR_REQUIRED, ve.getQuestionTitle()));
+                   }
                 }
             }
         }

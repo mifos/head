@@ -58,7 +58,7 @@ import java.util.Random;
 import static java.util.Arrays.asList;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"client","acceptance","ui"})
+@Test(sequential = true, groups = {"client","acceptance","ui","smoke"})
 public class ClientTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -194,8 +194,8 @@ public class ClientTest extends UiTestCaseBase {
         verifyQuestionGroupInstances(viewDetailsPage.getQuestionGroupInstances(), questionGroupTitle);
         QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(questionGroupTitle);
         questionGroupResponsePage.verifyPage();
-        Assert.assertEquals(answer1, questionGroupResponsePage.getAnswer(question1));
-        Assert.assertEquals("Choice1, Choice3, Choice4", questionGroupResponsePage.getAnswer(question2));
+        Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question1).contains(answer1));
+        Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice1, Choice3, Choice4"));
         viewDetailsPage = questionGroupResponsePage.navigateToViewClientDetailsPage();
         viewDetailsPage.verifyPage();
     }

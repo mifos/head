@@ -20,7 +20,22 @@ public class CreateQuestionPage extends MifosPage {
     public CreateQuestionPage addQuestion(CreateQuestionParameters createQuestionParameters) {
         selenium.type("currentQuestion.title", createQuestionParameters.getTitle());
         selenium.select("id=currentQuestion.type", "value=" + createQuestionParameters.getType());
-        if (questionHasAnswerChoices(createQuestionParameters)) {
+        fillUpChoices(createQuestionParameters);
+        fillUpNumericDetails(createQuestionParameters);
+        selenium.click("_eventId_addQuestion");
+        waitForPageToLoad();
+        return new CreateQuestionPage(selenium);
+    }
+
+    private void fillUpNumericDetails(CreateQuestionParameters createQuestionParameters) {
+        if (createQuestionParameters.isNumericQuestionType()) {
+            selenium.type("currentQuestion.numericMin", createQuestionParameters.getNumericMin().toString());
+            selenium.type("currentQuestion.numericMax", createQuestionParameters.getNumericMax().toString());
+        }
+    }
+
+    private void fillUpChoices(CreateQuestionParameters createQuestionParameters) {
+        if (createQuestionParameters.questionHasAnswerChoices()) {
             for (String choice : createQuestionParameters.getChoices()) {
                 selenium.type("currentQuestion.choice", choice);
                 selenium.keyUp("id=currentQuestion.choice"," ");
@@ -28,13 +43,6 @@ public class CreateQuestionPage extends MifosPage {
                 waitForPageToLoad();
             }
         }
-        selenium.click("_eventId_addQuestion");
-        waitForPageToLoad();
-        return new CreateQuestionPage(selenium);
-    }
-
-    private boolean questionHasAnswerChoices(CreateQuestionParameters createQuestionParameters) {
-        return "Multi Select".equals(createQuestionParameters.getType()) || "Single Select".equals(createQuestionParameters.getType());
     }
 
     public AdminPage submitQuestions() {

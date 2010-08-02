@@ -95,4 +95,8 @@ public class QuestionForm extends ScreenObject {
     public boolean answerChoicesAreInvalid() {
         return currentQuestion.answerChoicesAreInvalid();
     }
+
+    public boolean numericBoundsAreInvalid() {
+        return currentQuestion.numericBoundsAreInvalid();
+    }
 }

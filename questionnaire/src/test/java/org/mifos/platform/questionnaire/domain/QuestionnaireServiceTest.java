@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
@@ -61,7 +62,6 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.MANDATORY_QUESTION_HAS_NO_ANSWER;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyString;
@@ -101,7 +101,7 @@ public class QuestionnaireServiceTest {
 
     @Before
     public void setUp() {
-        QuestionnaireMapper questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao);
+        QuestionnaireMapper questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao, questionGroupInstanceDao);
         questionnaireService = new QuestionnaireServiceImpl(questionnaireValidator, questionDao, questionnaireMapper, questionGroupDao, eventSourceDao, questionGroupInstanceDao);
     }
 
@@ -247,7 +247,7 @@ public class QuestionnaireServiceTest {
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String event, String source, String... sectionNames) {
-        return new QuestionGroupDetail(0, QUESTION_GROUP_TITLE, getEventSource(event, source), getSectionDefinitions(sectionNames),false);
+        return new QuestionGroupDetail(0, QUESTION_GROUP_TITLE, getEventSource(event, source), getSectionDefinitions(sectionNames), false);
     }
 
     private List<SectionDetail> getSectionDefinitions(String... sectionNames) {
@@ -411,6 +411,24 @@ public class QuestionnaireServiceTest {
     }
 
     @Test
+    public void testGetNumericQuestionByIdSuccess() throws SystemException {
+        int questionId = 1;
+        String title = "Title";
+        QuestionEntity question = getQuestion(questionId, title, AnswerType.NUMBER);
+        question.setNumericMin(10);
+        question.setNumericMax(100);
+        when(questionDao.getDetails(questionId)).thenReturn(question);
+        QuestionDetail questionDetail = questionnaireService.getQuestion(questionId);
+        Assert.assertNotNull(questionDetail);
+        assertThat(questionDetail.getShortName(), is(title));
+        assertThat(questionDetail.getText(), is(title));
+        assertThat(questionDetail.getType(), is(QuestionType.NUMERIC));
+        assertThat(questionDetail.getNumericMin(), is(10));
+        assertThat(questionDetail.getNumericMax(), is(100));
+        verify(questionDao, times(1)).getDetails(questionId);
+    }
+
+    @Test
     public void testGetMultiSelectQuestionById() throws SystemException {
         int questionId = 1;
         String title = "Title";
@@ -509,7 +527,7 @@ public class QuestionnaireServiceTest {
         questionGroupInstance.setEntityId(entityId);
         questionGroupInstance.setVersionNum(version);
         List<QuestionGroupResponse> groupResponses = new ArrayList<QuestionGroupResponse>();
-        for (int i=0; i<responses.length; i++) {
+        for (int i = 0; i < responses.length; i++) {
             groupResponses.add(getQuestionGroupResponse(responses[i], questionGroupInstance, questionGroup.getSections().get(i).getQuestions().get(0)));
         }
         questionGroupInstance.setQuestionGroupResponses(groupResponses);
@@ -525,7 +543,7 @@ public class QuestionnaireServiceTest {
         questionGroupInstance.setEntityId(entityId);
         questionGroupInstance.setVersionNum(version);
         List<QuestionGroupResponse> groupResponses = new ArrayList<QuestionGroupResponse>();
-        for (int i=0; i<responses.length; i++) {
+        for (int i = 0; i < responses.length; i++) {
             groupResponses.add(getQuestionGroupResponse(responses[i], questionGroupInstance, questionGroup.getSections().get(0).getQuestions().get(0)));
         }
         questionGroupInstance.setQuestionGroupResponses(groupResponses);
@@ -544,7 +562,7 @@ public class QuestionnaireServiceTest {
         questionGroupInstance.setEntityId(entityId);
         questionGroupInstance.setVersionNum(1);
         List<QuestionGroupResponse> groupResponses = new ArrayList<QuestionGroupResponse>();
-        for (int i=0; i<responses.length; i++) {
+        for (int i = 0; i < responses.length; i++) {
             groupResponses.add(getQuestionGroupResponse(responses[i], questionGroupInstance, questionGroup.getSections().get(i).getQuestions().get(0)));
         }
         questionGroupInstance.setQuestionGroupResponses(groupResponses);
@@ -563,8 +581,12 @@ public class QuestionnaireServiceTest {
     public void shouldSaveResponses() {
         List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, "value", false));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails,true);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails, true);
+        QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
+        questionGroupInstance.setVersionNum(0);
+        when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(1, 1)).thenReturn(asList(questionGroupInstance));
         questionnaireService.saveResponses(new QuestionGroupDetails(1, 1, asList(questionGroupDetail)));
+        verify(questionGroupInstanceDao).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(1,1);
         verify(questionnaireValidator, times(1)).validateForQuestionGroupResponses(asList(questionGroupDetail));
         verify(questionGroupInstanceDao, times(1)).saveOrUpdateAll(Matchers.<List<QuestionGroupInstance>>any()); // TODO: Verify the contents using a custom matcher
     }
@@ -575,7 +597,7 @@ public class QuestionnaireServiceTest {
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails, true);
         try {
-            Mockito.doThrow(new ValidationException(MANDATORY_QUESTION_HAS_NO_ANSWER, new SectionQuestionDetail())).
+            doThrow(new MandatoryAnswerNotFoundException("Title")).
                     when(questionnaireValidator).validateForQuestionGroupResponses(asList(questionGroupDetail));
             questionnaireService.validateResponses(asList(questionGroupDetail));
             Assert.fail("Should not have thrown the validation exception");
@@ -588,16 +610,16 @@ public class QuestionnaireServiceTest {
     public void shouldGetQuestionGroupInstances() {
         List<Section> sections = new ArrayList<Section>();
         List<QuestionGroupInstance> questionGroupInstances = asList(getQuestionGroupInstance(3031, 2010, 7, 26, getQuestionGroup(4041, "QG1", sections)),
-                                                                           getQuestionGroupInstance(3032, 2010, 7, 26, getQuestionGroup(4042, "QG2", sections)),
-                                                                           getQuestionGroupInstance(3033, 2010, 7, 26, getQuestionGroup(4043, "QG3", sections)),
-                                                                           getQuestionGroupInstance(3034, 2010, 7, 25, getQuestionGroup(4041, "QG1", sections)),
-                                                                           getQuestionGroupInstance(3035, 2010, 7, 25, getQuestionGroup(4042, "QG2", sections)),
-                                                                           getQuestionGroupInstance(3036, 2010, 7, 24, getQuestionGroup(4042, "QG2", sections)),
-                                                                           getQuestionGroupInstance(3037, 2010, 7, 24, getQuestionGroup(4043, "QG3", sections)));
+                getQuestionGroupInstance(3032, 2010, 7, 26, getQuestionGroup(4042, "QG2", sections)),
+                getQuestionGroupInstance(3033, 2010, 7, 26, getQuestionGroup(4043, "QG3", sections)),
+                getQuestionGroupInstance(3034, 2010, 7, 25, getQuestionGroup(4041, "QG1", sections)),
+                getQuestionGroupInstance(3035, 2010, 7, 25, getQuestionGroup(4042, "QG2", sections)),
+                getQuestionGroupInstance(3036, 2010, 7, 24, getQuestionGroup(4042, "QG2", sections)),
+                getQuestionGroupInstance(3037, 2010, 7, 24, getQuestionGroup(4043, "QG3", sections)));
         when(questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202)).thenReturn(questionGroupInstances);
         when(eventSourceDao.retrieveByEventAndSource("View", "Client")).thenReturn(asList(getEventSourceEntity(202)));
         EventSource eventSource = new EventSource("View", "Client", "View.Client");
-        List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSource, false);
+        List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSource, false, false);
         assertThat(instances, is(notNullValue()));
         assertThat(instances.size(), is(7));
         assertQuestionGroupInstanceDetail(instances.get(0), "QG1", 2010, 7, 26, questionGroupInstances.get(0).getId());
@@ -613,24 +635,45 @@ public class QuestionnaireServiceTest {
     }
 
     @Test
+    public void shouldGetLatestQuestionGroupInstances() {
+        List<Section> sections = new ArrayList<Section>();
+        List<QuestionGroupInstance> questionGroupInstances = asList(
+                getQuestionGroupInstance(3033, 2010, 7, 26, getQuestionGroup(4043, "QG2", sections)),
+                getQuestionGroupInstance(3034, 2010, 7, 25, getQuestionGroup(4041, "QG1", sections)),
+                getQuestionGroupInstance(3037, 2010, 7, 24, getQuestionGroup(4043, "QG3", sections)));
+        when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202)).thenReturn(questionGroupInstances);
+        when(eventSourceDao.retrieveByEventAndSource("View", "Client")).thenReturn(asList(getEventSourceEntity(202)));
+        EventSource eventSource = new EventSource("View", "Client", "View.Client");
+        List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSource, false, true);
+        assertThat(instances, is(notNullValue()));
+        assertThat(instances.size(), is(3));
+        assertQuestionGroupInstanceDetail(instances.get(0), "QG2", 2010, 7, 26, questionGroupInstances.get(0).getId());
+        assertQuestionGroupInstanceDetail(instances.get(1), "QG1", 2010, 7, 25, questionGroupInstances.get(1).getId());
+        assertQuestionGroupInstanceDetail(instances.get(2), "QG3", 2010, 7, 24, questionGroupInstances.get(2).getId());
+        verify(questionGroupInstanceDao, times(1)).retrieveLatestQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202);
+        verify(questionnaireValidator, times(1)).validateForEventSource(eventSource);
+        verify(eventSourceDao, times(1)).retrieveByEventAndSource("View", "Client");
+    }
+
+    @Test
     public void shouldGetQuestionGroupInstancesIncludingUnansweredQuestionGroups() {
         List<Section> sections = new ArrayList<Section>();
         List<QuestionGroup> questionGroups = asList(getQuestionGroup(4041, "QG1", sections),
-                                                    getQuestionGroup(4042, "QG2", sections),
-                                                    getQuestionGroup(4043, "QG3", sections),
-                                                    getQuestionGroup(4044, "QG4", sections));
+                getQuestionGroup(4042, "QG2", sections),
+                getQuestionGroup(4043, "QG3", sections),
+                getQuestionGroup(4044, "QG4", sections));
         List<QuestionGroupInstance> questionGroupInstances = asList(getQuestionGroupInstance(3031, 2010, 7, 26, questionGroups.get(0)),
-                                                                    getQuestionGroupInstance(3032, 2010, 7, 26, questionGroups.get(1)),
-                                                                    getQuestionGroupInstance(3033, 2010, 7, 26, questionGroups.get(2)),
-                                                                    getQuestionGroupInstance(3034, 2010, 7, 25, questionGroups.get(0)),
-                                                                    getQuestionGroupInstance(3035, 2010, 7, 25, questionGroups.get(1)),
-                                                                    getQuestionGroupInstance(3036, 2010, 7, 24, questionGroups.get(1)),
-                                                                    getQuestionGroupInstance(3037, 2010, 7, 24, questionGroups.get(2)));
+                getQuestionGroupInstance(3032, 2010, 7, 26, questionGroups.get(1)),
+                getQuestionGroupInstance(3033, 2010, 7, 26, questionGroups.get(2)),
+                getQuestionGroupInstance(3034, 2010, 7, 25, questionGroups.get(0)),
+                getQuestionGroupInstance(3035, 2010, 7, 25, questionGroups.get(1)),
+                getQuestionGroupInstance(3036, 2010, 7, 24, questionGroups.get(1)),
+                getQuestionGroupInstance(3037, 2010, 7, 24, questionGroups.get(2)));
         when(questionGroupDao.retrieveQuestionGroupsByEventSource("View", "Client")).thenReturn(questionGroups);
         when(questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202)).thenReturn(questionGroupInstances);
         when(eventSourceDao.retrieveByEventAndSource("View", "Client")).thenReturn(asList(getEventSourceEntity(202)));
         EventSource eventSource = new EventSource("View", "Client", "View.Client");
-        List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSource, true);
+        List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSource, true, false);
         assertThat(instances, is(notNullValue()));
         assertThat(instances.size(), is(8));
         assertQuestionGroupInstanceDetail(instances.get(0), "QG1", 2010, 7, 26, questionGroupInstances.get(0).getId());
