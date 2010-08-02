@@ -23,8 +23,7 @@ package org.mifos.ui.core.controller;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.application.admin.servicefacade.AdminServiceFacade;
-import org.mifos.dto.screen.ProductConfigurationDto;
+import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -34,60 +33,58 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/editLatenessDormancy")
+@RequestMapping("/previewHoliday")
 @SessionAttributes("formBean")
-public class LatenessDormancyController {
+public class PreviewHolidayController {
 
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
     private static final String CANCEL_PARAM = "CANCEL";
+    private static final String EDIT_PARAM = "EDIT";
 
     @Autowired
-    private AdminServiceFacade adminServiceFacade;
+    private HolidayServiceFacade holidayServiceFacade;
 
-    protected LatenessDormancyController() {
+    protected PreviewHolidayController() {
         // default contructor for spring autowiring
     }
 
-    public LatenessDormancyController(final AdminServiceFacade adminServiceFacade) {
-        this.adminServiceFacade = adminServiceFacade;
+    public PreviewHolidayController(final HolidayServiceFacade adminServiceFacade) {
+        this.holidayServiceFacade = adminServiceFacade;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("editLatenessDormancy", "editLatenessDormancy.ftl").build();
-    }
-
-    @ModelAttribute("formBean")
-    public LatenessDormancyFormBean showPopulatedForm() {
-        ProductConfigurationDto productConfiguration = adminServiceFacade.retrieveProductConfiguration();
-        LatenessDormancyFormBean formBean = new LatenessDormancyFormBean();
-        formBean.setLatenessDays(productConfiguration.getLatenessDays());
-        formBean.setDormancyDays(productConfiguration.getDormancyDays());
-        return formBean;
+        return new AdminBreadcrumbBuilder().withLink("viewHolidays", "viewHolidays.ftl").build();
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
-                                    @ModelAttribute("formBean") LatenessDormancyFormBean formBean,
+    public ModelAndView processFormSubmit(@RequestParam(value = EDIT_PARAM, required = false) String edit,
+                                    @RequestParam(value = CANCEL_PARAM, required = false) String cancel,
+                                    @ModelAttribute("formBean") HolidayFormBean formBean,
                                     BindingResult result,
                                     SessionStatus status) {
 
         String viewName = REDIRECT_TO_ADMIN_SCREEN;
 
-        if (StringUtils.isNotBlank(cancel)) {
-            viewName = REDIRECT_TO_ADMIN_SCREEN;
+        ModelAndView modelAndView = new ModelAndView();
+        if (StringUtils.isNotBlank(edit)) {
+            viewName = "editHoliday";
+            modelAndView.setViewName(viewName);
+            modelAndView.addObject("formBean", formBean);
+        } else if (StringUtils.isNotBlank(cancel)) {
+            modelAndView.setViewName("redirect:viewHolidays.ftl");
             status.setComplete();
         } else if (result.hasErrors()) {
-            viewName = "editLatenessDormancy";
+            modelAndView.setViewName("previewHoliday");
         } else {
-            ProductConfigurationDto productConfigurationDto = new ProductConfigurationDto(formBean.getLatenessDays(), formBean.getDormancyDays());
-            this.adminServiceFacade.updateProductConfiguration(productConfigurationDto);
+            // successful submit.
+            viewName = REDIRECT_TO_ADMIN_SCREEN;
+            modelAndView.setViewName(viewName);
             status.setComplete();
         }
-
-        return viewName;
+        return modelAndView;
     }
 }

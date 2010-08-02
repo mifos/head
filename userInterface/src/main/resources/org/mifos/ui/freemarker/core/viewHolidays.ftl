@@ -22,7 +22,6 @@
         
       [#list holidaysMap?keys as key]
       	<p class="fontBold">Holidays for year ${key}</p>
-      	[#list holidaysMap[key] as officeHoliday]
       	<div class="span-22"> 
         	<div class="bluedivs span-22 fontBold paddingLeft">
         		<span class="span-3">From Date</span>
@@ -31,15 +30,16 @@
             	<span class="span-5">Repayment Rule</span>
             	<span class="span-5">Applies To</span>
         	</div>
-        	<div class="span-22 borderbtm paddingLeft ">
-        		<span class="span-3">${officeHoliday.holidayDetails.fromDate}</span>
-            	<span class="span-3">${officeHoliday.holidayDetails.thruDate}</span>
-            	<span class="span-5">${officeHoliday.holidayDetails.name}</span>
-            	<span class="span-5">${officeHoliday.holidayDetails.repaymentRuleName}</span>
-            	<span class="span-5">${officeHoliday.officeNamesAsString}</span>
-    	    </div>
-    	</div>
-      	[/#list]
+      		[#list holidaysMap[key] as officeHoliday]
+	        	<div class="span-22 borderbtm paddingLeft ">
+	        		<span class="span-3">${officeHoliday.holidayDetails.fromDate}</span>
+	            	<span class="span-3">${officeHoliday.holidayDetails.thruDate}</span>
+	            	<span class="span-5">${officeHoliday.holidayDetails.name}</span>
+	            	<span class="span-5">${officeHoliday.holidayDetails.repaymentRuleName}</span>
+	            	<span class="span-5">${officeHoliday.officeNamesAsString}</span>
+	    	    </div>
+      		[/#list]
+      	</div>
 		<div class="clear">&nbsp;</div>	    
       [/#list]
     	</div>
