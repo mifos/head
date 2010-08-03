@@ -35,6 +35,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.reports.business.MockFormFile;
 import org.mifos.reports.business.ReportsBO;
@@ -122,6 +123,8 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testUpgradePathNotRuined() throws Exception {
+        // TODO Temporary solution to avoid unsuccessful test on some machines
+        TestDatabase.resetMySQLDatabase();
         // Retrieve initial activities information
         List<ActivityEntity> activities = new RolesPermissionsBusinessService().getActivities();
         int newActivityId = activities.get(activities.size() - 1).getId() + 1;
@@ -215,6 +218,8 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testShouldSubmitSucessWhenUploadNewReport() throws Exception {
+        // TODO Temporary solution to avoid unsuccessful test on some machines
+        TestDatabase.resetMySQLDatabase();
 
         setRequestPathInfo("/birtReportsUploadAction.do");
 
