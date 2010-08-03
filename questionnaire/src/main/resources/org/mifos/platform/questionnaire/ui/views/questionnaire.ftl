@@ -58,9 +58,9 @@
                         <label for="details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value">
                             [#if question.mandatory]<span class="red">*</span>[/#if]
                             ${question.title}
-                            [#if question.questionTypeDetail.questionType=="DATE"](dd/mm/yyyy)&nbsp[/#if]:
+                            [#if question.questionType=="DATE"](dd/mm/yyyy)&nbsp[/#if]:
                         </label>
-                        [#switch question.questionTypeDetail.questionType]
+                        [#switch question.questionType]
                           [#case "FREETEXT"]
                             [@spring.formTextarea "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", 'rows="4" cols="50" maxlength="200"' /]
                           [#break]
@@ -89,7 +89,7 @@
                           </fieldset>
                           [#break]
                           [#default]
-                             Unknown question type ${question.questionTypeDetail.questionType}
+                             Unknown question type ${question.questionType}
                         [/#switch]
                     </li>
                     [/#list]

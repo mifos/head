@@ -20,7 +20,6 @@
 
 package org.mifos.platform.questionnaire.ui.model;
 
-import org.mifos.platform.questionnaire.mappers.QuestionTypeDetailFactory;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.util.CollectionUtils;
@@ -71,16 +70,11 @@ public class Question implements Serializable {
     @javax.validation.constraints.Pattern(regexp="^.*[^\\s]+.*$")
     @javax.validation.constraints.NotNull
     public String getType() {
-        return questionTypeToStringMap.get(questionDetail.getQuestionTypeDetail().getQuestionType());
+        return questionTypeToStringMap.get(questionDetail.getType());
     }
 
     public void setType(String type) {
-        QuestionType questionType = stringToQuestionTypeMap.get(type);
-        if (questionType == null) {
-            questionType = QuestionType.INVALID;
-        }
-        QuestionTypeDetailFactory questionTypeDetailFactory = QuestionTypeDetailFactory.getInstance();
-        questionDetail.setQuestionTypeDetail(questionTypeDetailFactory.getQuestionTypeDetail(questionType));
+        questionDetail.setType(stringToQuestionTypeMap.get(type));
     }
 
     public String getId() {
@@ -121,14 +115,14 @@ public class Question implements Serializable {
     }
 
     public void setChoicesIfApplicable() {
-        QuestionType type = questionDetail.getQuestionTypeDetail().getQuestionType();
+        QuestionType type = questionDetail.getType();
         if (!answerChoicesApplicableFor(type)) {
             questionDetail.setAnswerChoices(new ArrayList<String>());
         }
     }
 
     public boolean answerChoicesAreInvalid() {
-        return answerChoicesApplicableFor(questionDetail.getQuestionTypeDetail().getQuestionType()) && getChoices().size() < 2;
+        return answerChoicesApplicableFor(questionDetail.getType()) && getChoices().size() < 2;
     }
 
     public Integer getNumericMin() {
@@ -148,7 +142,7 @@ public class Question implements Serializable {
     }
 
     private boolean answerChoicesApplicableFor(QuestionType type) {
-        return QuestionType.MULTI_SELECT.equals(type) || QuestionType.SINGLE_SELECT.equals(questionDetail.getQuestionTypeDetail().getQuestionType());
+        return QuestionType.MULTI_SELECT.equals(type) || QuestionType.SINGLE_SELECT.equals(questionDetail.getType());
     }
 
     private static void populateStringToQuestionTypeMap() {
@@ -176,7 +170,7 @@ public class Question implements Serializable {
 
     public boolean numericBoundsAreInvalid() {
         boolean result = false;
-        if (QuestionType.NUMERIC.equals(questionDetail.getQuestionTypeDetail().getQuestionType())) {
+        if (QuestionType.NUMERIC.equals(questionDetail.getType())) {
             Integer min = getNumericMin();
             Integer max = getNumericMax();
             result = min != null && max != null && min > max;

@@ -29,11 +29,9 @@ import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundExcept
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.service.EventSource;
-import org.mifos.platform.questionnaire.service.FreeTextQuestionTypeDto;
-import org.mifos.platform.questionnaire.service.NumericQuestionTypeDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.service.QuestionTypeDto;
+import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mockito.Mock;
@@ -81,7 +79,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldNotThrowExceptionWhenQuestionTitleIsProvided() {
         try {
-            questionnaireValidator.validateForDefineQuestion(new QuestionDetail("Title", new FreeTextQuestionTypeDto()));
+            questionnaireValidator.validateForDefineQuestion(new QuestionDetail("Title", QuestionType.FREETEXT));
         } catch (SystemException e) {
             fail("Should not have thrown the exception");
         }
@@ -90,7 +88,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenQuestionTitleIsProvided() {
         try {
-            questionnaireValidator.validateForDefineQuestion(new QuestionDetail(null, new FreeTextQuestionTypeDto()));
+            questionnaireValidator.validateForDefineQuestion(new QuestionDetail(null, QuestionType.FREETEXT));
             fail("Should have thrown the validation exception");
         } catch (SystemException e) {
             assertEquals(QUESTION_TITLE_NOT_PROVIDED, e.getKey());
@@ -100,7 +98,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenQuestionTypeNotProvided() {
         try {
-            questionnaireValidator.validateForDefineQuestion(new QuestionDetail("Title 123", new QuestionTypeDto()));
+            questionnaireValidator.validateForDefineQuestion(new QuestionDetail("Title 123", QuestionType.INVALID));
             fail("Should have thrown the validation exception");
         } catch (SystemException e) {
             assertEquals(QUESTION_TYPE_NOT_PROVIDED, e.getKey());
@@ -110,7 +108,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldNotThrowExceptionForNumericQuestionType() {
         try {
-            QuestionDetail questionDetail = new QuestionDetail("Title", new NumericQuestionTypeDto());
+            QuestionDetail questionDetail = new QuestionDetail("Title", QuestionType.NUMERIC);
             questionnaireValidator.validateForDefineQuestion(questionDetail);
         } catch (SystemException e) {
             fail("Should not have thrown the exception");
@@ -120,7 +118,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionForNumericQuestionTypeWhenInvalidBoundsGiven() {
         try {
-            QuestionDetail questionDetail = new QuestionDetail("Title", new NumericQuestionTypeDto());
+            QuestionDetail questionDetail = new QuestionDetail("Title", QuestionType.NUMERIC);
             questionDetail.setNumericMin(100);
             questionDetail.setNumericMax(10);
             questionnaireValidator.validateForDefineQuestion(questionDetail);
@@ -133,7 +131,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldNotThrowExceptionForNumericQuestionTypeWhenOnlyMinBoundGiven() {
         try {
-            QuestionDetail questionDetail = new QuestionDetail("Title", new NumericQuestionTypeDto());
+            QuestionDetail questionDetail = new QuestionDetail("Title", QuestionType.NUMERIC);
             questionDetail.setNumericMin(10);
             questionnaireValidator.validateForDefineQuestion(questionDetail);
         } catch (SystemException e) {
@@ -144,7 +142,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldNotThrowExceptionForNumericQuestionTypeWhenOnlyMaxBoundGiven() {
         try {
-            QuestionDetail questionDetail = new QuestionDetail("Title", new NumericQuestionTypeDto());
+            QuestionDetail questionDetail = new QuestionDetail("Title", QuestionType.NUMERIC);
             questionDetail.setNumericMax(-100);
             questionnaireValidator.validateForDefineQuestion(questionDetail);
         } catch (SystemException e) {
@@ -360,7 +358,7 @@ public class QuestionValidatorTest {
     }
 
     private QuestionDetail getNumericQuestionDetail(String title, Integer numericMin, Integer numericMax) {
-        QuestionDetail questionDetail = new QuestionDetail(title, new NumericQuestionTypeDto());
+        QuestionDetail questionDetail = new QuestionDetail(title, QuestionType.NUMERIC);
         questionDetail.setNumericMin(numericMin);
         questionDetail.setNumericMax(numericMax);
         return questionDetail;
@@ -384,7 +382,7 @@ public class QuestionValidatorTest {
     private SectionDetail getSection(String name) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, "Q1", "Q1", new QuestionTypeDto()), true, null));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, "Q1", "Q1", QuestionType.INVALID), true, null));
         return section;
     }
 
@@ -393,7 +391,7 @@ public class QuestionValidatorTest {
         section.setName(name);
         if (questionIds != null) {
             for (int questionId : questionIds) {
-                section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, null, null, new QuestionTypeDto()), true, null));
+                section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, null, null, QuestionType.INVALID), true, null));
             }
         }
         return section;

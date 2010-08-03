@@ -24,13 +24,8 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.platform.questionnaire.service.DateQuestionTypeDto;
-import org.mifos.platform.questionnaire.service.FreeTextQuestionTypeDto;
-import org.mifos.platform.questionnaire.service.MultiSelectQuestionTypeDto;
-import org.mifos.platform.questionnaire.service.NumericQuestionTypeDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
-import org.mifos.platform.questionnaire.service.QuestionTypeDto;
-import org.mifos.platform.questionnaire.service.SingleSelectQuestionTypeDto;
+import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.ui.model.Question;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -77,11 +72,11 @@ public class QuestionTest {
 
     @Test
     public void shouldGetTitleAndType() {
-        assertQuestion("Question Title1", new NumericQuestionTypeDto(), "Number", new LinkedList<String>());
-        assertQuestion("Question Title2", new FreeTextQuestionTypeDto(), "Free Text", new LinkedList<String>());
-        assertQuestion("Question Title3", new DateQuestionTypeDto(), "Date", new LinkedList<String>());
-        assertQuestion("Question Title4", new SingleSelectQuestionTypeDto(), "Single Select", Arrays.asList("choice-1", "choice-2"));
-        assertQuestion("Question Title5", new MultiSelectQuestionTypeDto(), "Multi Select", Arrays.asList("choice1", "choice2"));
+        assertQuestion("Question Title1", QuestionType.NUMERIC, "Number", new LinkedList<String>());
+        assertQuestion("Question Title2", QuestionType.FREETEXT, "Free Text", new LinkedList<String>());
+        assertQuestion("Question Title3", QuestionType.DATE, "Date", new LinkedList<String>());
+        assertQuestion("Question Title4", QuestionType.SINGLE_SELECT, "Single Select", Arrays.asList("choice-1", "choice-2"));
+        assertQuestion("Question Title5", QuestionType.MULTI_SELECT, "Multi Select", Arrays.asList("choice1", "choice2"));
     }
 
     @Test
@@ -104,8 +99,8 @@ public class QuestionTest {
     }
 
 
-    private void assertQuestion(String shortName, QuestionTypeDto questionTypeDto, String questionTypeString, List<String> choices) {
-        Question question = new Question(new QuestionDetail(123, "Question Text", shortName, questionTypeDto, choices));
+    private void assertQuestion(String shortName, QuestionType questionType, String questionTypeString, List<String> choices) {
+        Question question = new Question(new QuestionDetail(123, "Question Text", shortName, questionType, choices));
         Assert.assertThat(question.getTitle(), is(shortName));
         Assert.assertThat(question.getType(), is(questionTypeString));
         Assert.assertEquals(question.getChoices(), choices);

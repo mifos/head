@@ -1,7 +1,14 @@
 package org.mifos.application.questionnaire.struts;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import junit.framework.Assert;
+
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.junit.Before;
@@ -9,20 +16,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.platform.questionnaire.service.EventSource;
-import org.mifos.platform.questionnaire.service.FreeTextQuestionTypeDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -90,7 +92,7 @@ public class QuestionnaireFlowAdapterTest {
     }
 
     private List<QuestionGroupDetail> getQuestionGroups() {
-        List<QuestionDetail> questions = Arrays.asList(new QuestionDetail(12, "Question1", "Question1", new FreeTextQuestionTypeDto()));
+        List<QuestionDetail> questions = Arrays.asList(new QuestionDetail(12, "Question1", "Question1", QuestionType.FREETEXT));
         List<SectionDetail> section = Arrays.asList(getSectionDetailWithQuestions("Section1", questions, null, true));
         QuestionGroupDetail questionGroup = getQuestionGroupDetail("Group1", "Create", "Loan", section);
         return Arrays.asList(questionGroup);
