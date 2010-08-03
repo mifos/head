@@ -191,7 +191,6 @@ truncate table  fund_code;
 truncate table  loan_counter;
 truncate table  group_loan_counter;
 truncate table  admin_document;
-truncate table  database_version;
 truncate table  batch_client_summary;
 truncate table  batch_staff_summary;
 truncate table  batch_loan_arrears_aging;
@@ -213,3 +212,5 @@ truncate table question_group_instance;
 truncate table question_group;
 truncate table event_sources;
 truncate table events;
+
+truncate table applied_upgrades;

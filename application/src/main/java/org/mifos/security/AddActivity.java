@@ -46,8 +46,6 @@ public class AddActivity extends Upgrade {
      * Define an activity and one name for it. If you want to give it names in
      * multiple locales, this upgrade can not yet do that.
      *
-     * @param higherVersion
-     *            db version after the new activity is added
      * @param newActivityId
      *            ID for the activity we are creating
      * @param parentActivity
@@ -61,11 +59,8 @@ public class AddActivity extends Upgrade {
      * This constructor is used for version 174 and lower. And it must not be
      * used afterward
      */
-    public AddActivity(int higherVersion, short newActivityId, Short parentActivity, Short locale, String activityName) {
-        super(higherVersion);
-        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION) {
-            throw new RuntimeException(WRONG_CONSTRUCTOR);
-        }
+    public AddActivity(short newActivityId, Short parentActivity, Short locale, String activityName) {
+
         this.newActivityId = newActivityId;
         this.parentActivity = parentActivity;
         this.locale = locale;
@@ -80,8 +75,7 @@ public class AddActivity extends Upgrade {
      * This constructor must be used after version 174. The activityNameKey must
      * in the format Permissions-...
      */
-    public AddActivity(int higherVersion, String activityNameKey, short newActivityId, Short parentActivity) {
-        super(higherVersion);
+    public AddActivity(String activityNameKey, short newActivityId, Short parentActivity) {
         if (!validateLookupValueKey(keyFormat, activityNameKey)) {
             throw new RuntimeException(wrongLookupValueKeyFormat);
         }
@@ -92,8 +86,8 @@ public class AddActivity extends Upgrade {
         this.activityName = null;
     }
 
-    public AddActivity(int higherVersion, String activityNameKey, short newActivityId, Short parentActivity, String activityName) {
-        super(higherVersion);
+    public AddActivity(String activityNameKey, short newActivityId, Short parentActivity, String activityName) {
+        super();
         if (!validateLookupValueKey(keyFormat, activityNameKey)) {
             throw new RuntimeException(wrongLookupValueKeyFormat);
         }
@@ -126,7 +120,6 @@ public class AddActivity extends Upgrade {
             deleteFromLookupValue(connection, (short) lookupId);
             throw e;
         }
-        upgradeVersion(connection);
     }
 
     private void allowActivity(Connection connection, short activityId, int roleId) throws SQLException {

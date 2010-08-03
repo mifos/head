@@ -21,6 +21,10 @@
 package org.mifos.accounts.business;
 
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import junit.framework.Assert;
 
 import org.hibernate.Session;
@@ -30,7 +34,6 @@ import org.junit.Test;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
 
@@ -43,14 +46,20 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
     private static final short FLAG_FEET_TOO_BIG = 12;
 
     private Session session;
+    private Connection connection;
 
     @Before
-    public void setUp() {
+    public void setUp() throws SQLException {
         session = StaticHibernateUtil.getSessionTL();
+        connection = session.connection();
+        connection.setAutoCommit(true);
     }
 
     @After
     public void tearDown() throws Exception {
+        StaticHibernateUtil.closeSession();
+        connection = null;
+        session = null;
         TestDatabase.resetMySQLDatabase();
     }
 
@@ -65,7 +74,7 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
     }
 
     private void upgradeAndCheck(Upgrade upgrade) throws Exception {
-        upgrade.upgrade(session.connection());
+        upgrade.upgrade(connection);
         MifosConfiguration.getInstance().init();
         session = StaticHibernateUtil.getSessionTL();
         AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(AccountStateFlagEntity.class,
@@ -93,26 +102,20 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
     public void testConstructor() throws Exception {
         short newId = 31500;
         AddAccountStateFlag upgrade = null;
-        try {
-            // use deprecated construtor
-            upgrade = new AddAccountStateFlag(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId,
-                    "NewAccountStateFlag", TEST_LOCALE, "NewAccountStateFlag");
-        } catch (Exception e) {
-           Assert.assertEquals(e.getMessage(), AddAccountStateFlag.WRONG_CONSTRUCTOR);
-        }
         String invalidKey = "NewAccountStateFlag";
 
         try {
             // use invalid lookup key format
-            upgrade = new AddAccountStateFlag(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, invalidKey,
+            upgrade = new AddAccountStateFlag(newId, invalidKey,
                     invalidKey);
         } catch (Exception e) {
            Assert.assertEquals(e.getMessage(), AddAccountStateFlag.wrongLookupValueKeyFormat);
         }
         String goodKey = "AccountFlags-NewAccountStateFlag";
-        // use valid construtor and valid key
-        upgrade = new AddAccountStateFlag(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, goodKey, goodKey);
-        upgrade.upgrade(session.connection());
+        // use valid constructor and valid key
+        upgrade = new AddAccountStateFlag( newId, goodKey, goodKey);
+
+        upgrade.upgrade(connection);
         AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(AccountStateFlagEntity.class, newId);
         Assert.assertEquals(goodKey, flag.getLookUpValue().getLookUpName());
         MifosConfiguration.getInstance().init();

@@ -31,7 +31,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.reports.business.ReportsBO;
 import org.mifos.reports.business.ReportsCategoryBO;
 
@@ -52,13 +51,13 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
         transaction = session.beginTransaction();
     }
 
-    private AddReport createReport(int version) {
-        return new AddReport(version, ReportsCategoryBO.ANALYSIS, "TestReportForUpgrade", "XYZ.rptdesign");
+    private AddReport createReport() {
+        return new AddReport(ReportsCategoryBO.ANALYSIS, "TestReportForUpgrade", "XYZ.rptdesign");
     }
 
     @Test
     public void testShouldUpgrade() throws Exception {
-        AddReport addReport = createReport(DatabaseVersionPersistence.APPLICATION_VERSION + 1);
+        AddReport addReport = createReport();
         addReport.upgrade(connection);
         ReportsBO report = new ReportsPersistence().getReport(ReportsCategoryBO.ANALYSIS);
         Assert.assertNotNull(report.getActivityId());

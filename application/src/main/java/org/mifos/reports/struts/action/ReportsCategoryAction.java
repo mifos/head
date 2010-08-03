@@ -36,7 +36,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.reports.business.ReportsCategoryBO;
@@ -266,7 +266,7 @@ public class ReportsCategoryAction extends BaseAction {
         rPersistence.updateLookUpValue(activityId, inputCategoryName);
 
         ActivityGenerator.changeActivityMessage(reportsCategoryBO.getActivityId(),
-                DatabaseVersionPersistence.ENGLISH_LOCALE, reportsCategoryBO.getReportCategoryName());
+                DatabaseMigrator.ENGLISH_LOCALE, reportsCategoryBO.getReportCategoryName());
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 }

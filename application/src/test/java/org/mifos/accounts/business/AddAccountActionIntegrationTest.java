@@ -32,7 +32,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
@@ -51,6 +50,7 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
     public void setUp() throws Exception {
         session = StaticHibernateUtil.getSessionTL();
         connection = session.connection();
+        connection.setAutoCommit(true);
     }
 
     @After
@@ -61,7 +61,7 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void startFromStandardStore() throws Exception {
-        Upgrade upgrade = new AddAccountAction(72, SEND_TO_ORPHANS, TEST_LOCALE, "Send money to orphans");
+        Upgrade upgrade = new AddAccountAction(SEND_TO_ORPHANS, TEST_LOCALE, "Send money to orphans");
         upgradeAndCheck(upgrade);
     }
 
@@ -87,26 +87,27 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
         short newId = 31000;
         AddAccountAction upgrade = null;
         try {
-            // use deprecated construtor
-            upgrade = new AddAccountAction(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, TEST_LOCALE,
-                    "NewAccountAction");
-        } catch (Exception e) {
-           Assert.assertEquals(e.getMessage(), AddAccountAction.WRONG_CONSTRUCTOR);
-        }
+                        // use deprecated constructor
+                        upgrade = new AddAccountAction(newId, TEST_LOCALE,
+                                "NewAccountAction");
+                    } catch (Exception e) {
+                       Assert.assertEquals(e.getMessage(), AddAccountAction.WRONG_CONSTRUCTOR);
+                    }
+
         String invalidKey = "NewAccountAction";
 
         try {
             // use invalid lookup key format
-            upgrade = new AddAccountAction(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, invalidKey);
+            upgrade = new AddAccountAction(newId, invalidKey);
         } catch (Exception e) {
            Assert.assertEquals(e.getMessage(), AddAccountAction.wrongLookupValueKeyFormat);
         }
         String goodKey = "AccountAction-NewAccountAction";
-        // use valid construtor and valid key
-        upgrade = new AddAccountAction(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, goodKey);
+        // use valid constructor and valid key
+        upgrade = new AddAccountAction(newId, goodKey);
         upgrade.upgrade(connection);
 
-        AccountActionEntity action = (AccountActionEntity) session.get(AccountActionEntity.class, newId);
+       AccountActionEntity action = (AccountActionEntity) session.get(AccountActionEntity.class, newId);
        Assert.assertEquals(goodKey, action.getLookUpValue().getLookUpName());
     }
 

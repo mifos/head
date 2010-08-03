@@ -31,19 +31,11 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import junit.framework.Assert;
-
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
 
 public class TestDatabase {
-
-    public static void runUpgradeScripts(int fromVersion, Connection connection) throws Exception {
-        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection);
-        Assert.assertEquals(fromVersion, persistence.read());
-        persistence.upgradeDatabase();
-    }
 
     /**
      * This method was added to work around integration test inter- and intra-dependencies. Once these dependencies in
@@ -146,6 +138,7 @@ public class TestDatabase {
      * Foreign key disabled connection
      */
 
+
     private static Connection fkDisabledConnection;
 
     private static Connection getJDBCConnection() throws Exception {
@@ -156,6 +149,7 @@ public class TestDatabase {
     }
 
     private static Connection initializeFKDisabledConnection() throws Exception {
+
         final Properties databaseSettings = new StandardTestingService().getDatabaseConnectionSettings();
         final String url = databaseSettings.getProperty("hibernate.connection.url");
         final String param = "&sessionVariables=FOREIGN_KEY_CHECKS=0";

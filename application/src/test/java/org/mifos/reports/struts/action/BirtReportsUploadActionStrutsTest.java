@@ -34,7 +34,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.reports.business.MockFormFile;
 import org.mifos.reports.business.ReportsBO;
@@ -144,8 +144,8 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         // Simulate an future activities upgrade
         AddActivity activity = null;
         try {
-            activity = new AddActivity(1, (short) newActivityId,
-                    SecurityConstants.ORGANIZATION_MANAGEMENT, DatabaseVersionPersistence.ENGLISH_LOCALE, "no name");
+            activity = new AddActivity((short) newActivityId,
+                    SecurityConstants.ORGANIZATION_MANAGEMENT, DatabaseMigrator.ENGLISH_LOCALE, "no name");
             activity.upgrade(StaticHibernateUtil.getSessionTL().connection());
 
         } catch (Exception e) {

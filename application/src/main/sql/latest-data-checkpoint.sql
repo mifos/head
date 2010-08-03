@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-insert into database_version(database_version) values(212);
+insert into database_version(database_version) values(225);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -27,14 +27,14 @@ insert into database_version(database_version) values(212);
  *
  * Some columns don't need meaningful values. See "More ISO currencies" below
  * for exactly what columns need meaningful values.
- * 
+ *
  * Consult the application-wide install-time configuration file for
  * changing currency configuration.
  * http://mifos.org/developers/wiki/ConfiguringMifos#application-wide-install-time-settings
  */
 insert into currency(currency_id,currency_name,display_symbol,rounding_mode,rounding_amount,default_currency,default_digits_after_decimal,currency_code)
 values(1,'US Dollar','$',1,.5,0,1,'USD');
-insert into currency(currency_id,currency_name,display_symbol,rounding_mode,rounding_amount,default_currency,default_digits_after_decimal,currency_code)	
+insert into currency(currency_id,currency_name,display_symbol,rounding_mode,rounding_amount,default_currency,default_digits_after_decimal,currency_code)
 values(2,'Indian Rupee','Rs',1,1,1,1,'INR');
 insert into currency(currency_id,currency_name,display_symbol,rounding_mode,rounding_amount,default_currency,default_digits_after_decimal,currency_code)
 values(3,'Euro','',2,.5,0,1,'EUR');
@@ -42,9 +42,9 @@ insert into currency(currency_id,currency_name,display_symbol,rounding_mode,roun
 values(4,'Pound Sterling','',1,.5,0,1,'GBP');
 
 /* More ISO currencies.
- * 
+ *
  * For the following rows, DEFAULT_DIGITS_AFTER_DECIMAL values are just guesses
- * and might very well be incorrect. */ 
+ * and might very well be incorrect. */
 insert into currency (currency_id, display_symbol, default_currency, currency_code, default_digits_after_decimal, currency_name) values (5  , '', 0, 'AED', 2, 'United Arab Emirates dirham');
 insert into currency (currency_id, display_symbol, default_currency, currency_code, default_digits_after_decimal, currency_name) values (6  , '', 0, 'AFN', 2, 'Afghani');
 insert into currency (currency_id, display_symbol, default_currency, currency_code, default_digits_after_decimal, currency_name) values (7  , '', 0, 'ALL', 2, 'Lek');
@@ -224,9 +224,9 @@ insert into currency (currency_id, display_symbol, default_currency, currency_co
 insert into currency (currency_id, display_symbol, default_currency, currency_code, default_digits_after_decimal, currency_name) values (178, '', 0, 'ZWD', 2, 'Zimbabwe dollar');
 
 /* Updated lookup_entity */
-/* The table LOOKUP_ENTITY will contain the entry for entities which 
-need to be configured like center to be called kendra by mfi, 
-ethnicity to be called something by the MFI, 
+/* The table LOOKUP_ENTITY will contain the entry for entities which
+need to be configured like center to be called kendra by mfi,
+ethnicity to be called something by the MFI,
 salutation to be called something by the MFI etc - Configuration */
 insert into lookup_entity(entity_id,entity_name,description)
 values(1,'ClientStatus','Client Status');
@@ -338,8 +338,8 @@ values(56,'PersonnelStatus','PersonnelStatus');
 insert into lookup_entity(entity_id,entity_name,description)
 values(57,'Personnel','Personnel');
 
-/* 2007-12-08 Default custom field entities 58-67 were removed */ 
-/* except for 62, which is also used for non-custom fields */  
+/* 2007-12-08 Default custom field entities 58-67 were removed */
+/* except for 62, which is also used for non-custom fields */
 
 insert into lookup_entity(entity_id,entity_name,description)
 values(62,'ExternalId','External ID');
@@ -358,36 +358,36 @@ insert into lookup_entity(entity_id,entity_name,description)
 values(73,'Position','Position');
 insert into lookup_entity(entity_id,entity_name,description)
 values(74,'Language','Language');
-insert into lookup_entity 
+insert into lookup_entity
 values(75,'CustomerAttendanceType','CustomerAttendanceType');
-insert into lookup_entity 
+insert into lookup_entity
 values(76,'FinancialAction','Financial Action');
-insert into lookup_entity 
+insert into lookup_entity
 values(77,'BulkEntry','BulkEntry');
-insert into lookup_entity 
+insert into lookup_entity
 values(78,'SavingsAccountFlag','SavingsAccountFlag');
-insert into lookup_entity 
+insert into lookup_entity
 values(79,'Address3','Address3');
-insert into lookup_entity 
+insert into lookup_entity
 values(80,'City','City');
-insert into lookup_entity 
+insert into lookup_entity
 values(81,'Interest','Interest');
-insert into lookup_entity 
+insert into lookup_entity
 values(82,'LoanPurposes','Loan Purposes');
-insert into lookup_entity 
+insert into lookup_entity
 values(83,'State','State');
-insert into lookup_entity 
+insert into lookup_entity
 values(84,'Address1','Address1');
-insert into lookup_entity 
+insert into lookup_entity
 values(85,'Address2','Address2');
-insert into lookup_entity 
+insert into lookup_entity
 values(86,'GovernmentId','GovernmentId');
-insert into lookup_entity 
+insert into lookup_entity
 values(87,'Permissions','Permissions');
 insert into lookup_entity(entity_id,entity_name,description)
 values(88,'ServiceCharge','Interest');
 
-insert into lookup_entity 
+insert into lookup_entity
 values(89,'feeUpdationType',' fee updation can to applied to existing accounts or future accounts');
 insert into lookup_entity(entity_id,entity_name,description)
 values(90,'FeeFrequency','Fee Frequency');
@@ -395,6 +395,8 @@ values(90,'FeeFrequency','Fee Frequency');
 insert into lookup_entity(entity_id,entity_name,description)
 values(91,'RepaymentRule','Repayment Rule Types');
 
+insert into lookup_entity(entity_id,entity_name,description)
+values(92,'LivingStatus','Living Status of the clients family member');
 
 /* fee_type */
 insert into fee_type(fee_type_id,fee_lookup_id,flat_or_rate,formula)
@@ -412,13 +414,13 @@ values(5,3,null,null);
 /* The table MEETING_TYPE indicates to what the meeting is associated against like loan,customer etc - System */
 insert into meeting_type(meeting_type_id,meeting_purpose,description)
 values(1,'LOANFREQUENCYOFINSTALLMENTS','Loan Frequency of istalments');
-insert into meeting_type(meeting_type_id,meeting_purpose,description) 
+insert into meeting_type(meeting_type_id,meeting_purpose,description)
 values(2,'SAVINGSTIMEPERFORINTCALC','Savings Time Period for Interest Calculation');
-insert into meeting_type(meeting_type_id,meeting_purpose,description) 
+insert into meeting_type(meeting_type_id,meeting_purpose,description)
 values(3,'SAVINGSFRQINTPOSTACC','Savings Frequency of Interest Posting to Accounts');
-insert into meeting_type(meeting_type_id,meeting_purpose,description) 
+insert into meeting_type(meeting_type_id,meeting_purpose,description)
 values(4,'CUSTOMERMEETING','Customer Meeting');
-insert into meeting_type(meeting_type_id,meeting_purpose,description) 
+insert into meeting_type(meeting_type_id,meeting_purpose,description)
 values(5,'FEEMEETING','Fees Meetings');
 
 /*recurrence_type*/
@@ -1584,7 +1586,7 @@ values(842, 1, 504, null);
 -- VALUES(867, 1, 529, NULL);
 -- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(530, 87, 'Permissions-CanViewCenterMeetingSchedule');
 -- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
--- VALUES(868, 1, 530, NULL); 
+-- VALUES(868, 1, 530, NULL);
 
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(531, 87, 'Permissions-CanRepayLoan');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
@@ -1747,6 +1749,9 @@ insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(608, 87, 'Permissions-CanViewOrganizationSettings');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(950, 1, 608, null);
+insert into lookup_value (lookup_id, entity_id, lookup_name) values(619, 87, 'Permissions-CanImportTransactions');
+insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(955, 1, 619, null);
+
 -- Entity: ServiceCharge
 -- Entity: feeUpdationType
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(556, 89, 'feeUpdationType-AppliesToExistingFutureAccounts');
@@ -1773,6 +1778,11 @@ insert into lookup_value(lookup_id,entity_id,lookup_name) values(578, 91, 'Repay
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(923, 1, 578, null);
 
+insert into lookup_value(lookup_id,entity_id,lookup_name) values(622, 92, 'Together');
+insert into lookup_value(lookup_id,entity_id,lookup_name) values(623, 92, 'Not Together');
+
+insert into lookup_value(lookup_id,entity_id,lookup_name) values(624, 52, 'Mother');
+insert into lookup_value(lookup_id,entity_id,lookup_name) values(625, 52, 'Child');
 -- Potentially unused or orphaned lookup_values
 -- Keep them here for a while and if everything is ok, they will be removed
 -- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(65, 34, 'DBUpgrade.OfficeLevels.Unsued');
@@ -1792,8 +1802,8 @@ insert into personnel_level(level_id, parent_level_id, level_name_id, interactio
 values(2,1,61,0);
 
 
-/* The table LOOKUP_LABEL will contain the configuration information 
-for the LOOKUP_ENTITY defined,like salutation entity could have 
+/* The table LOOKUP_LABEL will contain the configuration information
+for the LOOKUP_ENTITY defined,like salutation entity could have
 mr,mrs etc - Configuration */
 /* Client Status */
 insert into lookup_label(label_id,entity_id,locale_id,entity_name)
@@ -1833,7 +1843,7 @@ insert into lookup_label(label_id,entity_id,locale_id,entity_name)
 values(23,12,1,null)
 /* 'Client' */;
 insert into lookup_label(label_id,entity_id,locale_id,entity_name)
-values(25,13,1,null); 
+values(25,13,1,null);
 /* Office */
 insert into lookup_label(label_id,entity_id,locale_id,entity_name)
 values(27,14,1,null);
@@ -1980,40 +1990,40 @@ values(136,72,1,null);
 insert into lookup_label(label_id,entity_id,locale_id,entity_name)
 values(151,74,1,null);
 /* CustomerAttendance */
-insert into lookup_label 
+insert into lookup_label
 values(154,75,1,null);
 /* Financial Action */
-insert into lookup_label 
+insert into lookup_label
 values(156,76,1,null);
 /* Bulk entry */
-insert into lookup_label 
+insert into lookup_label
 values(158,77,1,null);
 /* Address 3 */
-insert into lookup_label 
+insert into lookup_label
 values(160,79,1,null);
 /* City/District */
-insert into lookup_label 
+insert into lookup_label
 values(162,80,1,null);
 /* Interest */
-insert into lookup_label 
+insert into lookup_label
 values(164,81,1,null);
 /* Loan Purposes */
-insert into lookup_label 
+insert into lookup_label
 values(166,82,1,null);
 /* State */
-insert into lookup_label 
+insert into lookup_label
 values(167,83,1,null);
 /* Address1 */
-insert into lookup_label 
+insert into lookup_label
 values(168,84,1,null);
 /* Address2 */
-insert into lookup_label 
+insert into lookup_label
 values(169,85,1,null);
 /* Government ID */
-insert into lookup_label 
+insert into lookup_label
 values(170,86,1,null);
 /* Permissions */
-insert into lookup_label 
+insert into lookup_label
 values(171,87,1,null);
 /* Interest */
 insert into lookup_label
@@ -2051,17 +2061,11 @@ values(1,111);
 insert into office_code(code_id,lookup_id)
 values(2,112);
 
-/* The PRD_CATEGORY_STATUS table contains the different product category status supported by the product category like active,inactive etc - System */
-insert into prd_category_status(prd_category_status_id,lookup_id) 
-values(0,113);
-
--- At first glance, this appears to just be updating a row to what it already
--- is.  But what does it really do?  Something about auto-increments or
--- something?  It is needed to make MySQL load the file.
-update prd_category_status set prd_category_status_id=0 where lookup_id=113;
-
+/* The PRD_CATEGORY_STATUS table contains the different product category status supported by the product category like active(1),inactive(2) etc - System */
 insert into prd_category_status(prd_category_status_id,lookup_id)
 values(1,114);
+insert into prd_category_status(prd_category_status_id,lookup_id)
+values(2,113);
 
 /* The PRD_STATE table contains the different states supported for the product types like active,inactive etc - System */
 insert into prd_state(prd_state_id,prd_state_lookup_id)
@@ -2077,7 +2081,7 @@ values(2,119);
 
 /* The table Recommended Amount which contains information used in group savings account holding values like complete group , per individual - System */
 insert into recommended_amnt_unit(recommended_amnt_unit_id,lookup_id)
-values(1,120); 
+values(1,120);
 insert into recommended_amnt_unit(recommended_amnt_unit_id,lookup_id)
 values(2,121);
 
@@ -2085,12 +2089,12 @@ values(2,121);
 insert into interest_calculation_types(interest_calculation_type_id,interest_calculation_lookup_id,description)
 values(1,122,null);
 insert into interest_calculation_types(interest_calculation_type_id,interest_calculation_lookup_id,description)
-values(2,123,null); 
+values(2,123,null);
 
 insert into yes_no_master(yes_no_master_id,lookup_id )
-values(1,124); 
+values(1,124);
 insert into yes_no_master(yes_no_master_id,lookup_id )
-values(2,125); 
+values(2,125);
 
 /* The table account type contains the account types supported by the system like Loan , savings, customer - System */
 insert into account_type(account_type_id,lookup_id,description)
@@ -2103,12 +2107,15 @@ values(3,140,'Customer Account');
 insert into account_type(account_type_id,lookup_id,description)
 values(4,126,'Individual Loan Account');
 
-/* The table SPOUSE_FATHER_LOOKUP contains the spouse father data which is used in display - System */ 
+/* The table SPOUSE_FATHER_LOOKUP contains the spouse father data which is used in display - System */
 insert into spouse_father_lookup(spouse_father_id,lookup_id)
 values(1,128);
 insert into spouse_father_lookup(spouse_father_id,lookup_id)
 values(2,129);
-
+insert into spouse_father_lookup(spouse_father_id,lookup_id)
+values(4,624);
+insert into spouse_father_lookup(spouse_father_id,lookup_id)
+values(5,625);
 /* The table Fee Payment Type contains the applicability of fee like time of disburesement,time of first installment etc - System */
 insert into fee_payment(fee_payment_id,fee_payment_lookup_id)
 values(1,146);
@@ -2123,11 +2130,11 @@ values(1,165);
 insert into fee_status(status_id,status_lookup_id)
 values(2,166);
 
-insert into fee_payments_categories_type(fee_payments_category_type_id,fee_payment_id,category_id,fee_type_id) 
+insert into fee_payments_categories_type(fee_payments_category_type_id,fee_payment_id,category_id,fee_type_id)
 values(1,1,1,1);
-insert into fee_payments_categories_type(fee_payments_category_type_id,fee_payment_id,category_id,fee_type_id) 
+insert into fee_payments_categories_type(fee_payments_category_type_id,fee_payment_id,category_id,fee_type_id)
 values(2,1,1,1);
-insert into fee_payments_categories_type(fee_payments_category_type_id,fee_payment_id,category_id,fee_type_id) 
+insert into fee_payments_categories_type(fee_payments_category_type_id,fee_payment_id,category_id,fee_type_id)
 values(3,1,1,1);
 
 /* The table Fee Formula master contains the formula for calculating fee amount like % of Interest, %of Principal etc - System */
@@ -2139,7 +2146,7 @@ insert into fee_formula_master(formulaid,forumla_lookup_id)
 values(3,151);
 
 
-/* The table PERSONNEL_STATUS contains the different status that will be associated to a personnel like active, inactive etc. - System */ 
+/* The table PERSONNEL_STATUS contains the different status that will be associated to a personnel like active, inactive etc. - System */
 insert into personnel_status(personnel_status_id,lookup_id)
 values(1,152);
 insert into personnel_status(personnel_status_id,lookup_id)
@@ -2148,13 +2155,13 @@ values(2,153);
 
 
 /* The table Customer Addendence Types will contain the different attendence types supported by the MFI like present,absent etc - Configuration */
-insert into customer_attendance_types 
+insert into customer_attendance_types
 values(1,194,'Present');
-insert into customer_attendance_types 
+insert into customer_attendance_types
 values(2,195,'Absent');
-insert into customer_attendance_types 
+insert into customer_attendance_types
 values(3,196,'Approved leave');
-insert into customer_attendance_types 
+insert into customer_attendance_types
 values(4,197,'Late');
 
 /* The table Customer level will contain the different levels supported by the system like center,group etc - System */
@@ -2257,11 +2264,11 @@ insert into prd_status(offering_status_id,prd_state_id,prd_type_id,currently_in_
 values(5,2,2,1,1);
 
 /* The table PRD_APPLICABLE_MASTER indicates to which type a product is being associated like client, group , center etc - System */
-insert into prd_applicable_master(prd_applicable_master_id,lookup_id) 
+insert into prd_applicable_master(prd_applicable_master_id,lookup_id)
 values(1,68);
-insert into prd_applicable_master(prd_applicable_master_id,lookup_id) 
+insert into prd_applicable_master(prd_applicable_master_id,lookup_id)
 values(2,69);
-insert into prd_applicable_master(prd_applicable_master_id,lookup_id) 
+insert into prd_applicable_master(prd_applicable_master_id,lookup_id)
 values(3,70);
 
 
@@ -2395,9 +2402,9 @@ values(2,16);
 
 /* The table Office will contain the default Head office information of the MFI like officename etc */
 /* This information can be configured through the UI, so does not need to be configured in the script */
-insert into office( parent_office_id, global_office_num, status_id, 
-  office_code_id, office_level_id,  search_id, office_short_name, 
-  max_child_count,local_remote_flag, display_name, 
+insert into office( parent_office_id, global_office_num, status_id,
+  office_code_id, office_level_id,  search_id, office_short_name,
+  max_child_count,local_remote_flag, display_name,
   created_by, created_date, updated_by, updated_date, version_no)
 values(null,'0001',1,
   null,1,'1.1','MIF1',
@@ -2406,7 +2413,7 @@ values(null,'0001',1,
 
 
 /* STILL NEEDS COMMENTS */
-insert into mfi_attribute(attribute_id, office_id, attribute_name, attribute_value) 
+insert into mfi_attribute(attribute_id, office_id, attribute_name, attribute_value)
 values(1,1,'CENTER','GROUP');
 insert into mfi_attribute(attribute_id, office_id, attribute_name, attribute_value)
 values(2,1,'CENTER','GROUP');
@@ -2420,8 +2427,8 @@ values(5,1,'CENTER','GROUP');
 
 /* DONT EDIT THE LOGIN_NAME COLUMN VALUE IN THE FOLLOWING ROW BECAUSE IT WOULD BE USED AS DEFAULT USER
    PASSWORD FOR THE SAME IS BEING GENERATED BY INITIALIZER PLUGIN*/
- 
-/* The table Personnel contains the default user of the system with 
+
+/* The table Personnel contains the default user of the system with
    information like login name etc - Configuration */
  insert into personnel(personnel_id,level_id,global_personnel_num,office_id,
  title,personnel_status,preferred_locale,search_id,max_child_count,password,
@@ -2433,7 +2440,7 @@ values(1,2,'1',1,
 null,1,null,0,null,0,0);
 
 /* The table Personnel Details contains the address information of the default user  - Configuration */
-insert into personnel_details 
+insert into personnel_details
 values(1,'Mifos',null,null,'MFI','123','1979-12-12',null,50,null,null,null,'Bangalore',null,null,'Bangalore','Bangalore','Bangalore',null,null);
 
 /* the table ENTITY_MASTER is used to specify entities that can be configured and are refered to in later sections of the script. */
@@ -2696,7 +2703,7 @@ values(119,113,479,479 );
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(120,113,480,480 );
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
-values(121,34,481,481 ); 
+values(121,34,481,481 );
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(122,56,482,482 );
 /* INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID)VALUES(123,33,709,709 ); */
@@ -2705,7 +2712,7 @@ values(122,56,482,482 );
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(126,34,483,483 );
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
-values(127,78,484,484 ); 
+values(127,78,484,484 );
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(128,78,485,485 );
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
@@ -2793,14 +2800,14 @@ values(151,141,504,504 );
 -- VALUES(174,149,527,527 );
 -- INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID)
 -- VALUES(175,149,528,528 );
--- 
--- 
--- 
+--
+--
+--
 -- INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID)
 -- VALUES(176,150,529,529 );
 -- INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID)
 -- VALUES(177,151,530,530 );
--- 
+--
 
 
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
@@ -2832,7 +2839,7 @@ insert into activity(activity_id,parent_id,activity_name_lookup_id,description_l
 values(189,113,553,553 );
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(190,136,554,554 );
-insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) 
+insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(191,136,555,555 );
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(193,13,562,562 );
@@ -2852,7 +2859,7 @@ insert into activity(activity_id,parent_id,activity_name_lookup_id,description_l
 values(199,56,567,567 );
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(200,78,568,568 );
-insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) 
+insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(201,196,569,569);
 
 
@@ -3037,7 +3044,7 @@ insert into roles_activity(activity_id,role_id)values(122,1);
 /* INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID)VALUES(125,1);*/
 insert into roles_activity(activity_id,role_id)
 values(126,1);
-insert into roles_activity(activity_id,role_id) values(127,1); 
+insert into roles_activity(activity_id,role_id) values(127,1);
 insert into roles_activity(activity_id,role_id)values(128,1);
 insert into roles_activity(activity_id,role_id)
 values(129,1);
@@ -3156,9 +3163,9 @@ insert into roles_activity(activity_id,role_id)
 values(189,1);
 insert into roles_activity(activity_id,role_id)
 values(190,1);
-insert into roles_activity(activity_id,role_id) 
+insert into roles_activity(activity_id,role_id)
 values(191,1);
-insert into roles_activity(activity_id,role_id) 
+insert into roles_activity(activity_id,role_id)
 values(192,1);
 insert into roles_activity(activity_id,role_id)
 values (193,1);
@@ -3198,25 +3205,25 @@ values(7,78,1,0);
 
 /* inserting VALUES in interest_type table*/
 /* The table Interest Types contains the different interest types supported by the system like Flat etc - System */
-insert into interest_types (interest_type_id, lookup_id, category_id, descripton) 
+insert into interest_types (interest_type_id, lookup_id, category_id, descripton)
 values(1,79,1,'Flat');
 insert into interest_types (interest_type_id, lookup_id, category_id, descripton)
 values(2,80,1,'Declining');
-insert into interest_types (interest_type_id, lookup_id, category_id, descripton) 
+insert into interest_types (interest_type_id, lookup_id, category_id, descripton)
 values(4,604,1,'Declining Balance-Equal Principal Installment');
 
-insert into interest_calc_rule (interest_calc_rule_id, lookup_id) 
+insert into interest_calc_rule (interest_calc_rule_id, lookup_id)
 values(1,88);
-insert into interest_calc_rule (interest_calc_rule_id, lookup_id) 
+insert into interest_calc_rule (interest_calc_rule_id, lookup_id)
 values(2,89);
 
 /* Grace period types*/
-/* The table GRACE_PERIOD_TYPE contains the different grace types supported by the system like principal only grace,interest only grace etc - System */ 
-insert into grace_period_type (grace_period_type_id, lookup_id) 
+/* The table GRACE_PERIOD_TYPE contains the different grace types supported by the system like principal only grace,interest only grace etc - System */
+insert into grace_period_type (grace_period_type_id, lookup_id)
 values(1,96);
-insert into grace_period_type (grace_period_type_id, lookup_id) 
+insert into grace_period_type (grace_period_type_id, lookup_id)
 values(2,97);
-insert into grace_period_type (grace_period_type_id, lookup_id) 
+insert into grace_period_type (grace_period_type_id, lookup_id)
 values(3,98);
 
 /* The table Rank Days contains data like first,second,third,fourth,last which will be used in meeting -System */
@@ -3275,10 +3282,10 @@ insert into field_configuration(field_config_id,field_name,entity_id,mandatory_f
 values(14,'EducationLevel',1,0,0);
 insert into field_configuration(field_config_id,field_name,entity_id,mandatory_flag,hidden_flag)
 values(15,'Photo',1,0,0);
-/*SpouseFatharMiddleName for Client*/ 
+/*SpouseFatharMiddleName for Client*/
 insert into field_configuration(field_config_id,field_name,entity_id,mandatory_flag,hidden_flag)
 values(16,'SpouseFatherMiddleName',1,0,0);
-/*SpouseFatharSecondLastName for Client*/ 
+/*SpouseFatharSecondLastName for Client*/
 insert into field_configuration(field_config_id,field_name,entity_id,mandatory_flag,hidden_flag)
 values(17,'SpouseFatherSecondLastName',1,0,0);
 /*Trained and trained date*/
@@ -3493,7 +3500,7 @@ insert into accepted_payment_type (accepted_payment_type_id,transaction_id,payme
 insert into accepted_payment_type (accepted_payment_type_id,transaction_id,payment_type_id) values (4,4,1);
 insert into accepted_payment_type (accepted_payment_type_id,transaction_id,payment_type_id) values (5,5,1);
 
-/* The table FEE_UPDATE_TYPE indicates what in fee is changed like amount changed, status changed etc - System */ 
+/* The table FEE_UPDATE_TYPE indicates what in fee is changed like amount changed, status changed etc - System */
 insert into fee_update_type(lookup_id) values(556);
 insert into fee_update_type(lookup_id) values(557);
 
@@ -3516,47 +3523,6 @@ values(5,1,'Funding Org D',0);
 
 
 -- Begin data for Reports Mini Portal
-insert into mis_bank values (1,'BANK1');
-insert into mis_bank values (2,'BANK2');
-insert into mis_bank values (3,'BANK3');
-
-insert into mis_bankbranch values (1,1,'BRANCHB1',4);
-insert into mis_bankbranch values (2,2,'BRANCHB2',5);
-insert into mis_bankbranch values (3,3,'BRANCHB3',6);
-insert into mis_bankbranch values (4,1,'BRANCHB11',7);
-insert into mis_bankbranch values (5,2,'BRANCHB21',8);
-insert into mis_bankbranch values (6,3,'BRANCHB31',9);
-
-insert into mis_geographicalarea values (1,'A1',1,null);
-insert into mis_geographicalarea values (2,'A2',1,null);
-insert into mis_geographicalarea values (3,'A3',1,null);
-insert into mis_geographicalarea values (4,'B1',2,1);
-insert into mis_geographicalarea values (5,'B2',2,2);
-insert into mis_geographicalarea values (6,'B3',2,3);
-insert into mis_geographicalarea values (7,'B11',2,1);
-insert into mis_geographicalarea values (8,'B21',2,2);
-insert into mis_geographicalarea values (9,'B31',2,3);
-
-insert into mis_geographicalareatype values (1,'A');
-insert into mis_geographicalareatype values (2,'B');
-
-insert into mis_shgmemberprofile values (1,1,'MEMBER1','YES',50,'YES');
-insert into mis_shgmemberprofile values (1,2,'MEMBER2','YES',50,'YES');
-insert into mis_shgmemberprofile values (1,3,'MEMBER3','NO',0,'YES');
-insert into mis_shgmemberprofile values (1,4,'MEMBER4','YES',100,'NO');
-
-insert into mis_shgprofile values 
-(1,'G1',10,4,null,'LEADER 1','LEADER 2',1);
-insert into mis_shgprofile values 
-(2,'G2',10,4,null,'LEADER1','LEADER2',1);
-insert into mis_shgprofile values 
-(3,'G3',8,5,null,'LAEDER1','LEADER2',2);
-insert into mis_shgprofile values 
-(4,'G4',12,4,null,'LEADER1','LEADER2',1);
-insert into mis_shgprofile values 
-(5,'G5',15,5,null,'LEADER1','LEADER2',2);
-insert into mis_shgprofile values 
-(6,'G6',11,7,null,'LEADER1','LEADER2',1);
 
 -- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(915,1,570,'Can reverse Loan disbursals');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values(202,99,570,570);
@@ -3564,7 +3530,7 @@ insert into roles_activity values (202,1);
 
 -- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(916,1,571,'Loan reversal');
 insert into account_state_flag(
-  flag_id,lookup_id,status_id,flag_description,retain_flag) 
+  flag_id,lookup_id,status_id,flag_description,retain_flag)
   values(7,571,10,'Loan reversal',0);
 
 -- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(917,1,572,'Loan Reversal');
@@ -3597,25 +3563,25 @@ values(74,'AssignClients',1,0,0);
 
 -- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(925,1,580,'Can remove clients from groups');
 insert into activity(activity_id,parent_id,
-  activity_name_lookup_id,description_lookup_id) 
+  activity_name_lookup_id,description_lookup_id)
   values(206,34,580,580);
 insert into roles_activity values (206,1);
 
 -- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(926,1,581,'Can view Detailed Aging of Portfolio at Risk');
 -- INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,
---  ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID) 
+--  ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID)
 --  VALUES(207,150,581,581);
 -- INSERT INTO ROLES_ACTIVITY VALUES (207,1);
 
--- INSERT INTO LOOKUP_VALUE_LOCALE 
+-- INSERT INTO LOOKUP_VALUE_LOCALE
 --  VALUES(927,1,582,'Can add an existing client to a group');
 insert into activity(activity_id,parent_id,
-  activity_name_lookup_id,description_lookup_id) 
+  activity_name_lookup_id,description_lookup_id)
   values(208,34,582,582);
 insert into roles_activity values (208,1);
 
 insert into activity(activity_id,parent_id,
-  activity_name_lookup_id,description_lookup_id) 
+  activity_name_lookup_id,description_lookup_id)
   values(229,145,607,607);
 insert into roles_activity values (229,1);
 
@@ -3634,7 +3600,7 @@ insert into roles_activity values (211,1);
 
 -- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(931,1,586,'Can view Active Loans By Loan Officer');
 -- INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,
---   ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID) 
+--   ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID)
 --  VALUES(212,150,586,586);
 -- INSERT INTO ROLES_ACTIVITY VALUES (212,1);
 
@@ -3658,42 +3624,42 @@ insert into roles_activity values (216,1);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(611, 87, 'Permissions-CanViewBranchCashConfirmationReport');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value) values(953, 1, 611, null);
 
-insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) 
+insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(231,150,611,611);
 insert into roles_activity values (231,1);
 
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(612, 87, 'Permissions-CanViewBranchProgressReport');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value) values(954, 1, 612, null);
 
-insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) 
+insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(232,150,612,612);
 insert into roles_activity values (232,1);
 
-/* The table Report Category will contain the different report category 
+/* The table Report Category will contain the different report category
    supported by the MFI like Performance, Client Detail etc - Configuration */
-insert into report_category(report_category_id,report_category_value) 
+insert into report_category(report_category_id,report_category_value)
   values(1,'Client Detail');
-insert into report_category(report_category_id,report_category_value) 
+insert into report_category(report_category_id,report_category_value)
   values(2,'Performance');
-insert into report_category(report_category_id,report_category_value) 
+insert into report_category(report_category_id,report_category_value)
   values(3,'Center');
-insert into report_category(report_category_id,report_category_value) 
+insert into report_category(report_category_id,report_category_value)
   values(4,'Loan Product Detail');
-insert into report_category(report_category_id,report_category_value) 
+insert into report_category(report_category_id,report_category_value)
   values(5,'Status');
-insert into report_category(report_category_id,report_category_value) 
+insert into report_category(report_category_id,report_category_value)
   values(6,'Analysis');
-insert into report_category(report_category_id,report_category_value) 
+insert into report_category(report_category_id,report_category_value)
   values(7,'Miscellaneous');
 
-/* The table Report will contain the different reports supported by the MFI 
-   like Client Summary etc. The report will be linked to the category 
+/* The table Report will contain the different reports supported by the MFI
+   like Client Summary etc. The report will be linked to the category
    under which it belongs - Configuration */
-insert into report(report_category_id,report_name,report_identifier, activity_id, report_active) 
+insert into report(report_category_id,report_name,report_identifier, activity_id, report_active)
   values(1,'Collection Sheet Report','collection_sheet_report',229,1);
-insert into report(report_category_id,report_name,report_identifier, activity_id, report_active) 
+insert into report(report_category_id,report_name,report_identifier, activity_id, report_active)
   values(6,'Branch Cash Confirmation Report','branch_cash_confirmation_report',231,1);
-insert into report(report_category_id,report_name,report_identifier, activity_id, report_active) 
+insert into report(report_category_id,report_name,report_identifier, activity_id, report_active)
   values(6,'Branch Progress Report','branch_progress_report',232,1);
 
 insert into report_jasper_map (report_category_id,report_name,report_identifier,
@@ -3717,13 +3683,13 @@ insert into roles_activity values (217,1);
 
 -- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(937,1,592,'Can redo Loan disbursals');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,
-  description_lookup_id) 
+  description_lookup_id)
   values(218,99,592,592);
 insert into roles_activity values (218,1);
 
 -- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(938,1,593,'Can define Accepted Payment Type');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,
-  description_lookup_id) 
+  description_lookup_id)
   values(219,1,593,593);
 insert into roles_activity values (219,1);
 
@@ -3762,17 +3728,22 @@ insert into activity(activity_id,parent_id,activity_name_lookup_id,
 insert into roles_activity values (226,1);
 
 -- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(947,1,605,'Can view system information');
-insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) 
+insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(227,null,605,605);
 insert into roles_activity values (227,1);
 
-insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) 
+insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(228,227,606,606);
 insert into roles_activity values (228,1);
 
-insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) 
+insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(230,203,608,608);
 insert into roles_activity values (230,1);
+
+-- For permission "Can import transaction" under Bulk catagory
+insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
+values(233,196,619,619);
+insert into roles_activity values (233,1);
 
 insert into lookup_value (lookup_id, entity_id, lookup_name) values(609, 76, 'FinancialAction-LoanRescheduled');
 insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(951, 1, 609, null);
@@ -3820,7 +3791,7 @@ insert into supported_locale(locale_id,country_id,lang_id,locale_name,default_lo
 insert into supported_locale(locale_id,country_id,lang_id,locale_name,default_locale) values(7,12,6,'Swahili-Tanzania',0);
 insert into supported_locale(locale_id,country_id,lang_id,locale_name,default_locale) values(8,13,6,'Swahili-Uganda',0);
 
-/* Arabic locale support */  
+/* Arabic locale support */
 insert into country(country_id,country_name,country_short_name) values(14,'Algeria','DZ');
 insert into country(country_id,country_name,country_short_name) values(15,'Bahrain','BH');
 insert into country(country_id,country_name,country_short_name) values(16,'Comoros','KM');
@@ -3910,3 +3881,11 @@ insert into lookup_value(lookup_id,entity_id,lookup_name) values(618,74,'Languag
 insert into language(lang_id,lang_name,lang_short_name,lookup_id) values(10,'Lao','lo',618);
 insert into supported_locale(locale_id,country_id,lang_id,locale_name,default_locale) values(45,50,10,'Lao-Laos',0);
 
+/* Al Majmoua custom English strings */
+insert into supported_locale(locale_id,country_id,lang_id,locale_name,default_locale) values(46,25,1,'English-Lebanon-AlMajmoua',0);
+
+/* Hungarian/Hungary locale support */
+insert into country(country_id,country_name,country_short_name) values(51,'Hungary','HU');
+insert into lookup_value(lookup_id,entity_id,lookup_name) values(702,74,'Language-Hungarian');
+insert into language(lang_id,lang_name,lang_short_name,lookup_id) values(11,'Hungarian','hu',702);
+insert into supported_locale(locale_id,country_id,lang_id,locale_name,default_locale) values(47,51,11,'Hungarian-Hungary',0);

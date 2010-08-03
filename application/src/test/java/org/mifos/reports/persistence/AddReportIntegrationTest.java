@@ -29,7 +29,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.reports.business.ReportsBO;
 import org.mifos.reports.business.ReportsCategoryBO;
@@ -57,19 +56,18 @@ public class AddReportIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testStartFromStandardStore() throws Exception {
         short newId = 17032;
-        AddReport upgrade = new AddReport(DatabaseVersionPersistence.APPLICATION_VERSION + 1,
-                ReportsCategoryBO.ANALYSIS, "Detailed Aging of Portfolio at Risk",
+        AddReport upgrade = new AddReport(ReportsCategoryBO.ANALYSIS, "Detailed Aging of Portfolio at Risk",
                 "DetailedAgingPortfolioAtRisk.rptdesign");
         upgrade.upgrade(session.connection());
         ReportsBO fetched = (ReportsBO) session.get(ReportsBO.class, newId);
-       Assert.assertEquals(newId, (int) fetched.getReportId());
-       Assert.assertEquals(ReportsBO.ACTIVE, fetched.getIsActive());
-       Assert.assertEquals(null, fetched.getActivityId());
-       Assert.assertEquals("Detailed Aging of Portfolio at Risk", fetched.getReportName());
-       Assert.assertEquals("aging_portfolio_at_risk", fetched.getReportIdentifier());
-       Assert.assertEquals(ReportsCategoryBO.ANALYSIS, (int) fetched.getReportsCategoryBO().getReportCategoryId());
+        Assert.assertEquals(newId, (int) fetched.getReportId());
+        Assert.assertEquals(ReportsBO.ACTIVE, fetched.getIsActive());
+        Assert.assertEquals(null, fetched.getActivityId());
+        Assert.assertEquals("Detailed Aging of Portfolio at Risk", fetched.getReportName());
+        Assert.assertEquals("aging_portfolio_at_risk", fetched.getReportIdentifier());
+        Assert.assertEquals(ReportsCategoryBO.ANALYSIS, (int) fetched.getReportsCategoryBO().getReportCategoryId());
 
         ReportsJasperMap map = fetched.getReportsJasperMap();
-       Assert.assertEquals("DetailedAgingPortfolioAtRisk.rptdesign", map.getReportJasper());
+        Assert.assertEquals("DetailedAgingPortfolioAtRisk.rptdesign", map.getReportJasper());
     }
 }

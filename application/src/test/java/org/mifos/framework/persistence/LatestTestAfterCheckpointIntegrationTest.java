@@ -20,8 +20,6 @@
 
 package org.mifos.framework.persistence;
 
-import static org.mifos.framework.persistence.DatabaseVersionPersistence.APPLICATION_VERSION;
-import static org.mifos.framework.persistence.DatabaseVersionPersistence.LATEST_CHECKPOINT_VERSION;
 import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
 
 import java.io.File;
@@ -47,19 +45,15 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**
- * This class runs tests on database upgrade scripts (both SQL
- * based and java based).  It uses a version of the database referred to as
- * a "checkpoint" as a starting point.  The database checkpoint version that
- * it starts with can be adjusted by updating sql/latest-schema-checkupoint.sql
- * and sql/latest-data-checkupoint.sql with a pair of the corresponding
- * latest-schema.sql and latest-data.sql files for a given database version.
- * The static variable DatabaseVersionPersistence.LATEST_CHECKPOINT_VERSION
- * must then be set to the database version number of the latest-xxx.sql files
- * that have been used to update the latest-xxx-checkpoint.sql files.
- * This test will run upgrade scripts using LATEST_CHECKPOINT_VERSION
- * as a starting point.  In general LATEST_CHECKPOINT_VERSION should be a
- * database version that is at least 3-5 upgrades ago in order to allow for
- * fixes to be made to recent upgrades when necessary.
+ * This class runs tests on database upgrade scripts (both SQL based and java based). It uses a version of the database
+ * referred to as a "checkpoint" as a starting point. The database checkpoint version that it starts with can be
+ * adjusted by updating sql/latest-schema-checkupoint.sql and sql/latest-data-checkupoint.sql with a pair of the
+ * corresponding latest-schema.sql and latest-data.sql files for a given database version. The static variable
+ * DatabaseVersionPersistence.LATEST_CHECKPOINT_VERSION must then be set to the database version number of the
+ * latest-xxx.sql files that have been used to update the latest-xxx-checkpoint.sql files. This test will run upgrade
+ * scripts using LATEST_CHECKPOINT_VERSION as a starting point. In general LATEST_CHECKPOINT_VERSION should be a
+ * database version that is at least 3-5 upgrades ago in order to allow for fixes to be made to recent upgrades when
+ * necessary.
  */
 public class LatestTestAfterCheckpointIntegrationTest {
 
@@ -91,11 +85,10 @@ public class LatestTestAfterCheckpointIntegrationTest {
 
     @Test
     public void testSimple() throws Exception {
-        connection.createStatement().execute("drop table if exists foo");
-        connection.commit();
+
         loadLatest();
         IDataSet latestDump = dbUnitConnection.createDataSet();
-        connection.createStatement().execute("drop table if exists foo");
+        connection.createStatement().execute("drop table database_upgrade_test");
         connection.commit();
         applyUpgrades();
         IDataSet upgradeDump = dbUnitConnection.createDataSet();
@@ -104,32 +97,31 @@ public class LatestTestAfterCheckpointIntegrationTest {
 
     @Test
     public void testRealSchemaFromCheckpoint() throws Exception {
+        String tmpDir = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
+
         createLatestDatabaseWithLatestData();
-        Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, new DatabaseVersionPersistence(connection)
-                .read());
-        IDataSet latestDataDump = dbUnitConnection.createDataSet();
 
         // FIXME for some reason the comparison of DatabaseDataSet (IDataSet) doesn't expose the difference at assert in
         // datasets FlatXmlDataSet seems to work here.
-        final File latestDumpFile = File.createTempFile("latestDataDump", ".xml");
-        FlatXmlDataSet.write(latestDataDump, new FileOutputStream(latestDumpFile));
-        latestDataDump = new FlatXmlDataSet(latestDumpFile);
-        latestDumpFile.delete();
-
-        final String latestDumpAsString = TestDatabase.getAllTablesStructureDump();
+        IDataSet latestDataDump = dbUnitConnection.createDataSet();
+        FlatXmlDataSet.write(latestDataDump, new FileOutputStream(tmpDir + "latestDataDump.xml"));
+        latestDataDump = new FlatXmlDataSet(new File(tmpDir + "latestDataDump.xml"));
+        final String latestSchemaDump = TestDatabase.getAllTablesStructureDump();
+        new FileOutputStream(tmpDir + "latestSchemaDump").write(latestSchemaDump.getBytes());
         dropLatestDatabase();
+
         createLatestCheckPointDatabaseWithLatestData();
-        TestDatabase.runUpgradeScripts(LATEST_CHECKPOINT_VERSION, connection);
-        String upgradeDump = TestDatabase.getAllTablesStructureDump();
 
+        DatabaseMigrator migrator = new DatabaseMigrator(connection);
+        migrator.upgrade() ;
+
+        String upgradeSchemaDump = TestDatabase.getAllTablesStructureDump();
+        new FileOutputStream(tmpDir + "upgradeSchemaDump").write(upgradeSchemaDump.getBytes());
         IDataSet upgradeDataDump = dbUnitConnection.createDataSet();
+        FlatXmlDataSet.write(upgradeDataDump, new FileOutputStream(tmpDir + "upgradeDataDump.xml"));
+        upgradeDataDump = new FlatXmlDataSet(new File(tmpDir + "upgradeDataDump.xml"));
 
-        final File upgradeDumpFile = File.createTempFile("upgradeDataDump", ".xml");
-        FlatXmlDataSet.write(upgradeDataDump, new FileOutputStream(upgradeDumpFile));
-        upgradeDataDump = new FlatXmlDataSet(upgradeDumpFile);
-        upgradeDumpFile.delete();
-
-        Assert.assertEquals(latestDumpAsString, upgradeDump);
+        Assert.assertEquals(latestSchemaDump, upgradeSchemaDump);
         Assertion.assertEquals(latestDataDump, upgradeDataDump);
     }
 
@@ -143,9 +135,8 @@ public class LatestTestAfterCheckpointIntegrationTest {
     }
 
     /**
-     * The idea here is to figure out whether we are dropping tables in the
-     * right order to deal with foreign keys. I'm not sure we fully succeed,
-     * however.
+     * The idea here is to figure out whether we are dropping tables in the right order to deal with foreign keys. I'm
+     * not sure we fully succeed, however.
      */
     @Test
     public void testDropTablesWithData() throws Exception {
@@ -167,7 +158,8 @@ public class LatestTestAfterCheckpointIntegrationTest {
                 "insert into lookup_value_locale(locale_id, lookup_id, lookup_value) " + "values(1," + nextLookupId
                         + ",'Martian')");
 
-        upgradeAllFromVersion(LATEST_CHECKPOINT_VERSION);
+        DatabaseMigrator migrator = new DatabaseMigrator(connection);
+        migrator.upgrade();
         connection.commit();
 
         // Assert that custom values have been retained
@@ -184,27 +176,6 @@ public class LatestTestAfterCheckpointIntegrationTest {
         Assert.assertEquals("Martian", rs.getString("lookup_value"));
         rs.close();
 
-    }
-
-    private void upgradeAllFromVersion(int fromVersion) throws Exception {
-        for (int currentVersion = fromVersion; currentVersion < APPLICATION_VERSION; ++currentVersion) {
-            int higherVersion = currentVersion + 1;
-            try {
-                upgradeNextVersion(higherVersion);
-            } catch (Exception failure) {
-                throw new Exception("Cannot upgrade to " + higherVersion, failure);
-            }
-        }
-    }
-
-    private void upgradeNextVersion(int nextVersion) throws Exception {
-        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection);
-        Upgrade upgrade = persistence.findUpgrade(nextVersion);
-        if (upgrade instanceof SqlUpgrade) {
-            assertNoHardcodedValues((SqlUpgrade) upgrade, nextVersion);
-        }
-
-        upgrade.upgrade(connection);
     }
 
     private void assertNoHardcodedValues(SqlUpgrade upgrade, int version) throws Exception {
@@ -235,15 +206,17 @@ public class LatestTestAfterCheckpointIntegrationTest {
     }
 
     private void applyUpgrades() throws Exception {
-        connection.createStatement().execute("create table foo(x integer)");
-        connection.createStatement().execute("insert into foo(x) values(5)");
-        connection.createStatement().execute("alter table foo add column y integer default 7");
+        connection.createStatement().execute("create table database_upgrade_test(x integer)");
+        connection.createStatement().execute("insert into database_upgrade_test(x) values(5)");
+        connection.createStatement().execute("alter table database_upgrade_test add column y integer default 7");
         connection.commit();
     }
 
     private void loadLatest() throws Exception {
-        connection.createStatement().execute("create table foo(x integer, y integer default 7)");
-        connection.createStatement().execute("insert into foo(x, y) values(5,7)");
+        connection.createStatement().execute("drop table if exists database_upgrade_test");
+        connection.commit();
+        connection.createStatement().execute("create table database_upgrade_test(x integer, y integer default 7)");
+        connection.createStatement().execute("insert into database_upgrade_test(x, y) values(5,7)");
         connection.commit();
     }
 
