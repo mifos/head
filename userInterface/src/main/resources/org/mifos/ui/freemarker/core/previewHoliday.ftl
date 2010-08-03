@@ -28,7 +28,7 @@
         	<span class="span-5">${officeHoliday.holidayDetails.repaymentRuleName}</span>
         	<span class="span-5">${officeHoliday.officeNamesAsString}</span>
 	    </div>
-    	
+
         <form method="post" action="previewHoliday.ftl" name="formname">
         [@spring.bind "formBean.name" /]
 		<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}" />
@@ -52,6 +52,10 @@
         [@spring.bind "formBean.selectedOfficeIds" /]
         <input type="hidden" id="selectedOfficeIds" name="${spring.status.expression}" value="${spring.status.value?default("")}" />
         
+        <br />
+        <div class="prepend-1">
+			<input type="submit" class="buttn2" name="EDIT" value="[@spring.message "editHolidayInformation"/]"/>
+		</div>
         <hr />
         <div class="prepend-10">
             <input class="buttn" type="submit" id="holiday.button.submit" name="submit" value="[@spring.message "submit"/]" />

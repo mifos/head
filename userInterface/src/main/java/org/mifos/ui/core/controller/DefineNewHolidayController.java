@@ -20,8 +20,11 @@
 
 package org.mifos.ui.core.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
@@ -31,6 +34,8 @@ import org.mifos.dto.domain.OfficeHoliday;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -58,6 +63,11 @@ public class DefineNewHolidayController {
         this.holidayServiceFacade = adminServiceFacade;
     }
 
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.setValidator(new HolidayFormValidator());
+    }
+
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
         return new AdminBreadcrumbBuilder().withLink("viewHolidays", "viewHolidays.ftl").withLink("addHoliday", "defineNewHoliday.ftl").build();
@@ -67,16 +77,12 @@ public class DefineNewHolidayController {
     @ModelAttribute("formBean")
     public HolidayFormBean showPopulatedForm() {
         HolidayFormBean formBean = new HolidayFormBean();
-        formBean.setName("testHolidayName");
-        formBean.setFromDay(01);
-        formBean.setFromMonth(07);
-        formBean.setFromYear("2011");
         return formBean;
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
-                                    @ModelAttribute("formBean") HolidayFormBean formBean,
+                                    @Valid @ModelAttribute("formBean") HolidayFormBean formBean,
                                     BindingResult result,
                                     SessionStatus status) {
 
@@ -94,10 +100,11 @@ public class DefineNewHolidayController {
                 thruDate = new DateTime().withDate(Integer.parseInt(formBean.getToYear()), formBean.getToMonth(), formBean.getToDay()).toDate();
             }
 
-            HolidayDetails holidayDetail = new HolidayDetails(formBean.getName(), fromDate, thruDate, formBean.getRepaymentRuleId().shortValue());
+            HolidayDetails holidayDetail = new HolidayDetails(formBean.getName(), fromDate, thruDate, Short.valueOf(formBean.getRepaymentRuleId()));
 
+            List<Short> branchIds = convertToIds(formBean.getSelectedOfficeIds());
 
-            OfficeHoliday officeHoliday = holidayServiceFacade.retrieveHolidayDetailsForPreview(holidayDetail);
+            OfficeHoliday officeHoliday = holidayServiceFacade.retrieveHolidayDetailsForPreview(holidayDetail, branchIds);
 
             mav = new ModelAndView("previewHoliday");
             mav.addObject("formBean", formBean);
@@ -105,5 +112,16 @@ public class DefineNewHolidayController {
         }
 
         return mav;
+    }
+
+    private List<Short> convertToIds(String commaDelimetedList) {
+
+        List<Short> branchIdList = new ArrayList<Short>();
+        String[] branchIds = commaDelimetedList.split(",");
+        for (String id : branchIds) {
+            branchIdList.add(Short.valueOf(id));
+        }
+
+        return branchIdList;
     }
 }

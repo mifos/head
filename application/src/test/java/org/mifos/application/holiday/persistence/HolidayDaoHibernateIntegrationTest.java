@@ -22,6 +22,7 @@ package org.mifos.application.holiday.persistence;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+import static org.junit.matchers.JUnitMatchers.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -253,6 +254,23 @@ public class HolidayDaoHibernateIntegrationTest {
 
         // exercise test
         holidayDao.validateNoExtraFutureHolidaysApplicableOnParentOffice(branch1.getParentOffice().getOfficeId(), areaOffice2.getOfficeId());
+    }
+
+    @Test
+    public void shouldRetrieveOfficeNames() throws Exception {
+
+        OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
+
+        // setup
+        createOfficeHierarchyUnderHeadOffice(headOffice);
+
+        List<Short> officeIds = Arrays.asList(branch1.getOfficeId());
+
+        // exercise test
+        List<String> officeNames = holidayDao.retrieveApplicableOfficeNames(officeIds);
+
+        // verification
+        assertThat(officeNames, hasItem(branch1.getOfficeName()));
     }
 
     private void insert(final Holiday holiday) {

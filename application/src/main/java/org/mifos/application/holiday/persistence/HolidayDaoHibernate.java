@@ -140,4 +140,12 @@ public class HolidayDaoHibernate implements HolidayDao {
             }
         }
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<String> retrieveApplicableOfficeNames(Collection<Short> officeIds) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("OFFICE_IDS", officeIds);
+        return (List<String>) genericDao.executeNamedQuery("holiday.retrieveOfficeNames", queryParameters);
+    }
 }

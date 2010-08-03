@@ -35,5 +35,5 @@ public interface HolidayServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     Map<String, List<OfficeHoliday>> holidaysByYear();
 
-    OfficeHoliday retrieveHolidayDetailsForPreview(HolidayDetails holidayDetail);
+    OfficeHoliday retrieveHolidayDetailsForPreview(HolidayDetails holidayDetail, List<Short> officeIds);
 }

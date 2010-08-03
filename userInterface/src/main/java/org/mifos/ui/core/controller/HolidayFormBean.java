@@ -20,20 +20,22 @@
 
 package org.mifos.ui.core.controller;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class HolidayFormBean {
 
     private String name;
     private Integer fromDay;
     private Integer fromMonth;
-
     private String fromYear;
     private Integer toDay;
     private Integer toMonth;
-
     private String toYear;
-    private Integer repaymentRuleId;
+    private String repaymentRuleId;
     private String selectedOfficeIds;
+
+    private Map<String, String> repaymentRuleOptions = new LinkedHashMap<String, String>();
 
     public String getName() {
         return this.name;
@@ -91,11 +93,11 @@ public class HolidayFormBean {
         this.toYear = toYear;
     }
 
-    public Integer getRepaymentRuleId() {
+    public String getRepaymentRuleId() {
         return this.repaymentRuleId;
     }
 
-    public void setRepaymentRuleId(Integer repaymentRuleId) {
+    public void setRepaymentRuleId(String repaymentRuleId) {
         this.repaymentRuleId = repaymentRuleId;
     }
 
@@ -107,4 +109,16 @@ public class HolidayFormBean {
         this.selectedOfficeIds = selectedOfficeIds;
     }
 
+    public Map<String, String> getRepaymentRuleOptions() {
+        this.repaymentRuleOptions = new LinkedHashMap<String, String>();
+        this.repaymentRuleOptions.put("1", "sameDay");
+        this.repaymentRuleOptions.put("2", "nextMeeting/Repayment");
+        this.repaymentRuleOptions.put("3", "nextWorkingDay");
+        this.repaymentRuleOptions.put("4", "repaymentMoratorium");
+        return this.repaymentRuleOptions;
+    }
+
+    public void setRepaymentRuleOptions(Map<String, String> repaymentRuleOptions) {
+        this.repaymentRuleOptions = repaymentRuleOptions;
+    }
 }

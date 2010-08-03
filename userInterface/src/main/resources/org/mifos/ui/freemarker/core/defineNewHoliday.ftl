@@ -1,6 +1,7 @@
-[#ftl]
+[#ftl]	
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
+[#import "macros.ftl" as mifosMacros]
 
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
@@ -20,6 +21,10 @@
         <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired." /] </div>
         
         <form method="post" action="defineNewHoliday.ftl" name="formname">
+        <div id="allErrorsDiv" class="allErrorsDiv">
+        	[@spring.bind "formBean" /]
+  			[@spring.showErrors "<br />" /]
+        </div>
         <p>&nbsp;&nbsp;</p>
                 <div class="prepend-3 span-22 last">
         	<span class="span-4 rightAlign"><span class="red"> * </span>[@spring.message "holidayName" /]</span>
@@ -54,14 +59,18 @@
             	<span class="red"> * </span>[@spring.message "repaymentRule" /]</span>
             	<span class="span-5">
             	    [@spring.bind "formBean.repaymentRuleId" /]
-            	    <!-- ${spring.status.value?default("")} value of select -->
-					<select id="holiday.input.repaymentrule" name="${spring.status.expression}">
-	                	<option value="-1">[@spring.message "--Select--" /]</option>
-	                    <option value="1">[@spring.message "sameDay" /]</option>
-	                    <option value="2">[@spring.message "nextMeeting/Repayment" /]</option>
-	                    <option value="3">[@spring.message "nextWorkingDay" /]</option>
-	                    <option value="4">[@spring.message "repaymentMoratorium" /]</option>
-					</select>
+				    <select id="holiday.input.repaymentrule" name="${spring.status.expression}">
+				        <option value="-1" [@spring.checkSelected ""/]>${springMacroRequestContext.getMessage("--Select--")}</option>
+				        [#if formBean.repaymentRuleOptions?is_hash]
+				            [#list formBean.repaymentRuleOptions?keys as value]
+				            <option value="${value?html}"[@spring.checkSelected value/]>${springMacroRequestContext.getMessage(formBean.repaymentRuleOptions[value]?html)}</option>
+				            [/#list]
+				        [#else]
+				            [#list formBean.repaymentRuleOptions as value]
+				            <option value="${value?html}"[@spring.checkSelected value/]>${springMacroRequestContext.getMessage(value?html)}</option>
+				            [/#list]
+				        [/#if]
+				    </select>
 				</span>
         </div>
         <p>&nbsp;&nbsp;</p>

@@ -20,7 +20,6 @@
 
 package org.mifos.application.holiday.persistence;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -72,10 +71,10 @@ public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
     }
 
     @Override
-    public OfficeHoliday retrieveHolidayDetailsForPreview(HolidayDetails holidayDetail) {
+    public OfficeHoliday retrieveHolidayDetailsForPreview(HolidayDetails holidayDetail, List<Short> officeIds) {
         holidayDetail.setRepaymentRuleName(RepaymentRuleTypes.fromInt(holidayDetail.getRepaymentRuleType().intValue()).getName());
 
-        List<String> officeNames = new ArrayList<String>();
+        List<String> officeNames = this.holidayDao.retrieveApplicableOfficeNames(officeIds);
 
         return new OfficeHoliday(holidayDetail, officeNames);
     }

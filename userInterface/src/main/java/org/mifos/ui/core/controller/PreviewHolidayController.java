@@ -20,10 +20,14 @@
 
 package org.mifos.ui.core.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
+import org.mifos.dto.domain.HolidayDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -71,7 +75,7 @@ public class PreviewHolidayController {
 
         ModelAndView modelAndView = new ModelAndView();
         if (StringUtils.isNotBlank(edit)) {
-            viewName = "editHoliday";
+            viewName = "defineNewHoliday";
             modelAndView.setViewName(viewName);
             modelAndView.addObject("formBean", formBean);
         } else if (StringUtils.isNotBlank(cancel)) {
@@ -80,13 +84,33 @@ public class PreviewHolidayController {
         } else if (result.hasErrors()) {
             modelAndView.setViewName("previewHoliday");
         } else {
-            // successful submit.
-            this.holidayServiceFacade.holidaysByYear();
+            Date fromDate = new DateTime().withDate(Integer.parseInt(formBean.getFromYear()), formBean.getFromMonth(), formBean.getFromDay()).toDate();
+            Date thruDate = null;
+            if (formBean.getToDay() != null) {
+                thruDate = new DateTime().withDate(Integer.parseInt(formBean.getToYear()), formBean.getToMonth(), formBean.getToDay()).toDate();
+            }
+
+            HolidayDetails holidayDetail = new HolidayDetails(formBean.getName(), fromDate, thruDate, Short.valueOf(formBean.getRepaymentRuleId()));
+
+            List<Short> branchIds = convertToIds(formBean.getSelectedOfficeIds());
+
+            this.holidayServiceFacade.createHoliday(holidayDetail, branchIds);
 
             viewName = REDIRECT_TO_ADMIN_SCREEN;
             modelAndView.setViewName(viewName);
             status.setComplete();
         }
         return modelAndView;
+    }
+
+    private List<Short> convertToIds(String commaDelimetedList) {
+
+        List<Short> branchIdList = new ArrayList<Short>();
+        String[] branchIds = commaDelimetedList.split(",");
+        for (String id : branchIds) {
+            branchIdList.add(Short.valueOf(id));
+        }
+
+        return branchIdList;
     }
 }
