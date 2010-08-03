@@ -520,18 +520,28 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						<tr>
 							<td class="fontnormal"><%--
 									<html-el:link styleId="loanaccountdetail.link.viewTransactionHistory"  href="transaction_history_loanAccount.htm"> <mifos:mifoslabel name="loan.view_transc_history" />
-									</html-el:link><br>--%> <span class="fontnormal"> <html-el:link styleId="loanaccountdetail.link.viewStatusHistory"
-								href="loanAccountAction.do?method=viewStatusHistory&globalAccountNum=${loanInformationDto.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-								<mifos:mifoslabel name="loan.view_status_history" />
-							</html-el:link><br>
-							<html-el:link styleId="loanaccountdetail.link.viewChangeLog"
-								href="loanAccountAction.do?method=loadChangeLog&entityType=Loan&entityId=${loanInformationDto.accountId}&currentFlowKey=${requestScope.currentFlowKey}">
-								<mifos:mifoslabel name="loan.view_change_log" />
-							</html-el:link><br>
-							<html-el:link styleId="loanaccountdetail.link.viewTransactionHistory"
-								href="accountAppAction.do?method=getTrxnHistory&input=LoanDetails&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-								<mifos:mifoslabel name="Center.TransactionHistory" />
-							</html-el:link> </span></td>
+									</html-el:link><br>--%> 
+									<span class="fontnormal"> 
+							            <a id="loanaccountdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?entityId=${loanInformationDto.accountId}&event=Create&source=Loan&backPageUrl=loanAccountAction.do?method%3Dget%26globalAccountNum%3D${loanInformationDto.globalAccountNum}">
+							    			<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
+										</a>
+							            <br/>
+									    <html-el:link styleId="loanaccountdetail.link.viewStatusHistory"
+								          href="loanAccountAction.do?method=viewStatusHistory&globalAccountNum=${loanInformationDto.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+								          <mifos:mifoslabel name="loan.view_status_history" />
+							            </html-el:link>
+							            <br>
+										<html-el:link styleId="loanaccountdetail.link.viewChangeLog"
+											href="loanAccountAction.do?method=loadChangeLog&entityType=Loan&entityId=${loanInformationDto.accountId}&currentFlowKey=${requestScope.currentFlowKey}">
+											<mifos:mifoslabel name="loan.view_change_log" />
+										</html-el:link>
+										<br>
+										<html-el:link styleId="loanaccountdetail.link.viewTransactionHistory"
+											href="accountAppAction.do?method=getTrxnHistory&input=LoanDetails&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+											<mifos:mifoslabel name="Center.TransactionHistory" />
+										</html-el:link> 
+									</span>
+							</td>
 						</tr>
 					</table>
 					</td>
