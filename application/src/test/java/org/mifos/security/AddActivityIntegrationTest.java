@@ -59,8 +59,9 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
     private Session session;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         session = StaticHibernateUtil.getSessionTL();
+        TestDatabase.resetMySQLDatabase();
     }
 
     @After
