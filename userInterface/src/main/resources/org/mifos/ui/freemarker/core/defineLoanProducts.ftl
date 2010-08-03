@@ -124,77 +124,77 @@ function disable()
   <div class="content marginAuto">
     <div class="borders span-22">
       <div class="borderbtm span-22">
-        <p class="span-17 arrowIMG orangeheading">[@spring.message "loanproductinformation" /]</p>
+        <p class="span-17 arrowIMG orangeheading">[@spring.message "manageLoanProducts.defineLoanProduct.loanproductinformation" /]</p>
         <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "review&Submit" /]</p>
       </div>
       <div class="subcontent ">
         <form method="" action="" name="formname">
-          <p class="font15"><span class="fontBold" id="createLoanProduct.heading">[@spring.message "addanewLoanproduct" /]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "enterLoanproductinformation" /]</span></p>
-          <div>[@spring.message "completethefieldsbelow.ThenclickPreview.ClickCanceltoreturn" /]</div>
+          <p class="font15"><span class="fontBold" id="createLoanProduct.heading">[@spring.message "manageLoanProducts.defineLoanProduct.addanewLoanproduct" /]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "manageLoanProducts.defineLoanProduct.enterLoanproductinformation" /]</span></p>
+          <div>[@spring.message "manageLoanProducts.defineLoanProduct.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturn" /]</div>
           <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired" /] </div>
           <p class="error" id="error1"></p>
-          <p class="fontBold">[@spring.message "loanproductdetails" /]</p>
+          <p class="fontBold">[@spring.message "manageLoanProducts.defineLoanProduct.loanproductdetails" /]</p>
           <div class="prepend-2  span-24 last">
-            <div class="span-23 "><span class="pull-3 span-8 rightAlign" id="createLoanProduct.label.prdOfferingName"><span class="red">* </span>[@spring.message "productinstancename" /]&nbsp;</span><span class="span-4">
+            <div class="span-23 "><span class="pull-3 span-8 rightAlign" id="createLoanProduct.label.prdOfferingName"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.productinstancename" /]&nbsp;:</span><span class="span-4">
               <input type="text"  id="createLoanProduct.input.prdOffering"/>
               </span> </div>
-            <div class="span-23 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "shortname" /]&nbsp;</span><span class="span-4">
+            <div class="span-23 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.shortname" /]&nbsp;:</span><span class="span-4">
               <input type="text" size="3" id="createLoanProduct.input.prdOfferingShortName" />
               </span> </div>
-            <div class="span-23 "><span class="pull-3 span-8 rightAlign">[@spring.message "description" /]&nbsp;</span><span class="span-4">
+            <div class="span-23 "><span class="pull-3 span-8 rightAlign">[@spring.message "manageLoanProducts.defineLoanProduct.description" /]&nbsp;:</span><span class="span-4">
               <textarea rows="7" cols="55" id="createLoanProduct.input.description"></textarea>
               </span> </div>
-            <div class="span-23 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "productcategory" /]&nbsp;</span><span class="span-4">
+            <div class="span-23 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.productcategory" /]&nbsp;:</span><span class="span-4">
               <select name="select">
-                <option >[@spring.message "--Select--" /]</option>
-                <option >[@spring.message "other" /]</option>
+                <option >--Select--</option>
+                <option >other</option>
               </select>
               </span> </div>
-            <div class="span-23 last"> <span class="pull-3 span-8 rightAlign"><span class="red"> * </span>[@spring.message "startDate" /]</span> <span class="span-2">
+            <div class="span-23 last"> <span class="pull-3 span-8 rightAlign"><span class="red"> * </span>[@spring.message "manageLoanProducts.defineLoanProduct.startdate" /]&nbsp;:</span> <span class="span-2">
               <input type="text" size="1" maxlength="2" id="startDateDD"/>
-              [@spring.message "DD" /]</span> <span>
+              DD</span> <span>
               <input type="text" size="1" maxlength="2" id="startDateMM"/>
-              [@spring.message "MM" /]</span> <span>
+              MM</span> <span>
               <input type="text" size="2" maxlength="4" id="startDateYY"/>
-              [@spring.message "YYYY" /]</span> </div>
-            <div class="span-23 last"> <span class="pull-3 span-8 rightAlign">[@spring.message "endDate" /]</span><span class="span-2">
+              YYYY</span> </div>
+            <div class="span-23 last"> <span class="pull-3 span-8 rightAlign">[@spring.message "manageLoanProducts.defineLoanProduct.enddate" /]&nbsp;:</span><span class="span-2">
               <input type="text" size="1" maxlength="2" id="endDateDD"/>
-              [@spring.message "DD" /]</span> <span class="span-2">
+              DD</span> <span class="span-2">
               <input type="text" size="1" maxlength="2" id="endDateMM"/>
-             [@spring.message "MM" /]</span> <span class="span-3">
+             MM</span> <span class="span-3">
               <input type="text" size="2" maxlength="4" id="endDateYY"/>
-              [@spring.message "YYYY" /]</span> </div>
-            <div class="span-23 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "applicablefor" /]&nbsp;</span><span class="span-4">
+              YYYY</span> </div>
+            <div class="span-23 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.applicablefor" /]&nbsp;:</span><span class="span-4">
               <select name="select">
-                <option >[@spring.message "--Select--" /]</option>
-                <option >[@spring.message "clients" /]</option>
-                <option >[@spring.message "groups" /]</option>
+                <option >--Select--</option>
+                <option >clients</option>
+                <option >groups</option>
               </select>
               </span> </div>
-            <div class="span-23 "><span class="pull-3 span-8 rightAlign">[@spring.message "includeinLoancyclecounter" /]&nbsp;</span><span class="span-4">
+            <div class="span-23 "><span class="pull-3 span-8 rightAlign">[@spring.message "manageLoanProducts.defineLoanProduct.includeinLoancyclecounter" /]&nbsp;:</span><span class="span-4">
               <input type="checkbox"  id="createLoanProduct.checkbox.loanCounter"/>
               </span> </div>
           </div>
           <div class="clear">&nbsp;</div>
           
-          <p class="fontBold">[@spring.message "loanAmount" /]</p>
+          <p class="fontBold">[@spring.message "manageLoanProducts.defineLoanProduct.loanAmount" /]</p>
           <div class="prepend-2  span-23 last">
-            <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "calculateLoanAmountas" /]&nbsp;</span>
+            <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.calculateLoanAmountas" /]&nbsp;:</span>
             	<div class="span-17">
-                	<span class="span-4"><input type="radio" name="loanAmount" id="createLoanProduct.radio.calcLoanAmountsameForAllLoans" value="SameforallLoans" checked="checked" onclick="enableAllLoans1();"/>[@spring.message "sameforallLoans" /]
+                	<span class="span-4"><input type="radio" name="loanAmount" id="createLoanProduct.radio.calcLoanAmountsameForAllLoans" value="SameforallLoans" checked="checked" onclick="enableAllLoans1();"/>[@spring.message "manageLoanProducts.defineLoanProduct.sameforallLoans" /]
                     </span>
-                    <span class="span-4"><input type="radio" name="loanAmount" id="createLoanProduct.radio.calcLoanAmountByLastLoanAmount" value="BylastloanAmount" onclick="enableLoanAmount1();"/>[@spring.message "bylastloanAmount" /]</span>
-                    <span class="span-4 last"><input type="radio" name="loanAmount" id="createLoanProduct.radio.calcLoanAmountByLoanCycle" value="ByloanCycle" onclick="enableLoanCycle1();"/>[@spring.message "byloanCycle" /]</span>
+                    <span class="span-4"><input type="radio" name="loanAmount" id="createLoanProduct.radio.calcLoanAmountByLastLoanAmount" value="BylastloanAmount" onclick="enableLoanAmount1();"/>[@spring.message "manageLoanProducts.defineLoanProduct.bylastloanAmount" /]</span>
+                    <span class="span-4 last"><input type="radio" name="loanAmount" id="createLoanProduct.radio.calcLoanAmountByLoanCycle" value="ByloanCycle" onclick="enableLoanCycle1();"/>[@spring.message "manageLoanProducts.defineLoanProduct.byloanCycle" /]</span>
                 </div>
                 <div class="clear">&nbsp;</div>
-                <div id="option0" class="span-17 prepend-4">
-                	<div class="span-17 bluedivs fontBold paddingLeft" >
-                    	<span class="span-4">[@spring.message "minloanamount" /]</span>
-                        <span class="span-4">[@spring.message "maxloanamount" /]</span>
-                        <span class="span-5 last">[@spring.message "defaultamount" /]</span>
+                <div id="option0" class="span-14 prepend-4">
+                	<div class="span-14 bluedivs fontBold paddingLeft" >
+                    	<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.minloanamount" /]</span>
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.maxloanamount" /]</span>
+                        <span class="span-5 last">[@spring.message "manageLoanProducts.defineLoanProduct.defaultamount" /]</span>
                     </div>
                     <div class="clear">&nbsp;</div>
-                    <div class="span-17 paddingLeft">
+                    <div class="span-14 paddingLeft">
                     	<span class="span-4"><input type="text" /></span>
                         <span class="span-4"><input type="text" /></span>
                         <span class="span-5 last"><input type="text" /></span>
@@ -208,65 +208,65 @@ function disable()
           </div>
           <div class="clear">&nbsp;</div>
           
-          <p class="fontBold">[@spring.message "interestrate" /] </p>
+          <p class="fontBold">[@spring.message "manageLoanProducts.defineLoanProduct.interestrate" /] </p>
           <div class="prepend-2  span-21 last">
-            <div class="span-23 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "interestratetype" /]&nbsp;</span><span class="span-6">
+            <div class="span-23 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.interestratetype" /]&nbsp;:</span><span class="span-6">
               <select name="select">
-                <option >[@spring.message "--Select--" /]</option>
-                <option >[@spring.message "flat" /]</option>
-                <option >[@spring.message "decliningBalance" /]</option>
-                <option >[@spring.message "decliningBalance-EqualPrincipalInstallment" /]</option>
+                <option >--Select--</option>
+                <option >flat</option>
+                <option >decliningBalance</option>
+                <option >decliningBalance-EqualPrincipalInstallment</option>
               </select>
               </span> </div>
-            <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "maxInterestrate" /]&nbsp;</span><span class="span-6">
+            <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.maxInterestrate" /]&nbsp;:</span><span class="span-6">
               <input type="text" id="createLoanProduct.input.maxInterestRate"/>
               &nbsp;(0 - 999)%</span>
             </div>
-            <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "minInterestrate" /]&nbsp;</span><span class="span-6">
+            <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.minInterestrate" /]&nbsp;:</span><span class="span-6">
               <input type="text" id="createLoanProduct.input.minInterestRate"/>
               &nbsp;(0 - 999)%</span>
             </div>
-            <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "defaultInterestrate" /]&nbsp;</span><span class="span-6">
+            <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.defaultInterestrate" /]&nbsp;:</span><span class="span-6">
               <input type="text" id="createLoanProduct.input.defInterestRate"/>
               &nbsp;(0 - 999)%</span>
             </div>
           </div>
           <div class="clear">&nbsp;</div>
-          <p class="fontBold">[@spring.message "repaymentschedule" /]</p>
+          <p class="fontBold">[@spring.message "manageLoanProducts.defineLoanProduct.repaymentschedule" /]</p>
           <div class="prepend-2  span-23 last">
           	<div class="span-23 ">
-            	<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "frequencyofinstallments" /]&nbsp;</span>
+            	<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.frequencyofinstallments" /]&nbsp;:</span>
                 <div class="span-15 borders">
                 	<div class="borderbtm span-15">
-                    	<span class="span-8"><input type="radio" name="time" value="week" checked="checked" onclick="enableWeek();" id="createLoanProduct.radio.freqOfInstallmentsWeeks"/>[@spring.message "weekly" /]</span>
-        				<span class="span-3 last"><input type="radio" name="time" value="month" onclick="enableMonth();" id="createLoanProduct.radio.freqOfInstallmentsMonths"/>[@spring.message "monthly" /]</span>	
+                    	<span class="span-8"><input type="radio" name="time" value="week" checked="checked" onclick="enableWeek();" id="createLoanProduct.radio.freqOfInstallmentsWeeks"/>[@spring.message "manageLoanProducts.defineLoanProduct.weekly" /]</span>
+        				<span class="span-3 last"><input type="radio" name="time" value="month" onclick="enableMonth();" id="createLoanProduct.radio.freqOfInstallmentsMonths"/>[@spring.message "manageLoanProducts.defineLoanProduct.monthly" /]</span>	
                     </div>
                     <div id="week" class="paddingLeft" id="weekDIV" >
-                		<span>[@spring.message "ifweeks,specifythefollowing" /]</span><br />
-                			[@spring.message "recurevery" /]<input type="text" name="weeks" size="3" id="week"/>[@spring.message "week(s)" /]
+                		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ifweeks,specifythefollowing" /]</span><br />
+                			[@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /]<input type="text" name="weeks" size="3" id="week"/>[@spring.message "manageLoanProducts.defineLoanProduct.week(s)" /]
                 	</div>
                     <div id="month" class="paddingLeft">
-                		<span>[@spring.message "ifmonths,specifythefollowing" /]</span><br />
-                			[@spring.message "recurevery" /] <input type="text" name="weeks" size="3" id="month"/>[@spring.message "month(s)" /]
+                		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ifmonths,specifythefollowing" /]</span><br />
+                			[@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /] <input type="text" name="weeks" size="3" id="month"/>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]
                 	</div>
                 </div>
             </div>
-            <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "calculateofInstallmentsas" /]&nbsp;</span>
-            	<div class="span-17">
-                	<span class="span-4"><input type="radio" name="loan" id="createLoanProduct.radio.calcInstallmentSameForAll" value="SameforallLoans" checked="checked" onclick="enableAllLoans();"/>[@spring.message "sameforallLoans" /]
+            <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.calculateofInstallmentsas" /]&nbsp;</span>
+            	<div class="span-14">
+                	<span class="span-4"><input type="radio" name="loan" id="createLoanProduct.radio.calcInstallmentSameForAll" value="SameforallLoans" checked="checked" onclick="enableAllLoans();"/>[@spring.message "manageLoanProducts.defineLoanProduct.sameforallLoans" /]
                     </span>
-                    <span class="span-4"><input type="radio" name="loan" id="createLoanProduct.radio.calcInstallmentByLastLoanAmount" value="BylastloanAmount" onclick="enableLoanAmount();"/>[@spring.message "bylastloanAmount" /]</span>
-                    <span class="span-4 last"><input type="radio" name="loan" id="createLoanProduct.radio.calcInstallmentByLoanCycle" value="ByloanCycle" onclick="enableLoanCycle();"/> [@spring.message "byloanCycle" /]</span>
+                    <span class="span-4"><input type="radio" name="loan" id="createLoanProduct.radio.calcInstallmentByLastLoanAmount" value="BylastloanAmount" onclick="enableLoanAmount();"/>[@spring.message "manageLoanProducts.defineLoanProduct.bylastloanAmount" /]</span>
+                    <span class="span-4 last"><input type="radio" name="loan" id="createLoanProduct.radio.calcInstallmentByLoanCycle" value="ByloanCycle" onclick="enableLoanCycle();"/> [@spring.message "manageLoanProducts.defineLoanProduct.byloanCycle" /]</span>
                 </div>
                 <div class="clear">&nbsp;</div>
-                <div id="install0"  class="span-17 prepend-4">
-                	<div class="span-17 bluedivs fontBold paddingLeft">
-                    	<span class="span-4">[@spring.message "minofinstallments" /]</span>
-                        <span class="span-4">[@spring.message "maxofinstallments" /]</span>
-                        <span class="span-5 last">[@spring.message "defaultofinstallments" /]</span>
+                <div id="install0"  class="span-14 prepend-4">
+                	<div class="span-14 bluedivs fontBold paddingLeft">
+                    	<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.minofinstallments" /]</span>
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.maxofinstallments" /]</span>
+                        <span class="span-5 last">[@spring.message "manageLoanProducts.defineLoanProduct.defaultofinstallments" /]</span>
                     </div>
                     <div class="clear">&nbsp;</div>
-                    <div class="span-17 paddingLeft">
+                    <div class="span-14 paddingLeft">
                     	<span class="span-4 "><input type="text" /></span>
                         <span class="span-4 "><input type="text" /></span>
                         <span class="span-5 last"><input type="text" /></span>
@@ -276,28 +276,28 @@ function disable()
                 
                
             </div>
-            <div class="span-23 ">
-            	<span class="pull-3 span-8 rightAlign" id="gracepertype">[@spring.message "graceperiodtype" /]&nbsp;</span>
+            <div class="span-23">
+            	<span class="pull-3 span-8 rightAlign" id="gracepertype">[@spring.message "manageLoanProducts.defineLoanProduct.graceperiodtype" /]&nbsp;:</span>
                 <span class="span-15 last">
                 	<select name="select">
-                		<option >[@spring.message "--Select--" /]</option>
-                		<option >[@spring.message "none" /]</option>
-                		<option >[@spring.message "graceonallrepayments" /]</option>
-                		<option >[@spring.message "principalonlygrace" /]</option>
+                		<option >--Select--</option>
+                		<option >none</option>
+                		<option >graceonallrepayments</option>
+                		<option >principalonlygrace</option>
               		</select>
                 </span>
             </div>
             <div class="span-23 ">
-            	<span class="pull-3 span-8 rightAlign" id="graceperdur">[@spring.message "graceperiodduration" /]&nbsp;</span>
-                <span class="span-15 last"><input type="text" />&nbsp;[@spring.message "installments" /]</span>
+            	<span class="pull-3 span-8 rightAlign" id="graceperdur">[@spring.message "manageLoanProducts.defineLoanProduct.graceperiodduration" /]&nbsp;:</span>
+                <span class="span-15 last"><input type="text" />&nbsp;[@spring.message "manageLoanProducts.defineLoanProduct.installments" /]</span>
             </div>
           </div>
           <div class="clear">&nbsp;</div>
-          <p class="fontBold">[@spring.message "fees" /] </p>
+          <p class="fontBold">[@spring.message "manageLoanProducts.defineLoanProduct.fees" /] </p>
           <div class="prepend-2  span-23 last">
-          	<div class="span-23"><span class="pull-3 span-8 rightAlign">[@spring.message "attachfeetypes" /]&nbsp;</span>
+          	<div class="span-23"><span class="pull-3 span-8 rightAlign">[@spring.message "manageLoanProducts.defineLoanProduct.attachfeetypes" /]&nbsp;</span>
             	<span class="span-12 ">
-                	<span class="span-8">[@spring.message "clickonafeetype" /]</span>
+                	<span class="span-8">[@spring.message "manageLoanProducts.defineLoanProduct.clickonafeetype" /]</span>
                     <span class="span-4">
             			<select name="lstBox" id="lstBox" multiple="multiple" class="listSize">
       						
@@ -312,18 +312,18 @@ function disable()
             </div>
           </div>
           <div class="clear">&nbsp;</div>
-          <p class="fontBold">[@spring.message "accounting" /] </p>
+          <p class="fontBold">[@spring.message "manageLoanProducts.defineLoanProduct.accounting" /] </p>
           <div class="prepend-2  span-23 last">
-          	<div class="span-23"><span class="pull-3 span-8 rightAlign">[@spring.message "sourcesoffunds" /]&nbsp;</span>
+          	<div class="span-23"><span class="pull-3 span-8 rightAlign">[@spring.message "manageLoanProducts.defineLoanProduct.sourcesoffunds" /]&nbsp;:</span>
             	<span class="span-12 ">
-                	<span class="span-8">[@spring.message "clickonafund" /]</span>
+                	<span class="span-8">[@spring.message "manageLoanProducts.defineLoanProduct.clickonafund" /]</span>
                     <span class="span-4">
             			<select name="lstBox" id="lstBox" multiple="multiple" class="listSize">
-      						<option >[@spring.message "nonDonor" /]</option>
-                        	<option >[@spring.message "fundingOrgA" /]</option>
-                            <option >[@spring.message "fundingOrgB" /]</option>
-                            <option >[@spring.message "fundingOrgC" /]</option>
-                            <option >[@spring.message "fundingOrgD" /]</option>
+      						<option >nonDonor</option>
+                        	<option >fundingOrgA</option>
+                            <option >fundingOrgB</option>
+                            <option >fundingOrgC</option>
+                            <option >fundingOrgD</option>
 						</select></span>
                     <span class="span-3"><br /><input class="buttn2" name="add" type="button"  id="SrcFundsList.button.add"  value="Add >>" onclick="FirstListBox();" /><br /><br />
 <input class="buttn2" name="remove" type="button" value="<< Remove" id="SrcFundsList.button.remove" onclick="SecondListBox();" /></span>
@@ -333,18 +333,18 @@ function disable()
 					</select></span>
                	</span>
             </div>
-            <div class="span-21"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "productGLcode" /]&nbsp;</span>
-            	<span class="span-6 "><span class="span-2">[@spring.message "interest" /]&nbsp;</span><span class="span-3">
+            <div class="span-21"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.productGLcode" /]&nbsp;:</span>
+            	<span class="span-6 "><span class="span-2">[@spring.message "manageLoanProducts.defineLoanProduct.interest" /]&nbsp;:</span><span class="span-3">
               		<select name="select">
-                		<option >[@spring.message "--Select--" /]</option>
+                		<option >--Select--</option>
                 		<option >31102</option>
                 		<option >5001</option>
                 		<option >31101</option>
               		</select></span>
                 
-                <span  class="span-2">[@spring.message "principal" /]&nbsp;</span> <span class="span-3">
+                <span  class="span-2">[@spring.message "manageLoanProducts.defineLoanProduct.principal" /]&nbsp;:</span> <span class="span-3">
               		<select name="select">
-                		<option >[@spring.message "--Select--" /]</option>
+                		<option >--Select--</option>
                 		<option >1507</option>
                 		<option >1506</option>
                 		<option >1509</option>

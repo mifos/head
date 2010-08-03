@@ -12,19 +12,19 @@
   <div class=" content leftMargin180">
   	<form method="" action="" name="formname">
     <div class="span-24">
-  		<div class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin" /]</a>&nbsp;/&nbsp;<a href="viewProductCategory.ftl">[@spring.message "viewProductCategories" /]</a>&nbsp;/&nbsp;<a href="#">[@spring.message "categoryName1" /]</a></div>
+  		<div class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin" /]</a>&nbsp;/&nbsp;<a href="viewProductCategory.ftl">[@spring.message "admin.viewProductCategories" /]</a>&nbsp;/&nbsp;<a href="#">[@spring.message "categoryName1" /]</a></div>
         <div class="clear">&nbsp;</div>
-    	<p class="font15"><span class="fontBold">[@spring.message "categoryName" /]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "editcategoryinformation" /]</span></p>
-        <div>[@spring.message "Editthefieldsbelow." /] </div>
+    	<p class="font15"><span class="fontBold">[@spring.message "manageProducts.editCategory.categoryName" /]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "manageProducts.editCategory.editcategoryinformation" /]</span></p>
+        <div>[@spring.message "manageProducts.editCategory..edittheFieldsBelow" /] </div>
         <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired." /] </div>
         <p class="error" id="error1"></p>
-        <p class="fontBold">[@spring.message "categorydetails" /]</p>
+        <p class="fontBold">[@spring.message "manageProducts.editCategory.categorydetails" /]</p>
         <div class="prepend-3 span-22 last">
-        	<div class="span-22"><span class="span-4 rightAlign"><span class="red"> * </span>[@spring.message "categoryName" /]</span><span class="span-4"><input type="text" /></span></div>
-            <div class="span-22"><span class="span-4 rightAlign"><span class="red"> * </span>[@spring.message "description" /]</span><span><textarea cols="50" rows="6"></textarea></span></div>
+        	<div class="span-22"><span class="span-4 rightAlign"><span class="red"> * </span>[@spring.message "manageProducts.editCategory.categoryName" /]</span><span class="span-4"><input type="text" /></span></div>
+            <div class="span-22"><span class="span-4 rightAlign"><span class="red"> * </span>[@spring.message "manageProducts.editCategory.description" /]</span><span><textarea cols="50" rows="6"></textarea></span></div>
         </div>
         <div class="prepend-3 span-22 last">
-            <span class="span-4 rightAlign"><span class="red"> * </span>[@spring.message "status1" /]</span><span class="span-4"><select name="status">
+            <span class="span-4 rightAlign"><span class="red"> * </span>[@spring.message "manageProducts.editCategory.status1" /]&nbsp;:</span><span class="span-4"><select name="status">
             			<option>[@spring.message "active"/]</option>
                         <option>[@spring.message "inactive"/]</option>
                     </select></span>

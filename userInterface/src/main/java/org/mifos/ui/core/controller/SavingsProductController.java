@@ -59,7 +59,7 @@ public class SavingsProductController {
         ModelAndView modelAndView = new ModelAndView("viewSavingsProducts");
         List<ProductDisplayDto> productDto = adminServiceFacade.retrieveSavingsProducts();
         modelAndView.addObject("products", productDto);
-        modelAndView.addObject("breadcrumbs", new AdminBreadcrumbBuilder().withLink("viewSavingsProducts",
+        modelAndView.addObject("breadcrumbs", new AdminBreadcrumbBuilder().withLink("admin.viewSavingsproducts",
                 "viewSavingsProducts.ftl").build());
 
         return modelAndView;

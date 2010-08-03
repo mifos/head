@@ -12,14 +12,14 @@
  <div class=" content leftMargin180">
     <div class="span-24">
     	[@mifos.crumbs breadcrumbs /]
-    	<p class="font15"><span class="orangeheading">[@spring.message "previewHoliday" /]</span></p>
+    	<p class="font15"><span class="orangeheading">[@spring.message "organizationPreferences.previewHoliday" /]</span></p>
     	<p>&nbsp;&nbsp;</p>
     	<div class="bluedivs span-24 fontBold paddingLeft">
-    		<span class="span-3">From Date</span>
-        	<span class="span-3">To Date</span>
-        	<span class="span-5">Holiday Name</span>
-        	<span class="span-5">Repayment Rule</span>
-        	<span class="span-5">Applies To</span>
+    		<span class="span-3">[@spring.message "organizationPreferences.definenewholiday.fromDat"/]</span>
+        	<span class="span-3">[@spring.message "organizationPreferences.definenewholiday.toDate"/]</span>
+        	<span class="span-5">[@spring.message "organizationPreferences.definenewholiday.holidayName"/]</span>
+        	<span class="span-5">[@spring.message "organizationPreferences.definenewholiday.repaymentRule"/]</span>
+        	<span class="span-5">[@spring.message "organizationPreferences.definenewholiday.appliesto"/]</span>
     	</div>
 		<div class="span-24 borderbtm paddingLeft ">
     		<span class="span-3">${officeHoliday.holidayDetails.fromDate}</span>
@@ -54,7 +54,7 @@
         
         <br />
         <div class="prepend-1">
-			<input type="submit" class="buttn2" name="EDIT" value="[@spring.message "editHolidayInformation"/]"/>
+			<input type="submit" class="buttn2" name="EDIT" value="[@spring.message "organizationPreferences.editHolidayInformation"/]"/>
 		</div>
         <hr />
         <div class="prepend-10">

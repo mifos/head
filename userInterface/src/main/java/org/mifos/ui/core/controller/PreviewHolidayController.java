@@ -59,7 +59,7 @@ public class PreviewHolidayController {
 
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("viewHolidays", "viewHolidays.ftl").build();
+        return new AdminBreadcrumbBuilder().withLink("admin.viewholidays", "viewHolidays.ftl").build();
     }
 
     @RequestMapping(method = RequestMethod.POST)

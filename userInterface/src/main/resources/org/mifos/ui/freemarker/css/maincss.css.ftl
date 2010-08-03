@@ -15,6 +15,21 @@ a:hover {
 .borders {
 	border:1px #d7deee solid;
 }
+.buttn {
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: 9pt;
+	font-weight: normal;
+	color: #000000;
+	border-right: #926030 1px solid;
+	border-bottom: #926030 1px solid;
+	border-left: #C29F7C 1px solid;
+	border-top: #C29F7C 1px solid;
+	background-image: url(pages/framework/images/buttons/buttonbg.jpg);
+	background-repeat: repeat-x;
+	cursor: pointer;
+	height: 20px;
+	margin-right:34px;
+}
 .container {
 	float:left;
 	width:100%;
