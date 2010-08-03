@@ -41,13 +41,13 @@ public class QuestionTest {
     @Test
     public void testAddAnswerChoice() {
         Question question = new Question(new QuestionDetail());
-        question.setChoice("choice1");
+        question.setCurrentChoice("choice1");
         question.addAnswerChoice();
-        question.setChoice("choice2");
+        question.setCurrentChoice("choice2");
         question.addAnswerChoice();
-        question.setChoice("choice1");
+        question.setCurrentChoice("choice1");
         question.addAnswerChoice();
-        question.setChoice("choice3");
+        question.setCurrentChoice("choice3");
         question.addAnswerChoice();
         Assert.assertThat(question.getChoices().size(), is(4));
         Assert.assertEquals(question.getChoices(), Arrays.asList("choice1", "choice2", "choice1", "choice3"));
@@ -57,11 +57,11 @@ public class QuestionTest {
     @Test
     public void testRemoveAnswerChoice() {
         Question question = new Question(new QuestionDetail());
-        question.setChoice("choice1");
+        question.setCurrentChoice("choice1");
         question.addAnswerChoice();
-        question.setChoice("choice2");
+        question.setCurrentChoice("choice2");
         question.addAnswerChoice();
-        question.setChoice("choice1");
+        question.setCurrentChoice("choice1");
         question.addAnswerChoice();
         Assert.assertEquals(question.getChoices(), Arrays.asList("choice1", "choice2", "choice1"));
         question.removeChoice(0);
