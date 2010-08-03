@@ -18,7 +18,7 @@
         <div class="clear">&nbsp;</div>
         <div class="marginLeft30">
         <p class="font15"><span class="fontBold">[@spring.message "viewHolidays"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "organizationWide" /]</span></p>
-        <p>[@spring.message "belowIsTheListOfOrganizationWideHolidaysClickHereTo"/]<a href="defineNewHoliday.ftl">[@spring.message "defineNewHoliday"/]</a> </p>
+        <p>[@spring.message "belowIsTheListOfOrganizationWideHolidaysClickHereTo"/]<a id="holiday.link.defineNewHoliday" href="defineNewHoliday.ftl">[@spring.message "defineNewHoliday"/]</a> </p>
         
       [#list holidaysMap?keys as key]
       	<p class="fontBold">Holidays for year ${key}</p>

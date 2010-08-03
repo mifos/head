@@ -45,8 +45,6 @@
         <form-bean name="customfieldsactionform"
                    type="org.mifos.config.struts.actionform.CustomFieldsActionForm"/>
 
-        <form-bean name="holidayActionForm" type="org.mifos.application.holiday.struts.actionforms.HolidayActionForm"/>
-
         <form-bean name="genericActionForm" type="org.mifos.framework.struts.actionforms.GenericActionForm"/>
 
         <!-- Products mix -->
