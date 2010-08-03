@@ -18,12 +18,33 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.service;
+package org.mifos.platform.questionnaire.domain;
 
-public class DateQuestionTypeDto extends QuestionTypeDto {
-    private static final long serialVersionUID = -8022967145976509605L;
+import java.io.Serializable;
 
-    public DateQuestionTypeDto() {
-        super(QuestionType.DATE);
+public class ChoiceTagEntity implements Serializable {
+    private static final long serialVersionUID = 7471841846292170333L;
+
+    private int id;
+    private String tagText;
+
+    @SuppressWarnings({"UnusedDeclaration", "PMD.UnnecessaryConstructor", "PMD.UncommentedEmptyConstructor"})
+    public ChoiceTagEntity() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTagText() {
+        return tagText;
+    }
+
+    public void setTagText(String tagText) {
+        this.tagText = tagText;
     }
 }

@@ -35,15 +35,12 @@ import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailFormMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailListMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailsMatcher;
-import org.mifos.platform.questionnaire.service.DateQuestionTypeDto;
 import org.mifos.platform.questionnaire.service.EventSource;
-import org.mifos.platform.questionnaire.service.FreeTextQuestionTypeDto;
-import org.mifos.platform.questionnaire.service.NumericQuestionTypeDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
-import org.mifos.platform.questionnaire.service.QuestionTypeDto;
+import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
@@ -328,7 +325,7 @@ public class QuestionGroupControllerTest {
 
     @Test
     public void shouldGetAllSectionQuestions() {
-        Mockito.when(questionnaireServiceFacade.getAllQuestions()).thenReturn(asList(getQuestionDetail(1, "Q1", new NumericQuestionTypeDto()), getQuestionDetail(2, "Q2", new DateQuestionTypeDto())));
+        Mockito.when(questionnaireServiceFacade.getAllQuestions()).thenReturn(asList(getQuestionDetail(1, "Q1", QuestionType.NUMERIC), getQuestionDetail(2, "Q2", QuestionType.DATE)));
         List<SectionQuestionDetail> sectionQuestions = questionGroupController.getAllSectionQuestions();
         assertThat(sectionQuestions, Is.is(notNullValue()));
         assertThat(sectionQuestions.size(), Is.is(2));
@@ -468,11 +465,11 @@ public class QuestionGroupControllerTest {
     }
 
     private SectionQuestionDetail getSectionQuestionDetail(int id, String title) {
-        return new SectionQuestionDetail(new QuestionDetail(id, title, title, new FreeTextQuestionTypeDto()), true);
+        return new SectionQuestionDetail(new QuestionDetail(id, title, title, QuestionType.FREETEXT), true);
     }
 
-    private QuestionDetail getQuestionDetail(int id, String title, QuestionTypeDto questionTypeDto) {
-        return new QuestionDetail(id, title, title, questionTypeDto);
+    private QuestionDetail getQuestionDetail(int id, String title, QuestionType type) {
+        return new QuestionDetail(id, title, title, type);
     }
 
 

@@ -29,7 +29,7 @@ import static junit.framework.Assert.assertEquals;
 @SuppressWarnings("PMD")
 public class QuestionDetailMatcher extends TypeSafeMatcher<QuestionDetail> {
 
-    private final QuestionDetail questionDetail;
+    private QuestionDetail questionDetail;
 
     public QuestionDetailMatcher(QuestionDetail questionDetail) {
         this.questionDetail = questionDetail;
@@ -40,7 +40,7 @@ public class QuestionDetailMatcher extends TypeSafeMatcher<QuestionDetail> {
         if (StringUtils.equals(questionDetail.getShortName(), this.questionDetail.getShortName())
                 && StringUtils.equals(questionDetail.getText(), this.questionDetail.getText())
                 && StringUtils.equals(questionDetail.getTitle(), this.questionDetail.getTitle())
-                && this.questionDetail.getQuestionTypeDetail().getQuestionType().equals(questionDetail.getQuestionTypeDetail().getQuestionType())) {
+                && this.questionDetail.getType().equals(questionDetail.getType())) {
             assertEquals(this.questionDetail.getAnswerChoices(), questionDetail.getAnswerChoices());
             return true;
         }

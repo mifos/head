@@ -35,9 +35,9 @@ import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.service.EventSource;
-import org.mifos.platform.questionnaire.service.FreeTextQuestionTypeDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
@@ -95,7 +95,7 @@ public class CustomerActionFormTest {
     @Test
     public void testValidateForQuestionGroupResponses() {
         List<QuestionGroupDto> questionGroupDtos = new LinkedList<QuestionGroupDto>();
-        List<QuestionDetail> questionDetails = Arrays.asList(new QuestionDetail(12, "Question 1", "Question 1", new FreeTextQuestionTypeDto()));
+        List<QuestionDetail> questionDetails = Arrays.asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
         List<SectionDetail> sectionDetails = Arrays.asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
         QuestionGroupDto questionGroupDto = new QuestionGroupDto(getQuestionGroupDetail("QG1", "Create", "Client", sectionDetails));
         questionGroupDtos.add(questionGroupDto);

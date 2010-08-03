@@ -154,9 +154,9 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     private void validateQuestionType(QuestionDetail questionDetail) throws SystemException {
-        if (INVALID == questionDetail.getQuestionTypeDetail().getQuestionType())
+        if (INVALID == questionDetail.getType())
             throw new SystemException(QUESTION_TYPE_NOT_PROVIDED);
-        if (NUMERIC == questionDetail.getQuestionTypeDetail().getQuestionType())
+        if (NUMERIC == questionDetail.getType())
             validateForNumericQuestionType(questionDetail);
     }
 

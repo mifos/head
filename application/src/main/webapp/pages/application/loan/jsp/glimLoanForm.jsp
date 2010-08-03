@@ -36,18 +36,23 @@ explanation of the license and how it is applied.
             
         <table width="96%" border="0" cellpadding="3" cellspacing="0">
             <tr>
-                <td width="5%" valign="top" class="drawtablerowboldnolinebg"><input
-                    id="glimLoanForm.input.selectAll"
-                    type="checkbox"
-                    onchange="CalculateTotalLoanAmount(CLIENTS_COUNT);"
-                    onclick="for(var i=0,l=this.form.length; i<l;
-                    i++){if(this.form[i].type==
-                    'checkbox' && this.form[i].name !='selectAll1'
-                    && this.form[i].name !='intDedDisbursement'
-                    ){this.form[i].checked=this.checked}}
-                    "
-                            name="selectAll1"></td>
-                <td width="29%" class="drawtablerowboldnolinebg"><mifos:mifoslabel
+		<td width="5%" valign="top" class="drawtablerowboldnolinebg"><c:choose>
+			<c:when
+				test="${loanfn:isDisabledWhileEditingGlim('clientDetails.clientId',accountState)}">
+				<input id="glimLoanForm.input.selectAll" type="checkbox"
+					onclick="return false;"  name="selectAll1">
+			</c:when>
+			<c:otherwise>
+				<input id="glimLoanForm.input.selectAll" type="checkbox"
+					onchange="CalculateTotalLoanAmount(CLIENTS_COUNT);"
+					onclick="for(var i=0,l=this.form.length; i<l;
+					i++){if(this.form[i].type==
+					'checkbox' && this.form[i].name !='selectAll1'
+					&& this.form[i].name !='intDedDisbursement'
+					){this.form[i].checked=this.checked}} "  name="selectAll1">
+			</c:otherwise>
+		</c:choose></td>
+		<td width="29%" class="drawtablerowboldnolinebg"><mifos:mifoslabel
                     name="loan.acc_owner" /></td>
                 <td width="31%" class="drawtablerowboldnolinebg"><font color="#FF0000">*</font>&nbsp;<mifos:mifoslabel
                     name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel

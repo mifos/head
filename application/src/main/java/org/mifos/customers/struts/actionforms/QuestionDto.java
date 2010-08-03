@@ -29,7 +29,7 @@ import java.util.List;
 public class QuestionDto implements DataTransferObject {
     private static final long serialVersionUID = 1759235897826098794L;
 
-    private final SectionQuestionDetail sectionQuestionDetail;
+    private SectionQuestionDetail sectionQuestionDetail;
 
     public QuestionDto(SectionQuestionDetail sectionQuestionDetail) {
         this.sectionQuestionDetail = sectionQuestionDetail;
@@ -48,11 +48,11 @@ public class QuestionDto implements DataTransferObject {
     }
 
     public QuestionType getQuestionType() {
-        return sectionQuestionDetail.getQuestionTypeDetail().getQuestionType();
+        return sectionQuestionDetail.getQuestionType();
     }
 
     public int getQuestionTypeAsNum() {
-        return sectionQuestionDetail.getQuestionTypeDetail().getQuestionType().ordinal();
+        return sectionQuestionDetail.getQuestionType().ordinal();
     }
 
     public List<String> getAnswerChoices() {

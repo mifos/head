@@ -25,23 +25,23 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.platform.questionnaire.service.EventSource;
-import org.mifos.platform.questionnaire.service.FreeTextQuestionTypeDto;
-import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.QuestionDetail;
+import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.ui.model.QuestionGroupForm;
 import org.mifos.platform.questionnaire.ui.model.SectionDetailForm;
 import org.mifos.platform.questionnaire.ui.model.SectionQuestionDetailForm;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertNotSame;
+import java.util.Arrays;
+import static org.hamcrest.CoreMatchers.not;   // NOPMD
+import static org.hamcrest.CoreMatchers.nullValue;   // NOPMD
+import static org.junit.Assert.assertNotSame;    // NOPMD
 import static org.junit.Assert.assertThat;     // NOPMD
 
 @RunWith(MockitoJUnitRunner.class)
@@ -235,7 +235,7 @@ public class QuestionGroupFormTest {
     }
 
     private SectionQuestionDetail getSectionQuestionDetail(int id, String title, boolean mandatory) {
-        return new SectionQuestionDetail(new QuestionDetail(id, title, title, new FreeTextQuestionTypeDto()), mandatory);
+        return new SectionQuestionDetail(new QuestionDetail(id, title, title, QuestionType.FREETEXT), mandatory);
     }
 
     private void assertEventSource(EventSource eventSource, String event, String source) {

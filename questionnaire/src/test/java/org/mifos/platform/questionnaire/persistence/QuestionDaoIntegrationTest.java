@@ -26,10 +26,8 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.domain.QuestionEntity;
 import org.mifos.platform.questionnaire.domain.QuestionState;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
-import org.mifos.platform.questionnaire.service.DateQuestionTypeDto;
-import org.mifos.platform.questionnaire.service.NumericQuestionTypeDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
-import org.mifos.platform.questionnaire.service.QuestionTypeDto;
+import org.mifos.platform.questionnaire.service.QuestionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -43,6 +41,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mifos.platform.questionnaire.service.QuestionType.DATE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/test-questionnaire-dbContext.xml", "/test-questionnaire-persistenceContext.xml", "/META-INF/spring/QuestionnaireContext.xml"})
@@ -62,7 +61,7 @@ public class QuestionDaoIntegrationTest {
         String questionTitle = "Title" + System.currentTimeMillis();
         List result = questionDao.retrieveCountOfQuestionsWithTitle(questionTitle);
         assertEquals((long) 0, result.get(0));
-        defineQuestion(questionTitle, new DateQuestionTypeDto());
+        defineQuestion(questionTitle, DATE);
         result = questionDao.retrieveCountOfQuestionsWithTitle(questionTitle);
         assertEquals((long) 1, result.get(0));
     }
@@ -70,9 +69,8 @@ public class QuestionDaoIntegrationTest {
     @Test
     @Transactional
     public void testRetrieveByState() throws SystemException {
-        NumericQuestionTypeDto numeric = new NumericQuestionTypeDto();
-        QuestionDetail questionDetail2 = defineQuestion("Title2" + System.currentTimeMillis(), numeric);
-        QuestionDetail questionDetail1 = defineQuestion("Title1" + System.currentTimeMillis(), numeric);
+        QuestionDetail questionDetail2 = defineQuestion("Title2" + System.currentTimeMillis(), QuestionType.NUMERIC);
+        QuestionDetail questionDetail1 = defineQuestion("Title1" + System.currentTimeMillis(), QuestionType.NUMERIC);
         List<QuestionEntity> list = questionDao.retrieveByState(QuestionState.ACTIVE.getValue());
         List<Integer> expectedIds = Arrays.asList(questionDetail1.getId(), questionDetail2.getId());
         List<String> expectedTitles = Arrays.asList(questionDetail1.getShortName(), questionDetail2.getShortName());
@@ -86,7 +84,7 @@ public class QuestionDaoIntegrationTest {
         assertThat(actualQuestions.get(1).getShortName(), is(expectedTitles.get(1)));
     }
 
-    private QuestionDetail defineQuestion(String questionTitle, QuestionTypeDto questionTypeDto) throws SystemException {
-        return questionnaireService.defineQuestion(new QuestionDetail(questionTitle, questionTypeDto));
+    private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws SystemException {
+        return questionnaireService.defineQuestion(new QuestionDetail(questionTitle, questionType));
     }
 }
