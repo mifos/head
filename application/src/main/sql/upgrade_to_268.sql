@@ -12,7 +12,7 @@ create table question_choice_tags(
     tag_text varchar(50) not null,
     primary key (id),
     foreign key (choice_id) references question_choices(choice_id),
-    unique(tag_text)
+    unique(choice_id, tag_text)
 ) engine=innodb character set utf8;
 
 alter table question_group add column is_ppi tinyint not null default 0;
