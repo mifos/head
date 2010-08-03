@@ -8,6 +8,7 @@ drop table if exists survey_response_date;
 drop table if exists survey_response_number;
 drop table if exists survey_response_freetext;
 drop table if exists survey_response;
+drop table if exists question_choice_tags;
 drop table if exists question_choices;
 drop table if exists survey_response_choice;
 drop table if exists survey_questions;

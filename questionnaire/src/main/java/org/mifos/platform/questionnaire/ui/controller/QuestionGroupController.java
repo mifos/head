@@ -30,7 +30,6 @@ import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
-import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.ui.model.QuestionGroupForm;
@@ -39,12 +38,9 @@ import org.mifos.platform.util.CollectionUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -64,27 +60,6 @@ public class QuestionGroupController extends QuestionnaireController {
 
     public QuestionGroupController(QuestionnaireServiceFacade questionnaireServiceFacade) {
         super(questionnaireServiceFacade);
-    }
-
-    @RequestMapping("/displayResponses.ftl")
-    public ModelMap getAllQuestionGroupResponses(@RequestParam("entityId") Integer entityId,
-                                                 @RequestParam("event") String event,
-                                                 @RequestParam("source") String source,
-                                                 @RequestParam("backPageUrl") String backPageUrl) throws UnsupportedEncodingException {
-        ModelMap modelMap = new ModelMap();
-        List<QuestionGroupInstanceDetail> instances = questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(entityId, event, source);
-        modelMap.addAttribute("questionGroupInstanceDetails", instances);
-        modelMap.addAttribute("backPageUrl", decodeUrl(backPageUrl));
-        return modelMap;
-    }
-
-    @RequestMapping("/displayResponse.ftl")
-    public ModelMap getQuestionGroupResponse(@RequestParam("instanceId") Integer instanceId,
-                                             @RequestParam("backPageUrl") String backPageUrl) throws UnsupportedEncodingException {
-        ModelMap modelMap = new ModelMap();
-        modelMap.addAttribute("questionGroupInstance", questionnaireServiceFacade.getQuestionGroupInstance(instanceId));
-        modelMap.addAttribute("backPageUrl", decodeUrl(backPageUrl));
-        return modelMap;
     }
 
     @RequestMapping("/viewQuestionGroups.ftl")
@@ -248,10 +223,6 @@ public class QuestionGroupController extends QuestionnaireController {
 
     private boolean isInvalidTitle(String title) {
         return StringUtils.isEmpty(StringUtils.trimToNull(title));
-    }
-
-    private String decodeUrl(String backPageUrl) throws UnsupportedEncodingException {
-        return URLDecoder.decode(backPageUrl, "UTF-8");
     }
 
 }

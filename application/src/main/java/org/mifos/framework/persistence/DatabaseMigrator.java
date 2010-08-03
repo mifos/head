@@ -267,6 +267,7 @@ public class DatabaseMigrator {
         legacyUpgrades.put(265, 1280719447);
         legacyUpgrades.put(266, 1280719676);
         legacyUpgrades.put(267, 1280721170);
+        legacyUpgrades.put(268, 1280793109);
 
         return legacyUpgrades;
     }

@@ -344,6 +344,9 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(eventSources, new EventSourcesMatcher(
                 asList(new EventSource("Create", "Client", "Create Client"),
                         new EventSource("View", "Client", "View Client"),
+                        new EventSource("Create", "Group", "Create Group"),
+                        new EventSource("Approve", "Loan", "Approve Loan"),
+                        new EventSource("Close", "Client", "Close Client"),
                         new EventSource("Create", "Loan", "Create Loan"))));
     }
 
@@ -370,11 +373,22 @@ public class QuestionnaireServiceIntegrationTest {
         questionGroupDetail.getSectionDetail(1).getQuestionDetail(0).setValue("2");
         questionnaireService.saveResponses(new QuestionGroupDetails(1, 1, asList(questionGroupDetail)));
         List<QuestionGroupInstance> instances = questionGroupInstanceDao.getDetailsAll();
-        QuestionGroupInstance instance = getMatchingQuestionGroupInstance(questionGroupDetail.getId(), 1, instances);
+        assertThat(instances.size(), is(1));
+        QuestionGroupInstance instance = getMatchingQuestionGroupInstance(questionGroupDetail.getId(), 1, instances, 0);
         assertThat(instance, is(notNullValue()));
         List<QuestionGroupResponse> groupResponses = instance.getQuestionGroupResponses();
         Assert.assertEquals(groupResponses.get(0).getResponse(), "1");
         Assert.assertEquals(groupResponses.get(1).getResponse(), "2");
+
+        questionGroupDetail.getSectionDetail(1).getQuestionDetail(0).setValue("3");
+        questionnaireService.saveResponses(new QuestionGroupDetails(1, 1, asList(questionGroupDetail)));
+        instances = questionGroupInstanceDao.getDetailsAll();
+        assertThat(instances.size(), is(2));
+        instance = getMatchingQuestionGroupInstance(questionGroupDetail.getId(), 1, instances, 1);
+        assertThat(instance, is(notNullValue()));
+        groupResponses = instance.getQuestionGroupResponses();
+        Assert.assertEquals(groupResponses.get(0).getResponse(), "1");
+        Assert.assertEquals(groupResponses.get(1).getResponse(), "3");
     }
 
     @Test
@@ -390,9 +404,10 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(actualQGDetail, is(Matchers.nullValue()));
     }
 
-    private QuestionGroupInstance getMatchingQuestionGroupInstance(Integer questionGroupId, Integer entityId, List<QuestionGroupInstance> instances) {
+    private QuestionGroupInstance getMatchingQuestionGroupInstance(Integer questionGroupId, Integer entityId, List<QuestionGroupInstance> instances, int version) {
         for (QuestionGroupInstance questionGroupInstance : instances) {
-            if (questionGroupInstance.getQuestionGroup().getId() == questionGroupId && questionGroupInstance.getEntityId() == entityId)
+            if (questionGroupInstance.getQuestionGroup().getId() == questionGroupId &&
+                    questionGroupInstance.getEntityId() == entityId && questionGroupInstance.getVersionNum() == version)
                 return questionGroupInstance;
         }
         return null;

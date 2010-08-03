@@ -23,6 +23,7 @@ package org.mifos.platform.questionnaire.service;
 import org.mifos.platform.util.CollectionUtils;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -139,8 +140,9 @@ public class SectionQuestionDetail implements Serializable {
 
         SectionQuestionDetail that = (SectionQuestionDetail) o;
 
-        if (questionDetail != null ? !questionDetail.equals(that.questionDetail) : that.questionDetail != null)
+        if (questionDetail != null ? !questionDetail.equals(that.questionDetail) : that.questionDetail != null) {
             return false;
+        }
 
         return true;
     }
@@ -181,5 +183,17 @@ public class SectionQuestionDetail implements Serializable {
 
     public Integer getNumericMax() {
         return questionDetail.getNumericMax();
+    }
+
+    //Used for legacy Struts binding support.
+    @Deprecated
+    public String[] getValuesAsArray() {
+        return values.toArray(new String[values.size()]);
+    }
+
+    //Used for legacy Struts binding support
+    @Deprecated
+    public void setValuesAsArray(String[] valuesArr) {
+        this.values = Arrays.asList(valuesArr);
     }
 }

@@ -3,6 +3,7 @@ truncate table  customer_family_detail;
 truncate table  ppi_likelihoods;
 truncate table  ppi_survey;
 truncate table  survey_response;
+truncate table  question_choice_tags;
 truncate table  question_choices;
 truncate table  survey_questions;
 truncate table  ppi_survey_instance;

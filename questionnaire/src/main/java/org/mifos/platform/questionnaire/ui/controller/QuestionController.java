@@ -99,7 +99,7 @@ public class QuestionController extends QuestionnaireController {
         else if (questionForm.numericBoundsAreInvalid()) {
             constructErrorMessage(
                     context, QuestionnaireConstants.INVALID_NUMERIC_BOUNDS,
-                    "currentQuestion.numericMin", "Please specify valid numeric bounds.");
+                    "currentQuestion.numericMin", "Please ensure maximum value is greater than minimum value.");
             result = "failure";
         }
 

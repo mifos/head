@@ -29,10 +29,11 @@ public class QuestionGroupDetail implements Serializable {
 
     private Integer id;
     private String title;
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_BAD_FIELD")
     private List<SectionDetail> sectionDetails;
     private EventSource eventSource;
     private boolean editable;
+    private boolean active;
 
     public QuestionGroupDetail() {
         this(0, null, null, new ArrayList<SectionDetail>(), false);
@@ -43,11 +44,16 @@ public class QuestionGroupDetail implements Serializable {
     }
 
     public QuestionGroupDetail(int id, String title, EventSource eventSource, List<SectionDetail> sectionDetails, boolean editable) {
+        this(id, title, eventSource, sectionDetails, editable, false);
+    }
+
+    public QuestionGroupDetail(int id, String title, EventSource eventSource, List<SectionDetail> sectionDetails, boolean editable, boolean active) {
         this.id = id;
         this.title = title;
         this.sectionDetails = sectionDetails;
         this.eventSource = eventSource;
         this.editable = editable;
+        this.active = active;
     }
 
     public String getTitle() {
@@ -95,5 +101,9 @@ public class QuestionGroupDetail implements Serializable {
 
     public void setEditable(boolean editable) {
         this.editable = editable;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }
