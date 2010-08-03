@@ -23,6 +23,8 @@
     	<constructor-arg ref="applicationConfigurationDao" />    	
     </bean>
 
+    <bean id="UserServiceFacade" class="org.mifos.application.servicefacade.UserServiceFacadeWebTier"/>
+
     <bean id="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade" >
     	<constructor-arg ref="feeService" />
     	<constructor-arg ref="feeDao" />
