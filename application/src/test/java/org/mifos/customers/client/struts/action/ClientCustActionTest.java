@@ -40,6 +40,7 @@ import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.SingleSelectQuestionTypeDto;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -171,7 +172,7 @@ public class ClientCustActionTest {
     private SectionDetail getSectionDetail(String name, String title) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
-        QuestionDetail questionDetail = new QuestionDetail(111, title, title, QuestionType.SINGLE_SELECT, asList("red", "green", "blue"));
+        QuestionDetail questionDetail = new QuestionDetail(111, title, title, new SingleSelectQuestionTypeDto(), asList("red", "green", "blue"));
         sectionDetail.setQuestionDetails(asList(new SectionQuestionDetail(questionDetail, true)));
         return sectionDetail;
     }

@@ -37,11 +37,13 @@ import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
 import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.NumericQuestionTypeDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.QuestionTypeDto;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.util.CollectionUtils;
@@ -121,7 +123,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         QuestionEntity question = new QuestionEntity();
         question.setShortName(questionDetail.getTitle());
         question.setQuestionText(questionDetail.getTitle());
-        QuestionType type = questionDetail.getType();
+        QuestionType type = questionDetail.getQuestionTypeDetail().getQuestionType();
         question.setAnswerType(mapToAnswerType(type));
         question.setQuestionState(QuestionState.ACTIVE);
         question.setChoices(mapToChoices(questionDetail.getAnswerChoices()));
@@ -130,7 +132,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private void mapBoundsForNumericQuestionDetail(QuestionDetail questionDetail, QuestionEntity question) {
-        if (questionDetail.getType() == QuestionType.NUMERIC) {
+        if (questionDetail.getQuestionTypeDetail() instanceof NumericQuestionTypeDto) {
             question.setNumericMin(questionDetail.getNumericMin());
             question.setNumericMax(questionDetail.getNumericMax());
         }
@@ -228,7 +230,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         sectionDetail.setName(section.getName());
         for (SectionQuestion sectionQuestion : section.getQuestions()) {
             QuestionEntity question = sectionQuestion.getQuestion();
-            QuestionType type = mapToQuestionType(question.getAnswerTypeAsEnum());
+            QuestionTypeDto type = mapToQuestionType(question.getAnswerTypeAsEnum());
             boolean required = sectionQuestion.isRequired();
             QuestionDetail questionDetail = mapToQuestionDetail(question, type);
             sectionDetail.addQuestion(mapToSectionQuestionDetail(sectionQuestion, required, questionDetail));
@@ -240,9 +242,9 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return new SectionQuestionDetail(sectionQuestion.getId(), questionDetail, required);
     }
 
-    private QuestionDetail mapToQuestionDetail(QuestionEntity question, QuestionType type) {
+    private QuestionDetail mapToQuestionDetail(QuestionEntity question, QuestionTypeDto questionTypeDto) {
         List<String> answerChoices = mapToAnswerChoices(question.getChoices());
-        QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type, answerChoices);
+        QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), questionTypeDto, answerChoices);
         mapBoundsForNumericQuestion(question, questionDetail);
         return questionDetail;
     }
@@ -304,7 +306,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     @Override
     public void mapQuestionResponse(SectionQuestionDetail sectionQuestionDetail, List<QuestionGroupResponse> questionGroupResponses) {
-        if (sectionQuestionDetail.isMultiSelectQuestion()) {
+        if (sectionQuestionDetail.getQuestionTypeDetail().isMultiSelectQuestion()) {
             setMultiChoiceResponses(questionGroupResponses, sectionQuestionDetail);
         } else {
             setResponse(questionGroupResponses, sectionQuestionDetail);
@@ -396,8 +398,8 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
                 eventSourceEntity.getDescription());
     }
 
-    private QuestionType mapToQuestionType(AnswerType answerType) {
-        return answerToQuestionType.get(answerType);
+    private QuestionTypeDto mapToQuestionType(AnswerType answerType) {
+        return QuestionTypeDetailFactory.getInstance().getQuestionTypeDetail(answerToQuestionType.get(answerType));
     }
 
     private AnswerType mapToAnswerType(QuestionType questionType) {

@@ -33,7 +33,7 @@ public class SectionQuestionDetailTest {
 
     @Test
     public void shouldGetAnswersForNoAnswer() {
-        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", QuestionType.MULTI_SELECT), true);
+        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", new MultiSelectQuestionTypeDto()), true);
         sectionQuestionDetail.setValue(null);
         sectionQuestionDetail.setValues(null);
         List<String> answers = sectionQuestionDetail.getAnswers();
@@ -43,7 +43,7 @@ public class SectionQuestionDetailTest {
     
     @Test
     public void shouldGetAnswersForSingleAnswer() {
-        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", QuestionType.FREETEXT), true);
+        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", new FreeTextQuestionTypeDto()), true);
         sectionQuestionDetail.setValue("Hello");
         List<String> answers = sectionQuestionDetail.getAnswers();
         assertThat(answers, is(notNullValue()));
@@ -53,7 +53,7 @@ public class SectionQuestionDetailTest {
 
     @Test
     public void shouldGetAnswersForMultipleAnswers() {
-        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", QuestionType.MULTI_SELECT), true);
+        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", new MultiSelectQuestionTypeDto()), true);
         sectionQuestionDetail.setValues(asList("Ans1", "Ans2", "Ans3"));
         List<String> answers = sectionQuestionDetail.getAnswers();
         assertThat(answers, is(notNullValue()));
@@ -65,20 +65,20 @@ public class SectionQuestionDetailTest {
 
     @Test
     public void shouldGetAnswerForNoAnswer() {
-        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", QuestionType.FREETEXT), true);
+        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", new FreeTextQuestionTypeDto()), true);
         assertThat(sectionQuestionDetail.getAnswer(), is(""));
     }
     
     @Test
     public void shouldGetAnswerForSingleAnswer() {
-        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", QuestionType.FREETEXT), true);
+        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", new FreeTextQuestionTypeDto()), true);
         sectionQuestionDetail.setValue("Hello");
         assertThat(sectionQuestionDetail.getAnswer(), is("Hello"));
     }
 
     @Test
     public void shouldGetAnswerForMultipleAnswers() {
-        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", QuestionType.MULTI_SELECT), true);
+        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", new MultiSelectQuestionTypeDto()), true);
         sectionQuestionDetail.setValues(asList("Ans1", "Ans2", "Ans3"));
         String answer = sectionQuestionDetail.getAnswer();
         assertThat(answer, is("Ans1, Ans2, Ans3"));

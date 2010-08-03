@@ -20,6 +20,10 @@
 
 package org.mifos.platform.questionnaire.service;
 
-public enum QuestionType {
-    INVALID, FREETEXT, NUMERIC, MULTI_SELECT, SINGLE_SELECT, DATE, SMART_SELECT
+public class SingleSelectQuestionTypeDto extends QuestionTypeDto {
+    private static final long serialVersionUID = 6005098755476011658L;
+
+    public SingleSelectQuestionTypeDto() {
+        super(QuestionType.SINGLE_SELECT);
+    }
 }

@@ -170,7 +170,7 @@ public class QuestionGroupInstanceDaoIntegrationTest {
         assertThat(((QuestionGroupInstance) list.get(2)).getId(), is(questionGroupInstances.get(1).getId()));
     }
 
-    private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws SystemException {
+    private QuestionDetail defineQuestion(String questionTitle, QuestionTypeDto questionType) throws SystemException {
         return questionnaireService.defineQuestion(new QuestionDetail(questionTitle, questionType));
     }
 
@@ -182,7 +182,7 @@ public class QuestionGroupInstanceDaoIntegrationTest {
         SectionDetail section = new SectionDetail();
         section.setName(name);
         String questionTitle = "Question" + name + currentTimeMillis();
-        QuestionDetail questionDetail = defineQuestion(questionTitle, QuestionType.NUMERIC);
+        QuestionDetail questionDetail = defineQuestion(questionTitle, new NumericQuestionTypeDto());
         section.addQuestion(new SectionQuestionDetail(questionDetail, true));
         return section;
     }

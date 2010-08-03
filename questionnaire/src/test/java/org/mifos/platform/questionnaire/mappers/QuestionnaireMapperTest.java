@@ -44,14 +44,20 @@ import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
+import org.mifos.platform.questionnaire.service.DateQuestionTypeDto;
 import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.FreeTextQuestionTypeDto;
+import org.mifos.platform.questionnaire.service.MultiSelectQuestionTypeDto;
+import org.mifos.platform.questionnaire.service.NumericQuestionTypeDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.QuestionTypeDto;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.SingleSelectQuestionTypeDto;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -96,7 +102,7 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapQuestionDetailToQuestion() {
-        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.FREETEXT);
+        QuestionDetail questionDefinition = new QuestionDetail(TITLE, new FreeTextQuestionTypeDto());
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
         assertThat(question.getAnswerTypeAsEnum(), CoreMatchers.is(AnswerType.FREETEXT));
         assertThat(question.getQuestionText(), is(TITLE));
@@ -106,7 +112,7 @@ public class QuestionnaireMapperTest {
     public void shouldMapMultiSelectQuestionDetailToQuestion() {
         String choice1 = "choice1";
         String choice2 = "choice2";
-        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.MULTI_SELECT, Arrays.asList(choice1, choice2));
+        QuestionDetail questionDefinition = new QuestionDetail(TITLE, new MultiSelectQuestionTypeDto(), Arrays.asList(choice1, choice2));
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
         assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.MULTISELECT));
         assertThat(question.getQuestionText(), is(TITLE));
@@ -118,7 +124,7 @@ public class QuestionnaireMapperTest {
     public void shouldMapSingleSelectQuestionDetailToQuestion() {
         String choice1 = "choice1";
         String choice2 = "choice2";
-        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.SINGLE_SELECT, Arrays.asList(choice1, choice2));
+        QuestionDetail questionDefinition = new QuestionDetail(TITLE, new SingleSelectQuestionTypeDto(), Arrays.asList(choice1, choice2));
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
         assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.SINGLESELECT));
         assertThat(question.getQuestionText(), is(TITLE));
@@ -128,7 +134,7 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapNumericQuestionDetailToQuestion() {
-        QuestionDetail questionDetail = new QuestionDetail(TITLE, QuestionType.NUMERIC);
+        QuestionDetail questionDetail = new QuestionDetail(TITLE, new NumericQuestionTypeDto());
         questionDetail.setNumericMin(10);
         questionDetail.setNumericMax(100);
         QuestionEntity questionEntity = questionnaireMapper.mapToQuestion(questionDetail);
@@ -222,7 +228,7 @@ public class QuestionnaireMapperTest {
     private SectionDetail getSectionDefinition(String name) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID), true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, new QuestionTypeDto()), true));
         return section;
     }
 
@@ -307,13 +313,13 @@ public class QuestionnaireMapperTest {
             List<SectionQuestionDetail> questionDetails1 = sectionDefinition1.getQuestions();
             assertThat(questionDetails1.size(), is(1));
             assertThat(questionDetails1.get(0).getTitle(), is(SECTION + i));
-            assertThat(questionDetails1.get(0).getQuestionType(), is(QuestionType.DATE));
+            assertThat(questionDetails1.get(0).getQuestionTypeDetail().getQuestionType(), is(QuestionType.DATE));
             SectionDetail sectionDefinition2 = questionGroupDetail.getSectionDetails().get(1);
             assertThat(sectionDefinition2.getName(), is(SECTION + (i + 1)));
             List<SectionQuestionDetail> questionDetails2 = sectionDefinition2.getQuestions();
             assertThat(questionDetails2.size(), is(1));
             assertThat(questionDetails2.get(0).getTitle(), is(SECTION + (i + 1)));
-            assertThat(questionDetails2.get(0).getQuestionType(), is(QuestionType.DATE));
+            assertThat(questionDetails2.get(0).getQuestionTypeDetail().getQuestionType(), is(QuestionType.DATE));
         }
     }
 
@@ -348,15 +354,15 @@ public class QuestionnaireMapperTest {
         Mockito.when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,10)).thenReturn(asList(questionGroupInstance));
         Mockito.when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,11)).thenReturn(asList(questionGroupInstance));
 
-        List<QuestionDetail> questionDetails1 = Arrays.asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
+        List<QuestionDetail> questionDetails1 = Arrays.asList(new QuestionDetail(12, "Question 1", "Question 1", new FreeTextQuestionTypeDto()));
         List<SectionDetail> sectionDetails1 = Arrays.asList(getSectionDetailWithQuestions(14, "Sec1", questionDetails1, "value",null));
         QuestionGroupDetail questionGroupDetail1 = new QuestionGroupDetail(10, "QG1", new EventSource("Create", "Client", null), sectionDetails1, true);
 
-        List<QuestionDetail> questionDetails2 = Arrays.asList(new QuestionDetail(13, "Question 2", "Question 2", QuestionType.DATE));
+        List<QuestionDetail> questionDetails2 = Arrays.asList(new QuestionDetail(13, "Question 2", "Question 2", new DateQuestionTypeDto()));
         List<SectionDetail> sectionDetails2 = Arrays.asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails2, null,null));
         QuestionGroupDetail questionGroupDetail2 = new QuestionGroupDetail(11, "QG2", new EventSource("Create", "Client", null), sectionDetails2, true);
         
-        List<QuestionDetail> questionDetails3 = Arrays.asList(new QuestionDetail(13, "Question 2", "Question 2", QuestionType.MULTI_SELECT, Arrays.asList("a1","a2","a3")));
+        List<QuestionDetail> questionDetails3 = Arrays.asList(new QuestionDetail(13, "Question 2", "Question 2", new MultiSelectQuestionTypeDto(), Arrays.asList("a1","a2","a3")));
         List<SectionDetail> sectionDetails3 = Arrays.asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails3, null,Arrays.asList("a2","a3")));
         QuestionGroupDetail questionGroupDetail3 = new QuestionGroupDetail(11, "QG2", new EventSource("Create", "Client", null), sectionDetails3, true);
 
@@ -544,7 +550,7 @@ public class QuestionnaireMapperTest {
 
     private void assertQuestionType(QuestionType questionType, AnswerType answerType) {
         QuestionDetail questionDetail = questionnaireMapper.mapToQuestionDetail(getQuestion(TITLE, answerType));
-        assertThat(questionDetail.getType(), is(questionType));
+        assertThat(questionDetail.getQuestionTypeDetail().getQuestionType(), is(questionType));
     }
 
     private void assertCreationDate(Date dateOfCreation) {
@@ -566,7 +572,7 @@ public class QuestionnaireMapperTest {
 
     private void assertQuestionDetail(QuestionDetail questionDetail, String title, QuestionType questionType) {
         assertThat(questionDetail.getText(), is(title));
-        assertThat(questionDetail.getType(), is(questionType));
+        assertThat(questionDetail.getQuestionTypeDetail().getQuestionType(), is(questionType));
     }
 
     private void assertQuestionDetail(QuestionDetail questionDetail, String title, QuestionType questionType, List<String> choices) {

@@ -96,8 +96,8 @@ public class SectionQuestionDetail implements Serializable {
         this.mandatory = mandatory;
     }
 
-    public QuestionType getQuestionType() {
-        return questionDetail.getType();
+    public QuestionTypeDto getQuestionTypeDetail() {
+        return questionDetail.getQuestionTypeDetail();
     }
 
     public List<String> getAnswerChoices() {
@@ -152,14 +152,10 @@ public class SectionQuestionDetail implements Serializable {
         return questionDetail != null ? questionDetail.hashCode() : 0;
     }
 
-    public boolean isMultiSelectQuestion() {
-        return QuestionType.MULTI_SELECT.equals(getQuestionType());
-    }
-
     public List<String> getAnswers() {
         List<String> answers = new LinkedList<String>();
         if (hasAnswer()) {
-            if (isMultiSelectQuestion()) {
+            if (getQuestionTypeDetail().isMultiSelectQuestion()) {
                 answers.addAll(getValues());
             } else {
                 answers.add(getValue());
@@ -171,10 +167,6 @@ public class SectionQuestionDetail implements Serializable {
     public String getAnswer() {
         List<String> answers = getAnswers();
         return isNotEmpty(answers) ? CollectionUtils.toString(answers) : EMPTY;
-    }
-
-    public boolean isNumeric() {
-        return QuestionType.NUMERIC.equals(getQuestionType());
     }
 
     public Integer getNumericMin() {
@@ -195,5 +187,9 @@ public class SectionQuestionDetail implements Serializable {
     @Deprecated
     public void setValuesAsArray(String[] valuesArr) {
         this.values = Arrays.asList(valuesArr);
+    }
+
+    public boolean isNumeric() {
+        return getQuestionTypeDetail().isNumeric();
     }
 }

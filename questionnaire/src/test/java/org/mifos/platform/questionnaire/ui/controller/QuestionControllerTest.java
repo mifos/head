@@ -28,8 +28,9 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.matchers.MessageMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionMatcher;
+import org.mifos.platform.questionnaire.service.NumericQuestionTypeDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
-import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.QuestionTypeDto;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.ui.model.Question;
 import org.mifos.platform.questionnaire.ui.model.QuestionForm;
@@ -247,7 +248,8 @@ public class QuestionControllerTest {
 
     @Test
     public void shouldGetAllQuestions() {
-        List<QuestionDetail> questionDetailList = Arrays.asList(getQuestionDetail(1, "title1", QuestionType.NUMERIC), getQuestionDetail(2, "title2", QuestionType.NUMERIC));
+        NumericQuestionTypeDto numeric = new NumericQuestionTypeDto();
+        List<QuestionDetail> questionDetailList = Arrays.asList(getQuestionDetail(1, "title1", numeric), getQuestionDetail(2, "title2", numeric));
         Mockito.when(questionnaireServiceFacade.getAllQuestions()).thenReturn(questionDetailList);
         String view = questionController.getAllQuestions(model, httpServletRequest);
         Assert.assertThat(view, is("viewQuestions"));
@@ -258,7 +260,7 @@ public class QuestionControllerTest {
     @Test
     public void shouldGetQuestionById() throws SystemException {
         int questionId = 1;
-        QuestionDetail questionDetail = getQuestionDetail(questionId, TITLE, QuestionType.NUMERIC);
+        QuestionDetail questionDetail = getQuestionDetail(questionId, TITLE, new NumericQuestionTypeDto());
         Mockito.when(questionnaireServiceFacade.getQuestionDetail(questionId)).thenReturn(questionDetail);
         Mockito.when(httpServletRequest.getParameter("questionId")).thenReturn(Integer.toString(questionId));
         String view = questionController.getQuestion(model, httpServletRequest);
@@ -309,8 +311,8 @@ public class QuestionControllerTest {
         return question;
     }
 
-    private QuestionDetail getQuestionDetail(int id, String title, QuestionType type) {
-        return new QuestionDetail(id, title, title, type);
+    private QuestionDetail getQuestionDetail(int id, String title, QuestionTypeDto questionTypeDto) {
+        return new QuestionDetail(id, title, title, questionTypeDto);
     }
 
     private QuestionForm getQuestionForm(String title, String type) {

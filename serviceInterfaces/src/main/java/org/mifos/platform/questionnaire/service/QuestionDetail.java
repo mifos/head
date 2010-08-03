@@ -33,33 +33,33 @@ public class QuestionDetail implements Serializable {
     private Integer id;
     private String text;
     private String shortName;
-    private QuestionType type;
+    private QuestionTypeDto questionTypeDto;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<String> answerChoices;
     private Integer numericMin;
     private Integer numericMax;
 
     public QuestionDetail() {
-        this(null, QuestionType.INVALID);
+        this(null, new QuestionTypeDto());
     }
 
-    public QuestionDetail(String text, QuestionType type) {
-        this(0, text, text, type);
+    public QuestionDetail(String text, QuestionTypeDto questionTypeDto) {
+        this(0, text, text, questionTypeDto);
     }
 
-    public QuestionDetail(Integer id, String text, String shortName, QuestionType type) {
-        this(id, text, shortName, type, new ArrayList<String>());
+    public QuestionDetail(Integer id, String text, String shortName, QuestionTypeDto questionTypeDto) {
+        this(id, text, shortName, questionTypeDto, new ArrayList<String>());
     }
 
-    public QuestionDetail(String title, QuestionType type, List<String> answerChoices) {
-        this(0, title, title, type, answerChoices);
+    public QuestionDetail(String title, QuestionTypeDto questionTypeDto, List<String> answerChoices) {
+        this(0, title, title, questionTypeDto, answerChoices);
     }
 
-    public QuestionDetail(Integer id, String text, String shortName, QuestionType type, List<String> answerChoices) {
+    public QuestionDetail(Integer id, String text, String shortName, QuestionTypeDto questionTypeDto, List<String> answerChoices) {
         this.id = id;
         this.text = text;
         this.shortName = shortName;
-        this.type = type;
+        this.questionTypeDto = questionTypeDto;
         this.answerChoices = answerChoices;
     }
 
@@ -79,16 +79,8 @@ public class QuestionDetail implements Serializable {
         return shortName;
     }
 
-    public QuestionType getType() {
-        return type;
-    }
-
     public void setTitle(String title) {
         this.shortName = title;
-    }
-
-    public void setType(QuestionType type) {
-        this.type = type;
     }
 
     public void setId(Integer id) {
@@ -146,5 +138,13 @@ public class QuestionDetail implements Serializable {
 
     public void removeAnswerChoice(int choiceIndex) {
         answerChoices.remove(choiceIndex);
+    }
+
+    public QuestionTypeDto getQuestionTypeDetail() {
+        return questionTypeDto;
+    }
+
+    public void setQuestionTypeDetail(QuestionTypeDto questionTypeDto) {
+        this.questionTypeDto = questionTypeDto;
     }
 }
