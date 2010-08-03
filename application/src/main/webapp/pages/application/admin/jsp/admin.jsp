@@ -135,12 +135,9 @@ while(enn.hasMoreElements()){
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<td>
-							<html-el:link styleId="admin.link.viewHolidays"
-								action="holidayAction.do?method=get">
-								<mifos:mifoslabel name="admin.viewholidays" /></html-el:link>
-							| <html-el:link styleId="admin.link.defineNewHoliday"
-								action="holidayAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.defnewholiday" /></html-el:link></td>
+							<a id="admin.link.viewHolidays" href="viewHolidays.ftl"><mifos:mifoslabel name="admin.viewholidays" /></a>
+							| <a id="admin.link.defineNewHoliday" href="defineNewHoliday.ftl"><mifos:mifoslabel name="admin.defnewholiday" /></a>
+							</td>
 						</tr>
 						<tr class="fontnormal">
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
