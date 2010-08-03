@@ -1,5 +1,6 @@
 package org.mifos.application.questionnaire.struts;
 
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,6 +48,13 @@ public class QuestionnaireFlowAdapter {
             form.setQuestionGroups(null);
             return mapping.findForward(defaultForward.toString());
         }
+        /**
+         * TODO if user goes back before "joinFlowAt" and continues, then Question group capture form will be reinitialized!
+         * We can use the flowkey to check need for reset. consider modifying QuestionResponseCapturerForm set flowkey and
+         * then compare the request attribute's flowkey to check! Unfortunately, usage of flowkey may not be consistent!
+         * Another situation, although very unlikely, is admin associates another question group with event and source in the meantime!
+         * In that case, the questionGroups need to be merged!
+         */
         form.setQuestionGroups(questionGroups);
         setQuestionnaireAttributesToRequest(request, form);
         return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
@@ -82,9 +90,8 @@ public class QuestionnaireFlowAdapter {
         if (CollectionUtils.isEmpty(questionResponses)) {
             return;
         }
-        //PersonnelPersistence personnelPersistence = new PersonnelPersistence();
-        //PersonnelBO currentUser = personnelPersistence.findPersonnelById(userContext.getId());
         QuestionnaireServiceFacade questionnaireServiceFacade = serviceLocator.getService(request);
+        //MifosUser loggedinUser = ((MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         if (questionnaireServiceFacade != null) {
             UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
             questionnaireServiceFacade.saveResponses(
