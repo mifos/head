@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+
 public class HolidayFormValidator implements Validator {
 
     @Override
@@ -33,6 +34,7 @@ public class HolidayFormValidator implements Validator {
         return HolidayFormBean.class.isAssignableFrom(clazz) || OfficeHoliday.class.isAssignableFrom(clazz);
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "REC_CATCH_EXCEPTION"}, justification = "Using catch all to detect invalid dates.")
     @Override
     public void validate(Object target, Errors errors) {
 
@@ -68,7 +70,7 @@ public class HolidayFormValidator implements Validator {
 
     private void rejectIfEmptyOrWhitespace(Errors errors, String value, String errorCode, String defaultMessage) {
 
-        if (value == null ||!StringUtils.hasText(value.toString())) {
+        if (value == null ||!StringUtils.hasText(value)) {
             errors.reject(errorCode, defaultMessage);
         }
     }

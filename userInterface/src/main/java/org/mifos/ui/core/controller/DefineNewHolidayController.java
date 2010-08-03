@@ -20,14 +20,11 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.dto.domain.OfficeHoliday;
@@ -54,6 +51,7 @@ public class DefineNewHolidayController {
 
     @Autowired
     private HolidayServiceFacade holidayServiceFacade;
+    private HolidayAssembler holidayAssembler = new HolidayAssembler();
 
     protected DefineNewHolidayController() {
         // default contructor for spring autowiring
@@ -76,8 +74,7 @@ public class DefineNewHolidayController {
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("formBean")
     public HolidayFormBean showPopulatedForm() {
-        HolidayFormBean formBean = new HolidayFormBean();
-        return formBean;
+        return new HolidayFormBean();
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -94,15 +91,9 @@ public class DefineNewHolidayController {
             mav = new ModelAndView("defineNewHoliday");
         } else {
 
-            Date fromDate = new DateTime().withDate(Integer.parseInt(formBean.getFromYear()), formBean.getFromMonth(), formBean.getFromDay()).toDate();
-            Date thruDate = null;
-            if (formBean.getToDay() != null) {
-                thruDate = new DateTime().withDate(Integer.parseInt(formBean.getToYear()), formBean.getToMonth(), formBean.getToDay()).toDate();
-            }
+            HolidayDetails holidayDetail = holidayAssembler.translateHolidayFormBeanToDto(formBean);
 
-            HolidayDetails holidayDetail = new HolidayDetails(formBean.getName(), fromDate, thruDate, Short.valueOf(formBean.getRepaymentRuleId()));
-
-            List<Short> branchIds = convertToIds(formBean.getSelectedOfficeIds());
+            List<Short> branchIds = holidayAssembler.convertToIds(formBean.getSelectedOfficeIds());
 
             OfficeHoliday officeHoliday = holidayServiceFacade.retrieveHolidayDetailsForPreview(holidayDetail, branchIds);
 
@@ -114,14 +105,7 @@ public class DefineNewHolidayController {
         return mav;
     }
 
-    private List<Short> convertToIds(String commaDelimetedList) {
-
-        List<Short> branchIdList = new ArrayList<Short>();
-        String[] branchIds = commaDelimetedList.split(",");
-        for (String id : branchIds) {
-            branchIdList.add(Short.valueOf(id));
-        }
-
-        return branchIdList;
+    public void setHolidayAssembler(HolidayAssembler holidayAssembler) {
+        this.holidayAssembler = holidayAssembler;
     }
 }
