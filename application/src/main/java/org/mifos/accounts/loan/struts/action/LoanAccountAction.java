@@ -109,6 +109,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.LoanCreationLoanDetailsDto;
@@ -220,7 +221,7 @@ import org.mifos.service.MifosServiceFactory;
  * </li>
  * </ul>
  */
-public class LoanAccountAction extends AccountAppAction {
+public class LoanAccountAction extends AccountAppAction implements QuestionnaireAction {
 
     private final LoanBusinessService loanBusinessService;
     private final LoanPrdBusinessService loanPrdBusinessService;
@@ -1485,6 +1486,7 @@ public class LoanAccountAction extends AccountAppAction {
     }
 
     @TransactionDemarcate(joinToken = true)
+    @Override
     public ActionForward captureQuestionResponses(
             final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
             @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
@@ -1499,6 +1501,7 @@ public class LoanAccountAction extends AccountAppAction {
     }
 
     @TransactionDemarcate(joinToken = true)
+    @Override
     public ActionForward editQuestionResponses(
             final ActionMapping mapping, final ActionForm form,
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {

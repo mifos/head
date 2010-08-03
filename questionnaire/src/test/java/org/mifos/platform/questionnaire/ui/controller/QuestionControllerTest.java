@@ -198,7 +198,7 @@ public class QuestionControllerTest {
         QuestionForm questionForm = new QuestionForm();
         questionForm.getCurrentQuestion().setTitle("  " + TITLE + "    ");
         questionForm.getCurrentQuestion().setType("Multi Select");
-        questionForm.getCurrentQuestion().setChoice("C1");
+        questionForm.getCurrentQuestion().setCurrentChoice("C1");
         questionForm.getCurrentQuestion().addAnswerChoice();
         Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionController.addQuestion(questionForm, requestContext);
@@ -213,9 +213,9 @@ public class QuestionControllerTest {
         QuestionForm questionForm = new QuestionForm();
         questionForm.getCurrentQuestion().setTitle("  " + TITLE + "    ");
         questionForm.getCurrentQuestion().setType("Single Select");
-        questionForm.getCurrentQuestion().setChoice("C1");
+        questionForm.getCurrentQuestion().setCurrentChoice("C1");
         questionForm.getCurrentQuestion().addAnswerChoice();
-        questionForm.getCurrentQuestion().setChoice("C2");
+        questionForm.getCurrentQuestion().setCurrentChoice("C2");
         questionForm.getCurrentQuestion().addAnswerChoice();
         Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionController.addQuestion(questionForm, requestContext);

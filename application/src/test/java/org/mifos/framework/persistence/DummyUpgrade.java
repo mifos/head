@@ -24,20 +24,27 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-final class DummyUpgrade extends Upgrade {
+public class DummyUpgrade extends Upgrade {
     private StringBuilder log = new StringBuilder();
 
-    DummyUpgrade(int higherVersion) {
-        super(higherVersion);
+    public DummyUpgrade() {
+        super();
     }
 
     @Override
     public void upgrade(Connection connection)
             throws IOException, SQLException {
-        log.append("upgrade to " + higherVersion() + "\n");
-        if (connection != null) {
-            upgradeVersion(connection);
-        }
+//        log.append("upgrade to " + ) + "\n");
+        connection.createStatement().execute("CREATE TABLE FOO ( "+
+                "FOO_ID INTEGER,"+
+                "Description VARCHAR(25),"+
+                "PRIMARY KEY(FOO_ID) ) ENGINE=InnoDB CHARACTER SET utf8 ");
+
+
+        connection.createStatement().execute("INSERT INTO FOO VALUES(1, 'BAR')");
+
+        connection.createStatement().execute("INSERT INTO FOO VALUES(2, 'BAZ')");
+        connection.commit();
     }
 
     String getLog() {

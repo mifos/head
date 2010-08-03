@@ -74,8 +74,8 @@
                 </li>
 			    <li>
                     <div id="choiceDiv">
-                        <label for="currentQuestion.choice"><span class="red">*</span>[@spring.message "questionnaire.quesiton.choice"/]: </label>
-                        [@spring.formInput "questionDefinition.currentQuestion.choice", 'maxlength="200"'/]
+                        <label for="currentQuestion.currentChoice"><span class="red">*</span>[@spring.message "questionnaire.quesiton.choice"/]: </label>
+                        [@spring.formInput "questionDefinition.currentQuestion.currentChoice", 'maxlength="200"'/]
                         <input type="submit" id="_eventId_addChoice" name="_eventId_addChoice" class="buttn"
                                value="[@spring.message "questionnaire.quesiton.add"/] >>">
                         <fieldset>

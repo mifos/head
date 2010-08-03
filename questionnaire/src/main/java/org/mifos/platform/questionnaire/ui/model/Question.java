@@ -37,7 +37,7 @@ public class Question implements Serializable {
     private static Map<String, QuestionType> stringToQuestionTypeMap;
     private static Map<QuestionType, String> questionTypeToStringMap;
     private QuestionDetail questionDetail;
-    private String choice;
+    private String currentChoice;
 
     static {
         populateStringToQuestionTypeMap();
@@ -97,21 +97,21 @@ public class Question implements Serializable {
         return CollectionUtils.toString(this.questionDetail.getAnswerChoices());
     }
 
-    public String getChoice() {
-        return choice;
+    public String getCurrentChoice() {
+        return currentChoice;
     }
 
-    public void setChoice(String choice) {
-        this.choice = choice;
+    public void setCurrentChoice(String currentChoice) {
+        this.currentChoice = currentChoice;
     }
 
     public void addAnswerChoice() {
-        getChoices().add(getChoice());
-        setChoice(null);
+        questionDetail.addAnswerChoice(getCurrentChoice());
+        setCurrentChoice(null);
     }
 
     public void removeChoice(int choiceIndex) {
-        getChoices().remove(choiceIndex);
+        questionDetail.removeAnswerChoice(choiceIndex);
     }
 
     public void setChoicesIfApplicable() {

@@ -139,4 +139,12 @@ public class QuestionDetail implements Serializable {
     public Integer getNumericMax() {
         return numericMax;
     }
+
+    public void addAnswerChoice(String answerChoice) {
+        answerChoices.add(answerChoice);
+    }
+
+    public void removeAnswerChoice(int choiceIndex) {
+        answerChoices.remove(choiceIndex);
+    }
 }

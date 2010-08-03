@@ -54,7 +54,7 @@ explanation of the license and how it is applied.
 		</STYLE>
             
         <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
-		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.SurveysUIResources"/>
 		<html-el:form action="${requestScope.origFlowRequestURI}">
 			<logic:messagesPresent>
                 <table width="93%" border="0" cellspacing="0" cellpadding="0">
@@ -99,20 +99,20 @@ explanation of the license and how it is applied.
                                      </td>
                                      <td width="83%">
                                      <html-el:hidden property='questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].id' value="${question.id}"></html-el:hidden>
-                                     <c:if test="${question.questionType == 'FREETEXT'}">
+                                     <c:if test="${question.questionTypeDetail.questionType == 'FREETEXT'}">
                                          <mifos:mifosalphanumtext styleId="create_ClientPersonalInfo.input.customField" 
                                              property='questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value' maxlength="200" />
                                      </c:if> 
-                                     <c:if test="${question.questionType == 'NUMERIC'}">
+                                     <c:if test="${question.questionTypeDetail.questionType == 'NUMERIC'}">
                                          <mifos:mifosnumbertext styleId="create_ClientPersonalInfo.input.customField" 
                                              property='questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value' maxlength="200" />
                                      </c:if> 
-                                     <c:if test="${question.questionType == 'DATE'}">
+                                     <c:if test="${question.questionTypeDetail.questionType == 'DATE'}">
                                          <mifos:mifosalphanumtext styleId="create_ClientPersonalInfo.input.customField" styleClass="date-pick"
                                              property='questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value' maxlength="10" />
                                      </c:if>
                                      
-                                     <c:if test="${question.questionType == 'SINGLE_SELECT'}">
+                                     <c:if test="${question.questionTypeDetail.questionType == 'SINGLE_SELECT'}">
                                          <mifos:select	property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value" size="1">
 										   <c:forEach var="choiceValue" items="${question.answerChoices}" >
 											  <html-el:option value="${choiceValue}">${choiceValue}</html-el:option>
@@ -120,7 +120,7 @@ explanation of the license and how it is applied.
 									     </mifos:select>
                                      </c:if>
                                      
-                                      <c:if test="${question.questionType == 'MULTI_SELECT'}">
+                                      <c:if test="${question.questionTypeDetail.questionType == 'MULTI_SELECT'}">
                                          <fieldset style="width:70%">
 				                            <ol class="noPadding">
 				                              <c:forEach var="choiceValue" items="${question.answerChoices}" >
@@ -140,8 +140,8 @@ explanation of the license and how it is applied.
                      <tr>
                         <td>&nbsp;</td>
 						<td align="left">
-							<input type="submit" class="buttn" name="captureQuestionResponses.button.continue" id="captureQuestionResponses.button.continue" value="Continue"/>
-							<input type="button" class="cancelbuttn" name="captureQuestionResponses_button_cancel" id="captureQuestionResponses_button_cancel" value="Cancel"/>
+							<input type="submit" class="buttn" name="captureQuestionResponses.button.continue" id="captureQuestionResponses.button.continue" value="<fmt:message key='Surveys.button.continue'/>"/>
+							<input type="button" class="cancelbuttn" name="captureQuestionResponses_button_cancel" id="captureQuestionResponses_button_cancel" value="<fmt:message key='Surveys.button.cancel'/>"/>
                         </td>
                     </tr>
                  </table>

@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 
 public class AddFieldIntegrationTest extends MifosIntegrationTestCase {
 
@@ -51,7 +50,7 @@ public class AddFieldIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testStartFromStandardStore() throws Exception {
         int newId = 203;
-        AddField upgrade = new AddField(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, "AssignClients",
+        AddField upgrade = new AddField(newId, "AssignClients",
                 EntityType.CLIENT, false, false);
         upgrade.upgrade(session.connection());
         FieldConfigurationEntity fetched = (FieldConfigurationEntity) session.get(FieldConfigurationEntity.class, newId);

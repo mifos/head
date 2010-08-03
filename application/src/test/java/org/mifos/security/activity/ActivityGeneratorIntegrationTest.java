@@ -31,7 +31,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
@@ -56,7 +56,7 @@ public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
 
         activityGenerator.upgradeUsingHQL(DynamicLookUpValueCreationTypes.BirtReport, parentId, "abcd");
         int lookUpId = activityGenerator.getLookUpId();
-       Assert.assertEquals("abcd", activityGenerator.getLookUpValueLocaleEntity(DatabaseVersionPersistence.ENGLISH_LOCALE,
+       Assert.assertEquals("abcd", activityGenerator.getLookUpValueLocaleEntity(DatabaseMigrator.ENGLISH_LOCALE,
                 lookUpId).getLookUpValue());
        Assert.assertEquals(ActivityGenerator.calculateDynamicActivityId(), (int) activityGenerator
                 .getActivityEntity(lookUpId).getId() - 1);
@@ -89,7 +89,7 @@ public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
         Integer lookUpId = activityEntity.getActivityNameLookupValues().getLookUpId();
        Assert.assertEquals(373, lookUpId.intValue());
 
-        short localeId = DatabaseVersionPersistence.ENGLISH_LOCALE;
+        short localeId = DatabaseMigrator.ENGLISH_LOCALE;
         LookUpValueLocaleEntity lookUpValueLocaleEntity = mp.retrieveOneLookUpValueLocaleEntity(localeId, lookUpId
                 .intValue());
         Assert.assertNull(lookUpValueLocaleEntity.getLookUpValue());

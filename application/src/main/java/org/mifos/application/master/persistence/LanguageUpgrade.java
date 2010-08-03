@@ -36,11 +36,12 @@ import org.mifos.framework.util.SqlUpgradeScriptFinder;
 public abstract class LanguageUpgrade extends Upgrade {
 
     private static final int LANGUAGE_ENTITY_NUMBER = 74;
-    private int databaseVersion;
+    private int upgradeTimeStamp;
 
-    public LanguageUpgrade(int databaseVersion) {
-        super(databaseVersion);
-        this.databaseVersion = databaseVersion;
+
+    public LanguageUpgrade(int upgradeTimestamp) {
+        super();
+        this.upgradeTimeStamp = upgradeTimestamp;
     }
 
     /**
@@ -55,10 +56,9 @@ public abstract class LanguageUpgrade extends Upgrade {
     @Override
     public void upgrade(Connection connection)
             throws IOException, SQLException {
-        addCountryCodes(connection, databaseVersion);
+        addCountryCodes(connection, upgradeTimeStamp);
         addLanguageDescriptionLookupValues(connection);
-        addLocales(connection, databaseVersion);
-        upgradeVersion(connection);
+        addLocales(connection, upgradeTimeStamp);
     }
 
     private void addLanguageDescriptionLookupValues(Connection connection) throws SQLException {
@@ -77,18 +77,18 @@ public abstract class LanguageUpgrade extends Upgrade {
     }
 
     private void addCountryCodes(Connection connection,
-            int upgradeVersion) throws IOException, SQLException {
-        upgradePart(connection, "upgrade_to_" + upgradeVersion + "_part_1.sql");
+            int upgradeTimestamp) throws IOException, SQLException {
+        upgradePart(connection, "upgrade_to_" + upgradeTimestamp + "_part_1.sql");
     }
 
     private void addLocales(Connection connection,
-            int upgradeVersion) throws IOException, SQLException {
-        upgradePart(connection, "upgrade_to_" + upgradeVersion + "_part_3.sql");
+            int upgradeTimestamp) throws IOException, SQLException {
+        upgradePart(connection, "upgrade_to_" + upgradeTimestamp + "_part_3.sql");
     }
 
     private void upgradePart(Connection connection,
             String sqlUpgradeScriptFilename) throws IOException, SQLException {
-        SqlUpgrade upgradePart = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
+        SqlUpgrade upgradePart = SqlUpgradeScriptFinder.findUpgradeScript(
                 sqlUpgradeScriptFilename);
         upgradePart.runScript(connection);
     }

@@ -100,7 +100,7 @@ public class PersonnelDaoHibernate implements PersonnelDao {
 
         List<GrantedAuthority> authorities = translateActivityIdsToGrantedAuthorities(activityIds);
 
-        return new MifosUser(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
+        return new MifosUser(user.getPersonnelId(), username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
                 authorities);
     }
 

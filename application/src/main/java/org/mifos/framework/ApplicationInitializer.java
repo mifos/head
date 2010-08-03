@@ -56,7 +56,7 @@ import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.StandardTestingService;
@@ -143,20 +143,20 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 // if a database upgrade loads an instance of Money then MoneyCompositeUserType needs the default currency
                 MoneyCompositeUserType.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
                 AccountingRules.init(); // load the additional currencies
-                DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
+                DatabaseMigrator migrator = new DatabaseMigrator();
                 try {
                     /*
                      * This is an easy way to force an actual database query to happen via Hibernate. Simply opening a
                      * Hibernate session may not actually connect to the database.
                      */
-                    persistence.isVersioned();
+                    migrator.isNSDU();
                 } catch (Throwable t) {
                     setDatabaseError(DatabaseErrorCode.CONNECTION_FAILURE, "Unable to connect to database.", t);
                 }
 
                 if (!databaseError.isError) {
                     try {
-                        persistence.upgradeDatabase();
+                        migrator.upgrade();
                     } catch (Throwable t) {
                         setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE, "Failed to upgrade database.", t);
                     }
@@ -209,10 +209,10 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         }
     }
 
-    public static void printDatabaseError(XmlBuilder xml, int dbVersion) {
+    public static void printDatabaseError(XmlBuilder xml) {
         synchronized (ApplicationInitializer.class) {
             if (databaseError.isError) {
-                addDatabaseErrorMessage(xml, dbVersion);
+                addDatabaseErrorMessage(xml);
             } else {
                 addNoFurtherDetailsMessage(xml);
             }
@@ -226,14 +226,14 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         xml.text("\n");
     }
 
-    private static void addDatabaseErrorMessage(XmlBuilder xml, int dbVersion) {
+    private static void addDatabaseErrorMessage(XmlBuilder xml) {
         xml.startTag("p", "style", "font-weight: bolder; color: red; font-size: x-large;");
 
         xml.text(databaseError.errmsg);
         xml.text("\n");
 
         if (databaseError.errorCode.equals(DatabaseErrorCode.UPGRADE_FAILURE)) {
-            addDatabaseVersionMessage(xml, dbVersion);
+            xml.text("Unable to apply database upgrades");
         }
         xml.endTag("p");
         if (databaseError.errorCode.equals(DatabaseErrorCode.CONNECTION_FAILURE)) {
@@ -285,15 +285,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         xml.endTag("a");
         xml.endTag("p");
         xml.text("\n");
-    }
-
-    private static void addDatabaseVersionMessage(XmlBuilder xml, int dbVersion) {
-        if (dbVersion == -1) {
-            xml.text("Database is too old to have a version.\n");
-        } else {
-            xml.text("Database Version = " + dbVersion + "\n");
-        }
-        xml.text("Application Version = " + DatabaseVersionPersistence.APPLICATION_VERSION + ".\n");
     }
 
     private static void addStackTraceHtml(XmlBuilder xml) {

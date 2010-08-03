@@ -44,8 +44,8 @@ public class AddReport extends Upgrade {
     private final String identifier;
     private final String fileName;
 
-    public AddReport(int higherVersion, short category, String name, String fileName) {
-        super(higherVersion);
+    public AddReport(short category, String name, String fileName) {
+        super();
         this.category = category;
         this.parentId = getParentId(category);
         this.name = name;
@@ -69,7 +69,6 @@ public class AddReport extends Upgrade {
         this.reportId = getNextId(connection, "report_id", "report");
         this.activityId = getNextId(connection, "activity_id", "activity");
         doUpgrade(connection);
-        upgradeVersion(connection);
     }
 
     private short getNextId(Connection connection, String idName, String table) throws SQLException {

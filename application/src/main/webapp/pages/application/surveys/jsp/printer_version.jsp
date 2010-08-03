@@ -24,7 +24,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
-<html>
+<mifos:html>
 <head>
 <title>Mifos</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -199,4 +199,4 @@ textarea {
 	</tr>
 </table>
 </body>
-</html>
+</mifos:html>
