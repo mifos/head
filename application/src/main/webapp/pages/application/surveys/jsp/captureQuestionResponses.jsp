@@ -54,7 +54,7 @@ explanation of the license and how it is applied.
 		</STYLE>
             
         <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
-		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.SurveysUIResources"/>
 		<html-el:form action="${requestScope.origFlowRequestURI}">
 			<logic:messagesPresent>
                 <table width="93%" border="0" cellspacing="0" cellpadding="0">
@@ -140,8 +140,8 @@ explanation of the license and how it is applied.
                      <tr>
                         <td>&nbsp;</td>
 						<td align="left">
-							<input type="submit" class="buttn" name="captureQuestionResponses.button.continue" id="captureQuestionResponses.button.continue" value="Continue"/>
-							<input type="button" class="cancelbuttn" name="captureQuestionResponses_button_cancel" id="captureQuestionResponses_button_cancel" value="Cancel"/>
+							<input type="submit" class="buttn" name="captureQuestionResponses.button.continue" id="captureQuestionResponses.button.continue" value="<fmt:message key='Surveys.button.continue'/>"/>
+							<input type="button" class="cancelbuttn" name="captureQuestionResponses_button_cancel" id="captureQuestionResponses_button_cancel" value="<fmt:message key='Surveys.button.cancel'/>"/>
                         </td>
                     </tr>
                  </table>
