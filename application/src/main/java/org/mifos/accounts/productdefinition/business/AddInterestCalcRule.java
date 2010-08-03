@@ -27,6 +27,7 @@ import java.sql.SQLException;
 
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.framework.persistence.Upgrade;
 
 /* AddInterestCalcRule adds a new type of interest calculation method
@@ -50,12 +51,9 @@ public class AddInterestCalcRule extends Upgrade {
      * This constructor is used for version 174 and lower. And it must not be
      * used afterward
      */
-    public AddInterestCalcRule(int higherVersion, int newRuleId, int categoryId, String lookupName, String description,
+    public AddInterestCalcRule(int newRuleId, int categoryId, String lookupName, String description,
             Short locale, String message) {
-        super(higherVersion);
-        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION) {
-            throw new RuntimeException(WRONG_CONSTRUCTOR);
-        }
+        super();
         this.newRuleId = newRuleId;
         this.lookupName = lookupName;
         this.categoryId = categoryId;
@@ -68,11 +66,8 @@ public class AddInterestCalcRule extends Upgrade {
      * This constructor must be used after version 174. The lookupValueKey must
      * in the format InterestTypes-...
      */
-    public AddInterestCalcRule(int higherVersion, int newRuleId, int categoryId, String lookupName, String description) {
-        super(higherVersion);
-        if (!validateLookupValueKey(keyFormat, lookupName)) {
-            throw new RuntimeException(wrongLookupValueKeyFormat);
-        }
+    public AddInterestCalcRule(int newRuleId, int categoryId, String lookupName, String description) {
+        super();
         this.newRuleId = newRuleId;
         this.lookupName = lookupName;
         this.categoryId = categoryId;
@@ -89,7 +84,6 @@ public class AddInterestCalcRule extends Upgrade {
         int lookupId = insertLookupValue(connection, lookupEntity, lookupName);
         insertMessage(connection, lookupId, locale, message);
         addInterestType(connection, newRuleId, description, lookupId);
-        upgradeVersion(connection);
     }
 
     private void addInterestType(Connection connection, int newRuleId, String description, int lookupId)

@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.domain.AnswerType;
+import org.mifos.platform.questionnaire.domain.ChoiceTagEntity;
 import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionChoiceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionEntity;
@@ -34,6 +35,7 @@ import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.QuestionGroupInstance;
 import org.mifos.platform.questionnaire.domain.QuestionGroupResponse;
 import org.mifos.platform.questionnaire.domain.QuestionGroupState;
+import org.mifos.platform.questionnaire.domain.QuestionState;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
 import org.mifos.platform.questionnaire.domain.Section;
 import org.mifos.platform.questionnaire.matchers.EventSourcesMatcher;
@@ -51,6 +53,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -402,6 +405,47 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(questionGroups, is(notNullValue()));
         QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
         assertThat(actualQGDetail, is(Matchers.nullValue()));
+    }
+    
+    @Test
+    public void shouldSaveQuestionWithSmartSelectOptionType() {
+        String quesTitle = "Ques" + currentTimeMillis();
+        QuestionEntity questionEntity = new QuestionEntity();
+        questionEntity.setAnswerType(AnswerType.SMARTSELECT);
+        questionEntity.setQuestionState(QuestionState.ACTIVE);
+        questionEntity.setQuestionText(quesTitle);
+        questionEntity.setShortName(quesTitle);
+        questionEntity.setChoices(asList(getChoice("Choice1", "Tag1", "Tag2"), getChoice("Choice2", "Tag4")));
+        Integer quesId = questionDao.create(questionEntity);
+        QuestionEntity newQuestionEntity = questionDao.getDetails(quesId);
+        assertThat(newQuestionEntity, is(notNullValue()));
+        assertThat(newQuestionEntity.getAnswerTypeAsEnum(), is(AnswerType.SMARTSELECT));
+        assertThat(newQuestionEntity.getChoices(), is(notNullValue()));
+        assertThat(newQuestionEntity.getChoices().size(), is(2));
+        assertThat(newQuestionEntity.getChoices().get(0).getChoiceText(), is("Choice1"));
+        assertThat(newQuestionEntity.getChoices().get(0).getTags(), is(notNullValue()));
+        assertThat(newQuestionEntity.getChoices().get(0).getTags().size(), is(2));
+
+        assertThat(newQuestionEntity.getChoices().get(1).getChoiceText(), is("Choice2"));
+        assertThat(newQuestionEntity.getChoices().get(1).getTags(), is(notNullValue()));
+        assertThat(newQuestionEntity.getChoices().get(1).getTags().size(), is(1));
+    }
+
+    private QuestionChoiceEntity getChoice(String choiceText, String... tagTexts) {
+        QuestionChoiceEntity questionChoiceEntity = new QuestionChoiceEntity();
+        questionChoiceEntity.setChoiceText(choiceText);
+        Set<ChoiceTagEntity> tags = new HashSet<ChoiceTagEntity>();
+        for (String tagText : tagTexts) {
+            tags.add(getTag(tagText));
+        }
+        questionChoiceEntity.setTags(tags);
+        return questionChoiceEntity;
+    }
+
+    private ChoiceTagEntity getTag(String tagText) {
+        ChoiceTagEntity choiceTagEntity = new ChoiceTagEntity();
+        choiceTagEntity.setTagText(tagText);
+        return choiceTagEntity;
     }
 
     private QuestionGroupInstance getMatchingQuestionGroupInstance(Integer questionGroupId, Integer entityId, List<QuestionGroupInstance> instances, int version) {

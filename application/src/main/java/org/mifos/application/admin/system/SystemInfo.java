@@ -24,7 +24,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Locale;
@@ -37,7 +39,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.StandardTestingService;
 
@@ -106,7 +108,15 @@ public class SystemInfo implements Serializable {
     }
 
     public int getApplicationVersion() {
-        return DatabaseVersionPersistence.APPLICATION_VERSION;
+        Connection connection = StaticHibernateUtil.getSessionTL().connection();
+        try {
+            ResultSet rs = connection.createStatement().executeQuery("select upgrade_id from applied_upgrades order by upgrade_id");
+            rs.last();
+            return rs.getInt(1);
+
+        } catch (SQLException e) {
+            return 0;
+        }
     }
 
     public String getDatabaseVendor() {

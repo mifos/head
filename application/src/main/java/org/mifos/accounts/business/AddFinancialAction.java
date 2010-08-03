@@ -43,8 +43,8 @@ public class AddFinancialAction extends Upgrade {
      * This constructor must be used after version 174. The lookupValueKey must
      * in the format FinancialAction-...
      */
-    public AddFinancialAction(int higherVersion, int action, String lookupValueKey) {
-        super(higherVersion);
+    public AddFinancialAction(int action, String lookupValueKey) {
+        super();
         if (!validateLookupValueKey(keyFormat, lookupValueKey)) {
             throw new RuntimeException(wrongLookupValueKeyFormat);
         }
@@ -62,7 +62,7 @@ public class AddFinancialAction extends Upgrade {
         int lookupId = insertLookupValue(connection, lookupEntity, lookupValueKey);
         insertMessage(connection, lookupId, locale, message);
         addAction(connection, action, lookupId);
-        upgradeVersion(connection);
+
     }
 
     private void addAction(Connection connection, int actionId, int lookupId) throws SQLException {

@@ -17,7 +17,50 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-insert into database_version(database_version) values(268);
+insert into applied_upgrades(upgrade_id) values(1277565300);
+insert into applied_upgrades(upgrade_id) values(1277565388);
+insert into applied_upgrades(upgrade_id) values(1277565389);
+insert into applied_upgrades(upgrade_id) values(1277567194);
+insert into applied_upgrades(upgrade_id) values(1277567768);
+insert into applied_upgrades(upgrade_id) values(1277567885);
+insert into applied_upgrades(upgrade_id) values(1277567949);
+insert into applied_upgrades(upgrade_id) values(1277568944);
+insert into applied_upgrades(upgrade_id) values(1277569001);
+insert into applied_upgrades(upgrade_id) values(1277571296);
+insert into applied_upgrades(upgrade_id) values(1277571560);
+insert into applied_upgrades(upgrade_id) values(1277571792);
+insert into applied_upgrades(upgrade_id) values(1277571837);
+insert into applied_upgrades(upgrade_id) values(1277586926);
+insert into applied_upgrades(upgrade_id) values(1277587117);
+insert into applied_upgrades(upgrade_id) values(1277587199);
+insert into applied_upgrades(upgrade_id) values(1277587465);
+insert into applied_upgrades(upgrade_id) values(1277587818);
+insert into applied_upgrades(upgrade_id) values(1277587878);
+insert into applied_upgrades(upgrade_id) values(1277587947);
+insert into applied_upgrades(upgrade_id) values(1277588038);
+insert into applied_upgrades(upgrade_id) values(1277588072);
+insert into applied_upgrades(upgrade_id) values(1277588240);
+insert into applied_upgrades(upgrade_id) values(1277588373);
+insert into applied_upgrades(upgrade_id) values(1277588885);
+insert into applied_upgrades(upgrade_id) values(1277588973);
+insert into applied_upgrades(upgrade_id) values(1277589055);
+insert into applied_upgrades(upgrade_id) values(1277589236);
+insert into applied_upgrades(upgrade_id) values(1277589321);
+insert into applied_upgrades(upgrade_id) values(1277589383);
+insert into applied_upgrades(upgrade_id) values(1278540763);
+insert into applied_upgrades(upgrade_id) values(1278540832);
+insert into applied_upgrades(upgrade_id) values(1278542100);
+insert into applied_upgrades(upgrade_id) values(1278542119);
+insert into applied_upgrades(upgrade_id) values(1278542138);
+insert into applied_upgrades(upgrade_id) values(1278542152);
+insert into applied_upgrades(upgrade_id) values(1278542171);
+insert into applied_upgrades(upgrade_id) values(1279140399);
+insert into applied_upgrades(upgrade_id) values(1279272090);
+insert into applied_upgrades(upgrade_id) values(1280719328);
+insert into applied_upgrades(upgrade_id) values(1280719447);
+insert into applied_upgrades(upgrade_id) values(1280719676);
+insert into applied_upgrades(upgrade_id) values(1280721170);
+insert into applied_upgrades(upgrade_id) values(1280793109);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.

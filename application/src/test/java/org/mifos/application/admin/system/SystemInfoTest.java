@@ -30,7 +30,6 @@ import junit.framework.Assert;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.util.DateTimeService;
 
 import servletunit.ServletContextSimulator;
@@ -51,7 +50,7 @@ public class SystemInfoTest {
 
     @Test
     public void testApplicationDatabaseVersion() throws Exception {
-        Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, info.getApplicationVersion());
+       //TODO Update for NSDU
     }
 
     @Test

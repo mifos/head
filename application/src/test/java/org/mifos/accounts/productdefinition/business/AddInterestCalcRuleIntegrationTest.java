@@ -20,24 +20,34 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
+import java.sql.Connection;
+
 import junit.framework.Assert;
 
 import org.hibernate.Session;
+import org.junit.Before;
 import org.junit.Test;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 
 public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase {
+
+    Connection connection;
+    Session session;
 
     public AddInterestCalcRuleIntegrationTest() throws Exception {
         super();
     }
 
-    @Test
+    @Before
+    public void setUp() throws Exception {
+        session = StaticHibernateUtil.getSessionTL();
+        connection = session.connection();
+        connection.setAutoCommit(true);
+    }
+
     public void testValidateLookupValueKeyTest() throws Exception {
         String validKey = "InterestTypes-DecliningBalance";
         String format = "InterestTypes-";
@@ -52,29 +62,21 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
         short categoryId = 1;
         String description = "DecliningBalance";
         AddInterestCalcRule upgrade = null;
-        try {
-            // use deprecated construtor
-            upgrade = new AddInterestCalcRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newRuleId,
-                    categoryId, "DecliningBalance", description, TEST_LOCALE, "DecliningBalance");
-        } catch (Exception e) {
-           Assert.assertEquals(e.getMessage(), AddInterestCalcRule.WRONG_CONSTRUCTOR);
-        }
         String invalidKey = "DecliningBalance";
 
         try {
             // use invalid lookup key format
-            upgrade = new AddInterestCalcRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newRuleId,
+            upgrade = new AddInterestCalcRule(newRuleId,
                     categoryId, invalidKey, description);
         } catch (Exception e) {
            Assert.assertEquals(e.getMessage(), AddInterestCalcRule.wrongLookupValueKeyFormat);
         }
         String goodKey = "InterestTypes-NewDecliningBalance";
-        // use valid construtor and valid key
-        upgrade = new AddInterestCalcRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newRuleId, categoryId,
+        // use valid constructor and valid key
+        upgrade = new AddInterestCalcRule(newRuleId, categoryId,
                 goodKey, description);
         try {
-            Session session = StaticHibernateUtil.getSessionTL();
-            upgrade.upgrade(session.connection());
+            upgrade.upgrade(connection);
             InterestTypesEntity entity = (InterestTypesEntity) session.get(InterestTypesEntity.class, newRuleId);
             Assert.assertEquals(goodKey, entity.getLookUpValue().getLookUpName());
         } finally {

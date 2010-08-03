@@ -37,8 +37,8 @@ public class CreateQuestionPage extends MifosPage {
     private void fillUpChoices(CreateQuestionParameters createQuestionParameters) {
         if (createQuestionParameters.questionHasAnswerChoices()) {
             for (String choice : createQuestionParameters.getChoices()) {
-                selenium.type("currentQuestion.choice", choice);
-                selenium.keyUp("id=currentQuestion.choice"," ");
+                selenium.type("currentQuestion.currentChoice", choice);
+                selenium.keyUp("id=currentQuestion.currentChoice"," ");
                 selenium.click("_eventId_addChoice");
                 waitForPageToLoad();
             }

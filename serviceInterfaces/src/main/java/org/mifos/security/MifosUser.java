@@ -47,9 +47,10 @@ public class MifosUser implements UserDetails {
     private final boolean credentialsNonExpired;
     private final boolean accountNonLocked;
     private final Collection<GrantedAuthority> authorities;
+    private int userId;
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="ignoring for now..")
-    public MifosUser(String username, byte[] password, boolean enabled, boolean accountNonExpired,
+    public MifosUser(int userId, String username, byte[] password, boolean enabled, boolean accountNonExpired,
             boolean credentialsNonExpired, boolean accountNonLocked, Collection<GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
@@ -58,6 +59,11 @@ public class MifosUser implements UserDetails {
         this.credentialsNonExpired = credentialsNonExpired;
         this.accountNonLocked = accountNonLocked;
         this.authorities = authorities;
+        this.userId = userId;
+    }
+
+    public int getUserId() {
+        return this.userId;
     }
 
     @Override

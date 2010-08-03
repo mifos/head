@@ -415,3 +415,5 @@ drop table if exists question_group_instance;
 drop table if exists question_group;
 drop table if exists event_sources;
 drop table if exists events;
+
+drop table if exists applied_upgrades;

@@ -82,7 +82,7 @@ public class QuestionFormTest {
         QuestionForm questionForm = new QuestionForm();
         questionForm.getCurrentQuestion().setTitle(title);
         questionForm.getCurrentQuestion().setType(type);
-        questionForm.getCurrentQuestion().setChoice(choice);
+        questionForm.getCurrentQuestion().setCurrentChoice(choice);
         questionForm.getCurrentQuestion().addAnswerChoice();
         questionForm.addCurrentQuestion();
         return questionForm;

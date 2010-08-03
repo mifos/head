@@ -32,7 +32,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleActivityEntity;
@@ -89,7 +89,7 @@ public class ActivityGenerator {
         MasterPersistence mp = new MasterPersistence();
         LookUpValueLocaleEntity lookUpValueLocaleEntity = new LookUpValueLocaleEntity();
         lookUpValueLocaleEntity.setLookUpId(new Integer(lookUpId));
-        lookUpValueLocaleEntity.setLocaleId(DatabaseVersionPersistence.ENGLISH_LOCALE);
+        lookUpValueLocaleEntity.setLocaleId(DatabaseMigrator.ENGLISH_LOCALE);
         lookUpValueLocaleEntity.setLookUpValue(lookUpDescription);
         mp.createOrUpdate(lookUpValueLocaleEntity);
 
