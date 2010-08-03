@@ -25,7 +25,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.struts.actionforms.QuestionDto;
 import org.mifos.customers.struts.actionforms.QuestionGroupDto;
 import org.mifos.customers.struts.actionforms.SectionDto;
@@ -78,9 +77,6 @@ public class ClientCustActionTest {
 
     @Mock
     private ClientBO clientBO;
-
-    @Mock
-    private PersonnelBO personnelBO;
 
     private ClientCustAction clientCustAction;
     public static final String FLOW_KEY = "FlowKey";
@@ -135,14 +131,13 @@ public class ClientCustActionTest {
     public void testPrepareSurveySelection() {
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute(Constants.RANDOMNUM)).thenReturn("123");
-        when(personnelBO.getPersonnelId()).thenReturn((short) 2);
         when(clientBO.getDisplayName()).thenReturn("displayName");
         when(clientBO.getCustomerId()).thenReturn(1);
         when(clientBO.getOffice()).thenReturn(getOffice());
         when(clientBO.getOfficeId()).thenReturn((short) 1);
         when(clientBO.getGlobalCustNum()).thenReturn("globalCustomerNumber");
 
-        clientCustAction.prepareSurveySelection(request, clientBO, personnelBO);
+        clientCustAction.prepareSurveySelection(request, clientBO, (short)2);
 
         verify(session, times(1)).setAttribute("source", "Client");
         verify(session, times(1)).setAttribute("event", "View");

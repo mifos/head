@@ -650,7 +650,7 @@ create table holiday (
   holiday_name varchar(100),
   repayment_rule_id smallint not null,
   holiday_changes_applied_flag smallint default 1,
-  holiday_id int auto_increment not null,	
+  holiday_id int auto_increment not null,
   primary key(holiday_id),
   constraint holiday_ibfk_2
   foreign key (repayment_rule_id)
@@ -2079,7 +2079,7 @@ create table account (
   closed_date date,
   version_no integer,
   offsetting_allowable smallint not null,
-  external_id varchar(100),  
+  external_id varchar(100),
   primary key(account_id),
   foreign key(account_state_id)
     references account_state(account_state_id)
@@ -4307,14 +4307,14 @@ create table batch_branch_confirmation_disbursement(
   references batch_branch_cash_confirmation_report(branch_cash_confirmation_report_id)
 )engine=innodb character set utf8;
 
-create table imported_transactions_files 
-( file_name varchar(100) not null, 
-  submitted_on timestamp not null, 
+create table imported_transactions_files
+( file_name varchar(100) not null,
+  submitted_on timestamp not null,
   submitted_by smallint not null,
   primary key (file_name),
-  foreign key (submitted_by) 
-  references personnel(personnel_id) 
-  on delete no action 
+  foreign key (submitted_by)
+  references personnel(personnel_id)
+  on delete no action
   on update no action
 )engine=innodb character set utf8;
 
@@ -4324,6 +4324,7 @@ create table question_group(
   date_of_creation date not null,
   state integer not null,
   is_editable tinyint not null default 0,
+  is_ppi tinyint not null default 0,
   primary key (id)
 ) engine=innodb character set utf8;
 
@@ -4392,4 +4393,13 @@ create table question_group_response(
     primary key (id),
     foreign key (sections_questions_id) references sections_questions(id),
     foreign key (question_group_instance_id) references question_group_instance(id)
+) engine=innodb character set utf8;
+
+create table question_choice_tags(
+    id integer auto_increment not null,
+    choice_id integer not null,
+    tag_text varchar(50) not null,
+    primary key (id),
+    foreign key (choice_id) references question_choices(choice_id),
+    unique(tag_text)
 ) engine=innodb character set utf8;

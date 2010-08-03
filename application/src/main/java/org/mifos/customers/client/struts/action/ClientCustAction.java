@@ -515,8 +515,7 @@ public class ClientCustAction extends CustAction {
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, clientBO, request);
 
         setCurrentPageUrl(request, clientBO);
-        final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
-        prepareSurveySelection(request, clientBO, personnelPersistence.findPersonnelById(userContext.getId()));
+        prepareSurveySelection(request, clientBO, userContext.getId());
         setQuestionGroupInstances(request, clientBO);
 
         return mapping.findForward(ActionForwards.get_success.toString());
@@ -546,13 +545,13 @@ public class ClientCustAction extends CustAction {
         return URLEncoder.encode(url, "UTF-8");
     }
 
-    void prepareSurveySelection(HttpServletRequest request, ClientBO clientBO, PersonnelBO currentUser) {
+    void prepareSurveySelection(HttpServletRequest request, ClientBO clientBO, short personnelId) {
         HttpSession session = request.getSession();
         session.setAttribute("source", "Client");
         session.setAttribute("event", "View");
         session.setAttribute("questionnaireFor", xmlEscape(clientBO.getDisplayName()));
         session.setAttribute("entityId", clientBO.getCustomerId());
-        session.setAttribute("creatorId", currentUser.getPersonnelId());
+        session.setAttribute("creatorId", personnelId);
         session.setAttribute("urlMap", getUrlMap(clientBO, session));
     }
 

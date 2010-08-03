@@ -30,6 +30,7 @@ import static org.mifos.platform.util.CollectionUtils.isEmpty;
 
 @SuppressWarnings("PMD")
 public class ValidationException extends SystemException {
+    //TODO FIXEME rename to QuestionnaireValidationException for disambiguation with org.mifos.framework.exception.ValidationException
     private static final long serialVersionUID = -8094463668575047971L;
     private List<ValidationException> childExceptions;
     protected final String questionTitle;

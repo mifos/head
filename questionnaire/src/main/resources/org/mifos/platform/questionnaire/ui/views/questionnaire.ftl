@@ -71,7 +71,7 @@
                             [@spring.formInput "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", 'maxlength="10" class="date-pick"' /]
                           [#break]
                           [#case "MULTI_SELECT"]
-                          <fieldset style="width:70%">
+                          <fieldset class="right_section" style="width:70%">
                             <ol class="noPadding">
                               <li class="noPadding">
                                 [@mifosMacros.formCheckboxes "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,'</li><li class="noPadding">', ''/]
@@ -80,7 +80,7 @@
                           </fieldset>
                           [#break]
                           [#case "SINGLE_SELECT"]
-                          <fieldset style="width:70%">
+                          <fieldset class="right_section" style="width:70%">
                             <ol  class="noPadding">
                               <li class="noPadding">
                                 [@mifosMacros.formRadioButtons "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", question.answerChoices ,'</li><li class="noPadding">', ''/]

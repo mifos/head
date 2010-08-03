@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <var name="questionGroupDetails" class="org.mifos.platform.questionnaire.service.QuestionGroupDetails"/>
+
+    <decision-state id="viewAndEditQuestionnaire">
+        <on-entry>
+            <set name="flowScope.backPageUrl" value="requestParameters.backPageUrl" type="string"></set>
+            <set name="flowScope.selectedQuestionnaireIndex" value="0" type="int"></set>
+        </on-entry>
+        <if test="requestParameters.instanceId == null" then="displayResponses" else="displayResponse"/>
+    </decision-state>
+
+    <view-state id="displayResponse">
+        <on-entry>
+            <evaluate result="flowScope.questionGroupInstance" expression="questionnaireServiceFacade.getQuestionGroupInstance(requestParameters.instanceId)"/>
+            <evaluate expression="flowScope.questionGroupDetails.details.add(flowScope.questionGroupInstance.questionGroupDetail)"/>
+        </on-entry>
+        <transition on="questionnaire" to="questionnaire"/>
+        <transition on="cancel" to="viewDetails" bind="false" history="discard"/>
+    </view-state>
+
+    <view-state id="displayResponses">
+        <on-entry>
+            <evaluate result="flowScope.questionGroupInstanceDetails" expression="questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(requestParameters.entityId, requestParameters.event, requestParameters.source)"/>
+        </on-entry>
+		<transition on="questionnaire" to="questionnaire">
+            <evaluate expression="flowScope.questionGroupDetails.details.add(flowScope.questionGroupInstanceDetails.get(requestParameters._eventId_questionnaire).questionGroupDetail)"/>
+        </transition>
+        <transition on="cancel" to="viewDetails" bind="false" history="discard"/>
+    </view-state>
+
+    <view-state id="questionnaire" model="questionGroupDetails">
+        <on-entry>
+            <set name="flowScope.questionGroupDetails.creatorId" value="externalContext.sessionMap.creatorId" type="int"></set>
+            <set name="flowScope.questionGroupDetails.entityId" value="externalContext.sessionMap.entityId" type="int"></set>
+        </on-entry>
+		<transition on="saveQuestionnaire" to="saveQuestionnaire"/>
+		<transition on="cancel" to="viewDetails" bind="false" history="discard"/>
+    </view-state>
+
+    <action-state id="saveQuestionnaire">
+        <evaluate expression="questionGroupController.saveQuestionnaire(questionGroupDetails, flowScope.selectedQuestionnaireIndex, flowRequestContext)"/>
+        <transition on="success" to="viewDetails"/>
+        <transition on="failure" to="questionnaire"/>
+    </action-state>
+
+    <end-state id="viewDetails" view="externalRedirect:contextRelative:/${flowScope.backPageUrl}"/>
+</flow>

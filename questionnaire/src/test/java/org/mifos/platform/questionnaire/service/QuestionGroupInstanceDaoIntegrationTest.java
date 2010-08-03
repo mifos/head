@@ -119,13 +119,13 @@ public class QuestionGroupInstanceDaoIntegrationTest {
         QuestionGroup questionGroup2 = questionGroupDao.getDetails(defineQuestionGroup("QG1" + currentTimeMillis(), "View", "Client", details, false).getId());
         QuestionGroup questionGroup3 = questionGroupDao.getDetails(defineQuestionGroup("QG3" + currentTimeMillis(), "View", "Client", details, false).getId());
         List<QuestionGroupInstance> questionGroupInstances = asList(
-                getQuestionGroupInstance(2010, 7, 24, questionGroup1, 101),
-                getQuestionGroupInstance(2010, 7, 25, questionGroup1, 101),
-                getQuestionGroupInstance(2010, 7, 24, questionGroup2, 101),
-                getQuestionGroupInstance(2010, 7, 25, questionGroup2, 101),
-                getQuestionGroupInstance(2010, 7, 26, questionGroup2, 101),
-                getQuestionGroupInstance(2010, 7, 24, questionGroup3, 101),
-                getQuestionGroupInstance(2010, 7, 26, questionGroup3, 101)
+                getQuestionGroupInstance(2010, 7, 24, questionGroup1, 101, 1),
+                getQuestionGroupInstance(2010, 7, 25, questionGroup1, 101, 1),
+                getQuestionGroupInstance(2010, 7, 24, questionGroup2, 101, 1),
+                getQuestionGroupInstance(2010, 7, 25, questionGroup2, 101, 1),
+                getQuestionGroupInstance(2010, 7, 26, questionGroup2, 101, 1),
+                getQuestionGroupInstance(2010, 7, 24, questionGroup3, 101, 1),
+                getQuestionGroupInstance(2010, 7, 26, questionGroup3, 101, 1)
         );
         questionGroupInstanceDao.saveOrUpdateAll(questionGroupInstances);
         int eventSourceId = ((EventSourceEntity) eventSourceDao.retrieveByEventAndSource("View", "Client").get(0)).getId();
@@ -139,6 +139,35 @@ public class QuestionGroupInstanceDaoIntegrationTest {
         assertThat(((QuestionGroupInstance) list.get(4)).getId(), is(questionGroupInstances.get(2).getId()));
         assertThat(((QuestionGroupInstance) list.get(5)).getId(), is(questionGroupInstances.get(0).getId()));
         assertThat(((QuestionGroupInstance) list.get(6)).getId(), is(questionGroupInstances.get(5).getId()));
+    }
+    
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldGetAllLatestQuestionGroupInstancesByEntityAndEventSourceId() {
+        List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
+        QuestionGroup questionGroup1 = questionGroupDao.getDetails(defineQuestionGroup("QG2" + currentTimeMillis(), "View", "Client", details, false).getId());
+        QuestionGroup questionGroup2 = questionGroupDao.getDetails(defineQuestionGroup("QG1" + currentTimeMillis(), "View", "Client", details, false).getId());
+        QuestionGroup questionGroup3 = questionGroupDao.getDetails(defineQuestionGroup("QG3" + currentTimeMillis(), "View", "Client", details, false).getId());
+        List<QuestionGroupInstance> questionGroupInstances = asList(
+                getQuestionGroupInstance(2010, 7, 24, questionGroup1, 101, 1),
+                getQuestionGroupInstance(2010, 7, 25, questionGroup1, 101, 2),
+                getQuestionGroupInstance(2010, 7, 24, questionGroup2, 101, 1),
+                getQuestionGroupInstance(2010, 7, 25, questionGroup2, 101, 2),
+                getQuestionGroupInstance(2010, 7, 26, questionGroup2, 101, 3),
+                getQuestionGroupInstance(2010, 7, 24, questionGroup3, 101, 1),
+                getQuestionGroupInstance(2010, 7, 26, questionGroup3, 101, 2)
+        );
+        questionGroupInstanceDao.saveOrUpdateAll(questionGroupInstances);
+        int eventSourceId = ((EventSourceEntity) eventSourceDao.retrieveByEventAndSource("View", "Client").get(0)).getId();
+        //  questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, eventSourceId)
+        //  is a hack to flush the entities as method under test is in SQL and not HQL
+        questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, eventSourceId);
+        List list = questionGroupInstanceDao.retrieveLatestQuestionGroupInstancesByEntityIdAndEventSourceId(101, eventSourceId);
+        assertThat(list, is(notNullValue()));
+        assertThat(list.size(), is(3));
+        assertThat(((QuestionGroupInstance) list.get(0)).getId(), is(questionGroupInstances.get(4).getId()));
+        assertThat(((QuestionGroupInstance) list.get(1)).getId(), is(questionGroupInstances.get(6).getId()));
+        assertThat(((QuestionGroupInstance) list.get(2)).getId(), is(questionGroupInstances.get(1).getId()));
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws SystemException {
@@ -175,7 +204,7 @@ public class QuestionGroupInstanceDaoIntegrationTest {
         return questionGroupInstance;
     }
 
-    private QuestionGroupInstance getQuestionGroupInstance(int year, int month, int date, QuestionGroup questionGroup, int entityId, String... responses) {
+    private QuestionGroupInstance getQuestionGroupInstance(int year, int month, int date, QuestionGroup questionGroup, int entityId, int versionNum, String... responses) {
         QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
         questionGroupInstance.setCompletedStatus(1);
         questionGroupInstance.setQuestionGroup(questionGroup);
@@ -183,7 +212,7 @@ public class QuestionGroupInstanceDaoIntegrationTest {
         calendar.set(year, month, date);
         questionGroupInstance.setDateConducted(calendar.getTime());
         questionGroupInstance.setCreatorId(122);
-        questionGroupInstance.setVersionNum(1);
+        questionGroupInstance.setVersionNum(versionNum);
         questionGroupInstance.setEntityId(entityId);
         List<QuestionGroupResponse> questionGroupResponses = new ArrayList<QuestionGroupResponse>();
         for (int index = 0; index < responses.length; index++) {
