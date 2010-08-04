@@ -28,7 +28,7 @@ public class ViewLoanProducts {
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("viewLoanProducts", "viewLoanProducts.ftl").build();
+        return new AdminBreadcrumbBuilder().withLink("admin.viewLoanProducts", "viewLoanProducts.ftl").build();
     }
 
     @ModelAttribute("formBean")

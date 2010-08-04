@@ -12,39 +12,39 @@
   <div class=" content leftMargin180">
   	<form method="" action="" name="formname">
   	<p class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin" /]</a>&nbsp;/&nbsp;<a href="viewAdditionalFields.ftl">[@spring.message "viewAdditionalFields" /]</a>&nbsp;/&nbsp;<a href="#">[@spring.message "personnel" /]</a></p>
-    <p class="font15"><span class="fontBold">[@spring.message "editadditionalfields" /]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "enteradditionalfieldinformation" /]</span></p>
-    <div>[@spring.message "completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminwithoutsubmittinginformation." /] </div>
+    <p class="font15"><span class="fontBold">[@spring.message "datadisplayandrules.editadditionalfields" /]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "datadisplayandrules.editadditionalfields.enteradditionalfieldinformation" /]</span></p>
+    <div>[@spring.message "datadisplayandrules.editadditionalfields.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminwithoutsubmittinginformation." /] </div>
     <p><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired." /]</p>
     <p class="error"></p>
-    <p class="fontBold">[@spring.message "additionalfielddetails" /]</p>
+    <p class="fontBold">[@spring.message "datadisplayandrules.editadditionalfields.additionalfielddetails" /]</p>
     <p>&nbsp;&nbsp;</p>
     <div class="prepend-1 span-21 last">
-        	<div class="span-20 prepend-3 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "category" /]</span><span class="span-4">&nbsp;
+        	<div class="span-20 prepend-3 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.editadditionalfields.category" /]</span><span class="span-4">&nbsp;
    					<select name="select" disabled="disabled">
       					<option >[@spring.message "--Select--" /]</option>
-                        <option >[@spring.message "personnel" /]</option>
-                        <option >[@spring.message "office" /]</option>
-                        <option >[@spring.message "client" /]</option>
-                        <option >[@spring.message "group" /]</option>
-                        <option >[@spring.message "center" /]</option>
-                        <option >[@spring.message "loan" /]</option>
-                        <option >[@spring.message "savings" /]</option>
+                        <option >[@spring.message "datadisplayandrules.editadditionalfields.personnel" /]</option>
+                        <option >[@spring.message "datadisplayandrules.editadditionalfields.office" /]</option>
+                        <option >[@spring.message "datadisplayandrules.editadditionalfields.client" /]</option>
+                        <option >[@spring.message "datadisplayandrules.editadditionalfields.group" /]</option>
+                        <option >[@spring.message "datadisplayandrules.editadditionalfields.center" /]</option>
+                        <option >[@spring.message "datadisplayandrules.editadditionalfields.loan" /]</option>
+                        <option >[@spring.message "offices.viewOfficeDetails.additionalinformation" /]</option>
 				    </select></span>
 			</div>
-        	<div class="span-20 prepend-3 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "label" /]</span>&nbsp;<span class="span-4">
+        	<div class="span-20 prepend-3 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.editadditionalfields.label" /]</span>&nbsp;<span class="span-4">
     				<input type="text" /></span>
   			</div>
-            <div class="span-20 prepend-3"><span class="span-3 rightAlign">[@spring.message "mandatory" /]</span>&nbsp;<span class="span-4">
+            <div class="span-20 prepend-3"><span class="span-3 rightAlign">[@spring.message "datadisplayandrules.editadditionalfields.mandatory" /]</span>&nbsp;<span class="span-4">
     				<input type="checkbox" /></span>
   			</div>
-            <div class="span-20 prepend-3"><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "dataType" /]</span>&nbsp;<span class="span-4">
+            <div class="span-20 prepend-3"><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.editadditionalfields.dataType" /]</span>&nbsp;<span class="span-4">
    					<select name="select" disabled="disabled">
       					<option >[@spring.message "--Select--" /]</option>
-                        <option >[@spring.message "numeric" /]</option>
-                        <option >[@spring.message "text" /]</option>
+                        <option >[@spring.message "datadisplayandrules.editadditionalfields.numeric" /]</option>
+                        <option >[@spring.message "datadisplayandrules.editadditionalfields.text" /]</option>
 				    </select></span>
 			</div>
-            <div class="span-20 prepend-3"><span class="span-3 rightAlign">[@spring.message "defaultValue" /]</span>&nbsp;<span class="span-4">
+            <div class="span-20 prepend-3"><span class="span-3 rightAlign">[@spring.message "datadisplayandrules.editadditionalfields.defaultValue" /]</span>&nbsp;<span class="span-4">
     				<input type="text" /></span>
   			</div>
             <div class="clear">&nbsp;</div>

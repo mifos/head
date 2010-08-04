@@ -60,7 +60,7 @@ public class AcceptedPaymentTypesController {
 
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("defineAcceptedPaymentTypes", "defineAcceptedPaymentTypes.ftl").build();
+        return new AdminBreadcrumbBuilder().withLink("OrganizationPreferences.defineAcceptedPaymentTypes", "defineAcceptedPaymentTypes.ftl").build();
     }
 
     @RequestMapping(method = RequestMethod.GET)
