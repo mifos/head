@@ -127,7 +127,9 @@ public class QuestionnaireServiceTest {
     public void shouldDefineQuestionWithAnswerChoices() throws SystemException {
         String choice1 = "choice1";
         String choice2 = "choice2";
-        QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, QuestionType.MULTI_SELECT, asList(choice1, choice2));
+        List<String> answerChoices = asList(choice1, choice2);
+        QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, QuestionType.MULTI_SELECT);
+        questionDefinition.setAnswerChoices(answerChoices);
         try {
             QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
             Mockito.verify(questionDao, times(1)).create(any(QuestionEntity.class));
@@ -135,7 +137,7 @@ public class QuestionnaireServiceTest {
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
             Assert.assertEquals(QuestionType.MULTI_SELECT, questionDetail.getType());
-            Assert.assertEquals(questionDetail.getAnswerChoices(), asList(choice1, choice2));
+            Assert.assertEquals(questionDetail.getAnswerChoices(), answerChoices);
         } catch (SystemException e) {
             Assert.fail("Should not have thrown the validation exception");
         }

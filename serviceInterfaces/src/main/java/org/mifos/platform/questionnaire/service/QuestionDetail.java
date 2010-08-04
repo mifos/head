@@ -48,19 +48,11 @@ public class QuestionDetail implements Serializable {
     }
 
     public QuestionDetail(Integer id, String text, String shortName, QuestionType type) {
-        this(id, text, shortName, type, new ArrayList<String>());
-    }
-
-    public QuestionDetail(String title, QuestionType type, List<String> answerChoices) {
-        this(0, title, title, type, answerChoices);
-    }
-
-    public QuestionDetail(Integer id, String text, String shortName, QuestionType type, List<String> answerChoices) {
         this.id = id;
         this.text = text;
         this.shortName = shortName;
         this.type = type;
-        this.answerChoices = answerChoices;
+        this.answerChoices = new ArrayList<String>();
     }
 
     public Integer getId() {
@@ -147,4 +139,5 @@ public class QuestionDetail implements Serializable {
     public void removeAnswerChoice(int choiceIndex) {
         answerChoices.remove(choiceIndex);
     }
+
 }

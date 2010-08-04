@@ -171,7 +171,8 @@ public class ClientCustActionTest {
     private SectionDetail getSectionDetail(String name, String title) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
-        QuestionDetail questionDetail = new QuestionDetail(111, title, title, QuestionType.SINGLE_SELECT, asList("red", "green", "blue"));
+        QuestionDetail questionDetail = new QuestionDetail(111, title, title, QuestionType.SINGLE_SELECT);
+        questionDetail.setAnswerChoices(asList("red", "green", "blue"));
         sectionDetail.setQuestionDetails(asList(new SectionQuestionDetail(questionDetail, true)));
         return sectionDetail;
     }

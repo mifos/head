@@ -138,8 +138,10 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     private List<QuestionChoiceEntity> mapToChoices(List<String> choices) {
         List<QuestionChoiceEntity> questionChoices = new LinkedList<QuestionChoiceEntity>();
-        for (String choice : choices) {
-            questionChoices.add(new QuestionChoiceEntity(choice));
+        if (CollectionUtils.isNotEmpty(choices)) {
+            for (String choice : choices) {
+                questionChoices.add(new QuestionChoiceEntity(choice));
+            }
         }
         return questionChoices;
     }
@@ -242,7 +244,8 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     private QuestionDetail mapToQuestionDetail(QuestionEntity question, QuestionType type) {
         List<String> answerChoices = mapToAnswerChoices(question.getChoices());
-        QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type, answerChoices);
+        QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type);
+        questionDetail.setAnswerChoices(answerChoices);
         mapBoundsForNumericQuestion(question, questionDetail);
         return questionDetail;
     }

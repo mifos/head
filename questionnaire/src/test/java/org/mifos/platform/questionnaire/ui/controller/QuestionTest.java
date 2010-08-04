@@ -100,7 +100,9 @@ public class QuestionTest {
 
 
     private void assertQuestion(String shortName, QuestionType questionType, String questionTypeString, List<String> choices) {
-        Question question = new Question(new QuestionDetail(123, "Question Text", shortName, questionType, choices));
+        QuestionDetail questionDetail = new QuestionDetail(123, "Question Text", shortName, questionType);
+        questionDetail.setAnswerChoices(choices);
+        Question question = new Question(questionDetail);
         Assert.assertThat(question.getTitle(), is(shortName));
         Assert.assertThat(question.getType(), is(questionTypeString));
         Assert.assertEquals(question.getChoices(), choices);

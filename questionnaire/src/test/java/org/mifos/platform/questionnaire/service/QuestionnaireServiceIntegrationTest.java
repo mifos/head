@@ -468,7 +468,9 @@ public class QuestionnaireServiceIntegrationTest {
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType type, List<String> choices) throws SystemException {
-        return questionnaireService.defineQuestion(new QuestionDetail(questionTitle, type, choices));
+        QuestionDetail questionDetail = new QuestionDetail(questionTitle, type);
+        questionDetail.setAnswerChoices(choices);
+        return questionnaireService.defineQuestion(questionDetail);
     }
 
     private QuestionGroupDetail defineQuestionGroup(String title, String event, String source, List<SectionDetail> sectionDetails, boolean editable) throws SystemException {
