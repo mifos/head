@@ -18,34 +18,23 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.productdefinition.util.helpers;
+package org.mifos.dto.domain;
 
-/*
- * ProductType corresponds to ProductTypeEntity instances.
- */
-public enum ProductType {
-    LOAN((short) 1), SAVINGS((short) 2);
+public class ProductTypeDto {
 
-    private Short value;
+    private final Integer productTypeId;
+    private final String productTypeKey;
 
-    private ProductType(Short value) {
-        this.value = value;
+    public ProductTypeDto(Integer productTypeId, String productTypeKey) {
+        this.productTypeId = productTypeId;
+        this.productTypeKey = productTypeKey;
     }
 
-    public Short getValue() {
-        return value;
+    public Integer getProductTypeId() {
+        return this.productTypeId;
     }
 
-    public static ProductType getProductType(int value) {
-        for (ProductType productType : ProductType.values()) {
-            if (productType.getValue() == value) {
-                return productType;
-            }
-        }
-        throw new RuntimeException("no product type " + value);
-    }
-
-    public static ProductType fromInt(Integer productTypeId) {
-        return getProductType(productTypeId);
+    public String getProductTypeKey() {
+        return this.productTypeKey;
     }
 }

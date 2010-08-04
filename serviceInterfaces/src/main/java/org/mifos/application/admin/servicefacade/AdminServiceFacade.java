@@ -26,6 +26,7 @@ import org.mifos.dto.domain.AcceptedPaymentTypeDto;
 import org.mifos.dto.domain.CreateOrUpdateProductCategory;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
+import org.mifos.dto.domain.ProductTypeDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.dto.screen.ProductCategoryDetailsDto;
@@ -97,4 +98,8 @@ public interface AdminServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void updateProductCategory(CreateOrUpdateProductCategory productCategory);
+
+    List<ProductTypeDto> retrieveProductTypesApplicableToProductMix();
+
+    List<ProductDisplayDto> retrieveProductsByProductTypeId(Integer productTypeId);
 }

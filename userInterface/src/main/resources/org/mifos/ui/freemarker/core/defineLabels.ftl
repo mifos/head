@@ -68,7 +68,7 @@
     				<span class="span-3"><input type="text" value="Ethnicity" /></span>
   			</div>
             <div class="span-16"><span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.citizenship"/]</span>
-    				<span class="span-3"><input type="text" value="Citizenship" /></span>
+    				<span class="span-3"><input type="text" id="definelabels.input.citizenship" value="Citizenship" /></span>
   			</div>
             <div class="span-16"><span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.handicapped"/]</span>
     				<span class="span-3"><input type="text" value="Handicapped" /></span>
