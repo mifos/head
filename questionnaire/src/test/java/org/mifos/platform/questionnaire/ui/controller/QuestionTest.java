@@ -20,20 +20,22 @@
 
 package org.mifos.platform.questionnaire.ui.controller;
 
-import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.ui.model.Question;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionTest {
@@ -50,8 +52,11 @@ public class QuestionTest {
         question.setCurrentChoice("choice3");
         question.addAnswerChoice();
         Assert.assertThat(question.getChoices().size(), is(4));
-        Assert.assertEquals(question.getChoices(), Arrays.asList("choice1", "choice2", "choice1", "choice3"));
-        Assert.assertTrue(StringUtils.equals(question.getCommaSeparateChoices(), "choice1, choice2, choice1, choice3"));
+        assertEquals("choice1", question.getChoices().get(0).getChoiceText());
+        assertEquals("choice2", question.getChoices().get(1).getChoiceText());
+        assertEquals("choice1", question.getChoices().get(2).getChoiceText());
+        assertEquals("choice3", question.getChoices().get(3).getChoiceText());
+        assertEquals("choice1, choice2, choice1, choice3", question.getCommaSeparateChoices());
     }
 
     @Test
@@ -63,11 +68,14 @@ public class QuestionTest {
         question.addAnswerChoice();
         question.setCurrentChoice("choice1");
         question.addAnswerChoice();
-        Assert.assertEquals(question.getChoices(), Arrays.asList("choice1", "choice2", "choice1"));
+        assertEquals("choice1", question.getChoices().get(0).getChoiceText());
+        assertEquals("choice2", question.getChoices().get(1).getChoiceText());
+        assertEquals("choice1", question.getChoices().get(2).getChoiceText());
         question.removeChoice(0);
-        Assert.assertEquals(question.getChoices(), Arrays.asList("choice2", "choice1"));
+        assertEquals("choice2", question.getChoices().get(0).getChoiceText());
+        assertEquals("choice1", question.getChoices().get(1).getChoiceText());
         question.removeChoice(1);
-        Assert.assertEquals(question.getChoices(), Arrays.asList("choice2"));
+        assertEquals("choice2", question.getChoices().get(0).getChoiceText());
     }
 
     @Test
@@ -101,10 +109,17 @@ public class QuestionTest {
 
     private void assertQuestion(String shortName, QuestionType questionType, String questionTypeString, List<String> choices) {
         QuestionDetail questionDetail = new QuestionDetail(123, "Question Text", shortName, questionType);
-        questionDetail.setAnswerChoices(choices);
+        List<ChoiceDetail> choiceDetails = getChoiceDetails(choices);
+        questionDetail.setAnswerChoices(choiceDetails);
         Question question = new Question(questionDetail);
         Assert.assertThat(question.getTitle(), is(shortName));
         Assert.assertThat(question.getType(), is(questionTypeString));
-        Assert.assertEquals(question.getChoices(), choices);
+        assertEquals(question.getChoices(), choiceDetails);
+    }
+
+    private List<ChoiceDetail> getChoiceDetails(List<String> choices) {
+        List<ChoiceDetail> choiceDetails = new ArrayList<ChoiceDetail>();
+        for (String choice : choices) choiceDetails.add(new ChoiceDetail(choice));
+        return choiceDetails;
     }
 }

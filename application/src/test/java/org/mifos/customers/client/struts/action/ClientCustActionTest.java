@@ -33,6 +33,7 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
@@ -46,6 +47,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -88,7 +90,7 @@ public class ClientCustActionTest {
 
     @Test
     public void shouldGetQuestionGroupsByEventSource() throws ApplicationException {
-        when(questionnaireServiceFacade.getQuestionGroups(EVENT_CREATE, SOURCE_CLIENT)).thenReturn(asList(getQuestionGroupDetail("QG1")));
+        when(questionnaireServiceFacade.getQuestionGroups(EVENT_CREATE, SOURCE_CLIENT)).thenReturn(asList(getQuestionGroupDetail("QG1", asList("red", "green", "blue"))));
         List<QuestionGroupDto> questionGroups = clientCustAction.getQuestionGroups(questionnaireServiceFacade);
         assertThat(questionGroups, is(notNullValue()));
         assertThat(questionGroups.size(), is(1));
@@ -105,7 +107,9 @@ public class ClientCustActionTest {
         assertThat(question1.getId(), is(111));
         assertThat(question1.getText(), is("Question1"));
         assertThat(question1.getQuestionType(), is(QuestionType.SINGLE_SELECT));
-        assertThat(question1.getAnswerChoices(), is(asList("red", "green", "blue")));
+        assertThat(question1.getAnswerChoices().get(0).getChoiceText(), is("red"));
+        assertThat(question1.getAnswerChoices().get(1).getChoiceText(), is("green"));
+        assertThat(question1.getAnswerChoices().get(2).getChoiceText(), is("blue"));
         assertThat(question1.isRequired(), is(true));
         verify(questionnaireServiceFacade, times(1)).getQuestionGroups(EVENT_CREATE, SOURCE_CLIENT);
     }
@@ -156,23 +160,27 @@ public class ClientCustActionTest {
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail(String questionGroupTitle) {
         QuestionGroupInstanceDetail detail = new QuestionGroupInstanceDetail();
         detail.setDateCompleted(Calendar.getInstance().getTime());
-        detail.setQuestionGroupDetail(getQuestionGroupDetail(questionGroupTitle));
+        detail.setQuestionGroupDetail(getQuestionGroupDetail(questionGroupTitle, asList("red", "green", "blue")));
         return detail;
     }
 
-    private QuestionGroupDetail getQuestionGroupDetail(String title) {
+    private QuestionGroupDetail getQuestionGroupDetail(String title, List<String> answerChoices) {
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail();
         questionGroupDetail.setTitle(title);
         questionGroupDetail.setId(123);
-        questionGroupDetail.setSectionDetails(asList(getSectionDetail("Section1", "Question1")));
+        questionGroupDetail.setSectionDetails(asList(getSectionDetail("Section1", "Question1", answerChoices)));
         return questionGroupDetail;
     }
 
-    private SectionDetail getSectionDetail(String name, String title) {
+    private SectionDetail getSectionDetail(String name, String title, List<String> answerChoices) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
         QuestionDetail questionDetail = new QuestionDetail(111, title, title, QuestionType.SINGLE_SELECT);
-        questionDetail.setAnswerChoices(asList("red", "green", "blue"));
+        List<ChoiceDetail> choiceDetails = new ArrayList<ChoiceDetail>();
+        for (String answerChoice : answerChoices) {
+            choiceDetails.add(new ChoiceDetail(answerChoice));
+        }
+        questionDetail.setAnswerChoices(choiceDetails);
         sectionDetail.setQuestionDetails(asList(new SectionQuestionDetail(questionDetail, true)));
         return sectionDetail;
     }

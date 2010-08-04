@@ -36,6 +36,7 @@ import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
+import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
@@ -107,14 +108,13 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return mapToQuestionDetail(question, mapToQuestionType(question.getAnswerTypeAsEnum()));
     }
 
-    private List<String> mapToAnswerChoices(List<QuestionChoiceEntity> choices) {
-        List<String> questionChoices = new LinkedList<String>();
+    private List<ChoiceDetail> mapToQuestionChoices(List<QuestionChoiceEntity> choices) {
+        List<ChoiceDetail> questionChoices = new LinkedList<ChoiceDetail>();
         for (QuestionChoiceEntity questionChoice : choices) {
-            questionChoices.add(questionChoice.getChoiceText());
+            questionChoices.add(new ChoiceDetail(questionChoice.getChoiceText()));
         }
         return questionChoices;
     }
-
 
     @Override
     public QuestionEntity mapToQuestion(QuestionDetail questionDetail) {
@@ -136,11 +136,11 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         }
     }
 
-    private List<QuestionChoiceEntity> mapToChoices(List<String> choices) {
+    private List<QuestionChoiceEntity> mapToChoices(List<ChoiceDetail> choices) {
         List<QuestionChoiceEntity> questionChoices = new LinkedList<QuestionChoiceEntity>();
         if (CollectionUtils.isNotEmpty(choices)) {
-            for (String choice : choices) {
-                questionChoices.add(new QuestionChoiceEntity(choice));
+            for (ChoiceDetail choice : choices) {
+                questionChoices.add(new QuestionChoiceEntity(choice.getChoiceText()));
             }
         }
         return questionChoices;
@@ -243,7 +243,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private QuestionDetail mapToQuestionDetail(QuestionEntity question, QuestionType type) {
-        List<String> answerChoices = mapToAnswerChoices(question.getChoices());
+        List<ChoiceDetail> answerChoices = mapToQuestionChoices(question.getChoices());
         QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type);
         questionDetail.setAnswerChoices(answerChoices);
         mapBoundsForNumericQuestion(question, questionDetail);

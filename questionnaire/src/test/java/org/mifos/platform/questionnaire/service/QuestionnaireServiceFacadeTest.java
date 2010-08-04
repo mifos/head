@@ -166,7 +166,7 @@ public class QuestionnaireServiceFacadeTest {
     public void testGetQuestionWithAnswerChoicesById() throws SystemException {
         int questionId = 1;
         String title = "Title";
-        List<String> answerChoices = asList("choice1", "choice2");
+        List<ChoiceDetail> answerChoices = asList(new ChoiceDetail("choice1"), new ChoiceDetail("choice2"));
         QuestionDetail expectedQuestionDetail = new QuestionDetail(questionId, title, title, QuestionType.MULTI_SELECT);
         expectedQuestionDetail.setAnswerChoices(answerChoices);
         when(questionnaireService.getQuestion(questionId)).thenReturn(expectedQuestionDetail);
@@ -336,7 +336,11 @@ public class QuestionnaireServiceFacadeTest {
 
     private QuestionDetail getQuestionDetail(int id, String text, String shortName, QuestionType questionType, List<String> choices) {
         QuestionDetail questionDetail = new QuestionDetail(id, text, shortName, questionType);
-        questionDetail.setAnswerChoices(choices);
+        List<ChoiceDetail> choiceDetails = new ArrayList<ChoiceDetail>();
+        for (String choice : choices) {
+            choiceDetails.add(new ChoiceDetail(choice));
+        }
+        questionDetail.setAnswerChoices(choiceDetails);
         return questionDetail;
     }
 }

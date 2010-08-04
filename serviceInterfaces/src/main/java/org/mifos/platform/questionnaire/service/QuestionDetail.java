@@ -35,7 +35,7 @@ public class QuestionDetail implements Serializable {
     private String shortName;
     private QuestionType type;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
-    private List<String> answerChoices;
+    private List<ChoiceDetail> answerChoices;
     private Integer numericMin;
     private Integer numericMax;
 
@@ -52,7 +52,7 @@ public class QuestionDetail implements Serializable {
         this.text = text;
         this.shortName = shortName;
         this.type = type;
-        this.answerChoices = new ArrayList<String>();
+        this.answerChoices = new ArrayList<ChoiceDetail>();
     }
 
     public Integer getId() {
@@ -91,11 +91,11 @@ public class QuestionDetail implements Serializable {
         this.shortName = StringUtils.trim(this.shortName);
     }
 
-    public List<String> getAnswerChoices() {
+    public List<ChoiceDetail> getAnswerChoices() {
         return answerChoices;
     }
 
-    public void setAnswerChoices(List<String> answerChoices) {
+    public void setAnswerChoices(List<ChoiceDetail> answerChoices) {
         this.answerChoices = answerChoices;
     }
 
@@ -132,7 +132,7 @@ public class QuestionDetail implements Serializable {
         return numericMax;
     }
 
-    public void addAnswerChoice(String answerChoice) {
+    public void addAnswerChoice(ChoiceDetail answerChoice) {
         answerChoices.add(answerChoice);
     }
 

@@ -36,6 +36,7 @@ import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
+import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
@@ -125,9 +126,9 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldDefineQuestionWithAnswerChoices() throws SystemException {
-        String choice1 = "choice1";
-        String choice2 = "choice2";
-        List<String> answerChoices = asList(choice1, choice2);
+        ChoiceDetail choice1 = new ChoiceDetail("choice1");
+        ChoiceDetail choice2 = new ChoiceDetail("choice2");
+        List<ChoiceDetail> answerChoices = asList(choice1, choice2);
         QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, QuestionType.MULTI_SELECT);
         questionDefinition.setAnswerChoices(answerChoices);
         try {
@@ -137,7 +138,8 @@ public class QuestionnaireServiceTest {
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
             Assert.assertEquals(QuestionType.MULTI_SELECT, questionDetail.getType());
-            Assert.assertEquals(questionDetail.getAnswerChoices(), answerChoices);
+            Assert.assertEquals(choice1.getChoiceText(), questionDetail.getAnswerChoices().get(0).getChoiceText());
+            Assert.assertEquals(choice2.getChoiceText(), questionDetail.getAnswerChoices().get(1).getChoiceText());
         } catch (SystemException e) {
             Assert.fail("Should not have thrown the validation exception");
         }
@@ -441,7 +443,8 @@ public class QuestionnaireServiceTest {
         assertThat(questionDetail.getShortName(), is(title));
         assertThat(questionDetail.getText(), is(title));
         assertThat(questionDetail.getType(), is(QuestionType.MULTI_SELECT));
-        Assert.assertEquals(questionDetail.getAnswerChoices(), asList("choice1", "choice2"));
+        Assert.assertEquals("choice1", questionDetail.getAnswerChoices().get(0).getChoiceText());
+        Assert.assertEquals("choice2", questionDetail.getAnswerChoices().get(1).getChoiceText());
         verify(questionDao, times(1)).getDetails(questionId);
     }
 
@@ -455,7 +458,8 @@ public class QuestionnaireServiceTest {
         Assert.assertThat(questionDetail.getShortName(), is(title));
         Assert.assertThat(questionDetail.getText(), is(title));
         Assert.assertThat(questionDetail.getType(), is(QuestionType.SINGLE_SELECT));
-        Assert.assertEquals(questionDetail.getAnswerChoices(), asList("choice1", "choice2"));
+        Assert.assertEquals("choice1", questionDetail.getAnswerChoices().get(0).getChoiceText());
+        Assert.assertEquals("choice2", questionDetail.getAnswerChoices().get(1).getChoiceText());
         Mockito.verify(questionDao, Mockito.times(1)).getDetails(questionId);
     }
 

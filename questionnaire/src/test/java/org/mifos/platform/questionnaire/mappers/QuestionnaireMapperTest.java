@@ -44,6 +44,7 @@ import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
+import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
@@ -90,7 +91,7 @@ public class QuestionnaireMapperTest {
 
     @Before
     public void setUp() {
-        questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao,questionGroupInstanceDao);
+        questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao, questionGroupInstanceDao);
     }
 
     @Test
@@ -103,28 +104,28 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapMultiSelectQuestionDetailToQuestion() {
-        String choice1 = "choice1";
-        String choice2 = "choice2";
+        ChoiceDetail choice1 = new ChoiceDetail("choice1");
+        ChoiceDetail choice2 = new ChoiceDetail("choice2");
         QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.MULTI_SELECT);
         questionDefinition.setAnswerChoices(asList(choice1, choice2));
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
         assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.MULTISELECT));
         assertThat(question.getQuestionText(), is(TITLE));
         assertThat(question.getShortName(), is(TITLE));
-        assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity(choice1), new QuestionChoiceEntity(choice2))));
+        assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity(choice1.getChoiceText()), new QuestionChoiceEntity(choice2.getChoiceText()))));
     }
 
     @Test
     public void shouldMapSingleSelectQuestionDetailToQuestion() {
-        String choice1 = "choice1";
-        String choice2 = "choice2";
+        ChoiceDetail choice1 = new ChoiceDetail("choice1");
+        ChoiceDetail choice2 = new ChoiceDetail("choice2");
         QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.SINGLE_SELECT);
         questionDefinition.setAnswerChoices(asList(choice1, choice2));
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
         assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.SINGLESELECT));
         assertThat(question.getQuestionText(), is(TITLE));
         assertThat(question.getShortName(), is(TITLE));
-        assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity(choice1), new QuestionChoiceEntity(choice2))));
+        assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity(choice1.getChoiceText()), new QuestionChoiceEntity(choice2.getChoiceText()))));
     }
 
     @Test
@@ -358,7 +359,7 @@ public class QuestionnaireMapperTest {
         QuestionGroupDetail questionGroupDetail2 = new QuestionGroupDetail(11, "QG2", new EventSource("Create", "Client", null), sectionDetails2, true);
 
         QuestionDetail questionDetail = new QuestionDetail(13, "Question 2", "Question 2", QuestionType.MULTI_SELECT);
-        questionDetail.setAnswerChoices(asList("a1","a2","a3"));
+        questionDetail.setAnswerChoices(asList(new ChoiceDetail("a1"),new ChoiceDetail("a2"),new ChoiceDetail("a3")));
         List<QuestionDetail> questionDetails3 = asList(questionDetail);
         List<SectionDetail> sectionDetails3 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails3, null, asList("a2","a3")));
         QuestionGroupDetail questionGroupDetail3 = new QuestionGroupDetail(11, "QG2", new EventSource("Create", "Client", null), sectionDetails3, true);

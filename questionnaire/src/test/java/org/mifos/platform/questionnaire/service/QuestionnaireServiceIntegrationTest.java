@@ -469,8 +469,17 @@ public class QuestionnaireServiceIntegrationTest {
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType type, List<String> choices) throws SystemException {
         QuestionDetail questionDetail = new QuestionDetail(questionTitle, type);
-        questionDetail.setAnswerChoices(choices);
+        List<ChoiceDetail> choiceDetails = getChoiceDetails(choices);
+        questionDetail.setAnswerChoices(choiceDetails);
         return questionnaireService.defineQuestion(questionDetail);
+    }
+
+    private List<ChoiceDetail> getChoiceDetails(List<String> choices) {
+        List<ChoiceDetail> choiceDetails = new ArrayList<ChoiceDetail>();
+        for (String choice : choices) {
+            choiceDetails.add(new ChoiceDetail(choice));
+        }
+        return choiceDetails;
     }
 
     private QuestionGroupDetail defineQuestionGroup(String title, String event, String source, List<SectionDetail> sectionDetails, boolean editable) throws SystemException {

@@ -20,6 +20,7 @@
 
 package org.mifos.platform.questionnaire.ui.model;
 
+import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.util.CollectionUtils;
@@ -89,7 +90,7 @@ public class Question implements Serializable {
         return questionDetail;
     }
 
-    public List<String> getChoices() {
+    public List<ChoiceDetail> getChoices() {
         return this.questionDetail.getAnswerChoices();
     }
 
@@ -106,7 +107,7 @@ public class Question implements Serializable {
     }
 
     public void addAnswerChoice() {
-        questionDetail.addAnswerChoice(getCurrentChoice());
+        questionDetail.addAnswerChoice(new ChoiceDetail(getCurrentChoice()));
         setCurrentChoice(null);
     }
 
@@ -117,7 +118,7 @@ public class Question implements Serializable {
     public void setChoicesIfApplicable() {
         QuestionType type = questionDetail.getType();
         if (!answerChoicesApplicableFor(type)) {
-            questionDetail.setAnswerChoices(new ArrayList<String>());
+            questionDetail.setAnswerChoices(new ArrayList<ChoiceDetail>());
         }
     }
 

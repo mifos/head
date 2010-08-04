@@ -21,6 +21,7 @@
 package org.mifos.customers.struts.actionforms;
 
 import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 
@@ -29,7 +30,7 @@ import java.util.List;
 public class QuestionDto implements DataTransferObject {
     private static final long serialVersionUID = 1759235897826098794L;
 
-    private SectionQuestionDetail sectionQuestionDetail;
+    private final SectionQuestionDetail sectionQuestionDetail;
 
     public QuestionDto(SectionQuestionDetail sectionQuestionDetail) {
         this.sectionQuestionDetail = sectionQuestionDetail;
@@ -55,7 +56,7 @@ public class QuestionDto implements DataTransferObject {
         return sectionQuestionDetail.getQuestionType().ordinal();
     }
 
-    public List<String> getAnswerChoices() {
+    public List<ChoiceDetail> getAnswerChoices() {
         return sectionQuestionDetail.getAnswerChoices();
     }
 
