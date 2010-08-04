@@ -45,14 +45,20 @@ public class MifosLogFilter implements Filter {
 	/**
 	 * @see Filter#destroy()
 	 */
-	public void destroy() {
+	@Override
+    public void destroy() {
 	}
 
 	/**
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
-	public void doFilter(ServletRequest request, ServletResponse response,
+	@Override
+    public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
+
+	    // see MIFOS-3501
+	    // We should use the UTF-8 in JSP
+	    request.setCharacterEncoding("UTF-8");
 
 		if (request instanceof HttpServletRequest) {
 
@@ -73,7 +79,8 @@ public class MifosLogFilter implements Filter {
 	/**
 	 * @see Filter#init(FilterConfig)
 	 */
-	public void init(FilterConfig fConfig) throws ServletException {
+	@Override
+    public void init(FilterConfig fConfig) throws ServletException {
 	}
 
 	private String makeTxnName(String requestURI, String inputName, String methodName) {
