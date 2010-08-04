@@ -28,7 +28,6 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.ProductTypeDto;
 import org.mifos.dto.screen.ProductDisplayDto;
-import org.mifos.dto.screen.ProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;

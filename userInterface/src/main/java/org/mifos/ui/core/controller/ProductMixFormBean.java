@@ -23,6 +23,8 @@ package org.mifos.ui.core.controller;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="..")
 public class ProductMixFormBean {
 
     private String productTypeId;
