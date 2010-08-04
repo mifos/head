@@ -7,16 +7,16 @@
   <div class="content marginAuto">
     <div class="borders span-22">
       <div class="borderbtm span-22">
-        <p class="span-5 arrowIMG orangeheading ">[@spring.message "manageLoanAccounts.redoLoanDisbursal.selectCustomer" /]</p>
-        <p class="span-5 arrowIMG1 orangeheading ">[@spring.message "manageLoanAccounts.redoLoanDisbursal.loanaccountinformation" /]</p>
-        <p class="span-5 arrowIMG1 orangeheading ">[@spring.message "manageLoanAccounts.redoLoanDisbursal.review/editinstallments" /]</p>
+        <p class="span-5 arrowIMG orangeheading ">[@spring.message "selectCustomer" /]</p>
+        <p class="span-5 arrowIMG1 orangeheading ">[@spring.message "loanaccountinformation" /]</p>
+        <p class="span-5 arrowIMG1 orangeheading ">[@spring.message "review/editinstallments" /]</p>
         <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "review&Submit" /]</p>
       </div>
       <div class="subcontent ">
       <form method="" action="" name="formname">
       	<div class="fontBold red">[@spring.message "note"/]</div>
-        <p class="font15"><span class="fontBold">[@spring.message "manageLoanAccounts.redoLoanDisbursal.redoLoansAccount" /]</span>&nbsp;-&nbsp;<span class=" orangeheading">[@spring.message "manageLoanAccounts.redoLoanDisbursal.selectacustomer" /]</span></p>
-        <p>[@spring.message "manageLoanAccounts.redoLoanDisbursal.enteraClientorGroupnameandclickSearch" /]</p>
+        <p class="font15"><span class="fontBold">[@spring.message "redoLoansAccount" /]</span>&nbsp;-&nbsp;<span class=" orangeheading">[@spring.message "selectacustomer" /]</span></p>
+        <p>[@spring.message "enteraClientorGroupnameandclickSearch" /]</p>
         <p>&nbsp;&nbsp;</p>
         <p class="error" id="cust_search_account.error.message"></p>
         <div class="prepend-6">

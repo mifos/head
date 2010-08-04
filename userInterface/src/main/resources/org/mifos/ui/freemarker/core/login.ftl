@@ -11,8 +11,8 @@
   <!--  Main Login Begins-->
     <div class="borders maindiv marginAuto">
       <form method="POST" action="j_spring_security_check" id="login.form">
-        <div class="bluediv span-16 last"><span>[@spring.message "login.login"/]</span></div>
-        <div class="span-7 LeftDiv normalFont">[@spring.message "login.welcomeToMifos"/]</div>
+        <div class="bluediv span-16 last"><span>[@spring.message "login"/]</span></div>
+        <div class="span-7 LeftDiv normalFont">[@spring.message "welcomeToMifos"/]</div>
         <!--Begining of Right side div-->
         <div class="span-8 last" align="center">
           <div class="error">
@@ -23,21 +23,22 @@
 			</span>
 		</div>					
 		<div>
-          	<span class="normalFont"><label for="login.input.username">[@spring.message "login.UserName" /]</label>:</span>
+          	<span class="normalFont"><label for="login.input.username">[@spring.message "UserName" /]</label>&nbsp;:</span>
             <span ><input type="text" name="j_username" id="login.input.username"></span>
           </div>
           <div class="paddingTop5">
-          	<span class="normalFont">&nbsp;<label for="login.input.password">[@spring.message "login.password"/]</label>&nbsp;:</span>
+          	<span class="normalFont">&nbsp;<label for="login.input.password">[@spring.message "user.password"/]</label>&nbsp;:</span>
             <span><input type="password" name="j_password" id="login.input.password"></span>
         </div>
           <div>&nbsp;</div>
-          <div> <input type="submit" value="[@spring.message "login.login" /]" class="buttn" id="login.button.login" />
+          <div> <input type="submit" value="[@spring.message "login" /]" class="buttn" id="login.button.login" />
         </div>
         </div>
         <!--End of Right side div-->
       </form>
     </div>
   <!--Main Login Ends-->
-  
+  <div class="footer">&nbsp;</div>
+</div>
 <!--Container Ends-->
 [@mifos.footer /] 

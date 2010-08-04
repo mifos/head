@@ -60,7 +60,7 @@
  </div>
 [/#macro]
 
-[#macro crumbpairs breadcrumbs lastEntryIsText="true"]
++[#macro crumbpairs breadcrumbs lastEntryIsText="true"]
 <div class="bluedivs paddingLeft">
 	    [#list breadcrumbs?keys as text]
   			[#if text_has_next || lastEntryIsText=="false"]
@@ -90,20 +90,4 @@
 
 </body>
 </html>
-[/#macro]
-
-[#macro formSingleSelectWithPrompt path options selectPrompt attributes=""]
-    [@spring.bind path/]
-    <select id="${spring.status.expression}" name="${spring.status.expression}" ${attributes}>
-        <option value="" [@spring.checkSelected ""/]>${selectPrompt}</option>
-        [#if options?is_hash]
-            [#list options?keys as value]
-            <option value="${value?html}"[@spring.checkSelected value/]>${options[value]?html}</option>
-            [/#list]
-        [#else]
-            [#list options as value]
-            <option value="${value?html}"[@spring.checkSelected value/]>${value?html}</option>
-            [/#list]
-        [/#if]
-    </select>
 [/#macro]

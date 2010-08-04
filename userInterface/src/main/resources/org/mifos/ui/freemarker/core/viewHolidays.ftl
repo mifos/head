@@ -3,7 +3,7 @@
 [#import "blueprintmacros.ftl" as mifos]
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-  <!--  Left Sidebar Begins-->
+  <!--  Left Sidebar Begins
   <div class="sidebar ht650">
   [#include "adminLeftPane.ftl" ]
   </div> 
@@ -17,18 +17,18 @@
       <div class="span-24">        
         <div class="clear">&nbsp;</div>
         <div class="marginLeft30">
-        <p class="font15"><span class="fontBold">[@spring.message "organizationPreferences.viewholidays"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "organizationPreferences.viewholidays.organizationWide" /]</span></p>
-        <p>[@spring.message "organizationPreferences.viewholidays.belowIsTheListOfOrganizationWideHolidaysClickHereTo"/]<a id="holiday.link.defineNewHoliday" href="defineNewHoliday.ftl">[@spring.message "organizationPreferences.viewholidays.defineNewHoliday"/]</a> </p>
+        <p class="font15"><span class="fontBold">[@spring.message "viewHolidays"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "organizationWide" /]</span></p>
+        <p>[@spring.message "belowIsTheListOfOrganizationWideHolidaysClickHereTo"/]<a id="holiday.link.defineNewHoliday" href="defineNewHoliday.ftl">[@spring.message "defineNewHoliday"/]</a> </p>
         
       [#list holidaysMap?keys as key]
       	<p class="fontBold">Holidays for year ${key}</p>
       	<div class="span-22"> 
         	<div class="bluedivs span-22 fontBold paddingLeft">
-        		<span class="span-3">[@spring.message "organizationPreferences.definenewholiday.fromDat"/]</span>
-            	<span class="span-3">[@spring.message "organizationPreferences.definenewholiday.toDate"/]</span>
-            	<span class="span-5">[@spring.message "organizationPreferences.definenewholiday.holidayName"/]</span>
-            	<span class="span-5">[@spring.message "organizationPreferences.definenewholiday.repaymentRule"/]</span>
-            	<span class="span-5">[@spring.message "organizationPreferences.definenewholiday.appliesto"/]</span>
+        		<span class="span-3">From Date</span>
+            	<span class="span-3">To Date</span>
+            	<span class="span-5">Holiday Name</span>
+            	<span class="span-5">Repayment Rule</span>
+            	<span class="span-5">Applies To</span>
         	</div>
       		[#list holidaysMap[key] as officeHoliday]
 	        	<div class="span-22 borderbtm paddingLeft ">

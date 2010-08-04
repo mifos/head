@@ -46,7 +46,7 @@ public class HolidayController {
 
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("organizationPreferences.viewholidays.viewHolidaysOrganizationWide", "viewHolidays.ftl").build();
+        return new AdminBreadcrumbBuilder().withLink("viewHolidaysOrganizationWide", "viewHolidays.ftl").build();
     }
 
     @RequestMapping("viewHolidays.ftl")

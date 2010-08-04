@@ -46,7 +46,7 @@ public class DefineMandatoryHiddenFieldsController {
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("admin.definemandatory/hiddenfields", "defineMandatoryHiddenFields.ftl")
+        return new AdminBreadcrumbBuilder().withLink("definemandatory/hiddenfields", "defineMandatoryHiddenFields.ftl")
                 .build();
     }
 

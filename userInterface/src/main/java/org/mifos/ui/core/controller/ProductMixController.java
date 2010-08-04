@@ -49,7 +49,7 @@ public class ProductMixController {
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("admin.viewproductsmix", "viewProductMix.ftl").build();
+        return new AdminBreadcrumbBuilder().withLink("viewProductMix", "viewProductMix.ftl").build();
     }
 
     @ModelAttribute("mixList")

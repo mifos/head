@@ -48,7 +48,7 @@ public class ViewProductCategoriesController {
         ModelAndView modelAndView = new ModelAndView("viewProductCategories");
         ProductCategoryDisplayDto dto = adminServiceFacade.retrieveAllProductCategories();
         modelAndView.addObject("dto", dto);
-        modelAndView.addObject("breadcrumbs", new AdminBreadcrumbBuilder().withLink("admin.viewproductcategories", "viewProductCategories.ftl").build());
+        modelAndView.addObject("breadcrumbs", new AdminBreadcrumbBuilder().withLink("viewProductCategories", "viewProductCategories.ftl").build());
 
         return modelAndView;
     }

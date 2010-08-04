@@ -3,7 +3,7 @@
 [#import "blueprintmacros.ftl" as mifos]
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-  <!--  Left Sidebar Begins-->
+  <!--  Left Sidebar Begins
   <div class="sidebar ht650">
   [#include "adminLeftPane.ftl" ]
   </div> 
@@ -11,11 +11,11 @@
   <!--  Main Content Begins-->  
   <div class="content leftMargin180">
   	<form method="post" action="/mifos/PersonAction.do?method=search" name="personActionForm">
-  	<p class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "systemUsers.viewSystemUsers"/]</span></p>
+  	<p class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "viewSystemUsers"/]</span></p>
   	<div class="marginLeft30">
     <div class="orangeheading">View system users</div>
     <ul></ul>
-    <p class="paddingLeft">[@spring.message "systemUsers.viewSystemUsers.searchUsersByName"/]<br />
+    <p class="paddingLeft">[@spring.message "searchUsersByName"/]<br />
       <input type="text" id="txtid" name="searchString"/>&nbsp;&nbsp;<input class="buttn" type="submit" name="search" value="Search"/>
     </p>
     </div>

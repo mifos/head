@@ -14,7 +14,7 @@
             <list>
                 <value>org.mifos.ui.localizedProperties.messages</value>
                 <value>org.mifos.ui.localizedProperties.LookupValueMessages</value>
-                <value>org.mifos.platform.questionnaire.ui.localizedProperties.questionnaire_messages</value>                
+                <value>org.mifos.platform.questionnaire.ui.localizedProperties.questionnaire_messages</value>
             </list>
         </property>
     </bean>

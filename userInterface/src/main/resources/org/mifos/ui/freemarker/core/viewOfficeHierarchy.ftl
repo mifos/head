@@ -11,39 +11,39 @@
     <div class="marginTop10">&nbsp;</div> 
     <form method="post" name="viewofficehierarchy" action="viewOfficeHierarchy.ftl">  
     <div class="span-19">
-	    <div class="fontBold"><span class="orangeheading">[@spring.message "admin.viewofficehierarchy"/]</span></div>
-        <span>[@spring.message "viewOfficeHierarchy.theofficehierarchycanhaveminimumtwoandmaximumfivelevels"/]</span>
+	    <div class="fontBold"><span class="orangeheading">[@spring.message "viewofficehierarchy"/]</span></div>
+        <span>[@spring.message "theofficehierarchycanhaveminimumtwoandmaximumfivelevels"/]</span>
         [@spring.bind "formBean" /]
   		[@spring.showErrors "<li>" /]  
-        <p><span>[@spring.message "viewOfficeHierarchy.checkthelevelstobeincluded"/]. </span></p>
+        <p><span>[@spring.message "checkthelevelstobeincluded"/]. </span></p>
         <p>&nbsp;&nbsp;</p>
-        <div><span class="fontBold">[@spring.message "note"/] </span><span>[@spring.message "viewOfficeHierarchy.thehighestandlowesthierarchylevelscannotberemovedfromthesystem"/]</span></div>
+        <div><span class="fontBold">[@spring.message "note"/] </span><span>[@spring.message "thehighestandlowesthierarchylevelscannotberemovedfromthesystem"/]</span></div>
 		<div class="span-19">
     	<div class="prepend-2">
 
     <span>
     [@spring.formCheckbox "formBean.headOffice" "disabled=disabled"/]
-    [@spring.message "viewOfficeHierarchy.headOffice"/]
+    [@spring.message "headOffice"/]
     </span><br />
 	        
     <span>
     [@spring.formCheckbox "formBean.regionalOffice" /]
-    [@spring.message "viewOfficeHierarchy.regionalOffice"/]
+    [@spring.message "regionalOffice"/]
     </span><br />
        	       
      <span>
      [@spring.formCheckbox "formBean.subRegionalOffice" /]
-     [@spring.message "viewOfficeHierarchy.divisionalOffice"/]
+     [@spring.message "divisionalOffice"/]
      </span><br />
           
      <span>
      [@spring.formCheckbox "formBean.areaOffice" /]
-     [@spring.message "viewOfficeHierarchy.areaOffice"/]
+     [@spring.message "areaOffice"/]
      </span><br />
           
      <span>
      [@spring.formCheckbox "formBean.branchOffice" "disabled"/]
-     [@spring.message "viewOfficeHierarchy.branchOffice"/]
+     [@spring.message "branchOffice"/]
      </span><br />
 
             </div>

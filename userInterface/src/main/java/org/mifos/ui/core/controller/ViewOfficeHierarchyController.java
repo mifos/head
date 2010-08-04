@@ -59,7 +59,7 @@ public class ViewOfficeHierarchyController {
 
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("admin.viewofficehierarchy", "viewOfficeHierarchy.ftl").build();
+        return new AdminBreadcrumbBuilder().withLink(FORM_VIEW, "viewOfficeHierarchy.ftl").build();
     }
 
     @RequestMapping(method = RequestMethod.GET)

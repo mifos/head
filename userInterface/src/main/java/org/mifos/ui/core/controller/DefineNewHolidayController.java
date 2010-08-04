@@ -68,7 +68,7 @@ public class DefineNewHolidayController {
 
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("admin.viewholidays", "viewHolidays.ftl").withLink("organizationPreferences.definenewholiday.addHoliday", "defineNewHoliday.ftl").build();
+        return new AdminBreadcrumbBuilder().withLink("viewHolidays", "viewHolidays.ftl").withLink("addHoliday", "defineNewHoliday.ftl").build();
     }
 
     @RequestMapping(method = RequestMethod.GET)
