@@ -341,41 +341,6 @@ explanation of the license and how it is applied.
 									<td valign="top"><html-el:checkbox styleId="createLoanProduct.checkbox.loanCounter" property="loanCounter"
 										value="1" /></td>
 								</tr>
-								<!--<tr class="fontnormal">
-									<td align="right">
-									<span class="mandatorytext"> <font color="#FF0000">*</font></span>
-									<fmt:message key="product.maxAmount">
-									<fmt:param><mifos:mifoslabel
-										name="${ConfigurationConstants.LOAN}"
-										bundle="ProductDefUIResources" /></fmt:param>
-									</fmt:message>:</td>
-									<td valign="top"><mifos:decimalinput
-										property="maxLoanAmount" /></td>
-								</tr>
-
-								<tr class="fontnormal">
-									<td align="right">
-									<span class="mandatorytext"> <font color="#FF0000">*</font></span>
-									<fmt:message key="product.minAmount">
-									<fmt:param><mifos:mifoslabel
-										name="${ConfigurationConstants.LOAN}"
-										bundle="ProductDefUIResources" /></fmt:param>
-									</fmt:message>:</td>
-									<td valign="top"><mifos:decimalinput
-										property="minLoanAmount" /></td>
-								</tr>
-
-								<tr class="fontnormal">
-									<td align="right">
-									<fmt:message key="product.defaultAmount">
-									<fmt:param><mifos:mifoslabel
-										name="${ConfigurationConstants.LOAN}"
-										bundle="ProductDefUIResources" /></fmt:param>
-									</fmt:message>:</td>
-									<td valign="top"><mifos:decimalinput
-										property="defaultLoanAmount" /></td>
-								</tr>
-							-->
 								<table width="93%" border="0" cellpadding="3" cellspacing="0">
 									<tr>
 										<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
@@ -739,26 +704,6 @@ explanation of the license and how it is applied.
 										showMeetingFrequency();
 									</script></td>
 									</tr>
-									<!--<tr class="fontnormal">
-										<td align="right"><mifos:mifoslabel mandatory="yes"
-											name="product.maxinst" bundle="ProductDefUIResources" /> :</td>
-										<td valign="top"><mifos:mifosnumbertext
-											property="maxNoInstallments" /></td>
-									</tr>
-									<tr class="fontnormal">
-										<td align="right"><mifos:mifoslabel mandatory="yes"
-											name="product.mininst" bundle="ProductDefUIResources" /> :</td>
-										<td valign="top"><mifos:mifosnumbertext
-											property="minNoInstallments" /></td>
-									</tr>
-									<tr class="fontnormal">
-										<td align="right"><span class="mandatorytext"></span> <mifos:mifoslabel
-											name="product.definst" bundle="ProductDefUIResources"
-											mandatory="yes" /> :</td>
-										<td valign="top"><mifos:mifosnumbertext
-											property="defNoInstallments" /></td>
-									</tr>
-									-->
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr class="fontnormal">
 											<td width="30%" align="right"><mifos:mifoslabel
@@ -995,15 +940,6 @@ explanation of the license and how it is applied.
 											var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
 
 										<tr class="fontnormal" id="intdeddis">
-											<!--  
-											<td align="right">
-											<fmt:message key="product.deductedatdis">
-											<fmt:param><mifos:mifoslabel
-												name="${ConfigurationConstants.SERVICE_CHARGE}" 
-												bundle="ProductDefUIResources" /></fmt:param>
-											</fmt:message>
-											:</td>
-											-->
 											<td valign="top"><c:if
 												test="${repaymentSchedulesIndependentOfMeetingIsEnabled == '0'}">
 
@@ -1020,11 +956,6 @@ explanation of the license and how it is applied.
 											</c:if></td><td>&nbsp;</td>
 										</tr>
 										<tr class="fontnormal">
-											<!--  
-											<td align="right"><mifos:mifoslabel
-												name="product.prinlastinst" bundle="ProductDefUIResources" />
-											:</td>
-											-->
 											<td valign="top"><html-el:checkbox
 												property="prinDueLastInstFlag" value="1"
 												style="visibility:hidden" /></td><td>&nbsp;</td>
