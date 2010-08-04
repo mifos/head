@@ -47,7 +47,7 @@ explanation of the license and how it is applied.
 	                    <span class="fontnormalbold">${question.title}:</span>
 	                    <span class="fontnormal">
 	                     <c:choose> 
-						   <c:when test="${question.questionTypeDetail.questionType == 'MULTI_SELECT'}" >
+						   <c:when test="${question.questionType == 'MULTI_SELECT'}" >
 						   		<c:forEach var="questionAnswer" items="${question.valuesAsArray}" varStatus="valuesLoopStatus">
 						   		   <c:if test="${valuesLoopStatus.index != 0}">
 						   		      <c:out value=","/>
