@@ -782,12 +782,11 @@ explanation of the license and how it is applied.
 												bundle="ProductDefUIResources" /> &nbsp;&nbsp;&nbsp;</td>
 										</tr>
 										<tr>
-											<td colspan="2">
+											<td>&nbsp;</td><td>
 											<div id="install0" style="display: block;">
-											<table width="93%" border="0" cellpadding="3" cellspacing="0">
+											<table border="0" cellpadding="3" cellspacing="0">
 												<tr class="fontnormal">
-													<td width="30%" align="right">&nbsp;</td>
-													<td width="70%" valign="top">
+													<td valign="top">
 													<table width="100%" border="0" cellpadding="3"
 														cellspacing="0">
 														<tr>
@@ -814,10 +813,9 @@ explanation of the license and how it is applied.
 											</table>
 											</div>
 											<div id="install1" style="display: none;">
-											<table width="93%" border="0" cellpadding="3" cellspacing="0">
+											<table border="0" cellpadding="3" cellspacing="0">
 												<tr class="fontnormal">
-													<td width="30%" align="right">&nbsp;</td>
-													<td width="70%" valign="top">
+													<td valign="top">
 													<table width="100%" border="0" cellpadding="3"
 														cellspacing="0">
 														<tr>
@@ -915,10 +913,9 @@ explanation of the license and how it is applied.
 											<br>
 											</div>
 											<div id="install2" style="display: none;">
-											<table width="93%" border="0" cellpadding="3" cellspacing="0">
+											<table border="0" cellpadding="3" cellspacing="0">
 												<tr class="fontnormal">
-													<td width="30%" align="right">&nbsp;</td>
-													<td width="70%" valign="top">
+													<td valign="top">
 													<table width="100%" border="0" cellspacing="0"
 														cellpadding="3">
 														<tr>
@@ -1020,7 +1017,7 @@ explanation of the license and how it is applied.
 
 												<html-el:checkbox property="intDedDisbursementFlag"
 													style="visibility:hidden" value="1" onclick="fnIntDesbr();" />
-											</c:if></td>
+											</c:if></td><td>&nbsp;</td>
 										</tr>
 										<tr class="fontnormal">
 											<!--  
@@ -1030,7 +1027,7 @@ explanation of the license and how it is applied.
 											-->
 											<td valign="top"><html-el:checkbox
 												property="prinDueLastInstFlag" value="1"
-												style="visibility:hidden" /></td>
+												style="visibility:hidden" /></td><td>&nbsp;</td>
 										</tr>
 										<tr class="fontnormal" id="gracepertype">
 											<td align="right"><mifos:mifoslabel
