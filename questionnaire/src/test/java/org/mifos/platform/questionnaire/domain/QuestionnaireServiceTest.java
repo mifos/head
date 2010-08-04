@@ -147,6 +147,34 @@ public class QuestionnaireServiceTest {
         Mockito.verify(questionDao).create(any(QuestionEntity.class));
     }
 
+    @Test
+    public void shouldDefineQuestionWithAnswerChoicesAndTags() throws SystemException {
+        ChoiceDetail choice1 = new ChoiceDetail("choice1");
+        choice1.setTags(asList("Tag1", "Tag2"));
+        ChoiceDetail choice2 = new ChoiceDetail("choice2");
+        choice2.setTags(asList("Tag3"));
+        List<ChoiceDetail> answerChoices = asList(choice1, choice2);
+        QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, QuestionType.MULTI_SELECT);
+        questionDefinition.setAnswerChoices(answerChoices);
+        try {
+            QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
+            Mockito.verify(questionDao, times(1)).create(any(QuestionEntity.class));
+            Assert.assertNotNull(questionDetail);
+            Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
+            Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
+            Assert.assertEquals(QuestionType.MULTI_SELECT, questionDetail.getType());
+            Assert.assertEquals(choice1.getChoiceText(), questionDetail.getAnswerChoices().get(0).getChoiceText());
+            Assert.assertEquals(choice1.getTags().get(0), questionDetail.getAnswerChoices().get(0).getTags().get(0));
+            Assert.assertEquals(choice1.getTags().get(1), questionDetail.getAnswerChoices().get(0).getTags().get(1));
+            Assert.assertEquals(choice2.getChoiceText(), questionDetail.getAnswerChoices().get(1).getChoiceText());
+            Assert.assertEquals(choice2.getTags().get(0), questionDetail.getAnswerChoices().get(1).getTags().get(0));
+        } catch (SystemException e) {
+            Assert.fail("Should not have thrown the validation exception");
+        }
+        Mockito.verify(questionnaireValidator).validateForDefineQuestion(questionDefinition);
+        Mockito.verify(questionDao).create(any(QuestionEntity.class));
+    }
+
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test(expected = SystemException.class)
     public void shouldThrowValidationExceptionWhenQuestionTitleIsNull() throws SystemException {

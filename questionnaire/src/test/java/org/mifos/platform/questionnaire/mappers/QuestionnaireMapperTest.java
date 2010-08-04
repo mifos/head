@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.business.EntityMaster;
 import org.mifos.platform.questionnaire.domain.AnswerType;
+import org.mifos.platform.questionnaire.domain.ChoiceTagEntity;
 import org.mifos.platform.questionnaire.domain.EventEntity;
 import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionChoiceEntity;
@@ -64,6 +65,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -113,6 +115,33 @@ public class QuestionnaireMapperTest {
         assertThat(question.getQuestionText(), is(TITLE));
         assertThat(question.getShortName(), is(TITLE));
         assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity(choice1.getChoiceText()), new QuestionChoiceEntity(choice2.getChoiceText()))));
+    }
+
+    @Test
+    public void shouldMapSmartSelectQuestionDetailToQuestion() {
+        ChoiceDetail choice1 = new ChoiceDetail("choice1");
+        choice1.setTags(asList("Tag1", "Tag2"));
+        ChoiceDetail choice2 = new ChoiceDetail("choice2");
+        choice2.setTags(asList("Tag3"));
+        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.SMART_SELECT);
+        questionDefinition.setAnswerChoices(asList(choice1, choice2));
+        QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
+        assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.SMARTSELECT));
+        assertThat(question.getQuestionText(), is(TITLE));
+        assertThat(question.getShortName(), is(TITLE));
+        assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(getChoiceEntity("choice1", "Tag1", "Tag2"), getChoiceEntity("choice2", "Tag3"))));
+    }
+
+    private QuestionChoiceEntity getChoiceEntity(String choiceText, String... tagTexts) {
+        QuestionChoiceEntity choiceEntity = new QuestionChoiceEntity(choiceText);
+        Set<ChoiceTagEntity> tags = new HashSet<ChoiceTagEntity>();
+        for (String tagText : tagTexts) {
+            ChoiceTagEntity choiceTagEntity = new ChoiceTagEntity();
+            choiceTagEntity.setTagText(tagText);
+            tags.add(choiceTagEntity);
+        }
+        choiceEntity.setTags(tags);
+        return choiceEntity;
     }
 
     @Test
@@ -575,7 +604,10 @@ public class QuestionnaireMapperTest {
 
     private void assertQuestionDetail(QuestionDetail questionDetail, String title, QuestionType questionType, List<String> choices) {
         assertQuestionDetail(questionDetail, title, questionType);
-        Assert.assertEquals(choices, questionDetail.getAnswerChoices());
+        for (int i = 0, choicesSize = choices.size(); i < choicesSize; i++) {
+            String choice = choices.get(i);
+            Assert.assertEquals(choice, questionDetail.getAnswerChoices().get(i).getChoiceText());
+        }
     }
 
     private EventSource getEventSource(String event, String source) {
