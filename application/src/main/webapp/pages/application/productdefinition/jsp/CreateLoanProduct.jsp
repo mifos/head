@@ -556,7 +556,7 @@ explanation of the license and how it is applied.
 													property="cycleLoanDefaultLoanAmt5" /></td>
 											</tr>
 											<tr>
-												<td class="drawtablerow">>4</td>
+												<td class="drawtablerow">&gt;4</td>
 												<td class="drawtablerow"><mifos:decimalinput size="10"
 													property="cycleLoanMinLoanAmt6" /></td>
 												<td class="drawtablerow"><mifos:decimalinput size="10"
@@ -920,7 +920,7 @@ explanation of the license and how it is applied.
 																size="10" property="defCycleInstallment5" /></td>
 														</tr>
 														<tr>
-															<td class="drawtablerow">>4</td>
+															<td class="drawtablerow">&gt;4</td>
 															<td class="drawtablerow"><mifos:mifosnumbertext
 																size="10" property="minCycleInstallment6" /></td>
 															<td class="drawtablerow"><mifos:mifosnumbertext
