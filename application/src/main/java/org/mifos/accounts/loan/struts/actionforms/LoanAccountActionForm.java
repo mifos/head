@@ -1481,16 +1481,6 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         this.collateralTypeId = null;
     }
 
-    /*@Override
-    public void setQuestionGroupDtos(List<QuestionGroupDto> questionGroups) {
-        this.questionGroupDtos = questionGroups;
-    }
-
-    @Override
-    public List<QuestionGroupDto> getQuestionGroupDtos() {
-        return questionGroupDtos;
-    }*/
-
     @Override
     public void setQuestionGroups(List<QuestionGroupDetail> questionGroups) {
         this.questionGroups = questionGroups;
@@ -1501,10 +1491,4 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         return questionGroups;
     }
 
-    /*public QuestionGroupDto getQuestionGroup(int i) {
-        if (i >= questionGroupDtos.size()) {
-            questionGroupDtos.add(new QuestionGroupDto());
-        }
-        return questionGroupDtos.get(i);
-    }*/
 }

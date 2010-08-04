@@ -29,8 +29,10 @@
 </div>
 <div class="content leftMargin180">
     <span id="page.id" title="display_question_group_reponse"></span>
-    [#assign breadcrumb = Session.urlMap/]
-    [@mifos.crumbpairs breadcrumb "false"/]
+    [#if Session.urlMap??]
+        [#assign breadcrumb = Session.urlMap/]
+        [@mifos.crumbpairs breadcrumb "false"/]
+    [/#if]
     <div class=" fontnormal marginLeft30">
         <div class="orangeheading marginTop15">
             ${questionGroupInstance.questionGroupTitle} - ${questionGroupInstance.dateCompletedAsString}

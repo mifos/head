@@ -20,15 +20,13 @@
 
 package org.mifos.customers.group.struts.action;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.servicefacade.CenterDto;
 import org.mifos.application.servicefacade.CenterHierarchySearchDto;
 import org.mifos.application.servicefacade.CustomerDetailsDto;
@@ -59,9 +57,17 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.MifosServiceFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 public class GroupCustAction extends CustAction {
 
@@ -88,6 +94,8 @@ public class GroupCustAction extends CustAction {
 
         security.allow("loadChangeLog", SecurityConstants.VIEW);
         security.allow("cancelChangeLog", SecurityConstants.VIEW);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
         return security;
     }
 
@@ -160,13 +168,26 @@ public class GroupCustAction extends CustAction {
         return mapping.findForward(ActionForwards.loadMeeting_success.toString());
     }
 
+    private QuestionnaireFlowAdapter createGroupQuestionnaire =
+            new QuestionnaireFlowAdapter("Create", "Group",
+                    ActionForwards.preview_success,
+                    "groupCustAction.do?method=cancel",
+                    new QuestionnaireServiceFacadeLocator() {
+                        @Override
+                        public QuestionnaireServiceFacade getService(HttpServletRequest request) {
+                            return MifosServiceFactory.getQuestionnaireServiceFacade(request);
+                        }
+                    });
+
+
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-
+                                 @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        GroupCustActionForm actionForm = (GroupCustActionForm) form;
         boolean isPendingApprovalDefined = ProcessFlowRules.isGroupPendingApprovalStateEnabled();
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, isPendingApprovalDefined, request);
-        return mapping.findForward(ActionForwards.preview_success.toString());
+        return createGroupQuestionnaire.fetchAppliedQuestions(
+                mapping, actionForm, request, ActionForwards.preview_success);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -185,7 +206,7 @@ public class GroupCustAction extends CustAction {
 
         List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(actionForm.getCustomFields(), null);
         CustomerDetailsDto centerDetails = this.customerServiceFacade.createNewGroup(actionForm, meeting, userContext, customerCustomFields);
-
+        createGroupQuestionnaire.saveResponses(request, actionForm, centerDetails.getId());
         actionForm.setCustomerId(centerDetails.getId().toString());
         actionForm.setGlobalCustNum(centerDetails.getGlobalCustNum());
         SessionUtils.setAttribute(GroupConstants.IS_GROUP_LOAN_ALLOWED, ClientRules.getGroupCanApplyLoans(), request);
@@ -389,5 +410,27 @@ public class GroupCustAction extends CustAction {
 
         return mapping.findForward(method + "_failure");
 
+    }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward captureQuestionResponses(
+            final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "captureQuestionResponses");
+        ActionErrors errors = createGroupQuestionnaire.validateResponses(request, (GroupCustActionForm) form);
+        if (errors != null && !errors.isEmpty()) {
+            addErrors(request, errors);
+            return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
+        }
+        ActionForward join = createGroupQuestionnaire.rejoinFlow(mapping);
+        return join;
+    }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward editQuestionResponses(
+            final ActionMapping mapping, final ActionForm form,
+            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "editQuestionResponses");
+        return createGroupQuestionnaire.editResponses(mapping, request, (GroupCustActionForm) form);
     }
 }

@@ -521,8 +521,9 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<td class="fontnormal"><%--
 									<html-el:link styleId="loanaccountdetail.link.viewTransactionHistory"  href="transaction_history_loanAccount.htm"> <mifos:mifoslabel name="loan.view_transc_history" />
 									</html-el:link><br>--%> 
-									<span class="fontnormal"> 
-							            <a id="loanaccountdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?entityId=${loanInformationDto.accountId}&event=Create&source=Loan&backPageUrl=loanAccountAction.do?method%3Dget%26globalAccountNum%3D${loanInformationDto.globalAccountNum}">
+									<span class="fontnormal">
+                                        <c:set var="questionnaireFor" scope="session" value="${loanInformationDto.prdOfferingName}"/>
+							            <a id="loanaccountdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${loanInformationDto.accountId}&event=Create&source=Loan&backPageUrl=loanAccountAction.do?method%3Dget%26globalAccountNum%3D${loanInformationDto.globalAccountNum}">
 							    			<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
 										</a>
 							            <br/>

@@ -131,26 +131,6 @@ public class ClientCustActionTest {
         verify(session, times(1)).getAttribute(Constants.FLOWMANAGER);
     }
 
-    @Test
-    public void testPrepareSurveySelection() {
-        when(request.getSession()).thenReturn(session);
-        when(session.getAttribute(Constants.RANDOMNUM)).thenReturn("123");
-        when(clientBO.getDisplayName()).thenReturn("displayName");
-        when(clientBO.getCustomerId()).thenReturn(1);
-        when(clientBO.getOffice()).thenReturn(getOffice());
-        when(clientBO.getOfficeId()).thenReturn((short) 1);
-        when(clientBO.getGlobalCustNum()).thenReturn("globalCustomerNumber");
-
-        clientCustAction.prepareSurveySelection(request, clientBO, (short)2);
-
-        verify(session, times(1)).setAttribute("source", "Client");
-        verify(session, times(1)).setAttribute("event", "View");
-        verify(session, times(1)).setAttribute("questionnaireFor", xmlEscape("displayName"));
-        verify(session, times(1)).setAttribute("entityId", 1);
-        verify(session, times(1)).setAttribute("creatorId", new Short("2"));
-        verify(session, times(1)).setAttribute(Mockito.eq("urlMap"), Mockito.anyMap());
-    }
-
     private OfficeBO getOffice() {
         OfficeBO office = new OfficeBO();
         office.setOfficeName("officeName");

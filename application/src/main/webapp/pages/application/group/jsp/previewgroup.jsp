@@ -51,6 +51,16 @@ explanation of the license and how it is applied.
 	groupCustActionForm.submit();
   }
 </script>
+<STYLE TYPE="text/css">
+    .viewQuestionResponseDiv {
+         padding : 0pt;
+     }
+
+     .viewQuestionResponseDiv ul {
+        list-style-type : none;
+        padding : 0pt;
+     }
+</STYLE>
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist')}" var="CenterHierarchyExist" />
@@ -432,6 +442,15 @@ explanation of the license and how it is applied.
 				</fmt:message>
               </html-el:button>
               </td>
+            </tr>
+            <tr>
+               <td>
+                    <c:set var="questionsHostForm" value="${groupCustActionForm}" scope="request" />
+                    <c:import url="/pages/application/surveys/jsp/viewQuestionResponses.jsp">
+                       <c:param name="editResponseURL" value="groupCustAction.do?method=editQuestionResponses&currentFlowKey=${requestScope.currentFlowKey}"/>
+                       <c:param name="responseDivStyleClass" value="viewQuestionResponseDiv"/>
+                    </c:import>
+               </td>
             </tr>
               </table>
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
