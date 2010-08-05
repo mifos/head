@@ -124,6 +124,13 @@ public class Question implements Serializable {
         currentSmartChoiceTags.remove(choiceIndex);
     }
 
+    public void removeChoiceTag(String choiceTagIndex) {
+        String[] indices = choiceTagIndex.split("_");
+        int choiceIndex = Integer.valueOf(indices[0]);
+        int tagIndex = Integer.valueOf(indices[1]);
+        questionDetail.removeTagForChoice(choiceIndex, tagIndex);
+    }
+
     public void addAnswerSmartChoice() {
         questionDetail.addAnswerChoice(new ChoiceDetail(getCurrentSmartChoice()));
         currentSmartChoiceTags.add(EMPTY);

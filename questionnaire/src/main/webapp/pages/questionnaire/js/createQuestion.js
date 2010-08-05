@@ -47,6 +47,13 @@ $(document).ready(function(){
         choiceToDeleteBtn.click();
     });
 
+    $("a[href*=removeSmartChoiceTag#]").click(function(event) {
+        var tagToDeleteBtn = document.getElementById('_eventId_removeChoiceTag');
+        tagToDeleteBtn.value = $(this).attr("choiceTagIndex");
+        event.preventDefault();
+        tagToDeleteBtn.click();
+    });
+
     $(":regex(id, addSmartChoiceTag_[0-9]+)").click(function(event) {
         var addSmartChoiceTagBtn = document.getElementById('_eventId_addSmartChoiceTag');
         addSmartChoiceTagBtn.value = $(this).attr("choiceIndex");

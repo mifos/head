@@ -70,4 +70,8 @@ public class ChoiceDetail implements Serializable {
     public void addTag(String tag) {
         tags.add(tag);
     }
+
+    public void removeTag(int tagIndex) {
+        tags.remove(tagIndex);
+    }
 }

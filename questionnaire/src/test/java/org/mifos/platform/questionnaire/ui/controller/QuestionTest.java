@@ -138,6 +138,32 @@ public class QuestionTest {
         assertThat(question.getCurrentSmartChoiceTags().get(1), is(""));
     }
 
+    @Test
+    public void testRemoveChoiceTag() {
+        Question question = new Question(new QuestionDetail());
+        question.setCurrentSmartChoice("Choice1");
+        question.addAnswerSmartChoice();
+        question.getCurrentSmartChoiceTags().set(0, "Tag1");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag2");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag3");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag4");
+        question.addSmartChoiceTag(0);
+        question.removeChoiceTag("0_2");
+        assertThat(question.getQuestionDetail().getAnswerChoices().size(), is(1));
+        assertThat(question.getQuestionDetail().getAnswerChoices().get(0).getTags().size(), is(3));
+        assertThat(question.getQuestionDetail().getAnswerChoices().get(0).getTags().get(0), is("Tag1"));
+        assertThat(question.getQuestionDetail().getAnswerChoices().get(0).getTags().get(1), is("Tag2"));
+        assertThat(question.getQuestionDetail().getAnswerChoices().get(0).getTags().get(2), is("Tag4"));
+        question.removeChoiceTag("0_0");
+        question.removeChoiceTag("0_0");
+        question.removeChoiceTag("0_0");
+        assertThat(question.getQuestionDetail().getAnswerChoices().size(), is(1));
+        assertThat(question.getQuestionDetail().getAnswerChoices().get(0).getTags().size(), is(0));
+    }
+    
     private void assertQuestion(String shortName, QuestionType questionType, String questionTypeString, List<String> choices) {
         QuestionDetail questionDetail = new QuestionDetail(123, "Question Text", shortName, questionType);
         List<ChoiceDetail> choiceDetails = getChoiceDetails(choices);

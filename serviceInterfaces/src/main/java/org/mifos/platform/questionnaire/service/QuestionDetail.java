@@ -149,4 +149,8 @@ public class QuestionDetail implements Serializable {
     public boolean isSmartSelect() {
         return QuestionType.SMART_SELECT.equals(type);
     }
+
+    public void removeTagForChoice(int choiceIndex, int tagIndex) {
+        answerChoices.get(choiceIndex).removeTag(tagIndex);
+    }
 }

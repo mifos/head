@@ -55,6 +55,7 @@
             <input type="hidden" id="smartSelect" name="smartSelect" value="${smartSelect}" />
             <input type="submit" id="_eventId_removeQuestion" name="_eventId_removeQuestion" value="" style="visibility:hidden"/>
             <input type="submit" id="_eventId_removeChoice" name="_eventId_removeChoice" value="" style="visibility:hidden"/>
+            <input type="submit" id="_eventId_removeChoiceTag" name="_eventId_removeChoiceTag" value="" style="visibility:hidden"/>
             <input type="submit" id="_eventId_addSmartChoiceTag" name="_eventId_addSmartChoiceTag" value="" style="visibility:hidden"/>
             <fieldset>
 			 <ol>
@@ -113,7 +114,17 @@
                                 [#list questionDefinition.currentQuestion.choices as choice]
                                 <li>
                                     <span class="choiceStyle">${choice.choiceText}&nbsp;</span>
-                                    <span class="tagStyle">${choice.commaSeparatedTags?default("")}&nbsp;</span>
+                                    <span class="tagStyle">
+                                        [#if choice.tags?size > 0]
+                                            [#list choice.tags as tag]
+                                                ${tag}<a href="removeSmartChoiceTag#" choiceTagIndex="${choice_index}_${tag_index}" style="text-decoration: none;">
+                                                        <img src="pages/framework/images/icon_remove.gif" class="removeIMG" alt="remove"/>
+                                                      </a> &nbsp;
+                                            [/#list]
+                                        [#else]
+                                            &nbsp;
+                                        [/#if]
+                                    </span>
                                     <span class="removeStyle">
                                         <a href="removeSmartChoice#" choiceIndex="${choice_index}">[@spring.message "questionnaire.remove.link"/]</a>
                                     </span>
