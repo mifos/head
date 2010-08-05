@@ -145,4 +145,8 @@ public class QuestionDetail implements Serializable {
             answerChoices.get(choiceIndex).addTag(tag);
         }
     }
+
+    public boolean isSmartSelect() {
+        return QuestionType.SMART_SELECT.equals(type);
+    }
 }

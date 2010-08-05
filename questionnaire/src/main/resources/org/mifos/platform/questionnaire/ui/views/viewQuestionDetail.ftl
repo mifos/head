@@ -41,7 +41,24 @@
                 <div class="marginTop15">
                     [@spring.message "questionnaire.question"/]: ${Request.questionDetail.title}<br/>
                     [@spring.message "questionnaire.answer.type"/]: ${Request.questionDetail.type}<br/>
-                    [#if Request.questionDetail.commaSeparateChoices?exists]
+                    [#if Request.questionDetail.smartSelect]
+                        <table id="choices.table" name="choices.table">
+                         <tr>
+                             <td class="drawtablehd" width="50%">[@spring.message "questionnaire.choice"/]</td>
+                             <td class="drawtablehd" width="50%">[@spring.message "questionnaire.tags"/]</td>
+                         </tr>
+                        [#list Request.questionDetail.choices as choice]
+                             <tr>
+                                 <td class="drawtablerow" width="50%">${choice.choiceText}</td>
+                                 [#if choice.commaSeparatedTags?exists]
+                                    <td class="drawtablerow" width="50%">${choice.commaSeparatedTags}</td>
+                                 [#else]
+                                    <td class="drawtablerow" width="50%">&nbsp;</td>
+                                 [/#if]
+                             </tr>
+                        [/#list]
+                        </table>
+                    [#elseif Request.questionDetail.commaSeparateChoices?exists]
                         <td class="drawtablerow">[@spring.message "questionnaire.quesiton.choices"/]: ${Request.questionDetail.commaSeparateChoices}</td>
                     [/#if]
                     [#if Request.questionDetail.numericMin?exists]

@@ -221,4 +221,8 @@ public class Question implements Serializable {
         }
         return currentSmartChoiceTags.get(index);
     }
+
+    public boolean isSmartSelect() {
+        return questionDetail.isSmartSelect();
+    }
 }
