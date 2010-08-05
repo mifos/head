@@ -171,7 +171,7 @@ public class QuestionsAction extends PersistenceAction {
         request.getSession().setAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES, choices);
         LinkedList<Question> newQuestions = new LinkedList<Question>();
         request.getSession().setAttribute(SurveysConstants.KEY_NEW_QUESTIONS, newQuestions);
-
+        ((GenericActionForm)form).clear();
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 

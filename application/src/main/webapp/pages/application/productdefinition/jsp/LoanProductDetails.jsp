@@ -130,7 +130,7 @@ explanation of the license and how it is applied.
 												<c:if test="${loanAmountType==1}">
 												<mifos:mifoslabel name="product.calcloanamount" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.sameforallloans" bundle="ProductDefUIResources" />
 													<br>
-													<table width="60%" border="0" cellspacing="0" cellpadding="3">
+													<table width="40%" border="0" cellspacing="0" cellpadding="3">
 														<tr>
 															<td width="20%" class="drawtablehd"> <mifos:mifoslabel name="product.minloanamt" bundle="ProductDefUIResources" /></td>
 															<td width="20%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.maxloanamt" bundle="ProductDefUIResources" /></td>
@@ -147,7 +147,7 @@ explanation of the license and how it is applied.
 												</c:if>
 												<c:if test="${loanAmountType=='2'}">
 													<br>
-													<table width="100%" border="0" cellpadding="3" cellspacing="0">
+													<table width="40%" border="0" cellpadding="3" cellspacing="0">
 													<mifos:mifoslabel name="product.calcloanamount" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.bylastloanamount" bundle="ProductDefUIResources" />
 													<tr>
 															<td width="25%" class="drawtablehd" > <mifos:mifoslabel name="product.lastloanamount" bundle="ProductDefUIResources" /> </td>
@@ -173,7 +173,7 @@ explanation of the license and how it is applied.
 													<mifos:mifoslabel name="product.calcloanamount" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.byloancycle" bundle="ProductDefUIResources" />
 													<br/>
 													
-													<table width="90%" border="0" cellspacing="0" cellpadding="3">
+													<table width="40%" border="0" cellspacing="0" cellpadding="3">
 														<tr>
 															<td width="15%" class="drawtablehd"> <mifos:mifoslabel name="product.loancycleno" bundle="ProductDefUIResources" /> </td>
 															<td width="30%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.minloanamt" bundle="ProductDefUIResources" /></td>
@@ -241,17 +241,17 @@ explanation of the license and how it is applied.
 													<c:if test="${installType=='1'}">
 													<mifos:mifoslabel name="product.calcInstallment" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.sameforallinstallment" bundle="ProductDefUIResources"/>
 														<br>
-														<table width="80%" border="0" cellspacing="0" cellpadding="3">
+														<table width="41.5%" border="0" cellspacing="0" cellpadding="3">
 																<tr>
 																	<td width="20%" class="drawtablehd"> <mifos:mifoslabel name="product.mininst" bundle="ProductDefUIResources" /></td>
-																	<td width="20%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.maxinst" bundle="ProductDefUIResources" /></td>
-																	<td width="20%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.definst" bundle="ProductDefUIResources" /></td>
+																	<td width="20%" class="drawtablehd" > <mifos:mifoslabel name="product.maxinst" bundle="ProductDefUIResources" /></td>
+																	<td width="20%" class="drawtablehd" > <mifos:mifoslabel name="product.definst" bundle="ProductDefUIResources" /></td>
 																</tr>	
 																	<c:forEach items="${loanPrd.noOfInstallSameForAllLoan}" var="noOfInstallSameForAllLoan">					
 																<tr>																														
 																	<td class="fontnormal" width="20%"> <c:out value="${noOfInstallSameForAllLoan.minNoOfInstall}" /></td>
-																	<td class="fontnormal" width="20%"align="right"> <c:out value="${noOfInstallSameForAllLoan.maxNoOfInstall}" /></td>
-																	<td class="fontnormal" width="20%"align="right"> <c:out value="${noOfInstallSameForAllLoan.defaultNoOfInstall}" /></td>																															
+																	<td class="fontnormal" width="20%"> <c:out value="${noOfInstallSameForAllLoan.maxNoOfInstall}" /></td>
+																	<td class="fontnormal" width="20%"> <c:out value="${noOfInstallSameForAllLoan.defaultNoOfInstall}" /></td>																															
 																</tr>																
 																	</c:forEach>														
 																</table>
@@ -260,21 +260,21 @@ explanation of the license and how it is applied.
 													<c:if test="${installType=='2'}">
 													<mifos:mifoslabel name="product.calcInstallment" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.installbylastloanamount" bundle="ProductDefUIResources"/>
 														<br>
-														<table width="100%" border="0" cellpadding="3" cellspacing="0">
+														<table width="41.5%" border="0" cellpadding="3" cellspacing="0">
 													<tr>
 																	<td width="25%" class="drawtablehd"> <mifos:mifoslabel name="product.lastloanamount" bundle="ProductDefUIResources" /> </td>
-																	<td width="15%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.mininst" bundle="ProductDefUIResources" /></td>
-																	<td width="15%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.maxinst" bundle="ProductDefUIResources" /></td>
-																	<td width="20%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.definst" bundle="ProductDefUIResources" /></td>	
+																	<td width="15%" class="drawtablehd" > <mifos:mifoslabel name="product.mininst" bundle="ProductDefUIResources" /></td>
+																	<td width="15%" class="drawtablehd" > <mifos:mifoslabel name="product.maxinst" bundle="ProductDefUIResources" /></td>
+																	<td width="20%" class="drawtablehd" > <mifos:mifoslabel name="product.definst" bundle="ProductDefUIResources" /></td>	
 																</tr>
 													<c:forEach items="${loanPrd.noOfInstallFromLastLoan}" var="noOfInstallFromLastLoan">
 													<tr>				
 													<td class="fontnormal"> 
 																<c:out value="${noOfInstallFromLastLoan.startRange}" />												
 														-	    <c:out value="${noOfInstallFromLastLoan.endRange}" /></td>
-																<td class="fontnormal" align="right"> <c:out value="${noOfInstallFromLastLoan.minNoOfInstall}" /></td>
-																<td class="fontnormal" align="right"> <c:out value="${noOfInstallFromLastLoan.maxNoOfInstall}" /> </td>
-																<td class="fontnormal" align="right"> <c:out value="${noOfInstallFromLastLoan.defaultNoOfInstall}" /></td>
+																<td class="fontnormal" > <c:out value="${noOfInstallFromLastLoan.minNoOfInstall}" /></td>
+																<td class="fontnormal" > <c:out value="${noOfInstallFromLastLoan.maxNoOfInstall}" /> </td>
+																<td class="fontnormal" > <c:out value="${noOfInstallFromLastLoan.defaultNoOfInstall}" /></td>
 															</tr>		
 													</c:forEach>
 																</table>
@@ -282,19 +282,19 @@ explanation of the license and how it is applied.
 													<c:if test="${installType=='3'}">
 													<mifos:mifoslabel name="product.calcInstallment" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.installbyloancycle" bundle="ProductDefUIResources"/>
 														<br>
-															<table width="90%" border="0" cellspacing="0" cellpadding="3">
+															<table width="41.5%" border="0" cellspacing="0" cellpadding="3">
 																<tr>
 																	<td width="15%" class="drawtablehd"> <mifos:mifoslabel name="product.loancycleno" bundle="ProductDefUIResources" /> </td>
-																	<td width="30%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.mininst" bundle="ProductDefUIResources" /></td>
-																	<td width="30%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.maxinst" bundle="ProductDefUIResources" /></td>
-																	<td width="30%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.definst" bundle="ProductDefUIResources" /></td>	
+																	<td width="30%" class="drawtablehd" > <mifos:mifoslabel name="product.mininst" bundle="ProductDefUIResources" /></td>
+																	<td width="30%" class="drawtablehd" > <mifos:mifoslabel name="product.maxinst" bundle="ProductDefUIResources" /></td>
+																	<td width="30%" class="drawtablehd" > <mifos:mifoslabel name="product.definst" bundle="ProductDefUIResources" /></td>	
 																</tr>
 																<c:forEach items="${loanPrd.noOfInstallFromLoanCycle}" var="noOfInstallFromLoanCycle">
 																<tr>	
 																	<td class="fontnormal" width="10%"><c:out value="${noOfInstallFromLoanCycle.rangeIndex}"/></td>
-																	<td class="fontnormal" width="30%" align="right"><c:out value="${noOfInstallFromLoanCycle.minNoOfInstall}"/></td>
-																	<td class="fontnormal" width="30%" align="right"><c:out value="${noOfInstallFromLoanCycle.maxNoOfInstall}" /></td>
-																	<td class="fontnormal" width="30%" align="right"><c:out value="${noOfInstallFromLoanCycle.defaultNoOfInstall}" /></td>																													
+																	<td class="fontnormal" width="30%" ><c:out value="${noOfInstallFromLoanCycle.minNoOfInstall}"/></td>
+																	<td class="fontnormal" width="30%" ><c:out value="${noOfInstallFromLoanCycle.maxNoOfInstall}" /></td>
+																	<td class="fontnormal" width="30%" ><c:out value="${noOfInstallFromLoanCycle.defaultNoOfInstall}" /></td>																													
 																</tr>
 																</c:forEach>
 																</table>

@@ -153,6 +153,7 @@
             <forward name="addGroupSearch_success" path="/pages/application/group/jsp/group_search_add_client.jsp"/>
             <!-- forward to delete !! -->
             <!-- forward name="loadSearch_failure" path="/pages/application/group/jsp/group_search_addMember.jsp" /-->
+            <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
         </action>
 
         <!-- Client Creation Action -->

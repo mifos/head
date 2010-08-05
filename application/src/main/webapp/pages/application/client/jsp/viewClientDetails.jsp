@@ -688,7 +688,7 @@ explanation of the license and how it is applied.
 								</c:forEach>
   							</c:if>
 							<tr><td class="paddingL10"> <br>
-							<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?entityId=<c:out value="${clientInformationDto.clientDisplay.customerId}"/>&event=Create&source=Client&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+							<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Create&source=Client&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
 							    <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
 							</a> <br>
 							<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${clientInformationDto.clientDisplay.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
@@ -804,7 +804,7 @@ explanation of the license and how it is applied.
               <tr>
                 <td width="70%" class="paddingL10">
                   <span class="fontnormal8pt">
-                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?instanceId=${questionGroupInstance.id}&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&instanceId=${questionGroupInstance.id}&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
                       <c:out value="${questionGroupInstance.questionGroupTitle}"/>
                     </a>
                   </span>
@@ -822,7 +822,11 @@ explanation of the license and how it is applied.
             <tr>
               <td colspan="2" align="right" class="paddingleft05">
                 <span class="fontnormal8pt">
-                  <a id="viewClientDetails.link.attachSurvey" href="questionnaire.ftl">
+                  <c:set var="questionnaireFor" scope="session" value="${clientInformationDto.clientDisplay.displayName}"/>
+                  <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
+                  <c:set target="${urlMap}" property="${clientInformationDto.clientDisplay.branchName}" value="custSearchAction.do?method=getOfficeHomePage&officeId=${UserContext.branchId}"/>
+                  <c:set target="${urlMap}" property="${clientInformationDto.clientDisplay.displayName}" value="clientCustAction.do?method=get&globalCustNum=${clientInformationDto.clientDisplay.globalCustNum}"/>
+                  <a id="viewClientDetails.link.attachSurvey" href="questionnaire.ftl?source=Client&event=View&entityId=${clientInformationDto.clientDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=clientCustAction.do%3Fmethod%3Dget">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
                 </span>
