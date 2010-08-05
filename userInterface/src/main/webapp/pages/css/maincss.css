@@ -97,7 +97,7 @@ padding-top:5px;
 }
 .logo {
 	float:left;
-	background:url(pages/framework/images/new_logo.jpg) left top no-repeat;
+	background:url(../framework/images/new_logo.jpg) left top no-repeat;
 	width:200px;
 	height:70px;
 	position:absolute;	
@@ -230,7 +230,7 @@ padding-top:5px;
 	border-bottom: #696969 1px solid;
 	border-left: #a4a4a4 1px solid;
 	border-top: #a2a2a2 1px solid;
-	background-image: url(pages/framework/images/buttons/buttonbgcancel.jpg);
+	background-image: url(../framework/images/buttons/buttonbgcancel.jpg);
 	background-repeat: repeat-x;
 	cursor: pointer;
 	height: 20px;
@@ -244,7 +244,7 @@ padding-top:5px;
 	border-bottom: #696969 1px solid;
 	border-left: #a4a4a4 1px solid;
 	border-top: #a2a2a2 1px solid;
-/*	background-image:#fff url(pages/framework/images/buttons/buttonbgcancel.jpg);
+/*	background-image:#fff url(../framework/images/buttons/buttonbgcancel.jpg);
 	background-repeat: repeat-x;*/
 	background-color:#FFFFFF;
 	cursor: pointer;
@@ -356,38 +356,38 @@ padding-top:5px;
 }
 .leftIMG {
 	float:left;
-	background:url(pages/framework/images/smallarrowleft.gif) no-repeat;
+	background:url(../framework/images/smallarrowleft.gif) no-repeat;
 	width:11px;
 	height:11px;
 }
 .downIMG {
 	float:left;
-	background:url(pages/framework/images/smallarrowdown.gif) no-repeat;
+	background:url(../framework/images/smallarrowdown.gif) no-repeat;
 	width:11px;
 	height:11px;
 }
 .topIMG {
 	float:left;
-	background:url(pages/framework/images/smallarrowtop.gif) no-repeat;
+	background:url(../framework/images/smallarrowtop.gif) no-repeat;
 	width:11px;
 	height:11px;
 }
 .activeIMG {
-	background:url(pages/framework/images/status_activegreen.gif) no-repeat;
+	background:url(../framework/images/status_activegreen.gif) no-repeat;
 	width:8px;
 	height:9px;
 	padding-left:20px;
 }
 .arrowIMG {
 	margin:3px 10px;
-	background:url(pages/framework/images/timeline/bigarrow.gif) no-repeat;
+	background:url(../framework/images/timeline/bigarrow.gif) no-repeat;
 	width:17px;
 	height:17px;
 	padding-left:20px;
 }
 .arrowIMG1 {
 	margin:3px 10px;
-	background:url(pages/framework/images/timeline/orangearrow.gif) no-repeat;
+	background:url(../framework/images/timeline/orangearrow.gif) no-repeat;
 	width:17px;
 	height:17px;
 	padding-left:20px;
@@ -395,7 +395,7 @@ padding-top:5px;
 }
 .completeIMG {
 	margin:3px 10px;
-	background:url(pages/framework/images/timeline/tick.gif) no-repeat;
+	background:url(../framework/images/timeline/tick.gif) no-repeat;
 	width:17px;
 	height:17px;
 	padding-left:20px;
@@ -476,3 +476,4 @@ padding-top:5px;
 	border-top-style: solid;
 	border-top-color: #D7DEEE;
 }
+
