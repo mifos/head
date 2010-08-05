@@ -37,11 +37,9 @@
                         <div class="marginLeft30">
                             [#assign boolean_text_yes][@spring.message "questionnaire.yes"/][/#assign]
                             [#assign boolean_text_no][@spring.message "questionnaire.no"/][/#assign]
-                            <div id="questionGroup.title">
-                                <h1>
+                            <h1 id="questionGroup.title">
                                 ${Request.questionGroupDetail.title}
-                                </h1>
-                            </div>
+                            </h1>
                             <div id="questionGroup.appliesTo" class="marginTop15">
                                 [@spring.message "questionnaire.questionGroupAppliesTo"/]: ${Request.eventSources[Request.questionGroupDetail.eventSourceId]}
                             </div>

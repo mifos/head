@@ -44,17 +44,6 @@ public class QuestionForm extends ScreenObject {
         this.currentQuestion = currentQuestion;
     }
 
-
-    /*@org.hibernate.validator.constraints.NotEmpty
-    @javax.validation.constraints.Size(max=50)
-    public String getTitle() {
-        return currentQuestion.getTitle();
-    }
-
-    public void setTitle(String title) {
-        currentQuestion.setTitle(title);
-    }*/
-
     public List<Question> getQuestions() {
         return questions;
     }

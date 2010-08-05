@@ -27,6 +27,7 @@
 [#assign number][@spring.message "questionnaire.quesiton.choices.number"/][/#assign]
 [#assign multiSelect][@spring.message "questionnaire.quesiton.choices.multiselect"/][/#assign]
 [#assign singleSelect][@spring.message "questionnaire.quesiton.choices.singleselect"/][/#assign]
+[#assign smartSelect][@spring.message "questionnaire.quesiton.choices.smartselect"/][/#assign]
 
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
@@ -52,8 +53,11 @@
                             <input type="hidden" id="number" name="number" value="${number}"/>
                             <input type="hidden" id="multiSelect" name="multiSelect" value="${multiSelect}"/>
                             <input type="hidden" id="singleSelect" name="singleSelect" value="${singleSelect}" />
+                            <input type="hidden" id="smartSelect" name="smartSelect" value="${smartSelect}" />
                             <input type="submit" id="_eventId_removeQuestion" name="_eventId_removeQuestion" value="" style="visibility:hidden"/>
                             <input type="submit" id="_eventId_removeChoice" name="_eventId_removeChoice" value="" style="visibility:hidden"/>
+                            <input type="submit" id="_eventId_removeChoiceTag" name="_eventId_removeChoiceTag" value="" style="visibility:hidden"/>
+                            <input type="submit" id="_eventId_addSmartChoiceTag" name="_eventId_addSmartChoiceTag" value="" style="visibility:hidden"/>
                             <fieldset>
                              <ol>
                                 <li>
@@ -62,7 +66,7 @@
                                 </li>
                                 <li>
                                   <label for="currentQuestion.type"><span class="red">*</span>[@spring.message "questionnaire.answer.type"/]: </label>
-                                  [@spring.formSingleSelect "questionDefinition.currentQuestion.type", [freeText, date, number, multiSelect, singleSelect], ''/]
+                                  [@spring.formSingleSelect "questionDefinition.currentQuestion.type", [freeText, date, number, multiSelect, singleSelect, smartSelect], ''/]
                                 </li>
                                 <li>
                                     <div id="numericDiv">
@@ -88,6 +92,50 @@
                                                 <li>
                                                     <span class="choiceStyle">${choice}&nbsp;</span>
                                                     <a href="removeChoice#" choiceIndex="${choice_index}">[@spring.message "questionnaire.remove.link"/]</a>
+                                                </li>
+                                                [/#list]
+                                            </ol>
+                                        </fieldset>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div id="choiceTagsDiv">
+                                        <label for="currentQuestion.currentSmartChoice"><span class="red">*</span>[@spring.message "questionnaire.quesiton.choice"/]: </label>
+                                        [@spring.formInput "questionDefinition.currentQuestion.currentSmartChoice", 'maxlength="200"'/]
+                                        <input type="submit" id="_eventId_addSmartChoice" name="_eventId_addSmartChoice" class="buttn"
+                                               value="[@spring.message "questionnaire.quesiton.add"/] >>">
+                                        <fieldset>
+                                            <ol class="choiceOlStyle">
+                                                <li class="choiceHeaderStyle">
+                                                    <span class="choiceStyle">[@spring.message "questionnaire.choice"/]</span>
+                                                    <span class="tagStyle">[@spring.message "questionnaire.tags"/]</span>
+                                                    <span class="removeStyle">[@spring.message "questionnaire.remove"/]</span>
+                                                    <span class="addTagStyle">&nbsp;</span>
+                                                </li>
+                                                [#list questionDefinition.currentQuestion.choices as choice]
+                                                <li>
+                                                    <span class="choiceStyle">${choice.choiceText}&nbsp;</span>
+                                                    <span class="tagStyle">
+                                                        [#if choice.tags?size > 0]
+                                                            [#list choice.tags as tag]
+                                                                ${tag}<a href="removeSmartChoiceTag#" choiceTagIndex="${choice_index}_${tag_index}" style="text-decoration: none;">
+                                                                        <img src="pages/framework/images/icon_remove.gif" class="removeIMG" alt="remove"/>
+                                                                      </a> &nbsp;
+                                                            [/#list]
+                                                        [#else]
+                                                            &nbsp;
+                                                        [/#if]
+                                                    </span>
+                                                    <span class="removeStyle">
+                                                        <a href="removeSmartChoice#" choiceIndex="${choice_index}">[@spring.message "questionnaire.remove.link"/]</a>
+                                                    </span>
+                                                    [#if questionDefinition.currentQuestion.currentSmartChoiceTags?size > 0]
+                                                        <span class="addTagStyle">
+                                                            [@spring.formInput "questionDefinition.currentQuestion.currentSmartChoiceTags[${choice_index}]", 'maxlength="50"'/]
+                                                            <input type="submit" id="addSmartChoiceTag_${choice_index}" name="addSmartChoiceTag_${choice_index}" disabled="disabled"
+                                                                   class="disabledbuttn" value="[@spring.message "questionnaire.question.addtag"/] >>" choiceIndex="${choice_index}">
+                                                        </span>
+                                                    [/#if]
                                                 </li>
                                                 [/#list]
                                             </ol>

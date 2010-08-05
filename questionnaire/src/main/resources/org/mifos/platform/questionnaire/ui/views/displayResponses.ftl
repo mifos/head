@@ -30,8 +30,10 @@
             <div class="col1">
             <div class="main_content">
                 <span id="page.id" title="display_question_group_reponses"></span>
-                [#assign breadcrumb = Session.urlMap/]
-                [@mifos.crumbpairs breadcrumb "false"/]
+                [#if Session.urlMap??]
+                    [#assign breadcrumb = Session.urlMap/]
+                    [@mifos.crumbpairs breadcrumb "false"/]
+                [/#if]
                 <div class="content_panel">
                     <h1>
                         [@spring.message "questionnaire.view.question.group.responses"/]

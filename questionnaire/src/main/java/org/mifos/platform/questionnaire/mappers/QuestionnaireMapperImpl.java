@@ -120,15 +120,18 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     private ChoiceDetail mapToChoiceDetail(QuestionChoiceEntity questionChoice) {
         ChoiceDetail choiceDetail = new ChoiceDetail(questionChoice.getChoiceText());
-        Set<ChoiceTagEntity> tags = questionChoice.getTags();
-        if (isNotEmpty(tags)) {
+        mapToChoiceTags(choiceDetail, questionChoice.getTags());
+        return choiceDetail;
+    }
+
+    private void mapToChoiceTags(ChoiceDetail choiceDetail, Set<ChoiceTagEntity> choiceTagEntities) {
+        if (isNotEmpty(choiceTagEntities)) {
             List<String> choiceTags = new ArrayList<String>();
-            for (ChoiceTagEntity tag : tags) {
+            for (ChoiceTagEntity tag : choiceTagEntities) {
                 choiceTags.add(tag.getTagText());
             }
             choiceDetail.setTags(choiceTags);
         }
-        return choiceDetail;
     }
 
     @Override

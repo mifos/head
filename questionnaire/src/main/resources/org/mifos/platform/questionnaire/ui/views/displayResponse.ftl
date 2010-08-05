@@ -24,15 +24,16 @@
 [@mifos.topNavigationNoSecurity currentTab="ClientsAndAccounts" /]
 <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
 <script src="pages/questionnaire/js/display.js" type="text/javascript"></script>        
-
 <div class="colmask leftmenu">
     <div class="colleft">
         <div class="col1wrap">
             <div class="col1">
             <div class="main_content">
                 <span id="page.id" title="display_question_group_reponse"></span>
-                [#assign breadcrumb = Session.urlMap/]
-                [@mifos.crumbpairs breadcrumb "false"/]
+                [#if Session.urlMap??]
+                    [#assign breadcrumb = Session.urlMap/]
+                    [@mifos.crumbpairs breadcrumb "false"/]
+                [/#if]
                 <div class="content_panel">
                     <h1>
                         ${questionGroupInstance.questionGroupTitle} - ${questionGroupInstance.dateCompletedAsString}

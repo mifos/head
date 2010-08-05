@@ -135,7 +135,7 @@
         </div>
           <div class="col2">
                 <div class="side_bar">
-                    [#include "newsadminLeftPane.ftl" /]
+                    [#include "newadminLeftPane.ftl" /]
                 </div>
         </div>
     </div>

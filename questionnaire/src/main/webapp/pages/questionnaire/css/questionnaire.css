@@ -74,6 +74,30 @@ fieldset .questionList label {
     word-wrap:break-word;
 }
 
+.addTagStyle{
+    float:left;
+    margin-right:1em;
+    margin-left:1em;
+    width:10em;
+    word-wrap:break-word;
+}
+
+.tagStyle{
+    float:left;
+    margin-right:1em;
+    margin-left:1em;
+    width:30em;
+    word-wrap:break-word;
+}
+
+.removeStyle{
+    float:left;
+    margin-right:0em;
+    margin-left:1em;
+    width:5em;
+    word-wrap:break-word;
+}
+
 .choiceHeaderStyle{
     background-color:#D7DEEE;
     border-top:1px solid #D7DEEE;
@@ -106,4 +130,10 @@ fieldset .questionList label {
 .topRight{
     float:right;
     margin:1em;
+}
+
+.removeIMG {
+	background:url(pages/framework/images/icon_remove.gif) no-repeat;
+	width:10px;
+	height:10px;
 }

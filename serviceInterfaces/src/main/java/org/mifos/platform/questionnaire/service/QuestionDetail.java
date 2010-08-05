@@ -140,4 +140,17 @@ public class QuestionDetail implements Serializable {
         answerChoices.remove(choiceIndex);
     }
 
+    public void addTag(int choiceIndex, String tag) {
+        if (choiceIndex < answerChoices.size()) {
+            answerChoices.get(choiceIndex).addTag(tag);
+        }
+    }
+
+    public boolean isSmartSelect() {
+        return QuestionType.SMART_SELECT.equals(type);
+    }
+
+    public void removeTagForChoice(int choiceIndex, int tagIndex) {
+        answerChoices.get(choiceIndex).removeTag(tagIndex);
+    }
 }
