@@ -42,6 +42,7 @@ import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
+import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
@@ -74,6 +75,7 @@ import org.mifos.dto.domain.CreateOrUpdateProductCategory;
 import org.mifos.dto.domain.GracePeriodDto;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
+import org.mifos.dto.domain.ProductTypeDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.dto.screen.PaymentTypeDto;
@@ -1214,5 +1216,33 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             return PrdCategoryStatus.ACTIVE;
         }
         return PrdCategoryStatus.INACTIVE;
+    }
+
+    @Override
+    public List<ProductTypeDto> retrieveProductTypesApplicableToProductMix() {
+        List<ProductTypeDto> poductTypes = new ArrayList<ProductTypeDto>();
+
+        poductTypes.add(new ProductTypeDto(ProductType.LOAN.getValue().intValue(), "manageProduct.viewProductMix.loan"));
+
+        return poductTypes;
+    }
+
+    @Override
+    public List<ProductDisplayDto> retrieveProductsByProductTypeId(Integer productTypeId) {
+
+        List<ProductDisplayDto> productTypes = new ArrayList<ProductDisplayDto>();
+
+        switch (ProductType.fromInt(productTypeId)) {
+        case LOAN:
+            productTypes = retrieveLoanProducts();
+            break;
+        case SAVINGS:
+            productTypes = retrieveSavingsProducts();
+            break;
+        default:
+            break;
+        }
+
+        return productTypes;
     }
 }
