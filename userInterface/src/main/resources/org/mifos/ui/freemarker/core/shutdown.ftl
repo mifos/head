@@ -19,7 +19,7 @@
                 <div class="span-23 borderbtm">
                     <p class="font15"><span class="orangeheading">[@spring.message "systemAdministration.shutdown.shutdownInformation" /]</span></p>
                     <div class="span-23">
-                        <span class="span-11">[@spring.message "systemAdministration.shutdown.welcometotheMifosshutdownmanagementArea" /]</span>
+                        <span class="span-11">[@spring.message "systemAdministration.shutdown.welcometotheMifosshutdownmanagementArea" /].</span>
                         [@spring.showErrors "<br>" /]
                     </div>
                     <div class="clear">&nbsp;</div>
@@ -32,7 +32,7 @@
                         <span class="span-7">[@spring.message "systemAdministration.shutdown.scheduleIn" /]</span>
     	            <span class="span-11">
     	            	[@spring.bind "formBean.timeout" /]
-						<input type="text" maxlength="7" id="timeout" name="${spring.status.expression}" value="${spring.status.value?default("")}" />&nbsp;[@spring.message "systemAdministration.shutdown.seconds" /]
+						<input type="text" maxlength="7" id="timeout" name="${spring.status.expression}" value="${formBean.timeout?c}" />&nbsp;[@spring.message "systemAdministration.shutdown.seconds" /]
 					</span>
                         [@spring.showErrors "<br>" /]
                     </div>
