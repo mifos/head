@@ -167,7 +167,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         QuestionChoiceEntity choiceEntity = new QuestionChoiceEntity(choice.getChoiceText());
         List<String> tags = choice.getTags();
         if (isNotEmpty(tags)) {
-            LinkedHashSet<ChoiceTagEntity> choiceTagEntities = new LinkedHashSet<ChoiceTagEntity>();
+            Set<ChoiceTagEntity> choiceTagEntities = new LinkedHashSet<ChoiceTagEntity>();
             for (String tag : tags) {
                 ChoiceTagEntity choiceTagEntity = new ChoiceTagEntity();
                 choiceTagEntity.setTagText(tag);

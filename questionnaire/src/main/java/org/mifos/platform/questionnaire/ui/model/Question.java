@@ -134,6 +134,7 @@ public class Question implements Serializable {
     public void addAnswerSmartChoice() {
         questionDetail.addAnswerChoice(new ChoiceDetail(getCurrentSmartChoice()));
         currentSmartChoiceTags.add(EMPTY);
+        setCurrentSmartChoice(null);
     }
 
     public void addSmartChoiceTag(int choiceIndex) {

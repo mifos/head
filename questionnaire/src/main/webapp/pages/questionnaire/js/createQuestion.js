@@ -104,6 +104,10 @@ $(document).ready(function(){
         }
     });
 
+    $(":regex(id, currentQuestion.currentSmartChoiceTags\\[[0-9]+\\])").bind("focus", function(){
+        $(this).keyfilter(/[a-z0-9_]/i);
+    });
+
     $(":regex(id, currentQuestion.currentSmartChoiceTags\\[[0-9]+\\])").bind("past cut keyup blur", function(){
         var val = $(this).val();
         var addTagButton = $(this).parent().children()[1];

@@ -35,6 +35,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -113,10 +114,12 @@ public class QuestionTest {
         Question question = new Question(new QuestionDetail());
         question.setCurrentSmartChoice("Choice1");
         question.addAnswerSmartChoice();
+        assertThat(question.getCurrentSmartChoice(), is(nullValue()));
         assertThat(question.getCurrentSmartChoiceTags().size(), is(1));
         assertThat(question.getCurrentSmartChoiceTags().get(0), is(""));
         question.setCurrentSmartChoice("Choice2");
         question.addAnswerSmartChoice();
+        assertThat(question.getCurrentSmartChoice(), is(nullValue()));
         assertThat(question.getCurrentSmartChoiceTags().size(), is(2));
         assertThat(question.getCurrentSmartChoiceTags().get(0), is(""));
         assertThat(question.getCurrentSmartChoiceTags().get(1), is(""));
@@ -132,10 +135,51 @@ public class QuestionTest {
         question.addAnswerSmartChoice();
         question.getCurrentSmartChoiceTags().set(1, "Tag1");
         question.addSmartChoiceTag(0);
+        assertThat(questionDetail.getAnswerChoices().get(0).getTags().size(), is(0));
         assertThat(questionDetail.getAnswerChoices().get(1).getTags().size(), is(0));
         question.addSmartChoiceTag(1);
         assertThat(questionDetail.getAnswerChoices().get(1).getTags().get(0), is("Tag1"));
         assertThat(question.getCurrentSmartChoiceTags().get(1), is(""));
+    }
+
+    @Test
+    public void testAddSmartChoiceTagUptoFiveTags() {
+        QuestionDetail questionDetail = new QuestionDetail();
+        Question question = new Question(questionDetail);
+        question.setCurrentSmartChoice("Choice1");
+        question.addAnswerSmartChoice();
+        question.getCurrentSmartChoiceTags().set(0, "Tag_1");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag_2");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag_3");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag_4");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag_5");
+        question.addSmartChoiceTag(0);
+        assertThat(questionDetail.getAnswerChoices().get(0).getTags().size(), is(5));
+        question.getCurrentSmartChoiceTags().set(0, "Tag_6");
+        question.addSmartChoiceTag(0);
+        assertThat(questionDetail.getAnswerChoices().get(0).getTags().size(), is(5));
+        assertThat(question.getCurrentSmartChoiceTags().get(0), is(""));
+    }
+
+    @Test
+    public void testAddSmartChoiceTagDoesnotAllowDuplicates() {
+        QuestionDetail questionDetail = new QuestionDetail();
+        Question question = new Question(questionDetail);
+        question.setCurrentSmartChoice("Choice1");
+        question.addAnswerSmartChoice();
+        question.getCurrentSmartChoiceTags().set(0, "Tag_1");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag_1");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag_2");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag_3");
+        question.addSmartChoiceTag(0);
+        assertThat(questionDetail.getAnswerChoices().get(0).getTags().size(), is(3));
     }
 
     @Test
@@ -163,7 +207,7 @@ public class QuestionTest {
         assertThat(question.getQuestionDetail().getAnswerChoices().size(), is(1));
         assertThat(question.getQuestionDetail().getAnswerChoices().get(0).getTags().size(), is(0));
     }
-    
+
     private void assertQuestion(String shortName, QuestionType questionType, String questionTypeString, List<String> choices) {
         QuestionDetail questionDetail = new QuestionDetail(123, "Question Text", shortName, questionType);
         List<ChoiceDetail> choiceDetails = getChoiceDetails(choices);
