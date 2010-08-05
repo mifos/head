@@ -140,4 +140,9 @@ public class QuestionDetail implements Serializable {
         answerChoices.remove(choiceIndex);
     }
 
+    public void addTag(int choiceIndex, String tag) {
+        if (choiceIndex < answerChoices.size()) {
+            answerChoices.get(choiceIndex).addTag(tag);
+        }
+    }
 }

@@ -9,7 +9,10 @@
 		<transition on="addQuestion" to="addQuestion" />
         <transition on="removeQuestion" to="removeQuestion"/>
         <transition on="addChoice" to="addChoice"/>
+        <transition on="addSmartChoice" to="addSmartChoice"/>
+        <transition on="addSmartChoiceTag" to="addSmartChoiceTag"/>
         <transition on="removeChoice" to="removeChoice"/>
+        <transition on="removeSmartChoice" to="removeChoice"/>
         <transition on="createQuestions" to="createQuestions" />
 		<transition on="cancel" to="cancel" bind="false" history="discard"/>
 	</view-state>
@@ -29,8 +32,18 @@
         <transition to="createQuestion" />
     </action-state>
 
+    <action-state id="addSmartChoice">
+    	<evaluate expression="questionDefinition.currentQuestion.addAnswerSmartChoice()"/>
+        <transition to="createQuestion" />
+    </action-state>
+
     <action-state id="removeChoice">
     	<evaluate expression="questionDefinition.currentQuestion.removeChoice(requestParameters._eventId_removeChoice)"/>
+        <transition to="createQuestion" />
+    </action-state>
+
+    <action-state id="addSmartChoiceTag">
+    	<evaluate expression="questionDefinition.currentQuestion.addSmartChoiceTag(requestParameters._eventId_addSmartChoiceTag)"/>
         <transition to="createQuestion" />
     </action-state>
 

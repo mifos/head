@@ -20,6 +20,8 @@
 
 package org.mifos.platform.questionnaire.service;
 
+import org.mifos.platform.util.CollectionUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,9 +57,17 @@ public class ChoiceDetail implements Serializable {
     public void setTags(List<String> tags) {
         this.tags = tags;
     }
+    
+    public String getCommaSeparatedTags() {
+        return CollectionUtils.toString(this.tags);
+    }
 
     @Override
     public String toString() {
         return choiceText;
+    }
+
+    public void addTag(String tag) {
+        tags.add(tag);
     }
 }

@@ -24,13 +24,16 @@ import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.util.CollectionUtils;
-import org.mifos.platform.util.MapEntry;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+
+import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+import static org.mifos.platform.util.MapEntry.makeEntry;
 
 @SuppressWarnings("PMD")
 public class Question implements Serializable {
@@ -39,6 +42,9 @@ public class Question implements Serializable {
     private static Map<QuestionType, String> questionTypeToStringMap;
     private QuestionDetail questionDetail;
     private String currentChoice;
+    private String currentSmartChoice;
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
+    private List<String> currentSmartChoiceTags;
 
     static {
         populateStringToQuestionTypeMap();
@@ -50,6 +56,7 @@ public class Question implements Serializable {
     }
     public Question(QuestionDetail questionDetail) {
         this.questionDetail = questionDetail;
+        this.currentSmartChoiceTags = new ArrayList<String>();
     }
 
     @javax.validation.constraints.NotNull
@@ -109,10 +116,25 @@ public class Question implements Serializable {
     public void addAnswerChoice() {
         questionDetail.addAnswerChoice(new ChoiceDetail(getCurrentChoice()));
         setCurrentChoice(null);
+        currentSmartChoiceTags.add(EMPTY);
     }
 
     public void removeChoice(int choiceIndex) {
         questionDetail.removeAnswerChoice(choiceIndex);
+        currentSmartChoiceTags.remove(choiceIndex);
+    }
+
+    public void addAnswerSmartChoice() {
+        questionDetail.addAnswerChoice(new ChoiceDetail(getCurrentSmartChoice()));
+        currentSmartChoiceTags.add(EMPTY);
+    }
+
+    public void addSmartChoiceTag(int choiceIndex) {
+        String currentSmartChoiceTag = getCurrentSmartChoiceTag(choiceIndex);
+        if (isNotEmpty(currentSmartChoiceTag)) {
+            questionDetail.addTag(choiceIndex, currentSmartChoiceTag);
+            currentSmartChoiceTags.set(choiceIndex, EMPTY);
+        }
     }
 
     public void setChoicesIfApplicable() {
@@ -143,24 +165,26 @@ public class Question implements Serializable {
     }
 
     private boolean answerChoicesApplicableFor(QuestionType type) {
-        return QuestionType.MULTI_SELECT.equals(type) || QuestionType.SINGLE_SELECT.equals(questionDetail.getType());
+        return QuestionType.MULTI_SELECT.equals(type) || QuestionType.SINGLE_SELECT.equals(type) || QuestionType.SMART_SELECT.equals(type);
     }
 
     private static void populateStringToQuestionTypeMap() {
         stringToQuestionTypeMap = CollectionUtils.asMap(
-                MapEntry.makeEntry(getResource("questionnaire.quesiton.choices.freetext"), QuestionType.FREETEXT),
-                MapEntry.makeEntry(getResource("questionnaire.quesiton.choices.date"), QuestionType.DATE),
-                MapEntry.makeEntry(getResource("questionnaire.quesiton.choices.multiselect"), QuestionType.MULTI_SELECT),
-                MapEntry.makeEntry(getResource("questionnaire.quesiton.choices.singleselect"), QuestionType.SINGLE_SELECT),
-                MapEntry.makeEntry(getResource("questionnaire.quesiton.choices.number"), QuestionType.NUMERIC));
+                makeEntry(getResource("questionnaire.quesiton.choices.freetext"), QuestionType.FREETEXT),
+                makeEntry(getResource("questionnaire.quesiton.choices.date"), QuestionType.DATE),
+                makeEntry(getResource("questionnaire.quesiton.choices.multiselect"), QuestionType.MULTI_SELECT),
+                makeEntry(getResource("questionnaire.quesiton.choices.singleselect"), QuestionType.SINGLE_SELECT),
+                makeEntry(getResource("questionnaire.quesiton.choices.smartselect"), QuestionType.SMART_SELECT),
+                makeEntry(getResource("questionnaire.quesiton.choices.number"), QuestionType.NUMERIC));
     }
 
     private static void populateQuestionTypeToStringMap() {
-        questionTypeToStringMap = CollectionUtils.asMap(MapEntry.makeEntry(QuestionType.FREETEXT, getResource("questionnaire.quesiton.choices.freetext")),
-                MapEntry.makeEntry(QuestionType.DATE, getResource("questionnaire.quesiton.choices.date")),
-                MapEntry.makeEntry(QuestionType.NUMERIC, getResource("questionnaire.quesiton.choices.number")),
-                MapEntry.makeEntry(QuestionType.MULTI_SELECT, getResource("questionnaire.quesiton.choices.multiselect")),
-                MapEntry.makeEntry(QuestionType.SINGLE_SELECT, getResource("questionnaire.quesiton.choices.singleselect"))
+        questionTypeToStringMap = CollectionUtils.asMap(makeEntry(QuestionType.FREETEXT, getResource("questionnaire.quesiton.choices.freetext")),
+                makeEntry(QuestionType.DATE, getResource("questionnaire.quesiton.choices.date")),
+                makeEntry(QuestionType.NUMERIC, getResource("questionnaire.quesiton.choices.number")),
+                makeEntry(QuestionType.MULTI_SELECT, getResource("questionnaire.quesiton.choices.multiselect")),
+                makeEntry(QuestionType.SMART_SELECT, getResource("questionnaire.quesiton.choices.smartselect")),
+                makeEntry(QuestionType.SINGLE_SELECT, getResource("questionnaire.quesiton.choices.singleselect"))
         );
     }
 
@@ -177,5 +201,24 @@ public class Question implements Serializable {
             result = min != null && max != null && min > max;
         }
         return result;
+    }
+
+    public String getCurrentSmartChoice() {
+        return currentSmartChoice;
+    }
+
+    public void setCurrentSmartChoice(String currentSmartChoice) {
+        this.currentSmartChoice = currentSmartChoice;
+    }
+
+    public List<String> getCurrentSmartChoiceTags() {
+        return currentSmartChoiceTags;
+    }
+
+    public String getCurrentSmartChoiceTag(int index) {
+        if (index >= currentSmartChoiceTags.size()) {
+            currentSmartChoiceTags.add(EMPTY);
+        }
+        return currentSmartChoiceTags.get(index);
     }
 }
