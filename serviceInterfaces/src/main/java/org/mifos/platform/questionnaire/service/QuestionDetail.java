@@ -35,7 +35,7 @@ public class QuestionDetail implements Serializable {
     private String shortName;
     private QuestionType type;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
-    private List<String> answerChoices;
+    private List<ChoiceDetail> answerChoices;
     private Integer numericMin;
     private Integer numericMax;
 
@@ -48,19 +48,11 @@ public class QuestionDetail implements Serializable {
     }
 
     public QuestionDetail(Integer id, String text, String shortName, QuestionType type) {
-        this(id, text, shortName, type, new ArrayList<String>());
-    }
-
-    public QuestionDetail(String title, QuestionType type, List<String> answerChoices) {
-        this(0, title, title, type, answerChoices);
-    }
-
-    public QuestionDetail(Integer id, String text, String shortName, QuestionType type, List<String> answerChoices) {
         this.id = id;
         this.text = text;
         this.shortName = shortName;
         this.type = type;
-        this.answerChoices = answerChoices;
+        this.answerChoices = new ArrayList<ChoiceDetail>();
     }
 
     public Integer getId() {
@@ -99,11 +91,11 @@ public class QuestionDetail implements Serializable {
         this.shortName = StringUtils.trim(this.shortName);
     }
 
-    public List<String> getAnswerChoices() {
+    public List<ChoiceDetail> getAnswerChoices() {
         return answerChoices;
     }
 
-    public void setAnswerChoices(List<String> answerChoices) {
+    public void setAnswerChoices(List<ChoiceDetail> answerChoices) {
         this.answerChoices = answerChoices;
     }
 
@@ -140,11 +132,25 @@ public class QuestionDetail implements Serializable {
         return numericMax;
     }
 
-    public void addAnswerChoice(String answerChoice) {
+    public void addAnswerChoice(ChoiceDetail answerChoice) {
         answerChoices.add(answerChoice);
     }
 
     public void removeAnswerChoice(int choiceIndex) {
         answerChoices.remove(choiceIndex);
+    }
+
+    public void addTag(int choiceIndex, String tag) {
+        if (choiceIndex < answerChoices.size()) {
+            answerChoices.get(choiceIndex).addTag(tag);
+        }
+    }
+
+    public boolean isSmartSelect() {
+        return QuestionType.SMART_SELECT.equals(type);
+    }
+
+    public void removeTagForChoice(int choiceIndex, int tagIndex) {
+        answerChoices.get(choiceIndex).removeTag(tagIndex);
     }
 }

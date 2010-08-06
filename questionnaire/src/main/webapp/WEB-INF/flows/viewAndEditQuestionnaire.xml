@@ -9,6 +9,8 @@
         <on-entry>
             <set name="flowScope.backPageUrl" value="requestParameters.backPageUrl" type="string"></set>
             <set name="flowScope.selectedQuestionnaireIndex" value="0" type="int"></set>
+            <set name="flowScope.questionGroupDetails.entityId" value="requestParameters.entityId" type="int"></set>
+            <set name="flowScope.questionGroupDetails.creatorId" value="requestParameters.creatorId" type="int"></set>
         </on-entry>
         <if test="requestParameters.instanceId == null" then="displayResponses" else="displayResponse"/>
     </decision-state>
@@ -33,10 +35,6 @@
     </view-state>
 
     <view-state id="questionnaire" model="questionGroupDetails">
-        <on-entry>
-            <set name="flowScope.questionGroupDetails.creatorId" value="externalContext.sessionMap.creatorId" type="int"></set>
-            <set name="flowScope.questionGroupDetails.entityId" value="externalContext.sessionMap.entityId" type="int"></set>
-        </on-entry>
 		<transition on="saveQuestionnaire" to="saveQuestionnaire"/>
 		<transition on="cancel" to="viewDetails" bind="false" history="discard"/>
     </view-state>

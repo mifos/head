@@ -412,6 +412,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         loanActionForm.setDisbursementDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(),
                 SessionUtils.getAttribute(PROPOSED_DISBURSAL_DATE, request).toString()));
 
+        if (isRedoOperation(request.getParameter(PERSPECTIVE))) {
+            loanActionForm.setDisbursementDate("");
+        }
+
         loanActionForm.setCustomFields(loanCreationDetailsDto.getCustomFields());
         loanActionForm.setDefaultFees(loanCreationDetailsDto.getDefaultFees());
 

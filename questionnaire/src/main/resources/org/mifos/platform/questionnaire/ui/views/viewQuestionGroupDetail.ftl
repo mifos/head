@@ -19,58 +19,67 @@
 *  explanation of the license and how it is applied.
 --]
 [#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
+[#import "newblueprintmacros.ftl" as mifos]
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-<div class="sidebar ht950">
-    [#include "adminLeftPane.ftl" /]
-</div>
-<div class="content leftMargin180">
-    <span id="page.id" title="view_question_groups_details"/></span>
-
-    <div class="fontnormal">
-        [#if error_message_code??]
-            [@spring.message error_message_code/]
-        [#else]
-            [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":"viewQuestionGroups.ftl",Request.questionGroupDetail.title:""}/]
-            [@mifos.crumbpairs breadcrumb/]
-            <div class="marginLeft30">
-            	[#assign boolean_text_yes][@spring.message "questionnaire.yes"/][/#assign]
-		        [#assign boolean_text_no][@spring.message "questionnaire.no"/][/#assign]
-                <div id="questionGroup.title" class="orangeheading marginTop15">
-                    ${Request.questionGroupDetail.title}
-                </div>
-                <div id="questionGroup.appliesTo" class="marginTop15">
-                    [@spring.message "questionnaire.questionGroupAppliesTo"/]: ${Request.eventSources[Request.questionGroupDetail.eventSourceId]}
-                </div>
-                <div id="questionGroup.editable">
-                    [@spring.message "questionnaire.editable"/]: ${Request.questionGroupDetail.editable?string(boolean_text_yes, boolean_text_no)}
-                </div>
-                <div id="questionGroup.sections" class="marginTop15">
-                    [#list Request.questionGroupDetail.sections as section]
-                        <b>${section.name}</b><br/>
-                        <table id="sections.table.${section.name}" name="sections.table.${section.name}">
-                         <tr>
-                             <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.name"/]</td>
-                             <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.mandatory"/]</td>
-                         </tr>
-                        [#list section.sectionQuestions as sectionQuestion]
-                             <tr>
-                                 <td class="drawtablerow" width="50%">${sectionQuestion.title}</td>
-                                 <td class="drawtablerow" width="50%">
-                                     [#if sectionQuestion.mandatory]
-                                         [@spring.message "questionnaire.yes"/]
-                                     [#else]
-                                         [@spring.message "questionnaire.no"/]
-                                     [/#if]
-                                 </td>
-                             </tr>
-                        [/#list]
-                        </table>
-                    [/#list]
+<div class="colmask leftmenu">
+    <div class="colleft">
+        <div class="col1wrap">
+            <div class="col1">
+            <div class="main_content">
+                <span id="page.id" title="view_question_groups_details"/></span>
+                [#if error_message_code??]
+                    [@spring.message error_message_code/]
+                [#else]
+                    [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":"viewQuestionGroups.ftl",Request.questionGroupDetail.title:""}/]
+                    [@mifos.crumbpairs breadcrumb/]
+                <div class="content_panel">
+                        <div class="marginLeft30">
+                            [#assign boolean_text_yes][@spring.message "questionnaire.yes"/][/#assign]
+                            [#assign boolean_text_no][@spring.message "questionnaire.no"/][/#assign]
+                            <h1 id="questionGroup.title">
+                                ${Request.questionGroupDetail.title}
+                            </h1>
+                            <div id="questionGroup.appliesTo" class="marginTop15">
+                                [@spring.message "questionnaire.questionGroupAppliesTo"/]: ${Request.eventSources[Request.questionGroupDetail.eventSourceId]}
+                            </div>
+                            <div id="questionGroup.editable">
+                                [@spring.message "questionnaire.editable"/]: ${Request.questionGroupDetail.editable?string(boolean_text_yes, boolean_text_no)}
+                            </div>
+                            <div id="questionGroup.sections" class="marginTop15">
+                                [#list Request.questionGroupDetail.sections as section]
+                                    <b>${section.name}</b><br/>
+                                    <table id="sections.table.${section.name}" name="sections.table.${section.name}">
+                                     <tr>
+                                         <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.name"/]</td>
+                                         <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.mandatory"/]</td>
+                                     </tr>
+                                    [#list section.sectionQuestions as sectionQuestion]
+                                         <tr>
+                                             <td class="drawtablerow" width="50%">${sectionQuestion.title}</td>
+                                             <td class="drawtablerow" width="50%">
+                                                 [#if sectionQuestion.mandatory]
+                                                     [@spring.message "questionnaire.yes"/]
+                                                 [#else]
+                                                     [@spring.message "questionnaire.no"/]
+                                                 [/#if]
+                                             </td>
+                                         </tr>
+                                    [/#list]
+                                    </table>
+                                [/#list]
+                            </div>
+                        </div>
+                    [/#if]
                 </div>
             </div>
-        [/#if]
+         </div>
+        </div>
+        <div class="col2">
+            <div class="side_bar">
+                [#include "newadminLeftPane.ftl" /]
+            </div>
+        </div>
     </div>
 </div>
 [@mifos.footer/]

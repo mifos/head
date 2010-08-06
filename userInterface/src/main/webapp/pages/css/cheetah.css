@@ -234,7 +234,7 @@ table#login-table td#login-submit {
 
 #login-page-header {
    background-attachment: scroll;
-   background-image: url(../images/logo.gif);
+   background-image: url(../framework/images/logo.gif);
    background-repeat: no-repeat;
    background-position: left top;
    background-color: white;

@@ -20,16 +20,16 @@
 package org.mifos.platform.questionnaire.matchers;
 
 import org.hamcrest.Description;
-import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.mifos.platform.questionnaire.domain.QuestionChoiceEntity;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
 @SuppressWarnings("PMD")
 public class QuestionChoicesMatcher extends TypeSafeMatcher<List<QuestionChoiceEntity>> {
-    private List<QuestionChoiceEntity> questionChoices;
+    private final List<QuestionChoiceEntity> questionChoices;
 
     public QuestionChoicesMatcher(List<QuestionChoiceEntity> questionChoices) {
         this.questionChoices = questionChoices;
@@ -39,7 +39,7 @@ public class QuestionChoicesMatcher extends TypeSafeMatcher<List<QuestionChoiceE
     public boolean matchesSafely(List<QuestionChoiceEntity> questionChoices) {
         if (this.questionChoices.size() == questionChoices.size()) {
             for (QuestionChoiceEntity questionChoice : this.questionChoices) {
-                assertThat(questionChoices, Matchers.hasItem(new QuestionChoiceMatcher(questionChoice)));
+                assertThat(questionChoices, hasItem(new QuestionChoiceMatcher(questionChoice)));
             }
             return true;
         }

@@ -19,31 +19,43 @@
 *  explanation of the license and how it is applied.
 --]
 [#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
+[#import "newblueprintmacros.ftl" as mifos]
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-<div class="sidebar ht950">
-    [#include "adminLeftPane.ftl" /]
-</div>
-<div class="content leftMargin180">
-    <span id="page.id" title="view_questions"/></span>
+<div class="colmask leftmenu">
+    <div class="colleft">
+        <div class="col1wrap">
+            <div class="col1">
+            <div class="main_content">
 
-    [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":""}/]
-    [@mifos.crumbpairs breadcrumb/]
+                <span id="page.id" title="view_questions"/></span>
 
-    <div class="fontnormal marginLeft30">
-        <div class="orangeheading marginTop15">
-            [@spring.message "questionnaire.view.questions"/]
+                [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":""}/]
+                [@mifos.crumbpairs breadcrumb/]
+
+               <div class="content_panel">
+                    <h1>
+                        [@spring.message "questionnaire.view.questions"/]
+                    </h1>
+                    <p>
+                        [@spring.message "questionnaire.create.question.prompt"/]
+                        <a href="createQuestion.ftl">[@spring.message "questionnaire.create.question.link"/]</a>
+                    </p>
+                    <ul class="questions">
+                        [#list questions as question]
+                        <li>
+                            <a href="viewQuestionDetail.ftl?questionId=${question.id}" id="questionId_${question.id}">${question.title}</a>
+                        </li>
+                        [/#list]
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="marginTop15">
-            [@spring.message "questionnaire.create.question.prompt"/]
-            <a href="createQuestion.ftl">[@spring.message "questionnaire.create.question.link"/]</a>
         </div>
-        <div class="marginTop15">
-            [#list questions as question]
-                <img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/>
-                <a href="viewQuestionDetail.ftl?questionId=${question.id}" id="questionId_${question.id}">${question.title}<br/></a>
-            [/#list]
+        <div class="col2">
+            <div class="side_bar">
+                [#include "newadminLeftPane.ftl" /]
+            </div>
         </div>
     </div>
 </div>

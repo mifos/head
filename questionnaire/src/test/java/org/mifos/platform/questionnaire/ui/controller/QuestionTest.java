@@ -20,20 +20,24 @@
 
 package org.mifos.platform.questionnaire.ui.controller;
 
-import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.ui.model.Question;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionTest {
@@ -49,9 +53,13 @@ public class QuestionTest {
         question.addAnswerChoice();
         question.setCurrentChoice("choice3");
         question.addAnswerChoice();
-        Assert.assertThat(question.getChoices().size(), is(4));
-        Assert.assertEquals(question.getChoices(), Arrays.asList("choice1", "choice2", "choice1", "choice3"));
-        Assert.assertTrue(StringUtils.equals(question.getCommaSeparateChoices(), "choice1, choice2, choice1, choice3"));
+        assertThat(question.getChoices().size(), is(4));
+        assertThat(question.getCurrentSmartChoiceTags().size(), is(4));
+        assertEquals("choice1", question.getChoices().get(0).getChoiceText());
+        assertEquals("choice2", question.getChoices().get(1).getChoiceText());
+        assertEquals("choice1", question.getChoices().get(2).getChoiceText());
+        assertEquals("choice3", question.getChoices().get(3).getChoiceText());
+        assertEquals("choice1, choice2, choice1, choice3", question.getCommaSeparateChoices());
     }
 
     @Test
@@ -63,11 +71,14 @@ public class QuestionTest {
         question.addAnswerChoice();
         question.setCurrentChoice("choice1");
         question.addAnswerChoice();
-        Assert.assertEquals(question.getChoices(), Arrays.asList("choice1", "choice2", "choice1"));
+        assertEquals("choice1", question.getChoices().get(0).getChoiceText());
+        assertEquals("choice2", question.getChoices().get(1).getChoiceText());
+        assertEquals("choice1", question.getChoices().get(2).getChoiceText());
         question.removeChoice(0);
-        Assert.assertEquals(question.getChoices(), Arrays.asList("choice2", "choice1"));
+        assertEquals("choice2", question.getChoices().get(0).getChoiceText());
+        assertEquals("choice1", question.getChoices().get(1).getChoiceText());
         question.removeChoice(1);
-        Assert.assertEquals(question.getChoices(), Arrays.asList("choice2"));
+        assertEquals("choice2", question.getChoices().get(0).getChoiceText());
     }
 
     @Test
@@ -83,26 +94,133 @@ public class QuestionTest {
     public void testQuestionTypeConversion() {
         Question question = new Question(new QuestionDetail());
         question.setType("Number");
-        Assert.assertThat(question.getType(), is("Number"));
+        assertThat(question.getType(), is("Number"));
         question.setType("Free Text");
-        Assert.assertThat(question.getType(), is("Free Text"));
+        assertThat(question.getType(), is("Free Text"));
         question.setType("Date");
-        Assert.assertThat(question.getType(), is("Date"));
+        assertThat(question.getType(), is("Date"));
         question.setType("Single Select");
-        Assert.assertThat(question.getType(), is("Single Select"));
+        assertThat(question.getType(), is("Single Select"));
         question.setType("Number");
-        Assert.assertThat(question.getType(), is("Number"));
+        assertThat(question.getType(), is("Number"));
         question.setType("Multi Select");
-        Assert.assertThat(question.getType(), is("Multi Select"));
+        assertThat(question.getType(), is("Multi Select"));
         question.setType("Multi Selects");
         Assert.assertNull(question.getType());
     }
 
+    @Test
+    public void testAddSmartChoice() {
+        Question question = new Question(new QuestionDetail());
+        question.setCurrentSmartChoice("Choice1");
+        question.addAnswerSmartChoice();
+        assertThat(question.getCurrentSmartChoice(), is(nullValue()));
+        assertThat(question.getCurrentSmartChoiceTags().size(), is(1));
+        assertThat(question.getCurrentSmartChoiceTags().get(0), is(""));
+        question.setCurrentSmartChoice("Choice2");
+        question.addAnswerSmartChoice();
+        assertThat(question.getCurrentSmartChoice(), is(nullValue()));
+        assertThat(question.getCurrentSmartChoiceTags().size(), is(2));
+        assertThat(question.getCurrentSmartChoiceTags().get(0), is(""));
+        assertThat(question.getCurrentSmartChoiceTags().get(1), is(""));
+    }
+
+    @Test
+    public void testAddSmartChoiceTag() {
+        QuestionDetail questionDetail = new QuestionDetail();
+        Question question = new Question(questionDetail);
+        question.setCurrentSmartChoice("Choice1");
+        question.addAnswerSmartChoice();
+        question.setCurrentSmartChoice("Choice2");
+        question.addAnswerSmartChoice();
+        question.getCurrentSmartChoiceTags().set(1, "Tag1");
+        question.addSmartChoiceTag(0);
+        assertThat(questionDetail.getAnswerChoices().get(0).getTags().size(), is(0));
+        assertThat(questionDetail.getAnswerChoices().get(1).getTags().size(), is(0));
+        question.addSmartChoiceTag(1);
+        assertThat(questionDetail.getAnswerChoices().get(1).getTags().get(0), is("Tag1"));
+        assertThat(question.getCurrentSmartChoiceTags().get(1), is(""));
+    }
+
+    @Test
+    public void testAddSmartChoiceTagUptoFiveTags() {
+        QuestionDetail questionDetail = new QuestionDetail();
+        Question question = new Question(questionDetail);
+        question.setCurrentSmartChoice("Choice1");
+        question.addAnswerSmartChoice();
+        question.getCurrentSmartChoiceTags().set(0, "Tag_1");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag_2");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag_3");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag_4");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag_5");
+        question.addSmartChoiceTag(0);
+        assertThat(questionDetail.getAnswerChoices().get(0).getTags().size(), is(5));
+        question.getCurrentSmartChoiceTags().set(0, "Tag_6");
+        question.addSmartChoiceTag(0);
+        assertThat(questionDetail.getAnswerChoices().get(0).getTags().size(), is(5));
+        assertThat(question.getCurrentSmartChoiceTags().get(0), is(""));
+    }
+
+    @Test
+    public void testAddSmartChoiceTagDoesnotAllowDuplicates() {
+        QuestionDetail questionDetail = new QuestionDetail();
+        Question question = new Question(questionDetail);
+        question.setCurrentSmartChoice("Choice1");
+        question.addAnswerSmartChoice();
+        question.getCurrentSmartChoiceTags().set(0, "Tag_1");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag_1");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag_2");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag_3");
+        question.addSmartChoiceTag(0);
+        assertThat(questionDetail.getAnswerChoices().get(0).getTags().size(), is(3));
+    }
+
+    @Test
+    public void testRemoveChoiceTag() {
+        Question question = new Question(new QuestionDetail());
+        question.setCurrentSmartChoice("Choice1");
+        question.addAnswerSmartChoice();
+        question.getCurrentSmartChoiceTags().set(0, "Tag1");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag2");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag3");
+        question.addSmartChoiceTag(0);
+        question.getCurrentSmartChoiceTags().set(0, "Tag4");
+        question.addSmartChoiceTag(0);
+        question.removeChoiceTag("0_2");
+        assertThat(question.getQuestionDetail().getAnswerChoices().size(), is(1));
+        assertThat(question.getQuestionDetail().getAnswerChoices().get(0).getTags().size(), is(3));
+        assertThat(question.getQuestionDetail().getAnswerChoices().get(0).getTags().get(0), is("Tag1"));
+        assertThat(question.getQuestionDetail().getAnswerChoices().get(0).getTags().get(1), is("Tag2"));
+        assertThat(question.getQuestionDetail().getAnswerChoices().get(0).getTags().get(2), is("Tag4"));
+        question.removeChoiceTag("0_0");
+        question.removeChoiceTag("0_0");
+        question.removeChoiceTag("0_0");
+        assertThat(question.getQuestionDetail().getAnswerChoices().size(), is(1));
+        assertThat(question.getQuestionDetail().getAnswerChoices().get(0).getTags().size(), is(0));
+    }
 
     private void assertQuestion(String shortName, QuestionType questionType, String questionTypeString, List<String> choices) {
-        Question question = new Question(new QuestionDetail(123, "Question Text", shortName, questionType, choices));
-        Assert.assertThat(question.getTitle(), is(shortName));
-        Assert.assertThat(question.getType(), is(questionTypeString));
-        Assert.assertEquals(question.getChoices(), choices);
+        QuestionDetail questionDetail = new QuestionDetail(123, "Question Text", shortName, questionType);
+        List<ChoiceDetail> choiceDetails = getChoiceDetails(choices);
+        questionDetail.setAnswerChoices(choiceDetails);
+        Question question = new Question(questionDetail);
+        assertThat(question.getTitle(), is(shortName));
+        assertThat(question.getType(), is(questionTypeString));
+        assertEquals(question.getChoices(), choiceDetails);
+    }
+
+    private List<ChoiceDetail> getChoiceDetails(List<String> choices) {
+        List<ChoiceDetail> choiceDetails = new ArrayList<ChoiceDetail>();
+        for (String choice : choices) choiceDetails.add(new ChoiceDetail(choice));
+        return choiceDetails;
     }
 }

@@ -513,9 +513,7 @@ public class ClientCustAction extends CustAction {
         // John W - for breadcrumb or another other action downstream that exists business_key set (until refactored)
         ClientBO clientBO = (ClientBO) this.customerDao.findCustomerById(clientInformationDto.getClientDisplay().getCustomerId());
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, clientBO, request);
-
         setCurrentPageUrl(request, clientBO);
-        prepareSurveySelection(request, clientBO, userContext.getId());
         setQuestionGroupInstances(request, clientBO);
 
         return mapping.findForward(ActionForwards.get_success.toString());
@@ -543,31 +541,6 @@ public class ClientCustAction extends CustAction {
         String url = String.format("clientCustAction.do?globalCustNum=%s&recordOfficeId=%s&recordLoanOfficerId=%s",
                 clientBO.getGlobalCustNum(), officerId, loanOfficerId);
         return URLEncoder.encode(url, "UTF-8");
-    }
-
-    void prepareSurveySelection(HttpServletRequest request, ClientBO clientBO, short personnelId) {
-        HttpSession session = request.getSession();
-        session.setAttribute("source", "Client");
-        session.setAttribute("event", "View");
-        session.setAttribute("questionnaireFor", xmlEscape(clientBO.getDisplayName()));
-        session.setAttribute("entityId", clientBO.getCustomerId());
-        session.setAttribute("creatorId", personnelId);
-        session.setAttribute("urlMap", getUrlMap(clientBO, session));
-    }
-
-    private HashMap getUrlMap(ClientBO clientBO, HttpSession session) {
-        HashMap<String, String> urlMap = new LinkedHashMap<String, String>();
-        String officeName = xmlEscape(clientBO.getOffice().getOfficeName());
-        String clientName = xmlEscape(clientBO.getDisplayName());
-        Object randomNumber = session.getAttribute(Constants.RANDOMNUM);
-        String officeUrl = "custSearchAction.do?method=getOfficeHomePage&officeId=" + clientBO.getOfficeId()
-                + "&officeName=" + officeName
-                + "&randomNum=" + randomNumber;
-        String clientUrl = "clientCustAction.do?method=get&globalCustNum=" + xmlEscape(clientBO.getGlobalCustNum())
-                + "&randomNum=" + randomNumber;
-        urlMap.put(officeName, officeUrl);
-        urlMap.put(clientName, clientUrl);
-        return urlMap;
     }
 
     @TransactionDemarcate(joinToken = true)

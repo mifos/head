@@ -19,48 +19,60 @@
 *  explanation of the license and how it is applied.
 --]
 [#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
+[#import "newblueprintmacros.ftl" as mifos]
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="ClientsAndAccounts" /]
 <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
 <script src="pages/questionnaire/js/display.js" type="text/javascript"></script>        
-<div class="sidebar ht950">
-    [#include "ClientLeftPane.ftl" /]
-</div>
-<div class="content leftMargin180">
-    <span id="page.id" title="display_question_group_reponse"></span>
-    [#assign breadcrumb = Session.urlMap/]
-    [@mifos.crumbpairs breadcrumb "false"/]
-    <div class=" fontnormal marginLeft30">
-        <div class="orangeheading marginTop15">
-            ${questionGroupInstance.questionGroupTitle} - ${questionGroupInstance.dateCompletedAsString}
-        </div>
-        <form action="viewAndEditQuestionnaire.ftl?execution=${flowExecutionKey}" id="displayResponseForm"
-              name="displayResponseForm" method="post">
-            <input type="submit" id="_eventId_questionnaire" name="_eventId_questionnaire" value="" style="visibility:hidden"/>
-            <fieldset id="questionGroupInstance.questionGroupDetail.sections" class="bluetableborderFull marginTop15">
-                [#if questionGroupInstance.questionGroupDetail.active && questionGroupInstance.questionGroupDetail.editable]
-                    <span class="topRight">
-                        <a href="editQuestionnaire#" questionGroupInstanceDetailIndex="0">[@spring.message "questionnaire.edit"/]</a>
-                    </span>
+<div class="colmask leftmenu">
+    <div class="colleft">
+        <div class="col1wrap">
+            <div class="col1">
+            <div class="main_content">
+                <span id="page.id" title="display_question_group_reponse"></span>
+                [#if Session.urlMap??]
+                    [#assign breadcrumb = Session.urlMap/]
+                    [@mifos.crumbpairs breadcrumb "false"/]
                 [/#if]
-                [#list questionGroupInstance.questionGroupDetail.sectionDetails as sectionDetail]
-                <br/>
-                <span class="paddingleft10 fontnormalbold">${sectionDetail.name}</span>
-                <ol>
-                    [#list sectionDetail.questions as sectionQuestionDetail]
-                    <li>
-                        <label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
-                            ${sectionQuestionDetail.title}:</label>${sectionQuestionDetail.answer}
-                    </li>
-                    [/#list]
-                </ol>
-                [/#list]
-            </fieldset>
-            <div class="buttonWidth">
-                <input id="_eventId_cancel" name="_eventId_cancel" type="submit" class="buttn" value="[@spring.message "questionnaire.back.to.details"/]"/>
+                <div class="content_panel">
+                    <h1>
+                        ${questionGroupInstance.questionGroupTitle} - ${questionGroupInstance.dateCompletedAsString}
+                    </h1>
+                    <form action="viewAndEditQuestionnaire.ftl?execution=${flowExecutionKey}" id="displayResponseForm"
+                          name="displayResponseForm" method="post">
+                        <input type="submit" id="_eventId_questionnaire" name="_eventId_questionnaire" value="" style="visibility:hidden"/>
+                        <fieldset id="questionGroupInstance.questionGroupDetail.sections" class="bluetableborderFull marginTop15">
+                            [#if questionGroupInstance.questionGroupDetail.active && questionGroupInstance.questionGroupDetail.editable]
+                                <span class="topRight">
+                                    <a href="editQuestionnaire#" questionGroupInstanceDetailIndex="0">[@spring.message "questionnaire.edit"/]</a>
+                                </span>
+                            [/#if]
+                            [#list questionGroupInstance.questionGroupDetail.sectionDetails as sectionDetail]
+                            <br/>
+                            <span class="paddingleft10 fontnormalbold">${sectionDetail.name}</span>
+                            <ol>
+                                [#list sectionDetail.questions as sectionQuestionDetail]
+                                <li>
+                                    <label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
+                                        ${sectionQuestionDetail.title}:</label>${sectionQuestionDetail.answer}
+                                </li>
+                                [/#list]
+                            </ol>
+                            [/#list]
+                        </fieldset>
+                        <div class="buttonWidth">
+                            <input id="_eventId_cancel" name="_eventId_cancel" type="submit" class="buttn" value="[@spring.message "questionnaire.back.to.details"/]"/>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
+        </div>
+        </div>
+        <div class="col2">
+            <div class="side_bar">
+                [#include "newClientLeftPane.ftl" /]
+            </div>
+        </div>
     </div>
 </div>
 [@mifos.footer/]

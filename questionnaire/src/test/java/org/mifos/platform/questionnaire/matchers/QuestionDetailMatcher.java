@@ -22,14 +22,17 @@ package org.mifos.platform.questionnaire.matchers;
 import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
+import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
+
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
 @SuppressWarnings("PMD")
 public class QuestionDetailMatcher extends TypeSafeMatcher<QuestionDetail> {
 
-    private QuestionDetail questionDetail;
+    private final QuestionDetail questionDetail;
 
     public QuestionDetailMatcher(QuestionDetail questionDetail) {
         this.questionDetail = questionDetail;
@@ -41,7 +44,11 @@ public class QuestionDetailMatcher extends TypeSafeMatcher<QuestionDetail> {
                 && StringUtils.equals(questionDetail.getText(), this.questionDetail.getText())
                 && StringUtils.equals(questionDetail.getTitle(), this.questionDetail.getTitle())
                 && this.questionDetail.getType().equals(questionDetail.getType())) {
-            assertEquals(this.questionDetail.getAnswerChoices(), questionDetail.getAnswerChoices());
+            List<ChoiceDetail> choiceDetails = this.questionDetail.getAnswerChoices();
+            for (int i = 0, choiceDetailsSize = choiceDetails.size(); i < choiceDetailsSize; i++) {
+                ChoiceDetail choiceDetail = choiceDetails.get(i);
+                assertEquals(choiceDetail.getChoiceText(), questionDetail.getAnswerChoices().get(i).getChoiceText());
+            }
             return true;
         }
         return false;

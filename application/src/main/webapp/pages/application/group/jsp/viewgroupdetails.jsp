@@ -608,7 +608,14 @@ explanation of the license and how it is applied.
 								</c:otherwise>
 							</c:choose> <br>
 
-							<%--Historical data link--%> <span class="fontnormal"><a id="viewgroupdetails.link.viewHistoricalData"
+							<%--Historical data link--%>
+							<span class="fontnormal">
+                            <c:set var="questionnaireFor" scope="session" value="${groupInformationDto.groupDisplay.displayName}"/>
+                            <a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${groupInformationDto.groupDisplay.customerId}&event=Create&source=Group&backPageUrl=groupCustAction.do?method%3Dget%26globalAccountNum%3D${client.globalCustNum}%26recordOfficeId%3D${groupInformationDto.groupDisplay.branchId}%26recordLoanOfficerId%3D${groupInformationDto.groupDisplay.loanOfficerId}">
+                                <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
+                            </a>
+                            <br/>
+							<a id="viewgroupdetails.link.viewHistoricalData"
 								href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${groupInformationDto.groupDisplay.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 							<mifos:mifoslabel name="Group.viewhistoricaldata"
 								bundle="GroupUIResources"></mifos:mifoslabel> </a> <br>

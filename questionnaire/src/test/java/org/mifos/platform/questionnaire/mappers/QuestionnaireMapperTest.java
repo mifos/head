@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.business.EntityMaster;
 import org.mifos.platform.questionnaire.domain.AnswerType;
+import org.mifos.platform.questionnaire.domain.ChoiceTagEntity;
 import org.mifos.platform.questionnaire.domain.EventEntity;
 import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionChoiceEntity;
@@ -44,6 +45,7 @@ import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
+import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
@@ -58,12 +60,12 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -91,7 +93,7 @@ public class QuestionnaireMapperTest {
 
     @Before
     public void setUp() {
-        questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao,questionGroupInstanceDao);
+        questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao, questionGroupInstanceDao);
     }
 
     @Test
@@ -104,26 +106,55 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapMultiSelectQuestionDetailToQuestion() {
-        String choice1 = "choice1";
-        String choice2 = "choice2";
-        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.MULTI_SELECT, Arrays.asList(choice1, choice2));
+        ChoiceDetail choice1 = new ChoiceDetail("choice1");
+        ChoiceDetail choice2 = new ChoiceDetail("choice2");
+        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.MULTI_SELECT);
+        questionDefinition.setAnswerChoices(asList(choice1, choice2));
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
         assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.MULTISELECT));
         assertThat(question.getQuestionText(), is(TITLE));
         assertThat(question.getShortName(), is(TITLE));
-        assertThat(question.getChoices(), new QuestionChoicesMatcher(Arrays.asList(new QuestionChoiceEntity(choice1), new QuestionChoiceEntity(choice2))));
+        assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity(choice1.getChoiceText()), new QuestionChoiceEntity(choice2.getChoiceText()))));
+    }
+
+    @Test
+    public void shouldMapSmartSelectQuestionDetailToQuestion() {
+        ChoiceDetail choice1 = new ChoiceDetail("choice1");
+        choice1.setTags(asList("Tag1", "Tag2"));
+        ChoiceDetail choice2 = new ChoiceDetail("choice2");
+        choice2.setTags(asList("Tag3"));
+        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.SMART_SELECT);
+        questionDefinition.setAnswerChoices(asList(choice1, choice2));
+        QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
+        assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.SMARTSELECT));
+        assertThat(question.getQuestionText(), is(TITLE));
+        assertThat(question.getShortName(), is(TITLE));
+        assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(getChoiceEntity("choice1", "Tag1", "Tag2"), getChoiceEntity("choice2", "Tag3"))));
+    }
+
+    private QuestionChoiceEntity getChoiceEntity(String choiceText, String... tagTexts) {
+        QuestionChoiceEntity choiceEntity = new QuestionChoiceEntity(choiceText);
+        Set<ChoiceTagEntity> tags = new HashSet<ChoiceTagEntity>();
+        for (String tagText : tagTexts) {
+            ChoiceTagEntity choiceTagEntity = new ChoiceTagEntity();
+            choiceTagEntity.setTagText(tagText);
+            tags.add(choiceTagEntity);
+        }
+        choiceEntity.setTags(tags);
+        return choiceEntity;
     }
 
     @Test
     public void shouldMapSingleSelectQuestionDetailToQuestion() {
-        String choice1 = "choice1";
-        String choice2 = "choice2";
-        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.SINGLE_SELECT, Arrays.asList(choice1, choice2));
+        ChoiceDetail choice1 = new ChoiceDetail("choice1");
+        ChoiceDetail choice2 = new ChoiceDetail("choice2");
+        QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.SINGLE_SELECT);
+        questionDefinition.setAnswerChoices(asList(choice1, choice2));
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
         assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.SINGLESELECT));
         assertThat(question.getQuestionText(), is(TITLE));
         assertThat(question.getShortName(), is(TITLE));
-        assertThat(question.getChoices(), new QuestionChoicesMatcher(Arrays.asList(new QuestionChoiceEntity(choice1), new QuestionChoiceEntity(choice2))));
+        assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity(choice1.getChoiceText()), new QuestionChoiceEntity(choice2.getChoiceText()))));
     }
 
     @Test
@@ -145,9 +176,9 @@ public class QuestionnaireMapperTest {
         QuestionDetail questionDetail = questionnaireMapper.mapToQuestionDetail(question);
         assertQuestionDetail(questionDetail, TITLE, QuestionType.FREETEXT);
 
-        question = getQuestion(TITLE, AnswerType.MULTISELECT, Arrays.asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2")));
+        question = getQuestion(TITLE, AnswerType.MULTISELECT, asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2")));
         questionDetail = questionnaireMapper.mapToQuestionDetail(question);
-        assertQuestionDetail(questionDetail, TITLE, QuestionType.MULTI_SELECT, Arrays.asList("choice1", "choice2"));
+        assertQuestionDetail(questionDetail, TITLE, QuestionType.MULTI_SELECT, asList("choice1", "choice2"));
 
         question = getQuestion(TITLE, AnswerType.NUMBER);
         question.setNumericMin(10);
@@ -184,7 +215,7 @@ public class QuestionnaireMapperTest {
         Mockito.when(eventSourceDao.retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString())).thenReturn(new ArrayList());
         Mockito.when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
         EventSource eventSource = getEventSource("Create", "Client");
-        List<SectionDetail> sectionDetails = Arrays.asList(getSectionDefinition(SECTION_NAME));
+        List<SectionDetail> sectionDetails = asList(getSectionDefinition(SECTION_NAME));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, TITLE, eventSource, sectionDetails, true);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         assertQuestionGroup(questionGroup);
@@ -271,7 +302,7 @@ public class QuestionnaireMapperTest {
         question.setAnswerType(AnswerType.DATE);
         question.setChoices(new LinkedList<QuestionChoiceEntity>());
         sectionQuestion.setQuestion(question);
-        section.setQuestions(Arrays.asList(sectionQuestion));
+        section.setQuestions(asList(sectionQuestion));
         return section;
     }
 
@@ -322,7 +353,7 @@ public class QuestionnaireMapperTest {
         List<EventSourceEntity> events = getEventSourceEntities("Create", "Client", "Create Client");
         List<EventSource> eventSources = questionnaireMapper.mapToEventSources(events);
         assertThat(eventSources, is(notNullValue()));
-        assertThat(eventSources, new EventSourcesMatcher(Arrays.asList(getEventSource("Create", "Client", "Create Client"))));
+        assertThat(eventSources, new EventSourcesMatcher(asList(getEventSource("Create", "Client", "Create Client"))));
     }
 
     @Test
@@ -348,20 +379,22 @@ public class QuestionnaireMapperTest {
         Mockito.when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,10)).thenReturn(asList(questionGroupInstance));
         Mockito.when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,11)).thenReturn(asList(questionGroupInstance));
 
-        List<QuestionDetail> questionDetails1 = Arrays.asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
-        List<SectionDetail> sectionDetails1 = Arrays.asList(getSectionDetailWithQuestions(14, "Sec1", questionDetails1, "value",null));
+        List<QuestionDetail> questionDetails1 = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
+        List<SectionDetail> sectionDetails1 = asList(getSectionDetailWithQuestions(14, "Sec1", questionDetails1, "value",null));
         QuestionGroupDetail questionGroupDetail1 = new QuestionGroupDetail(10, "QG1", new EventSource("Create", "Client", null), sectionDetails1, true);
 
-        List<QuestionDetail> questionDetails2 = Arrays.asList(new QuestionDetail(13, "Question 2", "Question 2", QuestionType.DATE));
-        List<SectionDetail> sectionDetails2 = Arrays.asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails2, null,null));
+        List<QuestionDetail> questionDetails2 = asList(new QuestionDetail(13, "Question 2", "Question 2", QuestionType.DATE));
+        List<SectionDetail> sectionDetails2 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails2, null,null));
         QuestionGroupDetail questionGroupDetail2 = new QuestionGroupDetail(11, "QG2", new EventSource("Create", "Client", null), sectionDetails2, true);
-        
-        List<QuestionDetail> questionDetails3 = Arrays.asList(new QuestionDetail(13, "Question 2", "Question 2", QuestionType.MULTI_SELECT, Arrays.asList("a1","a2","a3")));
-        List<SectionDetail> sectionDetails3 = Arrays.asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails3, null,Arrays.asList("a2","a3")));
+
+        QuestionDetail questionDetail = new QuestionDetail(13, "Question 2", "Question 2", QuestionType.MULTI_SELECT);
+        questionDetail.setAnswerChoices(asList(new ChoiceDetail("a1"),new ChoiceDetail("a2"),new ChoiceDetail("a3")));
+        List<QuestionDetail> questionDetails3 = asList(questionDetail);
+        List<SectionDetail> sectionDetails3 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails3, null, asList("a2","a3")));
         QuestionGroupDetail questionGroupDetail3 = new QuestionGroupDetail(11, "QG2", new EventSource("Create", "Client", null), sectionDetails3, true);
 
         List<QuestionGroupInstance> questionGroupInstances =
-                questionnaireMapper.mapToQuestionGroupInstances(new QuestionGroupDetails(101, 201, Arrays.asList(questionGroupDetail1, questionGroupDetail2,questionGroupDetail3)));
+                questionnaireMapper.mapToQuestionGroupInstances(new QuestionGroupDetails(101, 201, asList(questionGroupDetail1, questionGroupDetail2,questionGroupDetail3)));
         assertThat(questionGroupInstances, is(notNullValue()));
         assertThat(questionGroupInstances.size(), is(3));
         QuestionGroupInstance questionGroupInstance1 = questionGroupInstances.get(0);
@@ -538,7 +571,7 @@ public class QuestionnaireMapperTest {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setId(id);
         questionGroup.setTitle(title);
-        questionGroup.setSections(Arrays.asList(sections));
+        questionGroup.setSections(asList(sections));
         return questionGroup;
     }
 
@@ -571,7 +604,10 @@ public class QuestionnaireMapperTest {
 
     private void assertQuestionDetail(QuestionDetail questionDetail, String title, QuestionType questionType, List<String> choices) {
         assertQuestionDetail(questionDetail, title, questionType);
-        Assert.assertEquals(choices, questionDetail.getAnswerChoices());
+        for (int i = 0, choicesSize = choices.size(); i < choicesSize; i++) {
+            String choice = choices.get(i);
+            Assert.assertEquals(choice, questionDetail.getAnswerChoices().get(i).getChoiceText());
+        }
     }
 
     private EventSource getEventSource(String event, String source) {

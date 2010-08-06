@@ -20,13 +20,7 @@ fieldset li {
     width: 100%;
     padding-bottom: 1em;
 }
-fieldset.right_section {
-    margin: 0;
-}
-fieldset.right_section label{
-    text-align: left;
-    width: auto;
-}
+
 
 fieldset.submit {
     width: auto;
@@ -34,14 +28,30 @@ fieldset.submit {
     padding-left: 15em;
 }
 
-label {
+fieldset label {
     float: left;
     width: 12em;
     margin-right: 1em;
     text-align: right;
     word-wrap:break-word;
 }
-
+fieldset.right_section {
+    margin: 0;
+}
+fieldset.right_section label{
+    text-align: left;
+    width: auto;
+}
+fieldset .questionList input {
+    float: left;
+}
+fieldset .questionList label {
+    text-align: left;
+    width: 15em;
+    margin: 0 0 0 5px;
+    float: none;
+    display: inline-block;
+}
 .allErrorsDiv {
     color:#FF0000;
     font-family:Arial,Verdana,Helvetica,sans-serif;
@@ -61,6 +71,30 @@ label {
     margin-right:1em;
     margin-left:1em;
     width:20em;
+    word-wrap:break-word;
+}
+
+.addTagStyle{
+    float:left;
+    margin-right:1em;
+    margin-left:1em;
+    width:10em;
+    word-wrap:break-word;
+}
+
+.tagStyle{
+    float:left;
+    margin-right:1em;
+    margin-left:1em;
+    width:30em;
+    word-wrap:break-word;
+}
+
+.removeStyle{
+    float:left;
+    margin-right:0em;
+    margin-left:1em;
+    width:5em;
     word-wrap:break-word;
 }
 
@@ -96,4 +130,10 @@ label {
 .topRight{
     float:right;
     margin:1em;
+}
+
+.removeIMG {
+	background:url(pages/framework/images/icon_remove.gif) no-repeat;
+	width:10px;
+	height:10px;
 }

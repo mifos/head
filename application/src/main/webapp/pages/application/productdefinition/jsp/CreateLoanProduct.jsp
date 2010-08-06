@@ -341,41 +341,6 @@ explanation of the license and how it is applied.
 									<td valign="top"><html-el:checkbox styleId="createLoanProduct.checkbox.loanCounter" property="loanCounter"
 										value="1" /></td>
 								</tr>
-								<!--<tr class="fontnormal">
-									<td align="right">
-									<span class="mandatorytext"> <font color="#FF0000">*</font></span>
-									<fmt:message key="product.maxAmount">
-									<fmt:param><mifos:mifoslabel
-										name="${ConfigurationConstants.LOAN}"
-										bundle="ProductDefUIResources" /></fmt:param>
-									</fmt:message>:</td>
-									<td valign="top"><mifos:decimalinput
-										property="maxLoanAmount" /></td>
-								</tr>
-
-								<tr class="fontnormal">
-									<td align="right">
-									<span class="mandatorytext"> <font color="#FF0000">*</font></span>
-									<fmt:message key="product.minAmount">
-									<fmt:param><mifos:mifoslabel
-										name="${ConfigurationConstants.LOAN}"
-										bundle="ProductDefUIResources" /></fmt:param>
-									</fmt:message>:</td>
-									<td valign="top"><mifos:decimalinput
-										property="minLoanAmount" /></td>
-								</tr>
-
-								<tr class="fontnormal">
-									<td align="right">
-									<fmt:message key="product.defaultAmount">
-									<fmt:param><mifos:mifoslabel
-										name="${ConfigurationConstants.LOAN}"
-										bundle="ProductDefUIResources" /></fmt:param>
-									</fmt:message>:</td>
-									<td valign="top"><mifos:decimalinput
-										property="defaultLoanAmount" /></td>
-								</tr>
-							-->
 								<table width="93%" border="0" cellpadding="3" cellspacing="0">
 									<tr>
 										<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
@@ -591,7 +556,7 @@ explanation of the license and how it is applied.
 													property="cycleLoanDefaultLoanAmt5" /></td>
 											</tr>
 											<tr>
-												<td class="drawtablerow">>4</td>
+												<td class="drawtablerow">&gt;4</td>
 												<td class="drawtablerow"><mifos:decimalinput size="10"
 													property="cycleLoanMinLoanAmt6" /></td>
 												<td class="drawtablerow"><mifos:decimalinput size="10"
@@ -739,26 +704,6 @@ explanation of the license and how it is applied.
 										showMeetingFrequency();
 									</script></td>
 									</tr>
-									<!--<tr class="fontnormal">
-										<td align="right"><mifos:mifoslabel mandatory="yes"
-											name="product.maxinst" bundle="ProductDefUIResources" /> :</td>
-										<td valign="top"><mifos:mifosnumbertext
-											property="maxNoInstallments" /></td>
-									</tr>
-									<tr class="fontnormal">
-										<td align="right"><mifos:mifoslabel mandatory="yes"
-											name="product.mininst" bundle="ProductDefUIResources" /> :</td>
-										<td valign="top"><mifos:mifosnumbertext
-											property="minNoInstallments" /></td>
-									</tr>
-									<tr class="fontnormal">
-										<td align="right"><span class="mandatorytext"></span> <mifos:mifoslabel
-											name="product.definst" bundle="ProductDefUIResources"
-											mandatory="yes" /> :</td>
-										<td valign="top"><mifos:mifosnumbertext
-											property="defNoInstallments" /></td>
-									</tr>
-									-->
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr class="fontnormal">
 											<td width="30%" align="right"><mifos:mifoslabel
@@ -782,12 +727,11 @@ explanation of the license and how it is applied.
 												bundle="ProductDefUIResources" /> &nbsp;&nbsp;&nbsp;</td>
 										</tr>
 										<tr>
-											<td colspan="2">
+											<td>&nbsp;</td><td>
 											<div id="install0" style="display: block;">
-											<table width="93%" border="0" cellpadding="3" cellspacing="0">
+											<table border="0" cellpadding="3" cellspacing="0">
 												<tr class="fontnormal">
-													<td width="30%" align="right">&nbsp;</td>
-													<td width="70%" valign="top">
+													<td valign="top">
 													<table width="100%" border="0" cellpadding="3"
 														cellspacing="0">
 														<tr>
@@ -814,10 +758,9 @@ explanation of the license and how it is applied.
 											</table>
 											</div>
 											<div id="install1" style="display: none;">
-											<table width="93%" border="0" cellpadding="3" cellspacing="0">
+											<table border="0" cellpadding="3" cellspacing="0">
 												<tr class="fontnormal">
-													<td width="30%" align="right">&nbsp;</td>
-													<td width="70%" valign="top">
+													<td valign="top">
 													<table width="100%" border="0" cellpadding="3"
 														cellspacing="0">
 														<tr>
@@ -915,10 +858,9 @@ explanation of the license and how it is applied.
 											<br>
 											</div>
 											<div id="install2" style="display: none;">
-											<table width="93%" border="0" cellpadding="3" cellspacing="0">
+											<table border="0" cellpadding="3" cellspacing="0">
 												<tr class="fontnormal">
-													<td width="30%" align="right">&nbsp;</td>
-													<td width="70%" valign="top">
+													<td valign="top">
 													<table width="100%" border="0" cellspacing="0"
 														cellpadding="3">
 														<tr>
@@ -978,7 +920,7 @@ explanation of the license and how it is applied.
 																size="10" property="defCycleInstallment5" /></td>
 														</tr>
 														<tr>
-															<td class="drawtablerow">>4</td>
+															<td class="drawtablerow">&gt;4</td>
 															<td class="drawtablerow"><mifos:mifosnumbertext
 																size="10" property="minCycleInstallment6" /></td>
 															<td class="drawtablerow"><mifos:mifosnumbertext
@@ -998,15 +940,6 @@ explanation of the license and how it is applied.
 											var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
 
 										<tr class="fontnormal" id="intdeddis">
-											<!--  
-											<td align="right">
-											<fmt:message key="product.deductedatdis">
-											<fmt:param><mifos:mifoslabel
-												name="${ConfigurationConstants.SERVICE_CHARGE}" 
-												bundle="ProductDefUIResources" /></fmt:param>
-											</fmt:message>
-											:</td>
-											-->
 											<td valign="top"><c:if
 												test="${repaymentSchedulesIndependentOfMeetingIsEnabled == '0'}">
 
@@ -1020,17 +953,12 @@ explanation of the license and how it is applied.
 
 												<html-el:checkbox property="intDedDisbursementFlag"
 													style="visibility:hidden" value="1" onclick="fnIntDesbr();" />
-											</c:if></td>
+											</c:if></td><td>&nbsp;</td>
 										</tr>
 										<tr class="fontnormal">
-											<!--  
-											<td align="right"><mifos:mifoslabel
-												name="product.prinlastinst" bundle="ProductDefUIResources" />
-											:</td>
-											-->
 											<td valign="top"><html-el:checkbox
 												property="prinDueLastInstFlag" value="1"
-												style="visibility:hidden" /></td>
+												style="visibility:hidden" /></td><td>&nbsp;</td>
 										</tr>
 										<tr class="fontnormal" id="gracepertype">
 											<td align="right"><mifos:mifoslabel

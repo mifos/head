@@ -19,33 +19,51 @@
 *  explanation of the license and how it is applied.
 --]
 [#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
+[#import "newblueprintmacros.ftl" as mifos]
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-<div class="sidebar ht950">
-    [#include "adminLeftPane.ftl" /]
-</div>
-<div class="content leftMargin180">
-    <span id="page.id" title="view_question_groups"/></span>
 
-    [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":""}/]
-    [@mifos.crumbpairs breadcrumb/]
+<div class="colmask leftmenu">
+    <div class="colleft">
+        <div class="col1wrap">
+            <div class="col1">
+            <div class="main_content">
+                <span id="page.id" title="view_question_groups"/></span>
 
-    <div class=" fontnormal marginLeft30">
-        <div class="orangeheading marginTop15">
-            [@spring.message "questionnaire.view.question.groups"/]
+                [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":""}/]
+                [@mifos.crumbpairs breadcrumb/]
+
+                <div class="content_panel">
+                    <h1>
+                        [@spring.message "questionnaire.view.question.groups"/]
+                    </h1>
+
+                    <p>
+                        [@spring.message "questionnaire.create.question.group.prompt"/]
+                        <a href="createQuestionGroup.ftl">[@spring.message
+                            "questionnaire.create.question.group.link"/]</a>
+                    </p>
+
+                    <div id="questionGroupList">
+                        <ul class="questions">
+                            [#list questionGroups as questionGroup]
+                            <li>
+                                <a href="viewQuestionGroupDetail.ftl?questionGroupId=${questionGroup.id}"
+                                   id="questionGroupId_${questionGroup.id}">${questionGroup.title}</a>
+                            </li>
+                            [/#list]
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="marginTop15">
-            [@spring.message "questionnaire.create.question.group.prompt"/]
-            <a href="createQuestionGroup.ftl">[@spring.message "questionnaire.create.question.group.link"/]</a>
         </div>
-        <div id="questionGroupList" class="marginTop15">
-            [#list questionGroups as questionGroup]
-                <img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/>
-                <a href="viewQuestionGroupDetail.ftl?questionGroupId=${questionGroup.id}" id="questionGroupId_${questionGroup.id}">${questionGroup.title}</a>
-                <br/>
-            [/#list]
+        <div class="col2">
+            <div class="side_bar">
+                [#include "newadminLeftPane.ftl" /]
+            </div>
         </div>
     </div>
 </div>
+
 [@mifos.footer/]

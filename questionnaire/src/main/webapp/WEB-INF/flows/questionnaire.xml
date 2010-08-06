@@ -6,10 +6,11 @@
     <var name="questionGroupDetails" class="org.mifos.platform.questionnaire.service.QuestionGroupDetails" />
 
     <on-start>
-        <evaluate expression="questionnaireServiceFacade.getQuestionGroups(externalContext.sessionMap.event, externalContext.sessionMap.source)"
+        <evaluate expression="questionnaireServiceFacade.getQuestionGroups(requestParameters.event, requestParameters.source)"
                 result="questionGroupDetails.details"/>
-        <set name="flowScope.questionGroupDetails.creatorId" value="externalContext.sessionMap.creatorId" type="int"></set>
-        <set name="flowScope.questionGroupDetails.entityId" value="externalContext.sessionMap.entityId" type="int"></set>
+        <set name="flowScope.questionGroupDetails.creatorId" value="requestParameters.creatorId" type="int"></set>
+        <set name="flowScope.questionGroupDetails.entityId" value="requestParameters.entityId" type="int"></set>
+        <set name="flowScope.backPageUrl" value="requestParameters.backPageUrl" type="string"></set>
     </on-start>
 
     <view-state id="selectQuestionnaire">
@@ -33,6 +34,6 @@
         <transition on="failure" to="questionnaire"/>
     </action-state>
 
-    <end-state id="viewClientDetails" view="externalRedirect:contextRelative:/clientCustAction.do?method=get" />
+    <end-state id="viewClientDetails" view="externalRedirect:contextRelative:/${flowScope.backPageUrl}" />
 
 </flow>

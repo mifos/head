@@ -22,10 +22,15 @@ package org.mifos.platform.questionnaire.matchers;
 import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
+import org.mifos.platform.questionnaire.domain.ChoiceTagEntity;
 import org.mifos.platform.questionnaire.domain.QuestionChoiceEntity;
+
+import static org.hamcrest.Matchers.hasItem;
+import static org.junit.Assert.assertThat;
+
 @SuppressWarnings("PMD")
 class QuestionChoiceMatcher extends TypeSafeMatcher<QuestionChoiceEntity> {
-    private QuestionChoiceEntity questionChoice;
+    private final QuestionChoiceEntity questionChoice;
 
     public QuestionChoiceMatcher(QuestionChoiceEntity questionChoice) {
         this.questionChoice = questionChoice;
@@ -33,7 +38,15 @@ class QuestionChoiceMatcher extends TypeSafeMatcher<QuestionChoiceEntity> {
 
     @Override
     public boolean matchesSafely(QuestionChoiceEntity questionChoice) {
-        return StringUtils.equals(questionChoice.getChoiceText(), this.questionChoice.getChoiceText());
+        if (StringUtils.equals(questionChoice.getChoiceText(), this.questionChoice.getChoiceText())) {
+            if (this.questionChoice.getTags() != null) {
+                for (ChoiceTagEntity choiceTagEntity : this.questionChoice.getTags()) {
+                    assertThat(questionChoice.getTags(), hasItem(new ChoiceTagMatcher(choiceTagEntity)));
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override

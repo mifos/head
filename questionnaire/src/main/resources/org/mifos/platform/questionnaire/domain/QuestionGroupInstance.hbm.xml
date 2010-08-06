@@ -36,7 +36,7 @@
     <sql-query name="QuestionGroupInstance.retrieveLatestQuestionGroupInstancesByEntityIdAndEventSourceId">
         <return class="org.mifos.platform.questionnaire.domain.QuestionGroupInstance"/>
               <![CDATA[
-                    select
+                    select distinct
                         question_group_instance.id,
                         question_group_instance.question_group_id,
                         question_group_instance.entity_id,
@@ -56,7 +56,7 @@
                         group by question_group.title, question_group.id
                     )t
                     join question_group on (question_group_instance.question_group_id = question_group.id and question_group.id=t.id)
-                    where
+                    where entity_id = :ENTITY_ID and
                     question_group_instance.version_id = t.version_id
                     order by question_group_instance.date_conducted desc, question_group.title
               ]]>

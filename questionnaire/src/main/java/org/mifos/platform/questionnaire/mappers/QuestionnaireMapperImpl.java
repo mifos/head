@@ -21,6 +21,7 @@
 package org.mifos.platform.questionnaire.mappers;
 
 import org.mifos.platform.questionnaire.domain.AnswerType;
+import org.mifos.platform.questionnaire.domain.ChoiceTagEntity;
 import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionChoiceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionEntity;
@@ -36,6 +37,7 @@ import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
+import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
@@ -50,6 +52,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -107,22 +110,36 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return mapToQuestionDetail(question, mapToQuestionType(question.getAnswerTypeAsEnum()));
     }
 
-    private List<String> mapToAnswerChoices(List<QuestionChoiceEntity> choices) {
-        List<String> questionChoices = new LinkedList<String>();
+    private List<ChoiceDetail> mapToQuestionChoices(List<QuestionChoiceEntity> choices) {
+        List<ChoiceDetail> questionChoices = new LinkedList<ChoiceDetail>();
         for (QuestionChoiceEntity questionChoice : choices) {
-            questionChoices.add(questionChoice.getChoiceText());
+            questionChoices.add(mapToChoiceDetail(questionChoice));
         }
         return questionChoices;
     }
 
+    private ChoiceDetail mapToChoiceDetail(QuestionChoiceEntity questionChoice) {
+        ChoiceDetail choiceDetail = new ChoiceDetail(questionChoice.getChoiceText());
+        mapToChoiceTags(choiceDetail, questionChoice.getTags());
+        return choiceDetail;
+    }
+
+    private void mapToChoiceTags(ChoiceDetail choiceDetail, Set<ChoiceTagEntity> choiceTagEntities) {
+        if (isNotEmpty(choiceTagEntities)) {
+            List<String> choiceTags = new ArrayList<String>();
+            for (ChoiceTagEntity tag : choiceTagEntities) {
+                choiceTags.add(tag.getTagText());
+            }
+            choiceDetail.setTags(choiceTags);
+        }
+    }
 
     @Override
     public QuestionEntity mapToQuestion(QuestionDetail questionDetail) {
         QuestionEntity question = new QuestionEntity();
         question.setShortName(questionDetail.getTitle());
         question.setQuestionText(questionDetail.getTitle());
-        QuestionType type = questionDetail.getType();
-        question.setAnswerType(mapToAnswerType(type));
+        question.setAnswerType(mapToAnswerType(questionDetail.getType()));
         question.setQuestionState(QuestionState.ACTIVE);
         question.setChoices(mapToChoices(questionDetail.getAnswerChoices()));
         mapBoundsForNumericQuestionDetail(questionDetail, question);
@@ -136,12 +153,29 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         }
     }
 
-    private List<QuestionChoiceEntity> mapToChoices(List<String> choices) {
+    private List<QuestionChoiceEntity> mapToChoices(List<ChoiceDetail> choices) {
         List<QuestionChoiceEntity> questionChoices = new LinkedList<QuestionChoiceEntity>();
-        for (String choice : choices) {
-            questionChoices.add(new QuestionChoiceEntity(choice));
+        if (CollectionUtils.isNotEmpty(choices)) {
+            for (ChoiceDetail choice : choices) {
+                questionChoices.add(mapToChoice(choice));
+            }
         }
         return questionChoices;
+    }
+
+    private QuestionChoiceEntity mapToChoice(ChoiceDetail choice) {
+        QuestionChoiceEntity choiceEntity = new QuestionChoiceEntity(choice.getChoiceText());
+        List<String> tags = choice.getTags();
+        if (isNotEmpty(tags)) {
+            Set<ChoiceTagEntity> choiceTagEntities = new LinkedHashSet<ChoiceTagEntity>();
+            for (String tag : tags) {
+                ChoiceTagEntity choiceTagEntity = new ChoiceTagEntity();
+                choiceTagEntity.setTagText(tag);
+                choiceTagEntities.add(choiceTagEntity);
+            }
+            choiceEntity.setTags(choiceTagEntities);
+        }
+        return choiceEntity;
     }
 
     @Override
@@ -241,8 +275,9 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private QuestionDetail mapToQuestionDetail(QuestionEntity question, QuestionType type) {
-        List<String> answerChoices = mapToAnswerChoices(question.getChoices());
-        QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type, answerChoices);
+        List<ChoiceDetail> answerChoices = mapToQuestionChoices(question.getChoices());
+        QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type);
+        questionDetail.setAnswerChoices(answerChoices);
         mapBoundsForNumericQuestion(question, questionDetail);
         return questionDetail;
     }
@@ -411,6 +446,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
                 makeEntry(AnswerType.NUMBER, QuestionType.NUMERIC),
                 makeEntry(AnswerType.SINGLESELECT, QuestionType.SINGLE_SELECT),
                 makeEntry(AnswerType.CHOICE, QuestionType.SINGLE_SELECT),
+                makeEntry(AnswerType.SMARTSELECT, QuestionType.SMART_SELECT),
                 makeEntry(AnswerType.MULTISELECT, QuestionType.MULTI_SELECT));
     }
 
@@ -420,6 +456,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
                 makeEntry(QuestionType.DATE, AnswerType.DATE),
                 makeEntry(QuestionType.NUMERIC, AnswerType.NUMBER),
                 makeEntry(QuestionType.SINGLE_SELECT, AnswerType.SINGLESELECT),
+                makeEntry(QuestionType.SMART_SELECT, AnswerType.SMARTSELECT),
                 makeEntry(QuestionType.MULTI_SELECT, AnswerType.MULTISELECT));
     }
 

@@ -100,7 +100,7 @@ public class SectionQuestionDetail implements Serializable {
         return questionDetail.getType();
     }
 
-    public List<String> getAnswerChoices() {
+    public List<ChoiceDetail> getAnswerChoices() {
         return questionDetail.getAnswerChoices();
     }
 
