@@ -39,10 +39,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegrationTestCase {
 
-    public AcceptedPaymentTypePersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private List<TransactionAcceptedPaymentTypes> currentAcceptedPaymentTypes = null;
     private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence = null;
     private List<TransactionAcceptedPaymentTypes> allAcceptedPaymentTypes = null;

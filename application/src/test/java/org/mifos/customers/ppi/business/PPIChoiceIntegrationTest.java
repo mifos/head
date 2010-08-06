@@ -51,10 +51,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PPIChoiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public PPIChoiceIntegrationTest() throws Exception {
-        super();
-    }
-
     @Before
     public void setUp() throws Exception {
         TestDatabase.resetMySQLDatabase();

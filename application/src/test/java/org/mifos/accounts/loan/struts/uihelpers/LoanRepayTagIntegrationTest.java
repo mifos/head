@@ -42,9 +42,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
 public class LoanRepayTagIntegrationTest extends MifosIntegrationTestCase {
-    public LoanRepayTagIntegrationTest() throws Exception {
-        super();
-    }
 
     CustomerBO center;
     CustomerBO group;

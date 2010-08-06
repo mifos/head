@@ -64,9 +64,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
 public class SavingsIntCalcHelperIntegrationTest extends MifosIntegrationTestCase {
-    public SavingsIntCalcHelperIntegrationTest() throws Exception {
-        super();
-    }
 
     private UserContext userContext;
 

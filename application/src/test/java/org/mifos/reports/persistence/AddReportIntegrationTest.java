@@ -37,10 +37,6 @@ import org.mifos.reports.business.ReportsJasperMap;
 @Ignore
 public class AddReportIntegrationTest extends MifosIntegrationTestCase {
 
-    public AddReportIntegrationTest() throws Exception {
-        super();
-    }
-
     private Session session;
 
     @Before

@@ -44,9 +44,6 @@ import org.mifos.reports.business.service.IBranchReportService;
 import org.springframework.core.io.Resource;
 
 public class BranchReportClientSummaryHelperIntegrationTest extends MifosIntegrationTestCase {
-    public BranchReportClientSummaryHelperIntegrationTest() throws Exception {
-        super();
-    }
 
     private static final Short THREE_SHORT = Short.valueOf("3");
     private static final String ONE_STRING = "1";

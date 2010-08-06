@@ -39,10 +39,6 @@ import org.springframework.core.io.ClassPathResource;
 
 public class ReportProductOfferingServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public ReportProductOfferingServiceIntegrationTest() throws Exception {
-        super();
-    }
-
     private static final Short SAVINGS_OFFERING_2_ID = Short.valueOf("2");
     private static final Short SAVINGS_OFFERING_1_ID = Short.valueOf("1");
     private static final Short LOAN_OFFERING_2_ID = Short.valueOf("2");

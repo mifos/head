@@ -52,10 +52,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase {
 
-    public ProductStatusHelperIntegrationTest() throws Exception {
-        super();
-    }
-
     LoanOfferingBO product;
 
     ProductStatusHelper productStatusHelper;

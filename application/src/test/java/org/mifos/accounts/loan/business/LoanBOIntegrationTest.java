@@ -151,10 +151,6 @@ import org.mifos.security.util.UserContext;
 
 public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanBOIntegrationTest() throws Exception {
-        super();
-    }
-
     private static final double DELTA = 0.00000001;
     private static final double DEFAULT_LOAN_AMOUNT = 300.0;
 

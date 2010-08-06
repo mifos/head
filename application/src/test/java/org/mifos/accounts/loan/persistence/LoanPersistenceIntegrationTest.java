@@ -59,10 +59,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private static final double DELTA = 0.00000001;
 
     // class under test

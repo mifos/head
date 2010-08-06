@@ -36,10 +36,6 @@ import org.mifos.framework.persistence.Upgrade;
 
 public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
 
-    public AddAccountActionIntegrationTest() throws Exception {
-        super();
-    }
-
     private Session session;
 
     private Connection connection;

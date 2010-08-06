@@ -56,10 +56,6 @@ import org.mifos.security.util.UserContext;
 
 public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends MifosIntegrationTestCase {
 
-    public GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest() throws Exception {
-        super();
-    }
-
     private CustomerBO group;
     private CustomerBO center;
     private CustomerBO client1;

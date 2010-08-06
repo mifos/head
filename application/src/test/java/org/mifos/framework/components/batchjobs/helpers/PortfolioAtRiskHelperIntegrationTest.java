@@ -51,10 +51,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCase {
 
-    public PortfolioAtRiskHelperIntegrationTest() throws Exception {
-        super();
-    }
-
     protected AccountBO account1 = null;
 
     protected AccountBO account2 = null;

@@ -70,10 +70,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  */
 public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
 
-    public CollectionSheetDaoHibernateIntegrationTest() throws Exception {
-        super();
-    }
-
     // class under test
     private CollectionSheetDao collectionSheetDao;
 

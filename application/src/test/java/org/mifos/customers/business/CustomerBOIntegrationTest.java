@@ -70,9 +70,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
-    public CustomerBOIntegrationTest() throws Exception {
-        super();
-    }
 
     private AccountBO accountBO;
     private CenterBO center;

@@ -51,10 +51,6 @@ import org.mifos.security.util.UserContext;
 
 public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public AccountPaymentEntityIntegrationTest() throws Exception {
-        super();
-    }
-
     private AccountBO accountBO = null;
     private CustomerBO center = null;
     private CustomerBO group = null;

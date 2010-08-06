@@ -26,9 +26,6 @@ import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 
 public class ReportServiceFactoryIntegrationTest extends MifosIntegrationTestCase {
-    public ReportServiceFactoryIntegrationTest() throws Exception {
-        super();
-    }
 
     @Test
     public void testInitializingServiceFactoryDoesNotThrowAnyErrors() throws Exception {

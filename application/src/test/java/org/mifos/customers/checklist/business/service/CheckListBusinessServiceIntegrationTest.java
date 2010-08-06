@@ -43,10 +43,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public CheckListBusinessServiceIntegrationTest() throws Exception {
-        super();
-    }
-
     @After
     public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();

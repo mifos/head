@@ -38,10 +38,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AuditBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public AuditBusinessServiceIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testGetAuditLogRecords() throws Exception {
         AuditLog auditLog = new AuditLog(1, (short) 2, "Mifos", new Date(System.currentTimeMillis()), (short) 3);

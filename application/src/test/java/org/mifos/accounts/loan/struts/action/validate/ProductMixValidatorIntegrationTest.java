@@ -43,10 +43,6 @@ import org.mifos.framework.exceptions.ServiceException;
 
 public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase {
 
-    public ProductMixValidatorIntegrationTest() throws Exception {
-        super();
-    }
-
     private ConfigurationBusinessService configServiceMock;
     private ProductMixBusinessService productMixBusinessServiceMock;
     private LoanBO loanMock;

@@ -46,10 +46,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanArrearsHelperIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanArrearsHelperIntegrationTest() throws Exception {
-        super();
-    }
-
     private LoanArrearsHelper loanArrearHelper;
 
     CustomerBO center = null;

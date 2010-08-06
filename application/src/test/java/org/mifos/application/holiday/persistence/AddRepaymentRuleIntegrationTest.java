@@ -29,10 +29,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 
 public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
 
-    public AddRepaymentRuleIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testValidateLookupValueKey() throws Exception {
         String validKey = "RepaymentRule-NewSameDay";

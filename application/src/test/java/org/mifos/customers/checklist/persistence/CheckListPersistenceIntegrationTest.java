@@ -41,14 +41,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CheckListPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public CheckListPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     @After
     public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
-
     }
 
     @Test

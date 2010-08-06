@@ -68,9 +68,6 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ClientIntegrationTest extends MifosIntegrationTestCase {
-    public ClientIntegrationTest() throws Exception {
-        super();
-    }
 
     private AccountBO accountBO;
     private CustomerBO center;

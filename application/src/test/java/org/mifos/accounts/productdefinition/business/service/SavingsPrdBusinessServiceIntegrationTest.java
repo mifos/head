@@ -43,11 +43,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SavingsPrdBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public SavingsPrdBusinessServiceIntegrationTest() throws Exception {
-        super();
-    }
-
-
     @After
     public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();

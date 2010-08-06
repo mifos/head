@@ -74,10 +74,6 @@ import org.mifos.security.util.UserContext;
 
 public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestCase {
 
-    public BulkEntryDisplayHelperIntegrationTest() throws Exception {
-        super();
-    }
-
     private CustomerBO center;
 
     private CustomerBO group;

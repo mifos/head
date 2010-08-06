@@ -40,10 +40,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanPrdBusinessServiceIntegrationTest() throws Exception {
-        super();
-    }
-
     private LoanOfferingBO loanOffering;
 
 

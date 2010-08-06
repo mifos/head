@@ -50,10 +50,6 @@ import org.mifos.security.util.UserContext;
 
 public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public SavingsPrdPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private CustomerBO group;
 
     private CustomerBO center;

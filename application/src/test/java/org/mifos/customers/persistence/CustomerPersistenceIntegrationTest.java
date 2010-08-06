@@ -95,10 +95,6 @@ import org.mifos.security.util.UserContext;
 
 public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public CustomerPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private MeetingBO meeting;
     private CustomerBO center;
     private ClientBO client;

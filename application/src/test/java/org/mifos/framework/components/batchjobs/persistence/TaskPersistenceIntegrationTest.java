@@ -39,10 +39,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public TaskPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     @Before
     public void setUp() throws Exception {
     }

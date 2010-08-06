@@ -30,10 +30,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class FinancialActionCacheIntegrationTest extends MifosIntegrationTestCase {
 
-    public FinancialActionCacheIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testFinancialActionCache() throws FinancialException {
 

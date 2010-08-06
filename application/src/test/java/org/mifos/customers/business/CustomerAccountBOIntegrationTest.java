@@ -82,10 +82,6 @@ import org.mifos.security.util.UserContext;
 
 public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public CustomerAccountBOIntegrationTest() throws Exception {
-        super();
-    }
-
     private static final double DELTA = 0.00000001;
 
     private CustomerAccountBO customerAccountBO;

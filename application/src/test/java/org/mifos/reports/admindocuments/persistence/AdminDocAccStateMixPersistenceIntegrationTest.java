@@ -31,10 +31,6 @@ import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
 
 public class AdminDocAccStateMixPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public AdminDocAccStateMixPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private AdminDocAccStateMixPersistence reportsPersistence;
 
     @Before

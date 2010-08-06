@@ -39,10 +39,6 @@ import org.mifos.security.util.UserContext;
 
 public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public ProductCategoryPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private ProductCategoryPersistence productCategoryPersistence;
 
     private UserContext userContext = null;

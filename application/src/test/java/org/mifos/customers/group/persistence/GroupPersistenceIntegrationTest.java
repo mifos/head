@@ -40,9 +40,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class GroupPersistenceIntegrationTest extends MifosIntegrationTestCase {
-    public GroupPersistenceIntegrationTest() throws Exception {
-        super();
-    }
 
     private MeetingBO meeting;
 

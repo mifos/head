@@ -32,9 +32,6 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 
 public class MeetingHelperIntegrationTest extends MifosIntegrationTestCase {
-    public MeetingHelperIntegrationTest() throws Exception {
-        super();
-    }
 
     private MeetingHelper helper = new MeetingHelper();
 

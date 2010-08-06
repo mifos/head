@@ -46,10 +46,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class OffsetAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public OffsetAccountBOIntegrationTest() throws Exception {
-        super();
-    }
-
     protected LoanBO accountBO = null;
     protected CustomerBO center = null;
     protected CustomerBO group = null;

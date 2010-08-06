@@ -34,10 +34,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 
 public class ApplicationConfigurationPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public ApplicationConfigurationPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     ApplicationConfigurationPersistence configurationPersistence;
 
     @Before

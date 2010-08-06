@@ -36,10 +36,6 @@ import org.mifos.reports.business.ReportsCategoryBO;
 
 public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
 
-    public AddReportUpgradeIntegrationTest() throws Exception {
-        super();
-    }
-
     private Session session;
     private Transaction transaction;
     private Connection connection;

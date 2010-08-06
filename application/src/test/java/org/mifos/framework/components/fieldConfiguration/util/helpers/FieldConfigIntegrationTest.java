@@ -37,10 +37,6 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 
 public class FieldConfigIntegrationTest extends MifosIntegrationTestCase {
 
-    public FieldConfigIntegrationTest() throws Exception {
-        super();
-    }
-
     private FieldConfigurationPersistence persistence = new FieldConfigurationPersistence();
 
     private FieldConfig fieldConfig = FieldConfig.getInstance();

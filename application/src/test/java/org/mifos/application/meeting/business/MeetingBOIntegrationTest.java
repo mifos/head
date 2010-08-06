@@ -42,9 +42,6 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 
 public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
-    public MeetingBOIntegrationTest() throws Exception {
-        super();
-    }
 
     private static final Short ONE = Short.valueOf("1");
     private static final Short TWO = Short.valueOf("2");

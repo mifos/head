@@ -36,10 +36,6 @@ public class COABOIntegrationTest extends MifosIntegrationTestCase {
 
     private final int FINANCIAL_DIRECTINCOME_SIZE = 10;
 
-    public COABOIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testGetCOAHead() throws FinancialException {
         String interestOnLoansGlCode = "31101";

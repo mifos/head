@@ -36,11 +36,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 public class AccountStateEntityIntegrationTest extends MifosIntegrationTestCase {
 
     private String APPROVED = "Application Approved";
-
-    public AccountStateEntityIntegrationTest() throws Exception {
-        super();
-    }
-
     private AccountStateEntity accountStateEntity;
     private Session session;
 

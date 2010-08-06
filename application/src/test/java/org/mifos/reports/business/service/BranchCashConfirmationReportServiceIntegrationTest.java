@@ -46,10 +46,6 @@ import org.mifos.reports.cashconfirmationreport.persistence.BranchCashConfirmati
 
 public class BranchCashConfirmationReportServiceIntegrationTest extends BranchReportIntegrationTestCase {
 
-    public BranchCashConfirmationReportServiceIntegrationTest() throws Exception {
-        super();
-    }
-
     private BranchCashConfirmationReportPersistence persistenceMock;
     private BranchCashConfirmationReportService service;
 

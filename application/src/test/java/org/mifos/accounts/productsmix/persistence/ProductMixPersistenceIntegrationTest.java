@@ -36,10 +36,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public ProductMixPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     MeetingBO meeting;
     MeetingBO meeting1;
     SavingsOfferingBO saving1;

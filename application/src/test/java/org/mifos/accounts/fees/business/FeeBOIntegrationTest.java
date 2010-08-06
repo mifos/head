@@ -50,10 +50,6 @@ import org.mifos.security.util.UserContext;
 
 public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public FeeBOIntegrationTest() throws Exception {
-        super();
-    }
-
     private FeeBO fee;
 
     @After

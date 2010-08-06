@@ -37,9 +37,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
-    public OfficeBusinessServiceIntegrationTest() throws Exception {
-        super();
-    }
 
     private OfficeBusinessService officeBusinessService = new OfficeBusinessService();
     private String officeSearchId;

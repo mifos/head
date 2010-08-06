@@ -70,11 +70,6 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
     private final int SAVINGS_CUSTOMFIELDS_NUMBER = 1;
 
-
-    public SavingsPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private UserContext userContext;
 
     private SavingsPersistence savingsPersistence;

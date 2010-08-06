@@ -29,10 +29,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PersonnelStatusEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public PersonnelStatusEntityIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testGetPersonnelStatusEntity() throws Exception {
         MasterPersistence masterPersistenceService = new MasterPersistence();
