@@ -54,7 +54,7 @@
       <p class="orangeheading">[@spring.message "admin.systemadministration"/]</p>
       <ul>
         <li type="circle"><a id="admin.link.viewSystemInfo" href="systemInformation.ftl">[@spring.message "admin.viewSystemInformation"/]</a></li>
-       <li type="circle"> <a id="admin.link.shutdownMifos" href="shutdownAction.do?method=load">[@spring.message "admin.shutDown"/]</a></li>
+       <li type="circle"> <a id="admin.link.shutdownMifos" href="shutdownAction.do?method=load">[@spring.message "admin.shutdown"/]</a></li>
       </ul>
     </div>
     <div class="span-10 last">

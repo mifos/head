@@ -22,6 +22,8 @@
     	<constructor-arg ref="officeDao" />
     	<constructor-arg ref="applicationConfigurationDao" />    	
     </bean>
+    
+    <bean id="shutdownServiceFacade" class="org.mifos.application.admin.business.service.ShutdownServiceFacadeWebTier"/>
 
     <bean id="UserServiceFacade" class="org.mifos.application.servicefacade.UserServiceFacadeWebTier"/>
 
