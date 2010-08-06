@@ -20,7 +20,6 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +43,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/defineProductMix")
 @SessionAttributes("formBean")
+@SuppressWarnings("PMD") // suppressing complexity warnings for now.. keithw.
 public class DefineProductMixController {
 
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
@@ -51,6 +51,7 @@ public class DefineProductMixController {
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
+    private ProductMixAssembler productMixAssembler = new ProductMixAssembler();
 
     protected DefineProductMixController() {
         // default contructor for spring autowiring
@@ -64,21 +65,8 @@ public class DefineProductMixController {
     @ModelAttribute("formBean")
     public ProductMixFormBean showPopulatedForm() {
 
-        ProductMixFormBean defineFormBean = new ProductMixFormBean();
-        populateProductTypeOptions(defineFormBean);
-
-        return defineFormBean;
-    }
-
-    private void populateProductTypeOptions(ProductMixFormBean formBean) {
-        Map<String, String> productTypeOptions = new LinkedHashMap<String, String>();
-
         List<ProductTypeDto> productTypes = this.adminServiceFacade.retrieveProductTypesApplicableToProductMix();
-        for (ProductTypeDto productTypeDto : productTypes) {
-            productTypeOptions.put(productTypeDto.getProductTypeId().toString(), productTypeDto.getProductTypeKey());
-        }
-
-        formBean.setProductTypeOptions(productTypeOptions);
+        return productMixAssembler.createFormBean(productTypes);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -97,26 +85,20 @@ public class DefineProductMixController {
             mav = new ModelAndView("defineProductMix");
 
             if (StringUtils.isBlank(formBean.getProductTypeId())) {
-                ProductMixFormBean defineFormBean = new ProductMixFormBean();
-                populateProductTypeOptions(defineFormBean);
+
+                List<ProductTypeDto> productTypes = this.adminServiceFacade.retrieveProductTypesApplicableToProductMix();
+                mav.addObject("formBean", productMixAssembler.createFormBean(productTypes));
+
             } else if (StringUtils.isNotBlank(formBean.getProductTypeId()) && StringUtils.isBlank(formBean.getProductId())) {
+
                 populateProductNameOptions(formBean);
+
             } else if (StringUtils.isNotBlank(formBean.getProductTypeId()) &&
                     StringUtils.isNotBlank(formBean.getProductId()) && (formBean.getAllowed() == null && formBean.getNotAllowed() == null)) {
                 populateAllowedNotAllowedOptions(formBean);
 
             } else {
-                String selectedProductTypeNameKey = formBean.getProductTypeOptions().get(formBean.getProductTypeId());
-                String selectedProductName = formBean.getProductNameOptions().get(formBean.getProductId());
-
-                List<String> allowedProductMix = findMatchingProducts(formBean, formBean.getAllowed());
-                List<String> notAllowedProductMix = findMatchingProducts(formBean, formBean.getNotAllowed());
-
-                ProductMixPreviewDto preview = new ProductMixPreviewDto();
-                preview.setProductTypeNameKey(selectedProductTypeNameKey);
-                preview.setProductName(selectedProductName);
-                preview.setAllowedProductMix(allowedProductMix);
-                preview.setNotAllowedProductMix(notAllowedProductMix);
+                ProductMixPreviewDto preview = this.productMixAssembler.createProductMixPreview(formBean);
 
                 mav = new ModelAndView("previewProductMix");
                 mav.addObject("ref", preview);
@@ -157,19 +139,7 @@ public class DefineProductMixController {
         formBean.setNotAllowedProductOptions(notAllowedProductOptions);
     }
 
-    private List<String> findMatchingProducts(ProductMixFormBean formBean, String[] productsArray) {
-        List<String> allowedProductNames = new ArrayList<String>();
-
-        if (productsArray != null) {
-            for (String productKey : productsArray) {
-                if (formBean.getAllowedProductOptions().containsKey(productKey)) {
-                    allowedProductNames.add(formBean.getAllowedProductOptions().get(productKey));
-                } else if (formBean.getNotAllowedProductOptions().containsKey(productKey)) {
-                    allowedProductNames.add(formBean.getNotAllowedProductOptions().get(productKey));
-                }
-            }
-        }
-
-        return allowedProductNames;
+    public void setProductMixAssembler(ProductMixAssembler productMixAssembler) {
+        this.productMixAssembler = productMixAssembler;
     }
 }

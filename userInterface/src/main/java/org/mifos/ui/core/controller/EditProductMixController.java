@@ -20,7 +20,6 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +51,7 @@ public class EditProductMixController {
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
+    private ProductMixAssembler productMixAssembler = new ProductMixAssembler();
 
     protected EditProductMixController() {
         // default contructor for spring autowiring
@@ -65,7 +65,8 @@ public class EditProductMixController {
     @ModelAttribute("formBean")
     public ProductMixFormBean showEditForm(@RequestParam(value = "productId", required = true) Integer productId) {
 
-        ProductMixFormBean formBean = new ProductMixFormBean();
+        List<ProductTypeDto> productTypes = this.adminServiceFacade.retrieveProductTypesApplicableToProductMix();
+        ProductMixFormBean formBean = productMixAssembler.createFormBean(productTypes);
         formBean.setProductId(productId.toString());
         formBean.setProductTypeId("1");
 
@@ -75,21 +76,9 @@ public class EditProductMixController {
         productNameOptions.put(productMixDetails.getPrdOfferingId().toString(), productMixDetails.getPrdOfferingName());
         formBean.setProductNameOptions(productNameOptions);
 
-        populateProductTypeOptions(formBean);
         populateAllowedNotAllowedOptions(formBean, productMixDetails);
 
         return formBean;
-    }
-
-    private void populateProductTypeOptions(ProductMixFormBean formBean) {
-        Map<String, String> productTypeOptions = new LinkedHashMap<String, String>();
-
-        List<ProductTypeDto> productTypes = this.adminServiceFacade.retrieveProductTypesApplicableToProductMix();
-        for (ProductTypeDto productTypeDto : productTypes) {
-            productTypeOptions.put(productTypeDto.getProductTypeId().toString(), productTypeDto.getProductTypeKey());
-        }
-
-        formBean.setProductTypeOptions(productTypeOptions);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -105,17 +94,7 @@ public class EditProductMixController {
         } else if (result.hasErrors()) {
             mav = new ModelAndView("editProductMix");
         } else {
-            String selectedProductTypeNameKey = formBean.getProductTypeOptions().get(formBean.getProductTypeId());
-            String selectedProductName = formBean.getProductNameOptions().get(formBean.getProductId());
-
-            List<String> allowedProductMix = findMatchingProducts(formBean, formBean.getAllowed());
-            List<String> notAllowedProductMix = findMatchingProducts(formBean, formBean.getNotAllowed());
-
-            ProductMixPreviewDto preview = new ProductMixPreviewDto();
-            preview.setProductTypeNameKey(selectedProductTypeNameKey);
-            preview.setProductName(selectedProductName);
-            preview.setAllowedProductMix(allowedProductMix);
-            preview.setNotAllowedProductMix(notAllowedProductMix);
+            ProductMixPreviewDto preview = this.productMixAssembler.createProductMixPreview(formBean);
 
             mav = new ModelAndView("previewProductMix");
             mav.addObject("ref", preview);
@@ -143,17 +122,7 @@ public class EditProductMixController {
         formBean.setNotAllowedProductOptions(notAllowedProductOptions);
     }
 
-    private List<String> findMatchingProducts(ProductMixFormBean formBean, String[] allowed) {
-        List<String> allowedProductNames = new ArrayList<String>();
-
-        for (String allowedKey : allowed) {
-            if (formBean.getAllowedProductOptions().containsKey(allowedKey)) {
-                allowedProductNames.add(formBean.getAllowedProductOptions().get(allowedKey));
-            } else if (formBean.getNotAllowedProductOptions().containsKey(allowedKey)) {
-                allowedProductNames.add(formBean.getNotAllowedProductOptions().get(allowedKey));
-            }
-        }
-
-        return allowedProductNames;
+    public void setProductMixAssembler(ProductMixAssembler productMixAssembler) {
+        this.productMixAssembler = productMixAssembler;
     }
 }

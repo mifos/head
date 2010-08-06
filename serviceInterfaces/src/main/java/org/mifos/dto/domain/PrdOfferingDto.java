@@ -27,6 +27,8 @@ import java.io.Serializable;
  * of a product offering hence instead of loading the entire product offering
  * object we can load only this object using a query.
  */
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
 public class PrdOfferingDto implements Serializable {
 
     private Short prdOfferingId;
