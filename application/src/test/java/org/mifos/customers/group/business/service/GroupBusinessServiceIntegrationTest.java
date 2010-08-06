@@ -50,9 +50,6 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class GroupBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
-    public GroupBusinessServiceIntegrationTest() throws Exception {
-        super();
-    }
 
     private MeetingBO meeting;
 

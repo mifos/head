@@ -37,10 +37,6 @@ import org.mifos.framework.struts.tags.XmlBuilder;
 
 public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
 
-    public QuestionTagIntegrationTest() throws Exception {
-        super();
-    }
-
     Session session;
 
     XmlBuilder result;

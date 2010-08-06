@@ -50,10 +50,6 @@ import org.mifos.security.util.UserContext;
 
 public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosIntegrationTestCase {
 
-    public SaveCollectionSheetStructureValidatorIntegrationTest() throws Exception {
-        super();
-    }
-
     private SaveCollectionSheetStructureValidator savecollectionSheetStructureValidator;
     private TestSaveCollectionSheetUtils saveCollectionSheetUtils;
     private TestCollectionSheetRetrieveSavingsAccountsUtils collectionSheetRetrieveSavingsAccountsUtils;

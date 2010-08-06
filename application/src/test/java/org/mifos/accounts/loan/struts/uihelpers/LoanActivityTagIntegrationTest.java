@@ -46,10 +46,6 @@ import org.mifos.security.util.UserContext;
 
 public class LoanActivityTagIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanActivityTagIntegrationTest() throws Exception {
-        super();
-    }
-
     CustomerBO center;
     CustomerBO group;
     CustomerBO client;

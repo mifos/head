@@ -41,10 +41,6 @@ import org.mifos.security.util.UserContext;
 
 public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public ProductCategoryBusinessServiceIntegrationTest() throws Exception {
-        super();
-    }
-
     private ProductCategoryBusinessService productCategoryBusinessService = null;
 
     private UserContext userContext = null;

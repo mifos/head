@@ -34,10 +34,6 @@ import org.mifos.security.util.UserContext;
 
 public class FieldConfigurationHelperIntegrationTest extends MifosIntegrationTestCase {
 
-    public FieldConfigurationHelperIntegrationTest() throws Exception {
-        super();
-    }
-
     private UserContext userContext = TestUtils.makeUser();
 
     @Before

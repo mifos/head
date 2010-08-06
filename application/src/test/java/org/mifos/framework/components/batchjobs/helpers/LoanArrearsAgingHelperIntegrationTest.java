@@ -65,9 +65,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
 public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestCase {
-    public LoanArrearsAgingHelperIntegrationTest() throws Exception {
-        super();
-    }
 
     private LoanArrearsAgingHelper loanArrearsAgingHelper;
     private LoanArrearsHelper loanArrearHelper;

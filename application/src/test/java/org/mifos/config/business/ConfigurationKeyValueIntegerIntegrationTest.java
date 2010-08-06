@@ -30,9 +30,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ConfigurationKeyValueIntegerIntegrationTest extends MifosIntegrationTestCase {
-    public ConfigurationKeyValueIntegerIntegrationTest() throws Exception {
-        super();
-    }
 
     private ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
     private final int TEST_VALUE = 100;

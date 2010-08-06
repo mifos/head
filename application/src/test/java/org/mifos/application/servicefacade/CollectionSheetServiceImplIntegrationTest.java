@@ -30,6 +30,7 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.center.business.CenterBO;
@@ -41,13 +42,13 @@ import org.mifos.framework.util.helpers.DateUtils;
 
 public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationTestCase {
 
-    public CollectionSheetServiceImplIntegrationTest() throws Exception {
-        super();
-        collectionSheetService = DependencyInjectedServiceLocator.locateCollectionSheetService();
-    }
-
     private static CollectionSheetService collectionSheetService;
     private TestSaveCollectionSheetUtils saveCollectionSheetUtils;
+
+    @BeforeClass
+    public static void init() {
+        collectionSheetService = DependencyInjectedServiceLocator.locateCollectionSheetService();
+    }
 
     @Before
     public void setUp() throws Exception {

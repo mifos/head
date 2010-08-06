@@ -58,10 +58,6 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
     private List<PaymentTypeDto> paymentTypeDtos;
     private PaymentTypeDto defaultPaymentType;
 
-    public StandardAccountServiceIntegrationTest() throws Exception {
-        super();
-    }
-
     @Before
     public void setUp() throws Exception {
         super.setUp();

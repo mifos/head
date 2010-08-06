@@ -36,10 +36,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class PrdCategoryStatusEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public PrdCategoryStatusEntityIntegrationTest() throws Exception {
-        super();
-    }
-
     private PrdCategoryStatusEntity prdCategoryStatusEntity;
     private Session session;
 

@@ -85,9 +85,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
 public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
-    public CustomerBusinessServiceIntegrationTest() throws Exception {
-        super();
-    }
 
     private static final Integer THREE = Integer.valueOf(3);
     private static final Integer ONE = Integer.valueOf(1);

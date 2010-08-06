@@ -60,10 +60,6 @@ import org.mifos.security.util.UserContext;
 
 public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public CenterBOIntegrationTest() throws Exception {
-        super();
-    }
-
     private CenterBO center;
     private final Short officeId = 1;
     private OfficeBO officeBo;

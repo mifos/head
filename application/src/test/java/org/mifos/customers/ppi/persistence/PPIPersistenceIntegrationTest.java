@@ -61,10 +61,6 @@ public class PPIPersistenceIntegrationTest extends MifosIntegrationTestCase {
     private static final double DELTA = 0.00000001;
     private PPIPersistence persistence;
 
-    public PPIPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     @Before
     public void setUp() throws Exception {
         persistence = new PPIPersistence();

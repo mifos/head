@@ -47,10 +47,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
 
-    public AuditInterceptorIntegrationTest() throws Exception {
-        super();
-    }
-
     protected AccountBO accountBO = null;
 
     protected CustomerBO center = null;

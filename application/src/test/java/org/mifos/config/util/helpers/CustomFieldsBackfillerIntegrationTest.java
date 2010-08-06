@@ -43,9 +43,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CustomFieldsBackfillerIntegrationTest extends MifosIntegrationTestCase {
-    public CustomFieldsBackfillerIntegrationTest() throws Exception {
-        super();
-    }
 
     // reused by unit tests
     ClientBO client;

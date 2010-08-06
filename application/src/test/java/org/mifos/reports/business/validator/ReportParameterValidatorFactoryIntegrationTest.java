@@ -28,10 +28,6 @@ import org.mifos.reports.business.ReportParameterForm;
 
 public class ReportParameterValidatorFactoryIntegrationTest extends MifosIntegrationTestCase {
 
-    public ReportParameterValidatorFactoryIntegrationTest() throws Exception {
-        super();
-    }
-
     private static final String COLLECTION_SHEET_REPORT_FILENAME = "report/CollectionSheetReport.rptdesign";
     private static final String DETAILED_AGING_PORTFOLIO_REPORT_FILENAME = "report/DetailedAgingPortfolioAtRisk.rptdesign";
     private static final String BATCH_COLLECTION_SHEET_REPORT_FILENAME = "report/BatchCollectionSheetReport.rptdesign";

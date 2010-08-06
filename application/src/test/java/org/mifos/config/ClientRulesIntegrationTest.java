@@ -30,10 +30,6 @@ import org.mifos.framework.util.helpers.Constants;
 
 public class ClientRulesIntegrationTest extends MifosIntegrationTestCase {
 
-    public ClientRulesIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testGetGroupCanApplyLoans() throws Exception {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();

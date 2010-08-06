@@ -35,10 +35,6 @@ import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersist
 
 public class ActivityTagIntegrationTest extends MifosIntegrationTestCase {
 
-    public ActivityTagIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testConvertToIdSet() throws Exception {
         Set<Short> activities = new ActivityTag().convertToIdSet(getActivities());

@@ -33,10 +33,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 
 public class FieldConfigurationPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public FieldConfigurationPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private FieldConfigurationPersistence fieldConfigurationPersistence = new FieldConfigurationPersistence();
 
     @Test

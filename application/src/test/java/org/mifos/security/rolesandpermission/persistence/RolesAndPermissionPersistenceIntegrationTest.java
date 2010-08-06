@@ -32,11 +32,6 @@ import org.mifos.security.rolesandpermission.business.RoleBO;
 
 public class RolesAndPermissionPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-
-    public RolesAndPermissionPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testGetRole() throws Exception {
         RoleBO role = new RolesPermissionsPersistence().getRole("Admin");

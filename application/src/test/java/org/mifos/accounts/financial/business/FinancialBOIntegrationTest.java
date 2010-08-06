@@ -35,10 +35,6 @@ public class FinancialBOIntegrationTest extends MifosIntegrationTestCase {
 
     private final int FINANCIAL_PRINCIPALPOSTING_SIZE = 10;
 
-    public FinancialBOIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testGetApplicableDebit() throws FinancialException {
         FinancialActionTypeEntity finActionPrincipal = FinancialActionCache

@@ -56,10 +56,6 @@ import org.mifos.security.util.UserContext;
 
 public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public CustomerTrxnDetailEntityIntegrationTest() throws Exception {
-        super();
-    }
-
     private MeetingBO weeklyMeeting;
     private AccountBO accountBO = null;
     private CenterBO center = null;

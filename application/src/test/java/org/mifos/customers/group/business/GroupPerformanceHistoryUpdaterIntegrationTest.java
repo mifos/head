@@ -33,10 +33,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 
 public class GroupPerformanceHistoryUpdaterIntegrationTest extends MifosIntegrationTestCase {
 
-    public GroupPerformanceHistoryUpdaterIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testShouldMatchClientsWithParentAccounts() throws Exception {
         LoanBO parentLoanMock1 = createMock(LoanBO.class);

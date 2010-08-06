@@ -28,10 +28,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ActivityEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public ActivityEntityIntegrationTest() throws Exception {
-        super();
-    }
-
     private ActivityEntity activityEntity = null;
 
     @Test

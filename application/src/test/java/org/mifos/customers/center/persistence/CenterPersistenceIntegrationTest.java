@@ -36,9 +36,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CenterPersistenceIntegrationTest extends MifosIntegrationTestCase {
-    public CenterPersistenceIntegrationTest() throws Exception {
-        super();
-    }
 
     private CustomerBO center;
     private OfficePersistence officePersistence;

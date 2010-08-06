@@ -60,10 +60,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationTestCase {
 
-    public PortfolioAtRiskCalculationIntegrationTest() throws Exception {
-        super();
-    }
-
     private static final double DELTA = 0.00000001;
 
     private AccountBO account1 = null;

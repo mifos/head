@@ -40,10 +40,6 @@ import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionCons
 
 public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public RoleBOIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testGetRole() throws Exception {
         RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();

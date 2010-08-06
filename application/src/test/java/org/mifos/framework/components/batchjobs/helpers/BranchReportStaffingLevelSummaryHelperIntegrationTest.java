@@ -38,9 +38,6 @@ import org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.reports.business.service.BranchReportService;
 
 public class BranchReportStaffingLevelSummaryHelperIntegrationTest extends MifosIntegrationTestCase {
-    public BranchReportStaffingLevelSummaryHelperIntegrationTest() throws Exception {
-        super();
-    }
 
     public static final Short BRANCH_ID = Short.valueOf("2");
 

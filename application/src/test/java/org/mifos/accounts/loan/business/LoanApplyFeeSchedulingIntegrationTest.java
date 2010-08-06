@@ -77,10 +77,6 @@ import org.mifos.security.util.UserContext;
 @Deprecated
 public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanApplyFeeSchedulingIntegrationTest() throws Exception {
-        super();
-    }
-
     private LoanOfferingBO loanOffering = null;
     private AccountBO accountBO = null;
     private AccountBO badAccountBO = null;

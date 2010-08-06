@@ -75,10 +75,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanOfferingBOIntegrationTest() throws Exception {
-        super();
-    }
-
     private static final double DELTA = 0.00000001;
 
     private LoanOfferingBO product;

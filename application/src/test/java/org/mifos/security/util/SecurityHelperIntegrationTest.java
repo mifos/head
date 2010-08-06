@@ -31,10 +31,6 @@ import org.mifos.security.rolesandpermission.business.RoleBO;
 
 public class SecurityHelperIntegrationTest extends MifosIntegrationTestCase {
 
-    public SecurityHelperIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testGetUserRoles() throws Exception {
         Set<RoleBO> userRoles = SecurityHelper.getUserRoles((short) 1);

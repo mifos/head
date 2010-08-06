@@ -35,10 +35,6 @@ import org.mifos.reports.business.dto.CollectionSheetReportData;
 
 public class CollectionSheetReportPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public CollectionSheetReportPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private static final Integer CENTER_ID = Integer.valueOf("2");
     private static final Integer PERSONNEL_ID = Integer.valueOf("1");
     private static final Date MEETING_DATE = DateUtils.getDate(2007, Calendar.JUNE, 22);

@@ -29,10 +29,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class RoleActivityEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public RoleActivityEntityIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testGetRoleActivity() {
         RoleActivityEntity roleActivityEntity = getRoleActivity((short) 1, (short) 1);

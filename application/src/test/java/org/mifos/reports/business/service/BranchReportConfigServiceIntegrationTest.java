@@ -32,10 +32,6 @@ import org.springframework.core.io.ClassPathResource;
 
 public class BranchReportConfigServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public BranchReportConfigServiceIntegrationTest() throws Exception {
-        super();
-    }
-
     private BranchReportConfigService branchReportConfigService;
 
     public void testGetDaysInArrears() throws ServiceException {

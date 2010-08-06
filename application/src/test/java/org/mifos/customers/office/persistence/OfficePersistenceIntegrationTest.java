@@ -46,9 +46,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
 public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
-    public OfficePersistenceIntegrationTest() throws Exception {
-        super();
-    }
 
     private OfficePersistence officePersistence;
 

@@ -34,9 +34,6 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ConfigurationIntializerIntegrationTest extends MifosIntegrationTestCase {
-    public ConfigurationIntializerIntegrationTest() throws Exception {
-        super();
-    }
 
     private ConfigurationInitializer configInitializer;
 

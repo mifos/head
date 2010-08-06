@@ -52,10 +52,6 @@ import org.mifos.security.util.UserContext;
 
 public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanBOForReversalIntegrationTest() throws Exception {
-        super();
-    }
-
     private LoanBO loan = null;
 
     private CenterBO center = null;

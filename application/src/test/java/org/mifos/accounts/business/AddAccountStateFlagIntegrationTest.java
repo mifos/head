@@ -39,10 +39,6 @@ import org.mifos.framework.persistence.Upgrade;
 
 public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase {
 
-    public AddAccountStateFlagIntegrationTest() throws Exception {
-        super();
-    }
-
     private static final short FLAG_FEET_TOO_BIG = 12;
 
     private Session session;

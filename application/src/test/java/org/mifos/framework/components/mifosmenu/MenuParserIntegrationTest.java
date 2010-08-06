@@ -27,10 +27,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 
 public class MenuParserIntegrationTest extends MifosIntegrationTestCase {
 
-    public MenuParserIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testParse() {
         // TODO: we probably want two tests, one for the live

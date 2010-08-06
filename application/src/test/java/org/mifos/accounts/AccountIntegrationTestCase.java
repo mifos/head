@@ -51,9 +51,6 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
-    public AccountIntegrationTestCase() throws Exception {
-        super();
-    }
 
     protected SavingsBO savingsBO;
     protected LoanBO groupLoan;

@@ -38,10 +38,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class AccountActionEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public AccountActionEntityIntegrationTest() throws Exception {
-        super();
-    }
-
     private Session session;
     private AccountActionEntity accountActionEntity;
 

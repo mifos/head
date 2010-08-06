@@ -31,10 +31,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 
 public class HibernateHelperIntegrationTest extends MifosIntegrationTestCase {
 
-    public HibernateHelperIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testDTOBuilderCapitalize() {
         DTOBuilder dtoBuilder = new DTOBuilder();

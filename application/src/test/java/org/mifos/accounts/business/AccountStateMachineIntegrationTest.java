@@ -40,10 +40,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AccountStateMachineIntegrationTest extends MifosIntegrationTestCase {
 
-    public AccountStateMachineIntegrationTest() throws Exception {
-        super();
-    }
-
     private AccountBusinessService service;
 
     @Before

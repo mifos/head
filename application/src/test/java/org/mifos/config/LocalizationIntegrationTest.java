@@ -33,11 +33,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class LocalizationIntegrationTest extends MifosIntegrationTestCase {
 
-    public LocalizationIntegrationTest() throws Exception {
-        super();
-    }
-
-
     @After
     public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();

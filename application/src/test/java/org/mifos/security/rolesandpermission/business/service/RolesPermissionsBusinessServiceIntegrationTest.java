@@ -33,10 +33,6 @@ import org.mifos.security.rolesandpermission.business.RoleBO;
 
 public class RolesPermissionsBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public RolesPermissionsBusinessServiceIntegrationTest() throws Exception {
-        super();
-    }
-
     RolesPermissionsBusinessService rolesPermissionsBusinessService = new RolesPermissionsBusinessService();
 
     @After

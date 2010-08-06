@@ -40,10 +40,6 @@ import org.w3c.dom.Node;
 
 public class ChartOfAccountsConfigIntegrationTest extends MifosIntegrationTestCase {
 
-    public ChartOfAccountsConfigIntegrationTest() throws Exception {
-        super();
-    }
-
     ChartOfAccountsConfig coa;
 
     @Before

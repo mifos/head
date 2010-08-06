@@ -49,10 +49,6 @@ import org.mifos.security.authorization.HierarchyManager;
 
 public class MasterBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public MasterBusinessServiceIntegrationTest() throws Exception {
-        super();
-    }
-
     private MasterDataService masterService;
 
     @Before

@@ -55,10 +55,6 @@ import org.springframework.core.io.ClassPathResource;
 
 public class PPISurveyIntegrationTest extends MifosIntegrationTestCase {
 
-    public PPISurveyIntegrationTest() throws Exception {
-        super();
-    }
-
     private static final double DELTA = 0.00000001;
     private PPIPersistence persistence;
 

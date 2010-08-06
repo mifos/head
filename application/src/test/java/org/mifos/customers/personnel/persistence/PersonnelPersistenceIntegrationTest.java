@@ -70,10 +70,6 @@ import org.mifos.security.util.UserContext;
 
 public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public PersonnelPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private static final Short OFFICE_WITH_BRANCH_MANAGER = Short.valueOf("3");
 
     private MeetingBO meeting;

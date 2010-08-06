@@ -50,10 +50,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PrdOfferingPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public PrdOfferingPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private LoanOfferingBO loanOffering;
     private LoanOfferingBO loanOffering2;
 

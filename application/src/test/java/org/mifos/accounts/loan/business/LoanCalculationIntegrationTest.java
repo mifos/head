@@ -99,11 +99,6 @@ import org.mifos.security.util.UserContext;
  */
 public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanCalculationIntegrationTest() throws Exception {
-        super();
-    }
-
-
     // these constants for parsing the spreadsheet
     final String principal = "Principal";
     final String loanType = "Loan Type";

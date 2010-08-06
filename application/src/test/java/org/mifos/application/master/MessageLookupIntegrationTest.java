@@ -37,9 +37,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.security.util.UserContext;
 
 public class MessageLookupIntegrationTest extends MifosIntegrationTestCase {
-    public MessageLookupIntegrationTest() throws Exception {
-        super();
-    }
 
     private static MessageLookup messageLookup;
 

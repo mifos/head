@@ -31,10 +31,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class ConfigurationPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public ConfigurationPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     @After
     public void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();

@@ -50,9 +50,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
 public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
-    public SavingsBusinessServiceIntegrationTest() throws Exception {
-        super();
-    }
 
     private SavingsBusinessService service;
 

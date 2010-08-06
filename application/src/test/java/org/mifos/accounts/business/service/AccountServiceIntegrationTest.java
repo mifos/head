@@ -83,10 +83,6 @@ import org.mifos.security.util.UserContext;
 
 public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public AccountServiceIntegrationTest() throws Exception {
-        super();
-    }
-
     protected AccountBO accountBO = null;
 
     protected SavingsBO savingsBO = null;

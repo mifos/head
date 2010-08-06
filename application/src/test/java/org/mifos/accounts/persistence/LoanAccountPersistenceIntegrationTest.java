@@ -30,10 +30,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 
 public class LoanAccountPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanAccountPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testSelectCoSigningClients() throws Exception {
         List<CustomerBO> coSigningClients = new AccountPersistence().getCoSigningClientsForGlim(1);

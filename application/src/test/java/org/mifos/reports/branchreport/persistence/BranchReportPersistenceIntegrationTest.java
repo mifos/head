@@ -63,10 +63,6 @@ import org.mifos.reports.business.service.BranchReportIntegrationTestCase;
 
 public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrationTestCase {
 
-    public BranchReportPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private static final Short LOAN_OFFICER_ID_SHORT = Short.valueOf("3");
     private static final String TOTAL_STAFF_ROLENAME_STR = "Total Staff";
     private static final Short BRANCH_ID = Short.valueOf("1");

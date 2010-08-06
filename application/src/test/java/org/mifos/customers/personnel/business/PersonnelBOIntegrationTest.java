@@ -68,10 +68,6 @@ import org.mifos.security.util.UserContext;
 
 public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public PersonnelBOIntegrationTest() throws Exception {
-        super();
-    }
-
     private OfficeBO office;
 
     private OfficeBO branchOffice;
