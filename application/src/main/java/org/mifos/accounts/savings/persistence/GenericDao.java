@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Query;
+import org.mifos.accounts.productsmix.business.ProductMixBO;
 
 /**
  *
@@ -42,5 +43,7 @@ public interface GenericDao {
     void createOrUpdate(Object entity);
 
     Query createQueryForUpdate(String hql);
+
+    void delete(Object entity);
 
 }

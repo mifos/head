@@ -36,7 +36,6 @@ import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
-import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.ValueListElement;
@@ -47,6 +46,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.dto.domain.PrdOfferingDto;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 

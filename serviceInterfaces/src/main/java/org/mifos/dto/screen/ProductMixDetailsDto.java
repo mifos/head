@@ -22,17 +22,19 @@ package org.mifos.dto.screen;
 
 import java.util.List;
 
+import org.mifos.dto.domain.PrdOfferingDto;
+
 public class ProductMixDetailsDto {
 
     private final Short prdOfferingId;
     private final String prdOfferingName;
     private final Short productTypeID;
 
-    private final List<String> allowedPrdOfferingNames;
-    private final List<String> notAllowedPrdOfferingNames;
+    private final List<PrdOfferingDto> allowedPrdOfferingNames;
+    private final List<PrdOfferingDto> notAllowedPrdOfferingNames;
 
     public ProductMixDetailsDto(Short prdOfferingId, String prdOfferingName, Short productTypeID,
-            List<String> allowedPrdOfferingNames, List<String> notAllowedPrdOfferingNames) {
+            List<PrdOfferingDto> allowedPrdOfferingNames, List<PrdOfferingDto> notAllowedPrdOfferingNames) {
         this.prdOfferingId = prdOfferingId;
         this.prdOfferingName = prdOfferingName;
         this.productTypeID = productTypeID;
@@ -52,11 +54,11 @@ public class ProductMixDetailsDto {
         return this.productTypeID;
     }
 
-    public List<String> getAllowedPrdOfferingNames() {
+    public List<PrdOfferingDto> getAllowedPrdOfferingNames() {
         return this.allowedPrdOfferingNames;
     }
 
-    public List<String> getNotAllowedPrdOfferingNames() {
+    public List<PrdOfferingDto> getNotAllowedPrdOfferingNames() {
         return this.notAllowedPrdOfferingNames;
     }
 }

@@ -62,7 +62,7 @@ function selectAllOptions(outSel)
   
   <div class="container">&nbsp;
   <!--  Main Content Begins-->
-  <span id="page.id" title="createProductsMix" />
+  <span id="page.id" title="editProductsMix" />
   <div class="content marginAuto">
     <div class="borders span-22">
       <div class="borderbtm span-22">
@@ -75,7 +75,7 @@ function selectAllOptions(outSel)
           <div><span class="red">* </span>[@spring.message "manageProducts.defineProductmix.fieldsmarkedwithanasteriskarerequired"/] </div>
           <p class="error" id="error1"></p>
           <p class="fontBold">[@spring.message "manageProducts.defineProductmix.productmixdetails"/] </p>
-        <form name="productsmixform" id="productsmixform" method="post" action="defineProductMix.ftl">
+        <form name="productsmixform" id="productsmixform" method="post" action="editProductMix.ftl">
         	<div class="prepend-3  span-21 last">
         		<div class="span-20 ">
 	        		<span class="span-5 rightAlign">
@@ -83,7 +83,7 @@ function selectAllOptions(outSel)
 	        		</span>
         			<span class="span-5">
 	   					[@spring.bind "formBean.productTypeId" /]
-					    <select id="${spring.status.expression}" name="${spring.status.expression}" onchange="return productsmixform.submit();">
+					    <select id="${spring.status.expression}" name="${spring.status.expression}" onchange="return productsmixform.submit();" disabled>
 					        <option value="" [@spring.checkSelected ""/]>${springMacroRequestContext.getMessage("--Select--")}</option>
 					        [#if formBean.productTypeOptions?is_hash]
 					            [#list formBean.productTypeOptions?keys as value]
@@ -104,7 +104,7 @@ function selectAllOptions(outSel)
 					</span>
 					<span class="span-7">
 						[@spring.bind "formBean.productId" /]
-					    <select id="${spring.status.expression}" name="${spring.status.expression}" onchange="return productsmixform.submit();">
+					    <select id="${spring.status.expression}" name="${spring.status.expression}" onchange="return productsmixform.submit();" disabled>
 					        <option value="" [@spring.checkSelected ""/]>${springMacroRequestContext.getMessage("--Select--")}</option>
 					        [#if formBean.productNameOptions?is_hash]
 					            [#list formBean.productNameOptions?keys as value]

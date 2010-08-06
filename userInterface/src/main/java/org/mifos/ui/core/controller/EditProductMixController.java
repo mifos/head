@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.ProductTypeDto;
+import org.mifos.dto.screen.ProductMixDetailsDto;
 import org.mifos.dto.screen.ProductMixPreviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,9 +43,9 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/defineProductMix")
+@RequestMapping("/editProductMix")
 @SessionAttributes("formBean")
-public class DefineProductMixController {
+public class EditProductMixController {
 
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
     private static final String CANCEL_PARAM = "CANCEL";
@@ -52,22 +53,32 @@ public class DefineProductMixController {
     @Autowired
     private AdminServiceFacade adminServiceFacade;
 
-    protected DefineProductMixController() {
+    protected EditProductMixController() {
         // default contructor for spring autowiring
     }
 
-    public DefineProductMixController(AdminServiceFacade adminServiceFacade) {
+    public EditProductMixController(AdminServiceFacade adminServiceFacade) {
         this.adminServiceFacade = adminServiceFacade;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("formBean")
-    public ProductMixFormBean showPopulatedForm() {
+    public ProductMixFormBean showEditForm(@RequestParam(value = "productId", required = true) Integer productId) {
 
-        ProductMixFormBean defineFormBean = new ProductMixFormBean();
-        populateProductTypeOptions(defineFormBean);
+        ProductMixFormBean formBean = new ProductMixFormBean();
+        formBean.setProductId(productId.toString());
+        formBean.setProductTypeId("1");
 
-        return defineFormBean;
+        ProductMixDetailsDto productMixDetails = adminServiceFacade.retrieveProductMixDetails(productId.shortValue(), formBean.getProductTypeId());
+
+        Map<String, String> productNameOptions = new LinkedHashMap<String, String>();
+        productNameOptions.put(productMixDetails.getPrdOfferingId().toString(), productMixDetails.getPrdOfferingName());
+        formBean.setProductNameOptions(productNameOptions);
+
+        populateProductTypeOptions(formBean);
+        populateAllowedNotAllowedOptions(formBean, productMixDetails);
+
+        return formBean;
     }
 
     private void populateProductTypeOptions(ProductMixFormBean formBean) {
@@ -92,63 +103,38 @@ public class DefineProductMixController {
         if (StringUtils.isNotBlank(cancel)) {
             status.setComplete();
         } else if (result.hasErrors()) {
-            mav = new ModelAndView("defineProductMix");
+            mav = new ModelAndView("editProductMix");
         } else {
-            mav = new ModelAndView("defineProductMix");
+            String selectedProductTypeNameKey = formBean.getProductTypeOptions().get(formBean.getProductTypeId());
+            String selectedProductName = formBean.getProductNameOptions().get(formBean.getProductId());
 
-            if (StringUtils.isBlank(formBean.getProductTypeId())) {
-                ProductMixFormBean defineFormBean = new ProductMixFormBean();
-                populateProductTypeOptions(defineFormBean);
-            } else if (StringUtils.isNotBlank(formBean.getProductTypeId()) && StringUtils.isBlank(formBean.getProductId())) {
-                populateProductNameOptions(formBean);
-            } else if (StringUtils.isNotBlank(formBean.getProductTypeId()) &&
-                    StringUtils.isNotBlank(formBean.getProductId()) && (formBean.getAllowed() == null && formBean.getNotAllowed() == null)) {
-                populateAllowedNotAllowedOptions(formBean);
+            List<String> allowedProductMix = findMatchingProducts(formBean, formBean.getAllowed());
+            List<String> notAllowedProductMix = findMatchingProducts(formBean, formBean.getNotAllowed());
 
-            } else {
-                String selectedProductTypeNameKey = formBean.getProductTypeOptions().get(formBean.getProductTypeId());
-                String selectedProductName = formBean.getProductNameOptions().get(formBean.getProductId());
+            ProductMixPreviewDto preview = new ProductMixPreviewDto();
+            preview.setProductTypeNameKey(selectedProductTypeNameKey);
+            preview.setProductName(selectedProductName);
+            preview.setAllowedProductMix(allowedProductMix);
+            preview.setNotAllowedProductMix(notAllowedProductMix);
 
-                List<String> allowedProductMix = findMatchingProducts(formBean, formBean.getAllowed());
-                List<String> notAllowedProductMix = findMatchingProducts(formBean, formBean.getNotAllowed());
-
-                ProductMixPreviewDto preview = new ProductMixPreviewDto();
-                preview.setProductTypeNameKey(selectedProductTypeNameKey);
-                preview.setProductName(selectedProductName);
-                preview.setAllowedProductMix(allowedProductMix);
-                preview.setNotAllowedProductMix(notAllowedProductMix);
-
-                mav = new ModelAndView("previewProductMix");
-                mav.addObject("ref", preview);
-                mav.addObject("formView", "defineProductMix");
-            }
-
+            mav = new ModelAndView("previewProductMix");
+            mav.addObject("ref", preview);
+            mav.addObject("formView", "editProductMix");
         }
 
         return mav;
     }
 
-    private void populateProductNameOptions(ProductMixFormBean formBean) {
-        Map<String, String> productNameOptions = new LinkedHashMap<String, String>();
-
-        List<PrdOfferingDto> applicableProducts = this.adminServiceFacade.retrieveLoanProductsNotMixed();
-        for (PrdOfferingDto product : applicableProducts) {
-            productNameOptions.put(product.getPrdOfferingId().toString(), product.getPrdOfferingName());
-        }
-
-        formBean.setProductNameOptions(productNameOptions);
-    }
-
-    private void populateAllowedNotAllowedOptions(ProductMixFormBean formBean) {
+    private void populateAllowedNotAllowedOptions(ProductMixFormBean formBean, ProductMixDetailsDto productMixDetails) {
         Map<String, String> allowedProductOptions = new LinkedHashMap<String, String>();
         Map<String, String> notAllowedProductOptions = new LinkedHashMap<String, String>();
 
-        List<PrdOfferingDto> allowedProductsInMix = this.adminServiceFacade.retrieveAllowedProductsForMix(Integer.parseInt(formBean.getProductTypeId()), Integer.parseInt(formBean.getProductId()));
+        List<PrdOfferingDto> allowedProductsInMix = productMixDetails.getAllowedPrdOfferingNames();
         for (PrdOfferingDto allowedProduct : allowedProductsInMix) {
             allowedProductOptions.put(allowedProduct.getPrdOfferingId().toString(), allowedProduct.getPrdOfferingName());
         }
 
-        List<PrdOfferingDto> notAllowedProductsInMix = this.adminServiceFacade.retrieveNotAllowedProductsForMix(Integer.parseInt(formBean.getProductTypeId()), Integer.parseInt(formBean.getProductId()));
+        List<PrdOfferingDto> notAllowedProductsInMix = productMixDetails.getNotAllowedPrdOfferingNames();
         for (PrdOfferingDto notAllowedProduct : notAllowedProductsInMix) {
             notAllowedProductOptions.put(notAllowedProduct.getPrdOfferingId().toString(), notAllowedProduct.getPrdOfferingName());
         }
@@ -157,16 +143,14 @@ public class DefineProductMixController {
         formBean.setNotAllowedProductOptions(notAllowedProductOptions);
     }
 
-    private List<String> findMatchingProducts(ProductMixFormBean formBean, String[] productsArray) {
+    private List<String> findMatchingProducts(ProductMixFormBean formBean, String[] allowed) {
         List<String> allowedProductNames = new ArrayList<String>();
 
-        if (productsArray != null) {
-            for (String productKey : productsArray) {
-                if (formBean.getAllowedProductOptions().containsKey(productKey)) {
-                    allowedProductNames.add(formBean.getAllowedProductOptions().get(productKey));
-                } else if (formBean.getNotAllowedProductOptions().containsKey(productKey)) {
-                    allowedProductNames.add(formBean.getNotAllowedProductOptions().get(productKey));
-                }
+        for (String allowedKey : allowed) {
+            if (formBean.getAllowedProductOptions().containsKey(allowedKey)) {
+                allowedProductNames.add(formBean.getAllowedProductOptions().get(allowedKey));
+            } else if (formBean.getNotAllowedProductOptions().containsKey(allowedKey)) {
+                allowedProductNames.add(formBean.getNotAllowedProductOptions().get(allowedKey));
             }
         }
 

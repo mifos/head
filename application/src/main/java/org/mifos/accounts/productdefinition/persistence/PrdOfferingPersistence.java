@@ -134,7 +134,6 @@ public class PrdOfferingPersistence extends Persistence {
 
     }
 
-    @SuppressWarnings("cast")
     public List<PrdOfferingBO> getAllowedPrdOfferingsForMixProduct(String prdId, String prdType)
             throws PersistenceException {
 

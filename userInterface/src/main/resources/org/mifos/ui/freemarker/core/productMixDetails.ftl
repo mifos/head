@@ -17,15 +17,15 @@
     	<div class="span-16 ">
         	<span class="orangeheading">${mixDetails.prdOfferingName}</span><br /><br />
         </div>
-        <span class="span-5 rightAlign"><a href="#">[@spring.message "manageProduct.productMixDetails.editproductmixinformation"/]</a></span>
+        <span class="span-5 rightAlign"><a href="editProductMix.ftl?productId=${mixDetails.prdOfferingId}">[@spring.message "manageProduct.productMixDetails.editproductmixinformation"/]</a></span>
     </div>
     <div class="span-22">
     	<div class="span-22"><span class="fontBold">[@spring.message "manageProduct.productMixDetails.allowedProducts"/] :</span><span>&nbsp;</span><br />
     	[#list mixDetails.allowedPrdOfferingNames as allowedProducts]
     	[#if allowedProducts_has_next]
-    		<div><span>${allowedProducts}</span></div>
+    		<div><span>${allowedProducts.prdOfferingName}</span></div>
     		[#else]
-    		<div><span>${allowedProducts}</span></div>
+    		<div><span>${allowedProducts.prdOfferingName}</span></div>
     	[/#if]    		
     	[/#list]	
     	</div>
@@ -35,16 +35,16 @@
     		[#list mixDetails.notAllowedPrdOfferingNames as notAllowedProducts]
     		[#if notAllowedProducts_has_next]
     		<div>
-    			<span>${notAllowedProducts}</span>
+    			<span>${notAllowedProducts.prdOfferingName}</span>
     		</div>
     		[#else]
     		<div>
-    			<span>${notAllowedProducts}</span>
+    			<span>${notAllowedProducts.prdOfferingName}</span>
     		</div>
     		[/#if]
     	[/#list]
     	</div>
-        <div class="span-22"><a href="#">[@spring.message "viewChangeLog"/]</a></div>
+        <div class="span-22"><a href="productMixAction.do?method=loadChangeLog&entityType=ProductMix&entityId=${mixDetails.prdOfferingId}">[@spring.message "viewChangeLog"/]</a></div>
     </div>
    	</form> 
   </div><!--Main Content Ends-->

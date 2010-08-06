@@ -273,10 +273,7 @@ while(enn.hasMoreElements()){
 						<tr class="fontnormal">
 							<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 							<td width="97%">
-								<a href="viewProductMix.ftl"><mifos:mifoslabel name="admin.viewProductsMix" /></a> | <html-el:link styleId="admin.link.defineProductsMix"
-								href="productMixAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.defineProductsMix"/>
-								</html-el:link>
+								<a href="viewProductMix.ftl"><mifos:mifoslabel name="admin.viewProductsMix" /></a> | <a id="admin.link.defineProductsMix" href="defineProductMix.ftl"><mifos:mifoslabel name="admin.defineProductsMix"/></a>
 							</td>
 						</tr>
 					</table>

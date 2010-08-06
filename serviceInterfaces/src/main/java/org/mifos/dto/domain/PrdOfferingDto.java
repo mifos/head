@@ -18,21 +18,19 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.productdefinition.util.helpers;
+package org.mifos.dto.domain;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import java.io.Serializable;
 
 /**
  * This is a helper class which would be used when we need only certain details
  * of a product offering hence instead of loading the entire product offering
  * object we can load only this object using a query.
  */
-public class PrdOfferingDto implements DataTransferObject {
+public class PrdOfferingDto implements Serializable {
 
     private Short prdOfferingId;
-
     private String prdOfferingName;
-
     private String globalPrdOfferingNum;
 
     public PrdOfferingDto() {

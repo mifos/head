@@ -12,7 +12,7 @@
 			<form method="" action="" name="formname">
 				<div class="marginTop10">&nbsp;</div>
 				<p class="font15 orangeheading">[@spring.message "admin.viewproductsmix"/]</p>
-				<p>[@spring.message "manageProduct.viewProductMix.clickonaproductinstancebelowtoviewmixdetailsandmakechangesor" /] <a href="productMixAction.do?method=load" >[@spring.message "admin.defineproductsmix"/] </a></p>
+				<p>[@spring.message "manageProduct.viewProductMix.clickonaproductinstancebelowtoviewmixdetailsandmakechangesor" /] <a href="defineProductMix.ftl" >[@spring.message "admin.defineproductsmix"/] </a></p>
 				<br/>
 				<div>
 	   	 			<span class="fontBold">[@spring.message "manageProduct.viewProductMix.loan" /]</span>
