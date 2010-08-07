@@ -31,9 +31,12 @@ import junit.framework.ComparisonFailure;
 
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
+import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.filter.ExcludeTableFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.hibernate.FlushMode;
 import org.hibernate.stat.Statistics;
 import org.junit.After;
 import org.junit.Before;
@@ -68,11 +71,18 @@ public class MifosIntegrationTestCase {
     private static IDataSet latestDataDump;
 
     protected static boolean verifyDatabaseState;
+    protected static ExcludeTableFilter excludeTables = new ExcludeTableFilter();
+
 
     @BeforeClass
     public static void init() throws Exception {
         new TestCaseInitializer().initialize();
         verifyDatabaseState = false;
+        excludeTables.excludeTable("config_key_value_integer");
+        excludeTables.excludeTable("personnel");
+        excludeTables.excludeTable("meeting");
+        excludeTables.excludeTable("recurrence_detail");
+        excludeTables.excludeTable("recur_on_day");
     }
 
     @Before
@@ -81,7 +91,8 @@ public class MifosIntegrationTestCase {
             Connection connection = StaticHibernateUtil.getSessionTL().connection();
             connection.setAutoCommit(false);
             DatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
-            latestDataDump = dbUnitConnection.createDataSet();
+
+            latestDataDump =  new FilteredDataSet(excludeTables, dbUnitConnection.createDataSet());
             String tmpDir = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
             FlatXmlDataSet.write(latestDataDump, new FileOutputStream(tmpDir + "latestDataDump.xml"));
             FlatXmlDataSetBuilder fxmlBuilder = new FlatXmlDataSetBuilder();
@@ -95,7 +106,7 @@ public class MifosIntegrationTestCase {
             Connection connection = StaticHibernateUtil.getSessionTL().connection();
             connection.setAutoCommit(false);
             DatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
-            IDataSet upgradeDataDump = dbUnitConnection.createDataSet();
+            IDataSet upgradeDataDump = new FilteredDataSet(excludeTables, dbUnitConnection.createDataSet());
             String tmpDir = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
             FlatXmlDataSet.write(upgradeDataDump, new FileOutputStream(tmpDir + "upgradeDataDump.xml"));
             FlatXmlDataSetBuilder fxmlBuilder = new FlatXmlDataSetBuilder();
