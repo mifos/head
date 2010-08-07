@@ -36,7 +36,6 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.filter.ExcludeTableFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.hibernate.FlushMode;
 import org.hibernate.stat.Statistics;
 import org.junit.After;
 import org.junit.Before;
