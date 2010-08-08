@@ -292,7 +292,7 @@ public class ClientTest extends UiTestCaseBase {
         CreateQuestionParameters parameters = new CreateQuestionParameters();
         parameters.setTitle(title);
         parameters.setType(type);
-        parameters.setChoices(choices);
+        parameters.setChoicesFromStrings(choices);
         return parameters;
     }
 
