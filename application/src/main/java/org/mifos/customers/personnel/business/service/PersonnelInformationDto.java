@@ -94,7 +94,7 @@ public class PersonnelInformationDto implements DataTransferObject {
         return this.emailId;
     }
 
-    public String getPreferredLocaleLanguage() {
+    public String getPreferredLocaleLanguageName() {
         return this.preferredLocaleLanguageName;
     }
 
