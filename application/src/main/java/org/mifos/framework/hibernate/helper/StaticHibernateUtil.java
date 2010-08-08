@@ -24,7 +24,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
-import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 
 public class StaticHibernateUtil {

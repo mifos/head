@@ -133,7 +133,7 @@ explanation of the license and how it is applied.
 						</c:if> <br>
 						<mifos:mifoslabel name="Personnel.LanguagePreferred"
 							bundle="PersonnelUIResources"></mifos:mifoslabel> <c:if
-							test="${!empty personnelInformationDto.preferredLocale}">
+							test="${!empty personnelInformationDto.preferredLocaleLanguageName}">
 							<%--<c:forEach
 								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'languageList')}"
 								var="item">
@@ -142,7 +142,7 @@ explanation of the license and how it is applied.
 											${item.name}
 								</c:if>
 							</c:forEach> --%>
-							${personnelInformationDto.preferredLocale.language.languageName}
+							${personnelInformationDto.preferredLocaleLanguageName}
 						</c:if> <br>
 						<mifos:mifoslabel name="Personnel.DOJMFI"
 							bundle="PersonnelUIResources"></mifos:mifoslabel> <c:out
@@ -208,7 +208,7 @@ explanation of the license and how it is applied.
 									bundle="PersonnelUIResources"></mifos:mifoslabel> <br>
 								<span class="fontnormal"> <mifos:mifoslabel
 									name="Personnel.Office" bundle="PersonnelUIResources"></mifos:mifoslabel>
-								<c:out value="${personnelInformationDto.office.officeName}" /> <br>
+								<c:out value="${personnelInformationDto.officeName}" /> <br>
 								<mifos:mifoslabel name="Personnel.UserTitle"
 									bundle="PersonnelUIResources"></mifos:mifoslabel> <c:forEach
 									items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'titleList')}"
@@ -223,7 +223,7 @@ explanation of the license and how it is applied.
 									items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'personnelLevelList')}"
 									var="item">
 
-									<c:if test="${personnelInformationDto.level.id == item.id}">
+									<c:if test="${personnelInformationDto.levelId == item.id}">
 											${item.name}
 								</c:if>
 								</c:forEach> <br>
@@ -236,10 +236,10 @@ explanation of the license and how it is applied.
 									</bean:define>
 									<c:choose>
 										<c:when test="${ctr == 0}">
-											<c:out value="${personnelRole.role.name}" />
+											<c:out value="${personnelRole.name}" />
 										</c:when>
 										<c:otherwise>
-					 						, <c:out value="${personnelRole.role.name}" />
+					 						, <c:out value="${personnelRole.name}" />
 										</c:otherwise>
 									</c:choose>
 								</c:forEach> </span></td>

@@ -23,14 +23,11 @@ package org.mifos.customers.personnel.business.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
-import org.mifos.customers.personnel.business.PersonnelDetailsEntity;
-import org.mifos.customers.personnel.business.PersonnelLevelEntity;
-import org.mifos.customers.personnel.business.PersonnelNotesEntity;
-import org.mifos.customers.personnel.business.PersonnelRoleEntity;
-import org.mifos.customers.personnel.business.PersonnelStatusEntity;
+
+import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.screen.ListElement;
+import org.mifos.dto.screen.PersonnelDetailsDto;
+import org.mifos.dto.screen.PersonnelNoteDto;
 import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.helpers.DateUtils;
 
@@ -40,35 +37,35 @@ import org.mifos.framework.util.helpers.DateUtils;
 public class PersonnelInformationDto implements DataTransferObject {
 
     private final String displayName;
-    private final PersonnelStatusEntity status;
+    private final ListElement status;
     private final Boolean locked;
-    private final PersonnelDetailsEntity personnelDetails;
+    private final PersonnelDetailsDto personnelDetails;
     private final String emailId;
-    private final SupportedLocalesEntity preferredLocale;
-    private final PersonnelLevelEntity level;
-    private final OfficeBO office;
+    private final String preferredLocaleLanguageName;
+    private final Short levelId;
+    private final String officeName;
     private final Integer title;
-    private final Set<PersonnelRoleEntity> personnelRoles;
+    private final Set<ListElement> personnelRoles;
     private final Short personnelId;
     private final String userName;
-    private final Set<PersonnelCustomFieldEntity> customFields;
-    private final Set<PersonnelNotesEntity> personnelNotes;
+    private final Set<CustomFieldDto> customFields;
+    private final Set<PersonnelNoteDto> personnelNotes;
 
 
-    public PersonnelInformationDto(String displayName, PersonnelStatusEntity status, Boolean locked,
-                                   PersonnelDetailsEntity personnelDetails, String emailId, SupportedLocalesEntity preferredLocale,
-                                   PersonnelLevelEntity level, OfficeBO office, Integer title, Set<PersonnelRoleEntity> personnelRoles,
-                                   Short personnelId, String userName, Set<PersonnelCustomFieldEntity> customFields,
-                                   Set<PersonnelNotesEntity> personnelNotes) {
+    public PersonnelInformationDto(String displayName, ListElement status, Boolean locked,
+                                   PersonnelDetailsDto personnelDetails, String emailId, String preferredLocaleLanguageName,
+                                   Short levelId, String officeName, Integer title, Set<ListElement> personnelRoles,
+                                   Short personnelId, String userName, Set<CustomFieldDto> customFields,
+                                   Set<PersonnelNoteDto> personnelNotes) {
         super();
         this.displayName = displayName;
         this.status = status;
         this.locked = locked;
         this.personnelDetails = personnelDetails;
         this.emailId = emailId;
-        this.preferredLocale = preferredLocale;
-        this.level = level;
-        this.office = office;
+        this.preferredLocaleLanguageName = preferredLocaleLanguageName;
+        this.levelId = levelId;
+        this.officeName = officeName;
         this.title = title;
         this.personnelRoles = personnelRoles;
         this.personnelId = personnelId;
@@ -81,7 +78,7 @@ public class PersonnelInformationDto implements DataTransferObject {
         return this.displayName;
     }
 
-    public PersonnelStatusEntity getStatus() {
+    public ListElement getStatus() {
         return this.status;
     }
 
@@ -89,7 +86,7 @@ public class PersonnelInformationDto implements DataTransferObject {
         return this.locked;
     }
 
-    public PersonnelDetailsEntity getPersonnelDetails() {
+    public PersonnelDetailsDto getPersonnelDetails() {
         return this.personnelDetails;
     }
 
@@ -97,23 +94,23 @@ public class PersonnelInformationDto implements DataTransferObject {
         return this.emailId;
     }
 
-    public SupportedLocalesEntity getPreferredLocale() {
-        return this.preferredLocale;
+    public String getPreferredLocaleLanguage() {
+        return this.preferredLocaleLanguageName;
     }
 
-    public PersonnelLevelEntity getLevel() {
-        return this.level;
+    public Short getLevelId() {
+        return this.levelId;
     }
 
-    public OfficeBO getOffice() {
-        return this.office;
+    public String getOfficeName() {
+        return this.officeName;
     }
 
     public Integer getTitle() {
         return this.title;
     }
 
-    public Set<PersonnelRoleEntity> getPersonnelRoles() {
+    public Set<ListElement> getPersonnelRoles() {
         return this.personnelRoles;
     }
 
@@ -125,11 +122,11 @@ public class PersonnelInformationDto implements DataTransferObject {
         return this.userName;
     }
 
-    public Set<PersonnelCustomFieldEntity> getCustomFields() {
+    public Set<CustomFieldDto> getCustomFields() {
         return this.customFields;
     }
 
-    public Set<PersonnelNotesEntity> getPersonnelNotes() {
+    public Set<PersonnelNoteDto> getPersonnelNotes() {
         return this.personnelNotes;
     }
 
@@ -137,16 +134,16 @@ public class PersonnelInformationDto implements DataTransferObject {
         if (this.personnelDetails != null && this.personnelDetails.getDob() != null
                 && !this.personnelDetails.getDob().equals("")) {
             return String.valueOf(DateUtils
-                    .DateDiffInYears(new java.sql.Date(this.personnelDetails.getDob().getTime())));
+                    .DateDiffInYears(new java.sql.Date(this.personnelDetails.getDob().toDate().getTime())));
         }
 
         return "";
     }
 
-    public List<PersonnelNotesEntity> getRecentPersonnelNotes() {
-        List<PersonnelNotesEntity> notes = new ArrayList<PersonnelNotesEntity>();
+    public List<PersonnelNoteDto> getRecentPersonnelNotes() {
+        List<PersonnelNoteDto> notes = new ArrayList<PersonnelNoteDto>();
         int count = 0;
-        for (PersonnelNotesEntity personnelNotes : getPersonnelNotes()) {
+        for (PersonnelNoteDto personnelNotes : getPersonnelNotes()) {
             if (count > 2) {
                 break;
             }
