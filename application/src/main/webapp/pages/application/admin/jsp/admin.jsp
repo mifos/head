@@ -115,9 +115,8 @@ while(enn.hasMoreElements()){
 						<tr class="fontnormal">
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
-							<td><html-el:link styleId="admin.link.viewFunds"
-								action="/fundAction.do?method=viewAllFunds&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.viewfunds" /></html-el:link>
+							<td>
+							<a id="admin.link.viewFunds" href="viewFunds.ftl"><mifos:mifoslabel name="admin.viewfunds" /></a>
 							| <html-el:link styleId="admin.link.defineNewFund"
 								action="/fundAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.defnewfund" /></html-el:link></td>
@@ -135,20 +134,17 @@ while(enn.hasMoreElements()){
 						<tr class="fontnormal">
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
-							<td><html-el:link styleId="admin.link.viewHolidays"
-								action="holidayAction.do?method=get">
-								<mifos:mifoslabel name="admin.viewholidays" /></html-el:link>
-							| <html-el:link styleId="admin.link.defineNewHoliday"
-								action="holidayAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.defnewholiday" /></html-el:link></td>
+							<td>
+							<a id="admin.link.viewHolidays" href="viewHolidays.ftl"><mifos:mifoslabel name="admin.viewholidays" /></a>
+							| <a id="admin.link.defineNewHoliday" href="defineNewHoliday.ftl"><mifos:mifoslabel name="admin.defnewholiday" /></a>
+							</td>
 						</tr>
 						<tr class="fontnormal">
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<td>
-							 <html-el:link styleId="admin.link.defineAcceptedPaymentType"
-								action="acceptedPaymentTypeAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.defineacceptedpaymenttype" /></html-el:link></td>
+							<a id="admin.link.defineAcceptedPaymentType" href="defineAcceptedPaymentTypes.ftl"><mifos:mifoslabel name="admin.defineacceptedpaymenttype" /></a>
+							</td>
 						</tr>
 						<tr class="fontnormal">
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
@@ -277,10 +273,7 @@ while(enn.hasMoreElements()){
 						<tr class="fontnormal">
 							<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 							<td width="97%">
-								<a href="viewProductMix.ftl"><mifos:mifoslabel name="admin.viewProductsMix" /></a> | <html-el:link styleId="admin.link.defineProductsMix"
-								href="productMixAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.defineProductsMix"/>
-								</html-el:link>
+								<a href="viewProductMix.ftl"><mifos:mifoslabel name="admin.viewProductsMix" /></a> | <a id="admin.link.defineProductsMix" href="defineProductMix.ftl"><mifos:mifoslabel name="admin.defineProductsMix"/></a>
 							</td>
 						</tr>
 					</table>

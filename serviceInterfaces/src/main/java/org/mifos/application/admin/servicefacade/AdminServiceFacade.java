@@ -23,10 +23,16 @@ package org.mifos.application.admin.servicefacade;
 import java.util.List;
 
 import org.mifos.dto.domain.AcceptedPaymentTypeDto;
+import org.mifos.dto.domain.CreateOrUpdateProductCategory;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
+import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.dto.domain.ProductTypeDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
+import org.mifos.dto.screen.ProductCategoryDetailsDto;
+import org.mifos.dto.screen.ProductCategoryDisplayDto;
+import org.mifos.dto.screen.ProductCategoryTypeDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductDto;
@@ -71,9 +77,36 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_ACCEPTED_PAYMENT_TYPES')")
     AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes();
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_ACCEPTED_PAYMENT_TYPES')")
+    void updateAcceptedPaymentTypes(String[] chosenAcceptedFees, String[] chosenAcceptedLoanDisbursements,
+            String[] chosenAcceptedLoanRepayments, String[] chosenAcceptedSavingDeposits,
+            String[] chosenAcceptedSavingWithdrawals);
+
     @PreAuthorize("isFullyAuthenticated()")
-    void updateAcceptedPaymentTypes(AcceptedPaymentTypeDto acceptedPaymentTypeDto);
+    ProductCategoryDisplayDto retrieveAllProductCategories();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    ProductCategoryDetailsDto retrieveProductCateogry(String globalProductCategoryNumber);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<ProductCategoryTypeDto> retrieveProductCategoryTypes();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void createProductCategory(CreateOrUpdateProductCategory productCategory);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateProductCategory(CreateOrUpdateProductCategory productCategory);
+
+    List<PrdOfferingDto> retrieveLoanProductsNotMixed();
+
+    List<ProductTypeDto> retrieveProductTypesApplicableToProductMix();
+
+    List<PrdOfferingDto> retrieveAllowedProductsForMix(Integer productTypeId, Integer productId);
+
+    List<PrdOfferingDto> retrieveNotAllowedProductsForMix(Integer productTypeId, Integer productId);
+
+    void createOrUpdateProductMix(Integer productId, List<Integer> notAllowedProductIds);
 }

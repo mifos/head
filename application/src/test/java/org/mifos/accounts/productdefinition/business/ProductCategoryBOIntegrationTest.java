@@ -41,10 +41,6 @@ import org.mifos.security.util.UserContext;
 
 public class ProductCategoryBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public ProductCategoryBOIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testCreateProductCategory() throws SystemException, ApplicationException {
         UserContext userContext = TestUtils.makeUser();

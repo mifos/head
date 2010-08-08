@@ -28,10 +28,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class FieldConfigurationEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public FieldConfigurationEntityIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testGetFieldConfigurationEntity() {
         FieldConfigurationEntity fieldConfigurationEntity = (FieldConfigurationEntity) StaticHibernateUtil

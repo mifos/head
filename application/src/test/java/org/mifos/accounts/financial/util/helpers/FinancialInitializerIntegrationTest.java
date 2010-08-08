@@ -30,10 +30,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 
 public class FinancialInitializerIntegrationTest extends MifosIntegrationTestCase {
 
-    public FinancialInitializerIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testAssetsCategoryIsCached() throws Exception {
         String assetsGlCode = "10000";

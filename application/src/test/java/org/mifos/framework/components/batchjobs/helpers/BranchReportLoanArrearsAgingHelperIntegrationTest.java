@@ -55,9 +55,6 @@ import org.mifos.reports.business.service.BranchReportService;
 import org.mifos.reports.business.service.IBranchReportService;
 
 public class BranchReportLoanArrearsAgingHelperIntegrationTest extends BranchReportIntegrationTestCase {
-    public BranchReportLoanArrearsAgingHelperIntegrationTest() throws Exception {
-        super();
-    }
 
     private IBranchReportService branchReportServiceMock;
     private List<LoanArrearsAgingPeriod> expectedPeriods;

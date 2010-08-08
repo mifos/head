@@ -53,10 +53,6 @@ import org.mifos.reports.business.service.IBranchReportService;
 
 public class BranchReportHelperIntegrationTest extends BranchReportIntegrationTestCase {
 
-    public BranchReportHelperIntegrationTest() throws Exception {
-        super();
-    }
-
     private BranchReportHelper branchReportHelper;
     private Session session;
     private Transaction transaction;

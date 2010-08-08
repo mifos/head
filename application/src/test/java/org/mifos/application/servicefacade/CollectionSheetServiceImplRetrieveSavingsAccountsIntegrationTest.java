@@ -32,6 +32,7 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountNotesEntity;
@@ -51,8 +52,8 @@ import org.mifos.security.util.UserContext;
 
 public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest extends MifosIntegrationTestCase {
 
-    public CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest() throws Exception {
-        super();
+    @BeforeClass
+    public static void init() {
         collectionSheetService = DependencyInjectedServiceLocator.locateCollectionSheetService();
     }
 

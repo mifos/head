@@ -27,16 +27,16 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.NextScheduledEventStrategy;
 import org.mifos.calendar.NextWorkingDayStrategy;
+import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.business.AbstractBusinessObject;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.schedule.ScheduledEvent;
+import org.mifos.service.BusinessRuleException;
 
 public class HolidayBO extends AbstractBusinessObject implements Holiday {
 
@@ -48,7 +48,7 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
 
     private boolean validationEnabled = true;
 
-    private Short holidayChangesAppliedFlag;
+    private Short holidayChangesAppliedFlag = YesNoFlag.NO.getValue();
 
     private Date holidayFromDate;
 
@@ -59,10 +59,16 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
 
     public HolidayBO(HolidayDetails holidayDetails) {
         this.holidayName = holidayDetails.getName();
-        this.holidayFromDate = holidayDetails.getFromDate();
-        this.holidayThruDate = holidayDetails.getThruDate();
-        this.holidayChangesAppliedFlag = holidayDetails.getHolidayChangesAppliedFlag().getValue();
-        this.repaymentRuleType = holidayDetails.getRepaymentRuleType();
+        this.holidayFromDate = holidayDetails.getFromDate().toDateMidnight().toDate();
+        if (holidayDetails.getThruDate() != null) {
+            this.holidayThruDate = holidayDetails.getThruDate().toDateMidnight().toDate();
+        }
+
+        if (holidayDetails.isHolidayChangesApplied()) {
+            this.holidayChangesAppliedFlag = YesNoFlag.YES.getValue();
+        }
+
+        this.repaymentRuleType = RepaymentRuleTypes.fromInt(holidayDetails.getRepaymentRuleType().intValue());
     }
 
     @Override
@@ -216,28 +222,28 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
     }
 
     public HolidayDetails toDto() {
-        return new HolidayDetails(this.holidayName, this.holidayFromDate, this.holidayThruDate, this.repaymentRuleType);
+        return new HolidayDetails(this.holidayName, this.holidayFromDate, this.holidayThruDate, this.repaymentRuleType.getValue());
     }
 
     public static HolidayBO fromDto(HolidayDetails holidayDetails) {
         return new HolidayBO(holidayDetails);
     }
 
-    public void validate() throws ApplicationException {
+    public void validate() {
         validateFromDateAgainstCurrentDate(this.holidayFromDate);
         validateFromDateAgainstThruDate(this.holidayFromDate, this.holidayThruDate);
     }
 
-    private void validateFromDateAgainstCurrentDate(final Date fromDate) throws ApplicationException {
+    private void validateFromDateAgainstCurrentDate(final Date fromDate) {
         if (DateUtils.getDateWithoutTimeStamp(fromDate.getTime()).compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) <= 0) {
-            throw new ApplicationException(HolidayConstants.INVALIDFROMDATE);
+            throw new BusinessRuleException(HolidayConstants.INVALIDFROMDATE);
         }
     }
 
-    private void validateFromDateAgainstThruDate(final Date fromDate, final Date thruDate) throws ApplicationException {
+    private void validateFromDateAgainstThruDate(final Date fromDate, final Date thruDate) {
         if (DateUtils.getDateWithoutTimeStamp(fromDate.getTime()).compareTo(
                 DateUtils.getDateWithoutTimeStamp(thruDate.getTime())) > 0) {
-            throw new ApplicationException(HolidayConstants.INVALIDTHRUDATE);
+            throw new BusinessRuleException(HolidayConstants.INVALIDTHRUDATE);
         }
     }
 }

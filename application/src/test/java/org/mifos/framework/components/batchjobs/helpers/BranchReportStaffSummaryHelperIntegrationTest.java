@@ -40,10 +40,6 @@ import org.springframework.core.io.Resource;
 
 public class BranchReportStaffSummaryHelperIntegrationTest extends MifosIntegrationTestCase {
 
-    public BranchReportStaffSummaryHelperIntegrationTest() throws Exception {
-        super();
-    }
-
     private static final Date RUN_DATE = DateUtils.currentDate();
     private static final Short BRANCH_ID_SHORT = Short.valueOf("2");
 

@@ -20,6 +20,7 @@
 
 package org.mifos.application.holiday.persistence;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.mifos.application.holiday.business.Holiday;
@@ -46,4 +47,6 @@ public interface HolidayDao {
     CalendarEvent findCalendarEventsForThisYearAndNext(short officeId);
 
     void validateNoExtraFutureHolidaysApplicableOnParentOffice(Short oldParentOfficeId, Short newParentOfficeId) throws ApplicationException;
+
+    List<String> retrieveApplicableOfficeNames(Collection<Short> officeIds);
 }

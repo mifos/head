@@ -47,7 +47,7 @@ public class FundController {
 
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("viewFunds", "viewFunds.ftl").build();
+        return new AdminBreadcrumbBuilder().withLink("admin.viewfunds", "viewFunds.ftl").build();
     }
 
     @RequestMapping(method = RequestMethod.GET)

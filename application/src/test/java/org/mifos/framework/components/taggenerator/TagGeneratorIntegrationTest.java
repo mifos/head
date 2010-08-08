@@ -51,9 +51,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
 public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
-    public TagGeneratorIntegrationTest() throws Exception {
-        super();
-    }
 
     private CustomerBO group;
 

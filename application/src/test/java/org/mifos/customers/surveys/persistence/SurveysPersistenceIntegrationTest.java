@@ -35,10 +35,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 
 public class SurveysPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public SurveysPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private Question question1;
     private Question question2;
     private Question question3;

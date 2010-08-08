@@ -27,8 +27,8 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.schedule.ScheduledEvent;
 
 public class MoratoriumStrategy implements ListOfDatesAdjustmentStrategy {
@@ -140,7 +140,7 @@ public class MoratoriumStrategy implements ListOfDatesAdjustmentStrategy {
 
     private Holiday buildHolidayFromCurrentHolidayWithRepaymentRule(Holiday originalHoliday, RepaymentRuleTypes rule) {
         HolidayDetails holidayDetails = new HolidayDetails("temporaryHoliday", originalHoliday.getFromDate().toDate(),
-                originalHoliday.getThruDate().toDate(), rule);
+                originalHoliday.getThruDate().toDate(), rule.getValue());
         return new HolidayBO(holidayDetails);
     }
 

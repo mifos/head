@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.accounts.acceptedpaymenttype.struts.action.AcceptedPaymentTypeAction;
 import org.mifos.accounts.fees.struts.action.FeeAction;
 import org.mifos.accounts.fund.struts.action.FundAction;
 import org.mifos.accounts.loan.struts.action.AccountStatusAction;
@@ -245,7 +244,6 @@ public class ActivityMapper {
         parseActionSecurity(LookupOptionsAction.getSecurity());
         parseActionSecurity(CustomFieldsAction.getSecurity());
         parseActionSecurity(PPIAction.getSecurity());
-        parseActionSecurity(AcceptedPaymentTypeAction.getSecurity());
         parseActionSecurity(ReportsCategoryAction.getSecurity());
         parseActionSecurity(BirtAdminDocumentUploadAction.getSecurity());
         parseActionSecurity(ImportTransactionsAction.getSecurity());

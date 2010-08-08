@@ -34,10 +34,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 @Ignore
 public class LookUpValueEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public LookUpValueEntityIntegrationTest() throws Exception {
-        super();
-    }
-
     private Session session;
 
     @Before

@@ -24,9 +24,6 @@ import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 
 public class BatchJobRunnerIntegrationTest extends MifosIntegrationTestCase {
-    public BatchJobRunnerIntegrationTest() throws Exception {
-        super();
-    }
 
     @Test
     public void testRunBatch() throws Exception {

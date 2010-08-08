@@ -42,9 +42,6 @@ import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationIssueBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO;
 
 public class BranchCashConfirmationReportPersistenceIntegrationTest extends BranchReportIntegrationTestCase {
-    public BranchCashConfirmationReportPersistenceIntegrationTest() throws Exception {
-        super();
-    }
 
     private Session session;
     private Transaction transaction;

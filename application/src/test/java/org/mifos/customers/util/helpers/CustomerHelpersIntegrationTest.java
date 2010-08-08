@@ -35,10 +35,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CustomerHelpersIntegrationTest extends MifosIntegrationTestCase {
 
-    public CustomerHelpersIntegrationTest() throws Exception {
-        super();
-    }
-
     private static final double DELTA = 0.00000001;
     private CustomerBO center;
 

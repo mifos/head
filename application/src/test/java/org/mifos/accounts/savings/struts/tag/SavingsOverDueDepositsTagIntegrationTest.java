@@ -44,10 +44,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SavingsOverDueDepositsTagIntegrationTest extends MifosIntegrationTestCase {
 
-    public SavingsOverDueDepositsTagIntegrationTest() throws Exception {
-        super();
-    }
-
     CenterBO center;
     GroupBO group;
     SavingsOfferingBO savingsOffering;

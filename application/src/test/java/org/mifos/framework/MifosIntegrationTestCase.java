@@ -20,12 +20,26 @@
 
 package org.mifos.framework;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.sql.Connection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import junit.framework.ComparisonFailure;
+
+import org.dbunit.Assertion;
+import org.dbunit.database.DatabaseConnection;
+import org.dbunit.dataset.FilteredDataSet;
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.filter.ExcludeTableFilter;
+import org.dbunit.dataset.xml.FlatXmlDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.hibernate.stat.Statistics;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
@@ -35,7 +49,6 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
-
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -54,8 +67,52 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  */
 public class MifosIntegrationTestCase {
 
-    protected MifosIntegrationTestCase() throws Exception {
+    private static IDataSet latestDataDump;
+
+    protected static boolean verifyDatabaseState;
+    protected static ExcludeTableFilter excludeTables = new ExcludeTableFilter();
+
+
+    @BeforeClass
+    public static void init() throws Exception {
         new TestCaseInitializer().initialize();
+        verifyDatabaseState = false;
+        excludeTables.excludeTable("config_key_value_integer");
+        excludeTables.excludeTable("personnel");
+        excludeTables.excludeTable("meeting");
+        excludeTables.excludeTable("recurrence_detail");
+        excludeTables.excludeTable("recur_on_day");
+    }
+
+    @Before
+    public void before() throws Exception {
+        if (verifyDatabaseState) {
+            Connection connection = StaticHibernateUtil.getSessionTL().connection();
+            connection.setAutoCommit(false);
+            DatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
+
+            latestDataDump =  new FilteredDataSet(excludeTables, dbUnitConnection.createDataSet());
+            String tmpDir = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
+            FlatXmlDataSet.write(latestDataDump, new FileOutputStream(tmpDir + "latestDataDump.xml"));
+            FlatXmlDataSetBuilder fxmlBuilder = new FlatXmlDataSetBuilder();
+            latestDataDump = fxmlBuilder.build(new File(tmpDir + "latestDataDump.xml"));
+        }
+    }
+
+    @After
+    public void after() throws Exception {
+        if (verifyDatabaseState) {
+            Connection connection = StaticHibernateUtil.getSessionTL().connection();
+            connection.setAutoCommit(false);
+            DatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
+            IDataSet upgradeDataDump = new FilteredDataSet(excludeTables, dbUnitConnection.createDataSet());
+            String tmpDir = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
+            FlatXmlDataSet.write(upgradeDataDump, new FileOutputStream(tmpDir + "upgradeDataDump.xml"));
+            FlatXmlDataSetBuilder fxmlBuilder = new FlatXmlDataSetBuilder();
+            upgradeDataDump = fxmlBuilder.build(new File(tmpDir + "upgradeDataDump.xml"));
+
+            Assertion.assertEquals(latestDataDump, upgradeDataDump);
+        }
     }
 
     private Statistics statisticsService;

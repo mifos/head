@@ -37,10 +37,6 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
     Connection connection;
     Session session;
 
-    public AddInterestCalcRuleIntegrationTest() throws Exception {
-        super();
-    }
-
     @Before
     public void setUp() throws Exception {
         session = StaticHibernateUtil.getSessionTL();

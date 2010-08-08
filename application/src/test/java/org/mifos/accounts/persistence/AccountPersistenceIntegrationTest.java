@@ -83,11 +83,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCase {
 
     public static final int LOAN_CUSTOMFIELDS_NUMBER = 1;
-
-    public AccountPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private static final String ASSETS_GL_ACCOUNT_CODE = "10000";
     private static final String DIRECT_EXPENDITURE_GL_ACCOUNT_CODE = "41000";
     private AccountPersistence accountPersistence = new AccountPersistence();

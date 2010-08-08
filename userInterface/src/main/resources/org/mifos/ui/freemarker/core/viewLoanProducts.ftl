@@ -12,8 +12,8 @@
   [@mifos.crumbs breadcrumbs/]
   <p>&nbsp;&nbsp;</p>
   	<form method="POST" action="viewLoanproducts.ftl" name="viewLoanproducts">
-  <p class="marginLeft30 font15 orangeheading">[@spring.message "viewLoanProducts"/]</p>
-    <p class="marginLeft30">[@spring.message "clickonaLoanproductbelowtoviewdetailsandmakechangesor"/] <a href="#">[@spring.message "defineanewLoanproduct"/] </a></p>
+  <p class="marginLeft30 font15 orangeheading">[@spring.message "admin.viewLoanProducts"/]</p>
+    <p class="marginLeft30">[@spring.message "manageLoanProducts.viewLoanProducts.clickonaLoanproductbelowtoviewdetailsandmakechangesor"/] <a href="#">[@spring.message "admin.definenewLoanproduct"/] </a></p>
     <div class="marginTop15">
     <div class="span-22 marginLeft30"> 
     	<ul>

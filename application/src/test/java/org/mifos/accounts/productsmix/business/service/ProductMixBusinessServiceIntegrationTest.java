@@ -56,10 +56,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public ProductMixBusinessServiceIntegrationTest() throws Exception {
-        super();
-    }
-
     private SavingsOfferingBO savingsOffering;
     private SavingsOfferingBO secondSavingsOffering;
     private LoanOfferingBO loanOffering;

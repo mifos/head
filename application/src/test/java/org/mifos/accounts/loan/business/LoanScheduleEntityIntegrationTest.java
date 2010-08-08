@@ -37,10 +37,6 @@ import org.mifos.framework.util.helpers.Money;
 
 public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCase {
 
-    public LoanScheduleEntityIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testGetPrincipalDue() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) groupLoan.getAccountActionDates().toArray()[0];

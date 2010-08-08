@@ -41,10 +41,6 @@ import org.mifos.reports.util.helpers.ReportsConstants;
 
 public class ReportsPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public ReportsPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private ReportsPersistence reportsPersistence;
 
     private Session session;

@@ -64,10 +64,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
-    public SurveyIntegrationTest() throws Exception {
-        super();
-    }
-
     private static final double DELTA = 0.00000001;
 
     @Before

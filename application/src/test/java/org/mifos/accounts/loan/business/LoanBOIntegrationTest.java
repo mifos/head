@@ -101,7 +101,6 @@ import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.FundCodeEntity;
@@ -132,6 +131,7 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
@@ -150,10 +150,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
 public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
-
-    public LoanBOIntegrationTest() throws Exception {
-        super();
-    }
 
     private static final double DELTA = 0.00000001;
     private static final double DEFAULT_LOAN_AMOUNT = 300.0;
@@ -261,7 +257,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     private HolidayBO createOneDayHoliday(final Date holidayDate, RepaymentRuleTypes repaymentRule)
             throws PersistenceException, ApplicationException {
         // next working day repayment rule
-        HolidayDetails holidayDetails = new HolidayDetails("a holiday", holidayDate, holidayDate, repaymentRule);
+        HolidayDetails holidayDetails = new HolidayDetails("a holiday", holidayDate, holidayDate, repaymentRule.getValue());
         HolidayBO holiday = new HolidayBO(holidayDetails);
         // Hard coded value for head office id is 1
         Short officeId = (short) 1;

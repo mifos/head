@@ -31,6 +31,8 @@ import org.hibernate.Session;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateFlagEntity;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
+import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.util.helpers.AccountTypes;
@@ -163,5 +165,20 @@ public class ApplicationConfigurationDaoHibernate implements ApplicationConfigur
     @Override
     public void save(LookUpValueEntity entity) {
         this.genericDao.createOrUpdate(entity);
+    }
+
+    @Override
+    public void save(ProductMixBO productMix) {
+        this.genericDao.createOrUpdate(productMix);
+    }
+
+    @Override
+    public void save(PrdOfferingBO product) {
+        this.genericDao.createOrUpdate(product);
+    }
+
+    @Override
+    public void delete(ProductMixBO productMix) {
+        this.genericDao.delete(productMix);
     }
 }

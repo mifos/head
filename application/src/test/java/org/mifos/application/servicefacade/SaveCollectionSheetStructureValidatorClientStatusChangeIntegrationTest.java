@@ -35,10 +35,6 @@ import org.mifos.framework.persistence.TestDatabase;
 
 public class SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationTest extends MifosIntegrationTestCase {
 
-    public SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationTest() throws Exception {
-        super();
-    }
-
     private SaveCollectionSheetStructureValidator savecollectionSheetStructureValidator;
     private TestSaveCollectionSheetUtils saveCollectionSheetUtils;
 

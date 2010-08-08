@@ -44,6 +44,11 @@ public class CustomFieldDto implements Serializable {
         this.fieldType = fieldType;
     }
 
+    public CustomFieldDto(Short fieldId, String fieldValue) {
+        this.fieldId = fieldId;
+        this.fieldValue = fieldValue;
+    }
+
     public Short getFieldId() {
         return fieldId;
     }

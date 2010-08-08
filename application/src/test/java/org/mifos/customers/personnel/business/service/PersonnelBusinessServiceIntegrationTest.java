@@ -46,10 +46,6 @@ import org.mifos.security.login.util.helpers.LoginConstants;
 
 public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public PersonnelBusinessServiceIntegrationTest() throws Exception {
-        super();
-    }
-
     private OfficeBO office;
 
     private PersonnelBO personnel;

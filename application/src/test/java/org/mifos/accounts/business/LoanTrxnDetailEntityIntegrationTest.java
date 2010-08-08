@@ -45,10 +45,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanTrxnDetailEntityIntegrationTest() throws Exception {
-        super();
-    }
-
     private CustomerBO center;
 
     private CustomerBO group;

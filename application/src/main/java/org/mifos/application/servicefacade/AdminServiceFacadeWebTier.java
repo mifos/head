@@ -20,25 +20,35 @@
 
 package org.mifos.application.servicefacade;
 
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.mifos.accounts.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.accounts.acceptedpaymenttype.business.TransactionTypeEntity;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.PrdCategoryStatusEntity;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.service.ProductCategoryBusinessService;
 import org.mifos.accounts.productdefinition.business.service.ProductService;
+import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
+import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
+import org.mifos.accounts.productdefinition.util.helpers.ProductType;
+import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
+import org.mifos.accounts.productsmix.persistence.ProductMixPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.master.business.LookUpEntity;
@@ -49,6 +59,7 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.config.persistence.ApplicationConfigurationPersistence;
@@ -66,13 +77,19 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.AcceptedPaymentTypeDto;
 import org.mifos.dto.domain.AccountStatusesLabelDto;
 import org.mifos.dto.domain.ConfigurableLookupLabelDto;
+import org.mifos.dto.domain.CreateOrUpdateProductCategory;
 import org.mifos.dto.domain.GracePeriodDto;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
+import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.dto.domain.ProductTypeDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.dto.screen.PaymentTypeDto;
+import org.mifos.dto.screen.ProductCategoryDetailsDto;
+import org.mifos.dto.screen.ProductCategoryDisplayDto;
 import org.mifos.dto.screen.ProductCategoryDto;
+import org.mifos.dto.screen.ProductCategoryTypeDto;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductDto;
@@ -82,6 +99,8 @@ import org.mifos.framework.components.fieldConfiguration.business.FieldConfigura
 import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.security.util.UserContext;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
@@ -93,11 +112,10 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private final OfficeDao officeDao;
     private final ApplicationConfigurationDao applicationConfigurationDao;
 
-
-
     public AdminServiceFacadeWebTier(ProductService productService, OfficeHierarchyService officeHierarchyService,
-                                    MandatoryHiddenFieldService mandatoryHiddenFieldService, LoanProductDao loanProductDao,
-                                    SavingsProductDao savingsProductDao, OfficeDao officeDao, ApplicationConfigurationDao applicationConfigurationDao) {
+            MandatoryHiddenFieldService mandatoryHiddenFieldService, LoanProductDao loanProductDao,
+            SavingsProductDao savingsProductDao, OfficeDao officeDao,
+            ApplicationConfigurationDao applicationConfigurationDao) {
         this.productService = productService;
         this.officeHierarchyService = officeHierarchyService;
         this.mandatoryHiddenFieldService = mandatoryHiddenFieldService;
@@ -183,17 +201,17 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
             List<PrdOfferingBO> prdOfferingList = new ProductMixBusinessService().getPrdOfferingMix();
 
-            List<ProductCategoryDto> pcList = new ArrayList<ProductCategoryDto>();
-            for(ProductCategoryBO pcBO: productCategoryList) {
-                ProductCategoryDto pcDto = new ProductCategoryDto(pcBO.getProductType().getProductTypeID(),
-                                            pcBO.getProductType().getLookUpValue().getLookUpName());
+            List<ProductCategoryTypeDto> pcList = new ArrayList<ProductCategoryTypeDto>();
+            for (ProductCategoryBO pcBO : productCategoryList) {
+                ProductCategoryTypeDto pcDto = new ProductCategoryTypeDto(pcBO.getProductType().getProductTypeID(),
+                        pcBO.getProductType().getLookUpValue().getLookUpName());
                 pcList.add(pcDto);
             }
 
             List<ProductMixDto> pmList = new ArrayList<ProductMixDto>();
-            for(PrdOfferingBO poBO: prdOfferingList) {
-                ProductMixDto pmDto = new ProductMixDto(poBO.getPrdCategory().getProductType().getProductTypeID(), poBO.getPrdOfferingId(),
-                                        poBO.getPrdType().getProductTypeID(), poBO.getPrdOfferingName());
+            for (PrdOfferingBO poBO : prdOfferingList) {
+                ProductMixDto pmDto = new ProductMixDto(poBO.getPrdCategory().getProductType().getProductTypeID(), poBO
+                        .getPrdOfferingId(), poBO.getPrdType().getProductTypeID(), poBO.getPrdOfferingName());
                 pmList.add(pmDto);
             }
 
@@ -211,20 +229,21 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             ProductMixBusinessService service = new ProductMixBusinessService();
             PrdOfferingBO product = service.getPrdOfferingByID(prdOfferingId);
 
-            List<PrdOfferingBO> allowedPrdOfferingList = service.getAllowedPrdOfferingsByType(prdOfferingId.toString(), productType);
+            List<PrdOfferingBO> allowedPrdOfferingList = service.getAllowedPrdOfferingsByType(prdOfferingId.toString(),productType);
             List<PrdOfferingBO> notAllowedPrdOfferingList = service.getNotAllowedPrdOfferingsByType(prdOfferingId.toString());
 
-            List<String> allowedPrdOfferingNames = new ArrayList<String>();
-            List<String> notAllowedPrdOfferingNames = new ArrayList<String>();
-            for(PrdOfferingBO prdOffering: allowedPrdOfferingList) {
-                allowedPrdOfferingNames.add(prdOffering.getPrdOfferingName());
+            List<PrdOfferingDto> allowedPrdOfferingNames = new ArrayList<PrdOfferingDto>();
+            List<PrdOfferingDto> notAllowedPrdOfferingNames = new ArrayList<PrdOfferingDto>();
+
+            for (PrdOfferingBO prdOffering : allowedPrdOfferingList) {
+                allowedPrdOfferingNames.add(prdOffering.toDto());
             }
-            for(PrdOfferingBO prdOffering: notAllowedPrdOfferingList) {
-                notAllowedPrdOfferingNames.add(prdOffering.getPrdOfferingName());
+            for (PrdOfferingBO prdOffering : notAllowedPrdOfferingList) {
+                notAllowedPrdOfferingNames.add(prdOffering.toDto());
             }
 
-            ProductMixDetailsDto dto = new ProductMixDetailsDto(prdOfferingId, product.getPrdOfferingName(),
-                                        product.getPrdType().getProductTypeID(), allowedPrdOfferingNames, notAllowedPrdOfferingNames);
+            ProductMixDetailsDto dto = new ProductMixDetailsDto(prdOfferingId, product.getPrdOfferingName(), product
+                    .getPrdType().getProductTypeID(), allowedPrdOfferingNames, notAllowedPrdOfferingNames);
             return dto;
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
@@ -236,13 +255,17 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
         ConfigureApplicationLabelsDto currentLabels = retrieveConfigurableLabels();
 
-        List<OfficeLevelEntity> changedOfficeLabels = findDifferentOfficeLevelEntitys(currentLabels.getOfficeLevels(), updatedLabels.getOfficeLevels());
-        List<LookUpEntity> lookupEntities = findDifferentLookupEntities(currentLabels.getLookupLabels(), updatedLabels.getLookupLabels());
-        List<GracePeriodTypeEntity> gracePeriods = findDifferentGracePeriodTypes(currentLabels.getGracePeriodDto(), updatedLabels.getGracePeriodDto());
+        List<OfficeLevelEntity> changedOfficeLabels = findDifferentOfficeLevelEntitys(currentLabels.getOfficeLevels(),
+                updatedLabels.getOfficeLevels());
+        List<LookUpEntity> lookupEntities = findDifferentLookupEntities(currentLabels.getLookupLabels(), updatedLabels
+                .getLookupLabels());
+        List<GracePeriodTypeEntity> gracePeriods = findDifferentGracePeriodTypes(currentLabels.getGracePeriodDto(),
+                updatedLabels.getGracePeriodDto());
 
         List<LookUpValueEntity> accountStatuses = findAccountStates(updatedLabels.getAccountStatusLabels());
 
-        officeHierarchyService.updateApplicationLabels(changedOfficeLabels, lookupEntities, gracePeriods, accountStatuses);
+        officeHierarchyService.updateApplicationLabels(changedOfficeLabels, lookupEntities, gracePeriods,
+                accountStatuses);
     }
 
     private List<LookUpValueEntity> findAccountStates(AccountStatusesLabelDto updatedDetails) {
@@ -317,19 +340,19 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             }
 
             // FIXME - keithw - not added when refactoring to spring mvc away from struts action.
-//            if (value.getLookUpId().equals(LabelConfigurations.FEE_CATEGORY_CLIENT.getValue())) {
-//                name = labelConfigurationActionForm.getClient();
-//            } else if (value.getLookUpId().equals(LabelConfigurations.FEE_CATEGORY_GROUP.getValue())) {
-//                name = labelConfigurationActionForm.getGroup();
-//            } else if (value.getLookUpId().equals(LabelConfigurations.FEE_CATEGORY_CENTER.getValue())
-//                    || value.getLookUpId().equals(Integer.valueOf("499"))) {
-//                name = labelConfigurationActionForm.getCenter();
-//            } else if (isLoanLookup(value)) {
-//                name = labelConfigurationActionForm.getLoans();
-//            } else if (value.getLookUpId().equals(Integer.valueOf("55"))
-//                    || value.getLookUpId().equals(Integer.valueOf("87"))) {
-//                name = labelConfigurationActionForm.getSavings();
-//            }
+            // if (value.getLookUpId().equals(LabelConfigurations.FEE_CATEGORY_CLIENT.getValue())) {
+            // name = labelConfigurationActionForm.getClient();
+            // } else if (value.getLookUpId().equals(LabelConfigurations.FEE_CATEGORY_GROUP.getValue())) {
+            // name = labelConfigurationActionForm.getGroup();
+            // } else if (value.getLookUpId().equals(LabelConfigurations.FEE_CATEGORY_CENTER.getValue())
+            // || value.getLookUpId().equals(Integer.valueOf("499"))) {
+            // name = labelConfigurationActionForm.getCenter();
+            // } else if (isLoanLookup(value)) {
+            // name = labelConfigurationActionForm.getLoans();
+            // } else if (value.getLookUpId().equals(Integer.valueOf("55"))
+            // || value.getLookUpId().equals(Integer.valueOf("87"))) {
+            // name = labelConfigurationActionForm.getSavings();
+            // }
         }
 
         return entitiesForUpdate;
@@ -337,7 +360,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
     private boolean isOnHold(LookUpValueEntity value) {
         return value.getLookUpId().equals(LabelConfigurations.CLIENT_ON_HOLD.getValue())
-        || value.getLookUpId().equals(LabelConfigurations.GROUP_ON_HOLD.getValue());
+                || value.getLookUpId().equals(LabelConfigurations.GROUP_ON_HOLD.getValue());
     }
 
     private boolean isClosedLookup(LookUpValueEntity value) {
@@ -394,7 +417,8 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                 || value.getLookUpId().equals(LabelConfigurations.SAVINGS_PARTIAL_APPLICATION.getValue());
     }
 
-    private List<GracePeriodTypeEntity> findDifferentGracePeriodTypes(GracePeriodDto existingDetails, GracePeriodDto updatedDetails) {
+    private List<GracePeriodTypeEntity> findDifferentGracePeriodTypes(GracePeriodDto existingDetails,
+            GracePeriodDto updatedDetails) {
 
         List<GracePeriodTypeEntity> gracePeriodForUpdate = new ArrayList<GracePeriodTypeEntity>();
 
@@ -429,167 +453,183 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         return gracePeriodForUpdate;
     }
 
-    private List<LookUpEntity> findDifferentLookupEntities(ConfigurableLookupLabelDto existingDetails, ConfigurableLookupLabelDto updatedDetails) {
+    private List<LookUpEntity> findDifferentLookupEntities(ConfigurableLookupLabelDto existingDetails,
+            ConfigurableLookupLabelDto updatedDetails) {
 
         List<LookUpEntity> lookupEntitiesForUpdate = new ArrayList<LookUpEntity>();
 
-            if (!existingDetails.getClient().equals(updatedDetails.getClient())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.CLIENT);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getClient());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getClient().equals(updatedDetails.getClient())) {
+            LookUpEntity entity = applicationConfigurationDao
+                    .findLookupValueByEntityType(ConfigurationConstants.CLIENT);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getClient());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            if (!existingDetails.getGroup().equals(updatedDetails.getGroup())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.GROUP);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getGroup());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getGroup().equals(updatedDetails.getGroup())) {
+            LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.GROUP);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getGroup());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            if (!existingDetails.getCenter().equals(updatedDetails.getCenter())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.CENTER);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getCenter());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getCenter().equals(updatedDetails.getCenter())) {
+            LookUpEntity entity = applicationConfigurationDao
+                    .findLookupValueByEntityType(ConfigurationConstants.CENTER);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getCenter());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            if (!existingDetails.getLoans().equals(updatedDetails.getLoans())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.LOAN);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getLoans());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getLoans().equals(updatedDetails.getLoans())) {
+            LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.LOAN);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getLoans());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            if (!existingDetails.getSavings().equals(updatedDetails.getSavings())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.SAVINGS);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getSavings());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getSavings().equals(updatedDetails.getSavings())) {
+            LookUpEntity entity = applicationConfigurationDao
+                    .findLookupValueByEntityType(ConfigurationConstants.SAVINGS);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getSavings());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            if (!existingDetails.getState().equals(updatedDetails.getState())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.STATE);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getState());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getState().equals(updatedDetails.getState())) {
+            LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.STATE);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getState());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            if (!existingDetails.getPostalCode().equals(updatedDetails.getPostalCode())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.POSTAL_CODE);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getPostalCode());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getPostalCode().equals(updatedDetails.getPostalCode())) {
+            LookUpEntity entity = applicationConfigurationDao
+                    .findLookupValueByEntityType(ConfigurationConstants.POSTAL_CODE);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getPostalCode());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            if (!existingDetails.getEthnicity().equals(updatedDetails.getEthnicity())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.ETHINICITY);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getEthnicity());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getEthnicity().equals(updatedDetails.getEthnicity())) {
+            LookUpEntity entity = applicationConfigurationDao
+                    .findLookupValueByEntityType(ConfigurationConstants.ETHINICITY);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getEthnicity());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            if (!existingDetails.getCitizenship().equals(updatedDetails.getCitizenship())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.CITIZENSHIP);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getCitizenship());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getCitizenship().equals(updatedDetails.getCitizenship())) {
+            LookUpEntity entity = applicationConfigurationDao
+                    .findLookupValueByEntityType(ConfigurationConstants.CITIZENSHIP);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getCitizenship());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            if (!existingDetails.getHandicapped().equals(updatedDetails.getHandicapped())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.HANDICAPPED);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getHandicapped());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getHandicapped().equals(updatedDetails.getHandicapped())) {
+            LookUpEntity entity = applicationConfigurationDao
+                    .findLookupValueByEntityType(ConfigurationConstants.HANDICAPPED);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getHandicapped());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            if (!existingDetails.getGovtId().equals(updatedDetails.getGovtId())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.GOVERNMENT_ID);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getGovtId());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getGovtId().equals(updatedDetails.getGovtId())) {
+            LookUpEntity entity = applicationConfigurationDao
+                    .findLookupValueByEntityType(ConfigurationConstants.GOVERNMENT_ID);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getGovtId());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            if (!existingDetails.getAddress1().equals(updatedDetails.getAddress1())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.ADDRESS1);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getAddress1());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getAddress1().equals(updatedDetails.getAddress1())) {
+            LookUpEntity entity = applicationConfigurationDao
+                    .findLookupValueByEntityType(ConfigurationConstants.ADDRESS1);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getAddress1());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            if (!existingDetails.getAddress2().equals(updatedDetails.getAddress2())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.ADDRESS2);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getAddress2());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getAddress2().equals(updatedDetails.getAddress2())) {
+            LookUpEntity entity = applicationConfigurationDao
+                    .findLookupValueByEntityType(ConfigurationConstants.ADDRESS2);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getAddress2());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            if (!existingDetails.getAddress3().equals(updatedDetails.getAddress3())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.ADDRESS3);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getAddress3());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getAddress3().equals(updatedDetails.getAddress3())) {
+            LookUpEntity entity = applicationConfigurationDao
+                    .findLookupValueByEntityType(ConfigurationConstants.ADDRESS3);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getAddress3());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            if (!existingDetails.getInterest().equals(updatedDetails.getInterest())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.INTEREST);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getInterest());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getInterest().equals(updatedDetails.getInterest())) {
+            LookUpEntity entity = applicationConfigurationDao
+                    .findLookupValueByEntityType(ConfigurationConstants.INTEREST);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getInterest());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            if (!existingDetails.getExternalId().equals(updatedDetails.getExternalId())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.EXTERNALID);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getExternalId());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getExternalId().equals(updatedDetails.getExternalId())) {
+            LookUpEntity entity = applicationConfigurationDao
+                    .findLookupValueByEntityType(ConfigurationConstants.EXTERNALID);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getExternalId());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            if (!existingDetails.getBulkEntry().equals(updatedDetails.getBulkEntry())) {
-                LookUpEntity entity = applicationConfigurationDao.findLookupValueByEntityType(ConfigurationConstants.BULKENTRY);
-                Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-                for (LookUpLabelEntity label : labels) {
-                    label.setLabelName(updatedDetails.getBulkEntry());
-                }
-                lookupEntitiesForUpdate.add(entity);
+        if (!existingDetails.getBulkEntry().equals(updatedDetails.getBulkEntry())) {
+            LookUpEntity entity = applicationConfigurationDao
+                    .findLookupValueByEntityType(ConfigurationConstants.BULKENTRY);
+            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+            for (LookUpLabelEntity label : labels) {
+                label.setLabelName(updatedDetails.getBulkEntry());
             }
+            lookupEntitiesForUpdate.add(entity);
+        }
 
-            return lookupEntitiesForUpdate;
+        return lookupEntitiesForUpdate;
     }
 
-    private List<OfficeLevelEntity> findDifferentOfficeLevelEntitys(OfficeLevelDto existingDetails, OfficeLevelDto updatedDetails) {
+    private List<OfficeLevelEntity> findDifferentOfficeLevelEntitys(OfficeLevelDto existingDetails,
+            OfficeLevelDto updatedDetails) {
 
         List<OfficeLevelEntity> officeLevels = new ArrayList<OfficeLevelEntity>();
 
@@ -757,7 +797,8 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     public MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields() {
 
         try {
-            List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence().getAllConfigurationFieldList();
+            List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence()
+                    .getAllConfigurationFieldList();
             MandatoryHiddenFieldsDto dto = new MandatoryHiddenFieldsDto();
             populateDto(dto, confFieldList);
             dto.setFamilyDetailsRequired(ClientRules.isFamilyDetailsRequired());
@@ -800,8 +841,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                 HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_INFORMATION)) {
             dto.setHideClientSpouseFatherInformation(getBooleanValue(fieldConfiguration.getHiddenFlag()));
             dto.setMandatoryClientSpouseFatherInformation(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
-        } else if (fieldConfiguration.getFieldName().equals(
-                HiddenMandatoryFieldNamesConstants.FAMILY_DETAILS)) {
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.FAMILY_DETAILS)) {
             dto.setMandatoryClientFamilyDetails(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
         } else if (fieldConfiguration.getFieldName().equals(
                 HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_MIDDLE_NAME)) {
@@ -809,8 +849,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         } else if (fieldConfiguration.getFieldName().equals(
                 HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_SECOND_LAST_NAME)) {
             dto.setHideClientSpouseFatherSecondLastName(getBooleanValue(fieldConfiguration.getHiddenFlag()));
-            dto.setMandatoryClientSpouseFatherSecondLastName(getBooleanValue(fieldConfiguration
-                    .getMandatoryFlag()));
+            dto.setMandatoryClientSpouseFatherSecondLastName(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.PHONE_NUMBER)) {
             dto.setHideClientPhone(getBooleanValue(fieldConfiguration.getHiddenFlag()));
             dto.setMandatoryClientPhone(getBooleanValue(fieldConfiguration.getMandatoryFlag()));
@@ -893,13 +932,14 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     private boolean getBooleanValue(Short s) {
-        return ((s != null)&&(s != 0))? true: false;
+        return ((s != null) && (s != 0)) ? true : false;
     }
 
     @Override
     public void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto) {
         try {
-            List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence().getAllConfigurationFieldList();
+            List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence()
+                    .getAllConfigurationFieldList();
             mandatoryHiddenFieldService.updateMandatoryHiddenFields(dto, confFieldList);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
@@ -909,7 +949,6 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     @Override
     public AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes() {
         List<PaymentTypeDto> payments = getAllPaymentTypes(null);
-        // acceptedPaymentTypeActionForm.setAllPaymentTypes(payments);
         AcceptedPaymentTypePersistence paymentTypePersistence = new AcceptedPaymentTypePersistence();
         AcceptedPaymentTypeDto dto = new AcceptedPaymentTypeDto();
         for (int i = 0; i < TrxnTypes.values().length; i++) {
@@ -926,14 +965,14 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         for (PaymentTypeEntity masterDataEntity : paymentTypes) {
             PaymentTypeEntity paymentType = masterDataEntity;
             id = paymentType.getId();
-            payment = new PaymentTypeDto(id, paymentType.getLookUpValue().getLookUpName());
+            payment = new PaymentTypeDto(id, paymentType.getName());
             paymentTypeList.add(payment);
         }
 
         return paymentTypeList;
     }
 
-    private <T extends MasterDataEntity>  List<T> getMasterEntities(Class<T> type, Short localeId) {
+    private <T extends MasterDataEntity> List<T> getMasterEntities(Class<T> type, Short localeId) {
         try {
             return new MasterDataService().retrieveMasterEntities(type, localeId);
         } catch (ServiceException e) {
@@ -946,7 +985,8 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
         try {
             Short transactionId = transactionType.getValue();
-            List<AcceptedPaymentType> paymentTypeList = paymentTypePersistence.getAcceptedPaymentTypesForATransaction(transactionId);
+            List<AcceptedPaymentType> paymentTypeList = paymentTypePersistence
+                    .getAcceptedPaymentTypesForATransaction(transactionId);
 
             List<PaymentTypeDto> inList = new ArrayList<PaymentTypeDto>(payments);
             List<PaymentTypeDto> outList = new ArrayList<PaymentTypeDto>();
@@ -954,7 +994,8 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             PaymentTypeDto data = null;
             for (AcceptedPaymentType paymentType : paymentTypeList) {
                 Short paymentTypeId = paymentType.getPaymentTypeEntity().getId();
-                data = new PaymentTypeDto(paymentTypeId, paymentType.getPaymentTypeEntity().getName(), paymentType.getAcceptedPaymentTypeId());
+                data = new PaymentTypeDto(paymentTypeId, paymentType.getPaymentTypeEntity().getName(), paymentType
+                        .getAcceptedPaymentTypeId());
                 outList.add(data);
                 RemoveFromInList(inList, paymentTypeId);
             }
@@ -974,7 +1015,8 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                 dto.setInWithdrawalList(inList);
                 dto.setOutWithdrawalList(outList);
             } else {
-                throw new MifosRuntimeException("Unknown account action for accepted payment type " + transactionType.toString());
+                throw new MifosRuntimeException("Unknown account action for accepted payment type "
+                        + transactionType.toString());
             }
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
@@ -990,65 +1032,78 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public void updateAcceptedPaymentTypes(AcceptedPaymentTypeDto acceptedPaymentTypeDto) {
+    public void updateAcceptedPaymentTypes(String[] chosenAcceptedFees, String[] chosenAcceptedLoanDisbursements,
+            String[] chosenAcceptedLoanRepayments, String[] chosenAcceptedSavingDeposits,
+            String[] chosenAcceptedSavingWithdrawals) {
 
         AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
 
         List<AcceptedPaymentType> deletedPaymentTypeList = new ArrayList<AcceptedPaymentType>();
         List<AcceptedPaymentType> addedPaymentTypeList = new ArrayList<AcceptedPaymentType>();
+        List<PaymentTypeDto> allPayments = getAllPaymentTypes(null);
+        AcceptedPaymentTypeDto oldAcceptedPaymentTypeDto = retrieveAcceptedPaymentTypes();
+
         for (int i = 0; i < TrxnTypes.values().length; i++) {
-            processOneAccountActionAcceptedPaymentTypes(TrxnTypes.values()[i], acceptedPaymentTypeDto,
-                    deletedPaymentTypeList, addedPaymentTypeList, persistence);
+
+            TrxnTypes transactionType = TrxnTypes.values()[i];
+            List<PaymentTypeDto> selectedPaymentTypes = new ArrayList<PaymentTypeDto>();
+            List<PaymentTypeDto> outList = null;
+
+            if (transactionType == TrxnTypes.fee) {
+                selectedPaymentTypes = populateSelectedPayments(chosenAcceptedFees, allPayments);
+                outList = oldAcceptedPaymentTypeDto.getOutFeeList();
+            } else if (transactionType == TrxnTypes.loan_disbursement) {
+                selectedPaymentTypes = populateSelectedPayments(chosenAcceptedLoanDisbursements, allPayments);
+                outList = oldAcceptedPaymentTypeDto.getOutDisbursementList();
+            } else if (transactionType == TrxnTypes.loan_repayment) {
+                selectedPaymentTypes = populateSelectedPayments(chosenAcceptedLoanRepayments, allPayments);
+                outList = oldAcceptedPaymentTypeDto.getOutRepaymentList();
+            } else if (transactionType == TrxnTypes.savings_deposit) {
+                selectedPaymentTypes = populateSelectedPayments(chosenAcceptedSavingDeposits, allPayments);
+                outList = oldAcceptedPaymentTypeDto.getOutDepositList();
+            } else if (transactionType == TrxnTypes.savings_withdrawal) {
+                selectedPaymentTypes = populateSelectedPayments(chosenAcceptedSavingWithdrawals, allPayments);
+                outList = oldAcceptedPaymentTypeDto.getOutWithdrawalList();
+            } else {
+                throw new MifosRuntimeException("Unknown account action for accepted payment type "
+                        + transactionType.toString());
+            }
+            process(selectedPaymentTypes, outList, deletedPaymentTypeList, addedPaymentTypeList, persistence,
+                    transactionType);
         }
 
         try {
             if (addedPaymentTypeList.size() > 0) {
                 persistence.addAcceptedPaymentTypes(addedPaymentTypeList);
+                StaticHibernateUtil.commitTransaction();
             }
 
             if (deletedPaymentTypeList.size() > 0) {
                 persistence.deleteAcceptedPaymentTypes(deletedPaymentTypeList);
+                StaticHibernateUtil.commitTransaction();
             }
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
     }
 
-    private void processOneAccountActionAcceptedPaymentTypes(TrxnTypes transactionType,
-            AcceptedPaymentTypeDto acceptedPaymentTypeDto,
-            List<AcceptedPaymentType> deletedPaymentTypeList, List<AcceptedPaymentType> addedPaymentTypeList,
-            AcceptedPaymentTypePersistence persistence) {
-        // new accepted payments
-        List<PaymentTypeDto> selectedPaymentTypes = null;
-        // old accepted payments
-        List<PaymentTypeDto> outList = null;
-        AcceptedPaymentTypeDto OldAcceptedPaymentTypeDto = retrieveAcceptedPaymentTypes();
+    private List<PaymentTypeDto> populateSelectedPayments(String[] selectedPayments, List<PaymentTypeDto> allPayments) {
 
-        if (transactionType == TrxnTypes.fee) {
-            selectedPaymentTypes = acceptedPaymentTypeDto.getOutFeeList();
-            outList = OldAcceptedPaymentTypeDto.getOutFeeList();
-        } else if (transactionType == TrxnTypes.loan_disbursement) {
-            selectedPaymentTypes = acceptedPaymentTypeDto.getOutDisbursementList();
-            outList = OldAcceptedPaymentTypeDto.getOutDisbursementList();
-        } else if (transactionType == TrxnTypes.loan_repayment) {
-            selectedPaymentTypes = acceptedPaymentTypeDto.getOutRepaymentList();
-            outList = OldAcceptedPaymentTypeDto.getOutRepaymentList();
-        } else if (transactionType == TrxnTypes.savings_deposit) {
-            selectedPaymentTypes = acceptedPaymentTypeDto.getOutDepositList();
-            outList = OldAcceptedPaymentTypeDto.getOutDepositList();
-        } else if (transactionType == TrxnTypes.savings_withdrawal) {
-            selectedPaymentTypes = acceptedPaymentTypeDto.getOutWithdrawalList();
-            outList = OldAcceptedPaymentTypeDto.getOutWithdrawalList();
-        } else {
-            throw new MifosRuntimeException("Unknown account action for accepted payment type " + transactionType.toString());
+        List<PaymentTypeDto> selectedPaymentTypes = new ArrayList<PaymentTypeDto>();
+        List<String> acceptedFees = Arrays.asList(selectedPayments);
+        for (PaymentTypeDto paymentType : allPayments) {
+            if (acceptedFees.contains(paymentType.getId().toString())) {
+                selectedPaymentTypes.add(paymentType);
+            }
         }
-        process(selectedPaymentTypes, outList, deletedPaymentTypeList, addedPaymentTypeList, persistence,
-                transactionType);
+
+        return selectedPaymentTypes;
     }
 
     private void process(List<PaymentTypeDto> selectedPaymentTypes, List<PaymentTypeDto> outList,
             List<AcceptedPaymentType> deletedPaymentTypeList, List<AcceptedPaymentType> addedPaymentTypeList,
             AcceptedPaymentTypePersistence persistence, TrxnTypes transactionType) {
+
         AcceptedPaymentType acceptedPaymentType = null;
         if ((outList != null) && (outList.size() > 0)) {
             for (PaymentTypeDto paymentType : outList) {
@@ -1058,18 +1113,17 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                 }
             }
         }
-        if (selectedPaymentTypes != null) {
-            for (PaymentTypeDto selectedPaymentType : selectedPaymentTypes) {
-                Short paymentTypeId = selectedPaymentType.getId();
-                if (findNew(paymentTypeId, outList)) {
-                    acceptedPaymentType = new AcceptedPaymentType();
-                    PaymentTypeEntity paymentTypeEntity = new PaymentTypeEntity(paymentTypeId);
-                    acceptedPaymentType.setPaymentTypeEntity(paymentTypeEntity);
-                    TransactionTypeEntity transactionEntity = new TransactionTypeEntity();
-                    transactionEntity.setTransactionId(transactionType.getValue());
-                    acceptedPaymentType.setTransactionTypeEntity(transactionEntity);
-                    addedPaymentTypeList.add(acceptedPaymentType);
-                }
+
+        for (PaymentTypeDto selectedPaymentType : selectedPaymentTypes) {
+            Short paymentTypeId = selectedPaymentType.getId();
+            if (findNew(paymentTypeId, outList)) {
+                acceptedPaymentType = new AcceptedPaymentType();
+                PaymentTypeEntity paymentTypeEntity = new PaymentTypeEntity(paymentTypeId);
+                acceptedPaymentType.setPaymentTypeEntity(paymentTypeEntity);
+                TransactionTypeEntity transactionEntity = new TransactionTypeEntity();
+                transactionEntity.setTransactionId(transactionType.getValue());
+                acceptedPaymentType.setTransactionTypeEntity(transactionEntity);
+                addedPaymentTypeList.add(acceptedPaymentType);
             }
         }
     }
@@ -1097,5 +1151,215 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             }
         }
         return true;
+    }
+
+    @Override
+    public ProductCategoryDisplayDto retrieveAllProductCategories() {
+        try {
+            List<ProductCategoryBO> productCategoryList = new ProductCategoryBusinessService().getAllCategories();
+
+            List<ProductCategoryTypeDto> pcTypeList = new ArrayList<ProductCategoryTypeDto>();
+            List<ProductCategoryDto> pcList = new ArrayList<ProductCategoryDto>();
+            for (ProductCategoryBO pcBO : productCategoryList) {
+                ProductCategoryTypeDto pcTypeDto = new ProductCategoryTypeDto(pcBO.getProductType().getProductTypeID(),
+                        pcBO.getProductType().getLookUpValue().getLookUpName());
+                pcTypeList.add(pcTypeDto);
+
+                ProductCategoryDto pcDto = new ProductCategoryDto(pcBO.getProductCategoryName(), pcBO
+                        .getPrdCategoryStatus().getId(), pcBO.getGlobalPrdCategoryNum());
+                pcList.add(pcDto);
+            }
+
+            ProductCategoryDisplayDto productCategoryDisplayDto = new ProductCategoryDisplayDto(pcTypeList, pcList);
+            return productCategoryDisplayDto;
+
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public ProductCategoryDetailsDto retrieveProductCateogry(String globalProductCategoryNumber) {
+
+        ProductCategoryBusinessService service = new ProductCategoryBusinessService();
+        try {
+            ProductCategoryBO pcBO = service.findByGlobalNum(globalProductCategoryNumber);
+            String productTypeName = service.getProductType(pcBO.getProductType().getProductTypeID()).getLookUpValue()
+                    .getLookUpName();
+            ProductCategoryDetailsDto productCategoryDetailsDto = new ProductCategoryDetailsDto(pcBO
+                    .getProductCategoryName(), pcBO.getPrdCategoryStatus().getId(), pcBO.getProductType()
+                    .getProductTypeID(), pcBO.getProductCategoryDesc(), productTypeName);
+            return productCategoryDetailsDto;
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public void createProductCategory(CreateOrUpdateProductCategory productCategory) {
+        UserContext userContext = new UserContext();
+        userContext.setId(productCategory.getUserId());
+        userContext.setBranchId(productCategory.getBranchId());
+        ProductCategoryBO productCategoryBO;
+        try {
+            productCategoryBO = new ProductCategoryBO(userContext, new ProductTypeEntity(productCategory
+                    .getProductTypeEntityId()), productCategory.getProductCategoryName(), productCategory
+                    .getProductCategoryDesc());
+            productCategoryBO.save();
+        } catch (ProductDefinitionException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<ProductCategoryTypeDto> retrieveProductCategoryTypes() {
+        try {
+            List<ProductTypeEntity> productCategoryList = new ProductCategoryBusinessService().getProductTypes();
+            List<ProductCategoryTypeDto> productCategoryTypeDtoList = new ArrayList<ProductCategoryTypeDto>();
+            for (ProductTypeEntity productType : productCategoryList) {
+                ProductCategoryTypeDto productCategoryTypeDto = new ProductCategoryTypeDto(productType
+                        .getProductTypeID(), productType.getLookUpValue().getLookUpName());
+                productCategoryTypeDtoList.add(productCategoryTypeDto);
+            }
+
+            return productCategoryTypeDtoList;
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public void updateProductCategory(CreateOrUpdateProductCategory productCategory) {
+
+        UserContext userContext = new UserContext();
+        userContext.setId(productCategory.getUserId());
+        userContext.setBranchId(productCategory.getBranchId());
+        ProductCategoryBO productCategoryBO;
+        try {
+            productCategoryBO = new ProductCategoryBO(userContext, new ProductTypeEntity(productCategory
+                    .getProductTypeEntityId()), productCategory.getProductCategoryName(), productCategory
+                    .getProductCategoryDesc());
+            productCategoryBO.updateProductCategory(productCategory.getProductCategoryName(), productCategory
+                    .getProductCategoryDesc(), new PrdCategoryStatusEntity(getProductCategoryStatus(productCategory
+                    .getProductCategoryStatusId())));
+        } catch (ProductDefinitionException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    private PrdCategoryStatus getProductCategoryStatus(Short statusId) {
+        if (statusId == PrdCategoryStatus.ACTIVE.getValue()) {
+            return PrdCategoryStatus.ACTIVE;
+        }
+        return PrdCategoryStatus.INACTIVE;
+    }
+
+    @Override
+    public List<ProductTypeDto> retrieveProductTypesApplicableToProductMix() {
+        List<ProductTypeDto> poductTypes = new ArrayList<ProductTypeDto>();
+
+        poductTypes
+                .add(new ProductTypeDto(ProductType.LOAN.getValue().intValue(), "manageProduct.viewProductMix.loan"));
+
+        return poductTypes;
+    }
+
+    @Override
+    public List<PrdOfferingDto> retrieveLoanProductsNotMixed() {
+
+        List<PrdOfferingDto> productTypes = new ArrayList<PrdOfferingDto>();
+
+        try {
+            List<LoanOfferingBO> loanProductsNotMixed = new LoanPrdPersistence().getLoanOfferingsNotMixed(null);
+            for (LoanOfferingBO loanOfferingBO : loanProductsNotMixed) {
+                productTypes.add(loanOfferingBO.toDto());
+            }
+            return productTypes;
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<PrdOfferingDto> retrieveAllowedProductsForMix(Integer productTypeId, Integer productId) {
+        try {
+            List<PrdOfferingDto> allowedProductDtos = new ArrayList<PrdOfferingDto>();
+            List<PrdOfferingBO> allowedProducts = new PrdOfferingPersistence().getAllowedPrdOfferingsForMixProduct(
+                    productId.toString(), productTypeId.toString());
+            for (PrdOfferingBO product : allowedProducts) {
+                allowedProductDtos.add(product.toDto());
+            }
+            return allowedProductDtos;
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<PrdOfferingDto> retrieveNotAllowedProductsForMix(Integer productTypeId, Integer productId) {
+
+        try {
+            List<PrdOfferingDto> notAllowedProductDtos = new ArrayList<PrdOfferingDto>();
+            List<PrdOfferingBO> allowedProducts = new PrdOfferingPersistence().getNotAllowedPrdOfferingsForMixProduct(
+                    productId.toString(), productTypeId.toString());
+            for (PrdOfferingBO product : allowedProducts) {
+                notAllowedProductDtos.add(product.toDto());
+            }
+            return notAllowedProductDtos;
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public void createOrUpdateProductMix(Integer productId, List<Integer> notAllowedProductIds) {
+
+        try {
+            PrdOfferingBO product = new PrdOfferingPersistence().getPrdOfferingByID(productId.shortValue());
+
+            StaticHibernateUtil.startTransaction();
+            product.setPrdMixFlag(YesNoFlag.YES.getValue());
+            applicationConfigurationDao.save(product);
+            StaticHibernateUtil.flushSession();
+
+            List<PrdOfferingBO> notAllowedProducts = new ArrayList<PrdOfferingBO>();
+            for (Integer notAllowedProductId : notAllowedProductIds) {
+                PrdOfferingBO notAllowedProduct = new PrdOfferingPersistence().getPrdOfferingByID(notAllowedProductId
+                        .shortValue());
+                notAllowedProducts.add(notAllowedProduct);
+            }
+
+            for (PrdOfferingBO oldnotallowedProduct : notAllowedProducts) {
+
+                ProductMixBO productMix = new ProductMixPersistence().getPrdOfferingMixByPrdOfferingID(productId
+                        .shortValue(), oldnotallowedProduct.getPrdOfferingId());
+
+                if (null != productMix) {
+                    applicationConfigurationDao.delete(productMix);
+                    StaticHibernateUtil.flushSession();
+                }
+                ProductMixBO alternateproductmix = new ProductMixPersistence().getPrdOfferingMixByPrdOfferingID(
+                        oldnotallowedProduct.getPrdOfferingId(), productId.shortValue());
+                if (null != alternateproductmix) {
+                    applicationConfigurationDao.delete(alternateproductmix);
+                    StaticHibernateUtil.flushSession();
+                }
+            }
+
+            for (PrdOfferingBO notallowedProduct : notAllowedProducts) {
+                ProductMixBO productMix = new ProductMixBO(product, notallowedProduct);
+                productMix.setUpdatedDate(new DateTime().toDate());
+                productMix.setUpdatedBy(Short.valueOf("1"));
+                applicationConfigurationDao.save(productMix);
+                StaticHibernateUtil.flushSession();
+            }
+            StaticHibernateUtil.commitTransaction();
+
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
     }
 }

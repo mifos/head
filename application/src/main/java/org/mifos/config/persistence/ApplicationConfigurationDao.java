@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
+import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -46,4 +48,12 @@ public interface ApplicationConfigurationDao {
     List<CustomerStatusEntity> findAllCustomerStatuses();
 
     List<GracePeriodTypeEntity> findGracePeriodTypes();
+
+    void delete(ProductMixBO productMix);
+
+    void save(ProductMixBO productMix);
+
+    void save(PrdOfferingBO product);
+
+
 }

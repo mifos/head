@@ -31,10 +31,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class AddFieldIntegrationTest extends MifosIntegrationTestCase {
 
-    public AddFieldIntegrationTest() throws Exception {
-        super();
-    }
-
     private Session session;
 
     @Before

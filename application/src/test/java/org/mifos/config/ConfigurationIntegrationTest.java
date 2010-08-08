@@ -33,10 +33,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 
 public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
 
-    public ConfigurationIntegrationTest() throws Exception {
-        super();
-    }
-
     MifosConfiguration configuration;
 
     @Before

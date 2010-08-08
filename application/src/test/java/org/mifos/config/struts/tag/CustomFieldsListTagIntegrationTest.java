@@ -36,10 +36,6 @@ import org.mifos.security.util.UserContext;
 
 public class CustomFieldsListTagIntegrationTest extends MifosIntegrationTestCase {
 
-    public CustomFieldsListTagIntegrationTest() throws Exception {
-        super();
-    }
-
     private UserContext userContext;
 
     @Before

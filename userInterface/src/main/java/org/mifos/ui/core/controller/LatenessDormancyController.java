@@ -22,6 +22,7 @@ package org.mifos.ui.core.controller;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,6 @@ public class LatenessDormancyController {
 
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
     private static final String CANCEL_PARAM = "CANCEL";
-    private static final String CANCEL_PARAM_VALUE = "Cancel";
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
@@ -77,7 +77,7 @@ public class LatenessDormancyController {
 
         String viewName = REDIRECT_TO_ADMIN_SCREEN;
 
-        if (CANCEL_PARAM_VALUE.equals(cancel)) {
+        if (StringUtils.isNotBlank(cancel)) {
             viewName = REDIRECT_TO_ADMIN_SCREEN;
             status.setComplete();
         } else if (result.hasErrors()) {

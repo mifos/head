@@ -93,6 +93,16 @@ public class GenericDaoHibernate implements GenericDao {
     }
 
     @Override
+    public void delete(final Object entity) {
+        Session session = getHibernateUtil().getSessionTL();
+        try {
+            session.delete(entity);
+        } catch (Exception he) {
+            throw new MifosRuntimeException(he);
+        }
+    }
+
+    @Override
     public final void createOrUpdate(final Object entity) {
         try {
             Session session = getHibernateUtil().getSessionTL();

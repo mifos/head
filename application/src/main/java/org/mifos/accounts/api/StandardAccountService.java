@@ -121,9 +121,15 @@ public class StandardAccountService implements AccountService {
 
         Money amount = new Money(account.getCurrency(), accountPaymentParametersDto.getPaymentAmount());
 
+        Date receiptDate = null;
+        if (accountPaymentParametersDto.getReceiptDate() != null) {
+            receiptDate = accountPaymentParametersDto.getReceiptDate().toDateMidnight().toDate();
+        }
+
         PaymentData paymentData = account.createPaymentData(accountPaymentParametersDto.getUserMakingPayment()
-                .getUserId(), amount, accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate(), null,
-                null, accountPaymentParametersDto.getPaymentType().getValue());
+                .getUserId(), amount, accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate(),
+                accountPaymentParametersDto.getReceiptId(), receiptDate, accountPaymentParametersDto.getPaymentType()
+                        .getValue());
         paymentData.setComment(accountPaymentParametersDto.getComment());
 
         account.applyPayment(paymentData);

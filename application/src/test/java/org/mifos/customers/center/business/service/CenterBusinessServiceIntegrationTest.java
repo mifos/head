@@ -37,10 +37,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CenterBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public CenterBusinessServiceIntegrationTest() throws Exception {
-        super();
-    }
-
     private CustomerBO center;
 
     private CustomerBO group;

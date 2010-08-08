@@ -38,9 +38,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public class AccountStateIntegrationTest extends MifosIntegrationTestCase {
-    public AccountStateIntegrationTest() throws Exception {
-        super();
-    }
 
     private AccountPersistence accountPersistence;
 

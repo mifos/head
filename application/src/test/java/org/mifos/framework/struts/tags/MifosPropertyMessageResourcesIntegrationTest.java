@@ -31,11 +31,6 @@ import org.mifos.framework.util.helpers.FilePaths;
 
 public class MifosPropertyMessageResourcesIntegrationTest extends MifosIntegrationTestCase {
 
-
-    public MifosPropertyMessageResourcesIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testGetMessageLocaleString() {
         MifosPropertyMessageResourcesFactory factory = new MifosPropertyMessageResourcesFactory();

@@ -36,10 +36,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class HibernateImportedFilesDaoIntegrationTest extends MifosIntegrationTestCase {
 
-    public HibernateImportedFilesDaoIntegrationTest() throws Exception {
-        super();
-    }
-
     @Before
     public void setUp() throws Exception {
         StaticHibernateUtil.flushAndClearSession();

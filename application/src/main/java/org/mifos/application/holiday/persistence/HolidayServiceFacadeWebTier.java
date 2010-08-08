@@ -25,9 +25,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.service.HolidayService;
-import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.dto.domain.HolidayDetails;
+import org.mifos.dto.domain.OfficeHoliday;
 
 public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
 
@@ -40,20 +43,22 @@ public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
     }
 
     @Override
-    public void createHoliday(HolidayDetails holidayDetails, List<Short> officeIds) throws ApplicationException {
+    public void createHoliday(HolidayDetails holidayDetails, List<Short> officeIds) {
 
         this.holidayService.create(holidayDetails, officeIds);
     }
 
     @Override
-    public Map<String, List<OfficeHoliday>> holidaysByYear() throws ApplicationException {
+    public Map<String, List<OfficeHoliday>> holidaysByYear() {
 
         List<HolidayBO> holidays = this.holidayDao.findAllHolidays();
 
         Map<String, List<OfficeHoliday>> holidaysByYear = new TreeMap<String, List<OfficeHoliday>>();
         for (HolidayBO holiday : holidays) {
             HolidayDetails holidayDetail = new HolidayDetails(holiday.getHolidayName(), holiday.getHolidayFromDate(), holiday
-                    .getHolidayThruDate(), holiday.getRepaymentRuleType());
+                    .getHolidayThruDate(), holiday.getRepaymentRuleType().getValue());
+            holidayDetail.setRepaymentRuleName(holiday.getRepaymentRuleType().getName());
+
             int year = holiday.getThruDate().getYear();
             List<OfficeHoliday> holidaysInYear = holidaysByYear.get(Integer.toString(year));
             if (holidaysInYear == null) {
@@ -63,5 +68,14 @@ public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
             holidaysByYear.put(Integer.toString(year), holidaysInYear);
         }
         return holidaysByYear;
+    }
+
+    @Override
+    public OfficeHoliday retrieveHolidayDetailsForPreview(HolidayDetails holidayDetail, List<Short> officeIds) {
+        holidayDetail.setRepaymentRuleName(RepaymentRuleTypes.fromInt(holidayDetail.getRepaymentRuleType().intValue()).getName());
+
+        List<String> officeNames = this.holidayDao.retrieveApplicableOfficeNames(officeIds);
+
+        return new OfficeHoliday(holidayDetail, officeNames);
     }
 }

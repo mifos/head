@@ -48,8 +48,6 @@ import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.FeeBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.holiday.persistence.HolidayDetails;
-import org.mifos.application.holiday.persistence.HolidayServiceFacade;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -59,6 +57,7 @@ import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
@@ -92,9 +91,6 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
 
     @Autowired
     private CustomerDao customerDao;
-
-    @Autowired
-    private HolidayServiceFacade holidayServiceFacade;
 
     private FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
     private List<WeekDay> savedWorkingDays = fiscalCalendarRules.getWorkingDays();
@@ -759,12 +755,10 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     private void saveHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) throws Exception {
-        HolidayDetails holidayDetails = new HolidayDetails("testHoliday", start.toDate(), through.toDate(), rule);
-        holidayDetails.disableValidation(true);
+        HolidayDetails holidayDetails = new HolidayDetails("testHoliday", start.toDate(), through.toDate(), rule.getValue());
         List<Short> officeIds = new LinkedList<Short>();
         officeIds.add((short)1);
-        // FIXME - keithw - Do not couple tests directly to production code for data insertion. use creation pattern
-        this.holidayServiceFacade.createHoliday(holidayDetails, officeIds );
+        IntegrationTestObjectMother.createHoliday(holidayDetails, officeIds);
     }
 
     private List<AccountActionDateEntity> getActionDatesSortedByDate(CustomerAccountBO customerAccount) {

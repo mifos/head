@@ -49,39 +49,39 @@ i=i+counter;numberOfItems=i;}
   <div class="content marginAuto">
     <div class="borders span-22">
       <div class="borderbtm span-22">
-        <p class="span-15 arrowIMG orangeheading">[@spring.message "checklistinformation" /]</p>
+        <p class="span-15 arrowIMG orangeheading">[@spring.message "organizationPreferences.defineNewCheckLists.checklistinformation" /]</p>
         <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "review&Submit" /]</p>
       </div>
       <div class="subcontent ">
         <form method="" action="" name="formname">
-          <p class="font15"><span class="fontBold">[@spring.message "addnewchecklist" /]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "enterchecklistinformation" /]</span></p>
-          <div>[@spring.message "completethefieldsbelow.ThenclickPreview." /] </div>
+          <p class="font15"><span class="fontBold">[@spring.message "organizationPreferences.defineNewCheckLists.addnewchecklist" /]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "organizationPreferences.defineNewCheckLists.enterchecklistinformation" /]</span></p>
+          <div>[@spring.message "organizationPreferences.defineNewCheckLists.completethefieldsbelow.ThenclickPreview." /] </div>
           <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired." /] </div>
           <p>&nbsp;&nbsp;</p>
-                 <p class="fontBold">[@spring.message "checklistdetails" /]  </p>
+                 <p class="fontBold">[@spring.message "organizationPreferences.defineNewCheckLists.checklistdetails" /]  </p>
                  <p>&nbsp;&nbsp;</p>
           <div class="prepend-3 pull-3 span-21 last">
-          	<div class="span-20 "><span class="span-6 rightAlign"><span class="red">* </span>[@spring.message "name" /]</span><span class="span-5">&nbsp;
+          	<div class="span-20 "><span class="span-6 rightAlign"><span class="red">* </span>[@spring.message "organizationPreferences.defineNewCheckLists.name" /]</span><span class="span-5">&nbsp;
     				<input type="text" /></span>
   			</div>
-          	<div class="span-20"><span class="span-6 rightAlign"><span class="red">* </span>[@spring.message "type" /]</span><span class="span-5">&nbsp;
+          	<div class="span-20"><span class="span-6 rightAlign"><span class="red">* </span>[@spring.message "organizationPreferences.defineNewCheckLists.type" /]</span><span class="span-5">&nbsp;
     				<select name="select">
-    				  <option>[@spring.message "--Select--"/]</option>
-                        <option>[@spring.message "center"/]</option>
-                        <option>[@spring.message "group"/]</option>
-                        <option>[@spring.message "client"/]</option>
-                        <option>[@spring.message "loans"/]</option>
-                        <option>[@spring.message "savings"/]</option>
+    				  <option>--Select--</option>
+                        <option>center</option>
+                        <option>group</option>
+                        <option>client</option>
+                        <option>loans</option>
+                        <option>savings</option>
 				    </select></span>
   			</div>
-        	<div class="span-20"><span class="span-6 rightAlign"><span class="red">* </span>[@spring.message "displayedwhenmovingintoStatus" /]</span><span class="span-5">&nbsp;
+        	<div class="span-20"><span class="span-6 rightAlign"><span class="red">* </span>[@spring.message "organizationPreferences.defineNewCheckLists.displayedwhenmovingintoStatus" /]&nbsp;:</span><span class="span-5">&nbsp;
    					<select name="select">
-   					 <option>[@spring.message "--Select--"/]</option>
-                        <option>[@spring.message "active"/]</option>
-                        <option>[@spring.message "inactive"/]</option>
+   					 <option>--Select--</option>
+                        <option>active</option>
+                        <option>inactive</option>
 				    </select></span>
 			</div>
-            <div class="span-20"><span class="span-6 rightAlign"><span class="red">* </span>[@spring.message "items" /]</span><span class="span-10">[@spring.message "entertextforeachitemandclickAddtosavetheiteminthelistbelow." /]<br />
+            <div class="span-20"><span class="span-6 rightAlign"><span class="red">* </span>[@spring.message "organizationPreferences.defineNewCheckLists.items" /]</span><span class="span-10">[@spring.message "organizationPreferences.defineNewCheckLists.entertextforeachitemandclickAddtosavetheiteminthelistbelow" /]<br />
             	<p><TEXTAREA name="text" cols="50" rows="5" onKeyPress="return restrictScript(event);"></TEXTAREA><INPUT type="button" name="button" value="Add&gt;&gt;" onClick="createCheckList();isButtonRequired()" class="buttn2"></span></p>
 			</div>
             <div class="span-20">

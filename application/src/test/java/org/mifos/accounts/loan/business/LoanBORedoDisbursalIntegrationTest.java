@@ -108,10 +108,6 @@ import org.mifos.security.util.UserContext;
 @Deprecated
 public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanBORedoDisbursalIntegrationTest() throws Exception {
-        super();
-    }
-
     private CenterPersistence centerPersistence;
     private GroupPersistence groupPersistence;
     private UserContext userContext;

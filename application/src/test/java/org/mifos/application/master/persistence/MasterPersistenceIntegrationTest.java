@@ -41,9 +41,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 
 public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
-    public MasterPersistenceIntegrationTest() throws Exception {
-        super();
-    }
 
     final private static short DEFAULT_LOCALE = (short) 1;
 

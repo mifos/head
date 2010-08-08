@@ -29,10 +29,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class FinancialActionConstantsIntegrationTest extends MifosIntegrationTestCase {
 
-    public FinancialActionConstantsIntegrationTest() throws Exception {
-        super();
-    }
-
     /*
      * Verify that the number of elements in the enum {@link
      * FinancialActionConstants} matches the number of elements in the

@@ -65,10 +65,6 @@ import org.mifos.reports.business.dto.BranchReportHeaderDTO;
 import org.mifos.reports.util.helpers.ReportUtils;
 public class BranchReportServiceIntegrationTest extends BranchReportIntegrationTestCase {
 
-    public BranchReportServiceIntegrationTest() throws Exception {
-        super();
-    }
-
     private BranchReportClientSummaryBO activeClientsCountSummary;;
     private BranchReportClientSummaryBO centerCountClientSummary;
     private BranchReportClientSummaryBO activeBorrowersCountSummary;

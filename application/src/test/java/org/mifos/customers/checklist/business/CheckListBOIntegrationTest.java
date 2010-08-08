@@ -45,10 +45,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CheckListBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public CheckListBOIntegrationTest() throws Exception {
-        super();
-    }
-
     private CustomerCheckListBO customerCheckList = null;
 
     private AccountCheckListBO accountCheckList = null;

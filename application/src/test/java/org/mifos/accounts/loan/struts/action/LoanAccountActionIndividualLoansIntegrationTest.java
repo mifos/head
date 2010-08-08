@@ -40,10 +40,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 
 public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanAccountActionIndividualLoansIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testShouldCallCreateMethodIfNewMembersSelected() throws Exception {
         GlimLoanUpdater glimLoanUpdaterMock = createMock(GlimLoanUpdater.class);

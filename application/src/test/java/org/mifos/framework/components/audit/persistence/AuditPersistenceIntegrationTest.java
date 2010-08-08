@@ -36,10 +36,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AuditPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public AuditPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testSave() {
         AuditLog auditLog = new AuditLog(Integer.valueOf("1"), Short.valueOf("2"), "Mifos", new Date(System

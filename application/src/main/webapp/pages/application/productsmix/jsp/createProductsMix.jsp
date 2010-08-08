@@ -143,8 +143,7 @@ explanation of the license and how it is applied.
 												:
 											</td>
 											<td>
-											<mifos:select property="productType"
-											onchange="return populateParent(this)" >
+											<mifos:select property="productType" onchange="return populateParent(this)" >
 												<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ProductTypeList')}" var="producttype">
 													<html-el:option value="${producttype.productTypeID}">${producttype.name}</html-el:option>
 												</c:forEach>

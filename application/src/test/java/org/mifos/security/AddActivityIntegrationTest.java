@@ -52,15 +52,12 @@ import org.mifos.security.util.UserContext;
 
 public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
 
-    public AddActivityIntegrationTest() throws Exception {
-        super();
-    }
-
     private Session session;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         session = StaticHibernateUtil.getSessionTL();
+        TestDatabase.resetMySQLDatabase();
     }
 
     @After

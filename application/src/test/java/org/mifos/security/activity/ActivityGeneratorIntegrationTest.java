@@ -40,10 +40,6 @@ import org.mifos.security.rolesandpermission.utils.ActivityTestUtil;
 
 public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
 
-    public ActivityGeneratorIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testShouldInsertSuccessActivity() throws Exception {
         Session session = StaticHibernateUtil.getSessionTL();

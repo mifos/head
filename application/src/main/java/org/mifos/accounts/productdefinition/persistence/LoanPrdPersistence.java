@@ -145,7 +145,9 @@ public class LoanPrdPersistence extends Persistence {
                 queryParameters);
         if (null != loanOfferings && loanOfferings.size() > 0) {
             for (LoanOfferingBO loanOffering : loanOfferings) {
-                loanOffering.getPrdStatus().getPrdState().setLocaleId(localeId);
+                if (localeId != null) {
+                    loanOffering.getPrdStatus().getPrdState().setLocaleId(localeId);
+                }
             }
         }
         return loanOfferings;

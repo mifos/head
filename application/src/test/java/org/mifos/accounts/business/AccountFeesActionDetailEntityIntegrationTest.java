@@ -46,10 +46,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public AccountFeesActionDetailEntityIntegrationTest() throws Exception {
-        super();
-    }
-
     protected AccountBO accountBO = null;
 
     protected CustomerBO center = null;

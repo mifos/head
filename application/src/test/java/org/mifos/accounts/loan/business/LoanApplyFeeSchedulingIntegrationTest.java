@@ -49,25 +49,24 @@ import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
@@ -77,10 +76,6 @@ import org.mifos.security.util.UserContext;
  */
 @Deprecated
 public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestCase {
-
-    public LoanApplyFeeSchedulingIntegrationTest() throws Exception {
-        super();
-    }
 
     private LoanOfferingBO loanOffering = null;
     private AccountBO accountBO = null;
@@ -529,11 +524,11 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
     }
 
 
-    private void buildAndPersistHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) throws ApplicationException {
-        HolidayDetails holidayDetails = new HolidayDetails("testHoliday", start.toDate(), through.toDate(), rule);
+    private void buildAndPersistHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) {
+        HolidayDetails holidayDetails = new HolidayDetails("testHoliday", start.toDate(), through.toDate(), rule.getValue());
         List<Short> officeIds = new LinkedList<Short>();
         officeIds.add((short)1);
-        DependencyInjectedServiceLocator.locateHolidayServiceFacade().createHoliday(holidayDetails, officeIds);
+        IntegrationTestObjectMother.createHoliday(holidayDetails, officeIds);
     }
 
     private void deleteHolidays() throws PersistenceException {

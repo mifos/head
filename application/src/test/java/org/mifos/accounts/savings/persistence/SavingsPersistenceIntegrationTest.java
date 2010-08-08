@@ -36,7 +36,6 @@ import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -58,6 +57,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -69,11 +69,6 @@ import org.mifos.security.util.UserContext;
 public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     private final int SAVINGS_CUSTOMFIELDS_NUMBER = 1;
-
-
-    public SavingsPersistenceIntegrationTest() throws Exception {
-        super();
-    }
 
     private UserContext userContext;
 

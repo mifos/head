@@ -28,8 +28,10 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.dto.domain.HolidayDetails;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -54,7 +56,7 @@ public class HolidayServiceFacadeWebTierTest {
         Date fromDate = dateTime.plusDays(10).toDate();
         Date thruDate = dateTime.plusDays(20).toDate();
         RepaymentRuleTypes repaymentRule = RepaymentRuleTypes.SAME_DAY;
-        holidayDetails = new HolidayDetails(name, fromDate, thruDate, repaymentRule);
+        holidayDetails = new HolidayDetails(name, fromDate, thruDate, repaymentRule.getValue());
         holidayServiceFacade =  new HolidayServiceFacadeWebTier(holidayService, holidayDao);
     }
 

@@ -47,6 +47,14 @@ public class ProductCategoryBusinessService implements BusinessService {
         }
     }
 
+    public ProductTypeEntity getProductType(Short id) throws ServiceException {
+        try {
+            return new ProductCategoryPersistence().getProductTypes(id);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     public ProductCategoryBO findByGlobalNum(String globalNum) throws ServiceException {
         try {
             return new ProductCategoryPersistence().findByGlobalNum(globalNum);

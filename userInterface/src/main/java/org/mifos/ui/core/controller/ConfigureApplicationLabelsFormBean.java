@@ -22,48 +22,94 @@ package org.mifos.ui.core.controller;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @SuppressWarnings("PMD.TooManyFields")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EQ_UNUSUAL", justification="using commons equals builder")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "EQ_UNUSUAL", justification = "using commons equals builder")
 public class ConfigureApplicationLabelsFormBean {
 
+    @NotEmpty
     private String headOffice;
+
+    @NotEmpty
     private String regionalOffice;
+
+    @NotEmpty
     private String subRegionalOffice;
+
+    @NotEmpty
     private String areaOffice;
+
+    @NotEmpty
     private String branchOffice;
+
+    @NotEmpty
     private String client;
+
+    @NotEmpty
     private String group;
+
+    @NotEmpty
     private String center;
+    @NotEmpty
     private String loans;
+    @NotEmpty
     private String savings;
+    @NotEmpty
     private String state;
+    @NotEmpty
     private String postalCode;
+    @NotEmpty
     private String ethnicity;
+    @NotEmpty
     private String citizenship;
+    @NotEmpty
     private String handicapped;
+    @NotEmpty
     private String govtId;
+    @NotEmpty
     private String address1;
+    @NotEmpty
     private String address2;
+    @NotEmpty
     private String address3;
+    @NotEmpty
     private String partialApplication;
+    @NotEmpty
     private String pendingApproval;
+    @NotEmpty
     private String approved;
+    @NotEmpty
     private String cancel;
+    @NotEmpty
     private String closed;
+    @NotEmpty
     private String onhold;
+    @NotEmpty
     private String active;
+    @NotEmpty
     private String inActive;
+    @NotEmpty
     private String activeInGoodStanding;
+    @NotEmpty
     private String activeInBadStanding;
+    @NotEmpty
     private String closedObligationMet;
+    @NotEmpty
     private String closedRescheduled;
+    @NotEmpty
     private String closedWrittenOff;
+    @NotEmpty
     private String none;
+    @NotEmpty
     private String graceOnAllRepayments;
+    @NotEmpty
     private String principalOnlyGrace;
+    @NotEmpty
     private String interest;
+    @NotEmpty
     private String externalId;
+    @NotEmpty
     private String bulkEntry;
 
     public String getHeadOffice() {

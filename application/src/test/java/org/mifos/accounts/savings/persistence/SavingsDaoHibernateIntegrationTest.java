@@ -60,10 +60,6 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
  */
 public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
 
-    public SavingsDaoHibernateIntegrationTest() throws Exception {
-        super();
-    }
-
     // class under test
     private SavingsDao savingsDao;
 

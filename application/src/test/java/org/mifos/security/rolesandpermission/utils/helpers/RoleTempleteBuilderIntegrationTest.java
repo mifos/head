@@ -36,10 +36,6 @@ import org.mifos.security.util.RoleChangeEvent;
 
 public class RoleTempleteBuilderIntegrationTest extends MifosIntegrationTestCase {
 
-    public RoleTempleteBuilderIntegrationTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testLocaleId() {
         RoleTempleteBuilder roleTempleteBuilder = new RoleTempleteBuilder();

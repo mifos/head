@@ -36,10 +36,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ProductMixBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public ProductMixBOIntegrationTest() throws Exception {
-        super();
-    }
-
     private SavingsOfferingBO savingsOffering;
     private SavingsTestHelper helper = new SavingsTestHelper();
     private ProductMixBO prdMix;

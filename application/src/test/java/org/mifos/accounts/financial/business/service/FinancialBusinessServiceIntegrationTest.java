@@ -69,9 +69,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
 public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
-    public FinancialBusinessServiceIntegrationTest() throws Exception {
-        super();
-    }
 
     protected LoanBO loan = null;
 

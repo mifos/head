@@ -21,11 +21,6 @@
 package org.mifos.application.holiday.struts.action;
 
 import java.io.PrintWriter;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,38 +28,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.holiday.business.service.HolidayBusinessService;
-import org.mifos.application.holiday.persistence.HolidayDetails;
-import org.mifos.application.holiday.persistence.OfficeHoliday;
-import org.mifos.application.holiday.struts.actionforms.HolidayActionForm;
-import org.mifos.application.holiday.util.helpers.HolidayConstants;
-import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
-
 public class HolidayAction extends BaseAction {
 
-    @Override
-    protected BusinessService getService() throws ServiceException {
-        return new HolidayBusinessService();
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
-        return true;
-    }
-
+    /*
+     * left in to handle AJAX call to officeHierarchy
+     */
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("holidayAction");
         security.allow("load", SecurityConstants.CAN_DEFINE_HOLIDAY);
@@ -78,146 +50,9 @@ public class HolidayAction extends BaseAction {
         return security;
     }
 
-    @TransactionDemarcate(saveToken = true)
-    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        doCleanUp(request);
-        request.getSession().setAttribute("HolidayActionForm", null);
-        request.getSession().setAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes());
-        return mapping.findForward(ActionForwards.load_success.toString());
-    }
-
-    private Map<Short, String> getRepaymentRuleTypes() throws Exception {
-        List<RepaymentRuleTypes> repaymentRuleTypes = Arrays.asList(RepaymentRuleTypes.values());
-        Map<Short, String> repaymentRuleTypesMap = new TreeMap<Short, String>();
-        for (RepaymentRuleTypes repaymentRule : repaymentRuleTypes) {
-            repaymentRuleTypesMap.put(repaymentRule.getValue(), repaymentRule.getName());
-        }
-        return repaymentRuleTypesMap;
-    }
-
-    public ActionForward addHoliday(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        ((HolidayActionForm)form).setSelectedOfficeIds("");
-        request.getSession().setAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes());
-        return mapping.findForward(ActionForwards.load_success.toString());// "create_office_holiday");
-    }
-
-    private void doCleanUp(HttpServletRequest request) {
-        SessionUtils.setAttribute(HolidayConstants.HOLIDAY_ACTIONFORM, null, request.getSession());
-    }
-
-    @TransactionDemarcate(joinToken = true)
-    public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        request.getSession().setAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes());
-        String selectedOfficeIds = ((HolidayActionForm) form).getSelectedOfficeIds();
-
-        final String topLevelOfficeNames = this.legacyOfficeServiceFacade.topLevelOfficeNames(selectedOfficeIds);
-
-        request.getSession().setAttribute(HolidayConstants.SELECTED_OFFICE_NAMES, topLevelOfficeNames);
-        return mapping.findForward(ActionForwards.preview_success.toString());
-    }
-
-    @TransactionDemarcate(joinToken = true)
-    public ActionForward previous(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-
-        request.getSession().setAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes());
-
-        return mapping.findForward(ActionForwards.previous_success.toString());
-    }
-
-    @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancelCreate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        return mapping.findForward(ActionForwards.cancelCreate_success.toString());
-    }
-
-    @TransactionDemarcate(saveToken = true)
-    public ActionForward get(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-
-        int count = 1;
-        Map<String, List<OfficeHoliday>> holidaysByYear = holidayServiceFacade.holidaysByYear();
-
-        Set<String> distinctYears = holidaysByYear.keySet();
-        for (String year : distinctYears) {
-            request.getSession().setAttribute(HolidayConstants.HOLIDAY_LIST + count, holidaysByYear.get(year));
-            request.getSession().setAttribute(HolidayConstants.YEAR + count, year);
-            count++;
-        }
-        request.getSession().setAttribute(HolidayConstants.NO_OF_YEARS, count - 1);
-        return mapping.findForward(ActionForwards.get_success.toString());
-    }
-
-    @TransactionDemarcate(joinToken = true)
-    public ActionForward getEditStates(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        return mapping.findForward(ActionForwards.manage_success.toString());
-    }
-
-    @TransactionDemarcate(joinToken = true)
-    public ActionForward managePreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-
-        return mapping.findForward(ActionForwards.managepreview_success.toString());
-    }
-
-    @TransactionDemarcate(joinToken = true)
-    public ActionForward managePrevious(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        return mapping.findForward(ActionForwards.manageprevious_success.toString());
-    }
-
-    @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-
-        HolidayActionForm holidayActionForm = (HolidayActionForm) form;
-
-        RepaymentRuleTypes repaymentRuleType = RepaymentRuleTypes.fromShort(Short.valueOf(holidayActionForm.getRepaymentRuleId()));
-        HolidayDetails holidayDetails = assembleHolidayDetails(holidayActionForm, repaymentRuleType);
-
-        List<Short> officeIds = new LinkedList<Short>();
-        String[] selectedOfficeIds = holidayActionForm.getSelectedOfficeIds().split(",");
-        for (String selectedOfficeId : selectedOfficeIds) {
-            officeIds.add(Short.valueOf(selectedOfficeId));
-        }
-
-        this.holidayServiceFacade.createHoliday(holidayDetails, officeIds);
-
-        if (null != request.getParameter(Constants.CURRENTFLOWKEY)) {
-            request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter("currentFlowKey"));
-        }
-        FlowManager flowManager = new FlowManager();
-        Flow flow = new Flow();
-        flow.addObjectToSession(Constants.CURRENTFLOWKEY, request.getParameter("currentFlowKey"));
-        flowManager.addFLow(Constants.CURRENTFLOWKEY, flow, this.clazz.getName());
-        request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter("currentFlowKey"));
-
-        return mapping.findForward(ActionForwards.update_success.toString());
-    }
-
-    private HolidayDetails assembleHolidayDetails(HolidayActionForm holidayActionForm,
-            RepaymentRuleTypes repaymentRuleType) {
-        return new HolidayDetails(holidayActionForm.getHolidayName(), holidayActionForm.getFromDate(), holidayActionForm.getThruDate(), repaymentRuleType);
-    }
-
-    @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancelManage(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        return mapping.findForward(ActionForwards.cancelEdit_success.toString());
-    }
-
-    @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-
-        String method = (String) request.getAttribute("methodCalled");
-        return mapping.findForward(method + "_failure");
-    }
-
-
+    /*
+     * for AJAX call from createHolidays.js
+     */
     public ActionForward officeHierarchy(@SuppressWarnings("unused") ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         response.setContentType("application/json");

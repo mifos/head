@@ -26,9 +26,9 @@ package org.mifos.accounts.productdefinition.util.helpers;
 public enum ProductType {
     LOAN((short) 1), SAVINGS((short) 2);
 
-    Short value;
+    private Short value;
 
-    ProductType(Short value) {
+    private ProductType(Short value) {
         this.value = value;
     }
 
@@ -43,5 +43,9 @@ public enum ProductType {
             }
         }
         throw new RuntimeException("no product type " + value);
+    }
+
+    public static ProductType fromInt(Integer productTypeId) {
+        return getProductType(productTypeId);
     }
 }

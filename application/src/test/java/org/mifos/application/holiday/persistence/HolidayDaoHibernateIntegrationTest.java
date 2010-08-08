@@ -22,6 +22,7 @@ package org.mifos.application.holiday.persistence;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+import static org.junit.matchers.JUnitMatchers.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -44,6 +45,7 @@ import org.mifos.config.Localization;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.domain.builders.HolidayBuilder;
+import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -254,11 +256,28 @@ public class HolidayDaoHibernateIntegrationTest {
         holidayDao.validateNoExtraFutureHolidaysApplicableOnParentOffice(branch1.getParentOffice().getOfficeId(), areaOffice2.getOfficeId());
     }
 
+    @Test
+    public void shouldRetrieveOfficeNames() throws Exception {
+
+        OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
+
+        // setup
+        createOfficeHierarchyUnderHeadOffice(headOffice);
+
+        List<Short> officeIds = Arrays.asList(branch1.getOfficeId());
+
+        // exercise test
+        List<String> officeNames = holidayDao.retrieveApplicableOfficeNames(officeIds);
+
+        // verification
+        assertThat(officeNames, hasItem(branch1.getOfficeName()));
+    }
+
     private void insert(final Holiday holiday) {
         OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
 
         HolidayDetails holidayDetails = new HolidayDetails("HolidayDaoTest", holiday.getFromDate().toDate(), holiday
-                .getThruDate().toDate(), holiday.getRepaymentRuleType());
+                .getThruDate().toDate(), holiday.getRepaymentRuleType().getValue());
 
         List<Short> officeIds = Arrays.asList(headOffice.getOfficeId());
         IntegrationTestObjectMother.createHoliday(holidayDetails, officeIds);

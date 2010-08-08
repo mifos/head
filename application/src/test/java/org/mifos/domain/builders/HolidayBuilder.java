@@ -23,9 +23,9 @@ package org.mifos.domain.builders;
 import org.joda.time.DateTime;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.dto.domain.HolidayDetails;
 
 public class HolidayBuilder {
 
@@ -37,8 +37,7 @@ public class HolidayBuilder {
 
     public Holiday build() {
 
-        HolidayBO holiday = new HolidayBO(new HolidayDetails(this.name, from.toDate(), to.toDate(),
-                repaymentRule));
+        HolidayBO holiday = new HolidayBO(new HolidayDetails(this.name, from.toDate(), to.toDate(), repaymentRule.getValue()));
 
         if (office != null) {
             office.addHoliday(holiday);

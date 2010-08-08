@@ -42,9 +42,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * deprecated and may be removed</a> (-Adam 22-JAN-2008).
  */
 public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
-    public ConfigurationIntegrationTest() throws Exception {
-        super();
-    }
 
     private Configuration configuration;
 

@@ -39,9 +39,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
  */
 
 public class ProcessFlowRulesIntegrationTest extends MifosIntegrationTestCase {
-    public ProcessFlowRulesIntegrationTest() throws Exception {
-        super();
-    }
 
     @After
     public void tearDown() {

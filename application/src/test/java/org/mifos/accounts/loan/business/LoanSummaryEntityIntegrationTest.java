@@ -40,10 +40,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanSummaryEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanSummaryEntityIntegrationTest() throws Exception {
-        super();
-    }
-
     protected AccountBO accountBO = null;
     protected CustomerBO center = null;
     protected CustomerBO group = null;

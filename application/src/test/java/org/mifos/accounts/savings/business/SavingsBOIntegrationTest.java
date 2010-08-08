@@ -113,9 +113,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
 public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
-    public SavingsBOIntegrationTest() throws Exception {
-        super();
-    }
 
     private UserContext userContext;
     private CustomerBO group;

@@ -56,10 +56,6 @@ import org.mifos.security.util.UserContext;
  */
 public class CustomerCreationDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
 
-    public CustomerCreationDaoHibernateIntegrationTest() throws Exception {
-        super();
-    }
-
     // class under test
     private CustomerDao customerDao;
 

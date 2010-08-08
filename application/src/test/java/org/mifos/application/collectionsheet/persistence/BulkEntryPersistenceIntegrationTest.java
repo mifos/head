@@ -48,10 +48,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public BulkEntryPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private AccountPersistence accountPersistence;
 
     private CustomerBO center;

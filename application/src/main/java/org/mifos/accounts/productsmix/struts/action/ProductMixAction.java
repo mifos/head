@@ -471,19 +471,20 @@ public class ProductMixAction extends BaseAction {
                 ProductDefinitionConstants.NOTALLOWEDPRODUCTLIST, request);
         PrdOfferingBO productOff = getPrdMixBusinessService().getPrdOfferingByID(
                 Short.valueOf(prdMixActionForm.getProductInstance()));
+
         productOff.setUserContext(getUserContext(request));
+
         List<PrdOfferingBO> oldNotAllowedProductList = (List<PrdOfferingBO>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.OLDNOTALLOWEDPRODUCTLIST, request);
+
         if (null != oldNotAllowedProductList && oldNotAllowedProductList.size() != 0) {
             for (PrdOfferingBO oldnotallowedProduct : oldNotAllowedProductList) {
 
-                ProductMixBO product = getPrdMixBusinessService().getPrdOfferingMixByPrdOfferingID(
-                        productOff.getPrdOfferingId(), oldnotallowedProduct.getPrdOfferingId());
+                ProductMixBO product = getPrdMixBusinessService().getPrdOfferingMixByPrdOfferingID(productOff.getPrdOfferingId(), oldnotallowedProduct.getPrdOfferingId());
                 if (null != product) {
                     product.delete();
                 }
-                ProductMixBO productmix = getPrdMixBusinessService().getPrdOfferingMixByPrdOfferingID(
-                        oldnotallowedProduct.getPrdOfferingId(), productOff.getPrdOfferingId());
+                ProductMixBO productmix = getPrdMixBusinessService().getPrdOfferingMixByPrdOfferingID(oldnotallowedProduct.getPrdOfferingId(), productOff.getPrdOfferingId());
                 if (null != productmix) {
                     productmix.delete();
                 }

@@ -31,10 +31,6 @@ import org.mifos.reports.admindocuments.business.AdminDocumentBO;
 
 public class AdminDocumentPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public AdminDocumentPersistenceIntegrationTest() throws Exception {
-        super();
-    }
-
     private AdminDocumentPersistence reportsPersistence;
 
     @Before

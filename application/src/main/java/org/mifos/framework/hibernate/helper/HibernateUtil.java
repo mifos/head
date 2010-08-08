@@ -33,7 +33,6 @@ import org.hibernate.cfg.ImprovedNamingStrategy;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.ConnectionNotFoundException;
-import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -104,18 +103,6 @@ public class HibernateUtil {
             transaction.begin();
         }
         return transaction;
-    }
-
-    /**
-     * @deprecated use only<br>
-     * {@link StaticHibernateUtil#startTransaction()}<br>
-     * {@link StaticHibernateUtil#commitTransaction()}<br>
-     * {@link StaticHibernateUtil#rollbackTransaction()}<br>
-     * @return
-     */
-    @Deprecated
-    public Transaction getTransaction() {
-        return getSessionTL().getTransaction();
     }
 
     public void closeSession() {
