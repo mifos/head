@@ -32,6 +32,7 @@ import java.util.Set;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
+import org.mifos.security.util.SecurityConstants;
 
 /**
  * This class build the templete for the activities in the system so that user
@@ -228,8 +229,9 @@ public class RoleTempleteBuilder {
         StringBuilder buff = new StringBuilder();
         // first build the map
         for (short k = 0; k < l.size(); k++) {
-
-            indexMap.put(l.get(k).getId(), k);
+            if (!l.get(k).getId().equals(SecurityConstants.CAN_VIEW_ORGANIZATION_SETTINGS)) {
+                indexMap.put(l.get(k).getId(), k);
+            }
         }
 
         // make checkmap

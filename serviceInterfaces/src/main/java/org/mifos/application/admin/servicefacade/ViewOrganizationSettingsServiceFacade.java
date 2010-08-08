@@ -28,6 +28,6 @@ import java.util.Properties;
 
 public interface ViewOrganizationSettingsServiceFacade {
 
-    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_VIEW_SYSTEM_INFO', 'ROLE_VIEW_ORGANIZATION_SETTINGS')")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_VIEW_SYSTEM_INFO')")
     Properties getOrganizationSettings(HttpSession session);
 }

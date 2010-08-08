@@ -52,8 +52,4 @@ public class ViewOrganizationSettingsController {
 
         return modelAndView;
     }
-
-    public String getPageToDisplay(HttpServletRequest request) {
-        return request.getRequestURI().replace("mifos/", "").replace("/", "").replace(".ftl", "");
-    }
 }

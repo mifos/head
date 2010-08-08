@@ -39,27 +39,30 @@ import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.struts.actionforms.RolesPermissionsActionForm;
 import org.mifos.security.rolesandpermission.util.helpers.RoleTempleteBuilder;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
-import org.mifos.security.util.UserContext;
+import org.mifos.security.util.SecurityConstants;
 
 public class ActivityTag extends TagSupport {
 
+    @SuppressWarnings("unchecked")
     @Override
     public int doEndTag() throws JspException {
-        UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USER_CONTEXT_KEY);
         RoleTempleteBuilder builder = new RoleTempleteBuilder();
         List<ActivityEntity> activities;
         try {
-            activities = (List<ActivityEntity>) SessionUtils.getAttribute(RolesAndPermissionConstants.ACTIVITYLIST,
-                    (HttpServletRequest) pageContext.getRequest());
+            activities = (List<ActivityEntity>) SessionUtils.getAttribute(RolesAndPermissionConstants.ACTIVITYLIST, (HttpServletRequest) pageContext.getRequest());
+            activities = filterActivities(activities);
             RoleBO role = (RoleBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, (HttpServletRequest) pageContext
                     .getRequest());
             RolesPermissionsActionForm rolesPermissionsActionForm = (RolesPermissionsActionForm) pageContext
                     .getSession().getAttribute("rolesPermissionsActionForm");
             if (rolesPermissionsActionForm != null && rolesPermissionsActionForm.getActivities().size() > 0) {
-                Set activitySet = convertToIdSet(getActivities(activities, rolesPermissionsActionForm.getActivities()));
+
+                List<ActivityEntity> flitered = filterActivities(getActivities(activities, rolesPermissionsActionForm.getActivities()));
+                Set<Short> activitySet = convertToIdSet(flitered);
                 builder.setCurrentActivites(activitySet);
             } else if (role != null) {
-                Set activitySet = convertToIdSet(role.getActivities());
+                List<ActivityEntity> flitered = filterActivities(role.getActivities());
+                Set<Short> activitySet = convertToIdSet(flitered);
                 builder.setCurrentActivites(activitySet);
             }
             SessionUtils.getAttribute(Constants.BUSINESS_KEY, (HttpServletRequest) pageContext.getRequest());
@@ -71,6 +74,17 @@ public class ActivityTag extends TagSupport {
             throw new JspException(e1);
         }
         return EVAL_PAGE;
+    }
+
+    private List<ActivityEntity> filterActivities(List<ActivityEntity> activities) {
+
+        List<ActivityEntity> filteredActivities = new ArrayList<ActivityEntity>();
+        for (ActivityEntity activityEntity : activities) {
+            if (!activityEntity.getId().equals(SecurityConstants.CAN_VIEW_ORGANIZATION_SETTINGS)) {
+                filteredActivities.add(activityEntity);
+            }
+        }
+        return filteredActivities;
     }
 
     static Set<Short> convertToIdSet(List<ActivityEntity> activityList) {
