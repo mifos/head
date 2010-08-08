@@ -22,6 +22,8 @@ package org.mifos.ui.core.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.AccountStatusesLabelDto;
@@ -58,6 +60,11 @@ public class ConfigureApplicationLabelsController {
     public ConfigureApplicationLabelsController(final AdminServiceFacade adminServiceFacade) {
         this.adminServiceFacade = adminServiceFacade;
     }
+
+//    @InitBinder
+//    protected void initBinder(WebDataBinder binder) {
+//        binder.setValidator(validator);
+//    }
 
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
@@ -145,9 +152,10 @@ public class ConfigureApplicationLabelsController {
 
     @RequestMapping(method = RequestMethod.POST)
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
-                                    @ModelAttribute("formBean") ConfigureApplicationLabelsFormBean formBean,
+                                    @ModelAttribute("formBean") @Valid ConfigureApplicationLabelsFormBean formBean,
                                     BindingResult result,
                                     SessionStatus status) {
+
         String viewName = REDIRECT_TO_ADMIN_SCREEN;
 
         if (StringUtils.isNotBlank(cancel)) {

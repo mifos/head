@@ -1,6 +1,7 @@
 [#ftl]
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
+[#import "macros.ftl" as mifosMacros]
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Left Sidebar Begins-->
@@ -21,10 +22,9 @@
     <div class="span-16">  		
         <div class="clear">&nbsp;</div>
         <div class="fontBold"><span class="orangeheading">[@spring.message "datadisplayandrules.defineLabels"/]</span></div>
-        [@spring.bind "formBean" /]
-        <p class="error">
-  			[@spring.showErrors "<br>" /]
-  		</p>
+        <div class="allErrorsDiv">
+	        [@mifosMacros.showAllErrors "formBean.*"/]
+        </div>
   		
 		<p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.officeHierarchy"/] </p>
         
