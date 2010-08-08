@@ -171,7 +171,7 @@ public class GroupCustAction extends CustAction {
     private QuestionnaireFlowAdapter createGroupQuestionnaire =
             new QuestionnaireFlowAdapter("Create", "Group",
                     ActionForwards.preview_success,
-                    "groupCustAction.do?method=cancel",
+                    "custSearchAction.do?method=loadMainSearch",
                     new QuestionnaireServiceFacadeLocator() {
                         @Override
                         public QuestionnaireServiceFacade getService(HttpServletRequest request) {

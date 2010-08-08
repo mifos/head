@@ -43,8 +43,8 @@ public class CollectionUtilsTest extends TestCase {
     }
     
     public void testCollectionToString() {
-        assertEquals(null, CollectionUtils.toString(null));
-        assertEquals(null, CollectionUtils.toString(Collections.EMPTY_LIST));
+        assertEquals("", CollectionUtils.toString(null));
+        assertEquals("", CollectionUtils.toString(Collections.EMPTY_LIST));
         assertEquals("Hi", CollectionUtils.toString(asList("Hi")));
         assertEquals("Hi, Bye", CollectionUtils.toString(asList("Hi", "Bye")));
     }

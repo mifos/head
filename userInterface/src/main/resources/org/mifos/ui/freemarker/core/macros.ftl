@@ -111,7 +111,7 @@
     [#assign id="${spring.status.expression}${value_index}"]
     [#assign isSelected = spring.contains(spring.status.value?default([""]), value)]
     <input type="checkbox" id="${id}" name="${spring.status.expression}" value="${value?html}"[#if isSelected] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
-    <label for="${id}" style="float:none;">${value?html}</label>${separator}
+    <label for="${id}" tags="${value.commaSeparatedTags}" style="float:none;">${value?html}</label>${separator}
     [/#list]
     <input type="hidden" name="_${spring.status.expression}" value="on"/>
 [/#macro]

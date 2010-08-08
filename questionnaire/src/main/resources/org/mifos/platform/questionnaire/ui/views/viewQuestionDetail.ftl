@@ -51,7 +51,7 @@
                                     [#list Request.questionDetail.choices as choice]
                                          <tr>
                                              <td class="drawtablerow" width="50%">${choice.choiceText}</td>
-                                             [#if choice.commaSeparatedTags?exists]
+                                             [#if choice.commaSeparatedTags?has_content]
                                                 <td class="drawtablerow" width="50%">${choice.commaSeparatedTags}</td>
                                              [#else]
                                                 <td class="drawtablerow" width="50%">&nbsp;</td>
@@ -59,7 +59,7 @@
                                          </tr>
                                     [/#list]
                                     </table>
-                                [#elseif Request.questionDetail.commaSeparateChoices?exists]
+                                [#elseif Request.questionDetail.commaSeparateChoices?has_content]
                                     <td class="drawtablerow">[@spring.message "questionnaire.quesiton.choices"/]: ${Request.questionDetail.commaSeparateChoices}</td>
                                 [/#if]
                                 [#if Request.questionDetail.numericMin?exists]

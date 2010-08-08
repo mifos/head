@@ -823,6 +823,7 @@ explanation of the license and how it is applied.
               <td colspan="2" align="right" class="paddingleft05">
                 <span class="fontnormal8pt">
                   <c:set var="questionnaireFor" scope="session" value="${clientInformationDto.clientDisplay.displayName}"/>
+                  <c:remove var="urlMap" />
                   <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
                   <c:set target="${urlMap}" property="${clientInformationDto.clientDisplay.branchName}" value="custSearchAction.do?method=getOfficeHomePage&officeId=${UserContext.branchId}"/>
                   <c:set target="${urlMap}" property="${clientInformationDto.clientDisplay.displayName}" value="clientCustAction.do?method=get&globalCustNum=${clientInformationDto.clientDisplay.globalCustNum}"/>

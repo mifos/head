@@ -23,6 +23,7 @@ package org.mifos.platform.questionnaire.service;
 import org.mifos.platform.util.CollectionUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class SectionQuestionDetail implements Serializable {
     private QuestionDetail questionDetail;
     private String value;
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_BAD_FIELD")
     private List<String> values;
 
     private int id;
@@ -153,7 +154,9 @@ public class SectionQuestionDetail implements Serializable {
     }
 
     public boolean isMultiSelectQuestion() {
-        return QuestionType.MULTI_SELECT.equals(getQuestionType());
+        QuestionType questionType = getQuestionType();
+        return QuestionType.MULTI_SELECT.equals(questionType) ||
+                QuestionType.SMART_SELECT.equals(questionType);
     }
 
     public List<String> getAnswers() {
@@ -194,6 +197,22 @@ public class SectionQuestionDetail implements Serializable {
     //Used for legacy Struts binding support
     @Deprecated
     public void setValuesAsArray(String[] valuesArr) {
-        this.values = Arrays.asList(valuesArr);
+        this.values = new ArrayList(Arrays.asList(valuesArr));
+        removeDefaultSelection();
     }
+
+    /*  This is a work around for the bug in Struts 1 tag html:multibox
+        The array binding does not happen if none of the values are selected
+        i.e the setter won't be called at all, this can create issues
+        when user un selects all values which were selected before
+        The work around introduces a hidden value which is always selected,
+        which ensures the binding always happen
+    */
+    @Deprecated    
+    private void removeDefaultSelection() {
+        if (CollectionUtils.isNotEmpty(values)) {
+            values.remove(0);
+        }
+    }
+
 }
