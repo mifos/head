@@ -21,6 +21,7 @@
 package org.mifos.customers.persistence;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.joda.time.DateTime;
@@ -42,6 +43,7 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelDto;
+import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.util.helpers.CenterDisplayDto;
 import org.mifos.customers.util.helpers.CenterPerformanceHistoryDto;
 import org.mifos.customers.util.helpers.ClientDisplayDto;
@@ -52,11 +54,11 @@ import org.mifos.customers.util.helpers.CustomerFlagDto;
 import org.mifos.customers.util.helpers.CustomerMeetingDto;
 import org.mifos.customers.util.helpers.CustomerNoteDto;
 import org.mifos.customers.util.helpers.CustomerPositionDto;
-import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.customers.util.helpers.GroupDisplayDto;
 import org.mifos.customers.util.helpers.LoanCycleCounter;
 import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -85,6 +87,10 @@ public interface CustomerDao {
 
     List<CustomFieldDto> retrieveCustomFieldsForCenter(UserContext userContext);
 
+    List<CustomFieldDto> retrieveCustomFieldsForPersonnel(Locale preferredLocale);
+
+    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForPersonnel();
+
     List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForCenter();
 
     List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForGroup();
@@ -111,6 +117,8 @@ public interface CustomerDao {
 
     List<ValueListElement> retrieveSalutations();
 
+    List<ValueListElement> retrieveTitles();
+
     List<ValueListElement> retrieveMaritalStatuses();
 
     List<ValueListElement> retrieveCitizenship();
@@ -128,6 +136,8 @@ public interface CustomerDao {
     List<ValueListElement> retrievePoverty();
 
     List<ValueListElement> retrieveLivingStatus();
+
+    List<ValueListElement> retrieveLanguages();
 
     CenterDisplayDto getCenterDisplayDto(Integer centerId, UserContext userContext);
 
@@ -215,4 +225,6 @@ public interface CustomerDao {
     void checkPermissionForDefaultFeeRemoval(UserContext userContext, Short officeId, Short personnelId) throws CustomerException;
 
     void checkPermissionForDefaultFeeRemovalFromLoan(UserContext userContext, CustomerBO customer) throws CustomerException;
+
+    List<PersonnelLevelEntity> retrievePersonnelLevels();
 }

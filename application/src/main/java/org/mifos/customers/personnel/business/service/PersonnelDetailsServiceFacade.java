@@ -23,6 +23,6 @@ package org.mifos.customers.personnel.business.service;
 
 public interface PersonnelDetailsServiceFacade {
 
-    PersonnelInformationDto getPersonnelInformationDto(String globalCustNum, Short userLocaleId);
+    PersonnelInformationDto getPersonnelInformationDto(String globalCustNum);
 
 }

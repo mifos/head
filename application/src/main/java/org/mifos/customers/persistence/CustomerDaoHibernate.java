@@ -30,11 +30,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
@@ -49,6 +52,7 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -74,6 +78,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelDto;
+import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.struts.uihelpers.CustomerUIHelperFn;
 import org.mifos.customers.util.helpers.CenterDisplayDto;
@@ -190,6 +195,20 @@ public class CustomerDaoHibernate implements CustomerDao {
     public final List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForCenter() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.CENTER.getValue());
+
+        return retrieveCustomFieldDefinitions(queryParameters);
+    }
+
+    @Override
+    public List<CustomFieldDto> retrieveCustomFieldsForPersonnel(Locale preferredLocale) {
+        List<CustomFieldDefinitionEntity> customFieldsForPersonnel = retrieveCustomFieldEntitiesForPersonnel();
+        return CustomFieldDefinitionEntity.toDto(customFieldsForPersonnel, preferredLocale);
+    }
+
+    @Override
+    public List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForPersonnel() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.PERSONNEL.getValue());
 
         return retrieveCustomFieldDefinitions(queryParameters);
     }
@@ -1604,5 +1623,37 @@ public class CustomerDaoHibernate implements CustomerDao {
     private boolean isPermissionAllowed(CustomerLevel customerLevel, UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
         return ActivityMapper.getInstance().isEditMeetingSchedulePermittedForCustomers(customerLevel, userContext,
                 recordOfficeId, recordLoanOfficerId);
+    }
+
+    @Override
+    public List<ValueListElement> retrieveTitles() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("entityType", MasterConstants.PERSONNEL_TITLE);
+
+        return retrieveMasterData(queryParameters);
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private <T extends MasterDataEntity> List<T> doFetchListOfMasterDataFor(Class<T> type) {
+        Session session = ((GenericDaoHibernate) this.genericDao).getHibernateUtil().getSessionTL();
+        List<T> masterEntities = session.createQuery("from " + type.getName()).list();
+        for (MasterDataEntity masterData : masterEntities) {
+            Hibernate.initialize(masterData.getNames());
+        }
+        return masterEntities;
+    }
+
+    @Override
+    public List<PersonnelLevelEntity> retrievePersonnelLevels() {
+        return doFetchListOfMasterDataFor(PersonnelLevelEntity.class);
+    }
+
+    @Override
+    public List<ValueListElement> retrieveLanguages() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("entityType", MasterConstants.LANGUAGE);
+
+        return retrieveMasterData(queryParameters);
     }
 }
