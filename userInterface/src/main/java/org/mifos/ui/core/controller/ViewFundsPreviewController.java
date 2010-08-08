@@ -64,6 +64,7 @@ public class ViewFundsPreviewController {
             viewName = "editFunds";
             modelAndView.setViewName(viewName);
             modelAndView.addObject("formBean", formBean);
+            modelAndView.addObject("previewView", "fundPreview");
         } else if (StringUtils.isNotBlank(cancel)) {
             viewName = REDIRECT_TO_VIEW_FUNDS;
             modelAndView.setViewName(viewName);

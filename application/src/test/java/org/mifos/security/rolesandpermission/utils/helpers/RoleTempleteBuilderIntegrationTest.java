@@ -40,7 +40,7 @@ public class RoleTempleteBuilderIntegrationTest extends MifosIntegrationTestCase
     public void testLocaleId() {
         RoleTempleteBuilder roleTempleteBuilder = new RoleTempleteBuilder();
         roleTempleteBuilder.setLocaleId(Short.valueOf("1"));
-       Assert.assertEquals(Short.valueOf("1"), roleTempleteBuilder.getLocaleId());
+        Assert.assertEquals(Short.valueOf("1"), roleTempleteBuilder.getLocaleId());
     }
 
     @Test
@@ -50,7 +50,7 @@ public class RoleTempleteBuilderIntegrationTest extends MifosIntegrationTestCase
         RoleTempleteBuilder roleTempleteBuilder = new RoleTempleteBuilder();
         roleTempleteBuilder.setCurrentActivites(activities);
         activities = roleTempleteBuilder.getCurrentActivites();
-       Assert.assertEquals(1, activities.size());
+        Assert.assertEquals(1, activities.size());
     }
 
     @Test
@@ -58,22 +58,22 @@ public class RoleTempleteBuilderIntegrationTest extends MifosIntegrationTestCase
         List<ActivityEntity> activities = new RolesPermissionsBusinessService().getActivities();
         StringBuilder stringBuilder = new RoleTempleteBuilder().getRolesTemplete(activities);
         Assert.assertNotNull(stringBuilder);
-       Assert.assertTrue(stringBuilder.toString().contains("Can create new role"));
-       Assert.assertTrue(stringBuilder.toString().contains("Can modify a role"));
-       Assert.assertTrue(stringBuilder.toString().contains("Can delete a role"));
+        Assert.assertTrue(stringBuilder.toString().contains("Can create new role"));
+        Assert.assertTrue(stringBuilder.toString().contains("Can modify a role"));
+        Assert.assertTrue(stringBuilder.toString().contains("Can delete a role"));
     }
 
     @Test
     public void testActivityChangeEvent() {
         ActivityChangeEvent activityChangeEvent = new ActivityChangeEvent("event", "stringObject");
-       Assert.assertEquals("value of event", "event", activityChangeEvent.getEventType());
-       Assert.assertEquals("value of object", "stringObject", activityChangeEvent.getObject());
+        Assert.assertEquals("value of event", "event", activityChangeEvent.getEventType());
+        Assert.assertEquals("value of object", "stringObject", activityChangeEvent.getObject());
     }
 
     @Test
     public void testRoleChangeEvent() {
         RoleChangeEvent roleChangeEvent = new RoleChangeEvent("event", "stringObject");
-       Assert.assertEquals("value of event", "event", roleChangeEvent.getEventType());
-       Assert.assertEquals("value of object", "stringObject", roleChangeEvent.getObject());
+        Assert.assertEquals("value of event", "event", roleChangeEvent.getEventType());
+        Assert.assertEquals("value of object", "stringObject", roleChangeEvent.getObject());
     }
 }

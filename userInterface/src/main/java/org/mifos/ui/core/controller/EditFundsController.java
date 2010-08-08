@@ -20,7 +20,6 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -43,8 +42,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class EditFundsController {
 
     private static final String REDIRECT_TO_VIEW_FUNDS = "redirect:/viewFunds.ftl";
-    private static final String TO_FUND_PREVIEW = "fundPreview";
     private static final String CANCEL_PARAM = "CANCEL";
+    private static final String FORM_VIEW = "editFunds";
 
     @Autowired
     private FundServiceFacade fundServiceFacade;
@@ -57,14 +56,11 @@ public class EditFundsController {
         this.fundServiceFacade = fundServiceFacade;
     }
 
-    @ModelAttribute("breadcrumbs")
-    public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("fundEdit", "fundEdit.ftl").build();
-    }
-
     @RequestMapping(method = RequestMethod.GET)
-    @ModelAttribute("formBean")
-    public FundFormBean showFund(HttpServletRequest request) {
+    public ModelAndView showFund(HttpServletRequest request) {
+
+        ModelAndView modelAndView = new ModelAndView(FORM_VIEW);
+
         Integer code = Integer.parseInt(request.getParameter("fundId"));
 
         FundDto fundDto = fundServiceFacade.getFund(code.shortValue());
@@ -72,20 +68,25 @@ public class EditFundsController {
         formBean.setCode(fundDto.getCode());
         formBean.setId(fundDto.getId());
         formBean.setName(fundDto.getName());
-        return formBean;
+
+        modelAndView.addObject("formBean", formBean);
+        modelAndView.addObject("previewView", "fundPreview");
+
+        return modelAndView;
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
+            @RequestParam(value = "PREVIEWVIEW", required = true) String previewView,
             @ModelAttribute("formBean") FundFormBean formBean, BindingResult result, SessionStatus status) {
         ModelAndView modelAndView = new ModelAndView(REDIRECT_TO_VIEW_FUNDS);
         if (StringUtils.isNotBlank(cancel)) {
             modelAndView.setViewName(REDIRECT_TO_VIEW_FUNDS);
             status.setComplete();
         } else if (result.hasErrors()) {
-            modelAndView.setViewName("editFunds");
+            modelAndView.setViewName(FORM_VIEW);
         } else {
-            modelAndView.setViewName(TO_FUND_PREVIEW);
+            modelAndView.setViewName(previewView);
             modelAndView.addObject("formBean", formBean);
         }
         return modelAndView;

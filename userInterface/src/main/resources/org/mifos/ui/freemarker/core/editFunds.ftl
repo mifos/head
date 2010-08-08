@@ -16,8 +16,7 @@
     [@spring.showErrors "<br />"/]
     
     [@spring.bind "formBean.name"/]
-  		[#assign breadcrumb = {"admin":"AdminAction.do?method=load", "organizationPreferences.viewfunds":"viewFunds.ftl",spring.status.value?default(""):""}/]
-  	[@spring.showErrors "<br />"/]  	
+  	[#assign breadcrumb = {"admin":"AdminAction.do?method=load", "organizationPreferences.viewfunds":"viewFunds.ftl",spring.status.value?default(""):""}/] 	
     [@mifos.crumbpairs breadcrumb/]
         <div class="clear">&nbsp;</div>
     	<p class="font15"><span class="fontBold">[@spring.bind "formBean.name"/]<label name="${spring.status.expression}">${spring.status.value?default("")}</label>[@spring.showErrors "<br />"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "organizationPreferences.viewFunds.edit.editfundinformation"/]</span></p>
@@ -27,6 +26,7 @@
                 <p class="fontBold">[@spring.message "organizationPreferences.viewFunds.edit.funddetails"/]</p>
                 <p>&nbsp;</p>
         <div class="prepend-3 span-22 last">
+        <input type="hidden" name="PREVIEWVIEW" id="previewview" value="${previewView}" />
         [@spring.bind "formBean.id"/]
         <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>        
         [@spring.bind "formBean.name"/]

@@ -229,9 +229,7 @@ public class RoleTempleteBuilder {
         StringBuilder buff = new StringBuilder();
         // first build the map
         for (short k = 0; k < l.size(); k++) {
-            if (!l.get(k).getId().equals(SecurityConstants.CAN_VIEW_ORGANIZATION_SETTINGS)) {
-                indexMap.put(l.get(k).getId(), k);
-            }
+            indexMap.put(l.get(k).getId(), k);
         }
 
         // make checkmap
