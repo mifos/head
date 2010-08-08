@@ -5,6 +5,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class CreateQuestionPage extends MifosPage {
     public CreateQuestionPage(Selenium selenium) {
@@ -36,12 +37,36 @@ public class CreateQuestionPage extends MifosPage {
 
     private void fillUpChoices(CreateQuestionParameters createQuestionParameters) {
         if (createQuestionParameters.questionHasAnswerChoices()) {
-            for (String choice : createQuestionParameters.getChoices()) {
-                selenium.type("currentQuestion.currentChoice", choice);
-                selenium.keyUp("id=currentQuestion.currentChoice"," ");
-                selenium.click("_eventId_addChoice");
+            setAnswerChoices(createQuestionParameters);
+        } else if (createQuestionParameters.questionHasSmartAnswerChoices()) {
+            setSmartAnswerChoices(createQuestionParameters);
+        }
+    }
+
+    private void setSmartAnswerChoices(CreateQuestionParameters createQuestionParameters) {
+        List<Choice> choices = createQuestionParameters.getChoices();
+        for (int i = 0, choicesSize = choices.size(); i < choicesSize; i++) {
+            Choice choice = choices.get(i);
+            selenium.type("currentQuestion.currentSmartChoice", choice.getChoiceText());
+            selenium.keyUp("id=currentQuestion.currentSmartChoice", " ");
+            selenium.click("_eventId_addSmartChoice");
+            waitForPageToLoad();
+            for (String tag : choice.getTags()) {
+                String tagId = "currentQuestion.currentSmartChoiceTags[" + i + "]";
+                selenium.type(tagId, tag);
+                selenium.keyUp("id=" + tagId, " ");
+                selenium.click("addSmartChoiceTag_" + i);
                 waitForPageToLoad();
             }
+        }
+    }
+
+    private void setAnswerChoices(CreateQuestionParameters createQuestionParameters) {
+        for (String choice : createQuestionParameters.getChoicesAsStrings()) {
+            selenium.type("currentQuestion.currentChoice", choice);
+            selenium.keyUp("id=currentQuestion.currentChoice"," ");
+            selenium.click("_eventId_addChoice");
+            waitForPageToLoad();
         }
     }
 
@@ -72,7 +97,7 @@ public class CreateQuestionPage extends MifosPage {
         questionParameters.setTitle(selenium.getTable("questions.table." + indexOfLastQuestion + ".0"));
         questionParameters.setType(selenium.getTable("questions.table." + indexOfLastQuestion + ".1"));
         String[] choices = selenium.getTable("questions.table." + indexOfLastQuestion + ".2").split(", ");
-        questionParameters.setChoices(Arrays.asList(choices));
+        questionParameters.setChoicesFromStrings(Arrays.asList(choices));
         return questionParameters;
     }
 }

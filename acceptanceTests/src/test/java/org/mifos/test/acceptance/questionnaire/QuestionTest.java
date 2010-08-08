@@ -62,6 +62,7 @@ public class QuestionTest extends UiTestCaseBase {
     private static final String MULTI_SELECT = "Multi Select";
     private static final String SINGLE_SELECT = "Single Select";
     private static final String NUMBER = "Number";
+    private static final String SMART_SELECT = "Smart Select";
     public static final String INVALID_BOUNDS_ERR = "Please ensure maximum value is greater than minimum value.";
 
     @Override
@@ -87,11 +88,25 @@ public class QuestionTest extends UiTestCaseBase {
         testMissingTitle(createQuestionPage);
         testInvalidNumericBounds(createQuestionPage);
         testAddQuestions(createQuestionPage);
+        testAddSmartQuestion(createQuestionPage);
+        testForAtleastTwoChoices(createQuestionPage);
         testDuplicateTitle(createQuestionPage);
         adminPage = testCreateQuestions(createQuestionPage);
         adminPage = testDuplicateTitleForExistingQuestionInDB(adminPage);
         ViewAllQuestionsPage viewAllQuestionsPage = testViewQuestions(adminPage);
         testViewQuestions(viewAllQuestionsPage);
+    }
+
+    private void testForAtleastTwoChoices(CreateQuestionPage createQuestionPage) {
+        testAddQuestion(createQuestionPage, MULTI_SELECT, title + 1, null, null, asList("choice2"));
+    }
+
+    private void testAddSmartQuestion(CreateQuestionPage createQuestionPage) {
+        createQuestionParameters.setTitle(title + SMART_SELECT);
+        createQuestionParameters.setType(SMART_SELECT);
+        createQuestionParameters.setChoices(asList(new Choice("Choice1", asList("Tag1", "Tag2")), new Choice("Choice2", asList("Tag3", "Tag4"))));
+        createQuestionPage.addQuestion(createQuestionParameters);
+        assertRecentQuestion(createQuestionPage);
     }
 
     private void testInvalidNumericBounds(CreateQuestionPage createQuestionPage) {
@@ -106,7 +121,6 @@ public class QuestionTest extends UiTestCaseBase {
         testAddQuestion(createQuestionPage, NUMBER, title, 10, 100, null);
         testAddQuestion(createQuestionPage, SINGLE_SELECT, title, null, null, asList("choice1", "choice2"));
         testAddQuestion(createQuestionPage, MULTI_SELECT, title, null, null, asList("choice2", "choice3"));
-        testAddQuestion(createQuestionPage, MULTI_SELECT, title + 1, null, null, asList("choice2"));
     }
 
     private void testAddQuestion(CreateQuestionPage createQuestionPage, String type, String title, Integer numericMin, Integer numericMax, List<String> choices) {
@@ -117,7 +131,7 @@ public class QuestionTest extends UiTestCaseBase {
     private void setupQuestionParameters(String title, String type, List<String> choices, Integer numericMin, Integer numericMax) {
         createQuestionParameters.setTitle(title);
         createQuestionParameters.setType(type);
-        createQuestionParameters.setChoices(choices);
+        createQuestionParameters.setChoicesFromStrings(choices);
         createQuestionParameters.setNumericMin(numericMin);
         createQuestionParameters.setNumericMax(numericMax);
     }
@@ -125,8 +139,12 @@ public class QuestionTest extends UiTestCaseBase {
     private void testAddQuestion(CreateQuestionPage createQuestionPage) {
         createQuestionPage.addQuestion(createQuestionParameters);
         Assert.assertFalse(selenium.isTextPresent(TITLE_MISSING), "Missing title error should not appear");
-        List<String> choices = createQuestionParameters.getChoices();
-        if (createQuestionParameters.questionHasAnswerChoices() && choices.size() < 2) {
+        assertRecentQuestion(createQuestionPage);
+    }
+
+    private void assertRecentQuestion(CreateQuestionPage createQuestionPage) {
+        List<String> choices = createQuestionParameters.getChoicesAsStrings();
+        if ((createQuestionParameters.questionHasAnswerChoices() || createQuestionParameters.questionHasSmartAnswerChoices()) && choices.size() < 2) {
             Assert.assertTrue(selenium.isTextPresent(AT_LEAST_2_CHOICES), "Missing warning for giving at least 2 choices");
         } else {
             assertLastAddedQuestion(createQuestionPage);
@@ -139,7 +157,26 @@ public class QuestionTest extends UiTestCaseBase {
         viewAllQuestionsPage = testViewQuestionDetail(viewAllQuestionsPage, FREE_TEXT, null, null, null);
         viewAllQuestionsPage = testViewQuestionDetail(viewAllQuestionsPage, NUMBER, 10, 100, null);
         viewAllQuestionsPage = testViewQuestionDetail(viewAllQuestionsPage, MULTI_SELECT, null, null, asList("choice2", "choice3"));
-        testViewQuestionDetail(viewAllQuestionsPage, SINGLE_SELECT, null, null, asList("choice1", "choice2"));
+        viewAllQuestionsPage = testViewQuestionDetail(viewAllQuestionsPage, SINGLE_SELECT, null, null, asList("choice1", "choice2"));
+        testViewQuestionDetailForSmartSelect(viewAllQuestionsPage);
+    }
+
+    private ViewAllQuestionsPage testViewQuestionDetailForSmartSelect(ViewAllQuestionsPage viewAllQuestionsPage) {
+        QuestionDetailPage questionDetailPage = viewAllQuestionsPage.navigateToQuestionDetail(title + SMART_SELECT);
+        questionDetailPage.verifyPage();
+        Assert.assertTrue(selenium.isTextPresent("Question: " + title + SMART_SELECT), "Title is missing");
+        Assert.assertTrue(selenium.isTextPresent("Answer Type: " + SMART_SELECT), "Answer type is missing");
+        assertForSmartChoices(asList(new Choice("Choice1", asList("Tag1", "Tag2")), new Choice("Choice2", asList("Tag3", "Tag4"))));
+        return questionDetailPage.navigateToViewAllQuestionsPage();
+    }
+
+    private void assertForSmartChoices(List<Choice> choices) {
+        for (Choice choice : choices) {
+            Assert.assertTrue(selenium.isTextPresent(choice.getChoiceText()));
+            for (String tag : choice.getTags()) {
+                Assert.assertTrue(selenium.isTextPresent(tag));
+            }
+        }
     }
 
     private ViewAllQuestionsPage testViewQuestionDetail(ViewAllQuestionsPage viewAllQuestionsPage, String type,
@@ -209,10 +246,10 @@ public class QuestionTest extends UiTestCaseBase {
         CreateQuestionParameters question = createQuestionPage.getLastAddedQuestion();
         assertEquals(createQuestionParameters.getTitle(), question.getTitle());
         assertEquals(createQuestionParameters.getType(), question.getType());
-        if (createQuestionParameters.questionHasAnswerChoices()) {
-            Assert.assertEquals(createQuestionParameters.getChoices(), question.getChoices());
+        if (createQuestionParameters.questionHasAnswerChoices() || createQuestionParameters.questionHasSmartAnswerChoices()) {
+            Assert.assertEquals(createQuestionParameters.getChoicesAsStrings(), question.getChoicesAsStrings());
         } else {
-            Assert.assertEquals(asList("Not Applicable"), question.getChoices());
+            Assert.assertEquals(asList("Not Applicable"), question.getChoicesAsStrings());
         }
         testSubmitButtonEnabled(createQuestionPage);
     }
