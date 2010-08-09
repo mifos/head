@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
-import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
@@ -42,7 +42,6 @@ import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.rolesandpermission.business.RoleBO;
@@ -108,15 +107,14 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
         List<PersonnelLevelEntity> personnelLevels = customerDao.retrievePersonnelLevels();
         List<ListElement> personnelLevelList = new ArrayList<ListElement>();
-        if (officeDto != null) {
-            for (PersonnelLevelEntity level : personnelLevels) {
-                if (officeDto.getLevelId().equals(OfficeLevel.BRANCHOFFICE.getValue())
-                        && !level.getId().equals(PersonnelLevel.LOAN_OFFICER.getValue())) {
-                    ListElement listElement = new ListElement(new Integer(level.getId()), level.getLookUpValue()
-                            .getLookUpName());
-                    personnelLevelList.add(listElement);
-                }
-            }
+        for (PersonnelLevelEntity level : personnelLevels) {
+            // if (officeDto.getLevelId().equals(OfficeLevel.BRANCHOFFICE.getValue()) &&
+            // !level.getId().equals(PersonnelLevel.LOAN_OFFICER.getValue())) {
+            String name = level.getLookUpValue().getLookUpName();
+            String localisedName = MessageLookup.getInstance().lookup(name);
+            ListElement listElement = new ListElement(new Integer(level.getId()), localisedName);
+            personnelLevelList.add(listElement);
+            // }
         }
 
         List<ValueListElement> genders = customerDao.retrieveGenders();

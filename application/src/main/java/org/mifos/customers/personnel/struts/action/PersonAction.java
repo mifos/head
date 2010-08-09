@@ -143,8 +143,7 @@ public class PersonAction extends SearchAction {
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         PersonActionForm personActionForm = (PersonActionForm) form;
-        OfficeBO office = ((PersonnelBusinessService) getService()).getOffice(getShortValue(personActionForm
-                .getOfficeId()));
+        OfficeBO office = ((PersonnelBusinessService) getService()).getOffice(getShortValue(personActionForm.getOfficeId()));
         SessionUtils.setAttribute(PersonnelConstants.OFFICE, office, request);
         personActionForm.clear();
         //Shahid - keeping the previous session objects for the sake of existing tests, once fully converted to spring

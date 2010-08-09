@@ -39,8 +39,8 @@ explanation of the license and how it is applied.
 </script>
 
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
-		<html-el:form action="PersonAction.do"
-			focus="firstName">
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'definePersonnelDto')}" var="definePersonnelDto" />
+		<html-el:form action="PersonAction.do" focus="firstName">
 
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -193,15 +193,14 @@ explanation of the license and how it is applied.
 									</mifos:select></td>
 								</tr>
 								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel name="Personnel.Gender"
-										mandatory="yes" /></td>
-									<td><mifos:select name="personActionForm"
-										property="gender">
-										<c:forEach items="${definePersonnelDto.genderList}" 
-											var="genderlist">
+									<td align="right"><mifos:mifoslabel name="Personnel.Gender" mandatory="yes" /></td>
+									<td>
+										<mifos:select name="personActionForm" property="gender">
+										<c:forEach items="${definePersonnelDto.genderList}" var="genderlist">
 											<html-el:option value="${genderlist.id}">${genderlist.name}</html-el:option>
 											</c:forEach>
-									</mifos:select></td>
+										</mifos:select>
+									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
@@ -312,17 +311,14 @@ explanation of the license and how it is applied.
 									</mifos:select> </td>
 								</tr>
 								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel
-										name="Personnel.UserHierarchy" mandatory="yes" /></td>
-
+									<td align="right"><mifos:mifoslabel name="Personnel.UserHierarchy" mandatory="yes" /></td>
 									<td>
-										<mifos:select
-										name="personActionForm" property="level">
-										<c:forEach items="${definePersonnelDto.personnelLevelList}" 
-											var="item">
-											<html-el:option value="${item.id}">${item.name}</html-el:option>
+										<mifos:select name="personActionForm" property="level">
+											<c:forEach items="${definePersonnelDto.personnelLevelList}" var="item">
+												<html-el:option value="${item.id}">${item.name}</html-el:option>
 											</c:forEach>
-									</mifos:select></td>
+										</mifos:select>
+									</td>
 								</tr>
 
 								<tr class="fontnormal">
