@@ -248,12 +248,21 @@ public class ClientTest extends UiTestCaseBase {
 
     private void verifyQuestionGroupInstances(Map<Integer, QuestionGroup> questionGroups, String questionGroupTitle, int instanceId) {
         Assert.assertEquals(instanceId, questionGroups.size());
-        Assert.assertTrue(questionGroups.containsKey(instanceId));
+        Assert.assertTrue("instanceid = " + instanceId + " not found in " + toString(questionGroups), questionGroups.containsKey(instanceId));
         QuestionGroup questionGroup = questionGroups.get(instanceId);
         Calendar calendar = Calendar.getInstance();
         String expectedDate = String.format(EXPECTED_DATE_FORMAT, calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
         Assert.assertEquals(questionGroupTitle, questionGroup.getName());
         Assert.assertEquals(expectedDate, questionGroup.getDate());
+    }
+
+    private String toString(Map<Integer, QuestionGroup> questionGroups) {
+        StringBuilder buffer = new StringBuilder("[");
+        for (Map.Entry<Integer, QuestionGroup> entry : questionGroups.entrySet()) {
+            buffer.append(entry.getKey()).append(":").append(entry.getValue()).append(", ");
+        }
+        buffer.append("]");
+        return buffer.toString();
     }
 
     private void createQuestionGroupForViewClient(String questionGroupTitle, String question1, String question2) {
