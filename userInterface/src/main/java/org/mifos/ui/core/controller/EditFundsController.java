@@ -21,6 +21,7 @@
 package org.mifos.ui.core.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.fund.servicefacade.FundDto;
@@ -65,7 +66,8 @@ public class EditFundsController {
 
         FundDto fundDto = fundServiceFacade.getFund(code.shortValue());
         FundFormBean formBean = new FundFormBean();
-        formBean.setCode(fundDto.getCode());
+        formBean.setCodeValue(fundDto.getCode().getValue());
+        formBean.setCodeId(fundDto.getCode().getId());
         formBean.setId(fundDto.getId());
         formBean.setName(fundDto.getName());
 
@@ -78,13 +80,14 @@ public class EditFundsController {
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
             @RequestParam(value = "PREVIEWVIEW", required = true) String previewView,
-            @ModelAttribute("formBean") FundFormBean formBean, BindingResult result, SessionStatus status) {
+            @ModelAttribute("formBean") @Valid FundFormBean formBean, BindingResult result, SessionStatus status) {
         ModelAndView modelAndView = new ModelAndView(REDIRECT_TO_VIEW_FUNDS);
         if (StringUtils.isNotBlank(cancel)) {
             modelAndView.setViewName(REDIRECT_TO_VIEW_FUNDS);
             status.setComplete();
         } else if (result.hasErrors()) {
             modelAndView.setViewName(FORM_VIEW);
+            modelAndView.addObject("previewView", previewView);
         } else {
             modelAndView.setViewName(previewView);
             modelAndView.addObject("formBean", formBean);

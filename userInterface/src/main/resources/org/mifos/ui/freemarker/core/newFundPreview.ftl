@@ -22,15 +22,15 @@
             <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
             [@spring.bind "formBean.name"/]
             <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
-            [@spring.bind "formBean.code.value"/]
+            [@spring.bind "formBean.codeValue"/]
             <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
-            [@spring.bind "formBean.code.id"/]
+            [@spring.bind "formBean.codeId"/]
             <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
             
             [@spring.bind "formBean.name"/]
           	<span class="fontBold">[@spring.message "name"/] </span><span>&nbsp;${spring.status.value?default("")}</span><br />
           	
-          	[@spring.bind "formBean.code.value"/]
+          	[@spring.bind "formBean.codeValue"/]
             <span class="fontBold">[@spring.message "fundcode"/] </span><span>&nbsp;${spring.status.value?default("")}</span><br />
           </p>
           

@@ -117,9 +117,8 @@ while(enn.hasMoreElements()){
 								height="11"></td>
 							<td>
 							<a id="admin.link.viewFunds" href="viewFunds.ftl"><mifos:mifoslabel name="admin.viewfunds" /></a>
-							| <html-el:link styleId="admin.link.defineNewFund"
-								action="/fundAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.defnewfund" /></html-el:link></td>
+							| <a href="defineNewFund.ftl" id="admin.link.defineNewFund"><mifos:mifoslabel name="admin.defnewfund" /></a>
+							</td>
 						</tr>
 						<tr class="fontnormal">
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"

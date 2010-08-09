@@ -75,8 +75,8 @@ public class NewFundPreviewController {
             mav = new ModelAndView("newFundPreview");
         } else {
             FundCodeDto codeDto=new FundCodeDto();
-            codeDto.setId(formBean.getCode().getId());
-            codeDto.setValue(formBean.getCode().getValue());
+            codeDto.setId(formBean.getCodeId());
+            codeDto.setValue(formBean.getCodeValue());
             FundDto fundDto=new FundDto();
             fundDto.setCode(codeDto);
             fundDto.setId(formBean.getId());

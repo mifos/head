@@ -24,6 +24,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.fund.servicefacade.FundCodeDto;
 import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
@@ -54,29 +56,37 @@ public class DefineNewFundController {
 
         ModelAndView modelAndView = new ModelAndView();
 
-        List<FundCodeDto> codeList = this.fundServiceFacade.getFundCodes();
-        Map<String, String> codeMap = new LinkedHashMap<String, String>();
-        for (FundCodeDto fundCode : codeList) {
-            codeMap.put(fundCode.getId(), fundCode.getValue());
-        }
         FundFormBean bean = new FundFormBean();
         modelAndView.setViewName("defineNewFund");
         modelAndView.addObject("formBean", bean);
+
+        Map<String, String> codeMap = retrieveFundCodeOptionMap();
         modelAndView.addObject("code", codeMap);
 
         return modelAndView;
     }
 
+    private Map<String, String> retrieveFundCodeOptionMap() {
+        List<FundCodeDto> codeList = this.fundServiceFacade.getFundCodes();
+        Map<String, String> codeMap = new LinkedHashMap<String, String>();
+        for (FundCodeDto fundCode : codeList) {
+            codeMap.put(fundCode.getId(), fundCode.getValue());
+        }
+        return codeMap;
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView showPreview(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
-            @ModelAttribute("formBean") FundFormBean formBean, BindingResult result, SessionStatus status) {
+            @ModelAttribute("formBean") @Valid FundFormBean formBean, BindingResult result, SessionStatus status) {
 
         ModelAndView modelAndView = new ModelAndView(REDIRECT_TO_ADMIN_SCREEN);
         if (StringUtils.isNotBlank(cancel)) {
             modelAndView.setViewName(REDIRECT_TO_ADMIN_SCREEN);
             status.setComplete();
         } else if (result.hasErrors()) {
-            modelAndView.setViewName("defineNewFunds");
+            modelAndView.setViewName("defineNewFund");
+            Map<String, String> codeMap = retrieveFundCodeOptionMap();
+            modelAndView.addObject("code", codeMap);
         } else {
             modelAndView.setViewName("newFundPreview");
             modelAndView.addObject("formBean", formBean);

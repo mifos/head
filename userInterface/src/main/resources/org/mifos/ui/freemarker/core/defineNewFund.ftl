@@ -1,6 +1,7 @@
 [#ftl]
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
+[#import "macros.ftl" as mifosMacros]
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
    <!--  Main Content Begins-->
@@ -15,7 +16,11 @@
           <p class="font15"><span class="fontBold">[@spring.message "organizationPreferences.definenewfund.defineanewfund"/]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "organizationPreferences.definenewfund.enterfundinformation"/]</span></p>
           <div>[@spring.message "organizationPreferences.definenewfund.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminpagewithoutsubmittinginformation"/]</div>
           <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired"/] </div>
-          <p class="error"></p>
+          
+          <div class="allErrorsDiv">
+	        [@mifosMacros.showAllErrors "formBean.*"/]
+          </div>
+          
           <p class="fontBold">[@spring.message "organizationPreferences.definenewfund.funddetails"/] </p>
           <div class="prepend-3  span-21 last">
           	<div class="span-20 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "organizationPreferences.definenewfund.name"/]</span><span class="span-5">&nbsp;
@@ -24,7 +29,7 @@
     				</span>
   			</div>
         	<div class="span-20 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "organizationPreferences.definenewfund.fundCode"/]</span><span class="span-5">&nbsp;       				    
-				    [@mifos.formSingleSelectWithPrompt "formBean.code.id", code,"--select one--" /]
+				    [@mifos.formSingleSelectWithPrompt "formBean.codeId", code,"--select one--" /]
 				    </span>
 			</div>
           </div>

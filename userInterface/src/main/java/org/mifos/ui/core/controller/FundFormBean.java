@@ -20,12 +20,18 @@
 
 package org.mifos.ui.core.controller;
 
-import org.mifos.accounts.fund.servicefacade.FundCodeDto;
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class FundFormBean {
 
     private String id;
-    private FundCodeDto code;
+
+    @NotEmpty
+    private String codeId;
+
+    private String codeValue;
+
+    @NotEmpty
     private String name;
 
     public String getId() {
@@ -36,14 +42,6 @@ public class FundFormBean {
         this.id = id;
     }
 
-    public FundCodeDto getCode() {
-        return this.code;
-    }
-
-    public void setCode(FundCodeDto code) {
-        this.code = code;
-    }
-
     public String getName() {
         return this.name;
     }
@@ -52,5 +50,19 @@ public class FundFormBean {
         this.name = name;
     }
 
+    public String getCodeId() {
+        return this.codeId;
+    }
 
+    public void setCodeId(String codeId) {
+        this.codeId = codeId;
+    }
+
+    public String getCodeValue() {
+        return this.codeValue;
+    }
+
+    public void setCodeValue(String codeValue) {
+        this.codeValue = codeValue;
+    }
 }
