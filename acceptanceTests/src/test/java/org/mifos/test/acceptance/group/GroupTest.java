@@ -157,7 +157,6 @@ public class GroupTest extends UiTestCaseBase {
         String question1 = "Nu_" + random.nextInt(100);
         String question2 = "SS_" + random.nextInt(100);
         List<Choice> choices = asList(new Choice("Choice1", asList("Tag1", "Tag2")), new Choice("Choice2", asList("Tag3", "Tag4")));
-        selenium.setSpeed("1000");
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
         createQuestionGroupForCreateGroup(questionGroupTitle, question1, question2, choices);
         CreateGroupEntryPage groupEntryPage = loginAndNavigateToNewGroupPage();
