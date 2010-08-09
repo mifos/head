@@ -42,6 +42,7 @@ public class DatabaseCleaner {
         template.execute("delete from customer_fee_schedule");
         template.execute("delete from customer_schedule");
 
+        template.execute("delete from loan_arrears_aging");
         template.execute("delete from loan_fee_schedule");
         template.execute("delete from loan_schedule");
 
