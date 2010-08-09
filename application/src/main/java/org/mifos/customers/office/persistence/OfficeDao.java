@@ -39,7 +39,7 @@ public interface OfficeDao {
 
     OfficeBO findOfficeById(Short officeIdValue);
 
-    OfficeDto findOfficeDtoById(Short valueOf);
+    OfficeDto findOfficeDtoById(Short officeId);
 
     void save(OfficeLevelEntity entity);
 

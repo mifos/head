@@ -61,8 +61,8 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
-import org.mifos.customers.personnel.business.service.PersonnelInformationDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.screen.PersonnelInformationDto;
 
 public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
     public PersonActionStrutsTest() throws Exception {

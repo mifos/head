@@ -18,23 +18,21 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.personnel.business.service;
+package org.mifos.dto.screen;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.DateMidnight;
 import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.screen.ListElement;
-import org.mifos.dto.screen.PersonnelDetailsDto;
-import org.mifos.dto.screen.PersonnelNoteDto;
-import org.mifos.framework.business.service.DataTransferObject;
-import org.mifos.framework.util.helpers.DateUtils;
 
-/**
- * Data transfer object to hold data for display on the viewCenterDetails.jsp page
- */
-public class PersonnelInformationDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class PersonnelInformationDto implements Serializable {
 
     private final String displayName;
     private final ListElement status;
@@ -132,11 +130,9 @@ public class PersonnelInformationDto implements DataTransferObject {
 
     public String getAge() {
         if (this.personnelDetails != null && this.personnelDetails.getDob() != null
-                && !this.personnelDetails.getDob().equals("")) {
-            return String.valueOf(DateUtils
-                    .DateDiffInYears(new java.sql.Date(this.personnelDetails.getDob().toDate().getTime())));
+                && !this.personnelDetails.getDob().toString().equals("")) {
+            return String.valueOf(dateDiffInYears(new java.sql.Date(this.personnelDetails.getDob().toDate().getTime())));
         }
-
         return "";
     }
 
@@ -151,5 +147,27 @@ public class PersonnelInformationDto implements DataTransferObject {
             count++;
         }
         return notes;
+    }
+
+    private int dateDiffInYears(java.sql.Date fromDate) {
+        Calendar fromDateCal = new GregorianCalendar();
+
+        fromDateCal.setTime(fromDate);
+
+        // Create a calendar object with today's date
+        Calendar today = new DateMidnight().toGregorianCalendar();
+        // Get age based on year
+        int age = today.get(Calendar.YEAR) - fromDateCal.get(Calendar.YEAR);
+        int monthDiff = (today.get(Calendar.MONTH) + 1) - (fromDateCal.get(Calendar.MONTH) + 1);
+        int dayDiff = today.get(Calendar.DAY_OF_MONTH) - fromDateCal.get(Calendar.DAY_OF_MONTH);
+        // If this year's birthday has not happened yet, subtract one from age
+        if (monthDiff < 0) {
+            age--;
+        } else if (monthDiff == 0) {
+            if (dayDiff < 0) {
+                age--;
+            }
+        }
+        return age;
     }
 }

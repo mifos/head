@@ -1,10 +1,13 @@
 package org.mifos.dto.screen;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.mifos.dto.domain.CustomFieldDto;
 
-public class DefinePersonnelDto {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class DefinePersonnelDto implements Serializable {
 
     private final String officeName;
     private final List<ListElement> titleList;

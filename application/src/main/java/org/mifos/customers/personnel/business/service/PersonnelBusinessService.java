@@ -85,6 +85,14 @@ public class PersonnelBusinessService implements BusinessService {
         }
     }
 
+    public RoleBO getRoleById(Short id) throws ServiceException {
+        try {
+            return rolesPermissionsPersistence.getRole(id);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     public List<SupportedLocalesEntity> getAllLocales() {
         return new ApplicationConfigurationPersistence().getSupportedLocale();
     }

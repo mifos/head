@@ -125,7 +125,7 @@
 		<![CDATA[from OfficeBO o where o.officeId = :OFFICE_ID]]>
     </query>
     <query name="findOfficeDtoById">
-		<![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId, o.shortName, o.globalOfficeNum, o.parentOffice.officeId, o.status.id, o.level.id) from OfficeBO o where o.officeId = :OFFICE_ID]]>
+		<![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId, o.shortName, o.globalOfficeNum, o.parentOffice.officeId, o.status.id, o.level.id) from OfficeBO o where o.officeId=:OFFICE_ID]]>
     </query>
     <query name="findAllHeadOffices">
 		<![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId, o.shortName, o.globalOfficeNum, o.parentOffice.officeId, o.status.id, o.level.id) from OfficeBO o where o.level.configured=1 and o.parentOffice is null order by o.level.id]]>

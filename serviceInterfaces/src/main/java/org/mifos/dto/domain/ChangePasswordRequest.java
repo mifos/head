@@ -20,6 +20,7 @@
 
 package org.mifos.dto.domain;
 
+@edu.umd.cs.findbugs.annotations.SuppressWarnings
 public class ChangePasswordRequest {
 
     private final String username;
