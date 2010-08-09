@@ -121,7 +121,7 @@ explanation of the license and how it is applied.
 								<tr>
 									<td class="fontnormal"><span class="fontnormalbold"> <mifos:mifoslabel
 										name="Personnel.Office" /> </span> <c:out
-										value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'office').officeName}" /></td>
+										value="${definePersonnelDto.officeName}" /></td>
 								</tr>
 							</table>
 							<br>
@@ -185,7 +185,7 @@ explanation of the license and how it is applied.
 										name="Personnel.MaritalStatus" /></td>
 									<td><mifos:select name="personActionForm"
 										property="maritalStatus">
-											<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusList')}" 
+											<c:forEach items="${definePersonnelDto.maritalStatusList}" 
 											var="maritalStatus">
 											<html-el:option value="${maritalStatus.id}">${maritalStatus.name}</html-el:option>
 											</c:forEach>
@@ -197,7 +197,7 @@ explanation of the license and how it is applied.
 										mandatory="yes" /></td>
 									<td><mifos:select name="personActionForm"
 										property="gender">
-										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderList')}" 
+										<c:forEach items="${definePersonnelDto.genderList}" 
 											var="genderlist">
 											<html-el:option value="${genderlist.id}">${genderlist.name}</html-el:option>
 											</c:forEach>
@@ -208,7 +208,7 @@ explanation of the license and how it is applied.
 										name="Personnel.LanguagePreferred" /></td>
 									<td>
                                         <mifos:select name="personActionForm" property="preferredLocale">
-                                            <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'languageList')}"
+                                            <c:forEach items="${definePersonnelDto.languageList}"
                                                        var="languageList">
                                                 <html-el:option value="${languageList.id}">${languageList.name}</html-el:option>
                                             </c:forEach>
@@ -305,7 +305,7 @@ explanation of the license and how it is applied.
 									<td width="78%">
 										 <mifos:select
 										name="personActionForm" property="title">
-										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'titleList')}" 
+										<c:forEach items="${definePersonnelDto.titleList}" 
 											var="titlelist">
 											<html-el:option value="${titlelist.id}">${titlelist.name}</html-el:option>
 											</c:forEach>
@@ -318,7 +318,7 @@ explanation of the license and how it is applied.
 									<td>
 										<mifos:select
 										name="personActionForm" property="level">
-										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'personnelLevelList')}" 
+										<c:forEach items="${definePersonnelDto.personnelLevelList}" 
 											var="item">
 											<html-el:option value="${item.id}">${item.name}</html-el:option>
 											</c:forEach>
@@ -328,7 +328,7 @@ explanation of the license and how it is applied.
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="Personnel.Roles" /></td>
 									<td>
-									<c:set var="rolelist" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'rolesList')}"/> 
+									<c:set var="rolelist" scope="request" value="${definePersonnelDto.rolesList}"/> 
 									<c:set var="personnelRolesList" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'personnelRolesList')}"/> 
 									<mifos:MifosSelect property="personnelRoles"
 										input="rolelist" output="personnelRolesList" property1="id"
@@ -365,10 +365,10 @@ explanation of the license and how it is applied.
 								</tr>
 							</table>
 							<br>
-							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+							<c:if test="${!empty definePersonnelDto.customFields}">
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 							
-							<c:set var="customFieldsList" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}"/> 								
+							<c:set var="customFieldsList" scope="request" value="${definePersonnelDto.customFields}"/> 								
 									<tr>
 										<td colspan="2" class="fontnormalbold" >
 										<mifos:mifoslabel	name="Personnel.AdditionalInfo"	/><br>

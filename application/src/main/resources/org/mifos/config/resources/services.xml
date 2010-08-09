@@ -26,8 +26,9 @@
     <bean id="shutdownServiceFacade" class="org.mifos.application.admin.business.service.ShutdownServiceFacadeWebTier"/>
 
     <bean id="PersonnelServiceFacade" class="org.mifos.application.servicefacade.PersonnelServiceFacadeWebTier">
-        <constructor-arg ref="customerDao" />
     	<constructor-arg ref="officeDao" />
+        <constructor-arg ref="customerDao" />
+    	<constructor-arg ref="personnelDao" />
     </bean>
 
     <bean id="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade" >

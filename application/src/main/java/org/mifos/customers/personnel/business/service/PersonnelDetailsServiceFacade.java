@@ -20,6 +20,8 @@
 
 package org.mifos.customers.personnel.business.service;
 
+import org.mifos.dto.screen.PersonnelInformationDto;
+
 
 public interface PersonnelDetailsServiceFacade {
 

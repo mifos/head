@@ -20,6 +20,7 @@
 
 package org.mifos.customers.personnel.struts.action;
 
+import org.mifos.framework.business.util.Name;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +35,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.joda.time.DateTime;
+import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -54,17 +57,21 @@ import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacade;
-import org.mifos.customers.personnel.business.service.PersonnelInformationDto;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.struts.actionforms.PersonActionForm;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.AddressDto;
+import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.screen.DefinePersonnelDto;
+import org.mifos.dto.screen.ListElement;
+import org.mifos.dto.screen.PersonnelInformationDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.tabletag.TableTagConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -86,7 +93,7 @@ import org.mifos.security.util.UserContext;
 
 public class PersonAction extends SearchAction {
 
-    private final PersonnelDetailsServiceFacade personnelDetailsServiceFacade = DependencyInjectedServiceLocator.locatePersonnelDetailsServiceFacade();
+    private final PersonnelServiceFacade personnelServiceFacade = DependencyInjectedServiceLocator.locatePersonnelServiceFacade();
 
     @Override
     protected BusinessService getService() throws ServiceException {
@@ -140,10 +147,16 @@ public class PersonAction extends SearchAction {
                 .getOfficeId()));
         SessionUtils.setAttribute(PersonnelConstants.OFFICE, office, request);
         personActionForm.clear();
+        //Shahid - keeping the previous session objects for the sake of existing tests, once fully converted to spring
+        //then we can get rid of the session objects made redundant by the dto
+        DefinePersonnelDto definePersonnelDto = this.personnelServiceFacade.retrieveInfoForNewUserDefinition(
+                                                    getShortValue(personActionForm.getOfficeId()), getUserContext(request).getPreferredLocale());
+        SessionUtils.setAttribute("definePersonnelDto", definePersonnelDto, request);
         loadCreateMasterData(request, personActionForm);
         if (office.getOfficeLevel() != OfficeLevel.BRANCHOFFICE) {
             updatePersonnelLevelList(request);
         }
+        personActionForm.setCustomFields(definePersonnelDto.getCustomFields());
         personActionForm.setDateOfJoiningMFI(DateUtils.makeDateAsSentFromBrowser());
         return mapping.findForward(ActionForwards.load_success.toString());
     }
@@ -177,7 +190,7 @@ public class PersonAction extends SearchAction {
         PersonnelLevel level = PersonnelLevel.fromInt(getShortValue(personActionForm.getLevel()));
         OfficeBO office = (OfficeBO) SessionUtils.getAttribute(PersonnelConstants.OFFICE, request);
         Integer title = getIntegerValue(personActionForm.getTitle());
-        Short perefferedLocale = getLocaleId(getPerefferedLocale(personActionForm, userContext));
+        Short preferredLocale = getLocaleId(getPerefferedLocale(personActionForm, userContext));
         Date dob = null;
         if (personActionForm.getDob() != null && !personActionForm.getDob().equals("")) {
             dob = DateUtils.getDate(personActionForm.getDob());
@@ -187,15 +200,29 @@ public class PersonAction extends SearchAction {
         if (personActionForm.getDateOfJoiningMFI() != null && !personActionForm.getDateOfJoiningMFI().equals("")) {
             dateOfJoiningMFI = DateUtils.getDateAsSentFromBrowser(personActionForm.getDateOfJoiningMFI());
         }
-        PersonnelBO personnelBO = new PersonnelBO(level, office, title, perefferedLocale, personActionForm
-                .getUserPassword(), personActionForm.getLoginName(), personActionForm.getEmailId(), getRoles(request,
-                personActionForm), personActionForm.getCustomFields(), personActionForm.getName(), personActionForm
-                .getGovernmentIdNumber(), dob, getIntegerValue(personActionForm.getMaritalStatus()),
-                getIntegerValue(personActionForm.getGender()), dateOfJoiningMFI, new DateTimeService()
-                        .getCurrentJavaDateTime(), personActionForm.getAddress(), userContext.getId());
-        personnelBO.save();
-        request.setAttribute("displayName", personnelBO.getDisplayName());
-        request.setAttribute("globalPersonnelNum", personnelBO.getGlobalPersonnelNum());
+
+        List<RoleBO> roles = getRoles(request, personActionForm);
+        List<ListElement> roleList = new ArrayList<ListElement>();
+        if (roles != null) {
+            for (RoleBO element : roles) {
+                ListElement listElement = new ListElement(new Integer(element.getId()), element.getName());
+                roleList.add(listElement);
+            }
+        }
+        Address address = personActionForm.getAddress();
+        AddressDto addressDto = new AddressDto(address.getLine1(), address.getLine2(), address.getLine3(), address.getCity(), address.getState(),
+                address.getCountry(), address.getZip(), address.getPhoneNumber());
+        CreateOrUpdatePersonnelInformation perosonnelInfo = new CreateOrUpdatePersonnelInformation(level.getValue(), office.getOfficeId(), title,
+                preferredLocale, personActionForm.getUserPassword(), personActionForm.getLoginName(), personActionForm.getEmailId(), roleList,
+                personActionForm.getCustomFields(), personActionForm.getFirstName(), personActionForm.getMiddleName(), personActionForm.getLastName(),
+                personActionForm.getSecondLastName(), personActionForm.getGovernmentIdNumber(), new DateTime(dob),
+                getIntegerValue(personActionForm.getMaritalStatus()), getIntegerValue(personActionForm.getGender()), new DateTime(dateOfJoiningMFI),
+                new DateTimeService().getCurrentDateTime(), addressDto, userContext.getId(), null, null);
+        String globalPersonnelNum = this.personnelServiceFacade.createPersonnelInformation(perosonnelInfo);
+        Name name = new Name(personActionForm.getFirstName(), personActionForm.getMiddleName(), personActionForm.getSecondLastName(), personActionForm.getLastName());
+
+        request.setAttribute("displayName", name.getDisplayName());
+        request.setAttribute("globalPersonnelNum", globalPersonnelNum);
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 
@@ -298,7 +325,7 @@ public class PersonAction extends SearchAction {
                 .getSession());
         /* Now we are getting personnelInformationDto instead of PersonnelBO. PersonnelDetailsServiceFacade encapsulates
                 all calls to PersonnelDao to obtain PersonnelInformationDto */
-        PersonnelInformationDto personnelInformationDto = this.personnelDetailsServiceFacade.getPersonnelInformationDto(
+        PersonnelInformationDto personnelInformationDto = this.personnelServiceFacade.getPersonnelInformationDto(
                 ((PersonActionForm) form).getGlobalPersonnelNum());
 
 //        personnelInformationDto.getStatus().setLocaleId(userContext.getLocaleId());
@@ -360,7 +387,7 @@ public class PersonAction extends SearchAction {
         SessionUtils.removeAttribute(Constants.SEARCH_RESULTS, request);
     }
 
-    private void loadMasterData(HttpServletRequest request, PersonActionForm personActionForm) throws Exception {
+    private void loadMasterData(HttpServletRequest request) throws Exception {
         UserContext userContext = getUserContext(request);
         MasterPersistence masterPersistence = new MasterPersistence();
 
@@ -403,14 +430,14 @@ public class PersonAction extends SearchAction {
     }
 
     private void loadCreateMasterData(HttpServletRequest request, PersonActionForm personActionForm) throws Exception {
-        loadMasterData(request, personActionForm);
+        loadMasterData(request);
         List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                 .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
         loadCreateCustomFields(personActionForm, customFieldDefs, getUserContext(request));
     }
 
     private void loadUpdateMasterData(HttpServletRequest request, PersonActionForm personActionForm) throws Exception {
-        loadMasterData(request, personActionForm);
+        loadMasterData(request);
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
                 .getSession());
         SessionUtils.setCollectionAttribute(PersonnelConstants.STATUS_LIST, getMasterEntities(

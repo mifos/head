@@ -1,9 +1,13 @@
 package org.mifos.dto.screen;
 
+import java.io.Serializable;
+
 import org.joda.time.DateTime;
 import org.mifos.dto.domain.AddressDto;
 
-public class PersonnelDetailsDto {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class PersonnelDetailsDto implements Serializable {
     private final String governmentIdNumber;
     private final DateTime dob;
     private final Integer maritalStatus;
