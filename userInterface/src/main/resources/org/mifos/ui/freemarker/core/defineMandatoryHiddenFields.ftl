@@ -145,13 +145,35 @@
         	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.client/systemusersfields"/] </span><span class="span-7 paddingLeft">[@spring.message "manadatoryHiddenFields.hide"/]</span><span class="span-5 paddingLeft">[@spring.message "manadatoryHiddenFields.mandatory"/]</span>
         </div>
         <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.middlename"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideClientMiddleName" [#if fields.hideClientMiddleName=true]  checked="checked" [/#if]  value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.middlename"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideClientMiddleName" [#if fields.hideClientMiddleName=true]  checked="checked" [/#if]  value="1" onclick="disableFields(this)"></span>
+        	<span class="span-5 paddingLeft"><input type="checkbox" name="mandatoryClientMiddleName" [#if fields.mandatoryClientMiddleName=true]  checked="checked" [/#if]  value="1" onclick="disableFields(this)"></span>
         </div>
         <div class="span-22 borderbtm">
         	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.secondlastname"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideClientSecondLastName" [#if fields.hideClientSecondLastName=true]  checked="checked" [/#if] [#if fields.mandatoryClientSecondLastName=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft"><input type="checkbox" name="mandatoryClientSecondLastName" [#if fields.mandatoryClientSecondLastName=true]  checked="checked" [/#if] [#if fields.hideClientSecondLastName=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span>
         </div>
         <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.governmentID"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideClientGovtId" [#if fields.hideClientGovtId=true]  checked="checked" [/#if] [#if fields.mandatoryClientGovtId=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft"><input type="checkbox" name="mandatoryClientGovtId" [#if fields.mandatoryClientGovtId=true]  checked="checked" [/#if] [#if fields.hideClientGovtId=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.governmentID"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideClientGovtId" [#if fields.hideClientGovtId=true]  checked="checked" [/#if] [#if fields.mandatoryClientGovtId=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span>
+        	<span class="span-5 paddingLeft"><input type="checkbox" name="mandatoryClientGovtId" [#if fields.mandatoryClientGovtId=true]  checked="checked" [/#if] [#if fields.hideClientGovtId=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span>
+        </div>
+                       
+		<div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.martialStatus"/] </span>
+        	<span class="span-7 paddingLeft">&nbsp;</span>
+        	<span class="span-5 paddingLeft"><input type="checkbox" name="mandatoryMaritalStatus" [#if fields.mandatoryMaritalStatus=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span>
+        </div>
+        
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.povertyStatus"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideClientPovertyStatus" [#if fields.hideClientPovertyStatus=true]  checked="checked" [/#if] [#if fields.mandatoryClientPovertyStatus=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span>
+        	<span class="span-5 paddingLeft"><input type="checkbox" name="mandatoryClientPovertyStatus" [#if fields.mandatoryClientPovertyStatus=true]  checked="checked" [/#if] [#if fields.hideClientPovertyStatus=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span>
+        </div>
+        
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.familyDetails"/] </span>
+        	<span class="span-7 paddingLeft">&nbsp;</span>
+        	<span class="span-5 paddingLeft"><input type="checkbox" name="mandatoryClientFamilyDetails" [#if fields.mandatoryClientFamilyDetails=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span>
         </div>
                        
         <div class="span-22 borderbtm">
@@ -170,18 +192,28 @@
         	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.trainedon"/] </span><span class="span-7 paddingLeft ">&nbsp;</span><span class="span-5 paddingLeft"><input type="checkbox" name="mandatoryClientTrainedOn" [#if fields.mandatoryClientTrainedOn=true]  checked="checked" [/#if]  value="1" onclick="disableFields(this)"></span>
         </div>
         <div class="span-22 last">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.business/workactivities"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideClientBusinessWorkActivities" [#if fields.hideClientBusinessWorkActivities=true]  checked="checked" [/#if]  value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.business/workactivities"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideClientBusinessWorkActivities" [#if fields.hideClientBusinessWorkActivities=true]  checked="checked" [/#if]  value="1" onclick="disableFields(this)"></span>
+        	<span class="span-5 paddingLeft">&nbsp;</span>
         </div>
     
+    	<div class="span-22 last">
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.numofchildren"/] </span>
+        	<span class="span-7 paddingLeft">&nbsp;</span>
+        	<span class="span-5 paddingLeft"><input type="checkbox" name="mandatoryNumberOfChildren" [#if fields.mandatoryNumberOfChildren=true]  checked="checked" [/#if]  value="1" onclick="disableFields(this)"></span>
+        </div>
     </div>
     <div class="span-22 last">
     	<div class="bluedivs span-22 fontBold">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.groupfields"/] </span><span class="span-7 paddingLeft">[@spring.message "manadatoryHiddenFields.hide"/]</span><span class="span-5 paddingLeft">[@spring.message "manadatoryHiddenFields.mandatory"/]</span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.groupfields"/] </span>
+        	<span class="span-7 paddingLeft">[@spring.message "manadatoryHiddenFields.hide"/]</span>
+        	<span class="span-5 paddingLeft">[@spring.message "manadatoryHiddenFields.mandatory"/]</span>
         </div>
         <div class="span-22 last">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.trained"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideGroupTrained" [#if fields.hideGroupTrained=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.trained"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideGroupTrained" [#if fields.hideGroupTrained=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span>
+        	<span class="span-5 paddingLeft">&nbsp;</span>
         </div>
-    
     </div>
     <div class="span-22 last">
     	<div class="bluedivs span-22 fontBold">

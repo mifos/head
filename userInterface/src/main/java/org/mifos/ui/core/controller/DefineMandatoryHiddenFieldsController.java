@@ -95,10 +95,15 @@ public class DefineMandatoryHiddenFieldsController {
         formBean.setMandatoryClientMiddleName(dto.isMandatoryClientMiddleName());
         formBean.setMandatoryClientPhone(dto.isMandatoryClientPhone());
         formBean.setMandatoryClientPovertyStatus(dto.isMandatoryClientPovertyStatus());
+        formBean.setMandatoryMaritalStatus(dto.isMandatoryMaritalStatus());
+        formBean.setMandatoryClientFamilyDetails(dto.isMandatoryClientFamilyDetails());
+
         formBean.setMandatoryClientSecondLastName(dto.isMandatoryClientSecondLastName());
         formBean.setMandatoryClientSpouseFatherInformation(dto.isMandatoryClientSpouseFatherInformation());
         formBean.setMandatoryClientSpouseFatherSecondLastName(dto.isMandatoryClientSpouseFatherSecondLastName());
         formBean.setMandatoryClientTrained(dto.isMandatoryClientTrained());
+        formBean.setMandatoryClientTrainedOn(dto.isMandatoryClientTrainedOn());
+        formBean.setMandatoryNumberOfChildren(dto.isMandatoryNumberOfChildren());
 
         formBean.setMandatorySystemAddress1(dto.isMandatorySystemAddress1());
         formBean.setMandatorySystemCitizenShip(dto.isMandatorySystemCitizenShip());
@@ -175,10 +180,15 @@ public class DefineMandatoryHiddenFieldsController {
         dto.setMandatoryClientMiddleName(bean.isMandatoryClientMiddleName());
         dto.setMandatoryClientPhone(bean.isMandatoryClientPhone());
         dto.setMandatoryClientPovertyStatus(bean.isMandatoryClientPovertyStatus());
+        dto.setMandatoryMaritalStatus(bean.isMandatoryMaritalStatus());
+        dto.setMandatoryClientFamilyDetails(bean.isMandatoryClientFamilyDetails());
+
         dto.setMandatoryClientSecondLastName(bean.isMandatoryClientSecondLastName());
         dto.setMandatoryClientSpouseFatherInformation(bean.isMandatoryClientSpouseFatherInformation());
         dto.setMandatoryClientSpouseFatherSecondLastName(bean.isMandatoryClientSpouseFatherSecondLastName());
         dto.setMandatoryClientTrained(bean.isMandatoryClientTrained());
+        dto.setMandatoryClientTrainedOn(bean.isMandatoryClientTrainedOn());
+        dto.setMandatoryNumberOfChildren(bean.isMandatoryNumberOfChildren());
 
         dto.setMandatorySystemAddress1(bean.isMandatorySystemAddress1());
         dto.setMandatorySystemCitizenShip(bean.isMandatorySystemCitizenShip());
