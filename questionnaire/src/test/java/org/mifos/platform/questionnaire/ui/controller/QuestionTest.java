@@ -177,9 +177,9 @@ public class QuestionTest {
         question.addSmartChoiceTag(0);
         question.getCurrentSmartChoiceTags().set(0, "Tag_2");
         question.addSmartChoiceTag(0);
-        question.getCurrentSmartChoiceTags().set(0, "Tag_3");
+        question.getCurrentSmartChoiceTags().set(0, "TAg_2");
         question.addSmartChoiceTag(0);
-        assertThat(questionDetail.getAnswerChoices().get(0).getTags().size(), is(3));
+        assertThat(questionDetail.getAnswerChoices().get(0).getTags().size(), is(2));
     }
 
     @Test

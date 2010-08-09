@@ -42,6 +42,7 @@ import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupParameters;
 import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
 import org.mifos.test.acceptance.questionnaire.CreateQuestionParameters;
 import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,7 +157,7 @@ public class GroupTest extends UiTestCaseBase {
         String question1 = "Nu_" + random.nextInt(100);
         String question2 = "SS_" + random.nextInt(100);
         List<Choice> choices = asList(new Choice("Choice1", asList("Tag1", "Tag2")), new Choice("Choice2", asList("Tag3", "Tag4")));
-
+        selenium.setSpeed("1000");
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
         createQuestionGroupForCreateGroup(questionGroupTitle, question1, question2, choices);
         CreateGroupEntryPage groupEntryPage = loginAndNavigateToNewGroupPage();
@@ -166,7 +167,13 @@ public class GroupTest extends UiTestCaseBase {
         questionResponsePage.verifyNumericBoundsValidation("name=questionGroups[0].sectionDetails[0].questions[0].value", "1000", question1);
         questionResponsePage.populateTextAnswer("name=questionGroups[0].sectionDetails[0].questions[0].value", "30");
         questionResponsePage.populateSmartSelect("txtListSearch", getChoiceTags());
-        questionResponsePage.navigateToCreateGroupDetailsPage("Application Pending*");
+        GroupViewDetailsPage groupViewDetailsPage = questionResponsePage.navigateToCreateGroupDetailsPage("Application Pending*");
+        ViewQuestionResponseDetailPage responsePage = groupViewDetailsPage.navigateToViewAdditionalInformationPage();
+        responsePage.verifyPage();
+        responsePage.verifyQuestionPresent(question1, "30");
+        responsePage.verifyQuestionPresent(question2, "Choice", "Choice2");
+        groupViewDetailsPage = responsePage.navigateToDetailsPage();
+        groupViewDetailsPage.verifyPage();
     }
 
     private Map<String, String> getChoiceTags() {

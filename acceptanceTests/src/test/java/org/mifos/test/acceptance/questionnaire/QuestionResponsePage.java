@@ -60,17 +60,23 @@ public class QuestionResponsePage extends MifosPage {
     public CreateGroupConfirmationPage submitNewGroupForApproval() {
         selenium.click("captureQuestionResponses.button.continue");
         waitForPageToLoad();
+        selenium.click("editQuestionResponses_button");
+        waitForPageToLoad();
+        super.verifyPage("captureQuestionResponse");
+        selenium.click("captureQuestionResponses.button.continue");
+        waitForPageToLoad();
         selenium.isVisible("previewgroup.button.submitForApproval");
         selenium.click("previewgroup.button.submitForApproval");
         waitForPageToLoad();
         return new CreateGroupConfirmationPage(selenium);
     }
 
-    public void navigateToCreateGroupDetailsPage(String status) {
+    public GroupViewDetailsPage navigateToCreateGroupDetailsPage(String status) {
         CreateGroupConfirmationPage confirmationPage = submitNewGroupForApproval();
         confirmationPage.verifyPage();
         GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
         groupDetailsPage.verifyPage();
         groupDetailsPage.verifyStatus(status);
+        return groupDetailsPage;
     }
 }
