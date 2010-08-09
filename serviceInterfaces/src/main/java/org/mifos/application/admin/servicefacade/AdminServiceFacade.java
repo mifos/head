@@ -71,10 +71,10 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
     void updateApplicationLabels(ConfigureApplicationLabelsDto applicationLabels);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')")
     MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields();
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')")
     void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_ACCEPTED_PAYMENT_TYPES')")
