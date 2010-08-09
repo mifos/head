@@ -25,15 +25,24 @@ import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.group.CenterSearchTransferGroupPage;
 import org.mifos.test.acceptance.framework.group.ConfirmCenterMembershipPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupConfirmationPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage;
+import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
 import org.mifos.test.acceptance.framework.group.CreateGroupSearchPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
-import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.questionnaire.Choice;
+import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
+import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupParameters;
+import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
+import org.mifos.test.acceptance.questionnaire.CreateQuestionParameters;
+import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +51,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import static java.util.Arrays.asList;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
@@ -54,6 +70,10 @@ public class GroupTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+    private Random random;
+    private NavigationHelper navigationHelper;
+    private static final String NUMBER = "Number";
+    private static final String SMART_SELECT = "Smart Select";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -61,6 +81,8 @@ public class GroupTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
+        navigationHelper = new NavigationHelper(selenium);
+        random = new Random();
     }
 
     @AfterMethod(groups = {"smoke","group","acceptance","ui"})
@@ -127,6 +149,73 @@ public class GroupTest extends UiTestCaseBase {
         groupDetailsPage.verifyLoanOfficer(" Loan officer: Jenna Barth");
     }
 
+    @Test(sequential = true, groups = {"smoke","group","acceptance","ui"})
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void createGroupInPendingApprovalStateTestWithSurveys() throws Exception {
+
+        String questionGroupTitle = "QG1" + random.nextInt(100);
+        String question1 = "Nu_" + random.nextInt(100);
+        String question2 = "SS_" + random.nextInt(100);
+        List<Choice> choices = asList(new Choice("Choice1", asList("Tag1", "Tag2")), new Choice("Choice2", asList("Tag3", "Tag4")));
+        selenium.setSpeed("1000");
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
+        createQuestionGroupForCreateGroup(questionGroupTitle, question1, question2, choices);
+        CreateGroupEntryPage groupEntryPage = loginAndNavigateToNewGroupPage();
+        CreateGroupSubmitParameters formParameters = getGenericGroupFormParameters();
+        QuestionResponsePage questionResponsePage = groupEntryPage.submitNewGroupAndNavigateToQuestionResponsePage(formParameters);
+        questionResponsePage.verifyPage();
+        questionResponsePage.verifyNumericBoundsValidation("name=questionGroups[0].sectionDetails[0].questions[0].value", "1000", question1);
+        questionResponsePage.populateTextAnswer("name=questionGroups[0].sectionDetails[0].questions[0].value", "30");
+        questionResponsePage.populateSmartSelect("txtListSearch", getChoiceTags());
+        GroupViewDetailsPage groupViewDetailsPage = questionResponsePage.navigateToCreateGroupDetailsPage("Application Pending*");
+        ViewQuestionResponseDetailPage responsePage = groupViewDetailsPage.navigateToViewAdditionalInformationPage();
+        responsePage.verifyPage();
+        responsePage.verifyQuestionPresent(question1, "30");
+        responsePage.verifyQuestionPresent(question2, "Choice", "Choice2");
+        groupViewDetailsPage = responsePage.navigateToDetailsPage();
+        groupViewDetailsPage.verifyPage();
+    }
+
+    private Map<String, String> getChoiceTags() {
+        Map<String,String> tags = new HashMap<String, String>();
+        tags.put("Tag1", "Choice1");
+        tags.put("Tag3", "Choice2");
+        return tags;
+    }
+
+    private void createQuestionGroupForCreateGroup(String questionGroupTitle, String question1, String question2, List<Choice> choices) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage().verifyPage();
+        createQuestionPage.addQuestion(getCreateQuestionParams(question1, NUMBER, 10, 100, null));
+        createQuestionPage.addQuestion(getCreateQuestionParams(question2, SMART_SELECT, null, null, choices));
+        adminPage = createQuestionPage.submitQuestions();
+
+        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage().verifyPage();
+        CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question1, question2));
+        createQuestionGroupPage.addSection(parameters);
+        createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
+        createQuestionGroupPage.submit(parameters);
+    }
+
+    private CreateQuestionParameters getCreateQuestionParams(String title, String type, Integer numericMin, Integer numericMax, List<Choice> choices) {
+        CreateQuestionParameters parameters = new CreateQuestionParameters();
+        parameters.setTitle(title);
+        parameters.setType(type);
+        parameters.setChoices(choices);
+        parameters.setNumericMin(numericMin);
+        parameters.setNumericMax(numericMax);
+        return parameters;
+    }
+
+    private CreateQuestionGroupParameters getCreateQuestionGroupParameters(String questionGroupTitle, List<String> questions) {
+        CreateQuestionGroupParameters parameters = new CreateQuestionGroupParameters();
+        parameters.setTitle(questionGroupTitle);
+        parameters.setAppliesTo("Create Group");
+        parameters.setAnswerEditable(true);
+        parameters.setSectionName("Default Section");
+        parameters.setQuestions(questions);
+        return parameters;
+    }
 
     private CreateGroupEntryPage loginAndNavigateToNewGroupPage() {
         LoginPage loginPage = appLauncher.launchMifos();

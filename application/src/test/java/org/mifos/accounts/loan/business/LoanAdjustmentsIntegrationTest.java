@@ -22,6 +22,7 @@ package org.mifos.accounts.loan.business;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
@@ -41,6 +42,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
@@ -64,6 +66,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.StandardTestingService;
@@ -79,7 +82,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/integration-test-context.xml", "/org/mifos/config/resources/hibernate-daos.xml",
         "/org/mifos/config/resources/services.xml" })
-public class LoanAdjustmentWhenCompletedIntegrationTest {
+public class LoanAdjustmentsIntegrationTest {
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
@@ -116,7 +119,6 @@ public class LoanAdjustmentWhenCompletedIntegrationTest {
 
     @Before
     public void cleanDatabaseTables() throws Exception {
-
         databaseCleaner.clean();
     }
 
@@ -157,13 +159,107 @@ public class LoanAdjustmentWhenCompletedIntegrationTest {
         assertThat(loan.getLoanSummary().getFeesPaid(), is(loan.getLoanSummary().getOriginalFees()));
         assertFalse(sameSchedule(copySchedule, loan.getAccountActionDates()));
 
-        adjustCompletedLoan(loan);
+        adjustLastLoanPayment(loan);
         loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
         // The adjustment of a completed loan should have caused the original amounts to be reset
         assertThat(loan.getLoanSummary().getOriginalPrincipal(), is(initialOriginalPrincipal));
         assertThat(loan.getLoanSummary().getOriginalInterest(), is(initialOriginalInterest));
         assertThat(loan.getLoanSummary().getOriginalFees(), is(initialOriginalFees));
         assertTrue(sameSchedule(copySchedule, loan.getAccountActionDates()));
+    }
+
+    @Test
+    public void testWhenACompletedLoanIsAdjustedThatAnAccountStatusChangeHistoryEntryisCreated() throws Exception {
+        // relates to mifos-3479
+        new DateTimeService().setCurrentDateTimeFixed(date(2010, 10, 13));
+
+        loan = createLoan();
+
+        // pay 3 installments
+        makePayment(loan, "333.0");
+        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+
+        makeEarlyPayment(loan);
+        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+
+        adjustLastLoanPayment(loan);
+        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+
+        assertNotNull("Account Status Change History Should Not Be Null", loan.getAccountStatusChangeHistory());
+        Integer listSize = loan.getAccountStatusChangeHistory().size();
+        assertFalse(listSize == 0);
+
+        // check if the last entry has an oldstatus LOAN_CLOSED_OBLIGATIONS_MET and a new status of
+        // LOAN_ACTIVE_IN_GOOD_STANDING
+        AccountStateEntity oldStatus = loan.getAccountStatusChangeHistory().get(listSize - 1).getOldStatus();
+        AccountStateEntity newStatus = loan.getAccountStatusChangeHistory().get(listSize - 1).getNewStatus();
+
+        assertTrue("Old Status Should Have Been LOAN_CLOSED_OBLIGATIONS_MET", oldStatus
+                .isInState(AccountState.LOAN_CLOSED_OBLIGATIONS_MET));
+        assertTrue("New Status Should Have Been LOAN_ACTIVE_IN_GOOD_STANDING", newStatus
+                .isInState(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
+
+    }
+
+    @Test
+    public void testWhenACompletedLoanIsAdjustedItGoesBackToBadStandingIfNecessary() throws Exception {
+        // relates to mifos-3479
+        new DateTimeService().setCurrentDateTimeFixed(date(2010, 10, 13));
+
+        loan = createLoan();
+
+        // pay 3 installments
+        makePayment(loan, "333.0");
+        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+
+        makeEarlyPayment(loan);
+        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+
+        // ensure loan is in bad standing when reopened
+        new DateTimeService().setCurrentDateTimeFixed(date(2010, 11, 13));
+
+        adjustLastLoanPayment(loan);
+        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+        AccountStateEntity currentStatus = loan.getAccountState();
+        assertTrue("Current Status Should Have Been LOAN_ACTIVE_IN_BAD_STANDING", currentStatus
+                .isInState(AccountState.LOAN_ACTIVE_IN_BAD_STANDING));
+
+    }
+
+    @Test
+    public void testWhenARepaymentIsAdjustedItGoesBackToBadStandingIfNecessary() throws Exception {
+        // relates to mifos-3479
+        new DateTimeService().setCurrentDateTimeFixed(date(2010, 10, 13));
+
+        loan = createLoan();
+
+        // pay 2 installments
+        makePayment(loan, "222.0");
+        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+
+        // pay 1 more installment
+        makePayment(loan, "111.0");
+        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+        // Ensure that after the adjustment the loan is calculated to be in bad standing.
+        new DateTimeService().setCurrentDateTimeFixed(date(2010, 11, 13));
+
+        adjustLastLoanPayment(loan);
+        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+
+        assertNotNull("Account Status Change History Should Not Be Null", loan.getAccountStatusChangeHistory());
+        Integer listSize = loan.getAccountStatusChangeHistory().size();
+        assertFalse(listSize == 0);
+
+        // check if the last entry has an oldstatus LOAN_ACTIVE_IN_GOOD_STANDING and a new status of
+        // LOAN_ACTIVE_IN_BAD_STANDING
+        AccountStateEntity oldStatus = loan.getAccountStatusChangeHistory().get(listSize - 1).getOldStatus();
+        AccountStateEntity newStatus = loan.getAccountStatusChangeHistory().get(listSize - 1).getNewStatus();
+
+        assertTrue("Old Status Should Have Been LOAN_ACTIVE_IN_GOOD_STANDING", oldStatus
+                .isInState(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
+        assertTrue("New Status Should Have Been LOAN_ACTIVE_IN_BAD_STANDING", newStatus
+                .isInState(AccountState.LOAN_ACTIVE_IN_BAD_STANDING));
+
     }
 
     private LoanBO createLoan() throws Exception {
@@ -223,8 +319,9 @@ public class LoanAdjustmentWhenCompletedIntegrationTest {
         StaticHibernateUtil.commitTransaction();
     }
 
-    private void adjustCompletedLoan(LoanBO loan) throws AccountException, PersistenceException {
+    private void adjustLastLoanPayment(LoanBO loan) throws AccountException, PersistenceException {
         StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.startTransaction();
         LoanBO tempLoan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
         tempLoan.setUserContext(loan.getUserContext());
         tempLoan.adjustLastPayment("Undo last payment");

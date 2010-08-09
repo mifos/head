@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.group;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
+import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -92,4 +93,9 @@ public class GroupViewDetailsPage extends MifosPage {
         return new AttachSurveyPage(selenium);
     }
 
+    public ViewQuestionResponseDetailPage navigateToViewAdditionalInformationPage() {
+        selenium.click("groupdetail.link.questionGroups");
+        waitForPageToLoad();
+        return new ViewQuestionResponseDetailPage(selenium);
+    }
 }
