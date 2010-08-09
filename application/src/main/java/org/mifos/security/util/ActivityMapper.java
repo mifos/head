@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.accounts.fees.struts.action.FeeAction;
-import org.mifos.accounts.fund.struts.action.FundAction;
 import org.mifos.accounts.loan.struts.action.AccountStatusAction;
 import org.mifos.accounts.loan.struts.action.LoanAccountAction;
 import org.mifos.accounts.loan.struts.action.LoanDisbursementAction;
@@ -200,7 +199,6 @@ public class ActivityMapper {
         parseActionSecurity(ChkListAction.getSecurity());
         parseActionSecurity(EditStatusAction.getSecurity());
         parseActionSecurity(CustAction.getSecurity());
-        parseActionSecurity(FundAction.getSecurity());
         parseActionSecurity(CollectionSheetEntryAction.getSecurity());
         parseActionSecurity(AccountAppAction.getSecurity());
         parseActionSecurity(SavingsAction.getSecurity());
