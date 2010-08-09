@@ -36,7 +36,6 @@ import org.mifos.accounts.loan.struts.action.ReverseLoanDisbursalAction;
 import org.mifos.accounts.productdefinition.struts.action.LoanPrdAction;
 import org.mifos.accounts.productdefinition.struts.action.PrdCategoryAction;
 import org.mifos.accounts.productdefinition.struts.action.SavingsPrdAction;
-import org.mifos.accounts.productsmix.struts.action.ProductMixAction;
 import org.mifos.accounts.savings.struts.action.SavingsAction;
 import org.mifos.accounts.savings.struts.action.SavingsApplyAdjustmentAction;
 import org.mifos.accounts.savings.struts.action.SavingsClosureAction;
@@ -234,7 +233,6 @@ public class ActivityMapper {
         parseActionSecurity(SurveysAction.getSecurity());
         parseActionSecurity(QuestionsAction.getSecurity());
         parseActionSecurity(AddGroupMembershipAction.getSecurity());
-        parseActionSecurity(ProductMixAction.getSecurity());
         parseActionSecurity(SurveyInstanceAction.getSecurity());
         parseActionSecurity(BirtReportsUploadAction.getSecurity());
         parseActionSecurity(LookupOptionsAction.getSecurity());
