@@ -21,6 +21,8 @@
 package org.mifos.ui.core.controller;
 
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,106 +40,157 @@ public class DefineMandatoryHiddenFieldsController {
 
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
     private static final String CANCEL_PARAM = "CANCEL";
-    private static final String CANCEL_PARAM_VALUE = "Cancel";
 
     @Autowired
-    AdminServiceFacade adminServiceFacade;
+    private AdminServiceFacade adminServiceFacade;
 
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("admin.definemandatory/hiddenfields", "defineMandatoryHiddenFields.ftl")
-                .build();
+        return new AdminBreadcrumbBuilder().withLink("admin.definemandatory/hiddenfields",
+                "defineMandatoryHiddenFields.ftl").build();
     }
 
     @ModelAttribute("fields")
     public DefineMandatoryHiddenFieldsFormBean getDetails() {
-        DefineMandatoryHiddenFieldsFormBean formBean = new DefineMandatoryHiddenFieldsFormBean();
-        formBean.setFamilyDetailsRequired(adminServiceFacade.retrieveHiddenMandatoryFields().isFamilyDetailsRequired());
-        formBean.setHideClientBusinessWorkActivities(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isHideClientBusinessWorkActivities());
-        formBean.setHideClientGovtId(adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientGovtId());
-        formBean.setHideClientMiddleName(adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientMiddleName());
-        formBean.setHideClientPhone(adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientPhone());
-        formBean.setHideClientPovertyStatus(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isHideClientPovertyStatus());
-        formBean.setHideClientSecondLastName(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isHideClientSecondLastName());
-        formBean.setHideClientSpouseFatherInformation(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isHideClientSpouseFatherInformation());
-        formBean.setHideClientSpouseFatherMiddleName(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isHideClientSpouseFatherMiddleName());
-        formBean.setHideClientSpouseFatherSecondLastName(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isHideClientSpouseFatherSecondLastName());
-        formBean.setHideClientTrained(adminServiceFacade.retrieveHiddenMandatoryFields().isHideClientTrained());
-        formBean.setHideGroupTrained(adminServiceFacade.retrieveHiddenMandatoryFields().isHideGroupTrained());
-        formBean.setHideSystemAddress2(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemAddress2());
-        formBean.setHideSystemAddress3(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemAddress3());
-        formBean.setHideSystemAssignClientPostions(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isHideSystemAssignClientPostions());
-        formBean.setHideSystemCitizenShip(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemCitizenShip());
-        formBean.setHideSystemCity(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemCity());
-        formBean.setHideSystemCollateralTypeNotes(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isHideSystemCollateralTypeNotes());
-        formBean.setHideSystemCountry(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemCountry());
-        formBean.setHideSystemEducationLevel(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isHideSystemEducationLevel());
-        formBean.setHideSystemEthnicity(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemEthnicity());
-        formBean.setHideSystemExternalId(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemExternalId());
-        formBean.setHideSystemHandicapped(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemHandicapped());
-        formBean.setHideSystemPhoto(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemPhoto());
-        formBean.setHideSystemPostalCode(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemPostalCode());
-        formBean.setHideSystemReceiptIdDate(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isHideSystemReceiptIdDate());
-        formBean.setHideSystemState(adminServiceFacade.retrieveHiddenMandatoryFields().isHideSystemState());
 
-        formBean.setMandatoryClientBusinessWorkActivities(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isMandatoryClientBusinessWorkActivities());
-        formBean.setMandatoryClientGovtId(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientGovtId());
-        formBean.setMandatoryClientMiddleName(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isMandatoryClientMiddleName());
-        formBean.setMandatoryClientPhone(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatoryClientPhone());
-        formBean.setMandatoryClientPovertyStatus(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isMandatoryClientPovertyStatus());
-        formBean.setMandatoryClientSecondLastName(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isMandatoryClientSecondLastName());
-        formBean.setMandatoryClientSpouseFatherInformation(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isMandatoryClientSpouseFatherInformation());
-        formBean.setMandatoryClientSpouseFatherSecondLastName(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isMandatoryClientSpouseFatherSecondLastName());
-        formBean.setMandatoryClientTrained(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isMandatoryClientTrained());
-        formBean.setMandatorySystemCitizenShip(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isMandatorySystemCitizenShip());
-        formBean.setMandatorySystemEducationLevel(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isMandatorySystemEducationLevel());
-        formBean.setMandatorySystemEthnicity(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isMandatorySystemEthnicity());
-        formBean.setMandatorySystemExternalId(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isMandatorySystemExternalId());
-        formBean.setMandatorySystemHandicapped(adminServiceFacade.retrieveHiddenMandatoryFields()
-                .isMandatorySystemHandicapped());
-        formBean.setMandatorySystemPhoto(adminServiceFacade.retrieveHiddenMandatoryFields().isMandatorySystemPhoto());
+        MandatoryHiddenFieldsDto dto = this.adminServiceFacade.retrieveHiddenMandatoryFields();
+        return assmebleFormBean(dto);
+    }
+
+    private DefineMandatoryHiddenFieldsFormBean assmebleFormBean(MandatoryHiddenFieldsDto dto) {
+
+        DefineMandatoryHiddenFieldsFormBean formBean = new DefineMandatoryHiddenFieldsFormBean();
+
+        formBean.setFamilyDetailsRequired(dto.isFamilyDetailsRequired());
+        formBean.setHideClientBusinessWorkActivities(dto.isHideClientBusinessWorkActivities());
+        formBean.setHideClientGovtId(dto.isHideClientGovtId());
+        formBean.setHideClientMiddleName(dto.isHideClientMiddleName());
+        formBean.setHideClientPhone(dto.isHideClientPhone());
+        formBean.setHideClientPovertyStatus(dto.isHideClientPovertyStatus());
+        formBean.setHideClientSecondLastName(dto.isHideClientSecondLastName());
+        formBean.setHideClientSpouseFatherInformation(dto.isHideClientSpouseFatherInformation());
+        formBean.setHideClientSpouseFatherMiddleName(dto.isHideClientSpouseFatherMiddleName());
+        formBean.setHideClientSpouseFatherSecondLastName(dto.isHideClientSpouseFatherSecondLastName());
+        formBean.setHideClientTrained(dto.isHideClientTrained());
+        formBean.setHideGroupTrained(dto.isHideGroupTrained());
+        formBean.setHideSystemAddress2(dto.isHideSystemAddress2());
+        formBean.setHideSystemAddress3(dto.isHideSystemAddress3());
+        formBean.setHideSystemAssignClientPostions(dto.isHideSystemAssignClientPostions());
+        formBean.setHideSystemCitizenShip(dto.isHideSystemCitizenShip());
+        formBean.setHideSystemCity(dto.isHideSystemCity());
+        formBean.setHideSystemCollateralTypeNotes(dto.isHideSystemCollateralTypeNotes());
+        formBean.setHideSystemCountry(dto.isHideSystemCountry());
+        formBean.setHideSystemEducationLevel(dto.isHideSystemEducationLevel());
+        formBean.setHideSystemEthnicity(dto.isHideSystemEthnicity());
+        formBean.setHideSystemExternalId(dto.isHideSystemExternalId());
+        formBean.setHideSystemHandicapped(dto.isHideSystemHandicapped());
+        formBean.setHideSystemPhoto(dto.isHideSystemPhoto());
+        formBean.setHideSystemPostalCode(dto.isHideSystemPostalCode());
+        formBean.setHideSystemReceiptIdDate(dto.isHideSystemReceiptIdDate());
+        formBean.setHideSystemState(dto.isHideSystemState());
+
+        formBean.setMandatoryClientBusinessWorkActivities(dto.isMandatoryClientBusinessWorkActivities());
+        formBean.setMandatoryClientGovtId(dto.isMandatoryClientGovtId());
+        formBean.setMandatoryClientMiddleName(dto.isMandatoryClientMiddleName());
+        formBean.setMandatoryClientPhone(dto.isMandatoryClientPhone());
+        formBean.setMandatoryClientPovertyStatus(dto.isMandatoryClientPovertyStatus());
+        formBean.setMandatoryClientSecondLastName(dto.isMandatoryClientSecondLastName());
+        formBean.setMandatoryClientSpouseFatherInformation(dto.isMandatoryClientSpouseFatherInformation());
+        formBean.setMandatoryClientSpouseFatherSecondLastName(dto.isMandatoryClientSpouseFatherSecondLastName());
+        formBean.setMandatoryClientTrained(dto.isMandatoryClientTrained());
+
+        formBean.setMandatorySystemAddress1(dto.isMandatorySystemAddress1());
+        formBean.setMandatorySystemCitizenShip(dto.isMandatorySystemCitizenShip());
+        formBean.setMandatorySystemEducationLevel(dto.isMandatorySystemEducationLevel());
+        formBean.setMandatorySystemEthnicity(dto.isMandatorySystemEthnicity());
+        formBean.setMandatorySystemExternalId(dto.isMandatorySystemExternalId());
+        formBean.setMandatorySystemHandicapped(dto.isMandatorySystemHandicapped());
+        formBean.setMandatorySystemPhoto(dto.isMandatorySystemPhoto());
+
+        formBean.setMandatoryLoanAccountPurpose(dto.isMandatoryLoanAccountPurpose());
+        formBean.setMandatoryLoanSourceOfFund(dto.isMandatoryLoanSourceOfFund());
+
         return formBean;
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
-            MandatoryHiddenFieldsDto bean, BindingResult result, SessionStatus status) {
+            DefineMandatoryHiddenFieldsFormBean bean, BindingResult result, SessionStatus status) {
 
         String viewName = REDIRECT_TO_ADMIN_SCREEN;
 
-        if (CANCEL_PARAM_VALUE.equals(cancel)) {
+        if (StringUtils.isNotBlank(cancel)) {
             viewName = REDIRECT_TO_ADMIN_SCREEN;
             status.setComplete();
         } else if (result.hasErrors()) {
             viewName = "defineMandatoryHiddenFields";
         } else {
-            adminServiceFacade.updateHiddenMandatoryFields(bean);
+
+            MandatoryHiddenFieldsDto dto = assembleDto(bean);
+            adminServiceFacade.updateHiddenMandatoryFields(dto);
             status.setComplete();
         }
 
         return viewName;
     }
 
+    private MandatoryHiddenFieldsDto assembleDto(DefineMandatoryHiddenFieldsFormBean bean) {
+
+        MandatoryHiddenFieldsDto dto = new MandatoryHiddenFieldsDto();
+
+        dto.setFamilyDetailsRequired(bean.isFamilyDetailsRequired());
+
+        dto.setHideClientBusinessWorkActivities(bean.isHideClientBusinessWorkActivities());
+        dto.setHideClientGovtId(bean.isHideClientGovtId());
+        dto.setHideClientMiddleName(bean.isHideClientMiddleName());
+        dto.setHideClientPhone(bean.isHideClientPhone());
+        dto.setHideClientPovertyStatus(bean.isHideClientPovertyStatus());
+        dto.setHideClientSecondLastName(bean.isHideClientSecondLastName());
+        dto.setHideClientSpouseFatherInformation(bean.isHideClientSpouseFatherInformation());
+        dto.setHideClientSpouseFatherMiddleName(bean.isHideClientSpouseFatherMiddleName());
+        dto.setHideClientSpouseFatherSecondLastName(bean.isHideClientSpouseFatherSecondLastName());
+        dto.setHideClientTrained(bean.isHideClientTrained());
+
+        dto.setHideGroupTrained(bean.isHideGroupTrained());
+
+        dto.setHideSystemAddress2(bean.isHideSystemAddress2());
+        dto.setHideSystemAddress3(bean.isHideSystemAddress3());
+        dto.setHideSystemAssignClientPostions(bean.isHideSystemAssignClientPostions());
+        dto.setHideSystemCitizenShip(bean.isHideSystemCitizenShip());
+        dto.setHideSystemCity(bean.isHideSystemCity());
+        dto.setHideSystemCollateralTypeNotes(bean.isHideSystemCollateralTypeNotes());
+        dto.setHideSystemCountry(bean.isHideSystemCountry());
+        dto.setHideSystemEducationLevel(bean.isHideSystemEducationLevel());
+        dto.setHideSystemEthnicity(bean.isHideSystemEthnicity());
+        dto.setHideSystemExternalId(bean.isHideSystemExternalId());
+        dto.setHideSystemHandicapped(bean.isHideSystemHandicapped());
+        dto.setHideSystemPhoto(bean.isHideSystemPhoto());
+        dto.setHideSystemPostalCode(bean.isHideSystemPostalCode());
+        dto.setHideSystemReceiptIdDate(bean.isHideSystemReceiptIdDate());
+        dto.setHideSystemState(bean.isHideSystemState());
+
+        dto.setMandatoryClientBusinessWorkActivities(bean.isMandatoryClientBusinessWorkActivities());
+        dto.setMandatoryClientGovtId(bean.isMandatoryClientGovtId());
+        dto.setMandatoryClientMiddleName(bean.isMandatoryClientMiddleName());
+        dto.setMandatoryClientPhone(bean.isMandatoryClientPhone());
+        dto.setMandatoryClientPovertyStatus(bean.isMandatoryClientPovertyStatus());
+        dto.setMandatoryClientSecondLastName(bean.isMandatoryClientSecondLastName());
+        dto.setMandatoryClientSpouseFatherInformation(bean.isMandatoryClientSpouseFatherInformation());
+        dto.setMandatoryClientSpouseFatherSecondLastName(bean.isMandatoryClientSpouseFatherSecondLastName());
+        dto.setMandatoryClientTrained(bean.isMandatoryClientTrained());
+
+        dto.setMandatorySystemAddress1(bean.isMandatorySystemAddress1());
+        dto.setMandatorySystemCitizenShip(bean.isMandatorySystemCitizenShip());
+        dto.setMandatorySystemEducationLevel(bean.isMandatorySystemEducationLevel());
+        dto.setMandatorySystemEthnicity(bean.isMandatorySystemEthnicity());
+        dto.setMandatorySystemExternalId(bean.isMandatorySystemExternalId());
+        dto.setMandatorySystemHandicapped(bean.isMandatorySystemHandicapped());
+        dto.setMandatorySystemPhoto(bean.isMandatorySystemPhoto());
+
+        dto.setMandatoryLoanAccountPurpose(bean.isMandatoryLoanAccountPurpose());
+        dto.setMandatoryLoanSourceOfFund(bean.isMandatoryLoanSourceOfFund());
+
+        return dto;
+    }
 }

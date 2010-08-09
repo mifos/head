@@ -36,75 +36,110 @@
   <div class=" content leftMargin180">
   [@mifos.crumbs breadcrumbs /]
   <p>&nbsp;&nbsp;</p>
+  	
   	<form method="post" action="defineMandatoryHiddenFields.ftl" name="defineMandatoryHiddenFields">
   	 <p class="orangeheading">[@spring.message "manadatoryHiddenFields.definemandatory/hiddenfields"/]</p>
-    <div class="span-22 last">
+     <div class="span-22 last">
     	<div class="bluedivs span-22 fontBold">
         	<span class="span-8 paddingLeft">[@spring.message "systemwidefields"/]</span><span class="span-7 paddingLeft">[@spring.message "manadatoryHiddenFields.hide"/]</span><span class="span-5 paddingLeft">[@spring.message "manadatoryHiddenFields.mandatory"/]</span>
-        </div>       
+        </div>
+               
         <div class="span-22 borderbtm">
         	<span class="span-8 paddingLeft">
         		[@spring.message "manadatoryHiddenFields.externalId"/] 
         	</span>
         	<span class="span-7 paddingLeft ">
-        		<input type="checkbox" name="hideSystemExternalId"  [#if fields.hideSystemExternalId=true]  checked="checked" [/#if] [#if fields.mandatorySystemExternalId=true]  DISABLED [/#if] value="1" onclick="disableFields(this)" />
+        		[@spring.bind "fields.hideSystemExternalId" /]
+    			<input type="hidden" name="_${spring.status.expression}" value="false"/>
+    			<input type="checkbox" id="${spring.status.expression}" name="${spring.status.expression}"
+           			[#if spring.status.value?? && spring.status.value?string=="true"]checked="true" [/#if]
+    				[#if fields.mandatorySystemExternalId=true]  disabled [/#if] onclick="disableFields(this)" />
         	</span>
         	<span class="span-5 paddingLeft">
-        		<input type="checkbox" name="mandatorySystemExternalId" value="1" [#if fields.mandatorySystemExternalId=true]  DISABLED [/#if] [#if fields.hideSystemExternalId=true]  DISABLED [/#if]  onclick="disableFields(this)">
+        		[@spring.bind "fields.mandatorySystemExternalId" /]
+    			<input type="hidden" name="_${spring.status.expression}" value="false"/>
+    			<input type="checkbox" id="${spring.status.expression}" name="${spring.status.expression}"
+           			[#if spring.status.value?? && spring.status.value?string=="true"]checked="true" [/#if]
+    				[#if fields.hideSystemExternalId=true]  disabled [/#if] onclick="disableFields(this)" />
         	</span>
         </div>
+        
         <div class="span-22 borderbtm">
         	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.ethnicity"/] </span>
         	<span class="span-7 paddingLeft ">
-        	<input type="checkbox" name="hideSystemEthnicity" [#if fields.hideSystemEthnicity=true]  checked="checked" [/#if] [#if fields.mandatorySystemEthnicity=true]  DISABLED [/#if] value="1" onclick="disableFields(this)">
+        	[@spring.bind "fields.hideSystemEthnicity" /]
+    			<input type="hidden" name="_${spring.status.expression}" value="false"/>
+    			<input type="checkbox" id="${spring.status.expression}" name="${spring.status.expression}"
+           			[#if spring.status.value?? && spring.status.value?string=="true"]checked="true" [/#if]
+    				[#if fields.mandatorySystemEthnicity=true]  disabled [/#if] onclick="disableFields(this)" />
         	</span>
-        	<span class="span-5 paddingLeft"><input type="checkbox" name="mandatorySystemEthnicity" [#if fields.mandatorySystemEthnicity=true]  checked="checked" [/#if] [#if fields.hideSystemEthnicity=true]  DISABLED [/#if] value="1" onclick="disableFields(this)">
+        	<span class="span-5 paddingLeft">
+        	[@spring.bind "fields.mandatorySystemEthnicity" /]
+    			<input type="hidden" name="_${spring.status.expression}" value="false"/>
+    			<input type="checkbox" id="${spring.status.expression}" name="${spring.status.expression}"
+           			[#if spring.status.value?? && spring.status.value?string=="true"]checked="true" [/#if]
+    				[#if fields.hideSystemEthnicity=true]  disabled [/#if] onclick="disableFields(this)" />
         	</span>
         </div>
         <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.citizenship"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemCitizenShip" [#if fields.hideSystemCitizenShip=true]  checked="checked" [/#if] [#if fields.mandatorySystemCitizenShip=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft"><input type="checkbox" name="mandatorySystemCitizenShip" [#if fields.mandatorySystemCitizenShip=true]  checked="checked" [/#if] [#if fields.hideSystemCitizenShip=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.citizenship"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemCitizenShip" [#if fields.hideSystemCitizenShip=true]  checked="checked" [/#if] [#if fields.mandatorySystemCitizenShip=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft"><input type="checkbox" name="mandatorySystemCitizenShip" [#if fields.mandatorySystemCitizenShip=true]  checked="checked" [/#if] [#if fields.hideSystemCitizenShip=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span>
         </div>
         <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.handicapped"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemHandicapped" [#if fields.hideSystemHandicapped=true]  checked="checked" [/#if] [#if fields.mandatorySystemHandicapped=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft"><input type="checkbox" name="mandatorySystemHandicapped" [#if fields.mandatorySystemHandicapped=true]  checked="checked" [/#if] [#if fields.hideSystemHandicapped=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.handicapped"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemHandicapped" [#if fields.hideSystemHandicapped=true]  checked="checked" [/#if] [#if fields.mandatorySystemHandicapped=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft"><input type="checkbox" name="mandatorySystemHandicapped" [#if fields.mandatorySystemHandicapped=true]  checked="checked" [/#if] [#if fields.hideSystemHandicapped=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span>
         </div>
         <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.educationlevel"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemEducationLevel" [#if fields.hideSystemEducationLevel=true]  checked="checked" [/#if] [#if fields.mandatorySystemEducationLevel=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft"><input type="checkbox" name="mandatorySystemEducationLevel" [#if fields.mandatorySystemEducationLevel=true]  checked="checked" [/#if] [#if fields.hideSystemEducationLevel=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.educationlevel"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemEducationLevel" [#if fields.hideSystemEducationLevel=true]  checked="checked" [/#if] [#if fields.mandatorySystemEducationLevel=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft"><input type="checkbox" name="mandatorySystemEducationLevel" [#if fields.mandatorySystemEducationLevel=true]  checked="checked" [/#if] [#if fields.hideSystemEducationLevel=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span>
         </div>
         <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.photo"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemPhoto" [#if fields.hideSystemPhoto=true]  checked="checked" [/#if] [#if fields.mandatorySystemPhoto=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft"><input type="checkbox" name="mandatorySystemPhoto" [#if fields.mandatorySystemPhoto=true]  checked="checked" [/#if] [#if fields.hideSystemPhoto=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.photo"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemPhoto" [#if fields.hideSystemPhoto=true]  checked="checked" [/#if] [#if fields.mandatorySystemPhoto=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft"><input type="checkbox" name="mandatorySystemPhoto" [#if fields.mandatorySystemPhoto=true]  checked="checked" [/#if] [#if fields.hideSystemPhoto=true]  DISABLED [/#if] value="1" onclick="disableFields(this)"></span>
         </div>
         <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.assigningClienttopositions"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemAssignClientPostions" [#if fields.hideSystemAssignClientPostions=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.assigningClienttopositions"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemAssignClientPostions" [#if fields.hideSystemAssignClientPostions=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
         <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.address1"/] </span><span class="span-7 paddingLeft ">&nbsp;</span><span class="span-5 paddingLeft"><input type="checkbox" name="mandatorySystemAddress1" [#if fields.mandatorySystemAddress1=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.address1"/] </span>
+        	<span class="span-7 paddingLeft ">&nbsp;</span>
+        	<span class="span-5 paddingLeft"><input type="checkbox" name="mandatorySystemAddress1" [#if fields.mandatorySystemAddress1=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span>
         </div>
         <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.address2"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemAddress2" [#if fields.hideSystemAddress2=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.address2"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemAddress2" [#if fields.hideSystemAddress2=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
         <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.address3"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemAddress3" [#if fields.hideSystemAddress3=true]  checked="checked" [/#if]  value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.address3"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemAddress3" [#if fields.hideSystemAddress3=true]  checked="checked" [/#if]  value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
         <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.city/District"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemCity" [#if fields.hideSystemCity=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.city/District"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemCity" [#if fields.hideSystemCity=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
         <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.state"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemState" [#if fields.hideSystemState=true]  checked="checked" [/#if]  value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.state"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemState" [#if fields.hideSystemState=true]  checked="checked" [/#if]  value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
         <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.country"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemCountry" [#if fields.hideSystemCountry=true]  checked="checked" [/#if]  value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.country"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemCountry" [#if fields.hideSystemCountry=true]  checked="checked" [/#if]  value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
         <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.postalCode"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemPostalCode" [#if fields.hideSystemPostalCode=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.postalCode"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemPostalCode" [#if fields.hideSystemPostalCode=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
         <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.receiptIDandDate"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemReceiptIdDate" [#if fields.hideSystemReceiptIdDate=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.receiptIDandDate"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemReceiptIdDate" [#if fields.hideSystemReceiptIdDate=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
         <div class="span-22 last">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.collateralTypeandNotes"/] </span><span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemCollateralTypeNotes" [#if fields.hideSystemCollateralTypeNotes=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.collateralTypeandNotes"/] </span>
+        	<span class="span-7 paddingLeft "><input type="checkbox" name="hideSystemCollateralTypeNotes" [#if fields.hideSystemCollateralTypeNotes=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
-    
     </div>
+    
     <div class="span-22 last">
     	<div class="bluedivs span-22 fontBold">
         	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.client/systemusersfields"/] </span><span class="span-7 paddingLeft">[@spring.message "manadatoryHiddenFields.hide"/]</span><span class="span-5 paddingLeft">[@spring.message "manadatoryHiddenFields.mandatory"/]</span>
@@ -150,10 +185,19 @@
     </div>
     <div class="span-22 last">
     	<div class="bluedivs span-22 fontBold">
-        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.loanAccountFields"/] </span><span class="span-7 paddingLeft">[@spring.message "manadatoryHiddenFields.hide"/]</span><span class="span-5 paddingLeft">[@spring.message "manadatoryHiddenFields.mandatory"/]</span>
+        	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.loanAccountFields"/] </span>
+        	<span class="span-7 paddingLeft">[@spring.message "manadatoryHiddenFields.hide"/]</span>
+        	<span class="span-5 paddingLeft">[@spring.message "manadatoryHiddenFields.mandatory"/]</span>
         </div>
         <div class="span-22 borderbtm last">
-        	<span class="span-8 paddingLeft ">[@spring.message "manadatoryHiddenFields.purposeofLoan"/] </span><span class="span-7 paddingLeft ">&nbsp;</span><span class="span-5 paddingLeft"><input type="checkbox" name="mandatoryLoanAccountPurpose" [#if fields.mandatoryLoanAccountPurpose=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span>
+        	<span class="span-8 paddingLeft ">[@spring.message "manadatoryHiddenFields.purposeofLoan"/] </span>
+        	<span class="span-7 paddingLeft ">&nbsp;</span>
+        	<span class="span-5 paddingLeft"><input type="checkbox" name="mandatoryLoanAccountPurpose" [#if fields.mandatoryLoanAccountPurpose=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span>
+        </div>
+        <div class="span-22 borderbtm last">
+        	<span class="span-8 paddingLeft ">[@spring.message "manadatoryHiddenFields.sourceOfFund"/] </span>
+        	<span class="span-7 paddingLeft ">&nbsp;</span>
+        	<span class="span-5 paddingLeft"><input type="checkbox" name="mandatoryLoanSourceOfFund" [#if fields.mandatoryLoanSourceOfFund=true]  checked="checked" [/#if] value="1" onclick="disableFields(this)"></span>
         </div>
         <div class="clear">&nbsp;</div>
     </div>
