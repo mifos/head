@@ -1606,7 +1606,6 @@ public class LoanBO extends AccountBO {
                          *
                          * This means... for paid installments add up the amount due (for interest, fees and penalties).
                          * The amount due is not necessarily zero for this case.
-                         *
                          */
                         if (accntActionDate.isPaid()) {
                             increaseInterest = increaseInterest.add(accntActionDate.getInterestDue());
@@ -1689,18 +1688,29 @@ public class LoanBO extends AccountBO {
             } else if (reversedTrxns.size() > 0) {
                 updatePerformanceHistoryOnAdjustment(numberOfFullPayments);
             }
+
             if (statusChangeNeeded) {
-                if (getDaysInArrears(accountReOpened) == 0) {
-                    if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
-                        setAccountState(new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
+                Short daysInArrears = getDaysInArrears(accountReOpened);
+                if (currentAccountState.getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())) {
+                    Short newStatusId = AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue();
+                    if (daysInArrears == 0) {
+                        newStatusId = AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue();
                     }
+                    this.changeStatus(newStatusId, null, "Account Reopened");
                 } else {
-                    if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
-                        setAccountState(new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_BAD_STANDING));
-                        handleArrearsAging();
+                    if (daysInArrears == 0) {
+                        if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
+                        this.changeStatus(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue(), null, "Account Adjusted");
+                        }
+                    } else {
+                        if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
+                        this.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "Account Adjusted");
+                            handleArrearsAging();
+                        }
                     }
                 }
             }
+
             PersonnelBO personnel;
             try {
                 personnel = new PersonnelPersistence().getPersonnel(getUserContext().getId());
@@ -1759,12 +1769,16 @@ public class LoanBO extends AccountBO {
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
         LocalDate currentDate = new LocalDate();
         LocalDate thisIntervalStartDate = meeting.startDateForMeetingInterval(currentDate);
-        LocalDate nextMatchingDate = new LocalDate(scheduledEvent.nextEventDateAfter(thisIntervalStartDate.toDateTimeAtStartOfDay()));
-        DateTime futureIntervalStartDate = meeting.startDateForMeetingInterval(nextMatchingDate).toDateTimeAtStartOfDay();
+        LocalDate nextMatchingDate = new LocalDate(scheduledEvent.nextEventDateAfter(thisIntervalStartDate
+                .toDateTimeAtStartOfDay()));
+        DateTime futureIntervalStartDate = meeting.startDateForMeetingInterval(nextMatchingDate)
+                .toDateTimeAtStartOfDay();
 
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
+                workingDays, holidays);
 
-        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate, futureIntervalStartDate, scheduledEvent);
+        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
+                futureIntervalStartDate, scheduledEvent);
 
         updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
     }

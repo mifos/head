@@ -30,7 +30,7 @@
 <script type="text/javascript" src="pages/questionnaire/js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="pages/questionnaire/js/date.js"></script>
 <script type="text/javascript" src="pages/questionnaire/js/dateConfiguration.js"></script>
-<!--[if IE]><script type="text/javascript" src="scripts/jquery.bgiframe.js"></script><![endif]-->
+<!--[if IE]><script type="text/javascript" src="pages/questionnaire/js/jquery.bgiframe.js"></script><![endif]-->
 <script src="pages/questionnaire/js/questionnaire.js" type="text/javascript"></script>
 <div class="colmask leftmenu">
     <div class="colleft">
@@ -80,6 +80,18 @@
                                             [@mifosMacros.formCheckboxes "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,'</li><li class="noPadding">', ''/]
                                           </li>
                                         </ol>
+                                      </fieldset>
+                                      [#break]
+                                      [#case "SMART_SELECT"]
+                                      <fieldset class="right_section" style="width:70%">
+                                            <li class="noPadding">
+                                              <input type="text" autocomplete="off" id="txtListSearch" name="txtListSearch" style="width:21em;" class="txtListSearch"/>
+                                            </li>
+                                            <ol class="questionList" id="questionList" style="overflow:auto; width:19em; height:180px; border:1px solid #336699; padding-left:5px">
+                                                <li style="padding-bottom: 0pt;">
+                                                    [@mifosMacros.formCheckboxes "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,'</li><li class="noPadding">', ''/]
+                                                </li>
+                                            </ol>
                                       </fieldset>
                                       [#break]
                                       [#case "SINGLE_SELECT"]

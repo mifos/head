@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-		<span id="page.id" title="QuestionGroup"></span>
+		<span id="page.id" title="captureQuestionResponse"></span>
 		<SCRIPT type="text/javascript" SRC="pages/framework/js/date.js"></SCRIPT>
 		<script type="text/javascript" src="pages/framework/js/jquery/jquery-1.4.2.min.js"></script>
 		<STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/datepicker.css); --></STYLE>
@@ -87,7 +87,7 @@ explanation of the license and how it is applied.
                                      <c:out value="${questionLoopStatus.index}" />
                                  </bean:define>
                                  <tr class="fontnormal">
-                                     <td width="17%" align="right">
+                                     <td width="17%" align="right" valign="top">
                                          <span id="create_ClientPersonalInfo.label.question">
                                              <c:if test="${question.mandatory}">
                                                  <span class="mandatorytext">
@@ -121,8 +121,9 @@ explanation of the license and how it is applied.
                                      </c:if>
                                      
                                       <c:if test="${question.questionType == 'MULTI_SELECT'}">
-                                         <fieldset style="width:70%">
+                                         <fieldset style="width:70%" class="right_section">
 				                            <ol class="noPadding">
+				                              <input type="checkbox" checked="checked" name="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="" style="display:none;"/>
 				                              <c:forEach var="choiceValue" items="${question.answerChoices}" >
 				                                 <li class="noPadding">
 								    				<html:multibox property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="${choiceValue}" /> ${choiceValue}
@@ -131,9 +132,25 @@ explanation of the license and how it is applied.
 				                            </ol>
 				                          </fieldset>    
                                      </c:if>
+                                     <c:if test="${question.questionType == 'SMART_SELECT'}">
+                                         <fieldset style="width:70%" class="right_section">
+                                            <li class="noPadding" style="list-style: none;">
+				                                <input type="text" autocomplete="off" id="txtListSearch" name="txtListSearch" style="width:21em;" class="txtListSearch"/>
+				                            </li>
+				                            <ol class="questionList" id="questionList" style="overflow:auto; width:19em; height:180px; border:1px solid #336699; padding-left:5px">
+                                              <input type="checkbox" checked="checked" name="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="" style="display:none;"/>
+				                              <c:forEach var="choiceValue" items="${question.answerChoices}" >
+                                                 <li class="noPadding">
+								    				<html:multibox property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="${choiceValue}" />
+								    				<label tags="${choiceValue.commaSeparatedTags}" style="float:none;">${choiceValue}</label>
+								                 </li>
+							                  </c:forEach>
+				                            </ol>
+				                          </fieldset>
+                                     </c:if>
                                      </td>
                                  </tr>
-                                 
+
                              </c:forEach>
                          </c:forEach>
                      </c:forEach>

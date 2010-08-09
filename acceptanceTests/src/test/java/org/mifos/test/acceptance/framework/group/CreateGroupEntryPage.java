@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.group;
 import org.mifos.test.acceptance.framework.AbstractPage;
 
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
 
 public class CreateGroupEntryPage extends AbstractPage {
 
@@ -32,6 +33,13 @@ public class CreateGroupEntryPage extends AbstractPage {
 
     public CreateGroupEntryPage(Selenium selenium) {
         super(selenium);
+    }
+
+    public QuestionResponsePage submitNewGroupAndNavigateToQuestionResponsePage(CreateGroupSubmitParameters formParameters) {
+        enterGroupData(formParameters);
+        selenium.click("creategroup.button.preview");
+        waitForPageToLoad();
+        return new QuestionResponsePage(selenium);
     }
 
     public CreateGroupConfirmationPage submitNewGroupForApproval(CreateGroupSubmitParameters formParameters) {

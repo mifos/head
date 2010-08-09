@@ -157,7 +157,7 @@
                                       <tr>
                                         <td class="drawtablerow">${question.title}</td>
                                         <td class="drawtablerow">${question.type}</td>
-                                          [#if question.commaSeparateChoices?exists]
+                                          [#if question.commaSeparateChoices?has_content]
                                           <td class="drawtablerow">${question.commaSeparateChoices}</td>
                                           [#else]
                                           <td class="drawtablerow"><i>[@spring.message "questionnaire.quesiton.choices.notapplicable"/]</i></td>

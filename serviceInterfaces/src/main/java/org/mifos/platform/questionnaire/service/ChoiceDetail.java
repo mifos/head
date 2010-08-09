@@ -20,6 +20,7 @@
 
 package org.mifos.platform.questionnaire.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.platform.util.CollectionUtils;
 
 import java.io.Serializable;
@@ -68,9 +69,19 @@ public class ChoiceDetail implements Serializable {
     }
 
     public void addTag(String tag) {
-        if (tags.size() < 5 && !tags.contains(tag)) {
+        if (tags.size() < 5 && !isDuplicateTag(tag)) {
             tags.add(tag);
         }
+    }
+
+    private boolean isDuplicateTag(String tag) {
+        boolean result = false;
+        for (String _tag : tags) {
+            if (StringUtils.equalsIgnoreCase(_tag, tag)) {
+                result = true;
+            }
+        }
+        return result;
     }
 
     public void removeTag(int tagIndex) {

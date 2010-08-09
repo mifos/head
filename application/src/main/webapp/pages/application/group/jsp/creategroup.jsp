@@ -598,7 +598,7 @@ explanation of the license and how it is applied.
 										<tr>
 											<td align="center">
 												<html-el:submit styleId="creategroup.button.preview" styleClass="buttn" >
-													<mifos:mifoslabel name="button.preview" bundle="GroupUIResources"></mifos:mifoslabel>
+													<mifos:mifoslabel name="button.continue" bundle="GroupUIResources"></mifos:mifoslabel>
 												</html-el:submit>
 												&nbsp;&nbsp;
 												<html-el:button styleId="creategroup.button.cancel" property="cancelBtn" styleClass="cancelbuttn" onclick="goToCancelPage()">

@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static org.apache.commons.lang.StringUtils.EMPTY;
+
 public class CollectionUtils {
      public static <K, V> Map<K, V> asOrderedMap(Map.Entry<K, V>... entry) {
         Map<K, V> map = new LinkedHashMap<K, V>();
@@ -52,7 +54,7 @@ public class CollectionUtils {
     }
 
     public static <T> String toString(Collection<T> collection) {
-        String result = null;
+        String result = EMPTY;
         if (isNotEmpty(collection)) {
             String collStr = collection.toString();
             result = collStr.substring(1, collStr.length() - 1);

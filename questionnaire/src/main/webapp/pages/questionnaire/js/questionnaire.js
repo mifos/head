@@ -30,4 +30,26 @@ $(document).ready(function(){
         );
     }, 'Please enter a valid date');
 
+
+
+	$('.txtListSearch', this.parent).keyup(function(event) {
+		var search_text = $(this).val();
+		var rg = new RegExp(search_text,'i');
+		$(this).parent().parent().find(".questionList li label").each(function(){
+ 			if($.trim($(this).html()).search(rg) == -1 && $(this).attr("tags").search(rg) == -1 ) {
+				$(this).parent().css('display', 'none');
+ 				$(this).css('display', 'none');
+				$(this).next().css('display', 'none');
+				$(this).next().next().css('display', 'none');
+			}
+			else {
+				$(this).parent().css('display', '');
+				$(this).css('display', '');
+				$(this).next().css('display', '');
+				$(this).next().next().css('display', '');
+			}
+		});
+	});
+
+
 });
