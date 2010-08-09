@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-		<span id="page.id" title="QuestionGroup"></span>
+		<span id="page.id" title="captureQuestionResponse"></span>
 		<SCRIPT type="text/javascript" SRC="pages/framework/js/date.js"></SCRIPT>
 		<script type="text/javascript" src="pages/framework/js/jquery/jquery-1.4.2.min.js"></script>
 		<STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/datepicker.css); --></STYLE>
