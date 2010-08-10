@@ -96,6 +96,10 @@ public class Question implements Serializable {
     public QuestionDetail getQuestionDetail() {
         return questionDetail;
     }
+    
+    public void setQuestionDetail(QuestionDetail questionDetail) {
+        this.questionDetail=questionDetail;
+    }
 
     public List<ChoiceDetail> getChoices() {
         return this.questionDetail.getAnswerChoices();

@@ -84,7 +84,7 @@
     <link href="pages/css/maincss.css" rel="stylesheet" type="text/css" />
     <link href="pages/css/gazelle.css" rel="stylesheet" type="text/css" />
     <link href="pages/css/screen.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="pages/framework/js/jquery/jquery-1.4.2.min.js"></script>   
+    <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>   
   </head>
   <body>
 [/#macro]

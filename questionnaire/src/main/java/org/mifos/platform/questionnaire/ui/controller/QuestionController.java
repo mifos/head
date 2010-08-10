@@ -55,24 +55,6 @@ public class QuestionController extends QuestionnaireController {
         return "viewQuestions";
     }
 
-    @RequestMapping("/viewQuestionDetail.ftl")
-    public String getQuestion(ModelMap model, HttpServletRequest httpServletRequest) {
-        String questionId = httpServletRequest.getParameter("questionId");
-        try {
-            if (isInvalidNumber(questionId)) {
-                model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_ID);
-            } else {
-                QuestionDetail questionDetail = questionnaireServiceFacade.getQuestionDetail(Integer.valueOf(questionId));
-                model.addAttribute("questionDetail", new Question(questionDetail));
-            }
-        } catch (SystemException e) {
-            //TODO: move mifosLogManager to common after dependency resolution
-            //MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
-            model.addAttribute("error_message_code", QuestionnaireConstants.QUESTION_NOT_FOUND);
-        }
-        return "viewQuestionDetail";
-    }
-
     public String addQuestion(QuestionForm questionForm, RequestContext requestContext) {
         MessageContext context = requestContext.getMessageContext();
         questionForm.validateConstraints(context);

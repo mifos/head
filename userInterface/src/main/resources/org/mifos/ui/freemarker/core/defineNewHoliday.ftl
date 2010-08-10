@@ -9,8 +9,8 @@
   [#include "adminLeftPane.ftl" /]
   </div> 
  <!--  Main Content Begins-->
- <script type="text/javascript" src="pages/framework/js/jquery/jquery-1.4.2.min.js"></script>
- <script type="text/javascript" src="pages/framework/js/jstree/jquery.jstree.js"></script>
+ <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+ <script type="text/javascript" src="pages/js/jstree/jquery.jstree.js"></script>
  <script type="text/javascript" src="pages/application/holiday/js/createHolidays.js"></script>
  <span id="page.id" title="create_officeHoliday" />  
  <div class=" content leftMargin180">

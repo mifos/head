@@ -255,52 +255,6 @@ public class QuestionControllerTest {
         Mockito.verify(model).addAttribute(Mockito.eq("questions"), Mockito.eq(questionDetailList));
     }
 
-    @Test
-    public void shouldGetQuestionById() throws SystemException {
-        int questionId = 1;
-        QuestionDetail questionDetail = getQuestionDetail(questionId, TITLE, QuestionType.NUMERIC);
-        Mockito.when(questionnaireServiceFacade.getQuestionDetail(questionId)).thenReturn(questionDetail);
-        Mockito.when(httpServletRequest.getParameter("questionId")).thenReturn(Integer.toString(questionId));
-        String view = questionController.getQuestion(model, httpServletRequest);
-        Assert.assertThat(view, is("viewQuestionDetail"));
-        Mockito.verify(questionnaireServiceFacade).getQuestionDetail(questionId);
-        Mockito.verify(httpServletRequest, Mockito.times(1)).getParameter("questionId");
-        Mockito.verify(model).addAttribute(Mockito.eq("questionDetail"), argThat(new QuestionMatcher("1", TITLE, "Number")));
-    }
-
-    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
-    @Test
-    public void testGetQuestionWhenNotPresentInDb() throws SystemException {
-        int questionId = 1;
-        Mockito.when(questionnaireServiceFacade.getQuestionDetail(questionId)).thenThrow(new SystemException(QuestionnaireConstants.QUESTION_NOT_FOUND));
-        Mockito.when(httpServletRequest.getParameter("questionId")).thenReturn(Integer.toString(questionId));
-        String view = questionController.getQuestion(model, httpServletRequest);
-        Assert.assertThat(view, is("viewQuestionDetail"));
-        Mockito.verify(questionnaireServiceFacade).getQuestionDetail(questionId);
-        Mockito.verify(httpServletRequest, Mockito.times(1)).getParameter("questionId");
-        Mockito.verify(model).addAttribute("error_message_code", QuestionnaireConstants.QUESTION_NOT_FOUND);
-    }
-
-    @Test
-    public void testGetQuestionWhenIdIsNull() throws SystemException {
-        Mockito.when(httpServletRequest.getParameter("questionId")).thenReturn(null);
-        String view = questionController.getQuestion(model, httpServletRequest);
-        Assert.assertThat(view, is("viewQuestionDetail"));
-        Mockito.verify(httpServletRequest, Mockito.times(1)).getParameter("questionId");
-        Mockito.verify(questionnaireServiceFacade, Mockito.times(0)).getQuestionDetail(anyInt());
-        Mockito.verify(model).addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_ID);
-    }
-
-    @Test
-    public void testGetQuestionWhenIdIsNotInteger() throws SystemException {
-        Mockito.when(httpServletRequest.getParameter("questionId")).thenReturn("1A");
-        String view = questionController.getQuestion(model, httpServletRequest);
-        Assert.assertThat(view, is("viewQuestionDetail"));
-        Mockito.verify(httpServletRequest, Mockito.times(1)).getParameter("questionId");
-        Mockito.verify(questionnaireServiceFacade, Mockito.times(0)).getQuestionDetail(anyInt());
-        Mockito.verify(model).addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_ID);
-    }
-
     private Question getQuestion(String id, String title, String type) {
         Question question = new Question(new QuestionDetail());
         question.setTitle(title);

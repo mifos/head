@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
         <span id="page.id" title="BulkEntry"/>
-		<script src="pages/framework/js/jquery/jquery-1.4.2.min.js"></script>
+		<script src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 		<script language="javascript">
 		<!--
             // trap the return/enter key to prevent accidental form submission

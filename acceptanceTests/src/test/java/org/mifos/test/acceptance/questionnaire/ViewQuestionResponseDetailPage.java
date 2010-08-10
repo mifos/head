@@ -32,7 +32,7 @@ public class ViewQuestionResponseDetailPage extends MifosPage {
     }
 
     public void verifyPage() {
-        super.verifyPage("display_question_group_reponses");
+        super.verifyPage("display_question_group_responses");
     }
 
     public void verifyQuestionPresent(String question, String... answers) {

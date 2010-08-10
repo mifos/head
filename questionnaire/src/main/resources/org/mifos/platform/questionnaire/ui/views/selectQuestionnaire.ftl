@@ -18,63 +18,44 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "newblueprintmacros.ftl" as mifos]
-[#import "macros.ftl" as mifosMacros]
-
-[@mifos.header "title" /]
-[@mifos.topNavigationNoSecurity currentTab="Admin" /]
-<STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
-<script src="pages/questionnaire/js/selectQuestionnaire.js" type="text/javascript"></script>
-<div class="colmask leftmenu">
-    <div class="colleft">
-        <div class="col1wrap">
-            <div class="col1">
-            <div class="main_content">
-                <span id="page.id" title="selectQuestionnaire"></span>
-                [#if Session.urlMap??]
-                    [#assign breadcrumb = Session.urlMap/]
-                    [@mifos.crumbpairs breadcrumb "false"/]
-                [/#if]
-                <div class="content_panel">
-                    <h1>
-                        ${Session.questionnaireFor} - [@spring.message "questionnaire.attach"/]
-                    </h1>
-                    <div class="marginTop15">
-                        [@spring.message "questionnaire.instructions"/]
-                    </div>
-                    <form name="selectQuestionGroup" action="questionnaire.ftl?execution=${flowExecutionKey}" method="POST">
-                        <fieldset>
-                            <ol>
-                                <li>
-                                    <label for="questionGroupId"><span class="red">*</span>[@spring.message
-                                        "questionnaire.selectquestionnaire"/]:</label>
-                                    <select id="questionGroupId" name="questionGroupId">
-                                        <option value="selectOne">--[@spring.message "questionnaire.selectone"/]--</option>
-                                        [#list questionGroupDetails.details as questionGroup]
-                                        <option value="${questionGroup_index}">${questionGroup.title}</option>
-                                        [/#list]
-                                    </select>
-                                </li>
-                                <li class="buttonWidth">
-                                    <input type="submit" id="_eventId_selectQuestionnaire" name="_eventId_selectQuestionnaire"
-                                           value="[@spring.message "questionnaire.continue"/]" class="buttn"/>
-                                    &nbsp;
-                                    <input type="submit" id="_eventId_cancel" name="_eventId_cancel"
-                                           value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
-                                </li>
-                            </ol>
-                        </fieldset>
-                    </form>
-                </div>
-            </div>
+[#include "layout.ftl"]
+[@adminLeftPaneLayout]
+    <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
+    <script src="pages/questionnaire/js/selectQuestionnaire.js" type="text/javascript"></script>
+    <span id="page.id" title="selectQuestionnaire"></span>
+    [#if Session.urlMap??]
+        [#assign breadcrumb = Session.urlMap/]
+        [@mifos.crumbpairs breadcrumb "false"/]
+    [/#if]
+    <div class="content_panel">
+        <h1>
+            ${Session.questionnaireFor} - [@spring.message "questionnaire.attach"/]
+        </h1>
+        <div class="marginTop15">
+            [@spring.message "questionnaire.instructions"/]
         </div>
-        </div>
-        <div class="col2">
-            <div class="side_bar">
-                [#include "newadminLeftPane.ftl" /]
-            </div>
-        </div>
+        <form name="selectQuestionGroup" action="questionnaire.ftl?execution=${flowExecutionKey}" method="POST">
+            <fieldset>
+                <ol>
+                    <li>
+                        <label for="questionGroupId"><span class="red">*</span>[@spring.message
+                            "questionnaire.selectquestionnaire"/]:</label>
+                        <select id="questionGroupId" name="questionGroupId">
+                            <option value="selectOne">--[@spring.message "questionnaire.selectone"/]--</option>
+                            [#list questionGroupDetails.details as questionGroup]
+                            <option value="${questionGroup_index}">${questionGroup.title}</option>
+                            [/#list]
+                        </select>
+                    </li>
+                    <li class="buttonWidth">
+                        <input type="submit" id="_eventId_selectQuestionnaire" name="_eventId_selectQuestionnaire"
+                               value="[@spring.message "questionnaire.continue"/]" class="buttn"/>
+                        &nbsp;
+                        <input type="submit" id="_eventId_cancel" name="_eventId_cancel"
+                               value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
+                    </li>
+                </ol>
+            </fieldset>
+        </form>
     </div>
-</div>
-[@mifos.footer/]
+[/@adminLeftPaneLayout]
