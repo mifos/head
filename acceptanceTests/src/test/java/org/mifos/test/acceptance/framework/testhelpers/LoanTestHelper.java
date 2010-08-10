@@ -41,6 +41,7 @@ import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalChooseLoanInstancePage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalEntryPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
@@ -83,17 +84,39 @@ public class LoanTestHelper {
      */
     public LoanAccountPage createLoanAccount(CreateLoanAccountSearchParameters searchParameters,
             CreateLoanAccountSubmitParameters submitAccountParameters) {
-        CreateLoanAccountSearchPage createLoanAccountSearchPage = navigateToCreateLoanAccountSearchPage();
-        createLoanAccountSearchPage.verifyPage();
-        CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage
-        .searchAndNavigateToCreateLoanAccountPage(searchParameters);
-        createLoanAccountEntryPage.verifyPage();
+        CreateLoanAccountEntryPage createLoanAccountEntryPage = navigateToLoanAccountEntryPage(searchParameters);
         CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountEntryPage
         .submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters);
         createLoanAccountConfirmationPage.verifyPage();
         LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
         loanAccountPage.verifyPage();
         return loanAccountPage;
+    }
+
+    /**
+     * Creates a loan account.
+     * @param searchParameters Parameters to find the client/group that will be the owner of the account.
+     * @param submitAccountParameters The parameters for the loan account.
+     * @param questionResponseParameters The parameters for the create loan question responses.
+     */
+    public LoanAccountPage createLoanAccount(CreateLoanAccountSearchParameters searchParameters,
+            CreateLoanAccountSubmitParameters submitAccountParameters, QuestionResponseParameters questionResponseParameters) {
+        CreateLoanAccountEntryPage createLoanAccountEntryPage = navigateToLoanAccountEntryPage(searchParameters);
+        CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountEntryPage
+        .submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters, questionResponseParameters);
+        createLoanAccountConfirmationPage.verifyPage();
+        LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
+        loanAccountPage.verifyPage();
+        return loanAccountPage;
+    }
+
+    private CreateLoanAccountEntryPage navigateToLoanAccountEntryPage(CreateLoanAccountSearchParameters searchParameters) {
+        CreateLoanAccountSearchPage createLoanAccountSearchPage = navigateToCreateLoanAccountSearchPage();
+        createLoanAccountSearchPage.verifyPage();
+        CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage
+        .searchAndNavigateToCreateLoanAccountPage(searchParameters);
+        createLoanAccountEntryPage.verifyPage();
+        return createLoanAccountEntryPage;
     }
 
     /**
@@ -294,12 +317,7 @@ public class LoanTestHelper {
     }
 
     public CreateLoanAccountEntryPage navigateToCreateLoanAccountEntryPage(CreateLoanAccountSearchParameters searchParameters) {
-        CreateLoanAccountSearchPage createLoanAccountSearchPage = navigateToCreateLoanAccountSearchPage();
-        createLoanAccountSearchPage.verifyPage();
-        CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage
-        .searchAndNavigateToCreateLoanAccountPage(searchParameters);
-        createLoanAccountEntryPage.verifyPage();
-        return createLoanAccountEntryPage;
+        return navigateToLoanAccountEntryPage(searchParameters);
     }
 
     public CreateLoanAccountEntryPage navigateToCreateLoanAccountEntryPageWithoutLogout(HomePage homePage, CreateLoanAccountSearchParameters searchParameters) {

@@ -24,6 +24,7 @@ import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupConfirmationPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 
 import java.util.Map;
 
@@ -40,13 +41,8 @@ public class QuestionResponsePage extends MifosPage {
 
     public void verifyNumericBoundsValidation(String questionInputId, String answer, String questionTitle) {
         populateTextAnswer(questionInputId, answer);
-        selenium.click("captureQuestionResponses.button.continue");
-        waitForPageToLoad();
+        navigateToNextPage();
         assertTrue(selenium.isTextPresent("Please specify " + questionTitle));
-    }
-
-    public void populateTextAnswer(String questionInputId, String answer) {
-        selenium.type(questionInputId, answer);
     }
 
     public void populateSmartSelect(String smartSelectId, Map<String, String> tags) {
@@ -58,17 +54,24 @@ public class QuestionResponsePage extends MifosPage {
     }
 
     public CreateGroupConfirmationPage submitNewGroupForApproval() {
-        selenium.click("captureQuestionResponses.button.continue");
-        waitForPageToLoad();
-        selenium.click("editQuestionResponses_button");
-        waitForPageToLoad();
-        super.verifyPage("captureQuestionResponse");
-        selenium.click("captureQuestionResponses.button.continue");
-        waitForPageToLoad();
+        navigateToNextPageAndTestEdit();
         selenium.isVisible("previewgroup.button.submitForApproval");
         selenium.click("previewgroup.button.submitForApproval");
         waitForPageToLoad();
         return new CreateGroupConfirmationPage(selenium);
+    }
+
+    public void navigateToNextPageAndTestEdit() {
+        navigateToNextPage();
+        selenium.click("editQuestionResponses_button");
+        waitForPageToLoad();
+        super.verifyPage("captureQuestionResponse");
+        navigateToNextPage();
+    }
+
+    public void navigateToNextPage() {
+        selenium.click("captureQuestionResponses.button.continue");
+        waitForPageToLoad();
     }
 
     public GroupViewDetailsPage navigateToCreateGroupDetailsPage(String status) {
@@ -78,5 +81,22 @@ public class QuestionResponsePage extends MifosPage {
         groupDetailsPage.verifyPage();
         groupDetailsPage.verifyStatus(status);
         return groupDetailsPage;
+    }
+
+    public void populateAnswers(QuestionResponseParameters responseParameters) {
+        for (Map.Entry<String, String> entry : responseParameters.getTextResponses().entrySet()) {
+            populateTextAnswer(entry.getKey(), entry.getValue());
+        }
+        for (Map.Entry<String, String> entry : responseParameters.getSingleSelectResponses().entrySet()) {
+            populateSingleSelectAnswer(entry.getKey(), entry.getValue());
+        }
+    }
+
+    public void populateTextAnswer(String questionInputId, String answer) {
+        selenium.type(questionInputId, answer);
+    }
+
+    private void populateSingleSelectAnswer(String questionInputId, String answer) {
+        selenium.select(questionInputId, answer);
     }
 }
