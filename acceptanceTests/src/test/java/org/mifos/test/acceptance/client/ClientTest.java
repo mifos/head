@@ -173,9 +173,8 @@ public class ClientTest extends UiTestCaseBase {
         nextPage.verifyPage("CreateClientPersonalInfo");
     }
 
-    @SuppressWarnings("PMD")
-    // FIXME need to fix this test
-    private void searchForClientAndAddSurveysTest() throws Exception {
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void searchForClientAndAddSurveysTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
         String questionGroupTitle = "QG1" + random.nextInt(100);
