@@ -166,6 +166,10 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         // System Information
         authoritiesMap.put(SecurityConstants.CAN_VIEW_SYSTEM_INFO, new GrantedAuthorityImpl(MifosUser.VIEW_SYSTEM_INFO));
 
+        // Shutdown
+        authoritiesMap.put(SecurityConstants.CAN_OPEN_SHUTDOWN_PAGE, new GrantedAuthorityImpl(MifosUser.CAN_OPEN_SHUTDOWN_PAGE));
+        authoritiesMap.put(SecurityConstants.CAN_SHUT_DOWN_MIFOS, new GrantedAuthorityImpl(MifosUser.CAN_SHUT_DOWN_MIFOS));
+
         return authoritiesMap;
     }
 }
