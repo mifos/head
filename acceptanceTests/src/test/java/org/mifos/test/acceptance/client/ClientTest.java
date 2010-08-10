@@ -54,6 +54,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 
@@ -185,11 +186,18 @@ public class ClientTest extends UiTestCaseBase {
         createQuestionGroupForViewClient(questionGroupTitle, question1, question2);
         ClientViewDetailsPage viewDetailsPage = getClientViewDetailsPage("Stu1232993852651", "Stu1232993852651 Client1232993852651: ID 0002-000000003");
         testAttachSurvey(questionGroupTitle, question1, question2, answer1, viewDetailsPage);
-        verifyQuestionGroupInstances(viewDetailsPage.getQuestionGroupInstances(), questionGroupTitle, 1);
-        testViewSurvey(1, question1, question2, answer1, viewDetailsPage);
+        verifyInstances(viewDetailsPage, questionGroupTitle, question1, question2, answer1, 1);
         editViewSurvey(question1, answer1 + 1, viewDetailsPage);
-        verifyQuestionGroupInstances(viewDetailsPage.getQuestionGroupInstances(), questionGroupTitle, 2);
-        testViewSurvey(2, question1, question2, answer1 + 1, viewDetailsPage);
+        verifyInstances(viewDetailsPage, questionGroupTitle, question1, question2, answer1 + 1, 2);
+    }
+
+    private void verifyInstances(ClientViewDetailsPage viewDetailsPage, String questionGroupTitle, String question1,
+                                 String question2, String expectedAnswer, int expectedSize) {
+        Map<Integer, QuestionGroup> questionGroupInstances = viewDetailsPage.getQuestionGroupInstances();
+        Integer latestInstanceId = latestInstanceId(questionGroupInstances);
+        QuestionGroup latestInstance = questionGroupInstances.get(latestInstanceId);
+        verifyQuestionGroupInstances(viewDetailsPage.getQuestionGroupInstances(), latestInstance, questionGroupTitle, expectedSize);
+        testViewSurvey(latestInstanceId, question1, question2, expectedAnswer, viewDetailsPage);
     }
 
     private void editViewSurvey(String question1, String answer1, ClientViewDetailsPage viewDetailsPage) {
@@ -246,23 +254,18 @@ public class ClientTest extends UiTestCaseBase {
         return searchResultsPage.navigateToSearchResult(clientName);
     }
 
-    private void verifyQuestionGroupInstances(Map<Integer, QuestionGroup> questionGroups, String questionGroupTitle, int instanceId) {
-        Assert.assertEquals(instanceId, questionGroups.size());
-        Assert.assertTrue("instanceid = " + instanceId + " not found in " + toString(questionGroups), questionGroups.containsKey(instanceId));
-        QuestionGroup questionGroup = questionGroups.get(instanceId);
+    private void verifyQuestionGroupInstances(Map<Integer, QuestionGroup> questionGroups, QuestionGroup latestInstance, String questionGroupTitle, int expectedSize) {
+        Assert.assertEquals(expectedSize, questionGroups.size());
         Calendar calendar = Calendar.getInstance();
         String expectedDate = String.format(EXPECTED_DATE_FORMAT, calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
-        Assert.assertEquals(questionGroupTitle, questionGroup.getName());
-        Assert.assertEquals(expectedDate, questionGroup.getDate());
+        Assert.assertEquals(questionGroupTitle, latestInstance.getName());
+        Assert.assertEquals(expectedDate, latestInstance.getDate());
     }
 
-    private String toString(Map<Integer, QuestionGroup> questionGroups) {
-        StringBuilder buffer = new StringBuilder("[");
-        for (Map.Entry<Integer, QuestionGroup> entry : questionGroups.entrySet()) {
-            buffer.append(entry.getKey()).append(":").append(entry.getValue()).append(", ");
-        }
-        buffer.append("]");
-        return buffer.toString();
+    public Integer latestInstanceId(Map<Integer, QuestionGroup> questionGroups) {
+        Set<Integer> keys = questionGroups.keySet();
+        Integer numInstances = keys.size();
+        return keys.toArray(new Integer[numInstances])[numInstances - 1];
     }
 
     private void createQuestionGroupForViewClient(String questionGroupTitle, String question1, String question2) {
