@@ -20,18 +20,24 @@
 
 package org.mifos.application.admin.servicefacade;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Locale;
 
 public interface ShutdownServiceFacade {
+    @PreAuthorize("isFullyAuthenticated()")
     List<LoggedUserDto> getLoggedUsers(HttpServletRequest request);
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_OPEN_SHUTDOWN_PAGE')")
     String getStatus(HttpServletRequest request, Locale locale);
 
     boolean isShutdownInProgress(HttpServletRequest request);
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_SHUT_DOWN_MIFOS')")
     void scheduleShutdown(HttpServletRequest request, long timeout);
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_SHUT_DOWN_MIFOS')")
     void cancelShutdown(HttpServletRequest request);
 }

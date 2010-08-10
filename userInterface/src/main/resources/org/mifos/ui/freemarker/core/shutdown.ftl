@@ -41,15 +41,13 @@
                 <div class="clear">&nbsp;</div>
                 <div class="prepend-9">
                     [#if model.submitButtonDisabled]
-                    <input class="disabledbuttn"  type="submit" disabled="true" id="START" name="START" value="[@spring.message "systemAdministration.shutdown.startShutdown"/]"/>
-                    <input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "systemAdministration.shutdown.cancelShutdown"/]"/>
+                    <input class="disabledbuttn2"  type="submit" disabled="true" id="START" name="START" value="[@spring.message "systemAdministration.shutdown.startShutdown"/]"/>
+                    <input class="cancelbuttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "systemAdministration.shutdown.cancelShutdown"/]"/>
                     [#else]
                     <input class="buttn"  type="submit" id="START" name="START" value="[@spring.message "systemAdministration.shutdown.startShutdown"/]"/>
-                    <input class="disabledbuttn" type="submit" disabled="true" id="CANCEL" name="CANCEL" value="[@spring.message "systemAdministration.shutdown.cancelShutdown"/]"/>
+                    <input class="disabledbuttn2" type="submit" disabled="true" id="CANCEL" name="CANCEL" value="[@spring.message "systemAdministration.shutdown.cancelShutdown"/]"/>
                     [/#if]
-                    <span class="prepend-1">
-                        <input class="buttn"  type="submit" name="REFRESH" value="[@spring.message "systemAdministration.shutdown.refresh"/]"/>
-                    </span>
+                    <input class="buttn"  type="submit" name="REFRESH" value="[@spring.message "systemAdministration.shutdown.refresh"/]"/>
                 </div>
                 <div class="span-23 borderbtm">
                     <p class="font15"><span class="orangeheading">[@spring.message "systemAdministration.shutdown.activeSessions" /]</span></p>
