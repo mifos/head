@@ -181,14 +181,14 @@ public class ClientTest extends UiTestCaseBase {
         String questionGroupTitle = "QG1" + random.nextInt(100);
         String question1 = "FT_" + random.nextInt(100);
         String question2 = "MS_" + random.nextInt(100);
-        String answer1 = "Hello World";
+        String answer = "Hello World";
 
         createQuestionGroupForViewClient(questionGroupTitle, question1, question2);
         ClientViewDetailsPage viewDetailsPage = getClientViewDetailsPage("Stu1232993852651", "Stu1232993852651 Client1232993852651: ID 0002-000000003");
-        testAttachSurvey(questionGroupTitle, question1, question2, answer1, viewDetailsPage);
-        Integer instanceId = verifyInstances(viewDetailsPage, questionGroupTitle, question1, question2, answer1, 1);
-        editViewSurvey(question1, answer1 + 1, viewDetailsPage, instanceId);
-        verifyInstances(viewDetailsPage, questionGroupTitle, question1, question2, answer1 + 1, 2);
+        testAttachSurvey(questionGroupTitle, question1, question2, answer, viewDetailsPage);
+        Integer instanceId = verifyInstances(viewDetailsPage, questionGroupTitle, question1, question2, answer, 1);
+        editViewSurvey(question1, answer + 1, viewDetailsPage, instanceId);
+        verifyInstances(viewDetailsPage, questionGroupTitle, question1, question2, answer + 1, 2);
     }
 
     private Integer verifyInstances(ClientViewDetailsPage viewDetailsPage, String questionGroupTitle, String question1,
@@ -216,7 +216,8 @@ public class ClientTest extends UiTestCaseBase {
     private void testViewSurvey(int instanceId, String question1, String question2, String expectedAnswer, ClientViewDetailsPage viewDetailsPage) {
         QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
         questionGroupResponsePage.verifyPage();
-        Assert.assertTrue(expectedAnswer + " not found for question " + question1, questionGroupResponsePage.getAnswerHtml(question1).contains(expectedAnswer));
+        String msg = expectedAnswer + " not found for question " + question1 + ". Instead found " + questionGroupResponsePage.getAnswerHtml(question1);
+        Assert.assertTrue(msg, questionGroupResponsePage.getAnswerHtml(question1).contains(expectedAnswer));
         Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice1, Choice3, Choice4"));
         questionGroupResponsePage.navigateToViewClientDetailsPage();
         viewDetailsPage.verifyPage();

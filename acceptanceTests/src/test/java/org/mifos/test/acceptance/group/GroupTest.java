@@ -171,7 +171,7 @@ public class GroupTest extends UiTestCaseBase {
         responsePage.verifyPage();
         responsePage.verifyQuestionPresent(question1, "30");
         responsePage.verifyQuestionPresent(question2, "Choice", "Choice2");
-        groupViewDetailsPage = responsePage.navigateToDetailsPage();
+        responsePage.navigateToDetailsPage();
         groupViewDetailsPage.verifyPage();
     }
 
