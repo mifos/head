@@ -51,6 +51,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -185,7 +186,7 @@ public class ClientTest extends UiTestCaseBase {
 
         createQuestionGroupForViewClient(questionGroupTitle, question1, question2);
         ClientViewDetailsPage viewDetailsPage = getClientViewDetailsPage("Stu1232993852651", "Stu1232993852651 Client1232993852651: ID 0002-000000003");
-        testAttachSurvey(questionGroupTitle, question1, question2, answer, viewDetailsPage);
+        viewDetailsPage = testAttachSurvey(questionGroupTitle, question1, question2, answer, viewDetailsPage);
 
         Map<Integer, QuestionGroup> questionGroups = viewDetailsPage.getQuestionGroupInstances();
         Integer latestInstanceId = latestInstanceId(questionGroups);
@@ -202,14 +203,16 @@ public class ClientTest extends UiTestCaseBase {
         verifyLatestInstanceResponses(latestInstanceId, viewDetailsPage, question1, question2, answer + 1);
     }
 
-    private void testAttachSurvey(String questionGroupTitle, String question1, String question2, String answer1, ClientViewDetailsPage viewDetailsPage) {
+    private ClientViewDetailsPage testAttachSurvey(String questionGroupTitle, String question1, String question2, String answer1, ClientViewDetailsPage viewDetailsPage) {
         QuestionnairePage questionnairePage = viewDetailsPage.getQuestionnairePage(questionGroupTitle);
         verifyCancel(questionnairePage);
         questionnairePage = checkMandatoryQuestionValidation(questionGroupTitle, question1, question2, viewDetailsPage);
         questionnairePage.setResponse(question1, answer1);
         MifosPage mifosPage = questionnairePage.submit();
         Assert.assertTrue(mifosPage instanceof ClientViewDetailsPage);
-        ((ClientViewDetailsPage) mifosPage).verifyPage();
+        ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) mifosPage;
+        clientViewDetailsPage.verifyPage();
+        return clientViewDetailsPage;
     }
 
     @SuppressWarnings("PMD.AvoidReassigningParameters")
@@ -272,8 +275,7 @@ public class ClientTest extends UiTestCaseBase {
 
     public Integer latestInstanceId(Map<Integer, QuestionGroup> questionGroups) {
         Set<Integer> keys = questionGroups.keySet();
-        Integer numInstances = keys.size();
-        return keys.toArray(new Integer[numInstances])[numInstances - 1];
+        return Collections.max(keys);
     }
 
     private void createQuestionGroupForViewClient(String questionGroupTitle, String question1, String question2) {
