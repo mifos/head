@@ -18,7 +18,6 @@
 	<tx:annotation-driven transaction-manager="platformTransactionManager" order="200"/>
 	
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
         <property name="annotatedClasses">
            <list>
                 <value>org.mifos.framework.business.EntityMaster</value>
