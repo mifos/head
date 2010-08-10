@@ -174,8 +174,8 @@ public class ClientTest extends UiTestCaseBase {
         nextPage.verifyPage("CreateClientPersonalInfo");
     }
 
-    @SuppressWarnings("PMD")
-    private void searchForClientAndAddSurveysTest() throws Exception {
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void searchForClientAndAddSurveysTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
         String questionGroupTitle = "QG1" + random.nextInt(100);
@@ -186,41 +186,20 @@ public class ClientTest extends UiTestCaseBase {
         createQuestionGroupForViewClient(questionGroupTitle, question1, question2);
         ClientViewDetailsPage viewDetailsPage = getClientViewDetailsPage("Stu1232993852651", "Stu1232993852651 Client1232993852651: ID 0002-000000003");
         testAttachSurvey(questionGroupTitle, question1, question2, answer, viewDetailsPage);
-        Integer instanceId = verifyInstances(viewDetailsPage, questionGroupTitle, question1, question2, answer, 1);
-        editViewSurvey(question1, answer + 1, viewDetailsPage, instanceId);
-        verifyInstances(viewDetailsPage, questionGroupTitle, question1, question2, answer + 1, 2);
-    }
 
-    private Integer verifyInstances(ClientViewDetailsPage viewDetailsPage, String questionGroupTitle, String question1,
-                                 String question2, String expectedAnswer, int expectedSize) {
-        Map<Integer, QuestionGroup> questionGroupInstances = viewDetailsPage.getQuestionGroupInstances();
-        Integer latestInstanceId = latestInstanceId(questionGroupInstances);
-        QuestionGroup latestInstance = questionGroupInstances.get(latestInstanceId);
-        verifyQuestionGroupInstances(viewDetailsPage.getQuestionGroupInstances(), latestInstance, questionGroupTitle, expectedSize);
-        testViewSurvey(latestInstanceId, question1, question2, expectedAnswer, viewDetailsPage);
-        return latestInstanceId;
-    }
+        Map<Integer, QuestionGroup> questionGroups = viewDetailsPage.getQuestionGroupInstances();
+        Integer latestInstanceId = latestInstanceId(questionGroups);
+        QuestionGroup latestInstance = questionGroups.get(latestInstanceId);
+        verifyLatestInstanceDetails(latestInstance, questionGroupTitle, 1, questionGroups);
+        viewDetailsPage = verifyLatestInstanceResponses(latestInstanceId, viewDetailsPage, question1, question2, answer);
 
-    private void editViewSurvey(String question1, String answer1, ClientViewDetailsPage viewDetailsPage, int instanceId) {
-        QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
-        QuestionnairePage questionnairePage = questionGroupResponsePage.navigateToEditResponses();
-        verifyCancel(questionnairePage);
-        questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
-        questionnairePage = questionGroupResponsePage.navigateToEditResponses();
-        questionnairePage.setResponse(question1, answer1);
-        MifosPage mifosPage = questionnairePage.submit();
-        Assert.assertTrue(mifosPage instanceof ClientViewDetailsPage);
-        ((ClientViewDetailsPage) mifosPage).verifyPage();
-    }
+        viewDetailsPage = editViewSurvey(question1, answer + 1, viewDetailsPage, latestInstanceId);
 
-    private void testViewSurvey(int instanceId, String question1, String question2, String expectedAnswer, ClientViewDetailsPage viewDetailsPage) {
-        QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
-        questionGroupResponsePage.verifyPage();
-        String msg = expectedAnswer + " not found for question " + question1 + ". Instead found " + questionGroupResponsePage.getAnswerHtml(question1);
-        Assert.assertTrue(msg, questionGroupResponsePage.getAnswerHtml(question1).contains(expectedAnswer));
-        Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice1, Choice3, Choice4"));
-        questionGroupResponsePage.navigateToViewClientDetailsPage();
-        viewDetailsPage.verifyPage();
+        questionGroups = viewDetailsPage.getQuestionGroupInstances();
+        latestInstanceId = latestInstanceId(questionGroups);
+        latestInstance = questionGroups.get(latestInstanceId);
+        verifyLatestInstanceDetails(latestInstance, questionGroupTitle, 2, questionGroups);
+        verifyLatestInstanceResponses(latestInstanceId, viewDetailsPage, question1, question2, answer + 1);
     }
 
     private void testAttachSurvey(String questionGroupTitle, String question1, String question2, String answer1, ClientViewDetailsPage viewDetailsPage) {
@@ -231,6 +210,41 @@ public class ClientTest extends UiTestCaseBase {
         MifosPage mifosPage = questionnairePage.submit();
         Assert.assertTrue(mifosPage instanceof ClientViewDetailsPage);
         ((ClientViewDetailsPage) mifosPage).verifyPage();
+    }
+
+    @SuppressWarnings("PMD.AvoidReassigningParameters")
+    private ClientViewDetailsPage verifyLatestInstanceResponses(Integer latestInstanceId, ClientViewDetailsPage viewDetailsPage, String question1,
+                                                                String question2, String expectedAnswer) {
+        QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(latestInstanceId);
+        questionGroupResponsePage.verifyPage();
+        String msg = expectedAnswer + " not found for question " + question1 + ". Instead found " + questionGroupResponsePage.getAnswerHtml(question1);
+        Assert.assertTrue(msg, questionGroupResponsePage.getAnswerHtml(question1).contains(expectedAnswer));
+        Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice1, Choice3, Choice4"));
+        viewDetailsPage = questionGroupResponsePage.navigateToViewClientDetailsPage();
+        viewDetailsPage.verifyPage();
+        return viewDetailsPage;
+    }
+
+    private void verifyLatestInstanceDetails(QuestionGroup latestInstance, String questionGroupTitle, int expectedSize, Map<Integer, QuestionGroup> questionGroups) {
+        Assert.assertEquals(expectedSize, questionGroups.size());
+        Calendar calendar = Calendar.getInstance();
+        String expectedDate = String.format(EXPECTED_DATE_FORMAT, calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
+        Assert.assertEquals(questionGroupTitle, latestInstance.getName());
+        Assert.assertEquals(expectedDate, latestInstance.getDate());
+    }
+
+    private ClientViewDetailsPage editViewSurvey(String question1, String answer1, ClientViewDetailsPage viewDetailsPage, int instanceId) {
+        QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
+        QuestionnairePage questionnairePage = questionGroupResponsePage.navigateToEditResponses();
+        verifyCancel(questionnairePage);
+        questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
+        questionnairePage = questionGroupResponsePage.navigateToEditResponses();
+        questionnairePage.setResponse(question1, answer1);
+        MifosPage mifosPage = questionnairePage.submit();
+        Assert.assertTrue(mifosPage instanceof ClientViewDetailsPage);
+        ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) mifosPage;
+        clientViewDetailsPage.verifyPage();
+        return clientViewDetailsPage;
     }
 
     private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1, String question2, ClientViewDetailsPage viewDetailsPage) {
@@ -254,14 +268,6 @@ public class ClientTest extends UiTestCaseBase {
         ClientSearchResultsPage searchResultsPage = clientsPage.searchForClient(searchName);
         searchResultsPage.verifyPage();
         return searchResultsPage.navigateToSearchResult(clientName);
-    }
-
-    private void verifyQuestionGroupInstances(Map<Integer, QuestionGroup> questionGroups, QuestionGroup latestInstance, String questionGroupTitle, int expectedSize) {
-        Assert.assertEquals(expectedSize, questionGroups.size());
-        Calendar calendar = Calendar.getInstance();
-        String expectedDate = String.format(EXPECTED_DATE_FORMAT, calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
-        Assert.assertEquals(questionGroupTitle, latestInstance.getName());
-        Assert.assertEquals(expectedDate, latestInstance.getDate());
     }
 
     public Integer latestInstanceId(Map<Integer, QuestionGroup> questionGroups) {
