@@ -40,7 +40,7 @@ public class StaticHibernateUtil {
      * This method must be called before using Hibernate!
      */
     public static void initialize() throws HibernateStartUpException {
-        hibernateUtil = new HibernateUtil();
+        hibernateUtil = HibernateUtil.getInstance();
     }
 
     public static SessionFactory getSessionFactory() {

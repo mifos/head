@@ -66,6 +66,8 @@ public class TestCaseInitializer {
          */
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
 
+        SpringUtil.initializeSpring();
+
         TestDatabase.createMySQLTestDatabase();
         DatabaseSetup.initializeHibernate();
         // add this because it is added to Application Initializer
@@ -82,8 +84,6 @@ public class TestCaseInitializer {
 
         Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
 
-        SpringUtil.initializeSpring();
-        // Spring must be initialized before FinancialInitializer
         FinancialInitializer.initialize();
         ActivityMapper.getInstance().init();
         AuthorizationManager.getInstance().init();

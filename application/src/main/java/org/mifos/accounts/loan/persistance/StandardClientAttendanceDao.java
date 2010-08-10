@@ -37,12 +37,11 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 public class StandardClientAttendanceDao implements ClientAttendanceDao {
 
     private final MasterPersistence masterPersistence;
-    private HibernateUtil hibernateUtil;
-
     public StandardClientAttendanceDao(final MasterPersistence masterPersistence) {
         this.masterPersistence = masterPersistence;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<ClientAttendanceBO> findClientAttendance(final Short branchId, final String searchId,
             final LocalDate meetingDate) throws PersistenceException {
@@ -55,6 +54,7 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
                 queryParameters);
     }
 
+    @Override
     public void save(final List<ClientAttendanceBO> clientAttendances) {
         Session session = getHibernateUtil().getSessionTL();
 
@@ -64,9 +64,6 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
     }
 
     private HibernateUtil getHibernateUtil() {
-        if (null == hibernateUtil) {
-            hibernateUtil = new HibernateUtil();
-        }
-        return hibernateUtil;
+        return HibernateUtil.getInstance();
     }
 }
