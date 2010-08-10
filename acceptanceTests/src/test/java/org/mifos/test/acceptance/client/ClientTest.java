@@ -186,25 +186,26 @@ public class ClientTest extends UiTestCaseBase {
         createQuestionGroupForViewClient(questionGroupTitle, question1, question2);
         ClientViewDetailsPage viewDetailsPage = getClientViewDetailsPage("Stu1232993852651", "Stu1232993852651 Client1232993852651: ID 0002-000000003");
         testAttachSurvey(questionGroupTitle, question1, question2, answer1, viewDetailsPage);
-        verifyInstances(viewDetailsPage, questionGroupTitle, question1, question2, answer1, 1);
-        editViewSurvey(question1, answer1 + 1, viewDetailsPage);
+        Integer instanceId = verifyInstances(viewDetailsPage, questionGroupTitle, question1, question2, answer1, 1);
+        editViewSurvey(question1, answer1 + 1, viewDetailsPage, instanceId);
         verifyInstances(viewDetailsPage, questionGroupTitle, question1, question2, answer1 + 1, 2);
     }
 
-    private void verifyInstances(ClientViewDetailsPage viewDetailsPage, String questionGroupTitle, String question1,
+    private Integer verifyInstances(ClientViewDetailsPage viewDetailsPage, String questionGroupTitle, String question1,
                                  String question2, String expectedAnswer, int expectedSize) {
         Map<Integer, QuestionGroup> questionGroupInstances = viewDetailsPage.getQuestionGroupInstances();
         Integer latestInstanceId = latestInstanceId(questionGroupInstances);
         QuestionGroup latestInstance = questionGroupInstances.get(latestInstanceId);
         verifyQuestionGroupInstances(viewDetailsPage.getQuestionGroupInstances(), latestInstance, questionGroupTitle, expectedSize);
         testViewSurvey(latestInstanceId, question1, question2, expectedAnswer, viewDetailsPage);
+        return latestInstanceId;
     }
 
-    private void editViewSurvey(String question1, String answer1, ClientViewDetailsPage viewDetailsPage) {
-        QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(1);
+    private void editViewSurvey(String question1, String answer1, ClientViewDetailsPage viewDetailsPage, int instanceId) {
+        QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
         QuestionnairePage questionnairePage = questionGroupResponsePage.navigateToEditResponses();
         verifyCancel(questionnairePage);
-        questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(1);
+        questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
         questionnairePage = questionGroupResponsePage.navigateToEditResponses();
         questionnairePage.setResponse(question1, answer1);
         MifosPage mifosPage = questionnairePage.submit();
@@ -212,10 +213,10 @@ public class ClientTest extends UiTestCaseBase {
         ((ClientViewDetailsPage) mifosPage).verifyPage();
     }
 
-    private void testViewSurvey(int instanceId, String question1, String question2, String answer1, ClientViewDetailsPage viewDetailsPage) {
+    private void testViewSurvey(int instanceId, String question1, String question2, String expectedAnswer, ClientViewDetailsPage viewDetailsPage) {
         QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
         questionGroupResponsePage.verifyPage();
-        Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question1).contains(answer1));
+        Assert.assertTrue(expectedAnswer + " not found for question " + question1, questionGroupResponsePage.getAnswerHtml(question1).contains(expectedAnswer));
         Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice1, Choice3, Choice4"));
         questionGroupResponsePage.navigateToViewClientDetailsPage();
         viewDetailsPage.verifyPage();
