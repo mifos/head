@@ -280,13 +280,6 @@ public abstract class CustomerActionForm extends BaseActionForm {
         return customFields.get(i);
     }
 
-    public QuestionGroupDto getQuestionGroup(int i) {
-        if (i >= questionGroupDtos.size()) {
-            questionGroupDtos.add(new QuestionGroupDto());
-        }
-        return questionGroupDtos.get(i);
-    }
-
     public String getFormedByPersonnel() {
         return formedByPersonnel;
     }
@@ -604,11 +597,4 @@ public abstract class CustomerActionForm extends BaseActionForm {
         this.searchString = searchString;
     }
 
-    public List<QuestionGroupDto> getQuestionGroupDtos() {
-        return questionGroupDtos;
-    }
-
-    public void setQuestionGroupDtos(List<QuestionGroupDto> questionGroupDtos) {
-        this.questionGroupDtos = questionGroupDtos;
-    }
 }

@@ -40,7 +40,6 @@ import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.FamilyDetailDTO;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
-import org.mifos.customers.struts.actionforms.QuestionGroupDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.dto.domain.CustomFieldDto;
@@ -55,14 +54,9 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
-import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
-import org.mifos.platform.util.CollectionUtils;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.service.MifosServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -400,46 +394,7 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
             validateFamilyRelationship(errors);
             validateFamilyLivingStatus(errors);
         }
-        validateForQuestionGroupResponses(method, errors, getQuestionnaireServiceFacade(request));
         return errors;
-    }
-
-    // intentionally made 'public' to aid testing !!!
-    public void validateForQuestionGroupResponses(String method, ActionErrors errors, QuestionnaireServiceFacade questionnaireServiceFacade) {
-        if (method.equals(Methods.next.toString())
-                && questionnaireServiceFacade != null
-                && !CollectionUtils.isEmpty(getQuestionGroupDtos())) {
-            try {
-                List<QuestionGroupDetail> groupDetails = new ArrayList<QuestionGroupDetail>();
-                for (QuestionGroupDto questionGroupDto : getQuestionGroupDtos()) {
-                    groupDetails.add(questionGroupDto.getQuestionGroupDetail());
-                }
-                questionnaireServiceFacade.validateResponses(groupDetails);
-            } catch (ValidationException e) {
-                if (e.containsChildExceptions()) {
-                    for (ValidationException validationException : e.getChildExceptions()) {
-                        if (validationException instanceof MandatoryAnswerNotFoundException) {
-                            populateError(errors, (MandatoryAnswerNotFoundException) validationException);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void populateError(ActionErrors errors, MandatoryAnswerNotFoundException exception) {
-        ActionMessage actionMessage = new ActionMessage(ClientConstants.ERROR_REQUIRED, exception.getQuestionTitle());
-        errors.add(ClientConstants.ERROR_REQUIRED, actionMessage);
-    }
-
-    private QuestionnaireServiceFacade getQuestionnaireServiceFacade(HttpServletRequest request) {
-        QuestionnaireServiceFacade questionnaireServiceFacade;
-        try {
-            questionnaireServiceFacade = (QuestionnaireServiceFacade) MifosServiceFactory.getSpringBean(request, "questionnaireServiceFacade");
-        } catch (Exception e) {
-            questionnaireServiceFacade = null;
-        }
-        return questionnaireServiceFacade;
     }
 
     private void validatePicture(HttpServletRequest request, ActionErrors errors) throws PageExpiredException {

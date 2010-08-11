@@ -24,11 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.struts.actionforms.QuestionDto;
-import org.mifos.customers.struts.actionforms.QuestionGroupDto;
-import org.mifos.customers.struts.actionforms.SectionDto;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
@@ -42,7 +37,6 @@ import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,11 +47,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mifos.customers.client.util.helpers.ClientConstants.EVENT_CREATE;
-import static org.mifos.customers.client.util.helpers.ClientConstants.SOURCE_CLIENT;
-import static org.mifos.framework.struts.tags.MifosTagUtils.xmlEscape;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -89,32 +79,6 @@ public class ClientCustActionTest {
     }
 
     @Test
-    public void shouldGetQuestionGroupsByEventSource() throws ApplicationException {
-        when(questionnaireServiceFacade.getQuestionGroups(EVENT_CREATE, SOURCE_CLIENT)).thenReturn(asList(getQuestionGroupDetail("QG1", asList("red", "green", "blue"))));
-        List<QuestionGroupDto> questionGroups = clientCustAction.getQuestionGroups(questionnaireServiceFacade);
-        assertThat(questionGroups, is(notNullValue()));
-        assertThat(questionGroups.size(), is(1));
-        assertThat(questionGroups.get(0).getId(), is(123));
-        List<SectionDto> sections = questionGroups.get(0).getSections();
-        assertThat(sections, is(notNullValue()));
-        assertThat(sections.size(), is(1));
-        SectionDto section1 = sections.get(0);
-        assertThat(section1.getName(), is("Section1"));
-        List<QuestionDto> questions1 = section1.getQuestions();
-        assertThat(questions1, is(notNullValue()));
-        assertThat(questions1.size(), is(1));
-        QuestionDto question1 = questions1.get(0);
-        assertThat(question1.getId(), is(111));
-        assertThat(question1.getText(), is("Question1"));
-        assertThat(question1.getQuestionType(), is(QuestionType.SINGLE_SELECT));
-        assertThat(question1.getAnswerChoices().get(0).getChoiceText(), is("red"));
-        assertThat(question1.getAnswerChoices().get(1).getChoiceText(), is("green"));
-        assertThat(question1.getAnswerChoices().get(2).getChoiceText(), is("blue"));
-        assertThat(question1.isRequired(), is(true));
-        verify(questionnaireServiceFacade, times(1)).getQuestionGroups(EVENT_CREATE, SOURCE_CLIENT);
-    }
-
-    @Test
     public void shouldSetQuestionGroupInstanceDetailsInSession() throws PageExpiredException {
         List<QuestionGroupInstanceDetail> instanceDetails = asList(getQuestionGroupInstanceDetail("QG1"), getQuestionGroupInstanceDetail("QG2"));
         when(questionnaireServiceFacade.getQuestionGroupInstances(101, "View", "Client")).thenReturn(instanceDetails);
@@ -129,12 +93,6 @@ public class ClientCustActionTest {
         verify(request, times(1)).getAttribute(Constants.CURRENTFLOWKEY);
         verify(request, times(1)).getSession();
         verify(session, times(1)).getAttribute(Constants.FLOWMANAGER);
-    }
-
-    private OfficeBO getOffice() {
-        OfficeBO office = new OfficeBO();
-        office.setOfficeName("officeName");
-        return office;
     }
 
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail(String questionGroupTitle) {

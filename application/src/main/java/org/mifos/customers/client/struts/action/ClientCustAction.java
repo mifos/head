@@ -53,7 +53,6 @@ import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.struts.action.CustAction;
-import org.mifos.customers.struts.actionforms.QuestionGroupDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
@@ -64,7 +63,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
@@ -79,14 +77,11 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
-import static org.mifos.customers.client.util.helpers.ClientConstants.EVENT_CREATE;
-import static org.mifos.customers.client.util.helpers.ClientConstants.SOURCE_CLIENT;
 
 public class ClientCustAction extends CustAction implements QuestionnaireAction {
 
@@ -217,17 +212,6 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
         }
         return mapping.findForward(ActionForwards.load_success.toString());
-    }
-
-    // intentionally made 'public' to aid testing !!!
-    public List<QuestionGroupDto> getQuestionGroups(QuestionnaireServiceFacade questionnaireServiceFacade) throws ApplicationException {
-        if (questionnaireServiceFacade == null) return null;
-        List<QuestionGroupDto> questionGroupDtos = new ArrayList<QuestionGroupDto>();
-        List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getQuestionGroups(EVENT_CREATE, SOURCE_CLIENT);
-        for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
-            questionGroupDtos.add(new QuestionGroupDto(questionGroupDetail));
-        }
-        return questionGroupDtos;
     }
 
     @TransactionDemarcate(joinToken = true)
