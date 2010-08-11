@@ -49,6 +49,7 @@ import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
+import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDaoHibernate;
 import org.mifos.application.holiday.business.service.HolidayService;
@@ -104,6 +105,7 @@ public class DependencyInjectedServiceLocator {
     private static FeeServiceFacade feeServiceFacade;
     private static FundServiceFacade fundServiceFacade;
     private static PersonnelServiceFacade personnelServiceFacade;
+    private static RolesPermissionServiceFacade rolesPermissionServiceFacade;
 
     // services
     private static CollectionSheetService collectionSheetService;
@@ -249,6 +251,13 @@ public class DependencyInjectedServiceLocator {
             personnelServiceFacade = new PersonnelServiceFacadeWebTier(officeDao, customerDao, personnelDao);
         }
         return personnelServiceFacade;
+    }
+
+    public static RolesPermissionServiceFacade locateRolesPermissionServiceFacade() {
+        if (rolesPermissionServiceFacade == null) {
+            rolesPermissionServiceFacade = new RolesPermissionServiceFacadeWebTier();
+        }
+        return rolesPermissionServiceFacade;
     }
 
     public static HolidayServiceFacade locateHolidayServiceFacade() {

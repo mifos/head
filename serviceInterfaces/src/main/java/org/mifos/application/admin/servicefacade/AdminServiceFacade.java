@@ -65,6 +65,18 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_PRODUCT_MIX')")
     ProductDto retrieveAllProductMix();
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_EDIT_PRODUCT_MIX')")
+    List<ProductTypeDto> retrieveProductTypesApplicableToProductMix();
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_PRODUCT_MIX')")
+    List<PrdOfferingDto> retrieveAllowedProductsForMix(Integer productTypeId, Integer productId);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_PRODUCT_MIX')")
+    List<PrdOfferingDto> retrieveNotAllowedProductsForMix(Integer productTypeId, Integer productId);
+
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CAN_DEFINE_PRODUCT_MIX', 'ROLE_CAN_EDIT_PRODUCT_MIX')")
+    void createOrUpdateProductMix(Integer productId, List<Integer> notAllowedProductIds);
+
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
     ConfigureApplicationLabelsDto retrieveConfigurableLabels();
 
@@ -101,12 +113,4 @@ public interface AdminServiceFacade {
     void updateProductCategory(CreateOrUpdateProductCategory productCategory);
 
     List<PrdOfferingDto> retrieveLoanProductsNotMixed();
-
-    List<ProductTypeDto> retrieveProductTypesApplicableToProductMix();
-
-    List<PrdOfferingDto> retrieveAllowedProductsForMix(Integer productTypeId, Integer productId);
-
-    List<PrdOfferingDto> retrieveNotAllowedProductsForMix(Integer productTypeId, Integer productId);
-
-    void createOrUpdateProductMix(Integer productId, List<Integer> notAllowedProductIds);
 }

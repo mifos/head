@@ -20,24 +20,23 @@
 
 package org.mifos.application.admin.servicefacade;
 
+import java.util.List;
+
+import org.mifos.dto.screen.ListElement;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Locale;
+@SuppressWarnings("PMD")
+public interface RolesPermissionServiceFacade {
 
-public interface ShutdownServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
-    List<LoggedUserDto> getLoggedUsers(HttpServletRequest request);
+    List<ListElement> retrieveAllRoles();
 
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_OPEN_SHUTDOWN_PAGE')")
-    String getStatus(HttpServletRequest request, Locale locale);
+    @PreAuthorize("isFullyAuthenticated()")
+    void createRole(Short userId, String name, List<Short> ActivityIds) throws Exception;
 
-    boolean isShutdownInProgress(HttpServletRequest request);
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateRole(Short roleId, Short userId, String name, List<Short> ActivityIds) throws Exception;
 
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_SHUT_DOWN_MIFOS')")
-    void scheduleShutdown(HttpServletRequest request, long timeout);
-
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_SHUT_DOWN_MIFOS')")
-    void cancelShutdown(HttpServletRequest request);
+    @PreAuthorize("isFullyAuthenticated()")
+    void deleteRole(Integer versionNo, Short roleId) throws Exception;
 }
