@@ -29,10 +29,12 @@ import java.util.List;
 import java.util.Set;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 import junitx.framework.StringAssert;
 
 import org.dom4j.DocumentException;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
@@ -41,52 +43,36 @@ import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.security.util.UserContext;
-import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
-public class OfficeListTagTest extends TestCase {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/integration-test-context.xml",
+                                    "/org/mifos/config/resources/messageSourceBean.xml"})
+public class OfficeListTagTest {
 
     private XmlBuilder result;
-
     private UserContext userContext;
-
     private OfficeBO head;
-
     private OfficeBO regional;
-
     private OfficeBO branch;
-
     private OfficeBO branch2;
 
-    public OfficeListTagTest() {
-        super();
-        initialize();
-    }
-
-    public OfficeListTagTest(String name) {
-        super(name);
-        initialize();
-    }
-
-    private void initialize() {
-        SpringUtil.initializeSpring();
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         result = new XmlBuilder();
         userContext = TestUtils.makeUser();
     }
 
+    @Test
     public void testNoBranches() throws Exception {
         new OfficeListTag().getBranchOffices(result, null, userContext.getPreferredLocale(), null, "Branch");
         assertWellFormedFragment(result.toString());
     }
 
+    @Test
     public void testBranches() throws Exception {
         createSomeOffices();
         Assert.assertEquals(2, regional.getBranchOnlyChildren().size());
@@ -104,11 +90,13 @@ public class OfficeListTagTest extends TestCase {
         StringAssert.assertNotContains("TheGambia", html);
     }
 
+    @Test
     public void testNothingAboveBranches() throws Exception {
         new OfficeListTag().getAboveBranches(result, null, null, null, null);
        Assert.assertEquals("", result.toString());
     }
 
+    @Test
     public void testAboveBranches() throws Exception {
         List<OfficeBO> offices = new ArrayList<OfficeBO>();
         offices.add(makeOffice("Trinidad&Tobago", OfficeLevel.HEADOFFICE));
@@ -125,6 +113,7 @@ public class OfficeListTagTest extends TestCase {
         StringAssert.assertContains("Toronto&amp;Ottawa", html);
     }
 
+    @Test
     public void testAssertWellFormed() throws Exception {
         assertWellFormedFragment("<foo />");
         assertWellFormedFragment("x y z");
@@ -137,6 +126,7 @@ public class OfficeListTagTest extends TestCase {
         }
     }
 
+    @Test
     public void testGetLink() throws Exception {
         OfficeListTag tag = new OfficeListTag("action", "method", "flow");
         XmlBuilder link = tag.getLink((short) 234, "My Office");
@@ -146,6 +136,7 @@ public class OfficeListTagTest extends TestCase {
                 .getOutput());
     }
 
+    @Test
     public void testGetOfficeListOnlyBranchs() throws Exception {
         createSomeOffices();
         OfficeListTag tag = new OfficeListTag("action", "method", "flow");
@@ -162,6 +153,7 @@ public class OfficeListTagTest extends TestCase {
         StringAssert.assertNotContains("TheGambia", html);
     }
 
+    @Test
     public void testGetOfficeListAllOffices() throws Exception {
         createSomeOffices();
         OfficeListTag tag = new OfficeListTag("action", "method", "flow");
@@ -217,5 +209,4 @@ public class OfficeListTagTest extends TestCase {
         return OfficeBO.makeForTest(userContext, level, parent, "1.1", null, name, shortName, null,
                 OperationMode.LOCAL_SERVER, OfficeStatus.ACTIVE);
     }
-
 }
