@@ -42,11 +42,9 @@ public class EditProductCategoryController {
     public ModelAndView showPopulatedForm(@RequestParam(value = PREVIEW_PARAM, required = false) String preview,
             @RequestParam(value = CANCEL_PARAM, required = false) String cancel, ProductCategoryFormBean formBean,
             BindingResult result) {
-        System.out.println("in post");
         ModelAndView modelAndView = new ModelAndView();
         if (StringUtils.isNotBlank(preview)) {
             modelAndView.setViewName("categoryPreview");
-            System.out.println("in preview");
             modelAndView.addObject("formBean", formBean);
         } else if (StringUtils.isNotBlank(cancel)) {
             modelAndView.setViewName(REDIRECT_TO_ADMIN_SCREEN);
@@ -59,12 +57,10 @@ public class EditProductCategoryController {
     }
 
 
-
     @edu.umd.cs.findbugs.annotations.SuppressWarnings
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("formBean")
     public ProductCategoryFormBean showCategory(HttpServletRequest request) {
-        System.out.println("in get");
         ProductCategoryDetailsDto productCategoryDetailsDto=adminServiceFacade.retrieveProductCateogry(request.getParameter("globalPrdCategoryNum"));
         ProductCategoryFormBean productCategoryFormBean=new ProductCategoryFormBean();
         productCategoryFormBean.setGlobalPrdCategoryNum(request.getParameter("globalProductCategoryNumber"));
