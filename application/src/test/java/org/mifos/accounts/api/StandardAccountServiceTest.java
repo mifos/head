@@ -172,7 +172,7 @@ public class StandardAccountServiceTest {
             verify(standardAccountServiceSpy).makePaymentNoCommit(dto1);
             verify(standardAccountServiceSpy).makePaymentNoCommit(dto2);
         } finally {
-            StaticHibernateUtil.setHibernateUtil(new HibernateUtil());
+            StaticHibernateUtil.setHibernateUtil(HibernateUtil.getInstance());
         }
 
     }

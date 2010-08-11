@@ -88,14 +88,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     }
 
     public HibernateUtil getHibernateUtil() {
-        if (hibernateUtil == null) {
-            return new HibernateUtil();
-        }
-        return this.hibernateUtil;
-    }
-
-    public void setHibernateUtil(HibernateUtil hibernateUtil) {
-        this.hibernateUtil = hibernateUtil;
+        return HibernateUtil.getInstance();
     }
 
     public AccountPersistence getAccountPersistence() {

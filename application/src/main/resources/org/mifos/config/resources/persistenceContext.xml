@@ -27,17 +27,27 @@
         <property name="configLocations">
           <list>
               <value>classpath:org/mifos/platform/questionnaire/domain/questionnaire_hibernate.cfg.xml</value>
+              <value>classpath:org/mifos/framework/util/resources/hibernate.cfg.xml</value>
           </list>
         </property>
         <property name="hibernateProperties">
             <ref bean="dbSpecificHibernateProperties"/>
         </property>
+        <property name="namingStrategy">
+            <ref bean="namingStrategy"/>
+        </property>
     </bean>
+
+    <bean id="namingStrategy" class="org.hibernate.cfg.ImprovedNamingStrategy"/>
 
     <bean id="platformTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
         <property name="sessionFactory">
             <ref local="sessionFactory"/>
         </property>
+    </bean>
+
+    <bean id="hibernateUtil" class="org.mifos.framework.hibernate.helper.HibernateUtil">
+    <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <tx:advice id="txAdvice" transaction-manager="platformTransactionManager">
