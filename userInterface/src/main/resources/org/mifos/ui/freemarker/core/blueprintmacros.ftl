@@ -109,3 +109,16 @@
         [/#if]
     </select>
 [/#macro]
+
+[#macro showAllErrors path]
+    [@spring.bind path/]
+    [#if spring.status.errorMessages?size > 0]
+    <div class="marginLeft30">
+        <ul class="error">
+	     [#list spring.status.errorMessages as error]
+	      <li><b>${error}</b></li>
+	     [/#list]
+	    </ul>
+	</div>
+	[/#if]
+[/#macro]

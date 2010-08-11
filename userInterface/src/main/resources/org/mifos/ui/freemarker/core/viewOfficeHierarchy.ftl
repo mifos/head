@@ -4,7 +4,10 @@
 [@mifos.header "title" /]
 
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+  <div class="container">
+  <div class="sidebar">
   [#include "adminLeftPane.ftl" /]
+  </div>
    <div class="content leftMargin180">
 	[@mifos.crumbs breadcrumbs/]
 	
@@ -58,4 +61,5 @@
 	</div>
    	</form> 
   </div><!--Main Content Ends-->  
+  <div>
     [@mifos.footer/]

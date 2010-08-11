@@ -21,10 +21,8 @@
         <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired" /] </div>
         
         <form method="post" action="defineNewHoliday.ftl" name="formname">
-        <div id="allErrorsDiv" class="allErrorsDiv">
-        	[@spring.bind "formBean" /]
-  			[@spring.showErrors "<br />" /]
-        </div>
+       [@spring.bind "formBean" /]
+        [@mifos.showAllErrors "formBean.*"/]
         <p>&nbsp;&nbsp;</p>
                 <div class="prepend-3 span-22 last">
         	<span class="span-4 rightAlign"><span class="red"> * </span>[@spring.message "organizationPreferences.definenewholiday.holidayName" /]</span>

@@ -4,11 +4,11 @@
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Left Sidebar Begins-->
+  <div>
   <div class="sidebar ht600">
   [#include "adminLeftPane.ftl" ]
   </div> 
   <!--  Left Sidebar Ends-->
-  
   <!--  Main Content Begins-->  
    <div>
   <div class=" content leftMargin180">
@@ -104,6 +104,7 @@
         <li type="circle"><a id="admin.link.questiongroups" href="viewQuestionGroups.ftl">[@spring.message "admin.viewquestiongroups" /]</a> | <a id="admin.link.defineNewQuestionGroup" href="createQuestionGroup.ftl">[@spring.message "admin.definenewquestiongroup" /]</a></li>
       </ul>          
     </div>
+  </div>
   </div>
 </div><!--Main Content Ends "-->
 [@mifos.footer/]

@@ -3,63 +3,53 @@
 [#import "blueprintmacros.ftl" as mifos]
 
 [@mifos.header "title" /]
+<div class="container">&nbsp;
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-  [#include "adminLeftPane.ftl" ] 
-   <!--  Main Content Begins--> 
-	<div class=" content leftMargin180">
- 		<p class="bluedivs paddingLeft"><a href="admin.ftl">Admin</a>&nbsp;/&nbsp;<span class="fontBold">View Product Categories</span></p>
-    	[@mifos.crumb "viewProductCategories"/] 		
- 		<br/> 		
- 		<p class="font15 orangeheading">[@spring.message "viewproductcategories" /]</p>
- 		
-			<table width="95%" border="0" cellpadding="0" cellspacing="0">
-				<tr>
-					<td width="70%" align="left" valign="top" class="paddingL15T15">
-					<table width="96%" border="0" cellpadding="3" cellspacing="0">
-						<tr>
-							<td width="50%" height="23" class="headingorange"><c:out
-								value="${BusinessKey.productCategoryName}" /></td>
-							<td width="50%" align="right"> 		
- 								<p>[@spring.message "clickonacategorybelowtoviewdetailsandmakechangesor"/] <a href="productCategoryAction.do?method=manage">[@spring.message "definenewreportcategory"/]</a></p>
-							</td>
-						</tr>
-						<tr>
-							<td height="23" colspan="2" class="fontnormalbold"><span
-								class="fontnormal"> </span><span class="fontnormal"> 
-								[#switch detailsDto.productCategoryStatusId] 
-									[#case productCategoryStatusId = 1]
-									<span class="fontnormal"> <img
-										src="pages/framework/images/status_activegreen.gif" width="8"
-										height="9">&nbsp; Active </span>
-									[#break]
-									[#default]
-									<span class="fontnormal"> <img
-										src="pages/framework/images/status_closedblack.gif" width="8"
-										height="9">&nbsp;Active </span>
-							[/#switch] <br>
-							<span class="fontnormal"> Product Type <br>
-								[#list typeDto as type]
-									[#if type.productTypeID == detailsDto.productTypeId]
-										${type.productName} /></span><br>
-									[/#if]
-								[/#list] <span class="fontnormal"> </span><span
-								class="fontnormal"></span><span class="fontnormal"> </span><span
-								class="fontnormal"></span><br>
-
-								[#if detailsDto.productCategoryDesc != null && detailsDto.productCategoryDesc != ''] 
-								Product Description
-								<span class="fontnormal"><br>
-								</span>
-								<span class="fontnormal"> <c:out
-									value="${detailsDto.productCategoryDesc}" /> </span>
-								<span class="fontnormal"><br>
-								[/#if] </span><span class="fontnormal"> </span></td>
-						</tr>
-					</table>
-					<br>
-					</td>
-				</tr>
-			</table>    	
-
-  </div><!--Main Content Ends -->
+  <div class="sidebar htTotal">
+  [#include "adminLeftPane.ftl" ]
+  </div>
+  <div class=" content leftMargin180">
+   	<form method="" action="" name="formname">
+    <div class="span-22">
+  		[@mifos.crumbs breadcrumbs/]
+        <div class="clear">&nbsp;</div>
+    	<div class="span-24">
+        	<div class="span-19">
+            	<span class="orangeheading">${detailsDto.productCategoryName}</span><br /><br />
+                <span>
+                [#switch detailsDto.productCategoryStatusId]
+                	[#case 1]
+                		<span><img src="pages/framework/images/status_activegreen.gif" /></span>&nbsp;<span>Active</span>
+                	[#break]
+                	[#case 2]
+                		<span><img src="pages/framework/images/status_closedblack.gif" /></span>&nbsp;<span>Inactive</span>
+                	[#break]
+                [/#switch]
+                </span><br />
+                <span><span>[@spring.message "manageProducts.defineNewCategory.productType"/]</span>&nbsp;:
+                	  <span>
+                	  		[#list typeDto as type]
+                	  			[#if type.productTypeID == detailsDto.productTypeId]
+                	  				${type.productName}
+                	  			[/#if]
+                	  		[/#list]
+                	  </span>
+                </span><br />
+                <span class="span-4 rightAlign"><a href="editCategoryInformation.ftl?globalPrdCategoryNum=${globalPrdCategoryNum}">[@spring.message "manageProducts.editCategory.editcategoryinformation"/]</a></span>
+        	</div>        	
+        </div>        
+        <div class="clear">&nbsp;</div>
+        <p class="span-20 ">
+        [#if detailsDto.productCategoryDesc?exists && detailsDto.productCategoryDesc != "null" && detailsDto.productCategoryDesc!='']
+		${detailsDto.productCategoryDesc}
+		[/#if]
+		</span>
+		<span class="fontnormal"><br>		
+		<br />
+        </p>
+	</div>
+   	</form> 
+  </div><!--Main Content Ends-->
+  <div class="footer">&nbsp;</div>
+</div><!--Container Ends--> 
 [@mifos.footer/]

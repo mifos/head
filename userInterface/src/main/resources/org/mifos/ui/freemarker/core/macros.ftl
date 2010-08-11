@@ -89,11 +89,13 @@
 [#macro showAllErrors path]
     [@spring.bind path/]
     [#if spring.status.errorMessages?size > 0]
-        <ol>
+    <div class="marginLeft30">
+        <ul class="error">
 	     [#list spring.status.errorMessages as error]
-	      <li>${error}</li>
+	      <li><b>${error}</b></li>
 	     [/#list]
-	    </ol>
+	    </ul>
+	</div>
 	[/#if]
 [/#macro]
 

@@ -16,6 +16,15 @@
           <p class="font15"><span class="fontBold">[@spring.message "defineanewfund"/]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "review&Submit"/]</span></p>
           <div>[@spring.message "reviewtheinformationbelow.ClickSubmitifyouaresatisfiedorclickEdittomakechanges.ClickCanceltoreturntoAdminpagewithoutsubmittinginformation"/]</div>
           <p class="clear">&nbsp; </p>
+          [@spring.bind "formBean"/]
+          [@mifos.showAllErrors "formBean.*"/]
+          <div class="marginLeft30">
+          <ul class="error">
+          [#if error?exists]
+          <li><b>[@spring.message error?default("")/] </b></li>	          
+          [/#if]
+          </ul>
+          </div>
           <div class="fontBold">[@spring.message "funddetails"/] </div>
           <p class="span-22">
             [@spring.bind "formBean.id"/]

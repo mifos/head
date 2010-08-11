@@ -59,6 +59,7 @@ function selectAllOptions(outSel)
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Left Sidebar Begins-->
+  <div>
   <div class="sidebar ht750">
   [#include "adminLeftPane.ftl" ]
   </div> 
@@ -186,4 +187,5 @@ function selectAllOptions(outSel)
    	</form> 
   </div>
   <!--Main content ends-->
+  </div>
   [@mifos.footer /]

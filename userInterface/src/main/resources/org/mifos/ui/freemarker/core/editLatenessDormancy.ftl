@@ -12,7 +12,7 @@
   	<form method="post" name="latenessanddormancy" action="editLatenessDormancy.ftl">
 [@mifos.crumbs breadcrumbs /]	
   		[@spring.bind "formBean" /]
-  		[@spring.showErrors "<br>" /]
+  		  [@mifos.showAllErrors "formBean.*"/]   
   		<div class="marginLeft30">
 		<div class="span-24">
   		    <div class="clear">&nbsp;</div>
