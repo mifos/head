@@ -20,7 +20,7 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.joda.time.DateTime;
@@ -56,7 +56,7 @@ public class DefineLoanProductsController {
         loanProductFormBean.setShortName("1234");
         loanProductFormBean.setDescription("basic description of the product");
 
-        Map<String, String> categoryOptions = new HashMap<String, String>();
+        Map<String, String> categoryOptions = new LinkedHashMap<String, String>();
         categoryOptions.put("1", "Other");
 
         loanProductFormBean.setCategoryOptions(categoryOptions);
@@ -72,7 +72,7 @@ public class DefineLoanProductsController {
         loanProductFormBean.setEndDateMonth(aYearFromNow.getMonthOfYear());
         loanProductFormBean.setEndDateYear(""+aYearFromNow.getYearOfEra());
 
-        Map<String, String> applicableForOptions = new HashMap<String, String>();
+        Map<String, String> applicableForOptions = new LinkedHashMap<String, String>();
         applicableForOptions.put("1", "Clients");
         applicableForOptions.put("2", "Groups");
 
@@ -81,22 +81,22 @@ public class DefineLoanProductsController {
 
         loanProductFormBean.setIncludeInLoanCycleCounter(true);
 
-        Map<String, String> loanAmountCalculationTypeOptions = new HashMap<String, String>();
-        loanAmountCalculationTypeOptions.put("1", "Same for all loans");
-        loanAmountCalculationTypeOptions.put("2", "By last loan amount");
-        loanAmountCalculationTypeOptions.put("3", "By loan cycle");
+        Map<String, String> calculationTypeOptions = new LinkedHashMap<String, String>();
+        calculationTypeOptions.put("1", "Same for all loans");
+        calculationTypeOptions.put("2", "By last loan amount");
+        calculationTypeOptions.put("3", "By loan cycle");
 
-        loanProductFormBean.setLoanAmountCalculationTypeOptions(loanAmountCalculationTypeOptions);
+        loanProductFormBean.setLoanAmountCalculationTypeOptions(calculationTypeOptions);
         loanProductFormBean.setLoanAmountCalculationType("1");
 
         loanProductFormBean.setMinLoanAmount(Double.valueOf("25.5"));
         loanProductFormBean.setMaxLoanAmount(Double.valueOf("250.0"));
         loanProductFormBean.setDefaultLoanAmount(Double.valueOf("101.5"));
 
-        Map<String, String> interestRateCalculationTypeOptions = new HashMap<String, String>();
-        loanAmountCalculationTypeOptions.put("1", "Flat");
-        loanAmountCalculationTypeOptions.put("2", "Declining Balance");
-        loanAmountCalculationTypeOptions.put("3", "Declining Balance-Equal Principal Installment");
+        Map<String, String> interestRateCalculationTypeOptions = new LinkedHashMap<String, String>();
+        interestRateCalculationTypeOptions.put("1", "Flat");
+        interestRateCalculationTypeOptions.put("2", "Declining Balance");
+        interestRateCalculationTypeOptions.put("3", "Declining Balance-Equal Principal Installment");
 
         loanProductFormBean.setInterestRateCalculationTypeOptions(interestRateCalculationTypeOptions);
         loanProductFormBean.setSelectedInterestRateCalculationType("2");
@@ -104,6 +104,59 @@ public class DefineLoanProductsController {
         loanProductFormBean.setMinInterestRate(Double.valueOf("1.0"));
         loanProductFormBean.setMaxInterestRate(Double.valueOf("10.0"));
         loanProductFormBean.setDefaultInterestRate(Double.valueOf("5.0"));
+
+        Map<String, String> installmentFrequencyPeriodOptions = new LinkedHashMap<String, String>();
+        installmentFrequencyPeriodOptions.put("1", "Weekly");
+        installmentFrequencyPeriodOptions.put("2", "Monthly");
+        loanProductFormBean.setInstallmentFrequencyPeriodOptions(installmentFrequencyPeriodOptions);
+        loanProductFormBean.setInstallmentFrequencyPeriod("1");
+        loanProductFormBean.setInstallmentFrequencyRecurrenceEvery(2);
+
+        loanProductFormBean.setInstallmentsCalculationTypeOptions(calculationTypeOptions);
+        loanProductFormBean.setInstallmentsCalculationType("1");
+
+        loanProductFormBean.setMinInstallments(1);
+        loanProductFormBean.setMaxInstallments(12);
+        loanProductFormBean.setDefaultInstallments(12);
+
+
+        Map<String, String> gracePeriodTypeOptions = new LinkedHashMap<String, String>();
+        gracePeriodTypeOptions.put("1", "None");
+        gracePeriodTypeOptions.put("2", "Grace on all repayments");
+        gracePeriodTypeOptions.put("3", "Principal only grace");
+        loanProductFormBean.setGracePeriodTypeOptions(gracePeriodTypeOptions);
+
+        loanProductFormBean.setSelectedGracePeriodType("2");
+
+        loanProductFormBean.setGracePeriodDurationInInstallments(0);
+
+        Map<String, String> applicableFeeOptions = new LinkedHashMap<String, String>();
+        applicableFeeOptions.put("1", "fee1");
+        applicableFeeOptions.put("2", "fee2");
+        loanProductFormBean.setApplicableFeeOptions(applicableFeeOptions);
+
+        Map<String, String> selectedFeeOptions = new LinkedHashMap<String, String>();
+        selectedFeeOptions.put("3", "selectedfee");
+        loanProductFormBean.setSelectedFeeOptions(selectedFeeOptions);
+
+        Map<String, String> applicableFundOptions = new LinkedHashMap<String, String>();
+        applicableFundOptions.put("1", "fund1");
+        applicableFundOptions.put("2", "fund2");
+        loanProductFormBean.setApplicableFundOptions(applicableFundOptions);
+
+        Map<String, String> selectedFundOptions = new LinkedHashMap<String, String>();
+        selectedFundOptions.put("3", "selectedfund");
+        loanProductFormBean.setSelectedFundOptions(selectedFundOptions);
+
+        Map<String, String> interestGeneralLedgerOptions = new LinkedHashMap<String, String>();
+        interestGeneralLedgerOptions.put("5123", "5123");
+        loanProductFormBean.setInterestGeneralLedgerOptions(interestGeneralLedgerOptions);
+        loanProductFormBean.setSelectedInterest("5123");
+
+        Map<String, String> principalGeneralLedgerOptions = new LinkedHashMap<String, String>();
+        principalGeneralLedgerOptions.put("5199", "5199");
+        loanProductFormBean.setPrincipalGeneralLedgerOptions(principalGeneralLedgerOptions);
+        loanProductFormBean.setSelectedPrincipal("5199");
 
         return loanProductFormBean;
     }

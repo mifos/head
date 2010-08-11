@@ -73,10 +73,12 @@ public class LoanProductFormBean {
     private Double minInterestRate;
     private Double defaultInterestRate;
 
-    private Integer installmentFrequencyPeriod;
+    private Map<String, String> installmentFrequencyPeriodOptions;
+    private String installmentFrequencyPeriod;
     private Integer installmentFrequencyRecurrenceEvery;
 
-    private Integer installmentsCalculationType;
+    private String installmentsCalculationType;
+    private Map<String, String> installmentsCalculationTypeOptions;
 
     // same for all loans
     private Integer minInstallments;
@@ -89,12 +91,16 @@ public class LoanProductFormBean {
 
     private Map<String, String> applicableFeeOptions;
     private Map<String, String> selectedFeeOptions;
+    private String[] selectedFees;
 
     private Map<String, String> applicableFundOptions;
     private Map<String, String> selectedFundOptions;
+    private String[] selectedFunds;
 
     private Map<String, String> interestGeneralLedgerOptions;
+    private String selectedInterest;
     private Map<String, String> principalGeneralLedgerOptions;
+    private String selectedPrincipal;
 
     public String getName() {
         return this.name;
@@ -320,11 +326,11 @@ public class LoanProductFormBean {
         this.defaultInterestRate = defaultInterestRate;
     }
 
-    public Integer getInstallmentFrequencyPeriod() {
+    public String getInstallmentFrequencyPeriod() {
         return this.installmentFrequencyPeriod;
     }
 
-    public void setInstallmentFrequencyPeriod(Integer installmentFrequencyPeriod) {
+    public void setInstallmentFrequencyPeriod(String installmentFrequencyPeriod) {
         this.installmentFrequencyPeriod = installmentFrequencyPeriod;
     }
 
@@ -336,11 +342,11 @@ public class LoanProductFormBean {
         this.installmentFrequencyRecurrenceEvery = installmentFrequencyRecurrenceEvery;
     }
 
-    public Integer getInstallmentsCalculationType() {
+    public String getInstallmentsCalculationType() {
         return this.installmentsCalculationType;
     }
 
-    public void setInstallmentsCalculationType(Integer installmentsCalculationType) {
+    public void setInstallmentsCalculationType(String installmentsCalculationType) {
         this.installmentsCalculationType = installmentsCalculationType;
     }
 
@@ -478,5 +484,53 @@ public class LoanProductFormBean {
 
     public void setLoanAmountCalculationTypeOptions(Map<String, String> loanAmountCalculationTypeOptions) {
         this.loanAmountCalculationTypeOptions = loanAmountCalculationTypeOptions;
+    }
+
+    public Map<String, String> getInstallmentFrequencyPeriodOptions() {
+        return this.installmentFrequencyPeriodOptions;
+    }
+
+    public void setInstallmentFrequencyPeriodOptions(Map<String, String> installmentFrequencyPeriodOptions) {
+        this.installmentFrequencyPeriodOptions = installmentFrequencyPeriodOptions;
+    }
+
+    public Map<String, String> getInstallmentsCalculationTypeOptions() {
+        return this.installmentsCalculationTypeOptions;
+    }
+
+    public void setInstallmentsCalculationTypeOptions(Map<String, String> installmentsCalculationTypeOptions) {
+        this.installmentsCalculationTypeOptions = installmentsCalculationTypeOptions;
+    }
+
+    public String[] getSelectedFees() {
+        return this.selectedFees;
+    }
+
+    public void setSelectedFees(String[] selectedFees) {
+        this.selectedFees = selectedFees;
+    }
+
+    public String[] getSelectedFunds() {
+        return this.selectedFunds;
+    }
+
+    public void setSelectedFunds(String[] selectedFunds) {
+        this.selectedFunds = selectedFunds;
+    }
+
+    public String getSelectedInterest() {
+        return this.selectedInterest;
+    }
+
+    public void setSelectedInterest(String selectedInterest) {
+        this.selectedInterest = selectedInterest;
+    }
+
+    public String getSelectedPrincipal() {
+        return this.selectedPrincipal;
+    }
+
+    public void setSelectedPrincipal(String selectedPrincipal) {
+        this.selectedPrincipal = selectedPrincipal;
     }
 }
