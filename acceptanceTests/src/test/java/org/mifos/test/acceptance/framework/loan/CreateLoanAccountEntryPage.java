@@ -20,11 +20,12 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import com.thoughtworks.selenium.Selenium;
+import org.apache.commons.lang.StringUtils;
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
 import org.testng.Assert;
-
-import com.thoughtworks.selenium.Selenium;
 
 public class CreateLoanAccountEntryPage extends AbstractPage {
 
@@ -48,6 +49,35 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToLoanAccountConfirmationPage(CreateLoanAccountSubmitParameters formParameters) {
+        submitAndNavigateToLoanPreviewPage(formParameters);
+        return navigateToConfirmationPage();
+    }
+
+    public CreateLoanAccountConfirmationPage submitAndNavigateToLoanAccountConfirmationPage(CreateLoanAccountSubmitParameters formParameters,
+                                                                                            QuestionResponseParameters responseParameters) {
+        submitAndNavigateToLoanPreviewPage(formParameters);
+        populateQuestionResponsesIfNeeded(responseParameters, selenium.getAttribute("page.id@title"));
+        return navigateToConfirmationPage();
+    }
+
+    private void populateQuestionResponsesIfNeeded(QuestionResponseParameters responseParameters, String pageId) {
+        if (StringUtils.equalsIgnoreCase(pageId, "captureQuestionResponse")) {
+            QuestionResponsePage responsePage = new QuestionResponsePage(selenium);
+            responsePage.populateAnswers(responseParameters);
+            responsePage.navigateToNextPage();
+        }
+    }
+
+    private CreateLoanAccountConfirmationPage navigateToConfirmationPage() {
+        selenium.click("schedulePreview.button.preview");
+        waitForPageToLoad();
+        selenium.isVisible("createloanpreview.button.submitForApproval");
+        selenium.click("createloanpreview.button.submitForApproval");
+        waitForPageToLoad();
+        return new CreateLoanAccountConfirmationPage(selenium);
+    }
+
+    private void submitAndNavigateToLoanPreviewPage(CreateLoanAccountSubmitParameters formParameters) {
         selenium.type("loancreationdetails.input.sumLoanAmount",formParameters.getAmount());
         if (formParameters.isGracePeriodTypeNone()) {
             Assert.assertFalse(selenium.isEditable("loancreationdetails.input.gracePeriod"));
@@ -72,24 +102,12 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
         selenium.click("loancreationdetails.button.continue");
         waitForPageToLoad();
-        selenium.click("schedulePreview.button.preview");
-        waitForPageToLoad();
-        selenium.isVisible("createloanpreview.button.submitForApproval");
-        selenium.click("createloanpreview.button.submitForApproval");
-        waitForPageToLoad();
-        return new CreateLoanAccountConfirmationPage(selenium);
-
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {
         selenium.click("loancreationdetails.button.continue");
         waitForPageToLoad();
-        selenium.click("schedulePreview.button.preview");
-        waitForPageToLoad();
-        selenium.isVisible("createloanpreview.button.submitForApproval");
-        selenium.click("createloanpreview.button.submitForApproval");
-        waitForPageToLoad();
-        return new CreateLoanAccountConfirmationPage(selenium);
+        return navigateToConfirmationPage();
 
     }
 
@@ -142,12 +160,7 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
     public CreateLoanAccountConfirmationPage clickContinueAndNavigateToLoanAccountConfirmationPage() {
         selenium.click("loancreationdetails.button.continue");
         waitForPageToLoad();
-        selenium.click("schedulePreview.button.preview");
-        waitForPageToLoad();
-        selenium.isVisible("createloanpreview.button.submitForApproval");
-        selenium.click("createloanpreview.button.submitForApproval");
-        waitForPageToLoad();
-        return new CreateLoanAccountConfirmationPage(selenium);
+        return navigateToConfirmationPage();
 
     }
 

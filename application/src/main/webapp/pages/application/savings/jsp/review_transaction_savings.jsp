@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="review_transaction_savings" />
-    <script src="pages/framework/js/jquery/jquery-1.4.2.min.js"></script>
+    <script src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 	<script language="javascript">
 		function funCancel(form){
 			form.action="savingsDepositWithdrawalAction.do?method=cancel";

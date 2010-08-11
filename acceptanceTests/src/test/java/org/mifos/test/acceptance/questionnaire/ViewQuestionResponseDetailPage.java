@@ -22,7 +22,6 @@ package org.mifos.test.acceptance.questionnaire;
 
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 
 import static org.junit.Assert.assertTrue;
 
@@ -32,7 +31,7 @@ public class ViewQuestionResponseDetailPage extends MifosPage {
     }
 
     public void verifyPage() {
-        super.verifyPage("display_question_group_reponses");
+        super.verifyPage("display_question_group_responses");
     }
 
     public void verifyQuestionPresent(String question, String... answers) {
@@ -42,9 +41,8 @@ public class ViewQuestionResponseDetailPage extends MifosPage {
         }
     }
 
-    public GroupViewDetailsPage navigateToDetailsPage() {
+    public void navigateToDetailsPage() {
         selenium.click("_eventId_cancel");
         waitForPageToLoad();
-        return new GroupViewDetailsPage(selenium);
     }
 }

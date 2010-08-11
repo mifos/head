@@ -18,52 +18,29 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "newblueprintmacros.ftl" as mifos]
-[@mifos.header "title" /]
-[@mifos.topNavigationNoSecurity currentTab="Admin" /]
-
-<div class="colmask leftmenu">
-    <div class="colleft">
-        <div class="col1wrap">
-            <div class="col1">
-            <div class="main_content">
-                <span id="page.id" title="view_question_groups"/></span>
-
-                [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":""}/]
-                [@mifos.crumbpairs breadcrumb/]
-
-                <div class="content_panel">
-                    <h1>
-                        [@spring.message "questionnaire.view.question.groups"/]
-                    </h1>
-
-                    <p>
-                        [@spring.message "questionnaire.create.question.group.prompt"/]
-                        <a href="createQuestionGroup.ftl">[@spring.message
-                            "questionnaire.create.question.group.link"/]</a>
-                    </p>
-
-                    <div id="questionGroupList">
-                        <ul class="questions">
-                            [#list questionGroups as questionGroup]
-                            <li>
-                                <a href="viewQuestionGroupDetail.ftl?questionGroupId=${questionGroup.id}"
-                                   id="questionGroupId_${questionGroup.id}">${questionGroup.title}</a>
-                            </li>
-                            [/#list]
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-        <div class="col2">
-            <div class="side_bar">
-                [#include "newadminLeftPane.ftl" /]
-            </div>
+[#include "layout.ftl"]
+[@adminLeftPaneLayout]
+    <span id="page.id" title="view_question_groups"></span>
+    [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":""}/]
+    [@mifos.crumbpairs breadcrumb/]
+    <div class="content_panel">
+        <h1>
+            [@spring.message "questionnaire.view.question.groups"/]
+        </h1>
+        <p>
+            [@spring.message "questionnaire.create.question.group.prompt"/]
+            <a href="createQuestionGroup.ftl">[@spring.message
+                "questionnaire.create.question.group.link"/]</a>
+        </p>
+        <div id="questionGroupList">
+            <ul class="questions">
+                [#list questionGroups as questionGroup]
+                <li>
+                    <a href="viewQuestionGroupDetail.ftl?questionGroupId=${questionGroup.id}"
+                       id="questionGroupId_${questionGroup.id}">${questionGroup.title}</a>
+                </li>
+                [/#list]
+            </ul>
         </div>
     </div>
-</div>
-
-[@mifos.footer/]
+[/@adminLeftPaneLayout]
