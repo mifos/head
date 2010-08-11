@@ -47,10 +47,7 @@ public abstract class Persistence {
     private HibernateUtil hibernateUtil;
 
     public HibernateUtil getHibernateUtil() {
-        if (null == hibernateUtil) {
-            hibernateUtil = new HibernateUtil();
-        }
-        return hibernateUtil;
+        return HibernateUtil.getInstance();
     }
 
     /**

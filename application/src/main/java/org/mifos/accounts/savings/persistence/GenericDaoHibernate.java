@@ -116,10 +116,7 @@ public class GenericDaoHibernate implements GenericDao {
     }
 
     public final HibernateUtil getHibernateUtil() {
-        if (null == hibernateUtil) {
-            hibernateUtil = new HibernateUtil();
-        }
-        return hibernateUtil;
+        return HibernateUtil.getInstance();
     }
 
     @Override

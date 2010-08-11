@@ -20,47 +20,33 @@
 
 package org.mifos.framework.hibernate.helper;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.AnnotationConfiguration;
-import org.hibernate.cfg.ImprovedNamingStrategy;
-import org.mifos.core.ClasspathResource;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.ConnectionNotFoundException;
-import org.mifos.framework.exceptions.HibernateStartUpException;
-import org.mifos.framework.util.StandardTestingService;
-import org.mifos.framework.util.helpers.FilePaths;
+import org.springframework.beans.factory.FactoryBean;
 
-public class HibernateUtil {
+public class HibernateUtil implements FactoryBean<HibernateUtil>{
 
-    private static Boolean initialized = Boolean.FALSE;
     private static SessionFactory sessionFactory;
-    private static AnnotationConfiguration config = null;
     private static final ThreadLocal<AuditInterceptor> interceptorTL = new ThreadLocal<AuditInterceptor>();
     private static final ThreadLocal<Session> sessionTL = new ThreadLocal<Session>();
 
-    public HibernateUtil() {
-        initialize();
+    private static final HibernateUtil hibernateUtil = new HibernateUtil();
+    private HibernateUtil() {
     }
 
-    public void initialize() throws HibernateStartUpException {
-        synchronized (initialized) {
-            if (initialized == Boolean.FALSE) {
-                config = new AnnotationConfiguration();
-                initializeHibernateConfiguration();
-                initializeDatabaseConnnectionSettings();
-                sessionFactory = config.buildSessionFactory();
-                initialized = Boolean.TRUE;
-            }
-        }
+    public static HibernateUtil getInstance() {
+        return hibernateUtil;
     }
-
+    /**
+     * @param sessionFactory the sessionFactory to set
+     */
+    public static void setSessionFactory(SessionFactory sessionFactory) {
+        HibernateUtil.sessionFactory = sessionFactory;
+    }
 
     /**
      * Return the hibernate session factory
@@ -156,24 +142,18 @@ public class HibernateUtil {
         }
     }
 
-    private void initializeHibernateConfiguration() {
-        try {
-            config.configure(ClasspathResource.getURI(FilePaths.HIBERNATECFGFILE).toURL());
-        } catch (HibernateException e) {
-            throw new HibernateStartUpException(e);
-        } catch (MalformedURLException e) {
-            throw new HibernateStartUpException(e);
-        } catch (URISyntaxException e) {
-            throw new HibernateStartUpException(e);
-        }
+    @Override
+    public HibernateUtil getObject() throws Exception {
+        return hibernateUtil;
     }
 
-    private void initializeDatabaseConnnectionSettings() {
-        try {
-            config.setProperties(new StandardTestingService().getDatabaseConnectionSettings());
-            config.setNamingStrategy(new ImprovedNamingStrategy());
-        } catch (IOException e) {
-            throw new HibernateStartUpException(e);
-        }
+    @Override
+    public Class<?> getObjectType() {
+        return HibernateUtil.class;
+    }
+
+    @Override
+    public boolean isSingleton() {
+        return true;
     }
 }

@@ -12,5 +12,7 @@
     <import resource="mainPropertyConfigurer.xml" />
     <import resource="messageSourceBean.xml" />
     <import resource="financialRulesBean.xml" />
+    <import resource="persistenceContext.xml" />
+    <import resource="dataSourceContext.xml" />
 
 </beans>
