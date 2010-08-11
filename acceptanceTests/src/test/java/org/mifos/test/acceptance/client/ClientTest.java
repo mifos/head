@@ -20,15 +20,6 @@
 
 package org.mifos.test.acceptance.client;
 
-import static java.util.Arrays.asList;
-
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
 import org.junit.Assert;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
@@ -58,6 +49,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
+import static java.util.Arrays.asList;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
@@ -182,23 +182,25 @@ public class ClientTest extends UiTestCaseBase {
         String questionGroupTitle = "QG1" + random.nextInt(100);
         String question1 = "FT_" + random.nextInt(100);
         String question2 = "MS_" + random.nextInt(100);
-        String answer1 = "Hello World";
+        String answer = "Hello World";
 
         createQuestionGroupForViewClient(questionGroupTitle, question1, question2);
         ClientViewDetailsPage viewDetailsPage = getClientViewDetailsPage("Stu1232993852651", "Stu1232993852651 Client1232993852651: ID 0002-000000003");
-        testAttachSurvey(questionGroupTitle, question1, question2, answer1, viewDetailsPage);
-        Integer instanceId = verifyInstances(viewDetailsPage, questionGroupTitle, question1, answer1, 1);
-        editViewSurvey(question1, answer1 + 1, viewDetailsPage, instanceId);
-        verifyInstances(viewDetailsPage, questionGroupTitle, question1, answer1 + 1, 2);
-    }
+        viewDetailsPage = testAttachSurvey(questionGroupTitle, question1, question2, answer, viewDetailsPage);
 
-    private Integer verifyInstances(ClientViewDetailsPage viewDetailsPage, String questionGroupTitle, String question1, String expectedAnswer, int expectedSize) {
-        Map<Integer, QuestionGroup> questionGroupInstances = viewDetailsPage.getQuestionGroupInstances();
-        Integer latestInstanceId = latestInstanceId(questionGroupInstances);
-        QuestionGroup latestInstance = questionGroupInstances.get(latestInstanceId);
-        verifyQuestionGroupInstances(viewDetailsPage.getQuestionGroupInstances(), latestInstance, questionGroupTitle, expectedSize);
-        testViewSurvey(latestInstanceId, question1, expectedAnswer, viewDetailsPage);
-        return latestInstanceId;
+        Map<Integer, QuestionGroup> questionGroups = viewDetailsPage.getQuestionGroupInstances();
+        Integer latestInstanceId = latestInstanceId(questionGroups);
+        QuestionGroup latestInstance = questionGroups.get(latestInstanceId);
+        verifyLatestInstanceDetails(latestInstance, questionGroupTitle, 1, questionGroups);
+        viewDetailsPage = verifyLatestInstanceResponses(latestInstanceId, viewDetailsPage, question1, question2, answer);
+
+        viewDetailsPage = editViewSurvey(question1, answer + 1, viewDetailsPage, latestInstanceId);
+
+        questionGroups = viewDetailsPage.getQuestionGroupInstances();
+        latestInstanceId = latestInstanceId(questionGroups);
+        latestInstance = questionGroups.get(latestInstanceId);
+        verifyLatestInstanceDetails(latestInstance, questionGroupTitle, 2, questionGroups);
+        verifyLatestInstanceResponses(latestInstanceId, viewDetailsPage, question1, question2, answer + 1);
     }
 
     private ClientViewDetailsPage testAttachSurvey(String questionGroupTitle, String question1, String question2, String answer1, ClientViewDetailsPage viewDetailsPage) {
@@ -213,10 +215,25 @@ public class ClientTest extends UiTestCaseBase {
         return clientViewDetailsPage;
     }
 
-    private void testViewSurvey(int instanceId, String question1, String expectedAnswer, ClientViewDetailsPage viewDetailsPage) {
-        QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
+    @SuppressWarnings("PMD.AvoidReassigningParameters")
+    private ClientViewDetailsPage verifyLatestInstanceResponses(Integer latestInstanceId, ClientViewDetailsPage viewDetailsPage, String question1,
+                                                                String question2, String expectedAnswer) {
+        QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(latestInstanceId);
         questionGroupResponsePage.verifyPage();
-        Assert.assertTrue(expectedAnswer + " not found for question " + question1, questionGroupResponsePage.getAnswerHtml(question1).contains(expectedAnswer));
+        String msg = expectedAnswer + " not found for question " + question1 + ". Instead found " + questionGroupResponsePage.getAnswerHtml(question1);
+        Assert.assertTrue(msg, questionGroupResponsePage.getAnswerHtml(question1).contains(expectedAnswer));
+        Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice1, Choice3, Choice4"));
+        viewDetailsPage = questionGroupResponsePage.navigateToViewClientDetailsPage();
+        viewDetailsPage.verifyPage();
+        return viewDetailsPage;
+    }
+
+    private void verifyLatestInstanceDetails(QuestionGroup latestInstance, String questionGroupTitle, int expectedSize, Map<Integer, QuestionGroup> questionGroups) {
+        Assert.assertEquals(expectedSize, questionGroups.size());
+        Calendar calendar = Calendar.getInstance();
+        String expectedDate = String.format(EXPECTED_DATE_FORMAT, calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
+        Assert.assertEquals(questionGroupTitle, latestInstance.getName());
+        Assert.assertEquals(expectedDate, latestInstance.getDate());
     }
 
     private ClientViewDetailsPage editViewSurvey(String question1, String answer1, ClientViewDetailsPage viewDetailsPage, int instanceId) {
@@ -254,14 +271,6 @@ public class ClientTest extends UiTestCaseBase {
         ClientSearchResultsPage searchResultsPage = clientsPage.searchForClient(searchName);
         searchResultsPage.verifyPage();
         return searchResultsPage.navigateToSearchResult(clientName);
-    }
-
-    private void verifyQuestionGroupInstances(Map<Integer, QuestionGroup> questionGroups, QuestionGroup latestInstance, String questionGroupTitle, int expectedSize) {
-        Assert.assertEquals(expectedSize, questionGroups.size());
-        Calendar calendar = Calendar.getInstance();
-        String expectedDate = String.format(EXPECTED_DATE_FORMAT, calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
-        Assert.assertEquals(questionGroupTitle, latestInstance.getName());
-        Assert.assertEquals(expectedDate, latestInstance.getDate());
     }
 
     public Integer latestInstanceId(Map<Integer, QuestionGroup> questionGroups) {
