@@ -24,8 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.joda.time.DateTime;
-import org.mifos.application.admin.servicefacade.AdminServiceFacade;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,16 +35,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @SessionAttributes("loanProduct")
 public class DefineLoanProductsController {
 
-    @Autowired
-    private AdminServiceFacade adminServiceFacade;
-
     protected DefineLoanProductsController(){
         //for spring autowiring
     }
-    public DefineLoanProductsController(final AdminServiceFacade adminServicefacade){
-        this.adminServiceFacade = adminServicefacade;
-    }
 
+    @SuppressWarnings("PMD")
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("loanProduct")
     public LoanProductFormBean showPopulatedForm() {
@@ -65,12 +58,12 @@ public class DefineLoanProductsController {
         DateTime today = new DateTime();
         loanProductFormBean.setStartDateDay(today.getDayOfMonth());
         loanProductFormBean.setStartDateMonth(today.getMonthOfYear());
-        loanProductFormBean.setStartDateYear(""+today.getYearOfEra());
+        loanProductFormBean.setStartDateYear(Integer.valueOf(today.getYearOfEra()).toString());
 
         DateTime aYearFromNow = new DateTime();
         loanProductFormBean.setEndDateDay(aYearFromNow.getDayOfMonth());
         loanProductFormBean.setEndDateMonth(aYearFromNow.getMonthOfYear());
-        loanProductFormBean.setEndDateYear(""+aYearFromNow.getYearOfEra());
+        loanProductFormBean.setEndDateYear(Integer.valueOf(aYearFromNow.getYearOfEra()).toString());
 
         Map<String, String> applicableForOptions = new LinkedHashMap<String, String>();
         applicableForOptions.put("1", "Clients");
