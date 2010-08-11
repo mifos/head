@@ -4,16 +4,21 @@
 [#import "macros.ftl" as mifosmacros]
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+ <!--  Left Sidebar Begins-->
+  <div class="sidebar">
+  [#include "adminLeftPane.ftl" ]
+  </div> 
+  <!--  Left Sidebar Ends-->
   <div class="container">&nbsp;
   <!--  Main Content Begins-->
   <span id="page.id" title="createProductsMixConfirmation" />
   
-  <div class="content marginAuto">
-  	<p>You have successfully defined a new product mix</p>
+  <div class="content marginAuto leftMargin180">
+  	<p>[@spring.message "manageProductMix.youhavesuccessfullydefinedanewproductmix"/]</p>
   	
-  	<a href="productMixDetails.ftl?prdOfferingId=${productId}&productType=1">View product mix details now</a>
+  	<a href="productMixDetails.ftl?prdOfferingId=${productId}&productType=1">[@spring.message "manageProductMix.viewproductmixdetailsnow"/]</a>
 
-	<a href="defineProductMix.ftl">Define mix for a new product</a>
+	<a href="defineProductMix.ftl">[@spring.message "manageProductMix.definemixforanewproduct"/]</a>
    
   </div>
     

@@ -5,7 +5,7 @@
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Left Sidebar Begins-->
-  <div class="sidebar ht600">
+  <div class="sidebar htTotal">
   [#include "adminLeftPane.ftl" ]
   </div> 
   <!--  Left Sidebar Ends-->
@@ -20,10 +20,8 @@
         <div class="clear">&nbsp;</div>
     	<p class="font15"><span class="fontBold">[@spring.bind "formBean.name"/]<label name="${spring.status.expression}">${spring.status.value?default("")}</label>[@spring.showErrors "<br />"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "organizationPreferences.viewFunds.edit.editfundinformation"/]</span></p>
         <div>[@spring.message "organizationPreferences.viewFunds.edit.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoViewfundspagewithoutsubmittinginformation."/]</div>
-        <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired"/] </div>
-        <div class="allErrorsDiv">
-	        [@mifosMacros.showAllErrors "formBean.*"/]
-    	</div>
+        <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired"/] </div>        
+	        [@mifos.showAllErrors "formBean.*"/]    	
         <p>&nbsp;</p>
         <p class="fontBold">[@spring.message "organizationPreferences.viewFunds.edit.funddetails"/]</p>
         <p>&nbsp;</p>

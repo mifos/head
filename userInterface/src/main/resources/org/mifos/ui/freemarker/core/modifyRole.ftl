@@ -22,12 +22,13 @@ function chkBox(){
 </head>
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Left Sidebar Begins-->
-  <div class="sidebar ht5000">
+    <div class="container htTotal">
+  <div class="sidebar ht5050">
   [#include "adminLeftPane.ftl" ]
-  </div> 
-  <!--  Left Sidebar Ends-->
+  <div>
+   <!--  Left Sidebar Ends-->
    <!--  Main Content Begins-->  
-  <div class=" content leftMargin180">
+<div class=" content leftMargin180">
   	<form method="" action="" name="formname">
     <div class="span-24 marginLeft30">
   		<div class="span-22 bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<a href="manageRolesAndPermissions.ftl">[@spring.message "systemusers.managerolesandpermissions.rolesandpermissions"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "admin"/]</span></div>
@@ -811,4 +812,5 @@ function chkBox(){
 	</div>
    	</form> 
   </div><!--Main Content Ends-->
+  </div>
   [@mifos.footer/]

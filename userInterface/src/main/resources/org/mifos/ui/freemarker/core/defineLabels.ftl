@@ -28,7 +28,7 @@
   		
 		<p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.officeHierarchy"/] </p>
         
-        <div class="span-16 last">
+        <div class="span-16 last marginLeft12em">
         	<div class="span-16">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.headoffice"/]</span>
     				<span class="span-3">
@@ -71,7 +71,7 @@
         </div>
         
         <p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.clients"/]</p>
-        <div class="span-16 last">
+        <div class="span-16 last marginLeft12em">
         	<div class="span-16">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.client"/]</span>
     				<span class="span-3">
@@ -99,7 +99,7 @@
         
         <p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.productTypes"/]</p>
         
-        <div class="span-16 last">
+        <div class="span-16 last marginLeft12em">
         
         	<div class="span-16">
    					<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.loans"/]</span>     			
@@ -120,7 +120,7 @@
         
         <p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.personalInformation"/] </p>
         
-        <div class="span-16 last">
+        <div class="span-16 last marginLeft12em">
             <div class="span-16">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.state"/]</span>
     				<span class="span-3">
@@ -171,7 +171,7 @@
         </div>
         
         <p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.address"/]</p>
-        <div class="span-16 last">
+        <div class="span-16 last marginLeft12em">
         	<div class="span-16">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.address1"/]</span>
     				<span class="span-3">
@@ -199,7 +199,7 @@
         </div>
         
         <p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.statuses"/]</p>
-        <div class="span-16 last">
+        <div class="span-16 last marginLeft12em">
         
         	<div class="span-16">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.partialApplication"/]</span>
@@ -307,7 +307,7 @@
         </div>
         
         <p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.gracetypes"/]</p>
-        <div class="span-16 last">
+        <div class="span-16 last marginLeft12em">
         	<div class="span-16">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.none"/]</span>
     				<span class="span-3">
@@ -334,7 +334,7 @@
         </div>
         
         <p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.miscellaneous"/] </p>
-        <div class="span-16 last">
+        <div class="span-16 last marginLeft12em">
         	<div class="span-16">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.interest"/]</span>
     				<span class="span-3">

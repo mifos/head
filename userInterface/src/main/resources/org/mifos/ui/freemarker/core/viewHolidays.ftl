@@ -4,7 +4,7 @@
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Left Sidebar Begins-->
-  <div class="sidebar ht650">
+  <div class="sidebar htTotal">
   [#include "adminLeftPane.ftl" ]
   </div> 
   <!--  Left Sidebar Ends-->
@@ -23,7 +23,7 @@
       [#list holidaysMap?keys as key]
       	<p class="fontBold">Holidays for year ${key}</p>
       	<div class="span-22"> 
-        	<div class="bluedivs span-22 fontBold paddingLeft">
+        	<div class="bluedivs span-20 fontBold paddingLeft">
         		<span class="span-3">[@spring.message "organizationPreferences.definenewholiday.fromDat"/]</span>
             	<span class="span-3">[@spring.message "organizationPreferences.definenewholiday.toDate"/]</span>
             	<span class="span-5">[@spring.message "organizationPreferences.definenewholiday.holidayName"/]</span>
@@ -31,7 +31,7 @@
             	<span class="span-5">[@spring.message "organizationPreferences.definenewholiday.appliesto"/]</span>
         	</div>
       		[#list holidaysMap[key] as officeHoliday]
-	        	<div class="span-22 borderbtm paddingLeft ">
+	        	<div class="span-20 borderbtm paddingLeft ">
 	        		<span class="span-3">${officeHoliday.holidayDetails.fromDate}</span>
 	            	<span class="span-3">${officeHoliday.holidayDetails.thruDate}</span>
 	            	<span class="span-5">${officeHoliday.holidayDetails.name}</span>

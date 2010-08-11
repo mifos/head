@@ -3,7 +3,9 @@
 [#import "blueprintmacros.ftl" as mifos]
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+  <div class="sidebar htTotal">
   [#include "adminLeftPane.ftl" /]
+  </div>
   <!--  Main Content Begins-->  
   <div class=" content leftMargin180">
   	<span id="page.id" title="viewProductsMix" />

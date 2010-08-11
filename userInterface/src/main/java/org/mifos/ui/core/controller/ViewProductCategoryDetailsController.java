@@ -54,6 +54,7 @@ public class ViewProductCategoryDetailsController {
         modelAndView.addObject("typeDto", typeDto);
         modelAndView.addObject("detailsDto", detailsDto);
         modelAndView.addObject("breadcrumbs", new AdminBreadcrumbBuilder().withLink("viewProductCategoryDetails", "viewProductCategoryDetails.ftl").build());
+        modelAndView.addObject("globalPrdCategoryNum",request.getParameter("globalPrdCategoryNum"));
 
         return modelAndView;
     }

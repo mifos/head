@@ -5,7 +5,8 @@
 
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-  [#include "adminLeftPane.ftl" ]
+  <div class="container">  
+  [#include "adminLeftPane.ftl" ]  
    <span id="page.id" title="SysInfo" />
    <div class=" content leftMargin180">
   	<form method="" action="" name="formname">
@@ -37,6 +38,7 @@
         </div>
 	</div>
    	</form> 
+  </div>
   </div>
   [@mifos.footer/]
 

@@ -16,11 +16,7 @@
           <p class="font15"><span class="fontBold">[@spring.message "organizationPreferences.definenewfund.defineanewfund"/]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "organizationPreferences.definenewfund.enterfundinformation"/]</span></p>
           <div>[@spring.message "organizationPreferences.definenewfund.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminpagewithoutsubmittinginformation"/]</div>
           <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired"/] </div>
-          
-          <div class="allErrorsDiv">
-	        [@mifosMacros.showAllErrors "formBean.*"/]
-          </div>
-          
+          [@mifos.showAllErrors "formBean.*"/]
           <p class="fontBold">[@spring.message "organizationPreferences.definenewfund.funddetails"/] </p>
           <div class="prepend-3  span-21 last">
           	<div class="span-20 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "organizationPreferences.definenewfund.name"/]</span><span class="span-5">&nbsp;

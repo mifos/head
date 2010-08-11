@@ -6,7 +6,7 @@
 	  <div class="left-pane-content">
    	  </div>
 </div>--]
- <div  class="sidebar ht600">
+ <div  class="sidebar ht550">
   <div>
   <form name="custSearchActionForm" method="post" action="custSearchAction.do?method=loadAllBranches">
     <p class="orangetab">[@spring.message "admin.administrativeTasks" /]</p>
