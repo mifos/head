@@ -120,11 +120,11 @@ public class CustomPropertiesUpdateController extends AbstractController {
     private void handleCalendarRules(HttpServletRequest request, HttpServletResponse response,
             List<String> errorMessages, Map<String, Object> model) {
         String workingDays = request.getParameter("FiscalCalendarRules.WorkingDays");
-        String scheduleTypeForMeetingOnHoliday = request.getParameter("FiscalCalendarRules.ScheduleTypeForMeetingOnHoliday");
-        if (StringUtils.isNotBlank(workingDays) || StringUtils.isNotBlank(scheduleTypeForMeetingOnHoliday)) {
+        String ScheduleMeetingIfNonWorkingDay = request.getParameter("FiscalCalendarRules.ScheduleMeetingIfNonWorkingDay");
+        if (StringUtils.isNotBlank(workingDays) || StringUtils.isNotBlank(ScheduleMeetingIfNonWorkingDay)) {
             try {
-                testingService.setFiscalCalendarRules(workingDays, scheduleTypeForMeetingOnHoliday);
-                model.put("fiscalCalendarRulesResult", "workingDays: " + workingDays + " scheduleTypeForMeetingOnHoliday: " + scheduleTypeForMeetingOnHoliday);
+                testingService.setFiscalCalendarRules(workingDays, ScheduleMeetingIfNonWorkingDay);
+                model.put("fiscalCalendarRulesResult", "workingDays: " + workingDays + " ScheduleMeetingIfNonWorkingDay: " + ScheduleMeetingIfNonWorkingDay);
             } catch (MifosException e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 errorMessages.add("Something was wrong with your Fiscal Calendar Rules parameters: " + new LogUtils().getStackTrace(e) );

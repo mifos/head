@@ -30,7 +30,7 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 public class FiscalCalendarRules {
 
     public static final String FiscalCalendarRulesWorkingDays = "FiscalCalendarRules.WorkingDays";
-    public static final String FiscalCalendarRulesScheduleTypeForMeetingOnHoliday = "FiscalCalendarRules.ScheduleTypeForMeetingOnHoliday";
+    public static final String FiscalCalendarRulesScheduleTypeForMeetingOnHoliday = "FiscalCalendarRules.ScheduleMeetingIfNonWorkingDay";
     public static final String FiscalCalendarRulesDaysForCalendarDefinition = "FiscalCalendarRules.DaysForCalendarDefinition";
     private String[] configWorkingDays = getConfiguredWorkingDays();
 
@@ -89,7 +89,7 @@ public class FiscalCalendarRules {
         if (configWorkingDays == null) {
             throw new RuntimeException("The working days are not defined in the config file.");
         }
-        List<Short> offDays = new ArrayList<Short>(); // returned off days
+        List<Short> offDays = new ArrayList<Short>(); // returned Non-working days
         WeekDay[] weekDays = WeekDay.values();
         for (int i = 0; i < weekDays.length; i++) {
             if (!isWorkingDay(weekDays[i])) {
@@ -171,8 +171,8 @@ public class FiscalCalendarRules {
         return (String) ConfigurationManager.getInstance().getProperty(FiscalCalendarRulesWorkingDays);
     }
 
-    public void setScheduleTypeForMeetingOnHoliday(final String scheduleTypeForMeetingOnHoliday) {
-        ConfigurationManager.getInstance().setProperty(FiscalCalendarRulesScheduleTypeForMeetingOnHoliday, scheduleTypeForMeetingOnHoliday);
+    public void setScheduleTypeForMeetingOnHoliday(final String ScheduleMeetingIfNonWorkingDay) {
+        ConfigurationManager.getInstance().setProperty(FiscalCalendarRulesScheduleTypeForMeetingOnHoliday, ScheduleMeetingIfNonWorkingDay);
     }
 
     public List<Days> getWorkingDaysAsJodaTimeDays() {
