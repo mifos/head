@@ -43,6 +43,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.*;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 
@@ -99,6 +100,8 @@ public abstract class CustomerActionForm extends BaseActionForm {
     private List<CustomerPositionDto> customerPositions;
 
     private List<QuestionGroupDto> questionGroupDtos;
+
+    protected List<QuestionGroupDetail> questionGroups;
 
     public CustomerActionForm() {
         address = new Address();

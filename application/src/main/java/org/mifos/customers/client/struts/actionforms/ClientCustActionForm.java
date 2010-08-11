@@ -27,6 +27,7 @@ import org.apache.struts.upload.FormFile;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -70,14 +71,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
-public class ClientCustActionForm extends CustomerActionForm {
+public class ClientCustActionForm extends CustomerActionForm implements QuestionResponseCapturer {
 
     private MeetingBO parentCustomerMeeting;
 
@@ -1159,14 +1159,13 @@ public class ClientCustActionForm extends CustomerActionForm {
     }
 
 
-    public List<QuestionGroupDetail> getQuestionGroupDetails() {
-        List<QuestionGroupDetail> questionGroupDetails = new LinkedList<QuestionGroupDetail>();
-        List<QuestionGroupDto> groupDtos = getQuestionGroupDtos();
-        if (groupDtos != null) {
-            for (QuestionGroupDto questionGroupDto : groupDtos) {
-                questionGroupDetails.add(questionGroupDto.getQuestionGroupDetail());
-            }
-        }
-        return questionGroupDetails;
+    @Override
+    public void setQuestionGroups(List<QuestionGroupDetail> questionGroups) {
+        this.questionGroups = questionGroups;
+    }
+
+    @Override
+    public List<QuestionGroupDetail> getQuestionGroups() {
+        return this.questionGroups;
     }
 }

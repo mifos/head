@@ -36,12 +36,14 @@ import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataP
 import org.mifos.test.acceptance.framework.client.QuestionGroup;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.questionnaire.Choice;
 import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
 import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupParameters;
 import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
 import org.mifos.test.acceptance.questionnaire.CreateQuestionParameters;
 import org.mifos.test.acceptance.questionnaire.QuestionGroupResponsePage;
 import org.mifos.test.acceptance.questionnaire.QuestionnairePage;
+import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -52,6 +54,7 @@ import org.testng.annotations.Test;
 
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -76,6 +79,8 @@ public class ClientTest extends UiTestCaseBase {
     private static final String FREE_TEXT = "Free Text";
     public static final String MULTI_SELECT = "Multi Select";
     public static final String EXPECTED_DATE_FORMAT = "%02d/%02d/%04d";
+    public static final String NUMBER = "Number";
+    public static final String SMART_SELECT = "Smart Select";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -144,7 +149,7 @@ public class ClientTest extends UiTestCaseBase {
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
         ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientsAndAccountsPage.createClient("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227", "11", "12", "1987");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientsAndAccountsPage.createClient("MyOffice1233171674227", "11", "12", "1987");
         CreateClientEnterMfiDataPage nextPage = clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
         nextPage.verifyPage("CreateClientMfiInfo");
     }
@@ -157,7 +162,7 @@ public class ClientTest extends UiTestCaseBase {
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
         ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientsAndAccountsPage.createClient("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227", "11", "12", "1940");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientsAndAccountsPage.createClient("MyOffice1233171674227", "11", "12", "1940");
         CreateClientEnterPersonalDataPage nextPage = clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
     }
@@ -170,7 +175,7 @@ public class ClientTest extends UiTestCaseBase {
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
         ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientsAndAccountsPage.createClient("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227", "11", "12", "1995");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientsAndAccountsPage.createClient("MyOffice1233171674227", "11", "12", "1995");
         CreateClientEnterPersonalDataPage nextPage = clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
     }
@@ -203,16 +208,26 @@ public class ClientTest extends UiTestCaseBase {
         verifyLatestInstanceResponses(latestInstanceId, viewDetailsPage, question1, question2, answer + 1);
     }
 
-    private ClientViewDetailsPage testAttachSurvey(String questionGroupTitle, String question1, String question2, String answer1, ClientViewDetailsPage viewDetailsPage) {
-        QuestionnairePage questionnairePage = viewDetailsPage.getQuestionnairePage(questionGroupTitle);
-        verifyCancel(questionnairePage);
-        questionnairePage = checkMandatoryQuestionValidation(questionGroupTitle, question1, question2, viewDetailsPage);
-        questionnairePage.setResponse(question1, answer1);
-        MifosPage mifosPage = questionnairePage.submit();
-        Assert.assertTrue(mifosPage instanceof ClientViewDetailsPage);
-        ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) mifosPage;
-        clientViewDetailsPage.verifyPage();
-        return clientViewDetailsPage;
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createClientWithQuestionGroups() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+
+        String questionGroupTitle = "QG1" + random.nextInt(100);
+        String question1 = "NU_" + random.nextInt(100);
+        String question2 = "SS_" + random.nextInt(100);
+        String answer = "30";
+        List<Choice> choices = asList(new Choice("Choice1", asList("Tag1", "Tag2")), new Choice("Choice2", asList("Tag3", "Tag4")));
+
+        createQuestionGroupForCreateClient(questionGroupTitle, question1, question2, choices);
+        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
+
+        ClientViewDetailsPage clientDetailsPage = clientsAndAccountsPage.createClientWithQuestionGroups("Joe1233171679953 Guy1233171679953",
+                                                "MyOffice1233171674227", getChoiceTags(), answer);
+        ViewQuestionResponseDetailPage responseDetailPage = clientDetailsPage.navigateToViewAdditionalInformationPage();
+        responseDetailPage.verifyQuestionPresent(question1, answer);
+        responseDetailPage.verifyQuestionPresent(question2, "Choice1", "Choice2");
+        responseDetailPage.navigateToDetailsPage();
+        clientDetailsPage.verifyPage();
     }
 
     @SuppressWarnings("PMD.AvoidReassigningParameters")
@@ -226,6 +241,25 @@ public class ClientTest extends UiTestCaseBase {
         viewDetailsPage = questionGroupResponsePage.navigateToViewClientDetailsPage();
         viewDetailsPage.verifyPage();
         return viewDetailsPage;
+    }
+
+    private Map<String, String> getChoiceTags() {
+        Map<String,String> tags = new HashMap<String, String>();
+        tags.put("Tag1", "Choice1");
+        tags.put("Tag3", "Choice2");
+        return tags;
+    }
+
+    private ClientViewDetailsPage testAttachSurvey(String questionGroupTitle, String question1, String question2, String answer1, ClientViewDetailsPage viewDetailsPage) {
+        QuestionnairePage questionnairePage = viewDetailsPage.getQuestionnairePage(questionGroupTitle);
+        verifyCancel(questionnairePage);
+        questionnairePage = checkMandatoryQuestionValidation(questionGroupTitle, question1, question2, viewDetailsPage);
+        questionnairePage.setResponse(question1, answer1);
+        MifosPage mifosPage = questionnairePage.submit();
+        Assert.assertTrue(mifosPage instanceof ClientViewDetailsPage);
+        ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) mifosPage;
+        clientViewDetailsPage.verifyPage();
+        return clientViewDetailsPage;
     }
 
     private void verifyLatestInstanceDetails(QuestionGroup latestInstance, String questionGroupTitle, int expectedSize, Map<Integer, QuestionGroup> questionGroups) {
@@ -278,6 +312,20 @@ public class ClientTest extends UiTestCaseBase {
         return Collections.max(keys);
     }
 
+    private void createQuestionGroupForCreateClient(String qgTitle, String q1, String q2, List<Choice> choiceTags) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        CreateQuestionPage cqPage = adminPage.navigateToCreateQuestionPage().verifyPage();
+        cqPage.addQuestion(getCreateQuestionParams(q1, NUMBER, 10, 100, null));
+        cqPage.addQuestion(getCreateQuestionParams(q2, SMART_SELECT, null, null, choiceTags));
+        adminPage = cqPage.submitQuestions();
+
+        CreateQuestionGroupPage cqGroupPage = adminPage.navigateToCreateQuestionGroupPage().verifyPage();
+        CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(qgTitle, asList(q1, q2), "Create Client");
+        cqGroupPage.addSection(parameters);
+        cqGroupPage.markEveryOtherQuestionsMandatory(asList(q1));
+        cqGroupPage.submit(parameters);
+    }
+
     private void createQuestionGroupForViewClient(String questionGroupTitle, String question1, String question2) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage().verifyPage();
@@ -286,19 +334,19 @@ public class ClientTest extends UiTestCaseBase {
         adminPage = createQuestionPage.submitQuestions();
 
         CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage().verifyPage();
-        CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(questionGroupTitle, question1, question2);
+        CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question1, question2), "View Client");
         createQuestionGroupPage.addSection(parameters);
         createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
         createQuestionGroupPage.submit(parameters);
     }
 
-    private CreateQuestionGroupParameters getCreateQuestionGroupParameters(String questionGroupTitle, String question1, String question2) {
+    private CreateQuestionGroupParameters getCreateQuestionGroupParameters(String questionGroupTitle, List<String> questions, String appliesTo) {
         CreateQuestionGroupParameters parameters = new CreateQuestionGroupParameters();
         parameters.setTitle(questionGroupTitle);
-        parameters.setAppliesTo("View Client");
+        parameters.setAppliesTo(appliesTo);
         parameters.setAnswerEditable(true);
         parameters.setSectionName("Default Section");
-        parameters.setQuestions(asList(question1, question2));
+        parameters.setQuestions(questions);
         return parameters;
     }
 
@@ -307,6 +355,16 @@ public class ClientTest extends UiTestCaseBase {
         parameters.setTitle(title);
         parameters.setType(type);
         parameters.setChoicesFromStrings(choices);
+        return parameters;
+    }
+
+    private CreateQuestionParameters getCreateQuestionParams(String title, String type, Integer numericMin, Integer numericMax, List<Choice> choices) {
+        CreateQuestionParameters parameters = new CreateQuestionParameters();
+        parameters.setTitle(title);
+        parameters.setType(type);
+        parameters.setChoices(choices);
+        parameters.setNumericMin(numericMin);
+        parameters.setNumericMax(numericMax);
         return parameters;
     }
 

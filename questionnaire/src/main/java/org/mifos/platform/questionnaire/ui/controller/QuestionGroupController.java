@@ -172,15 +172,15 @@ public class QuestionGroupController extends QuestionnaireController {
         String code, message;
         Integer allowedMinValue = exception.getAllowedMinValue();
         Integer allowedMaxValue = exception.getAllowedMaxValue();
-        if (allowedMinValue != null && allowedMaxValue != null) {
+        if (exception.areMinMaxBoundsPresent()) {
             code = "questionnaire.invalid.numeric.range.response";
             message = format("Please specify a number between {0} and {1} for {2}", allowedMinValue, allowedMaxValue, title);
             constructErrorMessage(code, message, requestContext.getMessageContext(), allowedMinValue, allowedMaxValue, title);
-        } else if (allowedMinValue != null) {
+        } else if (exception.isMinBoundPresent()) {
             code = "questionnaire.invalid.numeric.min.response";
             message = format("Please specify a number greater than {0} for {1}", allowedMinValue, title);
             constructErrorMessage(code, message, requestContext.getMessageContext(), allowedMinValue, title);
-        } else if (allowedMaxValue != null) {
+        } else if (exception.isMaxBoundPresent()) {
             code = "questionnaire.invalid.numeric.max.response";
             message = format("Please specify a number lesser than {0} for {1}", allowedMaxValue, title);
             constructErrorMessage(code, message, requestContext.getMessageContext(), allowedMaxValue, title);

@@ -200,4 +200,8 @@ public interface ClientConstants {
     String EVENT_CREATE = "Create";
     String SOURCE_CLIENT = "Client";
     String ERROR_REQUIRED = "errors.required";
+    String INVALID_NUMERIC_RANGE_RESPONSE = "questionnaire.invalid.numeric.range.response";
+    String INVALID_NUMERIC_MIN_RESPONSE = "questionnaire.invalid.numeric.min.response";
+    String INVALID_NUMERIC_MAX_RESPONSE = "questionnaire.invalid.numeric.max.response";
+    String INVALID_NUMERIC_RESPONSE = "questionnaire.invalid.numeric.response";
 }

@@ -1,10 +1,6 @@
 package org.mifos.application.questionnaire.struts;
 
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -21,6 +17,9 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.util.CollectionUtils;
 import org.mifos.security.util.UserContext;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 public class QuestionnaireFlowAdapter {
@@ -73,16 +72,35 @@ public class QuestionnaireFlowAdapter {
             if (e.containsChildExceptions()) {
                 for (ValidationException ve : e.getChildExceptions()) {
                    if (ve instanceof MandatoryAnswerNotFoundException) {
-                       errors.add(ClientConstants.ERROR_REQUIRED,new ActionMessage(ClientConstants.ERROR_REQUIRED, ve.getQuestionTitle()));
+                       errors.add(ClientConstants.ERROR_REQUIRED, new ActionMessage(ClientConstants.ERROR_REQUIRED, ve.getQuestionTitle()));
                    }
                    else if (ve instanceof BadNumericResponseException) {
-                       errors.add(ClientConstants.ERROR_REQUIRED,new ActionMessage(ClientConstants.ERROR_REQUIRED, ve.getQuestionTitle()));
+                       populateNumericError((BadNumericResponseException) ve, errors);
                    }
                 }
             }
         }
         setQuestionnaireAttributesToRequest(request, form);
         return errors;
+    }
+
+    private void populateNumericError(BadNumericResponseException exception, ActionErrors actionErrors) {
+        String title = exception.getQuestionTitle();
+        Integer allowedMinValue = exception.getAllowedMinValue();
+        Integer allowedMaxValue = exception.getAllowedMaxValue();
+        if (exception.areMinMaxBoundsPresent()) {
+            ActionMessage actionMessage = new ActionMessage(ClientConstants.INVALID_NUMERIC_RANGE_RESPONSE, allowedMinValue, allowedMaxValue, title);
+            actionErrors.add(ClientConstants.INVALID_NUMERIC_RANGE_RESPONSE, actionMessage);
+        } else if (exception.isMinBoundPresent()) {
+            ActionMessage actionMessage = new ActionMessage(ClientConstants.INVALID_NUMERIC_MIN_RESPONSE, allowedMinValue, title);
+            actionErrors.add(ClientConstants.INVALID_NUMERIC_MIN_RESPONSE, actionMessage);
+        } else if (exception.isMaxBoundPresent()) {
+            ActionMessage actionMessage = new ActionMessage(ClientConstants.INVALID_NUMERIC_MAX_RESPONSE, allowedMaxValue, title);
+            actionErrors.add(ClientConstants.INVALID_NUMERIC_MAX_RESPONSE, actionMessage);
+        } else {
+            ActionMessage actionMessage = new ActionMessage(ClientConstants.INVALID_NUMERIC_RESPONSE, title);
+            actionErrors.add(ClientConstants.INVALID_NUMERIC_RESPONSE, actionMessage);
+        }
     }
 
     public void saveResponses(HttpServletRequest request, QuestionResponseCapturer form, int associateWithId) {

@@ -41,4 +41,16 @@ public class BadNumericResponseException extends ValidationException {
     public Integer getAllowedMaxValue() {
         return allowedMaxValue;
     }
+
+    public boolean areMinMaxBoundsPresent() {
+        return getAllowedMinValue() != null && getAllowedMaxValue() != null;
+    }
+
+    public boolean isMinBoundPresent() {
+        return getAllowedMinValue() != null;
+    }
+
+    public boolean isMaxBoundPresent() {
+        return getAllowedMaxValue() != null;
+    }
 }

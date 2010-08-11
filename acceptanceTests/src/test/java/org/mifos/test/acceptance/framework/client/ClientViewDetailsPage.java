@@ -28,6 +28,7 @@ import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
 import org.mifos.test.acceptance.questionnaire.QuestionGroupResponsePage;
 import org.mifos.test.acceptance.questionnaire.QuestionnairePage;
+import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
 import org.testng.Assert;
 
 import java.util.LinkedHashMap;
@@ -182,6 +183,12 @@ public class ClientViewDetailsPage extends MifosPage {
         QuestionnairePage questionnairePage = attachSurveyPage.selectSurvey(questionGroupTitle);
         questionnairePage.verifyPage();
         return questionnairePage;
+    }
+
+    public ViewQuestionResponseDetailPage navigateToViewAdditionalInformationPage() {
+        selenium.click("viewClientDetails.link.questionGroups");
+        waitForPageToLoad();
+        return new ViewQuestionResponseDetailPage(selenium);
     }
 }
 
