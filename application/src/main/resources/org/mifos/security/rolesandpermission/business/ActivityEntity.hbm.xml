@@ -33,5 +33,8 @@
 	<query name="activityEntity.getActivityEntityByLookUpValueEntity">
             <![CDATA[ from ActivityEntity ae where ae.activityNameLookupValues=:aLookUpValueEntity]]>
     </query>
+    <query name="getActivityById">
+		<![CDATA[from ActivityEntity ae where ae.id = :ACTIVITY_ID]]>
+    </query>    
 </hibernate-mapping>
 
