@@ -44,7 +44,10 @@
     		[/#if]
     	[/#list]
     	</div>
+    	<!-- productMix change log not working in earlier versions of mifos - keithw. -->
+    	<!--
         <div class="span-22"><a href="productMixAction.do?method=loadChangeLog&entityType=ProductMix&entityId=${mixDetails.prdOfferingId}">[@spring.message "viewChangeLog"/]</a></div>
+        -->
     </div>
    	</form> 
   </div><!--Main Content Ends-->

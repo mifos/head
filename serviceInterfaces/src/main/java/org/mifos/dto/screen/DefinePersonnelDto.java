@@ -20,22 +20,29 @@
 
 package org.mifos.dto.screen;
 
+import org.mifos.dto.domain.CustomFieldDto;
+
 import java.io.Serializable;
 import java.util.List;
-
-import org.mifos.dto.domain.CustomFieldDto;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
 public class DefinePersonnelDto implements Serializable {
 
     private final String officeName;
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private final List<ListElement> titleList;
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private final List<ListElement> personnelLevelList;
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private final List<ListElement> genderList;
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private final List<ListElement> maritalStatusList;
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private final List<ListElement> languageList;
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private final List<ListElement> rolesList;
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private final List<CustomFieldDto> customFields;
 
     public DefinePersonnelDto(String officeName, List<ListElement> titleList,

@@ -31,7 +31,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.dto.screen.ListElement;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
@@ -52,6 +55,7 @@ import org.mifos.security.util.UserContext;
 
 public class RolesPermissionsAction extends BaseAction {
 
+    private final RolesPermissionServiceFacade rolesPermissionServiceFacade = DependencyInjectedServiceLocator.locateRolesPermissionServiceFacade();
     @Override
     protected BusinessService getService() throws ServiceException {
         return ServiceFactory.getInstance().getBusinessService(BusinessServiceName.RolesPermissions);
@@ -74,7 +78,7 @@ public class RolesPermissionsAction extends BaseAction {
     public ActionForward viewRoles(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         doCleanUp((RolesPermissionsActionForm) form);
-        List<RoleBO> roles = ((RolesPermissionsBusinessService) getService()).getRoles();
+        List<ListElement> roles = rolesPermissionServiceFacade.retrieveAllRoles();
         SessionUtils.setCollectionAttribute(RolesAndPermissionConstants.ROLES, roles, request);
         return mapping.findForward(ActionForwards.viewRoles_success.toString());
     }
@@ -97,10 +101,8 @@ public class RolesPermissionsAction extends BaseAction {
         List<ActivityEntity> activities = (List<ActivityEntity>) SessionUtils.getAttribute(
                 RolesAndPermissionConstants.ACTIVITYLIST, request);
         RolesPermissionsActionForm rolesPermissionsActionForm = (RolesPermissionsActionForm) form;
-        RoleBO roleBO = new RoleBO(userContext, rolesPermissionsActionForm.getName(), getActivities(activities,
-                rolesPermissionsActionForm.getActivities()));
-        roleBO.save();
-        AuthorizationManager.getInstance().addRole(roleBO);
+        rolesPermissionServiceFacade.createRole(userContext.getId(), rolesPermissionsActionForm.getName(),
+                getActivityIds(getActivities(activities,rolesPermissionsActionForm.getActivities())));
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 
@@ -123,12 +125,10 @@ public class RolesPermissionsAction extends BaseAction {
         RolesPermissionsActionForm rolesPermissionsActionForm = (RolesPermissionsActionForm) form;
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
                 .getSession());
-        RoleBO roleBO = (RoleBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         List<ActivityEntity> activities = (List<ActivityEntity>) SessionUtils.getAttribute(
                 RolesAndPermissionConstants.ACTIVITYLIST, request);
-        roleBO.update(userContext.getId(), rolesPermissionsActionForm.getName(), getActivities(activities,
-                rolesPermissionsActionForm.getActivities()));
-        AuthorizationManager.getInstance().updateRole(roleBO);
+        rolesPermissionServiceFacade.updateRole(Short.parseShort(rolesPermissionsActionForm.getId()), userContext.getId(),
+                rolesPermissionsActionForm.getName(), getActivityIds(getActivities(activities, rolesPermissionsActionForm.getActivities())));
         return mapping.findForward(ActionForwards.update_success.toString());
     }
 
@@ -145,10 +145,7 @@ public class RolesPermissionsAction extends BaseAction {
     public ActionForward delete(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         RoleBO role = (RoleBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        RoleBO roleBO = ((RolesPermissionsBusinessService) getService()).getRole(role.getId());
-        roleBO.setVersionNo(role.getVersionNo());
-        roleBO.delete();
-        AuthorizationManager.getInstance().deleteRole(roleBO);
+        rolesPermissionServiceFacade.deleteRole(role.getVersionNo(), role.getId());
         role = null;
         return mapping.findForward(ActionForwards.delete_success.toString());
     }
@@ -186,6 +183,14 @@ public class RolesPermissionsAction extends BaseAction {
             }
         }
         return newActivityList;
+    }
+
+    private List<Short> getActivityIds(List<ActivityEntity> activityList) {
+        List<Short> activityIds = new ArrayList<Short>();
+        for (ActivityEntity activityEntity : activityList) {
+            activityIds.add(activityEntity.getId());
+        }
+        return activityIds;
     }
 
     private void doCleanUp(RolesPermissionsActionForm form) {

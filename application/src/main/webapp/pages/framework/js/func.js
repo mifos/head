@@ -9,7 +9,7 @@ function FnCheckNumberOnPress(event) {
 function FnCheckNumberOnPressValue(evt,min,max) {
 	var keyCodePress = (window.event)?event.keyCode:evt.which;
 	if(keyCodePress< min || keyCodePress> max) {
-		if(keyCodePress==8 || keyCodePress==0) {
+		if(keyCodePress==8 || keyCodePress==0 || keyCodePress==45) {
 			return true;
 		}
 		else {
@@ -28,7 +28,7 @@ function  FnCheckNumber(event,min,max,objTextField) {
 }
 function FnCheckNumberEnglish(event,min,max,value) {
 	if(value!=null && value!="") {
-		var pattern=new RegExp("^[0-9]{1,}$");
+		var pattern=new RegExp("^[-]?[0-9]{1,}$");
 		if(true==pattern.test(value.toString())) {
 			return fnCheckRange(event,min,max,value);
 		}

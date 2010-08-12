@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.client;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
 
 public class CreateClientEnterPersonalDataPage extends MifosPage {
 
@@ -209,6 +210,12 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
         selenium.click("create_ClientPersonalInfo.button.continue");
         waitForPageToLoad();
         return new CreateClientEnterMfiDataPage(selenium);
+    }
+
+    public QuestionResponsePage submitAndGotoCaptureQuestionResponsePage() {
+        selenium.click("create_ClientPersonalInfo.button.continue");
+        waitForPageToLoad();
+        return new QuestionResponsePage(selenium);
     }
 
     public CreateClientEnterFamilyDetailsPage submitAndGotoCreateClientEnterFamilyDetailsPage() {

@@ -39,10 +39,10 @@ public class QuestionResponsePage extends MifosPage {
         super.verifyPage("captureQuestionResponse");
     }
 
-    public void verifyNumericBoundsValidation(String questionInputId, String answer, String questionTitle) {
+    public void verifyNumericBoundsValidation(String questionInputId, String answer, int minimum, int maximum, String questionTitle) {
         populateTextAnswer(questionInputId, answer);
         navigateToNextPage();
-        assertTrue(selenium.isTextPresent("Please specify " + questionTitle));
+        assertTrue(selenium.isTextPresent("Please specify a number between " + minimum + " and " + maximum + " for " + questionTitle));
     }
 
     public void populateSmartSelect(String smartSelectId, Map<String, String> tags) {

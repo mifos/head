@@ -621,3 +621,12 @@ select {
 	height: 25px;
 
 }
+
+.viewQuestionResponseDiv {
+    padding : 0pt;
+}
+
+.viewQuestionResponseDiv ul {
+   list-style-type : none;
+   padding : 0pt;
+}

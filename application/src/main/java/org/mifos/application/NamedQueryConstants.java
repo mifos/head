@@ -301,6 +301,7 @@ public interface NamedQueryConstants {
 
     String GET_ROLE_FOR_GIVEN_NAME = "getRoleForGivenName";
     String GET_ALL_ACTIVITIES = "getAllActivities";
+    String GET_ACTIVITY_BY_ID = "getActivityById";
     String GET_ALL_ROLES = "getAllRoles";
     String GET_PERSONNEL_ROLE_COUNT = "getPersonnelRoleCount";
 

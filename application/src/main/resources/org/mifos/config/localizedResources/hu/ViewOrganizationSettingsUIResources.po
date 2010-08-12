@@ -84,7 +84,7 @@ msgid "Group pending approval state enabled"
 msgstr "Jóváhagyásra váró csoport státusz engedélyezése"
 
 #: VOS.holidayMeeting
-msgid "Meeting in case of a holiday"
+msgid "Meeting in case of non-working day"
 msgstr "Találkozó munkaszüneti nap esetén"
 
 #: VOS.intDigitsAfterDecimal
@@ -188,7 +188,7 @@ msgid "Name sequence"
 msgstr "Név sorrend"
 
 #: VOS.offDays
-msgid "Off days"
+msgid "Non-working days"
 msgstr "Munkaszüneti napok"
 
 #: VOS.optionalstate

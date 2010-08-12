@@ -154,6 +154,7 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         // manage products ->
         authoritiesMap.put(SecurityConstants.UPDATE_LATENESS_DORMANCY, new GrantedAuthorityImpl(MifosUser.UPDATE_LATENESS_DORMANCY));
         authoritiesMap.put(SecurityConstants.CAN_DEFINE_PRODUCT_MIX, new GrantedAuthorityImpl(MifosUser.ROLE_CAN_DEFINE_PRODUCT_MIX));
+        authoritiesMap.put(SecurityConstants.CAN_EDIT_PRODUCT_MIX, new GrantedAuthorityImpl(MifosUser.ROLE_CAN_EDIT_PRODUCT_MIX));
 
         // Manage Organisation -> Data display and rules
         authoritiesMap.put(SecurityConstants.FUNDS_EDIT_FUNDS, new GrantedAuthorityImpl(MifosUser.CAN_EDIT_FUNDS));
@@ -164,6 +165,10 @@ public class PersonnelDaoHibernate implements PersonnelDao {
 
         // System Information
         authoritiesMap.put(SecurityConstants.CAN_VIEW_SYSTEM_INFO, new GrantedAuthorityImpl(MifosUser.VIEW_SYSTEM_INFO));
+
+        // Shutdown
+        authoritiesMap.put(SecurityConstants.CAN_OPEN_SHUTDOWN_PAGE, new GrantedAuthorityImpl(MifosUser.CAN_OPEN_SHUTDOWN_PAGE));
+        authoritiesMap.put(SecurityConstants.CAN_SHUT_DOWN_MIFOS, new GrantedAuthorityImpl(MifosUser.CAN_SHUT_DOWN_MIFOS));
 
         return authoritiesMap;
     }

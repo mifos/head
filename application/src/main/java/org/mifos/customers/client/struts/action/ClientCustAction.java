@@ -20,11 +20,15 @@
 
 package org.mifos.customers.client.struts.action;
 
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.questionnaire.struts.QuestionnaireAction;
+import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.servicefacade.ClientDetailDto;
 import org.mifos.application.servicefacade.ClientFamilyDetailsDto;
 import org.mifos.application.servicefacade.ClientFamilyInfoDto;
@@ -48,10 +52,7 @@ import org.mifos.customers.client.business.service.ClientInformationDto;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.group.util.helpers.GroupConstants;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.struts.action.CustAction;
-import org.mifos.customers.struts.actionforms.QuestionGroupDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
@@ -62,11 +63,8 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
-import org.mifos.platform.util.CollectionUtils;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
@@ -74,24 +72,29 @@ import org.mifos.service.MifosServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mifos.customers.client.util.helpers.ClientConstants.EVENT_CREATE;
-import static org.mifos.customers.client.util.helpers.ClientConstants.SOURCE_CLIENT;
-import static org.mifos.framework.struts.tags.MifosTagUtils.xmlEscape;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
-public class ClientCustAction extends CustAction {
+public class ClientCustAction extends CustAction implements QuestionnaireAction {
+
+    private final QuestionnaireFlowAdapter createClientQuestionnaire =
+        new QuestionnaireFlowAdapter("Create","Client",
+                ActionForwards.next_success,
+                "clientCustAction.do?method=cancel",
+                new QuestionnaireServiceFacadeLocator() {
+                    @Override
+                    public QuestionnaireServiceFacade getService(HttpServletRequest request) {
+                        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
+                    }
+                });
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("clientCustAction");
@@ -130,6 +133,8 @@ public class ClientCustAction extends CustAction {
         security.allow("deleteFamilyRow", SecurityConstants.VIEW);
         security.allow("updateFamilyInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
         security.allow("editPreviewEditFamilyInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
         return security;
     }
 
@@ -206,21 +211,7 @@ public class ClientCustAction extends CustAction {
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
         }
-        List<QuestionGroupDto> questionGroups = getQuestionGroups(MifosServiceFactory.getQuestionnaireServiceFacade(request));
-        actionForm.setQuestionGroupDtos(questionGroups);
-        SessionUtils.setCollectionAttribute(CustomerConstants.QUESTION_GROUPS_LIST, questionGroups, request);
         return mapping.findForward(ActionForwards.load_success.toString());
-    }
-
-    // intentionally made 'public' to aid testing !!!
-    public List<QuestionGroupDto> getQuestionGroups(QuestionnaireServiceFacade questionnaireServiceFacade) throws ApplicationException {
-        if (questionnaireServiceFacade == null) return null;
-        List<QuestionGroupDto> questionGroupDtos = new ArrayList<QuestionGroupDto>();
-        List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getQuestionGroups(EVENT_CREATE, SOURCE_CLIENT);
-        for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
-            questionGroupDtos.add(new QuestionGroupDto(questionGroupDetail));
-        }
-        return questionGroupDtos;
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -241,7 +232,7 @@ public class ClientCustAction extends CustAction {
             return mapping.findForward(ActionForwards.next_success_family.toString());
         }
 
-        return mapping.findForward(ActionForwards.next_success.toString());
+        return createClientQuestionnaire.fetchAppliedQuestions(mapping, actionForm, request, ActionForwards.next_success);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -251,7 +242,7 @@ public class ClientCustAction extends CustAction {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         actionForm.setFamilyDateOfBirth();
         actionForm.constructFamilyDetails();
-        return mapping.findForward(ActionForwards.next_success.toString());
+        return createClientQuestionnaire.fetchAppliedQuestions(mapping, actionForm, request, ActionForwards.next_success);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -476,20 +467,8 @@ public class ClientCustAction extends CustAction {
         actionForm.setCustomerId(clientDetails.getId().toString());
         actionForm.setGlobalCustNum(clientDetails.getGlobalCustNum());
         actionForm.setEditFamily("notEdit");
-        saveQuestionResponses(request, actionForm.getQuestionGroupDetails(), userContext.getId(), clientDetails.getId());
+        createClientQuestionnaire.saveResponses(request, actionForm, clientDetails.getId());
         return mapping.findForward(ActionForwards.create_success.toString());
-    }
-
-    private void saveQuestionResponses(HttpServletRequest request, List<QuestionGroupDetail> questionGroupDetails, short userId, int clientId) {
-        if (!CollectionUtils.isEmpty(questionGroupDetails)) {
-            PersonnelPersistence personnelPersistence = new PersonnelPersistence();
-            PersonnelBO currentUser = personnelPersistence.findPersonnelById(userId);
-            QuestionnaireServiceFacade questionnaireServiceFacade = MifosServiceFactory.getQuestionnaireServiceFacade(request);
-            if (questionnaireServiceFacade != null) {
-                questionnaireServiceFacade.saveResponses(
-                        new QuestionGroupDetails(currentUser.getPersonnelId(), clientId, questionGroupDetails));
-            }
-        }
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -867,4 +846,20 @@ public class ClientCustAction extends CustAction {
         return FieldConfig.getInstance().isFieldManadatory("Client." + HiddenMandatoryFieldNamesConstants.FAMILY_DETAILS);
     }
 
+    @Override
+    public ActionForward captureQuestionResponses(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "captureQuestionResponses");
+        ActionErrors errors = createClientQuestionnaire.validateResponses(request, (ClientCustActionForm) form);
+        if (errors != null && !errors.isEmpty()) {
+            addErrors(request, errors);
+            return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
+        }
+        return createClientQuestionnaire.rejoinFlow(mapping);
+    }
+
+    @Override
+    public ActionForward editQuestionResponses(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "editQuestionResponses");
+        return createClientQuestionnaire.editResponses(mapping, request, (ClientCustActionForm) form);
+    }
 }

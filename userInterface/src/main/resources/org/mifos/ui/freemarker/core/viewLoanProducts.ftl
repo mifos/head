@@ -12,17 +12,17 @@
   [@mifos.crumbs breadcrumbs/]
   <p>&nbsp;&nbsp;</p>
   	<form method="POST" action="viewLoanproducts.ftl" name="viewLoanproducts">
-  <p class="marginLeft30 font15 orangeheading">[@spring.message "admin.viewLoanProducts"/]</p>
-    <p class="marginLeft30">[@spring.message "manageLoanProducts.viewLoanProducts.clickonaLoanproductbelowtoviewdetailsandmakechangesor"/] <a href="#">[@spring.message "admin.definenewLoanproduct"/] </a></p>
-    <div class="marginTop15">
-    <div class="span-22 marginLeft30"> 
-    	<ul>
-    	[#list formBean as loans]
-    	<li><a href="loanproductaction.do?method=get&prdOfferingId=${loans.prdOfferingId}">${loans.prdOfferingName}</a></li>
-    	[/#list]        	 
-        </ul>	
-    </div> 
+    	<p class="marginLeft30 font15 orangeheading">[@spring.message "admin.viewLoanProducts"/]</p>
+    	<p class="marginLeft30">[@spring.message "manageLoanProducts.viewLoanProducts.clickonaLoanproductbelowtoviewdetailsandmakechangesor"/] <a href="defineLoanProducts.ftl">[@spring.message "admin.definenewLoanproduct"/]</a></p>
+    	<div class="marginTop15">
+    	<div class="span-22 marginLeft30"> 
+    		<ul>
+    		[#list formBean as loans]
+    		<li><a href="loanproductaction.do?method=get&prdOfferingId=${loans.prdOfferingId}">${loans.prdOfferingName}</a></li>
+    		[/#list]
+        	</ul>	
+    	</div> 
     </div>
-       	</form> 
+    </form> 
   </div><!--Main Content Ends-->
 [@mifos.footer/]

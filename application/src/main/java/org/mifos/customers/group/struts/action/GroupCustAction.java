@@ -409,7 +409,6 @@ public class GroupCustAction extends CustAction {
         String method = (String) request.getAttribute("methodCalled");
 
         return mapping.findForward(method + "_failure");
-
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -422,8 +421,7 @@ public class GroupCustAction extends CustAction {
             addErrors(request, errors);
             return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
         }
-        ActionForward join = createGroupQuestionnaire.rejoinFlow(mapping);
-        return join;
+        return createGroupQuestionnaire.rejoinFlow(mapping);
     }
 
     @TransactionDemarcate(joinToken = true)

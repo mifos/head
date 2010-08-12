@@ -36,7 +36,6 @@ import org.mifos.accounts.loan.struts.action.ReverseLoanDisbursalAction;
 import org.mifos.accounts.productdefinition.struts.action.LoanPrdAction;
 import org.mifos.accounts.productdefinition.struts.action.PrdCategoryAction;
 import org.mifos.accounts.productdefinition.struts.action.SavingsPrdAction;
-import org.mifos.accounts.productsmix.struts.action.ProductMixAction;
 import org.mifos.accounts.savings.struts.action.SavingsAction;
 import org.mifos.accounts.savings.struts.action.SavingsApplyAdjustmentAction;
 import org.mifos.accounts.savings.struts.action.SavingsClosureAction;
@@ -51,7 +50,6 @@ import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.admin.struts.action.AdminAction;
-import org.mifos.application.admin.struts.action.ShutdownAction;
 import org.mifos.application.collectionsheet.struts.action.CollectionSheetEntryAction;
 import org.mifos.application.holiday.struts.action.HolidayAction;
 import org.mifos.application.importexport.struts.action.ImportTransactionsAction;
@@ -234,7 +232,6 @@ public class ActivityMapper {
         parseActionSecurity(SurveysAction.getSecurity());
         parseActionSecurity(QuestionsAction.getSecurity());
         parseActionSecurity(AddGroupMembershipAction.getSecurity());
-        parseActionSecurity(ProductMixAction.getSecurity());
         parseActionSecurity(SurveyInstanceAction.getSecurity());
         parseActionSecurity(BirtReportsUploadAction.getSecurity());
         parseActionSecurity(LookupOptionsAction.getSecurity());
@@ -243,7 +240,6 @@ public class ActivityMapper {
         parseActionSecurity(ReportsCategoryAction.getSecurity());
         parseActionSecurity(BirtAdminDocumentUploadAction.getSecurity());
         parseActionSecurity(ImportTransactionsAction.getSecurity());
-        parseActionSecurity(ShutdownAction.getSecurity());
     }
 
     private void addCustomerSearchMappings() {

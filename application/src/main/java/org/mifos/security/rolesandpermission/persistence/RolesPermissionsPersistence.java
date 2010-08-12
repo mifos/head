@@ -51,6 +51,16 @@ public class RolesPermissionsPersistence extends Persistence {
         }
     }
 
+    public ActivityEntity getActivityById(Short id) throws PersistenceException {
+        try {
+            Map<String, Object> queryParameters = new HashMap<String, Object>();
+            queryParameters.put("ACTIVITY_ID", id);
+            return (ActivityEntity)execUniqueResultNamedQuery(NamedQueryConstants.GET_ACTIVITY_BY_ID, queryParameters);
+        } catch (Exception e) {
+            throw new PersistenceException(e);
+        }
+    }
+
     public List<ActivityEntity> getActivities(Session session) {
         Query query = session.getNamedQuery(NamedQueryConstants.GET_ALL_ACTIVITIES);
         return query.list();

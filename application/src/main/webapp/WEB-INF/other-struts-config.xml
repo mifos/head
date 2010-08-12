@@ -21,7 +21,6 @@
         <form-bean name="meetingActionForm" type="org.mifos.application.meeting.struts.actionforms.MeetingActionForm"/>
         <!-- admin action form -->
         <form-bean name="adminActionForm" type="org.mifos.application.admin.struts.actionforms.AdminActionForm"/>
-        <form-bean name="shutdownActionForm" type="org.mifos.application.admin.struts.actionforms.ShutdownActionForm"/>
         <!-- Notes form bean -->
         <form-bean name="feeactionform" type="org.mifos.accounts.fees.struts.actionforms.FeeActionForm"/>
         <!-- ChkListActionForm Action Form  -->
@@ -42,10 +41,6 @@
 
         <form-bean name="genericActionForm" type="org.mifos.framework.struts.actionforms.GenericActionForm"/>
 
-        <!-- Products mix -->
-        <form-bean name="productMixActionForm"
-                   type="org.mifos.accounts.productsmix.struts.actionforms.ProductMixActionForm"/>
-        <!-- End Products mix -->
         <!--  Accepted Payment Type Form -->
         <form-bean name="acceptedpaymenttypeactionform"
                    type="org.mifos.accounts.acceptedpaymenttype.struts.actionform.AcceptedPaymentTypeActionForm"/>
@@ -57,39 +52,7 @@
     </form-beans>
 
     <action-mappings>
-        <!-- Products mix -->
-        <action path="/productMixAction"
-                type="org.mifos.accounts.productsmix.struts.action.ProductMixAction"
-                name="productMixActionForm"
-                parameter="method"
-                scope="session"
-                input="/productMixAction.do?method=validate"
-                validate="true"
-                >
-            <forward name="load_success" path="/pages/application/productsmix/jsp/createProductsMix.jsp"/>
-            <forward name="loadParents_success" path="/pages/application/productsmix/jsp/createProductsMix.jsp"/>
-            <forward name="preview_success" path="/pages/application/productsmix/jsp/previewProductsMix.jsp"/>
-            <forward name="previous_success" path="/pages/application/productsmix/jsp/createProductsMix.jsp"/>
-            <forward name="previous_failure" path="/pages/application/productsmix/jsp/createProductsMix.jsp"/>
-            <forward name="preview_failure" path="/pages/application/productsmix/jsp/createProductsMix.jsp"/>
-            <forward name="create_success" path="/pages/application/productsmix/jsp/createProductsMixConfirmation.jsp"/>
-            <forward name="get_success" path="/pages/application/productsmix/jsp/viewProductsMixDetails.jsp"/>
-            <forward name="update_success" path="/productMixAction.do?method=get"/>
-            <forward name="viewAllProductMix_success" path="/pages/application/productsmix/jsp/viewProductsMix.jsp"/>
-            <forward name="manage_success" path="/pages/application/productsmix/jsp/editProductsMix.jsp"/>
-            <forward name="editpreview_success" path="/pages/application/productsmix/jsp/editPreviewProductsMix.jsp"/>
-            <forward name="edit_success" path="/pages/application/productsmix/jsp/editProductsMix.jsp"/>
-
-            <forward name="cancelCreate_success" path="/AdminAction.do?method=load"/>
-            <forward name="cancel_success" path="/productMixAction.do?method=get"/>
-            <forward name="viewProductMixChangeLog" path="/pages/application/productsmix/jsp/viewChangeLog.jsp"/>
-            <forward name="cancelProductMixChangeLog" path="/productMixAction.do?method=get"/>
-
-            <!-- adding forward for log-->
-
-
-        </action>
-        <!-- End Products mix -->
+        
         <action path="/yourSettings" type="org.mifos.customers.personnel.struts.action.PersonnelSettingsAction"
                 name="personnelSettingsActionForm" parameter="method" validate="true"
                 input="/yourSettings.do?method=validate" scope="session">
@@ -179,10 +142,6 @@
         <action path="/AdminAction" type="org.mifos.application.admin.struts.action.AdminAction" name="adminActionForm"
                 parameter="method" input="/AdminAction.do?method=validate" validate="false">
             <forward name="load_success" path="/pages/application/admin/jsp/admin.jsp" />
-        </action>
-        <action path="/shutdownAction" type="org.mifos.application.admin.struts.action.ShutdownAction" name="shutdownActionForm"
-                parameter="method" input="/ShutdownAction.do?method=validate" validate="false">
-            <forward name="load_success" path="/pages/application/admin/jsp/shutdown.jsp" />
         </action>
         <!-- Fee Action -->
         <action path="/feeaction" type="org.mifos.accounts.fees.struts.action.FeeAction" parameter="method"
