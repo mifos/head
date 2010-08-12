@@ -217,13 +217,13 @@ public class StandardTestingService implements TestingService {
     }
 
     @Override
-    public void setFiscalCalendarRules(String workingDays, String scheduleTypeForMeetingOnHoliday)
+    public void setFiscalCalendarRules(String workingDays, String ScheduleMeetingIfNonWorkingDay)
             throws MifosException {
         if (isSet(workingDays)) {
             new FiscalCalendarRules().setWorkingDays(workingDays);
         }
-        if (isSet(scheduleTypeForMeetingOnHoliday)) {
-            new FiscalCalendarRules().setScheduleTypeForMeetingOnHoliday(scheduleTypeForMeetingOnHoliday);
+        if (isSet(ScheduleMeetingIfNonWorkingDay)) {
+            new FiscalCalendarRules().setScheduleTypeForMeetingOnHoliday(ScheduleMeetingIfNonWorkingDay);
         }
     }
 

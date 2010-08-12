@@ -51,16 +51,6 @@ explanation of the license and how it is applied.
 	groupCustActionForm.submit();
   }
 </script>
-<STYLE TYPE="text/css">
-    .viewQuestionResponseDiv {
-         padding : 0pt;
-     }
-
-     .viewQuestionResponseDiv ul {
-        list-style-type : none;
-        padding : 0pt;
-     }
-</STYLE>
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist')}" var="CenterHierarchyExist" />

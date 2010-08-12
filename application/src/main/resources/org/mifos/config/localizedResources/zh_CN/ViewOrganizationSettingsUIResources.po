@@ -83,7 +83,7 @@ msgid "Group pending approval state enabled"
 msgstr "启用组待审批状态"
 
 #: VOS.holidayMeeting
-msgid "Meeting in case of a holiday"
+msgid "Meeting in case of non-working day"
 msgstr "如果会议日期为假日"
 
 #: VOS.intDigitsAfterDecimal
@@ -187,7 +187,7 @@ msgid "Name sequence"
 msgstr "名称排序"
 
 #: VOS.offDays
-msgid "Off days"
+msgid "Non-working days"
 msgstr "休息日"
 
 #: VOS.optionalstate

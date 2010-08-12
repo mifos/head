@@ -242,6 +242,7 @@
             <forward name="cancelEdit_success" path="/clientCustAction.do?method=get"/>
             <forward name="viewClientChangeLog" path="/pages/application/client/jsp/viewChangeLog.jsp"/>
             <forward name="cancelClientChangeLog" path="/clientCustAction.do?method=get"/>
+            <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
         </action>
 
         <!-- Savings Accounts action -->

@@ -163,7 +163,7 @@ public class GroupTest extends UiTestCaseBase {
         CreateGroupSubmitParameters formParameters = getGenericGroupFormParameters();
         QuestionResponsePage questionResponsePage = groupEntryPage.submitNewGroupAndNavigateToQuestionResponsePage(formParameters);
         questionResponsePage.verifyPage();
-        questionResponsePage.verifyNumericBoundsValidation("name=questionGroups[0].sectionDetails[0].questions[0].value", "1000", question1);
+        questionResponsePage.verifyNumericBoundsValidation("name=questionGroups[0].sectionDetails[0].questions[0].value", "1000", 10, 100, question1);
         questionResponsePage.populateTextAnswer("name=questionGroups[0].sectionDetails[0].questions[0].value", "30");
         questionResponsePage.populateSmartSelect("txtListSearch", getChoiceTags());
         GroupViewDetailsPage groupViewDetailsPage = questionResponsePage.navigateToCreateGroupDetailsPage("Application Pending*");

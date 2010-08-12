@@ -85,7 +85,7 @@ msgid "Group pending approval state enabled"
 msgstr "ការអាក់ខានក្នុងការសំរេចសំរាប់ក្រុមដូច្នេះលក្ខ័ណគឺនៅបើកអោយកែប្រែ"
 
 #: VOS.holidayMeeting
-msgid "Meeting in case of a holiday"
+msgid "Meeting in case of non-working day"
 msgstr "អង្គប្រជុំក្នុងករុណីថ្ងៃឈប់សំរាក"
 
 #: VOS.intDigitsAfterDecimal
@@ -189,7 +189,7 @@ msgid "Name sequence"
 msgstr ""
 
 #: VOS.offDays
-msgid "Off days"
+msgid "Non-working days"
 msgstr "ថ្ចៃសំរាក"
 
 #: VOS.optionalstate

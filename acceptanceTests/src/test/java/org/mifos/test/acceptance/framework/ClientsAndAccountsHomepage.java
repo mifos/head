@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework;
 
+import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.center.CreateCenterChooseOfficePage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ChooseOfficePage;
@@ -38,9 +39,10 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSearchPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchPage;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
+import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.util.StringUtil;
 
-import com.thoughtworks.selenium.Selenium;
+import java.util.Map;
 
 public class ClientsAndAccountsHomepage extends AbstractPage {
 
@@ -95,14 +97,35 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
 
     // TODO belongs in a helper
     public ClientViewDetailsPage createClient(String loanOfficer, String officeName) {
-        GroupSearchPage groupSearchPage = navigateToCreateNewClientPage();
-        ChooseOfficePage chooseOfficePage = groupSearchPage.navigateToCreateClientWithoutGroupPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage = chooseOfficePage.chooseOffice(officeName);
-
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = navigateToPersonalDataPage(officeName);
         CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = FormParametersHelper.getClientEnterPersonalDataPageFormParameters();
         clientPersonalDataPage=clientPersonalDataPage.create(formParameters);
         CreateClientEnterMfiDataPage clientMfiDataPage = clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
+        CreateClientConfirmationPage clientConfirmationPage = navigateToConfirmationPage(loanOfficer, clientMfiDataPage);
+        return navigateToClientViewDetails(formParameters, clientConfirmationPage);
+    }
 
+    public ClientViewDetailsPage createClientWithQuestionGroups(String loanOfficer, String officeName, Map<String, String> choiceTags, String answer) {
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = navigateToPersonalDataPage(officeName);
+        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = FormParametersHelper.getClientEnterPersonalDataPageFormParameters();
+        clientPersonalDataPage = clientPersonalDataPage.create(formParameters);
+        QuestionResponsePage questionResponsePage = clientPersonalDataPage.submitAndGotoCaptureQuestionResponsePage();
+        questionResponsePage.populateTextAnswer("name=questionGroups[0].sectionDetails[0].questions[0].value", answer);
+        questionResponsePage.populateSmartSelect("txtListSearch", choiceTags);
+        questionResponsePage.navigateToNextPage();
+        return navigateToClientViewDetails(formParameters, navigateToConfirmationPage(loanOfficer, new CreateClientEnterMfiDataPage(selenium)));
+    }
+
+    private ClientViewDetailsPage navigateToClientViewDetails(CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters, CreateClientConfirmationPage clientConfirmationPage) {
+        ClientViewDetailsPage clientViewDetailsPage = clientConfirmationPage.navigateToClientViewDetailsPage();
+        clientViewDetailsPage.verifyName(formParameters.getFirstName() + " " + formParameters.getLastName());
+        clientViewDetailsPage.verifyDateOfBirth(formParameters.getDateOfBirthDD(), formParameters.getDateOfBirthMM(), formParameters.getDateOfBirthYYYY());
+        clientViewDetailsPage.verifySpouseFather(formParameters.getSpouseFirstName() + " " + formParameters.getSpouseLastName());
+        clientViewDetailsPage.verifyHandicapped(formParameters.getHandicapped());
+        return clientViewDetailsPage;
+    }
+
+    private CreateClientConfirmationPage navigateToConfirmationPage(String loanOfficer, CreateClientEnterMfiDataPage clientMfiDataPage) {
         CreateClientEnterMfiDataPage.SubmitFormParameters mfiFormParameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
         mfiFormParameters.setLoanOfficerId(loanOfficer);
 
@@ -116,19 +139,17 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         CreateClientPreviewDataPage clientPreviewDataPage = clientMfiDataPage.submitAndGotoCreateClientPreviewDataPage(mfiFormParameters);
         CreateClientConfirmationPage clientConfirmationPage = clientPreviewDataPage.submit();
         clientConfirmationPage.verifyPage();
-
-        ClientViewDetailsPage clientViewDetailsPage = clientConfirmationPage.navigateToClientViewDetailsPage();
-        clientViewDetailsPage.verifyName(formParameters.getFirstName() + " " + formParameters.getLastName());
-        clientViewDetailsPage.verifyDateOfBirth(formParameters.getDateOfBirthDD(), formParameters.getDateOfBirthMM(), formParameters.getDateOfBirthYYYY());
-        clientViewDetailsPage.verifySpouseFather(formParameters.getSpouseFirstName() + " " + formParameters.getSpouseLastName());
-        clientViewDetailsPage.verifyHandicapped(formParameters.getHandicapped());
-        return clientViewDetailsPage;
+        return clientConfirmationPage;
     }
 
-    public CreateClientEnterPersonalDataPage createClient(String loanOfficer, String officeName, String dd, String mm, String yy){
+    private CreateClientEnterPersonalDataPage navigateToPersonalDataPage(String officeName) {
         GroupSearchPage groupSearchPage = navigateToCreateNewClientPage();
         ChooseOfficePage chooseOfficePage = groupSearchPage.navigateToCreateClientWithoutGroupPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage = chooseOfficePage.chooseOffice(officeName);
+        return chooseOfficePage.chooseOffice(officeName);
+    }
+
+    public CreateClientEnterPersonalDataPage createClient(String officeName, String dd, String mm, String yy){
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = navigateToPersonalDataPage(officeName);
         CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
         formParameters.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
         formParameters.setFirstName("test");
@@ -147,9 +168,7 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
 
 
     public CreateClientEnterPersonalDataPage createClientForFamilyInfo(String officeName, String dd, String mm, String yy) {
-         GroupSearchPage groupSearchPage = navigateToCreateNewClientPage();
-         ChooseOfficePage chooseOfficePage = groupSearchPage.navigateToCreateClientWithoutGroupPage();
-         CreateClientEnterPersonalDataPage clientPersonalDataPage = chooseOfficePage.chooseOffice(officeName);
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = navigateToPersonalDataPage(officeName);
          CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
          formParameters.setLastName("Customer" + StringUtil.getRandomString(8));
          formParameters.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
