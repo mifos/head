@@ -138,7 +138,7 @@ public class QuestionGroupController extends QuestionnaireController {
 
     public List<SectionQuestionDetail> getAllSectionQuestions() {
         List<SectionQuestionDetail> sectionQuestionDetails = new ArrayList<SectionQuestionDetail>();
-        List<QuestionDetail> questionDetails = questionnaireServiceFacade.getAllQuestions();
+        List<QuestionDetail> questionDetails = questionnaireServiceFacade.getAllActiveQuestions();
         if (questionDetails != null) {
             for (QuestionDetail questionDetail : questionDetails) {
                 sectionQuestionDetails.add(new SectionQuestionDetail(questionDetail, false));

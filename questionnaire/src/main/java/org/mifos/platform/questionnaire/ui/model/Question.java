@@ -219,6 +219,14 @@ public class Question implements Serializable {
         return initialNumberOfChoices;
     }
 
+    public boolean isActive() {
+        return questionDetail.isActive();
+    }
+
+    public void setActive(boolean active) {
+        questionDetail.setActive(active);
+    }
+
     private boolean answerChoicesApplicableFor(QuestionType type) {
         return QuestionType.MULTI_SELECT.equals(type) || QuestionType.SINGLE_SELECT.equals(type) || QuestionType.SMART_SELECT.equals(type);
     }

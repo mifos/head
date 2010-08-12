@@ -113,7 +113,7 @@ public class ClientCustActionTest {
     private SectionDetail getSectionDetail(String name, String title, List<String> answerChoices) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
-        QuestionDetail questionDetail = new QuestionDetail(111, title, title, QuestionType.SINGLE_SELECT);
+        QuestionDetail questionDetail = new QuestionDetail(111, title, title, QuestionType.SINGLE_SELECT, true);
         List<ChoiceDetail> choiceDetails = new ArrayList<ChoiceDetail>();
         for (String answerChoice : answerChoices) {
             choiceDetails.add(new ChoiceDetail(answerChoice));

@@ -5,13 +5,19 @@
 [#assign multiSelect][@spring.message "questionnaire.quesiton.choices.multiselect"/][/#assign]
 [#assign singleSelect][@spring.message "questionnaire.quesiton.choices.singleselect"/][/#assign]
 [#assign smartSelect][@spring.message "questionnaire.quesiton.choices.smartselect"/][/#assign]
+[#assign active][@spring.message "questionnaire.active"/][/#assign]
+[#assign inActive][@spring.message "questionnaire.inactive"/][/#assign]
 <input type="hidden" id="number" name="number" value="${number}"/>
 <input type="hidden" id="multiSelect" name="multiSelect" value="${multiSelect}"/>
 <input type="hidden" id="singleSelect" name="singleSelect" value="${singleSelect}" />
 <input type="hidden" id="smartSelect" name="smartSelect" value="${smartSelect}" />
-<input type="submit" id="_eventId_removeChoice" name="_eventId_removeChoice" value="" style="visibility:hidden"/>
-<input type="submit" id="_eventId_removeChoiceTag" name="_eventId_removeChoiceTag" value="" style="visibility:hidden"/>
-<input type="submit" id="_eventId_addSmartChoiceTag" name="_eventId_addSmartChoiceTag" value="" style="visibility:hidden"/>
+<input type="submit" id="_eventId_removeChoice" name="_eventId_removeChoice" value="" style="display: none;"/>
+<input type="submit" id="_eventId_removeChoiceTag" name="_eventId_removeChoiceTag" value="" style="display: none;"/>
+<input type="submit" id="_eventId_addSmartChoiceTag" name="_eventId_addSmartChoiceTag" value="" style="display: none;"/>
+<li id="status">
+  <label for="currentQuestion.active"><span class="red">*</span>[@spring.message "questionnaire.status"/]: </label>
+  [@mifosmacros.boolRadioButtons "questionDefinition.currentQuestion.active", {"true":active, "false":inActive},'','' /]
+</li>
 <li>
   <label for="currentQuestion.title"><span class="red">*</span>[@spring.message "questionnaire.question.title"/]: </label>
   [@spring.formInput "questionDefinition.currentQuestion.title", 'maxlength="50"' /]

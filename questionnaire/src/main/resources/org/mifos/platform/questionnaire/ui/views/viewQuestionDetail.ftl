@@ -40,36 +40,38 @@
                         <li>
                             [@spring.message "questionnaire.answer.type"/]: ${question.type}
                         </li>
+                        [#if question.smartSelect]
                         <li>
-                            [#if question.smartSelect]
-                                <table id="choices.table" name="choices.table">
-                                 <tr>
-                                     <td class="drawtablehd" width="50%">[@spring.message "questionnaire.choice"/]</td>
-                                     <td class="drawtablehd" width="50%">[@spring.message "questionnaire.tags"/]</td>
-                                 </tr>
-                                [#list question.choices as choice]
+                            <table id="choices.table" name="choices.table">
                                      <tr>
-                                         <td class="drawtablerow" width="50%">${choice.choiceText}</td>
-                                         [#if choice.commaSeparatedTags?has_content]
-                                            <td class="drawtablerow" width="50%">${choice.commaSeparatedTags}</td>
-                                         [#else]
-                                            <td class="drawtablerow" width="50%">&nbsp;</td>
-                                         [/#if]
+                                         <td class="drawtablehd" width="50%">[@spring.message "questionnaire.choice"/]</td>
+                                         <td class="drawtablehd" width="50%">[@spring.message "questionnaire.tags"/]</td>
                                      </tr>
-                                [/#list]
-                                </table>
-                            [#elseif question.commaSeparateChoices?has_content]
-                                <td class="drawtablerow">[@spring.message "questionnaire.quesiton.choices"/]: ${question.commaSeparateChoices}</td>
-                            [/#if]
+                                    [#list question.choices as choice]
+                                         <tr>
+                                             <td class="drawtablerow" width="50%">${choice.choiceText}</td>
+                                             [#if choice.commaSeparatedTags?has_content]
+                                                <td class="drawtablerow" width="50%">${choice.commaSeparatedTags}</td>
+                                             [#else]
+                                                <td class="drawtablerow" width="50%">&nbsp;</td>
+                                             [/#if]
+                                         </tr>
+                                    [/#list]
+                                    </table>
+                                [#elseif question.commaSeparateChoices?has_content]
+                                    <td class="drawtablerow">[@spring.message "questionnaire.quesiton.choices"/]: ${question.commaSeparateChoices}</td>
                         </li>
+                        [/#if]
+                        [#if question.numericMin?exists]
                         <li>
-                            [#if question.numericMin?exists]
-                                [@spring.message "questionnaire.quesiton.numeric.min"/]: ${question.numericMin}
-                            [/#if]
-                            [#if question.numericMax?exists]
-                                [@spring.message "questionnaire.quesiton.numeric.max"/]: ${question.numericMax}
-                            [/#if]
+                            [@spring.message "questionnaire.quesiton.numeric.min"/]: ${question.numericMin}
                         </li>
+                        [/#if]
+                        [#if question.numericMax?exists]
+                        <li>
+                            [@spring.message "questionnaire.quesiton.numeric.max"/]: ${question.numericMax}
+                        </li>
+                        [/#if]
                     </ol>
                 </fieldset>
             </form>

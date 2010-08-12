@@ -188,6 +188,14 @@ public class SectionQuestionDetail implements Serializable {
         return questionDetail.getNumericMax();
     }
 
+    public boolean isActive() {
+        return questionDetail.isActive();
+    }
+    
+    public boolean isInactive() {
+        return !isActive();
+    }
+
     //Used for legacy Struts binding support.
     @Deprecated
     public String[] getValuesAsArray() {

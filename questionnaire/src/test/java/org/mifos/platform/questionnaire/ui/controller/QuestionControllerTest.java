@@ -246,10 +246,10 @@ public class QuestionControllerTest {
     @Test
     public void shouldGetAllQuestions() {
         List<QuestionDetail> questionDetailList = Arrays.asList(getQuestionDetail(1, "title1", QuestionType.NUMERIC), getQuestionDetail(2, "title2", QuestionType.NUMERIC));
-        Mockito.when(questionnaireServiceFacade.getAllQuestions()).thenReturn(questionDetailList);
+        Mockito.when(questionnaireServiceFacade.getAllActiveQuestions()).thenReturn(questionDetailList);
         String view = questionController.getAllQuestions(model, httpServletRequest);
         Assert.assertThat(view, is("viewQuestions"));
-        Mockito.verify(questionnaireServiceFacade).getAllQuestions();
+        Mockito.verify(questionnaireServiceFacade).getAllActiveQuestions();
         Mockito.verify(model).addAttribute(Mockito.eq("questions"), Mockito.eq(questionDetailList));
     }
 
@@ -262,7 +262,7 @@ public class QuestionControllerTest {
     }
 
     private QuestionDetail getQuestionDetail(int id, String title, QuestionType type) {
-        return new QuestionDetail(id, title, title, type);
+        return new QuestionDetail(id, title, title, type, true);
     }
 
     private QuestionForm getQuestionForm(String title, String type) {

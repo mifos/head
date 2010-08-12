@@ -187,7 +187,7 @@ public class QuestionnaireServiceTest {
     @Test
     public void shouldGetAllQuestions() {
         Mockito.when(questionDao.retrieveByState(1)).thenReturn(asList(getQuestion(1, "q1", AnswerType.DATE), getQuestion(2, "q2", AnswerType.FREETEXT)));
-        List<QuestionDetail> questionDetails = questionnaireService.getAllQuestions();
+        List<QuestionDetail> questionDetails = questionnaireService.getAllActiveQuestions();
         Assert.assertNotNull("getAllQuestions should not return null", questionDetails);
         Mockito.verify(questionDao, times(1)).retrieveByState(1);
 
@@ -308,8 +308,8 @@ public class QuestionnaireServiceTest {
     private SectionDetail getSectionDefinition(String name) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(11, null, null, QuestionType.INVALID), true));
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID), false));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(11, null, null, QuestionType.INVALID, true), true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID, true), false));
         return section;
     }
 
@@ -613,7 +613,7 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldSaveResponses() {
-        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
+        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, "value", false));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails, true);
         QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
@@ -627,7 +627,7 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void testValidateResponse() {
-        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
+        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails, true);
         try {

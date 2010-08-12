@@ -23,7 +23,7 @@
         <transition on="removeChoiceTag" to="removeChoiceTag"/>
         <transition on="removeSmartChoice" to="removeChoice"/>
         <transition on="update" to="update"/>
-		<transition on="cancel" to="viewAndEditQuestion" bind="false" history="discard"/>
+		<transition on="cancel" to="viewAndEditQuestion"/>
     </view-state>
 
     <action-state id="addChoice">
@@ -63,6 +63,6 @@
         <transition on="failure" to="editQuestion" />
     </action-state>
 
-    <end-state id="viewAndEditQuestion" view="externalRedirect:contextRelative:/viewAndEditQuestion.ftl?questionId=${flowScope.questionId}"/>
+    <view-state id="viewAndEditQuestion" view="externalRedirect:contextRelative:/viewAndEditQuestion.ftl?questionId=${flowScope.questionId}"/>
 
 </flow>

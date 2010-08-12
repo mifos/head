@@ -95,12 +95,12 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testGetAllQuestion() {
-        when(questionnaireService.getAllQuestions()).thenReturn(asList(getQuestionDetail(1, "title", "title", QuestionType.NUMERIC)));
-        List<QuestionDetail> questionDetailList = questionnaireServiceFacade.getAllQuestions();
+        when(questionnaireService.getAllActiveQuestions()).thenReturn(asList(getQuestionDetail(1, "title", "title", QuestionType.NUMERIC)));
+        List<QuestionDetail> questionDetailList = questionnaireServiceFacade.getAllActiveQuestions();
         Assert.assertNotNull(questionDetailList);
         assertThat(questionDetailList.get(0).getTitle(), is("title"));
         assertThat(questionDetailList.get(0).getId(), is(1));
-        Mockito.verify(questionnaireService).getAllQuestions();
+        Mockito.verify(questionnaireService).getAllActiveQuestions();
     }
 
     @Test
@@ -149,7 +149,7 @@ public class QuestionnaireServiceFacadeTest {
     public void testGetQuestionById() throws SystemException {
         int questionId = 1;
         String title = "Title";
-        QuestionDetail question = new QuestionDetail(questionId, title, title, QuestionType.NUMERIC);
+        QuestionDetail question = new QuestionDetail(questionId, title, title, QuestionType.NUMERIC, true);
         question.setNumericMin(10);
         question.setNumericMax(100);
         when(questionnaireService.getQuestion(questionId)).thenReturn(question);
@@ -167,7 +167,7 @@ public class QuestionnaireServiceFacadeTest {
         int questionId = 1;
         String title = "Title";
         List<ChoiceDetail> answerChoices = asList(new ChoiceDetail("choice1"), new ChoiceDetail("choice2"));
-        QuestionDetail expectedQuestionDetail = new QuestionDetail(questionId, title, title, QuestionType.MULTI_SELECT);
+        QuestionDetail expectedQuestionDetail = new QuestionDetail(questionId, title, title, QuestionType.MULTI_SELECT, true);
         expectedQuestionDetail.setAnswerChoices(answerChoices);
         when(questionnaireService.getQuestion(questionId)).thenReturn(expectedQuestionDetail);
         QuestionDetail questionDetail = questionnaireServiceFacade.getQuestionDetail(questionId);
@@ -234,7 +234,7 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void shouldSaveQuestionGroupDetail() {
-        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
+        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, "value", false));
         QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(1, 1,
                 asList(getQuestionGroupDetail("QG1", "Create", "Client", sectionDetails)));
@@ -244,7 +244,7 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testValidateResponse() {
-        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
+        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails, true);
         try {
@@ -308,7 +308,7 @@ public class QuestionnaireServiceFacadeTest {
         List<SectionQuestionDetail> questions = new ArrayList<SectionQuestionDetail>();
         for (int quesId : questionIds) {
             String text = "Q" + quesId;
-            questions.add(new SectionQuestionDetail(new QuestionDetail(quesId, text, text, QuestionType.DATE), false));
+            questions.add(new SectionQuestionDetail(new QuestionDetail(quesId, text, text, QuestionType.DATE, true), false));
         }
         sectionDetail.setQuestionDetails(questions);
         return sectionDetail;
@@ -317,7 +317,7 @@ public class QuestionnaireServiceFacadeTest {
     private SectionDetail getSectionDetail(String name) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
-        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(123, "Q1", "Q1", QuestionType.FREETEXT), true));
+        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(123, "Q1", "Q1", QuestionType.FREETEXT, true), true));
         return sectionDetail;
     }
 
@@ -330,12 +330,12 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     private QuestionDetail getQuestionDetail(int id, String text, String shortName, QuestionType questionType) {
-        return new QuestionDetail(id, text, shortName, questionType);
+        return new QuestionDetail(id, text, shortName, questionType, true);
     }
 
 
     private QuestionDetail getQuestionDetail(int id, String text, String shortName, QuestionType questionType, List<String> choices) {
-        QuestionDetail questionDetail = new QuestionDetail(id, text, shortName, questionType);
+        QuestionDetail questionDetail = new QuestionDetail(id, text, shortName, questionType, true);
         List<ChoiceDetail> choiceDetails = new ArrayList<ChoiceDetail>();
         for (String choice : choices) {
             choiceDetails.add(new ChoiceDetail(choice));
