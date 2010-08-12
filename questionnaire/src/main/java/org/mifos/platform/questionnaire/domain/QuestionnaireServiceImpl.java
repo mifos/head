@@ -232,7 +232,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     private void persistQuestion(QuestionEntity question) throws SystemException {
         try {
-            questionDao.create(question);
+            questionDao.saveOrUpdate(question);
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
             throw new SystemException(QuestionnaireConstants.DUPLICATE_QUESTION, e);
         }

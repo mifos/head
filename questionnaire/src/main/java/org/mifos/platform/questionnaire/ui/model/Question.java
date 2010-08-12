@@ -20,6 +20,7 @@
 
 package org.mifos.platform.questionnaire.ui.model;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
@@ -33,6 +34,7 @@ import java.util.ResourceBundle;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
+import static org.mifos.platform.util.CollectionUtils.isEmpty;
 import static org.mifos.platform.util.MapEntry.makeEntry;
 
 @SuppressWarnings("PMD")
@@ -45,6 +47,8 @@ public class Question implements Serializable {
     private String currentSmartChoice;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<String> currentSmartChoiceTags;
+    private int initialNumberOfChoices;
+    private String originalTitle;
 
     static {
         populateStringToQuestionTypeMap();
@@ -52,8 +56,9 @@ public class Question implements Serializable {
     }
 
     public Question() {
-        //TODO: spring autowiring requires default constructor
+        this(null);
     }
+
     public Question(QuestionDetail questionDetail) {
         this.questionDetail = questionDetail;
         this.currentSmartChoiceTags = new ArrayList<String>();
@@ -96,9 +101,10 @@ public class Question implements Serializable {
     public QuestionDetail getQuestionDetail() {
         return questionDetail;
     }
-    
+
     public void setQuestionDetail(QuestionDetail questionDetail) {
         this.questionDetail=questionDetail;
+        initializeSmartChoiceTags();
     }
 
     public List<ChoiceDetail> getChoices() {
@@ -152,7 +158,7 @@ public class Question implements Serializable {
     public void setChoicesIfApplicable() {
         QuestionType type = questionDetail.getType();
         if (!answerChoicesApplicableFor(type)) {
-            questionDetail.setAnswerChoices(new ArrayList<ChoiceDetail>());
+            resetChoices();
         }
     }
 
@@ -174,35 +180,6 @@ public class Question implements Serializable {
 
     public void setNumericMax(Integer numericMax) {
         questionDetail.setNumericMax(numericMax);
-    }
-
-    private boolean answerChoicesApplicableFor(QuestionType type) {
-        return QuestionType.MULTI_SELECT.equals(type) || QuestionType.SINGLE_SELECT.equals(type) || QuestionType.SMART_SELECT.equals(type);
-    }
-
-    private static void populateStringToQuestionTypeMap() {
-        stringToQuestionTypeMap = CollectionUtils.asMap(
-                makeEntry(getResource("questionnaire.quesiton.choices.freetext"), QuestionType.FREETEXT),
-                makeEntry(getResource("questionnaire.quesiton.choices.date"), QuestionType.DATE),
-                makeEntry(getResource("questionnaire.quesiton.choices.multiselect"), QuestionType.MULTI_SELECT),
-                makeEntry(getResource("questionnaire.quesiton.choices.singleselect"), QuestionType.SINGLE_SELECT),
-                makeEntry(getResource("questionnaire.quesiton.choices.smartselect"), QuestionType.SMART_SELECT),
-                makeEntry(getResource("questionnaire.quesiton.choices.number"), QuestionType.NUMERIC));
-    }
-
-    private static void populateQuestionTypeToStringMap() {
-        questionTypeToStringMap = CollectionUtils.asMap(makeEntry(QuestionType.FREETEXT, getResource("questionnaire.quesiton.choices.freetext")),
-                makeEntry(QuestionType.DATE, getResource("questionnaire.quesiton.choices.date")),
-                makeEntry(QuestionType.NUMERIC, getResource("questionnaire.quesiton.choices.number")),
-                makeEntry(QuestionType.MULTI_SELECT, getResource("questionnaire.quesiton.choices.multiselect")),
-                makeEntry(QuestionType.SMART_SELECT, getResource("questionnaire.quesiton.choices.smartselect")),
-                makeEntry(QuestionType.SINGLE_SELECT, getResource("questionnaire.quesiton.choices.singleselect"))
-        );
-    }
-
-    private static String getResource(String key) {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("org.mifos.platform.questionnaire.ui.localizedProperties.questionnaire_messages");
-        return resourceBundle.getString(key);
     }
 
     public boolean numericBoundsAreInvalid() {
@@ -236,5 +213,59 @@ public class Question implements Serializable {
 
     public boolean isSmartSelect() {
         return questionDetail.isSmartSelect();
+    }
+
+    public int getInitialNumberOfChoices() {
+        return initialNumberOfChoices;
+    }
+
+    private boolean answerChoicesApplicableFor(QuestionType type) {
+        return QuestionType.MULTI_SELECT.equals(type) || QuestionType.SINGLE_SELECT.equals(type) || QuestionType.SMART_SELECT.equals(type);
+    }
+
+    private void resetChoices() {
+        questionDetail.setAnswerChoices(new ArrayList<ChoiceDetail>());
+    }
+
+    private void initializeSmartChoiceTags() {
+        List<ChoiceDetail> choices = getChoices();
+        if (isEmpty(choices)) {
+            choices = new ArrayList<ChoiceDetail>();
+        }
+        this.currentSmartChoiceTags = new ArrayList<String>();
+        this.initialNumberOfChoices = choices.size();
+        this.originalTitle = getTitle();
+        for (int i = 0; i < initialNumberOfChoices; i++) {
+            this.currentSmartChoiceTags.add(EMPTY);
+        }
+    }
+
+    private static void populateStringToQuestionTypeMap() {
+        stringToQuestionTypeMap = CollectionUtils.asMap(
+                makeEntry(getResource("questionnaire.quesiton.choices.freetext"), QuestionType.FREETEXT),
+                makeEntry(getResource("questionnaire.quesiton.choices.date"), QuestionType.DATE),
+                makeEntry(getResource("questionnaire.quesiton.choices.multiselect"), QuestionType.MULTI_SELECT),
+                makeEntry(getResource("questionnaire.quesiton.choices.singleselect"), QuestionType.SINGLE_SELECT),
+                makeEntry(getResource("questionnaire.quesiton.choices.smartselect"), QuestionType.SMART_SELECT),
+                makeEntry(getResource("questionnaire.quesiton.choices.number"), QuestionType.NUMERIC));
+    }
+
+    private static void populateQuestionTypeToStringMap() {
+        questionTypeToStringMap = CollectionUtils.asMap(makeEntry(QuestionType.FREETEXT, getResource("questionnaire.quesiton.choices.freetext")),
+                makeEntry(QuestionType.DATE, getResource("questionnaire.quesiton.choices.date")),
+                makeEntry(QuestionType.NUMERIC, getResource("questionnaire.quesiton.choices.number")),
+                makeEntry(QuestionType.MULTI_SELECT, getResource("questionnaire.quesiton.choices.multiselect")),
+                makeEntry(QuestionType.SMART_SELECT, getResource("questionnaire.quesiton.choices.smartselect")),
+                makeEntry(QuestionType.SINGLE_SELECT, getResource("questionnaire.quesiton.choices.singleselect"))
+        );
+    }
+
+    private static String getResource(String key) {
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("org.mifos.platform.questionnaire.ui.localizedProperties.questionnaire_messages");
+        return resourceBundle.getString(key);
+    }
+
+    public boolean titleHasChanged() {
+        return !StringUtils.equals(originalTitle, getTitle());
     }
 }

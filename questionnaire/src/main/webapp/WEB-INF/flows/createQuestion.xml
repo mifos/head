@@ -19,7 +19,7 @@
 	</view-state>
 
     <action-state id="addQuestion">
-        <evaluate expression="questionController.addQuestion(questionDefinition, flowRequestContext)"/>
+        <evaluate expression="questionController.addQuestion(questionDefinition, flowRequestContext, true)"/>
         <transition to="createQuestion" />
     </action-state>
 

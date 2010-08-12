@@ -23,31 +23,31 @@
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
     <script type="text/javascript" src="pages/questionnaire/js/viewQuestionDetail.js"></script>
     <span id="page.id" title="view_question_details"></span>
-        [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":"viewQuestions.ftl",Request.questionDetail.title:""}/]
+        [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":"viewQuestions.ftl",question.title:""}/]
         [@mifos.crumbpairs breadcrumb/]
         <div class="content_panel">
             <h1>
-                ${Request.questionDetail.title}
+                ${question.title}
             </h1>
             <form name="viewQuestionDetailsForm" action="viewAndEditQuestion.ftl?execution=${flowExecutionKey}" method="POST" class="marginLeft30">
                 <fieldset>
                     <ol>
                         <li>
                             <a href="editQuestion#" class="topRight">[@spring.message "questionnaire.edit"/]</a>
-                            <input type="submit" id="_eventId_editQuestion" name="_eventId_editQuestion" value="${Request.questionDetail.id}" style="display:none"/>
-                            [@spring.message "questionnaire.question"/]: ${Request.questionDetail.title}
+                            <input type="submit" id="_eventId_editQuestion" name="_eventId_editQuestion" value="${question.id}" style="display:none"/>
+                            [@spring.message "questionnaire.question"/]: ${question.title}
                         </li>
                         <li>
-                            [@spring.message "questionnaire.answer.type"/]: ${Request.questionDetail.type}
+                            [@spring.message "questionnaire.answer.type"/]: ${question.type}
                         </li>
                         <li>
-                            [#if Request.questionDetail.smartSelect]
+                            [#if question.smartSelect]
                                 <table id="choices.table" name="choices.table">
                                  <tr>
                                      <td class="drawtablehd" width="50%">[@spring.message "questionnaire.choice"/]</td>
                                      <td class="drawtablehd" width="50%">[@spring.message "questionnaire.tags"/]</td>
                                  </tr>
-                                [#list Request.questionDetail.choices as choice]
+                                [#list question.choices as choice]
                                      <tr>
                                          <td class="drawtablerow" width="50%">${choice.choiceText}</td>
                                          [#if choice.commaSeparatedTags?has_content]
@@ -58,16 +58,16 @@
                                      </tr>
                                 [/#list]
                                 </table>
-                            [#elseif Request.questionDetail.commaSeparateChoices?has_content]
-                                <td class="drawtablerow">[@spring.message "questionnaire.quesiton.choices"/]: ${Request.questionDetail.commaSeparateChoices}</td>
+                            [#elseif question.commaSeparateChoices?has_content]
+                                <td class="drawtablerow">[@spring.message "questionnaire.quesiton.choices"/]: ${question.commaSeparateChoices}</td>
                             [/#if]
                         </li>
                         <li>
-                            [#if Request.questionDetail.numericMin?exists]
-                                [@spring.message "questionnaire.quesiton.numeric.min"/]: ${Request.questionDetail.numericMin}
+                            [#if question.numericMin?exists]
+                                [@spring.message "questionnaire.quesiton.numeric.min"/]: ${question.numericMin}
                             [/#if]
-                            [#if Request.questionDetail.numericMax?exists]
-                                [@spring.message "questionnaire.quesiton.numeric.max"/]: ${Request.questionDetail.numericMax}
+                            [#if question.numericMax?exists]
+                                [@spring.message "questionnaire.quesiton.numeric.max"/]: ${question.numericMax}
                             [/#if]
                         </li>
                     </ol>

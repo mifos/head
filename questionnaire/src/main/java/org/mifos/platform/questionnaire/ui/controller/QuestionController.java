@@ -55,16 +55,24 @@ public class QuestionController extends QuestionnaireController {
         return "viewQuestions";
     }
 
-    public String addQuestion(QuestionForm questionForm, RequestContext requestContext) {
+    public String addQuestion(QuestionForm questionForm, RequestContext requestContext, boolean createMode) {
         MessageContext context = requestContext.getMessageContext();
         questionForm.validateConstraints(context);
         String result = "success";
+        String title = StringUtils.trim(questionForm.getCurrentQuestion().getTitle());
 
         if (context.hasErrorMessages()) {
             result = "failure";
         }
 
-        else if (isDuplicateQuestion(questionForm)) {
+        else if (checkDuplicateTitleForCreateOperation(questionForm, createMode)) {
+            constructErrorMessage(
+                    context, "questionnaire.error.question.duplicate",
+                    "currentQuestion.title", "The name specified already exists.");
+            result = "failure";
+        }
+
+        else if (checkDuplicateTitleForEditOperation(questionForm, createMode, title)) {
             constructErrorMessage(
                     context, "questionnaire.error.question.duplicate",
                     "currentQuestion.title", "The name specified already exists.");
@@ -90,6 +98,14 @@ public class QuestionController extends QuestionnaireController {
         }
 
         return result;
+    }
+
+    private boolean checkDuplicateTitleForEditOperation(QuestionForm questionForm, boolean createMode, String title) {
+        return !createMode && questionForm.titleHasChanged() && questionnaireServiceFacade.isDuplicateQuestion(title);
+    }
+
+    private boolean checkDuplicateTitleForCreateOperation(QuestionForm questionForm, boolean createMode) {
+        return createMode && isDuplicateQuestion(questionForm);
     }
 
     public void removeQuestion(QuestionForm questionForm, String questionTitle) {

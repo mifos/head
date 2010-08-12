@@ -3,16 +3,66 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-    <var name="questionDetail" class="org.mifos.platform.questionnaire.ui.model.Question"/>
+	<var name="questionDefinition" class="org.mifos.platform.questionnaire.ui.model.QuestionForm"/>
+    <var name="question" class="org.mifos.platform.questionnaire.ui.model.Question"/>
 
     <view-state id="viewQuestionDetail">
         <on-entry>
-            <evaluate expression="questionnaireServiceFacade.getQuestionDetail(requestParameters.questionId)" result="questionDetail.questionDetail"/>
+            <set name="flowScope.questionId" value="requestParameters.questionId" type="int"></set>
+            <evaluate expression="questionnaireServiceFacade.getQuestionDetail(flowScope.questionId)" result="question.questionDetail"/>
+            <set name="questionDefinition.currentQuestion" value="question" type="org.mifos.platform.questionnaire.ui.model.Question"></set>
         </on-entry>
 		<transition on="editQuestion" to="editQuestion"/>
     </view-state>
 
-    <view-state id="editQuestion">
+    <view-state id="editQuestion" model="questionDefinition">
+        <transition on="addChoice" to="addChoice"/>
+        <transition on="addSmartChoice" to="addSmartChoice"/>
+        <transition on="addSmartChoiceTag" to="addSmartChoiceTag"/>
+        <transition on="removeChoice" to="removeChoice"/>
+        <transition on="removeChoiceTag" to="removeChoiceTag"/>
+        <transition on="removeSmartChoice" to="removeChoice"/>
+        <transition on="update" to="update"/>
+		<transition on="cancel" to="viewAndEditQuestion" bind="false" history="discard"/>
     </view-state>
+
+    <action-state id="addChoice">
+    	<evaluate expression="questionDefinition.currentQuestion.addAnswerChoice()"/>
+        <transition to="editQuestion" />
+    </action-state>
+
+    <action-state id="addSmartChoice">
+    	<evaluate expression="questionDefinition.currentQuestion.addAnswerSmartChoice()"/>
+        <transition to="editQuestion" />
+    </action-state>
+
+    <action-state id="removeChoice">
+    	<evaluate expression="questionDefinition.currentQuestion.removeChoice(requestParameters._eventId_removeChoice)"/>
+        <transition to="editQuestion" />
+    </action-state>
+
+    <action-state id="removeChoiceTag">
+    	<evaluate expression="questionDefinition.currentQuestion.removeChoiceTag(requestParameters._eventId_removeChoiceTag)"/>
+        <transition to="editQuestion" />
+    </action-state>
+
+    <action-state id="addSmartChoiceTag">
+    	<evaluate expression="questionDefinition.currentQuestion.addSmartChoiceTag(requestParameters._eventId_addSmartChoiceTag)"/>
+        <transition to="editQuestion" />
+    </action-state>
+
+    <action-state id="update">
+        <evaluate expression="questionController.addQuestion(questionDefinition, flowRequestContext, false)"/>
+        <transition on="success" to="save" />
+        <transition on="failure" to="editQuestion" />
+    </action-state>
+
+    <action-state id="save">
+        <evaluate expression="questionController.createQuestions(questionDefinition, flowRequestContext)"/>
+        <transition on="success" to="viewAndEditQuestion"/>
+        <transition on="failure" to="editQuestion" />
+    </action-state>
+
+    <end-state id="viewAndEditQuestion" view="externalRedirect:contextRelative:/viewAndEditQuestion.ftl?questionId=${flowScope.questionId}"/>
 
 </flow>

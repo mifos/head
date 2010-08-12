@@ -32,4 +32,5 @@ public interface GenericDao<T, ID extends Serializable> {
     void update(T transientObject);
     void delete(T persistentObject);
     void saveOrUpdateAll(Collection<T> c);
+    void saveOrUpdate(T entity);
 }
