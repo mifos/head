@@ -7,6 +7,9 @@
 
 	<bean id="viewOrganizationSettingsServiceFacade" class="org.mifos.application.admin.business.service.ViewOrganizationSettingsServiceFacadeWebTier"/>
 	<bean id="systemInformationServiceFacade" class="org.mifos.application.admin.business.service.SystemInformationServiceFacadeWebTier"/>
+	<bean id="appliedUpgradesServiceFacade" class="org.mifos.application.admin.business.service.AppliedUpgradesServiceFacadeWebTier">
+		<constructor-arg ref="appliedUpgradesDao"/>
+	</bean>
 
     <bean id="loginServiceFacade" class="org.mifos.application.servicefacade.LoginServiceFacadeWebTier">
     	<constructor-arg ref="personnelService" />
