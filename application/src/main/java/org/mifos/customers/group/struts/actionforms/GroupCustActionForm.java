@@ -125,7 +125,6 @@ public class GroupCustActionForm extends CustomerActionForm  implements Question
         setTrained(null);
         setTrainedDate(null);
         setFormedByPersonnel(null);
-        setNextOrPreview("next");
     }
 
     @Override

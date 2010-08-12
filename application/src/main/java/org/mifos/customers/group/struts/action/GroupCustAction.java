@@ -80,7 +80,6 @@ public class GroupCustAction extends CustAction {
         security.allow("load", SecurityConstants.VIEW);
         security.allow("loadMeeting", SecurityConstants.MEETING_CREATE_GROUP_MEETING);
         security.allow("preview", SecurityConstants.VIEW);
-        security.allow("previewOnly", SecurityConstants.VIEW);
         security.allow("previous", SecurityConstants.VIEW);
         security.allow("create", SecurityConstants.VIEW);
 
@@ -189,14 +188,6 @@ public class GroupCustAction extends CustAction {
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, isPendingApprovalDefined, request);
         return createGroupQuestionnaire.fetchAppliedQuestions(
                 mapping, actionForm, request, ActionForwards.preview_success);
-    }
-
-    @TransactionDemarcate(joinToken = true)
-    public ActionForward previewOnly(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
-                                 @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        boolean isPendingApprovalDefined = ProcessFlowRules.isGroupPendingApprovalStateEnabled();
-        SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, isPendingApprovalDefined, request);
-        return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
