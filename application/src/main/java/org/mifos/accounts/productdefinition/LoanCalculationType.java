@@ -18,27 +18,43 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.productdefinition.util.helpers;
+package org.mifos.accounts.productdefinition;
 
-public enum GraceType {
+public enum LoanCalculationType {
+    UNKNOWN(0), SAME_FOR_ALL_LOANS(1), BY_LAST_LOAN(2), BY_LOAN_CYCLE(3);
 
-    NONE((short) 1), GRACEONALLREPAYMENTS((short) 2), PRINCIPALONLYGRACE((short) 3);
-    private Short value;
+    private final int value;
 
-    private GraceType(Short value) {
+    private LoanCalculationType(int value) {
         this.value = value;
     }
 
-    public Short getValue() {
-        return value;
+    public int getValue() {
+        return this.value;
     }
 
-    public static GraceType fromInt(int value) {
-        for (GraceType graceTypeConstants : GraceType.values()) {
-            if (graceTypeConstants.getValue() == value) {
-                return graceTypeConstants;
-            }
+    public static LoanCalculationType fromInt(int value) {
+
+        LoanCalculationType type = UNKNOWN;
+
+        switch (value) {
+        case 0:
+            type = UNKNOWN;
+            break;
+        case 1:
+            type = SAME_FOR_ALL_LOANS;
+            break;
+        case 2:
+            type = BY_LAST_LOAN;
+            break;
+        case 3:
+            type = BY_LOAN_CYCLE;
+            break;
+        default:
+            type = UNKNOWN;
+            break;
         }
-        throw new RuntimeException("no grace type " + value);
+
+        return type;
     }
 }

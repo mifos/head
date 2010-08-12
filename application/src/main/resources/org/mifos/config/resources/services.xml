@@ -20,7 +20,9 @@
     	<constructor-arg ref="loanProductDao" />
     	<constructor-arg ref="savingsProductDao" />
     	<constructor-arg ref="officeDao" />
-    	<constructor-arg ref="applicationConfigurationDao" />    	
+    	<constructor-arg ref="applicationConfigurationDao" />
+    	<constructor-arg ref="fundDao" />
+    	<constructor-arg ref="generalLedgerDao" />    	
     </bean>
     
     <bean id="shutdownServiceFacade" class="org.mifos.application.admin.business.service.ShutdownServiceFacadeWebTier"/>

@@ -18,27 +18,29 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.productdefinition.util.helpers;
+package org.mifos.dto.domain;
 
-public enum GraceType {
+public class MinMaxDefaultDto<T> {
 
-    NONE((short) 1), GRACEONALLREPAYMENTS((short) 2), PRINCIPALONLYGRACE((short) 3);
-    private Short value;
+    private final T min;
+    private final T max;
+    private final T theDefault;
 
-    private GraceType(Short value) {
-        this.value = value;
+    public MinMaxDefaultDto(T min, T max, T theDefault) {
+        this.min = min;
+        this.max = max;
+        this.theDefault = theDefault;
     }
 
-    public Short getValue() {
-        return value;
+    public T getMin() {
+        return this.min;
     }
 
-    public static GraceType fromInt(int value) {
-        for (GraceType graceTypeConstants : GraceType.values()) {
-            if (graceTypeConstants.getValue() == value) {
-                return graceTypeConstants;
-            }
-        }
-        throw new RuntimeException("no grace type " + value);
+    public T getMax() {
+        return this.max;
+    }
+
+    public T getTheDefault() {
+        return this.theDefault;
     }
 }

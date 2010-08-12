@@ -21,8 +21,15 @@ package org.mifos.accounts.productdefinition.persistence;
 
 import java.util.List;
 
+import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.accounts.productdefinition.util.helpers.GraceType;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.customers.business.CustomerLevelEntity;
 
@@ -39,5 +46,21 @@ public interface LoanProductDao {
 
     void save(ProductTypeEntity loanProductConfiguration);
 
+    void save(LoanOfferingBO loanProduct);
+
     List<Object[]> findAllLoanProducts();
+
+    List<PrdApplicableMasterEntity> retrieveLoanApplicableProductCategories();
+
+    List<GracePeriodTypeEntity> retrieveGracePeriodTypes();
+
+    List<InterestTypesEntity> retrieveInterestTypes();
+
+    List<InterestCalcTypeEntity> retrieveInterestCalcTypes();
+
+    InterestTypesEntity findInterestType(InterestType interestType);
+
+    PrdApplicableMasterEntity findApplicableProductType(ApplicableTo applicableTo);
+
+    GracePeriodTypeEntity findGracePeriodType(GraceType gracePeriodType);
 }

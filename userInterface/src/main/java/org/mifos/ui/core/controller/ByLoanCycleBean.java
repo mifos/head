@@ -18,36 +18,44 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.dto.screen;
+package org.mifos.ui.core.controller;
 
-import java.io.Serializable;
+public class ByLoanCycleBean {
 
-@SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
-public class ListElement implements Serializable {
+    private Integer loanCycleNumber;
+    private Double min;
+    private Double max;
+    private Double theDefault;
 
-    private Integer id;
-    private String name;
-
-    public ListElement(Integer id, String name) {
-        super();
-        this.id = id;
-        this.name = name;
+    public Integer getLoanCycleNumber() {
+        return this.loanCycleNumber;
     }
 
-    public Integer getId() {
-        return this.id;
+    public void setLoanCycleNumber(Integer loanCycleNumber) {
+        this.loanCycleNumber = loanCycleNumber;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Double getMin() {
+        return this.min;
     }
 
-    public String getName() {
-        return this.name;
+    public void setMin(Double min) {
+        this.min = min;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Double getMax() {
+        return this.max;
+    }
+
+    public void setMax(Double max) {
+        this.max = max;
+    }
+
+    public Double getTheDefault() {
+        return this.theDefault;
+    }
+
+    public void setTheDefault(Double theDefault) {
+        this.theDefault = theDefault;
     }
 }

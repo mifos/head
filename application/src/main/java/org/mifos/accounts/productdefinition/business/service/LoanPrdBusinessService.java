@@ -31,10 +31,12 @@ import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
+import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
+import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.business.CustomerLevelEntity;
@@ -60,10 +62,13 @@ public class LoanPrdBusinessService implements BusinessService {
         }
     }
 
+    /**
+     * @deprecated - see {@link LoanProductDao#retrieveLoanApplicableProductCategories}
+     */
+    @Deprecated
     public List<? extends MasterDataEntity> getLoanApplicableCustomerTypes(final Short localeId) throws ServiceException {
         try {
-            List<PrdApplicableMasterEntity> applList = new MasterPersistence().retrieveMasterEntities(
-                    PrdApplicableMasterEntity.class, localeId);
+            List<PrdApplicableMasterEntity> applList = new MasterPersistence().retrieveMasterEntities(PrdApplicableMasterEntity.class, localeId);
             if (applList != null) {
                 for (Iterator<PrdApplicableMasterEntity> iter = applList.iterator(); iter.hasNext();) {
                     MasterDataEntity masterData = iter.next();

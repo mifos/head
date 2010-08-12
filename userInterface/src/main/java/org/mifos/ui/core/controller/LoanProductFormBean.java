@@ -46,31 +46,15 @@ public class LoanProductFormBean {
 
     private boolean includeInLoanCycleCounter;
 
-    private String loanAmountCalculationType;
     private Map<String, String> loanAmountCalculationTypeOptions;
 
-    // same for all loans
-    private Double minLoanAmount;
-    private Double maxLoanAmount;
-    private Double defaultLoanAmount;
+    private String selectedLoanAmountCalculationType;
+    private SameForAllLoanBean loanAmountSameForAllLoans;
+    private ByLastLoanAmountBean loanAmountByLastLoanAmount;
+    private ByLoanCycleBean loanAmountByLoanCycle;
 
-    // by last loan amount
-    // row 0
-    private Double lowerLastLoanAmount;
-    private Double upperLastLoanAmount;
-    private Double minLastLoanAmount;
-    private Double maxLastLoanAmount;
-    private Double defaultLastLoanAmount;
-
-    // by loan cycle
-    // row 0
-    private Integer loanCycleNumber;
-    private Double minLoanAmountForCycle;
-    private Double maxLoanAmountForCycle;
-    private Double defaultLoanAmountForCycle;
-
-    private String selectedInterestRateCalculationType;
     private Map<String, String> interestRateCalculationTypeOptions;
+    private String selectedInterestRateCalculationType;
     private Double maxInterestRate;
     private Double minInterestRate;
     private Double defaultInterestRate;
@@ -79,13 +63,12 @@ public class LoanProductFormBean {
     private String installmentFrequencyPeriod;
     private Integer installmentFrequencyRecurrenceEvery;
 
-    private String installmentsCalculationType;
     private Map<String, String> installmentsCalculationTypeOptions;
 
-    // same for all loans
-    private Integer minInstallments;
-    private Integer maxInstallments;
-    private Integer defaultInstallments;
+    private String selectedInstallmentsCalculationType;
+    private SameForAllLoanBean installmentsSameForAllLoans;
+    private ByLastLoanAmountBean installmentsByLastLoanAmount;
+    private ByLoanCycleBean installmentsByLoanCycle;
 
     private String selectedGracePeriodType;
     private Map<String, String> gracePeriodTypeOptions;
@@ -93,10 +76,12 @@ public class LoanProductFormBean {
 
     private Map<String, String> applicableFeeOptions;
     private Map<String, String> selectedFeeOptions;
+    private String[] applicableFees;
     private String[] selectedFees;
 
     private Map<String, String> applicableFundOptions;
     private Map<String, String> selectedFundOptions;
+    private String[] applicableFunds;
     private String[] selectedFunds;
 
     private Map<String, String> interestGeneralLedgerOptions;
@@ -184,110 +169,6 @@ public class LoanProductFormBean {
         this.includeInLoanCycleCounter = includeInLoanCycleCounter;
     }
 
-    public String getLoanAmountCalculationType() {
-        return this.loanAmountCalculationType;
-    }
-
-    public void setLoanAmountCalculationType(String loanAmountCalculationType) {
-        this.loanAmountCalculationType = loanAmountCalculationType;
-    }
-
-    public Double getMinLoanAmount() {
-        return this.minLoanAmount;
-    }
-
-    public void setMinLoanAmount(Double minLoanAmount) {
-        this.minLoanAmount = minLoanAmount;
-    }
-
-    public Double getMaxLoanAmount() {
-        return this.maxLoanAmount;
-    }
-
-    public void setMaxLoanAmount(Double maxLoanAmount) {
-        this.maxLoanAmount = maxLoanAmount;
-    }
-
-    public Double getDefaultLoanAmount() {
-        return this.defaultLoanAmount;
-    }
-
-    public void setDefaultLoanAmount(Double defaultLoanAmount) {
-        this.defaultLoanAmount = defaultLoanAmount;
-    }
-
-    public Double getLowerLastLoanAmount() {
-        return this.lowerLastLoanAmount;
-    }
-
-    public void setLowerLastLoanAmount(Double lowerLastLoanAmount) {
-        this.lowerLastLoanAmount = lowerLastLoanAmount;
-    }
-
-    public Double getUpperLastLoanAmount() {
-        return this.upperLastLoanAmount;
-    }
-
-    public void setUpperLastLoanAmount(Double upperLastLoanAmount) {
-        this.upperLastLoanAmount = upperLastLoanAmount;
-    }
-
-    public Double getMinLastLoanAmount() {
-        return this.minLastLoanAmount;
-    }
-
-    public void setMinLastLoanAmount(Double minLastLoanAmount) {
-        this.minLastLoanAmount = minLastLoanAmount;
-    }
-
-    public Double getMaxLastLoanAmount() {
-        return this.maxLastLoanAmount;
-    }
-
-    public void setMaxLastLoanAmount(Double maxLastLoanAmount) {
-        this.maxLastLoanAmount = maxLastLoanAmount;
-    }
-
-    public Double getDefaultLastLoanAmount() {
-        return this.defaultLastLoanAmount;
-    }
-
-    public void setDefaultLastLoanAmount(Double defaultLastLoanAmount) {
-        this.defaultLastLoanAmount = defaultLastLoanAmount;
-    }
-
-    public Integer getLoanCycleNumber() {
-        return this.loanCycleNumber;
-    }
-
-    public void setLoanCycleNumber(Integer loanCycleNumber) {
-        this.loanCycleNumber = loanCycleNumber;
-    }
-
-    public Double getMinLoanAmountForCycle() {
-        return this.minLoanAmountForCycle;
-    }
-
-    public void setMinLoanAmountForCycle(Double minLoanAmountForCycle) {
-        this.minLoanAmountForCycle = minLoanAmountForCycle;
-    }
-
-    public Double getMaxLoanAmountForCycle() {
-        return this.maxLoanAmountForCycle;
-    }
-
-    public void setMaxLoanAmountForCycle(Double maxLoanAmountForCycle) {
-        this.maxLoanAmountForCycle = maxLoanAmountForCycle;
-    }
-
-    public Double getDefaultLoanAmountForCycle() {
-        return this.defaultLoanAmountForCycle;
-    }
-
-    public void setDefaultLoanAmountForCycle(Double defaultLoanAmountForCycle) {
-        this.defaultLoanAmountForCycle = defaultLoanAmountForCycle;
-    }
-
     public String getSelectedInterestRateCalculationType() {
         return this.selectedInterestRateCalculationType;
     }
@@ -342,38 +223,6 @@ public class LoanProductFormBean {
 
     public void setInstallmentFrequencyRecurrenceEvery(Integer installmentFrequencyRecurrenceEvery) {
         this.installmentFrequencyRecurrenceEvery = installmentFrequencyRecurrenceEvery;
-    }
-
-    public String getInstallmentsCalculationType() {
-        return this.installmentsCalculationType;
-    }
-
-    public void setInstallmentsCalculationType(String installmentsCalculationType) {
-        this.installmentsCalculationType = installmentsCalculationType;
-    }
-
-    public Integer getMinInstallments() {
-        return this.minInstallments;
-    }
-
-    public void setMinInstallments(Integer minInstallments) {
-        this.minInstallments = minInstallments;
-    }
-
-    public Integer getMaxInstallments() {
-        return this.maxInstallments;
-    }
-
-    public void setMaxInstallments(Integer maxInstallments) {
-        this.maxInstallments = maxInstallments;
-    }
-
-    public Integer getDefaultInstallments() {
-        return this.defaultInstallments;
-    }
-
-    public void setDefaultInstallments(Integer defaultInstallments) {
-        this.defaultInstallments = defaultInstallments;
     }
 
     public String getSelectedGracePeriodType() {
@@ -534,5 +383,85 @@ public class LoanProductFormBean {
 
     public void setSelectedPrincipal(String selectedPrincipal) {
         this.selectedPrincipal = selectedPrincipal;
+    }
+
+    public String getSelectedLoanAmountCalculationType() {
+        return this.selectedLoanAmountCalculationType;
+    }
+
+    public void setSelectedLoanAmountCalculationType(String selectedLoanAmountCalculationType) {
+        this.selectedLoanAmountCalculationType = selectedLoanAmountCalculationType;
+    }
+
+    public SameForAllLoanBean getLoanAmountSameForAllLoans() {
+        return this.loanAmountSameForAllLoans;
+    }
+
+    public void setLoanAmountSameForAllLoans(SameForAllLoanBean loanAmountSameForAllLoans) {
+        this.loanAmountSameForAllLoans = loanAmountSameForAllLoans;
+    }
+
+    public ByLastLoanAmountBean getLoanAmountByLastLoanAmount() {
+        return this.loanAmountByLastLoanAmount;
+    }
+
+    public void setLoanAmountByLastLoanAmount(ByLastLoanAmountBean loanAmountByLastLoanAmount) {
+        this.loanAmountByLastLoanAmount = loanAmountByLastLoanAmount;
+    }
+
+    public ByLoanCycleBean getLoanAmountByLoanCycle() {
+        return this.loanAmountByLoanCycle;
+    }
+
+    public void setLoanAmountByLoanCycle(ByLoanCycleBean loanAmountByLoanCycle) {
+        this.loanAmountByLoanCycle = loanAmountByLoanCycle;
+    }
+
+    public String getSelectedInstallmentsCalculationType() {
+        return this.selectedInstallmentsCalculationType;
+    }
+
+    public void setSelectedInstallmentsCalculationType(String selectedInstallmentsCalculationType) {
+        this.selectedInstallmentsCalculationType = selectedInstallmentsCalculationType;
+    }
+
+    public SameForAllLoanBean getInstallmentsSameForAllLoans() {
+        return this.installmentsSameForAllLoans;
+    }
+
+    public void setInstallmentsSameForAllLoans(SameForAllLoanBean installmentsSameForAllLoans) {
+        this.installmentsSameForAllLoans = installmentsSameForAllLoans;
+    }
+
+    public ByLastLoanAmountBean getInstallmentsByLastLoanAmount() {
+        return this.installmentsByLastLoanAmount;
+    }
+
+    public void setInstallmentsByLastLoanAmount(ByLastLoanAmountBean installmentsByLastLoanAmount) {
+        this.installmentsByLastLoanAmount = installmentsByLastLoanAmount;
+    }
+
+    public ByLoanCycleBean getInstallmentsByLoanCycle() {
+        return this.installmentsByLoanCycle;
+    }
+
+    public void setInstallmentsByLoanCycle(ByLoanCycleBean installmentsByLoanCycle) {
+        this.installmentsByLoanCycle = installmentsByLoanCycle;
+    }
+
+    public String[] getApplicableFees() {
+        return this.applicableFees;
+    }
+
+    public void setApplicableFees(String[] applicableFees) {
+        this.applicableFees = applicableFees;
+    }
+
+    public String[] getApplicableFunds() {
+        return this.applicableFunds;
+    }
+
+    public void setApplicableFunds(String[] applicableFunds) {
+        this.applicableFunds = applicableFunds;
     }
 }

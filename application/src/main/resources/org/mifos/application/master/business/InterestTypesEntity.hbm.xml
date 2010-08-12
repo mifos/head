@@ -14,4 +14,8 @@
         <many-to-one name="productType" column="category_id" class="org.mifos.accounts.productdefinition.business.ProductTypeEntity"  not-null="true" />
         <many-to-one name="lookUpValue" class="org.mifos.application.master.business.LookUpValueEntity" column="lookup_id" insert="true" update="false"/>
     </class>
+    
+    <query name="findInterestTypeById">
+		<![CDATA[from InterestTypesEntity i where i.id=:ID]]>
+	</query>
 </hibernate-mapping>

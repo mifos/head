@@ -18,27 +18,25 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.productdefinition.util.helpers;
+package org.mifos.dto.screen;
 
-public enum GraceType {
+import org.mifos.dto.domain.MinMaxDefaultDto;
 
-    NONE((short) 1), GRACEONALLREPAYMENTS((short) 2), PRINCIPALONLYGRACE((short) 3);
-    private Short value;
+public class LoanAmountDetails {
 
-    private GraceType(Short value) {
-        this.value = value;
+    private final Integer calculationType;
+    private final MinMaxDefaultDto<Double> sameForAllLoanRange;
+
+    public LoanAmountDetails(Integer calculationType, MinMaxDefaultDto<Double> sameForAllLoanRange) {
+        this.calculationType = calculationType;
+        this.sameForAllLoanRange = sameForAllLoanRange;
     }
 
-    public Short getValue() {
-        return value;
+    public Integer getCalculationType() {
+        return this.calculationType;
     }
 
-    public static GraceType fromInt(int value) {
-        for (GraceType graceTypeConstants : GraceType.values()) {
-            if (graceTypeConstants.getValue() == value) {
-                return graceTypeConstants;
-            }
-        }
-        throw new RuntimeException("no grace type " + value);
+    public MinMaxDefaultDto<Double> getSameForAllLoanRange() {
+        return this.sameForAllLoanRange;
     }
 }

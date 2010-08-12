@@ -24,7 +24,7 @@ import org.mifos.framework.util.LocalizationConverter;
 
 public abstract class LoanAmountOption extends AmountRange {
     private Double defaultLoanAmount;
-    private final LoanOfferingBO loanOffering;
+    private LoanOfferingBO loanOffering;
 
     public LoanAmountOption(Double minLoanAmount, Double maxLoanAmount, Double defaultLoanAmount,
             LoanOfferingBO loanOffering) {
@@ -55,5 +55,9 @@ public abstract class LoanAmountOption extends AmountRange {
 
     public LoanOfferingBO getLoanOffering() {
         return loanOffering;
+    }
+
+    public void setLoanOffering(LoanOfferingBO loanOffering) {
+        this.loanOffering = loanOffering;
     }
 }

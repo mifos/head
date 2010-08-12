@@ -20,17 +20,29 @@
 
 package org.mifos.accounts.productdefinition.persistence;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.accounts.productdefinition.util.helpers.GraceType;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.master.business.InterestTypesEntity;
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.customers.business.CustomerLevelEntity;
@@ -85,9 +97,76 @@ public class LoanProductDaoHibernate implements LoanProductDao {
         this.genericDao.createOrUpdate(productType);
     }
 
+    @Override
+    public void save(LoanOfferingBO loanProduct) {
+        this.genericDao.createOrUpdate(loanProduct);
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public List<Object[]> findAllLoanProducts() {
         return (List<Object[]>) genericDao.executeNamedQuery("findAllLoanProducts", null);
+    }
+
+    @Override
+    public List<PrdApplicableMasterEntity> retrieveLoanApplicableProductCategories() {
+        List<PrdApplicableMasterEntity> applicableCategories = filter(doFetchListOfMasterDataFor(PrdApplicableMasterEntity.class));
+        return applicableCategories;
+    }
+
+    private List<PrdApplicableMasterEntity> filter(List<PrdApplicableMasterEntity> nonFiltered) {
+        List<PrdApplicableMasterEntity> applicableCategories = new ArrayList<PrdApplicableMasterEntity>();
+        for (PrdApplicableMasterEntity entity : nonFiltered) {
+            if (!ApplicableTo.CENTERS.getValue().equals(entity.getId())) {
+                applicableCategories.add(entity);
+            }
+        }
+        return applicableCategories;
+    }
+
+    @Override
+    public List<GracePeriodTypeEntity> retrieveGracePeriodTypes() {
+        return doFetchListOfMasterDataFor(GracePeriodTypeEntity.class);
+    }
+
+    @Override
+    public List<InterestCalcTypeEntity> retrieveInterestCalcTypes() {
+        return doFetchListOfMasterDataFor(InterestCalcTypeEntity.class);
+    }
+
+    @Override
+    public List<InterestTypesEntity> retrieveInterestTypes() {
+        return doFetchListOfMasterDataFor(InterestTypesEntity.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends MasterDataEntity> List<T> doFetchListOfMasterDataFor(Class<T> type) {
+        Session session = ((GenericDaoHibernate) this.genericDao).getHibernateUtil().getSessionTL();
+        List<T> masterEntities = session.createQuery("from " + type.getName()).list();
+        for (MasterDataEntity masterData : masterEntities) {
+            Hibernate.initialize(masterData.getNames());
+        }
+        return masterEntities;
+    }
+
+    @Override
+    public InterestTypesEntity findInterestType(InterestType interestType) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("ID", interestType.getValue());
+        return (InterestTypesEntity) genericDao.executeUniqueResultNamedQuery("findInterestTypeById", queryParameters);
+    }
+
+    @Override
+    public PrdApplicableMasterEntity findApplicableProductType(ApplicableTo applicableTo) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("ID", applicableTo.getValue());
+        return (PrdApplicableMasterEntity) genericDao.executeUniqueResultNamedQuery("findApplicableProductTypeById", queryParameters);
+    }
+
+    @Override
+    public GracePeriodTypeEntity findGracePeriodType(GraceType gracePeriodType) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("ID", gracePeriodType.getValue());
+        return (GracePeriodTypeEntity) genericDao.executeUniqueResultNamedQuery("findGracePeriodTypeById", queryParameters);
     }
 }

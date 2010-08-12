@@ -18,27 +18,35 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.productdefinition.util.helpers;
+package org.mifos.ui.core.controller;
 
-public enum GraceType {
+public class SameForAllLoanBean {
 
-    NONE((short) 1), GRACEONALLREPAYMENTS((short) 2), PRINCIPALONLYGRACE((short) 3);
-    private Short value;
+    private Double min;
+    private Double max;
+    private Double theDefault;
 
-    private GraceType(Short value) {
-        this.value = value;
+    public Double getMin() {
+        return this.min;
     }
 
-    public Short getValue() {
-        return value;
+    public void setMin(Double min) {
+        this.min = min;
     }
 
-    public static GraceType fromInt(int value) {
-        for (GraceType graceTypeConstants : GraceType.values()) {
-            if (graceTypeConstants.getValue() == value) {
-                return graceTypeConstants;
-            }
-        }
-        throw new RuntimeException("no grace type " + value);
+    public Double getMax() {
+        return this.max;
+    }
+
+    public void setMax(Double max) {
+        this.max = max;
+    }
+
+    public Double getTheDefault() {
+        return this.theDefault;
+    }
+
+    public void setTheDefault(Double theDefault) {
+        this.theDefault = theDefault;
     }
 }

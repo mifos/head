@@ -18,27 +18,31 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.productdefinition.util.helpers;
+package org.mifos.dto.screen;
 
-public enum GraceType {
+import java.util.List;
 
-    NONE((short) 1), GRACEONALLREPAYMENTS((short) 2), PRINCIPALONLYGRACE((short) 3);
-    private Short value;
+public class AccountingDetailsDto {
 
-    private GraceType(Short value) {
-        this.value = value;
+    private final List<Integer> applicableFunds;
+    private final Integer interestGlCodeId;
+    private final Integer principalClCodeId;
+
+    public AccountingDetailsDto(List<Integer> applicableFunds, Integer interestGlCodeId, Integer principalClCodeId) {
+        this.applicableFunds = applicableFunds;
+        this.interestGlCodeId = interestGlCodeId;
+        this.principalClCodeId = principalClCodeId;
     }
 
-    public Short getValue() {
-        return value;
+    public List<Integer> getApplicableFunds() {
+        return this.applicableFunds;
     }
 
-    public static GraceType fromInt(int value) {
-        for (GraceType graceTypeConstants : GraceType.values()) {
-            if (graceTypeConstants.getValue() == value) {
-                return graceTypeConstants;
-            }
-        }
-        throw new RuntimeException("no grace type " + value);
+    public Integer getInterestGlCodeId() {
+        return this.interestGlCodeId;
+    }
+
+    public Integer getPrincipalClCodeId() {
+        return this.principalClCodeId;
     }
 }

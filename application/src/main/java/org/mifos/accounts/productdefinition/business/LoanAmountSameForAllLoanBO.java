@@ -23,8 +23,7 @@ package org.mifos.accounts.productdefinition.business;
 public class LoanAmountSameForAllLoanBO extends LoanAmountOption {
     private final Short loanAmountSameForAllLoanID;
 
-    public LoanAmountSameForAllLoanBO(Double minLoanAmount, Double maxLoanAmount, Double defaultLoanAmount,
-            LoanOfferingBO loanOffering) {
+    public LoanAmountSameForAllLoanBO(Double minLoanAmount, Double maxLoanAmount, Double defaultLoanAmount, LoanOfferingBO loanOffering) {
         super(minLoanAmount, maxLoanAmount, defaultLoanAmount, loanOffering);
         this.loanAmountSameForAllLoanID = null;
     }

@@ -39,6 +39,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.fund.business.FundBO;
@@ -106,9 +107,45 @@ public class LoanOfferingBO extends PrdOfferingBO {
     private final Set<NoOfInstallFromLoanCycleBO> noOfInstallFromLoanCycle;
     private final Set<NoOfInstallSameForAllLoanBO> noOfInstallSameForAllLoan;
 
+    public static LoanOfferingBO createNew(Integer userId, String globalProductId, String name, String shortName, ProductCategoryBO productCategory,
+            DateTime startDate, PrdApplicableMasterEntity applicableToEntity, LoanAmountSameForAllLoanBO loanAmount, InterestTypesEntity interestTypeEntity, Double minRate,
+            Double maxRate, Double defaultRate, RecurrenceType recurrence, Integer recurEvery, NoOfInstallSameForAllLoanBO installment,
+            GLCodeEntity interestGlCode, GLCodeEntity principalGlCode) {
+
+        LoanOfferingBO loanProduct = new LoanOfferingBO(userId, globalProductId, name, shortName, productCategory, applicableToEntity, startDate, interestTypeEntity, minRate, maxRate, defaultRate, interestGlCode, principalGlCode);
+
+        return loanProduct;
+    }
+
     /**
-     * used by builders to construct legal {@link LoanOfferingBO}'s
+     * minimal legal constructor
      */
+    private LoanOfferingBO(Integer userId, String globalProductId, String name, String shortName, ProductCategoryBO productCategory, PrdApplicableMasterEntity applicableToEntity, DateTime startDate,
+            InterestTypesEntity interestTypeEntity, Double minRate, Double maxRate, Double defaultRate, GLCodeEntity interestGlCode, GLCodeEntity principalGlCode) {
+        super(userId, globalProductId, name, shortName, productCategory, applicableToEntity, startDate);
+        this.interestTypes = interestTypeEntity;
+        this.minInterestRate = minRate;
+        this.maxInterestRate = maxRate;
+        this.defInterestRate = defaultRate;
+        this.interestGLcode = interestGlCode;
+        this.principalGLcode = principalGlCode;
+        this.intDedDisbursement = YesNoFlag.NO.getValue();
+        this.prinDueLastInst = YesNoFlag.NO.getValue();
+
+        this.loanOfferingFunds = new HashSet<LoanOfferingFundEntity>();
+        this.loanOfferingFees = new HashSet<LoanOfferingFeesEntity>();
+        this.noOfInstallSameForAllLoan = new HashSet<NoOfInstallSameForAllLoanBO>();
+        this.noOfInstallFromLoanCycle = new HashSet<NoOfInstallFromLoanCycleBO>();
+        this.noOfInstallFromLastLoan = new HashSet<NoOfInstallFromLastLoanAmountBO>();
+        this.loanAmountFromLastLoan = new HashSet<LoanAmountFromLastLoanAmountBO>();
+        this.loanAmountSameForAllLoan = new HashSet<LoanAmountSameForAllLoanBO>();
+        this.loanAmountFromLoanCycle = new HashSet<LoanAmountFromLoanCycleBO>();
+    }
+
+    /**
+     *
+     */
+    @Deprecated
     public LoanOfferingBO(final GLCodeEntity principalGLcode, final GLCodeEntity interestGLCode,
             final InterestType interestType, final Double minInterestRate, final Double maxInterestRate,
             final Double defaultInterestRate, final Short interestPaidAtDisbursement,
@@ -245,6 +282,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
         prdLogger.debug("Loan offering build :" + getGlobalPrdOfferingNum());
     }
 
+    @Deprecated
     public LoanOfferingBO(final UserContext userContext, final String prdOfferingName,
             final String prdOfferingShortName, final ProductCategoryBO prdCategory,
             final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
@@ -911,6 +949,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
      * earlier data will be deleted using the delete-orphan property of hibernate
      */
     private void populateLoanAmountAndInstall(final LoanPrdActionForm loanPrdActionForm) {
+
         if (Short.parseShort(loanPrdActionForm.getLoanAmtCalcType()) == LOANAMOUNTFROMLASTLOAN) {
             clearLoanAmountData();
             // FIXME: does form logic belong in this class?
@@ -918,27 +957,33 @@ public class LoanOfferingBO extends PrdOfferingBO {
                     .getLastLoanMinLoanAmt1Value(), loanPrdActionForm.getLastLoanMaxLoanAmt1Value(), loanPrdActionForm
                     .getLastLoanDefaultLoanAmt1Value(), loanPrdActionForm.getStartRangeLoanAmt1().doubleValue(),
                     loanPrdActionForm.getEndRangeLoanAmt1().doubleValue(), this));
+
             addLoanAmountFromLastLoanAmount(new LoanAmountFromLastLoanAmountBO(loanPrdActionForm
                     .getLastLoanMinLoanAmt2Value(), loanPrdActionForm.getLastLoanMaxLoanAmt2Value(), loanPrdActionForm
                     .getLastLoanDefaultLoanAmt2Value(), loanPrdActionForm.getStartRangeLoanAmt2().doubleValue(),
                     loanPrdActionForm.getEndRangeLoanAmt2().doubleValue(), this));
+
             addLoanAmountFromLastLoanAmount(new LoanAmountFromLastLoanAmountBO(loanPrdActionForm
                     .getLastLoanMinLoanAmt3Value(), loanPrdActionForm.getLastLoanMaxLoanAmt3Value(), loanPrdActionForm
                     .getLastLoanDefaultLoanAmt3Value(), loanPrdActionForm.getStartRangeLoanAmt3().doubleValue(),
                     loanPrdActionForm.getEndRangeLoanAmt3().doubleValue(), this));
+
             addLoanAmountFromLastLoanAmount(new LoanAmountFromLastLoanAmountBO(loanPrdActionForm
                     .getLastLoanMinLoanAmt4Value(), loanPrdActionForm.getLastLoanMaxLoanAmt4Value(), loanPrdActionForm
                     .getLastLoanDefaultLoanAmt4Value(), loanPrdActionForm.getStartRangeLoanAmt4().doubleValue(),
                     loanPrdActionForm.getEndRangeLoanAmt4().doubleValue(), this));
+
             addLoanAmountFromLastLoanAmount(new LoanAmountFromLastLoanAmountBO(loanPrdActionForm
                     .getLastLoanMinLoanAmt5Value(), loanPrdActionForm.getLastLoanMaxLoanAmt5Value(), loanPrdActionForm
                     .getLastLoanDefaultLoanAmt5Value(), loanPrdActionForm.getStartRangeLoanAmt5().doubleValue(),
                     loanPrdActionForm.getEndRangeLoanAmt5().doubleValue(), this));
+
             addLoanAmountFromLastLoanAmount(new LoanAmountFromLastLoanAmountBO(loanPrdActionForm
                     .getLastLoanMinLoanAmt6Value(), loanPrdActionForm.getLastLoanMaxLoanAmt6Value(), loanPrdActionForm
                     .getLastLoanDefaultLoanAmt6Value(), loanPrdActionForm.getStartRangeLoanAmt6().doubleValue(),
                     loanPrdActionForm.getEndRangeLoanAmt6().doubleValue(), this));
         }
+
         if (Short.parseShort(loanPrdActionForm.getCalcInstallmentType()) == LOANAMOUNTFROMLASTLOAN) {
             clearNoOfInstallmentsData();
             addNoOfInstallFromLastLoanAmount(new NoOfInstallFromLastLoanAmountBO(Short.valueOf(loanPrdActionForm
@@ -965,8 +1010,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
                     .getMinLoanInstallment6()), Short.valueOf(loanPrdActionForm.getMaxLoanInstallment6()), Short
                     .valueOf(loanPrdActionForm.getDefLoanInstallment6()), loanPrdActionForm.getStartInstallmentRange6()
                     .doubleValue(), loanPrdActionForm.getEndInstallmentRange6().doubleValue(), this));
-
         }
+
         if (Short.parseShort(loanPrdActionForm.getLoanAmtCalcType()) == LOANAMOUNTFROMLOANCYCLE) {
             clearLoanAmountData();
             // FIXME: what are these hardcoded values like new Short("0")? can
@@ -1014,6 +1059,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
                     .getMinCycleInstallment6()), Short.valueOf(loanPrdActionForm.getMaxCycleInstallment6()), Short
                     .valueOf(loanPrdActionForm.getDefCycleInstallment6()), new Short("5"), this));
         }
+
         if (Short.parseShort(loanPrdActionForm.getLoanAmtCalcType()) == LOANAMOUNTSAMEFORALLLOAN) {
             clearLoanAmountData();
             loanAmountSameForAllLoan.add(new LoanAmountSameForAllLoanBO(loanPrdActionForm.getMinLoanAmountValue(),
