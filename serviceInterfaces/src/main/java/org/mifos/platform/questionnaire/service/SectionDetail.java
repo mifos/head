@@ -62,11 +62,13 @@ public class SectionDetail implements Serializable {
     }
 
     public boolean hasNoActiveQuestions() {
+        boolean result = true;
         for (SectionQuestionDetail sectionQuestionDetail : questionDetails) {
             if (sectionQuestionDetail.isActive()) {
-                return false;
+                result = false;
+                break;
             }
         }
-        return true;
+        return result;
     }
 }

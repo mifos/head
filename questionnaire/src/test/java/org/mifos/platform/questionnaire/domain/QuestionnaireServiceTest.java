@@ -111,7 +111,7 @@ public class QuestionnaireServiceTest {
         QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, QuestionType.FREETEXT);
         try {
             QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
-            Mockito.verify(questionDao, times(1)).create(any(QuestionEntity.class));
+            Mockito.verify(questionDao, times(1)).saveOrUpdate(any(QuestionEntity.class));
             Assert.assertNotNull(questionDetail);
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
@@ -121,7 +121,7 @@ public class QuestionnaireServiceTest {
             Assert.fail("Should not have thrown the validation exception");
         }
         Mockito.verify(questionnaireValidator).validateForDefineQuestion(questionDefinition);
-        Mockito.verify(questionDao).create(any(QuestionEntity.class));
+        Mockito.verify(questionDao).saveOrUpdate(any(QuestionEntity.class));
     }
 
     @Test
@@ -133,7 +133,7 @@ public class QuestionnaireServiceTest {
         questionDefinition.setAnswerChoices(answerChoices);
         try {
             QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
-            Mockito.verify(questionDao, times(1)).create(any(QuestionEntity.class));
+            Mockito.verify(questionDao, times(1)).saveOrUpdate(any(QuestionEntity.class));
             Assert.assertNotNull(questionDetail);
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
@@ -144,7 +144,7 @@ public class QuestionnaireServiceTest {
             Assert.fail("Should not have thrown the validation exception");
         }
         Mockito.verify(questionnaireValidator).validateForDefineQuestion(questionDefinition);
-        Mockito.verify(questionDao).create(any(QuestionEntity.class));
+        Mockito.verify(questionDao).saveOrUpdate(any(QuestionEntity.class));
     }
 
     @Test
@@ -158,7 +158,7 @@ public class QuestionnaireServiceTest {
         questionDefinition.setAnswerChoices(answerChoices);
         try {
             QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
-            Mockito.verify(questionDao, times(1)).create(any(QuestionEntity.class));
+            Mockito.verify(questionDao, times(1)).saveOrUpdate(any(QuestionEntity.class));
             Assert.assertNotNull(questionDetail);
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
@@ -172,7 +172,7 @@ public class QuestionnaireServiceTest {
             Assert.fail("Should not have thrown the validation exception");
         }
         Mockito.verify(questionnaireValidator).validateForDefineQuestion(questionDefinition);
-        Mockito.verify(questionDao).create(any(QuestionEntity.class));
+        Mockito.verify(questionDao).saveOrUpdate(any(QuestionEntity.class));
     }
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})

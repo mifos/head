@@ -58,8 +58,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.mifos.platform.questionnaire.domain.QuestionState.ACTIVE;
-import static org.mifos.platform.questionnaire.domain.QuestionState.INACTIVE;
 import static org.mifos.platform.util.CollectionUtils.asMap;
 import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 import static org.mifos.platform.util.MapEntry.makeEntry;
@@ -143,7 +141,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         question.setShortName(questionDetail.getTitle());
         question.setQuestionText(questionDetail.getTitle());
         question.setAnswerType(mapToAnswerType(questionDetail.getType()));
-        question.setQuestionState(ACTIVE);
+        question.setQuestionState(QuestionState.ACTIVE);
         question.setChoices(mapToChoices(questionDetail.getAnswerChoices()));
         question.setQuestionState(getQuestionState(questionDetail.isActive()));
         mapBoundsForNumericQuestionDetail(questionDetail, question);
@@ -151,7 +149,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private QuestionState getQuestionState(boolean active) {
-        return active? ACTIVE: INACTIVE;
+        return active? QuestionState.ACTIVE: QuestionState.INACTIVE;
     }
 
     private void mapBoundsForNumericQuestionDetail(QuestionDetail questionDetail, QuestionEntity question) {

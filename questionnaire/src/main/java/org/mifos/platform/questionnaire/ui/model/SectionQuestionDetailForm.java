@@ -48,6 +48,10 @@ public class SectionQuestionDetailForm {
         return sectionQuestionDetail.isMandatory();
     }
 
+    public boolean isActive() {
+        return sectionQuestionDetail.isActive();
+    }
+
     public void setMandatory(boolean mandatory) {
         sectionQuestionDetail.setMandatory(mandatory);
     }
