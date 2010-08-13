@@ -40,7 +40,11 @@ import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
-import org.mifos.accounts.productdefinition.LoanCalculationType;
+import org.mifos.accounts.productdefinition.LoanAmountCalculation;
+import org.mifos.accounts.productdefinition.LoanInstallmentCalculation;
+import org.mifos.accounts.productdefinition.LoanInstallmentCaluclationFactory;
+import org.mifos.accounts.productdefinition.LoanProductCalculationType;
+import org.mifos.accounts.productdefinition.LoanAmountCaluclationFactory;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -48,6 +52,7 @@ import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.PrdCategoryStatusEntity;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
+import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
@@ -62,6 +67,7 @@ import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
+import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
@@ -127,6 +133,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 
@@ -1480,33 +1487,27 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
     private LoanOfferingBO assembleFrom(LoanProductRequest loanProductRequest) {
 
-        String name = loanProductRequest.getLoanProductDetails().getName();
-        String shortName = loanProductRequest.getLoanProductDetails().getShortName();
-        String description = loanProductRequest.getLoanProductDetails().getDescription();
-        Integer category = loanProductRequest.getLoanProductDetails().getCategory();
-
-        ProductCategoryBO productCategory = findProductCategory(category);
-        DateTime startDate = loanProductRequest.getLoanProductDetails().getStartDate();
-        DateTime endDate = loanProductRequest.getLoanProductDetails().getEndDate();
-        ApplicableTo applicableTo = ApplicableTo.fromInt(loanProductRequest.getLoanProductDetails().getApplicableFor());
-
         // FIXME - keithw - pass down into service facade
         Integer userId = Integer.valueOf(1);
         Integer userBranchId = Integer.valueOf(3);
 
-        LoanCalculationType loanCalculation = LoanCalculationType.fromInt(loanProductRequest.getLoanAmountDetails().getCalculationType());
+        String name = loanProductRequest.getLoanProductDetails().getName();
+        String shortName = loanProductRequest.getLoanProductDetails().getShortName();
+        String description = loanProductRequest.getLoanProductDetails().getDescription();
+        Integer category = loanProductRequest.getLoanProductDetails().getCategory();
+        boolean loanCycleCounter = loanProductRequest.getLoanProductDetails().isIncludeInLoanCycleCounter();
+
+        ProductCategoryBO productCategory = this.loanProductDao.findProductCategoryById(category);
+        DateTime startDate = loanProductRequest.getLoanProductDetails().getStartDate();
+        DateTime endDate = loanProductRequest.getLoanProductDetails().getEndDate();
+        ApplicableTo applicableTo = ApplicableTo.fromInt(loanProductRequest.getLoanProductDetails().getApplicableFor());
+
+        LoanProductCalculationType calculationType = LoanProductCalculationType.fromInt(loanProductRequest.getLoanAmountDetails().getCalculationType());
         Double min = loanProductRequest.getLoanAmountDetails().getSameForAllLoanRange().getMin();
         Double max = loanProductRequest.getLoanAmountDetails().getSameForAllLoanRange().getMax();
         Double theDefault = loanProductRequest.getLoanAmountDetails().getSameForAllLoanRange().getTheDefault();
 
-        LoanAmountSameForAllLoanBO loanAmount = null;
-        switch (loanCalculation) {
-        case SAME_FOR_ALL_LOANS:
-            loanAmount = new LoanAmountSameForAllLoanBO(min, max, theDefault, null);
-            break;
-        default:
-            break;
-        }
+        LoanAmountCalculation loanAmountCalculation = LoanAmountCaluclationFactory.create(calculationType, min, max, theDefault);
 
         InterestType interestType = InterestType.fromInt(loanProductRequest.getInterestRateType());
         Double minRate = loanProductRequest.getInterestRateRange().getMin();
@@ -1519,19 +1520,12 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         RecurrenceType recurrence = RecurrenceType.fromInt(loanProductRequest.getRepaymentDetails().getFrequencyType().shortValue());
         Integer recurEvery = loanProductRequest.getRepaymentDetails().getRecurs();
 
-        LoanCalculationType installmentCalculation = LoanCalculationType.fromInt(loanProductRequest.getRepaymentDetails().getCalculationType());
+        LoanProductCalculationType installmentCalculation = LoanProductCalculationType.fromInt(loanProductRequest.getRepaymentDetails().getCalculationType());
         Integer minAllowed = loanProductRequest.getRepaymentDetails().getSameForAllLoanRange().getMin();
         Integer maxAllowed = loanProductRequest.getRepaymentDetails().getSameForAllLoanRange().getMax();
         Integer defaultAllowed = loanProductRequest.getRepaymentDetails().getSameForAllLoanRange().getTheDefault();
 
-        NoOfInstallSameForAllLoanBO installment = null;
-        switch (installmentCalculation) {
-        case SAME_FOR_ALL_LOANS:
-            installment = new NoOfInstallSameForAllLoanBO(minAllowed.shortValue(), maxAllowed.shortValue(), defaultAllowed.shortValue(), null);
-            break;
-        default:
-            break;
-        }
+        LoanInstallmentCalculation loanInstallmentCalculation = LoanInstallmentCaluclationFactory.create(installmentCalculation, minAllowed, maxAllowed, defaultAllowed);
 
         GraceType gracePeriodType = GraceType.fromInt(loanProductRequest.getRepaymentDetails().getGracePeriodType());
         GracePeriodTypeEntity gracePeriodTypeEntity = this.loanProductDao.findGracePeriodType(gracePeriodType);
@@ -1557,32 +1551,16 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         StringBuilder globalPrdOfferingNum = new StringBuilder();
         globalPrdOfferingNum.append(userBranchId);
         globalPrdOfferingNum.append("-");
-        Short maxPrdID = null;
+
         try {
-            maxPrdID = new PrdOfferingPersistence().getMaxPrdOffering();
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
-        }
-        globalPrdOfferingNum.append(StringUtils.leftPad(String.valueOf(maxPrdID != null ? maxPrdID + 1 : ProductDefinitionConstants.DEFAULTMAX + 1), 3, '0'));
+            Short maxPrdID = new PrdOfferingPersistence().getMaxPrdOffering();
+            PrdStatusEntity activeStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.LOAN_ACTIVE);
+            PrdStatusEntity inActiveStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.LOAN_INACTIVE);
+            globalPrdOfferingNum.append(StringUtils.leftPad(String.valueOf(maxPrdID != null ? maxPrdID + 1 : ProductDefinitionConstants.DEFAULTMAX + 1), 3, '0'));
 
-        return LoanOfferingBO.createNew(userId, globalPrdOfferingNum.toString(), name, shortName, productCategory, startDate, applicableToEntity, loanAmount,
-                interestTypeEntity, minRate, maxRate, defaultRate, recurrence, recurEvery, installment, interestGlCode, principalGlCode);
-    }
-
-    private ProductCategoryBO findProductCategory(Integer category) {
-
-        ProductCategoryBO found = null;
-        for (ProductCategoryBO productCategory : getActiveLoanProductCategories()) {
-            if (productCategory.getProductCategoryID().equals(category)) {
-                found = productCategory;
-            }
-        }
-        return found;
-    }
-
-    public List<ProductCategoryBO> getActiveLoanProductCategories() {
-        try {
-            return new PrdOfferingPersistence().getApplicableProductCategories(ProductType.LOAN, PrdCategoryStatus.ACTIVE);
+            return LoanOfferingBO.createNew(userId, globalPrdOfferingNum.toString(), name, shortName, description, productCategory, startDate, endDate, applicableToEntity,
+                    interestTypeEntity, minRate, maxRate, defaultRate, recurrence, recurEvery, interestGlCode, principalGlCode,
+                    activeStatus, inActiveStatus, gracePeriodTypeEntity, gracePeriodDuration, loanCycleCounter, loanAmountCalculation, loanInstallmentCalculation, applicableFees, applicableFunds);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }

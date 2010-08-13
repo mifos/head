@@ -29,6 +29,7 @@ public class LoanOfferingFeesEntity extends AbstractEntity {
 
     private final Short prdOfferingFeeId;
 
+    @SuppressWarnings("unused")
     private final LoanOfferingBO loanOffering;
 
     private final FeeBO fees;

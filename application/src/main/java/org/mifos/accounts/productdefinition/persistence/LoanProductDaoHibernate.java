@@ -31,10 +31,12 @@ import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
+import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
@@ -168,5 +170,14 @@ public class LoanProductDaoHibernate implements LoanProductDao {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("ID", gracePeriodType.getValue());
         return (GracePeriodTypeEntity) genericDao.executeUniqueResultNamedQuery("findGracePeriodTypeById", queryParameters);
+    }
+
+    @Override
+    public ProductCategoryBO findProductCategoryById(Integer category) {
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("productCategoryID", category.shortValue());
+        queryParameters.put("prdCategoryStatusId", PrdCategoryStatus.ACTIVE.getValue());
+        return (ProductCategoryBO) this.genericDao.executeUniqueResultNamedQuery("product.findById", queryParameters);
     }
 }

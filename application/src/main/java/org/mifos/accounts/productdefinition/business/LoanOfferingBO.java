@@ -40,10 +40,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.productdefinition.LoanAmountCalculation;
+import org.mifos.accounts.productdefinition.LoanInstallmentCalculation;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
@@ -96,10 +99,6 @@ public class LoanOfferingBO extends PrdOfferingBO {
     private final Set<LoanOfferingFundEntity> loanOfferingFunds;
     private final Set<LoanOfferingFeesEntity> loanOfferingFees;
 
-    // FIXME: the implementation of defaults for loan amounts and number of
-    // installments requires the inclusion of branching logic wherever loan
-    // offerings are instantiated, such as LoanPrdActionForm,
-    // LoanProductDetails.jsp,CreateMultipleLoanAccountsSearchResults.jsp, etc.
     private final Set<LoanAmountFromLastLoanAmountBO> loanAmountFromLastLoan;
     private final Set<LoanAmountFromLoanCycleBO> loanAmountFromLoanCycle;
     private final Set<LoanAmountSameForAllLoanBO> loanAmountSameForAllLoan;
@@ -107,12 +106,50 @@ public class LoanOfferingBO extends PrdOfferingBO {
     private final Set<NoOfInstallFromLoanCycleBO> noOfInstallFromLoanCycle;
     private final Set<NoOfInstallSameForAllLoanBO> noOfInstallSameForAllLoan;
 
-    public static LoanOfferingBO createNew(Integer userId, String globalProductId, String name, String shortName, ProductCategoryBO productCategory,
-            DateTime startDate, PrdApplicableMasterEntity applicableToEntity, LoanAmountSameForAllLoanBO loanAmount, InterestTypesEntity interestTypeEntity, Double minRate,
-            Double maxRate, Double defaultRate, RecurrenceType recurrence, Integer recurEvery, NoOfInstallSameForAllLoanBO installment,
-            GLCodeEntity interestGlCode, GLCodeEntity principalGlCode) {
+    public static LoanOfferingBO createNew(Integer userId, String globalProductId, String name, String shortName, String description, ProductCategoryBO productCategory,
+            DateTime startDate, DateTime endDate, PrdApplicableMasterEntity applicableToEntity, InterestTypesEntity interestTypeEntity, Double minRate,
+            Double maxRate, Double defaultRate, RecurrenceType recurrence, Integer recurEvery, GLCodeEntity interestGlCode, GLCodeEntity principalGlCode,
+            PrdStatusEntity activeStatus, PrdStatusEntity inActiveStatus, GracePeriodTypeEntity gracePeriodTypeEntity,
+            Integer gracePeriodDuration, boolean loanCycleCounter, LoanAmountCalculation loanAmountCalculation, LoanInstallmentCalculation loanInstallmentCalculation, List<FeeBO> applicableFees, List<FundBO> applicableFunds) {
 
-        LoanOfferingBO loanProduct = new LoanOfferingBO(userId, globalProductId, name, shortName, productCategory, applicableToEntity, startDate, interestTypeEntity, minRate, maxRate, defaultRate, interestGlCode, principalGlCode);
+        PrdStatusEntity status = inActiveStatus;
+        if (new LocalDate(startDate).isEqual(new LocalDate())) {
+            status = activeStatus;
+        }
+
+        LoanOfferingBO loanProduct = new LoanOfferingBO(userId, globalProductId, name, shortName, productCategory, status, applicableToEntity, startDate,
+                interestTypeEntity, minRate, maxRate, defaultRate, interestGlCode, principalGlCode, gracePeriodTypeEntity, gracePeriodDuration,
+                loanCycleCounter);
+        loanProduct.setDescription(description);
+        if (endDate != null) {
+            loanProduct.setEndDate(endDate.toDate());
+        }
+
+        for (FundBO fund : applicableFunds) {
+            loanProduct.addLoanOfferingFund(new LoanOfferingFundEntity(fund, loanProduct));
+        }
+
+        for (FeeBO fee : applicableFees) {
+            loanProduct.addPrdOfferingFee(new LoanOfferingFeesEntity(loanProduct, fee));
+        }
+
+        loanProduct.setLoanAmountSameForAllLoan(loanAmountCalculation.getSameForAll());
+        for (LoanAmountFromLastLoanAmountBO loanAmountFromLastLoanAmount : loanAmountCalculation.getFromLastLoan()) {
+            loanProduct.addLoanAmountFromLastLoanAmount(loanAmountFromLastLoanAmount);
+        }
+
+        for (LoanAmountFromLoanCycleBO loanAmountFromLoanCycle : loanAmountCalculation.getFromLoanCycle()) {
+            loanProduct.addLoanAmountFromLoanCycle(loanAmountFromLoanCycle);
+        }
+
+        loanProduct.setNoOfInstallSameForAllLoan(loanInstallmentCalculation.getSameForAll());
+        for (NoOfInstallFromLastLoanAmountBO noOfInstallFromLastLoanAmount : loanInstallmentCalculation.getFromLastLoan()) {
+            loanProduct.addNoOfInstallFromLastLoanAmount(noOfInstallFromLastLoanAmount);
+        }
+
+        for (NoOfInstallFromLoanCycleBO noOfInstallFromLoanCycle : loanInstallmentCalculation.getFromLoanCycle()) {
+            loanProduct.addNoOfInstallFromLoanCycle(noOfInstallFromLoanCycle);
+        }
 
         return loanProduct;
     }
@@ -120,20 +157,24 @@ public class LoanOfferingBO extends PrdOfferingBO {
     /**
      * minimal legal constructor
      */
-    private LoanOfferingBO(Integer userId, String globalProductId, String name, String shortName, ProductCategoryBO productCategory, PrdApplicableMasterEntity applicableToEntity, DateTime startDate,
-            InterestTypesEntity interestTypeEntity, Double minRate, Double maxRate, Double defaultRate, GLCodeEntity interestGlCode, GLCodeEntity principalGlCode) {
-        super(userId, globalProductId, name, shortName, productCategory, applicableToEntity, startDate);
+    private LoanOfferingBO(Integer userId, String globalProductId, String name, String shortName, ProductCategoryBO productCategory, PrdStatusEntity status, PrdApplicableMasterEntity applicableToEntity, DateTime startDate,
+            InterestTypesEntity interestTypeEntity, Double minRate, Double maxRate, Double defaultRate, GLCodeEntity interestGlCode, GLCodeEntity principalGlCode, GracePeriodTypeEntity gracePeriodTypeEntity, Integer gracePeriodDuration, boolean loanCycleCounter) {
+        super(userId, globalProductId, name, shortName, productCategory, status, applicableToEntity, startDate);
         this.interestTypes = interestTypeEntity;
         this.minInterestRate = minRate;
         this.maxInterestRate = maxRate;
         this.defInterestRate = defaultRate;
         this.interestGLcode = interestGlCode;
         this.principalGLcode = principalGlCode;
+        this.gracePeriodType = gracePeriodTypeEntity;
+        this.gracePeriodDuration = gracePeriodDuration.shortValue();
         this.intDedDisbursement = YesNoFlag.NO.getValue();
         this.prinDueLastInst = YesNoFlag.NO.getValue();
+        this.loanCounter = loanCycleCounter ? YesNoFlag.YES.getValue() : YesNoFlag.NO.getValue();
 
         this.loanOfferingFunds = new HashSet<LoanOfferingFundEntity>();
         this.loanOfferingFees = new HashSet<LoanOfferingFeesEntity>();
+
         this.noOfInstallSameForAllLoan = new HashSet<NoOfInstallSameForAllLoanBO>();
         this.noOfInstallFromLoanCycle = new HashSet<NoOfInstallFromLoanCycleBO>();
         this.noOfInstallFromLastLoan = new HashSet<NoOfInstallFromLastLoanAmountBO>();
@@ -494,24 +535,28 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
     public void addLoanAmountFromLastLoanAmount(final LoanAmountFromLastLoanAmountBO loanAmountFromLastLoanAmountBO) {
         if (null != loanAmountFromLastLoanAmountBO) {
+            loanAmountFromLastLoanAmountBO.setLoanOffering(this);
             this.loanAmountFromLastLoan.add(loanAmountFromLastLoanAmountBO);
         }
     }
 
     public void addNoOfInstallFromLastLoanAmount(final NoOfInstallFromLastLoanAmountBO noOfInstallFromLastLoanAmountBO) {
         if (null != noOfInstallFromLastLoanAmountBO) {
+            noOfInstallFromLastLoanAmountBO.setLoanOffering(this);
             this.noOfInstallFromLastLoan.add(noOfInstallFromLastLoanAmountBO);
         }
     }
 
     public void addLoanAmountFromLoanCycle(final LoanAmountFromLoanCycleBO loanAmountFromLoanCycleBO) {
         if (null != loanAmountFromLoanCycleBO) {
+            loanAmountFromLoanCycleBO.setLoanOffering(this);
             this.loanAmountFromLoanCycle.add(loanAmountFromLoanCycleBO);
         }
     }
 
     public void addNoOfInstallFromLoanCycle(final NoOfInstallFromLoanCycleBO noOfInstallFromLoanCycleBO) {
         if (null != noOfInstallFromLoanCycleBO) {
+            noOfInstallFromLoanCycleBO.setLoanOffering(this);
             this.noOfInstallFromLoanCycle.add(noOfInstallFromLoanCycleBO);
         }
     }
@@ -1178,11 +1223,13 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     public void setLoanAmountSameForAllLoan(final LoanAmountSameForAllLoanBO loanAmountSameForAllLoan) {
+        loanAmountSameForAllLoan.setLoanOffering(this);
         getLoanAmountSameForAllLoan().clear();
         getLoanAmountSameForAllLoan().add(loanAmountSameForAllLoan);
     }
 
     public void setNoOfInstallSameForAllLoan(final NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoan) {
+        noOfInstallSameForAllLoan.setLoanOffering(this);
         getNoOfInstallSameForAllLoan().clear();
         getNoOfInstallSameForAllLoan().add(noOfInstallSameForAllLoan);
     }

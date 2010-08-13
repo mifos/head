@@ -25,6 +25,7 @@ import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
+import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
@@ -63,4 +64,6 @@ public interface LoanProductDao {
     PrdApplicableMasterEntity findApplicableProductType(ApplicableTo applicableTo);
 
     GracePeriodTypeEntity findGracePeriodType(GraceType gracePeriodType);
+
+    ProductCategoryBO findProductCategoryById(Integer category);
 }

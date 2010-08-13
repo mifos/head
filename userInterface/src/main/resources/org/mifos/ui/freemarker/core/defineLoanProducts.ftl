@@ -234,7 +234,7 @@ function selectAllOptions(outSel)
             <div class="span-23">
             	<span class="pull-3 span-8 rightAlign" id="gracepertype">[@spring.message "manageLoanProducts.defineLoanProduct.graceperiodtype" /]&nbsp;:</span>
                 <span class="span-15 last">
-                	[@mifos.formSingleSelectWithPrompt "loanProduct.selectedGracePeriodType", loanProduct.gracePeriodTypeOptions, "--select one--" /]
+                	[@spring.formSingleSelect "loanProduct.selectedGracePeriodType", loanProduct.gracePeriodTypeOptions /]
                 </span>
             </div>
             <div class="span-23 ">

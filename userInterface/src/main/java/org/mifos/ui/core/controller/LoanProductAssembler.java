@@ -107,6 +107,7 @@ public class LoanProductAssembler {
             gracePeriodTypeOptions.put(gracePeriod.getId().toString(), gracePeriod.getName());
         }
         loanProductFormBean.setGracePeriodTypeOptions(gracePeriodTypeOptions);
+        loanProductFormBean.setSelectedGracePeriodType("1");
     }
 
     private void populateInstallmentCalculationRadioButtons(LoanProductFormBean loanProductFormBean,
@@ -157,5 +158,9 @@ public class LoanProductAssembler {
             categoryOptions.put(category.getId().toString(), category.getName());
         }
         loanProductFormBean.setCategoryOptions(categoryOptions);
+
+        if (loanProductRefData.getProductCategories().size() == 1) {
+            loanProductFormBean.setSelectedCategory(loanProductRefData.getProductCategories().get(0).getId().toString());
+        }
     }
 }

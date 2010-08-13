@@ -79,7 +79,14 @@ public class DefineLoanProductsFormController {
         loanProductFormBean.setStartDateMonth(startDate.getMonthOfYear());
         loanProductFormBean.setStartDateYear(Integer.valueOf(startDate.getYearOfEra()).toString());
 
+        SameForAllLoanBean installmentsSameForAllLoans = new SameForAllLoanBean();
+        installmentsSameForAllLoans.setMin(Double.valueOf("1"));
+        loanProductFormBean.setInstallmentsSameForAllLoans(installmentsSameForAllLoans);
+
         loanProductFormBean.setIncludeInLoanCycleCounter(false);
+        loanProductFormBean.setInstallmentFrequencyRecurrenceEvery(Integer.valueOf(1));
+        loanProductFormBean.setGracePeriodDurationInInstallments(Integer.valueOf(0));
+
 
         return loanProductFormBean;
     }
@@ -121,8 +128,10 @@ public class DefineLoanProductsFormController {
         RepaymentDetailsDto repaymentDetails = translateToRepaymentDetails(loanProductFormBean);
 
         List<Integer> applicableFees = new ArrayList<Integer>();
-        for (String feeId : loanProductFormBean.getSelectedFees()) {
-            applicableFees.add(Integer.valueOf(feeId));
+        if (loanProductFormBean.getSelectedFees() != null) {
+            for (String feeId : loanProductFormBean.getSelectedFees()) {
+                applicableFees.add(Integer.valueOf(feeId));
+            }
         }
 
         AccountingDetailsDto accountDetails = translateToAccountDetails(loanProductFormBean);
@@ -133,8 +142,10 @@ public class DefineLoanProductsFormController {
     private AccountingDetailsDto translateToAccountDetails(LoanProductFormBean loanProductFormBean) {
 
         List<Integer> applicableFunds = new ArrayList<Integer>();
-        for (String fundId : loanProductFormBean.getSelectedFunds()) {
-            applicableFunds.add(Integer.valueOf(fundId));
+        if (loanProductFormBean.getSelectedFunds() != null) {
+            for (String fundId : loanProductFormBean.getSelectedFunds()) {
+                applicableFunds.add(Integer.valueOf(fundId));
+            }
         }
         Integer interestGlCodeId = Integer.valueOf(loanProductFormBean.getSelectedInterest());
         Integer principalClCodeId = Integer.valueOf(loanProductFormBean.getSelectedPrincipal());
@@ -166,7 +177,7 @@ public class DefineLoanProductsFormController {
         Integer frequencyType = Integer.valueOf(loanProductFormBean.getInstallmentFrequencyPeriod());
         Integer recurs = Integer.valueOf(loanProductFormBean.getInstallmentFrequencyRecurrenceEvery());
         Integer calculationType = Integer.valueOf(loanProductFormBean.getSelectedInstallmentsCalculationType());
-        MinMaxDefaultDto<Integer> sameForAllLoanRange = translateToMinMaxDefault(loanProductFormBean.getLoanAmountSameForAllLoans());
+        MinMaxDefaultDto<Integer> sameForAllLoanRange = translateToMinMaxDefault(loanProductFormBean.getInstallmentsSameForAllLoans());
 
         Integer gracePeriodType = Integer.valueOf(loanProductFormBean.getSelectedGracePeriodType());
         Integer gracePeriodDuration = loanProductFormBean.getGracePeriodDurationInInstallments();
@@ -182,5 +193,9 @@ public class DefineLoanProductsFormController {
 
     private MinMaxDefaultDto<Double> translate(SameForAllLoanBean bean) {
         return new MinMaxDefaultDto<Double>(bean.getMin(), bean.getMax(), bean.getTheDefault());
+    }
+
+    public void setLoanProductAssembler(LoanProductAssembler loanProductAssembler) {
+        this.loanProductAssembler = loanProductAssembler;
     }
 }

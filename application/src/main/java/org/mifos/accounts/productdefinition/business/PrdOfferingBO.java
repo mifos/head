@@ -85,12 +85,13 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
      * minimal legal constructor (based on table schema)
      */
     public PrdOfferingBO(Integer userId, String globalProductId, String name, String shortName, ProductCategoryBO productCategory,
-            PrdApplicableMasterEntity applicableToEntity, DateTime startDate) {
+            PrdStatusEntity status, PrdApplicableMasterEntity applicableToEntity, DateTime startDate) {
         this.prdOfferingId = null;
         this.prdOfferingName = name;
         this.prdOfferingShortName = shortName;
         this.globalPrdOfferingNum = globalProductId;
         this.prdCategory = productCategory;
+        this.prdStatus = status;
         this.prdApplicableMaster = applicableToEntity;
         this.startDate = startDate.toDate();
         this.createdBy = userId.shortValue();

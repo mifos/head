@@ -20,12 +20,12 @@
 
 package org.mifos.accounts.productdefinition;
 
-public enum LoanCalculationType {
+public enum LoanProductCalculationType {
     UNKNOWN(0), SAME_FOR_ALL_LOANS(1), BY_LAST_LOAN(2), BY_LOAN_CYCLE(3);
 
     private final int value;
 
-    private LoanCalculationType(int value) {
+    private LoanProductCalculationType(int value) {
         this.value = value;
     }
 
@@ -33,9 +33,9 @@ public enum LoanCalculationType {
         return this.value;
     }
 
-    public static LoanCalculationType fromInt(int value) {
+    public static LoanProductCalculationType fromInt(int value) {
 
-        LoanCalculationType type = UNKNOWN;
+        LoanProductCalculationType type = UNKNOWN;
 
         switch (value) {
         case 0:
