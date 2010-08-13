@@ -88,7 +88,6 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
     private String dateOfBirthDD;
     private String dateOfBirthMM;
     private String dateOfBirthYY;
-    private String nextOrPreview;
     private String editFamily;
     private String gotErrorInPage;
     private String deleteThisRow;
@@ -281,14 +280,6 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
 
     public FormFile getPicture() {
         return picture;
-    }
-
-    public String getNextOrPreview() {
-        return nextOrPreview;
-    }
-
-    public void setNextOrPreview(String nextOrPreview) {
-        this.nextOrPreview = nextOrPreview;
     }
 
     public void setPicture(FormFile picture) {
