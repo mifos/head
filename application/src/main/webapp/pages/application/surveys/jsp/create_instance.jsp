@@ -100,12 +100,12 @@ hr {
 <br/>
 
 <font class="fontnormalRedBold"><html-el:errors bundle="SurveysUIResources" /></font>
-<hr>
+<hr style="width:100%">
 
 <h1>
 	<c:out value="${sessionScope.retrievedSurvey.name}"/>
 </h1>
-<hr>
+<hr style="width:100%">
 </td>
 </tr>
 </table>
