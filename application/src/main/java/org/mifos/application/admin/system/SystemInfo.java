@@ -20,15 +20,17 @@
 
 package org.mifos.application.admin.system;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
@@ -38,8 +40,9 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.core.ClasspathResource;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.StandardTestingService;
 
@@ -86,7 +89,6 @@ public class SystemInfo implements Serializable {
         this.databaseMetaData = databaseMetaData;
         this.locale = locale;
 
-
         try {
             URI mysqlOnly = new URI(databaseMetaData.getURL());
             this.infoURL = new URI(mysqlOnly.getSchemeSpecificPart());
@@ -107,16 +109,42 @@ public class SystemInfo implements Serializable {
         }
     }
 
-    public int getApplicationVersion() {
-        Connection connection = StaticHibernateUtil.getSessionTL().connection();
-        try {
-            ResultSet rs = connection.createStatement().executeQuery("select upgrade_id from applied_upgrades order by upgrade_id");
-            rs.last();
-            return rs.getInt(1);
+    public String getApplicationVersion() {
+        return getApplicationVersion(new DatabaseMigrator().getAppliedUpgrades(), getReleaseUpgrades(),
+                getReleaseSchemaName());
+    }
 
-        } catch (SQLException e) {
-            return 0;
+    public String getApplicationVersion(List<Integer> appliedUpgrades, List<Integer> releaseUpgrades,
+            String releaseSchemaName) {
+        String version = "Developer Schema";
+
+        if (appliedUpgrades.equals(releaseUpgrades)) {
+            version = releaseSchemaName;
         }
+
+        return version;
+    }
+
+    private String getReleaseSchemaName() {
+        Reader reader = null;
+        BufferedReader bufferedReader = null;
+        Integer upgradeId = null;
+        List<Integer> releaseUpgrades = new ArrayList<Integer>();
+        try {
+            reader = ClasspathResource.getInstance("/sql/").getAsReader("release-upgrades.txt");
+            bufferedReader = new BufferedReader(reader);
+
+            while (true) {
+                String line = bufferedReader.readLine();
+                if (line.startsWith("release")) {
+                    line = line.substring(line.indexOf(':') + 1);
+                    return line;
+                }
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return null;
     }
 
     public String getDatabaseVendor() {
@@ -291,4 +319,51 @@ public class SystemInfo implements Serializable {
     public void setOsUser(String osUser) {
         this.osUser = osUser;
     }
+
+    public List<Integer> getReleaseUpgrades() {
+        Reader reader = null;
+        BufferedReader bufferedReader = null;
+        Integer upgradeId = null;
+        List<Integer> releaseUpgrades = new ArrayList<Integer>();
+        try {
+            reader = ClasspathResource.getInstance("/sql/").getAsReader("release-upgrades.txt");
+            bufferedReader = new BufferedReader(reader);
+
+            while (true) {
+                String line = bufferedReader.readLine();
+                if (line == null) {
+                    break;
+                }
+                if (!line.startsWith("release")) {
+                    upgradeId = Integer.parseInt(line);
+                }
+
+                releaseUpgrades.add(upgradeId);
+            }
+
+        } catch (IOException e) {
+            // log.error("An error occurred whilst reading the upgrades.txt file");
+
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return releaseUpgrades;
+    }
+
 }

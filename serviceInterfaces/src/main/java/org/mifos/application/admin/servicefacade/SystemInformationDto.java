@@ -24,7 +24,7 @@ package org.mifos.application.admin.servicefacade;
 public class SystemInformationDto {
 
     private final String applicationServerInfo;
-    private final int    applicationVersion;
+    private final String applicationVersion;
     private final String buildDate;
     private final String buildNumber;
     private final String commitIdentifier;
@@ -50,7 +50,7 @@ public class SystemInformationDto {
     private final String releaseName;
 
     @SuppressWarnings("PMD.ExcessiveParameterList")
-    public SystemInformationDto(String applicationServerInfo, int applicationVersion, String buildDate,
+    public SystemInformationDto(String applicationServerInfo, String applicationVersion, String buildDate,
             String buildNumber, String commitIdentifier, String customReportsDirectory, String databaseName,
             String databasePort, String databaseServer, String databaseUser, String databaseVendor,
             String databaseVersion, String databaseDriverName, String databaseDriverVersion, String dateTimeString,
@@ -87,7 +87,7 @@ public class SystemInformationDto {
     public String getApplicationServerInfo() {
         return this.applicationServerInfo;
     }
-    public int getApplicationVersion() {
+    public String getApplicationVersion() {
         return this.applicationVersion;
     }
     public String getBuildDate() {
