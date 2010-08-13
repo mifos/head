@@ -27,7 +27,6 @@ import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.matchers.MessageMatcher;
-import org.mifos.platform.questionnaire.matchers.QuestionMatcher;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -51,7 +50,6 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyListOf;
 import static org.mockito.Mockito.argThat;
 
@@ -110,7 +108,7 @@ public class QuestionControllerTest {
         Mockito.when(questionnaireServiceFacade.isDuplicateQuestion(TITLE)).thenReturn(false);
         Mockito.when(messageContext.getAllMessages()).thenReturn(new Message[] {});
         Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
-        String result = questionController.addQuestion(questionForm, requestContext);
+        String result = questionController.addQuestion(questionForm, requestContext, true);
         List<Question> questions = questionForm.getQuestions();
         Mockito.verify(questionnaireServiceFacade).isDuplicateQuestion(TITLE);
         Assert.assertThat(questions, is(notNullValue()));
@@ -124,7 +122,7 @@ public class QuestionControllerTest {
         questionForm.setValidator(validator);
         Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
         Mockito.when(messageContext.hasErrorMessages()).thenReturn(true);
-        String result = questionController.addQuestion(questionForm, requestContext);
+        String result = questionController.addQuestion(questionForm, requestContext, true);
         Assert.assertThat(questionForm.getQuestions().size(), is(0));
         Assert.assertThat(result, is(notNullValue()));
         Assert.assertThat(result, is("failure"));
@@ -140,7 +138,7 @@ public class QuestionControllerTest {
         questionForm.setValidator(validator);
         Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
         Mockito.when(messageContext.hasErrorMessages()).thenReturn(false);
-        String result = questionController.addQuestion(questionForm, requestContext);
+        String result = questionController.addQuestion(questionForm, requestContext, true);
         Assert.assertThat(questionForm.getQuestions().size(), is(0));
         Assert.assertThat(result, is("failure"));
         Mockito.verify(requestContext).getMessageContext();
@@ -155,7 +153,7 @@ public class QuestionControllerTest {
         qform.getCurrentQuestion().setType("Free Text");
         Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
         Mockito.when(messageContext.hasErrorMessages()).thenReturn(true);
-        String result = questionController.addQuestion(qform, requestContext);
+        String result = questionController.addQuestion(qform, requestContext, true);
         Assert.assertThat(qform.getQuestions().size(), is(0));
         Assert.assertThat(result, is(notNullValue()));
         Assert.assertThat(result, is("failure"));
@@ -172,7 +170,7 @@ public class QuestionControllerTest {
         questionForm.getCurrentQuestion().setTitle(TITLE);
         Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
         Mockito.when(questionnaireServiceFacade.isDuplicateQuestion(TITLE)).thenReturn(true);
-        String result = questionController.addQuestion(questionForm, requestContext);
+        String result = questionController.addQuestion(questionForm, requestContext, true);
         Assert.assertThat(questionForm.getQuestions().size(), is(0));
         Assert.assertThat(result, is("failure"));
         Mockito.verify(requestContext).getMessageContext();
@@ -185,7 +183,7 @@ public class QuestionControllerTest {
         questionForm.getCurrentQuestion().setTitle("  " + TITLE + "    ");
         questionForm.setQuestions(Arrays.asList(getQuestion("0", TITLE, "Number")));
         Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
-        String result = questionController.addQuestion(questionForm, requestContext);
+        String result = questionController.addQuestion(questionForm, requestContext, true);
         Assert.assertThat(questionForm.getQuestions().size(), is(1));
         Assert.assertThat(result, is(notNullValue()));
         Assert.assertThat(result, is("failure"));
@@ -201,7 +199,7 @@ public class QuestionControllerTest {
         questionForm.getCurrentQuestion().setCurrentChoice("C1");
         questionForm.getCurrentQuestion().addAnswerChoice();
         Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
-        String result = questionController.addQuestion(questionForm, requestContext);
+        String result = questionController.addQuestion(questionForm, requestContext, true);
         Assert.assertThat(result, is(notNullValue()));
         Assert.assertThat(result, is("failure"));
         Mockito.verify(requestContext).getMessageContext();
@@ -218,7 +216,7 @@ public class QuestionControllerTest {
         questionForm.getCurrentQuestion().setCurrentChoice("C2");
         questionForm.getCurrentQuestion().addAnswerChoice();
         Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
-        String result = questionController.addQuestion(questionForm, requestContext);
+        String result = questionController.addQuestion(questionForm, requestContext, true);
         Assert.assertThat(result, is(notNullValue()));
         Assert.assertThat(result, is("success"));
         Assert.assertThat(questionForm.getQuestions().size(), is(1));
@@ -264,7 +262,7 @@ public class QuestionControllerTest {
     }
 
     private QuestionDetail getQuestionDetail(int id, String title, QuestionType type) {
-        return new QuestionDetail(id, title, title, type);
+        return new QuestionDetail(id, title, title, type, true);
     }
 
     private QuestionForm getQuestionForm(String title, String type) {

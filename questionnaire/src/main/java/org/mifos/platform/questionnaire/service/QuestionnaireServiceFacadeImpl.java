@@ -64,6 +64,11 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
+    public List<QuestionDetail> getAllActiveQuestions() {
+        return questionnaireService.getAllActiveQuestions();
+    }
+
+    @Override
     public List<QuestionGroupDetail> getAllQuestionGroups() {
         return questionnaireService.getAllQuestionGroups();
     }

@@ -34,6 +34,8 @@ public interface QuestionnaireService {
 
     List<QuestionDetail> getAllQuestions();
 
+    List<QuestionDetail> getAllActiveQuestions();
+
     QuestionGroupDetail defineQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
 
     List<QuestionGroupDetail> getAllQuestionGroups();

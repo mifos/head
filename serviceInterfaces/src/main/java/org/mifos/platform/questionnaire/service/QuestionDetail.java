@@ -38,21 +38,23 @@ public class QuestionDetail implements Serializable {
     private List<ChoiceDetail> answerChoices;
     private Integer numericMin;
     private Integer numericMax;
+    private boolean active;
 
     public QuestionDetail() {
         this(null, QuestionType.INVALID);
     }
 
     public QuestionDetail(String text, QuestionType type) {
-        this(0, text, text, type);
+        this(0, text, text, type, true);
     }
 
-    public QuestionDetail(Integer id, String text, String shortName, QuestionType type) {
+    public QuestionDetail(Integer id, String text, String shortName, QuestionType type, boolean active) {
         this.id = id;
         this.text = text;
         this.shortName = shortName;
         this.type = type;
         this.answerChoices = new ArrayList<ChoiceDetail>();
+        this.active = active;
     }
 
     public Integer getId() {
@@ -152,5 +154,13 @@ public class QuestionDetail implements Serializable {
 
     public void removeTagForChoice(int choiceIndex, int tagIndex) {
         answerChoices.get(choiceIndex).removeTag(tagIndex);
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

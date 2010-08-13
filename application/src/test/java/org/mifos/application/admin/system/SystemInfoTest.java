@@ -21,6 +21,8 @@
 package org.mifos.application.admin.system;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
@@ -46,11 +48,6 @@ public class SystemInfoTest {
         info.setJavaVendor("Sun");
         info.setJavaVersion("1.5");
         info.setBuildInformation(new MockSvnRevision());
-    }
-
-    @Test
-    public void testApplicationDatabaseVersion() throws Exception {
-       //TODO Update for NSDU
     }
 
     @Test
@@ -109,5 +106,24 @@ public class SystemInfoTest {
         } finally {
             dateTimeService.resetToCurrentSystemDateTime();
         }
+    }
+
+    @Test
+    public void testFriendlyDatabaseVersion() {
+        List<Integer> appliedUpgrades = new ArrayList<Integer>();
+        appliedUpgrades.add(1277604232);
+        appliedUpgrades.add(1277604243);
+        appliedUpgrades.add(1277604267);
+
+        List<Integer> releaseUpgrades = new ArrayList<Integer>();
+        releaseUpgrades.add(1277604232);
+        releaseUpgrades.add(1277604243);
+        releaseUpgrades.add(1277604267);
+
+        String releaseSchemaName = "mifos-v1.7.0-schema";
+
+        String databaseVersion = info.getApplicationVersion(appliedUpgrades, releaseUpgrades, releaseSchemaName);
+        Assert.assertEquals(releaseSchemaName, databaseVersion);
+
     }
 }

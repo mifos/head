@@ -78,6 +78,11 @@ explanation of the license and how it is applied.
 	 	 return true;
     }
 
+  function goToPreviewPage(){
+	groupCustActionForm.action="groupCustAction.do?method=previewOnly";
+	groupCustActionForm.submit();
+  }
+
 </script>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
@@ -597,9 +602,24 @@ explanation of the license and how it is applied.
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:submit styleId="creategroup.button.preview" styleClass="buttn" >
-													<mifos:mifoslabel name="button.continue" bundle="GroupUIResources"></mifos:mifoslabel>
-												</html-el:submit>
+                                                <c:choose>
+                                                    <c:when
+                                                        test="${param.method eq 'previous' or sessionScope.groupCustActionForm.nextOrPreview eq 'preview'}">
+                                                        <html:hidden property="nextOrPreview" value="preview" />
+
+                                                        <html-el:button styleId="creategroup.button.preview" onclick="goToPreviewPage()"
+                                                            property="submitButton" styleClass="buttn">
+                                                            <mifos:mifoslabel name="button.preview"
+                                                                bundle="GroupUIResources"></mifos:mifoslabel>
+                                                        </html-el:button>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <html-el:submit styleId="creategroup.button.preview" styleClass="buttn">
+                                                            <mifos:mifoslabel name="button.continue"
+                                                                bundle="GroupUIResources"></mifos:mifoslabel>
+                                                        </html-el:submit>
+                                                    </c:otherwise>
+                                                </c:choose>
 												&nbsp;&nbsp;
 												<html-el:button styleId="creategroup.button.cancel" property="cancelBtn" styleClass="cancelbuttn" onclick="goToCancelPage()">
 													<mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>

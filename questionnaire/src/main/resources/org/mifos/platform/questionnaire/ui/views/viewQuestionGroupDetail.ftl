@@ -49,15 +49,23 @@
                                  <tr>
                                      <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.name"/]</td>
                                      <td class="drawtablehd" width="25%">[@spring.message "questionnaire.question.mandatory"/]</td>
+                                     <td class="drawtablehd" width="25%">[@spring.message "questionnaire.status"/]</td>
                                  </tr>
                                 [#list section.sectionQuestions as sectionQuestion]
                                      <tr>
                                          <td class="drawtablerow" width="50%"><a href="viewAndEditQuestion.ftl?questionId=${sectionQuestion.questionId}">${sectionQuestion.title}</a></td>
-                                         <td class="drawtablerow" width="50%">
+                                         <td class="drawtablerow" width="25%">
                                              [#if sectionQuestion.mandatory]
                                                  [@spring.message "questionnaire.yes"/]
                                              [#else]
                                                  [@spring.message "questionnaire.no"/]
+                                             [/#if]
+                                         </td>
+                                         <td class="drawtablerow" width="25%">
+                                             [#if sectionQuestion.active]
+                                                 [@spring.message "questionnaire.active"/]
+                                             [#else]
+                                                 [@spring.message "questionnaire.inactive"/]
                                              [/#if]
                                          </td>
                                      </tr>

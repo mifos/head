@@ -124,3 +124,12 @@
     <label for="${id}" style="float:none;">${value?html}</label>${separator}
     [/#list]
 [/#macro]
+
+[#macro boolRadioButtons path options separator attributes=""]
+    [@spring.bind path/]
+    [#list options?keys as value]
+    [#assign id="${spring.status.expression}${value_index}"]
+    <input type="radio" id="${id}" name="${spring.status.expression}" value="${value?html}"[#if spring.stringStatusValue == value] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
+    <label for="${id}" style="float:none;">${options[value]?html}</label>${separator}
+    [/#list]
+[/#macro]

@@ -209,7 +209,7 @@ public class QuestionTest {
     }
 
     private void assertQuestion(String shortName, QuestionType questionType, String questionTypeString, List<String> choices) {
-        QuestionDetail questionDetail = new QuestionDetail(123, "Question Text", shortName, questionType);
+        QuestionDetail questionDetail = new QuestionDetail(123, "Question Text", shortName, questionType, true);
         List<ChoiceDetail> choiceDetails = getChoiceDetails(choices);
         questionDetail.setAnswerChoices(choiceDetails);
         Question question = new Question(questionDetail);

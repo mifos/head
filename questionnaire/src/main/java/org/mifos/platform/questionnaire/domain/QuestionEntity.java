@@ -180,5 +180,8 @@ public class QuestionEntity implements Serializable, Comparable<QuestionEntity> 
         return getShortName().compareTo(other.getShortName());
     }
 
+    public boolean isActive() {
+        return QuestionState.ACTIVE.equals(questionState);
+    }
 }
 
