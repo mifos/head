@@ -161,12 +161,12 @@ public class QuestionnaireServiceIntegrationTest {
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldGetAllQuestions() throws SystemException {
-        int initialCountOfQuestions = questionnaireService.getAllQuestions().size();
+        int initialCountOfQuestions = questionnaireService.getAllActiveQuestions().size();
         QuestionDetail questionDetail2 = defineQuestion("Q2" + currentTimeMillis(), QuestionType.FREETEXT);
         QuestionDetail questionDetail1 = defineQuestion("Q1" + currentTimeMillis(), QuestionType.NUMERIC);
         List<String> expectedOrderTitles = asList(questionDetail1.getShortName(), questionDetail2.getShortName());
         List<Integer> expectedOrderIds = asList(questionDetail1.getId(), questionDetail2.getId());
-        List<QuestionDetail> questionDetails = questionnaireService.getAllQuestions();
+        List<QuestionDetail> questionDetails = questionnaireService.getAllActiveQuestions();
         int finalCountOfQuestions = questionDetails.size();
         assertThat(finalCountOfQuestions - initialCountOfQuestions, is(2));
         List<QuestionDetail> actualQuestions = new ArrayList<QuestionDetail>();
@@ -498,7 +498,7 @@ public class QuestionnaireServiceIntegrationTest {
     private SectionDetail getSectionWithQuestionId(String name, int questionId) throws SystemException {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, null, null, QuestionType.INVALID), true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, null, null, QuestionType.INVALID, true), true));
         return section;
     }
 

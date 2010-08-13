@@ -70,6 +70,11 @@ public class GenericDaoHibernateImpl<T, ID extends Serializable>
     }
 
     @Override
+    public void saveOrUpdate(T entity) {
+        getHibernateTemplate().saveOrUpdate(entity);
+    }
+
+    @Override
     public void update(T transientObject) {
         getHibernateTemplate().update(transientObject);
     }

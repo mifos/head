@@ -325,7 +325,7 @@ public class QuestionGroupControllerTest {
 
     @Test
     public void shouldGetAllSectionQuestions() {
-        Mockito.when(questionnaireServiceFacade.getAllQuestions()).thenReturn(asList(getQuestionDetail(1, "Q1", QuestionType.NUMERIC), getQuestionDetail(2, "Q2", QuestionType.DATE)));
+        Mockito.when(questionnaireServiceFacade.getAllActiveQuestions()).thenReturn(asList(getQuestionDetail(1, "Q1", QuestionType.NUMERIC), getQuestionDetail(2, "Q2", QuestionType.DATE)));
         List<SectionQuestionDetail> sectionQuestions = questionGroupController.getAllSectionQuestions();
         assertThat(sectionQuestions, Is.is(notNullValue()));
         assertThat(sectionQuestions.size(), Is.is(2));
@@ -333,16 +333,16 @@ public class QuestionGroupControllerTest {
         assertThat(sectionQuestions.get(0).getTitle(), Is.is("Q1"));
         assertThat(sectionQuestions.get(1).getQuestionId(), Is.is(2));
         assertThat(sectionQuestions.get(1).getTitle(), Is.is("Q2"));
-        verify(questionnaireServiceFacade).getAllQuestions();
+        verify(questionnaireServiceFacade).getAllActiveQuestions();
     }
 
     @Test
     public void shouldGetAllSectionQuestionsEmpty() {
-        Mockito.when(questionnaireServiceFacade.getAllQuestions()).thenReturn(null);
+        Mockito.when(questionnaireServiceFacade.getAllActiveQuestions()).thenReturn(null);
         List<SectionQuestionDetail> sectionQuestions = questionGroupController.getAllSectionQuestions();
         assertThat(sectionQuestions, Is.is(notNullValue()));
         assertThat(sectionQuestions.size(), Is.is(0));
-        verify(questionnaireServiceFacade).getAllQuestions();
+        verify(questionnaireServiceFacade).getAllActiveQuestions();
     }
 
     @Test
@@ -465,11 +465,11 @@ public class QuestionGroupControllerTest {
     }
 
     private SectionQuestionDetail getSectionQuestionDetail(int id, String title) {
-        return new SectionQuestionDetail(new QuestionDetail(id, title, title, QuestionType.FREETEXT), true);
+        return new SectionQuestionDetail(new QuestionDetail(id, title, title, QuestionType.FREETEXT, true), true);
     }
 
     private QuestionDetail getQuestionDetail(int id, String title, QuestionType type) {
-        return new QuestionDetail(id, title, title, type);
+        return new QuestionDetail(id, title, title, type, true);
     }
 
 

@@ -121,6 +121,7 @@ $(document).ready(function(){
     });
 
     CreateQuestion.disableSubmitButtonOnEmptyQuestionList();
+    $("#status").hide();
     $("#currentQuestion\\.type").change();
     $("#currentQuestion\\.currentChoice").keyup();
     $("#currentQuestion\\.currentSmartChoice").keyup();
