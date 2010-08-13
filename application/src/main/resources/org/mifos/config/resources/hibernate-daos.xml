@@ -52,4 +52,8 @@
     <bean id="generalLedgerDao" class="org.mifos.accounts.financial.business.service.GeneralLedgerDaoHibernate" >
         <constructor-arg ref="genericDao" />
     </bean>
+    
+    <bean id="appliedUpgradesDao" class="org.mifos.application.admin.system.persistence.AppliedUpgradesDaoHibernate">
+    	<constructor-arg ref="genericDao" />
+    </bean>
 </beans>

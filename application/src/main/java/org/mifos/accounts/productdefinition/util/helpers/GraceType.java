@@ -23,9 +23,9 @@ package org.mifos.accounts.productdefinition.util.helpers;
 public enum GraceType {
 
     NONE((short) 1), GRACEONALLREPAYMENTS((short) 2), PRINCIPALONLYGRACE((short) 3);
-    Short value;
+    private Short value;
 
-    GraceType(Short value) {
+    private GraceType(Short value) {
         this.value = value;
     }
 

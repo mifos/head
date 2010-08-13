@@ -137,13 +137,19 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     @Override
     public QuestionEntity mapToQuestion(QuestionDetail questionDetail) {
         QuestionEntity question = new QuestionEntity();
+        question.setQuestionId(questionDetail.getId());
         question.setShortName(questionDetail.getTitle());
         question.setQuestionText(questionDetail.getTitle());
         question.setAnswerType(mapToAnswerType(questionDetail.getType()));
         question.setQuestionState(QuestionState.ACTIVE);
         question.setChoices(mapToChoices(questionDetail.getAnswerChoices()));
+        question.setQuestionState(getQuestionState(questionDetail.isActive()));
         mapBoundsForNumericQuestionDetail(questionDetail, question);
         return question;
+    }
+
+    private QuestionState getQuestionState(boolean active) {
+        return active? QuestionState.ACTIVE: QuestionState.INACTIVE;
     }
 
     private void mapBoundsForNumericQuestionDetail(QuestionDetail questionDetail, QuestionEntity question) {
@@ -276,7 +282,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     private QuestionDetail mapToQuestionDetail(QuestionEntity question, QuestionType type) {
         List<ChoiceDetail> answerChoices = mapToQuestionChoices(question.getChoices());
-        QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type);
+        QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type, question.isActive());
         questionDetail.setAnswerChoices(answerChoices);
         mapBoundsForNumericQuestion(question, questionDetail);
         return questionDetail;

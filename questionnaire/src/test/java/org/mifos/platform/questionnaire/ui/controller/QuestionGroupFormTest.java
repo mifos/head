@@ -235,7 +235,7 @@ public class QuestionGroupFormTest {
     }
 
     private SectionQuestionDetail getSectionQuestionDetail(int id, String title, boolean mandatory) {
-        return new SectionQuestionDetail(new QuestionDetail(id, title, title, QuestionType.FREETEXT), mandatory);
+        return new SectionQuestionDetail(new QuestionDetail(id, title, title, QuestionType.FREETEXT, true), mandatory);
     }
 
     private void assertEventSource(EventSource eventSource, String event, String source) {

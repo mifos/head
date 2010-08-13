@@ -2,120 +2,59 @@
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
 <head>
-<script type="text/javascript">
-//list boxes code
-function SecListBox(ListBox,text,value){
-	try{
-		var option=document.createElement("OPTION");
-		option.value=value;option.text=text;
-		ListBox.options.add(option)
+ <script type="text/javascript">
+ function addOption(root, text, value)
+{
+  var newOpt = new Option(text, value);
+  var rootLength = root.length;
+  root.options[rootLength] = newOpt;
+}
+
+function deleteOption(root, index)
+{ 
+  var rootLength= root.length;
+  if(rootLength>0)
+  {
+    root.options[index] = null;
+  }
+}
+
+function moveOptions(root, destination)
+{
+  
+  var rootLength= root.length;
+  var rootText = new Array();
+  var rootValues = new Array();
+  var rootCount = 0;
+  
+  var i; 
+  for(i=rootLength-1; i>=0; i--)
+  {
+    if(root.options[i].selected)
+    {
+      rootText[rootCount] = root.options[i].text;
+      rootValues[rootCount] = root.options[i].value;
+      deleteOption(root, i);
+      rootCount++;
+    }
+  }  
+  for(i=rootCount-1; i>=0; i--)
+  {
+    addOption(destination, rootText[i], rootValues[i]);
+  }  
+}
+
+function selectAllOptions(outSel)
+{
+	if(null != outSel) {
+	 	var selLength =outSel.length;
+		outSel.multiple=true;
+		for(i=selLength-1; i>=0; i--)
+		{
+			outSel.options[i].selected=true;
 		}
-	catch(er){alert(er)}
-}
-function FirstListBox(){
-	try{
-		var count=document.getElementById("lstBox").options.length;
-		for(i=0;i<count;i++){
-			if(document.getElementById("lstBox").options[i].selected){
-				SecListBox(document.getElementById("ListBox1"),document.getElementById("lstBox").options[i].value,document.getElementById("lstBox").options[i].value);
-				document.getElementById("lstBox").remove(i);
-				break
-			}
-		}
 	}
-	catch(er){alert(er)}
-}
-function SortAllItems(){
-	var arr=new Array();
-	for(i=0;i<document.getElementById("lstBox").options.length;i++){
-		arr[i]=document.getElementById("lstBox").options[i].value
-	}
-	arr.sort();
-	RemoveAll();
-	for(i=0;i<arr.length;i++){
-		SecListBox(document.getElementById("lstBox"),arr[i],arr[i])
-	}
-}
-function RemoveAll(){
-	try{
-		document.getElementById("lstBox").options.length=0
-	}
-	catch(er){alert(er)}
-}
-function SecondListBox(){
-	try{
-		var count=document.getElementById("ListBox1").options.length;
-		for(i=0;i<count;i++){
-			if(document.getElementById("ListBox1").options[i].selected){
-				SecListBox(document.getElementById("lstBox"),document.getElementById("ListBox1").options[i].value,document.getElementById("ListBox1").options[i].value);
-				document.getElementById("ListBox1").remove(i);
-				break
-			}
-		}
-		SortAllItems()
-	}catch(er){alert(er)}
-}
-//next part
-
-function enableMonth()
-{
-	document.getElementById("month").style.display="block";
-	document.getElementById("week").style.display="none";
-}
-function enableWeek()
-{
-	document.getElementById("week").style.display="block";
-	document.getElementById("month").style.display="none";
-
-}
-function enableAllLoans()
-{
-	document.getElementById("1").style.display="block";
-	document.getElementById("2").style.display="none";
-	document.getElementById("3").style.display="none";
-}
-function enableLoanAmount()
-{
-	document.getElementById("2").style.display="block";
-	document.getElementById("1").style.display="none";
-	document.getElementById("3").style.display="none";
-
-}
-function enableLoanCycle()
-{
-	document.getElementById("3").style.display="block";
-	document.getElementById("2").style.display="none";
-	document.getElementById("1").style.display="none";
-
-}
-function enableAllLoans1()
-{
-	document.getElementById("11").style.display="block";
-	document.getElementById("22").style.display="none";
-	document.getElementById("33").style.display="none";
-}
-function enableLoanAmount1()
-{
-	document.getElementById("22").style.display="block";
-	document.getElementById("11").style.display="none";
-	document.getElementById("33").style.display="none";
-
-}
-function enableLoanCycle1()
-{
-	document.getElementById("33").style.display="block";
-	document.getElementById("22").style.display="none";
-	document.getElementById("11").style.display="none";
-
-}
-function disable()
-{
-	document.getElementById("month").style.display="none";
-	document.getElementById("22").style.display="none";
-	document.getElementById("33").style.display="none";
-	document.getElementById("2").style.display="none";
-	document.getElementById("3").style.display="none";
-}
+}	
 </script>
 </head>
 [@mifos.header "title" /]
@@ -128,7 +67,7 @@ function disable()
         <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "review&Submit" /]</p>
       </div>
       <div class="subcontent ">
-        <form method="" action="" name="formname">
+        <form method="post" action="defineLoanProducts.ftl" name="formname">
           <p class="font15"><span class="fontBold" id="createLoanProduct.heading">[@spring.message "manageLoanProducts.defineLoanProduct.addanewLoanproduct" /]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "manageLoanProducts.defineLoanProduct.enterLoanproductinformation" /]</span></p>
           <div>[@spring.message "manageLoanProducts.defineLoanProduct.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturn" /]</div>
           <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired" /] </div>
@@ -206,7 +145,7 @@ function disable()
           <div class="prepend-2  span-23 last">
             <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.calculateLoanAmountas" /]&nbsp;:</span>
             	<div class="span-17">
-            		[@spring.formRadioButtons "loanProduct.loanAmountCalculationType", loanProduct.loanAmountCalculationTypeOptions, "" /]
+            		[@spring.formRadioButtons "loanProduct.selectedLoanAmountCalculationType", loanProduct.loanAmountCalculationTypeOptions, "" /]
                 </div>
                 
                 <div class="clear">&nbsp;</div>
@@ -219,9 +158,9 @@ function disable()
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="span-14 paddingLeft">
-                    	<span class="span-4">[@spring.formInput "loanProduct.minLoanAmount" /]</span>
-                        <span class="span-4">[@spring.formInput "loanProduct.maxLoanAmount" /]</span>
-                        <span class="span-5 last">[@spring.formInput "loanProduct.defaultLoanAmount" /]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountSameForAllLoans.min" /]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountSameForAllLoans.max" /]</span>
+                        <span class="span-5 last">[@spring.formInput "loanProduct.loanAmountSameForAllLoans.theDefault" /]</span>
                     </div>
                     <div>&nbsp;</div>
                 </div>
@@ -265,14 +204,14 @@ function disable()
                 	</div>
                     <div id="month" class="paddingLeft" style="display:none">
                 		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ifmonths,specifythefollowing" /]</span><br />
-                		[@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /][@spring.formInput "loanProduct.installmentFrequencyRecurrenceEvery" "size=3"/][@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]
+                		[@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /][@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]
                 	</div>
                 </div>
             </div>
 
             <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.calculateofInstallmentsas" /]&nbsp;</span>
             	<div class="span-14">
-            		[@spring.formRadioButtons "loanProduct.installmentsCalculationType", loanProduct.installmentsCalculationTypeOptions, "" /]
+            		[@spring.formRadioButtons "loanProduct.selectedInstallmentsCalculationType", loanProduct.installmentsCalculationTypeOptions, "" /]
                 </div>
                 
                 <div class="clear">&nbsp;</div>
@@ -284,9 +223,9 @@ function disable()
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="span-14 paddingLeft">
-                    	<span class="span-4 ">[@spring.formInput "loanProduct.minInstallments" /]</span>
-                        <span class="span-4 ">[@spring.formInput "loanProduct.maxInstallments" /]</span>
-                        <span class="span-5 last">[@spring.formInput "loanProduct.defaultInstallments" /]</span>
+                    	<span class="span-4 ">[@spring.formInput "loanProduct.installmentsSameForAllLoans.min" /]</span>
+                        <span class="span-4 ">[@spring.formInput "loanProduct.installmentsSameForAllLoans.max" /]</span>
+                        <span class="span-5 last">[@spring.formInput "loanProduct.installmentsSameForAllLoans.theDefault" /]</span>
                     </div>
                     <div>&nbsp;</div>
                 </div>
@@ -295,7 +234,7 @@ function disable()
             <div class="span-23">
             	<span class="pull-3 span-8 rightAlign" id="gracepertype">[@spring.message "manageLoanProducts.defineLoanProduct.graceperiodtype" /]&nbsp;:</span>
                 <span class="span-15 last">
-                	[@mifos.formSingleSelectWithPrompt "loanProduct.selectedGracePeriodType", loanProduct.gracePeriodTypeOptions, "--select one--" /]
+                	[@spring.formSingleSelect "loanProduct.selectedGracePeriodType", loanProduct.gracePeriodTypeOptions /]
                 </span>
             </div>
             <div class="span-23 ">
@@ -311,13 +250,13 @@ function disable()
             	<span class="span-12 ">
                 	<span class="span-8">[@spring.message "manageLoanProducts.defineLoanProduct.clickonafeetype" /]</span>
                     <span class="span-4">
-            			[@spring.formMultiSelect "loanProduct.selectedFees", loanProduct.applicableFeeOptions, "class=listSize" /]
+            			[@spring.formMultiSelect "loanProduct.applicableFees", loanProduct.applicableFeeOptions, "class=listSize" /]
 					</span>
                     <span class="span-3">
                     	<br />
-                    	<input class="buttn2" name="add" type="button" id="LoanFeesList.button.add"  value="Add >>" />
+                    	<input class="buttn2" name="add" type="button" id="LoanFeesList.button.add"  value="Add >>" onclick="moveOptions(this.form.applicableFees, this.form.selectedFees);" />
                     	<br /><br />
-						<input class="buttn2" name="remove" type="button" value="<< Remove" />
+						<input class="buttn2" name="remove" type="button" value="<< Remove" onclick="moveOptions(this.form.selectedFees, this.form.applicableFees);" />
 					</span>
 					<span class="span-4">
 						[@spring.formMultiSelect "loanProduct.selectedFees", loanProduct.selectedFeeOptions, "class=listSize" /]
@@ -332,13 +271,13 @@ function disable()
             	<span class="span-12 ">
                 	<span class="span-8">[@spring.message "manageLoanProducts.defineLoanProduct.clickonafund" /]</span>
                     <span class="span-4">
-                    	[@spring.formMultiSelect "loanProduct.selectedFunds", loanProduct.applicableFundOptions, "class=listSize" /]
+                    	[@spring.formMultiSelect "loanProduct.applicableFunds", loanProduct.applicableFundOptions, "class=listSize" /]
 					</span>
                     <span class="span-3">
                     	<br />
-                    	<input class="buttn2" name="add" type="button"  id="SrcFundsList.button.add"  value="Add >>" onclick="FirstListBox();" />
+                    	<input class="buttn2" name="add" type="button"  id="srcFundsList.button.add"  value="Add >>" onclick="moveOptions(this.form.applicableFunds, this.form.selectedFunds);" />
                     	<br /><br />
-						<input class="buttn2" name="remove" type="button" value="<< Remove" id="SrcFundsList.button.remove" onclick="SecondListBox();" />
+						<input class="buttn2" name="remove" type="button" value="<< Remove" id="srcFundsList.button.remove" onclick="moveOptions(this.form.selectedFunds, this.form.applicableFunds);" />
 					</span>
 					<span class="span-4">
 						[@spring.formMultiSelect "loanProduct.selectedFunds", loanProduct.selectedFundOptions, "class=listSize" /]
@@ -361,10 +300,10 @@ function disable()
           </div>
           <div class="clear">&nbsp;</div>
           <hr />
-          <div class="prepend-9">
-            <input class="buttn" type="button" id="createLoanProduct.button.preview" name="preview" value="Preview" onclick="#"/>
-            <input class="buttn2" type="button" id="createLoanProduct.button.cancel" name="cancel" value="Cancel" onclick="window.location='admin.ftl'"/>
-          </div>
+	        <div class="prepend-9">
+	        	<input class="buttn" type="submit" id="createLoanProduct.button.preview" name="preview" value="Preview" onclick="selectAllOptions(this.form.selectedFees);selectAllOptions(this.form.selectedFunds);" />
+	        	<input class="buttn2" type="submit" id="createLoanProduct.button.cancel" name="CANCEL" value="Cancel" />
+	      	</div>
           <div class="clear">&nbsp;</div>
         </form>
       </div>

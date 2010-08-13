@@ -182,6 +182,7 @@ public class LoanPrdAction extends BaseAction {
         LoanPrdActionForm loanPrdActionForm = (LoanPrdActionForm) form;
         UserContext userContext = getUserContext(request);
         Locale locale = getLocale(userContext);
+
         LoanOfferingBO loanOffering = new LoanOfferingBO(userContext, loanPrdActionForm.getPrdOfferingName(),
                 loanPrdActionForm.getPrdOfferingShortName(), getProductCategory(((List<ProductCategoryBO>) SessionUtils
                         .getAttribute(ProductDefinitionConstants.LOANPRODUCTCATEGORYLIST, request)), loanPrdActionForm
@@ -202,13 +203,14 @@ public class LoanPrdAction extends BaseAction {
                         .getFreqOfInstallmentsValue()), loanPrdActionForm.getRecurAfterValue(), loanPrdActionForm
                         .getStartDateValue(locale), MeetingType.LOAN_INSTALLMENT), findGLCodeEntity(request,
                         ProductDefinitionConstants.LOANPRICIPALGLCODELIST, loanPrdActionForm.getPrincipalGLCode()),
-                findGLCodeEntity(request, ProductDefinitionConstants.LOANINTERESTGLCODELIST, loanPrdActionForm
-                        .getInterestGLCode()), loanPrdActionForm);
+                findGLCodeEntity(request, ProductDefinitionConstants.LOANINTERESTGLCODELIST, loanPrdActionForm.getInterestGLCode()),
+                loanPrdActionForm);
+
         loanOffering.setCurrency(getCurrency(loanPrdActionForm.getCurrencyId()));
         loanOffering.save();
         request.setAttribute(ProductDefinitionConstants.LOANPRODUCTID, loanOffering.getPrdOfferingId());
-        request.setAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM, loanOffering
-                .getGlobalPrdOfferingNum());
+        request.setAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM, loanOffering.getGlobalPrdOfferingNum());
+
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 

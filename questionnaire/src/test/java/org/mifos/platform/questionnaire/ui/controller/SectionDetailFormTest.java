@@ -57,9 +57,9 @@ public class SectionDetailFormTest {
 
     private SectionDetail getSectionDefinition() {
         SectionDetail sectionDetail = new SectionDetail();
-        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(121, "Question1", "Question1", QuestionType.FREETEXT), true));
-        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(122, "Question2", "Question2", QuestionType.FREETEXT), false));
-        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(123, "Question3", "Question3", QuestionType.FREETEXT), true));
+        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(121, "Question1", "Question1", QuestionType.FREETEXT, true), true));
+        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(122, "Question2", "Question2", QuestionType.FREETEXT, true), false));
+        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(123, "Question3", "Question3", QuestionType.FREETEXT, true), true));
         return sectionDetail;
     }
 }

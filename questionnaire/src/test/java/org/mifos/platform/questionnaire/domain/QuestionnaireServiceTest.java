@@ -111,7 +111,7 @@ public class QuestionnaireServiceTest {
         QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, QuestionType.FREETEXT);
         try {
             QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
-            Mockito.verify(questionDao, times(1)).create(any(QuestionEntity.class));
+            Mockito.verify(questionDao, times(1)).saveOrUpdate(any(QuestionEntity.class));
             Assert.assertNotNull(questionDetail);
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
@@ -121,7 +121,7 @@ public class QuestionnaireServiceTest {
             Assert.fail("Should not have thrown the validation exception");
         }
         Mockito.verify(questionnaireValidator).validateForDefineQuestion(questionDefinition);
-        Mockito.verify(questionDao).create(any(QuestionEntity.class));
+        Mockito.verify(questionDao).saveOrUpdate(any(QuestionEntity.class));
     }
 
     @Test
@@ -133,7 +133,7 @@ public class QuestionnaireServiceTest {
         questionDefinition.setAnswerChoices(answerChoices);
         try {
             QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
-            Mockito.verify(questionDao, times(1)).create(any(QuestionEntity.class));
+            Mockito.verify(questionDao, times(1)).saveOrUpdate(any(QuestionEntity.class));
             Assert.assertNotNull(questionDetail);
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
@@ -144,7 +144,7 @@ public class QuestionnaireServiceTest {
             Assert.fail("Should not have thrown the validation exception");
         }
         Mockito.verify(questionnaireValidator).validateForDefineQuestion(questionDefinition);
-        Mockito.verify(questionDao).create(any(QuestionEntity.class));
+        Mockito.verify(questionDao).saveOrUpdate(any(QuestionEntity.class));
     }
 
     @Test
@@ -158,7 +158,7 @@ public class QuestionnaireServiceTest {
         questionDefinition.setAnswerChoices(answerChoices);
         try {
             QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
-            Mockito.verify(questionDao, times(1)).create(any(QuestionEntity.class));
+            Mockito.verify(questionDao, times(1)).saveOrUpdate(any(QuestionEntity.class));
             Assert.assertNotNull(questionDetail);
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
@@ -172,7 +172,7 @@ public class QuestionnaireServiceTest {
             Assert.fail("Should not have thrown the validation exception");
         }
         Mockito.verify(questionnaireValidator).validateForDefineQuestion(questionDefinition);
-        Mockito.verify(questionDao).create(any(QuestionEntity.class));
+        Mockito.verify(questionDao).saveOrUpdate(any(QuestionEntity.class));
     }
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
@@ -187,7 +187,7 @@ public class QuestionnaireServiceTest {
     @Test
     public void shouldGetAllQuestions() {
         Mockito.when(questionDao.retrieveByState(1)).thenReturn(asList(getQuestion(1, "q1", AnswerType.DATE), getQuestion(2, "q2", AnswerType.FREETEXT)));
-        List<QuestionDetail> questionDetails = questionnaireService.getAllQuestions();
+        List<QuestionDetail> questionDetails = questionnaireService.getAllActiveQuestions();
         Assert.assertNotNull("getAllQuestions should not return null", questionDetails);
         Mockito.verify(questionDao, times(1)).retrieveByState(1);
 
@@ -308,8 +308,8 @@ public class QuestionnaireServiceTest {
     private SectionDetail getSectionDefinition(String name) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(11, null, null, QuestionType.INVALID), true));
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID), false));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(11, null, null, QuestionType.INVALID, true), true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID, true), false));
         return section;
     }
 
@@ -613,7 +613,7 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldSaveResponses() {
-        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
+        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, "value", false));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails, true);
         QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
@@ -627,7 +627,7 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void testValidateResponse() {
-        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT));
+        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails, true);
         try {

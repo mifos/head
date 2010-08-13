@@ -45,7 +45,9 @@
 	</query>
 	<query name="product.createapplicableproductcat">
 		<![CDATA[from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc 
-		where pc.productType.productTypeID=:productTypeID and pc.prdCategoryStatus.id=:prdCategoryStatusId 
-		order by pc.productCategoryName]]>
+		where pc.productType.productTypeID=:productTypeID and pc.prdCategoryStatus.id=:prdCategoryStatusId order by pc.productCategoryName]]>
+	</query>
+	<query name="product.findById">
+		<![CDATA[from ProductCategoryBO pc where pc.productCategoryID != (:productCategoryID) and pc.prdCategoryStatus.id=:prdCategoryStatusId]]>
 	</query>
 </hibernate-mapping>

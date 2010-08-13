@@ -4,41 +4,32 @@
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 	<class
-		name="org.mifos.accounts.productdefinition.business.PrdOfferingBO"
-		table="prd_offering">
+		name="org.mifos.accounts.productdefinition.business.PrdOfferingBO" table="prd_offering">
 		<id name="prdOfferingId" column="prd_offering_id"
 			access="field">
 			<generator class="native" />
 		</id>
-		<version name="versionNo" column="version_no"
-			unsaved-value="null" />
-		<property name="globalPrdOfferingNum"
-			column="global_prd_offering_num" update="false" access="field" />
+		<version name="versionNo" column="version_no" unsaved-value="null" />
+		<property name="globalPrdOfferingNum" column="global_prd_offering_num" update="false" access="field" />
 		<property name="startDate" column="start_date" />
 		<property name="endDate" column="end_date" />
 		<property name="prdOfferingName" column="prd_offering_name" />
-		<property name="prdOfferingShortName"
-			column="prd_offering_short_name" />
+		<property name="prdOfferingShortName" column="prd_offering_short_name" />
 		<property name="prdMixFlag" column="prd_mix_flag" />
 		<property name="description" column="description" />
-		<property name="createdDate" column="created_date"
-			update="false" />
+		<property name="createdDate" column="created_date" update="false" />
 		<property name="createdBy" column="created_by" update="false" />
 		<property name="updatedDate" column="updated_date" />
 		<property name="updatedBy" column="updated_by" />
 
 		<many-to-one name="office" column="office_id"
-			class="org.mifos.customers.office.business.OfficeBO" cascade="none"
-			access="field" />
+			class="org.mifos.customers.office.business.OfficeBO" cascade="none" access="field" />
 		<many-to-one name="prdCategory" column="prd_category_id"
-			class="org.mifos.accounts.productdefinition.business.ProductCategoryBO"
-			cascade="none" />
+			class="org.mifos.accounts.productdefinition.business.ProductCategoryBO" cascade="none" />
 		<many-to-one name="prdStatus" column="offering_status_id"
-			class="org.mifos.accounts.productdefinition.business.PrdStatusEntity"
-			cascade="none" />
+			class="org.mifos.accounts.productdefinition.business.PrdStatusEntity" cascade="none" />
 		<many-to-one name="prdType" column="prd_type_id"
-			class="org.mifos.accounts.productdefinition.business.ProductTypeEntity"
-			access="field" cascade="none" />
+			class="org.mifos.accounts.productdefinition.business.ProductTypeEntity" access="field" cascade="none" />
 		<many-to-one name="prdApplicableMaster"
 			column="prd_applicable_master_id"
 			class="org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity"
@@ -48,13 +39,11 @@
             update="false" insert="true" unique="true" access="field" />
 
 		<!-- bi-directional one-to-many association to PrdOfferingMix -->
-		<set name="collectionProductMix" lazy="false" inverse="true"
-			cascade="none">
+		<set name="collectionProductMix" lazy="false" inverse="true" cascade="none">
 			<key>
 				<column name="prd_offering_id" />
 			</key>
-			<one-to-many
-				class="org.mifos.accounts.productsmix.business.ProductMixBO" />
+			<one-to-many class="org.mifos.accounts.productsmix.business.ProductMixBO" />
 		</set>
 		<!-- bi-directional one-to-many association to PrdOfferingMix -->
 		<set name="prdOfferingNotAllowedId" lazy="false" inverse="true"
@@ -62,8 +51,7 @@
 			<key>
 				<column name="prd_offering_not_allowed_id" />
 			</key>
-			<one-to-many
-				class="org.mifos.accounts.productsmix.business.ProductMixBO" />
+			<one-to-many class="org.mifos.accounts.productsmix.business.ProductMixBO" />
 		</set>
 
 		<joined-subclass

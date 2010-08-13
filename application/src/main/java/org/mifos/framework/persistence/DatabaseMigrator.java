@@ -27,8 +27,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import org.mifos.reports.business.ReportsCategoryBO;
-import org.mifos.reports.persistence.AddReport;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,6 +43,8 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.reports.business.ReportsCategoryBO;
+import org.mifos.reports.persistence.AddReport;
 import org.mifos.security.AddActivity;
 import org.mifos.security.util.SecurityConstants;
 
@@ -63,7 +63,7 @@ public class DatabaseMigrator {
 
     private Connection connection;
 
-    public SortedMap<Integer, String> availableUpgrades;
+    private SortedMap<Integer, String> availableUpgrades;
 
     private String upgradesPackage;
 
@@ -74,6 +74,8 @@ public class DatabaseMigrator {
     public static final String SCRIPT_UPGRADE_TYPE = "sql";
 
     private static MifosLogger log = null;
+
+
 
     public DatabaseMigrator() {
         this(StaticHibernateUtil.getSessionTL().connection(), getAvailableUpgrades(),
@@ -361,7 +363,7 @@ public class DatabaseMigrator {
         return upgrade;
     }
 
-    private List<Integer> getAppliedUpgrades() {
+    public List<Integer> getAppliedUpgrades() {
 
         List<Integer> appliedUpgrades = new ArrayList<Integer>();
 

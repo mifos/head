@@ -24,12 +24,14 @@ import java.util.List;
 
 import org.mifos.dto.domain.AcceptedPaymentTypeDto;
 import org.mifos.dto.domain.CreateOrUpdateProductCategory;
+import org.mifos.dto.domain.LoanProductRequest;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.ProductTypeDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
+import org.mifos.dto.screen.LoanProductFormDto;
 import org.mifos.dto.screen.ProductCategoryDetailsDto;
 import org.mifos.dto.screen.ProductCategoryDisplayDto;
 import org.mifos.dto.screen.ProductCategoryTypeDto;
@@ -55,6 +57,12 @@ public interface AdminServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     List<ProductDisplayDto> retrieveLoanProducts();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanProductFormDto retrieveLoanProductFormReferenceData();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void createLoanProduct(LoanProductRequest loanProduct);
 
     @PreAuthorize("isFullyAuthenticated()")
     List<ProductDisplayDto> retrieveSavingsProducts();

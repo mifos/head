@@ -382,7 +382,7 @@ public class QuestionValidatorTest {
     private SectionDetail getSection(String name) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, "Q1", "Q1", QuestionType.INVALID), true, null));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, "Q1", "Q1", QuestionType.INVALID, true), true, null));
         return section;
     }
 
@@ -391,7 +391,7 @@ public class QuestionValidatorTest {
         section.setName(name);
         if (questionIds != null) {
             for (int questionId : questionIds) {
-                section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, null, null, QuestionType.INVALID), true, null));
+                section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, null, null, QuestionType.INVALID, true), true, null));
             }
         }
         return section;

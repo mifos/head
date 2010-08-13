@@ -21,8 +21,9 @@
 package org.mifos.accounts.productdefinition.business;
 
 public abstract class LoanOfferingInstallmentRange extends InstallmentRange {
+
     @SuppressWarnings("unused")
-    private final LoanOfferingBO loanOffering;
+    private LoanOfferingBO loanOffering;
     private Short defaultNoOfInstall;
 
     public LoanOfferingInstallmentRange(Short minNoOfInstall, Short maxNoOfInstall, Short defaultNoOfInstall,
@@ -38,5 +39,9 @@ public abstract class LoanOfferingInstallmentRange extends InstallmentRange {
 
     public void setDefaultNoOfInstall(Short defaultNoOfInstall) {
         this.defaultNoOfInstall = defaultNoOfInstall;
+    }
+
+    public void setLoanOffering(LoanOfferingBO loanOffering) {
+        this.loanOffering = loanOffering;
     }
 }

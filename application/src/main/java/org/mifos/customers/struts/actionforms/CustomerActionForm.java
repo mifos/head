@@ -102,6 +102,7 @@ public abstract class CustomerActionForm extends BaseActionForm {
     private List<QuestionGroupDto> questionGroupDtos;
 
     protected List<QuestionGroupDetail> questionGroups;
+    private String nextOrPreview;
 
     public CustomerActionForm() {
         address = new Address();
@@ -597,4 +598,11 @@ public abstract class CustomerActionForm extends BaseActionForm {
         this.searchString = searchString;
     }
 
+    public String getNextOrPreview() {
+        return nextOrPreview;
+    }
+
+    public void setNextOrPreview(String nextOrPreview) {
+        this.nextOrPreview = nextOrPreview;
+    }
 }

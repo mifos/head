@@ -70,7 +70,7 @@ fieldset .questionList label {
     float:left;
     margin-right:1em;
     margin-left:1em;
-    width:20em;
+    width:28%;
     word-wrap:break-word;
 }
 
@@ -78,7 +78,7 @@ fieldset .questionList label {
     float:left;
     margin-right:1em;
     margin-left:1em;
-    width:10em;
+    padding-top:3px;
     word-wrap:break-word;
 }
 
@@ -86,7 +86,7 @@ fieldset .questionList label {
     float:left;
     margin-right:1em;
     margin-left:1em;
-    width:30em;
+    width:28%;
     word-wrap:break-word;
 }
 
@@ -94,7 +94,7 @@ fieldset .questionList label {
     float:left;
     margin-right:0em;
     margin-left:1em;
-    width:5em;
+    width:8%;
     word-wrap:break-word;
 }
 

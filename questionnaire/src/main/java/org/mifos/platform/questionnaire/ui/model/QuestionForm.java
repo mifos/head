@@ -88,4 +88,8 @@ public class QuestionForm extends ScreenObject {
     public boolean numericBoundsAreInvalid() {
         return currentQuestion.numericBoundsAreInvalid();
     }
+
+    public boolean titleHasChanged() {
+        return currentQuestion.titleHasChanged();
+    }
 }

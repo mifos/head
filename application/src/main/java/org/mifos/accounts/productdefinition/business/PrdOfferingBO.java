@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -55,37 +56,22 @@ import org.mifos.security.util.UserContext;
 public abstract class PrdOfferingBO extends AbstractBusinessObject {
 
     private static final MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+
     private final Short prdOfferingId;
-
     private String prdOfferingName;
-
     private String prdOfferingShortName;
-
     private final String globalPrdOfferingNum;
-
-    private final ProductTypeEntity prdType;
-
+    private ProductTypeEntity prdType;
     private ProductCategoryBO prdCategory;
-
     private PrdStatusEntity prdStatus;
-
     private PrdApplicableMasterEntity prdApplicableMaster;
-
     private Date startDate;
-
     private Date endDate;
-
     private MifosCurrency currency;
-
-    private final OfficeBO office;
-
+    private OfficeBO office;
     private String description;
-
     private Set<PrdOfferingBO> collectionProductMix;
-
-    private Set<PrdOfferingBO> prdOfferingNotAllowedId; // For Not allowed
-                                                        // products
-
+    private Set<PrdOfferingBO> prdOfferingNotAllowedId; // For Not allowed products
     private Short prdMixFlag; // Tagging products for which mixes were defined
 
     /**
@@ -95,12 +81,30 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
         this(null, null, null, null);
     }
 
+    /**
+     * minimal legal constructor (based on table schema)
+     */
+    public PrdOfferingBO(Integer userId, String globalProductId, String name, String shortName, ProductCategoryBO productCategory,
+            PrdStatusEntity status, PrdApplicableMasterEntity applicableToEntity, DateTime startDate) {
+        this.prdOfferingId = null;
+        this.prdOfferingName = name;
+        this.prdOfferingShortName = shortName;
+        this.globalPrdOfferingNum = globalProductId;
+        this.prdCategory = productCategory;
+        this.prdStatus = status;
+        this.prdApplicableMaster = applicableToEntity;
+        this.startDate = startDate.toDate();
+        this.createdBy = userId.shortValue();
+        this.createdDate = new DateTime().toDate();
+    }
+
+    @Deprecated
     protected PrdOfferingBO(final Short prdOfferingId) {
         this(prdOfferingId, null, null, null);
     }
 
-    protected PrdOfferingBO(final Short prdOfferingId, final String globalPrdOfferingNum,
-            final ProductTypeEntity prdType, final OfficeBO office) {
+    @Deprecated
+    protected PrdOfferingBO(final Short prdOfferingId, final String globalPrdOfferingNum, final ProductTypeEntity prdType, final OfficeBO office) {
         this.prdOfferingId = prdOfferingId;
         this.globalPrdOfferingNum = globalPrdOfferingNum;
         this.prdType = prdType;
@@ -108,8 +112,9 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
     }
 
     /**
-     * Minimal legal constructor uses from builders only
+     *
      */
+    @Deprecated
     public PrdOfferingBO(final String name, final String shortName, final String globalProductNumber,
             final Date startDate, final ApplicableTo applicableToCustomer, final ProductCategoryBO category,
             final PrdStatusEntity prdStatus, final Date createdDate, final Short createdByUserId) {
@@ -127,6 +132,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
         this.office = null;
     }
 
+    @Deprecated
     protected PrdOfferingBO(final UserContext userContext, final String prdOfferingName, final String prdOfferingShortName,
             final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate)
             throws ProductDefinitionException {
@@ -134,6 +140,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
                 null);
     }
 
+    @Deprecated
     protected PrdOfferingBO(final UserContext userContext, final String prdOfferingName, final String prdOfferingShortName,
             final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
             final String description) throws ProductDefinitionException {

@@ -21,25 +21,33 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
-    [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":"viewQuestions.ftl",Request.questionDetail.title:""}/]
+    <script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
+    <script src="pages/questionnaire/js/createQuestion.js" type="text/javascript"></script>
+    <script src="pages/questionnaire/js/editQuestion.js" type="text/javascript"></script>
+    <span id="page.id" title="createQuestion"/>
+    [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":"viewQuestions.ftl", "questionnaire.editquestion":""}/]
     [@mifos.crumbpairs breadcrumb/]
     <div class="content_panel">
         <h1>
-            [@spring.message "questionnaire.editquestion"/]
+            ${questionDefinition.currentQuestion.title} - [@spring.message "questionnaire.editquestion"/]
         </h1>
+        <p class="red">
+            [@spring.message "questionnaire.editquestion.warning"/]
+        </p>
+        <p>
+            [@spring.message "questionnaire.editquestion.instructions"/]
+        </p>
         <div id="allErrorsDiv" class="allErrorsDiv">
-            [@mifosmacros.showAllErrors "questionDetail.*"/]
+            [@mifosmacros.showAllErrors "questionDefinition.*"/]
         </div>
-        <form name="editQuestionForm" action="viewAndEditQuestion.ftl?execution=${flowExecutionKey}" method="POST">
+        <form name="editquestionform" action="viewAndEditQuestion.ftl?execution=${flowExecutionKey}" method="POST" focus="currentQuestion.title">
             <fieldset>
              <ol>
-                <li>
-                    <label for="questionDetail.title"><span class="red">*</span>[@spring.message "questionnaire.question.title"/]: </label>
-                    [@spring.formInput "questionDetail.title", 'maxlength="50"' /]
-                </li>
-                <li>
-                    <label for="questionDetail.title">[@spring.message "questionnaire.answer.type"/]: </label>
-                    ${questionDetail.type}
+                [#include "questionDefinition.ftl"]
+                <li class="buttonWidth">
+                    <input type="submit" id="_eventId_update" name="_eventId_update" value="[@spring.message "questionnaire.submit"/]" class="buttn"/>
+                    &nbsp;
+                    <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
                 </li>
              </ol>
             </fieldset>

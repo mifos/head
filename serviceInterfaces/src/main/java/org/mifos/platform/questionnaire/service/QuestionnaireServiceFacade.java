@@ -33,6 +33,8 @@ public interface QuestionnaireServiceFacade {
 
     List<QuestionDetail> getAllQuestions();
 
+    List<QuestionDetail> getAllActiveQuestions();
+
     List<QuestionGroupDetail> getAllQuestionGroups();
 
     QuestionGroupDetail getQuestionGroupDetail(Integer questionGroupId) throws SystemException;

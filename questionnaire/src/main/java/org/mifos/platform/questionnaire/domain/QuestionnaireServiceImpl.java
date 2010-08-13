@@ -38,6 +38,7 @@ import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
@@ -87,6 +88,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Override
     public List<QuestionDetail> getAllQuestions() {
+        List<QuestionEntity> questions = questionDao.getDetailsAll();
+        return questionnaireMapper.mapToQuestionDetails(questions);
+    }
+
+    @Override
+    public List<QuestionDetail> getAllActiveQuestions() {
         List<QuestionEntity> questions = questionDao.retrieveByState(QuestionState.ACTIVE.getValue());
         return questionnaireMapper.mapToQuestionDetails(questions);
     }
@@ -138,7 +145,9 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public List<QuestionGroupDetail> getQuestionGroups(Integer entityId, EventSource eventSource) throws SystemException {
         questionnaireValidator.validateForEventSource(eventSource);
         List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSource.getEvent(), eventSource.getSource());
-        return getQuestionGroupDetailsAndResponses(entityId, questionGroups);
+        List<QuestionGroupDetail> questionGroupDetails = getQuestionGroupDetailsAndResponses(entityId, questionGroups);
+        removeInactiveSectionsAndQuestions(questionGroupDetails);
+        return questionGroupDetails;
     }
 
     @Override
@@ -156,18 +165,23 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSource eventSource, Boolean includeUnansweredQuestionGroups, boolean fetchLastVersion) {
         questionnaireValidator.validateForEventSource(eventSource);
         Integer eventSourceId = getEventSourceEntity(eventSource).getId();
-        List questionGroupInstances = null;
-        if(fetchLastVersion){
-            questionGroupInstances = questionGroupInstanceDao.retrieveLatestQuestionGroupInstancesByEntityIdAndEventSourceId(entityId, eventSourceId);
-        }else{
-            questionGroupInstances = questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(entityId, eventSourceId);
-        }
+        List<QuestionGroupInstance> questionGroupInstances = getQuestionGroupInstanceEntities(entityId, eventSourceId, fetchLastVersion);
         List<QuestionGroupInstanceDetail> questionGroupInstanceDetails = questionnaireMapper.mapToQuestionGroupInstanceDetails(questionGroupInstances);
         if (includeUnansweredQuestionGroups) {
             List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSource.getEvent(), eventSource.getSource());
             questionGroupInstanceDetails = mergeUnansweredQuestionGroups(questionGroupInstanceDetails, questionGroups);
         }
         return questionGroupInstanceDetails;
+    }
+
+    private List<QuestionGroupInstance> getQuestionGroupInstanceEntities(Integer entityId, Integer eventSourceId, boolean fetchLastVersion) {
+        List<QuestionGroupInstance> questionGroupInstances;
+        if(fetchLastVersion){
+            questionGroupInstances = questionGroupInstanceDao.retrieveLatestQuestionGroupInstancesByEntityIdAndEventSourceId(entityId, eventSourceId);
+        }else{
+            questionGroupInstances = questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(entityId, eventSourceId);
+        }
+        return questionGroupInstances;
     }
 
     private List<QuestionGroupInstanceDetail> mergeUnansweredQuestionGroups(List<QuestionGroupInstanceDetail> instancesWithResponses, List<QuestionGroup> questionGroups) {
@@ -232,9 +246,34 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     private void persistQuestion(QuestionEntity question) throws SystemException {
         try {
-            questionDao.create(question);
+            questionDao.saveOrUpdate(question);
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
             throw new SystemException(QuestionnaireConstants.DUPLICATE_QUESTION, e);
+        }
+    }
+
+    private void removeInactiveSectionsAndQuestions(List<QuestionGroupDetail> questionGroupDetails) {
+        for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
+            removeInactiveSectionsAndQuestions(questionGroupDetail);
+        }
+    }
+
+    private void removeInactiveSectionsAndQuestions(QuestionGroupDetail questionGroupDetail) {
+        for (Iterator<SectionDetail> sectionDetailIterator = questionGroupDetail.getSectionDetails().iterator(); sectionDetailIterator.hasNext();) {
+            SectionDetail sectionDetail = sectionDetailIterator.next();
+            if (sectionDetail.hasNoActiveQuestions()) {
+                sectionDetailIterator.remove();
+                continue;
+            }
+            removeInactiveQuestions(sectionDetail);
+        }
+    }
+
+    private void removeInactiveQuestions(SectionDetail sectionDetail) {
+        for (Iterator<SectionQuestionDetail> sectionQuestionDetailIterator = sectionDetail.getQuestions().iterator(); sectionQuestionDetailIterator.hasNext();) {
+            if (sectionQuestionDetailIterator.next().isInactive()) {
+                sectionQuestionDetailIterator.remove();
+            }
         }
     }
 
