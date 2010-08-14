@@ -20,6 +20,9 @@
 
 package org.mifos.platform.questionnaire.service;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.platform.util.CollectionUtils;
 
@@ -27,12 +30,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@XStreamAlias("choice")
 public class ChoiceDetail implements Serializable {
     private static final long serialVersionUID = 5839636913158754732L;
 
     private String value;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
+    @XStreamImplicit(itemFieldName = "tag")
     private List<String> tags;
+    @XStreamAsAttribute
     private Integer order;
 
     public ChoiceDetail() {

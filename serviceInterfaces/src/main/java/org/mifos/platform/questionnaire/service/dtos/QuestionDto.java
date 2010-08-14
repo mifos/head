@@ -20,6 +20,9 @@
 
 package org.mifos.platform.questionnaire.service.dtos;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 
@@ -27,6 +30,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@XStreamAlias("question")
 public class QuestionDto implements Serializable {
     private static final long serialVersionUID = 4062506731931643620L;
 
@@ -34,10 +38,12 @@ public class QuestionDto implements Serializable {
     private String title;
     private QuestionType type;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
+    @XStreamImplicit(itemFieldName = "choice")
     private List<ChoiceDetail> choices;
     private Integer minValue;
     private Integer maxValue;
     private boolean mandatory;
+    @XStreamAsAttribute
     private Integer order;
 
     public QuestionDto() {

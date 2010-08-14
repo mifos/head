@@ -20,16 +20,23 @@
 
 package org.mifos.platform.questionnaire.service.dtos;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@XStreamAlias("section")
 public class SectionDto implements Serializable {
     private static final long serialVersionUID = 3786423475492705740L;
 
     private String name;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_BAD_FIELD")
+    @XStreamImplicit(itemFieldName = "question")
     private List<QuestionDto> questions;
+    @XStreamAsAttribute
     private Integer order;
 
     public SectionDto() {

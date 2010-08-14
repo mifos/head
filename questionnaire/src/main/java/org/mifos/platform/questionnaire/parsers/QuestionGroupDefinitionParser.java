@@ -53,31 +53,15 @@ public final class QuestionGroupDefinitionParser {
     private XStream initializeXStream() {
         XStream xstream = new XStream();
         processAnnotations(xstream);
-        setImplicitCollections(xstream);
-        setAttributeFor(xstream);
         return xstream;
     }
 
-    private void setImplicitCollections(XStream xstream) {
-        xstream.addImplicitCollection(QuestionGroupDto.class, "sections");
-        xstream.addImplicitCollection(SectionDto.class, "questions");
-        xstream.addImplicitCollection(QuestionDto.class, "choices");
-        xstream.addImplicitCollection(ChoiceDetail.class, "tags");
-    }
-
-    private void setAttributeFor(XStream xstream) {
-        xstream.useAttributeFor(SectionDto.class, "order");
-        xstream.useAttributeFor(QuestionDto.class, "order");
-        xstream.useAttributeFor(ChoiceDetail.class, "order");
-    }
-
     private void processAnnotations(XStream xstream) {
-        xstream.alias("QuestionGroup", QuestionGroupDto.class);
-        xstream.alias("section", SectionDto.class);
-        xstream.alias("question", QuestionDto.class);
-        xstream.alias("eventSource", EventSource.class);
-        xstream.alias("type", QuestionType.class);
-        xstream.alias("choice", ChoiceDetail.class);
-        xstream.alias("tag", String.class);
+        xstream.processAnnotations(QuestionGroupDto.class);
+        xstream.processAnnotations(SectionDto.class);
+        xstream.processAnnotations(QuestionDto.class);
+        xstream.processAnnotations(EventSource.class);
+        xstream.processAnnotations(QuestionType.class);
+        xstream.processAnnotations(ChoiceDetail.class);
     }
 }
