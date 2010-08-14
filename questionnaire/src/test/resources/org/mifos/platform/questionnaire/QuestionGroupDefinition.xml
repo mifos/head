@@ -70,7 +70,8 @@
             <choice>
                 <order>3</order>
                 <value>Product 2</value>
-                <tag>Fishing, Farming</tag>
+                <tag>Fishing</tag>
+                <tag>Farming</tag>
             </choice>
             <choice>
                 <order>4</order>

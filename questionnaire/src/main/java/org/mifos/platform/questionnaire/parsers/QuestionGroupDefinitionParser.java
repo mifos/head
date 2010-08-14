@@ -31,7 +31,7 @@ import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class QuestionGroupDefinitionParser {
+public final class QuestionGroupDefinitionParser {
     private final XStream xstream;
 
     public QuestionGroupDefinitionParser() {
@@ -39,12 +39,32 @@ public class QuestionGroupDefinitionParser {
     }
 
     public QuestionGroupDto parse(String questionGroupDefXml) throws IOException {
-        InputStream inputStream = getClass().getResourceAsStream(questionGroupDefXml);
-        return (QuestionGroupDto) xstream.fromXML(inputStream);
+        InputStream inputStream = null;
+        try {
+            inputStream = getClass().getResourceAsStream(questionGroupDefXml);
+            return (QuestionGroupDto) xstream.fromXML(inputStream);
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        }
     }
 
     private XStream initializeXStream() {
         XStream xstream = new XStream();
+        setAliases(xstream);
+        setImplicitCollections(xstream);
+        return xstream;
+    }
+
+    private void setImplicitCollections(XStream xstream) {
+        xstream.addImplicitCollection(QuestionGroupDto.class, "sections");
+        xstream.addImplicitCollection(SectionDto.class, "questions");
+        xstream.addImplicitCollection(QuestionDto.class, "choices");
+        xstream.addImplicitCollection(ChoiceDetail.class, "tags");
+    }
+
+    private void setAliases(XStream xstream) {
         xstream.alias("QuestionGroup", QuestionGroupDto.class);
         xstream.alias("section", SectionDto.class);
         xstream.alias("question", QuestionDto.class);
@@ -52,10 +72,5 @@ public class QuestionGroupDefinitionParser {
         xstream.alias("type", QuestionType.class);
         xstream.alias("choice", ChoiceDetail.class);
         xstream.alias("tag", String.class);
-        xstream.addImplicitCollection(QuestionGroupDto.class, "sections");
-        xstream.addImplicitCollection(SectionDto.class, "questions");
-        xstream.addImplicitCollection(QuestionDto.class, "choices");
-        xstream.addImplicitCollection(ChoiceDetail.class, "tags");
-        return xstream;
     }
 }

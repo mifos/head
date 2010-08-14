@@ -22,7 +22,10 @@ package org.mifos.platform.questionnaire.parsers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -41,16 +44,122 @@ public class QuestionGroupDefinitionParserTest {
     public void shouldParseQuestionDefinitionXml() throws IOException {
         QuestionGroupDefinitionParser questionGroupDefinitionParser = new QuestionGroupDefinitionParser();
         QuestionGroupDto questionGroupDto = questionGroupDefinitionParser.parse("/org/mifos/platform/questionnaire/QuestionGroupDefinition.xml");
+        assertQuestionGroupDto(questionGroupDto);
+        EventSource eventSource = questionGroupDto.getEventSource();
+        assertEventSource(eventSource);
+        List<SectionDto> sectionDtos = questionGroupDto.getSections();
+        assertSections(sectionDtos);
+    }
+
+    private void assertSections(List<SectionDto> sectionDtos) {
+        assertThat(sectionDtos, is(notNullValue()));
+        assertThat(sectionDtos.size(), is(2));
+        assertFirstSection(sectionDtos.get(0));
+        assertSecondSection(sectionDtos.get(1));
+    }
+
+    private void assertFirstSection(SectionDto sectionDto) {
+        assertThat(sectionDto.getName(), is("default"));
+        assertThat(sectionDto.getOrder(), is(1));
+        List<QuestionDto> questions = sectionDto.getQuestions();
+        assertThat(questions, is(notNullValue()));
+        assertThat(questions.size(), is(2));
+        QuestionDto questionDto = questions.get(0);
+        assertThat(questionDto.getTitle(), is("Your DOB"));
+        assertThat(questionDto.getType(), is(QuestionType.DATE));
+        assertThat(questionDto.getOrder(), is(1));
+        questionDto = questions.get(1);
+        assertThat(questionDto.getTitle(), is("How many family members"));
+        assertThat(questionDto.getType(), is(QuestionType.NUMERIC));
+        assertThat(questionDto.getOrder(), is(2));
+        assertThat(questionDto.getMinValue(), is(3));
+        assertThat(questionDto.getMaxValue(), is(10));
+        assertThat(questionDto.isMandatory(), is(true));
+    }
+
+    private void assertSecondSection(SectionDto sectionDto) {
+        assertThat(sectionDto.getName(), is("misc"));
+        assertThat(sectionDto.getOrder(), is(2));
+        List<QuestionDto> questions = sectionDto.getQuestions();
+        assertThat(questions, is(notNullValue()));
+        assertThat(questions.size(), is(3));
+        QuestionDto questionDto = questions.get(0);
+        assertThat(questionDto.getTitle(), is("Father's name'"));
+        assertThat(questionDto.getType(), is(QuestionType.FREETEXT));
+        assertThat(questionDto.getOrder(), is(1));
+        questionDto = questions.get(1);
+        assertThat(questionDto.getTitle(), is("No of dependents"));
+        assertThat(questionDto.getType(), is(QuestionType.SINGLE_SELECT));
+        assertThat(questionDto.getOrder(), is(2));
+        assertThat(questionDto.isMandatory(), is(true));
+        List<ChoiceDetail> choices = questionDto.getChoices();
+        assertThat(choices, is(notNullValue()));
+        assertThat(choices.size(), is(3));
+        assertChoiceDetail(choices.get(0), "Less than 2", 1);
+        assertChoiceDetail(choices.get(1), "Less than 5", 2);
+        assertChoiceDetail(choices.get(2), "Less than 10", 3);
+        questionDto = questions.get(2);
+        assertThat(questionDto.getTitle(), is("Previous Loans taken for"));
+        assertThat(questionDto.getType(), is(QuestionType.SMART_SELECT));
+        assertThat(questionDto.getOrder(), is(3));
+        assertThat(questionDto.isMandatory(), is(true));
+        choices = questionDto.getChoices();
+        assertThat(choices, is(notNullValue()));
+        assertThat(choices.size(), is(4));
+        assertFirstChoiceWithTags(choices.get(0));
+        assertSecondChoiceWithTags(choices.get(1));
+        assertThirdChoiceWithTags(choices.get(2));
+        assertFourthChoiceWithTags(choices.get(3));
+    }
+
+    private void assertFirstChoiceWithTags(ChoiceDetail choiceDetail) {
+        assertChoiceDetail(choiceDetail, "No Product", 1);
+        List<String> tags = choiceDetail.getTags();
+        assertThat(tags, is(notNullValue()));
+        assertThat(tags.size(), is(1));
+        assertThat(tags.get(0), is("Never"));
+    }
+
+    private void assertSecondChoiceWithTags(ChoiceDetail choiceDetail) {
+        assertChoiceDetail(choiceDetail, "Product 1", 2);
+        List<String> tags = choiceDetail.getTags();
+        assertThat(tags, is(notNullValue()));
+        assertThat(tags.size(), is(1));
+        assertThat(tags.get(0), is("Agriculture"));
+    }
+
+    private void assertThirdChoiceWithTags(ChoiceDetail choiceDetail) {
+        assertChoiceDetail(choiceDetail, "Product 2", 3);
+        List<String> tags = choiceDetail.getTags();
+        assertThat(tags, is(notNullValue()));
+        assertThat(tags.size(), is(2));
+        assertThat(tags.get(0), is("Fishing"));
+        assertThat(tags.get(1), is("Farming"));
+    }
+
+    private void assertFourthChoiceWithTags(ChoiceDetail choiceDetail) {
+        assertChoiceDetail(choiceDetail, "Product 3", 4);
+        List<String> tags = choiceDetail.getTags();
+        assertThat(tags, is(notNullValue()));
+        assertThat(tags.size(), is(1));
+        assertThat(tags.get(0), is("Construction"));
+    }
+
+    private void assertChoiceDetail(ChoiceDetail choiceDetail, String value, int order) {
+        assertThat(choiceDetail.getValue(), is(value));
+        assertThat(choiceDetail.getOrder(), is(order));
+    }
+
+    private void assertEventSource(EventSource eventSource) {
+        assertThat(eventSource, is(notNullValue()));
+        assertThat(eventSource.getEvent(), is("Create"));
+        assertThat(eventSource.getSource(), is("Loan"));
+    }
+
+    private void assertQuestionGroupDto(QuestionGroupDto questionGroupDto) {
         assertThat(questionGroupDto, is(notNullValue()));
         assertThat(questionGroupDto.getTitle(), is("PPI India"));
         assertThat(questionGroupDto.isEditable(), is(false));
         assertThat(questionGroupDto.isPpi(), is(true));
-        EventSource eventSource = questionGroupDto.getEventSource();
-        assertThat(eventSource, is(notNullValue()));
-        assertThat(eventSource.getEvent(), is("Create"));
-        assertThat(eventSource.getSource(), is("Loan"));
-        List<SectionDto> sectionDtos = questionGroupDto.getSections();
-        assertThat(sectionDtos, is(notNullValue()));
-        assertThat(sectionDtos.size(), is(2));
     }
 }
