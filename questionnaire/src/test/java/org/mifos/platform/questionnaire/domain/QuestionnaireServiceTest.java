@@ -138,8 +138,8 @@ public class QuestionnaireServiceTest {
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
             Assert.assertEquals(QuestionType.MULTI_SELECT, questionDetail.getType());
-            Assert.assertEquals(choice1.getChoiceText(), questionDetail.getAnswerChoices().get(0).getChoiceText());
-            Assert.assertEquals(choice2.getChoiceText(), questionDetail.getAnswerChoices().get(1).getChoiceText());
+            Assert.assertEquals(choice1.getValue(), questionDetail.getAnswerChoices().get(0).getValue());
+            Assert.assertEquals(choice2.getValue(), questionDetail.getAnswerChoices().get(1).getValue());
         } catch (SystemException e) {
             Assert.fail("Should not have thrown the validation exception");
         }
@@ -163,10 +163,10 @@ public class QuestionnaireServiceTest {
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
             Assert.assertEquals(QuestionType.MULTI_SELECT, questionDetail.getType());
-            Assert.assertEquals(choice1.getChoiceText(), questionDetail.getAnswerChoices().get(0).getChoiceText());
+            Assert.assertEquals(choice1.getValue(), questionDetail.getAnswerChoices().get(0).getValue());
             Assert.assertEquals(choice1.getTags().get(0), questionDetail.getAnswerChoices().get(0).getTags().get(0));
             Assert.assertEquals(choice1.getTags().get(1), questionDetail.getAnswerChoices().get(0).getTags().get(1));
-            Assert.assertEquals(choice2.getChoiceText(), questionDetail.getAnswerChoices().get(1).getChoiceText());
+            Assert.assertEquals(choice2.getValue(), questionDetail.getAnswerChoices().get(1).getValue());
             Assert.assertEquals(choice2.getTags().get(0), questionDetail.getAnswerChoices().get(1).getTags().get(0));
         } catch (SystemException e) {
             Assert.fail("Should not have thrown the validation exception");
@@ -471,8 +471,8 @@ public class QuestionnaireServiceTest {
         assertThat(questionDetail.getShortName(), is(title));
         assertThat(questionDetail.getText(), is(title));
         assertThat(questionDetail.getType(), is(QuestionType.MULTI_SELECT));
-        Assert.assertEquals("choice1", questionDetail.getAnswerChoices().get(0).getChoiceText());
-        Assert.assertEquals("choice2", questionDetail.getAnswerChoices().get(1).getChoiceText());
+        Assert.assertEquals("choice1", questionDetail.getAnswerChoices().get(0).getValue());
+        Assert.assertEquals("choice2", questionDetail.getAnswerChoices().get(1).getValue());
         verify(questionDao, times(1)).getDetails(questionId);
     }
 
@@ -486,8 +486,8 @@ public class QuestionnaireServiceTest {
         Assert.assertThat(questionDetail.getShortName(), is(title));
         Assert.assertThat(questionDetail.getText(), is(title));
         Assert.assertThat(questionDetail.getType(), is(QuestionType.SINGLE_SELECT));
-        Assert.assertEquals("choice1", questionDetail.getAnswerChoices().get(0).getChoiceText());
-        Assert.assertEquals("choice2", questionDetail.getAnswerChoices().get(1).getChoiceText());
+        Assert.assertEquals("choice1", questionDetail.getAnswerChoices().get(0).getValue());
+        Assert.assertEquals("choice2", questionDetail.getAnswerChoices().get(1).getValue());
         Mockito.verify(questionDao, Mockito.times(1)).getDetails(questionId);
     }
 

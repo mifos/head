@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuestionGroup xmlns="http://www.mifos.org/QuestionGroupDefinition"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://www.mifos.org/QuestionGroupDefinition QuestionGroupDefinition.xsd ">
+    <ppi>true</ppi>
+    <title>PPI India</title>
+    <editable>false</editable>
+    <eventSource>
+        <event>Create</event>
+        <source>Loan</source>
+    </eventSource>
+    <section>
+        <name>default</name>
+        <order>1</order>
+        <question>
+            <title>Your DOB</title>
+            <type>DATE</type>
+            <order>1</order>
+        </question>
+        <question>
+            <title>How many family members</title>
+            <type>NUMERIC</type>
+            <minValue>3</minValue>
+            <maxValue>10</maxValue>
+            <mandatory>true</mandatory>
+            <order>2</order>
+        </question>
+    </section>
+    <section>
+        <name>misc</name>
+        <order>2</order>
+        <question>
+            <title>Father's name'</title>
+            <type>FREETEXT</type>
+            <order>1</order>
+        </question>
+        <question>
+            <title>No of dependents</title>
+            <type>SINGLE_SELECT</type>
+            <choice>
+                <value>Less than 2</value>
+                <order>1</order>
+            </choice>
+            <choice>
+                <value>Less than 5</value>
+                <order>2</order>
+            </choice>
+            <choice>
+                <value>Less than 10</value>
+                <order>3</order>
+            </choice>
+            <mandatory>true</mandatory>
+            <order>2</order>
+        </question>
+        <question>
+            <title>Previous Loans taken for</title>
+            <type>SMART_SELECT</type>
+            <order>3</order>
+            <mandatory>true</mandatory>
+            <choice>
+                <order>1</order>
+                <value>No Product</value>
+                <tag>Never</tag>
+            </choice>
+            <choice>
+                <order>2</order>
+                <value>Product 1</value>
+                <tag>Agriculture</tag>
+            </choice>
+            <choice>
+                <order>3</order>
+                <value>Product 2</value>
+                <tag>Fishing, Farming</tag>
+            </choice>
+            <choice>
+                <order>4</order>
+                <value>Product 3</value>
+                <tag>Construction</tag>
+            </choice>
+        </question>
+    </section>
+</QuestionGroup>

@@ -99,8 +99,6 @@ public abstract class CustomerActionForm extends BaseActionForm {
 
     private List<CustomerPositionDto> customerPositions;
 
-    private List<QuestionGroupDto> questionGroupDtos;
-
     protected List<QuestionGroupDetail> questionGroups;
     private String nextOrPreview;
 

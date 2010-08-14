@@ -30,25 +30,26 @@ import java.util.List;
 public class ChoiceDetail implements Serializable {
     private static final long serialVersionUID = 5839636913158754732L;
 
-    private String choiceText;
+    private String value;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<String> tags;
+    private Integer order;
 
     public ChoiceDetail() {
         this(null);
     }
 
-    public ChoiceDetail(String choiceText) {
-        this.choiceText = choiceText;
+    public ChoiceDetail(String value) {
+        this.value = value;
         tags = new ArrayList<String>();
     }
 
-    public String getChoiceText() {
-        return choiceText;
+    public String getValue() {
+        return value;
     }
 
-    public void setChoiceText(String choiceText) {
-        this.choiceText = choiceText;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public List<String> getTags() {
@@ -65,7 +66,7 @@ public class ChoiceDetail implements Serializable {
 
     @Override
     public String toString() {
-        return choiceText;
+        return value;
     }
 
     public void addTag(String tag) {
@@ -86,5 +87,13 @@ public class ChoiceDetail implements Serializable {
 
     public void removeTag(int tagIndex) {
         tags.remove(tagIndex);
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
     }
 }

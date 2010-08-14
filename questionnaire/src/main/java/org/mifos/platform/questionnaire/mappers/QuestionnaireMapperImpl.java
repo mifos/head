@@ -170,7 +170,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private QuestionChoiceEntity mapToChoice(ChoiceDetail choice) {
-        QuestionChoiceEntity choiceEntity = new QuestionChoiceEntity(choice.getChoiceText());
+        QuestionChoiceEntity choiceEntity = new QuestionChoiceEntity(choice.getValue());
         List<String> tags = choice.getTags();
         if (isNotEmpty(tags)) {
             Set<ChoiceTagEntity> choiceTagEntities = new LinkedHashSet<ChoiceTagEntity>();

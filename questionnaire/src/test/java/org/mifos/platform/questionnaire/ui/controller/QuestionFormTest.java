@@ -55,7 +55,7 @@ public class QuestionFormTest {
         assertNotSame(title, questionForm.getCurrentQuestion().getTitle());
         assertThat(type, is("Multi Select"));
         assertThat(title, is("title"));
-        assertThat(choices.get(0).getChoiceText(), is("choice2"));
+        assertThat(choices.get(0).getValue(), is("choice2"));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class QuestionFormTest {
         List<ChoiceDetail> choices = questionList.get(0).getChoices();
         assertNotSame(title, questionForm.getCurrentQuestion().getTitle());
         assertNotSame(type, questionForm.getCurrentQuestion().getType());
-        assertThat(choices.get(0).getChoiceText(), is("choice"));
+        assertThat(choices.get(0).getValue(), is("choice"));
         assertThat(title, is("title1"));
         assertThat(type, is("Single Select"));
     }
