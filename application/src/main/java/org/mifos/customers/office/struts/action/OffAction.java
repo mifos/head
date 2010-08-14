@@ -186,17 +186,15 @@ public class OffAction extends BaseAction {
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         OffActionForm actionForm = (OffActionForm) form;
-        OfficeBO officeBO = null;
         if (StringUtils.isBlank(actionForm.getOfficeId())) {
             throw new OfficeException(OfficeConstants.KEYGETFAILED);
         }
-        officeBO = ((OfficeBusinessService) getService()).getOffice(Short.valueOf(actionForm.getOfficeId()));
+
+        OfficeDto officeDto = this.officeServiceFacade.retrieveOfficeById(Short.valueOf(actionForm.getOfficeId()));
         actionForm.clear();
         loadCustomFieldDefinitions(request);
-        officeBO.getStatus().setLocaleId(getUserContext(request).getLocaleId());
-        officeBO.getLevel().setLocaleId(getUserContext(request).getLocaleId());
-        actionForm.populate(officeBO);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, officeBO, request);
+        actionForm.populate(officeDto);
+        SessionUtils.setAttribute("officeDto", officeDto, request);
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 

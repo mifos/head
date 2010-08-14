@@ -1,6 +1,5 @@
 package org.mifos.application.servicefacade;
 
-import org.mifos.framework.exceptions.ApplicationException;
 import java.util.ArrayList;
 import java.util.List;
 

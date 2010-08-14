@@ -37,10 +37,12 @@ import org.mifos.customers.office.struts.OfficeUpdateRequest;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
+import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.screen.OfficeFormDto;
 import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.util.UserContext;
@@ -214,5 +216,34 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
         List<OfficeDto> parents = this.officeDao.findActiveParents(officeLevel);
 
         return new OfficeFormDto(customFields, parents);
+    }
+
+    @Override
+    public OfficeDto retrieveOfficeById(Short id) {
+        OfficeBO officeBO = officeDao.findOfficeById(id);
+        List<CustomFieldDto> customFields = retrieveCustomFieldsForOffice();
+        Short parentOfficeId = null;
+        String parentOffineName = null;
+        if(officeBO.getParentOffice() != null) {
+            parentOfficeId = officeBO.getParentOffice().getOfficeId();
+            parentOffineName = officeBO.getParentOffice().getOfficeName();
+        }
+        Address address = officeBO.getAddress() != null ? officeBO.getAddress().getAddress(): null;
+        AddressDto addressDto = address != null ? Address.toDto(officeBO.getAddress().getAddress()): null;
+
+        OfficeDto officeDto = new OfficeDto(officeBO.getOfficeId(), officeBO.getOfficeName(), officeBO.getSearchId(), officeBO.getShortName(),
+                officeBO.getGlobalOfficeNum(), parentOfficeId, officeBO.getStatus().getId(), officeBO.getLevel().getId(),
+                parentOffineName, officeBO.getVersionNo(), officeBO.getStatus().getName(), officeBO.getLevel().getName(),
+                addressDto, customFields);
+
+        return officeDto;
+    }
+
+    @Override
+    public List<CustomFieldDto> retrieveCustomFieldsForOffice() {
+        if (officeDao.retrieveCustomFieldsForOffice() != null) {
+            return CustomFieldDefinitionEntity.toDto(officeDao.retrieveCustomFieldsForOffice(), Locale.getDefault());
+        }
+        return null;
     }
 }
