@@ -49,7 +49,7 @@
                                      </tr>
                                     [#list question.choices as choice]
                                          <tr>
-                                             <td class="drawtablerow" width="50%">${choice.choiceText}</td>
+                                             <td class="drawtablerow" width="50%">${choice.value}</td>
                                              [#if choice.commaSeparatedTags?has_content]
                                                 <td class="drawtablerow" width="50%">${choice.commaSeparatedTags}</td>
                                              [#else]
