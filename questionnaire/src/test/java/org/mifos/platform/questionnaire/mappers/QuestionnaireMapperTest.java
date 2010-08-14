@@ -114,7 +114,7 @@ public class QuestionnaireMapperTest {
         assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.MULTISELECT));
         assertThat(question.getQuestionText(), is(TITLE));
         assertThat(question.getShortName(), is(TITLE));
-        assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity(choice1.getChoiceText()), new QuestionChoiceEntity(choice2.getChoiceText()))));
+        assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity(choice1.getValue()), new QuestionChoiceEntity(choice2.getValue()))));
     }
 
     @Test
@@ -154,7 +154,7 @@ public class QuestionnaireMapperTest {
         assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.SINGLESELECT));
         assertThat(question.getQuestionText(), is(TITLE));
         assertThat(question.getShortName(), is(TITLE));
-        assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity(choice1.getChoiceText()), new QuestionChoiceEntity(choice2.getChoiceText()))));
+        assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity(choice1.getValue()), new QuestionChoiceEntity(choice2.getValue()))));
     }
 
     @Test
@@ -606,7 +606,7 @@ public class QuestionnaireMapperTest {
         assertQuestionDetail(questionDetail, title, questionType);
         for (int i = 0, choicesSize = choices.size(); i < choicesSize; i++) {
             String choice = choices.get(i);
-            Assert.assertEquals(choice, questionDetail.getAnswerChoices().get(i).getChoiceText());
+            Assert.assertEquals(choice, questionDetail.getAnswerChoices().get(i).getValue());
         }
     }
 

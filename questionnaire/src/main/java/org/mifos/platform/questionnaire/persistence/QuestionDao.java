@@ -26,6 +26,6 @@ import org.mifos.platform.questionnaire.domain.QuestionEntity;
 import java.util.List;
 
 public interface QuestionDao extends GenericDao<QuestionEntity, Integer> {
-    List retrieveCountOfQuestionsWithTitle(String questionTitle);
+    List<Long> retrieveCountOfQuestionsWithTitle(String questionTitle);
     List<QuestionEntity> retrieveByState(int questionState);
 }

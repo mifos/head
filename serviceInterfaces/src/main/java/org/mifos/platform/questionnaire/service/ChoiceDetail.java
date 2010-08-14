@@ -20,6 +20,9 @@
 
 package org.mifos.platform.questionnaire.service;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.platform.util.CollectionUtils;
 
@@ -27,28 +30,32 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@XStreamAlias("choice")
 public class ChoiceDetail implements Serializable {
     private static final long serialVersionUID = 5839636913158754732L;
 
-    private String choiceText;
+    private String value;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
+    @XStreamImplicit(itemFieldName = "tag")
     private List<String> tags;
+    @XStreamAsAttribute
+    private Integer order;
 
     public ChoiceDetail() {
         this(null);
     }
 
-    public ChoiceDetail(String choiceText) {
-        this.choiceText = choiceText;
+    public ChoiceDetail(String value) {
+        this.value = value;
         tags = new ArrayList<String>();
     }
 
-    public String getChoiceText() {
-        return choiceText;
+    public String getValue() {
+        return value;
     }
 
-    public void setChoiceText(String choiceText) {
-        this.choiceText = choiceText;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public List<String> getTags() {
@@ -65,7 +72,7 @@ public class ChoiceDetail implements Serializable {
 
     @Override
     public String toString() {
-        return choiceText;
+        return value;
     }
 
     public void addTag(String tag) {
@@ -86,5 +93,13 @@ public class ChoiceDetail implements Serializable {
 
     public void removeTag(int tagIndex) {
         tags.remove(tagIndex);
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
     }
 }

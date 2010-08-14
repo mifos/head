@@ -26,7 +26,7 @@ import org.mifos.platform.questionnaire.domain.QuestionGroupInstance;
 import java.util.List;
 
 public interface QuestionGroupInstanceDao extends GenericDao<QuestionGroupInstance, Integer> {
-    List retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(int entityId, int questionGroupId);
-    List retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(int entityId, int eventSourceId);
-    List retrieveLatestQuestionGroupInstancesByEntityIdAndEventSourceId(int entityId, int eventSourceId);
+    List<QuestionGroupInstance> retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(int entityId, int questionGroupId);
+    List<QuestionGroupInstance> retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(int entityId, int eventSourceId);
+    List<QuestionGroupInstance> retrieveLatestQuestionGroupInstancesByEntityIdAndEventSourceId(int entityId, int eventSourceId);
 }

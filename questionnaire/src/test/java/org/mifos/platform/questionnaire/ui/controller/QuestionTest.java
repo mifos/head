@@ -55,10 +55,10 @@ public class QuestionTest {
         question.addAnswerChoice();
         assertThat(question.getChoices().size(), is(4));
         assertThat(question.getCurrentSmartChoiceTags().size(), is(4));
-        assertEquals("choice1", question.getChoices().get(0).getChoiceText());
-        assertEquals("choice2", question.getChoices().get(1).getChoiceText());
-        assertEquals("choice1", question.getChoices().get(2).getChoiceText());
-        assertEquals("choice3", question.getChoices().get(3).getChoiceText());
+        assertEquals("choice1", question.getChoices().get(0).getValue());
+        assertEquals("choice2", question.getChoices().get(1).getValue());
+        assertEquals("choice1", question.getChoices().get(2).getValue());
+        assertEquals("choice3", question.getChoices().get(3).getValue());
         assertEquals("choice1, choice2, choice1, choice3", question.getCommaSeparateChoices());
     }
 
@@ -71,14 +71,14 @@ public class QuestionTest {
         question.addAnswerChoice();
         question.setCurrentChoice("choice1");
         question.addAnswerChoice();
-        assertEquals("choice1", question.getChoices().get(0).getChoiceText());
-        assertEquals("choice2", question.getChoices().get(1).getChoiceText());
-        assertEquals("choice1", question.getChoices().get(2).getChoiceText());
+        assertEquals("choice1", question.getChoices().get(0).getValue());
+        assertEquals("choice2", question.getChoices().get(1).getValue());
+        assertEquals("choice1", question.getChoices().get(2).getValue());
         question.removeChoice(0);
-        assertEquals("choice2", question.getChoices().get(0).getChoiceText());
-        assertEquals("choice1", question.getChoices().get(1).getChoiceText());
+        assertEquals("choice2", question.getChoices().get(0).getValue());
+        assertEquals("choice1", question.getChoices().get(1).getValue());
         question.removeChoice(1);
-        assertEquals("choice2", question.getChoices().get(0).getChoiceText());
+        assertEquals("choice2", question.getChoices().get(0).getValue());
     }
 
     @Test

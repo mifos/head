@@ -359,7 +359,7 @@ public class QuestionnaireServiceIntegrationTest {
         String title = "QG1" + currentTimeMillis();
         List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
         QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details, false);
-        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(null, new EventSource("Create", "Client", "Create.Client"));
+        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
         assertThat(questionGroups, is(notNullValue()));
         QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
         assertThat(actualQGDetail, is(notNullValue()));
@@ -401,7 +401,7 @@ public class QuestionnaireServiceIntegrationTest {
         List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
         QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details, true);
         setState(expectedQGDetail.getId(), QuestionGroupState.INACTIVE);
-        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(null, new EventSource("Create", "Client", "Create.Client"));
+        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
         assertThat(questionGroups, is(notNullValue()));
         QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
         assertThat(actualQGDetail, is(Matchers.nullValue()));

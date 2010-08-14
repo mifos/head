@@ -71,7 +71,7 @@
             </li>
             [#list questionDefinition.currentQuestion.choices as choice]
             <li>
-                <span class="choiceStyle">${choice.choiceText}&nbsp;</span>
+                <span class="choiceStyle">${choice.value}&nbsp;</span>
                 <span class="tagStyle">
                     [#if choice.tags?size > 0]
                         [#list choice.tags as tag]

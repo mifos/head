@@ -47,7 +47,7 @@ public class QuestionDetailMatcher extends TypeSafeMatcher<QuestionDetail> {
             List<ChoiceDetail> choiceDetails = this.questionDetail.getAnswerChoices();
             for (int i = 0, choiceDetailsSize = choiceDetails.size(); i < choiceDetailsSize; i++) {
                 ChoiceDetail choiceDetail = choiceDetails.get(i);
-                assertEquals(choiceDetail.getChoiceText(), questionDetail.getAnswerChoices().get(i).getChoiceText());
+                assertEquals(choiceDetail.getValue(), questionDetail.getAnswerChoices().get(i).getValue());
             }
             return true;
         }

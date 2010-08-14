@@ -20,6 +20,9 @@
 
 package org.mifos.platform.questionnaire.service;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+@XStreamAlias("type")
 public enum QuestionType {
     INVALID, FREETEXT, NUMERIC, MULTI_SELECT, SINGLE_SELECT, DATE, SMART_SELECT
 }

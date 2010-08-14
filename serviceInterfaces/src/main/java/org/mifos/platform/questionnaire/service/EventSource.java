@@ -20,8 +20,11 @@
 
 package org.mifos.platform.questionnaire.service;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import java.io.Serializable;
 
+@XStreamAlias("eventSource")
 public class EventSource implements Serializable{
     private String source;
     private String event;

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.mifos.org/QuestionGroupDefinition"
+        xmlns:tns="http://www.mifos.org/QuestionGroupDefinition" elementFormDefault="qualified">
+
+    <element name="QuestionGroup" type="tns:QuestionGroup"/>
+
+    <complexType name="QuestionGroup">
+        <sequence>
+            <element name="ppi" type="boolean"/>
+            <element name="title" type="string" maxOccurs="1" minOccurs="1"/>
+            <element name="editable" type="boolean"/>
+            <element name="eventSource" type="tns:EventSource" maxOccurs="1" minOccurs="1"/>
+            <element name="section" type="tns:Section" maxOccurs="unbounded" minOccurs="1"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="EventSource">
+        <all>
+            <element name="event" type="string" maxOccurs="1" minOccurs="1"/>
+            <element name="source" type="string" maxOccurs="1" minOccurs="1"/>
+        </all>
+    </complexType>
+
+    <complexType name="Section">
+        <sequence>
+            <element name="name" type="string" maxOccurs="1" minOccurs="0"/>
+            <element name="question" type="tns:Question" maxOccurs="unbounded" minOccurs="1"/>
+        </sequence>
+        <attribute name="order" type="int" use="required"/>
+    </complexType>
+
+    <complexType name="Question">
+        <sequence>
+            <element name="title" type="string" maxOccurs="1" minOccurs="1"/>
+            <element name="type" type="tns:QuestionType" maxOccurs="1" minOccurs="1"/>
+            <element name="minValue" type="int" maxOccurs="1" minOccurs="0"/>
+            <element name="maxValue" type="int" maxOccurs="1" minOccurs="0"/>
+            <element name="choice" type="tns:QuestionChoice" maxOccurs="unbounded" minOccurs="0"/>
+            <element name="mandatory" type="boolean" maxOccurs="1" minOccurs="0"/>
+        </sequence>
+        <attribute name="order" type="int" use="required"/>
+    </complexType>
+
+    <simpleType name="QuestionType">
+        <restriction base="token">
+            <enumeration value="FREETEXT"/>
+            <enumeration value="NUMERIC"/>
+            <enumeration value="DATE"/>
+            <enumeration value="SINGLE_SELECT"/>
+            <enumeration value="MULTI_SELECT"/>
+            <enumeration value="SMART_SELECT"/>
+        </restriction>
+    </simpleType>
+
+    <complexType name="QuestionChoice">
+        <sequence>
+            <element name="value" type="string" maxOccurs="1" minOccurs="1"/>
+            <element name="tag" type="string" maxOccurs="unbounded" minOccurs="0" />
+        </sequence>
+        <attribute name="order" type="int" use="required"/>
+    </complexType>
+</schema>
