@@ -9,72 +9,58 @@
         <event>Create</event>
         <source>Loan</source>
     </eventSource>
-    <section>
+    <section order="1">
         <name>default</name>
-        <order>1</order>
-        <question>
+        <question order="1">
             <title>Your DOB</title>
             <type>DATE</type>
-            <order>1</order>
         </question>
-        <question>
+        <question order="2">
             <title>How many family members</title>
             <type>NUMERIC</type>
             <minValue>3</minValue>
             <maxValue>10</maxValue>
             <mandatory>true</mandatory>
-            <order>2</order>
         </question>
     </section>
-    <section>
+    <section order="2">
         <name>misc</name>
-        <order>2</order>
-        <question>
+        <question order="1">
             <title>Father's name'</title>
             <type>FREETEXT</type>
-            <order>1</order>
         </question>
-        <question>
+        <question order="2">
             <title>No of dependents</title>
             <type>SINGLE_SELECT</type>
-            <choice>
+            <choice order="1">
                 <value>Less than 2</value>
-                <order>1</order>
             </choice>
-            <choice>
+            <choice order="2">
                 <value>Less than 5</value>
-                <order>2</order>
             </choice>
-            <choice>
+            <choice order="3">
                 <value>Less than 10</value>
-                <order>3</order>
             </choice>
             <mandatory>true</mandatory>
-            <order>2</order>
         </question>
-        <question>
+        <question order="3">
             <title>Previous Loans taken for</title>
             <type>SMART_SELECT</type>
-            <order>3</order>
             <mandatory>true</mandatory>
-            <choice>
-                <order>1</order>
+            <choice order="1">
                 <value>No Product</value>
                 <tag>Never</tag>
             </choice>
-            <choice>
-                <order>2</order>
+            <choice order="2">
                 <value>Product 1</value>
                 <tag>Agriculture</tag>
             </choice>
-            <choice>
-                <order>3</order>
+            <choice order="3">
                 <value>Product 2</value>
                 <tag>Fishing</tag>
                 <tag>Farming</tag>
             </choice>
-            <choice>
-                <order>4</order>
+            <choice order="4">
                 <value>Product 3</value>
                 <tag>Construction</tag>
             </choice>

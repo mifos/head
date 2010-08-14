@@ -24,9 +24,9 @@
     <complexType name="Section">
         <sequence>
             <element name="name" type="string" maxOccurs="1" minOccurs="0"/>
-            <element name="order" type="int" maxOccurs="1" minOccurs="1"/>
             <element name="question" type="tns:Question" maxOccurs="unbounded" minOccurs="1"/>
         </sequence>
+        <attribute name="order" type="int" use="required"/>
     </complexType>
 
     <complexType name="Question">
@@ -36,9 +36,9 @@
             <element name="minValue" type="int" maxOccurs="1" minOccurs="0"/>
             <element name="maxValue" type="int" maxOccurs="1" minOccurs="0"/>
             <element name="choice" type="tns:QuestionChoice" maxOccurs="unbounded" minOccurs="0"/>
-            <element name="order" type="int" maxOccurs="1" minOccurs="1"/>
             <element name="mandatory" type="boolean" maxOccurs="1" minOccurs="0"/>
         </sequence>
+        <attribute name="order" type="int" use="required"/>
     </complexType>
 
     <simpleType name="QuestionType">
@@ -54,9 +54,9 @@
 
     <complexType name="QuestionChoice">
         <sequence>
-            <element name="order" type="int" maxOccurs="1" minOccurs="1"/>
             <element name="value" type="string" maxOccurs="1" minOccurs="1"/>
             <element name="tag" type="string" maxOccurs="unbounded" minOccurs="0" />
         </sequence>
+        <attribute name="order" type="int" use="required"/>
     </complexType>
 </schema>
