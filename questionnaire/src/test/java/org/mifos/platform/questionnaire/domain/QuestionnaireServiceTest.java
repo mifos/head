@@ -116,7 +116,6 @@ public class QuestionnaireServiceTest {
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
             Assert.assertEquals(QuestionType.FREETEXT, questionDetail.getType());
-            Assert.assertEquals(questionDetail.getAnswerChoices(), asList());
         } catch (SystemException e) {
             Assert.fail("Should not have thrown the validation exception");
         }
@@ -438,7 +437,6 @@ public class QuestionnaireServiceTest {
         assertThat(questionDetail.getShortName(), is(title));
         assertThat(questionDetail.getText(), is(title));
         assertThat(questionDetail.getType(), is(QuestionType.DATE));
-        Assert.assertEquals(questionDetail.getAnswerChoices(), asList());
         verify(questionDao, times(1)).getDetails(questionId);
     }
 
@@ -517,7 +515,7 @@ public class QuestionnaireServiceTest {
     public void shouldGetAllQuestionGroupsByEventSource() throws SystemException {
         List<QuestionGroup> questionGroups = asList(getQuestionGroup(1, "Title1", getSections("Section1")), getQuestionGroup(2, "Title2", getSections("Section2")));
         when(questionGroupDao.retrieveQuestionGroupsByEventSource("Create", "Client")).thenReturn(questionGroups);
-        List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(null, new EventSource("Create", "Client", "Create.Client"));
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
         assertThat(questionGroupDetails, is(notNullValue()));
         assertThat(questionGroupDetails.size(), is(2));
         assertThat(questionGroupDetails.get(0).getTitle(), is("Title1"));
@@ -533,23 +531,9 @@ public class QuestionnaireServiceTest {
         QuestionGroup questionGroup3 = getQuestionGroup(3, "Title3", asList(getSectionWithOneMultiSelectQuestion(222, "Section3", "Question3", "Choice1", "Choice2", "Choice3", "Choice4")));
         List<QuestionGroup> questionGroups = asList(questionGroup1, questionGroup2, questionGroup3);
         when(questionGroupDao.retrieveQuestionGroupsByEventSource("Create", "Client")).thenReturn(questionGroups);
-        QuestionGroupInstance questionGroupInstance1 = getQuestionGroupInstance(101, 1, questionGroup1, "Hello World");
-        QuestionGroupInstance questionGroupInstance2 = getQuestionGroupInstance(101, 2, questionGroup2, "Foo Bar");
-        QuestionGroupInstance questionGroupInstance3 = getQuestionGroupInstanceWithSingleMultiSelectQuestion(101, 3, questionGroup3, "Choice1", "Choice3", "Choice4");
-        when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(101, 1)).thenReturn(asList(questionGroupInstance1));
-        when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(101, 2)).thenReturn(asList(questionGroupInstance2));
-        when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(101, 3)).thenReturn(asList(questionGroupInstance3));
-        List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(101, new EventSource("Create", "Client", "Create.Client"));
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
         assertThat(questionGroupDetails, is(notNullValue()));
         assertThat(questionGroupDetails.size(), is(3));
-        assertThat(questionGroupDetails.get(0).getSectionDetail(0).getQuestionDetail(0).getValue(), is("Hello World"));
-        assertThat(questionGroupDetails.get(1).getSectionDetail(0).getQuestionDetail(0).getValue(), is("Foo Bar"));
-        List<String> values = questionGroupDetails.get(2).getSectionDetail(0).getQuestionDetail(0).getValues();
-        assertThat(values, is(notNullValue()));
-        assertThat(values.size(), is(3));
-        assertThat(values.get(0), is("Choice1"));
-        assertThat(values.get(1), is("Choice3"));
-        assertThat(values.get(2), is("Choice4"));
     }
 
     private QuestionGroupInstance getQuestionGroupInstance(int entityId, int version, QuestionGroup questionGroup, String... responses) {
@@ -563,22 +547,6 @@ public class QuestionnaireServiceTest {
         List<QuestionGroupResponse> groupResponses = new ArrayList<QuestionGroupResponse>();
         for (int i = 0; i < responses.length; i++) {
             groupResponses.add(getQuestionGroupResponse(responses[i], questionGroupInstance, questionGroup.getSections().get(i).getQuestions().get(0)));
-        }
-        questionGroupInstance.setQuestionGroupResponses(groupResponses);
-        return questionGroupInstance;
-    }
-
-    private QuestionGroupInstance getQuestionGroupInstanceWithSingleMultiSelectQuestion(int entityId, int version, QuestionGroup questionGroup, String... responses) {
-        QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
-        questionGroupInstance.setQuestionGroup(questionGroup);
-        questionGroupInstance.setCompletedStatus(1);
-        questionGroupInstance.setCreatorId(122);
-        questionGroupInstance.setDateConducted(Calendar.getInstance().getTime());
-        questionGroupInstance.setEntityId(entityId);
-        questionGroupInstance.setVersionNum(version);
-        List<QuestionGroupResponse> groupResponses = new ArrayList<QuestionGroupResponse>();
-        for (int i = 0; i < responses.length; i++) {
-            groupResponses.add(getQuestionGroupResponse(responses[i], questionGroupInstance, questionGroup.getSections().get(0).getQuestions().get(0)));
         }
         questionGroupInstance.setQuestionGroupResponses(groupResponses);
         return questionGroupInstance;

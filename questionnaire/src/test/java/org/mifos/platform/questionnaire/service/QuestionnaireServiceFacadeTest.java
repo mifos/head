@@ -32,7 +32,7 @@ import org.mifos.platform.questionnaire.matchers.EventSourceMatcher;
 import org.mifos.platform.questionnaire.matchers.EventSourcesMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionDetailMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
-import org.mockito.Matchers;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -205,10 +205,10 @@ public class QuestionnaireServiceFacadeTest {
     @Test
     public void shouldRetrieveQuestionGroupsByEventSource() throws SystemException {
         QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE + 1, "Create", "Client", asList(getSectionDetailWithQuestionIds("Section1", 11, 22, 33)));
-        when(questionnaireService.getQuestionGroups(Matchers.<Integer>any(), any(EventSource.class))).thenReturn(asList(questionGroupDetail));
+        when(questionnaireService.getQuestionGroups(any(EventSource.class))).thenReturn(asList(questionGroupDetail));
         List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getQuestionGroups("Create", "Client");
         assertQuestionGroupDetails(questionGroupDetails);
-        Mockito.verify(questionnaireService, times(1)).getQuestionGroups(Matchers.<Integer>any(), argThat(new EventSourceMatcher("Create", "Client", "Create.Client")));
+        Mockito.verify(questionnaireService, times(1)).getQuestionGroups(argThat(new EventSourceMatcher("Create", "Client", "Create.Client")));
     }
 
     private void assertQuestionGroupDetails(List<QuestionGroupDetail> questionGroupDetails) {
@@ -277,6 +277,13 @@ public class QuestionnaireServiceFacadeTest {
         when(questionnaireService.getQuestionGroupInstances(101, new EventSource("Create", "Client", "Create.Client"), true, false)).thenReturn(new ArrayList<QuestionGroupInstanceDetail>());
         questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(101, "Create", "Client");
         verify(questionnaireService).getQuestionGroupInstances(eq(101), any(EventSource.class), eq(true), eq(true));
+    }
+
+    @Test
+    public void testCreateQuestionGroupUsingDTO() {
+        QuestionGroupDto questionGroupDto = new QuestionGroupDto();
+        questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
+        verify(questionnaireService).defineQuestionGroup(questionGroupDto);
     }
 
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail() {

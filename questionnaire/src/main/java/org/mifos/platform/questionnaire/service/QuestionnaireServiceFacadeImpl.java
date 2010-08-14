@@ -22,6 +22,7 @@ package org.mifos.platform.questionnaire.service;
 
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -30,7 +31,6 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Autowired
     private QuestionnaireService questionnaireService;
-    public static final Integer INVALID_ENTITY_ID = null;
 
     public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService) {
         this.questionnaireService = questionnaireService;
@@ -100,7 +100,7 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public List<QuestionGroupDetail> getQuestionGroups(String event, String source) throws SystemException {
-        return questionnaireService.getQuestionGroups(INVALID_ENTITY_ID, getEventSource(event, source));
+        return questionnaireService.getQuestionGroups(getEventSource(event, source));
     }
 
     @Override
@@ -116,6 +116,11 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     @Override
     public QuestionGroupInstanceDetail getQuestionGroupInstance(Integer questionGroupInstanceId) {
         return questionnaireService.getQuestionGroupInstance(questionGroupInstanceId);
+    }
+
+    @Override
+    public void createQuestionGroup(QuestionGroupDto questionGroupDto) throws SystemException {
+        questionnaireService.defineQuestionGroup(questionGroupDto);
     }
 
     private EventSource getEventSource(String event, String source) {

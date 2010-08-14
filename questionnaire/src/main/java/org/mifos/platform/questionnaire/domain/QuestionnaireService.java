@@ -26,6 +26,7 @@ import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public interface QuestionnaireService {
 
     List<EventSource> getAllEventSources();
 
-    List<QuestionGroupDetail> getQuestionGroups(Integer entityId, EventSource eventSource) throws SystemException;
+    List<QuestionGroupDetail> getQuestionGroups(EventSource eventSource) throws SystemException;
 
     void saveResponses(QuestionGroupDetails questionGroupDetails);
 
@@ -57,4 +58,6 @@ public interface QuestionnaireService {
     List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSource eventSource, Boolean includeUnansweredQuestionGroups, boolean fetchLastVersion);
 
     QuestionGroupInstanceDetail getQuestionGroupInstance(int questionGroupInstanceId);
+
+    void defineQuestionGroup(QuestionGroupDto questionGroupDto);
 }

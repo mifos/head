@@ -21,6 +21,7 @@
 package org.mifos.platform.questionnaire.service;
 
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 
 import java.util.List;
 
@@ -54,4 +55,6 @@ public interface QuestionnaireServiceFacade {
     List<QuestionGroupInstanceDetail> getQuestionGroupInstancesWithUnansweredQuestionGroups(Integer entityId, String event, String source);
 
     QuestionGroupInstanceDetail getQuestionGroupInstance(Integer questionGroupInstanceId);
+
+    void createQuestionGroup(QuestionGroupDto questionGroupDto) throws SystemException;
 }
