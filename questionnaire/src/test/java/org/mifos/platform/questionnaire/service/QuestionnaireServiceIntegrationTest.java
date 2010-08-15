@@ -26,6 +26,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.builders.ChoiceDetailBuilder;
+import org.mifos.platform.questionnaire.builders.QuestionDtoBuilder;
+import org.mifos.platform.questionnaire.builders.QuestionGroupDtoBuilder;
+import org.mifos.platform.questionnaire.builders.SectionDtoBuilder;
 import org.mifos.platform.questionnaire.domain.AnswerType;
 import org.mifos.platform.questionnaire.domain.ChoiceTagEntity;
 import org.mifos.platform.questionnaire.domain.EventSourceEntity;
@@ -38,12 +42,16 @@ import org.mifos.platform.questionnaire.domain.QuestionGroupState;
 import org.mifos.platform.questionnaire.domain.QuestionState;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
 import org.mifos.platform.questionnaire.domain.Section;
+import org.mifos.platform.questionnaire.domain.SectionQuestion;
 import org.mifos.platform.questionnaire.matchers.EventSourcesMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionChoicesMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
+import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -408,6 +416,7 @@ public class QuestionnaireServiceIntegrationTest {
     }
     
     @Test
+    @Transactional(rollbackFor = DataAccessException.class)
     public void shouldSaveQuestionWithSmartSelectOptionType() {
         String quesTitle = "Ques" + currentTimeMillis();
         QuestionEntity questionEntity = new QuestionEntity();
@@ -429,6 +438,69 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(newQuestionEntity.getChoices().get(1).getChoiceText(), is("Choice2"));
         assertThat(newQuestionEntity.getChoices().get(1).getTags(), is(notNullValue()));
         assertThat(newQuestionEntity.getChoices().get(1).getTags().size(), is(1));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldSaveQuestionGroupFromDto() {
+        String ques1Title = "Ques1" + currentTimeMillis();
+        String ques2Title = "Ques2" + currentTimeMillis();
+        String qgTitle = "QG1" + currentTimeMillis();
+        QuestionDto question1 = new QuestionDtoBuilder().withTitle(ques1Title).withMandatory(true).withType(QuestionType.FREETEXT).withOrder(1).build();
+        ChoiceDetail choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
+        ChoiceDetail choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
+        ChoiceDetail choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
+        QuestionDto question2 = new QuestionDtoBuilder().withTitle(ques2Title).withType(QuestionType.SINGLE_SELECT).addChoices(choice1, choice2, choice3).withOrder(2).build();
+        SectionDto section1 = new SectionDtoBuilder().withName("Sec1").withOrder(1).addQuestions(question1, question2).build();
+        QuestionGroupDto questionGroupDto = new QuestionGroupDtoBuilder().withTitle(qgTitle).withEventSource("Create", "Client").addSections(section1).build();
+        Integer questionGroupId = questionnaireService.defineQuestionGroup(questionGroupDto);
+        assertQuestionGroup(questionGroupDao.getDetails(questionGroupId), qgTitle, ques1Title, ques2Title);
+    }
+
+    private void assertQuestionGroup(QuestionGroup questionGroup, String questionGroupTitle, String firstQuestionTitle, String secondQuestionTitle) {
+        assertThat(questionGroup, is(notNullValue()));
+        assertThat(questionGroup.getTitle(), is(questionGroupTitle));
+        Set<EventSourceEntity> eventSources = questionGroup.getEventSources();
+        assertThat(eventSources, is(notNullValue()));
+        assertThat(eventSources.size(), is(1));
+        EventSourceEntity eventSourceEntity = eventSources.toArray(new EventSourceEntity[eventSources.size()])[0];
+        assertThat(eventSourceEntity.getEvent().getName(), is("Create"));
+        assertThat(eventSourceEntity.getSource().getEntityType(), is("Client"));
+        assertThat(questionGroup.getState(), is(QuestionGroupState.ACTIVE));
+        List<Section> sections = questionGroup.getSections();
+        assertThat(sections, is(notNullValue()));
+        assertThat(sections.size(), is(1));
+        Section section = sections.get(0);
+        assertThat(section.getName(), is("Sec1"));
+        List<SectionQuestion> questions = section.getQuestions();
+        assertThat(questions, is(notNullValue()));
+        assertThat(questions.size(), is(2));
+
+        SectionQuestion sectionQuestion1 = questions.get(0);
+        assertThat(sectionQuestion1.getSequenceNumber(), is(1));
+        assertThat(sectionQuestion1.getSection(), is(notNullValue()));
+        assertThat(sectionQuestion1.getSection().getName(), is("Sec1"));
+        assertThat(sectionQuestion1.getSection().getSequenceNumber(), is(1));
+        assertThat(sectionQuestion1.getQuestion(), is(notNullValue()));
+        assertThat(sectionQuestion1.getQuestion().getShortName(), is(firstQuestionTitle));
+        assertThat(sectionQuestion1.getQuestion().getAnswerTypeAsEnum(), is(AnswerType.FREETEXT));
+
+        SectionQuestion sectionQuestion2 = questions.get(1);
+        assertThat(sectionQuestion2.getSequenceNumber(), is(2));
+        assertThat(sectionQuestion2.getSection(), is(notNullValue()));
+        assertThat(sectionQuestion2.getSection().getName(), is("Sec1"));
+        assertThat(sectionQuestion2.getSection().getSequenceNumber(), is(1));
+        assertThat(sectionQuestion2.getQuestion(), is(notNullValue()));
+        assertThat(sectionQuestion2.getQuestion().getShortName(), is(secondQuestionTitle));
+        assertThat(sectionQuestion2.getQuestion().getAnswerTypeAsEnum(), is(AnswerType.SINGLESELECT));
+        assertThat(sectionQuestion2.getQuestion().getChoices(), is(notNullValue()));
+        assertThat(sectionQuestion2.getQuestion().getChoices().size(), is(3));
+        assertThat(sectionQuestion2.getQuestion().getChoices().get(0).getChoiceText(), is("Ch1"));
+        assertThat(sectionQuestion2.getQuestion().getChoices().get(0).getChoiceOrder(), is(1));
+        assertThat(sectionQuestion2.getQuestion().getChoices().get(1).getChoiceText(), is("Ch2"));
+        assertThat(sectionQuestion2.getQuestion().getChoices().get(1).getChoiceOrder(), is(2));
+        assertThat(sectionQuestion2.getQuestion().getChoices().get(2).getChoiceText(), is("Ch3"));
+        assertThat(sectionQuestion2.getQuestion().getChoices().get(2).getChoiceOrder(), is(3));
     }
 
     private QuestionChoiceEntity getChoice(String choiceText, String... tagTexts) {

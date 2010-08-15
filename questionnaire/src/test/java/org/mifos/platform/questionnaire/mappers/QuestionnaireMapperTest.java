@@ -26,6 +26,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.business.EntityMaster;
+import org.mifos.platform.questionnaire.builders.ChoiceDetailBuilder;
+import org.mifos.platform.questionnaire.builders.QuestionDtoBuilder;
+import org.mifos.platform.questionnaire.builders.QuestionGroupDtoBuilder;
+import org.mifos.platform.questionnaire.builders.SectionDtoBuilder;
 import org.mifos.platform.questionnaire.domain.AnswerType;
 import org.mifos.platform.questionnaire.domain.ChoiceTagEntity;
 import org.mifos.platform.questionnaire.domain.EventEntity;
@@ -54,9 +58,11 @@ import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -71,6 +77,9 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionnaireMapperTest {
@@ -212,16 +221,16 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapQuestionGroupDefinitionToQuestionGroup() {
-        Mockito.when(eventSourceDao.retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString())).thenReturn(new ArrayList());
-        Mockito.when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
+        when(eventSourceDao.retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString())).thenReturn(new ArrayList());
+        when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
         EventSource eventSource = getEventSource("Create", "Client");
         List<SectionDetail> sectionDetails = asList(getSectionDefinition(SECTION_NAME));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, TITLE, eventSource, sectionDetails, true);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         assertQuestionGroup(questionGroup);
         assertThat(questionGroup.isEditable(), is(true));
-        Mockito.verify(eventSourceDao, Mockito.times(1)).retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString());
-        Mockito.verify(questionDao, Mockito.times(1)).getDetails(12);
+        verify(eventSourceDao, times(1)).retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString());
+        verify(questionDao, times(1)).getDetails(12);
     }
 
     private void assertQuestionGroup(QuestionGroup questionGroup) {
@@ -318,7 +327,6 @@ public class QuestionnaireMapperTest {
         HashSet<EventSourceEntity> eventSources = new HashSet<EventSourceEntity>();
         eventSources.add(eventSourceEntity);
         return eventSources;
-        //return Collections.singleton(eventSourceEntity);
     }
 
     @Test
@@ -360,24 +368,24 @@ public class QuestionnaireMapperTest {
     public void shouldMapToQuestionGroupInstances() {
         QuestionGroup questionGroup1 = new QuestionGroup();
         questionGroup1.setId(10);
-        Mockito.when(questionGroupDao.getDetails(10)).thenReturn(questionGroup1);
+        when(questionGroupDao.getDetails(10)).thenReturn(questionGroup1);
 
         QuestionGroup questionGroup2 = new QuestionGroup();
         questionGroup2.setId(11);
-        Mockito.when(questionGroupDao.getDetails(11)).thenReturn(questionGroup2);
+        when(questionGroupDao.getDetails(11)).thenReturn(questionGroup2);
 
         SectionQuestion sectionQuestion1 = new SectionQuestion();
         sectionQuestion1.setId(14);
-        Mockito.when(sectionQuestionDao.getDetails(14)).thenReturn(sectionQuestion1);
+        when(sectionQuestionDao.getDetails(14)).thenReturn(sectionQuestion1);
         
         SectionQuestion sectionQuestion2 = new SectionQuestion();
         sectionQuestion2.setId(15);
-        Mockito.when(sectionQuestionDao.getDetails(15)).thenReturn(sectionQuestion2);
+        when(sectionQuestionDao.getDetails(15)).thenReturn(sectionQuestion2);
 
         QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
         questionGroupInstance.setVersionNum(3);
-        Mockito.when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,10)).thenReturn(asList(questionGroupInstance));
-        Mockito.when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,11)).thenReturn(asList(questionGroupInstance));
+        when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,10)).thenReturn(asList(questionGroupInstance));
+        when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,11)).thenReturn(asList(questionGroupInstance));
 
         List<QuestionDetail> questionDetails1 = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails1 = asList(getSectionDetailWithQuestions(14, "Sec1", questionDetails1, "value",null));
@@ -435,8 +443,8 @@ public class QuestionnaireMapperTest {
         assertThat(questionGroupResponses3.get(0).getResponse(), is("a2"));
         assertThat(questionGroupResponses3.get(1).getResponse(), is("a3"));
 
-        Mockito.verify(questionGroupInstanceDao,Mockito.times(1)).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,10);
-        Mockito.verify(questionGroupInstanceDao,Mockito.times(2)).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,11);
+        verify(questionGroupInstanceDao, times(1)).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,10);
+        verify(questionGroupInstanceDao, times(2)).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,11);
     }
 
     @Test
@@ -479,8 +487,8 @@ public class QuestionnaireMapperTest {
         questionGroupInstance.setEntityId(entityId);
         questionGroupInstance.setVersionNum(version);
         List<QuestionGroupResponse> groupResponses = new ArrayList<QuestionGroupResponse>();
-        for (int i=0; i<responses.length; i++) {
-            groupResponses.add(getQuestionGroupResponse(responses[i], questionGroupInstance, questionGroup.getSections().get(0).getQuestions().get(0)));
+        for (String response : responses) {
+            groupResponses.add(getQuestionGroupResponse(response, questionGroupInstance, questionGroup.getSections().get(0).getQuestions().get(0)));
         }
         questionGroupInstance.setQuestionGroupResponses(groupResponses);
         return questionGroupInstance;
@@ -618,5 +626,75 @@ public class QuestionnaireMapperTest {
         return new EventSource(event, source, description);
     }
 
+    @Test
+    public void shouldMapToQuestionGroupFromDto() {
+        when(eventSourceDao.retrieveByEventAndSource("Create", "Client")).thenReturn(asList(getEventSourceEntity("Create", "Client")));
+        QuestionDto question1 = new QuestionDtoBuilder().withTitle("Ques1").withMandatory(true).withType(QuestionType.FREETEXT).withOrder(1).build();
+        ChoiceDetail choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
+        ChoiceDetail choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
+        ChoiceDetail choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
+        QuestionDto question2 = new QuestionDtoBuilder().withTitle("Ques2").withType(QuestionType.SINGLE_SELECT).addChoices(choice1, choice2, choice3).withOrder(2).build();
+        SectionDto section1 = new SectionDtoBuilder().withName("Sec1").withOrder(1).addQuestions(question1, question2).build();
+        QuestionGroupDto questionGroupDto = new QuestionGroupDtoBuilder().withTitle("QG1").withEventSource("Create", "Client").addSections(section1).build();
+        assertQuestionGroupEntity(questionnaireMapper.mapToQuestionGroup(questionGroupDto));
+        verify(eventSourceDao, times(1)).retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString());
+    }
+
+    private void assertQuestionGroupEntity(QuestionGroup questionGroup) {
+        assertThat(questionGroup, is(notNullValue()));
+        assertThat(questionGroup.getTitle(), is("QG1"));
+        Set<EventSourceEntity> eventSources = questionGroup.getEventSources();
+        assertThat(eventSources, is(notNullValue()));
+        assertThat(eventSources.size(), is(1));
+        EventSourceEntity eventSourceEntity = eventSources.toArray(new EventSourceEntity[eventSources.size()])[0];
+        assertThat(eventSourceEntity.getEvent().getName(), is("Create"));
+        assertThat(eventSourceEntity.getSource().getEntityType(), is("Client"));
+        assertThat(questionGroup.getState(), is(QuestionGroupState.ACTIVE));
+        List<Section> sections = questionGroup.getSections();
+        assertThat(sections, is(notNullValue()));
+        assertThat(sections.size(), is(1));
+        Section section = sections.get(0);
+        assertThat(section.getName(), is("Sec1"));
+        List<SectionQuestion> questions = section.getQuestions();
+        assertThat(questions, is(notNullValue()));
+        assertThat(questions.size(), is(2));
+
+        SectionQuestion sectionQuestion1 = questions.get(0);
+        assertThat(sectionQuestion1.getSequenceNumber(), is(1));
+        assertThat(sectionQuestion1.getSection(), is(notNullValue()));
+        assertThat(sectionQuestion1.getSection().getName(), is("Sec1"));
+        assertThat(sectionQuestion1.getSection().getSequenceNumber(), is(1));
+        assertThat(sectionQuestion1.getQuestion(), is(notNullValue()));
+        assertThat(sectionQuestion1.getQuestion().getShortName(), is("Ques1"));
+        assertThat(sectionQuestion1.getQuestion().getAnswerTypeAsEnum(), is(AnswerType.FREETEXT));
+
+        SectionQuestion sectionQuestion2 = questions.get(1);
+        assertThat(sectionQuestion2.getSequenceNumber(), is(2));
+        assertThat(sectionQuestion2.getSection(), is(notNullValue()));
+        assertThat(sectionQuestion2.getSection().getName(), is("Sec1"));
+        assertThat(sectionQuestion2.getSection().getSequenceNumber(), is(1));
+        assertThat(sectionQuestion2.getQuestion(), is(notNullValue()));
+        assertThat(sectionQuestion2.getQuestion().getShortName(), is("Ques2"));
+        assertThat(sectionQuestion2.getQuestion().getAnswerTypeAsEnum(), is(AnswerType.SINGLESELECT));
+        assertThat(sectionQuestion2.getQuestion().getChoices(), is(notNullValue()));
+        assertThat(sectionQuestion2.getQuestion().getChoices().size(), is(3));
+        assertThat(sectionQuestion2.getQuestion().getChoices().get(0).getChoiceText(), is("Ch1"));
+        assertThat(sectionQuestion2.getQuestion().getChoices().get(0).getChoiceOrder(), is(1));
+        assertThat(sectionQuestion2.getQuestion().getChoices().get(1).getChoiceText(), is("Ch2"));
+        assertThat(sectionQuestion2.getQuestion().getChoices().get(1).getChoiceOrder(), is(2));
+        assertThat(sectionQuestion2.getQuestion().getChoices().get(2).getChoiceText(), is("Ch3"));
+        assertThat(sectionQuestion2.getQuestion().getChoices().get(2).getChoiceOrder(), is(3));
+    }
+
+    private EventSourceEntity getEventSourceEntity(String event, String source) {
+        EventSourceEntity eventSource = new EventSourceEntity();
+        EventEntity eventEntity = new EventEntity();
+        eventEntity.setName(event);
+        eventSource.setEvent(eventEntity);
+        EntityMaster entityMaster = new EntityMaster();
+        entityMaster.setEntityType(source);
+        eventSource.setSource(entityMaster);
+        return eventSource;
+    }
 }
 

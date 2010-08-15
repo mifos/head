@@ -28,24 +28,25 @@ public class Section implements Serializable {
     // should extend AbstractEntity? move AbstractEntity to common module first
     private static final long serialVersionUID = -6805203646344424230L;
 
-    private int id;
+    private Integer id;
     private String name;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<SectionQuestion> questions;
+    private Integer sequenceNumber;
 
     @SuppressWarnings({"UnusedDeclaration", "PMD.UncommentedEmptyConstructor"})
-    Section() {
+    public Section() {
     }
 
     public Section(String name) {
         this.name = name;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -63,5 +64,13 @@ public class Section implements Serializable {
 
     public void setQuestions(List<SectionQuestion> questions) {
         this.questions = questions;
+    }
+
+    public Integer getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public void setSequenceNumber(Integer sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
     }
 }

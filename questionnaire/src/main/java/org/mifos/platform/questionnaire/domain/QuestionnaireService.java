@@ -59,5 +59,5 @@ public interface QuestionnaireService {
 
     QuestionGroupInstanceDetail getQuestionGroupInstance(int questionGroupInstanceId);
 
-    void defineQuestionGroup(QuestionGroupDto questionGroupDto);
+    Integer defineQuestionGroup(QuestionGroupDto questionGroupDto);
 }

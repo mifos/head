@@ -46,11 +46,15 @@ import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.mifos.platform.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -171,6 +175,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     private QuestionChoiceEntity mapToChoice(ChoiceDetail choice) {
         QuestionChoiceEntity choiceEntity = new QuestionChoiceEntity(choice.getValue());
+        choiceEntity.setChoiceOrder(choice.getOrder());
         List<String> tags = choice.getTags();
         if (isNotEmpty(tags)) {
             Set<ChoiceTagEntity> choiceTagEntities = new LinkedHashSet<ChoiceTagEntity>();
@@ -189,16 +194,15 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setTitle(questionGroupDetail.getTitle());
         questionGroup.setState(QuestionGroupState.ACTIVE);
-        questionGroup.setDateOfCreation(Calendar.getInstance().getTime());
+        questionGroup.setDateOfCreation(getCurrentDateTime());
         questionGroup.setSections(mapToSections(questionGroupDetail.getSectionDetails()));
-        questionGroup.setEventSources(mapToEventSources(questionGroupDetail));
+        questionGroup.setEventSources(mapToEventSources(questionGroupDetail.getEventSource()));
         questionGroup.setEditable(questionGroupDetail.isEditable());
         return questionGroup;
     }
 
-    private Set<EventSourceEntity> mapToEventSources(QuestionGroupDetail questionGroupDetail) {
+    private Set<EventSourceEntity> mapToEventSources(EventSource eventSource) {
         Set<EventSourceEntity> eventSources = new HashSet<EventSourceEntity>();
-        EventSource eventSource = questionGroupDetail.getEventSource();
         List list = eventSourceDao.retrieveByEventAndSource(eventSource.getEvent(), eventSource.getSource());
         for (Object obj : list) {
             eventSources.add((EventSourceEntity) obj);
@@ -344,7 +348,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     @Override
-    public void mapQuestionResponse(SectionQuestionDetail sectionQuestionDetail, List<QuestionGroupResponse> questionGroupResponses) {
+    public void mapToQuestionResponse(SectionQuestionDetail sectionQuestionDetail, List<QuestionGroupResponse> questionGroupResponses) {
         if (sectionQuestionDetail.isMultiSelectQuestion()) {
             setMultiChoiceResponses(questionGroupResponses, sectionQuestionDetail);
         } else {
@@ -360,11 +364,73 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return questionGroupInstanceDetail;
     }
 
+    @Override
+    public QuestionGroup mapToQuestionGroup(QuestionGroupDto questionGroupDto) {
+        QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setEditable(questionGroupDto.isEditable());
+        questionGroup.setDateOfCreation(getCurrentDateTime());
+        questionGroup.setPpi(questionGroupDto.isPpi());
+        questionGroup.setEventSources(mapToEventSources(questionGroupDto.getEventSource()));
+        questionGroup.setTitle(questionGroupDto.getTitle());
+        questionGroup.setState(QuestionGroupState.ACTIVE);
+        questionGroup.setSections(mapToSectionsFromDtos(questionGroupDto.getSections()));
+        return questionGroup;
+    }
+
+    private List<Section> mapToSectionsFromDtos(List<SectionDto> sectionDtos) {
+        List<Section> sections = new ArrayList<Section>();
+        for (SectionDto sectionDto : sectionDtos) {
+            sections.add(mapToSection(sectionDto));
+        }
+        return sections;
+    }
+
+    private Section mapToSection(SectionDto sectionDto) {
+        Section section = new Section();
+        section.setName(sectionDto.getName());
+        section.setSequenceNumber(sectionDto.getOrder());
+        section.setQuestions(mapToSectionQuestionsFromDtos(sectionDto.getQuestions(), section));
+        return section;
+    }
+
+    private List<SectionQuestion> mapToSectionQuestionsFromDtos(List<QuestionDto> questions, Section section) {
+        List<SectionQuestion> sectionQuestions = new ArrayList<SectionQuestion>();
+        for (QuestionDto questionDto : questions) {
+            sectionQuestions.add(mapToSectionQuestion(questionDto, section));
+        }
+        return sectionQuestions;
+    }
+
+    private SectionQuestion mapToSectionQuestion(QuestionDto questionDto, Section section) {
+        SectionQuestion sectionQuestion = new SectionQuestion();
+        sectionQuestion.setSection(section);
+        sectionQuestion.setSequenceNumber(questionDto.getOrder());
+        sectionQuestion.setRequired(questionDto.isMandatory());
+        sectionQuestion.setQuestion(mapToQuestion(questionDto));
+        return sectionQuestion;
+    }
+
+    private QuestionEntity mapToQuestion(QuestionDto questionDto) {
+        QuestionEntity questionEntity = new QuestionEntity();
+        questionEntity.setShortName(questionDto.getTitle());
+        questionEntity.setQuestionText(questionDto.getTitle());
+        questionEntity.setAnswerType(mapToAnswerType(questionDto.getType()));
+        questionEntity.setNumericMin(questionDto.getMinValue());
+        questionEntity.setNumericMax(questionDto.getMaxValue());
+        questionEntity.setQuestionState(QuestionState.ACTIVE);
+        questionEntity.setChoices(mapToChoices(questionDto.getChoices()));
+        return questionEntity;
+    }
+
+    private Date getCurrentDateTime() {
+        return Calendar.getInstance().getTime();
+    }
+
     private void mapQuestionResponses(QuestionGroupInstanceDetail questionGroupInstanceDetail, List<QuestionGroupResponse> questionGroupResponses) {
         if (isNotEmpty(questionGroupResponses)) {
             for (SectionDetail sectionDetail : questionGroupInstanceDetail.getQuestionGroupDetail().getSectionDetails()) {
                 for (SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()) {
-                    mapQuestionResponse(sectionQuestionDetail, questionGroupResponses);
+                    mapToQuestionResponse(sectionQuestionDetail, questionGroupResponses);
                 }
             }
         }
@@ -390,7 +456,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     private QuestionGroupInstance mapToQuestionGroupInstance(int creatorId, int entityId, QuestionGroupDetail questionGroupDetail) {
         QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
-        questionGroupInstance.setDateConducted(Calendar.getInstance().getTime());
+        questionGroupInstance.setDateConducted(getCurrentDateTime());
         questionGroupInstance.setCompletedStatus(1);
         Integer questionGroupId = questionGroupDetail.getId();
         questionGroupInstance.setVersionNum(

@@ -211,8 +211,10 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public void defineQuestionGroup(QuestionGroupDto questionGroupDto) {
-        //TODO persist QuestionGroup using dto
+    public Integer defineQuestionGroup(QuestionGroupDto questionGroupDto) {
+        // TODO Do validations on the DTO here
+        QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDto);
+        return questionGroupDao.create(questionGroup);
     }
 
     private EventSourceEntity getEventSourceEntity(EventSource eventSource) {

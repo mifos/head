@@ -9,6 +9,7 @@
            </id>
            <discriminator column="ppi" type="yes_no"/>
            <property name="choiceText" column="choice_text" not-null="true"/>
+           <property name="choiceOrder" column="choice_order" not-null="true" insert="false" update="false"/>
            <set name="tags" cascade="all" lazy="false">
                <key column="choice_id" not-null="true"/>
                <one-to-many class="org.mifos.platform.questionnaire.domain.ChoiceTagEntity"/>

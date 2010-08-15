@@ -27,6 +27,10 @@ import org.junit.runner.RunWith;
 import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.builders.ChoiceDetailBuilder;
+import org.mifos.platform.questionnaire.builders.QuestionDtoBuilder;
+import org.mifos.platform.questionnaire.builders.QuestionGroupDtoBuilder;
+import org.mifos.platform.questionnaire.builders.SectionDtoBuilder;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
@@ -45,6 +49,9 @@ import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.mockito.Matchers;
 import org.mockito.Mock;
@@ -698,6 +705,19 @@ public class QuestionnaireServiceTest {
         assertThat(questionGroupInstanceDetail, is(notNullValue()));
         assertThat(questionGroupInstanceDetail.getQuestionGroupTitle(), is("QG1"));
         verify(questionGroupInstanceDao, times(1)).getDetails(1212);
+    }
+
+    @Test
+    public void shouldDefineQuestionGroupFromDto() {
+        QuestionDto question1 = new QuestionDtoBuilder().withTitle("Ques1").withMandatory(true).withType(QuestionType.FREETEXT).build();
+        ChoiceDetail choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
+        ChoiceDetail choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
+        ChoiceDetail choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
+        QuestionDto question2 = new QuestionDtoBuilder().withTitle("Ques2").withType(QuestionType.SINGLE_SELECT).addChoices(choice1, choice2, choice3).build();
+        SectionDto section = new SectionDtoBuilder().withName("Sec1").withOrder(1).addQuestions(question1, question2).build();
+        QuestionGroupDto questionGroupDto = new QuestionGroupDtoBuilder().withTitle("QG1").withEventSource("Create", "Client").addSections(section).build();
+        questionnaireService.defineQuestionGroup(questionGroupDto);
+        verify(questionGroupDao).create(any(QuestionGroup.class));
     }
 
     private EventSourceEntity getEventSourceEntity(int id) {

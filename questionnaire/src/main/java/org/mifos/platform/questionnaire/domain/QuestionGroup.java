@@ -47,6 +47,8 @@ public class QuestionGroup implements Serializable {
 
     private boolean editable;
 
+    private boolean ppi;
+
     @SuppressWarnings({"UnusedDeclaration", "PMD.UnnecessaryConstructor","PMD.UncommentedEmptyConstructor"})
     public QuestionGroup() {
     }
@@ -107,5 +109,13 @@ public class QuestionGroup implements Serializable {
 
     public void setEditable(boolean editable) {
         this.editable = editable;
+    }
+
+    public boolean isPpi() {
+        return ppi;
+    }
+
+    public void setPpi(boolean ppi) {
+        this.ppi = ppi;
     }
 }

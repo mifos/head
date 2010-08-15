@@ -29,7 +29,7 @@ public class SectionQuestion implements Serializable {
     private static final long serialVersionUID = -439615520685608649L;
 
     private int id;
-    private int sequenceNumber;
+    private Integer sequenceNumber;
     private boolean required;
     private QuestionEntity question;
     private Section section;
@@ -66,11 +66,11 @@ public class SectionQuestion implements Serializable {
         this.section = section;
     }
 
-    public int getSequenceNumber() {
+    public Integer getSequenceNumber() {
         return sequenceNumber;
     }
 
-    public void setSequenceNumber(int sequenceNumber) {
+    public void setSequenceNumber(Integer sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
     }
 }

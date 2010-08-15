@@ -8,6 +8,7 @@
             <generator class="native"/>
         </id>
         <property name="name" column="name" access="field"/>
+        <property name="sequenceNumber" column="sequence_number" access="field" insert="false" update="false"/>
         <bag name="questions" lazy="false" inverse="true" cascade="save-update" order-by="sequence_number">
             <key column="section_id" not-null="true"/>
             <one-to-many class="org.mifos.platform.questionnaire.domain.SectionQuestion"/>

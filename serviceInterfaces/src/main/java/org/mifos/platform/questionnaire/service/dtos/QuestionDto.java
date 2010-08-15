@@ -34,7 +34,6 @@ import java.util.List;
 public class QuestionDto implements Serializable {
     private static final long serialVersionUID = 4062506731931643620L;
 
-    private String text;
     private String title;
     private QuestionType type;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
@@ -48,14 +47,6 @@ public class QuestionDto implements Serializable {
 
     public QuestionDto() {
         choices = new ArrayList<ChoiceDetail>();
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 
     public String getTitle() {
