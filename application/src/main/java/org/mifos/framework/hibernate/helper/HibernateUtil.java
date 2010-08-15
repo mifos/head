@@ -44,7 +44,7 @@ public class HibernateUtil implements FactoryBean<HibernateUtil>{
     /**
      * @param sessionFactory the sessionFactory to set
      */
-    public static void setSessionFactory(SessionFactory sessionFactory) {
+    public void setSessionFactory(SessionFactory sessionFactory) {
         HibernateUtil.sessionFactory = sessionFactory;
     }
 
