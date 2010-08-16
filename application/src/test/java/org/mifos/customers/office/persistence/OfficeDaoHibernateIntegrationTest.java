@@ -20,9 +20,11 @@
 
 package org.mifos.customers.office.persistence;
 
-import static org.junit.matchers.JUnitMatchers.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItem;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,7 +36,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.Localization;
@@ -46,23 +47,17 @@ import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.domain.OfficeLevelDto;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.util.StandardTestingService;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml",
-                                    "/org/mifos/config/resources/messageSourceBean.xml",
-                                    "/org/mifos/config/resources/hibernate-daos.xml"})
-public class OfficeDaoHibernateIntegrationTest {
+public class OfficeDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
 
     // class under test
     @Autowired
@@ -90,7 +85,6 @@ public class OfficeDaoHibernateIntegrationTest {
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
-        DatabaseSetup.initializeHibernate();
     }
 
     @AfterClass
