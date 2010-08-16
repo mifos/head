@@ -41,6 +41,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
@@ -55,7 +56,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
  * database version that is at least 3-5 upgrades ago in order to allow for fixes to be made to recent upgrades when
  * necessary.
  */
-public class LatestTestAfterCheckpointIntegrationTest {
+public class LatestTestAfterCheckpointIntegrationTest extends MifosIntegrationTestCase {
 
     private static Connection connection;
     private static DatabaseConnection dbUnitConnection;

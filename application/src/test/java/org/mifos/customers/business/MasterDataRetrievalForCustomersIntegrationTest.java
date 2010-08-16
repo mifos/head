@@ -33,6 +33,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
@@ -43,10 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml",
-                                    "/org/mifos/config/resources/hibernate-daos.xml"})
-public class MasterDataRetrievalForCustomersIntegrationTest {
+public class MasterDataRetrievalForCustomersIntegrationTest extends MifosIntegrationTestCase {
 
     @Autowired
     private CustomerDao customerDao;
@@ -57,7 +55,6 @@ public class MasterDataRetrievalForCustomersIntegrationTest {
     @Before
     public void cleanDatabaseTables() {
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
-        DatabaseSetup.initializeHibernate();
         databaseCleaner.clean();
     }
 
