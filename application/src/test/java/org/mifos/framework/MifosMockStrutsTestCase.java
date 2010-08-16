@@ -61,8 +61,8 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
     protected MifosMockStrutsTestCase() throws Exception {
         super();
         if (!initialized) {
-            SpringTestUtil.initializeSpring();
             new StandardTestingService().setTestMode(TestMode.INTEGRATION);
+            SpringTestUtil.initializeSpring();
             TestCaseInitializer.initialize();
             initialized = true;
         }
