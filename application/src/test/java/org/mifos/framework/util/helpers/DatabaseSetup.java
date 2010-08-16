@@ -35,6 +35,10 @@ import org.mifos.framework.persistence.SqlResource;
 
 public class DatabaseSetup {
 
+    public static void initializeHibernate() {
+        StaticHibernateUtil.initialize();
+    }
+
     public static Configuration getHibernateConfiguration() {
         Configuration configuration = new Configuration();
         try {

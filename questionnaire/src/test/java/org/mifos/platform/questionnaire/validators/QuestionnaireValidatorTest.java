@@ -28,6 +28,8 @@ import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
+import org.mifos.platform.questionnaire.persistence.QuestionDao;
+import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
@@ -64,16 +66,22 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class QuestionValidatorTest {
+public class QuestionnaireValidatorTest {
 
     private QuestionnaireValidator questionnaireValidator;
 
     @Mock
     private EventSourceDao eventSourceDao;
 
+    @Mock
+    private QuestionGroupDao questionGroupDao;
+
+    @Mock
+    private QuestionDao questionDao;
+
     @Before
     public void setUp() {
-        questionnaireValidator = new QuestionnaireValidatorImpl(eventSourceDao);
+        questionnaireValidator = new QuestionnaireValidatorImpl(eventSourceDao, questionGroupDao, questionDao);
     }
 
     @Test

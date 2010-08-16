@@ -212,7 +212,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Override
     public Integer defineQuestionGroup(QuestionGroupDto questionGroupDto) {
-        // TODO Do validations on the DTO here
+        questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDto);
         return questionGroupDao.create(questionGroup);
     }
@@ -225,7 +225,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         try {
             questionDao.saveOrUpdate(question);
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
-            throw new SystemException(QuestionnaireConstants.DUPLICATE_QUESTION, e);
+            throw new SystemException(QuestionnaireConstants.QUESTION_TITILE_DUPLICATE, e);
         }
     }
 

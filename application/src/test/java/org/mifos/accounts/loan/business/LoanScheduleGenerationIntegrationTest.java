@@ -65,7 +65,6 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.dto.domain.HolidayDetails;
-import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.StandardTestingService;
@@ -85,7 +84,11 @@ import edu.emory.mathcs.backport.java.util.Collections;
  * FIXME - completely rewrite/fix these tests
  * These tests validate new schedule-generating code for loan repayments
  */
-public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestCase {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/integration-test-context.xml",
+                                    "/org/mifos/config/resources/hibernate-daos.xml",
+                                    "/org/mifos/config/resources/services.xml" })
+public class LoanScheduleGenerationIntegrationTest {
 
     //Things you need to set up before you can create a loan
     private MeetingBO meeting;
@@ -110,6 +113,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
+        DatabaseSetup.initializeHibernate();
     }
 
     @AfterClass

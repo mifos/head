@@ -35,9 +35,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * A (hopefully) temporary class to encapsulate Spring/Mifos integration. (-Adam
  * 06-FEB-2008)
  */
-public class SpringTestUtil {
+public class SpringUtil {
     private static ApplicationContext appContext = null;
-    private static Boolean initialized = false;
+
     /**
      * Use the root logger for lack of research as to which logger would be more
      * appropriate. {@link LoggerConstants#CONFIGURATION_LOGGER} might also be a
@@ -52,11 +52,8 @@ public class SpringTestUtil {
      * .
      */
     public static void initializeSpring() {
-        if (initialized == false) {
-            String[] configFiles = getConfigFiles();
-            appContext = new ClassPathXmlApplicationContext(configFiles);
-            initialized = true;
-        }
+        String[] configFiles = getConfigFiles();
+        appContext = new ClassPathXmlApplicationContext(configFiles);
     }
 
     /**
@@ -70,7 +67,6 @@ public class SpringTestUtil {
 
         // required config file. exception thrown if not found.
         configFiles.add(FilePaths.SPRING_CONFIG_CORE);
-        configFiles.add("integration-test-context.xml");
 
         String customMbcPath;
         try {
@@ -93,6 +89,6 @@ public class SpringTestUtil {
     }
 
     public static void setAppContext(ApplicationContext context) {
-        SpringTestUtil.appContext = context;
+        SpringUtil.appContext = context;
     }
 }

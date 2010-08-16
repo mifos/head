@@ -5,10 +5,8 @@
     classpath:xsd/spring-beans-3.0.xsd
     http://www.springframework.org/schema/aop 
     classpath:xsd/spring-aop-3.0.xsd">
-    
-    <bean id="testDatabase" class="org.mifos.framework.persistence.TestDatabase">
-        <property name="integrationDataSource" ref="integrationDataSource" />
-    </bean>
+
+    <import resource="integrationPropertyConfigurer.xml" />
 
     <bean id="integrationDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${integration.database.driver}" />
