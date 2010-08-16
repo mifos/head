@@ -29,6 +29,7 @@ import org.mifos.platform.questionnaire.builders.QuestionDtoBuilder;
 import org.mifos.platform.questionnaire.builders.QuestionGroupDtoBuilder;
 import org.mifos.platform.questionnaire.builders.SectionDtoBuilder;
 import org.mifos.platform.questionnaire.domain.AnswerType;
+import org.mifos.platform.questionnaire.domain.QuestionChoiceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionEntity;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
@@ -51,18 +52,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.GENERIC_VALIDATION;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.INVALID_EVENT_SOURCE;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.NO_QUESTIONS_FOUND_IN_SECTION;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_SECTION_NOT_PROVIDED;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_TOO_BIG;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_ORDER_DUPLICATE;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_ORDER_NOT_PROVIDED;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITILE_DUPLICATE;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.SECTION_ORDER_DUPLICATE;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.SECTION_ORDER_NOT_PROVIDED;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -81,6 +71,17 @@ public class QuestionnaireValidatorForDtoTest {
     @Before
     public void setUp() {
         questionnaireValidator = new QuestionnaireValidatorImpl(eventSourceDao, questionGroupDao, questionDao);
+    }
+
+    @Test
+    public void shouldNotValidateForValidQuestionGroupDto() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+        } catch (ValidationException e) {
+            fail("Should not have thrown validationException");
+        }
     }
 
     @Test
@@ -325,7 +326,7 @@ public class QuestionnaireValidatorForDtoTest {
         when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
         QuestionGroupDto questionGroupDto = getQuestionGroupDto();
         String questionTitle = questionGroupDto.getSections().get(0).getQuestions().get(0).getTitle();
-        when(questionDao.retrieveByName(questionTitle)).thenReturn(asList(getQuestionEntity(questionTitle)));
+        when(questionDao.retrieveByName(questionTitle)).thenReturn(asList(getQuestionEntity(questionTitle, AnswerType.DATE, null)));
         try {
             questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
             fail("Should have thrown validationException");
@@ -339,10 +340,198 @@ public class QuestionnaireValidatorForDtoTest {
         }
     }
 
-    private QuestionEntity getQuestionEntity(String questionTitle) {
+    @Test
+    public void shouldValidateForInvalidQuestionGroupDto_ExistingQuestionTitle_SameQuestionType_WithDifferentNumberOfChoices() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        String questionTitle = questionGroupDto.getSections().get(0).getQuestions().get(1).getTitle();
+        List<QuestionChoiceEntity> choices = asList(getChoice("Ch2"), getChoice("Ch5"));
+        when(questionDao.retrieveByName(questionTitle)).thenReturn(asList(getQuestionEntity(questionTitle, AnswerType.SINGLESELECT, choices)));
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+            fail("Should have thrown validationException");
+        } catch (ValidationException e) {
+            assertThat(e.getKey(), is(GENERIC_VALIDATION));
+            assertThat(e.containsChildExceptions(), is(true));
+            List<ValidationException> childExceptions = e.getChildExceptions();
+            assertThat(childExceptions, is(notNullValue()));
+            assertThat(childExceptions.size(), is(1));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITILE_DUPLICATE));
+        }
+    }
+
+    @Test
+    public void shouldValidateForInvalidQuestionGroupDto_ExistingQuestionTitle_SameQuestionType_WithDifferentChoices() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        String questionTitle = questionGroupDto.getSections().get(0).getQuestions().get(1).getTitle();
+        List<QuestionChoiceEntity> choices = asList(getChoice("Ch2"), getChoice("Ch3"), getChoice("Ch0"));
+        when(questionDao.retrieveByName(questionTitle)).thenReturn(asList(getQuestionEntity(questionTitle, AnswerType.SINGLESELECT, choices)));
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+            fail("Should have thrown validationException");
+        } catch (ValidationException e) {
+            assertThat(e.getKey(), is(GENERIC_VALIDATION));
+            assertThat(e.containsChildExceptions(), is(true));
+            List<ValidationException> childExceptions = e.getChildExceptions();
+            assertThat(childExceptions, is(notNullValue()));
+            assertThat(childExceptions.size(), is(1));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITILE_DUPLICATE));
+        }
+    }
+
+    @Test
+    public void shouldNotValidateForValidQuestionGroupDto_ExistingQuestionTitle_SameQuestionType_WithSimilarChoices() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        String questionTitle = questionGroupDto.getSections().get(0).getQuestions().get(1).getTitle();
+        List<QuestionChoiceEntity> choices = asList(getChoice("Ch2"), getChoice("Ch3"), getChoice("cH1"));
+        when(questionDao.retrieveByName(questionTitle)).thenReturn(asList(getQuestionEntity(questionTitle, AnswerType.SINGLESELECT, choices)));
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+        } catch (ValidationException e) {
+            fail("Should not have thrown validationException");
+        }
+    }
+
+    @Test
+    public void shouldValidateForInvalidQuestionGroupDto_MissingQuestionType() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        questionGroupDto.getSections().get(0).getQuestions().get(0).setType(QuestionType.INVALID);
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+            fail("Should have thrown validationException");
+        } catch (ValidationException e) {
+            assertThat(e.getKey(), is(GENERIC_VALIDATION));
+            assertThat(e.containsChildExceptions(), is(true));
+            List<ValidationException> childExceptions = e.getChildExceptions();
+            assertThat(childExceptions, is(notNullValue()));
+            assertThat(childExceptions.size(), is(1));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TYPE_NOT_PROVIDED));
+        }
+    }
+
+    @Test
+    public void shouldValidateForInvalidQuestionGroupDto_MissingRequiredNumberOfChoicesForSingleSelect() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        questionGroupDto.getSections().get(0).getQuestions().get(1).setChoices(asList(new ChoiceDetail("Ch1")));
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+            fail("Should have thrown validationException");
+        } catch (ValidationException e) {
+            assertThat(e.getKey(), is(GENERIC_VALIDATION));
+            assertThat(e.containsChildExceptions(), is(true));
+            List<ValidationException> childExceptions = e.getChildExceptions();
+            assertThat(childExceptions, is(notNullValue()));
+            assertThat(childExceptions.size(), is(1));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_CHOICES_INSUFFICIENT));
+        }
+    }
+
+    @Test
+    public void shouldValidateForInvalidQuestionGroupDto_MissingValueForChoice() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        questionGroupDto.getSections().get(0).getQuestions().get(1).getChoices().get(0).setValue(null);
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+            fail("Should have thrown validationException");
+        } catch (ValidationException e) {
+            assertThat(e.getKey(), is(GENERIC_VALIDATION));
+            assertThat(e.containsChildExceptions(), is(true));
+            List<ValidationException> childExceptions = e.getChildExceptions();
+            assertThat(childExceptions, is(notNullValue()));
+            assertThat(childExceptions.size(), is(1));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_CHOICES_INVALID));
+        }
+    }
+
+    @Test
+    public void shouldValidateForInvalidQuestionGroupDto_DuplicateValueForChoice() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        questionGroupDto.getSections().get(0).getQuestions().get(1).getChoices().get(0).setValue(" Choice");
+        questionGroupDto.getSections().get(0).getQuestions().get(1).getChoices().get(1).setValue("ChoICe ");
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+            fail("Should have thrown validationException");
+        } catch (ValidationException e) {
+            assertThat(e.getKey(), is(GENERIC_VALIDATION));
+            assertThat(e.containsChildExceptions(), is(true));
+            List<ValidationException> childExceptions = e.getChildExceptions();
+            assertThat(childExceptions, is(notNullValue()));
+            assertThat(childExceptions.size(), is(1));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_CHOICES_INVALID));
+        }
+    }
+
+    @Test
+    public void shouldValidateForInvalidQuestionGroupDto_MissingOrderForChoice() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        questionGroupDto.getSections().get(0).getQuestions().get(1).getChoices().get(0).setOrder(null);
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+            fail("Should have thrown validationException");
+        } catch (ValidationException e) {
+            assertThat(e.getKey(), is(GENERIC_VALIDATION));
+            assertThat(e.containsChildExceptions(), is(true));
+            List<ValidationException> childExceptions = e.getChildExceptions();
+            assertThat(childExceptions, is(notNullValue()));
+            assertThat(childExceptions.size(), is(1));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_CHOICES_INVALID));
+        }
+    }
+
+    @Test
+    public void shouldValidateForInvalidQuestionGroupDto_DuplicateOrderForChoice() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        questionGroupDto.getSections().get(0).getQuestions().get(1).getChoices().get(0).setOrder(987);
+        questionGroupDto.getSections().get(0).getQuestions().get(1).getChoices().get(1).setOrder(987);
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+            fail("Should have thrown validationException");
+        } catch (ValidationException e) {
+            assertThat(e.getKey(), is(GENERIC_VALIDATION));
+            assertThat(e.containsChildExceptions(), is(true));
+            List<ValidationException> childExceptions = e.getChildExceptions();
+            assertThat(childExceptions, is(notNullValue()));
+            assertThat(childExceptions.size(), is(1));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_CHOICES_INVALID));
+        }
+    }
+
+    @Test
+    public void shouldValidateForInvalidQuestionGroupDto_InvalidNumericBounds() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        questionGroupDto.getSections().get(1).getQuestions().get(1).setMinValue(100);
+        questionGroupDto.getSections().get(1).getQuestions().get(1).setMaxValue(10);
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+            fail("Should have thrown validationException");
+        } catch (ValidationException e) {
+            assertThat(e.getKey(), is(GENERIC_VALIDATION));
+            assertThat(e.containsChildExceptions(), is(true));
+            List<ValidationException> childExceptions = e.getChildExceptions();
+            assertThat(childExceptions, is(notNullValue()));
+            assertThat(childExceptions.size(), is(1));
+            assertThat(childExceptions.get(0).getKey(), is(INVALID_NUMERIC_BOUNDS));
+        }
+    }
+
+    private QuestionChoiceEntity getChoice(String text) {
+        return new QuestionChoiceEntity(text);
+    }
+
+    private QuestionEntity getQuestionEntity(String questionTitle, AnswerType answerType, List<QuestionChoiceEntity> choices) {
         QuestionEntity questionEntity = new QuestionEntity();
         questionEntity.setShortName(questionTitle);
-        questionEntity.setAnswerType(AnswerType.DATE);
+        questionEntity.setAnswerType(answerType);
+        questionEntity.setChoices(choices);
         return questionEntity;
     }
 

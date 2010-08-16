@@ -224,32 +224,31 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         boolean result = false;
         if (isNotEmpty(questions)) {
             QuestionEntity questionEntity = questions.get(0);
-            result = !areSameQuestionTypes(question.getType(), questionEntity.getAnswerTypeAsEnum()) || haveDissimilarChoices(question, questionEntity);
+            result = !areSameQuestionTypes(question.getType(), questionEntity.getAnswerTypeAsEnum()) || haveIncompatibleChoices(question, questionEntity);
         }
         return result;
     }
 
-    private boolean haveDissimilarChoices(QuestionDto question, QuestionEntity questionEntity) {
-        boolean result = false;
+    private boolean haveIncompatibleChoices(QuestionDto question, QuestionEntity questionEntity) {
         List<ChoiceDetail> choiceDetails = question.getChoices();
         List<QuestionChoiceEntity> choiceEntities = questionEntity.getChoices();
-        if (choiceDetails.size() == choiceEntities.size()) {
-            for (ChoiceDetail choiceDetail : choiceDetails) {
-                String choiceValue = choiceDetail.getValue();
-                boolean choiceFound = false;
-                for (QuestionChoiceEntity choiceEntity : choiceEntities) {
-                    if (StringUtils.equalsIgnoreCase(choiceValue, choiceEntity.getChoiceText())) {
-                        choiceFound = true;
-                        break;
-                    }
-                }
-                if (!choiceFound) {
-                    result = true;
-                    break;
-                }
-            }
+        boolean result = choiceDetails.size() != choiceEntities.size();
+        for (int i = 0, choiceDetailsSize = choiceDetails.size(); i < choiceDetailsSize && !result; i++) {
+            String choiceValue = choiceDetails.get(i).getValue();
+            result = isUniqueChoice(choiceEntities, choiceValue);
         }
         return result;
+    }
+
+    private boolean isUniqueChoice(List<QuestionChoiceEntity> choiceEntities, String choiceValue) {
+        boolean uniqueChoice = true;
+        for (QuestionChoiceEntity choiceEntity : choiceEntities) {
+            if (StringUtils.equalsIgnoreCase(choiceValue, choiceEntity.getChoiceText())) {
+                uniqueChoice = false;
+                break;
+            }
+        }
+        return uniqueChoice;
     }
 
     private boolean areSameQuestionTypes(QuestionType type, AnswerType answerType) {
