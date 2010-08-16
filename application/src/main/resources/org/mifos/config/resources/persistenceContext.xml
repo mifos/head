@@ -47,7 +47,7 @@
     </bean>
 
     <bean id="hibernateUtil" class="org.mifos.framework.hibernate.helper.HibernateUtil">
-    <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="sessionFactory" ref="sessionFactory" />
     </bean>
 
     <tx:advice id="txAdvice" transaction-manager="platformTransactionManager">

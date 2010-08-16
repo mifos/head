@@ -39,7 +39,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountStateEntity;
@@ -47,7 +46,6 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.financial.exceptions.FinancialException;
-import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanProductBuilder;
@@ -63,26 +61,19 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
-import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.StandardTestingService;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml", "/org/mifos/config/resources/hibernate-daos.xml",
-        "/org/mifos/config/resources/services.xml" })
-public class LoanAdjustmentsIntegrationTest {
+public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
@@ -96,13 +87,9 @@ public class LoanAdjustmentsIntegrationTest {
 
     @BeforeClass
     public static void initialiseHibernateUtil() throws FinancialException {
-
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
-        DatabaseSetup.initializeHibernate();
-        SpringUtil.initializeSpring();
-        FinancialInitializer.initialize();
     }
 
     @AfterClass
