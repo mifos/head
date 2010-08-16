@@ -54,6 +54,7 @@ import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
 @Test(sequential = true, groups = { "smoke","holiday", "schedules", "acceptance", "ui" })
+
 public class AdditionalHolidayTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -248,6 +249,30 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         verifyLoanSchedule("CreateLoanScheduleWithMoratorium_001_result_dbunit.xml.zip");
     }
 
+    public void createTwoWeeklyLoansInDifferentOffices() throws Exception {
+        CreateLoanAccountSearchParameters searchParameters1 = new CreateLoanAccountSearchParameters();
+        // This client meets weekly on Wednesdays
+        searchParameters1.setSearchString("Stu1233171716380 Client1233171716380");
+
+        // This loan product is a weekly flat-interest loan without fees that defaults to 11 installments.
+        searchParameters1.setLoanProduct("MyLoanProduct1232993826860");
+
+        CreateLoanAccountSubmitParameters submitAccountParameters1 = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters1.setAmount("2000");
+
+        this.createLoan(searchParameters1, submitAccountParameters1);
+
+        // create second loan account
+        CreateLoanAccountSearchParameters searchParameters2 = new CreateLoanAccountSearchParameters();
+        searchParameters2.setSearchString("Stu1232993852651 Client1232993852651");
+        searchParameters2.setLoanProduct("MyLoanProduct1232993826860");
+
+        CreateLoanAccountSubmitParameters submitAccountParameters2 = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters2.setAmount("2000");
+
+        this.createLoan(searchParameters2, submitAccountParameters2);
+    }
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled = false)
     public void createMonthlyLoanScheduleNoFeesWithFirstInstallmentOnAMoratorium() throws Exception {
@@ -422,7 +447,44 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         this.createLoan(searchParameters, submitAccountParameters);
     }
 
-    @Test(enabled = false)
+    @SuppressWarnings("unused")
+    @Test
+    // MIFOSTEST-280
+    private void testBranchSpecificMoratorium() throws Exception {
+        initRemote
+                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        // create two weeks of moratorium in MyOffice1232993831593
+        createMoratoriumForMay("2");
+
+
+        AdminPage adminPage = loginAndNavigateToAdminPage();
+        adminPage.verifyPage();
+        adminPage.navigateToViewHolidaysPage();
+        selenium.isTextPresent("MyOffice1232993831593");
+    }
+
+    @Test
+    //MIFOSTEST-282
+    public void testMoratoriumPushesLoanPaymentToFutureMeeting() throws Exception {
+        initRemote
+                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+
+        // create two clients and two loans in different offices MyOffice1233171674227 and MyOffice1232993831593
+        createTwoWeeklyLoansInDifferentOffices();
+
+        // create two weeks of moratorium in MyOffice1232993831593
+        createMoratoriumForMay("2");
+
+        // run batch jobs
+        List<String> jobsToRun = new ArrayList<String>();
+        jobsToRun.add("ApplyHolidayChangesTask");
+        new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
+
+        // verify loan, saving and fee schedules
+        verifyLoanSchedule("AdditionalHolidayTest_013_result_dbunit.xml.zip");
+    }
+
+ @Test(enabled = false)
     private void createWeeklyLoanScheduleWithTwoMeetingsAndAHoliday(final String repaymentRule) {
         // create a loan for a client who meet at Wednesdays, client with system ID 0003-000000006
         // in the acceptance_small_003 data set.
@@ -499,7 +561,23 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         createHoliday(params);
     }
 
-    @Test(enabled = false)
+    private void createMoratoriumForMay(String selectedOfficeId) {
+        CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
+
+        params.setName("Long moratorium");
+        params.setFromDateDD("1");
+        params.setFromDateMM("05");
+        params.setFromDateYYYY("2009");
+        params.setThruDateDD("30");
+        params.setThruDateMM("05");
+        params.setThruDateYYYY("2009");
+        params.setRepaymentRule(CreateHolidaySubmitParameters.MORATORIUM);
+        params.setSelectedOfficeIds(selectedOfficeId);
+
+        createHoliday(params);
+    }
+
+	@Test(enabled = false)
     private void createLoan(final CreateLoanAccountSearchParameters searchParameters,
             final CreateLoanAccountSubmitParameters submitAccountParameters) {
         logOut();
@@ -520,7 +598,15 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         dbUnitUtilities.verifyTable(LOAN_SCHEDULE, databaseDataSet, expectedDataSet);
     }
 
-    @Test(enabled = false)
+    private void verifySavingsSchedule(final String resultDataSet) throws Exception {
+        // TODO
+    }
+
+    private void veridyFeesSchedule(final String resultDataSet) throws Exception {
+        // TODO
+    }
+
+	 @Test(enabled = false)
     private CreateLoanAccountSearchPage navigateToCreateLoanAccountSearchPage() {
         LoginPage loginPage = appLauncher.launchMifos();
         loginPage.verifyPage();
