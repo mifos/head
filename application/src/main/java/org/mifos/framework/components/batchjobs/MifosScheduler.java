@@ -106,6 +106,7 @@ public class MifosScheduler {
                 if (Long.parseLong(delayTime) < 86400) {
                     throw new IllegalArgumentException("Please specify the delay time >= 86400(1 day)");
                 }
+                mifosTask.delay = Long.parseLong(delayTime) * 1000;
                 schedule(mifosTask, parseInitialTime(initialTime), Long.parseLong(delayTime) * 1000);
             } else {
                 schedule(mifosTask, parseInitialTime(initialTime));
