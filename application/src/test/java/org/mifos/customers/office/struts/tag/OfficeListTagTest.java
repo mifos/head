@@ -49,8 +49,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml",
-                                    "/org/mifos/config/resources/messageSourceBean.xml"})
+@ContextConfiguration(locations = {"/org/mifos/config/resources/messageSourceBean.xml"})
 public class OfficeListTagTest {
 
     private XmlBuilder result;

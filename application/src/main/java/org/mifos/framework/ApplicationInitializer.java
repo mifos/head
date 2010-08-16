@@ -55,6 +55,7 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
@@ -100,27 +101,15 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     }
 
     private static String getDatabaseConnectionInfo() {
-        StandardTestingService standardTestingService = new StandardTestingService();
-        Properties hibernateCfg = new Properties();
-        String info = "Using Mifos database connection settings";
-        try {
-            hibernateCfg = standardTestingService.getDatabaseConnectionSettings();
-            info += " from file(s): " + Arrays.toString(standardTestingService.getAllSettingsFilenames());
-        } catch (IOException e) {
-            /*
-             * not sure if we can actually do anything useful with this exception since we're likely running during
-             * container initialization
-             */
-            e.printStackTrace();
-        }
-        info += " Connection URL=" + hibernateCfg.getProperty("hibernate.connection.url");
-        info += ". Username=" + hibernateCfg.getProperty("hibernate.connection.username");
-        info += ". Password=********";
+        String info = "Not implemented - check local.properties file for local overrides";
+        // FIXME: not sure if this is necessary may be spring/hibernate logging would be a better way to get this info
+        // For UI purpose, not sure, may be showing all the configuration would be a better way
         return info;
     }
 
     private static DatabaseError databaseError = new DatabaseError();
 
+    @Override
     public void contextInitialized(ServletContextEvent ctx) {
         init(ctx);
     }
@@ -346,6 +335,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         AuditConfigurtion.init(locale);
     }
 
+    @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         ServletContext ctx = servletContextEvent.getServletContext();
         LOG.info("shutting down scheduler");
@@ -354,10 +344,12 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         mifosScheduler.shutdown();
     }
 
+    @Override
     public void requestDestroyed(@SuppressWarnings("unused") ServletRequestEvent event) {
         StaticHibernateUtil.closeSession();
     }
 
+    @Override
     public void requestInitialized(@SuppressWarnings("unused") ServletRequestEvent event) {
 
     }
