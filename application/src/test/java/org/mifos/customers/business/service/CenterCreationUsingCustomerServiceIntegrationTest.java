@@ -50,7 +50,6 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -70,7 +69,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * This can move from being a 'integrated test' to a 'unit test' once usage of {@link StaticHibernateUtil} is removed from {@link CustomerService}.
  * Then there will only be the need for 'integrated test' at {@link CustomerDao} level.
  */
-public class CenterCreationUsingCustomerServiceIntegrationTest extends MifosIntegrationTestCase {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/integration-test-context.xml",
+                                    "/org/mifos/config/resources/hibernate-daos.xml",
+                                    "/org/mifos/config/resources/services.xml" })
+public class CenterCreationUsingCustomerServiceIntegrationTest {
 
     @Autowired
     private CustomerService customerService;
@@ -82,9 +85,11 @@ public class CenterCreationUsingCustomerServiceIntegrationTest extends MifosInte
 
     @BeforeClass
     public static void initialiseHibernateUtil() {
+
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
+        DatabaseSetup.initializeHibernate();
     }
 
     @AfterClass

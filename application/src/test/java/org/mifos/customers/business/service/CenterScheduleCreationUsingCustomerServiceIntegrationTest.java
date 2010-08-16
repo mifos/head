@@ -58,7 +58,6 @@ import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.dto.domain.HolidayDetails;
-import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
@@ -76,7 +75,11 @@ import edu.emory.mathcs.backport.java.util.Collections;
 /**
  * FIXME - completely rerwite/fix these tests
  */
-public class CenterScheduleCreationUsingCustomerServiceIntegrationTest extends MifosIntegrationTestCase {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/integration-test-context.xml",
+                                    "/org/mifos/config/resources/hibernate-daos.xml",
+                                    "/org/mifos/config/resources/services.xml" })
+public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
 
     @Autowired
     private CustomerService customerService;
@@ -94,9 +97,11 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest extends M
 
     @BeforeClass
     public static void initialiseHibernateUtil() {
+
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
+        DatabaseSetup.initializeHibernate();
     }
 
    @AfterClass

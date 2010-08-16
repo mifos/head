@@ -20,8 +20,6 @@
 
 package org.mifos.framework.hibernate.helper;
 
-import java.util.Properties;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -29,22 +27,18 @@ import org.hibernate.Transaction;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
 
-public class HibernateUtil implements FactoryBean<HibernateUtil> {
+public class HibernateUtil implements FactoryBean<HibernateUtil>{
 
     private static SessionFactory sessionFactory;
     private static final ThreadLocal<AuditInterceptor> interceptorTL = new ThreadLocal<AuditInterceptor>();
     private static final ThreadLocal<Session> sessionTL = new ThreadLocal<Session>();
 
-    private static HibernateUtil hibernateUtil;
+    private static final HibernateUtil hibernateUtil = new HibernateUtil();
     private HibernateUtil() {
     }
 
     public static HibernateUtil getInstance() {
-        if(hibernateUtil == null) {
-            hibernateUtil = new HibernateUtil();
-        }
         return hibernateUtil;
     }
     /**
@@ -52,10 +46,6 @@ public class HibernateUtil implements FactoryBean<HibernateUtil> {
      */
     public void setSessionFactory(SessionFactory sessionFactory) {
         HibernateUtil.sessionFactory = sessionFactory;
-    }
-
-    public Properties getHibernateProperties() {
-        return ((AnnotationSessionFactoryBean) sessionFactory).getHibernateProperties();
     }
 
     /**
@@ -154,7 +144,7 @@ public class HibernateUtil implements FactoryBean<HibernateUtil> {
 
     @Override
     public HibernateUtil getObject() throws Exception {
-        return getInstance();
+        return hibernateUtil;
     }
 
     @Override
