@@ -32,20 +32,25 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.exceptions.OfficeException;
+import org.mifos.customers.office.exceptions.OfficeValidationException;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.struts.OfficeUpdateRequest;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
+import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.OfficeDto;
+import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.OfficeFormDto;
 import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 
 public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, OfficeServiceFacade {
 
@@ -245,5 +250,35 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
             return CustomFieldDefinitionEntity.toDto(officeDao.retrieveCustomFieldsForOffice(), Locale.getDefault());
         }
         return null;
+    }
+
+    @Override
+    public ListElement createOffice(Short userId, Locale preferredLocale, Short operationMode, OfficeDto officeDto) {
+        UserContext userContext = new UserContext();
+        userContext.setId(userId);
+        userContext.setPreferredLocale(preferredLocale);
+        OfficeLevel level = OfficeLevel.getOfficeLevel(officeDto.getLevelId());
+        OfficeBO parentOffice = officeDao.findOfficeById(officeDto.getParentId());
+        AddressDto addressDto = officeDto.getAddress();
+        Address address = new Address(addressDto.getLine1(), addressDto.getLine2(), addressDto.getLine3(), addressDto.getCity(), addressDto.getState(),
+                addressDto.getCountry(), addressDto.getZip(), addressDto.getPhoneNumber());
+
+        try {
+            OfficeBO officeBO = new OfficeBO(userContext, level, parentOffice, officeDto.getCustomFields(),
+                    officeDto.getName(), officeDto.getOfficeShortName(), address, OperationMode.fromInt(operationMode.intValue()));
+            //not sure why it is needed - copied from OffAction
+            StaticHibernateUtil.flushAndCloseSession();
+            officeBO.save();
+            //Shahid - this is hackish solution to return officeId and globalOfficeNum via ListElement, it should be fixed, at least
+            //a proper data storage class can be created
+            ListElement element = new ListElement(new Integer(officeBO.getOfficeId()), officeBO.getGlobalOfficeNum());
+            return element;
+        } catch (OfficeValidationException e) {
+            throw new BusinessRuleException(e.getMessage());
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        } catch (OfficeException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 }

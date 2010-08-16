@@ -51,9 +51,11 @@ import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.OfficeDto;
+import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.OfficeFormDto;
 import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
 import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -144,18 +146,13 @@ public class OffAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         OffActionForm offActionForm = (OffActionForm) form;
-
-        OfficeLevel level = OfficeLevel.getOfficeLevel(getShortValue(offActionForm.getOfficeLevel()));
-
-        OfficeBO parentOffice = ((OfficeBusinessService) getService()).getOffice(getShortValue(offActionForm.getParentOfficeId()));
-
-        OfficeBO officeBO = new OfficeBO(getUserContext(request), level, parentOffice, offActionForm.getCustomFields(),
-                offActionForm.getOfficeName(), offActionForm.getShortName(), offActionForm.getAddress(), OperationMode.REMOTE_SERVER);
-        StaticHibernateUtil.flushAndCloseSession();
-        officeBO.save();
-
-        offActionForm.setOfficeId(officeBO.getOfficeId().toString());
-        offActionForm.setGlobalOfficeNum(officeBO.getGlobalOfficeNum());
+        OfficeDto officeDto = new OfficeDto(getShortValue(offActionForm.getOfficeLevel()), getShortValue(offActionForm.getParentOfficeId()),
+                offActionForm.getCustomFields(), offActionForm.getOfficeName(), offActionForm.getShortName(),
+                Address.toDto(offActionForm.getAddress()));
+        UserContext userContext = getUserContext(request);
+        ListElement element = officeServiceFacade.createOffice(userContext.getId(), userContext.getPreferredLocale(), OperationMode.REMOTE_SERVER.getValue(), officeDto);
+        offActionForm.setOfficeId(element.getId().toString());
+        offActionForm.setGlobalOfficeNum(element.getName());
 
         return mapping.findForward(ActionForwards.create_success.toString());
     }

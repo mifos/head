@@ -118,6 +118,24 @@ public class OfficeDto implements Serializable {
         this.customFields = customFields;
     }
 
+    public OfficeDto(Short levelId, Short parentId, List<CustomFieldDto> customFields, String name, String officeShortName, AddressDto address) {
+        this.id = null;
+        this.name = name;
+        this.searchId = "";
+        this.officeShortName = officeShortName;
+        this.globalNum = null;
+        this.parentId = parentId;
+        this.statusId = null;
+        this.levelId = levelId;
+        this.parentOfficeName = "";
+        this.versionNum = null;
+        this.lookupNameKey = "";
+        this.officeStatusName = null;
+        this.officeLevelName = null;
+        this.address = address;
+        this.customFields = customFields;
+    }
+
     public String getSearchId() {
         return this.searchId;
     }
