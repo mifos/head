@@ -20,10 +20,15 @@
 
 package org.mifos.framework.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
@@ -56,7 +61,6 @@ public class StandardTestingService implements TestingService {
         configurationLocator = new ConfigurationLocator();
     }
 
-    @Override
     public TestMode getTestMode() {
         String testMode = System.getProperty(TEST_MODE_SYSTEM_PROPERTY);
         if ("acceptance".equals(testMode)) {
@@ -72,6 +76,28 @@ public class StandardTestingService implements TestingService {
     public void setTestMode(TestMode newMode) {
         String modeString = newMode.toString().toLowerCase();
         System.setProperty(TEST_MODE_SYSTEM_PROPERTY, modeString);
+    }
+
+    public Properties getDatabaseConnectionSettings() throws IOException {
+        String defaultSettingsFilename = getDefaultSettingsFilename(getTestMode());
+
+        File defaultsFile = configurationLocator.getFile(defaultSettingsFilename);
+        Properties mifosSpecific = new Properties();
+        mifosSpecific.load(new FileInputStream(defaultsFile));
+
+        Properties overrides = new Properties();
+
+        try {
+            File overridesFile = configurationLocator.getFile(FilePaths.LOCAL_CONFIGURATION_OVERRIDES);
+            overrides.load(new FileInputStream(overridesFile));
+        } catch (FileNotFoundException e) {
+            // basically ignore; no matter if they don't have local overrides
+            LOG.info("local overrides not found.");
+        }
+
+        mifosSpecific.putAll(overrides);
+
+        return translateToHibernate(mifosSpecific, getTestMode());
     }
 
     public String[] getAllSettingsFilenames() throws IOException {
@@ -96,9 +122,53 @@ public class StandardTestingService implements TestingService {
         } else if (testMode == TestMode.INTEGRATION) {
             defaultSettingsFilename = FilePaths.INTEGRATION_DATABASE_CONFIGURATION;
         } else {
-            throw new RuntimeException("illegal mifos.mode");
+            throw new RuntimeException("illegal mifos.test.mode");
         }
         return defaultSettingsFilename;
+    }
+
+    Properties translateToHibernate(Properties mifosSpecific, TestMode testModeEnum) {
+        Properties hibernateSpecific = new Properties();
+        String testMode = testModeEnum.toString().toLowerCase();
+
+        String host = mifosSpecific.getProperty(testMode + ".database.host");
+        String port = mifosSpecific.getProperty(testMode + ".database.port");
+        String database = mifosSpecific.getProperty(testMode + ".database");
+        String params = mifosSpecific.getProperty(testMode + ".database.params");
+        hibernateSpecific.setProperty("hibernate.connection.url", "jdbc:mysql://" + host + ":" + port + "/" + database
+                + "?" + params);
+
+        Map<String, String> hibernateToMifos = new HashMap<String, String>();
+        hibernateToMifos.put("hibernate.connection.driver_class", testMode + ".database.driver");
+        hibernateToMifos.put("hibernate.connection.username", testMode + ".database.user");
+        hibernateToMifos.put("hibernate.connection.password", testMode + ".database.password");
+        hibernateToMifos.put("hibernate.dialect", testMode + ".database.hibernate.dialect");
+        hibernateToMifos.put("hibernate.show_sql", testMode + ".database.hibernate.show_sql");
+        hibernateToMifos.put("hibernate.transaction.factory_class", testMode
+                + ".database.hibernate.transaction.factory_class");
+        hibernateToMifos.put("hibernate.cache.provider_class", testMode + ".database.hibernate.cache.provider_class");
+        hibernateToMifos.put("hibernate.cache.use_query_cache", testMode + ".database.hibernate.cache.use_query_cache");
+        hibernateToMifos.put("hibernate.cache.use_second_level_cache", testMode
+                + ".database.hibernate.cache.use_second_level_cache");
+        hibernateToMifos.put("hibernate.connection.provider_class", testMode
+                + ".database.hibernate.connection.provider_class");
+        hibernateToMifos.put("hibernate.connection.isolation", testMode + ".database.hibernate.connection.isolation");
+        hibernateToMifos.put("hibernate.c3p0.acquire_increment", testMode
+                + ".database.hibernate.c3p0.acquire_increment");
+        hibernateToMifos.put("hibernate.c3p0.idle_test_period", testMode + ".database.hibernate.c3p0.idle_test_period");
+        hibernateToMifos.put("hibernate.c3p0.max_size", testMode + ".database.hibernate.c3p0.max_size");
+        hibernateToMifos.put("hibernate.c3p0.max_statements", testMode + ".database.hibernate.c3p0.max_statements");
+        hibernateToMifos.put("hibernate.c3p0.min_size", testMode + ".database.hibernate.c3p0.min_size");
+        hibernateToMifos.put("hibernate.c3p0.timeout", testMode + ".database.hibernate.c3p0.timeout");
+
+        for (String key : hibernateToMifos.keySet()) {
+            String value = mifosSpecific.getProperty(hibernateToMifos.get(key));
+            if (null != value) {
+                hibernateSpecific.setProperty(key, value);
+            }
+        }
+
+        return hibernateSpecific;
     }
 
     /**
