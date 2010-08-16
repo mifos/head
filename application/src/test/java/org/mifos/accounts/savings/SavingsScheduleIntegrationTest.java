@@ -38,7 +38,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -63,25 +62,21 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.dto.domain.HolidayDetails;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.StandardTestingService;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * FIXME - completely rewrite/fix these tests
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml"})
-public class SavingsScheduleIntegrationTest {
+public class SavingsScheduleIntegrationTest extends MifosIntegrationTestCase {
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
@@ -101,11 +96,9 @@ public class SavingsScheduleIntegrationTest {
 
     @BeforeClass
     public static void initialiseHibernateUtil() {
-
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
-        DatabaseSetup.initializeHibernate();
     }
 
    @AfterClass

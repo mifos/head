@@ -20,14 +20,13 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 import java.util.Date;
 import java.util.Set;
-
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -35,7 +34,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
@@ -46,22 +44,17 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.util.StandardTestingService;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml",
-                                    "/org/mifos/config/resources/hibernate-daos.xml"})
-public class GenerateMeetingsForCustomerAndSavingsBatchJobIntegrationTest {
+public class GenerateMeetingsForCustomerAndSavingsBatchJobIntegrationTest extends MifosIntegrationTestCase {
 
     // class under test
     private GenerateMeetingsForCustomerAndSavingsHelper generateMeetingsForCustomerAndSavingsHelper;
@@ -83,7 +76,6 @@ public class GenerateMeetingsForCustomerAndSavingsBatchJobIntegrationTest {
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
-        DatabaseSetup.initializeHibernate();
     }
 
     @AfterClass

@@ -14,5 +14,7 @@
     <import resource="financialRulesBean.xml" />
     <import resource="persistenceContext.xml" />
     <import resource="dataSourceContext.xml" />
+    <import resource="hibernate-daos.xml" />
+    <import resource="services.xml" />
 
 </beans>

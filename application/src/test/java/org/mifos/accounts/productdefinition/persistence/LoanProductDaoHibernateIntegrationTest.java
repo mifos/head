@@ -40,8 +40,9 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.spring.SpringUtil;
+import org.mifos.framework.spring.SpringTestUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -52,13 +53,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-/**
- *
- */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml",
-                                    "/org/mifos/config/resources/hibernate-daos.xml"})
-public class LoanProductDaoHibernateIntegrationTest {
+public class LoanProductDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
 
     // class under test
     @Autowired
@@ -75,12 +70,9 @@ public class LoanProductDaoHibernateIntegrationTest {
 
     @BeforeClass
     public static void initialiseHibernateUtil() {
-
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
-        DatabaseSetup.initializeHibernate();
-        SpringUtil.initializeSpring();
     }
 
     @AfterClass

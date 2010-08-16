@@ -35,7 +35,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * A (hopefully) temporary class to encapsulate Spring/Mifos integration. (-Adam
  * 06-FEB-2008)
  */
-public class SpringUtil {
+public class SpringTestUtil {
     private static ApplicationContext appContext = null;
 
     /**
@@ -46,10 +46,8 @@ public class SpringUtil {
     private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER);
 
     /**
-     * Dynamically fetches config files since an exception is thrown if a
-     * nonexistant file is passed into
-     * {@link ClassPathXmlApplicationContext#ClassPathXmlApplicationContext(String[])}
-     * .
+     * Dynamically fetches config files since an exception is thrown if a nonexistant file is passed into
+     * {@link ClassPathXmlApplicationContext#ClassPathXmlApplicationContext(String[])} .
      */
     public static void initializeSpring() {
         String[] configFiles = getConfigFiles();
@@ -67,6 +65,7 @@ public class SpringUtil {
 
         // required config file. exception thrown if not found.
         configFiles.add(FilePaths.SPRING_CONFIG_CORE);
+        configFiles.add("integration-test-context.xml");
 
         String customMbcPath;
         try {
@@ -89,6 +88,6 @@ public class SpringUtil {
     }
 
     public static void setAppContext(ApplicationContext context) {
-        SpringUtil.appContext = context;
+        SpringTestUtil.appContext = context;
     }
 }
