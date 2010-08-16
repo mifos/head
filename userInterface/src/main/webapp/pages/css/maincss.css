@@ -28,7 +28,7 @@ a:hover {
 	background-repeat: repeat-x;
 	cursor: pointer;
 	height: 20px;
-	margin-right:34px;
+	margin-right:20px;
 }
 .container {
 	float:left;
@@ -62,8 +62,7 @@ a:hover {
 .content {
 	padding-top: 10px;
 	/*margin-left:180px;*/
-	padding-left:4px;
-	width:85%;
+	padding-left:4px;	
 	text-decoration:none;
 	color:#000000;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
@@ -350,9 +349,15 @@ padding-top:5px;
 }
 .sidebar {
 	margin-top:2px;
-	width:174px;
+	width:185px;
 	background-color:#F2D1A6;
 	float:left;
+}
+.ht550{
+	height:550px;
+}
+.htTotal{
+	height:100%;
 }
 .ht600 {
 	height:650px;
@@ -389,7 +394,7 @@ padding-top:5px;
 	padding-left: 8px;
 	padding-top: 2px;
 	padding-bottom: 5px;
-	width:166px;
+	width:175px;
 	background-color:#FF9600;
 	text-decoration: none;
 	color:#FFFFFF;

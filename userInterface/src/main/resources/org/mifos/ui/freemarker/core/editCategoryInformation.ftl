@@ -28,7 +28,9 @@
         	<span class="red">* </span>
         	[@spring.message "fieldsmarkedwithanasteriskarerequired." /]
         </div>
-        <p class="error" id="error1"></p>
+        [#-- [@mifos.showAllErrors "formBean.*"/] --]
+        [@spring.bind "formBean"/]
+       [@mifos.showAllErrors "formBean.*"/] 
         <p class="fontBold">
         	[@spring.message "manageProducts.editCategory.categoryDetails" /]
         </p>
@@ -41,7 +43,6 @@
         		<span class="span-4">
         		[@spring.bind "formBean.productCategoryName"/]
         			<input type="text" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
-        		[@spring.showErrors "<br />"/]
         		</span>
         	</div>
             <div class="span-22">
@@ -51,8 +52,7 @@
             	</span>
             	<span>
             	[@spring.bind "formBean.productCategoryDesc"/]
-            		<textarea cols="50" rows="6" name="${spring.status.expression}">${spring.status.value?default("")}</textarea>
-            	[@spring.showErrors "<br />"/]
+            		<textarea cols="50" rows="6" name="${spring.status.expression}">${spring.status.value?default("")}</textarea>            	
             	</span>
             </div>
         </div>
@@ -68,12 +68,20 @@
             <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
             [@spring.bind "formBean.globalPrdCategoryNum"/]
             <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
+            [#assign statusTypes={"1":"active","2":"inactive"}/]
             [@spring.bind "formBean.productCategoryStatusId"/]
             <select id="${spring.status.expression}" name="${spring.status.expression}">
-            		<option value="" [#if spring.status.value?string == ""] selected=="selected"[/#if] >[@spring.message "--select--"/]</option>
-            		<option value="1" [#if spring.status.value?string == "1"] selected=="selected"[/#if] >[@spring.message "active"/]</option>
-                    <option value="2" [#if spring.status.value?string == "2"] selected=="selected"[/#if] >[@spring.message "inactive"/]</option>
-                </select>
+					        <option value="" [@spring.checkSelected ""/]>${springMacroRequestContext.getMessage("--Select--")}</option>
+					        [#if statusTypes?is_hash]
+					            [#list statusTypes?keys as value]
+					            <option value="${value?html}"[@spring.checkSelected value/]>${springMacroRequestContext.getMessage(statusTypes[value]?html)}</option>
+					            [/#list]
+					        [#else]
+					            [#list statusTypes as value]
+					            <option value="${value?html}"[@spring.checkSelected value/]>${springMacroRequestContext.getMessage(value?html)}</option>
+					            [/#list]
+					        [/#if]
+			</select>
             </span>
         </div>
         <div class="clear">&nbsp;</div>

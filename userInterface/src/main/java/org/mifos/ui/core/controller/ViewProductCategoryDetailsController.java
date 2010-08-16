@@ -44,6 +44,10 @@ public class ViewProductCategoryDetailsController {
         // empty constructor for spring wiring
     }
 
+    public ViewProductCategoryDetailsController(final AdminServiceFacade adminServiceFacade){
+        this.adminServiceFacade=adminServiceFacade;
+    }
+
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="NP_UNWRITTEN_FIELD", justification="request is not null")
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView handleRequestInternal(HttpServletRequest request) {
@@ -55,7 +59,6 @@ public class ViewProductCategoryDetailsController {
         modelAndView.addObject("detailsDto", detailsDto);
         modelAndView.addObject("breadcrumbs", new AdminBreadcrumbBuilder().withLink("viewProductCategoryDetails", "viewProductCategoryDetails.ftl").build());
         modelAndView.addObject("globalPrdCategoryNum",request.getParameter("globalPrdCategoryNum"));
-
         return modelAndView;
     }
 

@@ -55,7 +55,7 @@
 <div class="bluedivs paddingLeft">
 	    [#list breadcrumbs as messages]
   			[#if messages_has_next]
-    			<a href="${messages.link}">[@spring.message "${messages.message}" /]</a>&nbsp;/&nbsp;  [#else] <span class="fontBold">[@spring.message "${messages.message}" /]</span>
+    			<a href="${messages.link}">[@spring.message "${messages.message}" /]</a>&nbsp;/&nbsp;  [#else] <span class="fontBold">[@spring.messageText "${messages.message}","${messages.message}" /]</span>
   			[/#if]
   		[/#list]
  </div>
@@ -84,6 +84,7 @@
     <link href="pages/css/maincss.css" rel="stylesheet" type="text/css" />
     <link href="pages/css/gazelle.css" rel="stylesheet" type="text/css" />
     <link href="pages/css/screen.css" rel="stylesheet" type="text/css" />
+    <link href="pages/css/main.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>   
   </head>
   <body>

@@ -10,12 +10,12 @@
   </div>
   <div class=" content leftMargin180">
    	<form method="" action="" name="formname">
-    <div class="span-22">
+    <div class="span-21">
   		[@mifos.crumbs breadcrumbs/]
         <div class="clear">&nbsp;</div>
-    	<div class="span-24">
+    	<div class="span-20">
         	<div class="span-19">
-            	<span class="orangeheading">${detailsDto.productCategoryName}</span><br /><br />
+            	<span class="orangeheading">${detailsDto.productCategoryName}</span><br />
                 <span>
                 [#switch detailsDto.productCategoryStatusId]
                 	[#case 1]
@@ -34,8 +34,8 @@
                 	  			[/#if]
                 	  		[/#list]
                 	  </span>
-                </span><br />
-                <span class="span-4 rightAlign"><a href="editCategoryInformation.ftl?globalPrdCategoryNum=${globalPrdCategoryNum}">[@spring.message "manageProducts.editCategory.editcategoryinformation"/]</a></span>
+                </span>
+                <span class="span-19 rightAlign"><a href="editCategoryInformation.ftl?globalPrdCategoryNum=${globalPrdCategoryNum}">[@spring.message "manageProducts.editCategory.editcategoryinformation"/]</a></span>                
         	</div>        	
         </div>        
         <div class="clear">&nbsp;</div>

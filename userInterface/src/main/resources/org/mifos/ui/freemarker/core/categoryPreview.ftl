@@ -36,10 +36,10 @@
         		[@spring.bind "formBean.productCategoryStatusId"/]
             	<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
 				[#switch formBean.productCategoryStatusId]
-                	[#case 1]
+                	[#case "1"]
                 		<span>[@spring.message "active"/]</span>
                 	[#break]
-                	[#case 2]
+                	[#case "2"]
                 		<span>[@spring.message "inactive"/]</span>
                 	[#break]
                 [/#switch]

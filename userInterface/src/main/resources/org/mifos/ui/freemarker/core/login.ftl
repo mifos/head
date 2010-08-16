@@ -4,7 +4,7 @@
 [@mifos.header "login" /]
 <!-- Container Begins-->
 <span id="page.id" title="Login" />
-<div class="container"> &nbsp;
+<div class="container" align="center"> &nbsp;
   <!--Header-->
   <span class="logo"></span>
   <div class="orangeline" style="margin-top:65px;">&nbsp;</div>
@@ -12,7 +12,7 @@
     <div class="borders maindiv marginAuto">
       <form method="POST" action="j_spring_security_check" id="login.form">
         <div class="bluediv span-16 last"><span>[@spring.message "login.login"/]</span></div>
-        <div class="span-7 LeftDiv normalFont">[@spring.message "login.welcomeToMifos"/]</div>
+        <div class="span-7 LeftDiv normalFont" align="left">[@spring.message "login.welcomeToMifos"/]</div>
         <!--Begining of Right side div-->
         <div class="span-8 last" align="center">
           <div class="error">

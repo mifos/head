@@ -20,75 +20,91 @@
 
 package org.mifos.ui.core.controller;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
-import org.mifos.dto.domain.CreateOrUpdateProductCategory;
+import org.mifos.dto.screen.ProductCategoryTypeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("productCategoryPreview")
+@RequestMapping("/newProductCategoryPreview")
 @SessionAttributes("formBean")
 public class DefineProductCategoryPreviewController {
 
-    private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
-    private static final String REDIRECT_TO_VIEW_PRODUCT_CATEGORY_DETAILS = "redirect:/viewProductCategoryDetails.ftl";
+    //private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
+    private static final String REDIRECT_TO_ADMIN = "redirect:/AdminAction.do?method=load";
     private static final String CANCEL_PARAM = "CANCEL";
+    private static final String REDIRECT_TO_VIEW_PRODUCT_CATEGORY = "redirect:/editProductCategory.ftl";
     private static final String EDIT_PARAM = "EDIT";
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
 
+    public DefineProductCategoryPreviewController(final AdminServiceFacade adminServiceFacade){
+        this.adminServiceFacade=adminServiceFacade;
+    }
+
     protected DefineProductCategoryPreviewController() {
         // spring auto wiring
     }
 
-    public DefineProductCategoryPreviewController(final AdminServiceFacade adminServiceFacade) {
-        this.adminServiceFacade = adminServiceFacade;
+    public Map<String,String> getProductCategoryTypes(){
+        String pType="";
+        Map<String, String> categoryTypes=new LinkedHashMap<String, String>();
+        for(ProductCategoryTypeDto productCategoryTypeDto:this.adminServiceFacade.retrieveProductCategoryTypes()){
+            if(!pType.equals(productCategoryTypeDto.getProductName())){
+                categoryTypes.put(productCategoryTypeDto.getProductTypeID().toString(), productCategoryTypeDto.getProductName());
+            }
+            pType=productCategoryTypeDto.getProductName();
+        }
+        return categoryTypes;
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="NP_LOAD_OF_KNOWN_NULL_VALUE", justification="request is not null")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings
     @RequestMapping(method = RequestMethod.POST)
-    public ModelAndView processFormSubmit(@RequestParam(value = EDIT_PARAM, required = true) String edit,
-            @RequestParam(value = CANCEL_PARAM, required = false) String cancel, ProductCategoryFormBean formBean,
-            BindingResult result, SessionStatus status) {
-        String viewName = REDIRECT_TO_ADMIN_SCREEN;
-        ModelAndView modelAndView = new ModelAndView();
-        if (StringUtils.isNotBlank(edit)) {
-            viewName = "viewProductCategoryDetails";
-            modelAndView.setViewName(viewName);
-            modelAndView.addObject("formBean", formBean);
-        } else if (StringUtils.isNotBlank(cancel)) {
-            viewName = REDIRECT_TO_VIEW_PRODUCT_CATEGORY_DETAILS;
-            modelAndView.setViewName(viewName);
-            status.setComplete();
-        } else if (result.hasErrors()) {
-            viewName = "productCategoryPreview";
-            modelAndView.setViewName(viewName);
-            modelAndView.addObject("formBean", formBean);
-        } else {
-            //Fix me: need to retreive userId and branchID
-            Short userId = null;
-            Short branchId = null;
-            CreateOrUpdateProductCategory productCategory = new CreateOrUpdateProductCategory(userId, branchId, formBean.getProductTypeId(),
-                                                            formBean.getProductCategoryName(), formBean.getProductCategoryDesc(),
-                                                            formBean.getProductCategoryStatusId());
-            if (StringUtils.isNotBlank(edit)) {
-                adminServiceFacade.updateProductCategory(productCategory);
-            } else {
-                adminServiceFacade.createProductCategory(productCategory);
-            }
-            viewName = REDIRECT_TO_ADMIN_SCREEN;
-            modelAndView.setViewName(viewName);
-            status.setComplete();
+    public ModelAndView showPopulatedForm(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,@RequestParam(value = EDIT_PARAM, required = false) String edit,
+            @ModelAttribute("formBean") ProductCategoryFormBean bean, BindingResult result,HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView("defineNewCategory");
+        if(StringUtils.isNotBlank(cancel)){
+            modelAndView.setViewName(REDIRECT_TO_VIEW_PRODUCT_CATEGORY);
+        }else if(StringUtils.isNotBlank(edit)){
+            modelAndView.setViewName("defineNewCategory");
+            modelAndView.addObject("formBean", bean);
+            modelAndView.addObject("typeList", this.getProductCategoryTypes());
+        }else if(result.hasErrors()){
+            modelAndView.setViewName("newProductCategoryPreview");
+            modelAndView.addObject("formBean", bean);
+        }else{
+/*            Integer productCategoryStatusId=1;
+            Integer productCategoryTypeId=Integer.parseInt(bean.getProductTypeId());
+            UserContext userContext=(UserContext)request.getSession().getAttribute("UserContext");
+            CreateOrUpdateProductCategory createOrUpdateProductCategory=new CreateOrUpdateProductCategory(userContext.getId(), userContext.getBranchId(), productCategoryTypeId.shortValue(), bean.getProductCategoryName(), bean.getProductCategoryDesc(), productCategoryStatusId.shortValue());
+            this.adminServiceFacade.createProductCategory(createOrUpdateProductCategory);
+*/            modelAndView.setViewName(REDIRECT_TO_ADMIN);
         }
         return modelAndView;
     }
+
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings
+    @RequestMapping(method = RequestMethod.GET)
+    public ModelAndView showPopulatedForm(ProductCategoryFormBean formBean) {
+        ModelAndView modelAndView=new ModelAndView("defineNewCategory");
+        modelAndView.addObject("formbean", formBean);
+        modelAndView.addObject("typeList", this.getProductCategoryTypes());
+        return modelAndView;
+    }
+
+
 }

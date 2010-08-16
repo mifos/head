@@ -20,13 +20,14 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
-import org.mifos.dto.screen.ProductCategoryDetailsDto;
 import org.mifos.dto.screen.ProductCategoryTypeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,68 +37,64 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/editProductCategory")
+@RequestMapping("/defineNewCategory")
 @SessionAttributes("formBean")
 public class DefineProductCategoryController {
 
-    private static final String REDIRECT_TO_VIEW_PRODUCT_CATEGORY = "redirect:/editProductCategory.ftl";
-    private static final String TO_PRODUCT_CATEGORY_PREVIEW = "productCategoryPreview";
-    private static final String CANCEL_PARAM = "CANCEL";
 
-    @Autowired
-    private AdminServiceFacade adminServiceFacade;
+    private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
+    private static final String CANCEL_PARAM = "CANCEL";
 
     protected DefineProductCategoryController() {
         // spring autowiring
     }
+    @Autowired
+    private AdminServiceFacade adminServiceFacade;
 
-    public DefineProductCategoryController(final AdminServiceFacade adminServiceFacade) {
-        this.adminServiceFacade = adminServiceFacade;
+    public DefineProductCategoryController(final AdminServiceFacade adminServiceFacade){
+        this.adminServiceFacade=adminServiceFacade;
     }
 
-    @ModelAttribute("breadcrumbs")
-    public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("editProductCategory", "editProductCategory.ftl").build();
-    }
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings
+    @RequestMapping(method=RequestMethod.POST)
+    public ModelAndView showEditInformation(@RequestParam(value = CANCEL_PARAM, required = false) String cancel, @ModelAttribute("formBean")@Valid ProductCategoryFormBean formBean,
+            BindingResult result){
+        ModelAndView modelAndView=new ModelAndView();
+        if(StringUtils.isNotBlank(cancel)){
+            modelAndView.setViewName(REDIRECT_TO_ADMIN_SCREEN);
+        }else if(result.hasErrors()){
+            modelAndView.setViewName("defineNewCategory");
+            modelAndView.addObject("formBean",formBean);
+            modelAndView.addObject("typeList", this.getProductCategoryTypes());
+        }else {
+        modelAndView.setViewName("newProductCategoryPreview");
+        modelAndView.addObject("formBean",formBean);
+        }
+        modelAndView.addObject("breadcrumbs",new AdminBreadcrumbBuilder().withLink("editProductCategory", "editProductCategory.ftl").build());
+        return modelAndView;
 
+    }
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView handleRequestInternal(HttpServletRequest request) {
-        boolean editMode = Boolean.parseBoolean(request.getParameter("editMode"));
-        ModelAndView modelAndView = new ModelAndView("editFunds");
-        List<ProductCategoryTypeDto> typeList = adminServiceFacade.retrieveProductCategoryTypes();
-        modelAndView.addObject("typeList", typeList);
-        ProductCategoryFormBean formBean= new ProductCategoryFormBean();
-        if(editMode) {
-            String globalProductCategoryNumber = request.getParameter("globalProductCategoryNumber");
-            ProductCategoryDetailsDto dto = adminServiceFacade.retrieveProductCateogry(globalProductCategoryNumber);
-            formBean.setGlobalPrdCategoryNum(globalProductCategoryNumber);
-            formBean.setProductCategoryDesc(dto.getProductCategoryDesc());
-            formBean.setProductCategoryName(dto.getProductCategoryName());
-            formBean.setProductCategoryStatusId(dto.getProductCategoryStatusId());
-            formBean.setProductType(dto.getProductTypeName());
-            formBean.setProductTypeId(dto.getProductTypeId());
-        }
+    public ModelAndView showPopulatedForm(ProductCategoryFormBean formBean) {
+        ModelAndView modelAndView=new ModelAndView("defineNewCategory");
         modelAndView.addObject("formBean", formBean);
+        modelAndView.addObject("typeList", this.getProductCategoryTypes());
         return modelAndView;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ModelAndView processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
-            @ModelAttribute("formBean") ProductCategoryFormBean formBean, BindingResult result, SessionStatus status) {
-        ModelAndView modelAndView = new ModelAndView(REDIRECT_TO_VIEW_PRODUCT_CATEGORY);
-        if (StringUtils.isNotBlank(cancel)) {
-            modelAndView.setViewName(REDIRECT_TO_VIEW_PRODUCT_CATEGORY);
-            status.setComplete();
-        } else if (result.hasErrors()) {
-            modelAndView.setViewName("editProductCategory");
-        } else {
-            modelAndView.setViewName(TO_PRODUCT_CATEGORY_PREVIEW);
-            modelAndView.addObject("formBean", formBean);
+    public Map<String,String> getProductCategoryTypes(){
+        String pType="";
+        Map<String, String> categoryTypes=new LinkedHashMap<String, String>();
+        for(ProductCategoryTypeDto productCategoryTypeDto:this.adminServiceFacade.retrieveProductCategoryTypes()){
+            if(!pType.equals(productCategoryTypeDto.getProductName())){
+                categoryTypes.put(productCategoryTypeDto.getProductTypeID().toString(), productCategoryTypeDto.getProductName());
+            }
+            pType=productCategoryTypeDto.getProductName();
         }
-        return modelAndView;
+        return categoryTypes;
     }
 }

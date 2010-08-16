@@ -1,6 +1,8 @@
 package org.mifos.ui.core.controller;
 
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -17,8 +19,12 @@ public class ProductCategoryPreviewController {
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
     private static final String CANCEL_PARAM = "CANCEL";
     private static final String EDIT_PARAM = "EDIT";
-    //private static final String PREVIEW_PARAM = "PREVIEW";
+    /*    @Autowired
+    private AdminServiceFacade adminServiceFacade;
 
+    public ProductCategoryPreviewController(final AdminServiceFacade adminServiceFacade){
+        this.adminServiceFacade=adminServiceFacade;
+    }*/
     protected ProductCategoryPreviewController(){
         // empty constructor for spring autowiring
     }
@@ -32,7 +38,7 @@ public class ProductCategoryPreviewController {
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView processFormSubmit(@RequestParam(value = EDIT_PARAM, required = false) String edit,
             @RequestParam(value = CANCEL_PARAM, required = false) String cancel, ProductCategoryFormBean formBean,
-            BindingResult result) {
+            BindingResult result,HttpServletRequest request) {
         String viewName = REDIRECT_TO_ADMIN_SCREEN;
         ModelAndView modelAndView = new ModelAndView();
         if (StringUtils.isNotBlank(edit)) {
@@ -49,9 +55,11 @@ public class ProductCategoryPreviewController {
             modelAndView.addObject("formBean", formBean);
         }else{
             //FIX ME: code for updating the product category
-            //UserContext userContext=((UserContext)request.getSession().getAttribute("UserContext"));
-           // CreateOrUpdateProductCategory createOrUpdateProductCategory=new CreateOrUpdateProductCategory(userContext.getId(), userContext.getBranchId(), formBean.getProductTypeId(), formBean.getProductCategoryName(), formBean.getProductCategoryDesc(), formBean.getProductCategoryStatusId());
-            //this.adminServiceFacade.updateProductCategory(createOrUpdateProductCategory);
+            /*UserContext userContext=((UserContext)request.getSession().getAttribute("UserContext"));
+            Integer productStatusId=Integer.parseInt(formBean.getProductCategoryStatusId());
+            Integer productTypeId=Integer.parseInt(formBean.getProductTypeId());
+            CreateOrUpdateProductCategory createOrUpdateProductCategory=new CreateOrUpdateProductCategory(userContext.getId(), userContext.getBranchId(), productTypeId.shortValue(), formBean.getProductCategoryName(), formBean.getProductCategoryDesc(), productStatusId.shortValue());
+            this.adminServiceFacade.updateProductCategory(createOrUpdateProductCategory);*/
             modelAndView.setViewName(REDIRECT_TO_ADMIN_SCREEN);
             modelAndView.addObject("formBean", formBean);
         }
