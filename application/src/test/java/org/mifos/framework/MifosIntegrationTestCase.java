@@ -62,10 +62,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * feature.
  * <br />
  * <br />
- * Inheriting from this instead of TestCase is deprecated, generally speaking. The reason is that TestCaseInitializer
- * (a) runs too soon (it is more graceful for a long delay to happen in setUp), and (b) initializes too much (most tests
- * don't need everything which is there).
- *
  * This base class initializes the database and various other things and so any class derived from this is an
  * integration test. If a test is not an integration test and does not need the database, then it should not derive from
  * this class.
@@ -75,8 +71,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class MifosIntegrationTestCase {
 
     private static Boolean isTestingModeSet = false;
-
-    private static Boolean initialized = false;
 
     private static IDataSet latestDataDump;
 
@@ -101,18 +95,14 @@ public class MifosIntegrationTestCase {
 
     @Before
     public void before() throws Exception {
-
-        if (!initialized) {
-            TestCaseInitializer.initialize();
-            initialized = true;
-        }
+        new TestCaseInitializer().initialize();
 
         if (verifyDatabaseState) {
             Connection connection = StaticHibernateUtil.getSessionTL().connection();
             connection.setAutoCommit(false);
             DatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
 
-            latestDataDump =  new FilteredDataSet(excludeTables, dbUnitConnection.createDataSet());
+            latestDataDump = new FilteredDataSet(excludeTables, dbUnitConnection.createDataSet());
             String tmpDir = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
             FlatXmlDataSet.write(latestDataDump, new FileOutputStream(tmpDir + "latestDataDump.xml"));
             FlatXmlDataSetBuilder fxmlBuilder = new FlatXmlDataSetBuilder();

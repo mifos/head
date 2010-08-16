@@ -42,11 +42,16 @@ import org.mifos.security.util.ActivityMapper;
  */
 public class TestCaseInitializer {
 
-    private TestCaseInitializer() {
-        // do nothing
+    private static Boolean initialized = false;
+    
+    public synchronized void initialize() throws Exception {
+        if (initialized == false) {
+            initializeDB();
+            initialized = true;
+        }
     }
 
-    public static void initialize() throws Exception{
+    private void initializeDB() throws Exception{
         StaticHibernateUtil.initialize();
         TestDatabase.createMySQLTestDatabase();
         // add this because it is added to Application Initializer

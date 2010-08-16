@@ -56,15 +56,15 @@ import servletunit.struts.MockStrutsTestCase;
  */
 public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 
-    private static Boolean initialized = false;
+    private static Boolean isTestingModeSet = false;
 
     protected MifosMockStrutsTestCase() throws Exception {
         super();
-        if (!initialized) {
+        if (!isTestingModeSet) {
             new StandardTestingService().setTestMode(TestMode.INTEGRATION);
             SpringTestUtil.initializeSpring();
-            TestCaseInitializer.initialize();
-            initialized = true;
+            new TestCaseInitializer().initialize();
+            isTestingModeSet = true;
         }
     }
 
