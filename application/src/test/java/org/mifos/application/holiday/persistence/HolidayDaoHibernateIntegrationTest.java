@@ -21,8 +21,11 @@
 package org.mifos.application.holiday.persistence;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-import static org.junit.matchers.JUnitMatchers.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.matchers.JUnitMatchers.hasItem;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -36,7 +39,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
@@ -46,24 +48,19 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.dto.domain.HolidayDetails;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml",
-                                    "/org/mifos/config/resources/hibernate-daos.xml"})
-public class HolidayDaoHibernateIntegrationTest {
+public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
 
     @Autowired
     private HolidayDao holidayDao;
@@ -88,7 +85,6 @@ public class HolidayDaoHibernateIntegrationTest {
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
-        DatabaseSetup.initializeHibernate();
     }
 
     @AfterClass

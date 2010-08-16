@@ -52,6 +52,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.util.StandardTestingService;
@@ -68,11 +69,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * Most {@link CustomerService#transferGroupTo(GroupBO, CenterBO)} functionality is covered in unit tests but
  * added these high value tests for now to verify that 'schedule regeneration works correctly' when transferring groups.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml",
-                                    "/org/mifos/config/resources/hibernate-daos.xml",
-                                    "/org/mifos/config/resources/services.xml" })
-public class GroupTransferServiceIntegrationTest {
+public class GroupTransferServiceIntegrationTest extends MifosIntegrationTestCase {
 
     @Autowired
     private CustomerService customerService;
@@ -91,7 +88,6 @@ public class GroupTransferServiceIntegrationTest {
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
-        DatabaseSetup.initializeHibernate();
     }
 
     @AfterClass

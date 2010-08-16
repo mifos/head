@@ -50,7 +50,7 @@ import org.dbunit.operation.DatabaseOperation;
 import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.persistence.SqlExecutor;
 import org.mifos.framework.persistence.SqlResource;
-import org.mifos.framework.spring.SpringUtil;
+import org.mifos.framework.spring.SpringTestUtil;
 import org.mifos.service.test.TestingService;
 
 
@@ -184,7 +184,7 @@ public class DataSetUpgradeUtil {
         }
 
         System.setProperty(TestingService.TEST_MODE_SYSTEM_PROPERTY,"acceptance");
-        SpringUtil.initializeSpring();
+        SpringTestUtil.initializeSpring();
         ApplicationInitializer applicationInitializer = new ApplicationInitializer();
         applicationInitializer.init(null);
         System.out.println(" upgrade done!");
