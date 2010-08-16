@@ -35,6 +35,7 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.spring.SpringTestUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Flow;
@@ -55,6 +56,7 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 
     protected MifosMockStrutsTestCase() throws Exception {
         super();
+        SpringTestUtil.initializeSpring();
         new TestCaseInitializer().initialize();
     }
 

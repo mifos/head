@@ -37,6 +37,7 @@ import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.Localization;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -50,10 +51,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml",
-                                    "/org/mifos/config/resources/hibernate-daos.xml"})
-public class FundDaoHibernateIntegrationTest {
+public class FundDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
 
     @Autowired
     private FundDao fundDao;
@@ -69,14 +67,11 @@ public class FundDaoHibernateIntegrationTest {
 
     @BeforeClass
     public static void initialiseHibernateUtil() {
-
         Locale locale = Localization.getInstance().getMainLocale();
         AuditConfigurtion.init(locale);
-
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
-        DatabaseSetup.initializeHibernate();
     }
 
     @AfterClass
