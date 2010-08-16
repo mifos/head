@@ -25,18 +25,35 @@ import static org.junit.Assert.*;
 import static org.junit.matchers.JUnitMatchers.*;
 
 import java.util.List;
+import java.util.Locale;
+
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.application.master.business.FundCodeEntity;
-import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.Localization;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.StandardTestingService;
+import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-public class FundDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/integration-test-context.xml",
+                                    "/org/mifos/config/resources/hibernate-daos.xml"})
+public class FundDaoHibernateIntegrationTest {
 
     @Autowired
     private FundDao fundDao;
@@ -47,6 +64,25 @@ public class FundDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
     private FundBO fund;
     private FundCodeEntity fundCode;
     private String fundName;
+
+    private static MifosCurrency oldDefaultCurrency;
+
+    @BeforeClass
+    public static void initialiseHibernateUtil() {
+
+        Locale locale = Localization.getInstance().getMainLocale();
+        AuditConfigurtion.init(locale);
+
+        oldDefaultCurrency = Money.getDefaultCurrency();
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+        new StandardTestingService().setTestMode(TestMode.INTEGRATION);
+        DatabaseSetup.initializeHibernate();
+    }
+
+    @AfterClass
+    public static void resetCurrency() {
+        Money.setDefaultCurrency(oldDefaultCurrency);
+    }
 
     @After
     public void cleanDatabaseTablesAfterTest() {

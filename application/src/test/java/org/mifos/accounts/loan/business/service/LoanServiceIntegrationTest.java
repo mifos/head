@@ -26,21 +26,31 @@ import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.calendar.DayOfWeek;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.domain.builders.HolidayBuilder;
-import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.StandardTestingService;
+import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
+import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-public class LoanServiceIntegrationTest extends MifosIntegrationTestCase {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/integration-test-context.xml",
+                                    "/org/mifos/config/resources/hibernate-daos.xml",
+                                    "/org/mifos/config/resources/services.xml" })
+public class LoanServiceIntegrationTest {
 
     private FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
     private List<WeekDay> savedWorkingDays = fiscalCalendarRules.getWorkingDays();
@@ -48,6 +58,13 @@ public class LoanServiceIntegrationTest extends MifosIntegrationTestCase {
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
+
+    @BeforeClass
+    public static void initialiseHibernateUtil() {
+
+        new StandardTestingService().setTestMode(TestMode.INTEGRATION);
+        DatabaseSetup.initializeHibernate();
+    }
 
     @Before
     public void cleanDatabaseTables() {

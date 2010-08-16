@@ -23,49 +23,19 @@ package org.mifos.framework.persistence;
 import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 import java.util.StringTokenizer;
-
-import javax.sql.DataSource;
 
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.springframework.beans.factory.FactoryBean;
+import org.mifos.framework.util.StandardTestingService;
 
-public class TestDatabase implements FactoryBean<TestDatabase> {
-
-    private static DataSource integrationDataSource;
-
-    private static TestDatabase testDatabase;
-
-    private TestDatabase() {
-
-    }
-
-    public static TestDatabase getInstance() {
-        if(testDatabase == null) {
-            testDatabase = new TestDatabase();
-        }
-        return testDatabase;
-    }
-
-
-    /**
-     * @return the integrationDataSource
-     */
-    public DataSource getIntegrationDataSource() {
-        return integrationDataSource;
-    }
-
-    /**
-     * @param integrationDataSource the integrationDataSource to set
-     */
-    public void setIntegrationDataSource(DataSource integrationDataSource) {
-        this.integrationDataSource = integrationDataSource;
-    }
+public class TestDatabase {
 
     /**
      * This method was added to work around integration test inter- and intra-dependencies. Once these dependencies in
@@ -163,6 +133,12 @@ public class TestDatabase implements FactoryBean<TestDatabase> {
         return tableStart + constraintsKeys + tableEnd;
     }
 
+    // FIXME Use Spring Managed Connection
+    /**
+     * Foreign key disabled connection
+     */
+
+
     private static Connection fkDisabledConnection;
 
     private static Connection getJDBCConnection() throws Exception {
@@ -173,22 +149,13 @@ public class TestDatabase implements FactoryBean<TestDatabase> {
     }
 
     private static Connection initializeFKDisabledConnection() throws Exception {
-        return integrationDataSource.getConnection();
-    }
 
-    @Override
-    public TestDatabase getObject() throws Exception {
-        // TODO Auto-generated method stub
-        return getInstance();
-    }
+        final Properties databaseSettings = new StandardTestingService().getDatabaseConnectionSettings();
+        final String url = databaseSettings.getProperty("hibernate.connection.url");
+        final String param = "&sessionVariables=FOREIGN_KEY_CHECKS=0";
+        final String user = databaseSettings.getProperty("hibernate.connection.username");
+        final String password = databaseSettings.getProperty("hibernate.connection.password");
 
-    @Override
-    public Class<?> getObjectType() {
-        return TestDatabase.class;
-    }
-
-    @Override
-    public boolean isSingleton() {
-        return true;
+        return DriverManager.getConnection(url + param, user, password);
     }
 }

@@ -40,7 +40,6 @@ import org.hibernate.stat.Statistics;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
@@ -49,13 +48,9 @@ import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.service.test.TestMode;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  *  All classes extending this class must be names as <b>*IntegrationTest.java</b> to support maven-surefire-plugin autofind
@@ -70,43 +65,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * integration test. If a test is not an integration test and does not need the database, then it should not derive from
  * this class.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml", "/org/mifos/config/resources/applicationContext.xml"})
 public class MifosIntegrationTestCase {
-
-    private static Boolean isTestingModeSet = false;
-
-    private static Boolean initialized = false;
 
     private static IDataSet latestDataDump;
 
     protected static boolean verifyDatabaseState;
-
     protected static ExcludeTableFilter excludeTables = new ExcludeTableFilter();
+
 
     @BeforeClass
     public static void init() throws Exception {
+        new TestCaseInitializer().initialize();
         verifyDatabaseState = false;
         excludeTables.excludeTable("config_key_value_integer");
         excludeTables.excludeTable("personnel");
         excludeTables.excludeTable("meeting");
         excludeTables.excludeTable("recurrence_detail");
         excludeTables.excludeTable("recur_on_day");
-
-        if (!isTestingModeSet) {
-            new StandardTestingService().setTestMode(TestMode.INTEGRATION);
-            isTestingModeSet = true;
-        }
     }
 
     @Before
     public void before() throws Exception {
-
-        if (!initialized) {
-            TestCaseInitializer.initialize();
-            initialized = true;
-        }
-
         if (verifyDatabaseState) {
             Connection connection = StaticHibernateUtil.getSessionTL().connection();
             connection.setAutoCommit(false);
