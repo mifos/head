@@ -39,12 +39,13 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 
 
-public class DatabaseMigratorIntegrationTest {
+public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
 
     private static java.sql.Connection connection;
 

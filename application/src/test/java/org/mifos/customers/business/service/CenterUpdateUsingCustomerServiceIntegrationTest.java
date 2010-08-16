@@ -56,6 +56,7 @@ import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.domain.builders.AddressBuilder;
 import org.mifos.domain.builders.PersonnelBuilder;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
@@ -77,11 +78,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * This can move from being a 'integrated test' to a 'unit test' once usage of {@link StaticHibernateUtil} is removed from {@link CustomerService}.
  * Then there will only be the need for 'integrated test' at {@link CustomerDao} level.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml",
-                                    "/org/mifos/config/resources/hibernate-daos.xml",
-                                    "/org/mifos/config/resources/services.xml" })
-public class CenterUpdateUsingCustomerServiceIntegrationTest {
+public class CenterUpdateUsingCustomerServiceIntegrationTest extends MifosIntegrationTestCase {
 
     @Autowired
     private CustomerService customerService;
@@ -100,14 +97,11 @@ public class CenterUpdateUsingCustomerServiceIntegrationTest {
 
     @BeforeClass
     public static void initialiseHibernateUtil() {
-
         Locale locale = Localization.getInstance().getMainLocale();
         AuditConfigurtion.init(locale);
-
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
-        DatabaseSetup.initializeHibernate();
     }
 
     @AfterClass
