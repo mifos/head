@@ -87,7 +87,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Override
     public List<QuestionDetail> getAllQuestions() {
-        List<QuestionEntity> questions = questionDao.getDetailsAll();
+        List<QuestionEntity> questions = questionDao.retrieveAll();
         return questionnaireMapper.mapToQuestionDetails(questions);
     }
 

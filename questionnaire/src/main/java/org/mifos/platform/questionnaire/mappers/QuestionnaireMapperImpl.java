@@ -145,7 +145,6 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         question.setShortName(questionDetail.getTitle());
         question.setQuestionText(questionDetail.getTitle());
         question.setAnswerType(mapToAnswerType(questionDetail.getType()));
-        question.setQuestionState(QuestionState.ACTIVE);
         question.setChoices(mapToChoices(questionDetail.getAnswerChoices()));
         question.setQuestionState(getQuestionState(questionDetail));
         mapBoundsForNumericQuestionDetail(questionDetail, question);
