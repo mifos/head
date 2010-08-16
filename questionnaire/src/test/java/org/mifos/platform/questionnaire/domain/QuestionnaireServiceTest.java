@@ -717,6 +717,7 @@ public class QuestionnaireServiceTest {
         SectionDto section = new SectionDtoBuilder().withName("Sec1").withOrder(1).addQuestions(question1, question2).build();
         QuestionGroupDto questionGroupDto = new QuestionGroupDtoBuilder().withTitle("QG1").withEventSource("Create", "Client").addSections(section).build();
         questionnaireService.defineQuestionGroup(questionGroupDto);
+        verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto);
         verify(questionGroupDao).create(any(QuestionGroup.class));
     }
 

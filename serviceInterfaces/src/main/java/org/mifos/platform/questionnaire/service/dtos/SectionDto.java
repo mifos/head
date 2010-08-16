@@ -28,6 +28,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.trim;
+
 @XStreamAlias("section")
 public class SectionDto implements Serializable {
     private static final long serialVersionUID = 3786423475492705740L;
@@ -65,5 +67,9 @@ public class SectionDto implements Serializable {
 
     public void setOrder(Integer order) {
         this.order = order;
+    }
+
+    public void trimName() {
+        this.name = trim(this.name);
     }
 }

@@ -33,4 +33,7 @@
                        where eventSource.event.name = :EVENT and eventSource.source.entityType = :SOURCE and questionGroup.state = 1
               ]]>
     </query>
+    <query name="QuestionGroup.retrieveCountOfQuestionGroupsWithTitle">
+      <![CDATA[select count(*) from QuestionGroup as questionGroup where questionGroup.title=:questionGroupTitle]]>
+   </query>
 </hibernate-mapping>

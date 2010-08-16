@@ -332,7 +332,7 @@ public class QuestionnaireServiceIntegrationTest {
             defineQuestion(questionTitle, QuestionType.FREETEXT);
             Assert.fail("Exception should have been thrown for duplicate question title");
         } catch (SystemException e) {
-            Assert.assertEquals(QuestionnaireConstants.DUPLICATE_QUESTION, e.getKey());
+            Assert.assertEquals(QuestionnaireConstants.QUESTION_TITILE_DUPLICATE, e.getKey());
         }
     }
 
