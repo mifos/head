@@ -37,4 +37,11 @@ public class QuestionDetailPage extends MifosPage {
         waitForPageToLoad();
         return new ViewAllQuestionsPage(selenium);
     }
+
+    public EditQuestionPage navigateToEditQuestionPage() {
+        selenium.click("link=Edit");
+        waitForPageToLoad();
+        return new EditQuestionPage(selenium);
+    }
+
 }

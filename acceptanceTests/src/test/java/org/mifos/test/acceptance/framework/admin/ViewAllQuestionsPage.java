@@ -18,4 +18,10 @@ public class ViewAllQuestionsPage extends MifosPage {
         waitForPageToLoad();
         return new QuestionDetailPage(selenium);        
     }
+
+    public AdminPage navigateToAdminPage() {
+        selenium.click("link="+"Admin");
+        waitForPageToLoad();
+        return new AdminPage(selenium);
+    }
 }

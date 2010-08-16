@@ -26,6 +26,9 @@ import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.EditQuestionPage;
+import org.mifos.test.acceptance.framework.admin.QuestionDetailPage;
+import org.mifos.test.acceptance.framework.admin.ViewAllQuestionsPage;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPage;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIParameters;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPreviewPage;
@@ -81,6 +84,13 @@ public class ClientTest extends UiTestCaseBase {
     public static final String EXPECTED_DATE_FORMAT = "%02d/%02d/%04d";
     public static final String NUMBER = "Number";
     public static final String SMART_SELECT = "Smart Select";
+    private String questionGroupTitle;
+    private String question1;
+    private String question2;
+    private String response;
+    private ClientViewDetailsPage viewClientDetailsPage;
+    private Map<Integer, QuestionGroup> questionGroupInstancesOfClient;
+    private String sectionName;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -184,28 +194,122 @@ public class ClientTest extends UiTestCaseBase {
     public void searchForClientAndAddSurveysTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
-        String questionGroupTitle = "QG1" + random.nextInt(100);
-        String question1 = "FT_" + random.nextInt(100);
-        String question2 = "MS_" + random.nextInt(100);
-        String answer = "Hello World";
+        createQuestionGroup();
+        navigateToClientDetailsPage();
 
-        createQuestionGroupForViewClient(questionGroupTitle, question1, question2);
-        ClientViewDetailsPage viewDetailsPage = getClientViewDetailsPage("Stu1232993852651", "Stu1232993852651 Client1232993852651: ID 0002-000000003");
-        viewDetailsPage = testAttachSurvey(questionGroupTitle, question1, question2, answer, viewDetailsPage);
+        testAttachQuestionGroup(response);
+        verifyQuestionGroupInstanceListing(1);
+        verifyQuestionGroupResponse(response);
 
-        Map<Integer, QuestionGroup> questionGroups = viewDetailsPage.getQuestionGroupInstances();
-        Integer latestInstanceId = latestInstanceId(questionGroups);
-        QuestionGroup latestInstance = questionGroups.get(latestInstanceId);
-        verifyLatestInstanceDetails(latestInstance, questionGroupTitle, 1, questionGroups);
-        viewDetailsPage = verifyLatestInstanceResponses(latestInstanceId, viewDetailsPage, question1, question2, answer);
+        testEditQuestionGroup(response + 1);
+        verifyQuestionGroupInstanceListing(2);
+        verifyQuestionGroupResponse(response +1);
 
-        viewDetailsPage = editViewSurvey(question1, answer + 1, viewDetailsPage, latestInstanceId);
+        testShouldEditInactiveQuestion(response + 2);
+        verifyQuestionGroupInstanceListing(3);
+        verifyQuestionGroupResponse(response +2);
 
-        questionGroups = viewDetailsPage.getQuestionGroupInstances();
-        latestInstanceId = latestInstanceId(questionGroups);
-        latestInstance = questionGroups.get(latestInstanceId);
-        verifyLatestInstanceDetails(latestInstance, questionGroupTitle, 2, questionGroups);
-        verifyLatestInstanceResponses(latestInstanceId, viewDetailsPage, question1, question2, answer + 1);
+        testSectionShouldNotAppearInQuestionnaireWhenAllQuestionsAreInactive();
+    }
+
+    private void testSectionShouldNotAppearInQuestionnaireWhenAllQuestionsAreInactive() {
+        testDeactivateQuestion(question2);
+        navigateToClientDetailsPage();
+        viewClientDetailsPage.getQuestionnairePage(questionGroupTitle);
+        Assert.assertFalse(sectionName + " should not be present on questionnaire when all questions are inactive",
+                selenium.isTextPresent(sectionName));
+    }
+
+    private void testShouldEditInactiveQuestion(String response) {
+        testDeactivateQuestion(question1);
+        navigateToClientDetailsPage();
+        testEditQuestionGroup(response);
+    }
+
+    private void testDeactivateQuestion(String question1) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ViewAllQuestionsPage viewAllQuestionsPage = adminPage.navigateToViewAllQuestions();
+        QuestionDetailPage questionDetailPage = viewAllQuestionsPage.navigateToQuestionDetail(question1);
+        EditQuestionPage editQuestionPage = questionDetailPage.navigateToEditQuestionPage();
+        questionDetailPage = editQuestionPage.deactivate();
+    }
+
+
+    private void testEditQuestionGroup(String answer) {
+        int instanceId = latestInstanceId(questionGroupInstancesOfClient);
+        QuestionGroupResponsePage questionGroupResponsePage = viewClientDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
+        QuestionnairePage questionnairePage = questionGroupResponsePage.navigateToEditResponses();
+        verifyCancel(questionnairePage);
+        questionGroupResponsePage = viewClientDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
+        questionnairePage = questionGroupResponsePage.navigateToEditResponses();
+        questionnairePage.setResponse(question1, answer);
+        MifosPage mifosPage = questionnairePage.submit();
+        Assert.assertTrue(mifosPage instanceof ClientViewDetailsPage);
+        ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) mifosPage;
+        clientViewDetailsPage.verifyPage();
+        viewClientDetailsPage = clientViewDetailsPage;
+    }
+
+    private void verifyQuestionGroupResponse(String response) {
+        QuestionGroupResponsePage questionGroupResponsePage = viewClientDetailsPage.navigateToQuestionGroupResponsePage(latestInstanceId(questionGroupInstancesOfClient));
+        questionGroupResponsePage.verifyPage();
+        String msg = response + " not found for question " + question1 + ". Instead found " + questionGroupResponsePage.getAnswerHtml(question1);
+        Assert.assertTrue(msg, questionGroupResponsePage.getAnswerHtml(question1).contains(response));
+        Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice1, Choice3, Choice4"));
+        viewClientDetailsPage = questionGroupResponsePage.navigateToViewClientDetailsPage();
+        viewClientDetailsPage.verifyPage();
+    }
+
+    private void verifyQuestionGroupInstanceListing(int expectedSize) {
+        questionGroupInstancesOfClient = viewClientDetailsPage.getQuestionGroupInstances();
+        QuestionGroup latestInstance = getLatestQuestionGroupInstance();
+        Assert.assertEquals(expectedSize, questionGroupInstancesOfClient.size());
+        Calendar calendar = Calendar.getInstance();
+        String expectedDate = String.format(EXPECTED_DATE_FORMAT, calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
+        Assert.assertEquals(questionGroupTitle, latestInstance.getName());
+        Assert.assertEquals(expectedDate, latestInstance.getDate());
+    }
+
+    private QuestionGroup getLatestQuestionGroupInstance() {
+        return questionGroupInstancesOfClient.get(latestInstanceId(questionGroupInstancesOfClient));
+    }
+
+    private void testAttachQuestionGroup(String response) {
+        QuestionnairePage questionnairePage = viewClientDetailsPage.getQuestionnairePage(questionGroupTitle);
+        verifyCancel(questionnairePage);
+        questionnairePage = checkMandatoryQuestionValidation(questionGroupTitle, question1, question2, viewClientDetailsPage);
+        questionnairePage.setResponse(question1, response);
+        MifosPage mifosPage = questionnairePage.submit();
+        Assert.assertTrue(mifosPage instanceof ClientViewDetailsPage);
+        ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) mifosPage;
+        clientViewDetailsPage.verifyPage();
+        viewClientDetailsPage = clientViewDetailsPage;
+    }
+
+    private void navigateToClientDetailsPage() {
+        ClientsAndAccountsHomepage clientsPage = navigationHelper.navigateToClientsAndAccountsPage();
+        ClientSearchResultsPage searchResultsPage = clientsPage.searchForClient("Stu1232993852651");
+        searchResultsPage.verifyPage();
+        viewClientDetailsPage = searchResultsPage.navigateToSearchResult("Stu1232993852651 Client1232993852651: ID 0002-000000003");
+    }
+
+    private void createQuestionGroup() {
+        questionGroupTitle = "QG1" + random.nextInt(100);
+        question1 = "FT_" + random.nextInt(100);
+        question2 = "MS_" + random.nextInt(100);
+        response = "Hello World";
+
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage().verifyPage();
+        createQuestionPage.addQuestion(getCreateQuestionParams(question1, FREE_TEXT, null));
+        createQuestionPage.addQuestion(getCreateQuestionParams(question2, MULTI_SELECT, asList("Choice1", "Choice2", "Choice3", "Choice4")));
+        adminPage = createQuestionPage.submitQuestions();
+
+        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage().verifyPage();
+        CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question1, question2), "View Client");
+        createQuestionGroupPage.addSection(parameters);
+        createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
+        createQuestionGroupPage.submit(parameters);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -230,58 +334,11 @@ public class ClientTest extends UiTestCaseBase {
         clientDetailsPage.verifyPage();
     }
 
-    @SuppressWarnings("PMD.AvoidReassigningParameters")
-    private ClientViewDetailsPage verifyLatestInstanceResponses(Integer latestInstanceId, ClientViewDetailsPage viewDetailsPage, String question1,
-                                                                String question2, String expectedAnswer) {
-        QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(latestInstanceId);
-        questionGroupResponsePage.verifyPage();
-        String msg = expectedAnswer + " not found for question " + question1 + ". Instead found " + questionGroupResponsePage.getAnswerHtml(question1);
-        Assert.assertTrue(msg, questionGroupResponsePage.getAnswerHtml(question1).contains(expectedAnswer));
-        Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice1, Choice3, Choice4"));
-        viewDetailsPage = questionGroupResponsePage.navigateToViewClientDetailsPage();
-        viewDetailsPage.verifyPage();
-        return viewDetailsPage;
-    }
-
     private Map<String, String> getChoiceTags() {
         Map<String,String> tags = new HashMap<String, String>();
         tags.put("Tag1", "Choice1");
         tags.put("Tag3", "Choice2");
         return tags;
-    }
-
-    private ClientViewDetailsPage testAttachSurvey(String questionGroupTitle, String question1, String question2, String answer1, ClientViewDetailsPage viewDetailsPage) {
-        QuestionnairePage questionnairePage = viewDetailsPage.getQuestionnairePage(questionGroupTitle);
-        verifyCancel(questionnairePage);
-        questionnairePage = checkMandatoryQuestionValidation(questionGroupTitle, question1, question2, viewDetailsPage);
-        questionnairePage.setResponse(question1, answer1);
-        MifosPage mifosPage = questionnairePage.submit();
-        Assert.assertTrue(mifosPage instanceof ClientViewDetailsPage);
-        ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) mifosPage;
-        clientViewDetailsPage.verifyPage();
-        return clientViewDetailsPage;
-    }
-
-    private void verifyLatestInstanceDetails(QuestionGroup latestInstance, String questionGroupTitle, int expectedSize, Map<Integer, QuestionGroup> questionGroups) {
-        Assert.assertEquals(expectedSize, questionGroups.size());
-        Calendar calendar = Calendar.getInstance();
-        String expectedDate = String.format(EXPECTED_DATE_FORMAT, calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
-        Assert.assertEquals(questionGroupTitle, latestInstance.getName());
-        Assert.assertEquals(expectedDate, latestInstance.getDate());
-    }
-
-    private ClientViewDetailsPage editViewSurvey(String question1, String answer1, ClientViewDetailsPage viewDetailsPage, int instanceId) {
-        QuestionGroupResponsePage questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
-        QuestionnairePage questionnairePage = questionGroupResponsePage.navigateToEditResponses();
-        verifyCancel(questionnairePage);
-        questionGroupResponsePage = viewDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
-        questionnairePage = questionGroupResponsePage.navigateToEditResponses();
-        questionnairePage.setResponse(question1, answer1);
-        MifosPage mifosPage = questionnairePage.submit();
-        Assert.assertTrue(mifosPage instanceof ClientViewDetailsPage);
-        ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) mifosPage;
-        clientViewDetailsPage.verifyPage();
-        return clientViewDetailsPage;
     }
 
     private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1, String question2, ClientViewDetailsPage viewDetailsPage) {
@@ -298,13 +355,6 @@ public class ClientTest extends UiTestCaseBase {
         ClientViewDetailsPage viewDetailsPage = questionnairePage.cancel();
         viewDetailsPage.verifyPage();
         return viewDetailsPage;
-    }
-
-    private ClientViewDetailsPage getClientViewDetailsPage(String searchName, String clientName) {
-        ClientsAndAccountsHomepage clientsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        ClientSearchResultsPage searchResultsPage = clientsPage.searchForClient(searchName);
-        searchResultsPage.verifyPage();
-        return searchResultsPage.navigateToSearchResult(clientName);
     }
 
     public Integer latestInstanceId(Map<Integer, QuestionGroup> questionGroups) {
@@ -326,26 +376,13 @@ public class ClientTest extends UiTestCaseBase {
         cqGroupPage.submit(parameters);
     }
 
-    private void createQuestionGroupForViewClient(String questionGroupTitle, String question1, String question2) {
-        AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage().verifyPage();
-        createQuestionPage.addQuestion(getCreateQuestionParams(question1, FREE_TEXT, null));
-        createQuestionPage.addQuestion(getCreateQuestionParams(question2, MULTI_SELECT, asList("Choice1", "Choice2", "Choice3", "Choice4")));
-        adminPage = createQuestionPage.submitQuestions();
-
-        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage().verifyPage();
-        CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question1, question2), "View Client");
-        createQuestionGroupPage.addSection(parameters);
-        createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
-        createQuestionGroupPage.submit(parameters);
-    }
-
     private CreateQuestionGroupParameters getCreateQuestionGroupParameters(String questionGroupTitle, List<String> questions, String appliesTo) {
         CreateQuestionGroupParameters parameters = new CreateQuestionGroupParameters();
         parameters.setTitle(questionGroupTitle);
         parameters.setAppliesTo(appliesTo);
         parameters.setAnswerEditable(true);
-        parameters.setSectionName("Default Section");
+        sectionName = "Default Section";
+        parameters.setSectionName(sectionName);
         parameters.setQuestions(questions);
         return parameters;
     }

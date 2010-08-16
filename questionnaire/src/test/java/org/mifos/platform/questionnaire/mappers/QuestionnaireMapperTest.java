@@ -40,6 +40,7 @@ import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.QuestionGroupInstance;
 import org.mifos.platform.questionnaire.domain.QuestionGroupResponse;
 import org.mifos.platform.questionnaire.domain.QuestionGroupState;
+import org.mifos.platform.questionnaire.domain.QuestionState;
 import org.mifos.platform.questionnaire.domain.Section;
 import org.mifos.platform.questionnaire.domain.SectionQuestion;
 import org.mifos.platform.questionnaire.matchers.EventSourcesMatcher;
@@ -108,9 +109,11 @@ public class QuestionnaireMapperTest {
     @Test
     public void shouldMapQuestionDetailToQuestion() {
         QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.FREETEXT);
+        questionDefinition.setActive(false);
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
         assertThat(question.getAnswerTypeAsEnum(), CoreMatchers.is(AnswerType.FREETEXT));
         assertThat(question.getQuestionText(), is(TITLE));
+        assertThat(question.getQuestionStateAsEnum(), is(QuestionState.INACTIVE));
     }
 
     @Test
@@ -124,6 +127,7 @@ public class QuestionnaireMapperTest {
         assertThat(question.getQuestionText(), is(TITLE));
         assertThat(question.getShortName(), is(TITLE));
         assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity(choice1.getValue()), new QuestionChoiceEntity(choice2.getValue()))));
+        assertThat(question.getQuestionStateAsEnum(), is(QuestionState.ACTIVE));
     }
 
     @Test
@@ -133,12 +137,14 @@ public class QuestionnaireMapperTest {
         ChoiceDetail choice2 = new ChoiceDetail("choice2");
         choice2.setTags(asList("Tag3"));
         QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.SMART_SELECT);
+        questionDefinition.setActive(true);
         questionDefinition.setAnswerChoices(asList(choice1, choice2));
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
         assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.SMARTSELECT));
         assertThat(question.getQuestionText(), is(TITLE));
         assertThat(question.getShortName(), is(TITLE));
         assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(getChoiceEntity("choice1", "Tag1", "Tag2"), getChoiceEntity("choice2", "Tag3"))));
+        assertThat(question.getQuestionStateAsEnum(), is(QuestionState.ACTIVE));
     }
 
     private QuestionChoiceEntity getChoiceEntity(String choiceText, String... tagTexts) {
