@@ -15,7 +15,7 @@
     </view-state>
 
     <action-state id="uploadQuestionGroupContinue">
-        <evaluate expression="uploadQuestionGroupController.upload(questionGroupForm, flowRequestContext)" />
+        <evaluate expression="uploadQuestionGroupController.upload(uploadQuestionGroupForm, flowRequestContext)" />
         <transition on="success" to="uploadQuestionGroupSuccess" />
         <transition on="failure" to="uploadQuestionGroup" />
     </action-state>

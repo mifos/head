@@ -1,4 +1,4 @@
-<%-- 
+<%--
 Copyright (c) 2005-2008 Grameen Foundation USA
 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
 All rights reserved.
@@ -165,9 +165,7 @@ while(enn.hasMoreElements()){
 						<tr class="fontnormal">
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
-							<td><html-el:link styleId="admin.link.uploadPPI"
-								action="uploadPPI.ftl">
-								<mifos:mifoslabel name="admin.uploadPPI" /></html-el:link>
+							<td><a id="admin.link.uploadPPI" href="uploadQuestionGroup.ftl"><mifos:mifoslabel name="admin.uploadPPI" /></a></td>
 						</tr>
 					</table>
 					 <br>

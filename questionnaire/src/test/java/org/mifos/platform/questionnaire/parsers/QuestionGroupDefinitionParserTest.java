@@ -31,6 +31,7 @@ import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -43,7 +44,9 @@ public class QuestionGroupDefinitionParserTest {
     @Test
     public void shouldParseQuestionDefinitionXml() throws IOException {
         QuestionGroupDefinitionParser questionGroupDefinitionParser = new QuestionGroupDefinitionParserImpl();
-        QuestionGroupDto questionGroupDto = questionGroupDefinitionParser.parse("/org/mifos/platform/questionnaire/QuestionGroupDefinition.xml");
+        String questionGroupDefXml = "/org/mifos/platform/questionnaire/QuestionGroupDefinition.xml";
+        InputStream inputStream = getClass().getResourceAsStream(questionGroupDefXml);
+        QuestionGroupDto questionGroupDto = questionGroupDefinitionParser.parse(inputStream);
         assertQuestionGroupDto(questionGroupDto);
         EventSource eventSource = questionGroupDto.getEventSource();
         assertEventSource(eventSource);

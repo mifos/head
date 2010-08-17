@@ -38,7 +38,7 @@
             <fieldset>
                 <ol>
                     <li>
-                        <label for="country"><span class="red">*</span>[@spring.message
+                        <label for="selectedCountry"><span class="red">*</span>[@spring.message
                             "questionnaire.country"/]:</label>
                         [@mifosmacros.formSingleSelectWithPrompt "uploadQuestionGroupForm.selectedCountry", uploadQuestionGroupForm.countries,
                         "--select one--" /]

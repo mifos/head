@@ -21,6 +21,8 @@
 package org.mifos.platform.questionnaire.parsers;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.StreamException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionType;
@@ -28,8 +30,13 @@ import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_UPLOAD_FAILED;
 
 public final class QuestionGroupDefinitionParserImpl implements QuestionGroupDefinitionParser {
     private final XStream xstream;
@@ -39,15 +46,41 @@ public final class QuestionGroupDefinitionParserImpl implements QuestionGroupDef
     }
 
     @Override
-    public QuestionGroupDto parse(String questionGroupDefXml) throws IOException {
-        InputStream inputStream = null;
+    public QuestionGroupDto parse(String questionGroupDefXmlFilePath) {
+        return parseSafely(questionGroupDefXmlFilePath);
+    }
+
+    @Override
+    public QuestionGroupDto parse(InputStream questionGroupDefInputStream) {
+        return parseSafely(questionGroupDefInputStream);
+    }
+
+    @SuppressWarnings({"ThrowFromFinallyBlock", "PMD.DoNotThrowExceptionInFinally"})
+    private QuestionGroupDto parseSafely(String questionGroupDefXmlFilePath) {
+        BufferedReader bufferedReader = null;
         try {
-            inputStream = getClass().getResourceAsStream(questionGroupDefXml);
-            return (QuestionGroupDto) xstream.fromXML(inputStream);
+            bufferedReader = new BufferedReader(new FileReader(questionGroupDefXmlFilePath));
+            return (QuestionGroupDto) xstream.fromXML(bufferedReader);
+        } catch (FileNotFoundException e) {
+            throw new SystemException(PPI_SURVEY_UPLOAD_FAILED, e);
+        } catch (StreamException e) {
+            throw new SystemException(PPI_SURVEY_UPLOAD_FAILED, e);
         } finally {
-            if (inputStream != null) {
-                inputStream.close();
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    throw new SystemException(PPI_SURVEY_UPLOAD_FAILED, e);
+                }
             }
+        }
+    }
+
+    private QuestionGroupDto parseSafely(InputStream questionGroupDefInputStream) {
+        try {
+            return (QuestionGroupDto) xstream.fromXML(questionGroupDefInputStream);
+        } catch (StreamException e) {
+            throw new SystemException(PPI_SURVEY_UPLOAD_FAILED, e);
         }
     }
 
