@@ -35,6 +35,10 @@ import static org.mifos.platform.questionnaire.QuestionnaireConstants.SELECT_ONE
 @Controller
 public class UploadQuestionGroupController extends QuestionnaireController {
 
+    public UploadQuestionGroupController() {
+        super();
+    }
+
     public UploadQuestionGroupController(QuestionnaireServiceFacade questionnaireServiceFacade) {
         super(questionnaireServiceFacade);
     }
