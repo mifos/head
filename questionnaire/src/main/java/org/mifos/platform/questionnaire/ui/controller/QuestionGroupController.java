@@ -214,7 +214,7 @@ public class QuestionGroupController extends QuestionnaireController {
     }
 
     private boolean appliesToNotPresent(String eventSourceId) {
-        return StringUtils.isEmpty(eventSourceId) || "--select one--".equals(eventSourceId);
+        return StringUtils.isEmpty(eventSourceId) || QuestionnaireConstants.SELECT_ONE.equals(eventSourceId);
     }
 
     private boolean sectionsNotPresent(List<SectionDetailForm> sections) {

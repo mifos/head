@@ -18,12 +18,13 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.parsers;
-
-import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+package org.mifos.platform.questionnaire.domain.ppi;
 
 import java.io.IOException;
+import java.util.List;
 
-public interface QuestionGroupDefinitionParser {
-    QuestionGroupDto parse(String questionGroupDefXml) throws IOException;
+public interface PPISurveyLocator {
+    List<String> getAllPPISurveyFiles() throws IOException;
+
+    String getPPIUploadFileForCountry(String country) throws IOException;
 }

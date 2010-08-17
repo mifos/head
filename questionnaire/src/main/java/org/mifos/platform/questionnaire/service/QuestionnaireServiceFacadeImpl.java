@@ -123,6 +123,16 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         questionnaireService.defineQuestionGroup(questionGroupDto);
     }
 
+    @Override
+    public List<String> getAllCountriesForPPI() {
+        return questionnaireService.getAllCountriesForPPI();
+    }
+
+    @Override
+    public void uploadPPIQuestionGroup(String country) {
+        questionnaireService.uploadPPIQuestionGroup(country);
+    }
+
     private EventSource getEventSource(String event, String source) {
         return new EventSource(event, source, String.format("%s.%s", event, source));
     }

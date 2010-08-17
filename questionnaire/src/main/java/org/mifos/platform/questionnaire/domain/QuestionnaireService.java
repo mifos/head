@@ -60,4 +60,8 @@ public interface QuestionnaireService {
     QuestionGroupInstanceDetail getQuestionGroupInstance(int questionGroupInstanceId);
 
     Integer defineQuestionGroup(QuestionGroupDto questionGroupDto);
+
+    List<String> getAllCountriesForPPI();
+
+    Integer uploadPPIQuestionGroup(String country);
 }

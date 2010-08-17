@@ -296,6 +296,20 @@ public class QuestionnaireServiceFacadeTest {
         verify(questionnaireService).defineQuestionGroup(questionGroupDto);
     }
 
+    @Test
+    public void testGetAllCountriesForPPI() {
+        List<String> countries = asList("India", "China", "Canada");
+        when(questionnaireService.getAllCountriesForPPI()).thenReturn(countries);
+        assertThat(questionnaireServiceFacade.getAllCountriesForPPI(), is(countries));
+        verify(questionnaireService).getAllCountriesForPPI();
+    }
+    
+    @Test
+    public void testUploadPPIQuestionGroup() {
+        questionnaireServiceFacade.uploadPPIQuestionGroup("India");
+        verify(questionnaireService).uploadPPIQuestionGroup("India");
+    }
+    
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail() {
         QuestionGroupInstanceDetail groupInstanceDetail = new QuestionGroupInstanceDetail();
         groupInstanceDetail.setQuestionGroupDetail(new QuestionGroupDetail());

@@ -30,6 +30,10 @@ public class QuestionnaireConstants {
     public static final String QUESTION_ORDER_DUPLICATE = "questionnaire.error.QuestionOrderDuplicate";
     public static final String QUESTION_CHOICES_INSUFFICIENT = "questionnaire.error.QuestionChoicesInsufficient";
     public static final String QUESTION_CHOICES_INVALID = "questionnaire.error.QuestionChoicesInvalid";
+    public static final String PPI_SURVEY_UPLOAD_FAILED = "questionnaire.error.PPISurveyUploadFailed";
     public static final int QUESTION_GROUP_TITLE_MAX_LENGTH = 50;
     public static final int MAX_CHOICES_FOR_QUESTION = 2;
+    public static final String PPI_SURVEY_FILE_PREFIX = "PPISurvey";
+    public static final String PPI_SURVEY_FILE_EXT = ".xml";
+    public static final String SELECT_ONE = "--select one--";
 }

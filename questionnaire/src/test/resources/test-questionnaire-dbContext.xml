@@ -22,6 +22,9 @@
     <bean id="customIntegrationTestProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
         <constructor-arg value="local.properties"/>
     </bean>
+    <bean id="questionnaireProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
+        <constructor-arg value="questionnaire.properties"/>
+    </bean>
     <bean id="integrationPropertyConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="ignoreResourceNotFound" value="true"/>
@@ -29,6 +32,7 @@
             <list>
                 <ref bean="defaultIntegrationTestProperties"/>
                 <ref bean="customIntegrationTestProperties"/>
+                <ref bean="questionnaireProperties"/>
             </list>
         </property>
     </bean>

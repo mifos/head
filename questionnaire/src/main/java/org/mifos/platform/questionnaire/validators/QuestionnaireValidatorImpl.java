@@ -144,17 +144,25 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
             if (QuestionType.INVALID == question.getType()) {
                 parentException.addChildException(new ValidationException(QUESTION_TYPE_NOT_PROVIDED));
             } else if (question.isTypeWithChoices()) {
-                List<ChoiceDetail> choices = question.getChoices();
-                if (isEmpty(choices) || choices.size() < MAX_CHOICES_FOR_QUESTION) {
-                    parentException.addChildException(new ValidationException(QUESTION_CHOICES_INSUFFICIENT));
-                } else if (choicesHaveInvalidValues(choices) || choicesHaveInvalidOrders(choices)) {
-                    parentException.addChildException(new ValidationException(QUESTION_CHOICES_INVALID));
-                }
+                validateChoices(question, parentException);
             } else if (QuestionType.NUMERIC == question.getType()) {
-                if (areInValidNumericBounds(question.getMinValue(), question.getMaxValue())) {
-                    parentException.addChildException(new ValidationException(INVALID_NUMERIC_BOUNDS));
-                }
+                validateNumericBounds(question, parentException);
             }
+        }
+    }
+
+    private void validateNumericBounds(QuestionDto question, ValidationException parentException) {
+        if (areInValidNumericBounds(question.getMinValue(), question.getMaxValue())) {
+            parentException.addChildException(new ValidationException(INVALID_NUMERIC_BOUNDS));
+        }
+    }
+
+    private void validateChoices(QuestionDto question, ValidationException parentException) {
+        List<ChoiceDetail> choices = question.getChoices();
+        if (isEmpty(choices) || choices.size() < MAX_CHOICES_FOR_QUESTION) {
+            parentException.addChildException(new ValidationException(QUESTION_CHOICES_INSUFFICIENT));
+        } else if (choicesHaveInvalidValues(choices) || choicesHaveInvalidOrders(choices)) {
+            parentException.addChildException(new ValidationException(QUESTION_CHOICES_INVALID));
         }
     }
 

@@ -31,10 +31,12 @@ import org.mifos.platform.questionnaire.builders.ChoiceDetailBuilder;
 import org.mifos.platform.questionnaire.builders.QuestionDtoBuilder;
 import org.mifos.platform.questionnaire.builders.QuestionGroupDtoBuilder;
 import org.mifos.platform.questionnaire.builders.SectionDtoBuilder;
+import org.mifos.platform.questionnaire.domain.ppi.PPISurveyLocator;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
+import org.mifos.platform.questionnaire.parsers.QuestionGroupDefinitionParser;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
@@ -58,6 +60,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -101,6 +104,12 @@ public class QuestionnaireServiceTest {
     @Mock
     private EventSourceDao eventSourceDao;
 
+    @Mock
+    private PPISurveyLocator ppiSurveyLocator;
+
+    @Mock
+    private QuestionGroupDefinitionParser questionGroupDefinitionParser;
+
     private static final String QUESTION_TITLE = "Test QuestionDetail Title";
     private static final String QUESTION_GROUP_TITLE = "Question Group Title";
     public static final String EVENT_CREATE = "Create";
@@ -110,7 +119,9 @@ public class QuestionnaireServiceTest {
     @Before
     public void setUp() {
         QuestionnaireMapper questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao, questionGroupInstanceDao);
-        questionnaireService = new QuestionnaireServiceImpl(questionnaireValidator, questionDao, questionnaireMapper, questionGroupDao, eventSourceDao, questionGroupInstanceDao);
+        questionnaireService = new QuestionnaireServiceImpl(questionnaireValidator, questionDao, questionnaireMapper,
+                                            questionGroupDao, eventSourceDao, questionGroupInstanceDao,
+                                            ppiSurveyLocator, questionGroupDefinitionParser);
     }
 
     @Test
@@ -745,14 +756,44 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldDefineQuestionGroupFromDto() {
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        questionnaireService.defineQuestionGroup(questionGroupDto);
+        verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto);
+        verify(questionGroupDao).create(any(QuestionGroup.class));
+    }
+
+    private QuestionGroupDto getQuestionGroupDto() {
         QuestionDto question1 = new QuestionDtoBuilder().withTitle("Ques1").withMandatory(true).withType(QuestionType.FREETEXT).build();
         ChoiceDetail choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
         ChoiceDetail choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
         ChoiceDetail choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
         QuestionDto question2 = new QuestionDtoBuilder().withTitle("Ques2").withType(QuestionType.SINGLE_SELECT).addChoices(choice1, choice2, choice3).build();
         SectionDto section = new SectionDtoBuilder().withName("Sec1").withOrder(1).addQuestions(question1, question2).build();
-        QuestionGroupDto questionGroupDto = new QuestionGroupDtoBuilder().withTitle("QG1").withEventSource("Create", "Client").addSections(section).build();
-        questionnaireService.defineQuestionGroup(questionGroupDto);
+        return new QuestionGroupDtoBuilder().withTitle("QG1").withEventSource("Create", "Client").addSections(section).build();
+    }
+
+    @Test
+    public void shouldGetAllCountriesForPPI() throws IOException {
+        when(ppiSurveyLocator.getAllPPISurveyFiles()).thenReturn(asList("PPISurveyINDIA.xml", "PPISurveyCHINA.xml", "PPISurveyCANADA.xml"));
+        List<String> countriesForPPI = questionnaireService.getAllCountriesForPPI();
+        assertThat(countriesForPPI, is(notNullValue()));
+        assertThat(countriesForPPI.size(), is(3));
+        assertThat(countriesForPPI.get(0), is("INDIA"));
+        assertThat(countriesForPPI.get(1), is("CHINA"));
+        assertThat(countriesForPPI.get(2), is("CANADA"));
+        verify(ppiSurveyLocator).getAllPPISurveyFiles();
+    }
+
+    @Test
+    public void shouldUploadPPIQuestionGroup() throws IOException {
+        String ppiXmlPath = "org/mifos/platform/questionnaire/PPISurveyINDIA.xml";
+        String country = "India";
+        when(ppiSurveyLocator.getPPIUploadFileForCountry(country)).thenReturn(ppiXmlPath);
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        when(questionGroupDefinitionParser.parse(ppiXmlPath)).thenReturn(questionGroupDto);
+        questionnaireService.uploadPPIQuestionGroup(country);
+        verify(ppiSurveyLocator).getPPIUploadFileForCountry(country);
+        verify(questionGroupDefinitionParser).parse(ppiXmlPath);
         verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto);
         verify(questionGroupDao).create(any(QuestionGroup.class));
     }

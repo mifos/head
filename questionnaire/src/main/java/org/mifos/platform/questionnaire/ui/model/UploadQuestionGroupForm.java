@@ -18,12 +18,31 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.parsers;
+package org.mifos.platform.questionnaire.ui.model;
 
-import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import java.io.Serializable;
+import java.util.List;
 
-import java.io.IOException;
+public class UploadQuestionGroupForm implements Serializable {
+    private static final long serialVersionUID = -1372371532096266005L;
 
-public interface QuestionGroupDefinitionParser {
-    QuestionGroupDto parse(String questionGroupDefXml) throws IOException;
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
+    private List<String> countries;
+    private String selectedCountry;
+
+    public List<String> getCountries() {
+        return countries;
+    }
+
+    public void setCountries(List<String> countries) {
+        this.countries = countries;
+    }
+
+    public String getSelectedCountry() {
+        return selectedCountry;
+    }
+
+    public void setSelectedCountry(String selectedCountry) {
+        this.selectedCountry = selectedCountry;
+    }
 }

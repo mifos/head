@@ -9,6 +9,14 @@
         <constructor-arg value="mainDatabase.properties"/>
     </bean>
 
+    <bean id="applicationProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
+        <constructor-arg value="applicationConfiguration.default.properties"/>
+    </bean>
+
+    <bean id="applicationCustomProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
+        <constructor-arg value="applicationConfiguration.custom.properties"/>
+    </bean>
+
     <bean id="integrationProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
         <constructor-arg value="integrationDatabase.properties"/>
     </bean>
@@ -30,6 +38,8 @@
                 <ref bean="integrationProperties"/>
                 <ref bean="acceptanceProperties"/>
                 <ref bean="customProperties"/>
+                <ref bean="applicationProperties"/>
+                <ref bean="applicationCustomProperties"/>
             </list>
         </property>
     </bean>

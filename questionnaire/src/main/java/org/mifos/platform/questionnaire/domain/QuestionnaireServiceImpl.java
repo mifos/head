@@ -22,7 +22,9 @@ package org.mifos.platform.questionnaire.domain;
 
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.domain.ppi.PPISurveyLocator;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
+import org.mifos.platform.questionnaire.parsers.QuestionGroupDefinitionParser;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
@@ -38,9 +40,14 @@ import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_EXT;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_PREFIX;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_UPLOAD_FAILED;
 
 public class QuestionnaireServiceImpl implements QuestionnaireService {
 
@@ -62,19 +69,28 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Autowired
     private QuestionnaireMapper questionnaireMapper;
 
+    @Autowired
+    private PPISurveyLocator ppiSurveyLocator;
+
+    @Autowired
+    private QuestionGroupDefinitionParser questionGroupDefinitionParser;
+
     @SuppressWarnings({"UnusedDeclaration"})
     private QuestionnaireServiceImpl() {
     }
 
     public QuestionnaireServiceImpl(QuestionnaireValidator questionnaireValidator, QuestionDao questionDao,
                                     QuestionnaireMapper questionnaireMapper, QuestionGroupDao questionGroupDao,
-                                    EventSourceDao eventSourceDao, QuestionGroupInstanceDao questionGroupInstanceDao) {
+                                    EventSourceDao eventSourceDao, QuestionGroupInstanceDao questionGroupInstanceDao,
+                                    PPISurveyLocator ppiSurveyLocator, QuestionGroupDefinitionParser questionGroupDefinitionParser) {
         this.questionnaireValidator = questionnaireValidator;
         this.questionDao = questionDao;
         this.questionnaireMapper = questionnaireMapper;
         this.questionGroupDao = questionGroupDao;
         this.eventSourceDao = eventSourceDao;
         this.questionGroupInstanceDao = questionGroupInstanceDao;
+        this.ppiSurveyLocator = ppiSurveyLocator;
+        this.questionGroupDefinitionParser = questionGroupDefinitionParser;
     }
 
     @Override
@@ -215,6 +231,32 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDto);
         return questionGroupDao.create(questionGroup);
+    }
+
+    @Override
+    public List<String> getAllCountriesForPPI() {
+        try {
+            List<String> ppiSurveyFiles = ppiSurveyLocator.getAllPPISurveyFiles();
+            List<String> countries = new ArrayList<String>();
+            for (String ppiSurveyFile : ppiSurveyFiles) {
+                String country = ppiSurveyFile.substring(PPI_SURVEY_FILE_PREFIX.length(), ppiSurveyFile.indexOf(PPI_SURVEY_FILE_EXT));
+                countries.add(country);
+            }
+            return countries;
+        } catch (IOException e) {
+            throw new SystemException(PPI_SURVEY_UPLOAD_FAILED, e);
+        }
+    }
+
+    @Override
+    public Integer uploadPPIQuestionGroup(String country) {
+        try {
+            String ppiXmlForCountry = ppiSurveyLocator.getPPIUploadFileForCountry(country);
+            QuestionGroupDto questionGroupDto = questionGroupDefinitionParser.parse(ppiXmlForCountry);
+            return defineQuestionGroup(questionGroupDto);
+        } catch (IOException e) {
+            throw new SystemException(PPI_SURVEY_UPLOAD_FAILED, e);
+        }
     }
 
     private EventSourceEntity getEventSourceEntity(EventSource eventSource) {

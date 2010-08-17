@@ -42,7 +42,7 @@ public class QuestionGroupDefinitionParserTest {
 
     @Test
     public void shouldParseQuestionDefinitionXml() throws IOException {
-        QuestionGroupDefinitionParser questionGroupDefinitionParser = new QuestionGroupDefinitionParser();
+        QuestionGroupDefinitionParser questionGroupDefinitionParser = new QuestionGroupDefinitionParserImpl();
         QuestionGroupDto questionGroupDto = questionGroupDefinitionParser.parse("/org/mifos/platform/questionnaire/QuestionGroupDefinition.xml");
         assertQuestionGroupDto(questionGroupDto);
         EventSource eventSource = questionGroupDto.getEventSource();
