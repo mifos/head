@@ -107,7 +107,7 @@ public abstract class TaskHelper {
      */
     public final void executeTask() {
         if (!isTaskAllowedToRun()) {
-            while ((new DateTimeService().getCurrentDateTime().getMillis() - timeInMillis) / (1000 * 60 * 60 * 24) != 1) {
+            while ((new DateTimeService().getCurrentDateTime().getMillis() - timeInMillis) / (1000 * 60 * 60 * 24) != 0) {
                 getLogger().info(
                         mifosTask.name + " will run catch-up execution for " + new java.util.Date(timeInMillis));
                 perform(timeInMillis + (1000 * 60 * 60 * 24));

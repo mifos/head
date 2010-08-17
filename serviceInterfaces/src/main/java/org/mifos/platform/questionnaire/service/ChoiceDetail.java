@@ -30,6 +30,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.trim;
+
 @XStreamAlias("choice")
 public class ChoiceDetail implements Serializable {
     private static final long serialVersionUID = 5839636913158754732L;
@@ -101,5 +103,9 @@ public class ChoiceDetail implements Serializable {
 
     public void setOrder(Integer order) {
         this.order = order;
+    }
+
+    public void trimValue() {
+        this.value = trim(this.value);
     }
 }

@@ -163,12 +163,6 @@ public class TestDatabase implements FactoryBean<TestDatabase> {
         return tableStart + constraintsKeys + tableEnd;
     }
 
-    // FIXME Use Spring Managed Connection
-    /**
-     * Foreign key disabled connection
-     */
-
-
     private static Connection fkDisabledConnection;
 
     private static Connection getJDBCConnection() throws Exception {

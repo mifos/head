@@ -37,7 +37,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class SpringTestUtil {
     private static ApplicationContext appContext = null;
-    private static Boolean initialized = false;
+
     /**
      * Use the root logger for lack of research as to which logger would be more
      * appropriate. {@link LoggerConstants#CONFIGURATION_LOGGER} might also be a
@@ -46,17 +46,12 @@ public class SpringTestUtil {
     private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER);
 
     /**
-     * Dynamically fetches config files since an exception is thrown if a
-     * nonexistant file is passed into
-     * {@link ClassPathXmlApplicationContext#ClassPathXmlApplicationContext(String[])}
-     * .
+     * Dynamically fetches config files since an exception is thrown if a nonexistant file is passed into
+     * {@link ClassPathXmlApplicationContext#ClassPathXmlApplicationContext(String[])} .
      */
     public static void initializeSpring() {
-        if (initialized == false) {
-            String[] configFiles = getConfigFiles();
-            appContext = new ClassPathXmlApplicationContext(configFiles);
-            initialized = true;
-        }
+        String[] configFiles = getConfigFiles();
+        appContext = new ClassPathXmlApplicationContext(configFiles);
     }
 
     /**

@@ -28,4 +28,6 @@ import java.util.List;
 public interface QuestionDao extends GenericDao<QuestionEntity, Integer> {
     List<Long> retrieveCountOfQuestionsWithTitle(String questionTitle);
     List<QuestionEntity> retrieveByState(int questionState);
+    List<QuestionEntity> retrieveAll();
+    List<QuestionEntity> retrieveByName(String questionTitle);
 }

@@ -32,33 +32,24 @@ import java.util.List;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.util.helpers.InstallmentDate;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.FeeBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.TestUtils;
-import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class AccountGetFeeDatesIntegrationTest extends MifosIntegrationTestCase {
-
-    private static MifosCurrency oldDefaultCurrency;
 
     @Autowired
     private CustomerDao customerDao;
@@ -69,18 +60,6 @@ public class AccountGetFeeDatesIntegrationTest extends MifosIntegrationTestCase 
     private MeetingBO weeklyMeeting;
     private AmountFeeBO weeklyPeriodicFeeForCenterOnly;
     private CenterBO center;
-
-    @BeforeClass
-    public static void initialiseHibernateUtil() {
-        oldDefaultCurrency = Money.getDefaultCurrency();
-        Money.setDefaultCurrency(TestUtils.RUPEE);
-        new StandardTestingService().setTestMode(TestMode.INTEGRATION);
-    }
-
-    @AfterClass
-    public static void resetCurrency() {
-        Money.setDefaultCurrency(oldDefaultCurrency);
-    }
 
     @Before
     public void cleanDatabaseTables() {

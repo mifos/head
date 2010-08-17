@@ -30,6 +30,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.trim;
+
 @XStreamAlias("question")
 public class QuestionDto implements Serializable {
     private static final long serialVersionUID = 4062506731931643620L;
@@ -103,5 +105,13 @@ public class QuestionDto implements Serializable {
 
     public void setOrder(Integer order) {
         this.order = order;
+    }
+
+    public void trimTitle() {
+        this.title = trim(this.title);
+    }
+
+    public boolean isTypeWithChoices() {
+        return this.type == QuestionType.SINGLE_SELECT || this.type == QuestionType.MULTI_SELECT || this.type == QuestionType.SMART_SELECT;
     }
 }

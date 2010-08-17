@@ -191,11 +191,30 @@ public class QuestionnaireServiceTest {
     }
 
     @Test
-    public void shouldGetAllQuestions() {
+    public void shouldGetAllActiveQuestions() {
         Mockito.when(questionDao.retrieveByState(1)).thenReturn(asList(getQuestion(1, "q1", AnswerType.DATE), getQuestion(2, "q2", AnswerType.FREETEXT)));
         List<QuestionDetail> questionDetails = questionnaireService.getAllActiveQuestions();
         Assert.assertNotNull("getAllQuestions should not return null", questionDetails);
         Mockito.verify(questionDao, times(1)).retrieveByState(1);
+
+        assertThat(questionDetails.get(0).getText(), is("q1"));
+        assertThat(questionDetails.get(0).getShortName(), is("q1"));
+        assertThat(questionDetails.get(0).getId(), is(1));
+        assertThat(questionDetails.get(0).getType(), is(QuestionType.DATE));
+
+        assertThat(questionDetails.get(1).getText(), is("q2"));
+        assertThat(questionDetails.get(1).getShortName(), is("q2"));
+        assertThat(questionDetails.get(1).getId(), is(2));
+        assertThat(questionDetails.get(1).getType(), is(QuestionType.FREETEXT));
+
+    }
+
+    @Test
+    public void shouldGetAllQuestions() {
+        Mockito.when(questionDao.retrieveAll()).thenReturn(asList(getQuestion(1, "q1", AnswerType.DATE), getQuestion(2, "q2", AnswerType.FREETEXT)));
+        List<QuestionDetail> questionDetails = questionnaireService.getAllQuestions();
+        Assert.assertNotNull("getAllQuestions should not return null", questionDetails);
+        Mockito.verify(questionDao, times(1)).retrieveAll();
 
         assertThat(questionDetails.get(0).getText(), is("q1"));
         assertThat(questionDetails.get(0).getShortName(), is("q1"));
@@ -362,19 +381,28 @@ public class QuestionnaireServiceTest {
     private Section getSectionWithQuestions(int sectionQuestionId, String sectionName, String... questionNames) {
         Section section = new Section(sectionName);
         List<SectionQuestion> sectionQuestions = new ArrayList<SectionQuestion>();
-        for (String questionName : questionNames) {
+        for (int i = 0; i < questionNames.length; i++) {
             SectionQuestion sectionQuestion = new SectionQuestion();
             sectionQuestion.setId(sectionQuestionId);
             sectionQuestion.setSection(section);
             QuestionEntity questionEntity = new QuestionEntity();
-            questionEntity.setQuestionText(questionName);
-            questionEntity.setShortName(questionName);
+            questionEntity.setQuestionText(questionNames[i]);
+            questionEntity.setShortName(questionNames[i]);
+            setEveryOtherStateActive(i, questionEntity);
             questionEntity.setChoices(new LinkedList<QuestionChoiceEntity>());
             sectionQuestion.setQuestion(questionEntity);
             sectionQuestions.add(sectionQuestion);
         }
         section.setQuestions(sectionQuestions);
         return section;
+    }
+
+    private void setEveryOtherStateActive(int i, QuestionEntity questionEntity) {
+        if (i % 2 == 0) {
+            questionEntity.setQuestionState(QuestionState.INACTIVE);
+        } else {
+            questionEntity.setQuestionState(QuestionState.ACTIVE);
+        }
     }
 
     private Section getSectionWithOneMultiSelectQuestion(int sectionQuestionId, String sectionName, String questionName, String... choices) {
@@ -533,14 +561,22 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldGetAllQuestionGroupsByEventSourceAndEntityId() {
-        QuestionGroup questionGroup1 = getQuestionGroup(1, "Title1", asList(getSectionWithQuestions(222, "Section1", "Question1")));
-        QuestionGroup questionGroup2 = getQuestionGroup(2, "Title2", asList(getSectionWithQuestions(222, "Section2", "Question2")));
+        QuestionGroup questionGroup1 = getQuestionGroup(1, "Title1", asList(getSectionWithQuestions(222, "Section1", "Question1", "Question2")));
+        QuestionGroup questionGroup2 = getQuestionGroup(2, "Title2", asList(getSectionWithQuestions(222, "Section2", "Question2"),
+                getSectionWithQuestions(222, "SectionN", "q1", "q2", "q3", "q4")));
         QuestionGroup questionGroup3 = getQuestionGroup(3, "Title3", asList(getSectionWithOneMultiSelectQuestion(222, "Section3", "Question3", "Choice1", "Choice2", "Choice3", "Choice4")));
         List<QuestionGroup> questionGroups = asList(questionGroup1, questionGroup2, questionGroup3);
         when(questionGroupDao.retrieveQuestionGroupsByEventSource("Create", "Client")).thenReturn(questionGroups);
         List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
         assertThat(questionGroupDetails, is(notNullValue()));
         assertThat(questionGroupDetails.size(), is(3));
+        assertThat(questionGroupDetails.get(0).getSectionDetails().size(), is(1));
+        assertThat(questionGroupDetails.get(1).getSectionDetails().size(), is(1));
+        assertThat(questionGroupDetails.get(1).getSectionDetails().get(0).getName(), is("SectionN"));
+        assertThat(questionGroupDetails.get(1).getSectionDetails().get(0).getQuestions().size(), is(2));
+        assertThat(questionGroupDetails.get(1).getSectionDetails().get(0).getQuestions().get(0).getTitle(), is("q2"));
+        assertThat(questionGroupDetails.get(1).getSectionDetails().get(0).getQuestions().get(1).getTitle(), is("q4"));
+        assertThat(questionGroupDetails.get(2).getSectionDetails().size(), is(1));
     }
 
     private QuestionGroupInstance getQuestionGroupInstance(int entityId, int version, QuestionGroup questionGroup, String... responses) {
@@ -595,7 +631,7 @@ public class QuestionnaireServiceTest {
         questionGroupInstance.setVersionNum(0);
         when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(1, 1)).thenReturn(asList(questionGroupInstance));
         questionnaireService.saveResponses(new QuestionGroupDetails(1, 1, asList(questionGroupDetail)));
-        verify(questionGroupInstanceDao).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(1,1);
+        verify(questionGroupInstanceDao).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(1, 1);
         verify(questionnaireValidator, times(1)).validateForQuestionGroupResponses(asList(questionGroupDetail));
         verify(questionGroupInstanceDao, times(1)).saveOrUpdateAll(Matchers.<List<QuestionGroupInstance>>any()); // TODO: Verify the contents using a custom matcher
     }
@@ -717,6 +753,7 @@ public class QuestionnaireServiceTest {
         SectionDto section = new SectionDtoBuilder().withName("Sec1").withOrder(1).addQuestions(question1, question2).build();
         QuestionGroupDto questionGroupDto = new QuestionGroupDtoBuilder().withTitle("QG1").withEventSource("Create", "Client").addSections(section).build();
         questionnaireService.defineQuestionGroup(questionGroupDto);
+        verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto);
         verify(questionGroupDao).create(any(QuestionGroup.class));
     }
 

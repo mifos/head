@@ -19,13 +19,17 @@ public class CreateQuestionPage extends MifosPage {
 
 
     public CreateQuestionPage addQuestion(CreateQuestionParameters createQuestionParameters) {
+        enterDetails(createQuestionParameters);
+        selenium.click("_eventId_addQuestion");
+        waitForPageToLoad();
+        return new CreateQuestionPage(selenium);
+    }
+
+    protected void enterDetails(CreateQuestionParameters createQuestionParameters) {
         selenium.type("currentQuestion.title", createQuestionParameters.getTitle());
         selenium.select("id=currentQuestion.type", "value=" + createQuestionParameters.getType());
         fillUpChoices(createQuestionParameters);
         fillUpNumericDetails(createQuestionParameters);
-        selenium.click("_eventId_addQuestion");
-        waitForPageToLoad();
-        return new CreateQuestionPage(selenium);
     }
 
     private void fillUpNumericDetails(CreateQuestionParameters createQuestionParameters) {

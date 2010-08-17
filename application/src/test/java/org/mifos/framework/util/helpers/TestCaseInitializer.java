@@ -26,15 +26,11 @@ import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
-import org.mifos.framework.spring.SpringTestUtil;
-import org.mifos.framework.util.StandardTestingService;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.ActivityMapper;
-import org.mifos.service.test.TestMode;
 
 /**
  * Many tests initialize themselves via this class.
@@ -47,11 +43,7 @@ import org.mifos.service.test.TestMode;
 public class TestCaseInitializer {
 
     private static Boolean initialized = false;
-
-    public TestCaseInitializer() {
-        // do nothing
-    }
-
+    
     public synchronized void initialize() throws Exception {
         if (initialized == false) {
             initializeDB();
@@ -60,17 +52,8 @@ public class TestCaseInitializer {
     }
 
     private void initializeDB() throws Exception{
-        /*
-         * Make sure TestingService is aware that we're running integration
-         * tests. This is for integration test cases that use a database,
-         * but could also apply to other "black box" tests.
-         */
-        new StandardTestingService().setTestMode(TestMode.INTEGRATION);
-
         StaticHibernateUtil.initialize();
-
         TestDatabase.createMySQLTestDatabase();
-
         // add this because it is added to Application Initializer
         Localization.getInstance().init();
 

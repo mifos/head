@@ -40,6 +40,7 @@ import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.QuestionGroupInstance;
 import org.mifos.platform.questionnaire.domain.QuestionGroupResponse;
 import org.mifos.platform.questionnaire.domain.QuestionGroupState;
+import org.mifos.platform.questionnaire.domain.QuestionState;
 import org.mifos.platform.questionnaire.domain.Section;
 import org.mifos.platform.questionnaire.domain.SectionQuestion;
 import org.mifos.platform.questionnaire.matchers.EventSourcesMatcher;
@@ -108,9 +109,11 @@ public class QuestionnaireMapperTest {
     @Test
     public void shouldMapQuestionDetailToQuestion() {
         QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.FREETEXT);
+        questionDefinition.setActive(false);
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
         assertThat(question.getAnswerTypeAsEnum(), CoreMatchers.is(AnswerType.FREETEXT));
         assertThat(question.getQuestionText(), is(TITLE));
+        assertThat(question.getQuestionStateAsEnum(), is(QuestionState.INACTIVE));
     }
 
     @Test
@@ -124,6 +127,7 @@ public class QuestionnaireMapperTest {
         assertThat(question.getQuestionText(), is(TITLE));
         assertThat(question.getShortName(), is(TITLE));
         assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity(choice1.getValue()), new QuestionChoiceEntity(choice2.getValue()))));
+        assertThat(question.getQuestionStateAsEnum(), is(QuestionState.ACTIVE));
     }
 
     @Test
@@ -133,12 +137,14 @@ public class QuestionnaireMapperTest {
         ChoiceDetail choice2 = new ChoiceDetail("choice2");
         choice2.setTags(asList("Tag3"));
         QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.SMART_SELECT);
+        questionDefinition.setActive(true);
         questionDefinition.setAnswerChoices(asList(choice1, choice2));
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
         assertThat(question.getAnswerTypeAsEnum(), is(AnswerType.SMARTSELECT));
         assertThat(question.getQuestionText(), is(TITLE));
         assertThat(question.getShortName(), is(TITLE));
         assertThat(question.getChoices(), new QuestionChoicesMatcher(asList(getChoiceEntity("choice1", "Tag1", "Tag2"), getChoiceEntity("choice2", "Tag3"))));
+        assertThat(question.getQuestionStateAsEnum(), is(QuestionState.ACTIVE));
     }
 
     private QuestionChoiceEntity getChoiceEntity(String choiceText, String... tagTexts) {
@@ -182,12 +188,16 @@ public class QuestionnaireMapperTest {
     @Test
     public void shouldMapQuestionToQuestionDetail() {
         QuestionEntity question = getQuestion(TITLE, AnswerType.FREETEXT);
+        question.setQuestionState(QuestionState.INACTIVE);
         QuestionDetail questionDetail = questionnaireMapper.mapToQuestionDetail(question);
         assertQuestionDetail(questionDetail, TITLE, QuestionType.FREETEXT);
+        assertThat(questionDetail.isActive(), is(false));
 
         question = getQuestion(TITLE, AnswerType.MULTISELECT, asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2")));
+        question.setQuestionState(QuestionState.ACTIVE);
         questionDetail = questionnaireMapper.mapToQuestionDetail(question);
         assertQuestionDetail(questionDetail, TITLE, QuestionType.MULTI_SELECT, asList("choice1", "choice2"));
+        assertThat(questionDetail.isActive(), is(true));
 
         question = getQuestion(TITLE, AnswerType.NUMBER);
         question.setNumericMin(10);
@@ -196,6 +206,7 @@ public class QuestionnaireMapperTest {
         assertQuestionDetail(questionDetail, TITLE, QuestionType.NUMERIC);
         assertThat(questionDetail.getNumericMin(), is(10));
         assertThat(questionDetail.getNumericMax(), is(100));
+        assertThat(questionDetail.isActive(), is(true));
     }
 
     @Test
@@ -377,32 +388,32 @@ public class QuestionnaireMapperTest {
         SectionQuestion sectionQuestion1 = new SectionQuestion();
         sectionQuestion1.setId(14);
         when(sectionQuestionDao.getDetails(14)).thenReturn(sectionQuestion1);
-        
+
         SectionQuestion sectionQuestion2 = new SectionQuestion();
         sectionQuestion2.setId(15);
         when(sectionQuestionDao.getDetails(15)).thenReturn(sectionQuestion2);
 
         QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
         questionGroupInstance.setVersionNum(3);
-        when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,10)).thenReturn(asList(questionGroupInstance));
-        when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,11)).thenReturn(asList(questionGroupInstance));
+        when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201, 10)).thenReturn(asList(questionGroupInstance));
+        when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201, 11)).thenReturn(asList(questionGroupInstance));
 
         List<QuestionDetail> questionDetails1 = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
-        List<SectionDetail> sectionDetails1 = asList(getSectionDetailWithQuestions(14, "Sec1", questionDetails1, "value",null));
+        List<SectionDetail> sectionDetails1 = asList(getSectionDetailWithQuestions(14, "Sec1", questionDetails1, "value", null));
         QuestionGroupDetail questionGroupDetail1 = new QuestionGroupDetail(10, "QG1", new EventSource("Create", "Client", null), sectionDetails1, true);
 
         List<QuestionDetail> questionDetails2 = asList(new QuestionDetail(13, "Question 2", "Question 2", QuestionType.DATE, true));
-        List<SectionDetail> sectionDetails2 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails2, null,null));
+        List<SectionDetail> sectionDetails2 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails2, null, null));
         QuestionGroupDetail questionGroupDetail2 = new QuestionGroupDetail(11, "QG2", new EventSource("Create", "Client", null), sectionDetails2, true);
 
         QuestionDetail questionDetail = new QuestionDetail(13, "Question 2", "Question 2", QuestionType.MULTI_SELECT, true);
-        questionDetail.setAnswerChoices(asList(new ChoiceDetail("a1"),new ChoiceDetail("a2"),new ChoiceDetail("a3")));
+        questionDetail.setAnswerChoices(asList(new ChoiceDetail("a1"), new ChoiceDetail("a2"), new ChoiceDetail("a3")));
         List<QuestionDetail> questionDetails3 = asList(questionDetail);
-        List<SectionDetail> sectionDetails3 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails3, null, asList("a2","a3")));
+        List<SectionDetail> sectionDetails3 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails3, null, asList("a2", "a3")));
         QuestionGroupDetail questionGroupDetail3 = new QuestionGroupDetail(11, "QG2", new EventSource("Create", "Client", null), sectionDetails3, true);
 
         List<QuestionGroupInstance> questionGroupInstances =
-                questionnaireMapper.mapToQuestionGroupInstances(new QuestionGroupDetails(101, 201, asList(questionGroupDetail1, questionGroupDetail2,questionGroupDetail3)));
+                questionnaireMapper.mapToQuestionGroupInstances(new QuestionGroupDetails(101, 201, asList(questionGroupDetail1, questionGroupDetail2, questionGroupDetail3)));
         assertThat(questionGroupInstances, is(notNullValue()));
         assertThat(questionGroupInstances.size(), is(3));
         QuestionGroupInstance questionGroupInstance1 = questionGroupInstances.get(0);
@@ -443,8 +454,8 @@ public class QuestionnaireMapperTest {
         assertThat(questionGroupResponses3.get(0).getResponse(), is("a2"));
         assertThat(questionGroupResponses3.get(1).getResponse(), is("a3"));
 
-        verify(questionGroupInstanceDao, times(1)).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,10);
-        verify(questionGroupInstanceDao, times(2)).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201,11);
+        verify(questionGroupInstanceDao, times(1)).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201, 10);
+        verify(questionGroupInstanceDao, times(2)).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201, 11);
     }
 
     @Test
@@ -554,7 +565,7 @@ public class QuestionnaireMapperTest {
         sectionDetail.setName(name);
         List<SectionQuestionDetail> sectionQuestionDetails = new ArrayList<SectionQuestionDetail>();
         for (QuestionDetail questionDetail : questionDetails) {
-            SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(id,questionDetail, false,answer, answers);
+            SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(id, questionDetail, false, answer, answers);
             sectionQuestionDetails.add(sectionQuestionDetail);
         }
         sectionDetail.setQuestionDetails(sectionQuestionDetails);

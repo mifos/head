@@ -36,6 +36,7 @@ import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.spring.SpringTestUtil;
+import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Flow;
@@ -43,6 +44,7 @@ import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.service.test.TestMode;
 
 import servletunit.struts.MockStrutsTestCase;
 
@@ -54,10 +56,16 @@ import servletunit.struts.MockStrutsTestCase;
  */
 public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 
+    private static Boolean isTestingModeSet = false;
+
     protected MifosMockStrutsTestCase() throws Exception {
         super();
-        SpringTestUtil.initializeSpring();
-        new TestCaseInitializer().initialize();
+        if (!isTestingModeSet) {
+            new StandardTestingService().setTestMode(TestMode.INTEGRATION);
+            SpringTestUtil.initializeSpring();
+            new TestCaseInitializer().initialize();
+            isTestingModeSet = true;
+        }
     }
 
     private boolean strutsConfigSet = false;

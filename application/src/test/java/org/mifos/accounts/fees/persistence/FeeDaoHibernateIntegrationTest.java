@@ -27,12 +27,8 @@ import static org.junit.Assert.assertThat;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 
 import java.util.List;
-import java.util.Locale;
-
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.CategoryTypeEntity;
@@ -48,16 +44,9 @@ import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.application.collectionsheet.persistence.FeeBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.config.Localization;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
-import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -69,23 +58,8 @@ public class FeeDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
     @Autowired
     private DatabaseCleaner databaseCleaner;
 
-    private static MifosCurrency oldDefaultCurrency;
     private AmountFeeBO weeklyPeriodicFeeForCenterOnly;
     private AmountFeeBO weeklyOneTimeForLoans;
-
-    @BeforeClass
-    public static void initialiseHibernateUtil() {
-        Locale locale = Localization.getInstance().getMainLocale();
-        AuditConfigurtion.init(locale);
-        oldDefaultCurrency = Money.getDefaultCurrency();
-        Money.setDefaultCurrency(TestUtils.RUPEE);
-        new StandardTestingService().setTestMode(TestMode.INTEGRATION);
-    }
-
-    @AfterClass
-    public static void resetCurrency() {
-        Money.setDefaultCurrency(oldDefaultCurrency);
-    }
 
     @After
     public void cleanDatabaseTablesAfterTest() {
