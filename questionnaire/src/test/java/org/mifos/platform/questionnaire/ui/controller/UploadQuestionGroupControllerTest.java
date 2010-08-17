@@ -23,6 +23,7 @@ package org.mifos.platform.questionnaire.ui.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.matchers.MessageMatcher;
@@ -38,6 +39,9 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.DUPLICATE_QUESTION_FOUND_IN_SECTION;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.FETCH_PPI_COUNTRY_XML_FAILED;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.GENERIC_VALIDATION;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.doThrow;
@@ -91,14 +95,30 @@ public class UploadQuestionGroupControllerTest {
     }
 
     @Test
-    public void testUploadQuestionGroup_ValidateForUploadFailure() {
+    public void testUploadQuestionGroup_UploadFailureDuringPPIProcessing() {
         when(requestContext.getMessageContext()).thenReturn(messageContext);
-        doThrow(new ValidationException(QUESTION_GROUP_TITLE_NOT_PROVIDED)).when(questionnaireServiceFacade).uploadPPIQuestionGroup("INDIA");
+        doThrow(new SystemException(FETCH_PPI_COUNTRY_XML_FAILED)).when(questionnaireServiceFacade).uploadPPIQuestionGroup("INDIA");
+        UploadQuestionGroupForm form = new UploadQuestionGroupForm();
+        form.setSelectedCountry("INDIA");
+        String result = controller.upload(form, requestContext);
+        assertThat(result, is("failure"));
+        verify(requestContext).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher(FETCH_PPI_COUNTRY_XML_FAILED)));
+    }
+
+    @Test
+    public void testUploadQuestionGroup_UploadFailureDuringValidation() {
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
+        validationException.addChildException(new ValidationException(QUESTION_GROUP_TITLE_NOT_PROVIDED));
+        validationException.addChildException(new ValidationException(DUPLICATE_QUESTION_FOUND_IN_SECTION));
+        doThrow(validationException).when(questionnaireServiceFacade).uploadPPIQuestionGroup("INDIA");
         UploadQuestionGroupForm form = new UploadQuestionGroupForm();
         form.setSelectedCountry("INDIA");
         String result = controller.upload(form, requestContext);
         assertThat(result, is("failure"));
         verify(requestContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher(QUESTION_GROUP_TITLE_NOT_PROVIDED)));
+        verify(messageContext).addMessage(argThat(new MessageMatcher(DUPLICATE_QUESTION_FOUND_IN_SECTION)));
     }
 }

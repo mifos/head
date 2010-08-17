@@ -31,6 +31,8 @@ public class QuestionnaireConstants {
     public static final String QUESTION_CHOICES_INSUFFICIENT = "questionnaire.error.QuestionChoicesInsufficient";
     public static final String QUESTION_CHOICES_INVALID = "questionnaire.error.QuestionChoicesInvalid";
     public static final String PPI_SURVEY_UPLOAD_FAILED = "questionnaire.error.PPISurveyUploadFailed";
+    public static final String FETCH_PPI_XMLS_FAILED = "questionnaire.error.FetchPPIXmlsFailed";
+    public static final String FETCH_PPI_COUNTRY_XML_FAILED = "questionnaire.error.FetchPPICountryXmlFailed";
     public static final int QUESTION_GROUP_TITLE_MAX_LENGTH = 50;
     public static final int MAX_CHOICES_FOR_QUESTION = 2;
     public static final String PPI_SURVEY_FILE_PREFIX = "PPISurvey";
