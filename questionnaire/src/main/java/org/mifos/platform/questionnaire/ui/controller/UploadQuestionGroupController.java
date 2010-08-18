@@ -21,8 +21,10 @@
 package org.mifos.platform.questionnaire.ui.controller;
 
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.ui.model.UploadQuestionGroupForm;
+import org.springframework.binding.message.MessageContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -55,12 +57,27 @@ public class UploadQuestionGroupController extends QuestionnaireController {
         } else {
             try {
                 questionnaireServiceFacade.uploadPPIQuestionGroup(uploadQuestionGroupForm.getSelectedCountry());
+            } catch(ValidationException e) {
+                handleValidationException(e, requestContext);
+                result = "failure";
             } catch (SystemException e) {
-                constructAndLogSystemError(requestContext.getMessageContext(), e);
+                constructErrorMessage(requestContext.getMessageContext(), e.getKey(), "selectedCountry", e.getKey());
+                result = "failure";
+            } catch (Exception e) {
+                constructAndLogSystemError(requestContext.getMessageContext(), new SystemException(e.getMessage(), e));
                 result = "failure";
             }
         }
         return result;
+    }
+
+    private void handleValidationException(ValidationException validationException, RequestContext requestContext) {
+        if (validationException.containsChildExceptions()) {
+            MessageContext messageContext = requestContext.getMessageContext();
+            for (ValidationException childException : validationException.getChildExceptions()) {
+                constructErrorMessage(messageContext, childException.getKey(), "selectedCountry", childException.getKey());
+            }
+        }
     }
 
     private boolean selectedCountryNotPresent(String selectedCountry) {

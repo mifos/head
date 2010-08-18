@@ -40,14 +40,13 @@ import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_EXT;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_PREFIX;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_UPLOAD_FAILED;
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 
 public class QuestionnaireServiceImpl implements QuestionnaireService {
 
@@ -230,33 +229,38 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public Integer defineQuestionGroup(QuestionGroupDto questionGroupDto) {
         questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDto);
+        return persistQuestionGroup(questionGroup);
+    }
+
+    private Integer persistQuestionGroup(QuestionGroup questionGroup) {
+        List<SectionQuestion> sectionQuestions = questionGroup.getAllSectionQuestions();
+        for (SectionQuestion sectionQuestion : sectionQuestions) {
+            List<QuestionEntity> questionEntities = questionDao.retrieveByName(sectionQuestion.getQuestionTitle());
+            if (isNotEmpty(questionEntities)) {
+                QuestionEntity questionEntity = questionEntities.get(0);
+                questionEntity.setQuestionState(QuestionState.ACTIVE);
+                sectionQuestion.setQuestion(questionEntity);
+            }
+        }
         return questionGroupDao.create(questionGroup);
     }
 
     @Override
     public List<String> getAllCountriesForPPI() {
-        try {
-            List<String> ppiSurveyFiles = ppiSurveyLocator.getAllPPISurveyFiles();
-            List<String> countries = new ArrayList<String>();
-            for (String ppiSurveyFile : ppiSurveyFiles) {
-                String country = ppiSurveyFile.substring(PPI_SURVEY_FILE_PREFIX.length(), ppiSurveyFile.indexOf(PPI_SURVEY_FILE_EXT));
-                countries.add(country);
-            }
-            return countries;
-        } catch (IOException e) {
-            throw new SystemException(PPI_SURVEY_UPLOAD_FAILED, e);
+        List<String> ppiSurveyFiles = ppiSurveyLocator.getAllPPISurveyFiles();
+        List<String> countries = new ArrayList<String>();
+        for (String ppiSurveyFile : ppiSurveyFiles) {
+            String country = ppiSurveyFile.substring(PPI_SURVEY_FILE_PREFIX.length(), ppiSurveyFile.indexOf(PPI_SURVEY_FILE_EXT));
+            countries.add(country);
         }
+        return countries;
     }
 
     @Override
     public Integer uploadPPIQuestionGroup(String country) {
-        try {
-            String ppiXmlForCountry = ppiSurveyLocator.getPPIUploadFileForCountry(country);
-            QuestionGroupDto questionGroupDto = questionGroupDefinitionParser.parse(ppiXmlForCountry);
-            return defineQuestionGroup(questionGroupDto);
-        } catch (IOException e) {
-            throw new SystemException(PPI_SURVEY_UPLOAD_FAILED, e);
-        }
+        String ppiXmlForCountry = ppiSurveyLocator.getPPIUploadFileForCountry(country);
+        QuestionGroupDto questionGroupDto = questionGroupDefinitionParser.parse(ppiXmlForCountry);
+        return defineQuestionGroup(questionGroupDto);
     }
 
     private EventSourceEntity getEventSourceEntity(EventSource eventSource) {
@@ -267,7 +271,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         try {
             questionDao.saveOrUpdate(question);
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
-            throw new SystemException(QuestionnaireConstants.QUESTION_TITILE_DUPLICATE, e);
+            throw new SystemException(QuestionnaireConstants.QUESTION_TITLE_DUPLICATE, e);
         }
     }
 

@@ -166,6 +166,7 @@ public class EditStatusAction extends BaseAction {
             newStatusId = getShortValue(editStatusActionForm.getNewStatusId());
         }
         checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
+        initializeLoanQuestionnaire(accountBO.getGlobalAccountNum());
         approveLoanQuestionnaire.saveResponses(request, editStatusActionForm, getIntegerValue(editStatusActionForm.getAccountId()));
         accountBO.changeStatus(newStatusId, flagId, editStatusActionForm.getNotes());
         accountBOInSession = null;

@@ -46,9 +46,9 @@ explanation of the license and how it is applied.
 				<tr>
 					<td align="left" valign="top" class="paddingL10">
 						<br>
-						<table width="90%" border="0" cellpadding="0" cellspacing="0">
+						<table width="95%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
-								<td align="left" valign="top">
+								<td valign="top">
 									<span class="headingorange"><mifos:mifoslabel name="loan.reverse" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.disbursal" /></span>
 								</td>
 							</tr>

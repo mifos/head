@@ -20,11 +20,10 @@
 
 package org.mifos.platform.questionnaire.domain.ppi;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface PPISurveyLocator {
-    List<String> getAllPPISurveyFiles() throws IOException;
+    List<String> getAllPPISurveyFiles();
 
-    String getPPIUploadFileForCountry(String country) throws IOException;
+    String getPPIUploadFileForCountry(String country);
 }

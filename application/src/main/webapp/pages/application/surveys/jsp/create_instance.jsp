@@ -85,6 +85,10 @@ hr {
 	</tr>
 </table>
 
+<!-- Wrapper to fix alignment problem when text flow is RTL -->
+<table width="95%">
+<tr>
+<td>
 <h1>
 	<c:out value="${requestScope.businessObjectName}"/> - 
 	<orange><mifos:mifoslabel name="Surveys.instance.entersurveydata" bundle="SurveysUIResources"/></orange>
@@ -96,12 +100,16 @@ hr {
 <br/>
 
 <font class="fontnormalRedBold"><html-el:errors bundle="SurveysUIResources" /></font>
-<hr>
+<hr style="width:100%">
 
 <h1>
 	<c:out value="${sessionScope.retrievedSurvey.name}"/>
 </h1>
-<hr>
+<hr style="width:100%">
+</td>
+</tr>
+</table>
+<!-- End wrapper -->
 
 <table width="95%" border="0" cellpadding="3" cellspacing="0">
 	<tr>

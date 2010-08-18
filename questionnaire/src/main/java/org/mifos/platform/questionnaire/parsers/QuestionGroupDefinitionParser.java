@@ -22,11 +22,10 @@ package org.mifos.platform.questionnaire.parsers;
 
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 public interface QuestionGroupDefinitionParser {
-    QuestionGroupDto parse(String questionGroupDefXmlFilePath) throws FileNotFoundException;
+    QuestionGroupDto parse(String questionGroupDefXmlFilePath);
 
     QuestionGroupDto parse(InputStream questionGroupDefInputStream);
 }

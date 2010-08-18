@@ -20,6 +20,7 @@
 
 package org.mifos.platform.questionnaire.domain.ppi;
 
+import org.mifos.framework.exceptions.SystemException;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -31,8 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_EXT;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_PREFIX;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.*; //NOPMD
 import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 
 public final class PPISurveyLocatorImpl implements PPISurveyLocator, ResourceLoaderAware {
@@ -44,16 +44,24 @@ public final class PPISurveyLocatorImpl implements PPISurveyLocator, ResourceLoa
     }
 
     @Override
-    public List<String> getAllPPISurveyFiles() throws IOException {
-        Resource resource = this.resourceLoader.getResource(ppiXmlFolder);
-        return getPPISurveyFiles(resource.getFile());
+    public List<String> getAllPPISurveyFiles() {
+        try {
+            Resource resource = this.resourceLoader.getResource(ppiXmlFolder);
+            return getPPISurveyFiles(resource.getFile());
+        } catch (IOException e) {
+            throw new SystemException(FETCH_PPI_XMLS_FAILED, e);
+        }
     }
 
     @Override
-    public String getPPIUploadFileForCountry(String country) throws IOException {
-        String fileName = getPPIXmlFileName(country);
-        Resource resource = this.resourceLoader.getResource(ppiXmlFolder);
-        return getPPIFilePath(fileName, resource.getFile());
+    public String getPPIUploadFileForCountry(String country) {
+        try {
+            String fileName = getPPIXmlFileName(country);
+            Resource resource = this.resourceLoader.getResource(ppiXmlFolder);
+            return getPPIFilePath(fileName, resource.getFile());
+        } catch (IOException e) {
+            throw new SystemException(FETCH_PPI_COUNTRY_XML_FAILED, e);
+        }
     }
 
     @SuppressWarnings("PMD.NullAssignment")

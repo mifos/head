@@ -48,7 +48,7 @@ explanation of the license and how it is applied.
 
 <table width="95%" border="0" cellpadding="0" cellspacing="0">
   <tr>
-    <td width="70%" align="left" valign="middle" class="paddingL15T15"> <!-- this td represents the entire central content area -->
+    <td width="70%" valign="middle" class="paddingL15T15"> <!-- this td represents the entire central content area -->
         <div style="padding:3px" class="headingorange"><mifos:mifoslabel name="Surveys.viewquestions"/>
             <br/>
             <br/>
