@@ -392,7 +392,7 @@ public class QuestionnaireServiceIntegrationTest {
             defineQuestion(questionTitle, QuestionType.FREETEXT, true);
             Assert.fail("Exception should have been thrown for duplicate question title");
         } catch (SystemException e) {
-            Assert.assertEquals(QuestionnaireConstants.QUESTION_TITILE_DUPLICATE, e.getKey());
+            Assert.assertEquals(QuestionnaireConstants.QUESTION_TITLE_DUPLICATE, e.getKey());
         }
     }
 
@@ -484,7 +484,7 @@ public class QuestionnaireServiceIntegrationTest {
         questionEntity.setQuestionState(QuestionState.ACTIVE);
         questionEntity.setQuestionText(quesTitle);
         questionEntity.setShortName(quesTitle);
-        questionEntity.setChoices(asList(getChoice("Choice1", "Tag1", "Tag2"), getChoice("Choice2", "Tag4")));
+        questionEntity.setChoices(asList(getChoice("Choice1", 0, "Tag1", "Tag2"), getChoice("Choice2", 1, "Tag4")));
         Integer quesId = questionDao.create(questionEntity);
         QuestionEntity newQuestionEntity = questionDao.getDetails(quesId);
         assertThat(newQuestionEntity, is(notNullValue()));
@@ -506,6 +506,7 @@ public class QuestionnaireServiceIntegrationTest {
         String ques1Title = "Ques1" + currentTimeMillis();
         String ques2Title = "Ques2" + currentTimeMillis();
         String qgTitle = "QG1" + currentTimeMillis();
+        createSingleSelectQuestion(ques2Title);
         QuestionDto question1 = new QuestionDtoBuilder().withTitle(ques1Title).withMandatory(true).withType(QuestionType.FREETEXT).withOrder(1).build();
         ChoiceDetail choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
         ChoiceDetail choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
@@ -515,6 +516,16 @@ public class QuestionnaireServiceIntegrationTest {
         QuestionGroupDto questionGroupDto = new QuestionGroupDtoBuilder().withTitle(qgTitle).withEventSource("Create", "Client").addSections(section1).build();
         Integer questionGroupId = questionnaireService.defineQuestionGroup(questionGroupDto);
         assertQuestionGroup(questionGroupDao.getDetails(questionGroupId), qgTitle, ques1Title, ques2Title);
+    }
+
+    private void createSingleSelectQuestion(String ques1Title) {
+        QuestionEntity questionEntity = new QuestionEntity();
+        questionEntity.setAnswerType(AnswerType.SINGLESELECT);
+        questionEntity.setQuestionState(QuestionState.INACTIVE);
+        questionEntity.setQuestionText(ques1Title);
+        questionEntity.setShortName(ques1Title);
+        questionEntity.setChoices(asList(getChoice("Ch2", 1), getChoice("Ch1", 2), getChoice("Ch3", 3)));
+        questionDao.create(questionEntity);
     }
 
     private void assertQuestionGroup(QuestionGroup questionGroup, String questionGroupTitle, String firstQuestionTitle, String secondQuestionTitle) {
@@ -542,6 +553,7 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(sectionQuestion1.getSection().getName(), is("Sec1"));
         assertThat(sectionQuestion1.getSection().getSequenceNumber(), is(1));
         assertThat(sectionQuestion1.getQuestion(), is(notNullValue()));
+        assertThat(sectionQuestion1.getQuestion().getQuestionStateAsEnum(), is(QuestionState.ACTIVE));
         assertThat(sectionQuestion1.getQuestion().getShortName(), is(firstQuestionTitle));
         assertThat(sectionQuestion1.getQuestion().getAnswerTypeAsEnum(), is(AnswerType.FREETEXT));
 
@@ -551,21 +563,23 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(sectionQuestion2.getSection().getName(), is("Sec1"));
         assertThat(sectionQuestion2.getSection().getSequenceNumber(), is(1));
         assertThat(sectionQuestion2.getQuestion(), is(notNullValue()));
+        assertThat(sectionQuestion2.getQuestion().getQuestionStateAsEnum(), is(QuestionState.ACTIVE));
         assertThat(sectionQuestion2.getQuestion().getShortName(), is(secondQuestionTitle));
         assertThat(sectionQuestion2.getQuestion().getAnswerTypeAsEnum(), is(AnswerType.SINGLESELECT));
         assertThat(sectionQuestion2.getQuestion().getChoices(), is(notNullValue()));
         assertThat(sectionQuestion2.getQuestion().getChoices().size(), is(3));
-        assertThat(sectionQuestion2.getQuestion().getChoices().get(0).getChoiceText(), is("Ch1"));
+        assertThat(sectionQuestion2.getQuestion().getChoices().get(0).getChoiceText(), is("Ch2"));
         assertThat(sectionQuestion2.getQuestion().getChoices().get(0).getChoiceOrder(), is(1));
-        assertThat(sectionQuestion2.getQuestion().getChoices().get(1).getChoiceText(), is("Ch2"));
+        assertThat(sectionQuestion2.getQuestion().getChoices().get(1).getChoiceText(), is("Ch1"));
         assertThat(sectionQuestion2.getQuestion().getChoices().get(1).getChoiceOrder(), is(2));
         assertThat(sectionQuestion2.getQuestion().getChoices().get(2).getChoiceText(), is("Ch3"));
         assertThat(sectionQuestion2.getQuestion().getChoices().get(2).getChoiceOrder(), is(3));
     }
 
-    private QuestionChoiceEntity getChoice(String choiceText, String... tagTexts) {
+    private QuestionChoiceEntity getChoice(String choiceText, int choiceOrder, String... tagTexts) {
         QuestionChoiceEntity questionChoiceEntity = new QuestionChoiceEntity();
         questionChoiceEntity.setChoiceText(choiceText);
+        questionChoiceEntity.setChoiceOrder(choiceOrder);
         Set<ChoiceTagEntity> tags = new HashSet<ChoiceTagEntity>();
         for (String tagText : tagTexts) {
             tags.add(getTag(tagText));

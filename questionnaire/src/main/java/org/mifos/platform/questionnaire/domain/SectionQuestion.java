@@ -73,4 +73,8 @@ public class SectionQuestion implements Serializable {
     public void setSequenceNumber(Integer sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
     }
+
+    public String getQuestionTitle() {
+        return question.getShortName();
+    }
 }

@@ -46,9 +46,9 @@
                 </ol>
             </fieldset>
             <div class="marginLeft12em">
-                 <input type="submit" name="_eventId_uploadQuestionGroupContinue" id="_eventId_uploadQuestionGroupContinue" value='[@spring.message "submit"/]' class="buttn"/>
+                 <input type="submit" name="_eventId_uploadQuestionGroupContinue" id="_eventId_uploadQuestionGroupContinue" value='[@spring.message "questionnaire.submit"/]' class="buttn"/>
                  &nbsp;
-                 <input type="submit" name="_eventId_cancel" id="_eventId_cancel" value='[@spring.message "cancel"/]' class="cancelbuttn"/>
+                 <input type="submit" name="_eventId_cancel" id="_eventId_cancel" value='[@spring.message "questionnaire.cancel"/]' class="cancelbuttn"/>
             </div>
         </form>
     </div>

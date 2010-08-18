@@ -20,6 +20,9 @@
 
 package org.mifos.platform.questionnaire.domain;
 
+import org.apache.commons.lang.StringUtils;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,6 +77,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doThrow;
@@ -762,6 +766,18 @@ public class QuestionnaireServiceTest {
         verify(questionGroupDao).create(any(QuestionGroup.class));
     }
 
+    @Test
+    public void shouldDefineQuestionGroupFromDto_WithExistingQuestions() {
+        QuestionEntity questionEntity = new QuestionEntity("Ques2");
+        questionEntity.setAnswerType(AnswerType.SINGLESELECT);
+        questionEntity.setChoices(asList(new QuestionChoiceEntity("Choice1"), new QuestionChoiceEntity("Choice2")));
+        when(questionDao.retrieveByName("Ques2")).thenReturn(asList(questionEntity));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        questionnaireService.defineQuestionGroup(questionGroupDto);
+        verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto);
+        verify(questionGroupDao).create(argThat(new QuestionGroupContainsQuestionMatcher(questionEntity)));
+    }
+
     private QuestionGroupDto getQuestionGroupDto() {
         QuestionDto question1 = new QuestionDtoBuilder().withTitle("Ques1").withMandatory(true).withType(QuestionType.FREETEXT).build();
         ChoiceDetail choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
@@ -841,4 +857,49 @@ public class QuestionnaireServiceTest {
         return sectionDetail;
     }
 
+    private class QuestionGroupContainsQuestionMatcher extends TypeSafeMatcher<QuestionGroup> {
+        private final QuestionEntity questionEntity;
+
+        public QuestionGroupContainsQuestionMatcher(QuestionEntity questionEntity) {
+            this.questionEntity = questionEntity;
+        }
+
+        @Override
+        public boolean matchesSafely(QuestionGroup questionGroup) {
+            for (Section section : questionGroup.getSections()) {
+                for (SectionQuestion sectionQuestion : section.getQuestions()) {
+                    QuestionEntity questionEntity = sectionQuestion.getQuestion();
+                    if (StringUtils.equals(this.questionEntity.getShortName(), questionEntity.getShortName())) {
+                        return this.questionEntity.getAnswerTypeAsEnum() == questionEntity.getAnswerTypeAsEnum()
+                                && areCompatibleChoices(questionEntity.getChoices());
+                    }
+                }
+            }
+            return false;
+        }
+
+        private boolean areCompatibleChoices(List<QuestionChoiceEntity> choiceEntities) {
+            boolean result = choiceEntities.size() == this.questionEntity.getChoices().size();
+            if (result) {
+                for (QuestionChoiceEntity questionChoiceEntity : this.questionEntity.getChoices()) {
+                    boolean currentChoiceFound = false;
+                    for (QuestionChoiceEntity choiceEntity : choiceEntities) {
+                        if (StringUtils.equals(questionChoiceEntity.getChoiceText(), choiceEntity.getChoiceText())) {
+                            currentChoiceFound = true;
+                        }
+                    }
+                    if (!currentChoiceFound) {
+                        result = false;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("QuestionGroup doesn't contain the given Question");
+        }
+    }
 }

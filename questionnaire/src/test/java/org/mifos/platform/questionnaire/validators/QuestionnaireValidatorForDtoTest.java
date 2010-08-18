@@ -53,6 +53,8 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.*;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_TOO_BIG;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.SECTION_NAME_TOO_BIG;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -103,7 +105,7 @@ public class QuestionnaireValidatorForDtoTest {
     }
 
     @Test
-    public void shouldValidateForInvalidQuestionGroupDto_TitleExceedsMaxChars() {
+    public void shouldValidateForInvalidQuestionGroupDto_QuestionGroupTitleExceedsMaxChars() {
         when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
         QuestionGroupDto questionGroupDto = getQuestionGroupDto();
         questionGroupDto.setTitle("this is more than fifty characters string for question group title");
@@ -117,6 +119,42 @@ public class QuestionnaireValidatorForDtoTest {
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
             assertThat(childExceptions.get(0).getKey(), is(QUESTION_GROUP_TITLE_TOO_BIG));
+        }
+    }
+
+    @Test
+    public void shouldValidateForInvalidQuestionGroupDto_SectionNameExceedsMaxChars() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        questionGroupDto.getSections().get(0).setName("this is more than fifty characters string for question group title");
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+            fail("Should have thrown validationException");
+        } catch (ValidationException e) {
+            assertThat(e.getKey(), is(GENERIC_VALIDATION));
+            assertThat(e.containsChildExceptions(), is(true));
+            List<ValidationException> childExceptions = e.getChildExceptions();
+            assertThat(childExceptions, is(notNullValue()));
+            assertThat(childExceptions.size(), is(1));
+            assertThat(childExceptions.get(0).getKey(), is(SECTION_NAME_TOO_BIG));
+        }
+    }
+
+    @Test
+    public void shouldValidateForInvalidQuestionGroupDto_QuestionTitleExceedsMaxChars() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        questionGroupDto.getSections().get(0).getQuestions().get(0).setTitle("this is more than fifty characters string for question group title");
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+            fail("Should have thrown validationException");
+        } catch (ValidationException e) {
+            assertThat(e.getKey(), is(GENERIC_VALIDATION));
+            assertThat(e.containsChildExceptions(), is(true));
+            List<ValidationException> childExceptions = e.getChildExceptions();
+            assertThat(childExceptions, is(notNullValue()));
+            assertThat(childExceptions.size(), is(1));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITLE_TOO_BIG));
         }
     }
 
@@ -188,7 +226,7 @@ public class QuestionnaireValidatorForDtoTest {
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
-            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITILE_DUPLICATE));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITLE_DUPLICATE));
         }
     }
 
@@ -336,7 +374,20 @@ public class QuestionnaireValidatorForDtoTest {
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
-            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITILE_DUPLICATE));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITILE_MATCHES_EXISTING_QUESTION));
+        }
+    }
+
+    @Test
+    public void shouldValidateForInvalidQuestionGroupDto_ExistingQuestionTitle_SameQuestionType_NoChoices() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        String questionTitle = questionGroupDto.getSections().get(0).getQuestions().get(0).getTitle();
+        when(questionDao.retrieveByName(questionTitle)).thenReturn(asList(getQuestionEntity(questionTitle, AnswerType.FREETEXT, null)));
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+        } catch (ValidationException e) {
+            fail("Should not have thrown validationException");
         }
     }
 
@@ -356,7 +407,7 @@ public class QuestionnaireValidatorForDtoTest {
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
-            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITILE_DUPLICATE));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITILE_MATCHES_EXISTING_QUESTION));
         }
     }
 
@@ -376,7 +427,7 @@ public class QuestionnaireValidatorForDtoTest {
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
-            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITILE_DUPLICATE));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITILE_MATCHES_EXISTING_QUESTION));
         }
     }
 
