@@ -86,10 +86,9 @@
 [@mifos.footer/]--]
 
 
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
-[@mifos.header "title" /]
-[@mifos.topNavigationNoSecurity currentTab="Admin" /]
+
+[#include "layout.ftl"]
+[@adminLeftPaneLayout]
 
  <script type="text/javascript">
  function addOption(root, text, value)
@@ -145,13 +144,9 @@ function selectAllOptions(outSel)
 	}
 }	
 </script>
-  <div class="container">&nbsp;
-  <div class="sidebar">
-  [#include "adminLeftPane.ftl" ]
-  </div> 
-  <!--  Left Sidebar Ends-->  
+    
   <!--  Main Content Begins-->  
-       <div class="content leftMargin180">
+       <div class="content">
           <p class="font15"><span class="fontBold">[@spring.message "manageProducts.defineProductmix.addanewproductmix"/]</span>&nbsp;--&nbsp;<span class="orangeheading"> [@spring.message "manageProducts.defineProductmix.enterproductmixinformation"/]</span></p>
           <div>[@spring.message "manageProducts.defineProductmix.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminwithoutsubmittinginformation"/] </div>
           <div><span class="red">* </span>[@spring.message "manageProducts.defineProductmix.fieldsmarkedwithanasteriskarerequired"/] </div>
@@ -236,4 +231,4 @@ function selectAllOptions(outSel)
   <div class="footer">&nbsp;</div>
 </div>
 <!--Container Ends-->
-[@mifos.footer/]
+[/@adminLeftPaneLayout]
