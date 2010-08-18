@@ -21,6 +21,7 @@
 package org.mifos.platform.questionnaire.parsers;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.StreamException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.service.ChoiceDetail;
@@ -36,7 +37,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_UPLOAD_FAILED;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.*; //NOPMD
 
 public final class QuestionGroupDefinitionParserImpl implements QuestionGroupDefinitionParser {
     private final XStream xstream;
@@ -62,9 +63,11 @@ public final class QuestionGroupDefinitionParserImpl implements QuestionGroupDef
             bufferedReader = new BufferedReader(new FileReader(questionGroupDefXmlFilePath));
             return (QuestionGroupDto) xstream.fromXML(bufferedReader);
         } catch (FileNotFoundException e) {
-            throw new SystemException(PPI_SURVEY_UPLOAD_FAILED, e);
+            throw new SystemException(PPI_SURVEY_FILE_NOT_FOUND, e);
         } catch (StreamException e) {
-            throw new SystemException(PPI_SURVEY_UPLOAD_FAILED, e);
+            throw new SystemException(PPI_SURVEY_PARSE_ERROR, e);
+        } catch (ConversionException e) {
+            throw new SystemException(PPI_SURVEY_CONVERSION_ERROR, e);
         } finally {
             if (bufferedReader != null) {
                 try {
@@ -80,7 +83,7 @@ public final class QuestionGroupDefinitionParserImpl implements QuestionGroupDef
         try {
             return (QuestionGroupDto) xstream.fromXML(questionGroupDefInputStream);
         } catch (StreamException e) {
-            throw new SystemException(PPI_SURVEY_UPLOAD_FAILED, e);
+            throw new SystemException(PPI_SURVEY_PARSE_ERROR, e);
         }
     }
 

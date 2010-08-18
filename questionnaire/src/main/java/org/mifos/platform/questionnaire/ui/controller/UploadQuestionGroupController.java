@@ -63,6 +63,9 @@ public class UploadQuestionGroupController extends QuestionnaireController {
             } catch (SystemException e) {
                 constructErrorMessage(requestContext.getMessageContext(), e.getKey(), "selectedCountry", e.getKey());
                 result = "failure";
+            } catch (Exception e) {
+                constructAndLogSystemError(requestContext.getMessageContext(), new SystemException(e.getMessage(), e));
+                result = "failure";
             }
         }
         return result;

@@ -46,6 +46,7 @@ import java.util.List;
 
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_EXT;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_PREFIX;
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 
 public class QuestionnaireServiceImpl implements QuestionnaireService {
 
@@ -228,6 +229,19 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public Integer defineQuestionGroup(QuestionGroupDto questionGroupDto) {
         questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDto);
+        return persistQuestionGroup(questionGroup);
+    }
+
+    private Integer persistQuestionGroup(QuestionGroup questionGroup) {
+        List<SectionQuestion> sectionQuestions = questionGroup.getAllSectionQuestions();
+        for (SectionQuestion sectionQuestion : sectionQuestions) {
+            List<QuestionEntity> questionEntities = questionDao.retrieveByName(sectionQuestion.getQuestionTitle());
+            if (isNotEmpty(questionEntities)) {
+                QuestionEntity questionEntity = questionEntities.get(0);
+                questionEntity.setQuestionState(QuestionState.ACTIVE);
+                sectionQuestion.setQuestion(questionEntity);
+            }
+        }
         return questionGroupDao.create(questionGroup);
     }
 
@@ -257,7 +271,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         try {
             questionDao.saveOrUpdate(question);
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
-            throw new SystemException(QuestionnaireConstants.QUESTION_TITILE_DUPLICATE, e);
+            throw new SystemException(QuestionnaireConstants.QUESTION_TITLE_DUPLICATE, e);
         }
     }
 
