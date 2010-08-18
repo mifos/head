@@ -27,11 +27,8 @@ import org.mifos.framework.business.AbstractEntity;
 public class PrdOfferingMeetingEntity extends AbstractEntity {
 
     private final Short prdOfferingMeetingId;
-
     private MeetingBO meeting;
-
-    private final PrdOfferingBO prdOffering;
-
+    private PrdOfferingBO prdOffering;
     private final Short meetingType;
 
     public PrdOfferingMeetingEntity(final MeetingBO meeting, final PrdOfferingBO prdOffering, final MeetingType meetingType) {
@@ -78,5 +75,9 @@ public class PrdOfferingMeetingEntity extends AbstractEntity {
             }
         }
         return value;
+    }
+
+    public void setPrdOffering(PrdOfferingBO prdOffering) {
+        this.prdOffering = prdOffering;
     }
 }

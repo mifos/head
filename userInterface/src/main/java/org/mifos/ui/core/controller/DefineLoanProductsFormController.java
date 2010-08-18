@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.LoanProductRequest;
+import org.mifos.dto.domain.LowerUpperMinMaxDefaultDto;
 import org.mifos.dto.domain.MinMaxDefaultDto;
 import org.mifos.dto.domain.RepaymentDetailsDto;
 import org.mifos.dto.screen.AccountingDetailsDto;
@@ -79,14 +80,35 @@ public class DefineLoanProductsFormController {
         loanProductFormBean.setStartDateMonth(startDate.getMonthOfYear());
         loanProductFormBean.setStartDateYear(Integer.valueOf(startDate.getYearOfEra()).toString());
 
-        SameForAllLoanBean installmentsSameForAllLoans = new SameForAllLoanBean();
-        installmentsSameForAllLoans.setMin(Double.valueOf("1"));
-        loanProductFormBean.setInstallmentsSameForAllLoans(installmentsSameForAllLoans);
-
         loanProductFormBean.setIncludeInLoanCycleCounter(false);
         loanProductFormBean.setInstallmentFrequencyRecurrenceEvery(Integer.valueOf(1));
         loanProductFormBean.setGracePeriodDurationInInstallments(Integer.valueOf(0));
 
+        ByLastLoanAmountBean zero = new ByLastLoanAmountBean();
+        zero.setLower(Double.valueOf("0"));
+        ByLastLoanAmountBean one = new ByLastLoanAmountBean();
+        ByLastLoanAmountBean two = new ByLastLoanAmountBean();
+        ByLastLoanAmountBean three = new ByLastLoanAmountBean();
+        ByLastLoanAmountBean four = new ByLastLoanAmountBean();
+        ByLastLoanAmountBean five = new ByLastLoanAmountBean();
+
+        loanProductFormBean.setLoanAmountByLastLoanAmount(new ByLastLoanAmountBean[] {zero, one, two, three, four, five});
+
+        ByLoanCycleBean zeroCycle = new ByLoanCycleBean();
+        ByLoanCycleBean oneCycle = new ByLoanCycleBean();
+        ByLoanCycleBean twoCycle = new ByLoanCycleBean();
+        ByLoanCycleBean threeCycle = new ByLoanCycleBean();
+        ByLoanCycleBean fourCycle = new ByLoanCycleBean();
+        ByLoanCycleBean greaterThanFourCycle = new ByLoanCycleBean();
+
+        loanProductFormBean.setLoanAmountByLoanCycle(new ByLoanCycleBean[] {zeroCycle,oneCycle, twoCycle, threeCycle, fourCycle, greaterThanFourCycle});
+
+        SameForAllLoanBean installmentsSameForAllLoans = new SameForAllLoanBean();
+        installmentsSameForAllLoans.setMin(Double.valueOf("1"));
+        loanProductFormBean.setInstallmentsSameForAllLoans(installmentsSameForAllLoans);
+
+        loanProductFormBean.setInstallmentsByLastLoanAmount(new ByLastLoanAmountBean[] {zero, one, two, three, four, five});
+        loanProductFormBean.setInstallmentsByLoanCycle(new ByLoanCycleBean[] {zeroCycle,oneCycle, twoCycle, threeCycle, fourCycle, greaterThanFourCycle});
 
         return loanProductFormBean;
     }
@@ -155,8 +177,23 @@ public class DefineLoanProductsFormController {
 
     private LoanAmountDetails translateToLoanAmountDetails(LoanProductFormBean loanProductFormBean) {
         Integer calculationType = Integer.valueOf(loanProductFormBean.getSelectedLoanAmountCalculationType());
-        MinMaxDefaultDto<Double> sameForAllLoanRange = translate(loanProductFormBean.getLoanAmountSameForAllLoans());
-        return new LoanAmountDetails(calculationType, sameForAllLoanRange);
+
+        MinMaxDefaultDto<Double> sameForAllLoanRange = null;
+        List<LowerUpperMinMaxDefaultDto<Double>>  byLastLoanAmountList = new ArrayList<LowerUpperMinMaxDefaultDto<Double>>();
+        List<MinMaxDefaultDto<Double>> byLoanCycleList = new ArrayList<MinMaxDefaultDto<Double>>();
+        if (calculationType.equals(1)) {
+            sameForAllLoanRange = translateMinMaxDefaultForDouble(loanProductFormBean.getLoanAmountSameForAllLoans());
+        }
+
+        if (calculationType.equals(2)) {
+            byLastLoanAmountList = translateLowerUpperMinMaxDefaultForDouble(loanProductFormBean.getLoanAmountByLastLoanAmount());
+        }
+
+        if (calculationType.equals(3)) {
+
+        }
+
+        return new LoanAmountDetails(calculationType, sameForAllLoanRange, byLastLoanAmountList, byLoanCycleList);
     }
 
     private LoanProductDetails translateToLoanProductDetails(LoanProductFormBean loanProductFormBean) {
@@ -191,8 +228,16 @@ public class DefineLoanProductsFormController {
         return new MinMaxDefaultDto<Integer>(bean.getMin().intValue(), bean.getMax().intValue(), bean.getTheDefault().intValue());
     }
 
-    private MinMaxDefaultDto<Double> translate(SameForAllLoanBean bean) {
+    private MinMaxDefaultDto<Double> translateMinMaxDefaultForDouble(SameForAllLoanBean bean) {
         return new MinMaxDefaultDto<Double>(bean.getMin(), bean.getMax(), bean.getTheDefault());
+    }
+
+    private List<LowerUpperMinMaxDefaultDto<Double>> translateLowerUpperMinMaxDefaultForDouble(ByLastLoanAmountBean[] loanAmountByLastLoanAmount) {
+        List<LowerUpperMinMaxDefaultDto<Double>> list = new ArrayList<LowerUpperMinMaxDefaultDto<Double>>();
+        for (ByLastLoanAmountBean bean : loanAmountByLastLoanAmount) {
+            list.add(new LowerUpperMinMaxDefaultDto<Double>(bean.getLower(), bean.getUpper(), bean.getMin(), bean.getMax(), bean.getTheDefault()));
+        }
+        return list;
     }
 
     public void setLoanProductAssembler(LoanProductAssembler loanProductAssembler) {

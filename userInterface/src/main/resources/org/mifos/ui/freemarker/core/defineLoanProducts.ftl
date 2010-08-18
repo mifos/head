@@ -21,7 +21,6 @@ function deleteOption(root, index)
 
 function moveOptions(root, destination)
 {
-  
   var rootLength= root.length;
   var rootText = new Array();
   var rootValues = new Array();
@@ -54,7 +53,70 @@ function selectAllOptions(outSel)
 			outSel.options[i].selected=true;
 		}
 	}
-}	
+}
+
+function switchFrequencyMessage() 
+{
+	if (document.getElementById("installmentFrequencyPeriod0").checked == true) 
+	{
+		document.getElementById("weekSpecifyMessage").style.display = "block";
+		document.getElementById("weekLabelMessage").style.display = "inline";
+		document.getElementById("monthSpecifyMessage").style.display = "none";
+		document.getElementById("monthLabelMessage").style.display = "none";
+	} 
+	else 
+	{
+		document.getElementById("weekSpecifyMessage").style.display = "none";
+		document.getElementById("weekLabelMessage").style.display = "none";
+		document.getElementById("monthSpecifyMessage").style.display = "block";
+		document.getElementById("monthLabelMessage").style.display = "inline";
+	}
+}
+
+function switchLoanAmountType() 
+{
+	if (document.getElementById("selectedLoanAmountCalculationType0").checked == true) 
+	{
+		document.getElementById("loanamountoption0").style.display = "block";
+		document.getElementById("loanamountoption1").style.display = "none";
+		document.getElementById("loanamountoption2").style.display = "none";
+	} 
+	else if (document.getElementById("selectedLoanAmountCalculationType1").checked == true) 
+	{
+		document.getElementById("loanamountoption0").style.display = "none";
+		document.getElementById("loanamountoption1").style.display = "block";
+		document.getElementById("loanamountoption2").style.display = "none";
+	} 
+	else if (document.getElementById("selectedLoanAmountCalculationType2").checked == true)
+	{
+		document.getElementById("loanamountoption0").style.display = "none";
+		document.getElementById("loanamountoption1").style.display = "none";
+		document.getElementById("loanamountoption2").style.display = "block";
+	}
+}
+
+function switchLoanInstallmentType() 
+{
+	if (document.getElementById("selectedInstallmentsCalculationType0").checked == true) 
+	{
+		document.getElementById("installmentoption0").style.display = "block";
+		document.getElementById("installmentoption1").style.display = "none";
+		document.getElementById("installmentoption2").style.display = "none";
+	} 
+	else if (document.getElementById("selectedInstallmentsCalculationType1").checked == true) 
+	{
+		document.getElementById("installmentoption0").style.display = "none";
+		document.getElementById("installmentoption1").style.display = "block";
+		document.getElementById("installmentoption2").style.display = "none";
+	} 
+	else if (document.getElementById("selectedInstallmentsCalculationType2").checked == true)
+	{
+		document.getElementById("installmentoption0").style.display = "none";
+		document.getElementById("installmentoption1").style.display = "none";
+		document.getElementById("installmentoption2").style.display = "block";
+	}
+}
+
 </script>
 </head>
 [@mifos.header "title" /]
@@ -145,24 +207,124 @@ function selectAllOptions(outSel)
           <div class="prepend-2  span-23 last">
             <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.calculateLoanAmountas" /]&nbsp;:</span>
             	<div class="span-17">
-            		[@spring.formRadioButtons "loanProduct.selectedLoanAmountCalculationType", loanProduct.loanAmountCalculationTypeOptions, "" /]
+            		[@spring.formRadioButtons "loanProduct.selectedLoanAmountCalculationType", loanProduct.loanAmountCalculationTypeOptions, "", "onclick='switchLoanAmountType();'" /]
                 </div>
                 
                 <div class="clear">&nbsp;</div>
                 
-                <div id="option0" class="span-14 prepend-4">
+                <div id="loanamountoption0" class="span-14 prepend-4">
                 	<div class="span-14 bluedivs fontBold paddingLeft" >
                     	<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.minloanamount" /]</span>
                         <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.maxloanamount" /]</span>
                         <span class="span-5 last">[@spring.message "manageLoanProducts.defineLoanProduct.defaultamount" /]</span>
                     </div>
-                    <div class="clear">&nbsp;</div>
                     <div class="span-14 paddingLeft">
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountSameForAllLoans.min" /]</span>
                         <span class="span-4">[@spring.formInput "loanProduct.loanAmountSameForAllLoans.max" /]</span>
                         <span class="span-5 last">[@spring.formInput "loanProduct.loanAmountSameForAllLoans.theDefault" /]</span>
                     </div>
-                    <div>&nbsp;</div>
+                </div>
+                
+                <div id="loanamountoption1" class="span-23" style="display:none">
+                	<div class="span-23 bluedivs fontBold paddingLeft" >
+                	    <span class="span-10">[@spring.message "manageLoanProducts.defineLoanProduct.lastLoanAmount" /]</span>
+                    	<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.minloanamount" /]</span>
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.maxloanamount" /]</span>
+                        <span class="span-5 last">[@spring.message "manageLoanProducts.defineLoanProduct.defaultamount" /]</span>
+                    </div>
+                    <div class="span-23 paddingLeft">
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[0].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-2"> - </span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[0].upper" "size=6"/]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[0].min" "size=6"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[0].max" "size=6"/]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[0].theDefault" "size=6"/]</span>
+                    </div>
+                    <div class="span-23 paddingLeft">
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[1].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-2"> - </span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[1].upper" "size=6"/]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[1].min" "size=6"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[1].max" "size=6"/]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[1].theDefault" "size=6"/]</span>
+                    </div>
+                     <div class="span-23 paddingLeft">
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[2].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-2"> - </span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[2].upper" "size=6"/]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[2].min" "size=6"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[2].max" "size=6"/]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[2].theDefault" "size=6"/]</span>
+                    </div>
+                     <div class="span-23 paddingLeft">
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[3].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-2"> - </span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[3].upper" "size=6"/]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[3].min" "size=6"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[3].max" "size=6"/]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[3].theDefault" "size=6"/]</span>
+                    </div>
+                     <div class="span-23 paddingLeft">
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[4].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-2"> - </span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[4].upper" "size=6"/]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[4].min" "size=6"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[4].max" "size=6"/]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[4].theDefault" "size=6"/]</span>
+                    </div>
+                     <div class="span-23 paddingLeft">
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[5].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-2"> - </span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[5].upper" "size=6"/]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[5].min" "size=6"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[5].max" "size=6"/]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[5].theDefault" "size=6"/]</span>
+                    </div>
+                </div>
+                
+                <div id="loanamountoption2" class="span-17" style="display:none">
+                	<div class="span-17 bluedivs fontBold paddingLeft" >
+                	    <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo" /]</span>
+                    	<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.minloanamount" /]</span>
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.maxloanamount" /]</span>
+                        <span class="span-5 last">[@spring.message "manageLoanProducts.defineLoanProduct.defaultamount" /]</span>
+                    </div>
+                    <div class="span-17 paddingLeft">
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.zero" /]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[0].min" /]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[0].max" /]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLoanCycle[0].theDefault" /]</span>
+                    </div>
+                    <div class="span-17 paddingLeft">
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.one" /]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[1].min" /]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[1].max" /]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLoanCycle[1].theDefault" /]</span>
+                    </div>
+                    <div class="span-17 paddingLeft">
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.two" /]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[2].min" /]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[2].max" /]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLoanCycle[2].theDefault" /]</span>
+                    </div>
+                    <div class="span-17 paddingLeft">
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.three" /]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[3].min" /]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[3].max" /]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLoanCycle[3].theDefault" /]</span>
+                    </div>
+                    <div class="span-17 paddingLeft">
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.four" /]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[4].min" /]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[4].max" /]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLoanCycle[4].theDefault" /]</span>
+                    </div>
+                    <div class="span-17 paddingLeft">
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.abovefour" /]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[5].min" /]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[5].max" /]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLoanCycle[5].theDefault" /]</span>
+                    </div>
                 </div>
             </div>
           </div>
@@ -192,30 +354,26 @@ function selectAllOptions(outSel)
             	<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.frequencyofinstallments" /]&nbsp;:</span>
                 <div class="span-15 borders">
                 	<div class="borderbtm span-15">
-                	[@spring.formRadioButtons "loanProduct.installmentFrequencyPeriod", loanProduct.installmentFrequencyPeriodOptions, "" /]
-                	<!--
-                    	<span class="span-8"><input type="radio" name="time" value="week" checked="checked" onclick="enableWeek();" id="createLoanProduct.radio.freqOfInstallmentsWeeks"/>[@spring.message "manageLoanProducts.defineLoanProduct.weekly" /]</span>
-        				<span class="span-3 last"><input type="radio" name="time" value="month" onclick="enableMonth();" id="createLoanProduct.radio.freqOfInstallmentsMonths"/>[@spring.message "manageLoanProducts.defineLoanProduct.monthly" /]</span>
-        			-->
+                	[@spring.formRadioButtons "loanProduct.installmentFrequencyPeriod", loanProduct.installmentFrequencyPeriodOptions, "", "onClick='switchFrequencyMessage();'" /]
                     </div>
                     <div id="week" class="paddingLeft" id="weekDIV" >
-                		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ifweeks,specifythefollowing" /]</span><br />
-                		[@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /][@spring.formInput "loanProduct.installmentFrequencyRecurrenceEvery" "size=3"/][@spring.message "manageLoanProducts.defineLoanProduct.week(s)" /]
-                	</div>
-                    <div id="month" class="paddingLeft" style="display:none">
-                		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ifmonths,specifythefollowing" /]</span><br />
-                		[@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /][@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]
+                		<span id="weekSpecifyMessage">[@spring.message "manageLoanProducts.defineLoanProduct.ifweeks,specifythefollowing" /]</span>
+                		<span id="monthSpecifyMessage" style="display:none">[@spring.message "manageLoanProducts.defineLoanProduct.ifmonths,specifythefollowing" /]</span>
+                		<br />
+                		[@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /][@spring.formInput "loanProduct.installmentFrequencyRecurrenceEvery" "size=3"/]
+                		<span id="weekLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.week(s)" /]</span>
+                		<span id="monthLabelMessage" style="display:none">[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]</span>
                 	</div>
                 </div>
             </div>
 
             <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.calculateofInstallmentsas" /]&nbsp;</span>
             	<div class="span-14">
-            		[@spring.formRadioButtons "loanProduct.selectedInstallmentsCalculationType", loanProduct.installmentsCalculationTypeOptions, "" /]
+            		[@spring.formRadioButtons "loanProduct.selectedInstallmentsCalculationType", loanProduct.installmentsCalculationTypeOptions, "", "onclick=switchLoanInstallmentType();" /]
                 </div>
                 
                 <div class="clear">&nbsp;</div>
-                <div id="install0"  class="span-14 prepend-4">
+                <div id="installmentoption0"  class="span-14 prepend-4">
                 	<div class="span-14 bluedivs fontBold paddingLeft">
                     	<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.minofinstallments" /]</span>
                         <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.maxofinstallments" /]</span>
@@ -227,8 +385,110 @@ function selectAllOptions(outSel)
                         <span class="span-4 ">[@spring.formInput "loanProduct.installmentsSameForAllLoans.max" /]</span>
                         <span class="span-5 last">[@spring.formInput "loanProduct.installmentsSameForAllLoans.theDefault" /]</span>
                     </div>
-                    <div>&nbsp;</div>
                 </div>
+                
+                <div id="installmentoption1" class="span-23" style="display:none">
+                	<div class="span-23 bluedivs fontBold paddingLeft" >
+                	    <span class="span-10">[@spring.message "manageLoanProducts.defineLoanProduct.lastLoanAmount" /]</span>
+                	    <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.minofinstallments" /]</span>
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.maxofinstallments" /]</span>
+                        <span class="span-5 last">[@spring.message "manageLoanProducts.defineLoanProduct.defaultofinstallments" /]</span>
+                    </div>
+                    <div class="span-23 paddingLeft">
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[0].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-2"> - </span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[0].upper" "size=6"/]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[0].min" "size=6"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[0].max" "size=6"/]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[0].theDefault" "size=6"/]</span>
+                    </div>
+                    <div class="span-23 paddingLeft">
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[1].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-2"> - </span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[1].upper" "size=6"/]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[1].min" "size=6"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[1].max" "size=6"/]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[1].theDefault" "size=6"/]</span>
+                    </div>
+                     <div class="span-23 paddingLeft">
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[2].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-2"> - </span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[2].upper" "size=6"/]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[2].min" "size=6"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[2].max" "size=6"/]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[2].theDefault" "size=6"/]</span>
+                    </div>
+                     <div class="span-23 paddingLeft">
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[3].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-2"> - </span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[3].upper" "size=6"/]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[3].min" "size=6"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[3].max" "size=6"/]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[3].theDefault" "size=6"/]</span>
+                    </div>
+                     <div class="span-23 paddingLeft">
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[4].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-2"> - </span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[4].upper" "size=6"/]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[4].min" "size=6"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[4].max" "size=6"/]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[4].theDefault" "size=6"/]</span>
+                    </div>
+                     <div class="span-23 paddingLeft">
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[5].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-2"> - </span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[5].upper" "size=6"/]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[5].min" "size=6"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[5].max" "size=6"/]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[5].theDefault" "size=6"/]</span>
+                    </div>
+                </div>
+                
+                <div id="installmentoption2" class="span-17" style="display:none">
+                	<div class="span-17 bluedivs fontBold paddingLeft" >
+                	    <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo" /]</span>
+                    	<span class="span-4">[@spring.message "manageLoanProducts.editloanproduct.minofinstallments" /]</span>
+                        <span class="span-4">[@spring.message "manageLoanProducts.editloanproduct.maxofinstallments" /]</span>
+                        <span class="span-5 last">[@spring.message "manageLoanProducts.defineLoanProduct.defaultofinstallments" /]</span>
+                    </div>
+                    <div class="span-17 paddingLeft">
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.zero" /]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLoanCycle[0].min" /]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLoanCycle[0].max" /]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLoanCycle[0].theDefault" /]</span>
+                    </div>
+                    <div class="span-17 paddingLeft">
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.one" /]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLoanCycle[1].min" /]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLoanCycle[1].max" /]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLoanCycle[1].theDefault" /]</span>
+                    </div>
+                    <div class="span-17 paddingLeft">
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.two" /]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLoanCycle[2].min" /]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLoanCycle[2].max" /]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLoanCycle[2].theDefault" /]</span>
+                    </div>
+                    <div class="span-17 paddingLeft">
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.three" /]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLoanCycle[3].min" /]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLoanCycle[3].max" /]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLoanCycle[3].theDefault" /]</span>
+                    </div>
+                    <div class="span-17 paddingLeft">
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.four" /]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLoanCycle[4].min" /]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLoanCycle[4].max" /]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLoanCycle[4].theDefault" /]</span>
+                    </div>
+                    <div class="span-17 paddingLeft">
+                        <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.abovefour" /]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLoanCycle[5].min" /]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLoanCycle[5].max" /]</span>
+                        <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLoanCycle[5].theDefault" /]</span>
+                    </div>
+                </div>
+                
             </div>
             
             <div class="span-23">

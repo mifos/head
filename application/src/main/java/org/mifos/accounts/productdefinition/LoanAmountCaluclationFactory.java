@@ -21,29 +21,47 @@
 package org.mifos.accounts.productdefinition;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.mifos.accounts.productdefinition.business.LoanAmountFromLastLoanAmountBO;
 import org.mifos.accounts.productdefinition.business.LoanAmountFromLoanCycleBO;
 import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
+import org.mifos.dto.domain.LowerUpperMinMaxDefaultDto;
+import org.mifos.dto.domain.MinMaxDefaultDto;
+import org.mifos.dto.screen.LoanAmountDetails;
 
 public class LoanAmountCaluclationFactory {
 
-    public static LoanAmountCalculation create(LoanProductCalculationType loanCalculation, Double min, Double max, Double theDefault) {
+    public static LoanAmountCalculation assembleFromDto(LoanAmountDetails loanAmountDetails) {
+
+        LoanProductCalculationType loanCalculation = LoanProductCalculationType.fromInt(loanAmountDetails.getCalculationType());
 
         LoanAmountSameForAllLoanBO sameForAll = null;
         Set<LoanAmountFromLastLoanAmountBO> loanAmountFromLastLoan = new HashSet<LoanAmountFromLastLoanAmountBO>();
         Set<LoanAmountFromLoanCycleBO> loanAmountFromLoanCycle = new HashSet<LoanAmountFromLoanCycleBO>();
         switch (loanCalculation) {
         case SAME_FOR_ALL_LOANS:
-            sameForAll = new LoanAmountSameForAllLoanBO(min, max, theDefault, null);
-            loanAmountFromLastLoan = new HashSet<LoanAmountFromLastLoanAmountBO>();
-            loanAmountFromLoanCycle = new HashSet<LoanAmountFromLoanCycleBO>();
+            MinMaxDefaultDto<Double> sameForAllLoan = loanAmountDetails.getSameForAllLoanRange();
+            sameForAll = new LoanAmountSameForAllLoanBO(sameForAllLoan.getMin(), sameForAllLoan.getMax(), sameForAllLoan.getTheDefault(), null);
+            break;
+        case BY_LAST_LOAN:
+            List<LowerUpperMinMaxDefaultDto<Double>> byLastAmount = loanAmountDetails.getByLastLoanAmountList();
+            for (LowerUpperMinMaxDefaultDto<Double> bean : byLastAmount) {
+                loanAmountFromLastLoan.add(new LoanAmountFromLastLoanAmountBO(bean.getMin(), bean.getMax(), bean.getTheDefault(), bean.getLower(), bean.getUpper(), null));
+            }
+        break;
+        case BY_LOAN_CYCLE:
+            List<MinMaxDefaultDto<Double>> byCycle = loanAmountDetails.getByLoanCycleList();
+            Short rangeIndex = Short.valueOf("0");
+            for (MinMaxDefaultDto<Double> bean : byCycle) {
+                loanAmountFromLoanCycle.add(new LoanAmountFromLoanCycleBO(bean.getMin(), bean.getMax(), bean.getTheDefault(), rangeIndex, null));
+                rangeIndex++;
+            }
             break;
         default:
             break;
         }
         return new LoanAmountCalculation(sameForAll, loanAmountFromLastLoan, loanAmountFromLoanCycle);
     }
-
 }

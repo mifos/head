@@ -60,6 +60,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -117,48 +118,57 @@ public class LoanOfferingBO extends PrdOfferingBO {
             status = activeStatus;
         }
 
-        LoanOfferingBO loanProduct = new LoanOfferingBO(userId, globalProductId, name, shortName, productCategory, status, applicableToEntity, startDate,
-                interestTypeEntity, minRate, maxRate, defaultRate, interestGlCode, principalGlCode, gracePeriodTypeEntity, gracePeriodDuration,
-                loanCycleCounter);
-        loanProduct.setDescription(description);
-        if (endDate != null) {
-            loanProduct.setEndDate(endDate.toDate());
-        }
+        try {
+            MeetingBO meeting = new MeetingBO(recurrence, recurEvery.shortValue(), startDate.toDate(), MeetingType.LOAN_INSTALLMENT);
+            PrdOfferingMeetingEntity meetingEntity = new PrdOfferingMeetingEntity(meeting, null, MeetingType.LOAN_INSTALLMENT);
 
-        for (FundBO fund : applicableFunds) {
-            loanProduct.addLoanOfferingFund(new LoanOfferingFundEntity(fund, loanProduct));
-        }
+            LoanOfferingBO loanProduct = new LoanOfferingBO(userId, globalProductId, name, shortName, productCategory, status, applicableToEntity, startDate,
+                    interestTypeEntity, minRate, maxRate, defaultRate, interestGlCode, principalGlCode, gracePeriodTypeEntity, gracePeriodDuration,
+                    loanCycleCounter, meetingEntity);
 
-        for (FeeBO fee : applicableFees) {
-            loanProduct.addPrdOfferingFee(new LoanOfferingFeesEntity(loanProduct, fee));
-        }
+            loanProduct.setDescription(description);
+            if (endDate != null) {
+                loanProduct.setEndDate(endDate.toDate());
+            }
 
-        loanProduct.setLoanAmountSameForAllLoan(loanAmountCalculation.getSameForAll());
-        for (LoanAmountFromLastLoanAmountBO loanAmountFromLastLoanAmount : loanAmountCalculation.getFromLastLoan()) {
-            loanProduct.addLoanAmountFromLastLoanAmount(loanAmountFromLastLoanAmount);
-        }
+            for (FundBO fund : applicableFunds) {
+                loanProduct.addLoanOfferingFund(new LoanOfferingFundEntity(fund, loanProduct));
+            }
 
-        for (LoanAmountFromLoanCycleBO loanAmountFromLoanCycle : loanAmountCalculation.getFromLoanCycle()) {
-            loanProduct.addLoanAmountFromLoanCycle(loanAmountFromLoanCycle);
-        }
+            for (FeeBO fee : applicableFees) {
+                loanProduct.addPrdOfferingFee(new LoanOfferingFeesEntity(loanProduct, fee));
+            }
 
-        loanProduct.setNoOfInstallSameForAllLoan(loanInstallmentCalculation.getSameForAll());
-        for (NoOfInstallFromLastLoanAmountBO noOfInstallFromLastLoanAmount : loanInstallmentCalculation.getFromLastLoan()) {
-            loanProduct.addNoOfInstallFromLastLoanAmount(noOfInstallFromLastLoanAmount);
-        }
+            loanProduct.setLoanAmountSameForAllLoan(loanAmountCalculation.getSameForAll());
+            for (LoanAmountFromLastLoanAmountBO loanAmountFromLastLoanAmount : loanAmountCalculation.getFromLastLoan()) {
+                loanProduct.addLoanAmountFromLastLoanAmount(loanAmountFromLastLoanAmount);
+            }
 
-        for (NoOfInstallFromLoanCycleBO noOfInstallFromLoanCycle : loanInstallmentCalculation.getFromLoanCycle()) {
-            loanProduct.addNoOfInstallFromLoanCycle(noOfInstallFromLoanCycle);
-        }
+            for (LoanAmountFromLoanCycleBO loanAmountFromLoanCycle : loanAmountCalculation.getFromLoanCycle()) {
+                loanProduct.addLoanAmountFromLoanCycle(loanAmountFromLoanCycle);
+            }
 
-        return loanProduct;
+            loanProduct.setNoOfInstallSameForAllLoan(loanInstallmentCalculation.getSameForAll());
+            for (NoOfInstallFromLastLoanAmountBO noOfInstallFromLastLoanAmount : loanInstallmentCalculation
+                    .getFromLastLoan()) {
+                loanProduct.addNoOfInstallFromLastLoanAmount(noOfInstallFromLastLoanAmount);
+            }
+
+            for (NoOfInstallFromLoanCycleBO noOfInstallFromLoanCycle : loanInstallmentCalculation.getFromLoanCycle()) {
+                loanProduct.addNoOfInstallFromLoanCycle(noOfInstallFromLoanCycle);
+            }
+
+            return loanProduct;
+        } catch (MeetingException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 
     /**
      * minimal legal constructor
      */
     private LoanOfferingBO(Integer userId, String globalProductId, String name, String shortName, ProductCategoryBO productCategory, PrdStatusEntity status, PrdApplicableMasterEntity applicableToEntity, DateTime startDate,
-            InterestTypesEntity interestTypeEntity, Double minRate, Double maxRate, Double defaultRate, GLCodeEntity interestGlCode, GLCodeEntity principalGlCode, GracePeriodTypeEntity gracePeriodTypeEntity, Integer gracePeriodDuration, boolean loanCycleCounter) {
+            InterestTypesEntity interestTypeEntity, Double minRate, Double maxRate, Double defaultRate, GLCodeEntity interestGlCode, GLCodeEntity principalGlCode, GracePeriodTypeEntity gracePeriodTypeEntity, Integer gracePeriodDuration, boolean loanCycleCounter, PrdOfferingMeetingEntity meetingEntity) {
         super(userId, globalProductId, name, shortName, productCategory, status, applicableToEntity, startDate);
         this.interestTypes = interestTypeEntity;
         this.minInterestRate = minRate;
@@ -167,6 +177,10 @@ public class LoanOfferingBO extends PrdOfferingBO {
         this.interestGLcode = interestGlCode;
         this.principalGLcode = principalGlCode;
         this.gracePeriodType = gracePeriodTypeEntity;
+
+        meetingEntity.setPrdOffering(this);
+        this.loanOfferingMeeting = meetingEntity;
+
         this.gracePeriodDuration = gracePeriodDuration.shortValue();
         this.intDedDisbursement = YesNoFlag.NO.getValue();
         this.prinDueLastInst = YesNoFlag.NO.getValue();

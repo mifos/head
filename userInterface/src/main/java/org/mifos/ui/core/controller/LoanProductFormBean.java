@@ -50,8 +50,8 @@ public class LoanProductFormBean {
 
     private String selectedLoanAmountCalculationType;
     private SameForAllLoanBean loanAmountSameForAllLoans;
-    private ByLastLoanAmountBean loanAmountByLastLoanAmount;
-    private ByLoanCycleBean loanAmountByLoanCycle;
+    private ByLastLoanAmountBean[] loanAmountByLastLoanAmount;
+    private ByLoanCycleBean[] loanAmountByLoanCycle;
 
     private Map<String, String> interestRateCalculationTypeOptions;
     private String selectedInterestRateCalculationType;
@@ -67,8 +67,8 @@ public class LoanProductFormBean {
 
     private String selectedInstallmentsCalculationType;
     private SameForAllLoanBean installmentsSameForAllLoans;
-    private ByLastLoanAmountBean installmentsByLastLoanAmount;
-    private ByLoanCycleBean installmentsByLoanCycle;
+    private ByLastLoanAmountBean[] installmentsByLastLoanAmount;
+    private ByLoanCycleBean[] installmentsByLoanCycle;
 
     private String selectedGracePeriodType;
     private Map<String, String> gracePeriodTypeOptions;
@@ -401,19 +401,19 @@ public class LoanProductFormBean {
         this.loanAmountSameForAllLoans = loanAmountSameForAllLoans;
     }
 
-    public ByLastLoanAmountBean getLoanAmountByLastLoanAmount() {
+    public ByLastLoanAmountBean[] getLoanAmountByLastLoanAmount() {
         return this.loanAmountByLastLoanAmount;
     }
 
-    public void setLoanAmountByLastLoanAmount(ByLastLoanAmountBean loanAmountByLastLoanAmount) {
+    public void setLoanAmountByLastLoanAmount(ByLastLoanAmountBean[] loanAmountByLastLoanAmount) {
         this.loanAmountByLastLoanAmount = loanAmountByLastLoanAmount;
     }
 
-    public ByLoanCycleBean getLoanAmountByLoanCycle() {
+    public ByLoanCycleBean[] getLoanAmountByLoanCycle() {
         return this.loanAmountByLoanCycle;
     }
 
-    public void setLoanAmountByLoanCycle(ByLoanCycleBean loanAmountByLoanCycle) {
+    public void setLoanAmountByLoanCycle(ByLoanCycleBean[] loanAmountByLoanCycle) {
         this.loanAmountByLoanCycle = loanAmountByLoanCycle;
     }
 
@@ -433,19 +433,19 @@ public class LoanProductFormBean {
         this.installmentsSameForAllLoans = installmentsSameForAllLoans;
     }
 
-    public ByLastLoanAmountBean getInstallmentsByLastLoanAmount() {
+    public ByLastLoanAmountBean[] getInstallmentsByLastLoanAmount() {
         return this.installmentsByLastLoanAmount;
     }
 
-    public void setInstallmentsByLastLoanAmount(ByLastLoanAmountBean installmentsByLastLoanAmount) {
+    public void setInstallmentsByLastLoanAmount(ByLastLoanAmountBean[] installmentsByLastLoanAmount) {
         this.installmentsByLastLoanAmount = installmentsByLastLoanAmount;
     }
 
-    public ByLoanCycleBean getInstallmentsByLoanCycle() {
+    public ByLoanCycleBean[] getInstallmentsByLoanCycle() {
         return this.installmentsByLoanCycle;
     }
 
-    public void setInstallmentsByLoanCycle(ByLoanCycleBean installmentsByLoanCycle) {
+    public void setInstallmentsByLoanCycle(ByLoanCycleBean[] installmentsByLoanCycle) {
         this.installmentsByLoanCycle = installmentsByLoanCycle;
     }
 

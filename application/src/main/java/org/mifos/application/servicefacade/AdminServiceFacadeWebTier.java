@@ -41,14 +41,12 @@ import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.productdefinition.LoanAmountCalculation;
+import org.mifos.accounts.productdefinition.LoanAmountCaluclationFactory;
 import org.mifos.accounts.productdefinition.LoanInstallmentCalculation;
 import org.mifos.accounts.productdefinition.LoanInstallmentCaluclationFactory;
 import org.mifos.accounts.productdefinition.LoanProductCalculationType;
-import org.mifos.accounts.productdefinition.LoanAmountCaluclationFactory;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
-import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.PrdCategoryStatusEntity;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
@@ -133,7 +131,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 
@@ -1502,12 +1499,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         DateTime endDate = loanProductRequest.getLoanProductDetails().getEndDate();
         ApplicableTo applicableTo = ApplicableTo.fromInt(loanProductRequest.getLoanProductDetails().getApplicableFor());
 
-        LoanProductCalculationType calculationType = LoanProductCalculationType.fromInt(loanProductRequest.getLoanAmountDetails().getCalculationType());
-        Double min = loanProductRequest.getLoanAmountDetails().getSameForAllLoanRange().getMin();
-        Double max = loanProductRequest.getLoanAmountDetails().getSameForAllLoanRange().getMax();
-        Double theDefault = loanProductRequest.getLoanAmountDetails().getSameForAllLoanRange().getTheDefault();
-
-        LoanAmountCalculation loanAmountCalculation = LoanAmountCaluclationFactory.create(calculationType, min, max, theDefault);
+        LoanAmountCalculation loanAmountCalculation = LoanAmountCaluclationFactory.assembleFromDto(loanProductRequest.getLoanAmountDetails());
 
         InterestType interestType = InterestType.fromInt(loanProductRequest.getInterestRateType());
         Double minRate = loanProductRequest.getInterestRateRange().getMin();
