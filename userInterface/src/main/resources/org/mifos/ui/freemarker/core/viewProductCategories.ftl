@@ -20,7 +20,8 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-   <!--  Main Content Begins--> 
+   <!--  Main Content Begins-->
+<span id="page.id" title="viewProductCategories" /> 
 <div class="content">
   		[@mifos.crumbs breadcrumbs/]
   		<p class="font15 orangeheading">[@spring.message "manageProducts.viewProductCategories.viewproductcategories" /]</p>
