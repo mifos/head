@@ -52,7 +52,7 @@
 <div class="breadcrumb">
 	    [#list breadcrumbs as messages]
   			[#if messages_has_next]
-    			<a href="${messages.link}">[@spring.message "${messages.message}" /]</a>&nbsp;/&nbsp;  [#else] <span class="fontBold">[@spring.message "${messages.message}" /]</span>
+    			<a href="${messages.link}">[@spring.message "${messages.message}" /]</a>&nbsp;/&nbsp;  [#else] <span class="fontBold">[@spring.messageText "${messages.message}","${messages.message}" /]</span>
   			[/#if]
   		[/#list]
  </div>
@@ -88,7 +88,18 @@
     </head>
     <body>
 [/#macro]
-
+[#macro showAllErrors path]
+    [@spring.bind path/]
+    [#if spring.status.errorMessages?size > 0]
+    <div class="marginLeft30">
+        <ul class="error">
+	     [#list spring.status.errorMessages as error]
+	      <li><b>${error}</b></li>
+	     [/#list]
+	    </ul>
+	</div>
+	[/#if]
+[/#macro]
 [#macro footer]
     </body>
     </html>
