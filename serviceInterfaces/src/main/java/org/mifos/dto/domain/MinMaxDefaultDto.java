@@ -20,6 +20,7 @@
 
 package org.mifos.dto.domain;
 
+@SuppressWarnings("PMD")
 public class MinMaxDefaultDto {
 
     private final Number min;
