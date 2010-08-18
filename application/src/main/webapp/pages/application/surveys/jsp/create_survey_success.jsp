@@ -28,10 +28,10 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="create_survey_success" />
-		<td align="left" valign="top" bgcolor="#FFFFFF" style="padding-left:8px; padding-top:10px;">
+		<td valign="top" bgcolor="#FFFFFF" style="padding-left:8px; padding-top:10px;">
 		  <table border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td colspan="2" align="left" valign="top">
+					<td colspan="2" valign="top">
             <span class="headingorange">
               <mifos:mifoslabel name="Surveys.createsurveyheader" bundle="SurveysUIResources"/>
             </span>
