@@ -114,10 +114,10 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     List<ProductCategoryTypeDto> retrieveProductCategoryTypes();
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CREATE_PRODUCT_CATEGORIES')")
     void createProductCategory(CreateOrUpdateProductCategory productCategory);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_EDIT_PRODUCT_CATEGORIES')")
     void updateProductCategory(CreateOrUpdateProductCategory productCategory);
 
     List<PrdOfferingDto> retrieveLoanProductsNotMixed();

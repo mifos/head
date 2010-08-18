@@ -22,10 +22,9 @@
 [@adminLeftPaneLayout]
    <!--  Main Content Begins--> 
 <div class="content">
-  	<form method="" action="viewProductCategories.ftl" name="viewProductCategories">
   		[@mifos.crumbs breadcrumbs/]
   		<p class="font15 orangeheading">[@spring.message "manageProducts.viewProductCategories.viewproductcategories" /]</p>
- 		<p>[@spring.message "manageProducts.viewProductCategories.clickonacategorybelowtoviewdetailsandmakechangesor"/] <a href="productCategoryAction.do?method=load">[@spring.message "admin.definenewreportcategory"/]</a></p>
+ 		<p>[@spring.message "manageProducts.viewProductCategories.clickonacategorybelowtoviewdetailsandmakechangesor"/] <a href="defineNewCategory.ftl">[@spring.message "admin.definenewreportcategory"/]</a></p>
  		<div class="span-22 marginLeft30"> 		
  			<span class="fontBold">[@spring.message "manageProducts.viewProductCategories.loans"/]</span>
     			<ul>
@@ -50,7 +49,6 @@
       				[/#list]    
         		</ul>	
     		</div>    	
-    </form> 
   </div><!--Main Content Ends -->
  
 [/@adminLeftPaneLayout]

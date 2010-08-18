@@ -100,8 +100,7 @@ public class PersonnelDaoHibernate implements PersonnelDao {
 
         List<GrantedAuthority> authorities = translateActivityIdsToGrantedAuthorities(activityIds);
 
-        return new MifosUser(user.getPersonnelId(), username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
-                authorities);
+        return new MifosUser(user.getPersonnelId(), user.getOffice().getOfficeId(), username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
 
     @SuppressWarnings("unchecked")
@@ -152,6 +151,9 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         Map<Short, GrantedAuthority> authoritiesMap = new HashMap<Short, GrantedAuthority>();
 
         // manage products ->
+        authoritiesMap.put(SecurityConstants.DEFINE_NEW_PRODUCT_CATEGORIES, new GrantedAuthorityImpl(MifosUser.ROLE_CAN_CREATE_PRODUCT_CATEGORIES));
+        authoritiesMap.put(SecurityConstants.EDIT_PRODUCT_CATEGORIES, new GrantedAuthorityImpl(MifosUser.ROLE_CAN_EDIT_PRODUCT_CATEGORIES));
+
         authoritiesMap.put(SecurityConstants.UPDATE_LATENESS_DORMANCY, new GrantedAuthorityImpl(MifosUser.UPDATE_LATENESS_DORMANCY));
         authoritiesMap.put(SecurityConstants.CAN_DEFINE_PRODUCT_MIX, new GrantedAuthorityImpl(MifosUser.ROLE_CAN_DEFINE_PRODUCT_MIX));
         authoritiesMap.put(SecurityConstants.CAN_EDIT_PRODUCT_MIX, new GrantedAuthorityImpl(MifosUser.ROLE_CAN_EDIT_PRODUCT_MIX));

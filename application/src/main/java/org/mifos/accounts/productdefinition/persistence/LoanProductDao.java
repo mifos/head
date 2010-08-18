@@ -47,6 +47,8 @@ public interface LoanProductDao {
 
     void save(ProductTypeEntity loanProductConfiguration);
 
+    void save(ProductCategoryBO productCategoryBO);
+
     void save(LoanOfferingBO loanProduct);
 
     List<Object[]> findAllLoanProducts();
@@ -65,5 +67,11 @@ public interface LoanProductDao {
 
     GracePeriodTypeEntity findGracePeriodType(GraceType gracePeriodType);
 
-    ProductCategoryBO findProductCategoryById(Integer category);
+    ProductCategoryBO findActiveProductCategoryById(Integer category);
+
+    ProductCategoryBO findProductCategoryByNameAndType(String productCategoryName, Short productTypeEntityId);
+
+    void validateNameIsAvailableForCategory(String productCategoryName, Short productTypeEntityId);
+
+    ProductCategoryBO findProductCategoryByGlobalNum(String globalNumber);
 }

@@ -38,6 +38,7 @@ import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -48,6 +49,7 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.customers.business.CustomerLevelEntity;
+import org.mifos.service.BusinessRuleException;
 
 /**
  *
@@ -92,6 +94,11 @@ public class LoanProductDaoHibernate implements LoanProductDao {
         queryParameters.put("productTypeId", AccountTypes.LOAN_ACCOUNT.getValue());
 
         return (ProductTypeEntity) this.genericDao.executeUniqueResultNamedQuery("findProductTypeConfigurationById", queryParameters);
+    }
+
+    @Override
+    public void save(ProductCategoryBO productCategory) {
+        this.genericDao.createOrUpdate(productCategory);
     }
 
     @Override
@@ -173,11 +180,35 @@ public class LoanProductDaoHibernate implements LoanProductDao {
     }
 
     @Override
-    public ProductCategoryBO findProductCategoryById(Integer category) {
+    public ProductCategoryBO findActiveProductCategoryById(Integer category) {
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("productCategoryID", category.shortValue());
         queryParameters.put("prdCategoryStatusId", PrdCategoryStatus.ACTIVE.getValue());
         return (ProductCategoryBO) this.genericDao.executeUniqueResultNamedQuery("product.findById", queryParameters);
+    }
+
+    @Override
+    public ProductCategoryBO findProductCategoryByNameAndType(String productCategoryName, Short productCategoryId) {
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("productCategoryID", productCategoryId);
+        queryParameters.put("productCategoryName", productCategoryName);
+        return (ProductCategoryBO) this.genericDao.executeUniqueResultNamedQuery("product.findByNameAndId", queryParameters);
+    }
+
+    @Override
+    public void validateNameIsAvailableForCategory(String productCategoryName, Short productCategoryId) {
+        ProductCategoryBO category = findProductCategoryByNameAndType(productCategoryName, productCategoryId);
+        if (category != null) {
+            throw new BusinessRuleException(ProductDefinitionConstants.DUPLICATE_CATEGORY_NAME);
+        }
+    }
+
+    @Override
+    public ProductCategoryBO findProductCategoryByGlobalNum(String globalPrdCategoryNum) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("globalPrdCategoryNum", globalPrdCategoryNum);
+        return (ProductCategoryBO) this.genericDao.executeUniqueResultNamedQuery("product.findByGlobalNum", queryParameters);
     }
 }

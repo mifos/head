@@ -48,7 +48,7 @@ public class ViewProductCategoryDetailsController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView handleRequestInternal(@RequestParam(value = "globalPrdCategoryNum", required = false) String globalPrdCategoryNum) {
+    public ModelAndView handleRequestInternal(@RequestParam(value = "globalPrdCategoryNum", required = true) String globalPrdCategoryNum) {
 
         ModelAndView modelAndView = new ModelAndView("viewProductCategoryDetails");
         List<ProductCategoryTypeDto> typeDto = adminServiceFacade.retrieveProductCategoryTypes();

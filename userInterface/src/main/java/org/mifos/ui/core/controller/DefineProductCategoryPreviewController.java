@@ -23,14 +23,15 @@ package org.mifos.ui.core.controller;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.dto.domain.CreateOrUpdateProductCategory;
 import org.mifos.dto.screen.ProductCategoryTypeDto;
+import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,7 +44,6 @@ import org.springframework.web.servlet.ModelAndView;
 @SessionAttributes("formBean")
 public class DefineProductCategoryPreviewController {
 
-    //private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
     private static final String REDIRECT_TO_ADMIN = "redirect:/AdminAction.do?method=load";
     private static final String CANCEL_PARAM = "CANCEL";
     private static final String REDIRECT_TO_VIEW_PRODUCT_CATEGORY = "redirect:/editProductCategory.ftl";
@@ -52,59 +52,64 @@ public class DefineProductCategoryPreviewController {
     @Autowired
     private AdminServiceFacade adminServiceFacade;
 
-    public DefineProductCategoryPreviewController(final AdminServiceFacade adminServiceFacade){
-        this.adminServiceFacade=adminServiceFacade;
+    public DefineProductCategoryPreviewController(final AdminServiceFacade adminServiceFacade) {
+        this.adminServiceFacade = adminServiceFacade;
     }
 
     protected DefineProductCategoryPreviewController() {
         // spring auto wiring
     }
 
-    public Map<String,String> getProductCategoryTypes(){
-        String pType="";
-        Map<String, String> categoryTypes=new LinkedHashMap<String, String>();
-        for(ProductCategoryTypeDto productCategoryTypeDto:this.adminServiceFacade.retrieveProductCategoryTypes()){
-            if(!pType.equals(productCategoryTypeDto.getProductName())){
-                categoryTypes.put(productCategoryTypeDto.getProductTypeID().toString(), productCategoryTypeDto.getProductName());
-            }
-            pType=productCategoryTypeDto.getProductName();
-        }
-        return categoryTypes;
-    }
-
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings
-    @RequestMapping(method = RequestMethod.POST)
-    public ModelAndView showPopulatedForm(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,@RequestParam(value = EDIT_PARAM, required = false) String edit,
-            @ModelAttribute("formBean") ProductCategoryFormBean bean, BindingResult result,HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("defineNewCategory");
-        if(StringUtils.isNotBlank(cancel)){
-            modelAndView.setViewName(REDIRECT_TO_VIEW_PRODUCT_CATEGORY);
-        }else if(StringUtils.isNotBlank(edit)){
-            modelAndView.setViewName("defineNewCategory");
-            modelAndView.addObject("formBean", bean);
-            modelAndView.addObject("typeList", this.getProductCategoryTypes());
-        }else if(result.hasErrors()){
-            modelAndView.setViewName("newProductCategoryPreview");
-            modelAndView.addObject("formBean", bean);
-        }else{
-/*            Integer productCategoryStatusId=1;
-            Integer productCategoryTypeId=Integer.parseInt(bean.getProductTypeId());
-            UserContext userContext=(UserContext)request.getSession().getAttribute("UserContext");
-            CreateOrUpdateProductCategory createOrUpdateProductCategory=new CreateOrUpdateProductCategory(userContext.getId(), userContext.getBranchId(), productCategoryTypeId.shortValue(), bean.getProductCategoryName(), bean.getProductCategoryDesc(), productCategoryStatusId.shortValue());
-            this.adminServiceFacade.createProductCategory(createOrUpdateProductCategory);
-*/            modelAndView.setViewName(REDIRECT_TO_ADMIN);
-        }
-        return modelAndView;
-    }
-
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView showPopulatedForm(ProductCategoryFormBean formBean) {
-        ModelAndView modelAndView=new ModelAndView("defineNewCategory");
+        ModelAndView modelAndView = new ModelAndView("defineNewCategory");
         modelAndView.addObject("formbean", formBean);
         modelAndView.addObject("typeList", this.getProductCategoryTypes());
         return modelAndView;
     }
 
+    private Map<String, String> getProductCategoryTypes() {
+        String pType = "";
+        Map<String, String> categoryTypes = new LinkedHashMap<String, String>();
+        for (ProductCategoryTypeDto productCategoryTypeDto : this.adminServiceFacade.retrieveProductCategoryTypes()) {
+            if (!pType.equals(productCategoryTypeDto.getProductName())) {
+                categoryTypes.put(productCategoryTypeDto.getProductTypeID().toString(), productCategoryTypeDto
+                        .getProductName());
+            }
+            pType = productCategoryTypeDto.getProductName();
+        }
+        return categoryTypes;
+    }
 
+    @RequestMapping(method = RequestMethod.POST)
+    public ModelAndView processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
+            @RequestParam(value = EDIT_PARAM, required = false) String edit,
+            @ModelAttribute("formBean") ProductCategoryFormBean bean,
+            BindingResult result) {
+        ModelAndView modelAndView = new ModelAndView("defineNewCategory");
+        if (StringUtils.isNotBlank(cancel)) {
+            modelAndView.setViewName(REDIRECT_TO_VIEW_PRODUCT_CATEGORY);
+        } else if (StringUtils.isNotBlank(edit)) {
+            modelAndView.setViewName("defineNewCategory");
+            modelAndView.addObject("formBean", bean);
+            modelAndView.addObject("typeList", this.getProductCategoryTypes());
+        } else if (result.hasErrors()) {
+            modelAndView.setViewName("newProductCategoryPreview");
+            modelAndView.addObject("formBean", bean);
+        } else {
+            CreateOrUpdateProductCategory productCategory = new CreateOrUpdateProductCategory(Short.parseShort(bean.getProductTypeId()), bean.getProductCategoryName(),
+                    bean.getProductCategoryDesc(), Short.parseShort(bean.getProductCategoryStatusId()), bean.getGlobalPrdCategoryNum());
+
+            try {
+                this.adminServiceFacade.createProductCategory(productCategory);
+                modelAndView.setViewName(REDIRECT_TO_ADMIN);
+            } catch (BusinessRuleException e) {
+                ObjectError error = new ObjectError("formBean", new String[] { e.getMessageKey() }, new Object[] {}, "default: ");
+                result.addError(error);
+                modelAndView.setViewName("newProductCategoryPreview");
+                modelAndView.addObject("formBean", bean);
+            }
+        }
+        return modelAndView;
+    }
 }

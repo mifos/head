@@ -20,7 +20,6 @@
 
 package org.mifos.ui.core.controller;
 
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -44,56 +43,56 @@ import org.springframework.web.servlet.ModelAndView;
 @SessionAttributes("formBean")
 public class DefineProductCategoryController {
 
-
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
     private static final String CANCEL_PARAM = "CANCEL";
 
     protected DefineProductCategoryController() {
         // spring autowiring
     }
+
     @Autowired
     private AdminServiceFacade adminServiceFacade;
 
-    public DefineProductCategoryController(final AdminServiceFacade adminServiceFacade){
-        this.adminServiceFacade=adminServiceFacade;
+    public DefineProductCategoryController(final AdminServiceFacade adminServiceFacade) {
+        this.adminServiceFacade = adminServiceFacade;
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings
-    @RequestMapping(method=RequestMethod.POST)
-    public ModelAndView showEditInformation(@RequestParam(value = CANCEL_PARAM, required = false) String cancel, @ModelAttribute("formBean")@Valid ProductCategoryFormBean formBean,
-            BindingResult result){
-        ModelAndView modelAndView=new ModelAndView();
-        if(StringUtils.isNotBlank(cancel)){
+    @RequestMapping(method = RequestMethod.POST)
+    public ModelAndView processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
+            @ModelAttribute("formBean") @Valid ProductCategoryFormBean formBean, BindingResult result) {
+        ModelAndView modelAndView = new ModelAndView();
+        if (StringUtils.isNotBlank(cancel)) {
             modelAndView.setViewName(REDIRECT_TO_ADMIN_SCREEN);
-        }else if(result.hasErrors()){
+        } else if (result.hasErrors()) {
             modelAndView.setViewName("defineNewCategory");
-            modelAndView.addObject("formBean",formBean);
+            modelAndView.addObject("formBean", formBean);
             modelAndView.addObject("typeList", this.getProductCategoryTypes());
-        }else {
-        modelAndView.setViewName("newProductCategoryPreview");
-        modelAndView.addObject("formBean",formBean);
+        } else {
+            modelAndView.setViewName("newProductCategoryPreview");
+            modelAndView.addObject("formBean", formBean);
         }
-        modelAndView.addObject("breadcrumbs",new AdminBreadcrumbBuilder().withLink("editProductCategory", "editProductCategory.ftl").build());
+        modelAndView.addObject("breadcrumbs", new AdminBreadcrumbBuilder().withLink("editProductCategory", "editProductCategory.ftl").build());
         return modelAndView;
 
     }
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings
+
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView showPopulatedForm(ProductCategoryFormBean formBean) {
-        ModelAndView modelAndView=new ModelAndView("defineNewCategory");
+        ModelAndView modelAndView = new ModelAndView("defineNewCategory");
         modelAndView.addObject("formBean", formBean);
         modelAndView.addObject("typeList", this.getProductCategoryTypes());
         return modelAndView;
     }
 
-    public Map<String,String> getProductCategoryTypes(){
-        String pType="";
-        Map<String, String> categoryTypes=new LinkedHashMap<String, String>();
-        for(ProductCategoryTypeDto productCategoryTypeDto:this.adminServiceFacade.retrieveProductCategoryTypes()){
-            if(!pType.equals(productCategoryTypeDto.getProductName())){
-                categoryTypes.put(productCategoryTypeDto.getProductTypeID().toString(), productCategoryTypeDto.getProductName());
+    public Map<String, String> getProductCategoryTypes() {
+        String pType = "";
+        Map<String, String> categoryTypes = new LinkedHashMap<String, String>();
+        for (ProductCategoryTypeDto productCategoryTypeDto : this.adminServiceFacade.retrieveProductCategoryTypes()) {
+            if (!pType.equals(productCategoryTypeDto.getProductName())) {
+                categoryTypes.put(productCategoryTypeDto.getProductTypeID().toString(), productCategoryTypeDto
+                        .getProductName());
             }
-            pType=productCategoryTypeDto.getProductName();
+            pType = productCategoryTypeDto.getProductName();
         }
         return categoryTypes;
     }

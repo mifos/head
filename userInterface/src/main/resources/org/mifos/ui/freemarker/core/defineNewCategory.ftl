@@ -11,7 +11,7 @@
         <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "review&Submit" /]</p>
       </div>
       <div class="subcontent ">
-		<form method="POST" action="defineNewCategory.ftl" name="defineNewCategory">
+		<form method="post" action="defineNewCategory.ftl" name="defineNewCategory">
 		<p>&nbsp;&nbsp;</p>
 		<p class="font15">
 			<span class="fontBold">[@spring.message "admin.definenewcategory" /]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "manageProducts.defineNewCategory.enterProductcategoryinformation" /]</span>

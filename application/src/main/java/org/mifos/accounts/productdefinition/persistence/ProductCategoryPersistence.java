@@ -46,6 +46,7 @@ public class ProductCategoryPersistence extends Persistence {
 
     }
 
+    @Deprecated
     public Integer getProductCategory(String productCategoryName, Short productCategoryId) throws PersistenceException {
         Map<Object, Object> queryParameters = new HashMap<Object, Object>();
         queryParameters.put(ProductDefinitionConstants.PRODUCTCATEGORYNAME, productCategoryName);

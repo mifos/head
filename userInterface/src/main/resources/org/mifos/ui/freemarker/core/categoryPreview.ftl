@@ -22,7 +22,7 @@
 [@adminLeftPaneLayout]
   <!--  Main Content Begins-->  
   <div class=" content">
-  	<form method="POST" action="categoryPreview.ftl" name="formname">
+  	<form method="post" action="categoryPreview.ftl" name="formname">
     <div class="span-24">
   		[@mifos.crumbs breadcrumbs/]
         <div class="clear">&nbsp;</div>
@@ -31,6 +31,7 @@
         <div>[@spring.message "manageProduct.editCategory.PreviewTheFieldsBelow.ThenClickSubmit"/]</div>
         <div class="clear">&nbsp;</div>
         <p class="fontBold">[@spring.message "manageProducts.editCategory.categoryDetails"/]</p>
+        [@mifos.showAllErrors "formBean.*"/]
         <p class="span-22 last">
         	<span class="span-4 fontBold">[@spring.message "manageProducts.editCategory.categoryName"/] &nbsp;:</span>
         	<span class="span-4">

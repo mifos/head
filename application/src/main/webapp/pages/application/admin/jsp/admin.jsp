@@ -250,11 +250,16 @@ while(enn.hasMoreElements()){
 							<td width="3%"><img
 								src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
-							<td width="97%"><html-el:link styleId="admin.link.viewProductCategories"
-								href="productCategoryAction.do?method=getAllCategories&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.viewprdcat" /></html-el:link> | <html-el:link styleId="admin.link.defineNewProductCategory"
-								href="productCategoryAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.defnewcat" /></html-el:link></td>
+							<td width="97%">
+								<!--
+								<html-el:link styleId="admin.link.viewProductCategories" href="productCategoryAction.do?method=getAllCategories&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								<mifos:mifoslabel name="admin.viewprdcat" />
+								</html-el:link> | <html-el:link styleId="admin.link.defineNewProductCategory" href="productCategoryAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								<mifos:mifoslabel name="admin.defnewcat" />
+								</html-el:link>
+								-->
+								<a href="viewProductCategories.ftl" id="admin.link.viewProductCategories"><mifos:mifoslabel name="admin.viewprdcat" /></a> | <a href="defineNewCategory.ftl" id="admin.link.defineNewProductCategory"><mifos:mifoslabel name="admin.defnewcat" /></a>								
+							</td>
 						</tr>
 						<tr class="fontnormal">
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"

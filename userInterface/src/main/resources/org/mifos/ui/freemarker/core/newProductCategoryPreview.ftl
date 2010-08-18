@@ -13,11 +13,11 @@
       </div>
       <div class="subcontent ">
         <form method="POST" action="newProductCategoryPreview.ftl" name="newCategoryPreview">
-        	
           <p class="font15"><span class="fontBold">[@spring.message"admin.definenewcategory"/]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "review&Submit"/]</span></p>
           <div>[@spring.message "manageProduct.editCategory.PreviewTheFieldsBelow.ThenClickSubmit"/]</div>
           <p class="clear">&nbsp; </p>
           <div class="fontBold">[@spring.message "manageProducts.editCategory.categoryDetails"/] </div>
+          [@mifos.showAllErrors "formBean.*"/]
           <p class="span-22">          
           	<span class="fontBold">[@spring.message "manageProducts.defineNewCategory.productType"/] </span><span>&nbsp;:[#switch formBean.productTypeId]
                 	[#case "1"]

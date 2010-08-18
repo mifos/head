@@ -43,6 +43,8 @@ public class MifosUser implements UserDetails {
     public static final String CAN_DEFINE_HIDDEN_MANDATORY_FIELDS = "ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS";
     public static final String CAN_OPEN_SHUTDOWN_PAGE = "ROLE_CAN_OPEN_SHUTDOWN_PAGE";
     public static final String CAN_SHUT_DOWN_MIFOS = "ROLE_CAN_SHUT_DOWN_MIFOS";
+    public static final String ROLE_CAN_CREATE_PRODUCT_CATEGORIES = "ROLE_CAN_CREATE_PRODUCT_CATEGORIES";
+    public static final String ROLE_CAN_EDIT_PRODUCT_CATEGORIES = "ROLE_CAN_EDIT_PRODUCT_CATEGORIES";
 
     private final String username;
     private final byte[] password;
@@ -51,10 +53,11 @@ public class MifosUser implements UserDetails {
     private final boolean credentialsNonExpired;
     private final boolean accountNonLocked;
     private final Collection<GrantedAuthority> authorities;
-    private int userId;
+    private final int userId;
+    private final Short branchId;
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="ignoring for now..")
-    public MifosUser(int userId, String username, byte[] password, boolean enabled, boolean accountNonExpired,
+    public MifosUser(int userId, Short branchId, String username, byte[] password, boolean enabled, boolean accountNonExpired,
             boolean credentialsNonExpired, boolean accountNonLocked, Collection<GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
@@ -64,6 +67,7 @@ public class MifosUser implements UserDetails {
         this.accountNonLocked = accountNonLocked;
         this.authorities = authorities;
         this.userId = userId;
+        this.branchId = branchId;
     }
 
     public int getUserId() {
@@ -108,5 +112,9 @@ public class MifosUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return this.enabled;
+    }
+
+    public Short getBranchId() {
+        return this.branchId;
     }
 }
