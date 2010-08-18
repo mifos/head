@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webflow-project-description>
+	<version>1</version>
+	<pluginVersion><![CDATA[2.3.3.201008072200-CI-R3808-B831]]></pluginVersion>
+	<configs>
+		<config>
+			<file>application/src/main/webapp/WEB-INF/gazelle-servlet.xml</file>
+			<name><![CDATA[gazelle-servlet]]></name>
+		</config>
+		<config>
+			<file>application/src/main/resources/org/mifos/config/resources/webflow-config.xml</file>
+			<name><![CDATA[webflow-config]]></name>
+		</config>
+	</configs>
+</webflow-project-description>

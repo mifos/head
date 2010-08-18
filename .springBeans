@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beansProjectDescription>
 	<version>1</version>
-	<pluginVersion><![CDATA[2.3.2.201003220227-RELEASE]]></pluginVersion>
+	<pluginVersion><![CDATA[2.3.3.201008072200-CI-R3808-B831]]></pluginVersion>
 	<configSuffixes>
 		<configSuffix><![CDATA[xml]]></configSuffix>
 	</configSuffixes>
 	<enableImports><![CDATA[true]]></enableImports>
 	<configs>
+		<config>application/src/main/resources/org/mifos/config/resources/applicationContext.xml</config>
+		<config>application/src/main/webapp/WEB-INF/applicationContextSecurity.xml</config>
+		<config>acceptanceTests/src/test/resources/acceptancePropertyConfigurer.xml</config>
+		<config>application/src/main/webapp/WEB-INF/cheetah-servlet.xml</config>
+		<config>application/src/main/resources/org/mifos/config/resources/dataSourceContext.xml</config>
+		<config>application/src/main/resources/org/mifos/config/resources/financialRulesBean.xml</config>
+		<config>application/src/main/resources/org/mifos/config/resources/hibernate-daos.xml</config>
+		<config>application/src/test/resources/integration-test-context.xml</config>
+		<config>application/src/main/resources/org/mifos/config/resources/messageSourceBean.xml</config>
+		<config>application/src/main/resources/org/mifos/config/resources/persistenceContext.xml</config>
+		<config>application/src/main/resources/org/mifos/config/resources/propertyConfigurer.xml</config>
+		<config>questionnaire/src/main/resources/META-INF/spring/QuestionnaireContext.xml</config>
+		<config>application/src/main/resources/org/mifos/config/reportParameterValidators.xml</config>
+		<config>application/src/main/resources/org/mifos/config/reportServices.xml</config>
+		<config>application/src/main/resources/org/mifos/config/resources/services.xml</config>
+		<config>acceptanceTests/src/test/resources/test-context.xml</config>
+		<config>questionnaire/src/test/resources/test-questionnaire-dbContext.xml</config>
+		<config>questionnaire/src/test/resources/test-questionnaire-persistenceContext.xml</config>
+		<config>acceptanceTests/src/test/resources/ui-test-context.xml</config>
+		<config>application/src/main/webapp/WEB-INF/web-app-config.xml</config>
 	</configs>
 	<configSets>
 	</configSets>
