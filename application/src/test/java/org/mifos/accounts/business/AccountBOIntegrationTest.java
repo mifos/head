@@ -32,6 +32,8 @@ import junit.framework.Assert;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Test;
 import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.exceptions.AccountException;
@@ -47,6 +49,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
@@ -61,6 +64,30 @@ import org.mifos.security.util.UserContext;
 public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
     private static final double DELTA = 0.00000001;
+
+    @After
+    @Override
+    public void tearDown() throws Exception {
+        super.tearDown();
+        new ConfigurationPersistence().updateConfigurationKeyValueInteger("repaymentSchedulesIndependentOfMeetingIsEnabled", 0);
+    }
+
+    /*
+     * When LSIM is turned on, back dated transactions should be allowed.
+     */
+    @Test
+    public void testIsTrxnDateValidWithLSIM() throws Exception {
+        new ConfigurationPersistence().updateConfigurationKeyValueInteger("repaymentSchedulesIndependentOfMeetingIsEnabled", 1);
+
+        DateTime transactionDate = new DateTime();
+        transactionDate = transactionDate.plusDays(10);
+        java.util.Date trxnDate = transactionDate.toDate();
+
+        groupLoan.changeStatus(AccountState.LOAN_APPROVED.getValue(), null, "status changed");
+        Assert.assertTrue(AccountingRules.isBackDatedTxnAllowed());
+        Assert.assertTrue(groupLoan.isTrxnDateValid(trxnDate));
+    }
+
 
     /**
      * The name of this test, and some now-gone (and broken) exception-catching code, make it look like it was supposed
@@ -316,8 +343,9 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         } else {
             Assert.assertFalse(groupLoan.isTrxnDateValid(trxnDate));
         }
-
     }
+
+
 
     @Test
     public void testDeleteFutureInstallments() throws HibernateException, SystemException, AccountException {
