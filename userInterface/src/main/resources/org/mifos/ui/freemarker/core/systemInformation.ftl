@@ -22,7 +22,6 @@
 [@adminLeftPaneLayout]
    <span id="page.id" title="SysInfo" />
    <div class="content">
-  	<form method="" action="" name="formname">
     <div class="span-24">
         <div><span class=" orangeheading">[@spring.message "systemAdministration.viewsysteminformation.systeminformation" /]</span></div>
         <div class="fontBold">[@spring.message "systemAdministration.viewsysteminformation.welcometotheMifossysteminformationarea" /]</div>
@@ -50,8 +49,5 @@
             <div><span class="span-5" id="sysinfo.text.osUser">[@spring.message "systemAdministration.viewsysteminformation.osuser" /]</span><span class="span-16">${model.systemInformationDto.osUser}</span></div>
         </div>
 	</div>
-   	</form> 
   </div>  
 [/@adminLeftPaneLayout]
-
-<!-- >>>>>>> f3bfd9df77ade953a70816f101a6ea9a8dfd6440 -->

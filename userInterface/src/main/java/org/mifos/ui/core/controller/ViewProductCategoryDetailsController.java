@@ -22,8 +22,6 @@ package org.mifos.ui.core.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.screen.ProductCategoryDetailsDto;
 import org.mifos.dto.screen.ProductCategoryTypeDto;
@@ -31,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -48,21 +47,16 @@ public class ViewProductCategoryDetailsController {
         this.adminServiceFacade=adminServiceFacade;
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="NP_UNWRITTEN_FIELD", justification="request is not null")
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView handleRequestInternal(HttpServletRequest request) {
+    public ModelAndView handleRequestInternal(@RequestParam(value = "globalPrdCategoryNum", required = false) String globalPrdCategoryNum) {
 
         ModelAndView modelAndView = new ModelAndView("viewProductCategoryDetails");
         List<ProductCategoryTypeDto> typeDto = adminServiceFacade.retrieveProductCategoryTypes();
-        ProductCategoryDetailsDto detailsDto =  adminServiceFacade.retrieveProductCateogry(request.getParameter("globalPrdCategoryNum"));
+        ProductCategoryDetailsDto detailsDto =  adminServiceFacade.retrieveProductCateogry(globalPrdCategoryNum);
         modelAndView.addObject("typeDto", typeDto);
         modelAndView.addObject("detailsDto", detailsDto);
         modelAndView.addObject("breadcrumbs", new AdminBreadcrumbBuilder().withLink("viewProductCategoryDetails", "viewProductCategoryDetails.ftl").build());
-        modelAndView.addObject("globalPrdCategoryNum",request.getParameter("globalPrdCategoryNum"));
+        modelAndView.addObject("globalPrdCategoryNum", globalPrdCategoryNum);
         return modelAndView;
-    }
-
-    public String getPageToDisplay(HttpServletRequest request) {
-        return request.getRequestURI().replace("mifos/", "").replace("/", "").replace(".ftl", "");
     }
 }

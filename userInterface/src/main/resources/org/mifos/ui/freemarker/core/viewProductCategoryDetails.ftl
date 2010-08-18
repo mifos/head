@@ -9,7 +9,6 @@
   [#include "adminLeftPane.ftl" ]
   </div>
   <div class=" content leftMargin180">
-   	<form method="" action="" name="formname">
     <div class="span-21">
   		[@mifos.crumbs breadcrumbs/]
         <div class="clear">&nbsp;</div>
@@ -48,7 +47,6 @@
 		<br />
         </p>
 	</div>
-   	</form> 
   </div><!--Main Content Ends-->
   <div class="footer">&nbsp;</div>
 </div><!--Container Ends--> 

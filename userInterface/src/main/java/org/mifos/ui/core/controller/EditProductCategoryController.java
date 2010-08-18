@@ -22,8 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/editCategoryInformation")
 @SessionAttributes("formBean")
 public class EditProductCategoryController {
-    //private static final String REDIRECT_TO_VIEW_CATEGORIES = "redirect:/viewProductCategories.ftl";
-    //private static final String TO_CATEGORY_PREVIEW = "categoryPreview";
+
     private static final String CANCEL_PARAM = "CANCEL";
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
 
@@ -40,7 +39,9 @@ public class EditProductCategoryController {
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings
     @RequestMapping(method = RequestMethod.POST)
-    public ModelAndView showPopulatedForm(@RequestParam(value = CANCEL_PARAM, required = false) String cancel, @ModelAttribute("formBean") @Valid ProductCategoryFormBean formBean, BindingResult result) {
+    public ModelAndView showPopulatedForm(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
+                                            @ModelAttribute("formBean") @Valid ProductCategoryFormBean formBean,
+                                            BindingResult result) {
         ModelAndView modelAndView = new ModelAndView();
         if (StringUtils.isNotBlank(cancel)) {
             modelAndView.setViewName(REDIRECT_TO_ADMIN_SCREEN);

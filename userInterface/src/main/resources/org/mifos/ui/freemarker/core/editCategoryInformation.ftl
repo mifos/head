@@ -10,7 +10,7 @@
   <!--  Left Sidebar Ends-->
    <!--  Main Content Begins-->  
   <div class=" content leftMargin180">
-  	<form method="POST" action="editCategoryInformation.ftl" name="editCategoryInformation">
+  	<form method="post" action="editCategoryInformation.ftl" name="editCategoryInformation">
   	[#assign breadcrumb = {"admin":"AdminAction.do?method=load", "admin.viewproductcategories":"viewProductCategories.ftl",formBean.productCategoryName:""}/] 	
     [@mifos.crumbpairs breadcrumb/]  	  	
     <div class="span-24">  		
@@ -28,9 +28,8 @@
         	<span class="red">* </span>
         	[@spring.message "fieldsmarkedwithanasteriskarerequired." /]
         </div>
-        [#-- [@mifos.showAllErrors "formBean.*"/] --]
         [@spring.bind "formBean"/]
-       [@mifos.showAllErrors "formBean.*"/] 
+        [@mifos.showAllErrors "formBean.*"/] 
         <p class="fontBold">
         	[@spring.message "manageProducts.editCategory.categoryDetails" /]
         </p>
@@ -47,7 +46,6 @@
         	</div>
             <div class="span-22">
             	<span class="span-4 rightAlign">
-            		<span class="red"> * </span>
             		[@spring.message "manageProducts.editCategory.description" /]
             	</span>
             	<span>
