@@ -1237,9 +1237,11 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     public void setLoanAmountSameForAllLoan(final LoanAmountSameForAllLoanBO loanAmountSameForAllLoan) {
-        loanAmountSameForAllLoan.setLoanOffering(this);
-        getLoanAmountSameForAllLoan().clear();
-        getLoanAmountSameForAllLoan().add(loanAmountSameForAllLoan);
+        if (loanAmountSameForAllLoan != null) {
+            loanAmountSameForAllLoan.setLoanOffering(this);
+            getLoanAmountSameForAllLoan().clear();
+            getLoanAmountSameForAllLoan().add(loanAmountSameForAllLoan);
+        }
     }
 
     public void setNoOfInstallSameForAllLoan(final NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoan) {

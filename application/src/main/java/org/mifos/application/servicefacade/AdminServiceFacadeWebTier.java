@@ -41,10 +41,8 @@ import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.productdefinition.LoanAmountCalculation;
-import org.mifos.accounts.productdefinition.LoanAmountCaluclationFactory;
 import org.mifos.accounts.productdefinition.LoanInstallmentCalculation;
-import org.mifos.accounts.productdefinition.LoanInstallmentCaluclationFactory;
-import org.mifos.accounts.productdefinition.LoanProductCalculationType;
+import org.mifos.accounts.productdefinition.LoanProductCaluclationTypeAssembler;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
@@ -145,6 +143,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private final ApplicationConfigurationDao applicationConfigurationDao;
     private final FundDao fundDao;
     private final GeneralLedgerDao generalLedgerDao;
+    private LoanProductCaluclationTypeAssembler loanProductCaluclationTypeAssembler = new LoanProductCaluclationTypeAssembler();
 
     public AdminServiceFacadeWebTier(ProductService productService, OfficeHierarchyService officeHierarchyService,
             MandatoryHiddenFieldService mandatoryHiddenFieldService, LoanProductDao loanProductDao,
@@ -1499,12 +1498,12 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         DateTime endDate = loanProductRequest.getLoanProductDetails().getEndDate();
         ApplicableTo applicableTo = ApplicableTo.fromInt(loanProductRequest.getLoanProductDetails().getApplicableFor());
 
-        LoanAmountCalculation loanAmountCalculation = LoanAmountCaluclationFactory.assembleFromDto(loanProductRequest.getLoanAmountDetails());
+        LoanAmountCalculation loanAmountCalculation = this.loanProductCaluclationTypeAssembler.assembleLoanAmountCalculationFromDto(loanProductRequest.getLoanAmountDetails());
 
         InterestType interestType = InterestType.fromInt(loanProductRequest.getInterestRateType());
-        Double minRate = loanProductRequest.getInterestRateRange().getMin();
-        Double maxRate = loanProductRequest.getInterestRateRange().getMax();
-        Double defaultRate = loanProductRequest.getInterestRateRange().getTheDefault();
+        Double minRate = loanProductRequest.getInterestRateRange().getMin().doubleValue();
+        Double maxRate = loanProductRequest.getInterestRateRange().getMax().doubleValue();
+        Double defaultRate = loanProductRequest.getInterestRateRange().getTheDefault().doubleValue();
 
         PrdApplicableMasterEntity applicableToEntity = this.loanProductDao.findApplicableProductType(applicableTo);
         InterestTypesEntity interestTypeEntity = this.loanProductDao.findInterestType(interestType);
@@ -1512,12 +1511,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         RecurrenceType recurrence = RecurrenceType.fromInt(loanProductRequest.getRepaymentDetails().getFrequencyType().shortValue());
         Integer recurEvery = loanProductRequest.getRepaymentDetails().getRecurs();
 
-        LoanProductCalculationType installmentCalculation = LoanProductCalculationType.fromInt(loanProductRequest.getRepaymentDetails().getCalculationType());
-        Integer minAllowed = loanProductRequest.getRepaymentDetails().getSameForAllLoanRange().getMin();
-        Integer maxAllowed = loanProductRequest.getRepaymentDetails().getSameForAllLoanRange().getMax();
-        Integer defaultAllowed = loanProductRequest.getRepaymentDetails().getSameForAllLoanRange().getTheDefault();
-
-        LoanInstallmentCalculation loanInstallmentCalculation = LoanInstallmentCaluclationFactory.create(installmentCalculation, minAllowed, maxAllowed, defaultAllowed);
+        LoanInstallmentCalculation loanInstallmentCalculation = this.loanProductCaluclationTypeAssembler.assembleLoanInstallmentCalculationFromDto(loanProductRequest.getRepaymentDetails().getInstallmentCalculationDetails());
 
         GraceType gracePeriodType = GraceType.fromInt(loanProductRequest.getRepaymentDetails().getGracePeriodType());
         GracePeriodTypeEntity gracePeriodTypeEntity = this.loanProductDao.findGracePeriodType(gracePeriodType);
@@ -1556,5 +1550,10 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    public void setLoanProductCaluclationTypeAssembler(
+            LoanProductCaluclationTypeAssembler loanProductCaluclationTypeAssembler) {
+        this.loanProductCaluclationTypeAssembler = loanProductCaluclationTypeAssembler;
     }
 }

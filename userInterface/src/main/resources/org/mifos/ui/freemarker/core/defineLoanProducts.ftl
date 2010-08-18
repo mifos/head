@@ -233,7 +233,7 @@ function switchLoanInstallmentType()
                         <span class="span-5 last">[@spring.message "manageLoanProducts.defineLoanProduct.defaultamount" /]</span>
                     </div>
                     <div class="span-23 paddingLeft">
-                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[0].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[0].lower" "size=6"/]</span>
                         <span class="span-2"> - </span>
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[0].upper" "size=6"/]</span>
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[0].min" "size=6"/]</span>
@@ -241,7 +241,7 @@ function switchLoanInstallmentType()
                         <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[0].theDefault" "size=6"/]</span>
                     </div>
                     <div class="span-23 paddingLeft">
-                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[1].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[1].lower" "size=6"/]</span>
                         <span class="span-2"> - </span>
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[1].upper" "size=6"/]</span>
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[1].min" "size=6"/]</span>
@@ -249,7 +249,7 @@ function switchLoanInstallmentType()
                         <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[1].theDefault" "size=6"/]</span>
                     </div>
                      <div class="span-23 paddingLeft">
-                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[2].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[2].lower" "size=6"/]</span>
                         <span class="span-2"> - </span>
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[2].upper" "size=6"/]</span>
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[2].min" "size=6"/]</span>
@@ -257,7 +257,7 @@ function switchLoanInstallmentType()
                         <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[2].theDefault" "size=6"/]</span>
                     </div>
                      <div class="span-23 paddingLeft">
-                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[3].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[3].lower" "size=6"/]</span>
                         <span class="span-2"> - </span>
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[3].upper" "size=6"/]</span>
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[3].min" "size=6"/]</span>
@@ -265,7 +265,7 @@ function switchLoanInstallmentType()
                         <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[3].theDefault" "size=6"/]</span>
                     </div>
                      <div class="span-23 paddingLeft">
-                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[4].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[4].lower" "size=6"/]</span>
                         <span class="span-2"> - </span>
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[4].upper" "size=6"/]</span>
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[4].min" "size=6"/]</span>
@@ -273,7 +273,7 @@ function switchLoanInstallmentType()
                         <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[4].theDefault" "size=6"/]</span>
                     </div>
                      <div class="span-23 paddingLeft">
-                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[5].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[5].lower" "size=6"/]</span>
                         <span class="span-2"> - </span>
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[5].upper" "size=6"/]</span>
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[5].min" "size=6"/]</span>
@@ -369,7 +369,7 @@ function switchLoanInstallmentType()
 
             <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.calculateofInstallmentsas" /]&nbsp;</span>
             	<div class="span-14">
-            		[@spring.formRadioButtons "loanProduct.selectedInstallmentsCalculationType", loanProduct.installmentsCalculationTypeOptions, "", "onclick=switchLoanInstallmentType();" /]
+            		[@spring.formRadioButtons "loanProduct.selectedInstallmentsCalculationType", loanProduct.installmentsCalculationTypeOptions, "", "onclick='switchLoanInstallmentType();'" /]
                 </div>
                 
                 <div class="clear">&nbsp;</div>
@@ -395,15 +395,15 @@ function switchLoanInstallmentType()
                         <span class="span-5 last">[@spring.message "manageLoanProducts.defineLoanProduct.defaultofinstallments" /]</span>
                     </div>
                     <div class="span-23 paddingLeft">
-                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[0].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[0].lower" "size=6"/]</span>
                         <span class="span-2"> - </span>
-                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[0].upper" "size=6"/]</span>
+                    	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[0].upper" "size=6" /]</span>
                     	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[0].min" "size=6"/]</span>
                         <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[0].max" "size=6"/]</span>
                         <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[0].theDefault" "size=6"/]</span>
                     </div>
                     <div class="span-23 paddingLeft">
-                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[1].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[1].lower" "size=6"/]</span>
                         <span class="span-2"> - </span>
                     	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[1].upper" "size=6"/]</span>
                     	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[1].min" "size=6"/]</span>
@@ -411,7 +411,7 @@ function switchLoanInstallmentType()
                         <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[1].theDefault" "size=6"/]</span>
                     </div>
                      <div class="span-23 paddingLeft">
-                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[2].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[2].lower" "size=6"/]</span>
                         <span class="span-2"> - </span>
                     	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[2].upper" "size=6"/]</span>
                     	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[2].min" "size=6"/]</span>
@@ -419,7 +419,7 @@ function switchLoanInstallmentType()
                         <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[2].theDefault" "size=6"/]</span>
                     </div>
                      <div class="span-23 paddingLeft">
-                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[3].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[3].lower" "size=6"/]</span>
                         <span class="span-2"> - </span>
                     	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[3].upper" "size=6"/]</span>
                     	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[3].min" "size=6"/]</span>
@@ -427,7 +427,7 @@ function switchLoanInstallmentType()
                         <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[3].theDefault" "size=6"/]</span>
                     </div>
                      <div class="span-23 paddingLeft">
-                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[4].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[4].lower" "size=6"/]</span>
                         <span class="span-2"> - </span>
                     	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[4].upper" "size=6"/]</span>
                     	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[4].min" "size=6"/]</span>
@@ -435,7 +435,7 @@ function switchLoanInstallmentType()
                         <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[4].theDefault" "size=6"/]</span>
                     </div>
                      <div class="span-23 paddingLeft">
-                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[5].lower" "size=6, disabled=disabled"/]</span>
+                        <span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[5].lower" "size=6"/]</span>
                         <span class="span-2"> - </span>
                     	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[5].upper" "size=6"/]</span>
                     	<span class="span-4">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[5].min" "size=6"/]</span>

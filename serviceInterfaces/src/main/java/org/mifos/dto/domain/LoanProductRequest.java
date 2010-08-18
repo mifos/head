@@ -23,22 +23,22 @@ package org.mifos.dto.domain;
 import java.util.List;
 
 import org.mifos.dto.screen.AccountingDetailsDto;
-import org.mifos.dto.screen.LoanAmountDetails;
+import org.mifos.dto.screen.LoanAmountDetailsDto;
 import org.mifos.dto.screen.LoanProductDetails;
 
 public class LoanProductRequest {
 
     private final LoanProductDetails loanProductDetails;
     private final Integer interestRateType;
-    private final MinMaxDefaultDto<Double> interestRateRange;
+    private final MinMaxDefaultDto interestRateRange;
     private final RepaymentDetailsDto repaymentDetails;
-    private final LoanAmountDetails loanAmountDetails;
+    private final LoanAmountDetailsDto loanAmountDetails;
     private final List<Integer> applicableFees;
     private final AccountingDetailsDto accountDetails;
 
 
-    public LoanProductRequest(LoanProductDetails loanProductDetails, LoanAmountDetails loanAmountDetails, Integer interestRateType,
-            MinMaxDefaultDto<Double> interestRateRange, RepaymentDetailsDto repaymentDetails, List<Integer> applicableFees, AccountingDetailsDto accountDetails) {
+    public LoanProductRequest(LoanProductDetails loanProductDetails, LoanAmountDetailsDto loanAmountDetails, Integer interestRateType,
+            MinMaxDefaultDto interestRateRange, RepaymentDetailsDto repaymentDetails, List<Integer> applicableFees, AccountingDetailsDto accountDetails) {
         this.loanProductDetails = loanProductDetails;
         this.loanAmountDetails = loanAmountDetails;
         this.interestRateType = interestRateType;
@@ -52,7 +52,7 @@ public class LoanProductRequest {
         return this.interestRateType;
     }
 
-    public MinMaxDefaultDto<Double> getInterestRateRange() {
+    public MinMaxDefaultDto getInterestRateRange() {
         return this.interestRateRange;
     }
 
@@ -64,7 +64,7 @@ public class LoanProductRequest {
         return this.loanProductDetails;
     }
 
-    public LoanAmountDetails getLoanAmountDetails() {
+    public LoanAmountDetailsDto getLoanAmountDetails() {
         return this.loanAmountDetails;
     }
 

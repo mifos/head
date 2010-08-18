@@ -20,15 +20,19 @@
 
 package org.mifos.dto.domain;
 
-public class LowerUpperMinMaxDefaultDto<T> {
+public class LowerUpperMinMaxDefaultDto {
 
-    private final T lower;
-    private final T upper;
-    private final T min;
-    private final T max;
-    private final T theDefault;
+    private final Number lower;
+    private final Number upper;
+    private final Number min;
+    private final Number max;
+    private final Number theDefault;
 
-    public LowerUpperMinMaxDefaultDto(T lower, T upper, T min, T max, T theDefault) {
+    public static LowerUpperMinMaxDefaultDto create(Number lower, Number upper, Number min, Number max, Number theDefault) {
+        return new LowerUpperMinMaxDefaultDto(lower, upper, min, max, theDefault);
+    }
+
+    private LowerUpperMinMaxDefaultDto(Number lower, Number upper, Number min, Number max, Number theDefault) {
         this.lower = lower;
         this.upper = upper;
         this.min = min;
@@ -36,23 +40,23 @@ public class LowerUpperMinMaxDefaultDto<T> {
         this.theDefault = theDefault;
     }
 
-    public T getLower() {
+    public Number getLower() {
         return this.lower;
     }
 
-    public T getUpper() {
+    public Number getUpper() {
         return this.upper;
     }
 
-    public T getMin() {
+    public Number getMin() {
         return this.min;
     }
 
-    public T getMax() {
+    public Number getMax() {
         return this.max;
     }
 
-    public T getTheDefault() {
+    public Number getTheDefault() {
         return this.theDefault;
     }
 }

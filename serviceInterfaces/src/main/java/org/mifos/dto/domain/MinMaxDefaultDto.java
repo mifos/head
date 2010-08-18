@@ -20,27 +20,31 @@
 
 package org.mifos.dto.domain;
 
-public class MinMaxDefaultDto<T> {
+public class MinMaxDefaultDto {
 
-    private final T min;
-    private final T max;
-    private final T theDefault;
+    private final Number min;
+    private final Number max;
+    private final Number theDefault;
 
-    public MinMaxDefaultDto(T min, T max, T theDefault) {
+    public static MinMaxDefaultDto create(Number min, Number max, Number theDefault) {
+        return new MinMaxDefaultDto(min, max, theDefault);
+    }
+
+    private MinMaxDefaultDto(Number min, Number max, Number theDefault) {
         this.min = min;
         this.max = max;
         this.theDefault = theDefault;
     }
 
-    public T getMin() {
+    public Number getMin() {
         return this.min;
     }
 
-    public T getMax() {
+    public Number getMax() {
         return this.max;
     }
 
-    public T getTheDefault() {
+    public Number getTheDefault() {
         return this.theDefault;
     }
 }

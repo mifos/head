@@ -25,14 +25,14 @@ import java.util.List;
 import org.mifos.dto.domain.LowerUpperMinMaxDefaultDto;
 import org.mifos.dto.domain.MinMaxDefaultDto;
 
-public class LoanAmountDetails {
+public class LoanAmountDetailsDto {
 
     private final Integer calculationType;
-    private final MinMaxDefaultDto<Double> sameForAllLoanRange;
-    private final List<LowerUpperMinMaxDefaultDto<Double>> byLastLoanAmountList;
-    private final List<MinMaxDefaultDto<Double>> byLoanCycleList;
+    private final MinMaxDefaultDto sameForAllLoanRange;
+    private final List<LowerUpperMinMaxDefaultDto> byLastLoanAmountList;
+    private final List<MinMaxDefaultDto> byLoanCycleList;
 
-    public LoanAmountDetails(Integer calculationType, MinMaxDefaultDto<Double> sameForAllLoanRange, List<LowerUpperMinMaxDefaultDto<Double>> byLastLoanAmountList, List<MinMaxDefaultDto<Double>> byLoanCycleList) {
+    public LoanAmountDetailsDto(Integer calculationType, MinMaxDefaultDto sameForAllLoanRange, List<LowerUpperMinMaxDefaultDto> byLastLoanAmountList, List<MinMaxDefaultDto> byLoanCycleList) {
         this.calculationType = calculationType;
         this.sameForAllLoanRange = sameForAllLoanRange;
         this.byLastLoanAmountList = byLastLoanAmountList;
@@ -43,15 +43,15 @@ public class LoanAmountDetails {
         return this.calculationType;
     }
 
-    public MinMaxDefaultDto<Double> getSameForAllLoanRange() {
+    public MinMaxDefaultDto getSameForAllLoanRange() {
         return this.sameForAllLoanRange;
     }
 
-    public List<LowerUpperMinMaxDefaultDto<Double>> getByLastLoanAmountList() {
+    public List<LowerUpperMinMaxDefaultDto> getByLastLoanAmountList() {
         return this.byLastLoanAmountList;
     }
 
-    public List<MinMaxDefaultDto<Double>> getByLoanCycleList() {
+    public List<MinMaxDefaultDto> getByLoanCycleList() {
         return this.byLoanCycleList;
     }
 }

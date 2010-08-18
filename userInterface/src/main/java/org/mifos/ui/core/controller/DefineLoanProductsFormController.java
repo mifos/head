@@ -33,7 +33,7 @@ import org.mifos.dto.domain.LowerUpperMinMaxDefaultDto;
 import org.mifos.dto.domain.MinMaxDefaultDto;
 import org.mifos.dto.domain.RepaymentDetailsDto;
 import org.mifos.dto.screen.AccountingDetailsDto;
-import org.mifos.dto.screen.LoanAmountDetails;
+import org.mifos.dto.screen.LoanAmountDetailsDto;
 import org.mifos.dto.screen.LoanProductDetails;
 import org.mifos.dto.screen.LoanProductFormDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +75,7 @@ public class DefineLoanProductsFormController {
 
         LoanProductFormBean loanProductFormBean = loanProductAssembler.populateWithReferenceData(loanProductRefData);
 
+        // FIXME - Delegate to assembler
         DateTime startDate = new DateTime();
         loanProductFormBean.setStartDateDay(startDate.getDayOfMonth());
         loanProductFormBean.setStartDateMonth(startDate.getMonthOfYear());
@@ -126,6 +127,7 @@ public class DefineLoanProductsFormController {
             viewName = "defineLoanProducts";
         } else {
 
+            // FIXME - Delegate to assembler
             LoanProductRequest loanProduct = translateFrom(loanProductFormBean);
 
             adminServiceFacade.createLoanProduct(loanProduct);
@@ -139,13 +141,13 @@ public class DefineLoanProductsFormController {
 
         LoanProductDetails loanProductDetails = translateToLoanProductDetails(loanProductFormBean);
 
-        LoanAmountDetails loanAmountDetails = translateToLoanAmountDetails(loanProductFormBean);
+        LoanAmountDetailsDto loanAmountDetails = translateToLoanAmountDetails(loanProductFormBean);
 
         Integer interestRateType = Integer.valueOf(loanProductFormBean.getSelectedInterestRateCalculationType());
         Double maxInterest = Double.valueOf(loanProductFormBean.getMaxInterestRate());
         Double minInterest = Double.valueOf(loanProductFormBean.getMinInterestRate());
         Double defaultInterest = Double.valueOf(loanProductFormBean.getDefaultInterestRate());
-        MinMaxDefaultDto<Double> interestRateRange = new MinMaxDefaultDto<Double>(minInterest, maxInterest, defaultInterest);
+        MinMaxDefaultDto interestRateRange = MinMaxDefaultDto.create(minInterest, maxInterest, defaultInterest);
 
         RepaymentDetailsDto repaymentDetails = translateToRepaymentDetails(loanProductFormBean);
 
@@ -156,12 +158,12 @@ public class DefineLoanProductsFormController {
             }
         }
 
-        AccountingDetailsDto accountDetails = translateToAccountDetails(loanProductFormBean);
+        AccountingDetailsDto accountDetails = translateToAccountingDetails(loanProductFormBean);
 
         return new LoanProductRequest(loanProductDetails, loanAmountDetails, interestRateType, interestRateRange, repaymentDetails, applicableFees, accountDetails);
     }
 
-    private AccountingDetailsDto translateToAccountDetails(LoanProductFormBean loanProductFormBean) {
+    private AccountingDetailsDto translateToAccountingDetails(LoanProductFormBean loanProductFormBean) {
 
         List<Integer> applicableFunds = new ArrayList<Integer>();
         if (loanProductFormBean.getSelectedFunds() != null) {
@@ -173,27 +175,6 @@ public class DefineLoanProductsFormController {
         Integer principalClCodeId = Integer.valueOf(loanProductFormBean.getSelectedPrincipal());
 
         return new AccountingDetailsDto(applicableFunds, interestGlCodeId, principalClCodeId);
-    }
-
-    private LoanAmountDetails translateToLoanAmountDetails(LoanProductFormBean loanProductFormBean) {
-        Integer calculationType = Integer.valueOf(loanProductFormBean.getSelectedLoanAmountCalculationType());
-
-        MinMaxDefaultDto<Double> sameForAllLoanRange = null;
-        List<LowerUpperMinMaxDefaultDto<Double>>  byLastLoanAmountList = new ArrayList<LowerUpperMinMaxDefaultDto<Double>>();
-        List<MinMaxDefaultDto<Double>> byLoanCycleList = new ArrayList<MinMaxDefaultDto<Double>>();
-        if (calculationType.equals(1)) {
-            sameForAllLoanRange = translateMinMaxDefaultForDouble(loanProductFormBean.getLoanAmountSameForAllLoans());
-        }
-
-        if (calculationType.equals(2)) {
-            byLastLoanAmountList = translateLowerUpperMinMaxDefaultForDouble(loanProductFormBean.getLoanAmountByLastLoanAmount());
-        }
-
-        if (calculationType.equals(3)) {
-
-        }
-
-        return new LoanAmountDetails(calculationType, sameForAllLoanRange, byLastLoanAmountList, byLoanCycleList);
     }
 
     private LoanProductDetails translateToLoanProductDetails(LoanProductFormBean loanProductFormBean) {
@@ -209,33 +190,79 @@ public class DefineLoanProductsFormController {
                 startDate, endDate, applicableFor, loanProductFormBean.isIncludeInLoanCycleCounter());
     }
 
+    private LoanAmountDetailsDto translateToLoanAmountDetails(LoanProductFormBean loanProductFormBean) {
+        Integer calculationType = Integer.valueOf(loanProductFormBean.getSelectedLoanAmountCalculationType());
+
+        MinMaxDefaultDto sameForAllLoanRange = null;
+        List<LowerUpperMinMaxDefaultDto>  byLastLoanAmountList = new ArrayList<LowerUpperMinMaxDefaultDto>();
+        List<MinMaxDefaultDto> byLoanCycleList = new ArrayList<MinMaxDefaultDto>();
+        if (Integer.valueOf(1).equals(calculationType)) {
+            sameForAllLoanRange = translateSameForAllLoanBeanToMinMaxDefaultDto(loanProductFormBean.getLoanAmountSameForAllLoans());
+        }
+
+        if (Integer.valueOf(2).equals(calculationType)) {
+            byLastLoanAmountList = translateByLastLoanAmountBeanToLowerUpperMinMaxDefaultDto(loanProductFormBean.getLoanAmountByLastLoanAmount());
+        }
+
+        if (Integer.valueOf(3).equals(calculationType)) {
+            byLoanCycleList = translateLoanCycleBeanToMinMaxDefaultDto(loanProductFormBean.getLoanAmountByLoanCycle());
+        }
+
+        return new LoanAmountDetailsDto(calculationType, sameForAllLoanRange, byLastLoanAmountList, byLoanCycleList);
+    }
+
+    private LoanAmountDetailsDto translateToInstallmentDetails(LoanProductFormBean loanProductFormBean) {
+        Integer calculationType = Integer.valueOf(loanProductFormBean.getSelectedInstallmentsCalculationType());
+
+        MinMaxDefaultDto sameForAllLoanRange = null;
+        List<LowerUpperMinMaxDefaultDto>  byLastLoanAmountList = new ArrayList<LowerUpperMinMaxDefaultDto>();
+        List<MinMaxDefaultDto> byLoanCycleList = new ArrayList<MinMaxDefaultDto>();
+        if (Integer.valueOf(1).equals(calculationType)) {
+            sameForAllLoanRange = translateSameForAllLoanBeanToMinMaxDefaultDto(loanProductFormBean.getInstallmentsSameForAllLoans());
+        }
+
+        if (Integer.valueOf(2).equals(calculationType)) {
+            byLastLoanAmountList = translateByLastLoanAmountBeanToLowerUpperMinMaxDefaultDto(loanProductFormBean.getInstallmentsByLastLoanAmount());
+        }
+
+        if (Integer.valueOf(3).equals(calculationType)) {
+            byLoanCycleList = translateLoanCycleBeanToMinMaxDefaultDto(loanProductFormBean.getLoanAmountByLoanCycle());
+        }
+
+        return new LoanAmountDetailsDto(calculationType, sameForAllLoanRange, byLastLoanAmountList, byLoanCycleList);
+    }
+
     private RepaymentDetailsDto translateToRepaymentDetails(LoanProductFormBean loanProductFormBean) {
 
         Integer frequencyType = Integer.valueOf(loanProductFormBean.getInstallmentFrequencyPeriod());
         Integer recurs = Integer.valueOf(loanProductFormBean.getInstallmentFrequencyRecurrenceEvery());
-        Integer calculationType = Integer.valueOf(loanProductFormBean.getSelectedInstallmentsCalculationType());
-        MinMaxDefaultDto<Integer> sameForAllLoanRange = translateToMinMaxDefault(loanProductFormBean.getInstallmentsSameForAllLoans());
+
+        LoanAmountDetailsDto installmentCalculationDetails = translateToInstallmentDetails(loanProductFormBean);
 
         Integer gracePeriodType = Integer.valueOf(loanProductFormBean.getSelectedGracePeriodType());
         Integer gracePeriodDuration = loanProductFormBean.getGracePeriodDurationInInstallments();
 
-        RepaymentDetailsDto details = new RepaymentDetailsDto(frequencyType, recurs, calculationType, sameForAllLoanRange, gracePeriodType, gracePeriodDuration);
+        RepaymentDetailsDto details = new RepaymentDetailsDto(frequencyType, recurs, installmentCalculationDetails, gracePeriodType, gracePeriodDuration);
 
         return details;
     }
 
-    private MinMaxDefaultDto<Integer> translateToMinMaxDefault(SameForAllLoanBean bean) {
-        return new MinMaxDefaultDto<Integer>(bean.getMin().intValue(), bean.getMax().intValue(), bean.getTheDefault().intValue());
+    private MinMaxDefaultDto translateSameForAllLoanBeanToMinMaxDefaultDto(SameForAllLoanBean bean) {
+        return MinMaxDefaultDto.create(bean.getMin(), bean.getMax(), bean.getTheDefault());
     }
 
-    private MinMaxDefaultDto<Double> translateMinMaxDefaultForDouble(SameForAllLoanBean bean) {
-        return new MinMaxDefaultDto<Double>(bean.getMin(), bean.getMax(), bean.getTheDefault());
+    private List<MinMaxDefaultDto> translateLoanCycleBeanToMinMaxDefaultDto(ByLoanCycleBean[] loanAmountByLoanCycle) {
+        List<MinMaxDefaultDto> byLoanCycleList = new ArrayList<MinMaxDefaultDto>();
+        for (ByLoanCycleBean bean : loanAmountByLoanCycle) {
+            byLoanCycleList.add(MinMaxDefaultDto.create(bean.getMin(), bean.getMax(), bean.getTheDefault()));
+        }
+        return byLoanCycleList;
     }
 
-    private List<LowerUpperMinMaxDefaultDto<Double>> translateLowerUpperMinMaxDefaultForDouble(ByLastLoanAmountBean[] loanAmountByLastLoanAmount) {
-        List<LowerUpperMinMaxDefaultDto<Double>> list = new ArrayList<LowerUpperMinMaxDefaultDto<Double>>();
+    private List<LowerUpperMinMaxDefaultDto> translateByLastLoanAmountBeanToLowerUpperMinMaxDefaultDto(ByLastLoanAmountBean[] loanAmountByLastLoanAmount) {
+        List<LowerUpperMinMaxDefaultDto> list = new ArrayList<LowerUpperMinMaxDefaultDto>();
         for (ByLastLoanAmountBean bean : loanAmountByLastLoanAmount) {
-            list.add(new LowerUpperMinMaxDefaultDto<Double>(bean.getLower(), bean.getUpper(), bean.getMin(), bean.getMax(), bean.getTheDefault()));
+            list.add(LowerUpperMinMaxDefaultDto.create(bean.getLower(), bean.getUpper(), bean.getMin(), bean.getMax(), bean.getTheDefault()));
         }
         return list;
     }
