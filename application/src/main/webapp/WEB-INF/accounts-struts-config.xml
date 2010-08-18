@@ -248,6 +248,7 @@
             <forward name="previous_success" path="/pages/accounts/jsp/change_status.jsp"/>
             <forward name="update_failure" path="/pages/accounts/jsp/change_status_preview.jsp"/>
             <forward name="preview_failure" path="/pages/accounts/jsp/change_status.jsp"/>
+            <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
         </action>
 
         <action path="/applyChargeAction" type="org.mifos.accounts.struts.action.ApplyChargeAction"

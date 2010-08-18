@@ -24,20 +24,15 @@ import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
-import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
 import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupParameters;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionParameters;
 import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,14 +42,11 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.List;
 import java.util.Random;
-
-import static java.util.Arrays.asList;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui"})
+@Test(sequential = true, groups = {"loan","acceptance","ui","smoke"})
 public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
@@ -69,6 +61,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     private Random random;
     public static final String DATE = "Date";
     public static final String SINGLE_SELECT = "Single Select";
+    private QuestionGroupHelper questionGroupHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -78,6 +71,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         super.setUp();
         loanTestHelper = new LoanTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
+        questionGroupHelper = new QuestionGroupHelper(navigationHelper);
         random = new Random();
     }
 
@@ -96,7 +90,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         String question2 = "SS_" + random.nextInt(100);
         String answer = "01/01/2010";
         String choiceAnswer = "Choice2";
-        createQuestionGroupForCreateLoan(questionGroupTitle, question1, question2);
+        questionGroupHelper.createQuestionGroup(questionGroupTitle, question1, question2, "Create Loan");
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Veronica Abisya");
@@ -114,38 +108,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         questionResponseDetailPage.verifyQuestionPresent(question2, choiceAnswer);
         questionResponseDetailPage.navigateToDetailsPage();
         loanAccountPage.verifyPage();
-    }
-
-    private void createQuestionGroupForCreateLoan(String questionGroupTitle, String question1, String question2) {
-        AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage().verifyPage();
-        createQuestionPage.addQuestion(getCreateQuestionParams(question1, DATE, null));
-        createQuestionPage.addQuestion(getCreateQuestionParams(question2, SINGLE_SELECT, asList("Choice1", "Choice2")));
-        adminPage = createQuestionPage.submitQuestions();
-
-        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage().verifyPage();
-        CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(questionGroupTitle, question1, question2);
-        createQuestionGroupPage.addSection(parameters);
-        createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
-        createQuestionGroupPage.submit(parameters);
-    }
-
-    private CreateQuestionParameters getCreateQuestionParams(String title, String type, List<String> choices) {
-        CreateQuestionParameters parameters = new CreateQuestionParameters();
-        parameters.setTitle(title);
-        parameters.setType(type);
-        parameters.setChoicesFromStrings(choices);
-        return parameters;
-    }
-
-    private CreateQuestionGroupParameters getCreateQuestionGroupParameters(String questionGroupTitle, String question1, String question2) {
-        CreateQuestionGroupParameters parameters = new CreateQuestionGroupParameters();
-        parameters.setTitle(questionGroupTitle);
-        parameters.setAppliesTo("Create Loan");
-        parameters.setAnswerEditable(true);
-        parameters.setSectionName("Default Section");
-        parameters.setQuestions(asList(question1, question2));
-        return parameters;
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

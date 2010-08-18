@@ -171,13 +171,15 @@ explanation of the license and how it is applied.
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleId="change_status.button.submit" styleClass="buttn">
-								<mifos:mifoslabel name="accounts.preview" />
-							</html-el:submit> &nbsp;&nbsp; <html-el:button styleId="change_status.button.cancel" property="btn"
-								styleClass="cancelbuttn"
-								onclick="goToCancelPage(this.form)">
-								<mifos:mifoslabel name="accounts.cancel" />
-							</html-el:button></td>
+							<td align="center">
+                                <html-el:submit styleId="change_status.button.submit" styleClass="buttn">
+                                    <mifos:mifoslabel name="accounts.preview" />
+                                </html-el:submit>
+    							&nbsp;&nbsp;
+                                <html-el:button styleId="change_status.button.cancel" property="btn" styleClass="cancelbuttn" onclick="goToCancelPage(this.form)">
+                                    <mifos:mifoslabel name="accounts.cancel" />
+                                </html-el:button>
+							</td>
 						</tr>
 					</table>
 					<br>

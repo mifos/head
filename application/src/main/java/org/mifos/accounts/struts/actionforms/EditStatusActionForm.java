@@ -20,22 +20,24 @@
 
 package org.mifos.accounts.struts.actionforms;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 
-public class EditStatusActionForm extends BaseActionForm {
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+public class EditStatusActionForm extends BaseActionForm implements QuestionResponseCapturer{
 
     public EditStatusActionForm() {
         selectedItems = new String[50];
@@ -62,6 +64,8 @@ public class EditStatusActionForm extends BaseActionForm {
     private String input;
 
     private String commentDate;
+
+    private List<QuestionGroupDetail> questionGroups;
 
     public String getCommentDate() {
         return commentDate;
@@ -228,5 +232,15 @@ public class EditStatusActionForm extends BaseActionForm {
     private boolean isNewStatusHasFlag() {
         return (Short.valueOf(newStatusId).equals(AccountState.LOAN_CANCELLED.getValue()))
                 || (Short.valueOf(newStatusId).equals(AccountState.SAVINGS_CANCELLED.getValue()));
+    }
+
+    @Override
+    public void setQuestionGroups(List<QuestionGroupDetail> questionGroups) {
+        this.questionGroups = questionGroups;
+    }
+
+    @Override
+    public List<QuestionGroupDetail> getQuestionGroups() {
+        return questionGroups;
     }
 }

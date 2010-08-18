@@ -1478,6 +1478,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         this.externalId = null;
         this.businessActivityId = null;
         this.collateralTypeId = null;
+        this.questionGroups = null;
     }
 
     @Override

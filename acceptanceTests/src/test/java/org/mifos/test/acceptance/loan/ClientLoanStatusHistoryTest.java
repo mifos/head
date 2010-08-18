@@ -163,7 +163,7 @@ public class ClientLoanStatusHistoryTest extends UiTestCaseBase {
 
         // do the edit in one long chain (we do this instead of using loanTestHelper because we already have a LoanAccountPage and
         // we're missing the ID.
-        loanAccountPage.navigateToEditAccountStatus().submitAndNavigateToEditStatusConfirmationPage(params).submitAndNavigateToLoanAccountPage();
+        loanAccountPage.navigateToEditAccountStatus().submitAndNavigateToNextPage(params).submitAndNavigateToLoanAccountPage();
 
         verifyStatusHistory("ClientLoanStatusHistory_006_result_dbunit.xml.zip");
 
