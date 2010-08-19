@@ -20,8 +20,6 @@
 
 package org.mifos.platform.questionnaire.exceptions;
 
-import org.mifos.platform.questionnaire.QuestionnaireConstants;
-
 public class BadNumericResponseException extends ValidationException {
     private static final long serialVersionUID = 8068243180234201365L;
 
@@ -29,7 +27,7 @@ public class BadNumericResponseException extends ValidationException {
     private final Integer allowedMaxValue;
 
     public BadNumericResponseException(String questionTitle, Integer allowedMinValue, Integer allowedMaxValue) {
-        super(QuestionnaireConstants.NUMERIC_QUESTION_HAS_BAD_ANSWER, questionTitle);
+        super("questionnaire.error.numeric.question.has.bad.answer", questionTitle);
         this.allowedMinValue = allowedMinValue;
         this.allowedMaxValue = allowedMaxValue;
     }

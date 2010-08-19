@@ -35,7 +35,7 @@ import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailFormMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailListMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailsMatcher;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
@@ -199,7 +199,7 @@ public class QuestionGroupControllerTest {
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, String... sectionNames) {
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail();
         questionGroupDetail.setTitle(title);
-        questionGroupDetail.setEventSource(new EventSource(event, source, null));
+        questionGroupDetail.setEventSource(new EventSourceDto(event, source, null));
         List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
         for (String sectionName : sectionNames) {
             SectionDetail sectionDetail = new SectionDetail();
@@ -316,7 +316,7 @@ public class QuestionGroupControllerTest {
 
     @Test
     public void shouldGetAllQgEventSources() {
-        Mockito.when(questionnaireServiceFacade.getAllEventSources()).thenReturn(asList(new EventSource("Create", "Client", "Create Client"), new EventSource("View", "Client", "View Client")));
+        Mockito.when(questionnaireServiceFacade.getAllEventSources()).thenReturn(asList(new EventSourceDto("Create", "Client", "Create Client"), new EventSourceDto("View", "Client", "View Client")));
         Map<String, String> eventSources = questionGroupController.getAllQgEventSources();
         verify(questionnaireServiceFacade).getAllEventSources();
         assertThat(eventSources.get("Create.Client"), Is.is("Create Client"));

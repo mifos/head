@@ -23,7 +23,7 @@ package org.mifos.platform.questionnaire.ui.controller;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.ui.model.Question;
@@ -210,17 +210,17 @@ public class QuestionTest {
 
     private void assertQuestion(String shortName, QuestionType questionType, String questionTypeString, List<String> choices) {
         QuestionDetail questionDetail = new QuestionDetail(123, "Question Text", shortName, questionType, true);
-        List<ChoiceDetail> choiceDetails = getChoiceDetails(choices);
-        questionDetail.setAnswerChoices(choiceDetails);
+        List<ChoiceDto> choiceDtos = getChoiceDetails(choices);
+        questionDetail.setAnswerChoices(choiceDtos);
         Question question = new Question(questionDetail);
         assertThat(question.getTitle(), is(shortName));
         assertThat(question.getType(), is(questionTypeString));
-        assertEquals(question.getChoices(), choiceDetails);
+        assertEquals(question.getChoices(), choiceDtos);
     }
 
-    private List<ChoiceDetail> getChoiceDetails(List<String> choices) {
-        List<ChoiceDetail> choiceDetails = new ArrayList<ChoiceDetail>();
-        for (String choice : choices) choiceDetails.add(new ChoiceDetail(choice));
-        return choiceDetails;
+    private List<ChoiceDto> getChoiceDetails(List<String> choices) {
+        List<ChoiceDto> choiceDtos = new ArrayList<ChoiceDto>();
+        for (String choice : choices) choiceDtos.add(new ChoiceDto(choice));
+        return choiceDtos;
     }
 }

@@ -21,6 +21,7 @@
 package org.mifos.platform.questionnaire.service;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class QuestionDetail implements Serializable {
     private String shortName;
     private QuestionType type;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
-    private List<ChoiceDetail> answerChoices;
+    private List<ChoiceDto> answerChoices;
     private Integer numericMin;
     private Integer numericMax;
     private boolean active;
@@ -53,7 +54,7 @@ public class QuestionDetail implements Serializable {
         this.text = text;
         this.shortName = shortName;
         this.type = type;
-        this.answerChoices = new ArrayList<ChoiceDetail>();
+        this.answerChoices = new ArrayList<ChoiceDto>();
         this.active = active;
     }
 
@@ -93,11 +94,11 @@ public class QuestionDetail implements Serializable {
         this.shortName = StringUtils.trim(this.shortName);
     }
 
-    public List<ChoiceDetail> getAnswerChoices() {
+    public List<ChoiceDto> getAnswerChoices() {
         return answerChoices;
     }
 
-    public void setAnswerChoices(List<ChoiceDetail> answerChoices) {
+    public void setAnswerChoices(List<ChoiceDto> answerChoices) {
         this.answerChoices = answerChoices;
     }
 
@@ -134,7 +135,7 @@ public class QuestionDetail implements Serializable {
         return numericMax;
     }
 
-    public void addAnswerChoice(ChoiceDetail answerChoice) {
+    public void addAnswerChoice(ChoiceDto answerChoice) {
         answerChoices.add(answerChoice);
     }
 

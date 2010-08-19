@@ -32,6 +32,7 @@ import org.mifos.platform.questionnaire.domain.SectionQuestion;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -175,7 +176,7 @@ public class QuestionGroupInstanceDaoIntegrationTest {
     }
 
     private QuestionGroupDetail defineQuestionGroup(String title, String event, String source, List<SectionDetail> sectionDetails, boolean editable) throws SystemException {
-        return questionnaireService.defineQuestionGroup(new QuestionGroupDetail(0, title, new EventSource(event, source, null), sectionDetails, editable));
+        return questionnaireService.defineQuestionGroup(new QuestionGroupDetail(0, title, new EventSourceDto(event, source, null), sectionDetails, editable));
     }
 
     private SectionDetail getSection(String name) throws SystemException {

@@ -20,7 +20,7 @@
 
 package org.mifos.platform.questionnaire.builders;
 
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 
@@ -47,7 +47,7 @@ public class QuestionGroupDtoBuilder {
     }
 
     public QuestionGroupDtoBuilder withEventSource(String event, String source) {
-        questionGroupDto.setEventSource(new EventSource(event, source, EMPTY));
+        questionGroupDto.setEventSource(new EventSourceDto(event, source, EMPTY));
         return this;
     }
 

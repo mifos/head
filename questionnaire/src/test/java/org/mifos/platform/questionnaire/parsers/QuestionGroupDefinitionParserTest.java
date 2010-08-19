@@ -22,8 +22,8 @@ package org.mifos.platform.questionnaire.parsers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
@@ -48,8 +48,8 @@ public class QuestionGroupDefinitionParserTest {
         InputStream inputStream = getClass().getResourceAsStream(questionGroupDefXml);
         QuestionGroupDto questionGroupDto = questionGroupDefinitionParser.parse(inputStream);
         assertQuestionGroupDto(questionGroupDto);
-        EventSource eventSource = questionGroupDto.getEventSource();
-        assertEventSource(eventSource);
+        EventSourceDto eventSourceDto = questionGroupDto.getEventSource();
+        assertEventSource(eventSourceDto);
         List<SectionDto> sectionDtos = questionGroupDto.getSections();
         assertSections(sectionDtos);
     }
@@ -95,7 +95,7 @@ public class QuestionGroupDefinitionParserTest {
         assertThat(questionDto.getType(), is(QuestionType.SINGLE_SELECT));
         assertThat(questionDto.getOrder(), is(2));
         assertThat(questionDto.isMandatory(), is(true));
-        List<ChoiceDetail> choices = questionDto.getChoices();
+        List<ChoiceDto> choices = questionDto.getChoices();
         assertThat(choices, is(notNullValue()));
         assertThat(choices.size(), is(3));
         assertChoiceDetail(choices.get(0), "Less than 2", 1);
@@ -115,48 +115,48 @@ public class QuestionGroupDefinitionParserTest {
         assertFourthChoiceWithTags(choices.get(3));
     }
 
-    private void assertFirstChoiceWithTags(ChoiceDetail choiceDetail) {
-        assertChoiceDetail(choiceDetail, "No Product", 1);
-        List<String> tags = choiceDetail.getTags();
+    private void assertFirstChoiceWithTags(ChoiceDto choiceDto) {
+        assertChoiceDetail(choiceDto, "No Product", 1);
+        List<String> tags = choiceDto.getTags();
         assertThat(tags, is(notNullValue()));
         assertThat(tags.size(), is(1));
         assertThat(tags.get(0), is("Never"));
     }
 
-    private void assertSecondChoiceWithTags(ChoiceDetail choiceDetail) {
-        assertChoiceDetail(choiceDetail, "Product 1", 2);
-        List<String> tags = choiceDetail.getTags();
+    private void assertSecondChoiceWithTags(ChoiceDto choiceDto) {
+        assertChoiceDetail(choiceDto, "Product 1", 2);
+        List<String> tags = choiceDto.getTags();
         assertThat(tags, is(notNullValue()));
         assertThat(tags.size(), is(1));
         assertThat(tags.get(0), is("Agriculture"));
     }
 
-    private void assertThirdChoiceWithTags(ChoiceDetail choiceDetail) {
-        assertChoiceDetail(choiceDetail, "Product 2", 3);
-        List<String> tags = choiceDetail.getTags();
+    private void assertThirdChoiceWithTags(ChoiceDto choiceDto) {
+        assertChoiceDetail(choiceDto, "Product 2", 3);
+        List<String> tags = choiceDto.getTags();
         assertThat(tags, is(notNullValue()));
         assertThat(tags.size(), is(2));
         assertThat(tags.get(0), is("Fishing"));
         assertThat(tags.get(1), is("Farming"));
     }
 
-    private void assertFourthChoiceWithTags(ChoiceDetail choiceDetail) {
-        assertChoiceDetail(choiceDetail, "Product 3", 4);
-        List<String> tags = choiceDetail.getTags();
+    private void assertFourthChoiceWithTags(ChoiceDto choiceDto) {
+        assertChoiceDetail(choiceDto, "Product 3", 4);
+        List<String> tags = choiceDto.getTags();
         assertThat(tags, is(notNullValue()));
         assertThat(tags.size(), is(1));
         assertThat(tags.get(0), is("Construction"));
     }
 
-    private void assertChoiceDetail(ChoiceDetail choiceDetail, String value, int order) {
-        assertThat(choiceDetail.getValue(), is(value));
-        assertThat(choiceDetail.getOrder(), is(order));
+    private void assertChoiceDetail(ChoiceDto choiceDto, String value, int order) {
+        assertThat(choiceDto.getValue(), is(value));
+        assertThat(choiceDto.getOrder(), is(order));
     }
 
-    private void assertEventSource(EventSource eventSource) {
-        assertThat(eventSource, is(notNullValue()));
-        assertThat(eventSource.getEvent(), is("Create"));
-        assertThat(eventSource.getSource(), is("Loan"));
+    private void assertEventSource(EventSourceDto eventSourceDto) {
+        assertThat(eventSourceDto, is(notNullValue()));
+        assertThat(eventSourceDto.getEvent(), is("Create"));
+        assertThat(eventSourceDto.getSource(), is("Loan"));
     }
 
     private void assertQuestionGroupDto(QuestionGroupDto questionGroupDto) {

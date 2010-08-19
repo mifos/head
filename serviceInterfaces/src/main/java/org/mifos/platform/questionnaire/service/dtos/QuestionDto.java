@@ -23,7 +23,6 @@ package org.mifos.platform.questionnaire.service.dtos;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 
 import java.io.Serializable;
@@ -40,7 +39,7 @@ public class QuestionDto implements Serializable {
     private QuestionType type;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     @XStreamImplicit(itemFieldName = "choice")
-    private List<ChoiceDetail> choices;
+    private List<ChoiceDto> choices;
     private Integer minValue;
     private Integer maxValue;
     private boolean mandatory;
@@ -48,7 +47,7 @@ public class QuestionDto implements Serializable {
     private Integer order;
 
     public QuestionDto() {
-        choices = new ArrayList<ChoiceDetail>();
+        choices = new ArrayList<ChoiceDto>();
     }
 
     public String getTitle() {
@@ -67,11 +66,11 @@ public class QuestionDto implements Serializable {
         this.type = type;
     }
 
-    public List<ChoiceDetail> getChoices() {
+    public List<ChoiceDto> getChoices() {
         return choices;
     }
 
-    public void setChoices(List<ChoiceDetail> choices) {
+    public void setChoices(List<ChoiceDto> choices) {
         this.choices = choices;
     }
 

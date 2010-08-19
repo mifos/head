@@ -21,6 +21,7 @@
 package org.mifos.platform.questionnaire.service;
 
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public interface QuestionnaireServiceFacade {
 
     QuestionDetail getQuestionDetail(Integer questionId) throws SystemException;
 
-    List<EventSource> getAllEventSources();
+    List<EventSourceDto> getAllEventSources();
 
     List<QuestionGroupDetail> getQuestionGroups(String event, String source) throws SystemException;
 

@@ -18,25 +18,15 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.validators;
+package org.mifos.platform.questionnaire.service.validators;
 
-import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
-import org.mifos.platform.questionnaire.service.QuestionDetail;
-import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.exceptions.ValidationException;
+import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 
-import java.util.List;
-
-
-public interface QuestionnaireValidator {
-    void validateForDefineQuestion(QuestionDetail questionDetail) throws SystemException;
-
-    void validateForDefineQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
-
-    void validateForEventSource(EventSourceDto eventSourceDto) throws SystemException;
-
-    void validateForQuestionGroupResponses(List<QuestionGroupDetail> questionGroupDetails);
-
-    void validateForDefineQuestionGroup(QuestionGroupDto questionGroupDto);
+public interface QuestionGroupDtoValidator {
+    void validate(QuestionGroupDto questionGroupDto, ValidationException validationException);
+    void validate(SectionDto sectionDto, ValidationException validationException);
+    void validate(QuestionDto questionDto, ValidationException validationException);
 }

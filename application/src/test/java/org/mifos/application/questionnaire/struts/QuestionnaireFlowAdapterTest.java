@@ -15,7 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
@@ -99,7 +99,7 @@ public class QuestionnaireFlowAdapterTest {
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, List<SectionDetail> sections) {
-        return new QuestionGroupDetail(1, title, new EventSource(event, source, null), sections, true);
+        return new QuestionGroupDetail(1, title, new EventSourceDto(event, source, null), sections, true);
     }
 
     private SectionDetail getSectionDetailWithQuestions(String sectionName, List<QuestionDetail> questionDetails,

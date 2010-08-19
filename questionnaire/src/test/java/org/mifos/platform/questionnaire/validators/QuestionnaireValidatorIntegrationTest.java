@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -47,9 +47,9 @@ public class QuestionnaireValidatorIntegrationTest {
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldCheckForInValidEventSource() {
-        EventSource eventSource = new EventSource("Disburse", "Client", "Disburse Client");
+        EventSourceDto eventSourceDto = new EventSourceDto("Disburse", "Client", "Disburse Client");
         try {
-            questionnaireValidator.validateForEventSource(eventSource);
+            questionnaireValidator.validateForEventSource(eventSourceDto);
             fail("Should have raised a validation error for invalid event");
         } catch (SystemException e) {
             assertThat(e.getKey(), is(QuestionnaireConstants.INVALID_EVENT_SOURCE));
@@ -59,13 +59,13 @@ public class QuestionnaireValidatorIntegrationTest {
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldCheckForValidEventSource() {
-        EventSource eventSource = new EventSource("Create", "Client", "Create Client");
+        EventSourceDto eventSourceDto = new EventSourceDto("Create", "Client", "Create Client");
         try {
-            questionnaireValidator.validateForEventSource(eventSource);
-            eventSource = new EventSource("View", "Client", "View Client");
-            questionnaireValidator.validateForEventSource(eventSource);
-            eventSource = new EventSource("Create", "Loan", "Create Loan");
-            questionnaireValidator.validateForEventSource(eventSource);
+            questionnaireValidator.validateForEventSource(eventSourceDto);
+            eventSourceDto = new EventSourceDto("View", "Client", "View Client");
+            questionnaireValidator.validateForEventSource(eventSourceDto);
+            eventSourceDto = new EventSourceDto("Create", "Loan", "Create Loan");
+            questionnaireValidator.validateForEventSource(eventSourceDto);
         } catch (SystemException e) {
             fail("Should not have raised a validation error for this event");
         }

@@ -20,6 +20,7 @@
 
 package org.mifos.platform.questionnaire.service;
 
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.util.CollectionUtils;
 
 import java.io.Serializable;
@@ -101,7 +102,7 @@ public class SectionQuestionDetail implements Serializable {
         return questionDetail.getType();
     }
 
-    public List<ChoiceDetail> getAnswerChoices() {
+    public List<ChoiceDto> getAnswerChoices() {
         return questionDetail.getAnswerChoices();
     }
 

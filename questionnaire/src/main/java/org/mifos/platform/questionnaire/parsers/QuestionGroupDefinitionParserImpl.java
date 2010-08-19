@@ -24,8 +24,8 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.StreamException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
@@ -97,8 +97,8 @@ public final class QuestionGroupDefinitionParserImpl implements QuestionGroupDef
         xstream.processAnnotations(QuestionGroupDto.class);
         xstream.processAnnotations(SectionDto.class);
         xstream.processAnnotations(QuestionDto.class);
-        xstream.processAnnotations(EventSource.class);
+        xstream.processAnnotations(EventSourceDto.class);
         xstream.processAnnotations(QuestionType.class);
-        xstream.processAnnotations(ChoiceDetail.class);
+        xstream.processAnnotations(ChoiceDto.class);
     }
 }
