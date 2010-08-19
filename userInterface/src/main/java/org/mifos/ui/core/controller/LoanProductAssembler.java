@@ -149,7 +149,7 @@ public class LoanProductAssembler {
         for (ListElement customerType : loanProductRefData.getApplicableCustomerTypes()) {
             applicableForOptions.put(customerType.getId().toString(), customerType.getName());
         }
-        loanProductFormBean.setApplicableForOptions(applicableForOptions);
+        loanProductFormBean.getGeneralDetails().setApplicableForOptions(applicableForOptions);
     }
 
     private void populateCategoryDropdown(LoanProductFormDto loanProductRefData, LoanProductFormBean loanProductFormBean) {
@@ -157,10 +157,10 @@ public class LoanProductAssembler {
         for (ListElement category : loanProductRefData.getProductCategories()) {
             categoryOptions.put(category.getId().toString(), category.getName());
         }
-        loanProductFormBean.setCategoryOptions(categoryOptions);
+        loanProductFormBean.getGeneralDetails().setCategoryOptions(categoryOptions);
 
         if (loanProductRefData.getProductCategories().size() == 1) {
-            loanProductFormBean.setSelectedCategory(loanProductRefData.getProductCategories().get(0).getId().toString());
+            loanProductFormBean.getGeneralDetails().setSelectedCategory(loanProductRefData.getProductCategories().get(0).getId().toString());
         }
     }
 }

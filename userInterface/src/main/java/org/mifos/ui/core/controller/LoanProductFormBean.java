@@ -26,23 +26,7 @@ import java.util.Map;
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="..")
 public class LoanProductFormBean {
 
-    private String name;
-    private String shortName;
-    private String description;
-
-    private String selectedCategory;
-    private Map<String, String> categoryOptions;
-
-    private Integer startDateDay;
-    private Integer startDateMonth;
-    private String startDateYear;
-
-    private Integer endDateDay;
-    private Integer endDateMonth;
-    private String endDateYear;
-
-    private String selectedApplicableFor;
-    private Map<String, String> applicableForOptions;
+    private GeneralProductDetails generalDetails;
 
     private boolean includeInLoanCycleCounter;
 
@@ -88,78 +72,6 @@ public class LoanProductFormBean {
     private String selectedInterest;
     private Map<String, String> principalGeneralLedgerOptions;
     private String selectedPrincipal;
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getShortName() {
-        return this.shortName;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getSelectedCategory() {
-        return this.selectedCategory;
-    }
-
-    public void setSelectedCategory(String selectedCategory) {
-        this.selectedCategory = selectedCategory;
-    }
-
-    public Map<String, String> getCategoryOptions() {
-        return this.categoryOptions;
-    }
-
-    public void setCategoryOptions(Map<String, String> categoryOptions) {
-        this.categoryOptions = categoryOptions;
-    }
-
-    public String getStartDateYear() {
-        return this.startDateYear;
-    }
-
-    public void setStartDateYear(String startDateYear) {
-        this.startDateYear = startDateYear;
-    }
-
-    public String getEndDateYear() {
-        return this.endDateYear;
-    }
-
-    public void setEndDateYear(String endDateYear) {
-        this.endDateYear = endDateYear;
-    }
-
-    public String getSelectedApplicableFor() {
-        return this.selectedApplicableFor;
-    }
-
-    public void setSelectedApplicableFor(String selectedApplicableFor) {
-        this.selectedApplicableFor = selectedApplicableFor;
-    }
-
-    public Map<String, String> getApplicableForOptions() {
-        return this.applicableForOptions;
-    }
-
-    public void setApplicableForOptions(Map<String, String> applicableForOptions) {
-        this.applicableForOptions = applicableForOptions;
-    }
 
     public boolean isIncludeInLoanCycleCounter() {
         return this.includeInLoanCycleCounter;
@@ -297,38 +209,6 @@ public class LoanProductFormBean {
         this.principalGeneralLedgerOptions = principalGeneralLedgerOptions;
     }
 
-    public Integer getStartDateDay() {
-        return this.startDateDay;
-    }
-
-    public void setStartDateDay(Integer startDateDay) {
-        this.startDateDay = startDateDay;
-    }
-
-    public Integer getStartDateMonth() {
-        return this.startDateMonth;
-    }
-
-    public void setStartDateMonth(Integer startDateMonth) {
-        this.startDateMonth = startDateMonth;
-    }
-
-    public Integer getEndDateDay() {
-        return this.endDateDay;
-    }
-
-    public void setEndDateDay(Integer endDateDay) {
-        this.endDateDay = endDateDay;
-    }
-
-    public Integer getEndDateMonth() {
-        return this.endDateMonth;
-    }
-
-    public void setEndDateMonth(Integer endDateMonth) {
-        this.endDateMonth = endDateMonth;
-    }
-
     public Map<String, String> getLoanAmountCalculationTypeOptions() {
         return this.loanAmountCalculationTypeOptions;
     }
@@ -463,5 +343,13 @@ public class LoanProductFormBean {
 
     public void setApplicableFunds(String[] applicableFunds) {
         this.applicableFunds = applicableFunds;
+    }
+
+    public GeneralProductDetails getGeneralDetails() {
+        return this.generalDetails;
+    }
+
+    public void setGeneralDetails(GeneralProductDetails generalDetails) {
+        this.generalDetails = generalDetails;
     }
 }

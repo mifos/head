@@ -20,9 +20,6 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
@@ -65,14 +62,14 @@ public class DefineSavingsProductsFormController {
         SavingsProductFormDto referenceData = this.adminServiceFacade.retrieveSavingsProductFormReferenceData();
         SavingsProductFormBean savingsProduct = new SavingsProductFormBeanAssembler().assembleReferenceData(referenceData);
 
-        savingsProduct.setName("testName");
-        savingsProduct.setShortName("1234");
-        savingsProduct.setDescription("description is short");
+        savingsProduct.getGeneralDetails().setName("testName");
+        savingsProduct.getGeneralDetails().setShortName("1234");
+        savingsProduct.getGeneralDetails().setDescription("description is short");
 
         DateTime today = new DateTime();
-        savingsProduct.setStartDateDay(today.getDayOfYear());
-        savingsProduct.setStartDateMonth(today.getMonthOfYear());
-        savingsProduct.setStartDateYear(""+today.getYearOfEra());
+        savingsProduct.getGeneralDetails().setStartDateDay(today.getDayOfYear());
+        savingsProduct.getGeneralDetails().setStartDateMonth(today.getMonthOfYear());
+        savingsProduct.getGeneralDetails().setStartDateYear(Integer.valueOf(today.getYearOfEra()).toString());
 
         return savingsProduct;
     }

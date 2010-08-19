@@ -77,9 +77,13 @@ public class DefineLoanProductsFormController {
 
         // FIXME - Delegate to assembler
         DateTime startDate = new DateTime();
-        loanProductFormBean.setStartDateDay(startDate.getDayOfMonth());
-        loanProductFormBean.setStartDateMonth(startDate.getMonthOfYear());
-        loanProductFormBean.setStartDateYear(Integer.valueOf(startDate.getYearOfEra()).toString());
+
+        GeneralProductDetails productDetails = new GeneralProductDetails();
+        productDetails.setStartDateDay(startDate.getDayOfMonth());
+        productDetails.setStartDateMonth(startDate.getMonthOfYear());
+        productDetails.setStartDateYear(Integer.valueOf(startDate.getYearOfEra()).toString());
+
+        loanProductFormBean.setGeneralDetails(productDetails);
 
         loanProductFormBean.setIncludeInLoanCycleCounter(false);
         loanProductFormBean.setInstallmentFrequencyRecurrenceEvery(Integer.valueOf(1));
@@ -178,15 +182,16 @@ public class DefineLoanProductsFormController {
     }
 
     private LoanProductDetails translateToLoanProductDetails(LoanProductFormBean loanProductFormBean) {
-        Integer category = Integer.valueOf(loanProductFormBean.getSelectedCategory());
-        Integer applicableFor = Integer.valueOf(loanProductFormBean.getSelectedApplicableFor());
-        DateTime startDate = new DateTime().withDate(Integer.valueOf(loanProductFormBean.getStartDateYear()), loanProductFormBean.getStartDateMonth(), loanProductFormBean.getStartDateDay());
+
+        Integer category = Integer.valueOf(loanProductFormBean.getGeneralDetails().getSelectedCategory());
+        Integer applicableFor = Integer.valueOf(loanProductFormBean.getGeneralDetails().getSelectedApplicableFor());
+        DateTime startDate = new DateTime().withDate(Integer.valueOf(loanProductFormBean.getGeneralDetails().getStartDateYear()), loanProductFormBean.getGeneralDetails().getStartDateMonth(), loanProductFormBean.getGeneralDetails().getStartDateDay());
         DateTime endDate = null;
-        if (StringUtils.isNotBlank(loanProductFormBean.getEndDateYear())) {
-            endDate = new DateTime().withDate(Integer.valueOf(loanProductFormBean.getEndDateYear()), loanProductFormBean.getEndDateMonth(), loanProductFormBean.getEndDateDay());
+        if (StringUtils.isNotBlank(loanProductFormBean.getGeneralDetails().getEndDateYear())) {
+            endDate = new DateTime().withDate(Integer.valueOf(loanProductFormBean.getGeneralDetails().getEndDateYear()), loanProductFormBean.getGeneralDetails().getEndDateMonth(), loanProductFormBean.getGeneralDetails().getEndDateDay());
         }
 
-        return new LoanProductDetails(loanProductFormBean.getName(), loanProductFormBean.getShortName(), loanProductFormBean.getDescription(), category,
+        return new LoanProductDetails(loanProductFormBean.getGeneralDetails().getName(), loanProductFormBean.getGeneralDetails().getShortName(), loanProductFormBean.getGeneralDetails().getDescription(), category,
                 startDate, endDate, applicableFor, loanProductFormBean.isIncludeInLoanCycleCounter());
     }
 

@@ -31,6 +31,8 @@ public class SavingsProductFormBeanAssembler {
     public SavingsProductFormBean assembleReferenceData(SavingsProductFormDto referenceData) {
 
         SavingsProductFormBean formBean = new SavingsProductFormBean();
+        GeneralProductDetails productDetails = new GeneralProductDetails();
+        formBean.setGeneralDetails(productDetails);
 
         // assembler for general product details
         populateCategoryDropdown(referenceData, formBean);
@@ -89,7 +91,7 @@ public class SavingsProductFormBeanAssembler {
         for (ListElement customerType : referenceData.getApplicableToCustomers()) {
             applicableForOptions.put(customerType.getId().toString(), customerType.getName());
         }
-        formBean.setApplicableForOptions(applicableForOptions);
+        formBean.getGeneralDetails().setApplicableForOptions(applicableForOptions);
     }
 
     private void populateCategoryDropdown(SavingsProductFormDto referenceData, SavingsProductFormBean formBean) {
@@ -97,10 +99,10 @@ public class SavingsProductFormBeanAssembler {
         for (ListElement category : referenceData.getProductCategories()) {
             categoryOptions.put(category.getId().toString(), category.getName());
         }
-        formBean.setCategoryOptions(categoryOptions);
+        formBean.getGeneralDetails().setCategoryOptions(categoryOptions);
 
         if (referenceData.getProductCategories().size() == 1) {
-            formBean.setSelectedCategory(referenceData.getProductCategories().get(0).getId().toString());
+            formBean.getGeneralDetails().setSelectedCategory(referenceData.getProductCategories().get(0).getId().toString());
         }
     }
 
