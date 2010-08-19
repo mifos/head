@@ -120,7 +120,6 @@
             <forward name="updatePassword_failure" path="/pages/application/login/jsp/changePassword.jsp"/>
             <forward name="updateSettings_success" path="/yourSettings.do?method=get"/>
         </action>
-        <!-- Product Category -->
         <!-- meeting action -->
         <action path="/meetingAction" type="org.mifos.application.meeting.struts.action.MeetingAction"
                 name="meetingActionForm" parameter="method" input="/meetingAction.do?method=validate" validate="true">

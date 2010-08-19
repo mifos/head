@@ -145,36 +145,6 @@
 				<msg name="required" key="meeting.meetingPlace.requiredmsg" bundle="MeetingResources" />
 			</field>
 		</form>
-		<!-- product definition-->
-		<form name="/productCategoryAction">
-			<field property="productType" depends="required">
-				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
-				<arg key="product.producttype" />
-			</field>
-			<field property="productCategoryName" depends="required,maxlength">
-				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
-				<msg name="maxlength" key="errors.maximumlength" bundle="ProductDefUIResources" />
-				<arg0 key="product.categoryname" />
-				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
-				<var>
-					<var-name>maxlength</var-name>
-					<var-value>100</var-value>
-				</var>
-			</field>
-			<field property="productCategoryDesc" depends="maxlength">
-				<msg name="maxlength" key="errors.maximumlength" bundle="ProductDefUIResources" />
-				<arg0 key="product.categorydesc" />
-				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
-				<var>
-					<var-name>maxlength</var-name>
-					<var-value>500</var-value>
-				</var>
-			</field>
-			<field property="productCategoryStatus" depends="required">
-				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
-				<arg0 key="product.status" />
-			</field>
-		</form>
 		<!-- Loan product-->
 		<form name="/loanproductaction">
 			<field property="prdOfferingName" depends="required,maxlength">
