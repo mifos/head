@@ -369,7 +369,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setEditable(questionGroupDto.isEditable());
         questionGroup.setDateOfCreation(getCurrentDateTime());
         questionGroup.setPpi(questionGroupDto.isPpi());
-        questionGroup.setEventSources(mapToEventSources(questionGroupDto.getEventSource()));
+        questionGroup.setEventSources(mapToEventSources(questionGroupDto.getEventSourceDto()));
         questionGroup.setTitle(questionGroupDto.getTitle());
         questionGroup.setState(QuestionGroupState.ACTIVE);
         questionGroup.setSections(mapToSectionsFromDtos(questionGroupDto.getSections()));

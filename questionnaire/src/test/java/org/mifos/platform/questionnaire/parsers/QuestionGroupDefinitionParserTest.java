@@ -48,7 +48,7 @@ public class QuestionGroupDefinitionParserTest {
         InputStream inputStream = getClass().getResourceAsStream(questionGroupDefXml);
         QuestionGroupDto questionGroupDto = questionGroupDefinitionParser.parse(inputStream);
         assertQuestionGroupDto(questionGroupDto);
-        EventSourceDto eventSourceDto = questionGroupDto.getEventSource();
+        EventSourceDto eventSourceDto = questionGroupDto.getEventSourceDto();
         assertEventSource(eventSourceDto);
         List<SectionDto> sectionDtos = questionGroupDto.getSections();
         assertSections(sectionDtos);

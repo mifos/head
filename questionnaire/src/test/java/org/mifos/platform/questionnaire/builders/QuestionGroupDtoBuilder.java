@@ -47,7 +47,7 @@ public class QuestionGroupDtoBuilder {
     }
 
     public QuestionGroupDtoBuilder withEventSource(String event, String source) {
-        questionGroupDto.setEventSource(new EventSourceDto(event, source, EMPTY));
+        questionGroupDto.setEventSourceDto(new EventSourceDto(event, source, EMPTY));
         return this;
     }
 

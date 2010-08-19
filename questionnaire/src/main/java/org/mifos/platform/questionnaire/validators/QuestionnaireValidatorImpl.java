@@ -108,7 +108,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     public void validateForDefineQuestionGroup(QuestionGroupDto questionGroupDto) {
         ValidationException parentException = new ValidationException(GENERIC_VALIDATION);
         validateQuestionGroupTitle(questionGroupDto, parentException);
-        validateEventSource(questionGroupDto.getEventSource(), parentException);
+        validateEventSource(questionGroupDto.getEventSourceDto(), parentException);
         validateSections(questionGroupDto.getSections(), parentException);
         if (parentException.containsChildExceptions()) throw parentException;
     }
