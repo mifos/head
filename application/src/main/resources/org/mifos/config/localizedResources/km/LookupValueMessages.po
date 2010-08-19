@@ -1464,8 +1464,8 @@ msgstr "អាចបង្កើតក្រុមថ្មីនៅក្នុ
 msgid "Can create new group in submit for approval state"
 msgstr "អាចបង្កើតក្រុមថ្មីនៅក្នុងពេលដាក់បញ្ជូនសំរាប់វគ្គសុំការសំរេច"
 
-#: Permissions-Groups-CanEditCenterClientship
-msgid "Can edit Center Clientship"
+#: Permissions-Groups-CanEditCenterMembership
+msgid "Can edit Center Membership"
 msgstr ""
 
 #: Permissions-Groups-CanEditFeeAmountAttachedToTheAccount

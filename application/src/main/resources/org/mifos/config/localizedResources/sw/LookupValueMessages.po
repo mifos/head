@@ -1450,8 +1450,8 @@ msgstr ""
 msgid "Can create new group in submit for approval state"
 msgstr ""
 
-#: Permissions-Groups-CanEditCenterClientship
-msgid "Can edit Center Clientship"
+#: Permissions-Groups-CanEditCenterMembership
+msgid "Can edit Center Membership"
 msgstr ""
 
 #: Permissions-Groups-CanEditFeeAmountAttachedToTheAccount
