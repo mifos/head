@@ -119,24 +119,7 @@
         </div>
         
         <p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.personalInformation"/] </p>
-        
         <div class="span-16 last marginLeft12em">
-            <div class="span-16">
-        			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.state"/]</span>
-    				<span class="span-3">
-    				    [@spring.bind "formBean.state" /]
-						<input type="text" id="state" name="${spring.status.expression}" value="${spring.status.value?default("")}">
-    				</span>
-  			</div>
-  			
-			<div class="span-16">
-        			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.postalcode"/]</span>			
-    				<span class="span-3">
-    				    [@spring.bind "formBean.postalCode" /]
-						<input type="text" id="postalcode" name="${spring.status.expression}" value="${spring.status.value?default("")}">
-    				</span>
-  			</div>
-  			
   			<div class="span-16">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.ethnicity"/]</span>
     				<span class="span-3">
@@ -195,7 +178,22 @@
 						<input type="text" id="address3" name="${spring.status.expression}" value="${spring.status.value?default("")}">
     				</span>
   			</div>        
-        
+
+            <div class="span-16">
+        			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.state"/]</span>
+    				<span class="span-3">
+    				    [@spring.bind "formBean.state" /]
+						<input type="text" id="state" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
+  			</div>
+  			
+			<div class="span-16">
+        			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.postalcode"/]</span>			
+    				<span class="span-3">
+    				    [@spring.bind "formBean.postalCode" /]
+						<input type="text" id="postalcode" name="${spring.status.expression}" value="${spring.status.value?default("")}">
+    				</span>
+  			</div>
         </div>
         
         <p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.statuses"/]</p>
