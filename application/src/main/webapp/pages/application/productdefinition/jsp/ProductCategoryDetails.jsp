@@ -75,7 +75,7 @@ explanation of the license and how it is applied.
 								<c:otherwise>
 									<span class="fontnormal"> <img
 										src="pages/framework/images/status_closedblack.gif" width="8"
-										height="9">&nbsp;<mifos:mifoslabel name="product.active"
+										height="9">&nbsp;<mifos:mifoslabel name="product.inactive"
 									bundle="ProductDefUIResources" /></span>
 								</c:otherwise>
 							</c:choose> <br>
