@@ -23,7 +23,6 @@ package org.mifos.framework.util;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
@@ -37,7 +36,7 @@ import org.mifos.config.Localization;
 import org.mifos.core.MifosException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
-import org.mifos.framework.components.batchjobs.MifosTask;
+import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.authorization.AuthorizationManager;
@@ -185,29 +184,33 @@ public class StandardTestingService implements TestingService {
     public void runAllBatchJobs(final ServletContext ctx) {
         LOG.info("running all batch jobs");
         MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
-        mifosScheduler.runAllTasks();
+        try {
+            mifosScheduler.runAllTasks();
+        } catch (TaskSystemException se) {
+            throw new MifosRuntimeException("Scheduler's inner exception while running all batch jobs!", se);
+        }
     }
 
     @Override
-    public void runIndividualBatchJob(final String requestedJob, final ServletContext ctx) {
+    public void runIndividualBatchJob(final String requestedJob, final ServletContext ctx) throws MifosException {
         LOG.info("running batch job with name like: " + requestedJob + "*");
         boolean jobFound = false;
+        String jobToRun = null;
         final MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
-        OUTER: for (String taskName : mifosScheduler.getTaskNames()) {
-            if (taskName.startsWith(requestedJob)) {
-                final List<MifosTask> tasks = mifosScheduler.getTasks();
-                for (MifosTask task : tasks) {
-                    if (taskName.equals(task.name)) {
-                        jobFound = true;
-                        task.run();
-                        break OUTER;
-                    }
+        try {
+            for(String taskName : mifosScheduler.getTaskNames()) {
+                if(taskName.startsWith(requestedJob)) {
+                    jobFound = true;
+                    jobToRun = taskName;
+                    break;
                 }
-                throw new MifosRuntimeException("task names and active tasks do not match!");
             }
-        }
-        if (!jobFound) {
-            throw new IllegalArgumentException(requestedJob + " is unknown and will not be executed.");
+            if (!jobFound) {
+                throw new IllegalArgumentException(requestedJob + " is unknown and will not be executed.");
+            }
+            mifosScheduler.runIndividualTask(jobToRun);
+        } catch(TaskSystemException se) {
+            throw new MifosException("Scheduler's inner exception while running individual batch job!", se);
         }
     }
 

@@ -20,12 +20,9 @@
 
 package org.mifos.framework;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.Locale;
-import java.util.Properties;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -56,12 +53,10 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
-import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyCompositeUserType;
 import org.mifos.security.authorization.AuthorizationManager;
@@ -175,7 +170,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
                     // FIXME: replace with Spring-managed beans
                     final MifosScheduler mifosScheduler = new MifosScheduler();
-                    mifosScheduler.registerTasks();
+                    mifosScheduler.initializeBatchJobs();
                     final ShutdownManager shutdownManager = new ShutdownManager();
                     if (null != ctx) {
                         ctx.getServletContext().setAttribute(MifosScheduler.class.getName(), mifosScheduler);
@@ -344,7 +339,11 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         LOG.info("shutting down scheduler");
         final MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
         ctx.removeAttribute(MifosScheduler.class.getName());
-        mifosScheduler.shutdown();
+        try {
+            mifosScheduler.shutdown();
+        } catch(Exception e) {
+            LOG.error("error while shutting down scheduler", e);
+        }
     }
 
     @Override

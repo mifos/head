@@ -24,12 +24,14 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.core.io.ClassPathResource;
 
@@ -40,7 +42,7 @@ public class MifosSchedulerTest {
 
         MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/config/resources/task.xml");
 
-        mifosScheduler.registerTasks();
+        mifosScheduler.initializeBatchJobs();
         List<String> taskNames = mifosScheduler.getTaskNames();
 
         Assert.assertTrue(taskNames.contains("ProductStatus"));
@@ -58,13 +60,13 @@ public class MifosSchedulerTest {
     @Test
     public void testCallsConfigurationLocator() throws Exception {
         MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/mockTask.xml");
-        mifosScheduler.registerTasks();
+        mifosScheduler.initializeBatchJobs();
         List<String> taskNames = mifosScheduler.getTaskNames();
         Assert.assertEquals(1, taskNames.size());
         Assert.assertTrue(taskNames.contains("MockTask"));
     }
 
-    private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws IOException {
+    private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws TaskSystemException, IOException, FileNotFoundException {
         ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
         expect(mockConfigurationLocator.getFile(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
                 new ClassPathResource(taskConfigurationPath).getFile());

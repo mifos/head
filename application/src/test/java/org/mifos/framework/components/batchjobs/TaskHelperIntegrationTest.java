@@ -31,6 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.business.Task;
+import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.components.batchjobs.helpers.SavingsIntCalcTask;
 import org.mifos.framework.components.batchjobs.helpers.SavingsIntPostingTask;
 import org.mifos.framework.components.batchjobs.helpers.TaskStatus;
@@ -57,8 +58,9 @@ public class TaskHelperIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Test
-    public void testIncompleteTaskHandling() throws PersistenceException {
+    public void testIncompleteTaskHandling() throws PersistenceException, TaskSystemException {
         MifosScheduler mifosScheduler = new MifosScheduler();
 
         Task task1 = new Task();
@@ -81,13 +83,14 @@ public class TaskHelperIntegrationTest extends MifosIntegrationTestCase {
 
         StaticHibernateUtil.closeSession();
 
-        SavingsIntPostingTask savingsIntPostingTask = new SavingsIntPostingTask();
-        savingsIntPostingTask.name = SavingsIntPostingTask.class.getSimpleName();
-        mifosScheduler.schedule(savingsIntPostingTask, new Date(System.currentTimeMillis() + 3600000), 86400000);
+        // TODO: Rework to use new schedule method:
+        //SavingsIntPostingTask savingsIntPostingTask = new SavingsIntPostingTask();
+        //savingsIntPostingTask.name = SavingsIntPostingTask.class.getSimpleName();
+        mifosScheduler.schedule(SavingsIntPostingTask.class.getSimpleName(), new Date(System.currentTimeMillis() + 3600000), 86400000);
 
-        SavingsIntCalcTask savingsIntCalcTask = new SavingsIntCalcTask();
-        savingsIntCalcTask.name = SavingsIntCalcTask.class.getSimpleName();
-        mifosScheduler.schedule(savingsIntCalcTask, new Date(System.currentTimeMillis() + 3600000), 86400000);
+        //SavingsIntCalcTask savingsIntCalcTask = new SavingsIntCalcTask();
+        //savingsIntCalcTask.name = SavingsIntCalcTask.class.getSimpleName();
+        mifosScheduler.schedule(SavingsIntCalcTask.class.getSimpleName(), new Date(System.currentTimeMillis() + 3600000), 86400000);
 
         mifosScheduler.runAllTasks();
 
@@ -95,8 +98,9 @@ public class TaskHelperIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(5, query.list().size());
     }
 
+    @SuppressWarnings("deprecation")
     @Test
-    public void testIncompleteTaskDelay() throws PersistenceException {
+    public void testIncompleteTaskDelay() throws PersistenceException, TaskSystemException {
         MifosScheduler mifosScheduler = new MifosScheduler();
 
         Task task1 = new Task();
@@ -119,17 +123,18 @@ public class TaskHelperIntegrationTest extends MifosIntegrationTestCase {
 
         StaticHibernateUtil.closeSession();
 
-        SavingsIntPostingTask savingsIntPostingTask = new SavingsIntPostingTask();
-        savingsIntPostingTask.name = SavingsIntPostingTask.class.getSimpleName();
+        // TODO: Rework to use new schedule method
+        //SavingsIntPostingTask savingsIntPostingTask = new SavingsIntPostingTask();
+        //savingsIntPostingTask.name = SavingsIntPostingTask.class.getSimpleName();
         long delay = 86400000; // one day
-        savingsIntPostingTask.delay = delay;
-        mifosScheduler.schedule(savingsIntPostingTask, new Date(System.currentTimeMillis() + 3600000), delay);
+        //savingsIntPostingTask.delay = delay;
+        mifosScheduler.schedule(SavingsIntPostingTask.class.getSimpleName(), new Date(System.currentTimeMillis() + 3600000), delay);
 
-        SavingsIntCalcTask savingsIntCalcTask = new SavingsIntCalcTask();
-        savingsIntCalcTask.name = SavingsIntCalcTask.class.getSimpleName();
+        //SavingsIntCalcTask savingsIntCalcTask = new SavingsIntCalcTask();
+        //savingsIntCalcTask.name = SavingsIntCalcTask.class.getSimpleName();
         delay = 172800000; // two days
-        savingsIntCalcTask.delay = delay;
-        mifosScheduler.schedule(savingsIntCalcTask, new Date(System.currentTimeMillis() + 3600000), delay);
+        //savingsIntCalcTask.delay = delay;
+        mifosScheduler.schedule(SavingsIntCalcTask.class.getSimpleName(), new Date(System.currentTimeMillis() + 3600000), delay);
 
         mifosScheduler.runAllTasks();
 

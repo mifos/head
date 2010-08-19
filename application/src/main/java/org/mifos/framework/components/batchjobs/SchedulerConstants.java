@@ -23,13 +23,33 @@ package org.mifos.framework.components.batchjobs;
 public interface SchedulerConstants {
 
     String CONFIGURATION_FILE_NAME = "task.xml";
+    String SCHEDULER_CONFIGURATION_FILE_NAME = "quartz.properties";
+
     String SCHEDULER_TASKS = "scheduler-tasks";
     String SCHEDULER = "scheduler";
     String TASK_CLASS_NAME = "task-class-name";
+    String TASK_GROUP_NAME = "task-group-name";
     String INITIAL_TIME = "initial-time";
     String DELAY_TIME = "delay-time";
+
+    String SCHEDULER_CONFIG = "scheduler-config";
+    String GLOBAL_JOB_LISTENERS = "global-job-listeners";
+    String GLOBAL_TRIGGER_LISTENERS = "global-trigger-listeners";
+    String LISTENER = "listener";
+    String SCHEDULE = "schedule";
+    String BATCH_JOB = "batch-job";
+    String JOB_NAME = "job-name";
+    String JOB_GROUP_NAME = "job-group-name";
+    String JOB_PRIORITY = "job-priority";
+    String CRON_EXPRESSION = "cron-expression";
+    String JOB_LISTENERS = "job-listeners";
+    String TRIGGER_LISTENERS = "trigger-listeners";
+
     String START = "Start";
     String FINISHED_SUCCESSFULLY = "Finished Successfully";
     String FAILURE = "Failure";
+
+    String GLOBAL_JOB_LISTENER_NAME = "MifosGlobalBatchJobListener";
+    String GLOBAL_TRIGGER_LISTENER_NAME = "MifosGlobalTriggerListener";
 
 }
