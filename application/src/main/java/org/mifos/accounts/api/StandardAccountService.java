@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
@@ -256,6 +257,39 @@ public class StandardAccountService implements AccountService {
         }
         return errors;
     }
+
+    @Override
+    public List<AccountPaymentParametersDto> lookupPayments(AccountReferenceDto accountRef)
+    throws PersistenceException {
+        final int accountId = accountRef.getAccountId();
+        final AccountBO account = getAccountPersistence().getAccount(accountId);
+        List<AccountPaymentParametersDto> paymentDtos = new ArrayList<AccountPaymentParametersDto>();
+        for (AccountPaymentEntity paymentEntity : account.getAccountPayments()) {
+            paymentDtos.add(makePaymentDto(paymentEntity));
+        }
+        return paymentDtos;
+    }
+
+    public AccountPaymentParametersDto makePaymentDto(AccountPaymentEntity paymentEntity) {
+        AccountPaymentParametersDto paymentDto = new AccountPaymentParametersDto(
+                paymentEntity.getCreatedByUser() == null ?
+                        new UserReferenceDto(paymentEntity.getAccountTrxns().iterator().next().
+                                getPersonnel().getPersonnelId()) :
+                                    new UserReferenceDto(paymentEntity.getCreatedByUser().getPersonnelId()),
+                                    new AccountReferenceDto(paymentEntity.getAccount().getAccountId()),
+                                    paymentEntity.getAmount().getAmount(),
+                                    LocalDate.fromDateFields(paymentEntity.getPaymentDate()),
+                                    new PaymentTypeDto(paymentEntity.getPaymentType().getId(),
+                                            paymentEntity.getPaymentType().toString()),
+                                            paymentEntity.getComment() == null ?
+                                                    paymentEntity.toString() :
+                                                        paymentEntity.getComment(),
+                                                        paymentEntity.getReceiptDate() == null ? null :
+                                                            LocalDate.fromDateFields(paymentEntity.getReceiptDate()),
+                                                            paymentEntity.getReceiptNumber());
+        return paymentDto;
+    }
+
 
     public List<PaymentTypeDto> getSavingsPaymentTypes() throws PersistenceException {
         return getPaymentTypes(TrxnTypes.savings_deposit.getValue());

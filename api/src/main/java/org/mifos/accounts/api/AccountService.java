@@ -163,4 +163,12 @@ public interface AccountService {
      *         mapping for this key.
      */
     Object getMifosConfiguration(String propertyKey);
+
+    /**
+     * Lookup all payments associated with a given account.
+     *
+     * @param accountRef is a reference to the account for which payment information is requested.
+     */
+    List<AccountPaymentParametersDto> lookupPayments(AccountReferenceDto accountRef) throws Exception;
+
 }
