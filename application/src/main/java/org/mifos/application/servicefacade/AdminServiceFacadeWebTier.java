@@ -44,15 +44,19 @@ import org.mifos.accounts.productdefinition.LoanAmountCalculation;
 import org.mifos.accounts.productdefinition.LoanInstallmentCalculation;
 import org.mifos.accounts.productdefinition.LoanProductCaluclationTypeAssembler;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
+import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.ProductCategoryBusinessService;
 import org.mifos.accounts.productdefinition.business.service.ProductService;
+import org.mifos.accounts.productdefinition.business.service.SavingsPrdBusinessService;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
@@ -77,6 +81,7 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.TrxnTypes;
@@ -119,6 +124,7 @@ import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductDto;
 import org.mifos.dto.screen.ProductMixDetailsDto;
 import org.mifos.dto.screen.ProductMixDto;
+import org.mifos.dto.screen.SavingsProductFormDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -128,6 +134,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
@@ -1427,6 +1434,76 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             throw new MifosRuntimeException(e);
         } finally {
             StaticHibernateUtil.closeSession();
+        }
+    }
+
+    @Override
+    public SavingsProductFormDto retrieveSavingsProductFormReferenceData() {
+
+        try {
+            SavingsPrdBusinessService service = new SavingsPrdBusinessService();
+
+            List<ListElement> productCategoryOptions = new ArrayList<ListElement>();
+            List<ProductCategoryBO> productCategories = service.getActiveSavingsProductCategories();
+            for (ProductCategoryBO category : productCategories) {
+                productCategoryOptions.add(new ListElement(category.getProductCategoryID().intValue(), category
+                        .getProductCategoryName()));
+            }
+
+            List<ListElement> applicableForOptions = new ArrayList<ListElement>();
+            List<PrdApplicableMasterEntity> applicableCustomerTypes = this.loanProductDao
+                    .retrieveSavingsApplicableProductCategories();
+            for (PrdApplicableMasterEntity entity : applicableCustomerTypes) {
+                applicableForOptions.add(new ListElement(entity.getId().intValue(), entity.getName()));
+            }
+
+            List<ListElement> savingsTypeOptions = new ArrayList<ListElement>();
+            List<SavingsTypeEntity> savingsTypes = this.loanProductDao.retrieveSavingsTypes();
+            for (SavingsTypeEntity entity : savingsTypes) {
+                savingsTypeOptions.add(new ListElement(entity.getId().intValue(), entity.getName()));
+            }
+
+            List<ListElement> recommendedAmountTypeOptions = new ArrayList<ListElement>();
+            List<RecommendedAmntUnitEntity> recommendedAmountTypes = this.loanProductDao
+                    .retrieveRecommendedAmountTypes();
+            for (RecommendedAmntUnitEntity entity : recommendedAmountTypes) {
+                recommendedAmountTypeOptions.add(new ListElement(entity.getId().intValue(), entity.getName()));
+            }
+
+            List<ListElement> interestCalcTypeOptions = new ArrayList<ListElement>();
+            List<InterestCalcTypeEntity> interestCalcTypes = this.loanProductDao.retrieveInterestCalcTypes();
+            for (InterestCalcTypeEntity entity : interestCalcTypes) {
+                interestCalcTypeOptions.add(new ListElement(entity.getId().intValue(), entity.getName()));
+            }
+
+            List<ListElement> timePeriodOptions = new ArrayList<ListElement>();
+            List<RecurrenceTypeEntity> applicableRecurrences = service.getSavingsApplicableRecurrenceTypes();
+            for (RecurrenceTypeEntity entity : applicableRecurrences) {
+                timePeriodOptions.add(new ListElement(entity.getRecurrenceId().intValue(), entity.getRecurrenceName()));
+            }
+
+            List<GLCodeEntity> depositGlCodeList = new ArrayList<GLCodeEntity>();
+            depositGlCodeList.addAll(new FinancialBusinessService().getGLCodes(FinancialActionConstants.MANDATORYDEPOSIT, FinancialConstants.CREDIT));
+            depositGlCodeList.addAll(new FinancialBusinessService().getGLCodes(FinancialActionConstants.VOLUNTORYDEPOSIT, FinancialConstants.CREDIT));
+
+            List<ListElement> depositGlCodeOptions = new ArrayList<ListElement>();
+            for (GLCodeEntity glCode : depositGlCodeList) {
+                depositGlCodeOptions.add(new ListElement(glCode.getGlcodeId().intValue(), glCode.getGlcode()));
+            }
+
+            List<GLCodeEntity> interestGlCodeList = new FinancialBusinessService().getGLCodes(FinancialActionConstants.SAVINGS_INTERESTPOSTING, FinancialConstants.DEBIT);
+            List<ListElement> interestGlCodes = new ArrayList<ListElement>();
+            for (GLCodeEntity glCode : interestGlCodeList) {
+                interestGlCodes.add(new ListElement(glCode.getGlcodeId().intValue(), glCode.getGlcode()));
+            }
+
+            return new SavingsProductFormDto(productCategoryOptions, applicableForOptions, savingsTypeOptions, recommendedAmountTypeOptions, interestCalcTypeOptions, timePeriodOptions, depositGlCodeOptions, interestGlCodes);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        } catch (SystemException e) {
+            throw new MifosRuntimeException(e);
+        } catch (ApplicationException e) {
+            throw new BusinessRuleException(e.getKey(), e);
         }
     }
 

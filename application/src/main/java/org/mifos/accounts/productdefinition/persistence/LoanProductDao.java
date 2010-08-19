@@ -27,6 +27,8 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
+import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
@@ -55,6 +57,8 @@ public interface LoanProductDao {
 
     List<PrdApplicableMasterEntity> retrieveLoanApplicableProductCategories();
 
+    List<PrdApplicableMasterEntity> retrieveSavingsApplicableProductCategories();
+
     List<GracePeriodTypeEntity> retrieveGracePeriodTypes();
 
     List<InterestTypesEntity> retrieveInterestTypes();
@@ -74,4 +78,8 @@ public interface LoanProductDao {
     void validateNameIsAvailableForCategory(String productCategoryName, Short productTypeEntityId);
 
     ProductCategoryBO findProductCategoryByGlobalNum(String globalNumber);
+
+    List<SavingsTypeEntity> retrieveSavingsTypes();
+
+    List<RecommendedAmntUnitEntity> retrieveRecommendedAmountTypes();
 }

@@ -22,8 +22,6 @@ package org.mifos.ui.core.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.screen.ProductDisplayDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +33,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/viewSavingsProducts")
-@SessionAttributes("formBean")
+@SessionAttributes("savingsProduct")
 public class SavingsProductController {
-
-//    private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
-//    private static final String CANCEL_PARAM = "CANCEL";
-//    private static final String CANCEL_PARAM_VALUE = "Cancel";
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
@@ -54,13 +48,12 @@ public class SavingsProductController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView handleRequestInternal(HttpServletRequest request) {
+    public ModelAndView showAllSavingsProducts() {
 
         ModelAndView modelAndView = new ModelAndView("viewSavingsProducts");
+
         List<ProductDisplayDto> productDto = adminServiceFacade.retrieveSavingsProducts();
         modelAndView.addObject("products", productDto);
-        modelAndView.addObject("breadcrumbs", new AdminBreadcrumbBuilder().withLink("admin.viewSavingsproducts",
-                "viewSavingsProducts.ftl").build());
 
         return modelAndView;
     }

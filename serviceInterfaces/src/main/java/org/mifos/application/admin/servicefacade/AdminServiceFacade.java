@@ -39,6 +39,7 @@ import org.mifos.dto.screen.ProductConfigurationDto;
 import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductDto;
 import org.mifos.dto.screen.ProductMixDetailsDto;
+import org.mifos.dto.screen.SavingsProductFormDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface AdminServiceFacade {
@@ -60,6 +61,9 @@ public interface AdminServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     LoanProductFormDto retrieveLoanProductFormReferenceData();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    SavingsProductFormDto retrieveSavingsProductFormReferenceData();
 
     @PreAuthorize("isFullyAuthenticated()")
     void createLoanProduct(LoanProductRequest loanProduct);

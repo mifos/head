@@ -33,6 +33,8 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
+import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
@@ -118,6 +120,12 @@ public class LoanProductDaoHibernate implements LoanProductDao {
     }
 
     @Override
+    public List<PrdApplicableMasterEntity> retrieveSavingsApplicableProductCategories() {
+        List<PrdApplicableMasterEntity> applicableCategories = doFetchListOfMasterDataFor(PrdApplicableMasterEntity.class);
+        return applicableCategories;
+    }
+
+    @Override
     public List<PrdApplicableMasterEntity> retrieveLoanApplicableProductCategories() {
         List<PrdApplicableMasterEntity> applicableCategories = filter(doFetchListOfMasterDataFor(PrdApplicableMasterEntity.class));
         return applicableCategories;
@@ -146,6 +154,16 @@ public class LoanProductDaoHibernate implements LoanProductDao {
     @Override
     public List<InterestTypesEntity> retrieveInterestTypes() {
         return doFetchListOfMasterDataFor(InterestTypesEntity.class);
+    }
+
+    @Override
+    public List<SavingsTypeEntity> retrieveSavingsTypes() {
+        return doFetchListOfMasterDataFor(SavingsTypeEntity.class);
+    }
+
+    @Override
+    public List<RecommendedAmntUnitEntity> retrieveRecommendedAmountTypes() {
+        return doFetchListOfMasterDataFor(RecommendedAmntUnitEntity.class);
     }
 
     @SuppressWarnings("unchecked")
