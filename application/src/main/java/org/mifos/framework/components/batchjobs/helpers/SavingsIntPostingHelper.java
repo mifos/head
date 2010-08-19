@@ -27,7 +27,6 @@ import java.util.List;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.config.business.Configuration;
-import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
@@ -35,8 +34,8 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class SavingsIntPostingHelper extends TaskHelper {
 
-    public SavingsIntPostingHelper(MifosTask mifosTask) {
-        super(mifosTask);
+    public SavingsIntPostingHelper() {
+        super();
     }
 
     @Override

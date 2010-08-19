@@ -20,15 +20,11 @@
 
 package org.mifos.framework.components.batchjobs.listeners;
 
-import java.sql.Timestamp;
-
+import org.joda.time.DateTime;
 import org.mifos.framework.components.batchjobs.BatchJobListener;
 import org.mifos.framework.components.batchjobs.MifosBatchJob;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
-import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.components.batchjobs.helpers.TaskStatus;
-import org.mifos.framework.components.batchjobs.persistence.TaskPersistence;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -47,59 +43,38 @@ public class GlobalBatchJobListener extends BatchJobListener {
         String jobName = context.getJobDetail().getName();
         long currentTime = new DateTimeService().getCurrentDateTime().getMillis();
         registerBatchJobLaunch(jobName, currentTime);
+        MifosBatchJob.batchJobStarted();
+        ((MifosBatchJob)context.getJobInstance()).requiresExclusiveAccess();
     }
 
     @Override
     public void jobWasExecuted(JobExecutionContext context, JobExecutionException exception) {
         String jobName = context.getJobDetail().getName();
+        long currentTime = new DateTimeService().getCurrentDateTime().getMillis();
         if(exception == null) {
-            registerBatchJobResult(jobName, 0, SchedulerConstants.FINISHED_SUCCESSFULLY, TaskStatus.COMPLETE);
+            registerBatchJobResult(jobName, currentTime, SchedulerConstants.FINISHED_SUCCESSFULLY, TaskStatus.COMPLETE);
         } else {
-            long currentTime = new DateTimeService().getCurrentDateTime().getMillis();
             registerBatchJobResult(jobName, currentTime, exception.getMessage(), TaskStatus.FAILED);
         }
+        MifosBatchJob.batchJobFinished();
     }
 
     public final void registerBatchJobLaunch(String batchJobName, long timeInMillis) {
-        try {
-            MifosBatchJob.batchJobStarted();
-            requiresExclusiveAccess();
-            Task task = new Task();
-            task.setDescription(SchedulerConstants.START);
-            task.setTask(batchJobName);
-            task.setStatus(TaskStatus.INCOMPLETE);
-            if (timeInMillis == 0) {
-                task.setStartTime(new Timestamp(new DateTimeService().getCurrentDateTime().getMillis()));
-            } else {
-                task.setStartTime(new Timestamp(timeInMillis));
-            }
-            new TaskPersistence().saveAndCommitTask(task);
-        } catch (PersistenceException pe) {
-            getLogger().error("Failure while registering " + batchJobName + " launch", pe);
-        }
+        DateTime date = new DateTime(timeInMillis);
+        String logMessage = "Batch job " + batchJobName + " launched on " + date;
+        getLogger().info(logMessage);
     }
 
     public final void registerBatchJobResult(String batchJobName, long timeInMillis, String description, TaskStatus status) {
-        try {
-            Task task = new Task();
-            task.setTask(batchJobName);
-            task.setDescription(description);
-            task.setStatus(status);
-            if (timeInMillis == 0) {
-                task.setEndTime(new Timestamp(new DateTimeService().getCurrentDateTime().getMillis()));
-            } else {
-                task.setEndTime(new Timestamp(timeInMillis));
-            }
-            new TaskPersistence().saveAndCommitTask(task);
-        } catch (PersistenceException pe) {
-            getLogger().error("Failure while registering " + batchJobName + " result", pe);
-        } finally {
-            MifosBatchJob.batchJobFinished();
+        DateTime date = new DateTime(timeInMillis);
+        String logMessage = null;
+        if(status == TaskStatus.COMPLETE) {
+            logMessage = "Batch job " + batchJobName +" completed on " + date + ": " + description;
+            getLogger().info(logMessage);
+        } else if(status == TaskStatus.FAILED) {
+            logMessage = "Batch job " + batchJobName + " FAILED on " + date + ": " + description;
+            getLogger().warn(logMessage);
         }
-    }
-
-    protected void requiresExclusiveAccess() {
-        MifosBatchJob.batchJobRequiresExclusiveAccess(true);
     }
 
 }

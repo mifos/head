@@ -22,15 +22,14 @@ package org.mifos.framework.components.batchjobs.helpers;
 
 import org.hibernate.Query;
 import org.joda.time.LocalDate;
-import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class LoanArrearsAgingHelper extends TaskHelper {
 
-    public LoanArrearsAgingHelper(MifosTask mifosTask) {
-        super(mifosTask);
+    public LoanArrearsAgingHelper() {
+        super();
     }
 
     @Override
@@ -78,8 +77,4 @@ public class LoanArrearsAgingHelper extends TaskHelper {
         }
     }
 
-    @Override
-    public boolean isTaskAllowedToRun() {
-        return true;
-    }
 }

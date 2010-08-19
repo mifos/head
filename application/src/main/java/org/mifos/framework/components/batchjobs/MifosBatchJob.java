@@ -20,45 +20,34 @@
 
 package org.mifos.framework.components.batchjobs;
 
-import java.util.TimerTask;
+import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.quartz.StatefulJob;
 
-public abstract class MifosTask extends TimerTask {
+public abstract class MifosBatchJob implements StatefulJob {
 
     private static boolean batchJobRunning = false;
     private static boolean requiresExclusiveAccess = true;
 
-    public TaskHelper helper;
-
-    /**
-     * Name of the task same as specified in XML
-     */
-    public String name;
-
-    /**
-     * Delay time until next execution same as specified in XML
-     */
-    public long delay;
-
-    /**
-     * Attribute which determines if the job is a regular DB update job to be
-     * run daily and hence registereed in the database or a user requested job.
-     * [ if true : job should run daily false : user requested job ]
-     */
-    public boolean normal;
-
-    /**
-     * An alternate set of parameters which could be set while the task is
-     * created.This constitutes input to the MifosTask while executing.
-     */
-    public Object params;
-
-    public MifosTask() {
+    @Override
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        try {
+            getTaskHelper().execute(context.getScheduledFireTime().getTime());
+        } catch (BatchJobException bje) {
+            throw new JobExecutionException(bje);
+        }
     }
 
-    @Override
-    public final void run() {
-        helper = getTaskHelper();
-        helper.executeTask();
+    public abstract TaskHelper getTaskHelper();
+
+    /**
+     * This method determines if users can continue to use the system while this task/batch job is running.
+     * <br />
+     * Override this method and return false it exclusive access is not necessary.
+     */
+    public void requiresExclusiveAccess() {
+        MifosBatchJob.batchJobRequiresExclusiveAccess(true);
     }
 
     public static boolean isBatchJobRunning() {
@@ -86,5 +75,4 @@ public abstract class MifosTask extends TimerTask {
         requiresExclusiveAccess = setting;
     }
 
-    public abstract TaskHelper getTaskHelper();
 }
