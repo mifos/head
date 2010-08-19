@@ -32,6 +32,8 @@ import org.mifos.platform.questionnaire.matchers.EventSourceMatcher;
 import org.mifos.platform.questionnaire.matchers.EventSourcesMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionDetailMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -176,7 +178,7 @@ public class QuestionnaireServiceFacadeTest {
     public void testGetQuestionWithAnswerChoicesById() throws SystemException {
         int questionId = 1;
         String title = "Title";
-        List<ChoiceDetail> answerChoices = asList(new ChoiceDetail("choice1"), new ChoiceDetail("choice2"));
+        List<ChoiceDto> answerChoices = asList(new ChoiceDto("choice1"), new ChoiceDto("choice2"));
         QuestionDetail expectedQuestionDetail = new QuestionDetail(questionId, title, title, QuestionType.MULTI_SELECT, true);
         expectedQuestionDetail.setAnswerChoices(answerChoices);
         when(questionnaireService.getQuestion(questionId)).thenReturn(expectedQuestionDetail);
@@ -201,21 +203,21 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testRetrieveEventSources() {
-        EventSource event1 = makeEvent("Create", "Client", "Create Client");
-        EventSource event2 = makeEvent("View", "Client", "View Client");
-        List<EventSource> events = getEvents(event1, event2);
+        EventSourceDto event1 = makeEvent("Create", "Client", "Create Client");
+        EventSourceDto event2 = makeEvent("View", "Client", "View Client");
+        List<EventSourceDto> events = getEvents(event1, event2);
         when(questionnaireService.getAllEventSources()).thenReturn(events);
-        List<EventSource> eventSources = questionnaireServiceFacade.getAllEventSources();
-        Assert.assertNotNull(eventSources);
-        Assert.assertTrue(eventSources.size() == 2);
-        assertThat(eventSources, new EventSourcesMatcher(asList(event1, event2)));
+        List<EventSourceDto> eventSourceDtos = questionnaireServiceFacade.getAllEventSources();
+        Assert.assertNotNull(eventSourceDtos);
+        Assert.assertTrue(eventSourceDtos.size() == 2);
+        assertThat(eventSourceDtos, new EventSourcesMatcher(asList(event1, event2)));
         Mockito.verify(questionnaireService).getAllEventSources();
     }
 
     @Test
     public void shouldRetrieveQuestionGroupsByEventSource() throws SystemException {
         QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE + 1, "Create", "Client", asList(getSectionDetailWithQuestionIds("Section1", 11, 22, 33)));
-        when(questionnaireService.getQuestionGroups(any(EventSource.class))).thenReturn(asList(questionGroupDetail));
+        when(questionnaireService.getQuestionGroups(any(EventSourceDto.class))).thenReturn(asList(questionGroupDetail));
         List<QuestionGroupDetail> questionGroupDetails = questionnaireServiceFacade.getQuestionGroups("Create", "Client");
         assertQuestionGroupDetails(questionGroupDetails);
         Mockito.verify(questionnaireService, times(1)).getQuestionGroups(argThat(new EventSourceMatcher("Create", "Client", "Create.Client")));
@@ -256,7 +258,7 @@ public class QuestionnaireServiceFacadeTest {
     public void testValidateResponse() {
         List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails, true);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSourceDto("Create", "Client", null), sectionDetails, true);
         try {
             Mockito.doThrow(new MandatoryAnswerNotFoundException("Title")).
                     when(questionnaireService).validateResponses(asList(questionGroupDetail));
@@ -269,9 +271,9 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testGetQuestionGroupInstances() {
-        when(questionnaireService.getQuestionGroupInstances(101, new EventSource("View", "Client", "View.Client"), false, false)).thenReturn(new ArrayList<QuestionGroupInstanceDetail>());
+        when(questionnaireService.getQuestionGroupInstances(101, new EventSourceDto("View", "Client", "View.Client"), false, false)).thenReturn(new ArrayList<QuestionGroupInstanceDetail>());
         assertThat(questionnaireServiceFacade.getQuestionGroupInstances(101, "View", "Client"), is(notNullValue()));
-        verify(questionnaireService).getQuestionGroupInstances(eq(101), any(EventSource.class), eq(false), eq(false));
+        verify(questionnaireService).getQuestionGroupInstances(eq(101), any(EventSourceDto.class), eq(false), eq(false));
     }
 
     @Test
@@ -284,9 +286,9 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testGetQuestionGroupInstancesIncludingNoResponses() {
-        when(questionnaireService.getQuestionGroupInstances(101, new EventSource("Create", "Client", "Create.Client"), true, false)).thenReturn(new ArrayList<QuestionGroupInstanceDetail>());
+        when(questionnaireService.getQuestionGroupInstances(101, new EventSourceDto("Create", "Client", "Create.Client"), true, false)).thenReturn(new ArrayList<QuestionGroupInstanceDetail>());
         questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(101, "Create", "Client");
-        verify(questionnaireService).getQuestionGroupInstances(eq(101), any(EventSource.class), eq(true), eq(true));
+        verify(questionnaireService).getQuestionGroupInstances(eq(101), any(EventSourceDto.class), eq(true), eq(true));
     }
 
     @Test
@@ -296,6 +298,20 @@ public class QuestionnaireServiceFacadeTest {
         verify(questionnaireService).defineQuestionGroup(questionGroupDto);
     }
 
+    @Test
+    public void testGetAllCountriesForPPI() {
+        List<String> countries = asList("India", "China", "Canada");
+        when(questionnaireService.getAllCountriesForPPI()).thenReturn(countries);
+        assertThat(questionnaireServiceFacade.getAllCountriesForPPI(), is(countries));
+        verify(questionnaireService).getAllCountriesForPPI();
+    }
+    
+    @Test
+    public void testUploadPPIQuestionGroup() {
+        questionnaireServiceFacade.uploadPPIQuestionGroup("India");
+        verify(questionnaireService).uploadPPIQuestionGroup("India");
+    }
+    
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail() {
         QuestionGroupInstanceDetail groupInstanceDetail = new QuestionGroupInstanceDetail();
         groupInstanceDetail.setQuestionGroupDetail(new QuestionGroupDetail());
@@ -316,7 +332,7 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, List<SectionDetail> sections) {
-        return new QuestionGroupDetail(1, title, new EventSource(event, source, null), sections, false);
+        return new QuestionGroupDetail(1, title, new EventSourceDto(event, source, null), sections, false);
     }
 
     private SectionDetail getSectionDetailWithQuestionIds(String name, int... questionIds) {
@@ -338,12 +354,12 @@ public class QuestionnaireServiceFacadeTest {
         return sectionDetail;
     }
 
-    private List<EventSource> getEvents(EventSource... event) {
+    private List<EventSourceDto> getEvents(EventSourceDto... event) {
         return asList(event);
     }
 
-    private EventSource makeEvent(String event, String source, String description) {
-        return new EventSource(event, source, description);
+    private EventSourceDto makeEvent(String event, String source, String description) {
+        return new EventSourceDto(event, source, description);
     }
 
     private QuestionDetail getQuestionDetail(int id, String text, String shortName, QuestionType questionType) {
@@ -353,11 +369,11 @@ public class QuestionnaireServiceFacadeTest {
 
     private QuestionDetail getQuestionDetail(int id, String text, String shortName, QuestionType questionType, List<String> choices) {
         QuestionDetail questionDetail = new QuestionDetail(id, text, shortName, questionType, true);
-        List<ChoiceDetail> choiceDetails = new ArrayList<ChoiceDetail>();
+        List<ChoiceDto> choiceDtos = new ArrayList<ChoiceDto>();
         for (String choice : choices) {
-            choiceDetails.add(new ChoiceDetail(choice));
+            choiceDtos.add(new ChoiceDto(choice));
         }
-        questionDetail.setAnswerChoices(choiceDetails);
+        questionDetail.setAnswerChoices(choiceDtos);
         return questionDetail;
     }
 }

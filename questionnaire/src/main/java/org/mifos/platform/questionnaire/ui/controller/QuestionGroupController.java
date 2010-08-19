@@ -26,7 +26,7 @@ import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
@@ -104,9 +104,9 @@ public class QuestionGroupController extends QuestionnaireController {
     }
 
     public Map<String, String> getAllQgEventSources() {
-        List<EventSource> eventSources = questionnaireServiceFacade.getAllEventSources();
+        List<EventSourceDto> eventSourceDtos = questionnaireServiceFacade.getAllEventSources();
         Map<String, String> evtSourcesMap = new HashMap<String, String>();
-        for (EventSource evtSrc : eventSources) {
+        for (EventSourceDto evtSrc : eventSourceDtos) {
             evtSourcesMap.put(getEventSourceId(evtSrc), evtSrc.getDescription());
         }
         return evtSourcesMap;
@@ -132,7 +132,7 @@ public class QuestionGroupController extends QuestionnaireController {
         return "success";
     }
 
-    private String getEventSourceId(EventSource evtSrc) {
+    private String getEventSourceId(EventSourceDto evtSrc) {
         return evtSrc.getEvent().trim().concat(".").concat(evtSrc.getSource().trim());
     }
 
@@ -214,7 +214,7 @@ public class QuestionGroupController extends QuestionnaireController {
     }
 
     private boolean appliesToNotPresent(String eventSourceId) {
-        return StringUtils.isEmpty(eventSourceId) || "--select one--".equals(eventSourceId);
+        return StringUtils.isEmpty(eventSourceId) || QuestionnaireConstants.SELECT_ONE.equals(eventSourceId);
     }
 
     private boolean sectionsNotPresent(List<SectionDetailForm> sections) {

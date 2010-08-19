@@ -95,4 +95,46 @@ public class TaskHelperIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(5, query.list().size());
     }
 
+    @Test
+    public void testIncompleteTaskDelay() throws PersistenceException {
+        MifosScheduler mifosScheduler = new MifosScheduler();
+
+        Task task1 = new Task();
+        task1.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
+        task1.setStartTime(new Timestamp(System.currentTimeMillis() - 350000000)); // over four days ago
+        task1.setEndTime(new Timestamp(System.currentTimeMillis() - 350000000));
+        task1.setStatus(TaskStatus.COMPLETE.getValue());
+        task1.setTask(SavingsIntPostingTask.class.getSimpleName());
+        TaskPersistence p = new TaskPersistence();
+        p.saveAndCommitTask(task1);
+
+        Task task2 = new Task();
+        task2.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
+        task2.setStartTime(new Timestamp(System.currentTimeMillis() - 350000000)); // over four days ago
+        task2.setEndTime(new Timestamp(System.currentTimeMillis() - 350000000));
+        task2.setStatus(TaskStatus.COMPLETE.getValue());
+        task2.setTask(SavingsIntCalcTask.class.getSimpleName());
+        p = new TaskPersistence();
+        p.saveAndCommitTask(task2);
+
+        StaticHibernateUtil.closeSession();
+
+        SavingsIntPostingTask savingsIntPostingTask = new SavingsIntPostingTask();
+        savingsIntPostingTask.name = SavingsIntPostingTask.class.getSimpleName();
+        long delay = 86400000; // one day
+        savingsIntPostingTask.delay = delay;
+        mifosScheduler.schedule(savingsIntPostingTask, new Date(System.currentTimeMillis() + 3600000), delay);
+
+        SavingsIntCalcTask savingsIntCalcTask = new SavingsIntCalcTask();
+        savingsIntCalcTask.name = SavingsIntCalcTask.class.getSimpleName();
+        delay = 172800000; // two days
+        savingsIntCalcTask.delay = delay;
+        mifosScheduler.schedule(savingsIntCalcTask, new Date(System.currentTimeMillis() + 3600000), delay);
+
+        mifosScheduler.runAllTasks();
+
+        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
+        Assert.assertEquals(8, query.list().size());
+    }
+
 }

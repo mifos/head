@@ -21,7 +21,7 @@
 package org.mifos.platform.questionnaire.ui.model;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
@@ -66,9 +66,9 @@ public class QuestionGroupForm implements Serializable {
     }
     
     public String getEventSourceId() {
-        EventSource eventSource = this.questionGroupDetail.getEventSource();
-        if (eventSource == null || isEmpty(eventSource.getEvent()) || isEmpty(eventSource.getSource())) return null;
-        return format("%s.%s", eventSource.getEvent(), eventSource.getSource());
+        EventSourceDto eventSourceDto = this.questionGroupDetail.getEventSource();
+        if (eventSourceDto == null || isEmpty(eventSourceDto.getEvent()) || isEmpty(eventSourceDto.getSource())) return null;
+        return format("%s.%s", eventSourceDto.getEvent(), eventSourceDto.getSource());
     }
 
     public String getId() {
@@ -78,18 +78,18 @@ public class QuestionGroupForm implements Serializable {
     public void setEventSourceId(String eventSourceId) {
         if (StringUtils.isNotEmpty(eventSourceId) && !StringUtils.equals(DEFAULT_APPLIES_TO_OPTION, eventSourceId)) {
             String[] parts = eventSourceId.split("\\.");
-            this.questionGroupDetail.setEventSource(new EventSource(parts[0], parts[1], eventSourceId));
+            this.questionGroupDetail.setEventSource(new EventSourceDto(parts[0], parts[1], eventSourceId));
         }else{
-            this.questionGroupDetail.setEventSource(new EventSource(null, null, null));
+            this.questionGroupDetail.setEventSource(new EventSourceDto(null, null, null));
         }
     }
 
-    public EventSource getEventSource() {
+    public EventSourceDto getEventSource() {
         return questionGroupDetail.getEventSource();
     }
 
-    public void setEventSource(EventSource eventSource) {
-        questionGroupDetail.setEventSource(eventSource);
+    public void setEventSource(EventSourceDto eventSourceDto) {
+        questionGroupDetail.setEventSource(eventSourceDto);
     }
 
     public List<SectionDetailForm> getSections() {

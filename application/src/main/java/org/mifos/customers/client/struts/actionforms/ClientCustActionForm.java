@@ -1082,7 +1082,7 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
         setSpouseName(new ClientNameDetailDto());
         setClientDetailView(new ClientPersonalDetailDto());
         setNextOrPreview("next");
-
+        setQuestionGroups(null);
         for (int i = 0; i < getSelectedOfferings().size(); i++) {
             getSelectedOfferings().set(i, null);
         }

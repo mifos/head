@@ -18,7 +18,7 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.service;
+package org.mifos.platform.questionnaire.service.dtos;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
@@ -33,7 +33,7 @@ import java.util.List;
 import static org.apache.commons.lang.StringUtils.trim;
 
 @XStreamAlias("choice")
-public class ChoiceDetail implements Serializable {
+public class ChoiceDto implements Serializable {
     private static final long serialVersionUID = 5839636913158754732L;
 
     private String value;
@@ -43,11 +43,11 @@ public class ChoiceDetail implements Serializable {
     @XStreamAsAttribute
     private Integer order;
 
-    public ChoiceDetail() {
+    public ChoiceDto() {
         this(null);
     }
 
-    public ChoiceDetail(String value) {
+    public ChoiceDto(String value) {
         this.value = value;
         tags = new ArrayList<String>();
     }

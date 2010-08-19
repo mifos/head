@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<ppi country="INDIA" name="PPI Survey India">
+<questions>
+	<question name="Number of children" mandatory="true" order="0">
+		<text>How many children aged 0 to 17 are in the household?</text>
+		<choice points="0">5 or more</choice>
+		<choice points="8">4</choice>
+		<choice points="11">3</choice>
+		<choice points="17">2</choice>
+		<choice points="22">1</choice>
+		<choice points="31">Zero</choice>
+	</question>
+	<question name="Cooking energy" mandatory="true" order="1">
+		<text>What is the household's primary energy source for cooking?</text>
+		<choice points="0">Firewood and chips, charcoal, or none</choice>
+		<choice points="8">Any other fuel</choice>
+	</question>
+	<question name="Own tv" mandatory="true" order="2">
+		<text>Does the household own a television?</text>
+		<choice points="0">No</choice>
+		<choice points="4">Yes</choice>
+	</question>
+	<question name="Own land" mandatory="true" order="3">
+		<text>How many hectares of land does the household own?</text>
+		<choice points="0">Urban, any amount</choice>
+		<choice points="4">Rural, 0 to 0.4</choice>
+		<choice points="7">Rural, 0.41 to 2</choice>
+		<choice points="10">Rural, &gt;2</choice>
+	</question>
+	<question name="Principal occupation" mandatory="true" order="4">
+		<text>What is the principle occupation of the household?</text>
+		<choice points="0">Agricultural labourers</choice>
+		<choice points="6">Operators and labourers, bricklayers, construction workers</choice>
+		<choice points="8">Cultivators, farmers, fishers, hunters, loggers, unknown</choice>
+		<choice points="11">Sales workers, service workers, and transport equipment operators</choice>
+		<choice points="13">Professional, technical, clerical, administrative, managerial, executive, teachers</choice>
+	</question>
+	<question name="Number of dressing tables" mandatory="true" order="5">
+		<text>How many almirah/dressing tables does the household own?</text>
+		<choice points="0">None</choice>
+		<choice points="2">One</choice>
+		<choice points="9">Two or more</choice>
+	</question>
+		<question name="Residence construction" mandatory="true" order="6">
+		<text>Is the residence all pucca (burnt bricks, stone, cement, concrete, jackboard/cement-plastered reeds, timber, tiles, galvanised tin or asbestos cement sheets)?</text>
+		<choice points="0">No</choice>
+		<choice points="5">Yes</choice>
+	</question>
+<question name="Own cooker" mandatory="true" order="7">
+		<text>Does the household own a pressure cooker or pressure pan?</text>
+		<choice points="0">No</choice>
+		<choice points="5">Yes</choice>
+	</question>
+	<question name="Own sewing machine" mandatory="true" order="8">
+		<text>Does the household own a sewing machine?</text>
+		<choice points="0">No</choice>
+		<choice points="6">Yes</choice>
+	</question>
+	<question name="Number of electric fans" mandatory="true" order="9">
+		<text>How many electric fans does the household own?</text>
+		<choice points="0">None</choice>
+		<choice points="5">One or two</choice>
+		<choice points="10">Three or more</choice>
+		</question>
+		</questions>
+	<likelihoods>
+		<likelihood scoreFrom="0" scoreTo="4" bottomHalf="82.2" topHalf="6.2"/>
+		<likelihood scoreFrom="5" scoreTo="9" bottomHalf="67.5" topHalf="28.8"/>
+		<likelihood scoreFrom="10" scoreTo="14" bottomHalf="61.2" topHalf="20.5"/>
+		<likelihood scoreFrom="15" scoreTo="19" bottomHalf="60.4" topHalf="21.6"/>
+		<likelihood scoreFrom="20" scoreTo="24" bottomHalf="38.8" topHalf="34.8"/>
+		<likelihood scoreFrom="25" scoreTo="29" bottomHalf="32.9" topHalf="27.7"/>
+		<likelihood scoreFrom="30" scoreTo="34" bottomHalf="23.9" topHalf="28.9"/>
+		<likelihood scoreFrom="35" scoreTo="39" bottomHalf="18.4" topHalf="20.7"/>
+		<likelihood scoreFrom="40" scoreTo="44" bottomHalf="6.9" topHalf="29.5"/>
+		<likelihood scoreFrom="45" scoreTo="49" bottomHalf="6.7" topHalf="15.4"/>
+		<likelihood scoreFrom="50" scoreTo="54" bottomHalf="1.1" topHalf="4.1"/>
+		<likelihood scoreFrom="55" scoreTo="59" bottomHalf="0.5" topHalf="6.1"/>
+		<likelihood scoreFrom="60" scoreTo="64" bottomHalf="0.2" topHalf="6.6"/>
+		<likelihood scoreFrom="65" scoreTo="69" bottomHalf="0.0" topHalf="3.6"/>
+		<likelihood scoreFrom="70" scoreTo="74" bottomHalf="0.0" topHalf="2.8"/>
+		<likelihood scoreFrom="75" scoreTo="79" bottomHalf="0.0" topHalf="0.0"/>
+		<likelihood scoreFrom="80" scoreTo="84" bottomHalf="0.0" topHalf="0.0"/>
+		<likelihood scoreFrom="85" scoreTo="89" bottomHalf="0.0" topHalf="0.0"/>
+		<likelihood scoreFrom="90" scoreTo="94" bottomHalf="0.0" topHalf="0.0"/>
+		<likelihood scoreFrom="95" scoreTo="101" bottomHalf="0.0" topHalf="0.0"/>
+	</likelihoods>
+</ppi>

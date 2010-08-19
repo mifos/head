@@ -35,7 +35,7 @@ import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
@@ -53,6 +53,8 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.*;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_TOO_BIG;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.SECTION_NAME_TOO_BIG;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -103,7 +105,7 @@ public class QuestionnaireValidatorForDtoTest {
     }
 
     @Test
-    public void shouldValidateForInvalidQuestionGroupDto_TitleExceedsMaxChars() {
+    public void shouldValidateForInvalidQuestionGroupDto_QuestionGroupTitleExceedsMaxChars() {
         when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
         QuestionGroupDto questionGroupDto = getQuestionGroupDto();
         questionGroupDto.setTitle("this is more than fifty characters string for question group title");
@@ -117,6 +119,42 @@ public class QuestionnaireValidatorForDtoTest {
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
             assertThat(childExceptions.get(0).getKey(), is(QUESTION_GROUP_TITLE_TOO_BIG));
+        }
+    }
+
+    @Test
+    public void shouldValidateForInvalidQuestionGroupDto_SectionNameExceedsMaxChars() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        questionGroupDto.getSections().get(0).setName("this is more than fifty characters string for question group title");
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+            fail("Should have thrown validationException");
+        } catch (ValidationException e) {
+            assertThat(e.getKey(), is(GENERIC_VALIDATION));
+            assertThat(e.containsChildExceptions(), is(true));
+            List<ValidationException> childExceptions = e.getChildExceptions();
+            assertThat(childExceptions, is(notNullValue()));
+            assertThat(childExceptions.size(), is(1));
+            assertThat(childExceptions.get(0).getKey(), is(SECTION_NAME_TOO_BIG));
+        }
+    }
+
+    @Test
+    public void shouldValidateForInvalidQuestionGroupDto_QuestionTitleExceedsMaxChars() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        questionGroupDto.getSections().get(0).getQuestions().get(0).setTitle("this is more than fifty characters string for question group title");
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+            fail("Should have thrown validationException");
+        } catch (ValidationException e) {
+            assertThat(e.getKey(), is(GENERIC_VALIDATION));
+            assertThat(e.containsChildExceptions(), is(true));
+            List<ValidationException> childExceptions = e.getChildExceptions();
+            assertThat(childExceptions, is(notNullValue()));
+            assertThat(childExceptions.size(), is(1));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITLE_TOO_BIG));
         }
     }
 
@@ -188,7 +226,7 @@ public class QuestionnaireValidatorForDtoTest {
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
-            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITILE_DUPLICATE));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITLE_DUPLICATE));
         }
     }
 
@@ -336,7 +374,20 @@ public class QuestionnaireValidatorForDtoTest {
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
-            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITILE_DUPLICATE));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITILE_MATCHES_EXISTING_QUESTION));
+        }
+    }
+
+    @Test
+    public void shouldValidateForInvalidQuestionGroupDto_ExistingQuestionTitle_SameQuestionType_NoChoices() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        String questionTitle = questionGroupDto.getSections().get(0).getQuestions().get(0).getTitle();
+        when(questionDao.retrieveByName(questionTitle)).thenReturn(asList(getQuestionEntity(questionTitle, AnswerType.FREETEXT, null)));
+        try {
+            questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+        } catch (ValidationException e) {
+            fail("Should not have thrown validationException");
         }
     }
 
@@ -356,7 +407,7 @@ public class QuestionnaireValidatorForDtoTest {
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
-            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITILE_DUPLICATE));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITILE_MATCHES_EXISTING_QUESTION));
         }
     }
 
@@ -376,7 +427,7 @@ public class QuestionnaireValidatorForDtoTest {
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
-            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITILE_DUPLICATE));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITILE_MATCHES_EXISTING_QUESTION));
         }
     }
 
@@ -416,7 +467,7 @@ public class QuestionnaireValidatorForDtoTest {
     public void shouldValidateForInvalidQuestionGroupDto_MissingRequiredNumberOfChoicesForSingleSelect() {
         when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
         QuestionGroupDto questionGroupDto = getQuestionGroupDto();
-        questionGroupDto.getSections().get(0).getQuestions().get(1).setChoices(asList(new ChoiceDetail("Ch1")));
+        questionGroupDto.getSections().get(0).getQuestions().get(1).setChoices(asList(new ChoiceDto("Ch1")));
         try {
             questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
             fail("Should have thrown validationException");
@@ -542,9 +593,9 @@ public class QuestionnaireValidatorForDtoTest {
         String ques4Title = "Ques4" + currentTimeMillis();
         String qgTitle = "QG1" + currentTimeMillis();
         QuestionDto question1 = new QuestionDtoBuilder().withTitle(ques1Title).withMandatory(true).withType(QuestionType.FREETEXT).withOrder(1).build();
-        ChoiceDetail choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
-        ChoiceDetail choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
-        ChoiceDetail choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
+        ChoiceDto choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
+        ChoiceDto choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
+        ChoiceDto choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
         QuestionDto question2 = new QuestionDtoBuilder().withTitle(ques2Title).withType(QuestionType.SINGLE_SELECT).addChoices(choice1, choice2, choice3).withOrder(2).build();
         SectionDto section1 = new SectionDtoBuilder().withName("Sec1").withOrder(1).addQuestions(question1, question2).build();
         QuestionDto question3 = new QuestionDtoBuilder().withTitle(ques3Title).withMandatory(false).withType(QuestionType.DATE).withOrder(1).build();

@@ -18,27 +18,27 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.service;
+package org.mifos.platform.questionnaire.service.dtos;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import java.io.Serializable;
 
 @XStreamAlias("eventSource")
-public class EventSource implements Serializable{
+public class EventSourceDto implements Serializable{
     private String source;
     private String event;
     private String description;
     private static final long serialVersionUID = 285579716279021785L;
 
-    public EventSource() {
+    public EventSourceDto() {
         //FIXEME: why does spring crib for not having a default constructor
         //for this class, when this class is not hooked onto spring?
         //TODO: Investigate later
         super();
     }
 
-    public EventSource(String event, String source, String description) {
+    public EventSourceDto(String event, String source, String description) {
         super();
         this.event = event;
         this.source = source;

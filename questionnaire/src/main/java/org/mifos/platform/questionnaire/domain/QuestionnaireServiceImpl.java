@@ -22,12 +22,14 @@ package org.mifos.platform.questionnaire.domain;
 
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.domain.ppi.PPISurveyLocator;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
+import org.mifos.platform.questionnaire.parsers.QuestionGroupDefinitionParser;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
@@ -41,6 +43,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_EXT;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_PREFIX;
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 
 public class QuestionnaireServiceImpl implements QuestionnaireService {
 
@@ -62,19 +68,28 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Autowired
     private QuestionnaireMapper questionnaireMapper;
 
+    @Autowired
+    private PPISurveyLocator ppiSurveyLocator;
+
+    @Autowired
+    private QuestionGroupDefinitionParser questionGroupDefinitionParser;
+
     @SuppressWarnings({"UnusedDeclaration"})
     private QuestionnaireServiceImpl() {
     }
 
     public QuestionnaireServiceImpl(QuestionnaireValidator questionnaireValidator, QuestionDao questionDao,
                                     QuestionnaireMapper questionnaireMapper, QuestionGroupDao questionGroupDao,
-                                    EventSourceDao eventSourceDao, QuestionGroupInstanceDao questionGroupInstanceDao) {
+                                    EventSourceDao eventSourceDao, QuestionGroupInstanceDao questionGroupInstanceDao,
+                                    PPISurveyLocator ppiSurveyLocator, QuestionGroupDefinitionParser questionGroupDefinitionParser) {
         this.questionnaireValidator = questionnaireValidator;
         this.questionDao = questionDao;
         this.questionnaireMapper = questionnaireMapper;
         this.questionGroupDao = questionGroupDao;
         this.eventSourceDao = eventSourceDao;
         this.questionGroupInstanceDao = questionGroupInstanceDao;
+        this.ppiSurveyLocator = ppiSurveyLocator;
+        this.questionGroupDefinitionParser = questionGroupDefinitionParser;
     }
 
     @Override
@@ -136,14 +151,14 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public List<EventSource> getAllEventSources() {
+    public List<EventSourceDto> getAllEventSources() {
         return questionnaireMapper.mapToEventSources(eventSourceDao.getDetailsAll());
     }
 
     @Override
-    public List<QuestionGroupDetail> getQuestionGroups(EventSource eventSource) throws SystemException {
-        questionnaireValidator.validateForEventSource(eventSource);
-        List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSource.getEvent(), eventSource.getSource());
+    public List<QuestionGroupDetail> getQuestionGroups(EventSourceDto eventSourceDto) throws SystemException {
+        questionnaireValidator.validateForEventSource(eventSourceDto);
+        List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSourceDto.getEvent(), eventSourceDto.getSource());
         List<QuestionGroupDetail> questionGroupDetails = questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
         removeInactiveSectionsAndQuestions(questionGroupDetails);
         return questionGroupDetails;
@@ -161,13 +176,13 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSource eventSource, Boolean includeUnansweredQuestionGroups, boolean fetchLastVersion) {
-        questionnaireValidator.validateForEventSource(eventSource);
-        Integer eventSourceId = getEventSourceEntity(eventSource).getId();
+    public List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSourceDto eventSourceDto, Boolean includeUnansweredQuestionGroups, boolean fetchLastVersion) {
+        questionnaireValidator.validateForEventSource(eventSourceDto);
+        Integer eventSourceId = getEventSourceEntity(eventSourceDto).getId();
         List<QuestionGroupInstance> questionGroupInstances = getQuestionGroupInstanceEntities(entityId, eventSourceId, fetchLastVersion);
         List<QuestionGroupInstanceDetail> questionGroupInstanceDetails = questionnaireMapper.mapToQuestionGroupInstanceDetails(questionGroupInstances);
         if (includeUnansweredQuestionGroups) {
-            List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSource.getEvent(), eventSource.getSource());
+            List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSourceDto.getEvent(), eventSourceDto.getSource());
             questionGroupInstanceDetails = mergeUnansweredQuestionGroups(questionGroupInstanceDetails, questionGroups);
         }
         return questionGroupInstanceDetails;
@@ -214,18 +229,49 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public Integer defineQuestionGroup(QuestionGroupDto questionGroupDto) {
         questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDto);
+        return persistQuestionGroup(questionGroup);
+    }
+
+    private Integer persistQuestionGroup(QuestionGroup questionGroup) {
+        List<SectionQuestion> sectionQuestions = questionGroup.getAllSectionQuestions();
+        for (SectionQuestion sectionQuestion : sectionQuestions) {
+            List<QuestionEntity> questionEntities = questionDao.retrieveByName(sectionQuestion.getQuestionTitle());
+            if (isNotEmpty(questionEntities)) {
+                QuestionEntity questionEntity = questionEntities.get(0);
+                questionEntity.setQuestionState(QuestionState.ACTIVE);
+                sectionQuestion.setQuestion(questionEntity);
+            }
+        }
         return questionGroupDao.create(questionGroup);
     }
 
-    private EventSourceEntity getEventSourceEntity(EventSource eventSource) {
-        return eventSourceDao.retrieveByEventAndSource(eventSource.getEvent(), eventSource.getSource()).get(0);
+    @Override
+    public List<String> getAllCountriesForPPI() {
+        List<String> ppiSurveyFiles = ppiSurveyLocator.getAllPPISurveyFiles();
+        List<String> countries = new ArrayList<String>();
+        for (String ppiSurveyFile : ppiSurveyFiles) {
+            String country = ppiSurveyFile.substring(PPI_SURVEY_FILE_PREFIX.length(), ppiSurveyFile.indexOf(PPI_SURVEY_FILE_EXT));
+            countries.add(country);
+        }
+        return countries;
+    }
+
+    @Override
+    public Integer uploadPPIQuestionGroup(String country) {
+        String ppiXmlForCountry = ppiSurveyLocator.getPPIUploadFileForCountry(country);
+        QuestionGroupDto questionGroupDto = questionGroupDefinitionParser.parse(ppiXmlForCountry);
+        return defineQuestionGroup(questionGroupDto);
+    }
+
+    private EventSourceEntity getEventSourceEntity(EventSourceDto eventSourceDto) {
+        return eventSourceDao.retrieveByEventAndSource(eventSourceDto.getEvent(), eventSourceDto.getSource()).get(0);
     }
 
     private void persistQuestion(QuestionEntity question) throws SystemException {
         try {
             questionDao.saveOrUpdate(question);
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
-            throw new SystemException(QuestionnaireConstants.QUESTION_TITILE_DUPLICATE, e);
+            throw new SystemException(QuestionnaireConstants.QUESTION_TITLE_DUPLICATE, e);
         }
     }
 

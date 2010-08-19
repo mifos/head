@@ -20,48 +20,12 @@
 
 package org.mifos.platform.questionnaire.parsers;
 
-import com.thoughtworks.xstream.XStream;
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
-import org.mifos.platform.questionnaire.service.EventSource;
-import org.mifos.platform.questionnaire.service.QuestionType;
-import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
-import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 
-import java.io.IOException;
 import java.io.InputStream;
 
-public final class QuestionGroupDefinitionParser {
-    private final XStream xstream;
+public interface QuestionGroupDefinitionParser {
+    QuestionGroupDto parse(String questionGroupDefXmlFilePath);
 
-    public QuestionGroupDefinitionParser() {
-        xstream = initializeXStream();
-    }
-
-    public QuestionGroupDto parse(String questionGroupDefXml) throws IOException {
-        InputStream inputStream = null;
-        try {
-            inputStream = getClass().getResourceAsStream(questionGroupDefXml);
-            return (QuestionGroupDto) xstream.fromXML(inputStream);
-        } finally {
-            if (inputStream != null) {
-                inputStream.close();
-            }
-        }
-    }
-
-    private XStream initializeXStream() {
-        XStream xstream = new XStream();
-        processAnnotations(xstream);
-        return xstream;
-    }
-
-    private void processAnnotations(XStream xstream) {
-        xstream.processAnnotations(QuestionGroupDto.class);
-        xstream.processAnnotations(SectionDto.class);
-        xstream.processAnnotations(QuestionDto.class);
-        xstream.processAnnotations(EventSource.class);
-        xstream.processAnnotations(QuestionType.class);
-        xstream.processAnnotations(ChoiceDetail.class);
-    }
+    QuestionGroupDto parse(InputStream questionGroupDefInputStream);
 }

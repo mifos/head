@@ -20,6 +20,9 @@
 
 package org.mifos.platform.questionnaire.domain;
 
+import org.apache.commons.lang.StringUtils;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,17 +34,19 @@ import org.mifos.platform.questionnaire.builders.ChoiceDetailBuilder;
 import org.mifos.platform.questionnaire.builders.QuestionDtoBuilder;
 import org.mifos.platform.questionnaire.builders.QuestionGroupDtoBuilder;
 import org.mifos.platform.questionnaire.builders.SectionDtoBuilder;
+import org.mifos.platform.questionnaire.domain.ppi.PPISurveyLocator;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
+import org.mifos.platform.questionnaire.parsers.QuestionGroupDefinitionParser;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
@@ -58,6 +63,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -71,6 +77,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doThrow;
@@ -101,6 +108,12 @@ public class QuestionnaireServiceTest {
     @Mock
     private EventSourceDao eventSourceDao;
 
+    @Mock
+    private PPISurveyLocator ppiSurveyLocator;
+
+    @Mock
+    private QuestionGroupDefinitionParser questionGroupDefinitionParser;
+
     private static final String QUESTION_TITLE = "Test QuestionDetail Title";
     private static final String QUESTION_GROUP_TITLE = "Question Group Title";
     public static final String EVENT_CREATE = "Create";
@@ -110,7 +123,9 @@ public class QuestionnaireServiceTest {
     @Before
     public void setUp() {
         QuestionnaireMapper questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao, questionGroupInstanceDao);
-        questionnaireService = new QuestionnaireServiceImpl(questionnaireValidator, questionDao, questionnaireMapper, questionGroupDao, eventSourceDao, questionGroupInstanceDao);
+        questionnaireService = new QuestionnaireServiceImpl(questionnaireValidator, questionDao, questionnaireMapper,
+                                            questionGroupDao, eventSourceDao, questionGroupInstanceDao,
+                                            ppiSurveyLocator, questionGroupDefinitionParser);
     }
 
     @Test
@@ -132,9 +147,9 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldDefineQuestionWithAnswerChoices() throws SystemException {
-        ChoiceDetail choice1 = new ChoiceDetail("choice1");
-        ChoiceDetail choice2 = new ChoiceDetail("choice2");
-        List<ChoiceDetail> answerChoices = asList(choice1, choice2);
+        ChoiceDto choice1 = new ChoiceDto("choice1");
+        ChoiceDto choice2 = new ChoiceDto("choice2");
+        List<ChoiceDto> answerChoices = asList(choice1, choice2);
         QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, QuestionType.MULTI_SELECT);
         questionDefinition.setAnswerChoices(answerChoices);
         try {
@@ -155,11 +170,11 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldDefineQuestionWithAnswerChoicesAndTags() throws SystemException {
-        ChoiceDetail choice1 = new ChoiceDetail("choice1");
+        ChoiceDto choice1 = new ChoiceDto("choice1");
         choice1.setTags(asList("Tag1", "Tag2"));
-        ChoiceDetail choice2 = new ChoiceDetail("choice2");
+        ChoiceDto choice2 = new ChoiceDto("choice2");
         choice2.setTags(asList("Tag3"));
-        List<ChoiceDetail> answerChoices = asList(choice1, choice2);
+        List<ChoiceDto> answerChoices = asList(choice1, choice2);
         QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, QuestionType.MULTI_SELECT);
         questionDefinition.setAnswerChoices(answerChoices);
         try {
@@ -275,10 +290,10 @@ public class QuestionnaireServiceTest {
         assertEvent(questionGroupDetail.getEventSource());
     }
 
-    private void assertEvent(EventSource eventSource) {
-        assertThat(eventSource, notNullValue());
-        assertThat(eventSource.getEvent(), is(EVENT_CREATE));
-        assertThat(eventSource.getSource(), is(SOURCE_CLIENT));
+    private void assertEvent(EventSourceDto eventSourceDto) {
+        assertThat(eventSourceDto, notNullValue());
+        assertThat(eventSourceDto.getEvent(), is(EVENT_CREATE));
+        assertThat(eventSourceDto.getSource(), is(SOURCE_CLIENT));
     }
 
     private void assertSections(List<SectionDetail> sectionDetails) {
@@ -326,8 +341,8 @@ public class QuestionnaireServiceTest {
         return eventSourceEntity;
     }
 
-    private EventSource getEventSource(String event, String source) {
-        return new EventSource(event, source, null);
+    private EventSourceDto getEventSource(String event, String source) {
+        return new EventSourceDto(event, source, null);
     }
 
     private SectionDetail getSectionDefinition(String name) {
@@ -431,11 +446,11 @@ public class QuestionnaireServiceTest {
     @Test
     public void shouldGetAllEventSources() {
         when(eventSourceDao.getDetailsAll()).thenReturn(asList(getEventSourceEntity("Create", "Client")));
-        List<EventSource> eventSources = questionnaireService.getAllEventSources();
-        assertThat(eventSources, notNullValue());
-        assertThat(eventSources.size(), is(1));
-        assertThat(eventSources.get(0).getEvent(), is("Create"));
-        assertThat(eventSources.get(0).getSource(), is("Client"));
+        List<EventSourceDto> eventSourceDtos = questionnaireService.getAllEventSources();
+        assertThat(eventSourceDtos, notNullValue());
+        assertThat(eventSourceDtos.size(), is(1));
+        assertThat(eventSourceDtos.get(0).getEvent(), is("Create"));
+        assertThat(eventSourceDtos.get(0).getSource(), is("Client"));
     }
 
     @Test
@@ -550,12 +565,12 @@ public class QuestionnaireServiceTest {
     public void shouldGetAllQuestionGroupsByEventSource() throws SystemException {
         List<QuestionGroup> questionGroups = asList(getQuestionGroup(1, "Title1", getSections("Section1")), getQuestionGroup(2, "Title2", getSections("Section2")));
         when(questionGroupDao.retrieveQuestionGroupsByEventSource("Create", "Client")).thenReturn(questionGroups);
-        List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(new EventSourceDto("Create", "Client", "Create.Client"));
         assertThat(questionGroupDetails, is(notNullValue()));
         assertThat(questionGroupDetails.size(), is(2));
         assertThat(questionGroupDetails.get(0).getTitle(), is("Title1"));
         assertThat(questionGroupDetails.get(1).getTitle(), is("Title2"));
-        verify(questionnaireValidator, times(1)).validateForEventSource(any(EventSource.class));
+        verify(questionnaireValidator, times(1)).validateForEventSource(any(EventSourceDto.class));
         verify(questionGroupDao, times(1)).retrieveQuestionGroupsByEventSource("Create", "Client");
     }
 
@@ -567,7 +582,7 @@ public class QuestionnaireServiceTest {
         QuestionGroup questionGroup3 = getQuestionGroup(3, "Title3", asList(getSectionWithOneMultiSelectQuestion(222, "Section3", "Question3", "Choice1", "Choice2", "Choice3", "Choice4")));
         List<QuestionGroup> questionGroups = asList(questionGroup1, questionGroup2, questionGroup3);
         when(questionGroupDao.retrieveQuestionGroupsByEventSource("Create", "Client")).thenReturn(questionGroups);
-        List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(new EventSourceDto("Create", "Client", "Create.Client"));
         assertThat(questionGroupDetails, is(notNullValue()));
         assertThat(questionGroupDetails.size(), is(3));
         assertThat(questionGroupDetails.get(0).getSectionDetails().size(), is(1));
@@ -626,7 +641,7 @@ public class QuestionnaireServiceTest {
     public void shouldSaveResponses() {
         List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, "value", false));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails, true);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSourceDto("Create", "Client", null), sectionDetails, true);
         QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
         questionGroupInstance.setVersionNum(0);
         when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(1, 1)).thenReturn(asList(questionGroupInstance));
@@ -640,7 +655,7 @@ public class QuestionnaireServiceTest {
     public void testValidateResponse() {
         List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSource("Create", "Client", null), sectionDetails, true);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSourceDto("Create", "Client", null), sectionDetails, true);
         try {
             doThrow(new MandatoryAnswerNotFoundException("Title")).
                     when(questionnaireValidator).validateForQuestionGroupResponses(asList(questionGroupDetail));
@@ -663,8 +678,8 @@ public class QuestionnaireServiceTest {
                 getQuestionGroupInstance(3037, 2010, 7, 24, getQuestionGroup(4043, "QG3", sections)));
         when(questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202)).thenReturn(questionGroupInstances);
         when(eventSourceDao.retrieveByEventAndSource("View", "Client")).thenReturn(asList(getEventSourceEntity(202)));
-        EventSource eventSource = new EventSource("View", "Client", "View.Client");
-        List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSource, false, false);
+        EventSourceDto eventSourceDto = new EventSourceDto("View", "Client", "View.Client");
+        List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSourceDto, false, false);
         assertThat(instances, is(notNullValue()));
         assertThat(instances.size(), is(7));
         assertQuestionGroupInstanceDetail(instances.get(0), "QG1", 2010, 7, 26, questionGroupInstances.get(0).getId());
@@ -675,7 +690,7 @@ public class QuestionnaireServiceTest {
         assertQuestionGroupInstanceDetail(instances.get(5), "QG2", 2010, 7, 24, questionGroupInstances.get(5).getId());
         assertQuestionGroupInstanceDetail(instances.get(6), "QG3", 2010, 7, 24, questionGroupInstances.get(6).getId());
         verify(questionGroupInstanceDao, times(1)).retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202);
-        verify(questionnaireValidator, times(1)).validateForEventSource(eventSource);
+        verify(questionnaireValidator, times(1)).validateForEventSource(eventSourceDto);
         verify(eventSourceDao, times(1)).retrieveByEventAndSource("View", "Client");
     }
 
@@ -688,15 +703,15 @@ public class QuestionnaireServiceTest {
                 getQuestionGroupInstance(3037, 2010, 7, 24, getQuestionGroup(4043, "QG3", sections)));
         when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202)).thenReturn(questionGroupInstances);
         when(eventSourceDao.retrieveByEventAndSource("View", "Client")).thenReturn(asList(getEventSourceEntity(202)));
-        EventSource eventSource = new EventSource("View", "Client", "View.Client");
-        List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSource, false, true);
+        EventSourceDto eventSourceDto = new EventSourceDto("View", "Client", "View.Client");
+        List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSourceDto, false, true);
         assertThat(instances, is(notNullValue()));
         assertThat(instances.size(), is(3));
         assertQuestionGroupInstanceDetail(instances.get(0), "QG2", 2010, 7, 26, questionGroupInstances.get(0).getId());
         assertQuestionGroupInstanceDetail(instances.get(1), "QG1", 2010, 7, 25, questionGroupInstances.get(1).getId());
         assertQuestionGroupInstanceDetail(instances.get(2), "QG3", 2010, 7, 24, questionGroupInstances.get(2).getId());
         verify(questionGroupInstanceDao, times(1)).retrieveLatestQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202);
-        verify(questionnaireValidator, times(1)).validateForEventSource(eventSource);
+        verify(questionnaireValidator, times(1)).validateForEventSource(eventSourceDto);
         verify(eventSourceDao, times(1)).retrieveByEventAndSource("View", "Client");
     }
 
@@ -717,8 +732,8 @@ public class QuestionnaireServiceTest {
         when(questionGroupDao.retrieveQuestionGroupsByEventSource("View", "Client")).thenReturn(questionGroups);
         when(questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202)).thenReturn(questionGroupInstances);
         when(eventSourceDao.retrieveByEventAndSource("View", "Client")).thenReturn(asList(getEventSourceEntity(202)));
-        EventSource eventSource = new EventSource("View", "Client", "View.Client");
-        List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSource, true, false);
+        EventSourceDto eventSourceDto = new EventSourceDto("View", "Client", "View.Client");
+        List<QuestionGroupInstanceDetail> instances = questionnaireService.getQuestionGroupInstances(101, eventSourceDto, true, false);
         assertThat(instances, is(notNullValue()));
         assertThat(instances.size(), is(8));
         assertQuestionGroupInstanceDetail(instances.get(0), "QG1", 2010, 7, 26, questionGroupInstances.get(0).getId());
@@ -729,7 +744,7 @@ public class QuestionnaireServiceTest {
         assertQuestionGroupInstanceDetail(instances.get(5), "QG2", 2010, 7, 24, questionGroupInstances.get(5).getId());
         assertQuestionGroupInstanceDetail(instances.get(6), "QG3", 2010, 7, 24, questionGroupInstances.get(6).getId());
         verify(questionGroupInstanceDao, times(1)).retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, 202);
-        verify(questionnaireValidator, times(1)).validateForEventSource(eventSource);
+        verify(questionnaireValidator, times(1)).validateForEventSource(eventSourceDto);
         verify(eventSourceDao, times(1)).retrieveByEventAndSource("View", "Client");
     }
 
@@ -745,14 +760,56 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldDefineQuestionGroupFromDto() {
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        questionnaireService.defineQuestionGroup(questionGroupDto);
+        verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto);
+        verify(questionGroupDao).create(any(QuestionGroup.class));
+    }
+
+    @Test
+    public void shouldDefineQuestionGroupFromDto_WithExistingQuestions() {
+        QuestionEntity questionEntity = new QuestionEntity("Ques2");
+        questionEntity.setAnswerType(AnswerType.SINGLESELECT);
+        questionEntity.setChoices(asList(new QuestionChoiceEntity("Choice1"), new QuestionChoiceEntity("Choice2")));
+        when(questionDao.retrieveByName("Ques2")).thenReturn(asList(questionEntity));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        questionnaireService.defineQuestionGroup(questionGroupDto);
+        verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto);
+        verify(questionGroupDao).create(argThat(new QuestionGroupContainsQuestionMatcher(questionEntity)));
+    }
+
+    private QuestionGroupDto getQuestionGroupDto() {
         QuestionDto question1 = new QuestionDtoBuilder().withTitle("Ques1").withMandatory(true).withType(QuestionType.FREETEXT).build();
-        ChoiceDetail choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
-        ChoiceDetail choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
-        ChoiceDetail choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
+        ChoiceDto choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
+        ChoiceDto choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
+        ChoiceDto choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
         QuestionDto question2 = new QuestionDtoBuilder().withTitle("Ques2").withType(QuestionType.SINGLE_SELECT).addChoices(choice1, choice2, choice3).build();
         SectionDto section = new SectionDtoBuilder().withName("Sec1").withOrder(1).addQuestions(question1, question2).build();
-        QuestionGroupDto questionGroupDto = new QuestionGroupDtoBuilder().withTitle("QG1").withEventSource("Create", "Client").addSections(section).build();
-        questionnaireService.defineQuestionGroup(questionGroupDto);
+        return new QuestionGroupDtoBuilder().withTitle("QG1").withEventSource("Create", "Client").addSections(section).build();
+    }
+
+    @Test
+    public void shouldGetAllCountriesForPPI() throws IOException {
+        when(ppiSurveyLocator.getAllPPISurveyFiles()).thenReturn(asList("PPISurveyINDIA.xml", "PPISurveyCHINA.xml", "PPISurveyCANADA.xml"));
+        List<String> countriesForPPI = questionnaireService.getAllCountriesForPPI();
+        assertThat(countriesForPPI, is(notNullValue()));
+        assertThat(countriesForPPI.size(), is(3));
+        assertThat(countriesForPPI.get(0), is("INDIA"));
+        assertThat(countriesForPPI.get(1), is("CHINA"));
+        assertThat(countriesForPPI.get(2), is("CANADA"));
+        verify(ppiSurveyLocator).getAllPPISurveyFiles();
+    }
+
+    @Test
+    public void shouldUploadPPIQuestionGroup() throws IOException {
+        String ppiXmlPath = "org/mifos/platform/questionnaire/PPISurveyINDIA.xml";
+        String country = "India";
+        when(ppiSurveyLocator.getPPIUploadFileForCountry(country)).thenReturn(ppiXmlPath);
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        when(questionGroupDefinitionParser.parse(ppiXmlPath)).thenReturn(questionGroupDto);
+        questionnaireService.uploadPPIQuestionGroup(country);
+        verify(ppiSurveyLocator).getPPIUploadFileForCountry(country);
+        verify(questionGroupDefinitionParser).parse(ppiXmlPath);
         verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto);
         verify(questionGroupDao).create(any(QuestionGroup.class));
     }
@@ -800,4 +857,49 @@ public class QuestionnaireServiceTest {
         return sectionDetail;
     }
 
+    private class QuestionGroupContainsQuestionMatcher extends TypeSafeMatcher<QuestionGroup> {
+        private final QuestionEntity questionEntity;
+
+        public QuestionGroupContainsQuestionMatcher(QuestionEntity questionEntity) {
+            this.questionEntity = questionEntity;
+        }
+
+        @Override
+        public boolean matchesSafely(QuestionGroup questionGroup) {
+            for (Section section : questionGroup.getSections()) {
+                for (SectionQuestion sectionQuestion : section.getQuestions()) {
+                    QuestionEntity questionEntity = sectionQuestion.getQuestion();
+                    if (StringUtils.equals(this.questionEntity.getShortName(), questionEntity.getShortName())) {
+                        return this.questionEntity.getAnswerTypeAsEnum() == questionEntity.getAnswerTypeAsEnum()
+                                && areCompatibleChoices(questionEntity.getChoices());
+                    }
+                }
+            }
+            return false;
+        }
+
+        private boolean areCompatibleChoices(List<QuestionChoiceEntity> choiceEntities) {
+            boolean result = choiceEntities.size() == this.questionEntity.getChoices().size();
+            if (result) {
+                for (QuestionChoiceEntity questionChoiceEntity : this.questionEntity.getChoices()) {
+                    boolean currentChoiceFound = false;
+                    for (QuestionChoiceEntity choiceEntity : choiceEntities) {
+                        if (StringUtils.equals(questionChoiceEntity.getChoiceText(), choiceEntity.getChoiceText())) {
+                            currentChoiceFound = true;
+                        }
+                    }
+                    if (!currentChoiceFound) {
+                        result = false;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("QuestionGroup doesn't contain the given Question");
+        }
+    }
 }

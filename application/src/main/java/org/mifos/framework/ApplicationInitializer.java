@@ -39,6 +39,7 @@ import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
+import org.mifos.config.ConfigLocale;
 import org.mifos.config.Localization;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.Configuration;
@@ -184,6 +185,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     Configuration.getInstance();
                     MifosConfiguration.getInstance().init();
                     configureAuditLogValues(Localization.getInstance().getMainLocale());
+                    ConfigLocale configLocale = new ConfigLocale();
+                    ctx.getServletContext().setAttribute(ConfigLocale.class.getSimpleName(), configLocale);
                 }
             }
         } catch (Exception e) {

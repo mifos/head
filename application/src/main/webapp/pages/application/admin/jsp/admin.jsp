@@ -1,4 +1,4 @@
-<%-- 
+<%--
 Copyright (c) 2005-2008 Grameen Foundation USA
 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
 All rights reserved.
@@ -42,22 +42,22 @@ while(enn.hasMoreElements()){
 	<tiles:put name="body" type="string">
         <span id="page.id" title="admin" ></span>
 		<html-el:form action="AdminAction.do?method=load">
-			<td align="left" valign="top" bgcolor="#FFFFFF"
+			<td valign="top" bgcolor="#FFFFFF"
 				style="padding-left:8px; padding-top:10px;">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 
 				<tr>
-					<td colspan="2" align="left" valign="top"><span id="admin.label.admintasks"
+					<td colspan="2" valign="top"><span id="admin.label.admintasks"
 						class="headingorange"><mifos:mifoslabel name="admin.admintasks"  /></span><br>
 					<span class="fontnormal"><span id="admin.text.welcome"><mifos:mifoslabel name="admin.welcometomifos" /></span></span></td>
 				</tr>
 				<tr width="100%">
-					<td align="left" valign="top" colspan="2"><font class="fontnormalRedBold"><span id="admin.error.message"><html-el:errors
+					<td valign="top" colspan="2"><font class="fontnormalRedBold"><span id="admin.error.message"><html-el:errors
 						bundle="adminUIResources" /></span> </font></td>
 				</tr>
 
 				<tr>
-					<td width="48%" height="240" align="left" valign="top"
+					<td width="48%" height="240" valign="top"
 						class="paddingleft"><span class="headingorange"><mifos:mifoslabel name="admin.manageorg" />
 						</span><br>
 					<span class="fontnormalbold"> <span class="fontnormalbold"><mifos:mifoslabel name="admin.sysusers" />
@@ -162,6 +162,11 @@ while(enn.hasMoreElements()){
 								action="ppiAction.do?method=configure">
 								<mifos:mifoslabel name="admin.configurePPI" /></html-el:link></td>
 						</tr>
+						<tr class="fontnormal">
+							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td><a id="admin.link.uploadPPI" href="uploadQuestionGroup.ftl"><mifos:mifoslabel name="admin.uploadPPI" /></a></td>
+						</tr>
 					</table>
 					 <br>
 					<span class="fontnormalbold"><mifos:mifoslabel name="admin.datadisplayrules" /></span><br>
@@ -242,7 +247,7 @@ while(enn.hasMoreElements()){
 					</tr>
 					</table>
 					</td>
-					<td width="52%" align="left" valign="top" class="paddingleft"><span
+					<td width="52%" valign="top" class="paddingleft"><span
 						class="headingorange"><mifos:mifoslabel name="admin.manageprd" /></span><br>
 					<span class="fontnormalbold"><mifos:mifoslabel name="admin.prdrules" /></span><br>
 					<table width="90%" border="0" cellspacing="0" cellpadding="0">

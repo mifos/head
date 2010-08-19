@@ -49,6 +49,8 @@ import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
@@ -278,10 +280,10 @@ public class QuestionnaireServiceIntegrationTest {
         List<SectionDetail> sectionDetailList = retrievedQuestionGroupDetail.getSectionDetails();
         assertThat(sectionDetailList.get(0).getName(), is("S1"));
         assertThat(sectionDetailList.get(1).getName(), is("S2"));
-        EventSource eventSource = retrievedQuestionGroupDetail.getEventSource();
-        assertThat(eventSource, is(notNullValue()));
-        assertThat(eventSource.getEvent(), is("Create"));
-        assertThat(eventSource.getSource(), is("Client"));
+        EventSourceDto eventSourceDto = retrievedQuestionGroupDetail.getEventSource();
+        assertThat(eventSourceDto, is(notNullValue()));
+        assertThat(eventSourceDto.getEvent(), is("Create"));
+        assertThat(eventSourceDto.getSource(), is("Client"));
     }
 
     @Test
@@ -392,7 +394,7 @@ public class QuestionnaireServiceIntegrationTest {
             defineQuestion(questionTitle, QuestionType.FREETEXT, true);
             Assert.fail("Exception should have been thrown for duplicate question title");
         } catch (SystemException e) {
-            Assert.assertEquals(QuestionnaireConstants.QUESTION_TITILE_DUPLICATE, e.getKey());
+            Assert.assertEquals(QuestionnaireConstants.QUESTION_TITLE_DUPLICATE, e.getKey());
         }
     }
 
@@ -410,15 +412,15 @@ public class QuestionnaireServiceIntegrationTest {
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldRetrieveAllEventSources() {
-        List<EventSource> eventSources = questionnaireService.getAllEventSources();
-        assertNotNull(eventSources);
-        assertThat(eventSources, new EventSourcesMatcher(
-                asList(new EventSource("Create", "Client", "Create Client"),
-                        new EventSource("View", "Client", "View Client"),
-                        new EventSource("Create", "Group", "Create Group"),
-                        new EventSource("Approve", "Loan", "Approve Loan"),
-                        new EventSource("Close", "Client", "Close Client"),
-                        new EventSource("Create", "Loan", "Create Loan"))));
+        List<EventSourceDto> eventSourceDtos = questionnaireService.getAllEventSources();
+        assertNotNull(eventSourceDtos);
+        assertThat(eventSourceDtos, new EventSourcesMatcher(
+                asList(new EventSourceDto("Create", "Client", "Create Client"),
+                        new EventSourceDto("View", "Client", "View Client"),
+                        new EventSourceDto("Create", "Group", "Create Group"),
+                        new EventSourceDto("Approve", "Loan", "Approve Loan"),
+                        new EventSourceDto("Close", "Client", "Close Client"),
+                        new EventSourceDto("Create", "Loan", "Create Loan"))));
     }
 
     @Test
@@ -427,7 +429,7 @@ public class QuestionnaireServiceIntegrationTest {
         String title = "QG1" + currentTimeMillis();
         List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
         QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details, false);
-        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
+        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSourceDto("Create", "Client", "Create.Client"));
         assertThat(questionGroups, is(notNullValue()));
         QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
         assertThat(actualQGDetail, is(notNullValue()));
@@ -469,7 +471,7 @@ public class QuestionnaireServiceIntegrationTest {
         List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
         QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details, true);
         setState(expectedQGDetail.getId(), QuestionGroupState.INACTIVE);
-        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
+        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSourceDto("Create", "Client", "Create.Client"));
         assertThat(questionGroups, is(notNullValue()));
         QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
         assertThat(actualQGDetail, is(Matchers.nullValue()));
@@ -484,7 +486,7 @@ public class QuestionnaireServiceIntegrationTest {
         questionEntity.setQuestionState(QuestionState.ACTIVE);
         questionEntity.setQuestionText(quesTitle);
         questionEntity.setShortName(quesTitle);
-        questionEntity.setChoices(asList(getChoice("Choice1", "Tag1", "Tag2"), getChoice("Choice2", "Tag4")));
+        questionEntity.setChoices(asList(getChoice("Choice1", 0, "Tag1", "Tag2"), getChoice("Choice2", 1, "Tag4")));
         Integer quesId = questionDao.create(questionEntity);
         QuestionEntity newQuestionEntity = questionDao.getDetails(quesId);
         assertThat(newQuestionEntity, is(notNullValue()));
@@ -506,15 +508,26 @@ public class QuestionnaireServiceIntegrationTest {
         String ques1Title = "Ques1" + currentTimeMillis();
         String ques2Title = "Ques2" + currentTimeMillis();
         String qgTitle = "QG1" + currentTimeMillis();
+        createSingleSelectQuestion(ques2Title);
         QuestionDto question1 = new QuestionDtoBuilder().withTitle(ques1Title).withMandatory(true).withType(QuestionType.FREETEXT).withOrder(1).build();
-        ChoiceDetail choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
-        ChoiceDetail choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
-        ChoiceDetail choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
+        ChoiceDto choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
+        ChoiceDto choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
+        ChoiceDto choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
         QuestionDto question2 = new QuestionDtoBuilder().withTitle(ques2Title).withType(QuestionType.SINGLE_SELECT).addChoices(choice1, choice2, choice3).withOrder(2).build();
         SectionDto section1 = new SectionDtoBuilder().withName("Sec1").withOrder(1).addQuestions(question1, question2).build();
         QuestionGroupDto questionGroupDto = new QuestionGroupDtoBuilder().withTitle(qgTitle).withEventSource("Create", "Client").addSections(section1).build();
         Integer questionGroupId = questionnaireService.defineQuestionGroup(questionGroupDto);
         assertQuestionGroup(questionGroupDao.getDetails(questionGroupId), qgTitle, ques1Title, ques2Title);
+    }
+
+    private void createSingleSelectQuestion(String ques1Title) {
+        QuestionEntity questionEntity = new QuestionEntity();
+        questionEntity.setAnswerType(AnswerType.SINGLESELECT);
+        questionEntity.setQuestionState(QuestionState.INACTIVE);
+        questionEntity.setQuestionText(ques1Title);
+        questionEntity.setShortName(ques1Title);
+        questionEntity.setChoices(asList(getChoice("Ch2", 1), getChoice("Ch1", 2), getChoice("Ch3", 3)));
+        questionDao.create(questionEntity);
     }
 
     private void assertQuestionGroup(QuestionGroup questionGroup, String questionGroupTitle, String firstQuestionTitle, String secondQuestionTitle) {
@@ -542,6 +555,7 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(sectionQuestion1.getSection().getName(), is("Sec1"));
         assertThat(sectionQuestion1.getSection().getSequenceNumber(), is(1));
         assertThat(sectionQuestion1.getQuestion(), is(notNullValue()));
+        assertThat(sectionQuestion1.getQuestion().getQuestionStateAsEnum(), is(QuestionState.ACTIVE));
         assertThat(sectionQuestion1.getQuestion().getShortName(), is(firstQuestionTitle));
         assertThat(sectionQuestion1.getQuestion().getAnswerTypeAsEnum(), is(AnswerType.FREETEXT));
 
@@ -551,21 +565,23 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(sectionQuestion2.getSection().getName(), is("Sec1"));
         assertThat(sectionQuestion2.getSection().getSequenceNumber(), is(1));
         assertThat(sectionQuestion2.getQuestion(), is(notNullValue()));
+        assertThat(sectionQuestion2.getQuestion().getQuestionStateAsEnum(), is(QuestionState.ACTIVE));
         assertThat(sectionQuestion2.getQuestion().getShortName(), is(secondQuestionTitle));
         assertThat(sectionQuestion2.getQuestion().getAnswerTypeAsEnum(), is(AnswerType.SINGLESELECT));
         assertThat(sectionQuestion2.getQuestion().getChoices(), is(notNullValue()));
         assertThat(sectionQuestion2.getQuestion().getChoices().size(), is(3));
-        assertThat(sectionQuestion2.getQuestion().getChoices().get(0).getChoiceText(), is("Ch1"));
+        assertThat(sectionQuestion2.getQuestion().getChoices().get(0).getChoiceText(), is("Ch2"));
         assertThat(sectionQuestion2.getQuestion().getChoices().get(0).getChoiceOrder(), is(1));
-        assertThat(sectionQuestion2.getQuestion().getChoices().get(1).getChoiceText(), is("Ch2"));
+        assertThat(sectionQuestion2.getQuestion().getChoices().get(1).getChoiceText(), is("Ch1"));
         assertThat(sectionQuestion2.getQuestion().getChoices().get(1).getChoiceOrder(), is(2));
         assertThat(sectionQuestion2.getQuestion().getChoices().get(2).getChoiceText(), is("Ch3"));
         assertThat(sectionQuestion2.getQuestion().getChoices().get(2).getChoiceOrder(), is(3));
     }
 
-    private QuestionChoiceEntity getChoice(String choiceText, String... tagTexts) {
+    private QuestionChoiceEntity getChoice(String choiceText, int choiceOrder, String... tagTexts) {
         QuestionChoiceEntity questionChoiceEntity = new QuestionChoiceEntity();
         questionChoiceEntity.setChoiceText(choiceText);
+        questionChoiceEntity.setChoiceOrder(choiceOrder);
         Set<ChoiceTagEntity> tags = new HashSet<ChoiceTagEntity>();
         for (String tagText : tagTexts) {
             tags.add(getTag(tagText));
@@ -603,21 +619,21 @@ public class QuestionnaireServiceIntegrationTest {
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType type, List<String> choices) throws SystemException {
         QuestionDetail questionDetail = new QuestionDetail(questionTitle, type);
-        List<ChoiceDetail> choiceDetails = getChoiceDetails(choices);
-        questionDetail.setAnswerChoices(choiceDetails);
+        List<ChoiceDto> choiceDtos = getChoiceDetails(choices);
+        questionDetail.setAnswerChoices(choiceDtos);
         return questionnaireService.defineQuestion(questionDetail);
     }
 
-    private List<ChoiceDetail> getChoiceDetails(List<String> choices) {
-        List<ChoiceDetail> choiceDetails = new ArrayList<ChoiceDetail>();
+    private List<ChoiceDto> getChoiceDetails(List<String> choices) {
+        List<ChoiceDto> choiceDtos = new ArrayList<ChoiceDto>();
         for (String choice : choices) {
-            choiceDetails.add(new ChoiceDetail(choice));
+            choiceDtos.add(new ChoiceDto(choice));
         }
-        return choiceDetails;
+        return choiceDtos;
     }
 
     private QuestionGroupDetail defineQuestionGroup(String title, String event, String source, List<SectionDetail> sectionDetails, boolean editable) throws SystemException {
-        return questionnaireService.defineQuestionGroup(new QuestionGroupDetail(0, title, new EventSource(event, source, null), sectionDetails, editable));
+        return questionnaireService.defineQuestionGroup(new QuestionGroupDetail(0, title, new EventSourceDto(event, source, null), sectionDetails, editable));
     }
 
     private SectionDetail getSection(String name) throws SystemException {

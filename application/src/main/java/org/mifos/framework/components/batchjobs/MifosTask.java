@@ -35,6 +35,11 @@ public abstract class MifosTask extends TimerTask {
     public String name;
 
     /**
+     * Delay time until next execution same as specified in XML
+     */
+    public long delay;
+
+    /**
      * Attribute which determines if the job is a regular DB update job to be
      * run daily and hence registereed in the database or a user requested job.
      * [ if true : job should run daily false : user requested job ]

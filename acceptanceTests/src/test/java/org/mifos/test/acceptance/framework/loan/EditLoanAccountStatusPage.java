@@ -20,10 +20,9 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import com.thoughtworks.selenium.Selenium;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.test.acceptance.framework.MifosPage;
-
-import com.thoughtworks.selenium.Selenium;
 
 
 public class EditLoanAccountStatusPage extends MifosPage {
@@ -35,7 +34,7 @@ public class EditLoanAccountStatusPage extends MifosPage {
         this.verifyPage("ChangeStatus");
     }
 
-    public EditAccountStatusConfirmationPage submitAndNavigateToEditStatusConfirmationPage(EditLoanAccountStatusParameters params) {
+    public EditAccountStatusConfirmationPage submitAndNavigateToNextPage(EditLoanAccountStatusParameters params) {
         /* usually this would be an "id=..." locator but since this is a radio button we have to use
            name + value (id + value is not supported by Selenium). */
         selenium.check("name=newStatusId value=" + params.getStatusValue());
@@ -53,4 +52,5 @@ public class EditLoanAccountStatusPage extends MifosPage {
         waitForPageToLoad();
         return new EditAccountStatusConfirmationPage(selenium);
     }
+
 }

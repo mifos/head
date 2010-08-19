@@ -49,7 +49,7 @@ explanation of the license and how it is applied.
 
 
 		<html-el:form action="/ChangeAccountStatus">
-			<table width="100%" border="0" cellpadding="2" cellspacing="0" class="paddingleftmain">
+			<table width="95%" border="0" cellpadding="2" cellspacing="0" class="paddingleftmain">
 				<tr>
 					<td>
 						<span class="headingorange"> <mifos:mifoslabel name="accountStatus.changeaccountstatus" /><br> <br> 
@@ -79,7 +79,7 @@ explanation of the license and how it is applied.
 
 				<tr class="bluetablehead">
 
-					<td align="left" valign="top" class="fontnormal">
+					<td valign="top" class="fontnormal">
 						<table width="50%" border="0" cellpadding="4" cellspacing="0">
 							<tr>
 								<td align="right" valign="top" class="fontnormal" width="36%">
@@ -140,7 +140,7 @@ explanation of the license and how it is applied.
 
 							<tr>
 								<td></td>
-								<td align="left">
+								<td>
 									<html-el:button styleId="changeaccountstatus.button.search" property="cancel" styleClass="buttn"  onclick="submitData(this.form);">
 										<mifos:mifoslabel name="accountStatus.search" />
 									</html-el:button>

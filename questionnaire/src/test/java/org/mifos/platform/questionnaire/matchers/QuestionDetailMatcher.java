@@ -22,7 +22,7 @@ package org.mifos.platform.questionnaire.matchers;
 import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 
 import java.util.List;
@@ -44,10 +44,10 @@ public class QuestionDetailMatcher extends TypeSafeMatcher<QuestionDetail> {
                 && StringUtils.equals(questionDetail.getText(), this.questionDetail.getText())
                 && StringUtils.equals(questionDetail.getTitle(), this.questionDetail.getTitle())
                 && this.questionDetail.getType().equals(questionDetail.getType())) {
-            List<ChoiceDetail> choiceDetails = this.questionDetail.getAnswerChoices();
-            for (int i = 0, choiceDetailsSize = choiceDetails.size(); i < choiceDetailsSize; i++) {
-                ChoiceDetail choiceDetail = choiceDetails.get(i);
-                assertEquals(choiceDetail.getValue(), questionDetail.getAnswerChoices().get(i).getValue());
+            List<ChoiceDto> choiceDtos = this.questionDetail.getAnswerChoices();
+            for (int i = 0, choiceDetailsSize = choiceDtos.size(); i < choiceDetailsSize; i++) {
+                ChoiceDto choiceDto = choiceDtos.get(i);
+                assertEquals(choiceDto.getValue(), questionDetail.getAnswerChoices().get(i).getValue());
             }
             return true;
         }

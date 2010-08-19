@@ -110,8 +110,9 @@ public abstract class TaskHelper {
             while ((new DateTimeService().getCurrentDateTime().getMillis() - timeInMillis) / (1000 * 60 * 60 * 24) != 0) {
                 getLogger().info(
                         mifosTask.name + " will run catch-up execution for " + new java.util.Date(timeInMillis));
-                perform(timeInMillis + (1000 * 60 * 60 * 24));
-                timeInMillis += (1000 * 60 * 60 * 24);
+                long delay = mifosTask.delay > 0 ? mifosTask.delay : (1000 * 60 * 60 * 24);
+                perform(timeInMillis + delay);
+                timeInMillis += delay;
             }
         } else {
             if (timeInMillis == 0) {

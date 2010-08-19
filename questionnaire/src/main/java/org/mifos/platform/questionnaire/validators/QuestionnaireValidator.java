@@ -21,7 +21,7 @@
 package org.mifos.platform.questionnaire.validators;
 
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
@@ -34,7 +34,7 @@ public interface QuestionnaireValidator {
 
     void validateForDefineQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
 
-    void validateForEventSource(EventSource eventSource) throws SystemException;
+    void validateForEventSource(EventSourceDto eventSourceDto) throws SystemException;
 
     void validateForQuestionGroupResponses(List<QuestionGroupDetail> questionGroupDetails);
 

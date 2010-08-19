@@ -31,8 +31,8 @@ import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
@@ -88,10 +88,10 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     @Override
-    public void validateForEventSource(EventSource eventSource) throws SystemException {
-        if (eventSource == null || StringUtils.isEmpty(eventSource.getSource()) || StringUtils.isEmpty(eventSource.getEvent()))
+    public void validateForEventSource(EventSourceDto eventSourceDto) throws SystemException {
+        if (eventSourceDto == null || StringUtils.isEmpty(eventSourceDto.getSource()) || StringUtils.isEmpty(eventSourceDto.getEvent()))
             throw new SystemException(INVALID_EVENT_SOURCE);
-        validateEventSource(eventSource);
+        validateEventSource(eventSourceDto);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     public void validateForDefineQuestionGroup(QuestionGroupDto questionGroupDto) {
         ValidationException parentException = new ValidationException(GENERIC_VALIDATION);
         validateQuestionGroupTitle(questionGroupDto, parentException);
-        validateEventSource(questionGroupDto.getEventSource(), parentException);
+        validateEventSource(questionGroupDto.getEventSourceDto(), parentException);
         validateSections(questionGroupDto.getSections(), parentException);
         if (parentException.containsChildExceptions()) throw parentException;
     }
@@ -119,9 +119,21 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         } else {
             if (!sectionsHaveInvalidNames(sections, parentException) && !sectionsHaveInvalidOrders(sections, parentException)) {
                 for (SectionDto section : sections) {
-                    validateQuestions(section.getQuestions(), parentException);
+                    validateSection(section, parentException);
                 }
             }
+        }
+    }
+
+    private void validateSection(SectionDto section, ValidationException parentException) {
+        validateSectionName(section, parentException);
+        validateQuestions(section.getQuestions(), parentException);
+    }
+
+    private void validateSectionName(SectionDto section, ValidationException parentException) {
+        String name = section.getName().trim();
+        if (name.length() >= MAX_LENGTH_FOR_TITILE) {
+            parentException.addChildException(new ValidationException(SECTION_NAME_TOO_BIG));
         }
     }
 
@@ -138,39 +150,49 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     private void validateQuestion(QuestionDto question, ValidationException parentException) {
-        if (questionHasDuplicateTitle(question)) {
-            parentException.addChildException(new ValidationException(QUESTION_TITILE_DUPLICATE));
+        if (question.getTitle().length() >= MAX_LENGTH_FOR_TITILE) {
+            parentException.addChildException(new ValidationException(QUESTION_TITLE_TOO_BIG));
+        } else if (questionHasDuplicateTitle(question)) {
+            parentException.addChildException(new ValidationException(QUESTION_TITILE_MATCHES_EXISTING_QUESTION));
         } else {
             if (QuestionType.INVALID == question.getType()) {
                 parentException.addChildException(new ValidationException(QUESTION_TYPE_NOT_PROVIDED));
             } else if (question.isTypeWithChoices()) {
-                List<ChoiceDetail> choices = question.getChoices();
-                if (isEmpty(choices) || choices.size() < MAX_CHOICES_FOR_QUESTION) {
-                    parentException.addChildException(new ValidationException(QUESTION_CHOICES_INSUFFICIENT));
-                } else if (choicesHaveInvalidValues(choices) || choicesHaveInvalidOrders(choices)) {
-                    parentException.addChildException(new ValidationException(QUESTION_CHOICES_INVALID));
-                }
+                validateChoices(question, parentException);
             } else if (QuestionType.NUMERIC == question.getType()) {
-                if (areInValidNumericBounds(question.getMinValue(), question.getMaxValue())) {
-                    parentException.addChildException(new ValidationException(INVALID_NUMERIC_BOUNDS));
-                }
+                validateNumericBounds(question, parentException);
             }
         }
     }
 
-    private boolean choicesHaveInvalidValues(List<ChoiceDetail> choiceDetails) {
-        return !allChoicesHaveValues(choiceDetails) || !allChoicesHaveUniqueValues(choiceDetails);
+    private void validateNumericBounds(QuestionDto question, ValidationException parentException) {
+        if (areInValidNumericBounds(question.getMinValue(), question.getMaxValue())) {
+            parentException.addChildException(new ValidationException(INVALID_NUMERIC_BOUNDS));
+        }
     }
 
-    private boolean choicesHaveInvalidOrders(List<ChoiceDetail> choiceDetails) {
-        return !allChoicesHaveOrders(choiceDetails) || !allChoicesHaveUniqueOrders(choiceDetails);
+    private void validateChoices(QuestionDto question, ValidationException parentException) {
+        List<ChoiceDto> choices = question.getChoices();
+        if (isEmpty(choices) || choices.size() < MAX_CHOICES_FOR_QUESTION) {
+            parentException.addChildException(new ValidationException(QUESTION_CHOICES_INSUFFICIENT));
+        } else if (choicesHaveInvalidValues(choices) || choicesHaveInvalidOrders(choices)) {
+            parentException.addChildException(new ValidationException(QUESTION_CHOICES_INVALID));
+        }
     }
 
-    private boolean allChoicesHaveUniqueOrders(List<ChoiceDetail> choiceDetails) {
+    private boolean choicesHaveInvalidValues(List<ChoiceDto> choiceDtos) {
+        return !allChoicesHaveValues(choiceDtos) || !allChoicesHaveUniqueValues(choiceDtos);
+    }
+
+    private boolean choicesHaveInvalidOrders(List<ChoiceDto> choiceDtos) {
+        return !allChoicesHaveOrders(choiceDtos) || !allChoicesHaveUniqueOrders(choiceDtos);
+    }
+
+    private boolean allChoicesHaveUniqueOrders(List<ChoiceDto> choiceDtos) {
         boolean result = true;
         Set<Integer> choiceOrders = new HashSet<Integer>();
-        for (ChoiceDetail choiceDetail : choiceDetails) {
-            Integer order = choiceDetail.getOrder();
+        for (ChoiceDto choiceDto : choiceDtos) {
+            Integer order = choiceDto.getOrder();
             if (choiceOrders.contains(order)) {
                 result = false;
                 break;
@@ -181,10 +203,10 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         return result;
     }
 
-    private boolean allChoicesHaveOrders(List<ChoiceDetail> choiceDetails) {
+    private boolean allChoicesHaveOrders(List<ChoiceDto> choiceDtos) {
         boolean result = true;
-        for (ChoiceDetail choiceDetail : choiceDetails) {
-            if (null == choiceDetail.getOrder()) {
+        for (ChoiceDto choiceDto : choiceDtos) {
+            if (null == choiceDto.getOrder()) {
                 result = false;
                 break;
             }
@@ -192,11 +214,11 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         return result;
     }
 
-    private boolean allChoicesHaveValues(List<ChoiceDetail> choiceDetails) {
+    private boolean allChoicesHaveValues(List<ChoiceDto> choiceDtos) {
         boolean result = true;
-        for (ChoiceDetail choiceDetail : choiceDetails) {
-            choiceDetail.trimValue();
-            if (StringUtils.isEmpty(choiceDetail.getValue())) {
+        for (ChoiceDto choiceDto : choiceDtos) {
+            choiceDto.trimValue();
+            if (StringUtils.isEmpty(choiceDto.getValue())) {
                 result = false;
                 break;
             }
@@ -204,11 +226,11 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         return result;
     }
 
-    private boolean allChoicesHaveUniqueValues(List<ChoiceDetail> choiceDetails) {
+    private boolean allChoicesHaveUniqueValues(List<ChoiceDto> choiceDtos) {
         boolean result = true;
         Set<String> choiceValues = new HashSet<String>();
-        for (ChoiceDetail choiceDetail : choiceDetails) {
-            String value = choiceDetail.getValue().toLowerCase(Locale.getDefault());
+        for (ChoiceDto choiceDto : choiceDtos) {
+            String value = choiceDto.getValue().toLowerCase(Locale.getDefault());
             if (choiceValues.contains(value)) {
                 result = false;
                 break;
@@ -230,12 +252,15 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     private boolean haveIncompatibleChoices(QuestionDto question, QuestionEntity questionEntity) {
-        List<ChoiceDetail> choiceDetails = question.getChoices();
+        List<ChoiceDto> choiceDtos = question.getChoices();
         List<QuestionChoiceEntity> choiceEntities = questionEntity.getChoices();
-        boolean result = choiceDetails.size() != choiceEntities.size();
-        for (int i = 0, choiceDetailsSize = choiceDetails.size(); i < choiceDetailsSize && !result; i++) {
-            String choiceValue = choiceDetails.get(i).getValue();
-            result = isUniqueChoice(choiceEntities, choiceValue);
+        boolean result = false;
+        if (choiceDtos != null && choiceEntities != null) {
+            result = choiceDtos.size() != choiceEntities.size();
+            for (int i = 0, choiceDetailsSize = choiceDtos.size(); i < choiceDetailsSize && !result; i++) {
+                String choiceValue = choiceDtos.get(i).getValue();
+                result = isUniqueChoice(choiceEntities, choiceValue);
+            }
         }
         return result;
     }
@@ -296,7 +321,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
             parentException.addChildException(new ValidationException(QUESTION_TITLE_NOT_PROVIDED));
             invalid = true;
         } else if(!allQuestionsHaveUniqueNames(questions)) {
-            parentException.addChildException(new ValidationException(QUESTION_TITILE_DUPLICATE));
+            parentException.addChildException(new ValidationException(QUESTION_TITLE_DUPLICATE));
             invalid = true;
         }
         return invalid;
@@ -432,12 +457,12 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         return result;
     }
 
-    private void validateEventSource(EventSource eventSource, ValidationException parentException) {
-        if (eventSource == null || eventSource.getEvent() == null || eventSource.getSource() == null) {
+    private void validateEventSource(EventSourceDto eventSourceDto, ValidationException parentException) {
+        if (eventSourceDto == null || eventSourceDto.getEvent() == null || eventSourceDto.getSource() == null) {
             parentException.addChildException(new ValidationException(INVALID_EVENT_SOURCE));
         } else {
             try {
-                validateEventSource(eventSource);
+                validateEventSource(eventSourceDto);
             } catch (SystemException e) {
                 parentException.addChildException(new ValidationException(e.getKey()));
             }
@@ -450,7 +475,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
             parentException.addChildException(new ValidationException(QUESTION_GROUP_TITLE_NOT_PROVIDED));
         } else {
             title = title.trim();
-            if (title.length() >= QUESTION_GROUP_TITLE_MAX_LENGTH) {
+            if (title.length() >= MAX_LENGTH_FOR_TITILE) {
                 parentException.addChildException(new ValidationException(QUESTION_GROUP_TITLE_TOO_BIG));
             } else if (isDuplicateQuestionGroupTitle(title)) {
                 parentException.addChildException(new ValidationException(QUESTION_GROUP_TITLE_DUPLICATE));
@@ -497,8 +522,8 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         return result;
     }
 
-    private void validateEventSource(EventSource eventSource) throws SystemException {
-        List<Long> result = eventSourceDao.retrieveCountByEventAndSource(eventSource.getEvent(), eventSource.getSource());
+    private void validateEventSource(EventSourceDto eventSourceDto) throws SystemException {
+        List<Long> result = eventSourceDao.retrieveCountByEventAndSource(eventSourceDto.getEvent(), eventSourceDto.getSource());
         if (isEmpty(result) || result.get(0) == 0) {
             throw new SystemException(INVALID_EVENT_SOURCE);
         }

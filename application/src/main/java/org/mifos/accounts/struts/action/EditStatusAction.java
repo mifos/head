@@ -20,13 +20,8 @@
 
 package org.mifos.accounts.struts.action;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -38,21 +33,35 @@ import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.EditStatusActionForm;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
+import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.MifosServiceFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 public class EditStatusAction extends BaseAction {
+
+    private QuestionnaireFlowAdapter approveLoanQuestionnaire;
 
     @Override
     protected BusinessService getService() {
@@ -70,6 +79,8 @@ public class EditStatusAction extends BaseAction {
         security.allow("preview", SecurityConstants.VIEW);
         security.allow("previous", SecurityConstants.VIEW);
         security.allow("update", SecurityConstants.VIEW);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
         return security;
     }
 
@@ -97,7 +108,28 @@ public class EditStatusAction extends BaseAction {
         AccountBO accountBO = (AccountBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
         getMasterData(form, accountBO, request, userContext);
+        initializeLoanQuestionnaire(accountBO.getGlobalAccountNum());
+        if (loanApproved(request)) {
+            return approveLoanQuestionnaire.fetchAppliedQuestions(mapping,(EditStatusActionForm) form, request, ActionForwards.preview_success);
+        }
         return mapping.findForward(ActionForwards.preview_success.toString());
+    }
+
+    private void initializeLoanQuestionnaire(String globalAccountNum) {
+        approveLoanQuestionnaire =
+                new QuestionnaireFlowAdapter("Approve", "Loan",
+                        ActionForwards.preview_success,
+                        "loanAccountAction.do?method=get&globalAccountNum=" + globalAccountNum,
+                        new QuestionnaireServiceFacadeLocator() {
+                            @Override
+                            public QuestionnaireServiceFacade getService(HttpServletRequest request) {
+                                return MifosServiceFactory.getQuestionnaireServiceFacade(request);
+                            }
+                        });
+    }
+
+    private boolean loanApproved(HttpServletRequest request) throws PageExpiredException {
+        return StringUtils.equalsIgnoreCase("Application Approved", (String) SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -134,6 +166,8 @@ public class EditStatusAction extends BaseAction {
             newStatusId = getShortValue(editStatusActionForm.getNewStatusId());
         }
         checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
+        initializeLoanQuestionnaire(accountBO.getGlobalAccountNum());
+        approveLoanQuestionnaire.saveResponses(request, editStatusActionForm, getIntegerValue(editStatusActionForm.getAccountId()));
         accountBO.changeStatus(newStatusId, flagId, editStatusActionForm.getNotes());
         accountBOInSession = null;
         accountBO.update();
@@ -158,6 +192,27 @@ public class EditStatusAction extends BaseAction {
         return mapping.findForward(forward);
     }
 
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward captureQuestionResponses(
+            final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "captureQuestionResponses");
+        ActionErrors errors = approveLoanQuestionnaire.validateResponses(request, (EditStatusActionForm) form);
+        if (errors != null && !errors.isEmpty()) {
+            addErrors(request, errors);
+            return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
+        }
+        return approveLoanQuestionnaire.rejoinFlow(mapping);
+    }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward editQuestionResponses(
+            final ActionMapping mapping, final ActionForm form,
+            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "editQuestionResponses");
+        return approveLoanQuestionnaire.editResponses(mapping, request, (EditStatusActionForm) form);
+    }
+
     private AccountBusinessService getAccountBusinessService() {
         return new AccountBusinessService();
     }
@@ -168,6 +223,7 @@ public class EditStatusAction extends BaseAction {
         editStatusActionForm.setNotes(null);
         editStatusActionForm.setNewStatusId(null);
         editStatusActionForm.setFlagId(null);
+        editStatusActionForm.setQuestionGroups(null);
         session.removeAttribute(Constants.BUSINESS_KEY);
     }
 
