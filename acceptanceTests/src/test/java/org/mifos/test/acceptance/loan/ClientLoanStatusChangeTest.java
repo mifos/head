@@ -26,7 +26,9 @@ import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +38,14 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Random;
+
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"acceptance","ui", "loan"})
+@Test(sequential=true, groups={"acceptance","ui", "loan","smoke"})
 public class ClientLoanStatusChangeTest extends UiTestCaseBase {
     private static final String ACCOUNT = "ACCOUNT";
     private LoanTestHelper loanTestHelper;
+    private Random random;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -61,6 +66,7 @@ public class ClientLoanStatusChangeTest extends UiTestCaseBase {
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         loanTestHelper = new LoanTestHelper(selenium);
+        random = new Random();
     }
 
     @AfterMethod
@@ -98,16 +104,27 @@ public class ClientLoanStatusChangeTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void pendingApprovalToApplicationApproved() throws Exception {
+    public void pendingApprovalToApplicationApprovedWithQuestionGroup() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
 
+        QuestionGroupHelper questionGroupHelper = new QuestionGroupHelper(new NavigationHelper(selenium));
+        String questionGroupTitle = "QG1" + random.nextInt(100);
+        String question1 = "DT_" + random.nextInt(100);
+        String question2 = "SS_" + random.nextInt(100);
+        String answer = "01/01/2010";
+        String choiceAnswer = "Choice2";
+        questionGroupHelper.createQuestionGroup(questionGroupTitle,question1,question2, "Approve Loan");
+        
         // a loan account w/ id 000100000000003 is pending approval in the data set
-
         EditLoanAccountStatusParameters statusParameters = new EditLoanAccountStatusParameters();
         statusParameters.setStatus(EditLoanAccountStatusParameters.APPROVED);
         statusParameters.setNote("Test");
 
-        loanTestHelper.changeLoanAccountStatus("000100000000003", statusParameters);
+        QuestionResponseParameters responseParameters = new QuestionResponseParameters();
+        responseParameters.addTextAnswer("create_ClientPersonalInfo.input.customField", answer);
+        responseParameters.addSingleSelectAnswer("name=questionGroups[0].sectionDetails[0].questions[1].value", choiceAnswer);
+
+        loanTestHelper.changeLoanAccountStatusProvidingQuestionGroupResponses("000100000000003", statusParameters,responseParameters);
         verifyLoanAccountStatus("ClientLoanStatusChange_003_result_dbunit.xml.zip");
     }
 

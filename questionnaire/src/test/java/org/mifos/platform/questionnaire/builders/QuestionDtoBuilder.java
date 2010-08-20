@@ -20,7 +20,7 @@
 
 package org.mifos.platform.questionnaire.builders;
 
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 
@@ -40,12 +40,12 @@ public class QuestionDtoBuilder {
         return this;
     }
 
-    public QuestionDtoBuilder withChoices(List<ChoiceDetail> choices) {
+    public QuestionDtoBuilder withChoices(List<ChoiceDto> choices) {
         questionDto.setChoices(choices);
         return this;
     }
 
-    public QuestionDtoBuilder addChoices(ChoiceDetail... choices) {
+    public QuestionDtoBuilder addChoices(ChoiceDto... choices) {
         questionDto.getChoices().addAll(asList(choices));
         return this;
     }

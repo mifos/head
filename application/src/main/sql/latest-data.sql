@@ -61,6 +61,7 @@ insert into applied_upgrades(upgrade_id) values(1280719447);
 insert into applied_upgrades(upgrade_id) values(1280719676);
 insert into applied_upgrades(upgrade_id) values(1280721170);
 insert into applied_upgrades(upgrade_id) values(1280793109);
+insert into applied_upgrades(upgrade_id) values(1282247229);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -1204,7 +1205,7 @@ values(769, 1, 431, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(432, 87, 'Permissions-Groups-CanEditGroupInformation');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(770, 1, 432, null);
-insert into lookup_value(lookup_id,entity_id,lookup_name) values(433, 87, 'Permissions-Groups-CanEditCenterClientship');
+insert into lookup_value(lookup_id,entity_id,lookup_name) values(433, 87, 'Permissions-Groups-CanEditCenterMembership');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(771, 1, 433, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(434, 87, 'Permissions-Groups-CanEditOfficeMembership');

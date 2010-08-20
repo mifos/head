@@ -1031,39 +1031,14 @@ public class AccountBO extends AbstractBusinessObject {
                 // payment date for loans must be >= disbursement date
                 if (this instanceof LoanBO) {
                     Date apporvalDate = this.getAccountApprovalDate();
-                    // This is call for disbursement.
-                    if (this.getState().equals(AccountState.LOAN_APPROVED)) {
-                        return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(apporvalDate)) >= 0;
-                    } else {
-                        // This is payment action.
-                        if (meetingDate == null) {
-                            // if meetings are not present..
-                            return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(apporvalDate)) >= 0;
-                        } else {
-                            final Date meetingDateWithoutTimeStamp = DateUtils.getDateWithoutTimeStamp(meetingDate);
-                            // if the last meeting date was prior to approval
-                            // date, then the transactions should be after the
-                            // approval date.
-                            if (apporvalDate.compareTo(meetingDateWithoutTimeStamp) > 0) {
-                                return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(apporvalDate)) >= 0;
-                            } else {
-                                // if the last meeting is after the appoval date
-                                // then the transaction should be after the
-                                // meeting.
-                                return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(meetingDate)) >= 0;
-                            }
-                        }
-                    }
-
+                    return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(apporvalDate)) >= 0;
                 }
                 // must be >= creation date for other accounts
                 return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(this.getCreatedDate())) >= 0;
-            } else {
-                if (meetingDate != null) {
+            } else if (meetingDate != null) {
                     return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(meetingDate)) >= 0;
-                }
-                return false;
             }
+            return false;
         } catch (PersistenceException e) {
             // This should only occur if Customer is null which shouldn't
             // happen.

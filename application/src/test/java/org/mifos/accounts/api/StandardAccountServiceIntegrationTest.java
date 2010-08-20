@@ -87,6 +87,14 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         TestObjectFactory.updateObject(groupLoan);
         Assert.assertEquals("The amount returned for the payment should have been " + paymentAmount, Double
                 .parseDouble(paymentAmount), groupLoan.getLastPmntAmnt());
+
+        AccountReferenceDto accountRef = new AccountReferenceDto(groupLoan.getAccountId());
+        List<AccountPaymentParametersDto> payments = standardAccountService.lookupPayments(accountRef);
+        Assert.assertEquals("One payment retrieved", payments.size(), 1);
+        AccountPaymentParametersDto payment = payments.iterator().next();
+        Assert.assertEquals("Payment amount should be " + paymentAmount,
+                payment.getPaymentAmount().compareTo(new BigDecimal(paymentAmount)), 0);
+
     }
 
     @Test

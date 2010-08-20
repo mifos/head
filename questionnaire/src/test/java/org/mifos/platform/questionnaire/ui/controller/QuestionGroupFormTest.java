@@ -24,7 +24,7 @@ import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
@@ -50,8 +50,8 @@ public class QuestionGroupFormTest {
 
     @Test
     public void shouldGetEventSourceId() {
-        EventSource eventSource = new EventSource("Create", "Client", "Create Client");
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, "Title", eventSource, new ArrayList<SectionDetail>(), false);
+        EventSourceDto eventSourceDto = new EventSourceDto("Create", "Client", "Create Client");
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, "Title", eventSourceDto, new ArrayList<SectionDetail>(), false);
         QuestionGroupForm questionGroupForm = new QuestionGroupForm(questionGroupDetail);
         assertThat(questionGroupForm.getEventSourceId(), Matchers.is("Create.Client"));
     }
@@ -94,7 +94,7 @@ public class QuestionGroupFormTest {
         QuestionGroupForm questionGroupForm;
 
         questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setEventSource(new EventSource("Create", "Client", null));
+        questionGroupForm.setEventSource(new EventSourceDto("Create", "Client", null));
         assertThat(questionGroupForm.getEventSourceId(), CoreMatchers.is("Create.Client"));
 
         questionGroupForm = new QuestionGroupForm();
@@ -102,7 +102,7 @@ public class QuestionGroupFormTest {
         assertThat(questionGroupForm.getEventSourceId(), CoreMatchers.is(nullValue()));
 
         questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setEventSource(new EventSource("", null, null));
+        questionGroupForm.setEventSource(new EventSourceDto("", null, null));
         assertThat(questionGroupForm.getEventSourceId(), CoreMatchers.is(nullValue()));
     }
 
@@ -238,9 +238,9 @@ public class QuestionGroupFormTest {
         return new SectionQuestionDetail(new QuestionDetail(id, title, title, QuestionType.FREETEXT, true), mandatory);
     }
 
-    private void assertEventSource(EventSource eventSource, String event, String source) {
-        assertThat(eventSource, CoreMatchers.is(not(nullValue())));
-        assertThat(eventSource.getEvent(), CoreMatchers.is(event));
-        assertThat(eventSource.getSource(), CoreMatchers.is(source));
+    private void assertEventSource(EventSourceDto eventSourceDto, String event, String source) {
+        assertThat(eventSourceDto, CoreMatchers.is(not(nullValue())));
+        assertThat(eventSourceDto.getEvent(), CoreMatchers.is(event));
+        assertThat(eventSourceDto.getSource(), CoreMatchers.is(source));
     }
 }

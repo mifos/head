@@ -37,8 +37,8 @@ import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
@@ -114,27 +114,27 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return mapToQuestionDetail(question, mapToQuestionType(question.getAnswerTypeAsEnum()));
     }
 
-    private List<ChoiceDetail> mapToQuestionChoices(List<QuestionChoiceEntity> choices) {
-        List<ChoiceDetail> questionChoices = new LinkedList<ChoiceDetail>();
+    private List<ChoiceDto> mapToQuestionChoices(List<QuestionChoiceEntity> choices) {
+        List<ChoiceDto> questionChoices = new LinkedList<ChoiceDto>();
         for (QuestionChoiceEntity questionChoice : choices) {
             questionChoices.add(mapToChoiceDetail(questionChoice));
         }
         return questionChoices;
     }
 
-    private ChoiceDetail mapToChoiceDetail(QuestionChoiceEntity questionChoice) {
-        ChoiceDetail choiceDetail = new ChoiceDetail(questionChoice.getChoiceText());
-        mapToChoiceTags(choiceDetail, questionChoice.getTags());
-        return choiceDetail;
+    private ChoiceDto mapToChoiceDetail(QuestionChoiceEntity questionChoice) {
+        ChoiceDto choiceDto = new ChoiceDto(questionChoice.getChoiceText());
+        mapToChoiceTags(choiceDto, questionChoice.getTags());
+        return choiceDto;
     }
 
-    private void mapToChoiceTags(ChoiceDetail choiceDetail, Set<ChoiceTagEntity> choiceTagEntities) {
+    private void mapToChoiceTags(ChoiceDto choiceDto, Set<ChoiceTagEntity> choiceTagEntities) {
         if (isNotEmpty(choiceTagEntities)) {
             List<String> choiceTags = new ArrayList<String>();
             for (ChoiceTagEntity tag : choiceTagEntities) {
                 choiceTags.add(tag.getTagText());
             }
-            choiceDetail.setTags(choiceTags);
+            choiceDto.setTags(choiceTags);
         }
     }
 
@@ -162,17 +162,17 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         }
     }
 
-    private List<QuestionChoiceEntity> mapToChoices(List<ChoiceDetail> choices) {
+    private List<QuestionChoiceEntity> mapToChoices(List<ChoiceDto> choices) {
         List<QuestionChoiceEntity> questionChoices = new LinkedList<QuestionChoiceEntity>();
         if (CollectionUtils.isNotEmpty(choices)) {
-            for (ChoiceDetail choice : choices) {
+            for (ChoiceDto choice : choices) {
                 questionChoices.add(mapToChoice(choice));
             }
         }
         return questionChoices;
     }
 
-    private QuestionChoiceEntity mapToChoice(ChoiceDetail choice) {
+    private QuestionChoiceEntity mapToChoice(ChoiceDto choice) {
         QuestionChoiceEntity choiceEntity = new QuestionChoiceEntity(choice.getValue());
         choiceEntity.setChoiceOrder(choice.getOrder());
         List<String> tags = choice.getTags();
@@ -200,9 +200,9 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return questionGroup;
     }
 
-    private Set<EventSourceEntity> mapToEventSources(EventSource eventSource) {
+    private Set<EventSourceEntity> mapToEventSources(EventSourceDto eventSourceDto) {
         Set<EventSourceEntity> eventSources = new HashSet<EventSourceEntity>();
-        List list = eventSourceDao.retrieveByEventAndSource(eventSource.getEvent(), eventSource.getSource());
+        List list = eventSourceDao.retrieveByEventAndSource(eventSourceDto.getEvent(), eventSourceDto.getSource());
         for (Object obj : list) {
             eventSources.add((EventSourceEntity) obj);
         }
@@ -244,18 +244,18 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     @Override
     public QuestionGroupDetail mapToQuestionGroupDetail(QuestionGroup questionGroup) {
         List<SectionDetail> sectionDetails = mapToSectionDetails(questionGroup.getSections());
-        EventSource eventSource = mapToEventSource(questionGroup.getEventSources());
+        EventSourceDto eventSourceDto = mapToEventSource(questionGroup.getEventSources());
         return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(),
-                eventSource, sectionDetails, questionGroup.isEditable(),
+                eventSourceDto, sectionDetails, questionGroup.isEditable(),
                 QuestionGroupState.ACTIVE.equals(questionGroup.getState()));
     }
 
-    private EventSource mapToEventSource(Set<EventSourceEntity> eventSources) {
+    private EventSourceDto mapToEventSource(Set<EventSourceEntity> eventSources) {
         if (eventSources == null || eventSources.isEmpty()) {
             return null;
         }
         EventSourceEntity eventSourceEntity = eventSources.toArray(new EventSourceEntity[eventSources.size()])[0];
-        return new EventSource(eventSourceEntity.getEvent().getName(), eventSourceEntity.getSource().getEntityType(), eventSourceEntity.getDescription());
+        return new EventSourceDto(eventSourceEntity.getEvent().getName(), eventSourceEntity.getSource().getEntityType(), eventSourceEntity.getDescription());
     }
 
     private List<SectionDetail> mapToSectionDetails(List<Section> sections) {
@@ -284,7 +284,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private QuestionDetail mapToQuestionDetail(QuestionEntity question, QuestionType type) {
-        List<ChoiceDetail> answerChoices = mapToQuestionChoices(question.getChoices());
+        List<ChoiceDto> answerChoices = mapToQuestionChoices(question.getChoices());
         QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type, question.isActive());
         questionDetail.setAnswerChoices(answerChoices);
         mapBoundsForNumericQuestion(question, questionDetail);
@@ -308,12 +308,12 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     @Override
-    public List<EventSource> mapToEventSources(List<EventSourceEntity> eventSourceEntities) {
-        List<EventSource> eventSources = new ArrayList<EventSource>();
+    public List<EventSourceDto> mapToEventSources(List<EventSourceEntity> eventSourceEntities) {
+        List<EventSourceDto> eventSourceDtos = new ArrayList<EventSourceDto>();
         for (EventSourceEntity eventSourceEntity : eventSourceEntities) {
-            eventSources.add(mapEventSource(eventSourceEntity));
+            eventSourceDtos.add(mapEventSource(eventSourceEntity));
         }
-        return eventSources;
+        return eventSourceDtos;
     }
 
     @Override
@@ -369,7 +369,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setEditable(questionGroupDto.isEditable());
         questionGroup.setDateOfCreation(getCurrentDateTime());
         questionGroup.setPpi(questionGroupDto.isPpi());
-        questionGroup.setEventSources(mapToEventSources(questionGroupDto.getEventSource()));
+        questionGroup.setEventSources(mapToEventSources(questionGroupDto.getEventSourceDto()));
         questionGroup.setTitle(questionGroupDto.getTitle());
         questionGroup.setState(QuestionGroupState.ACTIVE);
         questionGroup.setSections(mapToSectionsFromDtos(questionGroupDto.getSections()));
@@ -497,8 +497,8 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return questionGroupResponse;
     }
 
-    private EventSource mapEventSource(EventSourceEntity eventSourceEntity) {
-        return new EventSource(eventSourceEntity.getEvent().getName(), eventSourceEntity.getSource().getEntityType(),
+    private EventSourceDto mapEventSource(EventSourceEntity eventSourceEntity) {
+        return new EventSourceDto(eventSourceEntity.getEvent().getName(), eventSourceEntity.getSource().getEntityType(),
                 eventSourceEntity.getDescription());
     }
 

@@ -29,7 +29,7 @@ import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
@@ -151,14 +151,14 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public List<EventSource> getAllEventSources() {
+    public List<EventSourceDto> getAllEventSources() {
         return questionnaireMapper.mapToEventSources(eventSourceDao.getDetailsAll());
     }
 
     @Override
-    public List<QuestionGroupDetail> getQuestionGroups(EventSource eventSource) throws SystemException {
-        questionnaireValidator.validateForEventSource(eventSource);
-        List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSource.getEvent(), eventSource.getSource());
+    public List<QuestionGroupDetail> getQuestionGroups(EventSourceDto eventSourceDto) throws SystemException {
+        questionnaireValidator.validateForEventSource(eventSourceDto);
+        List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSourceDto.getEvent(), eventSourceDto.getSource());
         List<QuestionGroupDetail> questionGroupDetails = questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
         removeInactiveSectionsAndQuestions(questionGroupDetails);
         return questionGroupDetails;
@@ -176,13 +176,13 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSource eventSource, Boolean includeUnansweredQuestionGroups, boolean fetchLastVersion) {
-        questionnaireValidator.validateForEventSource(eventSource);
-        Integer eventSourceId = getEventSourceEntity(eventSource).getId();
+    public List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSourceDto eventSourceDto, Boolean includeUnansweredQuestionGroups, boolean fetchLastVersion) {
+        questionnaireValidator.validateForEventSource(eventSourceDto);
+        Integer eventSourceId = getEventSourceEntity(eventSourceDto).getId();
         List<QuestionGroupInstance> questionGroupInstances = getQuestionGroupInstanceEntities(entityId, eventSourceId, fetchLastVersion);
         List<QuestionGroupInstanceDetail> questionGroupInstanceDetails = questionnaireMapper.mapToQuestionGroupInstanceDetails(questionGroupInstances);
         if (includeUnansweredQuestionGroups) {
-            List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSource.getEvent(), eventSource.getSource());
+            List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSourceDto.getEvent(), eventSourceDto.getSource());
             questionGroupInstanceDetails = mergeUnansweredQuestionGroups(questionGroupInstanceDetails, questionGroups);
         }
         return questionGroupInstanceDetails;
@@ -263,8 +263,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         return defineQuestionGroup(questionGroupDto);
     }
 
-    private EventSourceEntity getEventSourceEntity(EventSource eventSource) {
-        return eventSourceDao.retrieveByEventAndSource(eventSource.getEvent(), eventSource.getSource()).get(0);
+    private EventSourceEntity getEventSourceEntity(EventSourceDto eventSourceDto) {
+        return eventSourceDao.retrieveByEventAndSource(eventSourceDto.getEvent(), eventSourceDto.getSource()).get(0);
     }
 
     private void persistQuestion(QuestionEntity question) throws SystemException {

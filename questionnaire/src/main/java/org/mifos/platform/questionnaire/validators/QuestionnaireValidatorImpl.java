@@ -31,8 +31,8 @@ import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
@@ -88,10 +88,10 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     @Override
-    public void validateForEventSource(EventSource eventSource) throws SystemException {
-        if (eventSource == null || StringUtils.isEmpty(eventSource.getSource()) || StringUtils.isEmpty(eventSource.getEvent()))
+    public void validateForEventSource(EventSourceDto eventSourceDto) throws SystemException {
+        if (eventSourceDto == null || StringUtils.isEmpty(eventSourceDto.getSource()) || StringUtils.isEmpty(eventSourceDto.getEvent()))
             throw new SystemException(INVALID_EVENT_SOURCE);
-        validateEventSource(eventSource);
+        validateEventSource(eventSourceDto);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     public void validateForDefineQuestionGroup(QuestionGroupDto questionGroupDto) {
         ValidationException parentException = new ValidationException(GENERIC_VALIDATION);
         validateQuestionGroupTitle(questionGroupDto, parentException);
-        validateEventSource(questionGroupDto.getEventSource(), parentException);
+        validateEventSource(questionGroupDto.getEventSourceDto(), parentException);
         validateSections(questionGroupDto.getSections(), parentException);
         if (parentException.containsChildExceptions()) throw parentException;
     }
@@ -172,7 +172,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     private void validateChoices(QuestionDto question, ValidationException parentException) {
-        List<ChoiceDetail> choices = question.getChoices();
+        List<ChoiceDto> choices = question.getChoices();
         if (isEmpty(choices) || choices.size() < MAX_CHOICES_FOR_QUESTION) {
             parentException.addChildException(new ValidationException(QUESTION_CHOICES_INSUFFICIENT));
         } else if (choicesHaveInvalidValues(choices) || choicesHaveInvalidOrders(choices)) {
@@ -180,19 +180,19 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         }
     }
 
-    private boolean choicesHaveInvalidValues(List<ChoiceDetail> choiceDetails) {
-        return !allChoicesHaveValues(choiceDetails) || !allChoicesHaveUniqueValues(choiceDetails);
+    private boolean choicesHaveInvalidValues(List<ChoiceDto> choiceDtos) {
+        return !allChoicesHaveValues(choiceDtos) || !allChoicesHaveUniqueValues(choiceDtos);
     }
 
-    private boolean choicesHaveInvalidOrders(List<ChoiceDetail> choiceDetails) {
-        return !allChoicesHaveOrders(choiceDetails) || !allChoicesHaveUniqueOrders(choiceDetails);
+    private boolean choicesHaveInvalidOrders(List<ChoiceDto> choiceDtos) {
+        return !allChoicesHaveOrders(choiceDtos) || !allChoicesHaveUniqueOrders(choiceDtos);
     }
 
-    private boolean allChoicesHaveUniqueOrders(List<ChoiceDetail> choiceDetails) {
+    private boolean allChoicesHaveUniqueOrders(List<ChoiceDto> choiceDtos) {
         boolean result = true;
         Set<Integer> choiceOrders = new HashSet<Integer>();
-        for (ChoiceDetail choiceDetail : choiceDetails) {
-            Integer order = choiceDetail.getOrder();
+        for (ChoiceDto choiceDto : choiceDtos) {
+            Integer order = choiceDto.getOrder();
             if (choiceOrders.contains(order)) {
                 result = false;
                 break;
@@ -203,10 +203,10 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         return result;
     }
 
-    private boolean allChoicesHaveOrders(List<ChoiceDetail> choiceDetails) {
+    private boolean allChoicesHaveOrders(List<ChoiceDto> choiceDtos) {
         boolean result = true;
-        for (ChoiceDetail choiceDetail : choiceDetails) {
-            if (null == choiceDetail.getOrder()) {
+        for (ChoiceDto choiceDto : choiceDtos) {
+            if (null == choiceDto.getOrder()) {
                 result = false;
                 break;
             }
@@ -214,11 +214,11 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         return result;
     }
 
-    private boolean allChoicesHaveValues(List<ChoiceDetail> choiceDetails) {
+    private boolean allChoicesHaveValues(List<ChoiceDto> choiceDtos) {
         boolean result = true;
-        for (ChoiceDetail choiceDetail : choiceDetails) {
-            choiceDetail.trimValue();
-            if (StringUtils.isEmpty(choiceDetail.getValue())) {
+        for (ChoiceDto choiceDto : choiceDtos) {
+            choiceDto.trimValue();
+            if (StringUtils.isEmpty(choiceDto.getValue())) {
                 result = false;
                 break;
             }
@@ -226,11 +226,11 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         return result;
     }
 
-    private boolean allChoicesHaveUniqueValues(List<ChoiceDetail> choiceDetails) {
+    private boolean allChoicesHaveUniqueValues(List<ChoiceDto> choiceDtos) {
         boolean result = true;
         Set<String> choiceValues = new HashSet<String>();
-        for (ChoiceDetail choiceDetail : choiceDetails) {
-            String value = choiceDetail.getValue().toLowerCase(Locale.getDefault());
+        for (ChoiceDto choiceDto : choiceDtos) {
+            String value = choiceDto.getValue().toLowerCase(Locale.getDefault());
             if (choiceValues.contains(value)) {
                 result = false;
                 break;
@@ -252,13 +252,13 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     private boolean haveIncompatibleChoices(QuestionDto question, QuestionEntity questionEntity) {
-        List<ChoiceDetail> choiceDetails = question.getChoices();
+        List<ChoiceDto> choiceDtos = question.getChoices();
         List<QuestionChoiceEntity> choiceEntities = questionEntity.getChoices();
         boolean result = false;
-        if (choiceDetails != null && choiceEntities != null) {
-            result = choiceDetails.size() != choiceEntities.size();
-            for (int i = 0, choiceDetailsSize = choiceDetails.size(); i < choiceDetailsSize && !result; i++) {
-                String choiceValue = choiceDetails.get(i).getValue();
+        if (choiceDtos != null && choiceEntities != null) {
+            result = choiceDtos.size() != choiceEntities.size();
+            for (int i = 0, choiceDetailsSize = choiceDtos.size(); i < choiceDetailsSize && !result; i++) {
+                String choiceValue = choiceDtos.get(i).getValue();
                 result = isUniqueChoice(choiceEntities, choiceValue);
             }
         }
@@ -457,12 +457,12 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         return result;
     }
 
-    private void validateEventSource(EventSource eventSource, ValidationException parentException) {
-        if (eventSource == null || eventSource.getEvent() == null || eventSource.getSource() == null) {
+    private void validateEventSource(EventSourceDto eventSourceDto, ValidationException parentException) {
+        if (eventSourceDto == null || eventSourceDto.getEvent() == null || eventSourceDto.getSource() == null) {
             parentException.addChildException(new ValidationException(INVALID_EVENT_SOURCE));
         } else {
             try {
-                validateEventSource(eventSource);
+                validateEventSource(eventSourceDto);
             } catch (SystemException e) {
                 parentException.addChildException(new ValidationException(e.getKey()));
             }
@@ -522,8 +522,8 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         return result;
     }
 
-    private void validateEventSource(EventSource eventSource) throws SystemException {
-        List<Long> result = eventSourceDao.retrieveCountByEventAndSource(eventSource.getEvent(), eventSource.getSource());
+    private void validateEventSource(EventSourceDto eventSourceDto) throws SystemException {
+        List<Long> result = eventSourceDao.retrieveCountByEventAndSource(eventSourceDto.getEvent(), eventSourceDto.getSource());
         if (isEmpty(result) || result.get(0) == 0) {
             throw new SystemException(INVALID_EVENT_SOURCE);
         }

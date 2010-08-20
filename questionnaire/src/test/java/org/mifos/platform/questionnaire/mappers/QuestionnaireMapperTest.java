@@ -50,8 +50,8 @@ import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
@@ -118,8 +118,8 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapMultiSelectQuestionDetailToQuestion() {
-        ChoiceDetail choice1 = new ChoiceDetail("choice1");
-        ChoiceDetail choice2 = new ChoiceDetail("choice2");
+        ChoiceDto choice1 = new ChoiceDto("choice1");
+        ChoiceDto choice2 = new ChoiceDto("choice2");
         QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.MULTI_SELECT);
         questionDefinition.setAnswerChoices(asList(choice1, choice2));
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
@@ -132,9 +132,9 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapSmartSelectQuestionDetailToQuestion() {
-        ChoiceDetail choice1 = new ChoiceDetail("choice1");
+        ChoiceDto choice1 = new ChoiceDto("choice1");
         choice1.setTags(asList("Tag1", "Tag2"));
-        ChoiceDetail choice2 = new ChoiceDetail("choice2");
+        ChoiceDto choice2 = new ChoiceDto("choice2");
         choice2.setTags(asList("Tag3"));
         QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.SMART_SELECT);
         questionDefinition.setActive(true);
@@ -161,8 +161,8 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapSingleSelectQuestionDetailToQuestion() {
-        ChoiceDetail choice1 = new ChoiceDetail("choice1");
-        ChoiceDetail choice2 = new ChoiceDetail("choice2");
+        ChoiceDto choice1 = new ChoiceDto("choice1");
+        ChoiceDto choice2 = new ChoiceDto("choice2");
         QuestionDetail questionDefinition = new QuestionDetail(TITLE, QuestionType.SINGLE_SELECT);
         questionDefinition.setAnswerChoices(asList(choice1, choice2));
         QuestionEntity question = questionnaireMapper.mapToQuestion(questionDefinition);
@@ -234,9 +234,9 @@ public class QuestionnaireMapperTest {
     public void shouldMapQuestionGroupDefinitionToQuestionGroup() {
         when(eventSourceDao.retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString())).thenReturn(new ArrayList());
         when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
-        EventSource eventSource = getEventSource("Create", "Client");
+        EventSourceDto eventSourceDto = getEventSource("Create", "Client");
         List<SectionDetail> sectionDetails = asList(getSectionDefinition(SECTION_NAME));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, TITLE, eventSource, sectionDetails, true);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, TITLE, eventSourceDto, sectionDetails, true);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         assertQuestionGroup(questionGroup);
         assertThat(questionGroup.isEditable(), is(true));
@@ -290,10 +290,10 @@ public class QuestionnaireMapperTest {
         assertThat(questionGroupDetail.getSectionDetails().size(), is(2));
         assertThat(questionGroupDetail.getSectionDetails().get(0).getName(), is("S1"));
         assertThat(questionGroupDetail.getSectionDetails().get(1).getName(), is("S2"));
-        EventSource eventSource = questionGroupDetail.getEventSource();
-        assertThat(eventSource, is(notNullValue()));
-        assertThat(eventSource.getEvent(), is("Create"));
-        assertThat(eventSource.getSource(), is("Client"));
+        EventSourceDto eventSourceDto = questionGroupDetail.getEventSource();
+        assertThat(eventSourceDto, is(notNullValue()));
+        assertThat(eventSourceDto.getEvent(), is("Create"));
+        assertThat(eventSourceDto.getSource(), is("Client"));
     }
 
     private QuestionGroup getQuestionGroup(String event, String source, String... sectionNames) {
@@ -370,9 +370,9 @@ public class QuestionnaireMapperTest {
     @Test
     public void shouldMapToEventSources() {
         List<EventSourceEntity> events = getEventSourceEntities("Create", "Client", "Create Client");
-        List<EventSource> eventSources = questionnaireMapper.mapToEventSources(events);
-        assertThat(eventSources, is(notNullValue()));
-        assertThat(eventSources, new EventSourcesMatcher(asList(getEventSource("Create", "Client", "Create Client"))));
+        List<EventSourceDto> eventSourceDtos = questionnaireMapper.mapToEventSources(events);
+        assertThat(eventSourceDtos, is(notNullValue()));
+        assertThat(eventSourceDtos, new EventSourcesMatcher(asList(getEventSource("Create", "Client", "Create Client"))));
     }
 
     @Test
@@ -400,17 +400,17 @@ public class QuestionnaireMapperTest {
 
         List<QuestionDetail> questionDetails1 = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails1 = asList(getSectionDetailWithQuestions(14, "Sec1", questionDetails1, "value", null));
-        QuestionGroupDetail questionGroupDetail1 = new QuestionGroupDetail(10, "QG1", new EventSource("Create", "Client", null), sectionDetails1, true);
+        QuestionGroupDetail questionGroupDetail1 = new QuestionGroupDetail(10, "QG1", new EventSourceDto("Create", "Client", null), sectionDetails1, true);
 
         List<QuestionDetail> questionDetails2 = asList(new QuestionDetail(13, "Question 2", "Question 2", QuestionType.DATE, true));
         List<SectionDetail> sectionDetails2 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails2, null, null));
-        QuestionGroupDetail questionGroupDetail2 = new QuestionGroupDetail(11, "QG2", new EventSource("Create", "Client", null), sectionDetails2, true);
+        QuestionGroupDetail questionGroupDetail2 = new QuestionGroupDetail(11, "QG2", new EventSourceDto("Create", "Client", null), sectionDetails2, true);
 
         QuestionDetail questionDetail = new QuestionDetail(13, "Question 2", "Question 2", QuestionType.MULTI_SELECT, true);
-        questionDetail.setAnswerChoices(asList(new ChoiceDetail("a1"), new ChoiceDetail("a2"), new ChoiceDetail("a3")));
+        questionDetail.setAnswerChoices(asList(new ChoiceDto("a1"), new ChoiceDto("a2"), new ChoiceDto("a3")));
         List<QuestionDetail> questionDetails3 = asList(questionDetail);
         List<SectionDetail> sectionDetails3 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails3, null, asList("a2", "a3")));
-        QuestionGroupDetail questionGroupDetail3 = new QuestionGroupDetail(11, "QG2", new EventSource("Create", "Client", null), sectionDetails3, true);
+        QuestionGroupDetail questionGroupDetail3 = new QuestionGroupDetail(11, "QG2", new EventSourceDto("Create", "Client", null), sectionDetails3, true);
 
         List<QuestionGroupInstance> questionGroupInstances =
                 questionnaireMapper.mapToQuestionGroupInstances(new QuestionGroupDetails(101, 201, asList(questionGroupDetail1, questionGroupDetail2, questionGroupDetail3)));
@@ -629,21 +629,21 @@ public class QuestionnaireMapperTest {
         }
     }
 
-    private EventSource getEventSource(String event, String source) {
-        return new EventSource(event, source, null);
+    private EventSourceDto getEventSource(String event, String source) {
+        return new EventSourceDto(event, source, null);
     }
 
-    private EventSource getEventSource(String event, String source, String description) {
-        return new EventSource(event, source, description);
+    private EventSourceDto getEventSource(String event, String source, String description) {
+        return new EventSourceDto(event, source, description);
     }
 
     @Test
     public void shouldMapToQuestionGroupFromDto() {
         when(eventSourceDao.retrieveByEventAndSource("Create", "Client")).thenReturn(asList(getEventSourceEntity("Create", "Client")));
         QuestionDto question1 = new QuestionDtoBuilder().withTitle("Ques1").withMandatory(true).withType(QuestionType.FREETEXT).withOrder(1).build();
-        ChoiceDetail choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
-        ChoiceDetail choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
-        ChoiceDetail choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
+        ChoiceDto choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
+        ChoiceDto choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
+        ChoiceDto choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
         QuestionDto question2 = new QuestionDtoBuilder().withTitle("Ques2").withType(QuestionType.SINGLE_SELECT).addChoices(choice1, choice2, choice3).withOrder(2).build();
         SectionDto section1 = new SectionDtoBuilder().withName("Sec1").withOrder(1).addQuestions(question1, question2).build();
         QuestionGroupDto questionGroupDto = new QuestionGroupDtoBuilder().withTitle("QG1").withEventSource("Create", "Client").addSections(section1).build();

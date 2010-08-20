@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
+import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
@@ -37,8 +38,11 @@ import org.mifos.test.acceptance.framework.loan.DisburseLoanConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanPage;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.EditAccountStatusConfirmationPage;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
+import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
@@ -50,13 +54,9 @@ import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSchedulePreview
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchResultsPage;
 import org.mifos.test.acceptance.framework.loan.ViewInstallmentDetailsPage;
-import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
-import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
-import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
-
-import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
 
 /**
  * Holds methods common to most loan tests.
@@ -148,19 +148,31 @@ public class LoanTestHelper {
      * @param params The status parameters.
      */
     public void changeLoanAccountStatus(String loanId, EditLoanAccountStatusParameters params) {
+        changeLoanAccountStatusProvidingQuestionGroupResponses(loanId, params, null);
+    }
+
+    public void changeLoanAccountStatusProvidingQuestionGroupResponses(String loanId, EditLoanAccountStatusParameters params, QuestionResponseParameters responseParameters) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         loanAccountPage.verifyPage();
 
         EditLoanAccountStatusPage editAccountStatusPage = loanAccountPage.navigateToEditAccountStatus();
         editAccountStatusPage.verifyPage();
 
-        EditAccountStatusConfirmationPage confirmationPage = editAccountStatusPage.submitAndNavigateToEditStatusConfirmationPage(params);
-        confirmationPage.verifyPage();
+        editAccountStatusPage.submitAndNavigateToNextPage(params);
 
-        loanAccountPage = confirmationPage.submitAndNavigateToLoanAccountPage();
+        if (responseParameters != null) {
+            populateQuestionGroupResponses(responseParameters);
+        }
+
+        loanAccountPage = new EditAccountStatusConfirmationPage(selenium).submitAndNavigateToLoanAccountPage();
         loanAccountPage.verifyPage();
     }
 
+    private void populateQuestionGroupResponses(QuestionResponseParameters responseParameters) {
+        QuestionResponsePage responsePage = new QuestionResponsePage(selenium);
+        responsePage.populateAnswers(responseParameters);
+        responsePage.navigateToNextPage();
+    }
 
 
     /**

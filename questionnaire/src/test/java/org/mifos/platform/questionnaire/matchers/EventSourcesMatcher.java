@@ -21,26 +21,26 @@ package org.mifos.platform.questionnaire.matchers;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
 @SuppressWarnings("PMD")
-public class EventSourcesMatcher extends TypeSafeMatcher<List<EventSource>> {
+public class EventSourcesMatcher extends TypeSafeMatcher<List<EventSourceDto>> {
 
-    private List<EventSource> eventSources;
+    private List<EventSourceDto> eventSourceDtos;
 
-    public EventSourcesMatcher(List<EventSource> eventSources) {
-        this.eventSources = eventSources;
+    public EventSourcesMatcher(List<EventSourceDto> eventSourceDtos) {
+        this.eventSourceDtos = eventSourceDtos;
     }
 
     @Override
-    public boolean matchesSafely(List<EventSource> eventSources) {
-        if (eventSources.size() == this.eventSources.size()) {
-            for (EventSource eventSource : this.eventSources) {
-                assertThat(eventSources, hasItem(new EventSourceMatcher(eventSource)));
+    public boolean matchesSafely(List<EventSourceDto> eventSourceDtos) {
+        if (eventSourceDtos.size() == this.eventSourceDtos.size()) {
+            for (EventSourceDto eventSourceDto : this.eventSourceDtos) {
+                assertThat(eventSourceDtos, hasItem(new EventSourceMatcher(eventSourceDto)));
             }
             return true;
         }

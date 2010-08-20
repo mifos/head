@@ -20,40 +20,40 @@
 
 package org.mifos.platform.questionnaire.builders;
 
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
 
 public class ChoiceDetailBuilder {
-    private final ChoiceDetail choiceDetail;
+    private final ChoiceDto choiceDto;
 
     public ChoiceDetailBuilder() {
-        choiceDetail = new ChoiceDetail();
+        choiceDto = new ChoiceDto();
     }
 
     public ChoiceDetailBuilder withValue(String value) {
-        choiceDetail.setValue(value);
+        choiceDto.setValue(value);
         return this;
     }
 
     public ChoiceDetailBuilder withOrder(Integer order) {
-        choiceDetail.setOrder(order);
+        choiceDto.setOrder(order);
         return this;
     }
 
     public ChoiceDetailBuilder withTags(List<String> tags) {
-        choiceDetail.setTags(tags);
+        choiceDto.setTags(tags);
         return this;
     }
 
     public ChoiceDetailBuilder addTags(String... tags) {
-        choiceDetail.getTags().addAll(asList(tags));
+        choiceDto.getTags().addAll(asList(tags));
         return this;
     }
 
-    public ChoiceDetail build() {
-        return choiceDetail;
+    public ChoiceDto build() {
+        return choiceDto;
     }
 }

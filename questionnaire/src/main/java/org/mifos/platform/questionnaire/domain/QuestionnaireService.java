@@ -21,7 +21,7 @@
 package org.mifos.platform.questionnaire.domain;
 
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
@@ -47,15 +47,15 @@ public interface QuestionnaireService {
 
     QuestionDetail getQuestion(int questionId) throws SystemException;
 
-    List<EventSource> getAllEventSources();
+    List<EventSourceDto> getAllEventSources();
 
-    List<QuestionGroupDetail> getQuestionGroups(EventSource eventSource) throws SystemException;
+    List<QuestionGroupDetail> getQuestionGroups(EventSourceDto eventSourceDto) throws SystemException;
 
     void saveResponses(QuestionGroupDetails questionGroupDetails);
 
     void validateResponses(List<QuestionGroupDetail> questionGroupDetails);
 
-    List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSource eventSource, Boolean includeUnansweredQuestionGroups, boolean fetchLastVersion);
+    List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSourceDto eventSourceDto, Boolean includeUnansweredQuestionGroups, boolean fetchLastVersion);
 
     QuestionGroupInstanceDetail getQuestionGroupInstance(int questionGroupInstanceId);
 

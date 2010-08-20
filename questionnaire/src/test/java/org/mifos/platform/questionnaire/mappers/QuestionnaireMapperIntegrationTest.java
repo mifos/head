@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +60,9 @@ public class QuestionnaireMapperIntegrationTest {
     }
 
     private void testMapEventSource(String event, String source, String description) {
-        EventSource eventSource = new EventSource(event, source, description);
+        EventSourceDto eventSourceDto = new EventSourceDto(event, source, description);
         List<SectionDetail> sectionDetails = getSectionDefinitions();
-        QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(new QuestionGroupDetail(0, "Title", eventSource, sectionDetails, false));
+        QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(new QuestionGroupDetail(0, "Title", eventSourceDto, sectionDetails, false));
         Set<EventSourceEntity> eventSources = questionGroup.getEventSources();
         assertThat(eventSources, is(not(nullValue())));
         assertThat(eventSources.size(), is(1));

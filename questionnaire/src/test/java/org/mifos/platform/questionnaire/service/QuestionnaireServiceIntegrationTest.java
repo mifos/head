@@ -49,6 +49,8 @@ import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
@@ -278,10 +280,10 @@ public class QuestionnaireServiceIntegrationTest {
         List<SectionDetail> sectionDetailList = retrievedQuestionGroupDetail.getSectionDetails();
         assertThat(sectionDetailList.get(0).getName(), is("S1"));
         assertThat(sectionDetailList.get(1).getName(), is("S2"));
-        EventSource eventSource = retrievedQuestionGroupDetail.getEventSource();
-        assertThat(eventSource, is(notNullValue()));
-        assertThat(eventSource.getEvent(), is("Create"));
-        assertThat(eventSource.getSource(), is("Client"));
+        EventSourceDto eventSourceDto = retrievedQuestionGroupDetail.getEventSource();
+        assertThat(eventSourceDto, is(notNullValue()));
+        assertThat(eventSourceDto.getEvent(), is("Create"));
+        assertThat(eventSourceDto.getSource(), is("Client"));
     }
 
     @Test
@@ -410,15 +412,15 @@ public class QuestionnaireServiceIntegrationTest {
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldRetrieveAllEventSources() {
-        List<EventSource> eventSources = questionnaireService.getAllEventSources();
-        assertNotNull(eventSources);
-        assertThat(eventSources, new EventSourcesMatcher(
-                asList(new EventSource("Create", "Client", "Create Client"),
-                        new EventSource("View", "Client", "View Client"),
-                        new EventSource("Create", "Group", "Create Group"),
-                        new EventSource("Approve", "Loan", "Approve Loan"),
-                        new EventSource("Close", "Client", "Close Client"),
-                        new EventSource("Create", "Loan", "Create Loan"))));
+        List<EventSourceDto> eventSourceDtos = questionnaireService.getAllEventSources();
+        assertNotNull(eventSourceDtos);
+        assertThat(eventSourceDtos, new EventSourcesMatcher(
+                asList(new EventSourceDto("Create", "Client", "Create Client"),
+                        new EventSourceDto("View", "Client", "View Client"),
+                        new EventSourceDto("Create", "Group", "Create Group"),
+                        new EventSourceDto("Approve", "Loan", "Approve Loan"),
+                        new EventSourceDto("Close", "Client", "Close Client"),
+                        new EventSourceDto("Create", "Loan", "Create Loan"))));
     }
 
     @Test
@@ -427,7 +429,7 @@ public class QuestionnaireServiceIntegrationTest {
         String title = "QG1" + currentTimeMillis();
         List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
         QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details, false);
-        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
+        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSourceDto("Create", "Client", "Create.Client"));
         assertThat(questionGroups, is(notNullValue()));
         QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
         assertThat(actualQGDetail, is(notNullValue()));
@@ -469,7 +471,7 @@ public class QuestionnaireServiceIntegrationTest {
         List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
         QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details, true);
         setState(expectedQGDetail.getId(), QuestionGroupState.INACTIVE);
-        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSource("Create", "Client", "Create.Client"));
+        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSourceDto("Create", "Client", "Create.Client"));
         assertThat(questionGroups, is(notNullValue()));
         QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
         assertThat(actualQGDetail, is(Matchers.nullValue()));
@@ -508,9 +510,9 @@ public class QuestionnaireServiceIntegrationTest {
         String qgTitle = "QG1" + currentTimeMillis();
         createSingleSelectQuestion(ques2Title);
         QuestionDto question1 = new QuestionDtoBuilder().withTitle(ques1Title).withMandatory(true).withType(QuestionType.FREETEXT).withOrder(1).build();
-        ChoiceDetail choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
-        ChoiceDetail choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
-        ChoiceDetail choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
+        ChoiceDto choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
+        ChoiceDto choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
+        ChoiceDto choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
         QuestionDto question2 = new QuestionDtoBuilder().withTitle(ques2Title).withType(QuestionType.SINGLE_SELECT).addChoices(choice1, choice2, choice3).withOrder(2).build();
         SectionDto section1 = new SectionDtoBuilder().withName("Sec1").withOrder(1).addQuestions(question1, question2).build();
         QuestionGroupDto questionGroupDto = new QuestionGroupDtoBuilder().withTitle(qgTitle).withEventSource("Create", "Client").addSections(section1).build();
@@ -617,21 +619,21 @@ public class QuestionnaireServiceIntegrationTest {
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType type, List<String> choices) throws SystemException {
         QuestionDetail questionDetail = new QuestionDetail(questionTitle, type);
-        List<ChoiceDetail> choiceDetails = getChoiceDetails(choices);
-        questionDetail.setAnswerChoices(choiceDetails);
+        List<ChoiceDto> choiceDtos = getChoiceDetails(choices);
+        questionDetail.setAnswerChoices(choiceDtos);
         return questionnaireService.defineQuestion(questionDetail);
     }
 
-    private List<ChoiceDetail> getChoiceDetails(List<String> choices) {
-        List<ChoiceDetail> choiceDetails = new ArrayList<ChoiceDetail>();
+    private List<ChoiceDto> getChoiceDetails(List<String> choices) {
+        List<ChoiceDto> choiceDtos = new ArrayList<ChoiceDto>();
         for (String choice : choices) {
-            choiceDetails.add(new ChoiceDetail(choice));
+            choiceDtos.add(new ChoiceDto(choice));
         }
-        return choiceDetails;
+        return choiceDtos;
     }
 
     private QuestionGroupDetail defineQuestionGroup(String title, String event, String source, List<SectionDetail> sectionDetails, boolean editable) throws SystemException {
-        return questionnaireService.defineQuestionGroup(new QuestionGroupDetail(0, title, new EventSource(event, source, null), sectionDetails, editable));
+        return questionnaireService.defineQuestionGroup(new QuestionGroupDetail(0, title, new EventSourceDto(event, source, null), sectionDetails, editable));
     }
 
     private SectionDetail getSection(String name) throws SystemException {

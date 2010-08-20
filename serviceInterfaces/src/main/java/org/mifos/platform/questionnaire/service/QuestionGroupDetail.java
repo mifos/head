@@ -20,6 +20,8 @@
 
 package org.mifos.platform.questionnaire.service;
 
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,7 @@ public class QuestionGroupDetail implements Serializable {
     private String title;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_BAD_FIELD")
     private List<SectionDetail> sectionDetails;
-    private EventSource eventSource;
+    private EventSourceDto eventSourceDto;
     private boolean editable;
     private boolean active;
 
@@ -43,15 +45,15 @@ public class QuestionGroupDetail implements Serializable {
         this(id, title, null, sectionDetails, false);
     }
 
-    public QuestionGroupDetail(int id, String title, EventSource eventSource, List<SectionDetail> sectionDetails, boolean editable) {
-        this(id, title, eventSource, sectionDetails, editable, false);
+    public QuestionGroupDetail(int id, String title, EventSourceDto eventSourceDto, List<SectionDetail> sectionDetails, boolean editable) {
+        this(id, title, eventSourceDto, sectionDetails, editable, false);
     }
 
-    public QuestionGroupDetail(int id, String title, EventSource eventSource, List<SectionDetail> sectionDetails, boolean editable, boolean active) {
+    public QuestionGroupDetail(int id, String title, EventSourceDto eventSourceDto, List<SectionDetail> sectionDetails, boolean editable, boolean active) {
         this.id = id;
         this.title = title;
         this.sectionDetails = sectionDetails;
-        this.eventSource = eventSource;
+        this.eventSourceDto = eventSourceDto;
         this.editable = editable;
         this.active = active;
     }
@@ -68,8 +70,8 @@ public class QuestionGroupDetail implements Serializable {
         return sectionDetails;
     }
 
-    public EventSource getEventSource() {
-        return eventSource;
+    public EventSourceDto getEventSource() {
+        return eventSourceDto;
     }
 
     public void setId(Integer id) {
@@ -84,8 +86,8 @@ public class QuestionGroupDetail implements Serializable {
         this.sectionDetails = sectionDetails;
     }
 
-    public void setEventSource(EventSource eventSource) {
-        this.eventSource = eventSource;
+    public void setEventSource(EventSourceDto eventSourceDto) {
+        this.eventSourceDto = eventSourceDto;
     }
 
     public SectionDetail getSectionDetail(int i) {

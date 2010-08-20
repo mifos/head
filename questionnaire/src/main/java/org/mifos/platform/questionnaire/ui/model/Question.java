@@ -21,7 +21,7 @@
 package org.mifos.platform.questionnaire.ui.model;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.util.CollectionUtils;
@@ -107,7 +107,7 @@ public class Question implements Serializable {
         initializeSmartChoiceTags();
     }
 
-    public List<ChoiceDetail> getChoices() {
+    public List<ChoiceDto> getChoices() {
         return this.questionDetail.getAnswerChoices();
     }
 
@@ -124,7 +124,7 @@ public class Question implements Serializable {
     }
 
     public void addAnswerChoice() {
-        questionDetail.addAnswerChoice(new ChoiceDetail(getCurrentChoice()));
+        questionDetail.addAnswerChoice(new ChoiceDto(getCurrentChoice()));
         setCurrentChoice(null);
         currentSmartChoiceTags.add(EMPTY);
     }
@@ -142,7 +142,7 @@ public class Question implements Serializable {
     }
 
     public void addAnswerSmartChoice() {
-        questionDetail.addAnswerChoice(new ChoiceDetail(getCurrentSmartChoice()));
+        questionDetail.addAnswerChoice(new ChoiceDto(getCurrentSmartChoice()));
         currentSmartChoiceTags.add(EMPTY);
         setCurrentSmartChoice(null);
     }
@@ -232,13 +232,13 @@ public class Question implements Serializable {
     }
 
     private void resetChoices() {
-        questionDetail.setAnswerChoices(new ArrayList<ChoiceDetail>());
+        questionDetail.setAnswerChoices(new ArrayList<ChoiceDto>());
     }
 
     private void initializeSmartChoiceTags() {
-        List<ChoiceDetail> choices = getChoices();
+        List<ChoiceDto> choices = getChoices();
         if (isEmpty(choices)) {
-            choices = new ArrayList<ChoiceDetail>();
+            choices = new ArrayList<ChoiceDto>();
         }
         this.currentSmartChoiceTags = new ArrayList<String>();
         this.initialNumberOfChoices = choices.size();

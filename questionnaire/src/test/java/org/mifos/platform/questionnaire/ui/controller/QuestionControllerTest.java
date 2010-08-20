@@ -27,7 +27,7 @@ import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.matchers.MessageMatcher;
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -199,7 +199,7 @@ public class QuestionControllerTest {
         QuestionDetail questionDetail = new QuestionDetail();
         questionDetail.setTitle(TITLE);
         questionDetail.setType(QuestionType.SINGLE_SELECT);
-        questionDetail.setAnswerChoices(new ArrayList<ChoiceDetail>(Arrays.asList(new ChoiceDetail("choice1"), new ChoiceDetail("choice2"))));
+        questionDetail.setAnswerChoices(new ArrayList<ChoiceDto>(Arrays.asList(new ChoiceDto("choice1"), new ChoiceDto("choice2"))));
         currentQuestion.setQuestionDetail(questionDetail);
         currentQuestion.setCurrentChoice("choice3");
         currentQuestion.addAnswerChoice();

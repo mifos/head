@@ -18,14 +18,10 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.exceptions;
+package org.mifos.platform.questionnaire.service.dtos;
 
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.MANDATORY_QUESTION_HAS_NO_ANSWER;
+import org.mifos.platform.questionnaire.service.validators.QuestionGroupDtoValidator;
 
-public class MandatoryAnswerNotFoundException extends ValidationException {
-    private static final long serialVersionUID = -8598139621543208626L;
-
-    public MandatoryAnswerNotFoundException(String questionTitle) {
-        super(MANDATORY_QUESTION_HAS_NO_ANSWER, questionTitle);
-    }
+public interface ValidatableDto {
+    void accept(QuestionGroupDtoValidator questionGroupDtoValidator);
 }

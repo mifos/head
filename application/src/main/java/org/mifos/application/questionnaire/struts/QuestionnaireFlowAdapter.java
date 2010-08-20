@@ -41,20 +41,22 @@ public class QuestionnaireFlowAdapter {
     public ActionForward fetchAppliedQuestions(
             ActionMapping mapping, QuestionResponseCapturer form,
             HttpServletRequest request, ActionForwards defaultForward) {
-        List<QuestionGroupDetail> questionGroups = getQuestionGroups(request);
-        if ((questionGroups == null) || (questionGroups.isEmpty()))  {
-            //NOTE: this is done, because the ActionForm is stored in session and when recycled still has the previous questionGroup lists!
-            form.setQuestionGroups(null);
-            return mapping.findForward(defaultForward.toString());
+        if (CollectionUtils.isEmpty(form.getQuestionGroups())) {
+            List<QuestionGroupDetail> questionGroups = getQuestionGroups(request);
+            if (CollectionUtils.isEmpty(questionGroups)) {
+                //NOTE: this is done, because the ActionForm is stored in session and when recycled still has the previous questionGroup lists!
+                form.setQuestionGroups(null);
+                return mapping.findForward(defaultForward.toString());
+            }
+            /**
+             * TODO if user goes back before "joinFlowAt" and continues, then Question group capture form will be reinitialized!
+             * We can use the flowkey to check need for reset. consider modifying QuestionResponseCapturerForm set flowkey and
+             * then compare the request attribute's flowkey to check! Unfortunately, usage of flowkey may not be consistent!
+             * Another situation, although very unlikely, is admin associates another question group with event and source in the meantime!
+             * In that case, the questionGroups need to be merged!
+             */
+            form.setQuestionGroups(questionGroups);
         }
-        /**
-         * TODO if user goes back before "joinFlowAt" and continues, then Question group capture form will be reinitialized!
-         * We can use the flowkey to check need for reset. consider modifying QuestionResponseCapturerForm set flowkey and
-         * then compare the request attribute's flowkey to check! Unfortunately, usage of flowkey may not be consistent!
-         * Another situation, although very unlikely, is admin associates another question group with event and source in the meantime!
-         * In that case, the questionGroups need to be merged!
-         */
-        form.setQuestionGroups(questionGroups);
         setQuestionnaireAttributesToRequest(request, form);
         return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
     }

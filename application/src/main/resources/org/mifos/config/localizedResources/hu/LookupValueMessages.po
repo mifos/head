@@ -1467,8 +1467,8 @@ msgstr "Mentés későbbi időpontra státuszú új csoport létrehozására jog
 msgid "Can create new group in submit for approval state"
 msgstr "Elküldés jóváhagyásra státuszú új csoport létrehozására jogosult"
 
-#: Permissions-Groups-CanEditCenterClientship
-msgid "Can edit Center Clientship"
+#: Permissions-Groups-CanEditCenterMembership
+msgid "Can edit Center Membership"
 msgstr "Központ tagság szerkesztésére jogosult"
 
 #: Permissions-Groups-CanEditFeeAmountAttachedToTheAccount

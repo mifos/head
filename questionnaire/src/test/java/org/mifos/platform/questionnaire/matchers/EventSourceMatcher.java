@@ -22,25 +22,26 @@ package org.mifos.platform.questionnaire.matchers;
 import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
-import org.mifos.platform.questionnaire.service.EventSource;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
+
 @SuppressWarnings("PMD")
-public class EventSourceMatcher extends TypeSafeMatcher<EventSource> {
+public class EventSourceMatcher extends TypeSafeMatcher<EventSourceDto> {
 
-    private EventSource eventSource;
+    private EventSourceDto eventSourceDto;
 
-    public EventSourceMatcher(EventSource eventSource) {
-        this.eventSource = eventSource;
+    public EventSourceMatcher(EventSourceDto eventSourceDto) {
+        this.eventSourceDto = eventSourceDto;
     }
 
     public EventSourceMatcher(String event, String source, String desc) {
-        this.eventSource = new EventSource(event, source, desc);
+        this.eventSourceDto = new EventSourceDto(event, source, desc);
     }
 
     @Override
-    public boolean matchesSafely(EventSource eventSource) {
-        return StringUtils.endsWithIgnoreCase(this.eventSource.getDescription(), eventSource.getDescription()) &&
-                StringUtils.endsWithIgnoreCase(this.eventSource.getSource(), eventSource.getSource()) &&
-                StringUtils.endsWithIgnoreCase(this.eventSource.getEvent(), eventSource.getEvent());
+    public boolean matchesSafely(EventSourceDto eventSourceDto) {
+        return StringUtils.endsWithIgnoreCase(this.eventSourceDto.getDescription(), eventSourceDto.getDescription()) &&
+                StringUtils.endsWithIgnoreCase(this.eventSourceDto.getSource(), eventSourceDto.getSource()) &&
+                StringUtils.endsWithIgnoreCase(this.eventSourceDto.getEvent(), eventSourceDto.getEvent());
     }
 
     @Override

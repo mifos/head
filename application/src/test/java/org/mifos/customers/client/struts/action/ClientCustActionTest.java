@@ -28,7 +28,7 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
-import org.mifos.platform.questionnaire.service.ChoiceDetail;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
@@ -114,11 +114,11 @@ public class ClientCustActionTest {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
         QuestionDetail questionDetail = new QuestionDetail(111, title, title, QuestionType.SINGLE_SELECT, true);
-        List<ChoiceDetail> choiceDetails = new ArrayList<ChoiceDetail>();
+        List<ChoiceDto> choiceDtos = new ArrayList<ChoiceDto>();
         for (String answerChoice : answerChoices) {
-            choiceDetails.add(new ChoiceDetail(answerChoice));
+            choiceDtos.add(new ChoiceDto(answerChoice));
         }
-        questionDetail.setAnswerChoices(choiceDetails);
+        questionDetail.setAnswerChoices(choiceDtos);
         sectionDetail.setQuestionDetails(asList(new SectionQuestionDetail(questionDetail, true)));
         return sectionDetail;
     }

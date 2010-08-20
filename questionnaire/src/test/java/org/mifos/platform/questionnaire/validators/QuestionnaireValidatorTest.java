@@ -30,12 +30,12 @@ import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
-import org.mifos.platform.questionnaire.service.EventSource;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -51,10 +51,8 @@ import static org.mifos.platform.questionnaire.QuestionnaireConstants.DUPLICATE_
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.GENERIC_VALIDATION;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.INVALID_EVENT_SOURCE;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.INVALID_NUMERIC_BOUNDS;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.MANDATORY_QUESTION_HAS_NO_ANSWER;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.NO_ANSWERS_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.NO_QUESTIONS_FOUND_IN_SECTION;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.NUMERIC_QUESTION_HAS_BAD_ANSWER;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_SECTION_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
@@ -280,7 +278,6 @@ public class QuestionnaireValidatorTest {
             assertEquals(true, e.containsChildExceptions());
             assertEquals(1, e.getChildExceptions().size());
             ValidationException childException = e.getChildExceptions().get(0);
-            assertEquals(MANDATORY_QUESTION_HAS_NO_ANSWER, childException.getKey());
             assertTrue(childException instanceof MandatoryAnswerNotFoundException);
             assertEquals("Q1", childException.getQuestionTitle());
         }
@@ -300,7 +297,6 @@ public class QuestionnaireValidatorTest {
             assertEquals(true, e.containsChildExceptions());
             assertEquals(1, e.getChildExceptions().size());
             ValidationException childException = e.getChildExceptions().get(0);
-            assertEquals(NUMERIC_QUESTION_HAS_BAD_ANSWER, childException.getKey());
             assertTrue(childException instanceof BadNumericResponseException);
             assertEquals("Numeric Question", childException.getQuestionTitle());
             assertEquals(Integer.valueOf(10), ((BadNumericResponseException)childException).getAllowedMinValue());
@@ -322,7 +318,6 @@ public class QuestionnaireValidatorTest {
             assertEquals(true, e.containsChildExceptions());
             assertEquals(1, e.getChildExceptions().size());
             ValidationException childException = e.getChildExceptions().get(0);
-            assertEquals(NUMERIC_QUESTION_HAS_BAD_ANSWER, childException.getKey());
             assertTrue(childException instanceof BadNumericResponseException);
             assertEquals("Numeric Question", childException.getQuestionTitle());
             assertEquals(Integer.valueOf(10), ((BadNumericResponseException)childException).getAllowedMinValue());
@@ -344,7 +339,6 @@ public class QuestionnaireValidatorTest {
             assertEquals(true, e.containsChildExceptions());
             assertEquals(1, e.getChildExceptions().size());
             ValidationException childException = e.getChildExceptions().get(0);
-            assertEquals(NUMERIC_QUESTION_HAS_BAD_ANSWER, childException.getKey());
             assertTrue(childException instanceof BadNumericResponseException);
             assertEquals("Numeric Question", childException.getQuestionTitle());
             assertNull(((BadNumericResponseException)childException).getAllowedMinValue());
@@ -405,8 +399,8 @@ public class QuestionnaireValidatorTest {
         return section;
     }
 
-    private EventSource getEventSource(String event, String source) {
-        return new EventSource(event, source, null);
+    private EventSourceDto getEventSource(String event, String source) {
+        return new EventSourceDto(event, source, null);
     }
 
 }
