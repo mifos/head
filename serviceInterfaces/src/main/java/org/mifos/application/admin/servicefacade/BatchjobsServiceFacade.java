@@ -27,9 +27,9 @@ import javax.servlet.ServletContext;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
+@SuppressWarnings("PMD")
 public interface BatchjobsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
-    List<BatchjobsDto> getBatchjobs(ServletContext context);
-
+    List<BatchjobsDto> getBatchjobs(ServletContext context) throws Exception;
 }

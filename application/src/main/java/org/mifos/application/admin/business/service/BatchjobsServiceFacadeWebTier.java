@@ -28,16 +28,17 @@ import javax.servlet.ServletContext;
 import org.mifos.application.admin.servicefacade.BatchjobsDto;
 import org.mifos.application.admin.servicefacade.BatchjobsServiceFacade;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
-import org.mifos.framework.components.batchjobs.MifosTask;
+import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 
 public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
 
     @Override
-    public List<BatchjobsDto> getBatchjobs(ServletContext context) {
+    public List<BatchjobsDto> getBatchjobs(ServletContext context) throws TaskSystemException {
         List<BatchjobsDto> batchjobs = new ArrayList<BatchjobsDto>();
         MifosScheduler mifosScheduler = (MifosScheduler) context.getAttribute(MifosScheduler.class.getName());
-        for (MifosTask mifosTask : mifosScheduler.getTasks()) {
-            batchjobs.add(new BatchjobsDto(mifosTask.name));
+        for (String mifosTaskName : mifosScheduler.getTaskNames()) {
+            BatchjobsDto batchjobsDto = new BatchjobsDto(mifosTaskName);
+            batchjobs.add(batchjobsDto);
         }
         return batchjobs;
     }

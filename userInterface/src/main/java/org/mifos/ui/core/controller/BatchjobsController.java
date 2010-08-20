@@ -60,7 +60,12 @@ public class BatchjobsController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView loadBatchjobsInfo(HttpServletRequest request) {
         ServletContext context = request.getSession().getServletContext();
-        List<BatchjobsDto> batchjobs = batchjobsServiceFacade.getBatchjobs(context);
+        List<BatchjobsDto> batchjobs = null;
+        try {
+            batchjobs = batchjobsServiceFacade.getBatchjobs(context);
+        } catch(Exception tse) {
+            new ArrayList<BatchjobsDto>();
+        }
 
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("request", request);
