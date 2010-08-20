@@ -22,6 +22,7 @@ package org.mifos.platform.questionnaire.domain;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -118,4 +119,15 @@ public class QuestionGroup implements Serializable {
     public void setPpi(boolean ppi) {
         this.ppi = ppi;
     }
+
+    public List<SectionQuestion> getAllSectionQuestions() {
+        List<SectionQuestion> sectionQuestions = new ArrayList<SectionQuestion>();
+        for (Section section : sections) {
+            for (SectionQuestion sectionQuestion : section.getQuestions()) {
+                sectionQuestions.add(sectionQuestion);
+            }
+        }
+        return sectionQuestions;
+    }
+
 }

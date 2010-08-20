@@ -107,6 +107,19 @@ public class UploadQuestionGroupControllerTest {
     }
 
     @Test
+    public void testUploadQuestionGroup_UploadFailureDueToGenericError() {
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String exceptionCode = "Random Exception";
+        doThrow(new RuntimeException(exceptionCode)).when(questionnaireServiceFacade).uploadPPIQuestionGroup("INDIA");
+        UploadQuestionGroupForm form = new UploadQuestionGroupForm();
+        form.setSelectedCountry("INDIA");
+        String result = controller.upload(form, requestContext);
+        assertThat(result, is("failure"));
+        verify(requestContext).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher(exceptionCode)));
+    }
+
+    @Test
     public void testUploadQuestionGroup_UploadFailureDuringValidation() {
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         ValidationException validationException = new ValidationException(GENERIC_VALIDATION);

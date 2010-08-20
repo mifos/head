@@ -119,9 +119,21 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         } else {
             if (!sectionsHaveInvalidNames(sections, parentException) && !sectionsHaveInvalidOrders(sections, parentException)) {
                 for (SectionDto section : sections) {
-                    validateQuestions(section.getQuestions(), parentException);
+                    validateSection(section, parentException);
                 }
             }
+        }
+    }
+
+    private void validateSection(SectionDto section, ValidationException parentException) {
+        validateSectionName(section, parentException);
+        validateQuestions(section.getQuestions(), parentException);
+    }
+
+    private void validateSectionName(SectionDto section, ValidationException parentException) {
+        String name = section.getName().trim();
+        if (name.length() >= MAX_LENGTH_FOR_TITILE) {
+            parentException.addChildException(new ValidationException(SECTION_NAME_TOO_BIG));
         }
     }
 
@@ -138,8 +150,10 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     private void validateQuestion(QuestionDto question, ValidationException parentException) {
-        if (questionHasDuplicateTitle(question)) {
-            parentException.addChildException(new ValidationException(QUESTION_TITILE_DUPLICATE));
+        if (question.getTitle().length() >= MAX_LENGTH_FOR_TITILE) {
+            parentException.addChildException(new ValidationException(QUESTION_TITLE_TOO_BIG));
+        } else if (questionHasDuplicateTitle(question)) {
+            parentException.addChildException(new ValidationException(QUESTION_TITILE_MATCHES_EXISTING_QUESTION));
         } else {
             if (QuestionType.INVALID == question.getType()) {
                 parentException.addChildException(new ValidationException(QUESTION_TYPE_NOT_PROVIDED));
@@ -240,10 +254,13 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     private boolean haveIncompatibleChoices(QuestionDto question, QuestionEntity questionEntity) {
         List<ChoiceDetail> choiceDetails = question.getChoices();
         List<QuestionChoiceEntity> choiceEntities = questionEntity.getChoices();
-        boolean result = choiceDetails.size() != choiceEntities.size();
-        for (int i = 0, choiceDetailsSize = choiceDetails.size(); i < choiceDetailsSize && !result; i++) {
-            String choiceValue = choiceDetails.get(i).getValue();
-            result = isUniqueChoice(choiceEntities, choiceValue);
+        boolean result = false;
+        if (choiceDetails != null && choiceEntities != null) {
+            result = choiceDetails.size() != choiceEntities.size();
+            for (int i = 0, choiceDetailsSize = choiceDetails.size(); i < choiceDetailsSize && !result; i++) {
+                String choiceValue = choiceDetails.get(i).getValue();
+                result = isUniqueChoice(choiceEntities, choiceValue);
+            }
         }
         return result;
     }
@@ -304,7 +321,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
             parentException.addChildException(new ValidationException(QUESTION_TITLE_NOT_PROVIDED));
             invalid = true;
         } else if(!allQuestionsHaveUniqueNames(questions)) {
-            parentException.addChildException(new ValidationException(QUESTION_TITILE_DUPLICATE));
+            parentException.addChildException(new ValidationException(QUESTION_TITLE_DUPLICATE));
             invalid = true;
         }
         return invalid;
@@ -458,7 +475,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
             parentException.addChildException(new ValidationException(QUESTION_GROUP_TITLE_NOT_PROVIDED));
         } else {
             title = title.trim();
-            if (title.length() >= QUESTION_GROUP_TITLE_MAX_LENGTH) {
+            if (title.length() >= MAX_LENGTH_FOR_TITILE) {
                 parentException.addChildException(new ValidationException(QUESTION_GROUP_TITLE_TOO_BIG));
             } else if (isDuplicateQuestionGroupTitle(title)) {
                 parentException.addChildException(new ValidationException(QUESTION_GROUP_TITLE_DUPLICATE));
