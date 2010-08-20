@@ -23,6 +23,7 @@ package org.mifos.framework.components.batchjobs;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.EasyMock.expectLastCall;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class MifosSchedulerTest {
     @Test
     public void testRegisterTasks() throws Exception {
 
-        MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/config/resources/task.xml");
+        MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/config/resources/task.xml", "org/mifos/config/resources/quartz.properties");
 
         mifosScheduler.initializeBatchJobs();
         List<String> taskNames = mifosScheduler.getTaskNames();
@@ -59,17 +60,21 @@ public class MifosSchedulerTest {
 
     @Test
     public void testCallsConfigurationLocator() throws Exception {
-        MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/mockTask.xml");
+        MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/mockTask.xml", "org/mifos/framework/components/batchjobs/mockQuartz.properties");
+        mifosScheduler.reInitialize();
         mifosScheduler.initializeBatchJobs();
         List<String> taskNames = mifosScheduler.getTaskNames();
         Assert.assertEquals(1, taskNames.size());
         Assert.assertTrue(taskNames.contains("MockTask"));
     }
 
-    private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws TaskSystemException, IOException, FileNotFoundException {
+    private MifosScheduler getMifosScheduler(String taskConfigurationPath, String schedulerConfigurationPath) throws TaskSystemException, IOException, FileNotFoundException {
         ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
         expect(mockConfigurationLocator.getFile(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
                 new ClassPathResource(taskConfigurationPath).getFile());
+        expectLastCall().times(2);
+        expect(mockConfigurationLocator.getFile(SchedulerConstants.SCHEDULER_CONFIGURATION_FILE_NAME)).andReturn(
+                new ClassPathResource(schedulerConfigurationPath).getFile());
         replay(mockConfigurationLocator);
         MifosScheduler mifosScheduler = new MifosScheduler();
         mifosScheduler.setConfigurationLocator(mockConfigurationLocator);

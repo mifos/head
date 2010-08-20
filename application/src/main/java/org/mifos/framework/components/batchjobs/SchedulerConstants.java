@@ -49,7 +49,7 @@ public interface SchedulerConstants {
     String FINISHED_SUCCESSFULLY = "Finished Successfully";
     String FAILURE = "Failure";
 
-    String GLOBAL_JOB_LISTENER_NAME = "MifosGlobalBatchJobListener";
-    String GLOBAL_TRIGGER_LISTENER_NAME = "MifosGlobalTriggerListener";
+    String GLOBAL_JOB_LISTENER_NAME = "GlobalBatchJobListener";
+    String GLOBAL_TRIGGER_LISTENER_NAME = "GlobalTriggerListener";
 
 }

@@ -74,6 +74,17 @@ public class MifosScheduler {
         }
     }
 
+    public void reInitialize() throws TaskSystemException {
+        StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
+        try {
+            String configPath = getQuartzSchedulerConfigurationFilePath();
+            schedulerFactory.initialize(configPath);
+            scheduler = schedulerFactory.getScheduler();
+        } catch (Exception e) {
+            throw new TaskSystemException(e);
+        }
+    }
+
     /**
      * Method schedules specified batch job to run accordingly to given cron expression, with given priority.
      * Since quartz scheduler used in mifos is configured to use a single working thread, it's ensured that
@@ -132,7 +143,7 @@ public class MifosScheduler {
         jobDetail.setName(jobName);
         jobDetail.setGroup(Scheduler.DEFAULT_GROUP);
         try {
-            jobDetail.setJobClass(Class.forName(BATCH_JOB_CLASS_PATH_PREFIX + jobName).getClass());
+            jobDetail.setJobClass(Class.forName(BATCH_JOB_CLASS_PATH_PREFIX + jobName));
         } catch (ClassNotFoundException cnfe) {
             throw new TaskSystemException(cnfe);
         }
@@ -463,7 +474,7 @@ public class MifosScheduler {
 
     private String getQuartzSchedulerConfigurationFilePath() throws FileNotFoundException, IOException {
         File configurationFile = getConfigurationLocator().getFile(SchedulerConstants.SCHEDULER_CONFIGURATION_FILE_NAME);
-        logger.info("Reading task configuration from: " + configurationFile.getAbsolutePath());
+        logger.info("Reading scheduler configuration from: " + configurationFile.getAbsolutePath());
         return configurationFile.getAbsolutePath();
     }
 

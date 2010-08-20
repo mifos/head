@@ -43,7 +43,7 @@ public class BatchJobController extends AbstractController {
 
     @Override
     @RequestMapping("/runBatchJobs.ftl")
-    protected ModelAndView handleRequestInternal(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+    protected ModelAndView handleRequestInternal(final HttpServletRequest request, final HttpServletResponse response) throws MifosException {
         ModelAndView returnValue = new ModelAndView("pageNotFound");
         if (TestMode.MAIN == getTestingService().getTestMode()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -60,11 +60,7 @@ public class BatchJobController extends AbstractController {
                 String rawJobList[] = request.getParameterValues("job");
                 if (null != rawJobList) {
                     for (String job : rawJobList) {
-                        try {
-                            getTestingService().runIndividualBatchJob(job, request.getSession().getServletContext());
-                        } catch(MifosException me) {
-                            throw new Exception("Error while handling batch job run request.", me);
-                        }
+                        getTestingService().runIndividualBatchJob(job, request.getSession().getServletContext());
                         jobsRan.add(job);
                     }
                 }

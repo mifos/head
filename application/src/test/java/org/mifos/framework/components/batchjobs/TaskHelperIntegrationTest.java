@@ -20,25 +20,10 @@
 
 package org.mifos.framework.components.batchjobs;
 
-import java.sql.Timestamp;
-import java.util.Date;
-
-import junit.framework.Assert;
-
-import org.hibernate.Query;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.components.batchjobs.business.Task;
-import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
-import org.mifos.framework.components.batchjobs.helpers.SavingsIntCalcTask;
-import org.mifos.framework.components.batchjobs.helpers.SavingsIntPostingTask;
-import org.mifos.framework.components.batchjobs.helpers.TaskStatus;
-import org.mifos.framework.components.batchjobs.persistence.TaskPersistence;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TaskHelperIntegrationTest extends MifosIntegrationTestCase {
 
@@ -52,94 +37,18 @@ public class TaskHelperIntegrationTest extends MifosIntegrationTestCase {
 
     @After
     public void tearDown() throws Exception {
-        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
-        for (Object task : query.list()) {
-            TestObjectFactory.removeObject((Task) task);
-        }
     }
 
-    @SuppressWarnings("deprecation")
     @Test
-    public void testIncompleteTaskHandling() throws PersistenceException, TaskSystemException {
-        MifosScheduler mifosScheduler = new MifosScheduler();
-
-        Task task1 = new Task();
-        task1.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
-        task1.setStartTime(new Timestamp(System.currentTimeMillis() - 86500000)); // over a day ago
-        task1.setEndTime(new Timestamp(System.currentTimeMillis() - 86500000));
-        task1.setStatus(TaskStatus.COMPLETE.getValue());
-        task1.setTask(SavingsIntPostingTask.class.getSimpleName());
-        TaskPersistence p = new TaskPersistence();
-        p.saveAndCommitTask(task1);
-
-        Task task2 = new Task();
-        task2.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
-        task2.setStartTime(new Timestamp(System.currentTimeMillis() - 175000000)); // over two days ago
-        task2.setEndTime(new Timestamp(System.currentTimeMillis() - 175000000));
-        task2.setStatus(TaskStatus.COMPLETE.getValue());
-        task2.setTask(SavingsIntCalcTask.class.getSimpleName());
-        p = new TaskPersistence();
-        p.saveAndCommitTask(task2);
-
-        StaticHibernateUtil.closeSession();
-
-        // TODO: Rework to use new schedule method:
-        //SavingsIntPostingTask savingsIntPostingTask = new SavingsIntPostingTask();
-        //savingsIntPostingTask.name = SavingsIntPostingTask.class.getSimpleName();
-        mifosScheduler.schedule(SavingsIntPostingTask.class.getSimpleName(), new Date(System.currentTimeMillis() + 3600000), 86400000);
-
-        //SavingsIntCalcTask savingsIntCalcTask = new SavingsIntCalcTask();
-        //savingsIntCalcTask.name = SavingsIntCalcTask.class.getSimpleName();
-        mifosScheduler.schedule(SavingsIntCalcTask.class.getSimpleName(), new Date(System.currentTimeMillis() + 3600000), 86400000);
-
-        mifosScheduler.runAllTasks();
-
-        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
-        Assert.assertEquals(5, query.list().size());
+    public void testIncompleteTaskHandling() {
+        // TODO: Integration test testing whether the catch-up mechanism executes the missed job after
+        // finding out that it failed on last scheduled last time
     }
 
-    @SuppressWarnings("deprecation")
     @Test
-    public void testIncompleteTaskDelay() throws PersistenceException, TaskSystemException {
-        MifosScheduler mifosScheduler = new MifosScheduler();
-
-        Task task1 = new Task();
-        task1.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
-        task1.setStartTime(new Timestamp(System.currentTimeMillis() - 350000000)); // over four days ago
-        task1.setEndTime(new Timestamp(System.currentTimeMillis() - 350000000));
-        task1.setStatus(TaskStatus.COMPLETE.getValue());
-        task1.setTask(SavingsIntPostingTask.class.getSimpleName());
-        TaskPersistence p = new TaskPersistence();
-        p.saveAndCommitTask(task1);
-
-        Task task2 = new Task();
-        task2.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
-        task2.setStartTime(new Timestamp(System.currentTimeMillis() - 350000000)); // over four days ago
-        task2.setEndTime(new Timestamp(System.currentTimeMillis() - 350000000));
-        task2.setStatus(TaskStatus.COMPLETE.getValue());
-        task2.setTask(SavingsIntCalcTask.class.getSimpleName());
-        p = new TaskPersistence();
-        p.saveAndCommitTask(task2);
-
-        StaticHibernateUtil.closeSession();
-
-        // TODO: Rework to use new schedule method
-        //SavingsIntPostingTask savingsIntPostingTask = new SavingsIntPostingTask();
-        //savingsIntPostingTask.name = SavingsIntPostingTask.class.getSimpleName();
-        long delay = 86400000; // one day
-        //savingsIntPostingTask.delay = delay;
-        mifosScheduler.schedule(SavingsIntPostingTask.class.getSimpleName(), new Date(System.currentTimeMillis() + 3600000), delay);
-
-        //SavingsIntCalcTask savingsIntCalcTask = new SavingsIntCalcTask();
-        //savingsIntCalcTask.name = SavingsIntCalcTask.class.getSimpleName();
-        delay = 172800000; // two days
-        //savingsIntCalcTask.delay = delay;
-        mifosScheduler.schedule(SavingsIntCalcTask.class.getSimpleName(), new Date(System.currentTimeMillis() + 3600000), delay);
-
-        mifosScheduler.runAllTasks();
-
-        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
-        Assert.assertEquals(8, query.list().size());
+    public void testIncompleteTaskDelay() {
+        // TODO: Integration test showing that when a job failed to execute several times,
+        // the scheduler would launch each failed run with a correct (previously scheduled) date
     }
 
 }
