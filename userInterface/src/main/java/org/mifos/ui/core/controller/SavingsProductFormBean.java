@@ -20,14 +20,24 @@
 
 package org.mifos.ui.core.controller;
 
+import java.math.BigDecimal;
 import java.util.Map;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @SuppressWarnings("PMD")
 public class SavingsProductFormBean {
 
-    private GeneralProductDetails generalDetails;
+    @Valid
+    private GeneralProductBean generalDetails;
 
     // Deposits and Withdrawal Restrictions
+    @NotEmpty
     private String selectedDepositType;
     private Map<String, String> depositTypeOptions;
     private Double amountForDeposit;
@@ -36,22 +46,32 @@ public class SavingsProductFormBean {
     private Double maxWithdrawalAmount;
 
     // Interest rate details
-    private Double interestRate;
+    @Min(value=0)
+    @Max(value=100)
+    @NotNull
+    private BigDecimal interestRate;
+    @NotEmpty
     private String selectedInterestCalculation;
     private Map<String, String> interestCaluclationOptions;
-
+    @NotNull
     private Integer interestCalculationFrequency;
+    @NotEmpty
     private String selectedFequencyPeriod;
     private Map<String, String> frequencyPeriodOptions;
 
+    @Min(value=1)
+    @NotNull
     private Integer interestPostingMonthlyFrequency;
     private Double minBalanceRequiredForInterestCalculation;
 
     // accounting details
-    private Map<String, String> interestGeneralLedgerOptions;
+    @NotEmpty
     private String selectedInterestGlCode;
-    private Map<String, String> principalGeneralLedgerOptions;
+    @NotEmpty
     private String selectedPrincipalGlCode;
+
+    private Map<String, String> interestGeneralLedgerOptions;
+    private Map<String, String> principalGeneralLedgerOptions;
 
     public Map<String, String> getInterestGeneralLedgerOptions() {
         return this.interestGeneralLedgerOptions;
@@ -133,11 +153,11 @@ public class SavingsProductFormBean {
         this.maxWithdrawalAmount = maxWithdrawalAmount;
     }
 
-    public Double getInterestRate() {
+    public BigDecimal getInterestRate() {
         return this.interestRate;
     }
 
-    public void setInterestRate(Double interestRate) {
+    public void setInterestRate(BigDecimal interestRate) {
         this.interestRate = interestRate;
     }
 
@@ -197,11 +217,11 @@ public class SavingsProductFormBean {
         this.minBalanceRequiredForInterestCalculation = minBalanceRequiredForInterestCalculation;
     }
 
-    public GeneralProductDetails getGeneralDetails() {
+    public GeneralProductBean getGeneralDetails() {
         return this.generalDetails;
     }
 
-    public void setGeneralDetails(GeneralProductDetails generalDetails) {
+    public void setGeneralDetails(GeneralProductBean generalDetails) {
         this.generalDetails = generalDetails;
     }
 }

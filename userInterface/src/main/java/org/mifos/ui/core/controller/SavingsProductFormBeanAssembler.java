@@ -31,7 +31,7 @@ public class SavingsProductFormBeanAssembler {
     public SavingsProductFormBean assembleReferenceData(SavingsProductFormDto referenceData) {
 
         SavingsProductFormBean formBean = new SavingsProductFormBean();
-        GeneralProductDetails productDetails = new GeneralProductDetails();
+        GeneralProductBean productDetails = new GeneralProductBean();
         formBean.setGeneralDetails(productDetails);
 
         // assembler for general product details

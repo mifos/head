@@ -62,14 +62,15 @@ public class DefineSavingsProductsFormController {
         SavingsProductFormDto referenceData = this.adminServiceFacade.retrieveSavingsProductFormReferenceData();
         SavingsProductFormBean savingsProduct = new SavingsProductFormBeanAssembler().assembleReferenceData(referenceData);
 
-        savingsProduct.getGeneralDetails().setName("testName");
-        savingsProduct.getGeneralDetails().setShortName("1234");
-        savingsProduct.getGeneralDetails().setDescription("description is short");
-
         DateTime today = new DateTime();
         savingsProduct.getGeneralDetails().setStartDateDay(today.getDayOfYear());
         savingsProduct.getGeneralDetails().setStartDateMonth(today.getMonthOfYear());
         savingsProduct.getGeneralDetails().setStartDateYear(Integer.valueOf(today.getYearOfEra()).toString());
+
+        Double zero = Double.valueOf("0");
+        savingsProduct.setAmountForDeposit(zero);
+        savingsProduct.setMaxWithdrawalAmount(zero);
+        savingsProduct.setMinBalanceRequiredForInterestCalculation(zero);
 
         return savingsProduct;
     }

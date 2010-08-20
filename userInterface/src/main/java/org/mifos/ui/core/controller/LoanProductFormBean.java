@@ -26,7 +26,7 @@ import java.util.Map;
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="..")
 public class LoanProductFormBean {
 
-    private GeneralProductDetails generalDetails;
+    private GeneralProductBean generalDetails;
 
     private boolean includeInLoanCycleCounter;
 
@@ -345,11 +345,11 @@ public class LoanProductFormBean {
         this.applicableFunds = applicableFunds;
     }
 
-    public GeneralProductDetails getGeneralDetails() {
+    public GeneralProductBean getGeneralDetails() {
         return this.generalDetails;
     }
 
-    public void setGeneralDetails(GeneralProductDetails generalDetails) {
+    public void setGeneralDetails(GeneralProductBean generalDetails) {
         this.generalDetails = generalDetails;
     }
 }

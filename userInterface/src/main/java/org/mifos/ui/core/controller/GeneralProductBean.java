@@ -22,23 +22,55 @@ package org.mifos.ui.core.controller;
 
 import java.util.Map;
 
-public class GeneralProductDetails {
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
+public class GeneralProductBean {
+
+    @NotEmpty
     private String name;
+
+    @Size(max=4)
+    @NotEmpty
     private String shortName;
+
+    @NotEmpty
     private String description;
 
+    @NotEmpty
     private String selectedCategory;
     private Map<String, String> categoryOptions;
 
+    @Min(value=1)
+    @Max(value=31)
+    @NotNull
     private Integer startDateDay;
+
+    @Min(value=1)
+    @Max(value=12)
+    @NotNull
     private Integer startDateMonth;
+
+    @Size(max=4)
+    @NotEmpty
     private String startDateYear;
 
+    @Min(value=1)
+    @Max(value=31)
     private Integer endDateDay;
+
+    @Min(value=1)
+    @Max(value=12)
     private Integer endDateMonth;
+
+    @Size(max=4)
     private String endDateYear;
 
+    @NotEmpty
     private String selectedApplicableFor;
     private Map<String, String> applicableForOptions;
 

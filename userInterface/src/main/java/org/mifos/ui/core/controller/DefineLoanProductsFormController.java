@@ -78,7 +78,7 @@ public class DefineLoanProductsFormController {
         // FIXME - Delegate to assembler
         DateTime startDate = new DateTime();
 
-        GeneralProductDetails productDetails = new GeneralProductDetails();
+        GeneralProductBean productDetails = new GeneralProductBean();
         productDetails.setStartDateDay(startDate.getDayOfMonth());
         productDetails.setStartDateMonth(startDate.getMonthOfYear());
         productDetails.setStartDateYear(Integer.valueOf(startDate.getYearOfEra()).toString());
