@@ -43,4 +43,3 @@ release-schema-version:mifos-v1.6.0-schema
 1280719676
 1280721170
 1280793109
-1282247229
