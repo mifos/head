@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.mifos.accounts.savings.persistence.GenericDao;
@@ -44,6 +46,8 @@ import org.springframework.security.core.authority.GrantedAuthorityImpl;
 public class PersonnelDaoHibernate implements PersonnelDao {
 
     private final GenericDao genericDao;
+
+    private static final ResourceBundle activityIdToRolesMap = ResourceBundle.getBundle("org.mifos.security.rolesandpermission.mifos_activity_role");
 
     public PersonnelDaoHibernate(GenericDao genericDao) {
         this.genericDao = genericDao;
@@ -98,11 +102,14 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = !user.isLocked();
 
-        List<GrantedAuthority> authorities = translateActivityIdsToGrantedAuthorities(activityIds);
+        //List<GrantedAuthority> authorities = translateActivityIdsToGrantedAuthorities(activityIds);
+        List<GrantedAuthority> authorities = getGrantedActivityAuthorities(activityIds);
 
         return new MifosUser(user.getPersonnelId(), username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
                 authorities);
     }
+
+
 
     @SuppressWarnings("unchecked")
     @Override
@@ -129,6 +136,7 @@ public class PersonnelDaoHibernate implements PersonnelDao {
 
         return (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.PERSONNEL_BY_SYSTEM_ID, queryParameters);
     }
+
 
     private List<GrantedAuthority> translateActivityIdsToGrantedAuthorities(List<Short> activityIdList) {
 
@@ -172,4 +180,22 @@ public class PersonnelDaoHibernate implements PersonnelDao {
 
         return authoritiesMap;
     }
+
+    private List<GrantedAuthority> getGrantedActivityAuthorities(List<Short> activityIds) {
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        for(Short activityId : activityIds) {
+            authorities.add(new GrantedAuthorityImpl(getRoleForActivityId(activityId.toString())));
+        }
+        return authorities;
+    }
+
+    private String getRoleForActivityId(String activityId) {
+        try {
+            return activityIdToRolesMap.getString(activityId);
+        } catch (MissingResourceException e) {
+            return "ROLE_UNDEFINED";
+        }
+    }
+
+
 }
