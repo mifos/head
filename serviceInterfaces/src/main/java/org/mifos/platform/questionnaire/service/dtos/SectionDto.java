@@ -72,4 +72,8 @@ public class SectionDto implements Serializable {
     public void trimName() {
         this.name = trim(this.name);
     }
+
+    public void addQuestion(QuestionDto questionDto) {
+        questions.add(questionDto);
+    }
 }
