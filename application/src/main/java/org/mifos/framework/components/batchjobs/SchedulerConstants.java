@@ -38,7 +38,7 @@ public interface SchedulerConstants {
     String LISTENER = "listener";
     String SCHEDULE = "schedule";
     String BATCH_JOB = "batch-job";
-    String JOB_NAME = "job-name";
+    String JOB_NAME = "job-class-name";
     String JOB_GROUP_NAME = "job-group-name";
     String JOB_PRIORITY = "job-priority";
     String CRON_EXPRESSION = "cron-expression";

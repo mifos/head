@@ -105,7 +105,7 @@ public class MifosScheduler {
             JobDetail jobDetail = new JobDetail();
             jobDetail.setName(jobName);
             jobDetail.setGroup(jobGroup);
-            jobDetail.setJobClass(Class.forName(BATCH_JOB_CLASS_PATH_PREFIX + jobName).getClass());
+            jobDetail.setJobClass(Class.forName(BATCH_JOB_CLASS_PATH_PREFIX + jobName));
             jobDetail.setRequestsRecovery(true);
             for(String jobListener : jobListeners) {
                 jobDetail.addJobListener(jobListener);
@@ -255,7 +255,9 @@ public class MifosScheduler {
                 if (Long.parseLong(delayTime) < 86400) {
                     throw new IllegalArgumentException("Please specify the delay time >= 86400(1 day)");
                 }
-                schedule(taskName, parseInitialTime(initialTime), Long.parseLong(delayTime) * 1000);
+                if(scheduler.getJobDetail(taskName, Scheduler.DEFAULT_GROUP) == null) {
+                    schedule(taskName, parseInitialTime(initialTime), Long.parseLong(delayTime) * 1000);
+                }
             }
             // Hard-coded initialization of default global listeners, as they don't exist in old configuration file:
             instantiateJobListener(SchedulerConstants.GLOBAL_JOB_LISTENER_NAME, true);
@@ -339,7 +341,7 @@ public class MifosScheduler {
                 String jobName = ((Text)jobNameNode.getFirstChild()).getData().trim();
                 Element jobGroupNameNode = (Element)batchJobNode.getElementsByTagName(SchedulerConstants.JOB_GROUP_NAME).item(0);
                 String jobGroupName = ((Text)jobGroupNameNode.getFirstChild()).getData().trim();
-                Element jobListenersNode = (Element)batchJobNode.getElementsByTagName(SchedulerConstants.JOB_LISTENERS);
+                Element jobListenersNode = (Element)batchJobNode.getElementsByTagName(SchedulerConstants.JOB_LISTENERS).item(0);
                 NodeList jobListeners = jobListenersNode.getElementsByTagName(SchedulerConstants.LISTENER);
                 List<String> jobListenersList = new ArrayList<String>();
                 for(int j = 0; j < jobListeners.getLength(); j++) {
@@ -347,7 +349,7 @@ public class MifosScheduler {
                     String jobListenerName = ((Text)jobListenerNode.getFirstChild()).getData().trim();
                     jobListenersList.add(jobListenerName);
                 }
-                Element triggerListenersNode = (Element)batchJobNode.getElementsByTagName(SchedulerConstants.TRIGGER_LISTENERS);
+                Element triggerListenersNode = (Element)batchJobNode.getElementsByTagName(SchedulerConstants.TRIGGER_LISTENERS).item(0);
                 NodeList triggerListeners = triggerListenersNode.getElementsByTagName(SchedulerConstants.LISTENER);
                 List<String> triggerListenersList = new ArrayList<String>();
                 for(int j = 0; j < triggerListeners.getLength(); j++) {
