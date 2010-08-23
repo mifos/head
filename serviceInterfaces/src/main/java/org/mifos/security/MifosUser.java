@@ -43,6 +43,8 @@ public class MifosUser implements UserDetails {
     public static final String CAN_DEFINE_HIDDEN_MANDATORY_FIELDS = "ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS";
     public static final String CAN_OPEN_SHUTDOWN_PAGE = "ROLE_CAN_OPEN_SHUTDOWN_PAGE";
     public static final String CAN_SHUT_DOWN_MIFOS = "ROLE_CAN_SHUT_DOWN_MIFOS";
+    public static final String CAN_RUN_BATCH_JOBS_ON_DEMAND = "ROLE_CAN_RUN_BATCH_JOBS_ON_DEMAND";
+    public static final String CAN_UPDATE_BATCH_JOBS_CONFIGURATION = "ROLE_CAN_UPDATE_BATCH_JOBS_CONFIGURATION";
 
     private final String username;
     private final byte[] password;

@@ -170,6 +170,10 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         authoritiesMap.put(SecurityConstants.CAN_OPEN_SHUTDOWN_PAGE, new GrantedAuthorityImpl(MifosUser.CAN_OPEN_SHUTDOWN_PAGE));
         authoritiesMap.put(SecurityConstants.CAN_SHUT_DOWN_MIFOS, new GrantedAuthorityImpl(MifosUser.CAN_SHUT_DOWN_MIFOS));
 
+        // Batch Jobs
+        authoritiesMap.put(SecurityConstants.CAN_RUN_BATCH_JOBS_ON_DEMAND, new GrantedAuthorityImpl(MifosUser.CAN_RUN_BATCH_JOBS_ON_DEMAND));
+        authoritiesMap.put(SecurityConstants.CAN_UPDATE_BATCH_JOBS_CONFIGURATION, new GrantedAuthorityImpl(MifosUser.CAN_UPDATE_BATCH_JOBS_CONFIGURATION));
+
         return authoritiesMap;
     }
 }
