@@ -21,6 +21,7 @@
 package org.mifos.application.admin.business.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -37,8 +38,8 @@ public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
         List<BatchjobsDto> batchjobs = new ArrayList<BatchjobsDto>();
         MifosScheduler mifosScheduler = (MifosScheduler) context.getAttribute(MifosScheduler.class.getName());
         for (String mifosTaskName : mifosScheduler.getTaskNames()) {
-            BatchjobsDto batchjobsDto = new BatchjobsDto(mifosTaskName);
-            batchjobs.add(batchjobsDto);
+            batchjobs.add(new BatchjobsDto(mifosTaskName, "0 0 * * * *", 5, "Finished Succesfully", new Date(System.currentTimeMillis()-86000000),
+                    new Date(System.currentTimeMillis()+400000), "", true));
         }
         return batchjobs;
     }
