@@ -26,11 +26,9 @@ import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.sql.Date;
-import java.util.List;
 
 import junit.framework.Assert;
 
-import org.hibernate.Query;
 import org.hibernate.SessionException;
 import org.junit.After;
 import org.junit.Before;
@@ -43,8 +41,6 @@ import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.components.batchjobs.SchedulerConstants;
-import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -99,7 +95,7 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
 
     @Test
     public void testExecuteTask() throws PersistenceException, BatchJobException {
-        // TODO: Create a test running ProductStatus task, testing if it completed successfully and below assertion is met:
+        // TODO QUARTZ: Create a test running ProductStatus task, testing if it completed successfully and below assertion is met:
         // createInactiveLoanOffering();
         // run task, check (Assert) if it executed correctly
         // product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
@@ -108,20 +104,20 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
 
     @Test
     public void testExecuteTaskFailure() throws PersistenceException {
-        // TODO: This test tested invalid task execution when DB connection was invalid. Since quartz requires a DB for
+        // TODO QUARTZ: This test tested invalid task execution when DB connection was invalid. Since quartz requires a DB for
         // it's JobStore to run, we should think of a different test case..
     }
 
     @Test
     public void testRegisterStartup() throws BatchJobException {
-        // TODO: Create a test running ProductStatus and checking if it's startup was registered correctly.
+        // TODO QUARTZ: Create a test running ProductStatus and checking if it's startup was registered correctly.
     }
 
-    // TODO: Test cases involving invalid database connections..
+    // TODO QUARTZ: Test cases involving invalid database connections..
 
     @Test
     public void testRegisterCompletion() throws BatchJobException {
-        // TODO: Create a test running ProductStatus successfully task and checking if it's completion was correctly registered
+        // TODO QUARTZ: Create a test running ProductStatus successfully task and checking if it's completion was correctly registered
     }
 
     private void createInactiveLoanOffering() throws PersistenceException {

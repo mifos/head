@@ -23,11 +23,7 @@ package org.mifos.framework.components.batchjobs.helpers;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
 
-import junit.framework.Assert;
-
-import org.hibernate.Query;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,15 +32,12 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
-import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.components.batchjobs.SchedulerConstants;
-import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -82,7 +75,7 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testExecute() throws Exception {
-        // TODO: Test running a LoanArrearTask batch job, testing if it executed successfully and below assertions are fulfilled:
+        // TODO QUARTZ: Test running a LoanArrearTask batch job, testing if it executed successfully and below assertions are fulfilled:
         // Assert.assertEquals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, loanAccount.getState());
         // int statusChangeHistorySize = loanAccount.getAccountStatusChangeHistory().size();
         // Assert.assertEquals(statusChangeHistorySize + 1, loanAccount.getAccountStatusChangeHistory().size());

@@ -62,6 +62,7 @@ insert into applied_upgrades(upgrade_id) values(1280719676);
 insert into applied_upgrades(upgrade_id) values(1280721170);
 insert into applied_upgrades(upgrade_id) values(1280793109);
 insert into applied_upgrades(upgrade_id) values(1282247229);
+insert into applied_upgrades(upgrade_id) values(1282389745);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -3229,3 +3230,10 @@ insert into event_sources (id, entity_type_id, event_id, description) values
 insert into event_sources (id, entity_type_id, event_id, description) values
     (6, (select entity_type_id from entity_master where entity_type = 'Client'), 4, 'Close Client');
 /* Upgrade 268 END */
+
+/* Quartz related inserts */
+insert into qrtz_locks values('TRIGGER_ACCESS');
+insert into qrtz_locks values('JOB_ACCESS');
+insert into qrtz_locks values('CALENDAR_ACCESS');
+insert into qrtz_locks values('STATE_ACCESS');
+insert into qrtz_locks values('MISFIRE_ACCESS');

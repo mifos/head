@@ -41,11 +41,11 @@ public class MifosSchedulerTest {
     @Test
     public void testRegisterTasks() throws Exception {
 
-        MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/config/resources/task.xml", "org/mifos/config/resources/quartz.properties");
-
+        MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/config/resources/task.xml", "org/mifos/framework/components/batchjobs/mockQuartz.properties");
         mifosScheduler.initializeBatchJobs();
         List<String> taskNames = mifosScheduler.getTaskNames();
 
+        Assert.assertEquals(10, taskNames.size());
         Assert.assertTrue(taskNames.contains("ProductStatus"));
         Assert.assertTrue(taskNames.contains("LoanArrearsTask"));
         Assert.assertTrue(taskNames.contains("SavingsIntCalcTask"));
@@ -60,10 +60,10 @@ public class MifosSchedulerTest {
 
     @Test
     public void testCallsConfigurationLocator() throws Exception {
-        MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/mockTask.xml", "org/mifos/framework/components/batchjobs/mockQuartz.properties");
-        mifosScheduler.reInitialize();
+        MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/mockTask.xml", "org/mifos/framework/components/batchjobs/mockQuartz2.properties");
         mifosScheduler.initializeBatchJobs();
         List<String> taskNames = mifosScheduler.getTaskNames();
+
         Assert.assertEquals(1, taskNames.size());
         Assert.assertTrue(taskNames.contains("MockTask"));
     }
@@ -76,8 +76,11 @@ public class MifosSchedulerTest {
         expect(mockConfigurationLocator.getFile(SchedulerConstants.SCHEDULER_CONFIGURATION_FILE_NAME)).andReturn(
                 new ClassPathResource(schedulerConfigurationPath).getFile());
         replay(mockConfigurationLocator);
+
         MifosScheduler mifosScheduler = new MifosScheduler();
         mifosScheduler.setConfigurationLocator(mockConfigurationLocator);
+        mifosScheduler.initialize();
+
         return mifosScheduler;
     }
 

@@ -64,17 +64,7 @@ public class MifosScheduler {
     private static MifosLogger logger = MifosLogManager.getLogger(MifosScheduler.class.getName());
     private ConfigurationLocator configurationLocator;
 
-    public MifosScheduler() throws TaskSystemException {
-        StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
-        try {
-            schedulerFactory.initialize(getQuartzSchedulerConfigurationFilePath());
-            scheduler = schedulerFactory.getScheduler();
-        } catch (Exception e) {
-            throw new TaskSystemException(e);
-        }
-    }
-
-    public void reInitialize() throws TaskSystemException {
+    public void initialize() throws TaskSystemException {
         StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
         try {
             String configPath = getQuartzSchedulerConfigurationFilePath();

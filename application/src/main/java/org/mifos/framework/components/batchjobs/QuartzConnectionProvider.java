@@ -18,23 +18,22 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.framework.components.batchjobs.business;
+package org.mifos.framework.components.batchjobs;
 
-import junit.framework.TestCase;
+import org.quartz.utils.ConnectionProvider;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
-import org.mifos.framework.components.batchjobs.helpers.TaskStatus;
-import org.testng.annotations.Test;
+import java.sql.Connection;
+import java.sql.SQLException;
 
-@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
-public class TaskTest extends TestCase {
-
-    public void testStatus() throws Exception {
-        /* TODO QUARTZ
-        Task task = new Task();
-        task.setStatus(TaskStatus.COMPLETE);
-        assertSame(TaskStatus.COMPLETE, task.getStatusEnum());
-        task.setStatus(TaskStatus.INCOMPLETE);
-        assertSame(TaskStatus.INCOMPLETE, task.getStatusEnum());*/
+public class QuartzConnectionProvider implements ConnectionProvider {
+    @Override
+    public Connection getConnection() throws SQLException {
+        return StaticHibernateUtil.getSessionTL().connection();
     }
 
+    @Override
+    public void shutdown() throws SQLException {
+        // do nothing
+    }
 }

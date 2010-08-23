@@ -24,8 +24,6 @@
 		<mapping class="org.mifos.framework.business.EntityMaster" />
 		<mapping resource="org/mifos/framework/components/audit/business/AuditLog.hbm.xml" />
 		<mapping resource="org/mifos/framework/components/audit/business/AuditLogRecord.hbm.xml" />
-		<!-- Batch Jobs -->
-		<mapping resource="org/mifos/framework/components/batchjobs/business/Task.hbm.xml" />
 
         <!-- M2 style objects importexport-->
         <mapping resource="org/mifos/application/importexport/business/ImportedFilesEntity.hbm.xml" />

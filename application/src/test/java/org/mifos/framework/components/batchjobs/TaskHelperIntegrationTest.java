@@ -41,13 +41,13 @@ public class TaskHelperIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testIncompleteTaskHandling() {
-        // TODO: Integration test testing whether the catch-up mechanism executes the missed job after
+        // TODO QUARTZ: Integration test testing whether the catch-up mechanism executes the missed job after
         // finding out that it failed on last scheduled last time
     }
 
     @Test
     public void testIncompleteTaskDelay() {
-        // TODO: Integration test showing that when a job failed to execute several times,
+        // TODO QUARTZ: Integration test showing that when a job failed to execute several times,
         // the scheduler would launch each failed run with a correct (previously scheduled) date
     }
 
