@@ -20,15 +20,60 @@
 
 package org.mifos.application.admin.servicefacade;
 
+import java.util.Date;
+
 public class BatchjobsDto {
     private final String name;
+    private final String cron;
+    private final int priority;
+    private final String lastRunStatus;
+    private final long lastStartTime;
+    private final long nextStartTime;
+    private final String taskDependency;
+    private final boolean active;
 
-    public BatchjobsDto(String name) {
+    public BatchjobsDto(String name, String cron, int priority, String lastRunStatus, Date lastStartTime,
+            Date nextStartTime, String taskDependency, boolean active) {
         this.name = name;
+        this.cron = cron;
+        this.priority = priority;
+        this.lastRunStatus = lastRunStatus;
+        this.lastStartTime = lastStartTime.getTime();
+        this.nextStartTime = nextStartTime.getTime();
+        this.taskDependency = taskDependency;
+        this.active = active;
     }
 
     public String getName() {
         return this.name;
+    }
+
+    public String getCron() {
+        return this.cron;
+    }
+
+    public int getPriority() {
+        return this.priority;
+    }
+
+    public String getLastRunStatus() {
+        return this.lastRunStatus;
+    }
+
+    public Date getLastStartTime() {
+        return new Date(this.lastStartTime);
+    }
+
+    public Date getNextStartTime() {
+        return new Date(this.nextStartTime);
+    }
+
+    public String getTaskDependency() {
+        return this.taskDependency;
+    }
+
+    public boolean isActive() {
+        return this.active;
     }
 
 }

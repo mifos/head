@@ -44,11 +44,11 @@ public class BatchjobsController {
   @Autowired
   private BatchjobsServiceFacade batchjobsServiceFacade;
 
-    public BatchjobsController() {
+    protected BatchjobsController() {
         // default contructor for spring autowiring
     }
 
-    public BatchjobsController(final BatchjobsServiceFacade batchjobsServiceFacade) {
+    protected BatchjobsController(final BatchjobsServiceFacade batchjobsServiceFacade) {
         this.batchjobsServiceFacade = batchjobsServiceFacade;
     }
 
