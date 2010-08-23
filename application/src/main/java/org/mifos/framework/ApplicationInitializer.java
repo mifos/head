@@ -112,6 +112,11 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
     public void init(ServletContextEvent ctx) {
         try {
+            // prevent ehcache "phone home"
+            System.setProperty("net.sf.ehcache.skipUpdateCheck", "true");
+            // prevent quartz "phone home"
+            System.setProperty("org.terracotta.quartz.skipUpdateCheck", "true");
+
             synchronized (ApplicationInitializer.class) {
 
                 /*
