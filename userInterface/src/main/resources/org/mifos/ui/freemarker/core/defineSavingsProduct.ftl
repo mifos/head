@@ -1,8 +1,32 @@
 [#ftl]
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
+<head>
+<script type="text/javascript">
+	function fnCheckAppliesTo() {
+		if(document.getElementById("generalDetails.selectedApplicableFor").selectedIndex==2) {
+			document.getElementById("selectedGroupSavingsApproach").disabled=false;
+		}
+		else {
+			document.getElementById("selectedGroupSavingsApproach")[0].selectedIndex=0;
+			document.getElementById("selectedGroupSavingsApproach").disabled=true;
+		}
+	}
+	
+	function fnCheckRecMand() {
+		if(document.getElementsByName("savingsType")[0].value==1) {
+			document.getElementById("mandamnt").style.display = "block";
+			document.getElementById("recamnt").style.display = "none";
+		}
+		else {
+			document.getElementById("mandamnt").style.display = "none";
+			document.getElementById("recamnt").style.display = "block";
+		}
+	}
+</script> 
+</head>
 [@mifos.header "title" /]
-  [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+[@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Main Content Begins-->
   <div class="content marginAuto">
     <div class="borders span-22">
@@ -71,7 +95,7 @@
 			
             <div class="span-20 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.applicablefor" /]&nbsp;</span>
 	            <span class="span-4">
-	            	[@mifos.formSingleSelectWithPrompt "savingsProduct.generalDetails.selectedApplicableFor", savingsProduct.generalDetails.applicableForOptions, "--select one--" /]
+	            	[@mifos.formSingleSelectWithPrompt "savingsProduct.generalDetails.selectedApplicableFor", savingsProduct.generalDetails.applicableForOptions, "--select one--", "onchange='fnCheckAppliesTo()'" /]
 				</span>
 			</div>
           </div>
@@ -88,7 +112,7 @@
   			</div>
             <div class="span-20 "><span class="pull-3 span-8 rightAlign" id="appliesto"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.amountAppliesto" /]&nbsp;</span>
             	<span class="span-4">
-   				[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedGroupSavingsApproach", savingsProduct.groupSavingsApproachOptions, "--select one--" /]
+   				[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedGroupSavingsApproach", savingsProduct.groupSavingsApproachOptions, "--select one--", "disabled=disabled" /]
 				</span>
 			</div>
             <div class="span-20 "><span class="pull-3 span-8 rightAlign">[@spring.message "manageProducts.defineSavingsProducts.maxamountperwithdrawal" /]&nbsp;</span>

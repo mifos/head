@@ -91,6 +91,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
         this.prdOfferingShortName = shortName;
         this.globalPrdOfferingNum = globalProductId;
         this.prdCategory = productCategory;
+        this.prdType = productCategory.getProductType();
         this.prdStatus = status;
         this.prdApplicableMaster = applicableToEntity;
         this.startDate = startDate.toDate();

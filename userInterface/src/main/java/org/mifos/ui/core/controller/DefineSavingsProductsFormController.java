@@ -29,6 +29,7 @@ import org.mifos.dto.screen.SavingsProductFormDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -70,7 +71,7 @@ public class DefineSavingsProductsFormController {
         Double zero = Double.valueOf("0");
         savingsProduct.setAmountForDeposit(zero);
         savingsProduct.setMaxWithdrawalAmount(zero);
-        savingsProduct.setMinBalanceRequiredForInterestCalculation(zero);
+        savingsProduct.setMinBalanceRequiredForInterestCalculation("0");
 
         return savingsProduct;
     }
@@ -79,18 +80,35 @@ public class DefineSavingsProductsFormController {
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
             @ModelAttribute("savingsProduct") @Valid SavingsProductFormBean savingsProductFormBean, BindingResult result, SessionStatus status) {
 
-        String viewName = REDIRECT_TO_ADMIN_SCREEN;
+        String viewName = "redirect:/previewSavingsProducts.ftl";
 
         if (StringUtils.isNotBlank(cancel)) {
             viewName = REDIRECT_TO_ADMIN_SCREEN;
             status.setComplete();
         } else if (result.hasErrors()) {
+            handlePossibleValidationErrors(savingsProductFormBean, result);
             viewName = "defineSavingsProduct";
         } else {
-
-            status.setComplete();
+            handlePossibleValidationErrors(savingsProductFormBean, result);
+            if (result.hasErrors()) {
+                viewName = "defineSavingsProduct";
+            }
         }
 
         return viewName;
+    }
+
+    private void handlePossibleValidationErrors(SavingsProductFormBean savingsProductFormBean, BindingResult result) {
+        if (savingsProductFormBean.isMandatoryGroupSavingAccount()) {
+            if (savingsProductFormBean.getAmountForDeposit() == null || savingsProductFormBean.getAmountForDeposit().intValue() <= 0) {
+                ObjectError error = new ObjectError("savingsProduct", new String[] { "Min.savingsProduct.amountForDesposit" }, new Object[] {}, "default: ");
+                result.addError(error);
+            }
+
+            if (StringUtils.isBlank(savingsProductFormBean.getSelectedGroupSavingsApproach())) {
+                ObjectError error = new ObjectError("savingsProduct", new String[] { "NotEmpty.savingsProduct.selectedGroupSavingsApproach" }, new Object[] {}, "default: ");
+                result.addError(error);
+            }
+        }
     }
 }

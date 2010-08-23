@@ -52,6 +52,7 @@ import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.ProductCategoryBusinessService;
@@ -110,6 +111,7 @@ import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.ProductTypeDto;
+import org.mifos.dto.domain.SavingsProductRequest;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.dto.screen.ListElement;
@@ -1572,6 +1574,29 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
+    public PrdOfferingDto createSavingsProduct(SavingsProductRequest savingsProductRequest) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        SavingsOfferingBO savingsProduct = new SavingsProductAssembler(this.loanProductDao, this.generalLedgerDao).fromDto(user, savingsProductRequest);
+
+        HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+
+        try {
+            transactionHelper.startTransaction();
+            this.savingsProductDao.save(savingsProduct);
+            transactionHelper.commitTransaction();
+            return savingsProduct.toDto();
+        } catch (Exception e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            transactionHelper.closeSession();
+        }
+
+    }
+
+    @Override
     public void createLoanProduct(LoanProductRequest loanProductRequest) {
 
         LoanOfferingBO loanProduct = assembleFrom(loanProductRequest);
@@ -1606,6 +1631,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         DateTime startDate = loanProductRequest.getLoanProductDetails().getStartDate();
         DateTime endDate = loanProductRequest.getLoanProductDetails().getEndDate();
         ApplicableTo applicableTo = ApplicableTo.fromInt(loanProductRequest.getLoanProductDetails().getApplicableFor());
+        PrdApplicableMasterEntity applicableToEntity = this.loanProductDao.findApplicableProductType(applicableTo);
 
         LoanAmountCalculation loanAmountCalculation = this.loanProductCaluclationTypeAssembler.assembleLoanAmountCalculationFromDto(loanProductRequest.getLoanAmountDetails());
 
@@ -1614,7 +1640,6 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         Double maxRate = loanProductRequest.getInterestRateRange().getMax().doubleValue();
         Double defaultRate = loanProductRequest.getInterestRateRange().getTheDefault().doubleValue();
 
-        PrdApplicableMasterEntity applicableToEntity = this.loanProductDao.findApplicableProductType(applicableTo);
         InterestTypesEntity interestTypeEntity = this.loanProductDao.findInterestType(interestType);
 
         RecurrenceType recurrence = RecurrenceType.fromInt(loanProductRequest.getRepaymentDetails().getFrequencyType().shortValue());
@@ -1649,9 +1674,10 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
         try {
             Short maxPrdID = new PrdOfferingPersistence().getMaxPrdOffering();
+            globalPrdOfferingNum.append(StringUtils.leftPad(String.valueOf(maxPrdID != null ? maxPrdID + 1 : ProductDefinitionConstants.DEFAULTMAX + 1), 3, '0'));
+
             PrdStatusEntity activeStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.LOAN_ACTIVE);
             PrdStatusEntity inActiveStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.LOAN_INACTIVE);
-            globalPrdOfferingNum.append(StringUtils.leftPad(String.valueOf(maxPrdID != null ? maxPrdID + 1 : ProductDefinitionConstants.DEFAULTMAX + 1), 3, '0'));
 
             return LoanOfferingBO.createNew(userId, globalPrdOfferingNum.toString(), name, shortName, description, productCategory, startDate, endDate, applicableToEntity,
                     interestTypeEntity, minRate, maxRate, defaultRate, recurrence, recurEvery, interestGlCode, principalGlCode,

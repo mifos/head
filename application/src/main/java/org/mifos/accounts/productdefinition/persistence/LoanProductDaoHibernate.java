@@ -37,10 +37,13 @@ import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
+import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -152,6 +155,18 @@ public class LoanProductDaoHibernate implements LoanProductDao {
     }
 
     @Override
+    public InterestCalcTypeEntity retrieveInterestCalcType(InterestCalcType interestCalcType) {
+        InterestCalcTypeEntity result = null;
+        List<InterestCalcTypeEntity> allSavingsTypes = retrieveInterestCalcTypes();
+        for (InterestCalcTypeEntity entity : allSavingsTypes) {
+            if (entity.getId().equals(interestCalcType.getValue())) {
+                result = entity;
+            }
+        }
+        return result;
+    }
+
+    @Override
     public List<InterestTypesEntity> retrieveInterestTypes() {
         return doFetchListOfMasterDataFor(InterestTypesEntity.class);
     }
@@ -162,8 +177,32 @@ public class LoanProductDaoHibernate implements LoanProductDao {
     }
 
     @Override
+    public SavingsTypeEntity retrieveSavingsType(SavingsType savingsType) {
+        SavingsTypeEntity result = null;
+        List<SavingsTypeEntity> allSavingsTypes = retrieveSavingsTypes();
+        for (SavingsTypeEntity entity : allSavingsTypes) {
+            if (entity.getId().equals(savingsType.getValue())) {
+                result = entity;
+            }
+        }
+        return result;
+    }
+
+    @Override
     public List<RecommendedAmntUnitEntity> retrieveRecommendedAmountTypes() {
         return doFetchListOfMasterDataFor(RecommendedAmntUnitEntity.class);
+    }
+
+    @Override
+    public RecommendedAmntUnitEntity retrieveRecommendedAmountType(RecommendedAmountUnit recommendedAmountType) {
+        RecommendedAmntUnitEntity result = null;
+        List<RecommendedAmntUnitEntity> allSavingsTypes = retrieveRecommendedAmountTypes();
+        for (RecommendedAmntUnitEntity entity : allSavingsTypes) {
+            if (entity.getId().equals(recommendedAmountType.getValue())) {
+                result = entity;
+            }
+        }
+        return result;
     }
 
     @SuppressWarnings("unchecked")

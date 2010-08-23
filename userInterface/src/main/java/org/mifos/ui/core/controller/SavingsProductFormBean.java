@@ -62,13 +62,19 @@ public class SavingsProductFormBean {
     @Min(value=1)
     @NotNull
     private Integer interestPostingMonthlyFrequency;
-    private Double minBalanceRequiredForInterestCalculation;
+
+    private String minBalanceRequiredForInterestCalculation;
 
     // accounting details
     @NotEmpty
     private String selectedInterestGlCode;
     @NotEmpty
     private String selectedPrincipalGlCode;
+
+    public boolean isMandatoryGroupSavingAccount() {
+        return ("2").equals(this.generalDetails.getSelectedApplicableFor()) &&
+                ("1").equals(this.selectedDepositType);
+    }
 
     private Map<String, String> interestGeneralLedgerOptions;
     private Map<String, String> principalGeneralLedgerOptions;
@@ -209,11 +215,11 @@ public class SavingsProductFormBean {
         this.interestPostingMonthlyFrequency = interestPostingMonthlyFrequency;
     }
 
-    public Double getMinBalanceRequiredForInterestCalculation() {
+    public String getMinBalanceRequiredForInterestCalculation() {
         return this.minBalanceRequiredForInterestCalculation;
     }
 
-    public void setMinBalanceRequiredForInterestCalculation(Double minBalanceRequiredForInterestCalculation) {
+    public void setMinBalanceRequiredForInterestCalculation(String minBalanceRequiredForInterestCalculation) {
         this.minBalanceRequiredForInterestCalculation = minBalanceRequiredForInterestCalculation;
     }
 

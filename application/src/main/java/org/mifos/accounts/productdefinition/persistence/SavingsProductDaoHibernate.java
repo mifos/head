@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.util.helpers.AccountTypes;
 
@@ -33,5 +34,10 @@ public class SavingsProductDaoHibernate implements SavingsProductDao {
     @Override
     public List<Object[]> findAllSavingsProducts() {
         return (List<Object[]>) genericDao.executeNamedQuery("findAllSavingsProducts", null);
+    }
+
+    @Override
+    public void save(SavingsOfferingBO product) {
+        this.genericDao.createOrUpdate(product);
     }
 }

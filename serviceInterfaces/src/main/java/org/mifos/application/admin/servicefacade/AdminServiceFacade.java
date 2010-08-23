@@ -29,6 +29,7 @@ import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.ProductTypeDto;
+import org.mifos.dto.domain.SavingsProductRequest;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.dto.screen.LoanProductFormDto;
@@ -125,4 +126,7 @@ public interface AdminServiceFacade {
     void updateProductCategory(CreateOrUpdateProductCategory productCategory);
 
     List<PrdOfferingDto> retrieveLoanProductsNotMixed();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    PrdOfferingDto createSavingsProduct(SavingsProductRequest savingsProductRequest);
 }

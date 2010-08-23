@@ -20,9 +20,14 @@
 
 package org.mifos.ui.core.controller;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.mifos.dto.domain.ProductDetailsDto;
+import org.mifos.dto.domain.SavingsProductRequest;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.SavingsProductFormDto;
 
@@ -120,5 +125,43 @@ public class SavingsProductFormBeanAssembler {
             interestGeneralLedgerOptions.put(glCode.getId().toString(), glCode.getName());
         }
         formBean.setInterestGeneralLedgerOptions(interestGeneralLedgerOptions);
+    }
+
+    public SavingsProductRequest assembleSavingsProductRequest(SavingsProductFormBean formBean) {
+
+        Integer category = Integer.valueOf(formBean.getGeneralDetails().getSelectedCategory());
+        Integer applicableFor = Integer.valueOf(formBean.getGeneralDetails().getSelectedApplicableFor());
+        DateTime startDate = new DateTime().withDate(Integer.valueOf(formBean.getGeneralDetails().getStartDateYear()), formBean.getGeneralDetails().getStartDateMonth(), formBean.getGeneralDetails().getStartDateDay());
+        DateTime endDate = null;
+        if (StringUtils.isNotBlank(formBean.getGeneralDetails().getEndDateYear())) {
+            endDate = new DateTime().withDate(Integer.valueOf(formBean.getGeneralDetails().getEndDateYear()), formBean.getGeneralDetails().getEndDateMonth(), formBean.getGeneralDetails().getEndDateDay());
+        }
+
+        ProductDetailsDto productDetails = new ProductDetailsDto(formBean.getGeneralDetails().getName(),
+                formBean.getGeneralDetails().getShortName(), formBean.getGeneralDetails().getDescription(),
+                category, startDate, endDate, applicableFor);
+
+        Integer depositType = Integer.valueOf(formBean.getSelectedDepositType());
+
+        Integer groupMandatorySavingsType = null;
+        if (StringUtils.isNotBlank(formBean.getSelectedGroupSavingsApproach())) {
+            groupMandatorySavingsType = Integer.valueOf(formBean.getSelectedGroupSavingsApproach());
+        }
+
+        Double amountForDeposit = formBean.getAmountForDeposit();
+        Double maxWithdrawal = formBean.getMaxWithdrawalAmount();
+
+        BigDecimal interestRate = formBean.getInterestRate();
+        Integer interestCalculationType = Integer.valueOf(formBean.getSelectedInterestCalculation());
+        Integer interestCalculationFrequencyPeriod = Integer.valueOf(formBean.getSelectedInterestCalculation());
+        BigDecimal minBalanceForInterestCalculation = BigDecimal.valueOf(Double.valueOf(formBean.getMinBalanceRequiredForInterestCalculation()));
+
+        Integer interestGlCode = Integer.parseInt(formBean.getSelectedInterestGlCode());
+        Integer depositGlCode = Integer.parseInt(formBean.getSelectedPrincipalGlCode());
+
+        return new SavingsProductRequest(productDetails, formBean.isMandatoryGroupSavingAccount(),
+                depositType, groupMandatorySavingsType, amountForDeposit, maxWithdrawal,
+                interestRate, interestCalculationType, formBean.getInterestCalculationFrequency(), interestCalculationFrequencyPeriod,
+                formBean.getInterestPostingMonthlyFrequency(), minBalanceForInterestCalculation, depositGlCode, interestGlCode);
     }
 }
