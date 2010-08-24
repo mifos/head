@@ -1479,9 +1479,9 @@ msgstr "Puede crear un nuevo grupo en el estado de Guardar para más adelante"
 msgid "Can create new group in submit for approval state"
 msgstr "Puede crear nuevo grupo en el estado de Enviar para aprobación"
 
-#: Permissions-Groups-CanEditCenterClientship
-msgid "Can edit Center Clientship"
-msgstr "Puede editar la clientela del Centro "
+#: Permissions-Groups-CanEditCenterMembership
+msgid "Can edit Center Membership"
+msgstr "Puede editar la afiliación del Centro "
 
 #: Permissions-Groups-CanEditFeeAmountAttachedToTheAccount
 msgctxt "Permissions-Groups-CanEditFeeAmountAttachedToTheAccount"

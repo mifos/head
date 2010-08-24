@@ -43,4 +43,7 @@ public class QuestionnaireConstants {
     public static final String PPI_SURVEY_FILE_PREFIX = "PPISurvey";
     public static final String PPI_SURVEY_FILE_EXT = ".xml";
     public static final String SELECT_ONE = "--select one--";
+    public static final String DEFAULT_SECTION_NAME = "Misc";
+    public static final String DEFAULT_EVENT_FOR_CUSTOM_FIELD = "Create";
+    public static final String QUESTION_GROUP_TITLE_FOR_ADDITIONAL_FIELDS = "Additional Fields for %s";
 }

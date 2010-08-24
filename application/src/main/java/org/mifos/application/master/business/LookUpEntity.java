@@ -20,7 +20,7 @@
 
 package org.mifos.application.master.business;
 
-import java.util.Set;
+import org.mifos.framework.business.AbstractEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,7 +33,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import org.mifos.framework.business.AbstractEntity;
+import java.util.Set;
 
 /**
  * The entityType field should be a CamelCase name containing no whitespace (since it is used as part of a properties
@@ -85,6 +85,7 @@ public class LookUpEntity extends AbstractEntity {
 
     @Id
     @GeneratedValue
+    @Column(name="entity_id")
     private Short entityId;
 
     @Column(name="entity_name")

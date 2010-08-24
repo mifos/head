@@ -1448,8 +1448,8 @@ msgstr "可以从“暂时保存”状态中新建组"
 msgid "Can create new group in submit for approval state"
 msgstr "可以从“提交并等待审批”状态中新建组"
 
-#: Permissions-Groups-CanEditCenterClientship
-msgid "Can edit Center Clientship"
+#: Permissions-Groups-CanEditCenterMembership
+msgid "Can edit Center Membership"
 msgstr "可以编辑行政村成员"
 
 #: Permissions-Groups-CanEditFeeAmountAttachedToTheAccount
