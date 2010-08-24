@@ -101,12 +101,12 @@ public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
     private void createFooTable(Connection connection) throws SQLException {
         connection.createStatement().execute("drop table if exists foo");
         connection.createStatement().execute(
-                "CREATE TABLE FOO ( " + "FOO_ID INTEGER," + "Description VARCHAR(25),"
+                "CREATE TABLE foo ( " + "FOO_ID INTEGER," + "Description VARCHAR(25),"
                         + "PRIMARY KEY(FOO_ID) ) ENGINE=InnoDB CHARACTER SET utf8 ");
 
-        connection.createStatement().execute("INSERT INTO FOO VALUES(1, 'BAR')");
+        connection.createStatement().execute("INSERT INTO foo VALUES(1, 'BAR')");
 
-        connection.createStatement().execute("INSERT INTO FOO VALUES(2, 'BAZ')");
+        connection.createStatement().execute("INSERT INTO foo VALUES(2, 'BAZ')");
         connection.commit();
     }
 
