@@ -27,7 +27,7 @@ import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import java.util.List;
 
 public interface QuestionnaireMigrationMapper {
-    QuestionDto map(CustomFieldDefinitionEntity customField);
+    QuestionDto map(CustomFieldDefinitionEntity customField, Integer questionOrder);
 
     QuestionGroupDto map(List<CustomFieldDefinitionEntity> customFields);
 }

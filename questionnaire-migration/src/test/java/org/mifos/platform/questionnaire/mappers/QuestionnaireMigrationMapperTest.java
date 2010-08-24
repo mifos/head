@@ -58,11 +58,12 @@ public class QuestionnaireMigrationMapperTest {
     public void shouldMapToQuestionDto() {
         CustomFieldDefinitionEntity customField = new CustomFieldDefinitionEntity("Favourite color", CustomerLevel.CLIENT.getValue(),
                CustomFieldType.ALPHA_NUMERIC, EntityType.CLIENT, "Red", YesNoFlag.YES);
-        QuestionDto questionDto = mapper.map(customField);
+        QuestionDto questionDto = mapper.map(customField, 0);
         assertThat(questionDto, is(notNullValue()));
         assertThat(questionDto.getTitle(), is("Favourite color"));
         assertThat(questionDto.getType(), is(QuestionType.FREETEXT));
         assertThat(questionDto.isMandatory(),is(true));
+        assertThat(questionDto.getOrder(),is(0));
     }
 
     @Test
@@ -88,11 +89,14 @@ public class QuestionnaireMigrationMapperTest {
         assertThat(sectionDto.getOrder(), is(0));
         List<QuestionDto> questions = sectionDto.getQuestions();
         assertThat(questions, is(notNullValue()));
-        assertThat(questions.get(0).getTitle(), is("CustomField1"));
-        assertThat(questions.get(0).getType(), is(QuestionType.FREETEXT));
-        assertThat(questions.get(1).getTitle(), is("CustomField2"));
-        assertThat(questions.get(1).getType(), is(QuestionType.DATE));
-        assertThat(questions.get(2).getTitle(), is("CustomField3"));
-        assertThat(questions.get(2).getType(), is(QuestionType.NUMERIC));
+        assertQuestion(questions.get(0), "CustomField1", QuestionType.FREETEXT, 0);
+        assertQuestion(questions.get(1), "CustomField2", QuestionType.DATE, 1);
+        assertQuestion(questions.get(2), "CustomField3", QuestionType.NUMERIC, 2);
+    }
+
+    private void assertQuestion(QuestionDto questionDto, String title, QuestionType type, int order) {
+        assertThat(questionDto.getTitle(), is(title));
+        assertThat(questionDto.getType(), is(type));
+        assertThat(questionDto.getOrder(), is(order));
     }
 }

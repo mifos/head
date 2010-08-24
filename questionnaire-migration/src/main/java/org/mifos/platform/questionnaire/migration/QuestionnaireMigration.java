@@ -22,6 +22,7 @@ package org.mifos.platform.questionnaire.migration;
 
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.platform.questionnaire.migration.mappers.QuestionnaireMigrationMapper;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,8 +33,21 @@ public class QuestionnaireMigration {
     @Autowired
     private QuestionnaireMigrationMapper questionnaireMigrationMapper;
 
+    @Autowired
+    private QuestionnaireServiceFacade questionnaireServiceFacade;
+
+    @SuppressWarnings({"UnusedDeclaration"})
+    public QuestionnaireMigration() {
+        // used for Spring wiring
+    }
+
+    public QuestionnaireMigration(QuestionnaireMigrationMapper questionnaireMigrationMapper, QuestionnaireServiceFacade questionnaireServiceFacade) {
+        this.questionnaireMigrationMapper = questionnaireMigrationMapper;
+        this.questionnaireServiceFacade = questionnaireServiceFacade;
+    }
+
     public Integer migrate(List<CustomFieldDefinitionEntity> customFields) {
         QuestionGroupDto questionGroupDto = questionnaireMigrationMapper.map(customFields);
-        return null;
+        return questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
     }
 }

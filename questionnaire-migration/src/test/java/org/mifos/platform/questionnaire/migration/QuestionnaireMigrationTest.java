@@ -20,41 +20,65 @@
 
 package org.mifos.platform.questionnaire.migration;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.customers.persistence.CustomerDao;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
+import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.platform.questionnaire.migration.mappers.QuestionnaireMigrationMapper;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/test-questionnaire-migration-dbContext.xml", "/test-questionnaire-migration-persistenceContext.xml", "/META-INF/spring/QuestionnaireMigrationContext.xml"})
-@TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
+@RunWith(MockitoJUnitRunner.class)
 public class QuestionnaireMigrationTest {
 
-    @Autowired
-    private CustomerDao customerDao;
+    @Mock
+    private QuestionnaireMigrationMapper questionnaireMigrationMapper;
 
-    @Autowired
+    @Mock
+    private QuestionnaireServiceFacade questionnaireServiceFacade;
+
     private QuestionnaireMigration questionnaireMigration;
 
+    private static final int QUESTION_GROUP_ID = 123;
+
+    @Before
+    public void setUp() {
+        questionnaireMigration = new QuestionnaireMigration(questionnaireMigrationMapper, questionnaireServiceFacade);
+    }
+    
     @Test
-    @Transactional(rollbackFor = DataAccessException.class)
-    public void shouldMigrateAllAdditionalFieldsForClientEntity() {
-        List<CustomFieldDefinitionEntity> customFields = customerDao.retrieveCustomFieldEntitiesForClient();
-        assertThat(customFields, is(notNullValue()));
-        int size = customFields.size();
-        assertThat(size > 0, is(true));
-        questionnaireMigration.migrate(customFields);
+    public void shouldMapCustomFields() {
+        List<CustomFieldDefinitionEntity> customFields = getCustomFields();
+        QuestionGroupDto questionGroupDto = new QuestionGroupDto();
+        when(questionnaireMigrationMapper.map(customFields)).thenReturn(questionGroupDto);
+        when(questionnaireServiceFacade.createQuestionGroup(questionGroupDto)).thenReturn(QUESTION_GROUP_ID);
+        Integer questionGroupId = questionnaireMigration.migrate(customFields);
+        assertThat(questionGroupId, is(QUESTION_GROUP_ID));
+        verify(questionnaireMigrationMapper).map(customFields);
+        verify(questionnaireServiceFacade).createQuestionGroup(questionGroupDto);
+    }
+
+    private List<CustomFieldDefinitionEntity> getCustomFields() {
+        CustomFieldDefinitionEntity customField1 = new CustomFieldDefinitionEntity("CustomField1", CustomerLevel.CLIENT.getValue(),
+               CustomFieldType.ALPHA_NUMERIC, EntityType.CLIENT, "Def1", YesNoFlag.YES);
+        CustomFieldDefinitionEntity customField2 = new CustomFieldDefinitionEntity("CustomField2", CustomerLevel.CLIENT.getValue(),
+               CustomFieldType.DATE, EntityType.CLIENT, "Def2", YesNoFlag.YES);
+        CustomFieldDefinitionEntity customField3 = new CustomFieldDefinitionEntity("CustomField3", CustomerLevel.CLIENT.getValue(),
+               CustomFieldType.NUMERIC, EntityType.CLIENT, "Def3", YesNoFlag.YES);
+        return asList(customField1, customField2, customField3);
     }
 }

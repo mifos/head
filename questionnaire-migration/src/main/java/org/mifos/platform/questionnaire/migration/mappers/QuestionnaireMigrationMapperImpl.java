@@ -51,25 +51,31 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     }
 
     @Override
-    public QuestionDto map(CustomFieldDefinitionEntity customField) {
+    public QuestionDto map(CustomFieldDefinitionEntity customField, Integer questionOrder) {
         QuestionDto questionDto = new QuestionDto();
         questionDto.setTitle(customField.getLabel());
         questionDto.setType(mapToQuestionType(customField.getFieldTypeAsEnum()));
         questionDto.setMandatory(customField.isMandatory());
+        questionDto.setOrder(questionOrder);
         return questionDto;
     }
 
     @Override
     public QuestionGroupDto map(List<CustomFieldDefinitionEntity> customFields) {
-        QuestionGroupDto questionGroupDto = new QuestionGroupDto();
         SectionDto sectionDto = getDefaultSection();
-        questionGroupDto.addSection(sectionDto);
-        for (CustomFieldDefinitionEntity customField : customFields) {
-            sectionDto.addQuestion(map(customField));
+        for (int i = 0, customFieldsSize = customFields.size(); i < customFieldsSize; i++) {
+            CustomFieldDefinitionEntity customField = customFields.get(i);
+            sectionDto.addQuestion(map(customField, i));
         }
+        return getQuestionGroup(sectionDto, customFields.get(0).getEntityType());
+    }
+
+    private QuestionGroupDto getQuestionGroup(SectionDto sectionDto, Short entityType) {
+        QuestionGroupDto questionGroupDto = new QuestionGroupDto();
+        questionGroupDto.addSection(sectionDto);
         questionGroupDto.setEditable(false);
         questionGroupDto.setPpi(false);
-        EventSourceDto eventSourceDto = mapForCustomField(customFields.get(0).getEntityType());
+        EventSourceDto eventSourceDto = mapForCustomField(entityType);
         questionGroupDto.setEventSourceDto(eventSourceDto);
         questionGroupDto.setTitle(format(QUESTION_GROUP_TITLE_FOR_ADDITIONAL_FIELDS, eventSourceDto));
         return questionGroupDto;
