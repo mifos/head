@@ -415,15 +415,15 @@ drop table if exists events;
 
 drop table if exists applied_upgrades;
 
-drop table if exists qrtz_job_details;
-drop table if exists qrtz_job_listeners;
-drop table if exists qrtz_triggers;
-drop table if exists qrtz_simple_triggers;
-drop table if exists qrtz_cron_triggers;
-drop table if exists qrtz_blob_triggers;
-drop table if exists qrtz_trigger_listeners;
-drop table if exists qrtz_calendars;
-drop table if exists qrtz_paused_trigger_grps;
-drop table if exists qrtz_fired_triggers;
-drop table if exists qrtz_scheduler_state;
-drop table if exists qrtz_locks;
+drop table if exists qrtz_JOB_DETAILS;
+drop table if exists qrtz_JOB_LISTENERS;
+drop table if exists qrtz_TRIGGERS;
+drop table if exists qrtz_SIMPLE_TRIGGERS;
+drop table if exists qrtz_CRON_TRIGGERS;
+drop table if exists qrtz_BLOB_TRIGGERS;
+drop table if exists qrtz_TRIGGER_LISTENERS;
+drop table if exists qrtz_CALENDARS;
+drop table if exists qrtz_PAUSED_TRIGGER_GRPS;
+drop table if exists qrtz_FIRED_TRIGGERS;
+drop table if exists qrtz_SCHEDULER_STATE;
+drop table if exists qrtz_LOCKS;
