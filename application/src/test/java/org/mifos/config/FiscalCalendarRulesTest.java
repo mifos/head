@@ -174,7 +174,7 @@ public class FiscalCalendarRulesTest {
 
     @Test
     public void testGetScheduleTypeForMeetingOnHoliday() {
-        String scheduleType = new FiscalCalendarRules().getScheduleTypeForMeetingOnHoliday();
+        String scheduleType = new FiscalCalendarRules().getScheduleTypeForMeetingIfNonWorkingDay();
        Assert.assertEquals(scheduleType.toUpperCase(), "same_day".toUpperCase());
     }
 
