@@ -22,8 +22,11 @@
 [@adminLeftPaneLayout]
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
     <script src="pages/questionnaire/js/createQuestionGroup.js" type="text/javascript"></script>
+    <script src="pages/questionnaire/js/createQuestion.js" type="text/javascript"></script>
     <span id="page.id" title="createQuestionGroup"></span>
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.addQuestionGroup":""}/]
+    [#assign addNewQuestion][@spring.message "questionnaire.addNewQuestion"/][/#assign]
+    [#assign selectQuestions][@spring.message "questionnaire.selectQuestions"/][/#assign]
     [@mifos.crumbpairs breadcrumb/]
     <div class="content_panel">
         <h1>
@@ -61,26 +64,18 @@
                         onkeypress="return FnCheckNumCharsOnPress(event,this);"
                         onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
                     </li>
-                    <li style="padding-bottom: 0pt;">
-                        <label for="txtListSearch"><span class="red">*</span>[@spring.message "questionnaire.select.questions"/]:</label>
-                        <input type="text" autocomplete="off" id="txtListSearch" name="txtListSearch" style="width:21em;"/>
+                    <li>
+                      <label for="addOrSelectFlag">&nbsp;</label>
+                      [@mifosmacros.boolRadioButtons "questionGroupForm.addOrSelectFlag", {"false":selectQuestions, "true":addNewQuestion},'','' /]
                     </li>
-                    <li style="padding-top: 0pt;">
-                        <label for="questionList">&nbsp;</label>
-                        <ol class="questionList" id="questionList" style="overflow:auto; width:19em; height:180px; border:1px solid #336699; padding-left:5px">
-                            [#list questionGroupForm.questionPool as sectionQuestion]
-                            <li style="padding-bottom: 0pt;">
-                               <input type="checkbox" id="${sectionQuestion.questionId?c}" name="selectedQuestionIds" value="${sectionQuestion.questionId?c}"/>
-                                &nbsp;<label for="${sectionQuestion.questionId?c}">${sectionQuestion.title}</label>
-                            </li>
-                            [/#list]
-                        </ol>
-                    </li>
+                    <div id="addQuestionDiv">
+                        [#include "addQuestion.ftl"]
+                    </div>
+                    <div id="selectQuestionsDiv">
+                        [#include "selectQuestions.ftl"]
+                    </div>
                 </ol>
             </fieldset>
-            <div class="marginLeft15em">
-                    <input type="submit" name="_eventId_addSection" id="_eventId_addSection" value='[@spring.message "questionnaire.add.questions"/]' class="buttn"/>
-            </div>
             <div id="divSections">
                 [#assign reversedSections=questionGroupForm.sections?reverse]
                 [#list reversedSections as section]
@@ -116,9 +111,9 @@
             </div>
 
             <div class="marginLeft12em">
-                 <input type="submit" name="_eventId_defineQuestionGroup" id="_eventId_defineQuestionGroup" value='[@spring.message "submit"/]' class="buttn"/>
+                 <input type="submit" name="_eventId_defineQuestionGroup" id="_eventId_defineQuestionGroup" value="[@spring.message "questionnaire.submit"/]" class="buttn"/>
                  &nbsp;
-                 <input type="submit" name="_eventId_cancel" id="_eventId_cancel" value='[@spring.message "cancel"/]' class="cancelbuttn"/>
+                 <input type="submit" name="_eventId_cancel" id="_eventId_cancel" value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
             </div>
         </form>
     </div>

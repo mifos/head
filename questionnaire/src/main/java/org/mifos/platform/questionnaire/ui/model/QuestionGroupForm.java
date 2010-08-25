@@ -21,12 +21,13 @@
 package org.mifos.platform.questionnaire.ui.model;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
+import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.trim;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.DEFAULT_APPLIES_TO_OPTION;
 @SuppressWarnings("PMD")
-public class QuestionGroupForm implements Serializable {
+public class QuestionGroupForm extends ScreenObject {
     private static final long serialVersionUID = -7545625058942409636L;
 
     private QuestionGroupDetail questionGroupDetail;
@@ -44,6 +45,9 @@ public class QuestionGroupForm implements Serializable {
     private List<String> selectedQuestionIds = new ArrayList<String>();
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<SectionQuestionDetail> questionPool = new ArrayList<SectionQuestionDetail>();
+    @javax.validation.Valid
+    private Question currentQuestion = new Question(new QuestionDetail());
+    private boolean addOrSelectFlag;
 
     public QuestionGroupForm() {
         this(new QuestionGroupDetail());
@@ -111,10 +115,14 @@ public class QuestionGroupForm implements Serializable {
     public void addCurrentSection() {
         currentSection.trimName();
         if (StringUtils.isEmpty(getSectionName())) {
-            setSectionName("Misc");
+            setSectionName(QuestionnaireConstants.DEFAULT_SECTION_NAME);
         }
         addCurrentSectionToSections();
-        addSelectedQuestionsToCurrentSection();
+        if (addOrSelectFlag) {
+            addNewQuestion();
+        } else {
+            addSelectedQuestionsToCurrentSection();
+        }
         currentSection = new SectionDetailForm();
         selectedQuestionIds = new ArrayList<String>();
     }
@@ -128,6 +136,34 @@ public class QuestionGroupForm implements Serializable {
             }
         }
         questionPool.removeAll(addedQuestions);
+    }
+
+    private void addNewQuestion() {
+        currentQuestion.trimTitleAndSetChoices();
+        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(currentQuestion.getQuestionDetail(), false);
+        currentSection.addSectionQuestion(sectionQuestionDetail);
+        currentQuestion = new Question(new QuestionDetail());
+    }
+
+    public boolean isDuplicateTitle(String questionTitle) {
+        boolean result = false;
+        if(StringUtils.isNotEmpty(questionTitle)){
+            for (SectionQuestionDetail sectionQuestionDetail : getAllQuestionsInAllSections()) {
+                if(StringUtils.equalsIgnoreCase(questionTitle.trim(), sectionQuestionDetail.getTitle())){
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    private List<SectionQuestionDetail> getAllQuestionsInAllSections() {
+        List<SectionQuestionDetail> sectionQuestionDetails = new ArrayList<SectionQuestionDetail>();
+        for (SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()) {
+            sectionQuestionDetails.addAll(sectionDetail.getQuestions());
+        }
+        return sectionQuestionDetails;
     }
 
     private void addCurrentSectionToSections() {
@@ -231,5 +267,21 @@ public class QuestionGroupForm implements Serializable {
 
     public void setEditable(boolean editable) {
        questionGroupDetail.setEditable(editable); 
+    }
+
+    public Question getCurrentQuestion() {
+        return currentQuestion;
+    }
+
+    public void setCurrentQuestion(Question currentQuestion) {
+        this.currentQuestion = currentQuestion;
+    }
+
+    public boolean isAddOrSelectFlag() {
+        return addOrSelectFlag;
+    }
+
+    public void setAddOrSelectFlag(boolean addOrSelectFlag) {
+        this.addOrSelectFlag = addOrSelectFlag;
     }
 }
