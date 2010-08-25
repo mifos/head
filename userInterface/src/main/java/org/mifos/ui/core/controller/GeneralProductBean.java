@@ -29,6 +29,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+@SuppressWarnings("PMD")
 public class GeneralProductBean {
 
     private Integer id;
