@@ -46,15 +46,11 @@ public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
     public List<BatchjobsDto> getBatchjobs(ServletContext context) throws TaskSystemException, FileNotFoundException, IOException, SchedulerException {
         List<BatchjobsDto> batchjobs = new ArrayList<BatchjobsDto>();
         MifosScheduler mifosScheduler = (MifosScheduler) context.getAttribute(MifosScheduler.class.getName());
-
-        StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
-        schedulerFactory.initialize(mifosScheduler.getQuartzSchedulerConfigurationFilePath());
+        Scheduler scheduler = mifosScheduler.getScheduler();
 
         for (String mifosTaskName : mifosScheduler.getTaskNames()) {
             Trigger trigger = null;
             JobDetail jobDetail = null;
-
-            Scheduler scheduler = schedulerFactory.getScheduler();
 
             int triggerState = 0;
             for(String group : scheduler.getJobGroupNames()) {

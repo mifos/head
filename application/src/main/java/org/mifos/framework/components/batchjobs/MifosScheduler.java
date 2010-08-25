@@ -87,6 +87,10 @@ public class MifosScheduler {
         }
     }
 
+    public Scheduler getScheduler() {
+        return this.scheduler;
+    }
+
     /**
      * Method schedules specified batch job to run accordingly to given cron expression, with given priority.
      * Since quartz scheduler used in mifos is configured to use a single working thread, it's ensured that
