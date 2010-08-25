@@ -24,7 +24,7 @@
   <div class=" content">
     <p class="font15 orangeheading">[@spring.message "manageSavingsProduct.youhavesuccessfullyaddedanewSavingsproduct"/]</p>
     <p><span class="fontBold">[@spring.message "manageSavingsProduct.pleaseNoteSavingsProducthasbeenassignedthesystemIDnumber"/]</span><span class="fontBold">${product.globalPrdOfferingNum}</span></p>
-    <p class="fontBold"><a href="savingsProductDetails.ftl?productId=${product.prdOfferingId}">[@spring.message "manageSavingsProduct.viewSavingsproductdetailsnow"/]</a></p>
+    <p class="fontBold"><a href="viewEditSavingsProduct.ftl?productId=${product.prdOfferingId}">[@spring.message "manageSavingsProduct.viewSavingsproductdetailsnow"/]</a></p>
     <p><a href="defineSavingsProduct.ftl">[@spring.message "manageSavingsProduct.defineanewSavingsproduct"/]</a></p>
   </div>
   <!--Main Content Ends-->

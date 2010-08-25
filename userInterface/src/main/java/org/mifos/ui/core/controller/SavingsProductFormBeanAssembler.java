@@ -27,7 +27,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.dto.domain.ProductDetailsDto;
-import org.mifos.dto.domain.SavingsProductRequest;
+import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.SavingsProductFormDto;
 
@@ -127,7 +127,7 @@ public class SavingsProductFormBeanAssembler {
         formBean.setInterestGeneralLedgerOptions(interestGeneralLedgerOptions);
     }
 
-    public SavingsProductRequest assembleSavingsProductRequest(SavingsProductFormBean formBean) {
+    public SavingsProductDto assembleSavingsProductRequest(SavingsProductFormBean formBean) {
 
         Integer category = Integer.valueOf(formBean.getGeneralDetails().getSelectedCategory());
         Integer applicableFor = Integer.valueOf(formBean.getGeneralDetails().getSelectedApplicableFor());
@@ -140,12 +140,13 @@ public class SavingsProductFormBeanAssembler {
         ProductDetailsDto productDetails = new ProductDetailsDto(formBean.getGeneralDetails().getName(),
                 formBean.getGeneralDetails().getShortName(), formBean.getGeneralDetails().getDescription(),
                 category, startDate, endDate, applicableFor);
+        productDetails.setId(formBean.getGeneralDetails().getId());
 
         Integer depositType = Integer.valueOf(formBean.getSelectedDepositType());
 
-        Integer groupMandatorySavingsType = null;
+        Integer groupSavingsType = null;
         if (StringUtils.isNotBlank(formBean.getSelectedGroupSavingsApproach())) {
-            groupMandatorySavingsType = Integer.valueOf(formBean.getSelectedGroupSavingsApproach());
+            groupSavingsType = Integer.valueOf(formBean.getSelectedGroupSavingsApproach());
         }
 
         Double amountForDeposit = formBean.getAmountForDeposit();
@@ -159,8 +160,8 @@ public class SavingsProductFormBeanAssembler {
         Integer interestGlCode = Integer.parseInt(formBean.getSelectedInterestGlCode());
         Integer depositGlCode = Integer.parseInt(formBean.getSelectedPrincipalGlCode());
 
-        return new SavingsProductRequest(productDetails, formBean.isMandatoryGroupSavingAccount(),
-                depositType, groupMandatorySavingsType, amountForDeposit, maxWithdrawal,
+        return new SavingsProductDto(productDetails, formBean.isMandatoryGroupSavingAccount(),
+                depositType, groupSavingsType, amountForDeposit, maxWithdrawal,
                 interestRate, interestCalculationType, formBean.getInterestCalculationFrequency(), interestCalculationFrequencyPeriod,
                 formBean.getInterestPostingMonthlyFrequency(), minBalanceForInterestCalculation, depositGlCode, interestGlCode);
     }

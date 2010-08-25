@@ -31,6 +31,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 public class GeneralProductBean {
 
+    private Integer id;
+
     @NotEmpty
     private String name;
 
@@ -176,5 +178,13 @@ public class GeneralProductBean {
 
     public void setApplicableForOptions(Map<String, String> applicableForOptions) {
         this.applicableForOptions = applicableForOptions;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

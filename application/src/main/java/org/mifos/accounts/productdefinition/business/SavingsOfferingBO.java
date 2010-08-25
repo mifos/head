@@ -36,6 +36,8 @@ import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.dto.domain.ProductDetailsDto;
+import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -85,17 +87,6 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 
         return savingsProduct;
     }
-
-//    public static SavingsOfferingBO createNewGroupMandatory(int userId, String systemId, String name, String shortName,
-//            String description, ProductCategoryBO productCategory, DateTime startDate, DateTime endDate,
-//            PrdApplicableMasterEntity applicableToEntity, PrdStatusEntity activeStatus, PrdStatusEntity inActiveStatus,
-//            SavingsTypeEntity savingsTypeEntity, RecommendedAmntUnitEntity recommendedAmntUnitEntity,
-//            Money amountForDeposit, Money maxWithdrawal,
-//            BigDecimal interestRate, InterestCalcTypeEntity interestCalcTypeEntity, GLCodeEntity depositGlEntity, GLCodeEntity interestGlEntity) {
-//        return createNew(userId, systemId, name, shortName, description, productCategory, startDate, endDate,
-//                applicableToEntity, activeStatus, inActiveStatus, savingsTypeEntity, recommendedAmntUnitEntity,
-//                amountForDeposit, maxWithdrawal, interestRate, interestCalcTypeEntity, depositGlEntity, interestGlEntity);
-//    }
 
     /**
      * @deprecated - get builders to use factory methods
@@ -210,7 +201,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         return savingsOfferingMeetings;
     }
 
-    public PrdOfferingMeetingEntity getFreqOfPostIntcalc() throws ProductDefinitionException {
+    public PrdOfferingMeetingEntity getFreqOfPostIntcalc() {
         return getPrdOfferingMeeting(MeetingType.SAVINGS_INTEREST_POSTING);
     }
 
@@ -218,7 +209,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         this.savingsOfferingMeetings.add(freqOfPostIntcalc);
     }
 
-    public PrdOfferingMeetingEntity getTimePerForInstcalc() throws ProductDefinitionException {
+    public PrdOfferingMeetingEntity getTimePerForInstcalc() {
         return getPrdOfferingMeeting(MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD);
     }
 
@@ -353,16 +344,17 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         prdLogger.debug("updated savings product offering done :" + getGlobalPrdOfferingNum());
     }
 
-    private PrdOfferingMeetingEntity getPrdOfferingMeeting(final MeetingType meetingType) throws ProductDefinitionException {
-        prdLogger.debug("getting product offering meeting for :" + meetingType);
+    private PrdOfferingMeetingEntity getPrdOfferingMeeting(final MeetingType meetingType) {
+
+        PrdOfferingMeetingEntity matchingEntity = null;
         if (getSavingsOfferingMeetings() != null && getSavingsOfferingMeetings().size() > 0) {
             for (PrdOfferingMeetingEntity prdOfferingMeeting : getSavingsOfferingMeetings()) {
                 if (prdOfferingMeeting.getprdOfferingMeetingType().equals(meetingType)) {
-                    return prdOfferingMeeting;
+                    matchingEntity = prdOfferingMeeting;
                 }
             }
         }
-        throw new ProductDefinitionException("errors.getmeeting");
+        return matchingEntity;
     }
 
     private void validate(final SavingsTypeEntity savingsType, final InterestCalcTypeEntity interestCalcType,
@@ -377,5 +369,51 @@ public class SavingsOfferingBO extends PrdOfferingBO {
             throw new ProductDefinitionException("errors.create");
         }
         prdLogger.debug("Validating the fields in savings Offering done");
+    }
+
+    public SavingsProductDto toFullDto() {
+        ProductDetailsDto details = super.toDetailsDto();
+        Integer groupSavingsType = Integer.valueOf(0);
+        boolean groupSavingsAccount = false;
+        if (this.recommendedAmntUnit != null) {
+            groupSavingsType = this.recommendedAmntUnit.getId().intValue();
+            groupSavingsAccount = true;
+        }
+
+        PrdOfferingMeetingEntity interestCalculationPeriod = getTimePerForInstcalc();
+        PrdOfferingMeetingEntity interestPosting = getFreqOfPostIntcalc();
+
+
+        SavingsProductDto savingsProductDto = new SavingsProductDto(details, groupSavingsAccount, this.savingsType.getId().intValue(), groupSavingsType,
+                this.recommendedAmount.getAmountDoubleValue(), this.maxAmntWithdrawl.getAmountDoubleValue(),
+                BigDecimal.valueOf(this.interestRate), this.interestCalcType.getId().intValue(), interestCalculationPeriod.getMeeting().getRecurAfter().intValue(),
+                interestCalculationPeriod.getMeeting().getRecurrenceType().getValue().intValue(), interestPosting.getMeeting().getRecurAfter().intValue(),
+                this.minAmntForInt.getAmount(), this.depositGLCode.getGlcodeId().intValue(), this.interestGLCode.getGlcodeId().intValue());
+        savingsProductDto.setDepositGlCodeValue(this.depositGLCode.getGlcode());
+        savingsProductDto.setInterestGlCodeValue(this.interestGLCode.getGlcode());
+
+        return savingsProductDto;
+    }
+
+    public void updateSavingsDetails(SavingsTypeEntity savingsType, Money recommendedAmount,
+            RecommendedAmntUnitEntity recommendedAmntUnit, Money maxAmntWithdrawl,
+            Double interestRate, InterestCalcTypeEntity interestCalcType,
+            PrdOfferingMeetingEntity timePerForInstcalc, PrdOfferingMeetingEntity freqOfPostIntcalc,
+            Money minAmntForInt) {
+        this.savingsType = savingsType;
+        this.recommendedAmount = recommendedAmount;
+        this.recommendedAmntUnit = recommendedAmntUnit;
+        this.maxAmntWithdrawl = maxAmntWithdrawl;
+        this.interestRate = interestRate;
+        this.interestCalcType = interestCalcType;
+        this.minAmntForInt = minAmntForInt;
+
+        this.savingsOfferingMeetings.remove(getTimePerForInstcalc());
+        timePerForInstcalc.setPrdOffering(this);
+        setTimePerForInstcalc(timePerForInstcalc);
+
+        this.savingsOfferingMeetings.remove(getFreqOfPostIntcalc());
+        freqOfPostIntcalc.setPrdOffering(this);
+        setFreqOfPostIntcalc(freqOfPostIntcalc);
     }
 }

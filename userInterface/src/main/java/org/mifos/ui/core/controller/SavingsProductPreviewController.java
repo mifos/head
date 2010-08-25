@@ -27,7 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.PrdOfferingDto;
-import org.mifos.dto.domain.SavingsProductRequest;
+import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,7 +43,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/previewSavingsProducts")
 @SessionAttributes(value = {"savingsProduct", "product"})
-public class DefineSavingsProductPreviewController {
+public class SavingsProductPreviewController {
 
     private static final String REDIRECT_TO_ADMIN = "redirect:/AdminAction.do?method=load";
     private static final String CANCEL_PARAM = "CANCEL";
@@ -52,18 +52,20 @@ public class DefineSavingsProductPreviewController {
     @Autowired
     private AdminServiceFacade adminServiceFacade;
 
-    public DefineSavingsProductPreviewController(final AdminServiceFacade adminServiceFacade) {
+    public SavingsProductPreviewController(final AdminServiceFacade adminServiceFacade) {
         this.adminServiceFacade = adminServiceFacade;
     }
 
-    protected DefineSavingsProductPreviewController() {
+    protected SavingsProductPreviewController() {
         // spring auto wiring
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView showPopulatedForm(@ModelAttribute("savingsProduct") SavingsProductFormBean savingsProduct) {
+    public ModelAndView showPopulatedForm(@ModelAttribute("savingsProduct") SavingsProductFormBean savingsProduct,
+                                        @RequestParam(value = "editFormview", required = false) String editFormview) {
         ModelAndView modelAndView = new ModelAndView("previewSavingsProducts");
         modelAndView.addObject("savingsProduct", savingsProduct);
+        modelAndView.addObject("editFormview", editFormview);
 
         GeneralProductBean bean = savingsProduct.getGeneralDetails();
         String categoryName = bean.getCategoryOptions().get(bean.getSelectedCategory());
@@ -110,33 +112,49 @@ public class DefineSavingsProductPreviewController {
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
             @RequestParam(value = EDIT_PARAM, required = false) String edit,
+            @RequestParam(value = "editFormview", required = false) String editFormview,
             @ModelAttribute("savingsProduct") SavingsProductFormBean savingsProduct,
             BindingResult result) {
 
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = new ModelAndView(REDIRECT_TO_ADMIN);
 
         if (StringUtils.isNotBlank(cancel)) {
             modelAndView.setViewName(REDIRECT_TO_ADMIN);
         } else if (StringUtils.isNotBlank(edit)) {
-            modelAndView.setViewName("defineSavingsProduct");
+            modelAndView.setViewName(editFormview);
             modelAndView.addObject("savingsProduct", savingsProduct);
         } else if (result.hasErrors()) {
             modelAndView.setViewName("previewSavingsProducts");
             modelAndView.addObject("savingsProduct", savingsProduct);
         } else {
 
-            try {
-              SavingsProductRequest savingsProductRequest = new SavingsProductFormBeanAssembler().assembleSavingsProductRequest(savingsProduct);
-              PrdOfferingDto product = this.adminServiceFacade.createSavingsProduct(savingsProductRequest);
+            PrdOfferingDto product;
 
-              modelAndView.setViewName("redirect:/confirmSavingsProduct.ftl");
-              modelAndView.addObject("product", product);
-            } catch (BusinessRuleException e) {
-                ObjectError error = new ObjectError("savingsProduct", new String[] { e.getMessageKey() }, new Object[] {}, "Error: Problem persisting savings product.");
-                result.addError(error);
-                modelAndView.setViewName("previewSavingsProducts");
-                modelAndView.addObject("savingsProduct", savingsProduct);
+            if (editFormview.equalsIgnoreCase("defineSavingsProduct")) {
+
+                try {
+                    SavingsProductDto savingsProductRequest = new SavingsProductFormBeanAssembler()
+                            .assembleSavingsProductRequest(savingsProduct);
+                    product = this.adminServiceFacade.createSavingsProduct(savingsProductRequest);
+
+                    modelAndView.setViewName("redirect:/confirmSavingsProduct.ftl");
+                    modelAndView.addObject("product", product);
+                } catch (BusinessRuleException e) {
+                    ObjectError error = new ObjectError("savingsProduct", new String[] { e.getMessageKey() },
+                            new Object[] {}, "Error: Problem persisting savings product.");
+                    result.addError(error);
+                    modelAndView.setViewName("previewSavingsProducts");
+                    modelAndView.addObject("savingsProduct", savingsProduct);
+                }
+            } else if (editFormview.equalsIgnoreCase("editSavingsProduct")) {
+
+                SavingsProductDto savingsProductRequest = new SavingsProductFormBeanAssembler().assembleSavingsProductRequest(savingsProduct);
+                product = this.adminServiceFacade.updateSavingsProduct(savingsProductRequest);
+
+                modelAndView.setViewName("redirect:/viewEditSavingsProduct.ftl?productId=" + product.getPrdOfferingId());
+                modelAndView.addObject("product", product);
             }
+
         }
         return modelAndView;
     }

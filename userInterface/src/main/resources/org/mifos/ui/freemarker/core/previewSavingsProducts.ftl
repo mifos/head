@@ -102,6 +102,7 @@
 			</div>
             <div class="clear">&nbsp;</div>
             <div class="span-20">
+                <input type="hidden" name="editFormview" value="${editFormview}" />
             	<input class="buttn2" type="submit" name="EDIT" value="Edit Savings product information"/>
             </div>
           </div>

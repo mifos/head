@@ -20,7 +20,9 @@
 
 package org.mifos.accounts.productdefinition.business;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -36,6 +38,7 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -501,5 +504,37 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
 
     public PrdOfferingDto toDto() {
         return new PrdOfferingDto(this.prdOfferingId, this.prdOfferingName, this.globalPrdOfferingNum);
+    }
+
+    public ProductDetailsDto toDetailsDto() {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        DateTime startDateTime = new DateTime(this.startDate);
+        String startDateFormatted = format.format(this.startDate);
+        String endDateFormatted = "";
+        DateTime endDateTime = null;
+        if (this.endDate != null) {
+            endDateTime = new DateTime(this.endDate);
+            endDateFormatted = format.format(this.endDate);
+        }
+        ProductDetailsDto detailsDto = new ProductDetailsDto(this.prdOfferingName, this.prdOfferingShortName, this.description, this.prdCategory.getProductCategoryID().intValue(), startDateTime, endDateTime, this.prdApplicableMaster.getId().intValue());
+        detailsDto.setId(this.prdOfferingId.intValue());
+        detailsDto.setGlobalNumber(this.globalPrdOfferingNum);
+        detailsDto.setStatus(this.prdStatus.getOfferingStatusId().intValue());
+        detailsDto.setCategoryName(this.prdCategory.getProductCategoryName());
+        detailsDto.setStartDateFormatted(startDateFormatted);
+        detailsDto.setEndDateFormatted(endDateFormatted);
+        return detailsDto;
+    }
+
+    public void updateProductDetails(String name, String shortName, String description, ProductCategoryBO productCategory,
+            Date startDate, Date endDate, PrdApplicableMasterEntity applicableMasterEntity, PrdStatusEntity prdStatusEntity) {
+        this.prdOfferingName = name;
+        this.prdOfferingShortName = shortName;
+        this.description = description;
+        this.prdCategory = productCategory;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.prdApplicableMaster = applicableMasterEntity;
+        this.prdStatus = prdStatusEntity;
     }
 }

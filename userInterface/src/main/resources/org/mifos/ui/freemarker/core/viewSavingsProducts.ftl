@@ -28,7 +28,16 @@
 		
 		<p>[@spring.message "manageLoanProducts.viewSavingsProducts.clickonaSavingsproductbelowtoviewdetailsandmakechangesor"/] <a href="defineSavingsProduct.ftl">[@spring.message "admin.definenewSavingsproduct"/]</a></p>	    
 	    [#list products as product]
-	        <img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/> <a href="savingsProductDetails.ftl?productId=${product.prdOfferingId}">${product.prdOfferingName}</a> ${product.prdOfferingStatusName}<br/>
+	        <div>
+	        	<img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/> <a href="viewEditSavingsProduct.ftl?productId=${product.prdOfferingId}">${product.prdOfferingName}</a>
+	        	[#switch product.prdOfferingStatusId]
+                	[#case 2]
+                	[#break]
+                	[#case 5]
+                	<span><img src="pages/framework/images/status_closedblack.gif" />[@spring.message "inactive"/]</span>
+                	[#break]
+                [/#switch] 
+	        </div>
 	    [/#list]   
   	</div>
   	<!--Main Content Ends-->

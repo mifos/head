@@ -48,7 +48,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.ProductDetailsDto;
-import org.mifos.dto.domain.SavingsProductRequest;
+import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
@@ -63,7 +63,7 @@ public class SavingsProductAssembler {
         this.generalLedgerDao = generalLedgerDao;
     }
 
-    public SavingsOfferingBO fromDto(MifosUser user, SavingsProductRequest savingsProductRequest) {
+    public SavingsOfferingBO fromDto(MifosUser user, SavingsProductDto savingsProductRequest) {
 
         try {
             // FIXME - keithw - this is general assembler common to both savings and loans i.e. all products. so

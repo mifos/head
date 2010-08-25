@@ -23,7 +23,7 @@ package org.mifos.dto.domain;
 import java.math.BigDecimal;
 
 @SuppressWarnings("PMD")
-public class SavingsProductRequest {
+public class SavingsProductDto {
 
     private final ProductDetailsDto productDetails;
     private final Integer depositType;
@@ -38,21 +38,26 @@ public class SavingsProductRequest {
     private final Integer interestPostingMonthlyFrequency;
     private final BigDecimal minBalanceForInterestCalculation;
     private final Integer depositGlCode;
+    private String depositGlCodeValue;
     private final Integer interestGlCode;
+    private String interestGlCodeValue;
 
-    public SavingsProductRequest(ProductDetailsDto productDetailsDto, boolean groupMandatorySavingsAccount,
-            Integer depositType, Integer groupMandatorySavingsType, Double amountForDeposit, Double maxWithdrawal,
+    /**
+     * minimal legal constructor for create savings products request
+     */
+    public SavingsProductDto(ProductDetailsDto productDetailsDto, boolean groupSavingsAccount,
+            Integer depositType, Integer groupSavingsType, Double amountForDeposit, Double maxWithdrawal,
             BigDecimal interestRate, Integer interestCalculationType, Integer interestCalculationFrequency,
             Integer interestCalculationFrequencyPeriod, Integer interestPostingMonthlyFrequency,
             BigDecimal minBalanceForInterestCalculation, Integer depositGlCode, Integer interestGlCode) {
         this.productDetails = productDetailsDto;
-        this.groupMandatorySavingsAccount = groupMandatorySavingsAccount;
+        this.groupMandatorySavingsAccount = groupSavingsAccount;
         this.depositType = depositType;
-        this.interestCalculationType = interestCalculationType;
-        this.groupMandatorySavingsType = groupMandatorySavingsType;
+        this.groupMandatorySavingsType = groupSavingsType;
         this.amountForDeposit = amountForDeposit;
         this.maxWithdrawal = maxWithdrawal;
         this.interestRate = interestRate;
+        this.interestCalculationType = interestCalculationType;
         this.interestCalculationFrequency = interestCalculationFrequency;
         this.interestCalculationFrequencyPeriod = interestCalculationFrequencyPeriod;
         this.interestPostingMonthlyFrequency = interestPostingMonthlyFrequency;
@@ -115,5 +120,21 @@ public class SavingsProductRequest {
 
     public Integer getInterestGlCode() {
         return this.interestGlCode;
+    }
+
+    public String getDepositGlCodeValue() {
+        return this.depositGlCodeValue;
+    }
+
+    public void setDepositGlCodeValue(String depositGlCodeValue) {
+        this.depositGlCodeValue = depositGlCodeValue;
+    }
+
+    public String getInterestGlCodeValue() {
+        return this.interestGlCodeValue;
+    }
+
+    public void setInterestGlCodeValue(String interestGlCodeValue) {
+        this.interestGlCodeValue = interestGlCodeValue;
     }
 }

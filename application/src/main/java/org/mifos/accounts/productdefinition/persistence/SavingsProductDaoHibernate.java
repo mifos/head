@@ -40,4 +40,13 @@ public class SavingsProductDaoHibernate implements SavingsProductDao {
     public void save(SavingsOfferingBO product) {
         this.genericDao.createOrUpdate(product);
     }
+
+    @Override
+    public SavingsOfferingBO findById(Integer productId) {
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("prdOfferingId", productId.shortValue());
+
+        return (SavingsOfferingBO) this.genericDao.executeUniqueResultNamedQuery("savingsProduct.byid", queryParameters);
+    }
 }

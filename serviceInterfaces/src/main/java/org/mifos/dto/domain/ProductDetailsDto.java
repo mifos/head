@@ -24,14 +24,23 @@ import org.joda.time.DateTime;
 
 public class ProductDetailsDto {
 
+    private Integer id;
+    private String globalNumber;
+    private Integer status;
     private final String name;
     private final String shortName;
     private final String description;
     private final Integer category;
+    private String categoryName;
     private final DateTime startDate;
+    private String startDateFormatted;
     private final DateTime endDate;
+    private String endDateFormatted;
     private final Integer applicableFor;
 
+    /**
+     * minimal legal constructor for product creation request.
+     */
     public ProductDetailsDto(String name, String shortName, String description, Integer category, DateTime startDate,
             DateTime endDate, Integer applicableFor) {
         this.name = name;
@@ -69,5 +78,53 @@ public class ProductDetailsDto {
 
     public Integer getApplicableFor() {
         return this.applicableFor;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getGlobalNumber() {
+        return this.globalNumber;
+    }
+
+    public void setGlobalNumber(String globalNumber) {
+        this.globalNumber = globalNumber;
+    }
+
+    public String getCategoryName() {
+        return this.categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public Integer getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getStartDateFormatted() {
+        return this.startDateFormatted;
+    }
+
+    public void setStartDateFormatted(String startDateFormatted) {
+        this.startDateFormatted = startDateFormatted;
+    }
+
+    public String getEndDateFormatted() {
+        return this.endDateFormatted;
+    }
+
+    public void setEndDateFormatted(String endDateFormatted) {
+        this.endDateFormatted = endDateFormatted;
     }
 }

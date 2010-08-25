@@ -27,12 +27,13 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 
 public interface SavingsProductDao {
 
+    SavingsOfferingBO findById(Integer productId);
+
     ProductTypeEntity findSavingsProductConfiguration();
 
     void save(ProductTypeEntity savingsProductConfiguration);
 
     List<Object[]> findAllSavingsProducts();
 
-    void save(SavingsOfferingBO loanProduct);
-
+    void save(SavingsOfferingBO savingsProduct);
 }

@@ -353,4 +353,7 @@
         where prdOffering.prdMixFlag =1 order by prdOffering.prdOfferingName
 		]]>
 	</query>
+	<query name="savingsProduct.byid">
+		<![CDATA[from SavingsOfferingBO sp where sp.prdOfferingId=:prdOfferingId]]>
+	</query>
 </hibernate-mapping>

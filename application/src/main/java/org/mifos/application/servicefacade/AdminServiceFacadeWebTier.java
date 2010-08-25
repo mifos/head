@@ -111,7 +111,7 @@ import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.ProductTypeDto;
-import org.mifos.dto.domain.SavingsProductRequest;
+import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.dto.screen.ListElement;
@@ -136,7 +136,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
@@ -1574,7 +1573,47 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public PrdOfferingDto createSavingsProduct(SavingsProductRequest savingsProductRequest) {
+    public PrdOfferingDto updateSavingsProduct(SavingsProductDto savingsProductRequest) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        SavingsOfferingBO newSavingsDetails = new SavingsProductAssembler(this.loanProductDao, this.generalLedgerDao).fromDto(user, savingsProductRequest);
+
+        SavingsOfferingBO savingsProductForUpdate = this.savingsProductDao.findById(savingsProductRequest.getProductDetails().getId());
+
+        UserContext userContext = new UserContext();
+        userContext.setBranchId(user.getBranchId());
+        userContext.setId(Short.valueOf((short) user.getUserId()));
+        userContext.setName(user.getUsername());
+
+        savingsProductForUpdate.updateDetails(userContext);
+
+        HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+
+        try {
+            transactionHelper.startTransaction();
+            transactionHelper.beginAuditLoggingFor(savingsProductForUpdate);
+
+            savingsProductForUpdate.updateProductDetails(newSavingsDetails.getPrdOfferingName(), newSavingsDetails.getPrdOfferingShortName(),
+                    newSavingsDetails.getDescription(), newSavingsDetails.getPrdCategory(), newSavingsDetails.getStartDate(), newSavingsDetails.getEndDate(),
+                    newSavingsDetails.getPrdApplicableMaster(), newSavingsDetails.getPrdStatus());
+
+            savingsProductForUpdate.updateSavingsDetails(newSavingsDetails.getSavingsType(), newSavingsDetails.getRecommendedAmount(), newSavingsDetails.getRecommendedAmntUnit(),
+                    newSavingsDetails.getMaxAmntWithdrawl(), newSavingsDetails.getInterestRate(), newSavingsDetails.getInterestCalcType(),
+                    newSavingsDetails.getTimePerForInstcalc(), newSavingsDetails.getFreqOfPostIntcalc(), newSavingsDetails.getMinAmntForInt());
+
+            this.savingsProductDao.save(savingsProductForUpdate);
+            transactionHelper.commitTransaction();
+            return savingsProductForUpdate.toDto();
+        } catch (Exception e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            transactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public PrdOfferingDto createSavingsProduct(SavingsProductDto savingsProductRequest) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -1593,7 +1632,6 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         } finally {
             transactionHelper.closeSession();
         }
-
     }
 
     @Override
@@ -1690,5 +1728,12 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     public void setLoanProductCaluclationTypeAssembler(
             LoanProductCaluclationTypeAssembler loanProductCaluclationTypeAssembler) {
         this.loanProductCaluclationTypeAssembler = loanProductCaluclationTypeAssembler;
+    }
+
+    @Override
+    public SavingsProductDto retrieveSavingsProductDetails(Integer productId) {
+
+        SavingsOfferingBO savingsProduct = this.savingsProductDao.findById(productId);
+        return savingsProduct.toFullDto();
     }
 }
