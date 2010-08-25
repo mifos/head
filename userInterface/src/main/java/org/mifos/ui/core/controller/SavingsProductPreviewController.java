@@ -67,6 +67,12 @@ public class SavingsProductPreviewController {
         modelAndView.addObject("savingsProduct", savingsProduct);
         modelAndView.addObject("editFormview", editFormview);
 
+        populateModelAndViewForPreview(savingsProduct, modelAndView);
+
+        return modelAndView;
+    }
+
+    private void populateModelAndViewForPreview(SavingsProductFormBean savingsProduct, ModelAndView modelAndView) {
         GeneralProductBean bean = savingsProduct.getGeneralDetails();
         String categoryName = bean.getCategoryOptions().get(bean.getSelectedCategory());
 
@@ -106,7 +112,18 @@ public class SavingsProductPreviewController {
         modelAndView.addObject("depositGlCode", depositGlCode);
         modelAndView.addObject("interestGlCode", interestGlCode);
 
-        return modelAndView;
+        Double zero = Double.valueOf("0");
+        if (savingsProduct.getAmountForDeposit() == null) {
+            savingsProduct.setAmountForDeposit(zero);
+        }
+
+        if (savingsProduct.getMaxWithdrawalAmount() == null) {
+            savingsProduct.setMaxWithdrawalAmount(zero);
+        }
+
+        if (savingsProduct.getMinBalanceRequiredForInterestCalculation() == null) {
+            savingsProduct.setMinBalanceRequiredForInterestCalculation(zero.toString());
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -126,36 +143,46 @@ public class SavingsProductPreviewController {
         } else if (result.hasErrors()) {
             modelAndView.setViewName("previewSavingsProducts");
             modelAndView.addObject("savingsProduct", savingsProduct);
+            modelAndView.addObject("editFormview", editFormview);
+            populateModelAndViewForPreview(savingsProduct, modelAndView);
         } else {
 
             PrdOfferingDto product;
-
+            SavingsProductDto savingsProductRequest = new SavingsProductFormBeanAssembler().assembleSavingsProductRequest(savingsProduct);
             if (editFormview.equalsIgnoreCase("defineSavingsProduct")) {
 
                 try {
-                    SavingsProductDto savingsProductRequest = new SavingsProductFormBeanAssembler()
-                            .assembleSavingsProductRequest(savingsProduct);
                     product = this.adminServiceFacade.createSavingsProduct(savingsProductRequest);
 
                     modelAndView.setViewName("redirect:/confirmSavingsProduct.ftl");
                     modelAndView.addObject("product", product);
                 } catch (BusinessRuleException e) {
-                    ObjectError error = new ObjectError("savingsProduct", new String[] { e.getMessageKey() },
-                            new Object[] {}, "Error: Problem persisting savings product.");
-                    result.addError(error);
-                    modelAndView.setViewName("previewSavingsProducts");
-                    modelAndView.addObject("savingsProduct", savingsProduct);
+                    handleBusinessRuleViolation(editFormview, savingsProduct, result, modelAndView, e.getMessageKey());
                 }
             } else if (editFormview.equalsIgnoreCase("editSavingsProduct")) {
 
-                SavingsProductDto savingsProductRequest = new SavingsProductFormBeanAssembler().assembleSavingsProductRequest(savingsProduct);
-                product = this.adminServiceFacade.updateSavingsProduct(savingsProductRequest);
+                try {
+                    product = this.adminServiceFacade.updateSavingsProduct(savingsProductRequest);
 
-                modelAndView.setViewName("redirect:/viewEditSavingsProduct.ftl?productId=" + product.getPrdOfferingId());
-                modelAndView.addObject("product", product);
+                    modelAndView.setViewName("redirect:/viewEditSavingsProduct.ftl?productId="+ product.getPrdOfferingId());
+                    modelAndView.addObject("product", product);
+                } catch (BusinessRuleException e) {
+                    handleBusinessRuleViolation(editFormview, savingsProduct, result, modelAndView, e.getMessageKey());
+                }
             }
 
         }
         return modelAndView;
+    }
+
+    private void handleBusinessRuleViolation(String editFormview, SavingsProductFormBean savingsProduct,
+            BindingResult result, ModelAndView modelAndView, String messageKey) {
+        ObjectError error = new ObjectError("savingsProduct", new String[] { messageKey },
+                new Object[] {}, "Error: Problem persisting savings product.");
+        result.addError(error);
+        modelAndView.setViewName("previewSavingsProducts");
+        modelAndView.addObject("savingsProduct", savingsProduct);
+        modelAndView.addObject("editFormview", editFormview);
+        populateModelAndViewForPreview(savingsProduct, modelAndView);
     }
 }

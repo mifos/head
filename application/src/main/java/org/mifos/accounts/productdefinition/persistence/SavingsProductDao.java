@@ -36,4 +36,8 @@ public interface SavingsProductDao {
     List<Object[]> findAllSavingsProducts();
 
     void save(SavingsOfferingBO savingsProduct);
+
+    void validateProductWithSameNameDoesNotExist(String name);
+
+    void validateProductWithSameShortNameDoesNotExist(String shortName);
 }

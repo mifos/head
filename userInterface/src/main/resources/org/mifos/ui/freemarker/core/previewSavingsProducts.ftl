@@ -14,6 +14,7 @@
         <form method="post" action="previewSavingsProducts.ftl" name="previewsavingsproduct">
           <p class="font15"><span class="fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.addanewSavingsProduct" /]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "review&Submit" /]</span></p>
           <p>[@spring.message "reviewtheinformationbelow.ClickSubmit" /]</p>
+          [@mifos.showAllErrors "savingsProduct.*"/]
           <p class="fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.savingsproductdetails" /] </p>
           <div class="span-21 last">
           	<div class="span-20">

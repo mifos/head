@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.accounts.acceptedpaymenttype.business.TransactionTypeEntity;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
@@ -103,6 +104,7 @@ import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.AcceptedPaymentTypeDto;
 import org.mifos.dto.domain.AccountStatusesLabelDto;
+import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.ConfigurableLookupLabelDto;
 import org.mifos.dto.domain.CreateOrUpdateProductCategory;
 import org.mifos.dto.domain.GracePeriodDto;
@@ -127,6 +129,9 @@ import org.mifos.dto.screen.ProductDto;
 import org.mifos.dto.screen.ProductMixDetailsDto;
 import org.mifos.dto.screen.ProductMixDto;
 import org.mifos.dto.screen.SavingsProductFormDto;
+import org.mifos.framework.components.audit.business.service.AuditBusinessService;
+import org.mifos.framework.components.audit.util.helpers.AuditConstants;
+import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -140,6 +145,7 @@ import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RequestParam;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
@@ -1444,6 +1450,12 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         try {
             SavingsPrdBusinessService service = new SavingsPrdBusinessService();
 
+            List<ListElement> statusOptions = new ArrayList<ListElement>();
+            List<PrdStatusEntity> applicableStatuses = service.getApplicablePrdStatus(Short.valueOf("1"));
+            for (PrdStatusEntity entity : applicableStatuses) {
+                statusOptions.add(new ListElement(entity.getOfferingStatusId().intValue(), entity.getPrdState().getName()));
+            }
+
             List<ListElement> productCategoryOptions = new ArrayList<ListElement>();
             List<ProductCategoryBO> productCategories = service.getActiveSavingsProductCategories();
             for (ProductCategoryBO category : productCategories) {
@@ -1498,7 +1510,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                 interestGlCodes.add(new ListElement(glCode.getGlcodeId().intValue(), glCode.getGlcode()));
             }
 
-            return new SavingsProductFormDto(productCategoryOptions, applicableForOptions, savingsTypeOptions, recommendedAmountTypeOptions, interestCalcTypeOptions, timePeriodOptions, depositGlCodeOptions, interestGlCodes);
+            return new SavingsProductFormDto(productCategoryOptions, applicableForOptions, savingsTypeOptions, recommendedAmountTypeOptions, interestCalcTypeOptions, timePeriodOptions, depositGlCodeOptions, interestGlCodes, statusOptions);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         } catch (SystemException e) {
@@ -1574,11 +1586,26 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
     @Override
     public PrdOfferingDto updateSavingsProduct(SavingsProductDto savingsProductRequest) {
+
+        SavingsOfferingBO savingsProductForUpdate = this.savingsProductDao.findById(savingsProductRequest.getProductDetails().getId());
+
+        // enforced by integrity constraints on table also.
+        if (savingsProductForUpdate.isDifferentName(savingsProductRequest.getProductDetails().getName())) {
+            this.savingsProductDao.validateProductWithSameNameDoesNotExist(savingsProductRequest.getProductDetails().getName());
+        }
+
+        if (savingsProductForUpdate.isDifferentShortName(savingsProductRequest.getProductDetails().getShortName())) {
+            this.savingsProductDao.validateProductWithSameShortNameDoesNotExist(savingsProductRequest.getProductDetails().getShortName());
+        }
+
+        // domain rule validation - put on domain entity
+        validateStartDateIsNotBeforeToday(savingsProductRequest.getProductDetails().getStartDate());
+        validateStartDateIsNotOverOneYearFromToday(savingsProductRequest.getProductDetails().getStartDate());
+        validateEndDateIsPastStartDate(savingsProductRequest.getProductDetails().getStartDate(), savingsProductRequest.getProductDetails().getEndDate());
+
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         SavingsOfferingBO newSavingsDetails = new SavingsProductAssembler(this.loanProductDao, this.generalLedgerDao).fromDto(user, savingsProductRequest);
-
-        SavingsOfferingBO savingsProductForUpdate = this.savingsProductDao.findById(savingsProductRequest.getProductDetails().getId());
 
         UserContext userContext = new UserContext();
         userContext.setBranchId(user.getBranchId());
@@ -1615,6 +1642,15 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     @Override
     public PrdOfferingDto createSavingsProduct(SavingsProductDto savingsProductRequest) {
 
+        // enforced by integrity constraints on table also.
+        this.savingsProductDao.validateProductWithSameNameDoesNotExist(savingsProductRequest.getProductDetails().getName());
+        this.savingsProductDao.validateProductWithSameShortNameDoesNotExist(savingsProductRequest.getProductDetails().getShortName());
+
+        // domain rule validation - put on domain entity
+        validateStartDateIsNotBeforeToday(savingsProductRequest.getProductDetails().getStartDate());
+        validateStartDateIsNotOverOneYearFromToday(savingsProductRequest.getProductDetails().getStartDate());
+        validateEndDateIsPastStartDate(savingsProductRequest.getProductDetails().getStartDate(), savingsProductRequest.getProductDetails().getEndDate());
+
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         SavingsOfferingBO savingsProduct = new SavingsProductAssembler(this.loanProductDao, this.generalLedgerDao).fromDto(user, savingsProductRequest);
@@ -1631,6 +1667,28 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             throw new MifosRuntimeException(e);
         } finally {
             transactionHelper.closeSession();
+        }
+    }
+
+    private void validateEndDateIsPastStartDate(DateTime startDate, DateTime endDate) {
+        if (endDate != null) {
+            if (new LocalDate(endDate).isBefore(new LocalDate(startDate))) {
+                throw new BusinessRuleException("Min.generalDetails.endDate");
+            }
+        }
+    }
+
+    private void validateStartDateIsNotOverOneYearFromToday(DateTime startDate) {
+        LocalDate oneYearFromToday = new LocalDate(new DateTime().plusYears(1));
+        if (new LocalDate(startDate).isAfter(oneYearFromToday)) {
+            throw new BusinessRuleException("Max.generalDetails.startDate");
+        }
+    }
+
+    private void validateStartDateIsNotBeforeToday(DateTime startDate) {
+        LocalDate today = new LocalDate(new DateTime());
+        if (new LocalDate(startDate).isBefore(today)) {
+            throw new BusinessRuleException("Min.generalDetails.startDate");
         }
     }
 
@@ -1735,5 +1793,20 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
         SavingsOfferingBO savingsProduct = this.savingsProductDao.findById(productId);
         return savingsProduct.toFullDto();
+    }
+
+    @Override
+    public List<AuditLogDto> retrieveSavingsProductAuditLogs(Integer productId) {
+        List<AuditLogDto> auditLogDtos = new ArrayList<AuditLogDto>();
+        AuditBusinessService auditBusinessService = new AuditBusinessService();
+        try {
+            List<AuditLogView> auditLogs = auditBusinessService.getAuditLogRecords(EntityType.SAVINGSPRODUCT.getValue(), productId);
+            for (AuditLogView auditLogView : auditLogs) {
+                auditLogDtos.add(auditLogView.toDto());
+            }
+            return auditLogDtos;
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 }

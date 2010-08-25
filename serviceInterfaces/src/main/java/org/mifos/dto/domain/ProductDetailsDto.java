@@ -37,6 +37,8 @@ public class ProductDetailsDto {
     private final DateTime endDate;
     private String endDateFormatted;
     private final Integer applicableFor;
+    private DateTime createdDate;
+    private String createdDateFormatted;
 
     /**
      * minimal legal constructor for product creation request.
@@ -126,5 +128,21 @@ public class ProductDetailsDto {
 
     public void setEndDateFormatted(String endDateFormatted) {
         this.endDateFormatted = endDateFormatted;
+    }
+
+    public DateTime getCreatedDate() {
+        return this.createdDate;
+    }
+
+    public void setCreatedDate(DateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getCreatedDateFormatted() {
+        return this.createdDateFormatted;
+    }
+
+    public void setCreatedDateFormatted(String createdDateFormatted) {
+        this.createdDateFormatted = createdDateFormatted;
     }
 }

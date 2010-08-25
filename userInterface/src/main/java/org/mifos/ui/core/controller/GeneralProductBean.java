@@ -76,6 +76,9 @@ public class GeneralProductBean {
     private String selectedApplicableFor;
     private Map<String, String> applicableForOptions;
 
+    private String selectedStatus;
+    private Map<String, String> statusOptions;
+
     public String getName() {
         return this.name;
     }
@@ -186,5 +189,21 @@ public class GeneralProductBean {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getSelectedStatus() {
+        return this.selectedStatus;
+    }
+
+    public void setSelectedStatus(String selectedStatus) {
+        this.selectedStatus = selectedStatus;
+    }
+
+    public Map<String, String> getStatusOptions() {
+        return this.statusOptions;
+    }
+
+    public void setStatusOptions(Map<String, String> statusOptions) {
+        this.statusOptions = statusOptions;
     }
 }

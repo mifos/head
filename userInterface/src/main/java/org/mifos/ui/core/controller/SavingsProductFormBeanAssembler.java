@@ -43,6 +43,9 @@ public class SavingsProductFormBeanAssembler {
         populateCategoryDropdown(referenceData, formBean);
         populateApplicableForDropdown(referenceData, formBean);
 
+        // status
+        populateStatusDropdown(referenceData, formBean);
+
         // assembler for accounting section
         populatePrincipalGlCodesDropdown(referenceData, formBean);
         populateInterestGlCodesDropdown(referenceData, formBean);
@@ -52,6 +55,14 @@ public class SavingsProductFormBeanAssembler {
         populateInterestBalanceDropdown(referenceData, formBean);
         populateFrequencyPeriodDropdown(referenceData, formBean);
         return formBean;
+    }
+
+    private void populateStatusDropdown(SavingsProductFormDto referenceData, SavingsProductFormBean formBean) {
+        Map<String, String> statusOptions = new LinkedHashMap<String, String>();
+        for (ListElement status : referenceData.getStatusOptions()) {
+            statusOptions.put(status.getId().toString(), status.getName());
+        }
+        formBean.getGeneralDetails().setStatusOptions(statusOptions);
     }
 
     private void populateFrequencyPeriodDropdown(SavingsProductFormDto referenceData, SavingsProductFormBean formBean) {
@@ -160,7 +171,7 @@ public class SavingsProductFormBeanAssembler {
         Integer interestGlCode = Integer.parseInt(formBean.getSelectedInterestGlCode());
         Integer depositGlCode = Integer.parseInt(formBean.getSelectedPrincipalGlCode());
 
-        return new SavingsProductDto(productDetails, formBean.isMandatoryGroupSavingAccount(),
+        return new SavingsProductDto(productDetails, formBean.isGroupSavingAccount(),
                 depositType, groupSavingsType, amountForDeposit, maxWithdrawal,
                 interestRate, interestCalculationType, formBean.getInterestCalculationFrequency(), interestCalculationFrequencyPeriod,
                 formBean.getInterestPostingMonthlyFrequency(), minBalanceForInterestCalculation, depositGlCode, interestGlCode);

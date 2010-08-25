@@ -154,7 +154,7 @@
             </div>
         </p>
         <p class="span-24 ">
-            <div><a href="viewSavingsProductChangeLog.ftl">[@spring.message "manageSavngsProducts.editsavingsproduct.viewChangeLog" /]</a></div>
+            <div><a href="viewSavingsProductChangeLog.ftl?productId=${savingsProductDetails.productDetails.id}">[@spring.message "manageSavngsProducts.editsavingsproduct.viewChangeLog" /]</a></div>
         </p>
        </div>
   </div>

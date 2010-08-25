@@ -71,13 +71,16 @@ public class SavingsProductFormBean {
     @NotEmpty
     private String selectedPrincipalGlCode;
 
-    public boolean isMandatoryGroupSavingAccount() {
-        return ("2").equals(this.generalDetails.getSelectedApplicableFor()) &&
-                ("1").equals(this.selectedDepositType);
-    }
-
     private Map<String, String> interestGeneralLedgerOptions;
     private Map<String, String> principalGeneralLedgerOptions;
+
+    public boolean isGroupSavingAccount() {
+        return ("2").equals(this.generalDetails.getSelectedApplicableFor());
+    }
+
+    public boolean isMandatory() {
+        return ("1").equals(this.selectedDepositType);
+    }
 
     public Map<String, String> getInterestGeneralLedgerOptions() {
         return this.interestGeneralLedgerOptions;

@@ -23,6 +23,7 @@ package org.mifos.application.admin.servicefacade;
 import java.util.List;
 
 import org.mifos.dto.domain.AcceptedPaymentTypeDto;
+import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.CreateOrUpdateProductCategory;
 import org.mifos.dto.domain.LoanProductRequest;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
@@ -135,4 +136,7 @@ public interface AdminServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     PrdOfferingDto updateSavingsProduct(SavingsProductDto savingsProduct);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<AuditLogDto> retrieveSavingsProductAuditLogs(Integer productId);
 }

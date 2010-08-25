@@ -1,8 +1,13 @@
 [#ftl]
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
-<head>
+[@mifos.header "title" /]
 <script type="text/javascript">
+  	$(document).ready(function () {
+  		fnCheckAppliesTo();
+  		fnCheckRecMand();
+	});
+
 	function fnCheckAppliesTo() {
 		if(document.getElementById("generalDetails.selectedApplicableFor").selectedIndex==2) {
 			document.getElementById("selectedGroupSavingsApproach").disabled=false;
@@ -12,9 +17,19 @@
 			document.getElementById("selectedGroupSavingsApproach").disabled=true;
 		}
 	}
-</script> 
-</head>
-[@mifos.header "title" /]
+	
+	function fnCheckRecMand() {
+	
+		if(document.getElementById("selectedDepositType").selectedIndex==1) {
+			document.getElementById("mandamnt").style.display = "inline";
+			document.getElementById("recamnt").style.display = "none";
+		}
+		else {
+			document.getElementById("mandamnt").style.display = "none";
+			document.getElementById("recamnt").style.display = "inline";
+		}
+	}
+</script>
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Main Content Begins-->
   <div class="content marginAuto">
@@ -95,10 +110,13 @@
           <div class="prepend-3  span-21 last">
           	<div class="span-20 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.typeofdeposits" /]&nbsp;:</span>
           		<span class="span-4">
-          		[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedDepositType", savingsProduct.depositTypeOptions, "--select one--" /]
+          		[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedDepositType", savingsProduct.depositTypeOptions, "--select one--", "onchange='fnCheckRecMand()'" /]
 				</span>
 			</div>
-            <div class="span-20 "><span class="pull-3 span-8 rightAlign" id="recamnt">[@spring.message "manageProducts.defineSavingsProducts.recommendedAmountforDeposit" /]&nbsp;:</span>
+			<script>fnCheckRecMand();</script>
+            <div class="span-20 ">
+            	<span class="pull-3 span-8 rightAlign" id="recamnt">[@spring.message "manageProducts.defineSavingsProducts.recommendedAmountforDeposit" /]&nbsp;:</span>
+            	<span class="pull-3 span-8 rightAlign" id="mandamnt" style="display: none"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.mandatoryAmountforDeposit" /]&nbsp;:</span>
             	<span class="span-4">[@spring.formInput "savingsProduct.amountForDeposit" /]</span>
   			</div>
             <div class="span-20 "><span class="pull-3 span-8 rightAlign" id="appliesto"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.amountAppliesto" /]&nbsp;</span>
@@ -110,6 +128,15 @@
             	<span class="span-4">[@spring.formInput "savingsProduct.maxWithdrawalAmount" /]</span>
   			</div>
           </div>
+          <div class="clear">&nbsp;</div>
+          <p class="fontBold">Status</p>
+          <div class="prepend-3  span-21 last">
+          	<div class="span-20">
+	      		<span class="pull-3 span-8 rightAlign"><span class="red">* </span>Status&nbsp;</span>
+		      	<span class="span-6">[@mifos.formSingleSelectWithPrompt "savingsProduct.generalDetails.selectedStatus", savingsProduct.generalDetails.statusOptions, "--select one--" /]</span>
+            </div>
+          </div>
+          
           <div class="clear">&nbsp;</div>
           <p class="fontBold">Interest rate</p>
           <div class="prepend-3  span-21 last">
@@ -159,7 +186,7 @@
           <hr />
           <div class="prepend-9">
             	<input class="buttn" type="submit" id="createSavingsProduct.button.preview" class="buttn" name="preview" value="Preview" />
-            	<input class="buttn2" type="submit" name="cancel" value="Cancel"/>
+            	<input class="buttn2" type="submit" name="CANCEL" value="Cancel"/>
           </div>
           <div class="clear">&nbsp;</div>
         </form>

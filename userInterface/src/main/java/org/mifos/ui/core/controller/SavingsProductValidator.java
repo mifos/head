@@ -27,14 +27,18 @@ import org.springframework.validation.ObjectError;
 public class SavingsProductValidator {
 
     public void validateGroup(SavingsProductFormBean savingsProductFormBean, BindingResult result) {
-        if (savingsProductFormBean.isMandatoryGroupSavingAccount()) {
-            if (savingsProductFormBean.getAmountForDeposit() == null || savingsProductFormBean.getAmountForDeposit().intValue() <= 0) {
-                ObjectError error = new ObjectError("savingsProduct", new String[] { "Min.savingsProduct.amountForDesposit" }, new Object[] {}, "default: ");
-                result.addError(error);
-            }
-
+        if (savingsProductFormBean.isGroupSavingAccount()) {
             if (StringUtils.isBlank(savingsProductFormBean.getSelectedGroupSavingsApproach())) {
                 ObjectError error = new ObjectError("savingsProduct", new String[] { "NotEmpty.savingsProduct.selectedGroupSavingsApproach" }, new Object[] {}, "default: ");
+                result.addError(error);
+            }
+        }
+    }
+
+    public void validateManadtorySavingsProduct(SavingsProductFormBean savingsProductFormBean, BindingResult result) {
+        if (savingsProductFormBean.isMandatory()) {
+            if (savingsProductFormBean.getAmountForDeposit() == null || savingsProductFormBean.getAmountForDeposit().intValue() <= 0) {
+                ObjectError error = new ObjectError("savingsProduct", new String[] { "Min.savingsProduct.amountForDesposit" }, new Object[] {}, "default: ");
                 result.addError(error);
             }
         }

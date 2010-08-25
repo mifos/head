@@ -63,7 +63,7 @@ public class DefineSavingsProductsFormController {
         SavingsProductFormBean savingsProduct = new SavingsProductFormBeanAssembler().assembleReferenceData(referenceData);
 
         DateTime today = new DateTime();
-        savingsProduct.getGeneralDetails().setStartDateDay(today.getDayOfYear());
+        savingsProduct.getGeneralDetails().setStartDateDay(today.getDayOfMonth());
         savingsProduct.getGeneralDetails().setStartDateMonth(today.getMonthOfYear());
         savingsProduct.getGeneralDetails().setStartDateYear(Integer.valueOf(today.getYearOfEra()).toString());
 
@@ -86,9 +86,11 @@ public class DefineSavingsProductsFormController {
             status.setComplete();
         } else if (result.hasErrors()) {
             new SavingsProductValidator().validateGroup(savingsProductFormBean, result);
+            new SavingsProductValidator().validateManadtorySavingsProduct(savingsProductFormBean, result);
             viewName = "defineSavingsProduct";
         } else {
             new SavingsProductValidator().validateGroup(savingsProductFormBean, result);
+            new SavingsProductValidator().validateManadtorySavingsProduct(savingsProductFormBean, result);
             if (result.hasErrors()) {
                 viewName = "defineSavingsProduct";
             }

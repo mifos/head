@@ -83,6 +83,7 @@ public class EditSavingsProductsFormController {
         }
 
         productBean.setSelectedApplicableFor(productDto.getApplicableFor().toString());
+        productBean.setSelectedStatus(productDto.getStatus().toString());
 
         savingsProductBean.setSelectedDepositType(savingsProductDto.getDepositType().toString());
         savingsProductBean.setAmountForDeposit(savingsProductDto.getAmountForDeposit());

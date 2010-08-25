@@ -331,12 +331,13 @@ while(enn.hasMoreElements()){
 								<fmt:message key="admin.viewSavingsProducts">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
 								</fmt:message>
-									</html-el:link> | <html-el:link styleId="admin.link.defineNewSavingsProduct"
-								href="savingsproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<fmt:message key="admin.defineNewSavingsProduct">
-									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
-								</fmt:message>
-								</html-el:link></td>
+									</html-el:link> | 
+									<a id="admin.link.defineNewSavingsProduct" href="defineSavingsProduct.ftl">
+									<fmt:message key="admin.defineNewSavingsProduct">
+										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
+									</fmt:message>
+									</a>
+								</td>
 						</tr>
 					</table>
 					<br>

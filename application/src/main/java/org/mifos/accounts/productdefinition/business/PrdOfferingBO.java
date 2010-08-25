@@ -523,6 +523,8 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
         detailsDto.setCategoryName(this.prdCategory.getProductCategoryName());
         detailsDto.setStartDateFormatted(startDateFormatted);
         detailsDto.setEndDateFormatted(endDateFormatted);
+        detailsDto.setCreatedDate(new DateTime(this.getCreatedDate()));
+        detailsDto.setCreatedDateFormatted(format.format(this.getCreatedDate()));
         return detailsDto;
     }
 
@@ -536,5 +538,13 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
         this.endDate = endDate;
         this.prdApplicableMaster = applicableMasterEntity;
         this.prdStatus = prdStatusEntity;
+    }
+
+    public boolean isDifferentName(final String name) {
+        return !this.prdOfferingName.equals(name);
+    }
+
+    public boolean isDifferentShortName(final String shortName) {
+        return !this.prdOfferingShortName.equals(shortName);
     }
 }

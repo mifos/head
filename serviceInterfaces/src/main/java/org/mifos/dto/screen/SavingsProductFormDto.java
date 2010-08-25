@@ -32,12 +32,13 @@ public class SavingsProductFormDto {
     private final List<ListElement> interestTimePeriodTypes;
     private final List<ListElement> principalGlCodes;
     private final List<ListElement> interestGlCodes;
+    private final List<ListElement> statusOptions;
 
     public SavingsProductFormDto(final List<ListElement> productCategories,
             final List<ListElement> applicableToCustomers, final List<ListElement> depositTypes,
             final List<ListElement> despositAmountAppliesTo, final List<ListElement> interestBalanceTypes,
             final List<ListElement> interestTimePeriodTypes, final List<ListElement> principalGlCodes,
-            final List<ListElement> interestGlCodes) {
+            final List<ListElement> interestGlCodes, List<ListElement> statusOptions) {
         this.productCategories = productCategories;
         this.applicableToCustomers = applicableToCustomers;
         this.depositTypes = depositTypes;
@@ -46,6 +47,7 @@ public class SavingsProductFormDto {
         this.interestTimePeriodTypes = interestTimePeriodTypes;
         this.principalGlCodes = principalGlCodes;
         this.interestGlCodes = interestGlCodes;
+        this.statusOptions = statusOptions;
     }
 
     public List<ListElement> getProductCategories() {
@@ -78,6 +80,10 @@ public class SavingsProductFormDto {
 
     public List<ListElement> getInterestGlCodes() {
         return this.interestGlCodes;
+    }
+
+    public List<ListElement> getStatusOptions() {
+        return this.statusOptions;
     }
 
 }
