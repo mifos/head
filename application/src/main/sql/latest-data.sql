@@ -3248,8 +3248,8 @@ insert into event_sources (id, entity_type_id, event_id, description) values
 /* Upgrade 268 END */
 
 /* Quartz related inserts */
-insert into qrtz_locks values('TRIGGER_ACCESS');
-insert into qrtz_locks values('JOB_ACCESS');
-insert into qrtz_locks values('CALENDAR_ACCESS');
-insert into qrtz_locks values('STATE_ACCESS');
-insert into qrtz_locks values('MISFIRE_ACCESS');
+insert into qrtz_LOCKS values('TRIGGER_ACCESS');
+insert into qrtz_LOCKS values('JOB_ACCESS');
+insert into qrtz_LOCKS values('CALENDAR_ACCESS');
+insert into qrtz_LOCKS values('STATE_ACCESS');
+insert into qrtz_LOCKS values('MISFIRE_ACCESS');

@@ -482,7 +482,7 @@ public class MifosScheduler {
         return configurationFile.getAbsolutePath();
     }
 
-    private String getQuartzSchedulerConfigurationFilePath() throws FileNotFoundException, IOException {
+    public String getQuartzSchedulerConfigurationFilePath() throws FileNotFoundException, IOException {
         File configurationFile = getConfigurationLocator().getFile(SchedulerConstants.SCHEDULER_CONFIGURATION_FILE_NAME);
         logger.info("Reading scheduler configuration from: " + configurationFile.getAbsolutePath());
         return configurationFile.getAbsolutePath();

@@ -23,12 +23,18 @@
                 <div class="clear">&nbsp;</div>
                 <div>
                     <span class="span-3">&nbsp;</span>
-                    <span class="span-7">[@spring.message "systemAdministration.batchjobs.taskStatus" /]: <i>Active</i></span>
-                    <span class="span-3">
-                        [#if true]
-                            <input class="buttn"  type="submit" id="SUSPEND" name="Suspend" value="[@spring.message "systemAdministration.batchjobs.suspend"/]"/>
+                    <span class="span-7">[@spring.message "systemAdministration.batchjobs.taskStatus" /]: 
+                        [#if model.scheduler == true]
+                            [@spring.message "systemAdministration.batchjobs.active" /]
                         [#else]
-                            <input class="buttn"  type="submit" id="SUSPEND" name="Activate" value="[@spring.message "systemAdministration.batchjobs.activate"/]"/>
+                            [@spring.message "systemAdministration.batchjobs.inactive" /]
+                        [/#if]
+                    </span>
+                    <span class="span-3">
+                        [#if model.scheduler == true]
+                            <input class="buttn"  type="submit" id="SUSPEND" name="SUSPEND" value="[@spring.message "systemAdministration.batchjobs.suspend"/]"/>
+                        [#else]
+                            <input class="buttn"  type="submit" id="SUSPEND" name="SUSPEND" value="[@spring.message "systemAdministration.batchjobs.activate"/]"/>
                         [/#if]
                     </span>
                 </div>
@@ -47,27 +53,49 @@
                         <span class="span-2">[@spring.message "systemAdministration.batchjobs.taskStatus" /]</span>
                         <span class="span-3">
                             <select class="span-2" name="ACTIVE">
-                                [#if batchjobs.active == true]
-                                    <option value="true" SELECTED>[@spring.message "systemAdministration.batchjobs.active" /]</option>
-                                    <option value="false">[@spring.message "systemAdministration.batchjobs.inactive" /]</option>
-                                [#else]
-                                    <option value="true">[@spring.message "systemAdministration.batchjobs.active" /]</option>
-                                    <option value="false" SELECTED>[@spring.message "systemAdministration.batchjobs.inactive" /]</option>
+                                [#if batchjobs.state == 0]
+                                    <option value="0" SELECTED>[@spring.message "systemAdministration.batchjobs.normal" /]</option>
+                                    <option value="1">[@spring.message "systemAdministration.batchjobs.paused" /]</option>
+                                [#elseif batchjobs.state == 1]
+                                    <option value="0">[@spring.message "systemAdministration.batchjobs.normal" /]</option>
+                                    <option value="1" SELECTED>[@spring.message "systemAdministration.batchjobs.paused" /]</option>
                                 [/#if]
                             </select>
                         </span>
                     </div>
                     <div class="span-21">
                         <span class="span-2">&nbsp;</span>
-                        <span class="span-6">[@spring.message "systemAdministration.batchjobs.previouslyStarted" /]:<br />${batchjobs.lastStartTime?datetime}&nbsp;</span>
-                        <span class="span-5">[@spring.message "systemAdministration.batchjobs.nextStart" /]:<br />${batchjobs.nextStartTime?datetime}&nbsp;</span>
-                        <span class="span-6">[@spring.message "systemAdministration.batchjobs.previousRunStatus" /]:<br />${batchjobs.lastRunStatus}&nbsp;</span>
+                        <span class="span-6">[@spring.message "systemAdministration.batchjobs.previouslyStarted" /]:<br />
+                            [#if batchjobs.lastStartTime?datetime != model.date0?datetime]
+                                ${batchjobs.lastStartTime?datetime}&nbsp;
+                            [#else]
+                                [@spring.message "systemAdministration.batchjobs.unknown" /]&nbsp;
+                            [/#if]
+                        </span>
+                        <span class="span-5">[@spring.message "systemAdministration.batchjobs.nextStart" /]:<br />
+                            [#if batchjobs.nextStartTime?datetime != model.date0?datetime]
+                                ${batchjobs.nextStartTime?datetime}&nbsp;
+                            [#else]
+                                [@spring.message "systemAdministration.batchjobs.unknown" /]&nbsp;
+                            [/#if]
+                        </span>
+                        <span class="span-6">[@spring.message "systemAdministration.batchjobs.previousRunStatus" /]:<br />
+                            [#if batchjobs.lastRunStatus != ""]
+                                ${batchjobs.lastRunStatus}&nbsp;
+                            [#else]
+                                [@spring.message "systemAdministration.batchjobs.unknown" /]&nbsp;
+                            [/#if]
+                        </span>
                     </div>
                     <div class="span-21">
                         <span class="span-2">&nbsp;</span>
                         <span class="span-6">
                             [@spring.message "systemAdministration.batchjobs.changeCronExpression" /]:<br />
-                            <input type="text" id="cron" name="CRON" value="${batchjobs.cron}" />
+                            [#if batchjobs.cron != ""]
+                                <input type="text" id="cron" name="CRON" value="${batchjobs.cron}" />
+                            [#else]
+                                <input type="text" id="cron" name="CRON" value="N/A" DISABLED/>
+                            [/#if]
                         </span>
                         <span class="span-5">
                             [@spring.message "systemAdministration.batchjobs.changePriority" /]:<br />
@@ -96,7 +124,7 @@
                     </span>
                     <span class="prepend-9">
                         <input class="buttn"  type="submit" id="SAVE" name="SAVE" value="[@spring.message "systemAdministration.batchjobs.saveChanges"/]"/>
-                        <input class="buttn"  type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "systemAdministration.batchjobs.reload"/]"/>
+                        <input class="buttn"  type="submit" id="RELOAD" name="RELOAD" value="[@spring.message "systemAdministration.batchjobs.reload"/]"/>
                     </span>
                 </div>
                 <div class="clear">&nbsp;</div>

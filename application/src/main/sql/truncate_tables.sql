@@ -214,15 +214,15 @@ truncate table events;
 
 truncate table applied_upgrades;
 
-truncate table qrtz_job_details;
-truncate table qrtz_job_listeners;
-truncate table qrtz_triggers;
-truncate table qrtz_simple_triggers;
-truncate table qrtz_cron_triggers;
-truncate table qrtz_blob_triggers;
-truncate table qrtz_trigger_listeners;
-truncate table qrtz_calendars;
-truncate table qrtz_paused_trigger_grps;
-truncate table qrtz_fired_triggers;
-truncate table qrtz_scheduler_state;
-truncate table qrtz_locks;
+truncate table qrtz_JOB_DETAILS;
+truncate table qrtz_JOB_LISTENERS;
+truncate table qrtz_TRIGGERS;
+truncate table qrtz_SIMPLE_TRIGGERS;
+truncate table qrtz_CRON_TRIGGERS;
+truncate table qrtz_BLOB_TRIGGERS;
+truncate table qrtz_TRIGGER_LISTENERS;
+truncate table qrtz_CALENDARS;
+truncate table qrtz_PAUSED_TRIGGER_GRPS;
+truncate table qrtz_FIRED_TRIGGERS;
+truncate table qrtz_SCHEDULER_STATE;
+truncate table qrtz_LOCKS;
