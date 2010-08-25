@@ -114,9 +114,7 @@ public class QuestionGroupForm extends ScreenObject {
 
     public void addCurrentSection() {
         currentSection.trimName();
-        if (StringUtils.isEmpty(getSectionName())) {
-            setSectionName(QuestionnaireConstants.DEFAULT_SECTION_NAME);
-        }
+        String sectionName = getSectionName();
         addCurrentSectionToSections();
         if (addOrSelectFlag) {
             addNewQuestion();
@@ -124,6 +122,7 @@ public class QuestionGroupForm extends ScreenObject {
             addSelectedQuestionsToCurrentSection();
         }
         currentSection = new SectionDetailForm();
+        currentSection.setName(sectionName);
         selectedQuestionIds = new ArrayList<String>();
     }
 
@@ -178,6 +177,9 @@ public class QuestionGroupForm extends ScreenObject {
     }
 
     public String getSectionName() {
+        if (StringUtils.isEmpty(currentSection.getName())) {
+            currentSection.setName(QuestionnaireConstants.DEFAULT_SECTION_NAME);
+        }
         return currentSection.getName();
     }
 
