@@ -25,6 +25,10 @@ public interface SchedulerConstants {
     String CONFIGURATION_FILE_NAME = "task.xml";
     String SCHEDULER_CONFIGURATION_FILE_NAME = "quartz.properties";
 
+    String SPRING_SCHEDULER_BEAN_NAME = "schedulerFactoryBean";
+
+    String SPRING_BEANS_FILE_ROOT_TAG = "beans";
+
     String SCHEDULER_TASKS = "scheduler-tasks";
     String SCHEDULER = "scheduler";
     String TASK_CLASS_NAME = "task-class-name";

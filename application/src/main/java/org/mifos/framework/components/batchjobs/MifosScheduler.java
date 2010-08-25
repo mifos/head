@@ -47,6 +47,8 @@ import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.TriggerListener;
 import org.quartz.impl.StdSchedulerFactory;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -65,11 +67,21 @@ public class MifosScheduler {
     private ConfigurationLocator configurationLocator;
 
     public void initialize() throws TaskSystemException {
-        StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
         try {
-            String configPath = getQuartzSchedulerConfigurationFilePath();
-            schedulerFactory.initialize(configPath);
-            scheduler = schedulerFactory.getScheduler();
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(getTaskConfigurationInputSource());
+            NodeList rootElement = document.getElementsByTagName(SchedulerConstants.SPRING_BEANS_FILE_ROOT_TAG);
+            if(rootElement.getLength() > 0) {
+                ConfigurableApplicationContext context = null;
+                context = new FileSystemXmlApplicationContext("file:"+getTaskConfigurationFilePath());
+                scheduler = (Scheduler)context.getBean(SchedulerConstants.SPRING_SCHEDULER_BEAN_NAME);
+            } else {
+                StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
+                String configPath = getQuartzSchedulerConfigurationFilePath();
+                schedulerFactory.initialize(configPath);
+                scheduler = schedulerFactory.getScheduler();
+            }
         } catch (Exception e) {
             throw new TaskSystemException(e);
         }
@@ -275,7 +287,7 @@ public class MifosScheduler {
     public void initializeBatchJobs() throws TaskSystemException {
         try {
             if(!scheduler.isInStandbyMode()) {
-                scheduler.standby();
+                return;
             }
             dispatchConfigurationFileProcessing();
             scheduler.start();
@@ -462,6 +474,12 @@ public class MifosScheduler {
         FileReader fileReader = new FileReader(configurationFile);
         logger.info("Reading task configuration from: " + configurationFile.getAbsolutePath());
         return new InputSource(fileReader);
+    }
+
+    private String getTaskConfigurationFilePath() throws IOException {
+        File configurationFile = getConfigurationLocator().getFile(SchedulerConstants.CONFIGURATION_FILE_NAME);
+        logger.info("Reading task configuration from: " + configurationFile.getAbsolutePath());
+        return configurationFile.getAbsolutePath();
     }
 
     private String getQuartzSchedulerConfigurationFilePath() throws FileNotFoundException, IOException {

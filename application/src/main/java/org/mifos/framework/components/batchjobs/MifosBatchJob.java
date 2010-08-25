@@ -24,14 +24,15 @@ import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 
-public abstract class MifosBatchJob implements StatefulJob {
+public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob {
 
     private static boolean batchJobRunning = false;
     private static boolean requiresExclusiveAccess = true;
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException {
+    public void executeInternal(JobExecutionContext context) throws JobExecutionException {
         try {
             getTaskHelper().execute(context.getScheduledFireTime().getTime());
         } catch (BatchJobException bje) {
