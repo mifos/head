@@ -337,6 +337,10 @@ while(enn.hasMoreElements()){
 										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
 									</fmt:message>
 									</a>
+									<!--
+									<html-el:link styleId="admin.link.defineNewSavingsProduct" href="savingsproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+									</html-el:link>
+									 -->
 								</td>
 						</tr>
 					</table>

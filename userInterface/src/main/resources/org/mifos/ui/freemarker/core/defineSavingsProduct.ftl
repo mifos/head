@@ -54,21 +54,21 @@
           		<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.productinstancename" /]&nbsp;</span>
           		<span class="span-4">
           			[@spring.bind "savingsProduct.generalDetails.name" /]
-            		<input type="text" id="createSavingsProduct.input.prdOfferingName" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />
+            		<input type="text" id="CreateSavingsProduct.input.prdOfferingName" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />
           		</span>
   			</div>
             <div class="span-20 ">
             	<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.shortname" /]&nbsp;</span>
             	<span class="span-4">
             		[@spring.bind "savingsProduct.generalDetails.shortName" /]
-            		<input type="text" size="3" maxlength="4" id="createSavingsProduct.input.prdOfferingShortName" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />
+            		<input type="text" size="3" maxlength="4" id="CreateSavingsProduct.input.prdOfferingShortName" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />
             	</span>
   			</div>
             <div class="span-20 ">
             	<span class="pull-3 span-8 rightAlign">[@spring.message "manageProducts.defineSavingsProducts.description" /]&nbsp;</span>
             	<span class="span-4">
             		[@spring.bind "savingsProduct.generalDetails.description" /]
-                	<textarea rows="7" cols="55" id="createSavingsProduct.input.description" name="${spring.status.expression}">${spring.status.value?if_exists}</textarea>
+                	<textarea rows="7" cols="55" id="CreateSavingsProduct.input.description" name="${spring.status.expression}">${spring.status.value?if_exists}</textarea>
             	</span>
   			</div>
         	<div class="span-20 ">
@@ -174,7 +174,7 @@
           <div class="clear">&nbsp;</div>
           <hr />
           <div class="prepend-9">
-            	<input class="buttn" type="submit" id="createSavingsProduct.button.preview" class="buttn" name="preview" value="Preview" />
+            	<input class="buttn" type="submit" id="CreateSavingsProduct.button.preview" class="buttn" name="preview" value="Preview" />
             	<input class="buttn2" type="submit" name="CANCEL" value="Cancel"/>
           </div>
           <div class="clear">&nbsp;</div>
