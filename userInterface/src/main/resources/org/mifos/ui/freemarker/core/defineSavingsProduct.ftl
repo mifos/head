@@ -32,6 +32,7 @@
 </script>
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Main Content Begins-->
+  <span id="page.id" title="CreateSavingsProduct" />
   <div class="content marginAuto">
     <div class="borders span-22">
       <div class="borderbtm span-22">

@@ -20,7 +20,8 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-  <!--  Main Content Begins-->  
+  <!--  Main Content Begins-->
+  <span id="page.id" title="CreateSavingsProductConfirmation" />  
   <div class=" content">
     <p class="font15 orangeheading">[@spring.message "manageSavingsProduct.youhavesuccessfullyaddedanewSavingsproduct"/]</p>
     <p><span class="fontBold">[@spring.message "manageSavingsProduct.pleaseNoteSavingsProducthasbeenassignedthesystemIDnumber"/]</span><span class="fontBold">${product.globalPrdOfferingNum}</span></p>
