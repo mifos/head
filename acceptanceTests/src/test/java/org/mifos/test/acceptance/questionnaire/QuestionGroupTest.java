@@ -58,7 +58,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
 
     private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
     private String qgTitle1, qgTitle2;
-    private String qTitle1, qTitle2, qTitle3;
+    private String qTitle1, qTitle2, qTitle3, qTitle4;
     private static final String TITLE_MISSING = "Please specify Question Group title.";
     private static final String APPLIES_TO_MISSING = "Please choose a valid 'Applies To' value.";
     private static final String SECTION_MISSING = "Please add at least one section.";
@@ -78,6 +78,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         qTitle1 = "Question1 " + System.currentTimeMillis();
         qTitle2 = "Question2 " + System.currentTimeMillis();
         qTitle3 = "Question3 " + System.currentTimeMillis();
+        qTitle4 = "Question4 " + System.currentTimeMillis();
     }
 
     @AfterMethod
@@ -89,7 +90,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         AdminPage adminPage = createQuestions(qTitle1, qTitle2, qTitle3);
         CreateQuestionGroupPage createQuestionGroupPage = getCreateQuestionGroupPage(adminPage);
         testMissingMandatoryInputs(createQuestionGroupPage);
-        testCreateQuestionGroup(createQuestionGroupPage, qgTitle1, APPLIES_TO_CREATE_CLIENT, true, SECTION_DEFAULT, asList(qTitle1, qTitle2), asList(qTitle3));
+        testCreateQuestionGroup(createQuestionGroupPage, qgTitle1, APPLIES_TO_CREATE_CLIENT, true, SECTION_DEFAULT, asList(qTitle1, qTitle2), asList(qTitle3), qTitle4);
         testShouldAllowDuplicateTitlesForQuestionGroup();
         testCancelCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)));
         testViewQuestionGroups();
@@ -98,7 +99,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private void testViewQuestionGroups() {
         ViewAllQuestionGroupsPage viewQuestionGroupsPage = getViewQuestionGroupsPage(new AdminPage(selenium));
         testViewQuestionGroups(viewQuestionGroupsPage);
-        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle1, "Default", asList(qTitle1, qTitle2), asList(qTitle1));
+        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle1, "Default", asList(qTitle1, qTitle2, qTitle4), asList(qTitle1));
         viewQuestionGroupsPage.navigateToViewAllQuestionGroupsPage();
         testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle2, "Misc", asList(qTitle1, qTitle3), asList(qTitle1));
     }
@@ -161,12 +162,12 @@ public class QuestionGroupTest extends UiTestCaseBase {
     }
 
     private void testShouldAllowDuplicateTitlesForQuestionGroup() {
-        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, APPLIES_TO_CREATE_CLIENT, false, "", asList(qTitle1, qTitle3), asList(qTitle2));
-        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, APPLIES_TO_CREATE_CLIENT, false, "Hello", asList(qTitle2), asList(qTitle1, qTitle3));
+        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, APPLIES_TO_CREATE_CLIENT, false, "", asList(qTitle1, qTitle3), asList(qTitle2), null);
+        testCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)), qgTitle2, APPLIES_TO_CREATE_CLIENT, false, "Hello", asList(qTitle2), asList(qTitle1, qTitle3), null);
     }
 
     private void testCreateQuestionGroup(CreateQuestionGroupPage createQuestionGroupPage, String title, String appliesTo, boolean isAnswerEditable,
-                                         String sectionName, List<String> questionsToSelect, List<String> questionsNotToSelect) {
+                                         String sectionName, List<String> questionsToSelect, List<String> questionsNotToSelect, String questionToAdd) {
         CreateQuestionGroupParameters parameters = new CreateQuestionGroupParameters();
         parameters.setTitle(title);
         parameters.setAppliesTo(appliesTo);
@@ -177,6 +178,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         createQuestionGroupPage.markEveryOtherQuestionsMandatory(questionsToSelect);
         assertPage(CreateQuestionGroupPage.PAGE_ID);
         assertTrue(createQuestionGroupPage.getAvailableQuestions().containsAll(questionsNotToSelect));
+        createQuestionGroupPage.addQuestion(questionToAdd);
         createQuestionGroupPage.submit(parameters);
         assertPage(AdminPage.PAGE_ID);
     }
