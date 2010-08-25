@@ -57,44 +57,46 @@ public class QuestionController extends QuestionnaireController {
 
     public String addQuestion(QuestionForm questionForm, RequestContext requestContext, boolean createMode) {
         MessageContext context = requestContext.getMessageContext();
+        boolean result = validateQuestion(questionForm, context, createMode);
+        if (result) questionForm.addCurrentQuestion();
+        return result? "success": "failure";
+    }
+
+    private boolean validateQuestion(QuestionForm questionForm, MessageContext context, boolean createMode) {
         questionForm.validateConstraints(context);
-        String result = "success";
+        boolean result = true;
         String title = StringUtils.trim(questionForm.getCurrentQuestion().getTitle());
 
         if (context.hasErrorMessages()) {
-            result = "failure";
+            result = false;
         }
 
         else if (checkDuplicateTitleForCreateOperation(questionForm, createMode)) {
             constructErrorMessage(
                     context, "questionnaire.error.question.duplicate",
                     "currentQuestion.title", "The name specified already exists.");
-            result = "failure";
+            result = false;
         }
 
         else if (checkDuplicateTitleForEditOperation(questionForm, createMode, title)) {
             constructErrorMessage(
                     context, "questionnaire.error.question.duplicate",
                     "currentQuestion.title", "The name specified already exists.");
-            result = "failure";
+            result = false;
         }
 
         else if(questionForm.answerChoicesAreInvalid()) {
             constructErrorMessage(
                     context, "questionnaire.error.question.choices",
                     "currentQuestion.choice", "Please specify at least 2 choices.");
-            result = "failure";
+            result = false;
         }
 
         else if (questionForm.numericBoundsAreInvalid()) {
             constructErrorMessage(
                     context, QuestionnaireConstants.INVALID_NUMERIC_BOUNDS,
                     "currentQuestion.numericMin", "Please ensure maximum value is greater than minimum value.");
-            result = "failure";
-        }
-
-        else {
-            questionForm.addCurrentQuestion();
+            result = false;
         }
 
         return result;

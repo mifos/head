@@ -140,7 +140,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     @Override
     public QuestionEntity mapToQuestion(QuestionDetail questionDetail) {
-        QuestionEntity question = new QuestionEntity();
+        QuestionEntity question = questionDetail.isNewQuestion() ? new QuestionEntity() : questionDao.getDetails(questionDetail.getId());
         question.setQuestionId(questionDetail.getId());
         question.setShortName(questionDetail.getTitle());
         question.setQuestionText(questionDetail.getTitle());
@@ -235,7 +235,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     private SectionQuestion mapToSectionQuestion(SectionQuestionDetail sectionQuestionDetail, int seqNum, Section section) {
         SectionQuestion sectionQuestion = new SectionQuestion();
         sectionQuestion.setRequired(sectionQuestionDetail.isMandatory());
-        sectionQuestion.setQuestion(questionDao.getDetails(sectionQuestionDetail.getQuestionId()));
+        sectionQuestion.setQuestion(mapToQuestion(sectionQuestionDetail.getQuestionDetail()));
         sectionQuestion.setSequenceNumber(seqNum);
         sectionQuestion.setSection(section);
         return sectionQuestion;

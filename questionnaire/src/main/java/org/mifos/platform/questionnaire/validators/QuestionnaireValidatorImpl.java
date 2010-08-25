@@ -537,14 +537,8 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     private void validateSectionDefinitions(List<SectionDetail> sectionDetails) throws SystemException {
-        Set<SectionQuestionDetail> questions = new HashSet<SectionQuestionDetail>();
         for (SectionDetail sectionDetail : sectionDetails) {
             validateSectionDefinition(sectionDetail);
-            for (SectionQuestionDetail questionDetail : sectionDetail.getQuestions()) {
-                if (!questions.add(questionDetail)) {
-                    throw new SystemException(DUPLICATE_QUESTION_FOUND_IN_SECTION);
-                }
-            }
         }
     }
 
