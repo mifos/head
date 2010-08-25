@@ -153,7 +153,7 @@ public class StandardTestingService implements TestingService {
             new FiscalCalendarRules().setWorkingDays(workingDays);
         }
         if (isSet(ScheduleMeetingIfNonWorkingDay)) {
-            new FiscalCalendarRules().setScheduleTypeForMeetingOnHoliday(ScheduleMeetingIfNonWorkingDay);
+            new FiscalCalendarRules().setScheduleTypeForMeetingIfNonWorkingDay(ScheduleMeetingIfNonWorkingDay);
         }
     }
 

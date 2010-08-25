@@ -20,6 +20,9 @@
 
 package org.mifos.accounts.financial.business;
 
+import org.mifos.accounts.financial.servicefacade.GLCodeDto;
+import org.mifos.framework.business.AbstractEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,9 +33,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.mifos.accounts.financial.servicefacade.GLCodeDto;
-import org.mifos.framework.business.AbstractEntity;
-
 @NamedQueries( { @NamedQuery(name = "GLCode.findById", query = "from GLCodeEntity glCode where glCode.glcodeId = :glcodeId")})
 
 
@@ -42,9 +42,10 @@ public class GLCodeEntity extends AbstractEntity {
 
     @Id
     @GeneratedValue
+    @Column(name = "glcode_id")
     private Short glcodeId;
 
-    @Column(name = "GLCODE_VALUE")
+    @Column(name = "glcode_value")
     private String glcode;
 
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "associatedGlcode")

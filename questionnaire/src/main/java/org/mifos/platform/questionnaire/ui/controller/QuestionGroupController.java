@@ -241,7 +241,7 @@ public class QuestionGroupController extends QuestionnaireController {
             result = false;
         }
 
-        else if (checkDuplicateTitleForCreateOperation(questionGroupForm)) {
+        else if (checkDuplicateTitle(questionGroupForm)) {
             constructErrorMessage(
                     context, "questionnaire.error.question.duplicate",
                     "currentQuestion.title", "The name specified already exists.");
@@ -265,9 +265,9 @@ public class QuestionGroupController extends QuestionnaireController {
         return result;
     }
 
-    private boolean checkDuplicateTitleForCreateOperation(QuestionGroupForm questionForm) {
-        String title = StringUtils.trim(questionForm.getCurrentQuestion().getTitle());
-        return questionForm.isDuplicateTitle(title) || questionnaireServiceFacade.isDuplicateQuestion(title);
+    private boolean checkDuplicateTitle(QuestionGroupForm questionGroupForm) {
+        String title = StringUtils.trim(questionGroupForm.getCurrentQuestion().getTitle());
+        return questionGroupForm.isDuplicateTitle(title) || questionnaireServiceFacade.isDuplicateQuestion(title);
     }
 
 }

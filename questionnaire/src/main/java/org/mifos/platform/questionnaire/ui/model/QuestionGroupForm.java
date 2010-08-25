@@ -148,7 +148,7 @@ public class QuestionGroupForm extends ScreenObject {
         boolean result = false;
         if(StringUtils.isNotEmpty(questionTitle)){
             for (SectionQuestionDetail sectionQuestionDetail : getAllQuestionsInAllSections()) {
-                if(StringUtils.equalsIgnoreCase(questionTitle.trim(), sectionQuestionDetail.getTitle())){
+                if(StringUtils.equalsIgnoreCase(questionTitle, sectionQuestionDetail.getTitle())){
                     result = true;
                     break;
                 }
