@@ -4,7 +4,7 @@
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Main Content Begins-->
-  <span id="page.id" title="Preview_EditSavingsProduct" />
+  <span id="page.id" title="SavingsProductPreview" />
   <div class="content marginAuto">
     <div class="borders span-22">
       <div class="borderbtm span-22">
@@ -111,8 +111,8 @@
           <div class="clear">&nbsp;</div>
           <hr />
           <div class="prepend-9">
-            	<input class="buttn" type="submit" name="submit" value="Submit"/>
-            	<input class="buttn2" type="submit" name="cancel" value="Cancel"/>
+            	<input class="buttn" type="submit" id="CreateSavingsProductPreview.button.submit" name="submit" value="Submit"/>
+            	<input class="buttn2" type="submit" name="CANCEL" value="Cancel"/>
           </div>
           <div class="clear">&nbsp;</div>
         </form>
