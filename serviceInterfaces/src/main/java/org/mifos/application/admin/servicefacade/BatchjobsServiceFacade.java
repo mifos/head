@@ -32,4 +32,17 @@ public interface BatchjobsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     List<BatchjobsDto> getBatchjobs(ServletContext context) throws Exception;
+
+    @PreAuthorize("isFullyAuthenticated()")
+    BatchjobsSchedulerDto getBatchjobsScheduler() throws Exception;
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void suspend();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void saveChanges();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void runSelectedTasks();
+
 }

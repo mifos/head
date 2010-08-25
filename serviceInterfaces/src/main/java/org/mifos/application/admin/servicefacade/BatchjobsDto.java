@@ -30,10 +30,10 @@ public class BatchjobsDto {
     private final long lastStartTime;
     private final long nextStartTime;
     private final String taskDependency;
-    private final boolean active;
+    private final int state;
 
     public BatchjobsDto(String name, String cron, int priority, String lastRunStatus, Date lastStartTime,
-            Date nextStartTime, String taskDependency, boolean active) {
+            Date nextStartTime, String taskDependency, int state) {
         this.name = name;
         this.cron = cron;
         this.priority = priority;
@@ -41,7 +41,7 @@ public class BatchjobsDto {
         this.lastStartTime = lastStartTime.getTime();
         this.nextStartTime = nextStartTime.getTime();
         this.taskDependency = taskDependency;
-        this.active = active;
+        this.state = state;
     }
 
     public String getName() {
@@ -72,8 +72,8 @@ public class BatchjobsDto {
         return this.taskDependency;
     }
 
-    public boolean isActive() {
-        return this.active;
+    public int getState() {
+        return this.state;
     }
 
 }
