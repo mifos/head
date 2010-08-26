@@ -10,7 +10,7 @@ lastStableWAR=$WORKSPACE/../$WAR_JOB/application/target/mifos-webapp.war
 deployRoot=$HOME/deploys/mifos-$JOB_NAME-deploy
 targetWARlocation=$deployRoot/tomcat6/webapps/mifos.war
 
-if [ $FETCH_NEW_WAR == 0 ]
+if [ "$FETCH_NEW_WAR" == "true" ]
 then
     $controlScript stop
     rm -f $deployRoot/tomcat6/logs/*
