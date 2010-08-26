@@ -24,6 +24,8 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import java.io.Serializable;
 
+import static java.lang.String.format;
+
 @XStreamAlias("eventSource")
 public class EventSourceDto implements Serializable{
     private String source;
@@ -55,5 +57,10 @@ public class EventSourceDto implements Serializable{
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public String toString() {
+        return format("%s %s", event, source);
     }
 }

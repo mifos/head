@@ -164,4 +164,8 @@ public class QuestionDetail implements Serializable {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    public boolean isNewQuestion() {
+        return id == 0;
+    }
 }

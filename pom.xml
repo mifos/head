@@ -39,10 +39,11 @@
         <module>serviceInterfaces</module>
         <module>userInterface</module>
         <module>application</module>
-        <module>acceptanceTests</module>
         <module>spi</module>
         <module>api</module>
         <module>questionnaire</module>
+        <module>questionnaire-migration</module>
+        <module>acceptanceTests</module>
     </modules>
 
     <!--
@@ -95,9 +96,14 @@
                 <version>1.7-SNAPSHOT</version>
             </dependency>
             <dependency>
-	        <groupId>org.mifos</groupId>
-	        <artifactId>mifos-questionnaire</artifactId>
-	        <version>1.7-SNAPSHOT</version>
+                <groupId>org.mifos</groupId>
+                <artifactId>mifos-questionnaire</artifactId>
+                <version>1.7-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mifos</groupId>
+                <artifactId>mifos-questionnaire-migration</artifactId>
+                <version>1.7-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>

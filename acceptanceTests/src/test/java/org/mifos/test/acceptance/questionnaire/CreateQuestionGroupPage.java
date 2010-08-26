@@ -20,6 +20,7 @@
 package org.mifos.test.acceptance.questionnaire;
 
 import com.thoughtworks.selenium.Selenium;
+import org.apache.commons.lang.StringUtils;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import java.util.ArrayList;
@@ -58,6 +59,15 @@ public class CreateQuestionGroupPage extends MifosPage {
         selectSectionQuestions(createQuestionGroupParameters);
         selenium.click("id=_eventId_addSection");
         waitForPageToLoad();
+    }
+
+    public void addQuestion(String questionToAdd) {
+        if (StringUtils.isNotEmpty(questionToAdd)) {
+            selenium.check("id=addOrSelectFlag1");
+            selenium.type("id=currentQuestion.title", questionToAdd);
+            selenium.click("id=_eventId_addQuestion");
+            waitForPageToLoad();
+        }
     }
 
     public List<String> getAvailableQuestions() {

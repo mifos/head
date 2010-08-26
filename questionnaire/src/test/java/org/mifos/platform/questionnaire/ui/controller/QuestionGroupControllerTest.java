@@ -35,23 +35,24 @@ import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailFormMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailListMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailsMatcher;
-import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
-import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.ui.model.QuestionGroupForm;
 import org.mifos.platform.questionnaire.ui.model.SectionDetailForm;
+import org.mifos.platform.validation.MifosBeanValidator;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -93,10 +94,14 @@ public class QuestionGroupControllerTest {
     @Mock
     private HttpServletRequest httpServletRequest;
 
+    MifosBeanValidator validator = new MifosBeanValidator();
+    LocalValidatorFactoryBean targetValidator = new LocalValidatorFactoryBean();
 
     @Before
     public void setUp() {
         questionGroupController = new QuestionGroupController(questionnaireServiceFacade);
+        targetValidator.afterPropertiesSet();
+        validator.setTargetValidator(targetValidator);
     }
 
     @Test
@@ -419,21 +424,95 @@ public class QuestionGroupControllerTest {
         verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.invalid.numeric.max.response")));
     }
 
+    @Test
+    public void testAddQuestion() {
+        QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
+        questionGroupForm.getCurrentQuestion().setTitle("Question1");
+        questionGroupForm.getCurrentQuestion().setType("Free Text");
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionGroupController.addQuestion(questionGroupForm, requestContext);
+        assertThat(result, is("success"));
+        verify(requestContext, times(1)).getMessageContext();
+    }
+    
+    @Test
+    public void testAddQuestionForEmptyTitle() {
+        QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
+        questionGroupForm.setValidator(validator);
+        questionGroupForm.getCurrentQuestion().setTitle(null);
+        questionGroupForm.getCurrentQuestion().setType("Free Text");
+        when(messageContext.hasErrorMessages()).thenReturn(true);
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionGroupController.addQuestion(questionGroupForm, requestContext);
+        assertThat(result, is("failure"));
+        verify(requestContext, times(1)).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher("NotNull.QuestionGroupForm.currentQuestion.title")));
+    }
+
+    @Test
+    public void testAddQuestionForEmptyType() {
+        QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
+        questionGroupForm.setValidator(validator);
+        questionGroupForm.getCurrentQuestion().setTitle(TITLE);
+        questionGroupForm.getCurrentQuestion().setType(null);
+        when(messageContext.hasErrorMessages()).thenReturn(true);
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionGroupController.addQuestion(questionGroupForm, requestContext);
+        assertThat(result, is("failure"));
+        verify(requestContext, times(1)).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher("NotNull.QuestionGroupForm.currentQuestion.type")));
+    }
+
+    @Test
+    public void testAddQuestionForDuplicateTitle() {
+        QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
+        questionGroupForm.setValidator(validator);
+        questionGroupForm.getCurrentQuestion().setTitle(TITLE);
+        questionGroupForm.getCurrentQuestion().setType("Free Text");
+        when(questionnaireServiceFacade.isDuplicateQuestion(TITLE)).thenReturn(true);
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionGroupController.addQuestion(questionGroupForm, requestContext);
+        assertThat(result, is("failure"));
+        verify(requestContext, times(1)).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.question.duplicate")));
+    }
+
+    @Test
+    public void testAddQuestionForInvalidAnswerChoices() {
+        QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
+        questionGroupForm.setValidator(validator);
+        questionGroupForm.getCurrentQuestion().setTitle(TITLE);
+        questionGroupForm.getCurrentQuestion().setType("Single Select");
+        questionGroupForm.getCurrentQuestion().setCurrentChoice("Choice1");
+        questionGroupForm.getCurrentQuestion().addAnswerChoice();
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionGroupController.addQuestion(questionGroupForm, requestContext);
+        assertThat(result, is("failure"));
+        verify(requestContext, times(1)).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.question.choices")));
+    }
+
+    @Test
+    public void testAddQuestionForInvalidNumericBounds() {
+        QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
+        questionGroupForm.setValidator(validator);
+        questionGroupForm.getCurrentQuestion().setTitle(TITLE);
+        questionGroupForm.getCurrentQuestion().setType("Number");
+        questionGroupForm.getCurrentQuestion().setNumericMin(100);
+        questionGroupForm.getCurrentQuestion().setNumericMax(10);
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionGroupController.addQuestion(questionGroupForm, requestContext);
+        assertThat(result, is("failure"));
+        verify(requestContext, times(1)).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher(QuestionnaireConstants.INVALID_NUMERIC_BOUNDS)));
+    }
+
     private QuestionGroupDetails getQuestionGroupDetails() {
         QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(1, 2, asList(
                 getQuestionGroupDetail(TITLE, "View", "Client", "S1", "S2"),
                 getQuestionGroupDetail(TITLE, "View", "Client", "S1", "S3")
         ));
         return questionGroupDetails;
-    }
-
-    private QuestionGroupInstanceDetail getQuestionGroupInstance(int id, String qgTitle) {
-        QuestionGroupInstanceDetail detail = new QuestionGroupInstanceDetail();
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail();
-        questionGroupDetail.setId(id);
-        questionGroupDetail.setTitle(qgTitle);
-        detail.setQuestionGroupDetail(questionGroupDetail);
-        return detail;
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(int questionGroupId, String title, String... sectionNames) {

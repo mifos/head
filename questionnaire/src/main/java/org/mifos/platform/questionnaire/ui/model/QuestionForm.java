@@ -53,21 +53,13 @@ public class QuestionForm extends ScreenObject {
     }
 
     public void addCurrentQuestion() {
-        currentQuestion.trimTitle();
-        currentQuestion.setChoicesIfApplicable();
+        currentQuestion.trimTitleAndSetChoices();
         questions.add(currentQuestion);
         currentQuestion = new Question(new QuestionDetail());
     }
 
     public boolean isDuplicateTitle(String questionTitle) {
         return (findQuestionByTitle(questionTitle) != null);
-    }
-
-    public void removeQuestion(String questionTitle) {
-       Question question = findQuestionByTitle(questionTitle);
-       if (question != null) {
-         questions.remove(question);
-       }
     }
 
     private Question findQuestionByTitle(String title) {
@@ -79,6 +71,13 @@ public class QuestionForm extends ScreenObject {
             }
         }
         return null;
+    }
+
+    public void removeQuestion(String questionTitle) {
+        Question question = findQuestionByTitle(questionTitle);
+        if (question != null) {
+            questions.remove(question);
+        }
     }
 
     public boolean answerChoicesAreInvalid() {
