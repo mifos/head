@@ -47,7 +47,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.DUPLICATE_QUESTION_FOUND_IN_SECTION;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.GENERIC_VALIDATION;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.INVALID_EVENT_SOURCE;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.INVALID_NUMERIC_BOUNDS;
@@ -238,20 +237,6 @@ public class QuestionnaireValidatorTest {
             fail("Should have thrown the validation exception");
         } catch (SystemException e) {
             assertEquals(NO_QUESTIONS_FOUND_IN_SECTION, e.getKey());
-        }
-        verify(eventSourceDao, never()).retrieveCountByEventAndSource(anyString(), anyString());
-    }
-
-    @Test
-    public void shouldThrowExceptionWhenAGivenQuestionAppearsInMoreThanOneSection() {
-        try {
-            SectionDetail sectionDefinition1 = getSectionWithQuestions("S1", 1, 3);
-            SectionDetail sectionDefinition2 = getSectionWithQuestions("S2", 3, 2);
-            List<SectionDetail> sectionDetails = asList(sectionDefinition1, sectionDefinition2);
-            questionnaireValidator.validateForDefineQuestionGroup(getQuestionGroupDetail(0, "Title", "Create", "Client", sectionDetails));
-            fail("Should have thrown the validation exception");
-        } catch (SystemException e) {
-            assertEquals(DUPLICATE_QUESTION_FOUND_IN_SECTION, e.getKey());
         }
         verify(eventSourceDao, never()).retrieveCountByEventAndSource(anyString(), anyString());
     }

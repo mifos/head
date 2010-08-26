@@ -20,16 +20,16 @@
 
 package org.mifos.platform.questionnaire.ui.controller;
 
-import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
+import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
-import org.mifos.platform.questionnaire.service.QuestionDetail;
-import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
+import org.mifos.platform.questionnaire.ui.model.Question;
 import org.mifos.platform.questionnaire.ui.model.QuestionGroupForm;
 import org.mifos.platform.questionnaire.ui.model.SectionDetailForm;
 import org.mifos.platform.questionnaire.ui.model.SectionQuestionDetailForm;
@@ -38,10 +38,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.Arrays;
-import static org.hamcrest.CoreMatchers.not;   // NOPMD
-import static org.hamcrest.CoreMatchers.nullValue;   // NOPMD
-import static org.junit.Assert.assertNotSame;    // NOPMD
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;     // NOPMD
 
 @RunWith(MockitoJUnitRunner.class)
@@ -60,7 +61,7 @@ public class QuestionGroupFormTest {
     public void shouldGetSections() {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName("Section1");
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, "Title", null, Arrays.asList(sectionDetail), false);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, "Title", null, asList(sectionDetail), false);
         QuestionGroupForm questionGroupForm = new QuestionGroupForm(questionGroupDetail);
         List<SectionDetailForm> sections = questionGroupForm.getSections();
         assertThat(sections, Matchers.notNullValue());
@@ -78,15 +79,15 @@ public class QuestionGroupFormTest {
 
         questionGroupForm = new QuestionGroupForm();
         questionGroupForm.setEventSourceId(null);
-        assertThat(questionGroupForm.getEventSource().getDescription(), CoreMatchers.is(nullValue()));
-        assertThat(questionGroupForm.getEventSource().getSource(), CoreMatchers.is(nullValue()));
-        assertThat(questionGroupForm.getEventSource().getEvent(), CoreMatchers.is(nullValue()));
+        assertThat(questionGroupForm.getEventSource().getDescription(), is(nullValue()));
+        assertThat(questionGroupForm.getEventSource().getSource(), is(nullValue()));
+        assertThat(questionGroupForm.getEventSource().getEvent(), is(nullValue()));
 
         questionGroupForm = new QuestionGroupForm();
         questionGroupForm.setEventSourceId("");
-        assertThat(questionGroupForm.getEventSource().getDescription(), CoreMatchers.is(nullValue()));
-        assertThat(questionGroupForm.getEventSource().getSource(), CoreMatchers.is(nullValue()));
-        assertThat(questionGroupForm.getEventSource().getEvent(), CoreMatchers.is(nullValue()));
+        assertThat(questionGroupForm.getEventSource().getDescription(), is(nullValue()));
+        assertThat(questionGroupForm.getEventSource().getSource(), is(nullValue()));
+        assertThat(questionGroupForm.getEventSource().getEvent(), is(nullValue()));
     }
 
     @Test
@@ -95,22 +96,22 @@ public class QuestionGroupFormTest {
 
         questionGroupForm = new QuestionGroupForm();
         questionGroupForm.setEventSource(new EventSourceDto("Create", "Client", null));
-        assertThat(questionGroupForm.getEventSourceId(), CoreMatchers.is("Create.Client"));
+        assertThat(questionGroupForm.getEventSourceId(), is("Create.Client"));
 
         questionGroupForm = new QuestionGroupForm();
         questionGroupForm.setEventSource(null);
-        assertThat(questionGroupForm.getEventSourceId(), CoreMatchers.is(nullValue()));
+        assertThat(questionGroupForm.getEventSourceId(), is(nullValue()));
 
         questionGroupForm = new QuestionGroupForm();
         questionGroupForm.setEventSource(new EventSourceDto("", null, null));
-        assertThat(questionGroupForm.getEventSourceId(), CoreMatchers.is(nullValue()));
+        assertThat(questionGroupForm.getEventSourceId(), is(nullValue()));
     }
 
     @Test
     public void testAddCurrentSection() {
         QuestionGroupForm questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setQuestionPool(new ArrayList<SectionQuestionDetail>(Arrays.asList(getSectionQuestionDetail(1, "Q1", true), getSectionQuestionDetail(2, "Q2", false))));
-        questionGroupForm.setSelectedQuestionIds(Arrays.asList("1"));
+        questionGroupForm.setQuestionPool(new ArrayList<SectionQuestionDetail>(asList(getSectionQuestionDetail(1, "Q1", true), getSectionQuestionDetail(2, "Q2", false))));
+        questionGroupForm.setSelectedQuestionIds(asList("1"));
         String title = "title";
         questionGroupForm.setTitle(title);
         String sectionName = "sectionName";
@@ -119,32 +120,32 @@ public class QuestionGroupFormTest {
         questionGroupForm.addCurrentSection();
 
         List<SectionDetailForm> sectionDetailForms = questionGroupForm.getSections();
-        assertThat(sectionDetailForms.size(), CoreMatchers.is(1));
+        assertThat(sectionDetailForms.size(), is(1));
         String nameOfAddedSection = questionGroupForm.getSections().get(0).getName();
-        assertThat(nameOfAddedSection, CoreMatchers.is(sectionName));
+        assertThat(nameOfAddedSection, is(sectionName));
         List<SectionQuestionDetailForm> questions = sectionDetailForms.get(0).getSectionQuestions();
-        assertThat(questions.size(), CoreMatchers.is(1));
-        assertThat(questions.get(0).getTitle(), CoreMatchers.is("Q1"));
-        assertThat(questions.get(0).isMandatory(), CoreMatchers.is(true));
-        assertNotSame(nameOfAddedSection, questionGroupForm.getSectionName());
-        assertNotSame(questionGroupForm.getSelectedQuestionIds().size(), CoreMatchers.is(0));
+        assertThat(questions.size(), is(1));
+        assertThat(questions.get(0).getTitle(), is("Q1"));
+        assertThat(questions.get(0).isMandatory(), is(true));
+        assertThat(questionGroupForm.getSectionName(), is(nameOfAddedSection));
+        assertNotSame(questionGroupForm.getSelectedQuestionIds().size(), is(0));
 
-        questionGroupForm.setSelectedQuestionIds(Arrays.asList("2"));
+        questionGroupForm.setSelectedQuestionIds(asList("2"));
         questionGroupForm.setSectionName(sectionName);
         questionGroupForm.addCurrentSection();
 
         sectionDetailForms = questionGroupForm.getSections();
-        assertThat(sectionDetailForms.size(), CoreMatchers.is(1));
+        assertThat(sectionDetailForms.size(), is(1));
         nameOfAddedSection = questionGroupForm.getSections().get(0).getName();
-        assertThat(nameOfAddedSection, CoreMatchers.is(sectionName));
+        assertThat(nameOfAddedSection, is(sectionName));
         questions = sectionDetailForms.get(0).getSectionQuestions();
-        assertThat(questions.size(), CoreMatchers.is(2));
-        assertThat(questions.get(0).getTitle(), CoreMatchers.is("Q1"));
-        assertThat(questions.get(0).isMandatory(), CoreMatchers.is(true));
-        assertThat(questions.get(1).getTitle(), CoreMatchers.is("Q2"));
-        assertThat(questions.get(1).isMandatory(), CoreMatchers.is(false));
-        assertNotSame(nameOfAddedSection, questionGroupForm.getSectionName());
-        assertNotSame(questionGroupForm.getSelectedQuestionIds().size(), CoreMatchers.is(0));
+        assertThat(questions.size(), is(2));
+        assertThat(questions.get(0).getTitle(), is("Q1"));
+        assertThat(questions.get(0).isMandatory(), is(true));
+        assertThat(questions.get(1).getTitle(), is("Q2"));
+        assertThat(questions.get(1).isMandatory(), is(false));
+        assertThat(questionGroupForm.getSectionName(), is(nameOfAddedSection));
+        assertNotSame(questionGroupForm.getSelectedQuestionIds().size(), is(0));
     }
 
     @Test
@@ -153,10 +154,10 @@ public class QuestionGroupFormTest {
         String title = "title";
         questionGroupForm.setTitle(title);
         questionGroupForm.addCurrentSection();
-        assertThat(questionGroupForm.getSections().size(), CoreMatchers.is(1));
+        assertThat(questionGroupForm.getSections().size(), is(1));
         String nameOfAddedSection = questionGroupForm.getSections().get(0).getName();
-        assertThat(nameOfAddedSection, CoreMatchers.is("Misc"));
-        assertNotSame(nameOfAddedSection, questionGroupForm.getSectionName());
+        assertThat(nameOfAddedSection, is("Misc"));
+        assertThat(questionGroupForm.getSectionName(), is(nameOfAddedSection));
     }
 
     @Test
@@ -167,10 +168,31 @@ public class QuestionGroupFormTest {
         String sectionName = "   ";
         questionGroupForm.setSectionName(sectionName);
         questionGroupForm.addCurrentSection();
-        assertThat(questionGroupForm.getSections().size(), CoreMatchers.is(1));
+        assertThat(questionGroupForm.getSections().size(), is(1));
         String nameOfAddedSection = questionGroupForm.getSections().get(0).getName();
-        assertThat(nameOfAddedSection, CoreMatchers.is("Misc"));
-        assertNotSame(nameOfAddedSection, questionGroupForm.getSectionName());
+        assertThat(nameOfAddedSection, is("Misc"));
+        assertThat(questionGroupForm.getSectionName(), is(nameOfAddedSection));
+    }
+
+    @Test
+    public void testAddCurrentSectionForAddQuestion() {
+        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
+        String title = "title";
+        questionGroupForm.setTitle(title);
+        String sectionName = "SectionWithNewQuestion";
+        Question currentQuestion = new Question(new QuestionDetail());
+        currentQuestion.setTitle(" Question1 ");
+        currentQuestion.setType("Free Text");
+        questionGroupForm.setCurrentQuestion(currentQuestion);
+        questionGroupForm.setAddOrSelectFlag(true);
+        questionGroupForm.setSectionName(sectionName);
+        questionGroupForm.addCurrentSection();
+        List<SectionDetailForm> sections = questionGroupForm.getSections();
+        assertThat(sections.size(), is(1));
+        SectionDetailForm section1 = sections.get(0);
+        assertThat(section1.getName(), is(sectionName));
+        assertThat(section1.getSectionQuestionDetails().get(0).getTitle(), is("Question1"));
+        assertThat(questionGroupForm.getSectionName(), is(section1.getName()));
     }
 
     @Test
@@ -181,10 +203,10 @@ public class QuestionGroupFormTest {
 
         questionGroupForm.removeQuestion("sectionName", "1");
 
-        assertThat(questionGroupForm.getSections().size(), CoreMatchers.is(1));
-        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().size(), CoreMatchers.is(1));
-        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).getTitle(), CoreMatchers.is("Q2"));
-        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).isMandatory(), CoreMatchers.is(true));
+        assertThat(questionGroupForm.getSections().size(), is(1));
+        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().size(), is(1));
+        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).getTitle(), is("Q2"));
+        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).isMandatory(), is(true));
         assertThat(questionGroupForm.getQuestionPool().size(), Matchers.is(1));
         assertThat(questionGroupForm.getQuestionPool().get(0).getTitle(), Matchers.is("Q1"));
         assertThat(questionGroupForm.getQuestionPool().get(0).isMandatory(), Matchers.is(false));
@@ -196,15 +218,15 @@ public class QuestionGroupFormTest {
 
     private void setupSection(QuestionGroupForm questionGroupForm, List<SectionDetailForm> sections, String sectionName) {
         sections.add(getSectionSectionDetailForm(sectionName,
-                new ArrayList<SectionQuestionDetail>(Arrays.asList(getSectionQuestionDetail(1, "Q1", false), getSectionQuestionDetail(2, "Q2", true)))));
+                new ArrayList<SectionQuestionDetail>(asList(getSectionQuestionDetail(1, "Q1", false), getSectionQuestionDetail(2, "Q2", true)))));
         questionGroupForm.setSections(sections);
 
-        assertThat(questionGroupForm.getSections().size(), CoreMatchers.is(1));
-        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().size(), CoreMatchers.is(2));
-        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).getTitle(), CoreMatchers.is("Q1"));
-        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).isMandatory(), CoreMatchers.is(false));
-        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(1).getTitle(), CoreMatchers.is("Q2"));
-        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(1).isMandatory(), CoreMatchers.is(true));
+        assertThat(questionGroupForm.getSections().size(), is(1));
+        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().size(), is(2));
+        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).getTitle(), is("Q1"));
+        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).isMandatory(), is(false));
+        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(1).getTitle(), is("Q2"));
+        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(1).isMandatory(), is(true));
         assertThat(questionGroupForm.getQuestionPool().size(), Matchers.is(0));
     }
 
@@ -217,9 +239,27 @@ public class QuestionGroupFormTest {
         questionGroupForm.removeSection(sectionName);
         assertThatQuestionFormHasNoSection(questionGroupForm);
     }
+    
+    @Test
+    public void testIsDuplicateTitle() {
+        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
+        String title = "title";
+        questionGroupForm.setTitle(title);
+        String sectionName = "SectionWithNewQuestion";
+        Question currentQuestion = new Question(new QuestionDetail());
+        currentQuestion.setTitle(" Question1 ");
+        currentQuestion.setType("Free Text");
+        questionGroupForm.setCurrentQuestion(currentQuestion);
+        questionGroupForm.setAddOrSelectFlag(true);
+        questionGroupForm.setSectionName(sectionName);
+        questionGroupForm.addCurrentSection();
+        questionGroupForm.getCurrentQuestion().setTitle("Question2 ");
+        questionGroupForm.addCurrentSection();
+        assertThat(questionGroupForm.isDuplicateTitle("Question1"), is(true));
+    }
 
     private void assertThatQuestionFormHasNoSection(QuestionGroupForm questionGroupForm) {
-        assertThat(questionGroupForm.getSections().size(), CoreMatchers.is(0));
+        assertThat(questionGroupForm.getSections().size(), is(0));
         assertThat(questionGroupForm.getQuestionPool().size(), Matchers.is(2));
         assertThat(questionGroupForm.getQuestionPool().get(0).getTitle(), Matchers.is("Q1"));
         assertThat(questionGroupForm.getQuestionPool().get(0).isMandatory(), Matchers.is(false));
@@ -239,8 +279,8 @@ public class QuestionGroupFormTest {
     }
 
     private void assertEventSource(EventSourceDto eventSourceDto, String event, String source) {
-        assertThat(eventSourceDto, CoreMatchers.is(not(nullValue())));
-        assertThat(eventSourceDto.getEvent(), CoreMatchers.is(event));
-        assertThat(eventSourceDto.getSource(), CoreMatchers.is(source));
+        assertThat(eventSourceDto, is(not(nullValue())));
+        assertThat(eventSourceDto.getEvent(), is(event));
+        assertThat(eventSourceDto.getSource(), is(source));
     }
 }

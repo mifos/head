@@ -26,15 +26,16 @@ import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
-import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.ui.model.QuestionGroupForm;
 import org.mifos.platform.questionnaire.ui.model.SectionDetailForm;
 import org.mifos.platform.util.CollectionUtils;
+import org.springframework.binding.message.MessageContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -223,6 +224,50 @@ public class QuestionGroupController extends QuestionnaireController {
 
     private boolean isInvalidTitle(String title) {
         return StringUtils.isEmpty(StringUtils.trimToNull(title));
+    }
+
+    public String addQuestion(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
+        MessageContext context = requestContext.getMessageContext();
+        boolean result = validateQuestion(questionGroupForm, context);
+        if (result) questionGroupForm.addCurrentSection();
+        return result? "success": "failure";
+    }
+
+    private boolean validateQuestion(QuestionGroupForm questionGroupForm, MessageContext context) {
+        questionGroupForm.validateConstraints(context);
+        boolean result = true;
+
+        if (context.hasErrorMessages()) {
+            result = false;
+        }
+
+        else if (checkDuplicateTitle(questionGroupForm)) {
+            constructErrorMessage(
+                    context, "questionnaire.error.question.duplicate",
+                    "currentQuestion.title", "The name specified already exists.");
+            result = false;
+        }
+
+        else if(questionGroupForm.getCurrentQuestion().answerChoicesAreInvalid()) {
+            constructErrorMessage(
+                    context, "questionnaire.error.question.choices",
+                    "currentQuestion.choice", "Please specify at least 2 choices.");
+            result = false;
+        }
+
+        else if (questionGroupForm.getCurrentQuestion().numericBoundsAreInvalid()) {
+            constructErrorMessage(
+                    context, QuestionnaireConstants.INVALID_NUMERIC_BOUNDS,
+                    "currentQuestion.numericMin", "Please ensure maximum value is greater than minimum value.");
+            result = false;
+        }
+
+        return result;
+    }
+
+    private boolean checkDuplicateTitle(QuestionGroupForm questionGroupForm) {
+        String title = StringUtils.trim(questionGroupForm.getCurrentQuestion().getTitle());
+        return questionGroupForm.isDuplicateTitle(title) || questionnaireServiceFacade.isDuplicateQuestion(title);
     }
 
 }

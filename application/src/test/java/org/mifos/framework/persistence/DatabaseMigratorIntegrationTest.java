@@ -20,19 +20,12 @@
 
 package org.mifos.framework.persistence;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
 import junit.framework.Assert;
 import junitx.framework.StringAssert;
-
 import org.dbunit.Assertion;
+import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConnection;
+import org.dbunit.dataset.CaseInsensitiveDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.junit.AfterClass;
@@ -42,6 +35,14 @@ import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 
 
@@ -72,11 +73,11 @@ public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
      * "1274760000" to "1274761395".
      */
 
-    // TODO temporarily disabled @Test
+    @Test
     public void testSimpleSQLUpgrade() throws Exception {
         loadNonSeqDatabaseSchema();
         createFooTable(connection);
-        IDataSet latestDump = new DatabaseConnection(connection).createDataSet();
+        IDataSet latestDump = createDataSet();
 
         loadNonSeqDatabaseSchema();
 
@@ -88,7 +89,7 @@ public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
         DatabaseMigrator migrator = new DatabaseMigrator(connection, upgrades, "org.mifos.framework.persistence");
         migrator.upgrade();
 
-        IDataSet dump = new DatabaseConnection(connection).createDataSet();
+        IDataSet dump = createDataSet();
         // check insertion of upgrade id
         ResultSet rs = connection.createStatement().executeQuery(
                 "select upgrade_id from applied_upgrades where upgrade_id=" + upgrades.firstKey());
@@ -98,15 +99,20 @@ public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    private IDataSet createDataSet() throws DatabaseUnitException, SQLException {
+        DatabaseConnection databaseConnection = new DatabaseConnection(connection);
+        return new CaseInsensitiveDataSet(databaseConnection.createDataSet());
+    }
+
     private void createFooTable(Connection connection) throws SQLException {
         connection.createStatement().execute("drop table if exists foo");
         connection.createStatement().execute(
-                "CREATE TABLE FOO ( " + "FOO_ID INTEGER," + "Description VARCHAR(25),"
+                "CREATE TABLE foo ( " + "FOO_ID INTEGER," + "Description VARCHAR(25),"
                         + "PRIMARY KEY(FOO_ID) ) ENGINE=InnoDB CHARACTER SET utf8 ");
 
-        connection.createStatement().execute("INSERT INTO FOO VALUES(1, 'BAR')");
+        connection.createStatement().execute("INSERT INTO foo VALUES(1, 'BAR')");
 
-        connection.createStatement().execute("INSERT INTO FOO VALUES(2, 'BAZ')");
+        connection.createStatement().execute("INSERT INTO foo VALUES(2, 'BAZ')");
         connection.commit();
     }
 
@@ -151,7 +157,7 @@ public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    // TODO temporarily disabled @Test
+    @Test
     public void testReallyOldDatabase() throws Exception {
         TestDatabase.dropMySQLDatabase();
         createFooTable(connection);

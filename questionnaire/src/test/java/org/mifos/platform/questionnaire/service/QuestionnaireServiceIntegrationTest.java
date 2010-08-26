@@ -184,8 +184,8 @@ public class QuestionnaireServiceIntegrationTest {
         String title = TITLE + currentTimeMillis();
         QuestionDetail questionDetail1 = defineQuestion(title + 1, QuestionType.NUMERIC, true);
         QuestionDetail questionDetail2 = defineQuestion(title + 2, QuestionType.FREETEXT, true);
-        SectionDetail section1 = getSectionWithQuestionId("S1", questionDetail1.getId());
-        SectionDetail section2 = getSectionWithQuestionId("S2", questionDetail2.getId());
+        SectionDetail section1 = getSectionWithQuestionId("S1", questionDetail1);
+        SectionDetail section2 = getSectionWithQuestionId("S2", questionDetail2);
         QuestionGroupDetail questionGroupDetail = defineQuestionGroup(title, "Create", "Client", asList(section1, section2), true);
         assertNotNull(questionGroupDetail);
         Integer questionGroupId = questionGroupDetail.getId();
@@ -645,10 +645,10 @@ public class QuestionnaireServiceIntegrationTest {
         return section;
     }
 
-    private SectionDetail getSectionWithQuestionId(String name, int questionId) throws SystemException {
+    private SectionDetail getSectionWithQuestionId(String name, QuestionDetail questionDetail) throws SystemException {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, null, null, QuestionType.INVALID, true), true));
+        section.addQuestion(new SectionQuestionDetail(questionDetail, true));
         return section;
     }
 
