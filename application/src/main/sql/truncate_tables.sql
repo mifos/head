@@ -226,3 +226,13 @@ truncate table qrtz_PAUSED_TRIGGER_GRPS;
 truncate table qrtz_FIRED_TRIGGERS;
 truncate table qrtz_SCHEDULER_STATE;
 truncate table qrtz_LOCKS;
+
+truncate table batch_job_instance;
+truncate table batch_job_execution;
+truncate table batch_job_params;
+truncate table batch_step_execution;
+truncate table batch_step_execution_context;
+truncate table batch_job_execution_context;
+truncate table batch_step_execution_seq;
+truncate table batch_job_execution_seq;
+truncate table batch_job_seq;

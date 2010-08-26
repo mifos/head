@@ -64,6 +64,7 @@ insert into applied_upgrades(upgrade_id) values(1280793109);
 insert into applied_upgrades(upgrade_id) values(1282247229);
 insert into applied_upgrades(upgrade_id) values(1282389745);
 insert into applied_upgrades(upgrade_id) values(1282567274);
+insert into applied_upgrades(upgrade_id) values(1282814250);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -3253,3 +3254,8 @@ insert into qrtz_LOCKS values('JOB_ACCESS');
 insert into qrtz_LOCKS values('CALENDAR_ACCESS');
 insert into qrtz_LOCKS values('STATE_ACCESS');
 insert into qrtz_LOCKS values('MISFIRE_ACCESS');
+
+/* Spring Batch related inserts */
+insert into batch_step_execution_seq values(0);
+insert into batch_job_execution_seq values(0);
+insert into batch_job_seq values(0);
