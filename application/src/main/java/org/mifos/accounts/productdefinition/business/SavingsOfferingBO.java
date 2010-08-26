@@ -70,12 +70,11 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 
     public static SavingsOfferingBO createNew(Integer userId, String systemId, String name, String shortName, String description,
             ProductCategoryBO productCategory, DateTime startDate, DateTime endDate,
-            PrdApplicableMasterEntity applicableToEntity, PrdStatusEntity activeStatus, PrdStatusEntity inActiveStatus,
-            SavingsTypeEntity savingsTypeEntity, RecommendedAmntUnitEntity recommendedAmntUnitEntity, Money amountForDeposit, Money maxWithdrawal,
+            PrdApplicableMasterEntity applicableToEntity, PrdStatusEntity selectedStatus, SavingsTypeEntity savingsTypeEntity, RecommendedAmntUnitEntity recommendedAmntUnitEntity, Money amountForDeposit, Money maxWithdrawal,
             BigDecimal interestRate, InterestCalcTypeEntity interestCalcTypeEntity, MeetingBO interestCalculationMeeting, MeetingBO interestPostingMeeting,
             Money minAmountForInterestCalculation, GLCodeEntity depositGlEntity, GLCodeEntity interestGlEntity) {
 
-        SavingsOfferingBO savingsProduct = new SavingsOfferingBO(userId, systemId, name, shortName, productCategory, activeStatus, applicableToEntity, startDate, savingsTypeEntity, interestRate, interestCalcTypeEntity, interestCalculationMeeting, interestPostingMeeting, depositGlEntity, interestGlEntity);
+        SavingsOfferingBO savingsProduct = new SavingsOfferingBO(userId, systemId, name, shortName, productCategory, selectedStatus, applicableToEntity, startDate, savingsTypeEntity, interestRate, interestCalcTypeEntity, interestCalculationMeeting, interestPostingMeeting, depositGlEntity, interestGlEntity);
         savingsProduct.setDescription(description);
         if (endDate != null) {
             savingsProduct.setEndDate(endDate.toDate());

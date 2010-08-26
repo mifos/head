@@ -153,6 +153,11 @@ public class SavingsProductFormBeanAssembler {
                 category, startDate, endDate, applicableFor);
         productDetails.setId(formBean.getGeneralDetails().getId());
 
+        if (StringUtils.isNotBlank(formBean.getGeneralDetails().getSelectedStatus())) {
+            Integer status = Integer.valueOf(formBean.getGeneralDetails().getSelectedStatus());
+            productDetails.setStatus(status);
+        }
+
         Integer depositType = Integer.valueOf(formBean.getSelectedDepositType());
 
         Integer groupSavingsType = null;
@@ -165,7 +170,7 @@ public class SavingsProductFormBeanAssembler {
 
         BigDecimal interestRate = formBean.getInterestRate();
         Integer interestCalculationType = Integer.valueOf(formBean.getSelectedInterestCalculation());
-        Integer interestCalculationFrequencyPeriod = Integer.valueOf(formBean.getSelectedInterestCalculation());
+        Integer interestCalculationFrequencyPeriod = Integer.valueOf(formBean.getSelectedFequencyPeriod());
         BigDecimal minBalanceForInterestCalculation = BigDecimal.valueOf(Double.valueOf(formBean.getMinBalanceRequiredForInterestCalculation()));
 
         Integer interestGlCode = Integer.parseInt(formBean.getSelectedInterestGlCode());

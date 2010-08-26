@@ -43,7 +43,7 @@
 		    <span>${changeLog.user}</span>
 	    </div>
 	    [/#list]
-	    <form name="backform" method="post" action="viewEditSavingsProduct.ftl">
+	    <form name="backform" method="get" action="viewEditSavingsProduct.ftl">
 		    <input type="hidden" name="productId" value="${auditLog.id}" />
 		    <input type="submit" name="submit" value="Back to details page" />
 	    </form>

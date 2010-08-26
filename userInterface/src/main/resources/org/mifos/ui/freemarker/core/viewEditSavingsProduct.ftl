@@ -24,7 +24,7 @@
   <div class=" content">
     <div class="span-24">
   		<div class="bluedivs paddingLeft">
-  			<a href="/AdminAction.do?method=load">[@spring.message "admin" /]</a>&nbsp;/&nbsp;<a href="viewSavingsProducts.ftl">[@spring.message "manageSavngsProducts.editsavingsproduct.viewSavingsproducts" /]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "manageSavngsProducts.editsavingsproduct.savingsProductName" /]</span>
+  			<a href="AdminAction.do?method=load">[@spring.message "admin" /]</a>&nbsp;/&nbsp;<a href="viewSavingsProducts.ftl">[@spring.message "manageSavngsProducts.editsavingsproduct.viewSavingsproducts" /]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "manageSavngsProducts.editsavingsproduct.savingsProductName" /]</span>
   		</div>
   		<div class="clear">&nbsp;</div>
   	 	<div class="span-18 ">

@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -546,5 +547,9 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
 
     public boolean isDifferentShortName(final String shortName) {
         return !this.prdOfferingShortName.equals(shortName);
+    }
+
+    public boolean isDifferentStartDate(DateTime startDate) {
+        return !new LocalDate(startDate).equals(new LocalDate(this.startDate));
     }
 }

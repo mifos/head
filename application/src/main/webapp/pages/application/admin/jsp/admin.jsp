@@ -326,13 +326,16 @@ while(enn.hasMoreElements()){
 								src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<!-- Bug id 28065  Added a  parameter input in the link of admin page.-->
-							<td width="97%"><html-el:link styleId="admin.link.viewSavingsProducts"
-								href="savingsproductaction.do?method=search&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<fmt:message key="admin.viewSavingsProducts">
-									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
-								</fmt:message>
-									</html-el:link> | 
-									<a id="admin.link.defineNewSavingsProduct" href="defineSavingsProduct.ftl">
+							<td width="97%">
+								<!-- 
+								<html-el:link styleId="admin.link.viewSavingsProducts" href="savingsproductaction.do?method=search&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								</html-el:link>
+								-->
+								<a id="admin.link.viewSavingsProducts" href="viewSavingsProducts.ftl">
+									<fmt:message key="admin.viewSavingsProducts">
+										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
+									</fmt:message>
+								</a> | <a id="admin.link.defineNewSavingsProduct" href="defineSavingsProduct.ftl">
 									<fmt:message key="admin.defineNewSavingsProduct">
 										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
 									</fmt:message>

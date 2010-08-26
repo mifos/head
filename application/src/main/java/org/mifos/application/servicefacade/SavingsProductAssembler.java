@@ -83,6 +83,11 @@ public class SavingsProductAssembler {
             PrdStatusEntity activeStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.SAVINGS_ACTIVE);
             PrdStatusEntity inActiveStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.SAVINGS_INACTIVE);
 
+            PrdStatusEntity selectedStatus = activeStatus;
+            if (productDetails.getStatus() != null && inActiveStatus.getOfferingStatusId().equals(productDetails.getStatus().shortValue())) {
+                selectedStatus = inActiveStatus;
+            }
+
             String globalNum = generateProductGlobalNum(user);
 
             // savings specific
@@ -116,15 +121,8 @@ public class SavingsProductAssembler {
             GLCodeEntity depositGlEntity = this.generalLedgerDao.findGlCodeById(savingsProductRequest.getDepositGlCode().shortValue());
             GLCodeEntity interestGlEntity = this.generalLedgerDao.findGlCodeById(savingsProductRequest.getInterestGlCode().shortValue());
 
-            if (savingsProductRequest.isGroupMandatorySavingsAccount()) {
-//                return SavingsOfferingBO.createNewGroupMandatory(user.getUserId(), globalNum, name, shortName, description,
-//                        productCategory, startDate, endDate, applicableToEntity, activeStatus, inActiveStatus,
-//                        savingsTypeEntity, recommendedAmntUnitEntity, amountForDeposit, maxWithdrawal,
-//                        interestRate, interestCalcTypeEntity, depositGlEntity, interestGlEntity);
-            }
-
             return SavingsOfferingBO.createNew(user.getUserId(), globalNum, name, shortName, description,
-                        productCategory, startDate, endDate, applicableToEntity, activeStatus, inActiveStatus,
+                        productCategory, startDate, endDate, applicableToEntity, selectedStatus,
                         savingsTypeEntity, recommendedAmntUnitEntity, amountForDeposit, maxWithdrawal,
                         interestRate, interestCalcTypeEntity, interestCalculationMeeting, interestPostingMeeting, minAmountForCalculation, depositGlEntity, interestGlEntity);
 

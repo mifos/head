@@ -32,7 +32,6 @@ public class SavingsProductDto {
     private final Double amountForDeposit;
     private final Double maxWithdrawal;
     private final boolean groupMandatorySavingsAccount;
-    private Integer status;
     private final BigDecimal interestRate;
     private final Integer interestCalculationFrequency;
     private final Integer interestCalculationFrequencyPeriod;
@@ -137,13 +136,5 @@ public class SavingsProductDto {
 
     public void setInterestGlCodeValue(String interestGlCodeValue) {
         this.interestGlCodeValue = interestGlCodeValue;
-    }
-
-    public Integer getStatus() {
-        return this.status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
     }
 }

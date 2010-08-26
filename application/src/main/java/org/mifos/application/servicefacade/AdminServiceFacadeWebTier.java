@@ -1599,9 +1599,12 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         }
 
         // domain rule validation - put on domain entity
-        validateStartDateIsNotBeforeToday(savingsProductRequest.getProductDetails().getStartDate());
-        validateStartDateIsNotOverOneYearFromToday(savingsProductRequest.getProductDetails().getStartDate());
-        validateEndDateIsPastStartDate(savingsProductRequest.getProductDetails().getStartDate(), savingsProductRequest.getProductDetails().getEndDate());
+        if (savingsProductForUpdate.isDifferentStartDate(savingsProductRequest.getProductDetails().getStartDate())) {
+            validateStartDateIsNotBeforeToday(savingsProductRequest.getProductDetails().getStartDate());
+            validateStartDateIsNotOverOneYearFromToday(savingsProductRequest.getProductDetails().getStartDate());
+
+            validateEndDateIsPastStartDate(savingsProductRequest.getProductDetails().getStartDate(), savingsProductRequest.getProductDetails().getEndDate());
+        }
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
