@@ -55,7 +55,7 @@ public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
             int triggerState = 0;
             for(String group : scheduler.getJobGroupNames()) {
                 for(String triggerName : scheduler.getTriggerNames(group)) {
-                    if (triggerName.equals(mifosTaskName)) {
+                    if (triggerName.equals(mifosTaskName+"Trigger")) {
                         trigger = scheduler.getTrigger(triggerName, group);
                         triggerState = scheduler.getTriggerState(triggerName, group);
                         break;
