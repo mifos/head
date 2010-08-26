@@ -21,9 +21,10 @@
                     [@spring.showErrors "<br>" /]
                 </div>
                 <div class="clear">&nbsp;</div>
-                <div>
+                <div class="span-21">
                     <span class="span-3">&nbsp;</span>
-                    <span class="span-7">[@spring.message "systemAdministration.batchjobs.taskStatus" /]: 
+                    <span class="span-7">
+                        <strong>[@spring.message "systemAdministration.batchjobs.schedulerStatus" /]:</strong>
                         [#if model.scheduler == true]
                             [@spring.message "systemAdministration.batchjobs.active" /]
                         [#else]
@@ -38,15 +39,29 @@
                         [/#if]
                     </span>
                 </div>
-                <div class="clear">&nbsp;</div>
-                <div class="span-21 borderbtm">
+                <div class="clear borderbtm">&nbsp;</div>
+                [#if model.executedTasks?size > 0]
+                    <div class="span-21 borderbtm">
+                        <span class="span-1">&nbsp;</span>
+                        <span  class="span-10">
+                            <p class="font15 orangeheading">[@spring.message "systemAdministration.batchjobs.executedTasks" /]:</p>
+                            <ul>
+                                [#list model.executedTasks as task]
+                                    <li>${task}</li>
+                                [/#list]
+                            </ul>
+                        </span>
+                    </div>
+                    <div class="clear">&nbsp;</div>
+                [/#if]
+                <div class="span-21">
                     <p class="font15"><span class="orangeheading">[@spring.message "systemAdministration.batchjobs.scheduledTasks" /]</span></p>
                 </div>
                 <div class="span-21 borderbtm">
                     [#list model.batchjobs as batchjobs]
                     <div class="span-21 paddingLeft">
                         <span class="span-1">
-                            <input type="checkbox" name="ONDEMEND" value="yes" />
+                            <input type="checkbox" name="ONDEMEND" value="${batchjobs.name}" />
                         </span>
                         <span class="span-1">${batchjobs_index + 1}.</span>
                         <span class="span-10"><strong>${batchjobs.name}</strong></span>

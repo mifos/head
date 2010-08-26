@@ -33,6 +33,8 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.BatchjobsDto;
 import org.mifos.application.admin.servicefacade.BatchjobsSchedulerDto;
 import org.mifos.application.admin.servicefacade.BatchjobsServiceFacade;
+import org.mifos.core.MifosException;
+import org.mifos.service.test.TestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -48,6 +50,9 @@ public class BatchjobsController {
     private static final String SUSPEND_PARAM = "SUSPEND";
     private static final String SAVE_PARAM = "SAVE";
     private static final String RUN_PARAM = "RUN";
+
+    private TestingService testingService;
+    private String[] rawJobList = new String[0];
 
     @Autowired
     private BatchjobsServiceFacade batchjobsServiceFacade;
@@ -87,6 +92,10 @@ public class BatchjobsController {
             model.put("scheduler", batchjobsScheduler.isStatus());
         }
         model.put("date0", new Date(0));
+        model.put("executedTasks", rawJobList);
+        if (rawJobList.length > 0) {
+            rawJobList = new String[0];
+        }
 
         Map<String, Object> status = new HashMap<String, Object>();
         List<String> errorMessages = new ArrayList<String>();
@@ -103,17 +112,34 @@ public class BatchjobsController {
                                     @RequestParam(value = SUSPEND_PARAM, required = false) String suspend,
                                     @RequestParam(value = SAVE_PARAM, required = false) String save,
                                     @RequestParam(value = RUN_PARAM, required = false) String run,
-                                    SessionStatus status) {
+                                    SessionStatus status) throws MifosException {
+
         if (StringUtils.isNotBlank(suspend)) {
             batchjobsServiceFacade.suspend();
         } else if (StringUtils.isNotBlank(save)) {
             batchjobsServiceFacade.saveChanges();
         } else if (StringUtils.isNotBlank(run)) {
-            batchjobsServiceFacade.runSelectedTasks();
+            rawJobList = request.getParameterValues("ONDEMEND");
+            if (rawJobList == null) {
+                rawJobList = new String[0];
+            }
+            else {
+                for (String job : rawJobList) {
+                    getTestingService().runIndividualBatchJob(job, request.getSession().getServletContext());
+                }
+            }
         }
         status.setComplete();
 
         return loadBatchjobsInfo(request);
+    }
+
+    public TestingService getTestingService() {
+        return this.testingService;
+    }
+
+    public void setTestingService(TestingService testingService) {
+        this.testingService = testingService;
     }
 
 }

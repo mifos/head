@@ -193,13 +193,13 @@ public class StandardTestingService implements TestingService {
 
     @Override
     public void runIndividualBatchJob(final String requestedJob, final ServletContext ctx) throws MifosException {
-        LOG.info("running batch job with name like: " + requestedJob + "*");
+        LOG.info("running batch job with name: " + requestedJob);
         boolean jobFound = false;
         String jobToRun = null;
         final MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
         try {
             for(String taskName : mifosScheduler.getTaskNames()) {
-                if(taskName.startsWith(requestedJob)) {
+                if(taskName.equals(requestedJob)) {
                     jobFound = true;
                     jobToRun = taskName;
                     break;
