@@ -41,7 +41,7 @@ public class MifosSchedulerTest {
     @Test
     public void testRegisterTasks() throws Exception {
 
-        MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/config/resources/task.xml", "org/mifos/framework/components/batchjobs/mockQuartz.properties");
+        MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/mockTask.xml", "org/mifos/framework/components/batchjobs/mockQuartz.properties");
         mifosScheduler.initializeBatchJobs();
         List<String> taskNames = mifosScheduler.getTaskNames();
 
@@ -60,7 +60,7 @@ public class MifosSchedulerTest {
 
     @Test
     public void testCallsConfigurationLocator() throws Exception {
-        MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/mockTask.xml", "org/mifos/framework/components/batchjobs/mockQuartz2.properties");
+        MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/mockTask2.xml", "org/mifos/framework/components/batchjobs/mockQuartz2.properties");
         mifosScheduler.initializeBatchJobs();
         List<String> taskNames = mifosScheduler.getTaskNames();
 
