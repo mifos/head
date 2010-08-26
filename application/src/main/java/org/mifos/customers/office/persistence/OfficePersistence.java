@@ -20,6 +20,7 @@
 
 package org.mifos.customers.office.persistence;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -254,7 +255,7 @@ public class OfficePersistence extends Persistence {
         if (queryResult != null && queryResult.size() != 0) {
             return queryResult;
         }
-        return null;
+        return new ArrayList<OfficeBO>();
     }
 
     public List<OfficeBO> getBranchParents(String searchId) throws PersistenceException {
@@ -266,7 +267,7 @@ public class OfficePersistence extends Persistence {
         if (queryResult != null && queryResult.size() != 0) {
             return queryResult;
         }
-        return null;
+        return new ArrayList<OfficeBO>();
     }
 
     public List<OfficeDetailsDto> getChildOffices(String searchId) throws PersistenceException {

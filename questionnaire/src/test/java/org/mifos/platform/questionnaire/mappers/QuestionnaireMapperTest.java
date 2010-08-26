@@ -235,7 +235,7 @@ public class QuestionnaireMapperTest {
         when(eventSourceDao.retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString())).thenReturn(new ArrayList());
         when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
         EventSourceDto eventSourceDto = getEventSource("Create", "Client");
-        List<SectionDetail> sectionDetails = asList(getSectionDefinition(SECTION_NAME));
+        List<SectionDetail> sectionDetails = asList(getSectionDefinition("S1", 12), getSectionDefinition("S2", 0));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, TITLE, eventSourceDto, sectionDetails, true);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         assertQuestionGroup(questionGroup);
@@ -254,10 +254,14 @@ public class QuestionnaireMapperTest {
 
     private void assertSections(List<Section> sections) {
         assertThat(sections, notNullValue());
-        assertThat(sections.size(), is(1));
-        Section section = sections.get(0);
-        assertThat(section.getName(), is(SECTION_NAME));
-        assertSectionQuestions(section.getQuestions());
+        assertThat(sections.size(), is(2));
+        Section section1 = sections.get(0);
+        assertThat(section1.getName(), is("S1"));
+        assertSectionQuestions(section1.getQuestions());
+
+        Section section2 = sections.get(1);
+        assertThat(section2.getName(), is("S2"));
+        assertSectionQuestions(section2.getQuestions());
     }
 
     private void assertSectionQuestions(List<SectionQuestion> sectionQuestions) {
@@ -270,10 +274,10 @@ public class QuestionnaireMapperTest {
         assertThat(sectionQuestion.getSequenceNumber(), is(0));
     }
 
-    private SectionDetail getSectionDefinition(String name) {
+    private SectionDetail getSectionDefinition(String name, int questionId) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID, true), true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, TITLE, TITLE, QuestionType.FREETEXT, true), true));
         return section;
     }
 

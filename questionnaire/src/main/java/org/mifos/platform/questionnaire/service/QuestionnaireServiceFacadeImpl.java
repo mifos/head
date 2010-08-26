@@ -120,8 +120,8 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public void createQuestionGroup(QuestionGroupDto questionGroupDto) throws SystemException {
-        questionnaireService.defineQuestionGroup(questionGroupDto);
+    public Integer createQuestionGroup(QuestionGroupDto questionGroupDto) throws SystemException {
+        return questionnaireService.defineQuestionGroup(questionGroupDto);
     }
 
     @Override

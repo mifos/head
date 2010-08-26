@@ -276,4 +276,9 @@ public class Question implements Serializable {
     public boolean titleHasChanged() {
         return !StringUtils.equals(originalTitle, getTitle());
     }
+
+    void trimTitleAndSetChoices() {
+        trimTitle();
+        setChoicesIfApplicable();
+    }
 }

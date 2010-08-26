@@ -26,11 +26,20 @@ import java.util.List;
 
 import org.joda.time.Days;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 
 public class FiscalCalendarRules {
 
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
+
     public static final String FiscalCalendarRulesWorkingDays = "FiscalCalendarRules.WorkingDays";
-    public static final String FiscalCalendarRulesScheduleTypeForMeetingOnHoliday = "FiscalCalendarRules.ScheduleMeetingIfNonWorkingDay";
+    @Deprecated
+    /**  FIXME, should be deleted after 1.7 Release */
+
+    public static final String FiscalCalendarRulesScheduleTypeForMeetingOnHoliday = "FiscalCalendarRules.ScheduleMeetingOnHoliday";
+    public static final String FiscalCalendarRulesScheduleTypeForMeetingIfNonWorkingDay = "FiscalCalendarRules.ScheduleMeetingIfNonWorkingDay";
     public static final String FiscalCalendarRulesDaysForCalendarDefinition = "FiscalCalendarRules.DaysForCalendarDefinition";
     private String[] configWorkingDays = getConfiguredWorkingDays();
 
@@ -146,13 +155,19 @@ public class FiscalCalendarRules {
     }
 
 
-    public String getScheduleTypeForMeetingOnHoliday() {
+    public String getScheduleTypeForMeetingIfNonWorkingDay() {
         String scheduleType = null;
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(FiscalCalendarRulesScheduleTypeForMeetingOnHoliday)) {
+        if (configMgr.containsKey(FiscalCalendarRulesScheduleTypeForMeetingIfNonWorkingDay)) {
+            scheduleType = configMgr.getString(FiscalCalendarRulesScheduleTypeForMeetingIfNonWorkingDay);
+        }
+        else if (configMgr.containsKey(FiscalCalendarRulesScheduleTypeForMeetingOnHoliday)) {
+            /* Conditional check is for backward compatibility only and should be removed after 1.7 release */
             scheduleType = configMgr.getString(FiscalCalendarRulesScheduleTypeForMeetingOnHoliday);
-        } else {
-            throw new RuntimeException("The schedule type for meeting on holiday is not defined in the config file.");
+            logger.warn("FiscalCalendarRules.ScheduleTypeForMeetingOnHoliday is deprecated and will not be supported in a future release. Use FiscalCalendarRules.ScheduleMeetingIfNonWorkingDay instead.");
+            }
+            else {
+            throw new RuntimeException("The schedule type for meeting if non working day is not defined in the config file.");
         }
         return scheduleType;
     }
@@ -171,8 +186,8 @@ public class FiscalCalendarRules {
         return (String) ConfigurationManager.getInstance().getProperty(FiscalCalendarRulesWorkingDays);
     }
 
-    public void setScheduleTypeForMeetingOnHoliday(final String ScheduleMeetingIfNonWorkingDay) {
-        ConfigurationManager.getInstance().setProperty(FiscalCalendarRulesScheduleTypeForMeetingOnHoliday, ScheduleMeetingIfNonWorkingDay);
+    public void setScheduleTypeForMeetingIfNonWorkingDay(final String ScheduleMeetingIfNonWorkingDay) {
+        ConfigurationManager.getInstance().setProperty(FiscalCalendarRulesScheduleTypeForMeetingIfNonWorkingDay, ScheduleMeetingIfNonWorkingDay);
     }
 
     public List<Days> getWorkingDaysAsJodaTimeDays() {

@@ -58,7 +58,7 @@ public interface QuestionnaireServiceFacade {
 
     QuestionGroupInstanceDetail getQuestionGroupInstance(Integer questionGroupInstanceId);
 
-    void createQuestionGroup(QuestionGroupDto questionGroupDto) throws SystemException;
+    Integer createQuestionGroup(QuestionGroupDto questionGroupDto) throws SystemException;
 
     List<String> getAllCountriesForPPI();
 
