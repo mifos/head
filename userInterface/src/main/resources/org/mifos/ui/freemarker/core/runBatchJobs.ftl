@@ -14,7 +14,7 @@
    Batch jobs ran:
    <ol>
        [#list model.jobsExecuted as job]
-       <li>${job}*</li>
+       <li>${job}</li>
        [/#list]
    </ol>
 
