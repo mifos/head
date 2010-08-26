@@ -48,35 +48,20 @@ public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
         MifosScheduler mifosScheduler = (MifosScheduler) context.getAttribute(MifosScheduler.class.getName());
         Scheduler scheduler = mifosScheduler.getScheduler();
 
-        for (String mifosTaskName : mifosScheduler.getTaskNames()) {
-            Trigger trigger = null;
-            JobDetail jobDetail = null;
-
-            int triggerState = 0;
-            for(String group : scheduler.getJobGroupNames()) {
-                for(String triggerName : scheduler.getTriggerNames(group)) {
-                    if (triggerName.equals(mifosTaskName)) {
-                        trigger = scheduler.getTrigger(triggerName, group);
-                        triggerState = scheduler.getTriggerState(triggerName, group);
-                        break;
-                    }
+        for (String groupName : scheduler.getJobGroupNames()) {
+            for (String jobName : scheduler.getJobNames(groupName)) {
+                Trigger[] triggers = scheduler.getTriggersOfJob(jobName, groupName);
+                Trigger trigger = triggers.length > 0 ? triggers[0] : null;
+                JobDetail jobDetail = scheduler.getJobDetail(jobName, groupName);
+                if (trigger != null && jobDetail != null) {
+                    Date nextFire = trigger.getNextFireTime() != null ? trigger.getNextFireTime() : new Date(0);
+                    Date lastFire = trigger.getPreviousFireTime() != null ? trigger.getPreviousFireTime() : new Date(0);
+                    int priority = trigger.getPriority();
+                    String cronExpression = trigger.getClass().getSimpleName().equals("CronTrigger") ? ((CronTrigger) trigger).getCronExpression() : "";
+                    String description = jobDetail.getDescription() != null ? jobDetail.getDescription() : "";
+                    int triggerState = scheduler.getTriggerState(trigger.getName(), groupName);
+                    batchjobs.add(new BatchjobsDto(jobName, cronExpression, priority, description, lastFire, nextFire, "", triggerState));
                 }
-                for(String jobDetailsName : scheduler.getJobNames(group)) {
-                    if (jobDetailsName.equals(mifosTaskName)) {
-                        jobDetail = scheduler.getJobDetail(jobDetailsName, group);
-                        break;
-                    }
-                }
-
-            }
-
-            if (trigger != null && jobDetail != null) {
-                Date nextFire = trigger.getNextFireTime() != null ? trigger.getNextFireTime() : new Date(0);
-                Date lastFire = trigger.getPreviousFireTime() != null ? trigger.getPreviousFireTime() : new Date(0);
-                int priority = trigger.getPriority();
-                String cronExpression = trigger.getClass().getSimpleName().equals("CronTrigger") ? ((CronTrigger) trigger).getCronExpression() : "";
-                String description = jobDetail.getDescription() != null ? jobDetail.getDescription() : "";
-                batchjobs.add(new BatchjobsDto(mifosTaskName, cronExpression, priority, description, lastFire, nextFire, "", triggerState));
             }
         }
         return batchjobs;
