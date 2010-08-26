@@ -73,7 +73,7 @@ public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
      * "1274760000" to "1274761395".
      */
 
-    // TODO temporarily disabled @Test
+    @Test
     public void testSimpleSQLUpgrade() throws Exception {
         loadNonSeqDatabaseSchema();
         createFooTable(connection);
@@ -157,7 +157,7 @@ public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    // TODO temporarily disabled @Test
+    @Test
     public void testReallyOldDatabase() throws Exception {
         TestDatabase.dropMySQLDatabase();
         createFooTable(connection);
