@@ -53,7 +53,7 @@ public class DefineNewSavingsProductPage extends MifosPage {
         selenium.type("interestCalculationFrequency", productParameters.getNumberOfDaysOrMonthsForInterestCalculation());
         selectValueIfNotZero("selectedFequencyPeriod", productParameters.getDaysOrMonthsForInterestCalculation());
 
-        selenium.type("selectedFequencyPeriod", productParameters.getFrequencyOfInterestPostings());
+        selenium.type("interestPostingMonthlyFrequency", productParameters.getFrequencyOfInterestPostings());
 
         selectIfNotEmpty("selectedPrincipalGlCode", productParameters.getGlCodeForDeposit());
         selectIfNotEmpty("selectedInterestGlCode", productParameters.getGlCodeForInterest());

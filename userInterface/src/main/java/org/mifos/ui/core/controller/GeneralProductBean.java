@@ -41,7 +41,6 @@ public class GeneralProductBean {
     @NotEmpty
     private String shortName;
 
-    @NotEmpty
     private String description;
 
     @NotEmpty
