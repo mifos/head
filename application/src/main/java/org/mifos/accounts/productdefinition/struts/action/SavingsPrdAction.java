@@ -65,6 +65,12 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
+/**
+ * @deprecated this entire class is no longer used and will be deleted after localisation of messages.properties files is complete.
+ *
+ * note: all struts/jsp and tests around this will also be removed.
+ */
+@Deprecated
 public class SavingsPrdAction extends BaseAction {
 
     private MifosLogger prdDefLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);

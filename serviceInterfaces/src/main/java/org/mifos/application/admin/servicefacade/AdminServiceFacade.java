@@ -65,9 +65,6 @@ public interface AdminServiceFacade {
     LoanProductFormDto retrieveLoanProductFormReferenceData();
 
     @PreAuthorize("isFullyAuthenticated()")
-    SavingsProductFormDto retrieveSavingsProductFormReferenceData();
-
-    @PreAuthorize("isFullyAuthenticated()")
     void createLoanProduct(LoanProductRequest loanProduct);
 
     @PreAuthorize("isFullyAuthenticated()")
@@ -129,12 +126,15 @@ public interface AdminServiceFacade {
     List<PrdOfferingDto> retrieveLoanProductsNotMixed();
 
     @PreAuthorize("isFullyAuthenticated()")
-    PrdOfferingDto createSavingsProduct(SavingsProductDto savingsProductRequest);
-
-    @PreAuthorize("isFullyAuthenticated()")
     SavingsProductDto retrieveSavingsProductDetails(Integer productId);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CAN_CREATE_NEW_SAVINGS_PRODUCT', 'ROLE_CAN_EDIT_SAVINGS_PRODUCT')")
+    SavingsProductFormDto retrieveSavingsProductFormReferenceData();
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CREATE_NEW_SAVINGS_PRODUCT')")
+    PrdOfferingDto createSavingsProduct(SavingsProductDto savingsProductRequest);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_EDIT_SAVINGS_PRODUCT')")
     PrdOfferingDto updateSavingsProduct(SavingsProductDto savingsProduct);
 
     @PreAuthorize("isFullyAuthenticated()")
