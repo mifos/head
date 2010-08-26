@@ -379,8 +379,8 @@ explanation of the license and how it is applied.
 									</bean:define>
 									<tr class="fontnormal">
 										<td width="22%" align="right"><span id="create_user.label.customField"><mifos:mifoslabel
-											name="${cf.lookUpEntity.entityType}"
-											mandatory="${cf.mandatoryStringValue}"
+											name="${cf.lookUpEntityType}"
+											mandatory="${cf.mandatoryString}"
 											bundle="PersonnelUIResources"/></span>:
 										</td>
 										<td width="78%" ><c:if test="${cf.fieldType == 1}">
