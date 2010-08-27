@@ -148,4 +148,8 @@ public class SavingsProductFormBeanAssembler {
                 interestRate, interestCalculationType, formBean.getInterestCalculationFrequency(), interestCalculationFrequencyPeriod,
                 formBean.getInterestPostingMonthlyFrequency(), minBalanceForInterestCalculation, depositGlCode, interestGlCode);
     }
+
+    public void setProductBeanAssembler(GeneralProductBeanAssembler productBeanAssembler) {
+        this.productBeanAssembler = productBeanAssembler;
+    }
 }

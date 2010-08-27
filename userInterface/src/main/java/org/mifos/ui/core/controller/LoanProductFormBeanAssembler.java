@@ -144,4 +144,8 @@ public class LoanProductFormBeanAssembler {
         loanProductFormBean.setSelectedLoanAmountCalculationType("1");
         return loanAmountCalculationTypeOptions;
     }
+
+    public void setProductBeanAssembler(GeneralProductBeanAssembler productBeanAssembler) {
+        this.productBeanAssembler = productBeanAssembler;
+    }
 }

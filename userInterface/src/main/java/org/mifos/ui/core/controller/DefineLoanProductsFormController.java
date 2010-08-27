@@ -53,6 +53,8 @@ import org.springframework.web.bind.support.SessionStatus;
 @Controller
 @RequestMapping("/defineLoanProducts")
 @SessionAttributes("loanProduct")
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="DB_DUPLICATE_SWITCH_CLAUSES", justification="..")
 public class DefineLoanProductsFormController {
 
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
@@ -143,7 +145,7 @@ public class DefineLoanProductsFormController {
     }
 
     private void validateInstallments(LoanProductFormBean loanProductFormBean, BindingResult result) {
-        Integer loanAmountType = Integer.valueOf(loanProductFormBean.getSelectedLoanAmountCalculationType());
+        Integer loanAmountType = Integer.valueOf(loanProductFormBean.getSelectedInstallmentsCalculationType());
         switch (loanAmountType) {
         case 1:
             Set<ConstraintViolation<SameForAllLoanBean>> violations = validator.validate(loanProductFormBean.getInstallmentsSameForAllLoans());
@@ -199,7 +201,7 @@ public class DefineLoanProductsFormController {
     private String buildViolationMessage(String objectName, ConstraintViolation<SameForAllLoanBean> constraintViolation) {
         StringBuilder builder = new StringBuilder();
         String constraintMessage = constraintViolation.getMessageTemplate().substring(30);
-        String constraintType = constraintMessage.substring(0, constraintMessage.indexOf("."));
+        String constraintType = constraintMessage.substring(0, constraintMessage.indexOf('.'));
         builder.append(constraintType).append('.').append(objectName).append('.').append(constraintViolation.getPropertyPath().toString());
         return builder.toString();
     }
