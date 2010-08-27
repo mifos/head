@@ -101,9 +101,11 @@ public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
     }
 
     @Override
-    public void runSelectedTasks() {
-        // TODO Auto-generated method stub
-
+    public void runSelectedTasks(ServletContext context, String[] rawJobList) throws TaskSystemException {
+        MifosScheduler mifosScheduler = (MifosScheduler) context.getAttribute(MifosScheduler.class.getName());
+        for (String taskName : rawJobList) {
+            mifosScheduler.runIndividualTask(taskName);
+        }
     }
 
 }

@@ -101,7 +101,4 @@
         <property name="testingService" ref="testingService" />
     </bean>
 
-    <bean name="batchjobsController" class="org.mifos.ui.core.controller.BatchjobsController">
-        <property name="testingService" ref="testingService" />
-    </bean>
 </beans>

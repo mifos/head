@@ -34,7 +34,6 @@ import org.mifos.application.admin.servicefacade.BatchjobsDto;
 import org.mifos.application.admin.servicefacade.BatchjobsSchedulerDto;
 import org.mifos.application.admin.servicefacade.BatchjobsServiceFacade;
 import org.mifos.core.MifosException;
-import org.mifos.service.test.TestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -50,7 +49,6 @@ public class BatchjobsController {
     private static final String SUSPEND_PARAM = "SUSPEND";
     private static final String RUN_PARAM = "RUN";
 
-    private TestingService testingService;
     private String[] rawJobList = new String[0];
 
     @Autowired
@@ -128,22 +126,17 @@ public class BatchjobsController {
                 rawJobList = new String[0];
             }
             else {
-                for (String job : rawJobList) {
-                    getTestingService().runIndividualBatchJob(job, request.getSession().getServletContext());
+                ServletContext context = request.getSession().getServletContext();
+                try {
+                    batchjobsServiceFacade.runSelectedTasks(context, rawJobList);
+                } catch (Exception e) {
+                    throw new MifosException(e);
                 }
             }
         }
         status.setComplete();
 
         return loadBatchjobsInfo(request);
-    }
-
-    public TestingService getTestingService() {
-        return this.testingService;
-    }
-
-    public void setTestingService(TestingService testingService) {
-        this.testingService = testingService;
     }
 
 }
