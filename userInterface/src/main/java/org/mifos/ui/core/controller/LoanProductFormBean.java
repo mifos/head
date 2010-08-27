@@ -22,34 +22,60 @@ package org.mifos.ui.core.controller;
 
 import java.util.Map;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="..")
 public class LoanProductFormBean {
 
+    @Valid
     private GeneralProductBean generalDetails;
 
     private boolean includeInLoanCycleCounter;
 
+    @NotEmpty
+    private String selectedLoanAmountCalculationType;
     private Map<String, String> loanAmountCalculationTypeOptions;
 
-    private String selectedLoanAmountCalculationType;
     private SameForAllLoanBean loanAmountSameForAllLoans;
     private ByLastLoanAmountBean[] loanAmountByLastLoanAmount;
     private ByLoanCycleBean[] loanAmountByLoanCycle;
 
-    private Map<String, String> interestRateCalculationTypeOptions;
+    @NotEmpty
     private String selectedInterestRateCalculationType;
+    private Map<String, String> interestRateCalculationTypeOptions;
+
+    @Min(value=0)
+    @Max(value=100)
+    @NotNull
     private Double maxInterestRate;
+    @Min(value=0)
+    @Max(value=100)
+    @NotNull
     private Double minInterestRate;
+    @Min(value=0)
+    @Max(value=100)
+    @NotNull
     private Double defaultInterestRate;
 
-    private Map<String, String> installmentFrequencyPeriodOptions;
+    @NotEmpty
     private String installmentFrequencyPeriod;
+    private Map<String, String> installmentFrequencyPeriodOptions;
+
+    @Min(value=0)
+    @Max(value=100)
+    @NotNull
     private Integer installmentFrequencyRecurrenceEvery;
 
+    @NotEmpty
+    private String selectedInstallmentsCalculationType;
     private Map<String, String> installmentsCalculationTypeOptions;
 
-    private String selectedInstallmentsCalculationType;
     private SameForAllLoanBean installmentsSameForAllLoans;
     private ByLastLoanAmountBean[] installmentsByLastLoanAmount;
     private ByLoanCycleBean[] installmentsByLoanCycle;
@@ -68,10 +94,13 @@ public class LoanProductFormBean {
     private String[] applicableFunds;
     private String[] selectedFunds;
 
-    private Map<String, String> interestGeneralLedgerOptions;
+    @NotEmpty
     private String selectedInterest;
-    private Map<String, String> principalGeneralLedgerOptions;
+    private Map<String, String> interestGeneralLedgerOptions;
+
+    @NotEmpty
     private String selectedPrincipal;
+    private Map<String, String> principalGeneralLedgerOptions;
 
     public boolean isIncludeInLoanCycleCounter() {
         return this.includeInLoanCycleCounter;

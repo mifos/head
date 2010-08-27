@@ -32,10 +32,11 @@ public class LoanProductFormDto {
     private final List<ListElement> interestGlCodes;
     private final List<ListElement> interestCalculationTypes;
     private final List<ListElement> applicableCustomerTypes;
+    private final List<ListElement> statusOptions;
 
     public LoanProductFormDto(List<ListElement> productCategories, List<ListElement> gracePeriodTypes,
             List<ListElement> sourceOfFunds, List<ListElement> loanFees, List<ListElement> principalGlCodes,
-            List<ListElement> interestGlCodes, List<ListElement> interestCalculationTypes, List<ListElement> applicableCustomerTypes) {
+            List<ListElement> interestGlCodes, List<ListElement> interestCalculationTypes, List<ListElement> applicableCustomerTypes,  List<ListElement> statusOptions) {
         this.productCategories = productCategories;
         this.gracePeriodTypes = gracePeriodTypes;
         this.sourceOfFunds = sourceOfFunds;
@@ -44,6 +45,7 @@ public class LoanProductFormDto {
         this.interestGlCodes = interestGlCodes;
         this.interestCalculationTypes = interestCalculationTypes;
         this.applicableCustomerTypes = applicableCustomerTypes;
+        this.statusOptions = statusOptions;
     }
 
     public List<ListElement> getProductCategories() {
@@ -76,5 +78,9 @@ public class LoanProductFormDto {
 
     public List<ListElement> getApplicableCustomerTypes() {
         return this.applicableCustomerTypes;
+    }
+
+    public List<ListElement> getStatusOptions() {
+        return this.statusOptions;
     }
 }

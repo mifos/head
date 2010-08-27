@@ -133,16 +133,13 @@ function switchLoanInstallmentType()
           <p class="font15"><span class="fontBold" id="createLoanProduct.heading">[@spring.message "manageLoanProducts.defineLoanProduct.addanewLoanproduct" /]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "manageLoanProducts.defineLoanProduct.enterLoanproductinformation" /]</span></p>
           <div>[@spring.message "manageLoanProducts.defineLoanProduct.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturn" /]</div>
           <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired" /] </div>
-          <p class="error" id="error1">
-          </p>
+          [@mifos.showAllErrors "loanProduct.*"/]
           <p class="fontBold">[@spring.message "manageLoanProducts.defineLoanProduct.loanproductdetails" /]</p>
-          
           <div class="prepend-2  span-24 last">
-            
             <div class="span-23 ">
             	<span class="pull-3 span-8 rightAlign" id="createLoanProduct.label.prdOfferingName"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.productinstancename" /]&nbsp;:</span>
             	<span class="span-4">
-            		[@spring.bind "loanProduct.name" /]
+            		[@spring.bind "loanProduct.generalDetails.name" /]
             		<input type="text" id="createLoanProduct.input.prdOffering" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />
             	</span>
             </div>
@@ -150,14 +147,14 @@ function switchLoanInstallmentType()
             <div class="span-23 ">
             	<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.shortname" /]&nbsp;:</span>
             	<span class="span-4">
-            		[@spring.bind "loanProduct.shortName" /]
+            		[@spring.bind "loanProduct.generalDetails.shortName" /]
             		<input type="text" size="3" id="createLoanProduct.input.prdOfferingShortName" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />
             	</span>
             </div>
             
             <div class="span-23 "><span class="pull-3 span-8 rightAlign">[@spring.message "manageLoanProducts.defineLoanProduct.description" /]&nbsp;:</span>
             	<span class="span-4">
-            		[@spring.bind "loanProduct.description" /]
+            		[@spring.bind "loanProduct.generalDetails.description" /]
                 	<textarea rows="7" cols="55" id="createLoanProduct.input.description" name="${spring.status.expression}">${spring.status.value?if_exists}</textarea>
             	</span>
             </div>
@@ -165,32 +162,32 @@ function switchLoanInstallmentType()
             <div class="span-23">
             	<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.productcategory" /]&nbsp;:</span>
             	<span class="span-4">
-            		[@mifos.formSingleSelectWithPrompt "loanProduct.selectedCategory", loanProduct.categoryOptions, "--select one--" /]
+            		[@mifos.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedCategory", loanProduct.generalDetails.categoryOptions, "--select one--" /]
               	</span>
             </div>
             
             <div class="span-23 last">
             	<span class="pull-3 span-8 rightAlign"><span class="red"> * </span>[@spring.message "manageLoanProducts.defineLoanProduct.startdate" /]&nbsp;:</span>
-            	[@spring.bind "loanProduct.startDateDay" /]
+            	[@spring.bind "loanProduct.generalDetails.startDateDay" /]
             	<span class="span-2"><input type="text" size="1" maxlength="2" id="startDateDD" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />DD</span>
-            	[@spring.bind "loanProduct.startDateMonth" /]
+            	[@spring.bind "loanProduct.generalDetails.startDateMonth" /]
               	<span><input type="text" size="1" maxlength="2" id="startDateMM" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />MM</span>
-              	[@spring.bind "loanProduct.startDateYear" /]
+              	[@spring.bind "loanProduct.generalDetails.startDateYear" /]
               	<span><input type="text" size="2" maxlength="4" id="startDateYY" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />YYYY</span>
             </div>
             
             <div class="span-23 last"> <span class="pull-3 span-8 rightAlign">[@spring.message "manageLoanProducts.defineLoanProduct.enddate" /]&nbsp;:</span>
-            	[@spring.bind "loanProduct.endDateDay" /]
+            	[@spring.bind "loanProduct.generalDetails.endDateDay" /]
 	            <span class="span-2"><input type="text" size="1" maxlength="2" id="endDateDD" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />DD</span>
-	            [@spring.bind "loanProduct.endDateMonth" /]
+	            [@spring.bind "loanProduct.generalDetails.endDateMonth" /]
 	            <span class="span-2"><input type="text" size="1" maxlength="2" id="endDateMM" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />MM</span>
-	            [@spring.bind "loanProduct.endDateYear" /]
+	            [@spring.bind "loanProduct.generalDetails.endDateYear" /]
 	            <span class="span-3"><input type="text" size="2" maxlength="4" id="endDateYY" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />YYYY</span>
             </div>
             
             <div class="span-23 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.applicablefor" /]&nbsp;:</span>
             	<span class="span-4">
-            	[@mifos.formSingleSelectWithPrompt "loanProduct.selectedApplicableFor", loanProduct.applicableForOptions, "--select one--" /]
+            	[@mifos.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedApplicableFor", loanProduct.generalDetails.applicableForOptions, "--select one--" /]
               	</span>
             </div>
             
@@ -561,8 +558,8 @@ function switchLoanInstallmentType()
           <div class="clear">&nbsp;</div>
           <hr />
 	        <div class="prepend-9">
-	        	<input class="buttn" type="submit" id="createLoanProduct.button.preview" name="preview" value="Preview" onclick="selectAllOptions(this.form.selectedFees);selectAllOptions(this.form.selectedFunds);" />
-	        	<input class="buttn2" type="submit" id="createLoanProduct.button.cancel" name="CANCEL" value="Cancel" />
+	        	<input class="buttn" type="submit" id="CreateLoanProduct.button.preview" name="preview" value="Preview" onclick="selectAllOptions(this.form.selectedFees);selectAllOptions(this.form.selectedFunds);" />
+	        	<input class="buttn2" type="submit" id="CreateLoanProduct.button.cancel" name="CANCEL" value="Cancel" />
 	      	</div>
           <div class="clear">&nbsp;</div>
         </form>

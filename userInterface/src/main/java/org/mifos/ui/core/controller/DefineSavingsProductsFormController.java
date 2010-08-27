@@ -23,7 +23,6 @@ package org.mifos.ui.core.controller;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.screen.SavingsProductFormDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,11 +60,6 @@ public class DefineSavingsProductsFormController {
 
         SavingsProductFormDto referenceData = this.adminServiceFacade.retrieveSavingsProductFormReferenceData();
         SavingsProductFormBean savingsProduct = new SavingsProductFormBeanAssembler().assembleReferenceData(referenceData);
-
-        DateTime today = new DateTime();
-        savingsProduct.getGeneralDetails().setStartDateDay(today.getDayOfMonth());
-        savingsProduct.getGeneralDetails().setStartDateMonth(today.getMonthOfYear());
-        savingsProduct.getGeneralDetails().setStartDateYear(Integer.valueOf(today.getYearOfEra()).toString());
 
         Double zero = Double.valueOf("0");
         savingsProduct.setAmountForDeposit(zero);

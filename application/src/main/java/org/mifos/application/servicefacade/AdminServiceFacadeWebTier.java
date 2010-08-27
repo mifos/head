@@ -1574,7 +1574,9 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                 interestGlCodes.add(new ListElement(glCode.getGlcodeId().intValue(), glCode.getGlcode()));
             }
 
-            return new LoanProductFormDto(productCategoryOptions, gracePeriodTypeOptions, sourceOfFunds, loanFee, principalGlCodes, interestGlCodes, interestCalcTypesOptions, applicableForOptions);
+            List<ListElement> statusOptions = new ArrayList<ListElement>();
+
+            return new LoanProductFormDto(productCategoryOptions, gracePeriodTypeOptions, sourceOfFunds, loanFee, principalGlCodes, interestGlCodes, interestCalcTypesOptions, applicableForOptions, statusOptions);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         } catch (SystemException e) {

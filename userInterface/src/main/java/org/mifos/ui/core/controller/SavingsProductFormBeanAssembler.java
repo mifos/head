@@ -33,18 +33,14 @@ import org.mifos.dto.screen.SavingsProductFormDto;
 
 public class SavingsProductFormBeanAssembler {
 
+    private GeneralProductBeanAssembler productBeanAssembler = new GeneralProductBeanAssembler();
+
     public SavingsProductFormBean assembleReferenceData(SavingsProductFormDto referenceData) {
 
         SavingsProductFormBean formBean = new SavingsProductFormBean();
-        GeneralProductBean productDetails = new GeneralProductBean();
+
+        GeneralProductBean productDetails = productBeanAssembler.assembleFromRefData(referenceData);
         formBean.setGeneralDetails(productDetails);
-
-        // assembler for general product details
-        populateCategoryDropdown(referenceData, formBean);
-        populateApplicableForDropdown(referenceData, formBean);
-
-        // status
-        populateStatusDropdown(referenceData, formBean);
 
         // assembler for accounting section
         populatePrincipalGlCodesDropdown(referenceData, formBean);
@@ -55,14 +51,6 @@ public class SavingsProductFormBeanAssembler {
         populateInterestBalanceDropdown(referenceData, formBean);
         populateFrequencyPeriodDropdown(referenceData, formBean);
         return formBean;
-    }
-
-    private void populateStatusDropdown(SavingsProductFormDto referenceData, SavingsProductFormBean formBean) {
-        Map<String, String> statusOptions = new LinkedHashMap<String, String>();
-        for (ListElement status : referenceData.getStatusOptions()) {
-            statusOptions.put(status.getId().toString(), status.getName());
-        }
-        formBean.getGeneralDetails().setStatusOptions(statusOptions);
     }
 
     private void populateFrequencyPeriodDropdown(SavingsProductFormDto referenceData, SavingsProductFormBean formBean) {
@@ -99,27 +87,6 @@ public class SavingsProductFormBeanAssembler {
             depositTypes.put(option.getId().toString(), option.getName());
         }
         formBean.setDepositTypeOptions(depositTypes);
-    }
-
-    private void populateApplicableForDropdown(SavingsProductFormDto referenceData,
-            SavingsProductFormBean formBean) {
-        Map<String, String> applicableForOptions = new LinkedHashMap<String, String>();
-        for (ListElement customerType : referenceData.getApplicableToCustomers()) {
-            applicableForOptions.put(customerType.getId().toString(), customerType.getName());
-        }
-        formBean.getGeneralDetails().setApplicableForOptions(applicableForOptions);
-    }
-
-    private void populateCategoryDropdown(SavingsProductFormDto referenceData, SavingsProductFormBean formBean) {
-        Map<String, String> categoryOptions = new LinkedHashMap<String, String>();
-        for (ListElement category : referenceData.getProductCategories()) {
-            categoryOptions.put(category.getId().toString(), category.getName());
-        }
-        formBean.getGeneralDetails().setCategoryOptions(categoryOptions);
-
-        if (referenceData.getProductCategories().size() == 1) {
-            formBean.getGeneralDetails().setSelectedCategory(referenceData.getProductCategories().get(0).getId().toString());
-        }
     }
 
     private void populatePrincipalGlCodesDropdown(SavingsProductFormDto referenceData, SavingsProductFormBean formBean) {

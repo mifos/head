@@ -20,10 +20,16 @@
 
 package org.mifos.ui.core.controller;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 public class SameForAllLoanBean {
 
+    @NotNull @Min(value=0)
     private Double min;
+    @NotNull @Min(value=0)
     private Double max;
+    @NotNull @Min(value=0)
     private Double theDefault;
 
     public Double getMin() {
@@ -48,5 +54,13 @@ public class SameForAllLoanBean {
 
     public void setTheDefault(Double theDefault) {
         this.theDefault = theDefault;
+    }
+
+    public boolean minIsLessThanMax() {
+        return this.min.doubleValue() < this.max.doubleValue();
+    }
+
+    public boolean defaultIsBetweenMinAndMax() {
+        return minIsLessThanMax() && this.theDefault.doubleValue() <= this.max.doubleValue();
     }
 }

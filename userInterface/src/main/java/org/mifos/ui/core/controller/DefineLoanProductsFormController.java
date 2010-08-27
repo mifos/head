@@ -22,7 +22,9 @@ package org.mifos.ui.core.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +41,8 @@ import org.mifos.dto.screen.LoanProductFormDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,7 +60,11 @@ public class DefineLoanProductsFormController {
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
-    private LoanProductAssembler loanProductAssembler = new LoanProductAssembler();
+
+    @Autowired
+    private LocalValidatorFactoryBean validator;
+
+    private LoanProductFormBeanAssembler loanProductAssembler = new LoanProductFormBeanAssembler();
 
     protected DefineLoanProductsFormController(){
         //for spring autowiring
@@ -74,16 +82,6 @@ public class DefineLoanProductsFormController {
         LoanProductFormDto loanProductRefData = this.adminServiceFacade.retrieveLoanProductFormReferenceData();
 
         LoanProductFormBean loanProductFormBean = loanProductAssembler.populateWithReferenceData(loanProductRefData);
-
-        // FIXME - Delegate to assembler
-        DateTime startDate = new DateTime();
-
-        GeneralProductBean productDetails = new GeneralProductBean();
-        productDetails.setStartDateDay(startDate.getDayOfMonth());
-        productDetails.setStartDateMonth(startDate.getMonthOfYear());
-        productDetails.setStartDateYear(Integer.valueOf(startDate.getYearOfEra()).toString());
-
-        loanProductFormBean.setGeneralDetails(productDetails);
 
         loanProductFormBean.setIncludeInLoanCycleCounter(false);
         loanProductFormBean.setInstallmentFrequencyRecurrenceEvery(Integer.valueOf(1));
@@ -124,6 +122,9 @@ public class DefineLoanProductsFormController {
 
         String viewName = REDIRECT_TO_ADMIN_SCREEN;
 
+        validateLoanAmount(loanProductFormBean, result);
+        validateInstallments(loanProductFormBean, result);
+
         if (StringUtils.isNotBlank(cancel)) {
             viewName = REDIRECT_TO_ADMIN_SCREEN;
             status.setComplete();
@@ -139,6 +140,68 @@ public class DefineLoanProductsFormController {
         }
 
         return viewName;
+    }
+
+    private void validateInstallments(LoanProductFormBean loanProductFormBean, BindingResult result) {
+        Integer loanAmountType = Integer.valueOf(loanProductFormBean.getSelectedLoanAmountCalculationType());
+        switch (loanAmountType) {
+        case 1:
+            Set<ConstraintViolation<SameForAllLoanBean>> violations = validator.validate(loanProductFormBean.getInstallmentsSameForAllLoans());
+            for (ConstraintViolation<SameForAllLoanBean> constraintViolation : violations) {
+                ObjectError error = new ObjectError("loanProduct", new String[] {buildViolationMessage("loanProduct.installmentsSameForAllLoans", constraintViolation)},
+                        new Object[] {}, constraintViolation.getMessage());
+                result.addError(error);
+            }
+            break;
+        case 2:
+        break;
+        case 3:
+            break;
+        default:
+            break;
+        }
+    }
+
+    private void validateLoanAmount(LoanProductFormBean loanProductFormBean, BindingResult result) {
+        Integer loanAmountType = Integer.valueOf(loanProductFormBean.getSelectedLoanAmountCalculationType());
+        switch (loanAmountType) {
+        case 1:
+            SameForAllLoanBean sameForAllLoanBean = loanProductFormBean.getLoanAmountSameForAllLoans();
+            Set<ConstraintViolation<SameForAllLoanBean>> violations = validator.validate(sameForAllLoanBean);
+            for (ConstraintViolation<SameForAllLoanBean> constraintViolation : violations) {
+                ObjectError error = new ObjectError("loanProduct", new String[] {buildViolationMessage("loanProduct.sameForAllLoans", constraintViolation)},
+                        new Object[] {}, constraintViolation.getMessage());
+                result.addError(error);
+            }
+
+            if (violations.isEmpty() && !sameForAllLoanBean.minIsLessThanMax()) {
+                ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.sameForAllLoans.max"},
+                        new Object[] {}, "The min must be less than max.");
+                result.addError(error);
+            }
+
+            if (violations.isEmpty() && !sameForAllLoanBean.defaultIsBetweenMinAndMax()) {
+                ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.sameForAllLoans.theDefault"},
+                        new Object[] {}, "The default is not within min and max range.");
+                result.addError(error);
+            }
+
+            break;
+        case 2:
+        break;
+        case 3:
+            break;
+        default:
+            break;
+        }
+    }
+
+    private String buildViolationMessage(String objectName, ConstraintViolation<SameForAllLoanBean> constraintViolation) {
+        StringBuilder builder = new StringBuilder();
+        String constraintMessage = constraintViolation.getMessageTemplate().substring(30);
+        String constraintType = constraintMessage.substring(0, constraintMessage.indexOf("."));
+        builder.append(constraintType).append('.').append(objectName).append('.').append(constraintViolation.getPropertyPath().toString());
+        return builder.toString();
     }
 
     private LoanProductRequest translateFrom(LoanProductFormBean loanProductFormBean) {
@@ -272,7 +335,7 @@ public class DefineLoanProductsFormController {
         return list;
     }
 
-    public void setLoanProductAssembler(LoanProductAssembler loanProductAssembler) {
+    public void setLoanProductAssembler(LoanProductFormBeanAssembler loanProductAssembler) {
         this.loanProductAssembler = loanProductAssembler;
     }
 }

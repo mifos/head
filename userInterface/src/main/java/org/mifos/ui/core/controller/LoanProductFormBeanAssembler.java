@@ -26,14 +26,16 @@ import java.util.Map;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.LoanProductFormDto;
 
-public class LoanProductAssembler {
+public class LoanProductFormBeanAssembler {
+
+    private GeneralProductBeanAssembler productBeanAssembler = new GeneralProductBeanAssembler();
 
     public LoanProductFormBean populateWithReferenceData(LoanProductFormDto loanProductRefData) {
 
         LoanProductFormBean loanProductFormBean = new LoanProductFormBean();
 
-        populateCategoryDropdown(loanProductRefData, loanProductFormBean);
-        populateApplicableForDropdown(loanProductRefData, loanProductFormBean);
+        GeneralProductBean productDetails = productBeanAssembler.assembleFromRefData(loanProductRefData);
+        loanProductFormBean.setGeneralDetails(productDetails);
 
         Map<String, String> loanAmountCalculationTypeOptions = populateLoanAmountCalculationRadioButtons(loanProductFormBean);
 
@@ -141,26 +143,5 @@ public class LoanProductAssembler {
         loanProductFormBean.setLoanAmountCalculationTypeOptions(loanAmountCalculationTypeOptions);
         loanProductFormBean.setSelectedLoanAmountCalculationType("1");
         return loanAmountCalculationTypeOptions;
-    }
-
-    private void populateApplicableForDropdown(LoanProductFormDto loanProductRefData,
-            LoanProductFormBean loanProductFormBean) {
-        Map<String, String> applicableForOptions = new LinkedHashMap<String, String>();
-        for (ListElement customerType : loanProductRefData.getApplicableCustomerTypes()) {
-            applicableForOptions.put(customerType.getId().toString(), customerType.getName());
-        }
-        loanProductFormBean.getGeneralDetails().setApplicableForOptions(applicableForOptions);
-    }
-
-    private void populateCategoryDropdown(LoanProductFormDto loanProductRefData, LoanProductFormBean loanProductFormBean) {
-        Map<String, String> categoryOptions = new LinkedHashMap<String, String>();
-        for (ListElement category : loanProductRefData.getProductCategories()) {
-            categoryOptions.put(category.getId().toString(), category.getName());
-        }
-        loanProductFormBean.getGeneralDetails().setCategoryOptions(categoryOptions);
-
-        if (loanProductRefData.getProductCategories().size() == 1) {
-            loanProductFormBean.getGeneralDetails().setSelectedCategory(loanProductRefData.getProductCategories().get(0).getId().toString());
-        }
     }
 }
