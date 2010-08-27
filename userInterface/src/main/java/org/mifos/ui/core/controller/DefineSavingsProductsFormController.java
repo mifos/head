@@ -75,19 +75,14 @@ public class DefineSavingsProductsFormController {
 
         String viewName = "redirect:/previewSavingsProducts.ftl?editFormview=defineSavingsProduct";
 
+        new SavingsProductValidator().validateGroup(savingsProductFormBean, result);
+        new SavingsProductValidator().validateManadtorySavingsProduct(savingsProductFormBean, result);
+
         if (StringUtils.isNotBlank(cancel)) {
             viewName = REDIRECT_TO_ADMIN_SCREEN;
             status.setComplete();
         } else if (result.hasErrors()) {
-            new SavingsProductValidator().validateGroup(savingsProductFormBean, result);
-            new SavingsProductValidator().validateManadtorySavingsProduct(savingsProductFormBean, result);
             viewName = "defineSavingsProduct";
-        } else {
-            new SavingsProductValidator().validateGroup(savingsProductFormBean, result);
-            new SavingsProductValidator().validateManadtorySavingsProduct(savingsProductFormBean, result);
-            if (result.hasErrors()) {
-                viewName = "defineSavingsProduct";
-            }
         }
 
         return viewName;

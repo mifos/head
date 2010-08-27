@@ -122,7 +122,7 @@ public class DefineLoanProductsFormController {
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
             @ModelAttribute("loanProduct") @Valid LoanProductFormBean loanProductFormBean, BindingResult result, SessionStatus status) {
 
-        String viewName = REDIRECT_TO_ADMIN_SCREEN;
+        String viewName = "redirect:/previewLoanProducts.ftl?editFormview=defineLoanProducts";
 
         validateLoanAmount(loanProductFormBean, result);
         validateInterestRateRange(loanProductFormBean, result);
@@ -136,10 +136,10 @@ public class DefineLoanProductsFormController {
         } else {
 
             // FIXME - Delegate to assembler
-            LoanProductRequest loanProduct = translateFrom(loanProductFormBean);
-
-            adminServiceFacade.createLoanProduct(loanProduct);
-            status.setComplete();
+//            LoanProductRequest loanProduct = translateFrom(loanProductFormBean);
+//
+//            adminServiceFacade.createLoanProduct(loanProduct);
+//            status.setComplete();
         }
 
         return viewName;

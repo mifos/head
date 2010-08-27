@@ -23,8 +23,8 @@
    <!--  Main Content Begins-->  
   <div class="content">
     <p class="font15 orangeheading">[@spring.message "manageLoanProduct.youhavesuccessfullyaddedanewLoanproduct"/] </p>
-    <p><span class="fontBold">[@spring.message "manageLoanProduct.pleaseNoteLoanProducthasbeenassignedthesystemIDnumber"/]</span><span class="fontBold">1-002 </span></p>
-    <p class="fontBold"><a href="loanProductDetails.html">[@spring.message "manageLoanProduct.viewLoanproductdetailsnow"/]</a></p>
+    <p><span class="fontBold">[@spring.message "manageLoanProduct.pleaseNoteLoanProducthasbeenassignedthesystemIDnumber"/]</span><span class="fontBold">${product.globalPrdOfferingNum}</span></p>
+    <p class="fontBold"><a href="viewEditLoanProduct.ftl?productId=${product.prdOfferingId}">[@spring.message "manageLoanProduct.viewLoanproductdetailsnow"/]</a></p>
     <p><a href="defineLoanProducts.ftl">[@spring.message "manageLoanProduct.defineanewLoanproduct"/]</a></p>
   </div>
   <!--Main Content Ends-->
