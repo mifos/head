@@ -20,13 +20,7 @@
 
 package org.mifos.ui.core.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.mifos.application.admin.servicefacade.AdminServiceFacade;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -45,12 +39,12 @@ public class LoanProductPreviewController {
     private static final String CANCEL_PARAM = "CANCEL";
     private static final String EDIT_PARAM = "EDIT";
 
-    @Autowired
-    private AdminServiceFacade adminServiceFacade;
-
-    public LoanProductPreviewController(final AdminServiceFacade adminServiceFacade) {
-        this.adminServiceFacade = adminServiceFacade;
-    }
+//    @Autowired
+//    private AdminServiceFacade adminServiceFacade;
+//
+//    public LoanProductPreviewController(final AdminServiceFacade adminServiceFacade) {
+//        this.adminServiceFacade = adminServiceFacade;
+//    }
 
     protected LoanProductPreviewController() {
         // spring auto wiring
@@ -70,19 +64,8 @@ public class LoanProductPreviewController {
 
     private void populateModelAndViewForPreview(LoanProductFormBean loanProduct, ModelAndView modelAndView) {
         GeneralProductBean bean = loanProduct.getGeneralDetails();
-        String categoryName = bean.getCategoryOptions().get(bean.getSelectedCategory());
 
-        DateTime startDate = new DateTime().withDate(Integer.parseInt(bean.getStartDateYear()), bean.getStartDateMonth(), bean.getStartDateDay());
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        String startDateFormatted = format.format(startDate.toDate());
-
-        String endDateFormatted = "";
-        if (StringUtils.isNotBlank(bean.getEndDateYear())) {
-            DateTime endDate = new DateTime().withDate(Integer.parseInt(bean.getEndDateYear()), bean.getEndDateMonth(), bean.getEndDateDay());
-            endDateFormatted = format.format(endDate.toDate());
-        }
-
-        String applicableTo = bean.getApplicableForOptions().get(bean.getSelectedApplicableFor());
+        new ProductModuleAndViewPopulator().populateProductDetails(bean, modelAndView);
 
         // loan product specific
 
@@ -90,10 +73,6 @@ public class LoanProductPreviewController {
         String principalGlCode = loanProduct.getPrincipalGeneralLedgerOptions().get(loanProduct.getSelectedPrincipal());
         String interestGlCode = loanProduct.getInterestGeneralLedgerOptions().get(loanProduct.getSelectedInterest());
 
-        modelAndView.addObject("categoryName", categoryName);
-        modelAndView.addObject("startDateFormatted", startDateFormatted);
-        modelAndView.addObject("endDateFormatted", endDateFormatted);
-        modelAndView.addObject("applicableTo", applicableTo);
         modelAndView.addObject("principalGlCode", principalGlCode);
         modelAndView.addObject("interestGlCode", interestGlCode);
     }
@@ -117,7 +96,7 @@ public class LoanProductPreviewController {
             modelAndView.addObject("loanProduct", loanProduct);
             modelAndView.addObject("editFormview", editFormview);
             populateModelAndViewForPreview(loanProduct, modelAndView);
-        } else {
+        }
 
 //            PrdOfferingDto product;
 //            SavingsProductDto savingsProductRequest = new SavingsProductFormBeanAssembler().assembleSavingsProductRequest(loanProduct);
@@ -142,8 +121,6 @@ public class LoanProductPreviewController {
 //                    handleBusinessRuleViolation(editFormview, loanProduct, result, modelAndView, e.getMessageKey());
 //                }
 //            }
-
-        }
         return modelAndView;
     }
 

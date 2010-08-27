@@ -136,7 +136,7 @@ public class DefineLoanProductsFormController {
         } else {
 
             // FIXME - Delegate to assembler
-//            LoanProductRequest loanProduct = translateFrom(loanProductFormBean);
+            translateFrom(loanProductFormBean);
 //
 //            adminServiceFacade.createLoanProduct(loanProduct);
 //            status.setComplete();

@@ -20,11 +20,7 @@
 
 package org.mifos.ui.core.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsProductDto;
@@ -74,19 +70,8 @@ public class SavingsProductPreviewController {
 
     private void populateModelAndViewForPreview(SavingsProductFormBean savingsProduct, ModelAndView modelAndView) {
         GeneralProductBean bean = savingsProduct.getGeneralDetails();
-        String categoryName = bean.getCategoryOptions().get(bean.getSelectedCategory());
 
-        DateTime startDate = new DateTime().withDate(Integer.parseInt(bean.getStartDateYear()), bean.getStartDateMonth(), bean.getStartDateDay());
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        String startDateFormatted = format.format(startDate.toDate());
-
-        String endDateFormatted = "";
-        if (StringUtils.isNotBlank(bean.getEndDateYear())) {
-            DateTime endDate = new DateTime().withDate(Integer.parseInt(bean.getEndDateYear()), bean.getEndDateMonth(), bean.getEndDateDay());
-            endDateFormatted = format.format(endDate.toDate());
-        }
-
-        String applicableTo = bean.getApplicableForOptions().get(bean.getSelectedApplicableFor());
+        new ProductModuleAndViewPopulator().populateProductDetails(bean, modelAndView);
 
         String depositType = savingsProduct.getDepositTypeOptions().get(savingsProduct.getSelectedDepositType());
 
@@ -101,10 +86,6 @@ public class SavingsProductPreviewController {
         String depositGlCode = savingsProduct.getPrincipalGeneralLedgerOptions().get(savingsProduct.getSelectedPrincipalGlCode());
         String interestGlCode = savingsProduct.getInterestGeneralLedgerOptions().get(savingsProduct.getSelectedInterestGlCode());
 
-        modelAndView.addObject("categoryName", categoryName);
-        modelAndView.addObject("startDateFormatted", startDateFormatted);
-        modelAndView.addObject("endDateFormatted", endDateFormatted);
-        modelAndView.addObject("applicableTo", applicableTo);
         modelAndView.addObject("depositType", depositType);
         modelAndView.addObject("appliesTo", appliesTo);
         modelAndView.addObject("interestCalculationUsed", interestCalculationUsed);
