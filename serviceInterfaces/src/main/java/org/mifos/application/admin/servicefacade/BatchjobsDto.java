@@ -24,23 +24,24 @@ import java.util.Date;
 
 public class BatchjobsDto {
     private final String name;
-    private final String cron;
+    private final String frequency;
+    private final String taskType;
     private final int priority;
     private final String lastRunStatus;
     private final long lastStartTime;
     private final long nextStartTime;
-    private final String taskDependency;
     private final int state;
 
-    public BatchjobsDto(String name, String cron, int priority, String lastRunStatus, Date lastStartTime,
-            Date nextStartTime, String taskDependency, int state) {
+
+    public BatchjobsDto(String name, String frequency, String taskType, int priority, String lastRunStatus, Date lastStartTime,
+            Date nextStartTime, int state) {
         this.name = name;
-        this.cron = cron;
+        this.frequency = frequency;
+        this.taskType = taskType;
         this.priority = priority;
         this.lastRunStatus = lastRunStatus;
         this.lastStartTime = lastStartTime.getTime();
         this.nextStartTime = nextStartTime.getTime();
-        this.taskDependency = taskDependency;
         this.state = state;
     }
 
@@ -48,8 +49,12 @@ public class BatchjobsDto {
         return this.name;
     }
 
-    public String getCron() {
-        return this.cron;
+    public String getFrequency() {
+        return this.frequency;
+    }
+
+    public String getTaskType() {
+        return this.taskType;
     }
 
     public int getPriority() {
@@ -66,10 +71,6 @@ public class BatchjobsDto {
 
     public Date getNextStartTime() {
         return new Date(this.nextStartTime);
-    }
-
-    public String getTaskDependency() {
-        return this.taskDependency;
     }
 
     public int getState() {

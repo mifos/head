@@ -48,7 +48,6 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/batchjobs")
 public class BatchjobsController {
     private static final String SUSPEND_PARAM = "SUSPEND";
-    private static final String SAVE_PARAM = "SAVE";
     private static final String RUN_PARAM = "RUN";
 
     private TestingService testingService;
@@ -77,7 +76,7 @@ public class BatchjobsController {
         BatchjobsSchedulerDto batchjobsScheduler = null;
         try {
             batchjobs = batchjobsServiceFacade.getBatchjobs(context);
-            batchjobsScheduler = batchjobsServiceFacade.getBatchjobsScheduler();
+            batchjobsScheduler = batchjobsServiceFacade.getBatchjobsScheduler(context);
         } catch(Exception tse) {
             new ArrayList<BatchjobsDto>();
         }
@@ -110,16 +109,21 @@ public class BatchjobsController {
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView processFormSubmit(HttpServletRequest request,
                                     @RequestParam(value = SUSPEND_PARAM, required = false) String suspend,
-                                    @RequestParam(value = SAVE_PARAM, required = false) String save,
                                     @RequestParam(value = RUN_PARAM, required = false) String run,
                                     SessionStatus status) throws MifosException {
 
         if (StringUtils.isNotBlank(suspend)) {
-            batchjobsServiceFacade.suspend();
-        } else if (StringUtils.isNotBlank(save)) {
-            batchjobsServiceFacade.saveChanges();
+            ServletContext context = request.getSession().getServletContext();
+            String[] doSuspend = request.getParameterValues("SUSPEND");
+            if (doSuspend != null) {
+                try {
+                    batchjobsServiceFacade.suspend(context, doSuspend[0]);
+                } catch (Exception e) {
+                    throw new MifosException(e);
+                }
+            }
         } else if (StringUtils.isNotBlank(run)) {
-            rawJobList = request.getParameterValues("ONDEMEND");
+            rawJobList = request.getParameterValues("ONDEMAND");
             if (rawJobList == null) {
                 rawJobList = new String[0];
             }
