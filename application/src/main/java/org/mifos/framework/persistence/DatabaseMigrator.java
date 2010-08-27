@@ -73,9 +73,9 @@ public class DatabaseMigrator {
     public static final String METHOD_UPGRADE_TYPE = "method";
     public static final String SCRIPT_UPGRADE_TYPE = "sql";
 
+    private static final String APPLIED_UPGRADES = "applied_upgrades";
+
     private static MifosLogger log = null;
-
-
 
     public DatabaseMigrator() {
         this(StaticHibernateUtil.getSessionTL().connection(), getAvailableUpgrades(),
@@ -215,7 +215,7 @@ public class DatabaseMigrator {
             if (e.getKey() <= databaseVersion) {
                 Statement stmt = connection.createStatement();
 
-                stmt.execute("insert into applied_upgrades values(" + e.getValue() + ")");
+                stmt.execute("insert into " + APPLIED_UPGRADES + " values(" + e.getValue() + ")");
                 connection.commit();
             }
         }
@@ -294,11 +294,12 @@ public class DatabaseMigrator {
     private void createAppliedUpgradesTable() {
         try {
             Statement stmt = connection.createStatement();
-            stmt.execute("create table  applied_upgrades" + "( upgrade_id integer not null,"
+            stmt.execute("create table " + APPLIED_UPGRADES + "( upgrade_id integer not null,"
                     + "primary key(upgrade_id)" + ")engine=innodb character set utf8;");
             connection.commit();
         } catch (SQLException e) {
-            System.err.print("Unable to create table applied_upgrade table for Non Sequential Database Upgrade");
+            System.err.println("Unable to create table " + APPLIED_UPGRADES + " for non-sequential database upgrades. "
+                    + e);
         }
     }
 
@@ -323,7 +324,7 @@ public class DatabaseMigrator {
         }
 
         Statement stmt = connection.createStatement();
-        stmt.execute("insert into applied_upgrades values (" + upgradeNumber + ")");
+        stmt.execute("insert into " + APPLIED_UPGRADES + " values (" + upgradeNumber + ")");
         connection.commit();
     }
 
@@ -370,7 +371,7 @@ public class DatabaseMigrator {
         Statement stmt = null;
         try {
             stmt = connection.createStatement(ResultSet.FETCH_FORWARD, ResultSet.CONCUR_READ_ONLY);
-            ResultSet rs = stmt.executeQuery("select upgrade_id from applied_upgrades order by upgrade_id");
+            ResultSet rs = stmt.executeQuery("select upgrade_id from " + APPLIED_UPGRADES + " order by upgrade_id");
 
             while (rs.next()) {
                 appliedUpgrades.add(rs.getInt(1));
@@ -389,7 +390,7 @@ public class DatabaseMigrator {
     }
 
     public boolean isNSDU(Connection conn) throws SQLException {
-        ResultSet results = conn.getMetaData().getColumns(null, null, "applied_upgrades", "upgrade_id");
+        ResultSet results = conn.getMetaData().getColumns(null, null, APPLIED_UPGRADES, "upgrade_id");
         boolean foundAppliedUpgrades = results.next();
         results.close();
 

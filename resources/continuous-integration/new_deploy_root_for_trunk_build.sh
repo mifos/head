@@ -3,6 +3,8 @@ set -o errexit
 
 # Create new deployment root for a trunk build of the Mifos Hudson build job
 
+# run as user "hudson" on ci server
+
 deployNickname=$1
 if [ -z "$deployNickname" ]
 then
@@ -18,7 +20,7 @@ then
     exit 1
 fi
 
-ciResources=$HOME/hudson-home/jobs/trunk/workspace/working_copy/resources/continuous-integration
+ciResources=$HOME/hudson-home/jobs/head-master/workspace/resources/continuous-integration
 
 set -x
 mkdir $deployRoot

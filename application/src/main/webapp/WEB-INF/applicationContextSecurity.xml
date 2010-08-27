@@ -54,10 +54,10 @@
   	</beans:bean>
   	
     <beans:bean id="mifosAuthenticationProvider" class="org.mifos.security.authentication.MifosDaoAuthenticationProvider">
-        <beans:property name="userDetailsService" ref="mifosAuthenticationAuthoriaztionService" />
+        <beans:property name="userDetailsService" ref="mifosAuthenticationAuthorizationService" />
     </beans:bean>
 
-    <beans:bean id="mifosAuthenticationAuthoriaztionService" class="org.mifos.security.AuthenticationAuthorizationServiceFacadeImpl">
+    <beans:bean id="mifosAuthenticationAuthorizationService" class="org.mifos.security.AuthenticationAuthorizationServiceFacadeImpl">
     	<beans:constructor-arg ref="personnelDao" />
     </beans:bean>
     
