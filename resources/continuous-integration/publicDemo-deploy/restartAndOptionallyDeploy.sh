@@ -6,7 +6,7 @@ set -o errexit
 
 controlScript=$WORKSPACE/resources/continuous-integration/deploy/tomcat/control.sh
 lastStableWAR=$WORKSPACE/application/target/mifos-webapp.war
-lastStableWAR=$WORKSPACE/../$WAR_JOB/application/target/mifos-webapp.war
+lastStableWAR=$WORKSPACE/../../$WAR_JOB/workspace/application/target/mifos-webapp.war
 deployRoot=$HOME/deploys/mifos-$JOB_NAME-deploy
 targetWARlocation=$deployRoot/tomcat6/webapps/mifos.war
 
