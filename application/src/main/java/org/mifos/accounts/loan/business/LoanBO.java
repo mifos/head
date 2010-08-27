@@ -1650,6 +1650,15 @@ public class LoanBO extends AccountBO {
                 groupHistory.setLastGroupLoanAmount(newLastGroupLoanAmount);
             }
 
+            /*
+             * John W - mifos-1986 - see related comment above
+             */
+            if (accountReOpened) {
+                loanSummary.increaseBy(null, increaseInterest, increasePenalty, increaseFees);
+                // fix for MIFOS-3287
+                this.setClosedDate(null);
+            }
+
             // Reverse just one payment when reopening an account
             // Else reverse payments equal to number of transactions reversed.
             if (accountReOpened) {
