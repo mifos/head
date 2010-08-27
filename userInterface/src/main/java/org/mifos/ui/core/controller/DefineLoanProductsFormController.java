@@ -125,6 +125,7 @@ public class DefineLoanProductsFormController {
         String viewName = REDIRECT_TO_ADMIN_SCREEN;
 
         validateLoanAmount(loanProductFormBean, result);
+        validateInterestRateRange(loanProductFormBean, result);
         validateInstallments(loanProductFormBean, result);
 
         if (StringUtils.isNotBlank(cancel)) {
@@ -144,14 +145,44 @@ public class DefineLoanProductsFormController {
         return viewName;
     }
 
+    private void validateInterestRateRange(LoanProductFormBean loanProductFormBean, BindingResult result) {
+        if (!result.hasErrors()) {
+            if (loanProductFormBean.getMinInterestRate() > loanProductFormBean.getMaxInterestRate()) {
+                ObjectError error = new ObjectError("loanProduct", new String[] {"Range.loanProduct.maxInterestRate"},
+                        new Object[] {}, "The min must be less than max.");
+                result.addError(error);
+            }
+
+            if (loanProductFormBean.getDefaultInterestRate() < loanProductFormBean.getMinInterestRate() ||
+                loanProductFormBean.getDefaultInterestRate() > loanProductFormBean.getMaxInterestRate()) {
+                ObjectError error = new ObjectError("loanProduct", new String[] {"Range.loanProduct.defaultInterestRate"},
+                        new Object[] {}, "The min must be less than max.");
+                result.addError(error);
+            }
+        }
+    }
+
     private void validateInstallments(LoanProductFormBean loanProductFormBean, BindingResult result) {
         Integer loanAmountType = Integer.valueOf(loanProductFormBean.getSelectedInstallmentsCalculationType());
         switch (loanAmountType) {
         case 1:
-            Set<ConstraintViolation<SameForAllLoanBean>> violations = validator.validate(loanProductFormBean.getInstallmentsSameForAllLoans());
+            SameForAllLoanBean sameForAllLoanBean = loanProductFormBean.getInstallmentsSameForAllLoans();
+            Set<ConstraintViolation<SameForAllLoanBean>> violations = validator.validate(sameForAllLoanBean);
             for (ConstraintViolation<SameForAllLoanBean> constraintViolation : violations) {
                 ObjectError error = new ObjectError("loanProduct", new String[] {buildViolationMessage("loanProduct.installmentsSameForAllLoans", constraintViolation)},
                         new Object[] {}, constraintViolation.getMessage());
+                result.addError(error);
+            }
+
+            if (violations.isEmpty() && !sameForAllLoanBean.minIsLessThanMax()) {
+                ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.installmentsSameForAllLoans.max"},
+                        new Object[] {}, "The min must be less than max.");
+                result.addError(error);
+            }
+
+            if (violations.isEmpty() && !sameForAllLoanBean.defaultIsBetweenMinAndMax()) {
+                ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.installmentsSameForAllLoans.theDefault"},
+                        new Object[] {}, "The default is not within min and max range.");
                 result.addError(error);
             }
             break;

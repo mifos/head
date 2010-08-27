@@ -51,15 +51,15 @@ public class LoanProductFormBean {
     private Map<String, String> interestRateCalculationTypeOptions;
 
     @Min(value=0)
-    @Max(value=100)
+    @Max(value=999)
     @NotNull
     private Double maxInterestRate;
     @Min(value=0)
-    @Max(value=100)
+    @Max(value=999)
     @NotNull
     private Double minInterestRate;
     @Min(value=0)
-    @Max(value=100)
+    @Max(value=99)
     @NotNull
     private Double defaultInterestRate;
 
