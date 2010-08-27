@@ -81,10 +81,10 @@ public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
     }
 
     @Override
-    public BatchjobsSchedulerDto getBatchjobsScheduler(ServletContext context) throws Exception {
+    public BatchjobsSchedulerDto getBatchjobsScheduler(ServletContext context) throws SchedulerException {
         MifosScheduler mifosScheduler = (MifosScheduler) context.getAttribute(MifosScheduler.class.getName());
         Scheduler scheduler = mifosScheduler.getScheduler();
-        BatchjobsSchedulerDto batchjobsScheduler = new BatchjobsSchedulerDto(scheduler.isInStandbyMode());
+        BatchjobsSchedulerDto batchjobsScheduler = new BatchjobsSchedulerDto(!scheduler.isInStandbyMode());
         return batchjobsScheduler;
     }
 
@@ -92,10 +92,10 @@ public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
     public void suspend(ServletContext context, String doSuspend) throws SchedulerException {
         MifosScheduler mifosScheduler = (MifosScheduler) context.getAttribute(MifosScheduler.class.getName());
         Scheduler scheduler = mifosScheduler.getScheduler();
-        if (doSuspend.equals(SCHEDULER_SUSPEND) && scheduler.isInStandbyMode()) {
+        if (doSuspend.equals(SCHEDULER_SUSPEND) && !scheduler.isInStandbyMode()) {
             scheduler.standby();
         }
-        if (doSuspend.equals(SCHEDULER_ACTIVATE) && !scheduler.isInStandbyMode()) {
+        if (doSuspend.equals(SCHEDULER_ACTIVATE) && scheduler.isInStandbyMode()) {
             scheduler.start();
         }
     }

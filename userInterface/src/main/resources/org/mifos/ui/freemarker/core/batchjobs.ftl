@@ -18,7 +18,6 @@
                 <p class="font15"><span class="orangeheading">[@spring.message "systemAdministration.batchjobs.batchjobsInformation" /]</span></p>
                 <div class="span-21">
                     <span class="span-11">[@spring.message "systemAdministration.batchjobs.welcometotheMifosbatchjobsArea" /].</span>
-                    [@spring.showErrors "<br>" /]
                 </div>
                 <div class="clear">&nbsp;</div>
                 <div class="span-21">

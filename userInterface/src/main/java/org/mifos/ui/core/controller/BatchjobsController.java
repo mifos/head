@@ -33,8 +33,9 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.BatchjobsDto;
 import org.mifos.application.admin.servicefacade.BatchjobsSchedulerDto;
 import org.mifos.application.admin.servicefacade.BatchjobsServiceFacade;
-import org.mifos.core.MifosException;
+import org.mifos.framework.business.LogUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,6 +70,52 @@ public class BatchjobsController {
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView loadBatchjobsInfo(HttpServletRequest request) {
+        List<String> errorMessages = new ArrayList<String>();
+        return produceModelAndView(request, errorMessages);
+    }
+
+    @SuppressWarnings("PMD.AvoidRethrowingException") // for default AccessDeniedException feedback
+    @RequestMapping(method = RequestMethod.POST)
+    public ModelAndView processFormSubmit(HttpServletRequest request,
+                                    @RequestParam(value = SUSPEND_PARAM, required = false) String suspend,
+                                    @RequestParam(value = RUN_PARAM, required = false) String run,
+                                    SessionStatus status) throws AccessDeniedException {
+
+        List<String> errorMessages = new ArrayList<String>();
+        if (StringUtils.isNotBlank(suspend)) {
+            ServletContext context = request.getSession().getServletContext();
+            String[] doSuspend = request.getParameterValues("SUSPEND");
+            if (doSuspend != null) {
+                try {
+                    batchjobsServiceFacade.suspend(context, doSuspend[0]);
+                } catch (AccessDeniedException e) {
+                    throw e;
+                } catch (Exception e) {
+                    errorMessages.add("Could not change Scheduler status. " + new LogUtils().getStackTrace(e));
+                }
+            }
+        } else if (StringUtils.isNotBlank(run)) {
+            rawJobList = request.getParameterValues("ONDEMAND");
+            if (rawJobList == null) {
+                rawJobList = new String[0];
+            }
+            else {
+                ServletContext context = request.getSession().getServletContext();
+                try {
+                    batchjobsServiceFacade.runSelectedTasks(context, rawJobList);
+                } catch (AccessDeniedException e) {
+                    throw e;
+                } catch (Exception e) {
+                    errorMessages.add("Could not run selected Tasks. " + new LogUtils().getStackTrace(e));
+                }
+            }
+        }
+        status.setComplete();
+
+        return produceModelAndView(request, errorMessages);
+    }
+
+    private ModelAndView produceModelAndView(HttpServletRequest request, List<String> errorMessages) {
         ServletContext context = request.getSession().getServletContext();
         List<BatchjobsDto> batchjobs = null;
         BatchjobsSchedulerDto batchjobsScheduler = null;
@@ -95,7 +142,6 @@ public class BatchjobsController {
         }
 
         Map<String, Object> status = new HashMap<String, Object>();
-        List<String> errorMessages = new ArrayList<String>();
         status.put("errorMessages", errorMessages);
 
         ModelAndView modelAndView = new ModelAndView("batchjobs", "model", model);
@@ -103,40 +149,4 @@ public class BatchjobsController {
 
         return modelAndView;
     }
-
-    @RequestMapping(method = RequestMethod.POST)
-    public ModelAndView processFormSubmit(HttpServletRequest request,
-                                    @RequestParam(value = SUSPEND_PARAM, required = false) String suspend,
-                                    @RequestParam(value = RUN_PARAM, required = false) String run,
-                                    SessionStatus status) throws MifosException {
-
-        if (StringUtils.isNotBlank(suspend)) {
-            ServletContext context = request.getSession().getServletContext();
-            String[] doSuspend = request.getParameterValues("SUSPEND");
-            if (doSuspend != null) {
-                try {
-                    batchjobsServiceFacade.suspend(context, doSuspend[0]);
-                } catch (Exception e) {
-                    throw new MifosException(e);
-                }
-            }
-        } else if (StringUtils.isNotBlank(run)) {
-            rawJobList = request.getParameterValues("ONDEMAND");
-            if (rawJobList == null) {
-                rawJobList = new String[0];
-            }
-            else {
-                ServletContext context = request.getSession().getServletContext();
-                try {
-                    batchjobsServiceFacade.runSelectedTasks(context, rawJobList);
-                } catch (Exception e) {
-                    throw new MifosException(e);
-                }
-            }
-        }
-        status.setComplete();
-
-        return loadBatchjobsInfo(request);
-    }
-
 }
