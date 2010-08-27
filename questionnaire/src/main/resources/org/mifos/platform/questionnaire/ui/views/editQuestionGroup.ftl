@@ -20,26 +20,17 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-    <span id="page.id" title="view_question_groups"></span>
-    [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":""}/]
+    <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
+    <script src="pages/questionnaire/js/createQuestionGroup.js" type="text/javascript"></script>
+    <script src="pages/questionnaire/js/createQuestion.js" type="text/javascript"></script>
+    <script src="pages/questionnaire/js/editQuestionGroup.js" type="text/javascript"></script>
+    <span id="page.id" title="editQuestionGroup"></span>
+    [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":"viewQuestionGroups.ftl", "questionnaire.editQuestionGroup":""}/]
     [@mifos.crumbpairs breadcrumb/]
     <div class="content_panel">
         <h1>
-            [@spring.message "questionnaire.view.question.groups"/]
+            [@spring.message "questionnaire.editQuestionGroup"/]
         </h1>
-        <p>
-            [@spring.message "questionnaire.create.question.group.prompt"/]
-            <a href="createQuestionGroup.ftl">[@spring.message
-                "questionnaire.create.question.group.link"/]</a>
-        </p>
-        <div id="questionGroupList">
-            <ul class="questions">
-                [#list questionGroups as questionGroup]
-                <li>
-                    <a href="viewAndEditQuestionGroup.ftl?questionGroupId=${questionGroup.id}" id="questionGroupId_${questionGroup.id}">${questionGroup.title}</a>
-                </li>
-                [/#list]
-            </ul>
-        </div>
+        [#include "questionGroupDefinition.ftl"/]
     </div>
 [/@adminLeftPaneLayout]

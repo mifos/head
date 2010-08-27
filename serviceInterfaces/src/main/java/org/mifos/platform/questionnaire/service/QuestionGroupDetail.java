@@ -108,4 +108,12 @@ public class QuestionGroupDetail implements Serializable {
     public boolean isActive() {
         return active;
     }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isNewQuestionGroup() {
+        return id == 0;
+    }
 }

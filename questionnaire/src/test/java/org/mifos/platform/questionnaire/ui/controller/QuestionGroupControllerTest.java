@@ -196,9 +196,21 @@ public class QuestionGroupControllerTest {
     @Test
     public void testCreateQuestionGroupSuccess() throws Exception {
         QuestionGroupForm questionGroup = getQuestionGroupForm("   " + TITLE + " ", "Create.Client", "S1", "S2");
-        String result = questionGroupController.defineQuestionGroup(questionGroup, requestContext);
+        String result = questionGroupController.defineQuestionGroup(questionGroup, requestContext, true);
         assertThat(result, Is.is("success"));
-        verify(questionnaireServiceFacade).createQuestionGroup(argThat(new QuestionGroupDetailMatcher(getQuestionGroupDetail(TITLE, "Create", "Client", "S1", "S2"))));
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", "S1", "S2");
+        questionGroupDetail.setActive(true);
+        verify(questionnaireServiceFacade).createQuestionGroup(argThat(new QuestionGroupDetailMatcher(questionGroupDetail)));
+    }
+
+    @Test
+    public void testEditQuestionGroupSuccess() throws Exception {
+        QuestionGroupForm questionGroup = getQuestionGroupForm("   " + TITLE + " ", "Create.Client", "S1", "S2");
+        String result = questionGroupController.defineQuestionGroup(questionGroup, requestContext, false);
+        assertThat(result, Is.is("success"));
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", "S1", "S2");
+        questionGroupDetail.setActive(false);
+        verify(questionnaireServiceFacade).createQuestionGroup(argThat(new QuestionGroupDetailMatcher(questionGroupDetail)));
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, String... sectionNames) {
@@ -219,7 +231,7 @@ public class QuestionGroupControllerTest {
     public void testCreateQuestionGroupForFailureWhenQuestionGroupTitleNotProvided() throws Exception {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(null, "Create.Client", "Section");
         Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
-        String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext);
+        String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext, true);
         assertThat(result, Is.is(notNullValue()));
         assertThat(result, Is.is("failure"));
         verify(requestContext).getMessageContext();
@@ -231,7 +243,7 @@ public class QuestionGroupControllerTest {
     public void testCreateQuestionGroupFailureWhenSectionsNotPresent() throws Exception {
         Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client");
-        String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext);
+        String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext, true);
         assertThat(result, Is.is("failure"));
         verify(requestContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.section.atLeastOne")));
@@ -241,7 +253,7 @@ public class QuestionGroupControllerTest {
     public void testCreateQuestionGroupForFailureWhenQuestionGroupAppliesToNotProvided() throws Exception {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, QuestionnaireConstants.DEFAULT_APPLIES_TO_OPTION, "Section");
         Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
-        String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext);
+        String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext, true);
         assertThat(result, Is.is(notNullValue()));
         assertThat(result, Is.is("failure"));
         verify(requestContext).getMessageContext();
@@ -254,7 +266,7 @@ public class QuestionGroupControllerTest {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "S1", "S2");
         Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
         Mockito.doThrow(new SystemException("questionnaire.error.duplicate.question.found.in.section")).when(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroupDetail>anyObject());
-        String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext);
+        String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext, true);
         assertThat(result, Is.is("failure"));
         verify(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroupDetail>anyObject());
         verify(requestContext).getMessageContext();
