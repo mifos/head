@@ -8,10 +8,16 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
       
-	<webflow:flow-executor id="flowExecutor"/>
+	<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
+		<webflow:flow-execution-listeners>
+		   <webflow:listener ref="securityFlowExecutionListener"/>
+		</webflow:flow-execution-listeners>
+	</webflow:flow-executor>
 	<webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
 	   <webflow:flow-location-pattern value="/WEB-INF/flows/**.xml"/>
 	</webflow:flow-registry>
+	
+	<bean id="securityFlowExecutionListener" class="org.springframework.webflow.security.SecurityFlowExecutionListener" />
 	
 	<bean id="flowExpressionParser" class="org.springframework.webflow.expression.WebFlowOgnlExpressionParser"/>
 	

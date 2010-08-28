@@ -24,7 +24,7 @@
     <distributionManagement>
         <site>
             <id>maven-site</id>
-            <url>file:/var/www/mifos</url>
+            <url>file:/var/www/mifos-maven-site</url>
         </site>
     </distributionManagement>
 

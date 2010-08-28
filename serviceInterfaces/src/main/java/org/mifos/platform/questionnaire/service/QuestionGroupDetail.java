@@ -108,4 +108,22 @@ public class QuestionGroupDetail implements Serializable {
     public boolean isActive() {
         return active;
     }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isNewQuestionGroup() {
+        return id == 0;
+    }
+
+    public List<Integer> getAllQuestionIds() {
+        List<Integer> questionIds = new ArrayList<Integer>();
+        for (SectionDetail sectionDetail : sectionDetails) {
+            for (SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()) {
+                questionIds.add(sectionQuestionDetail.getQuestionId());
+            }
+        }
+        return questionIds;
+    }
 }

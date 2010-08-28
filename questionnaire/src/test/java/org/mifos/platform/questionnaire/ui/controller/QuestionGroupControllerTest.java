@@ -160,7 +160,7 @@ public class QuestionGroupControllerTest {
 
     @Test
     public void testAddSectionWithoutQuestions() throws Exception {
-        Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
         QuestionGroupForm questionGroup = new QuestionGroupForm();
         questionGroup.setTitle("title");
         questionGroup.setSectionName("sectionName");
@@ -196,9 +196,21 @@ public class QuestionGroupControllerTest {
     @Test
     public void testCreateQuestionGroupSuccess() throws Exception {
         QuestionGroupForm questionGroup = getQuestionGroupForm("   " + TITLE + " ", "Create.Client", "S1", "S2");
-        String result = questionGroupController.defineQuestionGroup(questionGroup, requestContext);
+        String result = questionGroupController.defineQuestionGroup(questionGroup, requestContext, true);
         assertThat(result, Is.is("success"));
-        verify(questionnaireServiceFacade).createQuestionGroup(argThat(new QuestionGroupDetailMatcher(getQuestionGroupDetail(TITLE, "Create", "Client", "S1", "S2"))));
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", "S1", "S2");
+        questionGroupDetail.setActive(true);
+        verify(questionnaireServiceFacade).createQuestionGroup(argThat(new QuestionGroupDetailMatcher(questionGroupDetail)));
+    }
+
+    @Test
+    public void testEditQuestionGroupSuccess() throws Exception {
+        QuestionGroupForm questionGroup = getQuestionGroupForm("   " + TITLE + " ", "Create.Client", "S1", "S2");
+        String result = questionGroupController.defineQuestionGroup(questionGroup, requestContext, false);
+        assertThat(result, Is.is("success"));
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", "S1", "S2");
+        questionGroupDetail.setActive(false);
+        verify(questionnaireServiceFacade).createQuestionGroup(argThat(new QuestionGroupDetailMatcher(questionGroupDetail)));
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, String... sectionNames) {
@@ -218,8 +230,8 @@ public class QuestionGroupControllerTest {
     @Test
     public void testCreateQuestionGroupForFailureWhenQuestionGroupTitleNotProvided() throws Exception {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(null, "Create.Client", "Section");
-        Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
-        String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext);
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext, true);
         assertThat(result, Is.is(notNullValue()));
         assertThat(result, Is.is("failure"));
         verify(requestContext).getMessageContext();
@@ -229,9 +241,9 @@ public class QuestionGroupControllerTest {
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
     public void testCreateQuestionGroupFailureWhenSectionsNotPresent() throws Exception {
-        Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client");
-        String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext);
+        String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext, true);
         assertThat(result, Is.is("failure"));
         verify(requestContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.section.atLeastOne")));
@@ -240,8 +252,8 @@ public class QuestionGroupControllerTest {
     @Test
     public void testCreateQuestionGroupForFailureWhenQuestionGroupAppliesToNotProvided() throws Exception {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, QuestionnaireConstants.DEFAULT_APPLIES_TO_OPTION, "Section");
-        Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
-        String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext);
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext, true);
         assertThat(result, Is.is(notNullValue()));
         assertThat(result, Is.is("failure"));
         verify(requestContext).getMessageContext();
@@ -252,9 +264,9 @@ public class QuestionGroupControllerTest {
     @Test
     public void testCreateQuestionGroupFailure() throws Exception {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "S1", "S2");
-        Mockito.when(requestContext.getMessageContext()).thenReturn(messageContext);
-        Mockito.doThrow(new SystemException("questionnaire.error.duplicate.question.found.in.section")).when(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroupDetail>anyObject());
-        String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext);
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        doThrow(new SystemException("questionnaire.error.duplicate.question.found.in.section")).when(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroupDetail>anyObject());
+        String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext, true);
         assertThat(result, Is.is("failure"));
         verify(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroupDetail>anyObject());
         verify(requestContext).getMessageContext();
@@ -265,7 +277,7 @@ public class QuestionGroupControllerTest {
     public void shouldGetAllQuestionGroups() {
         List<QuestionGroupDetail> questionGroupDetails = asList(
                 getQuestionGroupDetail(1, TITLE, "title1", "sectionName1"), getQuestionGroupDetail(1, TITLE, "title1", "sectionName1"));
-        Mockito.when(questionnaireServiceFacade.getAllQuestionGroups()).thenReturn(questionGroupDetails);
+        when(questionnaireServiceFacade.getAllQuestionGroups()).thenReturn(questionGroupDetails);
         String view = questionGroupController.getAllQuestionGroups(model, httpServletRequest);
         assertThat(view, Is.is("viewQuestionGroups"));
         verify(questionnaireServiceFacade).getAllQuestionGroups();
@@ -276,8 +288,8 @@ public class QuestionGroupControllerTest {
     public void shouldGetQuestionGroupById() throws SystemException {
         int questionGroupId = 1;
         QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(questionGroupId, TITLE, "S1", "S2", "S3");
-        Mockito.when(questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId)).thenReturn(questionGroupDetail);
-        Mockito.when(httpServletRequest.getParameter("questionGroupId")).thenReturn(Integer.toString(questionGroupId));
+        when(questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId)).thenReturn(questionGroupDetail);
+        when(httpServletRequest.getParameter("questionGroupId")).thenReturn(Integer.toString(questionGroupId));
         String view = questionGroupController.getQuestionGroup(model, httpServletRequest);
         assertThat(view, Is.is("viewQuestionGroupDetail"));
         verify(questionnaireServiceFacade).getQuestionGroupDetail(questionGroupId);
@@ -290,8 +302,8 @@ public class QuestionGroupControllerTest {
     @Test
     public void testGetQuestionGroupWhenNotPresentInDb() throws SystemException {
         int questionGroupId = 1;
-        Mockito.when(questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId)).thenThrow(new SystemException(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
-        Mockito.when(httpServletRequest.getParameter("questionGroupId")).thenReturn("1");
+        when(questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId)).thenThrow(new SystemException(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
+        when(httpServletRequest.getParameter("questionGroupId")).thenReturn("1");
         String view = questionGroupController.getQuestionGroup(model, httpServletRequest);
         assertThat(view, Is.is("viewQuestionGroupDetail"));
         verify(questionnaireServiceFacade).getQuestionGroupDetail(questionGroupId);
@@ -301,7 +313,7 @@ public class QuestionGroupControllerTest {
 
     @Test
     public void testGetQuestionGroupWhenIdIsNull() throws SystemException {
-        Mockito.when(httpServletRequest.getParameter("questionGroupId")).thenReturn(null);
+        when(httpServletRequest.getParameter("questionGroupId")).thenReturn(null);
         String view = questionGroupController.getQuestionGroup(model, httpServletRequest);
         assertThat(view, Is.is("viewQuestionGroupDetail"));
         verify(httpServletRequest, times(1)).getParameter("questionGroupId");
@@ -311,7 +323,7 @@ public class QuestionGroupControllerTest {
 
     @Test
     public void testGetQuestionGroupWhenIdIsNotInteger() throws SystemException {
-        Mockito.when(httpServletRequest.getParameter("questionGroupId")).thenReturn("1A");
+        when(httpServletRequest.getParameter("questionGroupId")).thenReturn("1A");
         String view = questionGroupController.getQuestionGroup(model, httpServletRequest);
         assertThat(view, Is.is("viewQuestionGroupDetail"));
         verify(httpServletRequest, times(1)).getParameter("questionGroupId");
@@ -321,7 +333,7 @@ public class QuestionGroupControllerTest {
 
     @Test
     public void shouldGetAllQgEventSources() {
-        Mockito.when(questionnaireServiceFacade.getAllEventSources()).thenReturn(asList(new EventSourceDto("Create", "Client", "Create Client"), new EventSourceDto("View", "Client", "View Client")));
+        when(questionnaireServiceFacade.getAllEventSources()).thenReturn(asList(new EventSourceDto("Create", "Client", "Create Client"), new EventSourceDto("View", "Client", "View Client")));
         Map<String, String> eventSources = questionGroupController.getAllQgEventSources();
         verify(questionnaireServiceFacade).getAllEventSources();
         assertThat(eventSources.get("Create.Client"), Is.is("Create Client"));
@@ -330,7 +342,7 @@ public class QuestionGroupControllerTest {
 
     @Test
     public void shouldGetAllSectionQuestions() {
-        Mockito.when(questionnaireServiceFacade.getAllActiveQuestions()).thenReturn(asList(getQuestionDetail(1, "Q1", QuestionType.NUMERIC), getQuestionDetail(2, "Q2", QuestionType.DATE)));
+        when(questionnaireServiceFacade.getAllActiveQuestions()).thenReturn(asList(getQuestionDetail(1, "Q1", QuestionType.NUMERIC), getQuestionDetail(2, "Q2", QuestionType.DATE)));
         List<SectionQuestionDetail> sectionQuestions = questionGroupController.getAllSectionQuestions();
         assertThat(sectionQuestions, Is.is(notNullValue()));
         assertThat(sectionQuestions.size(), Is.is(2));
@@ -342,8 +354,33 @@ public class QuestionGroupControllerTest {
     }
 
     @Test
+    public void shouldGetAllSectionQuestionsWithoutExcludedQuestions() {
+        List<Integer> excludedQuestions = asList(3);
+        List<QuestionDetail> questionDetails = asList(getQuestionDetail(1, "Q1", QuestionType.NUMERIC), getQuestionDetail(2, "Q2", QuestionType.DATE));
+        when(questionnaireServiceFacade.getAllActiveQuestions(excludedQuestions)).thenReturn(questionDetails);
+        QuestionGroupForm questionGroupForm = getQuestionGroupFormWithOneSectionQuestion("QG1", 3);
+        List<SectionQuestionDetail> sectionQuestions = questionGroupController.getAllSectionQuestions(questionGroupForm);
+        assertThat(sectionQuestions, Is.is(notNullValue()));
+        assertThat(sectionQuestions.size(), Is.is(2));
+        assertThat(sectionQuestions.get(0).getQuestionId(), Is.is(1));
+        assertThat(sectionQuestions.get(0).getTitle(), Is.is("Q1"));
+        assertThat(sectionQuestions.get(1).getQuestionId(), Is.is(2));
+        assertThat(sectionQuestions.get(1).getTitle(), Is.is("Q2"));
+        verify(questionnaireServiceFacade).getAllActiveQuestions(excludedQuestions);
+    }
+
+    private QuestionGroupForm getQuestionGroupFormWithOneSectionQuestion(String qgTitle, int questionId) {
+        QuestionGroupForm questionGroupForm = getQuestionGroupForm(qgTitle, "Create.Client");
+        SectionDetail sectionDetail = new SectionDetail();
+        sectionDetail.setName("Sec1");
+        sectionDetail.setQuestionDetails(asList(new SectionQuestionDetail(getQuestionDetail(questionId, "Q3", QuestionType.FREETEXT), true)));
+        questionGroupForm.getQuestionGroupDetail().getSectionDetails().add(sectionDetail);
+        return questionGroupForm;
+    }
+
+    @Test
     public void shouldGetAllSectionQuestionsEmpty() {
-        Mockito.when(questionnaireServiceFacade.getAllActiveQuestions()).thenReturn(null);
+        when(questionnaireServiceFacade.getAllActiveQuestions()).thenReturn(null);
         List<SectionQuestionDetail> sectionQuestions = questionGroupController.getAllSectionQuestions();
         assertThat(sectionQuestions, Is.is(notNullValue()));
         assertThat(sectionQuestions.size(), Is.is(0));
@@ -354,7 +391,7 @@ public class QuestionGroupControllerTest {
     public void testSaveQuestionnaireSuccess() {
         String result = questionGroupController.saveQuestionnaire(
                 getQuestionGroupDetails(), 1, requestContext);
-        Mockito.verify(questionnaireServiceFacade, times(1)).saveResponses(argThat(new QuestionGroupDetailsMatcher(
+        verify(questionnaireServiceFacade, times(1)).saveResponses(argThat(new QuestionGroupDetailsMatcher(
                 new QuestionGroupDetails(1, 2, asList(
                         getQuestionGroupDetail(TITLE, "View", "Client", "S1", "S3"))))));
         assertThat(result, is("success"));
@@ -364,7 +401,7 @@ public class QuestionGroupControllerTest {
     public void testSaveQuestionnaireFailure() {
         ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
         validationException.addChildException(new MandatoryAnswerNotFoundException("q1"));
-        Mockito.doThrow(validationException).when(questionnaireServiceFacade).saveResponses(Mockito.<QuestionGroupDetails>any());
+        doThrow(validationException).when(questionnaireServiceFacade).saveResponses(Mockito.<QuestionGroupDetails>any());
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionGroupController.saveQuestionnaire(getQuestionGroupDetails(), 1, requestContext);
         assertThat(result, is("failure"));
