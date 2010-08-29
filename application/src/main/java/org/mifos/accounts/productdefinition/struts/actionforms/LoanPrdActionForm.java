@@ -37,6 +37,7 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
@@ -1832,7 +1833,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         validateEndDate(request, errors);
         validateLoanAmount(errors, locale, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow);
         validateLoanInstallments(errors, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow,
-                forNumberOfLastLoanInstallmentAtRow);
+                forNumberOfLastLoanInstallmentAtRow, resources);
         if (StringUtils.isBlank(getInterestTypes())) {
             addError(errors, "interestTypes", ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
                     ConfigurationConstants.INTEREST, request), rateType);
@@ -1860,7 +1861,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         validateEndDate(request, errors);
         validateLoanAmount(errors, locale, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow);
         validateLoanInstallments(errors, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow,
-                forNumberOfLastLoanInstallmentAtRow);
+                forNumberOfLastLoanInstallmentAtRow, resources);
         if (StringUtils.isBlank(getInterestTypes())) {
             addError(errors, "interestTypes", ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
                     ConfigurationConstants.INTEREST, request), rateType);
@@ -2449,7 +2450,7 @@ public class LoanPrdActionForm extends BaseActionForm {
     }
 
     private void validateLoanInstallments(ActionErrors errors, String sameForAllLoans, String forByLastLoanAtRow,
-            String forByLoanCycleAtRow, String forNumberOfLastLoanInstallmentAtRow) {
+            String forByLoanCycleAtRow, String forNumberOfLastLoanInstallmentAtRow, ResourceBundle resources) {
         String minLoanAmt;
         String maxLoanAmt;
         String defLoanAmt;
@@ -2471,7 +2472,8 @@ public class LoanPrdActionForm extends BaseActionForm {
                         : getMaxNoInstallments();
                 defLoanAmt = (getDefNoInstallments() == null || getDefNoInstallments().equals("")) ? null
                         : getDefNoInstallments();
-                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, sameForAllLoans, "");
+                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, sameForAllLoans, "",
+                        resources);
             } else if (calcinsttype == ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN) {
                 // number of installments by last loan amount
                 // first row
@@ -2483,7 +2485,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 maxLoanAmt = getMaxLoanInstallment1();
                 defLoanAmt = getDefLoanInstallment1();
                 validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt,
-                        forNumberOfLastLoanInstallmentAtRow, "1");
+                        forNumberOfLastLoanInstallmentAtRow, "1", resources);
 
                 // second row
                 startRange = getStartInstallmentRange2();
@@ -2494,7 +2496,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 maxLoanAmt = getMaxLoanInstallment2();
                 defLoanAmt = getDefLoanInstallment2();
                 validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt,
-                        forNumberOfLastLoanInstallmentAtRow, "2");
+                        forNumberOfLastLoanInstallmentAtRow, "2", resources);
 
                 // third row
                 startRange = getStartInstallmentRange3();
@@ -2505,7 +2507,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 maxLoanAmt = getMaxLoanInstallment3();
                 defLoanAmt = getDefLoanInstallment3();
                 validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt,
-                        forNumberOfLastLoanInstallmentAtRow, "3");
+                        forNumberOfLastLoanInstallmentAtRow, "3", resources);
 
                 // four row
                 startRange = getStartInstallmentRange4();
@@ -2516,7 +2518,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 maxLoanAmt = getMaxLoanInstallment4();
                 defLoanAmt = getDefLoanInstallment4();
                 validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt,
-                        forNumberOfLastLoanInstallmentAtRow, "4");
+                        forNumberOfLastLoanInstallmentAtRow, "4", resources);
 
                 // fifth row
                 startRange = getStartInstallmentRange5();
@@ -2527,7 +2529,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 maxLoanAmt = getMaxLoanInstallment5();
                 defLoanAmt = getDefLoanInstallment5();
                 validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt,
-                        forNumberOfLastLoanInstallmentAtRow, "5");
+                        forNumberOfLastLoanInstallmentAtRow, "5", resources);
 
                 // six row
                 startRange = getStartInstallmentRange6();
@@ -2538,7 +2540,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 maxLoanAmt = getMaxLoanInstallment6();
                 defLoanAmt = getDefLoanInstallment6();
                 validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt,
-                        forNumberOfLastLoanInstallmentAtRow, "6");
+                        forNumberOfLastLoanInstallmentAtRow, "6", resources);
 
             } else if (calcinsttype == ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE) {
                 // by loan cycle
@@ -2546,44 +2548,50 @@ public class LoanPrdActionForm extends BaseActionForm {
                 minLoanAmt = getMinCycleInstallment1();
                 maxLoanAmt = getMaxCycleInstallment1();
                 defLoanAmt = getDefCycleInstallment1();
-                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "1");
+                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "1",
+                        resources);
 
                 // Second row
                 minLoanAmt = getMinCycleInstallment2();
                 maxLoanAmt = getMaxCycleInstallment2();
                 defLoanAmt = getDefCycleInstallment2();
-                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "2");
+                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "2",
+                        resources);
 
                 // third row
                 minLoanAmt = getMinCycleInstallment3();
                 maxLoanAmt = getMaxCycleInstallment3();
                 defLoanAmt = getDefCycleInstallment3();
-                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "3");
+                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "3",
+                        resources);
 
                 // fourth row
                 minLoanAmt = getMinCycleInstallment4();
                 maxLoanAmt = getMaxCycleInstallment4();
                 defLoanAmt = getDefCycleInstallment4();
-                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "4");
+                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "4",
+                        resources);
 
                 // fifth row
                 minLoanAmt = getMinCycleInstallment5();
                 maxLoanAmt = getMaxCycleInstallment5();
                 defLoanAmt = getDefCycleInstallment5();
-                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "5");
+                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "5",
+                        resources);
 
                 // six row
                 minLoanAmt = getMinCycleInstallment6();
                 maxLoanAmt = getMaxCycleInstallment6();
                 defLoanAmt = getDefCycleInstallment6();
-                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "6");
+                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "6",
+                        resources);
             }
         }
 
     }
 
     private void validateMinMaxDefInstallments(ActionErrors errors, String maxinst, String mininst, String definst,
-            String error, String rownum) {
+            String error, String rownum, ResourceBundle resources) {
 
         String maxNoOfInstall = maxinst == null ? null : maxinst.toString();
         String minNoOfInstall = mininst == null ? null : mininst.toString();
@@ -2602,20 +2610,40 @@ public class LoanPrdActionForm extends BaseActionForm {
                     ProductDefinitionConstants.ERRORDEFAULTINSTALLMENT, error, rownum);
         }
 
-        if (StringUtils.isNotBlank(maxNoOfInstall) && StringUtils.isNotBlank(minNoOfInstall)) {
-            if (Integer.parseInt(minNoOfInstall) > Integer.parseInt(maxNoOfInstall)) {
+        Short defaultInstallmentsNo = getInstallmentsValue(errors, defNoOfInstall,
+                resources.getString(ProductDefinitionConstants.DEFAULTNOOFINSTALLMENTS));
+        Short minimumInstallmentsNo = getInstallmentsValue(errors, minNoOfInstall,
+                resources.getString(ProductDefinitionConstants.MINIMUMNOOFINSTALLMENTS));
+        Short maximumInstallmentsNo = getInstallmentsValue(errors, maxNoOfInstall,
+                resources.getString(ProductDefinitionConstants.MAXIMUMNOOFINSTALLMENTS));
+
+        if (defaultInstallmentsNo != null && minimumInstallmentsNo != null && maximumInstallmentsNo != null) {
+            if (minimumInstallmentsNo > maximumInstallmentsNo) {
                 addError(errors, ProductDefinitionConstants.ERRORMAXMINNOOFINSTALL,
                         ProductDefinitionConstants.ERRORMAXMINNOOFINSTALL, error, rownum);
             }
-        }
-        if (StringUtils.isNotBlank(defNoOfInstall) && StringUtils.isNotBlank(maxNoOfInstall)
-                && StringUtils.isNotBlank(minNoOfInstall)) {
-            if (Integer.parseInt(defNoOfInstall) < Integer.parseInt(minNoOfInstall)
-                    || Integer.parseInt(defNoOfInstall) > Integer.parseInt(maxNoOfInstall)) {
+            if (defaultInstallmentsNo < minimumInstallmentsNo || defaultInstallmentsNo > maximumInstallmentsNo) {
                 addError(errors, ProductDefinitionConstants.ERRORMINMAXDEFINSTALLMENT,
                         ProductDefinitionConstants.ERRORMINMAXDEFINSTALLMENT, error, rownum);
             }
         }
+    }
+
+    /**
+     * The user must get a validation error if he enters a number of installments greater than Short range.
+     */
+    private Short getInstallmentsValue(ActionErrors errors, String noOfInstallments, String field) {
+        Short value = null;
+        try {
+            if (StringUtils.isNotBlank(noOfInstallments)) {
+                value = getShortValue(noOfInstallments);
+            }
+        } catch (NumberFormatException e) {
+            addError(errors, field, ProductDefinitionConstants.ERRORS_RANGE, field,
+                    ProductDefinitionConstants.DEFAULTMINNOINSTALLMENTS, String.valueOf(Short.MAX_VALUE));
+        }
+
+        return value;
     }
 
     private void validateStartEndRangeLoanAmounts(ActionErrors errors, Integer StartLoanAmount, Integer EndLoanAmnount,
