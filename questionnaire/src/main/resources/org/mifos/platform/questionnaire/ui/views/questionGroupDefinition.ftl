@@ -29,7 +29,7 @@
       action="createQuestionGroup.ftl?execution=${flowExecutionKey}" method="POST">
     <fieldset>
         <ol>
-            <li id="status">
+            <li id="questionGroupStatus" style="display: none;">
               <label for="active"><span class="red">*</span>[@spring.message "questionnaire.status"/]: </label>
               [@mifosmacros.boolRadioButtons "questionGroupForm.active", {"true":active, "false":inActive},'','' /]
             </li>
