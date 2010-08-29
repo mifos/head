@@ -249,6 +249,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         verifyLoanSchedule("CreateLoanScheduleWithMoratorium_001_result_dbunit.xml.zip");
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createTwoWeeklyLoansInDifferentOffices() throws Exception {
         CreateLoanAccountSearchParameters searchParameters1 = new CreateLoanAccountSearchParameters();
         // This client meets weekly on Wednesdays
@@ -447,10 +448,10 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         this.createLoan(searchParameters, submitAccountParameters);
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test
     // MIFOSTEST-280
-    private void testBranchSpecificMoratorium() throws Exception {
+    public void testBranchSpecificMoratorium() throws Exception {
         initRemote
                 .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
         // create two weeks of moratorium in MyOffice1232993831593
@@ -463,7 +464,9 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         selenium.isTextPresent("MyOffice1232993831593");
     }
 
+
     @Test
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //MIFOSTEST-282
     public void testMoratoriumPushesLoanPaymentToFutureMeeting() throws Exception {
         initRemote
@@ -598,15 +601,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         dbUnitUtilities.verifyTable(LOAN_SCHEDULE, databaseDataSet, expectedDataSet);
     }
 
-    private void verifySavingsSchedule(final String resultDataSet) throws Exception {
-        // TODO
-    }
-
-    private void veridyFeesSchedule(final String resultDataSet) throws Exception {
-        // TODO
-    }
-
-	 @Test(enabled = false)
+	@Test(enabled = false)
     private CreateLoanAccountSearchPage navigateToCreateLoanAccountSearchPage() {
         LoginPage loginPage = appLauncher.launchMifos();
         loginPage.verifyPage();
