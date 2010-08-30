@@ -44,10 +44,11 @@ public class QuestionGroupForm extends ScreenObject {
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<String> selectedQuestionIds = new ArrayList<String>();
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
-    private List<SectionQuestionDetail> questionPool = new ArrayList<SectionQuestionDetail>();
+    private final List<SectionQuestionDetail> questionPool = new ArrayList<SectionQuestionDetail>();
     @javax.validation.Valid
     private Question currentQuestion = new Question(new QuestionDetail());
     private boolean addOrSelectFlag;
+    private boolean editFlow;
 
     public QuestionGroupForm() {
         this(new QuestionGroupDetail());
@@ -271,6 +272,14 @@ public class QuestionGroupForm extends ScreenObject {
        questionGroupDetail.setEditable(editable); 
     }
 
+    public boolean isActive() {
+        return questionGroupDetail.isActive();
+    }
+
+    public void setActive(boolean active) {
+        questionGroupDetail.setActive(active);
+    }
+
     public Question getCurrentQuestion() {
         return currentQuestion;
     }
@@ -285,5 +294,9 @@ public class QuestionGroupForm extends ScreenObject {
 
     public void setAddOrSelectFlag(boolean addOrSelectFlag) {
         this.addOrSelectFlag = addOrSelectFlag;
+    }
+
+    public void setQuestionGroupDetail(QuestionGroupDetail questionGroupDetail) {
+        this.questionGroupDetail = questionGroupDetail;
     }
 }

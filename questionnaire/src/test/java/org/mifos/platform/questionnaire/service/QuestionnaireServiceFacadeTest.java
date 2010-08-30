@@ -97,12 +97,23 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testGetAllActiveQuestion() {
-        when(questionnaireService.getAllActiveQuestions()).thenReturn(asList(getQuestionDetail(1, "title", "title", QuestionType.NUMERIC)));
+        when(questionnaireService.getAllActiveQuestions(null)).thenReturn(asList(getQuestionDetail(1, "title", "title", QuestionType.NUMERIC)));
         List<QuestionDetail> questionDetailList = questionnaireServiceFacade.getAllActiveQuestions();
         Assert.assertNotNull(questionDetailList);
         assertThat(questionDetailList.get(0).getTitle(), is("title"));
         assertThat(questionDetailList.get(0).getId(), is(1));
-        Mockito.verify(questionnaireService).getAllActiveQuestions();
+        Mockito.verify(questionnaireService).getAllActiveQuestions(null);
+    }
+
+    @Test
+    public void testGetAllActiveQuestionWithoutExcludedQuestions() {
+        List<Integer> excludedQuestions = asList(2);
+        when(questionnaireService.getAllActiveQuestions(excludedQuestions)).thenReturn(asList(getQuestionDetail(1, "title", "title", QuestionType.NUMERIC)));
+        List<QuestionDetail> questionDetailList = questionnaireServiceFacade.getAllActiveQuestions(excludedQuestions);
+        Assert.assertNotNull(questionDetailList);
+        assertThat(questionDetailList.get(0).getTitle(), is("title"));
+        assertThat(questionDetailList.get(0).getId(), is(1));
+        Mockito.verify(questionnaireService).getAllActiveQuestions(excludedQuestions);
     }
 
     @Test

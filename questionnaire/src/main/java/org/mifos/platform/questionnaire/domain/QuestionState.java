@@ -42,4 +42,8 @@ public enum QuestionState {
         }
         throw new RuntimeException("no question state " + state);
     }
+
+    public static QuestionState getQuestionStateEnum(boolean active) {
+        return active ? ACTIVE : INACTIVE;
+    }
 }

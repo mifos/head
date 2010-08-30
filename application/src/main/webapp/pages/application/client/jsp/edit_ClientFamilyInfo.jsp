@@ -129,6 +129,13 @@ explanation of the license and how it is applied.
 								</font>
 							</td>
 						</tr>
+                        <c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsMandatory')}">
+                            <tr class="fontnormalboldorange">
+                                <td>
+                                    <mifos:mifoslabel name="client.FamilyDetailsOptional" bundle="ClientUIResources"/>
+                                </td>
+                            </tr>
+                        </c:if>
 						<tr>
 							<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
 								name="family.FamilyInformationHeading"
@@ -161,7 +168,7 @@ explanation of the license and how it is applied.
 													
 													<td class="paddingL10">
 													<span id="create_ClientFamilyInfo.label.familyMiddleName">
-															<mifos:mifoslabel  name="client.FamilyMiddleName"  
+															<mifos:mifoslabel keyhm="Client.SpouseFatherMiddleName" name="client.FamilyMiddleName"  
 																	bundle="ClientUIResources">
 																	</mifos:mifoslabel>
 													</span>
@@ -224,7 +231,7 @@ explanation of the license and how it is applied.
 															</mifos:mifosalphanumtext>								
 														</td>
 														<td class="paddingL10">
-															<mifos:mifosalphanumtext name="clientCustActionForm" property="familyMiddleName[${row}]">																	
+															<mifos:mifosalphanumtext keyhm="Client.SpouseFatherMiddleName" name="clientCustActionForm" property="familyMiddleName[${row}]">
 															</mifos:mifosalphanumtext>								
 														</td>
 														<td class="paddingL10">

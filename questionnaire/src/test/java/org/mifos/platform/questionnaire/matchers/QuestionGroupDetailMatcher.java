@@ -42,7 +42,7 @@ public class QuestionGroupDetailMatcher extends TypeSafeMatcher<QuestionGroupDet
             for (SectionDetail sectionDetail : this.questionGroupDetail.getSectionDetails()) {
                 assertThat(questionGroupDetail.getSectionDetails(), Matchers.hasItem(new QuestionGroupSectionMatcher(sectionDetail)));
             }
-            return true;
+            return questionGroupDetail.isActive() == this.questionGroupDetail.isActive();
         }
         return false;
     }

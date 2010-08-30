@@ -107,8 +107,13 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public List<QuestionDetail> getAllActiveQuestions() {
-        List<QuestionEntity> questions = questionDao.retrieveByState(QuestionState.ACTIVE.getValue());
+    public List<QuestionDetail> getAllActiveQuestions(List<Integer> questionIdsToExclude) {
+        List<QuestionEntity> questions;
+        if (isNotEmpty(questionIdsToExclude)) {
+            questions = questionDao.retrieveByStateExcluding(questionIdsToExclude, QuestionState.ACTIVE.getValue());
+        } else {
+            questions = questionDao.retrieveByState(QuestionState.ACTIVE.getValue());
+        }
         return questionnaireMapper.mapToQuestionDetails(questions);
     }
 
