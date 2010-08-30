@@ -71,7 +71,7 @@ public class SavingsProductPreviewController {
     private void populateModelAndViewForPreview(SavingsProductFormBean savingsProduct, ModelAndView modelAndView) {
         GeneralProductBean bean = savingsProduct.getGeneralDetails();
 
-        new ProductModuleAndViewPopulator().populateProductDetails(bean, modelAndView);
+        new ProductModelAndViewPopulator().populateProductDetails(bean, modelAndView);
 
         String depositType = savingsProduct.getDepositTypeOptions().get(savingsProduct.getSelectedDepositType());
 

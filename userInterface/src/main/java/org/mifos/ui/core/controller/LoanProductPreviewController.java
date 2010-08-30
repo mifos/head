@@ -65,13 +65,16 @@ public class LoanProductPreviewController {
     private void populateModelAndViewForPreview(LoanProductFormBean loanProduct, ModelAndView modelAndView) {
         GeneralProductBean bean = loanProduct.getGeneralDetails();
 
-        new ProductModuleAndViewPopulator().populateProductDetails(bean, modelAndView);
+        new ProductModelAndViewPopulator().populateProductDetails(bean, modelAndView);
 
         // loan product specific
+        String interestRateCalculation = loanProduct.getInterestRateCalculationTypeOptions().get(loanProduct.getSelectedInterestRateCalculationType());
 
         // accounting
         String principalGlCode = loanProduct.getPrincipalGeneralLedgerOptions().get(loanProduct.getSelectedPrincipal());
         String interestGlCode = loanProduct.getInterestGeneralLedgerOptions().get(loanProduct.getSelectedInterest());
+
+        modelAndView.addObject("interestRateCalculation", interestRateCalculation);
 
         modelAndView.addObject("principalGlCode", principalGlCode);
         modelAndView.addObject("interestGlCode", interestGlCode);

@@ -27,7 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.web.servlet.ModelAndView;
 
-public class ProductModuleAndViewPopulator {
+public class ProductModelAndViewPopulator {
 
     public void populateProductDetails(GeneralProductBean bean, ModelAndView modelAndView) {
         String categoryName = bean.getCategoryOptions().get(bean.getSelectedCategory());
