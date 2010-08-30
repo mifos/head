@@ -20,7 +20,14 @@
 
 package org.mifos.ui.core.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
+import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.dto.domain.LoanProductRequest;
+import org.mifos.dto.domain.PrdOfferingDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -39,12 +47,13 @@ public class LoanProductPreviewController {
     private static final String CANCEL_PARAM = "CANCEL";
     private static final String EDIT_PARAM = "EDIT";
 
-//    @Autowired
-//    private AdminServiceFacade adminServiceFacade;
-//
-//    public LoanProductPreviewController(final AdminServiceFacade adminServiceFacade) {
-//        this.adminServiceFacade = adminServiceFacade;
-//    }
+    @Autowired
+    private AdminServiceFacade adminServiceFacade;
+    private LoanProductFormBeanAssembler loanProductFormBeanAssembler = new LoanProductFormBeanAssembler();
+
+    public LoanProductPreviewController(final AdminServiceFacade adminServiceFacade) {
+        this.adminServiceFacade = adminServiceFacade;
+    }
 
     protected LoanProductPreviewController() {
         // spring auto wiring
@@ -70,11 +79,31 @@ public class LoanProductPreviewController {
         // loan product specific
         String interestRateCalculation = loanProduct.getInterestRateCalculationTypeOptions().get(loanProduct.getSelectedInterestRateCalculationType());
 
+        List<String> fees = new ArrayList<String>();
+        for (String selectedFee : loanProduct.getSelectedFees()) {
+            if (loanProduct.getApplicableFeeOptions().containsKey(selectedFee)) {
+                fees.add(loanProduct.getApplicableFeeOptions().get(selectedFee));
+            } else if (loanProduct.getSelectedFeeOptions().containsKey(selectedFee)) {
+                fees.add(loanProduct.getSelectedFeeOptions().get(selectedFee));
+            }
+        }
+
+        List<String> funds = new ArrayList<String>();
+        for (String selectedFund : loanProduct.getSelectedFunds()) {
+            if (loanProduct.getApplicableFundOptions().containsKey(selectedFund)) {
+                funds.add(loanProduct.getApplicableFundOptions().get(selectedFund));
+            } else if (loanProduct.getSelectedFundOptions().containsKey(selectedFund)) {
+                funds.add(loanProduct.getSelectedFundOptions().get(selectedFund));
+            }
+        }
+
         // accounting
         String principalGlCode = loanProduct.getPrincipalGeneralLedgerOptions().get(loanProduct.getSelectedPrincipal());
         String interestGlCode = loanProduct.getInterestGeneralLedgerOptions().get(loanProduct.getSelectedInterest());
 
         modelAndView.addObject("interestRateCalculation", interestRateCalculation);
+        modelAndView.addObject("fees", fees);
+        modelAndView.addObject("funds", funds);
 
         modelAndView.addObject("principalGlCode", principalGlCode);
         modelAndView.addObject("interestGlCode", interestGlCode);
@@ -85,7 +114,7 @@ public class LoanProductPreviewController {
             @RequestParam(value = EDIT_PARAM, required = false) String edit,
             @RequestParam(value = "editFormview", required = false) String editFormview,
             @ModelAttribute("loanProduct") LoanProductFormBean loanProduct,
-            BindingResult result) {
+            BindingResult result, SessionStatus status) {
 
         ModelAndView modelAndView = new ModelAndView(REDIRECT_TO_ADMIN);
 
@@ -94,47 +123,38 @@ public class LoanProductPreviewController {
         } else if (StringUtils.isNotBlank(edit)) {
             modelAndView.setViewName(editFormview);
             modelAndView.addObject("loanProduct", loanProduct);
+
+            for (String selectedFee : loanProduct.getSelectedFees()) {
+                if (loanProduct.getApplicableFeeOptions().containsKey(selectedFee)) {
+                    String value = loanProduct.getApplicableFeeOptions().remove(selectedFee);
+                    loanProduct.getSelectedFeeOptions().put(selectedFee, value);
+                }
+            }
+
+            for (String selectedFund : loanProduct.getSelectedFunds()) {
+                if (loanProduct.getApplicableFundOptions().containsKey(selectedFund)) {
+                    String value = loanProduct.getApplicableFundOptions().remove(selectedFund);
+                    loanProduct.getSelectedFundOptions().put(selectedFund, value);
+                }
+            }
+
         } else if (result.hasErrors()) {
             modelAndView.setViewName("previewloanProducts");
             modelAndView.addObject("loanProduct", loanProduct);
             modelAndView.addObject("editFormview", editFormview);
             populateModelAndViewForPreview(loanProduct, modelAndView);
+        } else {
+            LoanProductRequest loanProductRequest = loanProductFormBeanAssembler.toLoanProductDto(loanProduct);
+            PrdOfferingDto product = adminServiceFacade.createLoanProduct(loanProductRequest);
+//            status.setComplete();
+            modelAndView.setViewName("redirect:/confirmLoanProduct.ftl");
+            modelAndView.addObject("product", product);
         }
 
-//            PrdOfferingDto product;
-//            SavingsProductDto savingsProductRequest = new SavingsProductFormBeanAssembler().assembleSavingsProductRequest(loanProduct);
-//            if (editFormview.equalsIgnoreCase("defineSavingsProduct")) {
-//
-//                try {
-//                    product = this.adminServiceFacade.createSavingsProduct(savingsProductRequest);
-//
-//                    modelAndView.setViewName("redirect:/confirmSavingsProduct.ftl");
-//                    modelAndView.addObject("product", product);
-//                } catch (BusinessRuleException e) {
-//                    handleBusinessRuleViolation(editFormview, loanProduct, result, modelAndView, e.getMessageKey());
-//                }
-//            } else if (editFormview.equalsIgnoreCase("editSavingsProduct")) {
-//
-//                try {
-//                    product = this.adminServiceFacade.updateSavingsProduct(savingsProductRequest);
-//
-//                    modelAndView.setViewName("redirect:/viewEditSavingsProduct.ftl?productId="+ product.getPrdOfferingId());
-//                    modelAndView.addObject("product", product);
-//                } catch (BusinessRuleException e) {
-//                    handleBusinessRuleViolation(editFormview, loanProduct, result, modelAndView, e.getMessageKey());
-//                }
-//            }
         return modelAndView;
     }
 
-//    private void handleBusinessRuleViolation(String editFormview, LoanProductFormBean loanProduct,
-//            BindingResult result, ModelAndView modelAndView, String messageKey) {
-//        ObjectError error = new ObjectError("savingsProduct", new String[] { messageKey },
-//                new Object[] {}, "Error: Problem persisting savings product.");
-//        result.addError(error);
-//        modelAndView.setViewName("previewSavingsProducts");
-//        modelAndView.addObject("savingsProduct", loanProduct);
-//        modelAndView.addObject("editFormview", editFormview);
-//        populateModelAndViewForPreview(loanProduct, modelAndView);
-//    }
+    public void setLoanProductFormBeanAssembler(LoanProductFormBeanAssembler loanProductFormBeanAssembler) {
+        this.loanProductFormBeanAssembler = loanProductFormBeanAssembler;
+    }
 }

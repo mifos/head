@@ -148,7 +148,7 @@ function switchLoanInstallmentType()
             	<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.shortname" /]&nbsp;:</span>
             	<span class="span-4">
             		[@spring.bind "loanProduct.generalDetails.shortName" /]
-            		<input type="text" size="3" id="createLoanProduct.input.prdOfferingShortName" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />
+            		<input type="text" size="3" maxlength="4" id="createLoanProduct.input.prdOfferingShortName" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />
             	</span>
             </div>
             

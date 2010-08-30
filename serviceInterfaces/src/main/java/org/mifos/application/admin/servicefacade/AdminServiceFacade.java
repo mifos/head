@@ -65,7 +65,7 @@ public interface AdminServiceFacade {
     LoanProductFormDto retrieveLoanProductFormReferenceData();
 
     @PreAuthorize("isFullyAuthenticated()")
-    void createLoanProduct(LoanProductRequest loanProduct);
+    PrdOfferingDto createLoanProduct(LoanProductRequest loanProduct);
 
     @PreAuthorize("isFullyAuthenticated()")
     List<ProductDisplayDto> retrieveSavingsProducts();

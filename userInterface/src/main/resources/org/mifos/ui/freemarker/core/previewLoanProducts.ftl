@@ -190,16 +190,31 @@
 		  </div>
           <div class="span-20 ">
           	<span class="span-8 fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.graceperiodduration"/]:&nbsp;</span>
-            <span class="span-4">&nbsp;</span>
+            <span class="span-4">${loanProduct.gracePeriodDurationInInstallments}</span>
 		  </div>
           <div class="clear">&nbsp;</div>
           <p class="fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.fees"/]</p>
-          <p class="span-20"><span class="span-8 fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.feestypes"/]:&nbsp;</span><span class="span-4">&nbsp;</span></p>
+          <p class="span-20">
+          	<span class="span-8 fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.feestypes"/]:&nbsp;</span>
+          	<span class="span-4">
+		    	<ol>
+		            [#list fees as fee]
+		            <li>${fee}</li>
+		            [/#list]
+		        </ol>
+          	</span>
+          </p>
           <p class="fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.accounting"/] </p>
           <div class="span-21 last">
           	<div class="span-20 ">
-          		<span class="span-8 fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.sourcesoffunds"/]:&nbsp;</span><br />
-          		<span class="span-4">&nbsp;</span>
+          		<span class="span-8 fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.sourcesoffunds"/]:&nbsp;</span>
+          		<span class="span-4">
+					<ol>
+			            [#list funds as fund]
+			            <li>${fund}</li>
+			            [/#list]
+		        	</ol>
+          		</span>
 			</div>
             <div class="span-20 ">
             	<span class="span-8 fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.productGLcode"/]:&nbsp;</span>

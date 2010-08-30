@@ -130,7 +130,6 @@ import org.mifos.dto.screen.ProductMixDetailsDto;
 import org.mifos.dto.screen.ProductMixDto;
 import org.mifos.dto.screen.SavingsProductFormDto;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
-import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
@@ -145,7 +144,6 @@ import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.RequestParam;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
@@ -1698,7 +1696,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public void createLoanProduct(LoanProductRequest loanProductRequest) {
+    public PrdOfferingDto createLoanProduct(LoanProductRequest loanProductRequest) {
 
         LoanOfferingBO loanProduct = assembleFrom(loanProductRequest);
 
@@ -1708,6 +1706,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             transactionHelper.startTransaction();
             this.loanProductDao.save(loanProduct);
             transactionHelper.commitTransaction();
+            return loanProduct.toDto();
         } catch (Exception e) {
             transactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
@@ -1718,9 +1717,10 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
     private LoanOfferingBO assembleFrom(LoanProductRequest loanProductRequest) {
 
-        // FIXME - keithw - pass down into service facade
-        Integer userId = Integer.valueOf(1);
-        Integer userBranchId = Integer.valueOf(3);
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Integer userId = user.getUserId();
+        Integer userBranchId = Integer.valueOf(user.getBranchId());
 
         String name = loanProductRequest.getLoanProductDetails().getName();
         String shortName = loanProductRequest.getLoanProductDetails().getShortName();
