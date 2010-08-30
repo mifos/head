@@ -71,4 +71,8 @@ public class SectionDetail implements Serializable {
         }
         return result;
     }
+
+    public Integer getCountOfQuestions() {
+        return this.questionDetails.size();
+    }
 }

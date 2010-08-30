@@ -20,7 +20,6 @@
 
 package org.mifos.platform.questionnaire.ui.controller;
 
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
@@ -41,6 +40,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;     // NOPMD
@@ -54,7 +54,7 @@ public class QuestionGroupFormTest {
         EventSourceDto eventSourceDto = new EventSourceDto("Create", "Client", "Create Client");
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, "Title", eventSourceDto, new ArrayList<SectionDetail>(), false);
         QuestionGroupForm questionGroupForm = new QuestionGroupForm(questionGroupDetail);
-        assertThat(questionGroupForm.getEventSourceId(), Matchers.is("Create.Client"));
+        assertThat(questionGroupForm.getEventSourceId(), is("Create.Client"));
     }
 
     @Test
@@ -64,9 +64,11 @@ public class QuestionGroupFormTest {
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, "Title", null, asList(sectionDetail), false);
         QuestionGroupForm questionGroupForm = new QuestionGroupForm(questionGroupDetail);
         List<SectionDetailForm> sections = questionGroupForm.getSections();
-        assertThat(sections, Matchers.notNullValue());
-        assertThat(sections.size(), Matchers.is(1));
-        assertThat(sections.get(0).getName(), Matchers.is("Section1"));
+        assertThat(questionGroupForm.getInitialCountOfSections(), is(1));
+        assertThat(sections, notNullValue());
+        assertThat(sections.size(), is(1));
+        assertThat(sections.get(0).getName(), is("Section1"));
+        assertThat(sections.get(0).getInitialCountOfQuestions(), is(0));
     }
 
     @Test
@@ -207,9 +209,9 @@ public class QuestionGroupFormTest {
         assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().size(), is(1));
         assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).getTitle(), is("Q2"));
         assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).isMandatory(), is(true));
-        assertThat(questionGroupForm.getQuestionPool().size(), Matchers.is(1));
-        assertThat(questionGroupForm.getQuestionPool().get(0).getTitle(), Matchers.is("Q1"));
-        assertThat(questionGroupForm.getQuestionPool().get(0).isMandatory(), Matchers.is(false));
+        assertThat(questionGroupForm.getQuestionPool().size(), is(1));
+        assertThat(questionGroupForm.getQuestionPool().get(0).getTitle(), is("Q1"));
+        assertThat(questionGroupForm.getQuestionPool().get(0).isMandatory(), is(false));
 
         questionGroupForm.removeQuestion("sectionName", "2");
 
@@ -227,7 +229,7 @@ public class QuestionGroupFormTest {
         assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).isMandatory(), is(false));
         assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(1).getTitle(), is("Q2"));
         assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(1).isMandatory(), is(true));
-        assertThat(questionGroupForm.getQuestionPool().size(), Matchers.is(0));
+        assertThat(questionGroupForm.getQuestionPool().size(), is(0));
     }
 
     @Test
@@ -260,11 +262,11 @@ public class QuestionGroupFormTest {
 
     private void assertThatQuestionFormHasNoSection(QuestionGroupForm questionGroupForm) {
         assertThat(questionGroupForm.getSections().size(), is(0));
-        assertThat(questionGroupForm.getQuestionPool().size(), Matchers.is(2));
-        assertThat(questionGroupForm.getQuestionPool().get(0).getTitle(), Matchers.is("Q1"));
-        assertThat(questionGroupForm.getQuestionPool().get(0).isMandatory(), Matchers.is(false));
-        assertThat(questionGroupForm.getQuestionPool().get(1).getTitle(), Matchers.is("Q2"));
-        assertThat(questionGroupForm.getQuestionPool().get(1).isMandatory(), Matchers.is(false));
+        assertThat(questionGroupForm.getQuestionPool().size(), is(2));
+        assertThat(questionGroupForm.getQuestionPool().get(0).getTitle(), is("Q1"));
+        assertThat(questionGroupForm.getQuestionPool().get(0).isMandatory(), is(false));
+        assertThat(questionGroupForm.getQuestionPool().get(1).getTitle(), is("Q2"));
+        assertThat(questionGroupForm.getQuestionPool().get(1).isMandatory(), is(false));
     }
 
     private SectionDetailForm getSectionSectionDetailForm(String sectionName, List<SectionQuestionDetail> questions) {

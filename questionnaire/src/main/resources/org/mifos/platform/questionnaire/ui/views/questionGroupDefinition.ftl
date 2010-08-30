@@ -71,11 +71,16 @@
         </ol>
     </fieldset>
     <div id="divSections">
-        [#assign reversedSections=questionGroupForm.sections?reverse]
+        [#assign sectionsSize = questionGroupForm.sections?size]
+        [#assign reversedSections = questionGroupForm.sections?reverse]
         [#list reversedSections as section]
+        [#assign reversed_section_index = sectionsSize - section_index - 1]
         <b>${section.name}:&nbsp;&nbsp;</b>
-        <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')">[@spring.message
-            "questionnaire.remove.link"/]</a>
+        [#if reversed_section_index gte questionGroupForm.initialCountOfSections]
+            <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')">[@spring.message "questionnaire.remove.link"/]</a>
+        [#else]
+            <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
+        [/#if]
         <br/>
         <table id="sections.table" name="sections.table">
             <tr>
@@ -87,9 +92,15 @@
             <tr>
                 <td class="drawtablerow">${sectionQuestion.title}</td>
                 <td align="center" valign="center" class="drawtablerow" style="text-align:center">
-                    [@mifosmacros.formCheckbox "questionGroupForm.sections[${reversedSections?size - section_index - 1}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
+                    [@mifosmacros.formCheckbox "questionGroupForm.sections[${reversed_section_index}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
                 </td>
-                <td class="drawtablerow"><a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')">[@spring.message "questionnaire.remove.link"/]</a></td>
+                <td class="drawtablerow">
+                    [#if sectionQuestion_index gte section.initialCountOfQuestions]
+                        <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')">[@spring.message "questionnaire.remove.link"/]</a>
+                    [#else]
+                        <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
+                    [/#if]
+                </td>
             </tr>
             [/#list]
             <tr>
