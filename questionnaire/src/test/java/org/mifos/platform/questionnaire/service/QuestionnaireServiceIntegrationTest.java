@@ -208,13 +208,35 @@ public class QuestionnaireServiceIntegrationTest {
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldGetAllActiveQuestions() throws SystemException {
-        int initialCountOfQuestions = questionnaireService.getAllActiveQuestions().size();
+        int initialCountOfQuestions = questionnaireService.getAllActiveQuestions(null).size();
         QuestionDetail questionDetail2 = defineQuestion("Q2" + currentTimeMillis(), QuestionType.FREETEXT, true);
         QuestionDetail questionDetail1 = defineQuestion("Q1" + currentTimeMillis(), QuestionType.NUMERIC, true);
         defineQuestion("Q0" + currentTimeMillis(), QuestionType.NUMERIC, false);
         List<String> expectedOrderTitles = asList(questionDetail1.getShortName(), questionDetail2.getShortName());
         List<Integer> expectedOrderIds = asList(questionDetail1.getId(), questionDetail2.getId());
-        List<QuestionDetail> questionDetails = questionnaireService.getAllActiveQuestions();
+        List<QuestionDetail> questionDetails = questionnaireService.getAllActiveQuestions(null);
+        int finalCountOfQuestions = questionDetails.size();
+        assertThat(finalCountOfQuestions - initialCountOfQuestions, is(2));
+        List<QuestionDetail> actualQuestions = new ArrayList<QuestionDetail>();
+        for (QuestionDetail questionDetail : questionDetails) {
+            if (expectedOrderIds.contains(questionDetail.getId()))
+                actualQuestions.add(questionDetail);
+        }
+        assertThat(actualQuestions.get(0).getShortName(), is(expectedOrderTitles.get(0)));
+        assertThat(actualQuestions.get(1).getShortName(), is(expectedOrderTitles.get(1)));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldGetAllActiveQuestionsWithoutExcludedQuestions() throws SystemException {
+        int initialCountOfQuestions = questionnaireService.getAllActiveQuestions(null).size();
+        QuestionDetail questionDetail3 = defineQuestion("Q3" + currentTimeMillis(), QuestionType.DATE, true);
+        QuestionDetail questionDetail2 = defineQuestion("Q2" + currentTimeMillis(), QuestionType.FREETEXT, true);
+        QuestionDetail questionDetail1 = defineQuestion("Q1" + currentTimeMillis(), QuestionType.NUMERIC, true);
+        defineQuestion("Q0" + currentTimeMillis(), QuestionType.NUMERIC, false);
+        List<String> expectedOrderTitles = asList(questionDetail1.getShortName(), questionDetail2.getShortName());
+        List<Integer> expectedOrderIds = asList(questionDetail1.getId(), questionDetail2.getId());
+        List<QuestionDetail> questionDetails = questionnaireService.getAllActiveQuestions(asList(questionDetail3.getId()));
         int finalCountOfQuestions = questionDetails.size();
         assertThat(finalCountOfQuestions - initialCountOfQuestions, is(2));
         List<QuestionDetail> actualQuestions = new ArrayList<QuestionDetail>();
@@ -633,7 +655,7 @@ public class QuestionnaireServiceIntegrationTest {
     }
 
     private QuestionGroupDetail defineQuestionGroup(String title, String event, String source, List<SectionDetail> sectionDetails, boolean editable) throws SystemException {
-        return questionnaireService.defineQuestionGroup(new QuestionGroupDetail(0, title, new EventSourceDto(event, source, null), sectionDetails, editable));
+        return questionnaireService.defineQuestionGroup(new QuestionGroupDetail(0, title, new EventSourceDto(event, source, null), sectionDetails, editable, true));
     }
 
     private SectionDetail getSection(String name) throws SystemException {

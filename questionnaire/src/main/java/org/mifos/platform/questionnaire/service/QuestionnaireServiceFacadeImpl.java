@@ -66,7 +66,12 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public List<QuestionDetail> getAllActiveQuestions() {
-        return questionnaireService.getAllActiveQuestions();
+        return questionnaireService.getAllActiveQuestions(null);
+    }
+
+    @Override
+    public List<QuestionDetail> getAllActiveQuestions(List<Integer> excludedQuestions) {
+        return questionnaireService.getAllActiveQuestions(excludedQuestions);
     }
 
     @Override

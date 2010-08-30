@@ -35,7 +35,7 @@ public interface QuestionnaireService {
 
     List<QuestionDetail> getAllQuestions();
 
-    List<QuestionDetail> getAllActiveQuestions();
+    List<QuestionDetail> getAllActiveQuestions(List<Integer> questionIdsToExclude);
 
     QuestionGroupDetail defineQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
 

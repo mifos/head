@@ -34,10 +34,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -71,14 +70,21 @@ public class QuestionDaoIntegrationTest {
     public void testRetrieveByState() throws SystemException {
         QuestionDetail questionDetail2 = defineQuestion("Title2" + System.currentTimeMillis(), QuestionType.NUMERIC);
         QuestionDetail questionDetail1 = defineQuestion("Title1" + System.currentTimeMillis(), QuestionType.NUMERIC);
-        List<QuestionEntity> list = questionDao.retrieveByState(QuestionState.ACTIVE.getValue());
-        List<Integer> expectedIds = Arrays.asList(questionDetail1.getId(), questionDetail2.getId());
-        List<String> expectedTitles = Arrays.asList(questionDetail1.getShortName(), questionDetail2.getShortName());
-        List<QuestionEntity> actualQuestions = new ArrayList<QuestionEntity>();
-        for (QuestionEntity question : list) {
-            if (expectedIds.contains(question.getQuestionId()))
-                actualQuestions.add(question);
-        }
+        List<String> expectedTitles = asList(questionDetail1.getShortName(), questionDetail2.getShortName());
+        List<QuestionEntity> actualQuestions = questionDao.retrieveByState(QuestionState.ACTIVE.getValue());
+        assertThat(actualQuestions.size(), is(2));
+        assertThat(actualQuestions.get(0).getShortName(), is(expectedTitles.get(0)));
+        assertThat(actualQuestions.get(1).getShortName(), is(expectedTitles.get(1)));
+    }
+
+    @Test
+    @Transactional
+    public void testRetrieveByStateExcluding() throws SystemException {
+        QuestionDetail questionDetail3 = defineQuestion("Title3" + System.currentTimeMillis(), QuestionType.NUMERIC);
+        QuestionDetail questionDetail2 = defineQuestion("Title2" + System.currentTimeMillis(), QuestionType.NUMERIC);
+        QuestionDetail questionDetail1 = defineQuestion("Title1" + System.currentTimeMillis(), QuestionType.NUMERIC);
+        List<String> expectedTitles = asList(questionDetail1.getShortName(), questionDetail2.getShortName());
+        List<QuestionEntity> actualQuestions = questionDao.retrieveByStateExcluding(asList(questionDetail3.getId()), QuestionState.ACTIVE.getValue());
         assertThat(actualQuestions.size(), is(2));
         assertThat(actualQuestions.get(0).getShortName(), is(expectedTitles.get(0)));
         assertThat(actualQuestions.get(1).getShortName(), is(expectedTitles.get(1)));

@@ -237,17 +237,35 @@ public class QuestionnaireMapperTest {
         EventSourceDto eventSourceDto = getEventSource("Create", "Client");
         List<SectionDetail> sectionDetails = asList(getSectionDefinition("S1", 12), getSectionDefinition("S2", 0));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, TITLE, eventSourceDto, sectionDetails, true);
+        questionGroupDetail.setActive(false);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
-        assertQuestionGroup(questionGroup);
+        assertQuestionGroup(questionGroup, QuestionGroupState.INACTIVE);
         assertThat(questionGroup.isEditable(), is(true));
         verify(eventSourceDao, times(1)).retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString());
         verify(questionDao, times(1)).getDetails(12);
     }
 
-    private void assertQuestionGroup(QuestionGroup questionGroup) {
+    @Test
+    public void shouldMapQuestionGroupDefinitionToExistingQuestionGroup() {
+        when(eventSourceDao.retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString())).thenReturn(new ArrayList());
+        when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
+        when(questionGroupDao.getDetails(123)).thenReturn(getQuestionGroup(123, "QG Title", getSection("S1")));
+        EventSourceDto eventSourceDto = getEventSource("Create", "Client");
+        List<SectionDetail> sectionDetails = asList(getSectionDefinition("S1", 12), getSectionDefinition("S2", 0));
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, TITLE, eventSourceDto, sectionDetails, true);
+        questionGroupDetail.setActive(false);
+        QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
+        assertQuestionGroup(questionGroup, QuestionGroupState.INACTIVE);
+        assertThat(questionGroup.isEditable(), is(true));
+        verify(eventSourceDao, times(1)).retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString());
+        verify(questionDao, times(1)).getDetails(12);
+        verify(questionGroupDao, times(1)).getDetails(123);
+    }
+
+    private void assertQuestionGroup(QuestionGroup questionGroup, QuestionGroupState questionGroupState) {
         assertThat(questionGroup, notNullValue());
         assertThat(questionGroup.getTitle(), is(TITLE));
-        assertThat(questionGroup.getState(), is(QuestionGroupState.ACTIVE));
+        assertThat(questionGroup.getState(), is(questionGroupState));
         assertSections(questionGroup.getSections());
         assertCreationDate(questionGroup.getDateOfCreation());
     }
