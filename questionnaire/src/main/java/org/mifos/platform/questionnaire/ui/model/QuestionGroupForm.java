@@ -29,6 +29,7 @@ import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -48,7 +49,8 @@ public class QuestionGroupForm extends ScreenObject {
     @javax.validation.Valid
     private Question currentQuestion = new Question(new QuestionDetail());
     private boolean addOrSelectFlag;
-    private boolean editFlow;
+    private List<SectionDetailForm> sections;
+    private int initialCountOfSections;
 
     public QuestionGroupForm() {
         this(new QuestionGroupDetail());
@@ -56,6 +58,7 @@ public class QuestionGroupForm extends ScreenObject {
 
     public QuestionGroupForm(QuestionGroupDetail questionGroupDetail) {
         this.questionGroupDetail = questionGroupDetail;
+        this.sections = initSections();
     }
 
     public QuestionGroupDetail getQuestionGroupDetail() {
@@ -98,16 +101,14 @@ public class QuestionGroupForm extends ScreenObject {
     }
 
     public List<SectionDetailForm> getSections() {
-        List<SectionDetailForm> sectionDetails = new ArrayList<SectionDetailForm>();
-        for (SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()) {
-            sectionDetails.add(new SectionDetailForm(sectionDetail));
-        }
-        return sectionDetails;
+        return this.sections;
     }
 
     public void setSections(List<SectionDetailForm> sections) {
         List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
+        this.sections = new ArrayList<SectionDetailForm>();
         for (SectionDetailForm sectionDetailForm : sections) {
+            this.sections.add(sectionDetailForm);
             sectionDetails.add(sectionDetailForm.getSectionDetail());
         }
         questionGroupDetail.setSectionDetails(sectionDetails);
@@ -167,14 +168,14 @@ public class QuestionGroupForm extends ScreenObject {
     }
 
     private void addCurrentSectionToSections() {
-        List<SectionDetail> sectionDetails = questionGroupDetail.getSectionDetails();
-        for (SectionDetail sectionDetail : sectionDetails) {
-            if (StringUtils.equalsIgnoreCase(sectionDetail.getName(), currentSection.getName())) {
-                currentSection = new SectionDetailForm(sectionDetail);
+        for (SectionDetailForm section : sections) {
+            if (StringUtils.equalsIgnoreCase(section.getName(), currentSection.getName())) {
+                currentSection = section;
                 return;
             }
         }
-        sectionDetails.add(currentSection.getSectionDetail());
+        sections.add(currentSection);
+        questionGroupDetail.addSection(currentSection.getSectionDetail());
     }
 
     public String getSectionName() {
@@ -190,16 +191,18 @@ public class QuestionGroupForm extends ScreenObject {
 
     public void removeSection(String sectionName) {
         SectionDetail sectionToDelete = null;
-        List<SectionDetail> sectionDetails = questionGroupDetail.getSectionDetails();
-        for (SectionDetail sectionDetail : sectionDetails) {
-            if (StringUtils.equalsIgnoreCase(sectionName, sectionDetail.getName())) {
-                sectionToDelete = sectionDetail;
+        for (Iterator<SectionDetailForm> iterator = sections.iterator(); iterator.hasNext();) {
+            SectionDetailForm section = iterator.next();
+            if (StringUtils.equalsIgnoreCase(sectionName, section.getName())) {
+                sectionToDelete = section.getSectionDetail();
+                iterator.remove();
                 break;
             }
         }
+
         if (sectionToDelete != null) {
             markQuestionsOptionalAndReturnToPool(sectionToDelete);
-            sectionDetails.remove(sectionToDelete);
+            questionGroupDetail.removeSection(sectionToDelete);
         }
     }
 
@@ -240,8 +243,8 @@ public class QuestionGroupForm extends ScreenObject {
         }
     }
 
-    public boolean hasQuestionsInCurrentSection() {
-        return selectedQuestionIds.size()==0;
+    public boolean hasNoQuestionsInCurrentSection() {
+        return selectedQuestionIds.size() == 0;
     }
 
     private boolean sectionHasNoQuestions(SectionDetail section) {
@@ -298,5 +301,23 @@ public class QuestionGroupForm extends ScreenObject {
 
     public void setQuestionGroupDetail(QuestionGroupDetail questionGroupDetail) {
         this.questionGroupDetail = questionGroupDetail;
+        this.sections = initSections();
+    }
+
+    private List<SectionDetailForm> initSections() {
+        List<SectionDetailForm> sectionDetailForms = new ArrayList<SectionDetailForm>();
+        if (questionGroupDetail != null) {
+            for (SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()) {
+                SectionDetailForm sectionDetailForm = new SectionDetailForm(sectionDetail);
+                sectionDetailForm.setInitialCountOfQuestions(sectionDetail.getCountOfQuestions());
+                sectionDetailForms.add(sectionDetailForm);
+            }
+        }
+        this.initialCountOfSections = sectionDetailForms.size();
+        return sectionDetailForms;
+    }
+
+    public int getInitialCountOfSections() {
+        return initialCountOfSections;
     }
 }

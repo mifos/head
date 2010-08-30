@@ -56,7 +56,7 @@ public class QuestionnaireMigrationIntegrationTest {
     @Autowired
     private QuestionGroupDao questionGroupDao;
 
-    @Ignore
+    @Ignore("Ignored because of lack of test data & viable means to create it")
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldMigrateAllAdditionalFieldsForClientEntity() {

@@ -1,7 +1,8 @@
-package org.mifos.test.acceptance.framework.admin;
+package org.mifos.test.acceptance.questionnaire;
 
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
 
 public class ViewAllQuestionsPage extends MifosPage {
     public ViewAllQuestionsPage(Selenium selenium) {
