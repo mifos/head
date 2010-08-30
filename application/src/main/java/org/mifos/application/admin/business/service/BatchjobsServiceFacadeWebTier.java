@@ -37,10 +37,14 @@ import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.CronTrigger;
+import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
-import org.quartz.impl.StdSchedulerFactory;
 
 public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
+    private final String CRON_TRIGGER = "CronTrigger";
+    private final String SIMPLE_TRIGGER = "SimpleTrigger";
+    private final String SCHEDULER_SUSPEND = "Suspend";
+    private final String SCHEDULER_ACTIVATE = "Activate";
 
     @Override
     public List<BatchjobsDto> getBatchjobs(ServletContext context) throws TaskSystemException, FileNotFoundException, IOException, SchedulerException {
@@ -57,10 +61,19 @@ public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
                     Date nextFire = trigger.getNextFireTime() != null ? trigger.getNextFireTime() : new Date(0);
                     Date lastFire = trigger.getPreviousFireTime() != null ? trigger.getPreviousFireTime() : new Date(0);
                     int priority = trigger.getPriority();
-                    String cronExpression = trigger.getClass().getSimpleName().equals("CronTrigger") ? ((CronTrigger) trigger).getCronExpression() : "";
+                    String frequency = "";
+                    String taskType = "";
+                    if (trigger.getClass().getSimpleName().equals(CRON_TRIGGER)) {
+                        frequency = ((CronTrigger) trigger).getCronExpression();
+                        taskType = CRON_TRIGGER;
+                    }
+                    if ((trigger.getClass().getSimpleName().equals(SIMPLE_TRIGGER))) {
+                        frequency = Long.toString(((SimpleTrigger) trigger).getRepeatInterval());
+                        taskType = SIMPLE_TRIGGER;
+                    }
                     String description = jobDetail.getDescription() != null ? jobDetail.getDescription() : "";
                     int triggerState = scheduler.getTriggerState(trigger.getName(), groupName);
-                    batchjobs.add(new BatchjobsDto(jobName, cronExpression, priority, description, lastFire, nextFire, "", triggerState));
+                    batchjobs.add(new BatchjobsDto(jobName, frequency, taskType, priority, description, lastFire, nextFire, triggerState));
                 }
             }
         }
@@ -68,29 +81,31 @@ public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
     }
 
     @Override
-    public BatchjobsSchedulerDto getBatchjobsScheduler() throws Exception {
-        StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
-        Scheduler scheduler = schedulerFactory.getScheduler();
-        BatchjobsSchedulerDto batchjobsScheduler = new BatchjobsSchedulerDto(scheduler.isInStandbyMode());
+    public BatchjobsSchedulerDto getBatchjobsScheduler(ServletContext context) throws SchedulerException {
+        MifosScheduler mifosScheduler = (MifosScheduler) context.getAttribute(MifosScheduler.class.getName());
+        Scheduler scheduler = mifosScheduler.getScheduler();
+        BatchjobsSchedulerDto batchjobsScheduler = new BatchjobsSchedulerDto(!scheduler.isInStandbyMode());
         return batchjobsScheduler;
     }
 
     @Override
-    public void suspend() {
-        // TODO Auto-generated method stub
-
+    public void suspend(ServletContext context, String doSuspend) throws SchedulerException {
+        MifosScheduler mifosScheduler = (MifosScheduler) context.getAttribute(MifosScheduler.class.getName());
+        Scheduler scheduler = mifosScheduler.getScheduler();
+        if (doSuspend.equals(SCHEDULER_SUSPEND) && !scheduler.isInStandbyMode()) {
+            scheduler.standby();
+        }
+        if (doSuspend.equals(SCHEDULER_ACTIVATE) && scheduler.isInStandbyMode()) {
+            scheduler.start();
+        }
     }
 
     @Override
-    public void saveChanges() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void runSelectedTasks() {
-        // TODO Auto-generated method stub
-
+    public void runSelectedTasks(ServletContext context, String[] rawJobList) throws TaskSystemException {
+        MifosScheduler mifosScheduler = (MifosScheduler) context.getAttribute(MifosScheduler.class.getName());
+        for (String taskName : rawJobList) {
+            mifosScheduler.runIndividualTask(taskName);
+        }
     }
 
 }

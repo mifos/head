@@ -180,10 +180,20 @@ explanation of the license and how it is applied.
 							
 							<!-- Family Details -->
 							<table>
+                                <c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsMandatory')}">
+                                    <tr class="fontnormalboldorange">
+                                        <td>
+                                            <mifos:mifoslabel name="client.FamilyDetailsOptional" bundle="ClientUIResources"/>
+                                        </td>
+                                    </tr>
+                                </c:if>
 								<tr class="fontnormal">
-									<td align="right" class="paddingL10"><mifos:mifoslabel
-										name="client.FamilyDetails" keyhm="Client.FamilyDetails"
-										bundle="ClientUIResources"></mifos:mifoslabel></td>
+									<td align="right" class="paddingL10">
+                                        <c:if test="${sessionScope.clientCustActionForm.familySize >= 0}">
+                                            <mifos:mifoslabel name="client.FamilyDetails" keyhm="Client.FamilyDetails"
+                                                              bundle="ClientUIResources"></mifos:mifoslabel>
+                                        </c:if>
+                                    </td>
 									<td>
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 										<tr class="fontnormal">

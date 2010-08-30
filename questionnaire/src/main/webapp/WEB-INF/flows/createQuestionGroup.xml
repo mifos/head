@@ -43,7 +43,7 @@
     </action-state>
 
     <action-state id="defineQuestionGroup">
-        <evaluate expression="questionGroupController.defineQuestionGroup(questionGroupForm, flowRequestContext)" />
+        <evaluate expression="questionGroupController.defineQuestionGroup(questionGroupForm, flowRequestContext, true)" />
         <transition on="success" to="defineQuestionGroupSuccess" />
         <transition on="failure" to="createQuestionGroup" />
     </action-state>

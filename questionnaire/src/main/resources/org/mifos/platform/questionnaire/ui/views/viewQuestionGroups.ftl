@@ -36,8 +36,7 @@
             <ul class="questions">
                 [#list questionGroups as questionGroup]
                 <li>
-                    <a href="viewQuestionGroupDetail.ftl?questionGroupId=${questionGroup.id}"
-                       id="questionGroupId_${questionGroup.id}">${questionGroup.title}</a>
+                    <a href="viewAndEditQuestionGroup.ftl?questionGroupId=${questionGroup.id}" id="questionGroupId_${questionGroup.id}">${questionGroup.title}</a>
                 </li>
                 [/#list]
             </ul>

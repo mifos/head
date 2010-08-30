@@ -89,10 +89,11 @@ public class QuestionGroupController extends QuestionnaireController {
         return "viewQuestionGroupDetail";
     }
 
-    public String defineQuestionGroup(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
+    public String defineQuestionGroup(QuestionGroupForm questionGroupForm, RequestContext requestContext, boolean createMode) {
         String result = "success";
         if (!questionGroupHasErrors(questionGroupForm, requestContext)) {
             try {
+                if (createMode) questionGroupForm.setActive(true);
                 questionnaireServiceFacade.createQuestionGroup(questionGroupForm.getQuestionGroupDetail());
             } catch (SystemException e) {
                 constructAndLogSystemError(requestContext.getMessageContext(), e);
@@ -140,6 +141,18 @@ public class QuestionGroupController extends QuestionnaireController {
     public List<SectionQuestionDetail> getAllSectionQuestions() {
         List<SectionQuestionDetail> sectionQuestionDetails = new ArrayList<SectionQuestionDetail>();
         List<QuestionDetail> questionDetails = questionnaireServiceFacade.getAllActiveQuestions();
+        if (questionDetails != null) {
+            for (QuestionDetail questionDetail : questionDetails) {
+                sectionQuestionDetails.add(new SectionQuestionDetail(questionDetail, false));
+            }
+        }
+        return sectionQuestionDetails;
+    }
+
+    public List<SectionQuestionDetail> getAllSectionQuestions(QuestionGroupForm questionGroupForm) {
+        List<SectionQuestionDetail> sectionQuestionDetails = new ArrayList<SectionQuestionDetail>();
+        List<Integer> questionIds = questionGroupForm.getQuestionGroupDetail().getAllQuestionIds();
+        List<QuestionDetail> questionDetails = questionnaireServiceFacade.getAllActiveQuestions(questionIds);
         if (questionDetails != null) {
             for (QuestionDetail questionDetail : questionDetails) {
                 sectionQuestionDetails.add(new SectionQuestionDetail(questionDetail, false));

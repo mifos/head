@@ -26,7 +26,10 @@
        <![CDATA[from QuestionEntity as question order by question.shortName]]>
     </query>
  	<query name="QuestionEntity.retrieveByState">
-       <![CDATA[from QuestionEntity as question where question.questionState=:QUESTION_STATE order by question.shortName]]>
+         <![CDATA[from QuestionEntity as question where question.questionState=:QUESTION_STATE order by question.shortName]]>
+     </query>
+    <query name="QuestionEntity.retrieveByStateExcluding">
+        <![CDATA[from QuestionEntity as question where question.questionId not in (:EXCLUDED_QUESTION_IDS) and question.questionState=:QUESTION_STATE order by question.shortName]]>
     </query>
     <query name="QuestionEntity.retrieveByName">
        <![CDATA[from QuestionEntity as question where question.shortName=:SHORT_NAME]]>

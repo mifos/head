@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="questionGroupForm" class="org.mifos.platform.questionnaire.ui.model.QuestionGroupForm"/>
+
+    <view-state id="viewQuestionGroupDetail">
+        <on-entry>
+            <set name="flowScope.questionGroupId" value="requestParameters.questionGroupId" type="int"/>
+            <evaluate expression="questionnaireServiceFacade.getQuestionGroupDetail(flowScope.questionGroupId)" result="questionGroupForm.questionGroupDetail"/>
+        </on-entry>
+		<transition on="editQuestionGroup" to="editQuestionGroup"/>
+    </view-state>
+
+    <view-state id="editQuestionGroup" model="questionGroupForm">
+        <on-entry>
+            <evaluate expression="questionGroupController.getAllQgEventSources()" result="flowScope.EventSources" />
+            <evaluate expression="questionGroupController.getAllSectionQuestions(questionGroupForm)" result="questionGroupForm.questionPool" />
+        </on-entry>
+        <transition on="addSection" to="addSection"/>
+        <transition on="deleteSection" to="deleteSection"/>
+        <transition on="deleteQuestion" to="deleteQuestion"/>
+        <transition on="addQuestion" to="addQuestion" />
+        <transition on="addChoice" to="addChoice"/>
+        <transition on="addSmartChoice" to="addSmartChoice"/>
+        <transition on="addSmartChoiceTag" to="addSmartChoiceTag"/>
+        <transition on="removeChoice" to="removeChoice"/>
+        <transition on="removeChoiceTag" to="removeChoiceTag"/>
+        <transition on="removeSmartChoice" to="removeChoice"/>
+        <transition on="defineQuestionGroup" to="defineQuestionGroup"/>
+		<transition on="cancel" to="viewAndEditQuestionGroup"/>
+    </view-state>
+
+    <action-state id="deleteSection">
+        <evaluate expression="questionGroupController.deleteSection(questionGroupForm, requestParameters._eventId_deleteSection)"/>
+        <transition on="success" to="editQuestionGroup" />
+    </action-state>
+
+    <action-state id="deleteQuestion">
+        <evaluate expression="questionGroupController.deleteQuestion(questionGroupForm, requestParameters.questionSection ,requestParameters._eventId_deleteQuestion )"/>
+        <transition on="success" to="editQuestionGroup" />
+    </action-state>
+
+    <action-state id="addSection">
+        <evaluate expression="questionGroupController.addSection(questionGroupForm, flowRequestContext)"/>
+        <transition on="success" to="editQuestionGroup" />
+        <transition on="failure" to="editQuestionGroup" />
+    </action-state>
+
+    <action-state id="addQuestion">
+        <evaluate expression="questionGroupController.addQuestion(questionGroupForm, flowRequestContext)"/>
+        <transition on="success" to="editQuestionGroup" />
+        <transition on="failure" to="editQuestionGroup" />
+    </action-state>
+
+    <action-state id="addChoice">
+    	<evaluate expression="questionGroupForm.currentQuestion.addAnswerChoice()"/>
+        <transition to="editQuestionGroup" />
+    </action-state>
+
+    <action-state id="addSmartChoice">
+    	<evaluate expression="questionGroupForm.currentQuestion.addAnswerSmartChoice()"/>
+        <transition to="editQuestionGroup" />
+    </action-state>
+
+    <action-state id="removeChoice">
+    	<evaluate expression="questionGroupForm.currentQuestion.removeChoice(requestParameters._eventId_removeChoice)"/>
+        <transition to="editQuestionGroup" />
+    </action-state>
+
+    <action-state id="removeChoiceTag">
+    	<evaluate expression="questionGroupForm.currentQuestion.removeChoiceTag(requestParameters._eventId_removeChoiceTag)"/>
+        <transition to="editQuestionGroup" />
+    </action-state>
+
+    <action-state id="addSmartChoiceTag">
+    	<evaluate expression="questionGroupForm.currentQuestion.addSmartChoiceTag(requestParameters._eventId_addSmartChoiceTag)"/>
+        <transition to="editQuestionGroup" />
+    </action-state>
+
+    <action-state id="defineQuestionGroup">
+        <evaluate expression="questionGroupController.defineQuestionGroup(questionGroupForm, flowRequestContext, false)" />
+        <transition on="success" to="viewAndEditQuestionGroup" />
+        <transition on="failure" to="editQuestionGroup" />
+    </action-state>
+
+    <view-state id="viewAndEditQuestionGroup" view="externalRedirect:contextRelative:/viewAndEditQuestionGroup.ftl?questionGroupId=${flowScope.questionGroupId}"/>
+
+</flow>

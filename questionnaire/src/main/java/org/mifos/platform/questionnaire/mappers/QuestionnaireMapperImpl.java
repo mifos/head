@@ -140,19 +140,19 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     @Override
     public QuestionEntity mapToQuestion(QuestionDetail questionDetail) {
-        QuestionEntity question = questionDetail.isNewQuestion() ? new QuestionEntity() : questionDao.getDetails(questionDetail.getId());
+        QuestionEntity question = getQuestion(questionDetail);
         question.setQuestionId(questionDetail.getId());
         question.setShortName(questionDetail.getTitle());
         question.setQuestionText(questionDetail.getTitle());
         question.setAnswerType(mapToAnswerType(questionDetail.getType()));
         question.setChoices(mapToChoices(questionDetail.getAnswerChoices()));
-        question.setQuestionState(getQuestionState(questionDetail));
+        question.setQuestionState(QuestionState.getQuestionStateEnum(questionDetail.isActive()));
         mapBoundsForNumericQuestionDetail(questionDetail, question);
         return question;
     }
 
-    private QuestionState getQuestionState(QuestionDetail questionDetail) {
-        return questionDetail.isActive() ? QuestionState.ACTIVE: QuestionState.INACTIVE;
+    private QuestionEntity getQuestion(QuestionDetail questionDetail) {
+        return questionDetail.isNewQuestion() ? new QuestionEntity() : questionDao.getDetails(questionDetail.getId());
     }
 
     private void mapBoundsForNumericQuestionDetail(QuestionDetail questionDetail, QuestionEntity question) {
@@ -190,14 +190,18 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     @Override
     public QuestionGroup mapToQuestionGroup(QuestionGroupDetail questionGroupDetail) {
-        QuestionGroup questionGroup = new QuestionGroup();
+        QuestionGroup questionGroup = getQuestionGroup(questionGroupDetail);
         questionGroup.setTitle(questionGroupDetail.getTitle());
-        questionGroup.setState(QuestionGroupState.ACTIVE);
+        questionGroup.setState(QuestionGroupState.getQuestionGroupStateAsEnum(questionGroupDetail.isActive()));
         questionGroup.setDateOfCreation(getCurrentDateTime());
         questionGroup.setSections(mapToSections(questionGroupDetail.getSectionDetails()));
         questionGroup.setEventSources(mapToEventSources(questionGroupDetail.getEventSource()));
         questionGroup.setEditable(questionGroupDetail.isEditable());
         return questionGroup;
+    }
+
+    private QuestionGroup getQuestionGroup(QuestionGroupDetail questionGroupDetail) {
+        return questionGroupDetail.isNewQuestionGroup() ? new QuestionGroup() : questionGroupDao.getDetails(questionGroupDetail.getId());
     }
 
     private Set<EventSourceEntity> mapToEventSources(EventSourceDto eventSourceDto) {

@@ -21,29 +21,35 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
+    <script type="text/javascript" src="pages/questionnaire/js/viewQuestionGroupDetail.js"></script>
     <span id="page.id" title="view_question_groups_details"></span>
     [#if error_message_code??]
         [@spring.message error_message_code/]
     [#else]
-        [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":"viewQuestionGroups.ftl",Request.questionGroupDetail.title:""}/]
+        [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":"viewQuestionGroups.ftl",questionGroupForm.questionGroupDetail.title:""}/]
         [@mifos.crumbpairs breadcrumb/]
     <div class="content_panel">
         <h1 id="questionGroup.title">
-            ${Request.questionGroupDetail.title}
+            ${questionGroupForm.questionGroupDetail.title}
         </h1>
-        <form name="viewQuestionDetailsForm" action="editQuestion.ftl" method="POST" class="marginLeft30">
+        <form name="viewQuestionGroupDetailsForm" action="viewAndEditQuestionGroup.ftl?execution=${flowExecutionKey}" method="POST" class="marginLeft30">
             [#assign boolean_text_yes][@spring.message "questionnaire.yes"/][/#assign]
             [#assign boolean_text_no][@spring.message "questionnaire.no"/][/#assign]
             <fieldset>
                 <ol>
+                    <li>
+                        <a href="editQuestionGroup#" class="topRight">[@spring.message "questionnaire.edit"/]</a>
+                        <input type="submit" id="_eventId_editQuestionGroup" name="_eventId_editQuestionGroup" value="${questionGroupForm.questionGroupDetail.id}" style="display:none"/>
+                        [@spring.message "questionnaire.questionGroup"/]: ${questionGroupForm.questionGroupDetail.title}
+                    </li>
                     <li id="questionGroup.appliesTo">
-                        [@spring.message "questionnaire.questionGroupAppliesTo"/]: ${Request.eventSources[Request.questionGroupDetail.eventSourceId]}
+                        [@spring.message "questionnaire.questionGroupAppliesTo"/]: ${questionGroupForm.questionGroupDetail.eventSource.description}
                     </li>
                     <li id="questionGroup.editable">
-                        [@spring.message "questionnaire.editable"/]: ${Request.questionGroupDetail.editable?string(boolean_text_yes, boolean_text_no)}
+                        [@spring.message "questionnaire.editable"/]: ${questionGroupForm.questionGroupDetail.editable?string(boolean_text_yes, boolean_text_no)}
                     </li>
                     <li id="questionGroup.sections">
-                        [#list Request.questionGroupDetail.sections as section]
+                        [#list questionGroupForm.sections as section]
                             <b>${section.name}</b><br/>
                             <table id="sections.table.${section.name}" name="sections.table.${section.name}">
                                  <tr>

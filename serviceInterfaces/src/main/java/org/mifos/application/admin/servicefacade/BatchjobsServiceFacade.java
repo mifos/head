@@ -34,15 +34,12 @@ public interface BatchjobsServiceFacade {
     List<BatchjobsDto> getBatchjobs(ServletContext context) throws Exception;
 
     @PreAuthorize("isFullyAuthenticated()")
-    BatchjobsSchedulerDto getBatchjobsScheduler() throws Exception;
+    BatchjobsSchedulerDto getBatchjobsScheduler(ServletContext context) throws Exception;
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_UPDATE_BATCH_JOBS_CONFIGURATION')")
-    void suspend();
-
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_UPDATE_BATCH_JOBS_CONFIGURATION')")
-    void saveChanges();
+    void suspend(ServletContext context, String doSuspend) throws Exception;
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_RUN_BATCH_JOBS_ON_DEMAND')")
-    void runSelectedTasks();
+    void runSelectedTasks(ServletContext context, String[] rawJobList) throws Exception;
 
 }

@@ -196,6 +196,7 @@
 				lazy="true" />
 			<property name="nextIntPostDate" column="next_int_post_date"
 				lazy="true" />
+			<!-- Date of interest calculation in between the period, might be done when interest rate changes etc. -->
 			<property name="interIntCalcDate" column="inter_int_calc_date"
 				lazy="true" />
 

@@ -23,6 +23,7 @@ package org.mifos.platform.questionnaire.service;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -36,6 +37,8 @@ public interface QuestionnaireServiceFacade {
     List<QuestionDetail> getAllQuestions();
 
     List<QuestionDetail> getAllActiveQuestions();
+
+    List<QuestionDetail> getAllActiveQuestions(List<Integer> excludedQuestions);
 
     List<QuestionGroupDetail> getAllQuestionGroups();
 
@@ -61,5 +64,6 @@ public interface QuestionnaireServiceFacade {
 
     List<String> getAllCountriesForPPI();
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_CUSTOM_FIELDS')")
     void uploadPPIQuestionGroup(String country);
 }
