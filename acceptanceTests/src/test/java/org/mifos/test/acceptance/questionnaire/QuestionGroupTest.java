@@ -25,8 +25,6 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
-import org.mifos.test.acceptance.framework.admin.QuestionGroupDetailPage;
-import org.mifos.test.acceptance.framework.admin.ViewAllQuestionGroupsPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -35,6 +33,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -57,14 +56,16 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private InitializeApplicationRemoteTestingService initRemote;
 
     private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
-    private String qgTitle1, qgTitle2;
-    private String qTitle1, qTitle2, qTitle3, qTitle4;
+    private String qgTitle1, qgTitle2, qgTitle3;
+    private String qTitle1, qTitle2, qTitle3, qTitle4, qTitle5;
     private static final String TITLE_MISSING = "Please specify Question Group title.";
     private static final String APPLIES_TO_MISSING = "Please choose a valid 'Applies To' value.";
     private static final String SECTION_MISSING = "Please add at least one section.";
     private static final String QUESTION_MISSING = "Section should have at least one question.";
     public static final String APPLIES_TO_CREATE_CLIENT = "Create Client";
     public static final String SECTION_DEFAULT = "Default";
+    private static final String SECTION_MISC = "Misc";
+    private static final List<String> EMPTY_LIST = new ArrayList<String>();
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -75,10 +76,12 @@ public class QuestionGroupTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
         qgTitle1 = "QuestionGroup1 " + System.currentTimeMillis();
         qgTitle2 = "QuestionGroup2 " + System.currentTimeMillis();
+        qgTitle3 = "QuestionGroup3 " + System.currentTimeMillis();
         qTitle1 = "Question1 " + System.currentTimeMillis();
         qTitle2 = "Question2 " + System.currentTimeMillis();
         qTitle3 = "Question3 " + System.currentTimeMillis();
         qTitle4 = "Question4 " + System.currentTimeMillis();
+        qTitle5 = "Question5 " + System.currentTimeMillis();
     }
 
     @AfterMethod
@@ -99,9 +102,27 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private void testViewQuestionGroups() {
         ViewAllQuestionGroupsPage viewQuestionGroupsPage = getViewQuestionGroupsPage(new AdminPage(selenium));
         testViewQuestionGroups(viewQuestionGroupsPage);
-        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle1, "Default", asList(qTitle1, qTitle2, qTitle4), asList(qTitle1));
-        viewQuestionGroupsPage.navigateToViewAllQuestionGroupsPage();
-        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle2, "Misc", asList(qTitle1, qTitle3), asList(qTitle1));
+        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle1, SECTION_DEFAULT, asList(qTitle1, qTitle2), asList(qTitle1));
+        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle1, SECTION_MISC, asList(qTitle4), EMPTY_LIST);
+        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle2, SECTION_MISC, asList(qTitle1, qTitle3), asList(qTitle1));
+        testEditQuestionGroupDetail(viewQuestionGroupsPage.navigateToQuestionGroupDetailPage(qgTitle2));
+        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle3, SECTION_MISC, asList(qTitle1, qTitle3), asList(qTitle1));
+        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle3, "New Section", asList(qTitle4), EMPTY_LIST);
+        testQuestionGroupDetail(viewQuestionGroupsPage, qgTitle3, "Hello World", asList(qTitle5), EMPTY_LIST);
+    }
+
+    private void testEditQuestionGroupDetail(QuestionGroupDetailPage questionGroupDetailPage) {
+        EditQuestionGroupPage editQuestionGroupPage = questionGroupDetailPage.navigateToEditPage();
+        editQuestionGroupPage.verifyPage();
+        editQuestionGroupPage.setTitle(qgTitle3);
+        CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        createQuestionGroupParameters.setSectionName("New Section");
+        createQuestionGroupParameters.setQuestions(asList(qTitle4));
+        editQuestionGroupPage.addSection(createQuestionGroupParameters);
+        editQuestionGroupPage.addQuestion(qTitle5, "Hello World");
+        editQuestionGroupPage.submit();
+        questionGroupDetailPage.verifyPage();
+        questionGroupDetailPage.navigateToViewQuestionGroupsPage();
     }
 
     private AdminPage createQuestions(String... qTitles) {
@@ -130,12 +151,24 @@ public class QuestionGroupTest extends UiTestCaseBase {
         assertPage(AdminPage.PAGE_ID);
     }
 
-    private void testQuestionGroupDetail(ViewAllQuestionGroupsPage viewAllQuestionGroupsPage, String title, String sectionName, List<String> questions, List<String> mandatoryQuestions) {
+    private void testQuestionGroupDetail(ViewAllQuestionGroupsPage viewAllQuestionGroupsPage, String title,
+                                         String sectionName, List<String> questions, List<String> mandatoryQuestions) {
+        QuestionGroupDetailPage questionGroupDetailPage = navigateToQuestionGroupDetailPage(viewAllQuestionGroupsPage, title);
+        testQuestionGroupDetail(questionGroupDetailPage, title, sectionName, questions, mandatoryQuestions);
+        questionGroupDetailPage.navigateToViewQuestionGroupsPage().verifyPage();
+    }
+
+    private QuestionGroupDetailPage navigateToQuestionGroupDetailPage(ViewAllQuestionGroupsPage viewAllQuestionGroupsPage, String title) {
         QuestionGroupDetailPage questionGroupDetailPage = viewAllQuestionGroupsPage.navigateToQuestionGroupDetailPage(title);
         questionGroupDetailPage.verifyPage();
+        return questionGroupDetailPage;
+    }
+
+    private void testQuestionGroupDetail(QuestionGroupDetailPage questionGroupDetailPage, String title, String sectionName,
+                                                            List<String> questions, List<String> mandatoryQuestions) {
         assertEquals(title, questionGroupDetailPage.getTitle());
         assertEquals(APPLIES_TO_CREATE_CLIENT, questionGroupDetailPage.getAppliesTo());
-        assertEquals(asList(sectionName), questionGroupDetailPage.getSections());
+        assertTrue(questionGroupDetailPage.getSections().contains(sectionName));
         assertEquals(questions, questionGroupDetailPage.getSectionsQuestions(sectionName));
         assertEquals(mandatoryQuestions, questionGroupDetailPage.getMandatoryQuestions(sectionName));
     }
@@ -178,7 +211,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         createQuestionGroupPage.markEveryOtherQuestionsMandatory(questionsToSelect);
         assertPage(CreateQuestionGroupPage.PAGE_ID);
         assertTrue(createQuestionGroupPage.getAvailableQuestions().containsAll(questionsNotToSelect));
-        createQuestionGroupPage.addQuestion(questionToAdd);
+        createQuestionGroupPage.addQuestion(questionToAdd, SECTION_MISC);
         createQuestionGroupPage.submit(parameters);
         assertPage(AdminPage.PAGE_ID);
     }
