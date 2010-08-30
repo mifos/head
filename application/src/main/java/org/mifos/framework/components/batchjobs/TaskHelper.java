@@ -20,12 +20,18 @@
 
 package org.mifos.framework.components.batchjobs;
 
+import java.util.Date;
+
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.springframework.batch.core.StepContribution;
+import org.springframework.batch.core.scope.context.ChunkContext;
+import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.repeat.RepeatStatus;
 
-public abstract class TaskHelper {
+public abstract class TaskHelper implements Tasklet {
 
     private MifosLogger logger;
 
@@ -49,6 +55,13 @@ public abstract class TaskHelper {
      *            jobs ignore this value.
      */
     public abstract void execute(long timeInMillis) throws BatchJobException;
+
+    @Override
+    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+        Date scheduledFireTime = (Date)chunkContext.getStepContext().getJobParameters().get(MifosBatchJob.JOB_EXECUTION_TIME_KEY);
+        execute(scheduledFireTime.getTime());
+        return null;
+    }
 
     /**
      * This method determines if users can continue to use the system while this task/batch job is running.

@@ -20,27 +20,62 @@
 
 package org.mifos.framework.components.batchjobs;
 
-import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.configuration.JobLocator;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob {
+public class MifosBatchJob extends QuartzJobBean implements StatefulJob {
+
+    public static final String JOB_EXECUTION_TIME_KEY = "executionTime";
 
     private static boolean batchJobRunning = false;
     private static boolean requiresExclusiveAccess = true;
 
+    private JobLauncher jobLauncher;
+
+    private JobLocator jobLocator;
+
+    public void setJobLauncher(JobLauncher jobLauncher) {
+        this.jobLauncher = jobLauncher;
+    }
+
+    public void setJobLocator(JobLocator jobLocator) {
+        this.jobLocator = jobLocator;
+    }
+
     @Override
     public void executeInternal(JobExecutionContext context) throws JobExecutionException {
         try {
-            getTaskHelper().execute(context.getScheduledFireTime().getTime());
-        } catch (BatchJobException bje) {
-            throw new JobExecutionException(bje);
+            // TODO QUARTZ: Resolve the issue with both quartz and spring batch requiring job name in the declaration.
+            String jobName = context.getJobDetail().getName()+"Job";
+            Job job = jobLocator.getJob(jobName);
+            jobLauncher.run(job, getJobParametersFromContext(context));
+        } catch(Exception ex) {
+            throw new JobExecutionException(ex);
         }
+        // TODO QUARTZ: Add proper support for old task.xml file.
+        // getTaskHelper().execute(context.getScheduledFireTime().getTime());
     }
 
-    public abstract TaskHelper getTaskHelper();
+    public JobParameters getJobParametersFromContext(JobExecutionContext context) {
+        JobParametersBuilder builder = new JobParametersBuilder();
+        builder.addDate(JOB_EXECUTION_TIME_KEY, context.getScheduledFireTime());
+        return builder.toJobParameters();
+    }
+
+    /**
+     * Classes inheriting from MifosBatchJob must override this method and
+     * return an appropriate Helper class containing business logic.
+     */
+    public TaskHelper getTaskHelper() {
+        return null;
+    }
 
     /**
      * This method determines if users can continue to use the system while this task/batch job is running.

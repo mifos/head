@@ -1,86 +1,191 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:batch="http://www.springframework.org/schema/batch"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd">
     
-    <bean name="ProductStatus" class="org.springframework.scheduling.quartz.JobDetailBean">
-      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.ProductStatus" />
+    <!--
+        ========= Import declarations: =========
+    -->
+    
+    <import resource="dataSourceContext.xml" />
+
+    <!--
+        ========= Batch jobs configurations: =========
+    -->
+
+    <!--
+                ProductStatus:
+    -->
+    <bean name="ProductStatus" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
+      <property name="jobClass" value="org.mifos.framework.components.batchjobs.MifosBatchJob" />
     </bean>
     <bean id="ProductStatusTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="ProductStatus" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
-    
-    <bean name="LoanArrearsTask" class="org.springframework.scheduling.quartz.JobDetailBean">
-      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.LoanArrearsTask" />
+    <batch:job id="ProductStatusJob" job-repository="jobRepository">
+        <batch:step id="ProductStatus-step-1">
+            <batch:tasklet ref="ProductStatusTasklet" />
+        </batch:step>
+    </batch:job>
+    <bean name="ProductStatusTasklet" class="org.mifos.framework.components.batchjobs.helpers.ProductStatusHelper" />
+	
+	<!--
+	           LoanArrearsTask:
+	-->
+    <bean name="LoanArrearsTask" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
+      <property name="jobClass" value="org.mifos.framework.components.batchjobs.MifosBatchJob" />
     </bean>
     <bean id="LoanArrearsTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="LoanArrearsTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
+    <batch:job id="LoanArrearsTaskJob" job-repository="jobRepository">
+        <batch:step id="LoanArrearsTask-step-1">
+            <batch:tasklet ref="LoanArrearsTaskTasklet" />
+        </batch:step>
+    </batch:job>
+    <bean name="LoanArrearsTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.LoanArrearsHelper" />
     
-    <bean name="SavingsIntCalcTask" class="org.springframework.scheduling.quartz.JobDetailBean">
-      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.SavingsIntCalcTask" />
+    <!--
+                SavingsIntCalcTask:
+    -->
+    <bean name="SavingsIntCalcTask" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
+      <property name="jobClass" value="org.mifos.framework.components.batchjobs.MifosBatchJob" />
     </bean>
     <bean id="SavingsIntCalcTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="SavingsIntCalcTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
+    <batch:job id="SavingsIntCalcTaskJob" job-repository="jobRepository">
+        <batch:step id="SavingsIntCalcTask-step-1">
+            <batch:tasklet ref="SavingsIntCalcTaskTasklet" />
+        </batch:step>
+    </batch:job>
+    <bean name="SavingsIntCalcTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.SavingsIntCalcHelper" />
     
-    <bean name="SavingsIntPostingTask" class="org.springframework.scheduling.quartz.JobDetailBean">
-      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.SavingsIntPostingTask" />
+    <!--
+                SavingsIntPostingTask:
+    -->
+    <bean name="SavingsIntPostingTask" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
+      <property name="jobClass" value="org.mifos.framework.components.batchjobs.MifosBatchJob" />
     </bean>
     <bean id="SavingsIntPostingTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="SavingsIntPostingTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
+    <batch:job id="SavingsIntPostingTaskJob" job-repository="jobRepository">
+        <batch:step id="SavingsIntPostingTask-step-1">
+            <batch:tasklet ref="SavingsIntPostingTaskTasklet" />
+        </batch:step>
+    </batch:job>
+    <bean name="SavingsIntPostingTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.SavingsIntPostingHelper" />
     
-    <bean name="ApplyCustomerFeeChangesTask" class="org.springframework.scheduling.quartz.JobDetailBean">
-      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.ApplyCustomerFeeChangesTask" />
+    <!--
+                ApplyCustomerFeeChangesTask:
+    -->
+    <bean name="ApplyCustomerFeeChangesTask" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
+      <property name="jobClass" value="org.mifos.framework.components.batchjobs.MifosBatchJob" />
     </bean>
     <bean id="ApplyCustomerFeeChangesTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="ApplyCustomerFeeChangesTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
+    <batch:job id="ApplyCustomerFeeChangesTaskJob" job-repository="jobRepository">
+        <batch:step id="ApplyCustomerFeeChangesTask-step-1">
+            <batch:tasklet ref="ApplyCustomerFeeChangesTaskTasklet" />
+        </batch:step>
+    </batch:job>
+    <bean name="ApplyCustomerFeeChangesTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.ApplyCustomerFeeChangesHelper" />
     
-    <bean name="LoanArrearsAgingTask" class="org.springframework.scheduling.quartz.JobDetailBean">
-      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.LoanArrearsAgingTask" />
+    <!--
+                LoanArrearsAgingTask:
+    -->
+    <bean name="LoanArrearsAgingTask" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
+      <property name="jobClass" value="org.mifos.framework.components.batchjobs.MifosBatchJob" />
     </bean>
     <bean id="LoanArrearsAgingTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="LoanArrearsAgingTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
+    <batch:job id="LoanArrearsAgingTaskJob" job-repository="jobRepository">
+        <batch:step id="LoanArrearsAgingTask-step-1">
+            <batch:tasklet ref="LoanArrearsAgingTaskTasklet" />
+        </batch:step>
+    </batch:job>
+    <bean name="LoanArrearsAgingTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.LoanArrearsAgingHelper" />
     
-    <bean name="ApplyHolidayChangesTask" class="org.springframework.scheduling.quartz.JobDetailBean">
-      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.ApplyHolidayChangesTask" />
+    <!--
+                ApplyHolidayChangesTask
+    -->
+    <bean name="ApplyHolidayChangesTask" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
+      <property name="jobClass" value="org.mifos.framework.components.batchjobs.MifosBatchJob" />
     </bean>
     <bean id="ApplyHolidayChangesTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="ApplyHolidayChangesTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
+    <batch:job id="ApplyHolidayChangesTaskJob" job-repository="jobRepository">
+        <batch:step id="ApplyHolidayChangesTask-step-1">
+            <batch:tasklet ref="ApplyHolidayChangesTaskTasklet" />
+        </batch:step>
+    </batch:job>
+    <bean name="ApplyHolidayChangesTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.ApplyHolidayChangesHelper" />
     
-    <bean name="PortfolioAtRiskTask" class="org.springframework.scheduling.quartz.JobDetailBean">
-      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskTask" />
+    <!--
+                PortfolioAtRiskTask:
+    -->
+    <bean name="PortfolioAtRiskTask" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
+      <property name="jobClass" value="org.mifos.framework.components.batchjobs.MifosBatchJob" />
     </bean>
     <bean id="PortfolioAtRiskTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="PortfolioAtRiskTask" />
-        <property name="cronExpression" value="0 5 0 * * ?" />
+        <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
+    <batch:job id="PortfolioAtRiskTaskJob" job-repository="jobRepository">
+        <batch:step id="PortfolioAtRiskTask-step-1" next="PortfolioAtRiskTask-step-2">
+            <batch:job ref="LoanArrearsTaskJob" job-launcher="jobLauncher" job-parameters-extractor="jobParametersExtractor" />
+        </batch:step>
+        <batch:step id="PortfolioAtRiskTask-step-2">
+            <batch:tasklet ref="PortfolioAtRiskTaskTasklet" />
+        </batch:step>
+    </batch:job>
+    <bean name="PortfolioAtRiskTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskHelper" />
     
-    <bean name="GenerateMeetingsForCustomerAndSavingsTask" class="org.springframework.scheduling.quartz.JobDetailBean">
-      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.GenerateMeetingsForCustomerAndSavingsTask" />
+    <!--
+                GenerateMeetingsForCustomerAndSavingsTask:
+    -->
+    <bean name="GenerateMeetingsForCustomerAndSavingsTask" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
+      <property name="jobClass" value="org.mifos.framework.components.batchjobs.MifosBatchJob" />
     </bean>
     <bean id="GenerateMeetingsForCustomerAndSavingsTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="GenerateMeetingsForCustomerAndSavingsTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
+    <batch:job id="GenerateMeetingsForCustomerAndSavingsTaskJob" job-repository="jobRepository">
+        <batch:step id="GenerateMeetingsForCustomerAndSavingsTask-step-1">
+            <batch:tasklet ref="GenerateMeetingsForCustomerAndSavingsTaskTasklet" />
+        </batch:step>
+    </batch:job>
+    <bean name="GenerateMeetingsForCustomerAndSavingsTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.GenerateMeetingsForCustomerAndSavingsHelper" />
     
-    <bean name="BranchReportTask" class="org.springframework.scheduling.quartz.JobDetailBean">
-	  <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.BranchReportTask" />
+    <!--
+                BranchReportTask:
+    -->
+    <bean name="BranchReportTask" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
+	  <property name="jobClass" value="org.mifos.framework.components.batchjobs.MifosBatchJob" />
 	</bean>
 	<bean id="BranchReportTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
 	    <property name="jobDetail" ref="BranchReportTask" />
 	    <property name="cronExpression" value="0 5 0 * * ?" />
 	</bean>
+	<batch:job id="BranchReportTaskJob" job-repository="jobRepository">
+        <batch:step id="BranchReportTask-step-1">
+            <batch:tasklet ref="BranchReportTaskTasklet" />
+        </batch:step>
+    </batch:job>
+    <bean name="BranchReportTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.BranchReportHelper" />
     
     <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="configLocation" value="classpath:org/mifos/config/resources/quartz.properties"/>
@@ -98,6 +203,44 @@
 	            <ref bean="BranchReportTaskTrigger" />
 	        </list>
 	    </property>
+	</bean>
+	
+	<!--
+        ========= Framework-specific configurations: =========
+    -->
+	
+	<batch:job-repository
+	   id="jobRepository"
+	   transaction-manager="transactionManager"
+	   data-source="dataSource"
+	   table-prefix="batch_"
+	/>
+	
+	<bean id="transactionManager" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager"/>
+	
+	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+	   <property name="jobRepository" ref="jobRepository" />
+	   <property name="taskExecutor">
+	       <bean class="org.springframework.core.task.SyncTaskExecutor" />
+	   </property>
+	</bean>
+	
+	<bean id="jobParametersExtractor" class="org.mifos.framework.components.batchjobs.BatchParametersExtractor" />
+	
+	<bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
+	
+	<bean id="jobRegistryBeanPostProcessor" class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
+	    <property name="jobRegistry" ref="jobRegistry"/>
+	</bean>
+	
+	<bean id="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
+	   <property name="jobDataAsMap">
+        <map>
+            <entry key="jobLocator" value-ref="jobRegistry"/>
+            <entry key="jobLauncher" value-ref="jobLauncher"/>
+        </map>
+    </property>
+	   
 	</bean>
     
 </beans>
