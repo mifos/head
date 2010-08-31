@@ -288,36 +288,42 @@ function switchLoanInstallmentType()
                     </div>
                     <div class="span-17 paddingLeft">
                         <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.zero" /]</span>
+                        [@spring.formHiddenInput  "loanProduct.loanAmountByLoanCycle[0].loanCycleNumber" /]
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[0].min" /]</span>
                         <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[0].max" /]</span>
                         <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLoanCycle[0].theDefault" /]</span>
                     </div>
                     <div class="span-17 paddingLeft">
                         <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.one" /]</span>
+                        [@spring.formHiddenInput  "loanProduct.loanAmountByLoanCycle[1].loanCycleNumber" /]
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[1].min" /]</span>
                         <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[1].max" /]</span>
                         <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLoanCycle[1].theDefault" /]</span>
                     </div>
                     <div class="span-17 paddingLeft">
                         <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.two" /]</span>
+                        [@spring.formHiddenInput  "loanProduct.loanAmountByLoanCycle[2].loanCycleNumber" /]
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[2].min" /]</span>
                         <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[2].max" /]</span>
                         <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLoanCycle[2].theDefault" /]</span>
                     </div>
                     <div class="span-17 paddingLeft">
                         <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.three" /]</span>
+                        [@spring.formHiddenInput  "loanProduct.loanAmountByLoanCycle[3].loanCycleNumber" /]
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[3].min" /]</span>
                         <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[3].max" /]</span>
                         <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLoanCycle[3].theDefault" /]</span>
                     </div>
                     <div class="span-17 paddingLeft">
                         <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.four" /]</span>
+                        [@spring.formHiddenInput  "loanProduct.loanAmountByLoanCycle[4].loanCycleNumber" /]
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[4].min" /]</span>
                         <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[4].max" /]</span>
                         <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLoanCycle[4].theDefault" /]</span>
                     </div>
                     <div class="span-17 paddingLeft">
                         <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.abovefour" /]</span>
+                        [@spring.formHiddenInput  "loanProduct.loanAmountByLoanCycle[5].loanCycleNumber" /]
                     	<span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[5].min" /]</span>
                         <span class="span-4">[@spring.formInput "loanProduct.loanAmountByLoanCycle[5].max" /]</span>
                         <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLoanCycle[5].theDefault" /]</span>
