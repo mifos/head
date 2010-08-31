@@ -297,10 +297,10 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 loanOffering.getStartDate(), loanOffering.getEndDate(), loanOffering.getDescription(),
                 PrdStatus.LOAN_ACTIVE, loanOffering.getGracePeriodType(), loanOffering.getInterestTypes(), loanOffering
                         .getGracePeriodDuration(), loanOffering.getMaxInterestRate(),
-                loanOffering.getMinInterestRate(), loanOffering.getDefInterestRate(), loanOffering
-                        .isIncludeInLoanCounter(), loanOffering.isIntDedDisbursement(), loanOffering
-                        .isPrinDueLastInst(), new ArrayList<FundBO>(), new ArrayList<FeeBO>(), Short.valueOf("1"),
-                RecurrenceType.MONTHLY, loanPrdActionForm);
+                loanOffering.getMinInterestRate(), loanOffering.getDefInterestRate(), loanOffering.isIncludeInLoanCounter(), 
+                loanOffering.isIntDedDisbursement(), loanOffering.isPrinDueLastInst(),
+                new ArrayList<FundBO>(), new ArrayList<FeeBO>(), Short.valueOf("1"),
+                RecurrenceType.MONTHLY, loanPrdActionForm, loanOffering.isInterestWaived());
         StaticHibernateUtil.commitTransaction();
 
         setRequestPathInfo("/loanAccountAction.do");
@@ -1231,7 +1231,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 productCategory, prdApplicableMaster, startDate, null, null, gracePeriodType, (short) 2, interestTypes,
                 new Money(getCurrency(), "1000"), new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"),
                 12.0, 2.0, 3.0, (short) 20, (short) 11, (short) 17, false, false, false, funds, fees, frequency,
-                principalglCodeEntity, intglCodeEntity);
+                principalglCodeEntity, intglCodeEntity, true);
         loanOfferingBO.save();
         return loanOfferingBO;
     }

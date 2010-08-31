@@ -20,11 +20,6 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
@@ -44,6 +39,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/defineLoanProducts")
@@ -169,7 +168,7 @@ public class DefineLoanProductsFormController {
         }
 
         return new LoanProductDetails(loanProductFormBean.getName(), loanProductFormBean.getShortName(), loanProductFormBean.getDescription(), category,
-                startDate, endDate, applicableFor, loanProductFormBean.isIncludeInLoanCycleCounter());
+                startDate, endDate, applicableFor, loanProductFormBean.isIncludeInLoanCycleCounter(), loanProductFormBean.isWaiverInterest());
     }
 
     private RepaymentDetailsDto translateToRepaymentDetails(LoanProductFormBean loanProductFormBean) {
@@ -182,9 +181,7 @@ public class DefineLoanProductsFormController {
         Integer gracePeriodType = Integer.valueOf(loanProductFormBean.getSelectedGracePeriodType());
         Integer gracePeriodDuration = loanProductFormBean.getGracePeriodDurationInInstallments();
 
-        RepaymentDetailsDto details = new RepaymentDetailsDto(frequencyType, recurs, calculationType, sameForAllLoanRange, gracePeriodType, gracePeriodDuration);
-
-        return details;
+        return new RepaymentDetailsDto(frequencyType, recurs, calculationType, sameForAllLoanRange, gracePeriodType, gracePeriodDuration);
     }
 
     private MinMaxDefaultDto<Integer> translateToMinMaxDefault(SameForAllLoanBean bean) {

@@ -291,6 +291,18 @@ explanation of the license and how it is applied.
 							<td valign="top"><html-el:checkbox styleId="EditLoanProduct.input.includeInLoanCycleCounter" property="loanCounter"
 								value="1" /></td>
 						</tr>
+						<tr class="fontnormal">
+							<td align="right">
+								<span id="EditLoanProduct.label.includeInterestWaiver">
+								<fmt:message key="product.include.interest.waiver">
+								<fmt:param><mifos:mifoslabel
+								name="${ConfigurationConstants.LOAN}"
+								bundle="ProductDefUIResources" /></fmt:param>
+								</fmt:message></span>:
+							</td>
+							<td valign="top"><html-el:checkbox styleId="EditLoanProduct.input.includeInterestWaiver" property="waiverInterest"
+								value="1" /></td>
+						</tr>
 						</table>
 						<!--<tr class="fontnormal">
 							<td align="right"><mifos:mifoslabel mandatory="yes"

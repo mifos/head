@@ -204,6 +204,23 @@ explanation of the license and how it is applied.
 												bundle="ProductDefUIResources" />
 										</c:otherwise>
 									</c:choose> </span> <br>
+									<fmt:message key="product.include.interest.waiver">
+                                    <fmt:param><mifos:mifoslabel
+                                    name="${ConfigurationConstants.LOAN}"
+                                    bundle="ProductDefUIResources" /></fmt:param>
+                                    </fmt:message>:
+                                    <span class="fontnormal">
+                                    <c:choose>
+										<c:when
+											test="${sessionScope.loanproductactionform.waiverInterest==1}">
+											<mifos:mifoslabel name="product.yes"
+												bundle="ProductDefUIResources" />
+										</c:when>
+										<c:otherwise>
+											<mifos:mifoslabel name="product.no"
+												bundle="ProductDefUIResources" />
+										</c:otherwise>
+									</c:choose> </span> <br>
 									<!--<mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" />

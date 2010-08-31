@@ -82,6 +82,8 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     private String loanCounter;
 
+    private String waiverInterest;
+
     private Short currencyId;
 
     private String minLoanAmount;
@@ -1458,6 +1460,14 @@ public class LoanPrdActionForm extends BaseActionForm {
         this.loanCounter = loanCounter;
     }
 
+    public String getWaiverInterest() {
+        return waiverInterest;
+    }
+
+    public void setWaiverInterest(String waiverInterest) {
+        this.waiverInterest = waiverInterest;
+    }
+
     public String[] getLoanOfferingFunds() {
         return loanOfferingFunds;
     }
@@ -1678,6 +1688,9 @@ public class LoanPrdActionForm extends BaseActionForm {
     public boolean isLoanCounterValue() {
         return getBooleanValue(getLoanCounter());
     }
+    public boolean shouldWaiverInterest() {
+        return getBooleanValue(getWaiverInterest());
+    }
 
     public boolean isIntDedAtDisbValue() {
         return getBooleanValue(getIntDedDisbursementFlag());
@@ -1722,6 +1735,7 @@ public class LoanPrdActionForm extends BaseActionForm {
             intDedDisbursementFlag = null;
             prinDueLastInstFlag = null;
             loanCounter = null;
+            waiverInterest = null;
             prdOfferinFees = null;
             loanOfferingFunds = null;
             gracePeriodType = null;
@@ -1778,6 +1792,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         this.endDate = null;
         this.prdApplicableMaster = null;
         this.loanCounter = null;
+        this.waiverInterest = null;
         this.minLoanAmount = null;
         this.maxLoanAmount = null;
         this.defaultLoanAmount = null;

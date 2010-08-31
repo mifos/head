@@ -46,9 +46,7 @@ import org.mifos.accounts.productdefinition.LoanInstallmentCaluclationFactory;
 import org.mifos.accounts.productdefinition.LoanProductCalculationType;
 import org.mifos.accounts.productdefinition.LoanAmountCaluclationFactory;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
-import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.PrdCategoryStatusEntity;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
@@ -133,7 +131,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 
@@ -1496,6 +1493,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         String description = loanProductRequest.getLoanProductDetails().getDescription();
         Integer category = loanProductRequest.getLoanProductDetails().getCategory();
         boolean loanCycleCounter = loanProductRequest.getLoanProductDetails().isIncludeInLoanCycleCounter();
+        boolean waiverInterest = loanProductRequest.getLoanProductDetails().shouldWaiverInterest();
 
         ProductCategoryBO productCategory = this.loanProductDao.findProductCategoryById(category);
         DateTime startDate = loanProductRequest.getLoanProductDetails().getStartDate();
@@ -1560,7 +1558,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
             return LoanOfferingBO.createNew(userId, globalPrdOfferingNum.toString(), name, shortName, description, productCategory, startDate, endDate, applicableToEntity,
                     interestTypeEntity, minRate, maxRate, defaultRate, recurrence, recurEvery, interestGlCode, principalGlCode,
-                    activeStatus, inActiveStatus, gracePeriodTypeEntity, gracePeriodDuration, loanCycleCounter, loanAmountCalculation, loanInstallmentCalculation, applicableFees, applicableFunds);
+                    activeStatus, inActiveStatus, gracePeriodTypeEntity, gracePeriodDuration, waiverInterest, loanCycleCounter, loanAmountCalculation, loanInstallmentCalculation, applicableFees, applicableFunds);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
