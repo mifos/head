@@ -59,8 +59,8 @@
                 onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
             </li>
             <li>
-              <label for="addOrSelectFlag">&nbsp;</label>
-              [@mifosmacros.boolRadioButtons "questionGroupForm.addOrSelectFlag", {"false":selectQuestions, "true":addNewQuestion},'','' /]
+              <label for="addQuestionFlag">&nbsp;</label>
+              [@mifosmacros.boolRadioButtons "questionGroupForm.addQuestionFlag", {"false":selectQuestions, "true":addNewQuestion},'','' /]
             </li>
             <li>
                 <ol id="addQuestionDiv" name="addQuestionDiv" style="display: none;">

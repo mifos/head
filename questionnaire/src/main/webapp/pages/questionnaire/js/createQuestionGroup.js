@@ -33,7 +33,7 @@ $(document).ready(function () {
 		});
 	});
 
-	$("input[name=addOrSelectFlag]").change(function(event) {
+	$("input[name=addQuestionFlag]").change(function(event) {
         $("#addQuestionDiv").toggle();
         $("#selectQuestionsDiv").toggle();
     });
