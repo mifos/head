@@ -24,13 +24,30 @@ public enum PrdCategoryStatus {
 
     ACTIVE((short) 1), INACTIVE((short) 2);
 
-    Short value;
+    private Short value;
 
-    PrdCategoryStatus(Short value) {
+    private PrdCategoryStatus(Short value) {
         this.value = value;
     }
 
     public Short getValue() {
         return value;
+    }
+
+    public static PrdCategoryStatus fromInt(int value) {
+        PrdCategoryStatus status;
+        switch (value) {
+        case 1:
+            status = PrdCategoryStatus.ACTIVE;
+            break;
+        case 2:
+            status = PrdCategoryStatus.INACTIVE;
+            break;
+        default:
+            status = PrdCategoryStatus.ACTIVE;
+            break;
+        }
+
+        return status;
     }
 }

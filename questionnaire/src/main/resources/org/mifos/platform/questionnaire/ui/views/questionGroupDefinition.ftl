@@ -29,7 +29,7 @@
       action="createQuestionGroup.ftl?execution=${flowExecutionKey}" method="POST">
     <fieldset>
         <ol>
-            <li id="status">
+            <li id="questionGroupStatus" style="display: none;">
               <label for="active"><span class="red">*</span>[@spring.message "questionnaire.status"/]: </label>
               [@mifosmacros.boolRadioButtons "questionGroupForm.active", {"true":active, "false":inActive},'','' /]
             </li>
@@ -59,23 +59,32 @@
                 onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
             </li>
             <li>
-              <label for="addOrSelectFlag">&nbsp;</label>
-              [@mifosmacros.boolRadioButtons "questionGroupForm.addOrSelectFlag", {"false":selectQuestions, "true":addNewQuestion},'','' /]
+              <label for="addQuestionFlag">&nbsp;</label>
+              [@mifosmacros.boolRadioButtons "questionGroupForm.addQuestionFlag", {"false":selectQuestions, "true":addNewQuestion},'','' /]
             </li>
-            <div id="addQuestionDiv">
-                [#include "addQuestion.ftl"]
-            </div>
-            <div id="selectQuestionsDiv">
-                [#include "selectQuestions.ftl"]
-            </div>
+            <li>
+                <ol id="addQuestionDiv" name="addQuestionDiv" style="display: none;">
+                    [#include "addQuestion.ftl"]
+                </ol>
+            </li>
+            <li>
+                <ol id="selectQuestionsDiv" name="selectQuestionsDiv">
+                    [#include "selectQuestions.ftl"]
+                </ol>
+            </li>
         </ol>
     </fieldset>
     <div id="divSections">
-        [#assign reversedSections=questionGroupForm.sections?reverse]
+        [#assign sectionsSize = questionGroupForm.sections?size]
+        [#assign reversedSections = questionGroupForm.sections?reverse]
         [#list reversedSections as section]
+        [#assign reversed_section_index = sectionsSize - section_index - 1]
         <b>${section.name}:&nbsp;&nbsp;</b>
-        <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')">[@spring.message
-            "questionnaire.remove.link"/]</a>
+        [#if reversed_section_index gte questionGroupForm.initialCountOfSections]
+            <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')">[@spring.message "questionnaire.remove.link"/]</a>
+        [#else]
+            <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
+        [/#if]
         <br/>
         <table id="sections.table" name="sections.table">
             <tr>
@@ -87,9 +96,15 @@
             <tr>
                 <td class="drawtablerow">${sectionQuestion.title}</td>
                 <td align="center" valign="center" class="drawtablerow" style="text-align:center">
-                    [@mifosmacros.formCheckbox "questionGroupForm.sections[${reversedSections?size - section_index - 1}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
+                    [@mifosmacros.formCheckbox "questionGroupForm.sections[${reversed_section_index}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
                 </td>
-                <td class="drawtablerow"><a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')">[@spring.message "questionnaire.remove.link"/]</a></td>
+                <td class="drawtablerow">
+                    [#if sectionQuestion_index gte section.initialCountOfQuestions]
+                        <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')">[@spring.message "questionnaire.remove.link"/]</a>
+                    [#else]
+                        <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
+                    [/#if]
+                </td>
             </tr>
             [/#list]
             <tr>

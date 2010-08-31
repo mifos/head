@@ -65,8 +65,21 @@ public class ProductCategoryBO extends AbstractBusinessObject {
     }
 
     /**
-     * minimal legal constructor
+     * minimal cosntructor
      */
+    public ProductCategoryBO(ProductTypeEntity productType, String name, String description, final String globalPrdCategoryNum) {
+        this.productCategoryID = null;
+        this.productType = productType;
+        this.globalPrdCategoryNum = globalPrdCategoryNum;
+        this.productCategoryName = name;
+        this.productCategoryDesc = description;
+        this.prdCategoryStatus = new PrdCategoryStatusEntity(PrdCategoryStatus.ACTIVE);
+    }
+
+    /**
+     * use minimal constructor
+     */
+    @Deprecated
     public ProductCategoryBO(final Short id, final String globalPrdCategoryNum) {
         this.productCategoryID = id;
         this.productType = null;
@@ -74,6 +87,10 @@ public class ProductCategoryBO extends AbstractBusinessObject {
         this.globalPrdCategoryNum = globalPrdCategoryNum;
     }
 
+    /**
+     * use minimal constructor
+     */
+    @Deprecated
     public ProductCategoryBO(final UserContext userContext, final ProductTypeEntity productType, final String productCategoryName,
             final String productCategoryDesc) throws ProductDefinitionException {
         super(userContext);
@@ -130,6 +147,10 @@ public class ProductCategoryBO extends AbstractBusinessObject {
         return globalPrdCategoryNum;
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     private String generatePrdCategoryNum() throws ProductDefinitionException {
         prdLoanLogger.debug("Generating new product category global number");
         StringBuilder globalPrdOfferingNum = new StringBuilder();
@@ -147,6 +168,7 @@ public class ProductCategoryBO extends AbstractBusinessObject {
         return globalPrdOfferingNum.toString();
     }
 
+    @Deprecated
     private void validateDuplicateProductCategoryName(final String productCategoryName) throws ProductDefinitionException {
         prdLoanLogger.debug("Checking for duplicate product category name");
         try {
@@ -158,12 +180,12 @@ public class ProductCategoryBO extends AbstractBusinessObject {
         }
     }
 
-    private void validateDuplicateProductCategoryName(final String productCategoryName, final Short productCategoryId)
+    @Deprecated
+    public void validateDuplicateProductCategoryName(final String productCategoryName, final Short productCategoryId)
             throws ProductDefinitionException {
         prdLoanLogger.debug("Checking for duplicate product category name");
         try {
-            if (!new ProductCategoryPersistence().getProductCategory(productCategoryName, productCategoryId).equals(
-                    Integer.valueOf("0"))) {
+            if (!new ProductCategoryPersistence().getProductCategory(productCategoryName, productCategoryId).equals(Integer.valueOf("0"))) {
                 throw new ProductDefinitionException(ProductDefinitionConstants.DUPLICATE_CATEGORY_NAME);
             }
         } catch (PersistenceException e) {
@@ -171,8 +193,11 @@ public class ProductCategoryBO extends AbstractBusinessObject {
         }
     }
 
-    public void updateProductCategory(final String productCategoryName, final String productCategoryDesc,
-            final PrdCategoryStatusEntity prdCategoryStatus) throws ProductDefinitionException {
+    /**
+     * @deprecated use service facade or appropriate test factory method
+     */
+    @Deprecated
+    public void updateProductCategory(final String productCategoryName, final String productCategoryDesc, final PrdCategoryStatusEntity prdCategoryStatus) throws ProductDefinitionException {
         prdLoanLogger.debug("Updating product category name");
         validateDuplicateProductCategoryName(productCategoryName, productCategoryID);
         this.productCategoryName = productCategoryName;
@@ -186,6 +211,10 @@ public class ProductCategoryBO extends AbstractBusinessObject {
         prdLoanLogger.debug("Updating product category done");
     }
 
+    /**
+     * @deprecated use service facade or appropriate factory method for use in tests.
+     */
+    @Deprecated
     public void save() throws ProductDefinitionException {
         try {
             new ProductCategoryPersistence().createOrUpdate(this);
@@ -194,4 +223,13 @@ public class ProductCategoryBO extends AbstractBusinessObject {
         }
     }
 
+    public boolean hasDifferentName(String productCategoryName) {
+        return !this.productCategoryName.equals(productCategoryName);
+    }
+
+    public void update(String name, String description, PrdCategoryStatus status) {
+        this.productCategoryName = name;
+        this.productCategoryDesc = description;
+        this.prdCategoryStatus = new PrdCategoryStatusEntity(status);
+    }
 }

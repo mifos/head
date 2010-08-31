@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -39,7 +38,6 @@ import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.security.util.SecurityConstants;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 
@@ -105,8 +103,7 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         //List<GrantedAuthority> authorities = translateActivityIdsToGrantedAuthorities(activityIds);
         List<GrantedAuthority> authorities = getGrantedActivityAuthorities(activityIds);
 
-        return new MifosUser(user.getPersonnelId(), username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
-                authorities);
+        return new MifosUser(user.getPersonnelId(), user.getOffice().getOfficeId(), username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
 
 
@@ -135,50 +132,6 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         queryParameters.put("globalPersonnelNum", globalNumber);
 
         return (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.PERSONNEL_BY_SYSTEM_ID, queryParameters);
-    }
-
-
-    private List<GrantedAuthority> translateActivityIdsToGrantedAuthorities(List<Short> activityIdList) {
-
-        Map<Short, GrantedAuthority> activityToGrantedAuthorityMap = populateSecurityConstantToGrantedAuthorityMap();
-
-        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        if (activityIdList != null) {
-            for (Short activityId : activityIdList) {
-                if (activityToGrantedAuthorityMap.containsKey(activityId)) {
-                    authorities.add(activityToGrantedAuthorityMap.get(activityId));
-                }
-            }
-        }
-
-        return authorities;
-    }
-
-    private Map<Short, GrantedAuthority> populateSecurityConstantToGrantedAuthorityMap() {
-
-        // FIXME - keithw - just keeping adding the SecurityConstants and corresponding GrantedAuthority name for area
-        Map<Short, GrantedAuthority> authoritiesMap = new HashMap<Short, GrantedAuthority>();
-
-        // manage products ->
-        authoritiesMap.put(SecurityConstants.UPDATE_LATENESS_DORMANCY, new GrantedAuthorityImpl(MifosUser.UPDATE_LATENESS_DORMANCY));
-        authoritiesMap.put(SecurityConstants.CAN_DEFINE_PRODUCT_MIX, new GrantedAuthorityImpl(MifosUser.ROLE_CAN_DEFINE_PRODUCT_MIX));
-        authoritiesMap.put(SecurityConstants.CAN_EDIT_PRODUCT_MIX, new GrantedAuthorityImpl(MifosUser.ROLE_CAN_EDIT_PRODUCT_MIX));
-
-        // Manage Organisation -> Data display and rules
-        authoritiesMap.put(SecurityConstants.FUNDS_EDIT_FUNDS, new GrantedAuthorityImpl(MifosUser.CAN_EDIT_FUNDS));
-        authoritiesMap.put(SecurityConstants.FUNDS_CREATE_FUNDS, new GrantedAuthorityImpl(MifosUser.CAN_CREATE_FUNDS));
-        authoritiesMap.put(SecurityConstants.CAN_DEFINE_LABELS, new GrantedAuthorityImpl(MifosUser.CAN_DEFINE_LABELS));
-        authoritiesMap.put(SecurityConstants.CAN_DEFINE_HIDDEN_MANDATORY_FIELDS, new GrantedAuthorityImpl(MifosUser.CAN_DEFINE_HIDDEN_MANDATORY_FIELDS));
-        authoritiesMap.put(SecurityConstants.CAN_DEFINE_ACCEPTED_PAYMENT_TYPE, new GrantedAuthorityImpl(MifosUser.CAN_DEFINE_ACCEPTED_PAYMENT_TYPES));
-
-        // System Information
-        authoritiesMap.put(SecurityConstants.CAN_VIEW_SYSTEM_INFO, new GrantedAuthorityImpl(MifosUser.VIEW_SYSTEM_INFO));
-
-        // Shutdown
-        authoritiesMap.put(SecurityConstants.CAN_OPEN_SHUTDOWN_PAGE, new GrantedAuthorityImpl(MifosUser.CAN_OPEN_SHUTDOWN_PAGE));
-        authoritiesMap.put(SecurityConstants.CAN_SHUT_DOWN_MIFOS, new GrantedAuthorityImpl(MifosUser.CAN_SHUT_DOWN_MIFOS));
-
-        return authoritiesMap;
     }
 
     private List<GrantedAuthority> getGrantedActivityAuthorities(List<Short> activityIds) {

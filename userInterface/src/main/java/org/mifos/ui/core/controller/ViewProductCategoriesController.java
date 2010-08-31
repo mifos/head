@@ -20,8 +20,6 @@
 
 package org.mifos.ui.core.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.screen.ProductCategoryDisplayDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +39,8 @@ public class ViewProductCategoriesController {
         // empty constructor for spring wiring
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="NP_UNWRITTEN_FIELD", justification="request is not null")
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView handleRequestInternal(HttpServletRequest request) {
+    public ModelAndView showProductCategories() {
 
         ModelAndView modelAndView = new ModelAndView("viewProductCategories");
         ProductCategoryDisplayDto dto = adminServiceFacade.retrieveAllProductCategories();
@@ -51,9 +48,5 @@ public class ViewProductCategoriesController {
         modelAndView.addObject("breadcrumbs", new AdminBreadcrumbBuilder().withLink("admin.viewproductcategories", "viewProductCategories.ftl").build());
 
         return modelAndView;
-    }
-
-    public String getPageToDisplay(HttpServletRequest request) {
-        return request.getRequestURI().replace("mifos/", "").replace("/", "").replace(".ftl", "");
     }
 }

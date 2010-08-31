@@ -115,7 +115,7 @@ public class QuestionGroupController extends QuestionnaireController {
     }
 
     public String addSection(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
-        if (questionGroupForm.hasQuestionsInCurrentSection()) {
+        if (questionGroupForm.hasNoQuestionsInCurrentSection()) {
             constructErrorMessage(requestContext.getMessageContext(),
                     "questionnaire.error.no.question.in.section", "currentSectionTitle", "Section should have at least one question.");
             return "failure";

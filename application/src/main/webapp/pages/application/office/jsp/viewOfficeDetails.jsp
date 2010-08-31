@@ -33,8 +33,8 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="viewOfficeDetails" />
 		<html-el:form action="/offAction.do">
-		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
-			   var="BusinessKey" />
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'officeDto')}"
+			   var="officeDto" />
 
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
@@ -45,7 +45,7 @@ explanation of the license and how it is applied.
 								name="Office.labelLinkViewOffices" />
 
 							</html-el:link> / </span><span class="fontnormal8ptbold"><c:out
-								value="${BusinessKey.officeName}"></c:out></span></td>
+								value="${officeDto.name}"></c:out></span></td>
 						</tr>
 					</table>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -54,9 +54,9 @@ explanation of the license and how it is applied.
 							<table width="96%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<td width="50%" height="23" class="headingorange"><span id="viewOfficeDetails.text.officeName"><c:out
-										value="${BusinessKey.officeName}"></c:out></span></td>
+										value="${officeDto.name}"></c:out></span></td>
 									<td width="50%" align="right">
-									<html-el:link styleId="viewOfficeDetails.link.editOfficeInformation" href="offAction.do?method=edit&officeLevel=${BusinessKey.level.id}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"
+									<html-el:link styleId="viewOfficeDetails.link.editOfficeInformation" href="offAction.do?method=edit&officeLevel=${officeDto.levelId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"
 										>
 										<mifos:mifoslabel name="Office.labelEditOfficeInfo"
 											/>
@@ -70,44 +70,44 @@ explanation of the license and how it is applied.
 									<td height="23" class="fontnormalbold"><span class="fontnormal">
 									</span>
 									<span class="fontnormal">
-									<c:if test="${BusinessKey.officeStatus == OfficeStatus.ACTIVE}">
+									<c:if test="${officeDto.statusId == 1}">
 									<mifos:MifosImage id="active" moduleName="org.mifos.customers.office.util.resources.officeImages" />
 									</c:if>
-									<c:if test="${BusinessKey.officeStatus == OfficeStatus.INACTIVE}">
+									<c:if test="${officeDto.statusId == 2}">
 									<mifos:MifosImage id="inactive" moduleName="org.mifos.customers.office.util.resources.officeImages" />
 									</c:if>
-									<c:out value="${BusinessKey.status.name}"></c:out>
+									<c:out value="${officeDto.officeStatusName}"></c:out>
 									</span>
 
 									<br>
 									<span class="fontnormal"><mifos:mifoslabel
 										name="Office.labelOfficeShortName" />
-									<span id="viewOfficeDetails.text.shortName"><c:out value="${BusinessKey.shortName}"></c:out></span><br>
+									<span id="viewOfficeDetails.text.shortName"><c:out value="${officeDto.officeShortName}"></c:out></span><br>
 									 <!-- End Logic for showing the correct code-->
 									<mifos:mifoslabel name="Office.labelOfficeType"/>
-									<span id="viewOfficeDetails.text.officeLevel"><c:out value="${BusinessKey.level.name}"></c:out></span>
+									<span id="viewOfficeDetails.text.officeLevel"><c:out value="${officeDto.officeLevelName}"></c:out></span>
 									 <br>
 									<!-- logic for showing the correct parent -->
 									<mifos:mifoslabel name="Office.labelParentOffice"	/>
-										<c:if test="${not empty BusinessKey.parentOffice}">
-										<c:out value="${BusinessKey.parentOffice.officeName}"></c:out>
+										<c:if test="${not empty officeDto.parentId}">
+										<c:out value="${officeDto.parentOfficeName}"></c:out>
 										</c:if>
 										<br>
 
 									 </span><br>
 									 <!-- End for showing the correct parent -->
 
-									<c:if test="${not empty BusinessKey.address.address}">
+									<c:if test="${not empty officeDto.address}">
 	
 									<mifos:mifoslabel name="office.labelAddress"
 										bundle="OfficeResources"></mifos:mifoslabel>
 										<br>
-										<c:if test="${ empty BusinessKey.address.address.displayAddress
-									&&  empty BusinessKey.address.address.city
-									&&  empty BusinessKey.address.address.state
-									&&  empty BusinessKey.address.address.country
-									&&  empty BusinessKey.address.address.zip
-									&&  empty BusinessKey.address.address.phoneNumber}">
+										<c:if test="${ empty officeDto.address.displayAddress
+									&&  empty officeDto.address.city
+									&&  empty officeDto.address.state
+									&&  empty officeDto.address.country
+									&&  empty officeDto.address.zip
+									&&  empty officeDto.address.phoneNumber}">
 									<br>
 									<span
 										class="fontnormal"><mifos:mifoslabel name="Office.addressnotentered"/></span>
@@ -115,34 +115,34 @@ explanation of the license and how it is applied.
 										</c:if>
 										<span
 										class="fontnormal">
-										<c:out value="${BusinessKey.address.address.displayAddress}"></c:out>
+										<c:out value="${officeDto.address.displayAddress}"></c:out>
 										</span>
 									</c:if>
-									<c:if test="${not empty BusinessKey.address.address.city}">
+									<c:if test="${not empty officeDto.address.city}">
 									<br>
 									<span class="fontnormal"><c:out
-										value="${BusinessKey.address.address.city}"></c:out>
+										value="${officeDto.address.city}"></c:out>
 									</span>
 									</c:if>
-									<c:if test="${not empty BusinessKey.address.address.state}">
+									<c:if test="${not empty officeDto.address.state}">
 									<br>
 									<span class="fontnormal"><c:out
-										value="${BusinessKey.address.address.state}"></c:out>
+										value="${officeDto.address.state}"></c:out>
 									</span></c:if>
 
-									<c:if test="${not empty BusinessKey.address.address.country}">
+									<c:if test="${not empty officeDto.address.country}">
 									<br>
 									<span class="fontnormal"><c:out
-										value="${BusinessKey.address.address.country}"></c:out>
+										value="${officeDto.address.country}"></c:out>
 										</span>
 									</c:if>
-									<c:if test="${not empty BusinessKey.address.address.zip}">
+									<c:if test="${not empty officeDto.address.zip}">
 									<br>
 									<span class="fontnormal"> <c:out
-										value="${BusinessKey.address.address.zip}"></c:out>
+										value="${officeDto.address.zip}"></c:out>
 									</span>
 									</c:if>
-									<c:if test="${ not empty BusinessKey.address.address.phoneNumber}">
+									<c:if test="${ not empty officeDto.address.phoneNumber}">
 									<br>
 									<br>
 									<span
@@ -150,7 +150,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="Office.labelTelephone"
 										/></span> <span
 										class="fontnormal"><c:out
-										value="${BusinessKey.address.address.phoneNumber}"></c:out>
+										value="${officeDto.address.phoneNumber}"></c:out>
 									</span>
 									<br>
 									</c:if>
@@ -160,7 +160,7 @@ explanation of the license and how it is applied.
 										<mifos:mifoslabel name="Office.labelAdditionInformation" />
 									 <span class="fontnormal"><br>
 									 <c:forEach var="cfdef"
-										items="${BusinessKey.customFields}">
+										items="${officeDto.customFields}">
 										<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 											<c:if test="${cfdef.fieldId==cf.fieldId}">
                                          <c:choose>
@@ -190,8 +190,8 @@ explanation of the license and how it is applied.
 						</tr>
 					</table>
 					<br>
-			<html-el:hidden	property="officeId"	value="${BusinessKey.officeId}" />
-			<html-el:hidden property="officeLevel" value="${BusinessKey.level.id}"/>
+			<html-el:hidden	property="officeId"	value="${officeDto.id}" />
+			<html-el:hidden property="officeLevel" value="${officeDto.levelId}"/>
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 

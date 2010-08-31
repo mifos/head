@@ -18,25 +18,41 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.dto.screen;
+package org.mifos.dto.domain;
 
-import org.mifos.dto.domain.MinMaxDefaultDto;
+public class AuditLogDto {
 
-public class LoanAmountDetails {
+    private final String date;
+    private final String field;
+    private final String oldValue;
+    private final String newValue;
+    private final String user;
 
-    private final Integer calculationType;
-    private final MinMaxDefaultDto<Double> sameForAllLoanRange;
-
-    public LoanAmountDetails(Integer calculationType, MinMaxDefaultDto<Double> sameForAllLoanRange) {
-        this.calculationType = calculationType;
-        this.sameForAllLoanRange = sameForAllLoanRange;
+    public AuditLogDto(String date, String field, String oldValue, String newValue, String user) {
+        this.date = date;
+        this.field = field;
+        this.oldValue = oldValue;
+        this.newValue = newValue;
+        this.user = user;
     }
 
-    public Integer getCalculationType() {
-        return this.calculationType;
+    public String getDate() {
+        return this.date;
     }
 
-    public MinMaxDefaultDto<Double> getSameForAllLoanRange() {
-        return this.sameForAllLoanRange;
+    public String getField() {
+        return this.field;
+    }
+
+    public String getOldValue() {
+        return this.oldValue;
+    }
+
+    public String getNewValue() {
+        return this.newValue;
+    }
+
+    public String getUser() {
+        return this.user;
     }
 }

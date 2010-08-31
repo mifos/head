@@ -32,6 +32,7 @@ import static org.apache.commons.lang.StringUtils.trim;
 public class SectionDetailForm implements Serializable {
     private static final long serialVersionUID = 900851228874986225L;
     private SectionDetail sectionDetail;
+    private int initialCountOfQuestions;
 
     public SectionDetailForm() {
         this(new SectionDetail());
@@ -75,5 +76,13 @@ public class SectionDetailForm implements Serializable {
 
     public void setQuestionDetails(List<SectionQuestionDetail> sectionQuestionDetails) {
         sectionDetail.setQuestionDetails(sectionQuestionDetails);
+    }
+
+    public void setInitialCountOfQuestions(int initialCountOfQuestions) {
+        this.initialCountOfQuestions = initialCountOfQuestions;
+    }
+
+    public int getInitialCountOfQuestions() {
+        return initialCountOfQuestions;
     }
 }

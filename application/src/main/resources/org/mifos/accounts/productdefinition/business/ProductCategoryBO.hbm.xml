@@ -40,14 +40,19 @@
 		where pc.productCategoryName=:productCategoryName]]>
 	</query>
 	<query name="productdefenition.getProductCategory">
-		<![CDATA[from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc 
-		where pc.globalPrdCategoryNum=:globalNum]]>
+		<![CDATA[from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc where pc.globalPrdCategoryNum=:globalNum]]>
 	</query>
 	<query name="product.createapplicableproductcat">
 		<![CDATA[from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc 
 		where pc.productType.productTypeID=:productTypeID and pc.prdCategoryStatus.id=:prdCategoryStatusId order by pc.productCategoryName]]>
 	</query>
 	<query name="product.findById">
-		<![CDATA[from ProductCategoryBO pc where pc.productCategoryID != (:productCategoryID) and pc.prdCategoryStatus.id=:prdCategoryStatusId]]>
+		<![CDATA[from ProductCategoryBO pc where pc.productCategoryID=:productCategoryID and pc.prdCategoryStatus.id=:prdCategoryStatusId]]>
+	</query>
+	<query name="product.findByGlobalNum">
+		<![CDATA[from ProductCategoryBO pc where pc.globalPrdCategoryNum=:globalPrdCategoryNum]]>
+	</query>
+    <query name="product.findByNameAndId">
+		<![CDATA[from ProductCategoryBO pc where pc.productType.productTypeID=:productCategoryID and pc.productCategoryName=:productCategoryName]]>
 	</query>
 </hibernate-mapping>

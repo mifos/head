@@ -27,9 +27,14 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
+import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
+import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.customers.business.CustomerLevelEntity;
@@ -47,11 +52,15 @@ public interface LoanProductDao {
 
     void save(ProductTypeEntity loanProductConfiguration);
 
+    void save(ProductCategoryBO productCategoryBO);
+
     void save(LoanOfferingBO loanProduct);
 
     List<Object[]> findAllLoanProducts();
 
     List<PrdApplicableMasterEntity> retrieveLoanApplicableProductCategories();
+
+    List<PrdApplicableMasterEntity> retrieveSavingsApplicableProductCategories();
 
     List<GracePeriodTypeEntity> retrieveGracePeriodTypes();
 
@@ -59,11 +68,27 @@ public interface LoanProductDao {
 
     List<InterestCalcTypeEntity> retrieveInterestCalcTypes();
 
+    InterestCalcTypeEntity retrieveInterestCalcType(InterestCalcType interestCalcType);
+
     InterestTypesEntity findInterestType(InterestType interestType);
 
     PrdApplicableMasterEntity findApplicableProductType(ApplicableTo applicableTo);
 
     GracePeriodTypeEntity findGracePeriodType(GraceType gracePeriodType);
 
-    ProductCategoryBO findProductCategoryById(Integer category);
+    ProductCategoryBO findActiveProductCategoryById(Integer category);
+
+    ProductCategoryBO findProductCategoryByNameAndType(String productCategoryName, Short productTypeEntityId);
+
+    void validateNameIsAvailableForCategory(String productCategoryName, Short productTypeEntityId);
+
+    ProductCategoryBO findProductCategoryByGlobalNum(String globalNumber);
+
+    List<SavingsTypeEntity> retrieveSavingsTypes();
+
+    SavingsTypeEntity retrieveSavingsType(SavingsType savingsType);
+
+    List<RecommendedAmntUnitEntity> retrieveRecommendedAmountTypes();
+
+    RecommendedAmntUnitEntity retrieveRecommendedAmountType(RecommendedAmountUnit recommendedAmountType);
 }

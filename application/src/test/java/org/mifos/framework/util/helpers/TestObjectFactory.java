@@ -1348,20 +1348,12 @@ public class TestObjectFactory {
             SavingsBO savings = (SavingsBO) account;
             session.delete(account);
             session.delete(savings.getTimePerForInstcalc());
-            try {
                 PrdOfferingMeetingEntity prdOfferingMeeting1 = savings.getSavingsOffering().getTimePerForInstcalc();
                 prdOfferingMeeting1.setMeeting(null);
                 session.delete(prdOfferingMeeting1);
-            } catch (ProductDefinitionException e) {
-                throw new RuntimeException(e);
-            }
-            try {
                 PrdOfferingMeetingEntity prdOfferingMeeting2 = savings.getSavingsOffering().getFreqOfPostIntcalc();
                 prdOfferingMeeting2.setMeeting(null);
                 session.delete(prdOfferingMeeting2);
-            } catch (ProductDefinitionException e) {
-                throw new RuntimeException(e);
-            }
             session.delete(savings.getSavingsOffering());
         } else {
             session.delete(account);
