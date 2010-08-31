@@ -48,19 +48,19 @@ public class SameForAllLoanBean {
         this.max = max;
     }
 
-    public Double getTheDefault() {
-        return this.theDefault;
-    }
-
-    public void setTheDefault(Double theDefault) {
-        this.theDefault = theDefault;
-    }
-
     public boolean minIsLessThanMax() {
         return this.min.doubleValue() < this.max.doubleValue();
     }
 
     public boolean defaultIsBetweenMinAndMax() {
         return minIsLessThanMax() && this.theDefault.doubleValue() <= this.max.doubleValue();
+    }
+
+    public Double getTheDefault() {
+        return this.theDefault;
+    }
+
+    public void setTheDefault(Double theDefault) {
+        this.theDefault = theDefault;
     }
 }
