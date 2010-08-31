@@ -1,9 +1,15 @@
 [#ftl]
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
-<head>
- <script type="text/javascript">
- function addOption(root, text, value)
+[@mifos.header "title" /]
+<script type="text/javascript">
+  	$(document).ready(function () {
+  		switchFrequencyMessage();
+  		switchLoanAmountType();
+  		switchLoanInstallmentType();
+	});
+	
+function addOption(root, text, value)
 {
   var newOpt = new Option(text, value);
   var rootLength = root.length;
@@ -116,10 +122,9 @@ function switchLoanInstallmentType()
 		document.getElementById("installmentoption2").style.display = "block";
 	}
 }
-
 </script>
-</head>
-[@mifos.header "title" /]
+
+
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
    <!--  Main Content Begins-->
   <div class="content marginAuto">

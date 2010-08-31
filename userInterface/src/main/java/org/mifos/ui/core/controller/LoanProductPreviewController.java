@@ -146,7 +146,6 @@ public class LoanProductPreviewController {
         } else {
             LoanProductRequest loanProductRequest = loanProductFormBeanAssembler.toLoanProductDto(loanProduct);
             PrdOfferingDto product = adminServiceFacade.createLoanProduct(loanProductRequest);
-//            status.setComplete();
             modelAndView.setViewName("redirect:/confirmLoanProduct.ftl");
             modelAndView.addObject("product", product);
         }
