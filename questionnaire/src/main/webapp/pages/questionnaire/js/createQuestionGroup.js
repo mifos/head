@@ -33,21 +33,9 @@ $(document).ready(function () {
 		});
 	});
 
-	$(":regex(id, addOrSelectFlag[0-1])").change(function(event) {
-        if ($("#addOrSelectFlag0").is(":checked")) {
-            $("#addQuestionDiv").hide();
-            $("#selectQuestionsDiv").show();
-        }
-        else if ($("#addOrSelectFlag1").is(":checked")) {
-            $("#addQuestionDiv").show();
-            $("#selectQuestionsDiv").hide();
-        }
-        else {
-            $("#addQuestionDiv").hide();
-            $("#selectQuestionsDiv").hide();
-        }
+	$("input[name=addOrSelectFlag]").change(function(event) {
+        $("#addQuestionDiv").toggle();
+        $("#selectQuestionsDiv").toggle();
     });
 
-    $("#addOrSelectFlag0").change();
-    $("#addOrSelectFlag1").change();
 });

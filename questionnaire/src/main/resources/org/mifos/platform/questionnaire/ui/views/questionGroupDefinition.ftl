@@ -62,12 +62,16 @@
               <label for="addOrSelectFlag">&nbsp;</label>
               [@mifosmacros.boolRadioButtons "questionGroupForm.addOrSelectFlag", {"false":selectQuestions, "true":addNewQuestion},'','' /]
             </li>
-            <div id="addQuestionDiv">
-                [#include "addQuestion.ftl"]
-            </div>
-            <div id="selectQuestionsDiv">
-                [#include "selectQuestions.ftl"]
-            </div>
+            <li>
+                <ol id="addQuestionDiv" name="addQuestionDiv" style="display: none;">
+                    [#include "addQuestion.ftl"]
+                </ol>
+            </li>
+            <li>
+                <ol id="selectQuestionsDiv" name="selectQuestionsDiv">
+                    [#include "selectQuestions.ftl"]
+                </ol>
+            </li>
         </ol>
     </fieldset>
     <div id="divSections">
