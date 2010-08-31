@@ -20,14 +20,15 @@
 
 package org.mifos.framework.components.batchjobs;
 
+import org.joda.time.DateTime;
+import org.mifos.framework.components.batchjobs.helpers.TaskStatus;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.JobListener;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobExecutionListener;
 
-public abstract class BatchJobListener implements JobListener {
+public class BatchJobListener implements JobExecutionListener {
 
     private MifosLogger logger;
 
@@ -36,18 +37,47 @@ public abstract class BatchJobListener implements JobListener {
     }
 
     @Override
-    public abstract String getName();
-
-    @Override
-    public void jobExecutionVetoed(JobExecutionContext context) {
+    public void beforeJob(JobExecution jobExecution) {
+        String jobName = jobExecution.getJobInstance().getJobName();
+        long launchTime = jobExecution.getStartTime().getTime();
+        registerBatchJobLaunch(jobName, launchTime);
     }
 
     @Override
-    public void jobToBeExecuted(JobExecutionContext context) {
+    public void afterJob(JobExecution jobExecution) {
+        String jobName = jobExecution.getJobInstance().getJobName();
+        long finishTime = jobExecution.getEndTime().getTime();
+        if(jobExecution.getAllFailureExceptions().isEmpty()) {
+            registerBatchJobResult(jobName, finishTime, SchedulerConstants.FINISHED_SUCCESSFULLY, TaskStatus.COMPLETE);
+        }
+        else {
+            StringBuilder builder = new StringBuilder();
+            for(Throwable cause : jobExecution.getAllFailureExceptions()) {
+                builder.append("[");
+                builder.append(cause.getMessage());
+                builder.append("], ");
+            }
+            builder.deleteCharAt(builder.lastIndexOf(","));
+            registerBatchJobResult(jobName, finishTime, builder.toString(), TaskStatus.FAILED);
+        }
     }
 
-    @Override
-    public void jobWasExecuted(JobExecutionContext context, JobExecutionException exception) {
+    public void registerBatchJobLaunch(String batchJobName, long timeInMillis) {
+        DateTime date = new DateTime(timeInMillis);
+        String logMessage = "Batch job " + batchJobName + " launched on " + date;
+        getLogger().info(logMessage);
+    }
+
+    public void registerBatchJobResult(String batchJobName, long timeInMillis, String description, TaskStatus status) {
+        DateTime date = new DateTime(timeInMillis);
+        String logMessage = null;
+        if(status == TaskStatus.COMPLETE) {
+            logMessage = "Batch job " + batchJobName +" completed on " + date + ": " + description;
+            getLogger().info(logMessage);
+        } else if(status == TaskStatus.FAILED) {
+            logMessage = "Batch job " + batchJobName + " FAILED on " + date + ": " + description;
+            getLogger().warn(logMessage);
+        }
     }
 
     protected MifosLogger getLogger() {
@@ -57,4 +87,5 @@ public abstract class BatchJobListener implements JobListener {
     protected void setLogger(MifosLogger logger) {
         this.logger = logger;
     }
+
 }

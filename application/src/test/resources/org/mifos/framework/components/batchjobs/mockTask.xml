@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:batch="http://www.springframework.org/schema/batch"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd">
     
+    <!--
+        ========= Batch jobs configurations: =========
+    -->
+
+    <!--
+                ProductStatus:
+    -->
     <bean name="ProductStatus" class="org.springframework.scheduling.quartz.JobDetailBean">
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.ProductStatus" />
     </bean>
     <bean id="ProductStatusTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="ProductStatus" />
-        <property name="cronExpression" value="0 0 0 * * ?" />
+        <property name="cronExpression" value="0/15 * * * * ?" />
     </bean>
-    
+   
+    <!--
+               LoanArrearsTask:
+    -->
     <bean name="LoanArrearsTask" class="org.springframework.scheduling.quartz.JobDetailBean">
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.LoanArrearsTask" />
     </bean>
@@ -18,6 +30,9 @@
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
     
+    <!--
+                SavingsIntCalcTask:
+    -->
     <bean name="SavingsIntCalcTask" class="org.springframework.scheduling.quartz.JobDetailBean">
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.SavingsIntCalcTask" />
     </bean>
@@ -26,6 +41,9 @@
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
     
+    <!--
+                SavingsIntPostingTask:
+    -->
     <bean name="SavingsIntPostingTask" class="org.springframework.scheduling.quartz.JobDetailBean">
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.SavingsIntPostingTask" />
     </bean>
@@ -34,6 +52,9 @@
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
     
+    <!--
+                ApplyCustomerFeeChangesTask:
+    -->
     <bean name="ApplyCustomerFeeChangesTask" class="org.springframework.scheduling.quartz.JobDetailBean">
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.ApplyCustomerFeeChangesTask" />
     </bean>
@@ -42,6 +63,9 @@
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
     
+    <!--
+                LoanArrearsAgingTask:
+    -->
     <bean name="LoanArrearsAgingTask" class="org.springframework.scheduling.quartz.JobDetailBean">
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.LoanArrearsAgingTask" />
     </bean>
@@ -50,6 +74,9 @@
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
     
+    <!--
+                ApplyHolidayChangesTask
+    -->
     <bean name="ApplyHolidayChangesTask" class="org.springframework.scheduling.quartz.JobDetailBean">
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.ApplyHolidayChangesTask" />
     </bean>
@@ -58,14 +85,20 @@
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
     
+    <!--
+                PortfolioAtRiskTask:
+    -->
     <bean name="PortfolioAtRiskTask" class="org.springframework.scheduling.quartz.JobDetailBean">
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskTask" />
     </bean>
     <bean id="PortfolioAtRiskTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="PortfolioAtRiskTask" />
-        <property name="cronExpression" value="0 5 0 * * ?" />
+        <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
     
+    <!--
+                GenerateMeetingsForCustomerAndSavingsTask:
+    -->
     <bean name="GenerateMeetingsForCustomerAndSavingsTask" class="org.springframework.scheduling.quartz.JobDetailBean">
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.GenerateMeetingsForCustomerAndSavingsTask" />
     </bean>
@@ -74,6 +107,9 @@
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
     
+    <!--
+                BranchReportTask:
+    -->
     <bean name="BranchReportTask" class="org.springframework.scheduling.quartz.JobDetailBean">
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.BranchReportTask" />
     </bean>
@@ -83,7 +119,17 @@
     </bean>
     
     <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="configLocation" value="classpath:org/mifos/framework/components/batchjobs/mockQuartz.properties"/>
+        <property name="quartzProperties">
+            <props>
+                <prop key="org.quartz.scheduler.instanceName">MockQuartzScheduler</prop>
+                <prop key="org.quartz.scheduler.instanceId">AUTO</prop>
+                <prop key="org.quartz.scheduler.skipUpdateCheck">true</prop>
+                <prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
+                <prop key="org.quartz.threadPool.threadCount">1</prop>
+                <prop key="org.quartz.jobStore.class">org.quartz.simpl.RAMJobStore</prop>
+                <prop key="org.quartz.jobStore.misfireThreshold">60000</prop>
+            </props>
+        </property>
         <property name="triggers">
             <list>
                 <ref bean="ProductStatusTrigger" />
@@ -100,5 +146,4 @@
         </property>
     </bean>
     
-</beans>
-    
+</beans>    

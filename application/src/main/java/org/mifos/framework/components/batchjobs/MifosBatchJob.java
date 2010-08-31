@@ -30,7 +30,7 @@ import org.springframework.batch.core.configuration.JobLocator;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-public class MifosBatchJob extends QuartzJobBean implements StatefulJob {
+public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob {
 
     public static final String JOB_EXECUTION_TIME_KEY = "executionTime";
 
@@ -52,12 +52,15 @@ public class MifosBatchJob extends QuartzJobBean implements StatefulJob {
     @Override
     public void executeInternal(JobExecutionContext context) throws JobExecutionException {
         try {
-            // TODO QUARTZ: Resolve the issue with both quartz and spring batch requiring job name in the declaration.
-            String jobName = context.getJobDetail().getName()+"Job";
+            String jobName = context.getJobDetail().getName();
             Job job = jobLocator.getJob(jobName);
+            batchJobStarted();
+            requiresExclusiveAccess();
             jobLauncher.run(job, getJobParametersFromContext(context));
         } catch(Exception ex) {
             throw new JobExecutionException(ex);
+        } finally {
+            batchJobFinished();
         }
         // TODO QUARTZ: Add proper support for old task.xml file.
         // getTaskHelper().execute(context.getScheduledFireTime().getTime());
@@ -73,9 +76,7 @@ public class MifosBatchJob extends QuartzJobBean implements StatefulJob {
      * Classes inheriting from MifosBatchJob must override this method and
      * return an appropriate Helper class containing business logic.
      */
-    public TaskHelper getTaskHelper() {
-        return null;
-    }
+    public abstract TaskHelper getTaskHelper();
 
     /**
      * This method determines if users can continue to use the system while this task/batch job is running.
