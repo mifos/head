@@ -210,7 +210,7 @@ public class LoanProductFormBeanAssembler {
         }
 
         return new LoanProductDetails(loanProductFormBean.getGeneralDetails().getName(), loanProductFormBean.getGeneralDetails().getShortName(), loanProductFormBean.getGeneralDetails().getDescription(), category,
-                startDate, endDate, applicableFor, loanProductFormBean.isIncludeInLoanCycleCounter());
+                startDate, endDate, applicableFor, loanProductFormBean.isIncludeInLoanCycleCounter(),loanProductFormBean.isWaiverInterest());
     }
 
     private LoanAmountDetailsDto translateToLoanAmountDetails(LoanProductFormBean loanProductFormBean) {
