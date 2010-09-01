@@ -229,6 +229,11 @@
 		
 	<bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
 	
+	<bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
+	   <property name="dataSource" ref="dataSource" />
+	   <property name="tablePrefix" value="batch_" />
+	</bean>
+	
 	<bean id="jobRegistryBeanPostProcessor" class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
 	    <property name="jobRegistry" ref="jobRegistry"/>
 	</bean>
@@ -236,8 +241,10 @@
 	<bean id="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
 	   <property name="jobDataAsMap">
         <map>
-            <entry key="jobLocator" value-ref="jobRegistry"/>
-            <entry key="jobLauncher" value-ref="jobLauncher"/>
+            <entry key="jobLocator" value-ref="jobRegistry" />
+            <entry key="jobLauncher" value-ref="jobLauncher" />
+            <entry key="jobExplorer" value-ref="jobExplorer" />
+            <entry key="jobRepository" value-ref="jobRepository" />
         </map>
     </property>
 	   
