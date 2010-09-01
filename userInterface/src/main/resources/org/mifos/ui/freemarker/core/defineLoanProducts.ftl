@@ -210,6 +210,13 @@ function switchLoanInstallmentType()
             		[@spring.formCheckbox "loanProduct.includeInLoanCycleCounter" "createLoanProduct.checkbox.loanCounter" /]
               	</span>
             </div>
+            
+            <div class="span-23 ">
+            	<span class="pull-3 span-8 rightAlign">[@spring.message "manageLoanProducts.defineLoanProduct.interestwaiver" /]&nbsp;:</span>
+            	<span class="span-4">
+            		[@spring.formCheckbox "loanProduct.waiverInterest" "createLoanProduct.checkbox.waiverInterest" /]
+              	</span>
+            </div>
           </div>
 
           <div class="clear">&nbsp;</div>
