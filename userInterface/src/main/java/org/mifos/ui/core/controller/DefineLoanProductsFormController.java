@@ -20,11 +20,6 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Valid;
-
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.screen.LoanProductFormDto;
@@ -39,6 +34,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/defineLoanProducts")
@@ -252,6 +251,7 @@ public class DefineLoanProductsFormController {
                         new Object[] {}, constraintViolation.getMessage());
                 result.addError(error);
             }
+
 
             if (violations.isEmpty() && !sameForAllLoanBean.minIsLessThanMax()) {
                 ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.sameForAllLoans.max"},

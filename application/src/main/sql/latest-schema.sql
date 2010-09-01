@@ -1264,6 +1264,7 @@ create table loan_offering (
   principal_glcode_id smallint not null,
   interest_glcode_id smallint not null,
   penalties_glcode_id smallint,
+  interest_waiver_flag smallint default 0,
   primary key(prd_offering_id),
   foreign key(principal_glcode_id)
     references gl_code(glcode_id)

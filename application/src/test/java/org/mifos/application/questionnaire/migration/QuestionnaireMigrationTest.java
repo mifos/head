@@ -18,17 +18,17 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.migration;
+package org.mifos.application.questionnaire.migration;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.questionnaire.migration.mappers.QuestionnaireMigrationMapper;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.platform.questionnaire.migration.mappers.QuestionnaireMigrationMapper;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mockito.Mock;
@@ -59,7 +59,7 @@ public class QuestionnaireMigrationTest {
     public void setUp() {
         questionnaireMigration = new QuestionnaireMigration(questionnaireMigrationMapper, questionnaireServiceFacade);
     }
-    
+
     @Test
     public void shouldMapCustomFields() {
         List<CustomFieldDefinitionEntity> customFields = getCustomFields();

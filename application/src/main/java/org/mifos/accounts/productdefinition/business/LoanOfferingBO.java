@@ -74,7 +74,7 @@ import org.mifos.security.util.UserContext;
 /**
  * A loan product is a set of rules (interest rate, number of installments, maximum amount, etc) which describes a
  * particular kind of loan that an MFI offers.
- *
+ * <p/>
  * Although we may sometimes call these "offerings", it is probably better to call them "loan products" (as that seems
  * to be the terminology in the functional spec and elsewhere).
  */
@@ -95,6 +95,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     private Short intDedDisbursement;
     private Short prinDueLastInst;
     private Short loanCounter;
+    private Short waiverInterest;
     private PrdOfferingMeetingEntity loanOfferingMeeting;
     private final GLCodeEntity principalGLcode;
     private final GLCodeEntity interestGLcode;
@@ -112,7 +113,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
             DateTime startDate, DateTime endDate, PrdApplicableMasterEntity applicableToEntity, MifosCurrency currency, InterestTypesEntity interestTypeEntity, Double minRate,
             Double maxRate, Double defaultRate, RecurrenceType recurrence, Integer recurEvery, GLCodeEntity interestGlCode, GLCodeEntity principalGlCode,
             PrdStatusEntity activeStatus, PrdStatusEntity inActiveStatus, GracePeriodTypeEntity gracePeriodTypeEntity,
-            Integer gracePeriodDuration, boolean loanCycleCounter, LoanAmountCalculation loanAmountCalculation, LoanInstallmentCalculation loanInstallmentCalculation, List<FeeBO> applicableFees, List<FundBO> applicableFunds) {
+            Integer gracePeriodDuration, boolean waiverInterest, boolean loanCycleCounter, LoanAmountCalculation loanAmountCalculation, LoanInstallmentCalculation loanInstallmentCalculation, List<FeeBO> applicableFees, List<FundBO> applicableFunds) {
 
         PrdStatusEntity status = inActiveStatus;
         if (new LocalDate(startDate).isEqual(new LocalDate())) {
@@ -125,7 +126,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
             LoanOfferingBO loanProduct = new LoanOfferingBO(userId, globalProductId, name, shortName, productCategory, status, applicableToEntity, startDate, currency,
                     interestTypeEntity, minRate, maxRate, defaultRate, interestGlCode, principalGlCode, gracePeriodTypeEntity, gracePeriodDuration,
-                    loanCycleCounter, meetingEntity);
+                    loanCycleCounter, meetingEntity, waiverInterest);
 
             loanProduct.setDescription(description);
             if (endDate != null) {
@@ -169,8 +170,10 @@ public class LoanOfferingBO extends PrdOfferingBO {
      * minimal legal constructor
      */
     private LoanOfferingBO(Integer userId, String globalProductId, String name, String shortName, ProductCategoryBO productCategory, PrdStatusEntity status, PrdApplicableMasterEntity applicableToEntity, DateTime startDate,
-            MifosCurrency currency, InterestTypesEntity interestTypeEntity, Double minRate, Double maxRate, Double defaultRate, GLCodeEntity interestGlCode, GLCodeEntity principalGlCode, GracePeriodTypeEntity gracePeriodTypeEntity, Integer gracePeriodDuration, boolean loanCycleCounter, PrdOfferingMeetingEntity meetingEntity) {
+            MifosCurrency currency, InterestTypesEntity interestTypeEntity, Double minRate, Double maxRate, Double defaultRate, GLCodeEntity interestGlCode, GLCodeEntity principalGlCode,
+            GracePeriodTypeEntity gracePeriodTypeEntity, Integer gracePeriodDuration, boolean loanCycleCounter, PrdOfferingMeetingEntity meetingEntity, boolean waiverInterest) {
         super(userId, globalProductId, name, shortName, productCategory, status, applicableToEntity, startDate, currency);
+
         this.interestTypes = interestTypeEntity;
         this.minInterestRate = minRate;
         this.maxInterestRate = maxRate;
@@ -186,6 +189,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
         this.intDedDisbursement = YesNoFlag.NO.getValue();
         this.prinDueLastInst = YesNoFlag.NO.getValue();
         this.loanCounter = loanCycleCounter ? YesNoFlag.YES.getValue() : YesNoFlag.NO.getValue();
+        this.waiverInterest = waiverInterest ? YesNoFlag.YES.getValue() : YesNoFlag.NO.getValue();
 
         this.loanOfferingFunds = new HashSet<LoanOfferingFundEntity>();
         this.loanOfferingFees = new HashSet<LoanOfferingFeesEntity>();
@@ -235,18 +239,18 @@ public class LoanOfferingBO extends PrdOfferingBO {
      */
     @Deprecated
     public LoanOfferingBO(final UserContext userContext, final String prdOfferingName,
-            final String prdOfferingShortName, final ProductCategoryBO prdCategory,
-            final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate,
-            final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount,
-            final Double maxInterestRate, final Double minInterestRate, final Double defInterestRate,
-            final Short maxNoInstallments, final Short minNoInstallments, final Short defNoInstallments,
-            final boolean loanCounter, final boolean intDedDisbursement, final boolean prinDueLastInst,
-            final MeetingBO meeting, final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode)
+                          final String prdOfferingShortName, final ProductCategoryBO prdCategory,
+                          final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate,
+                          final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount,
+                          final Double maxInterestRate, final Double minInterestRate, final Double defInterestRate,
+                          final Short maxNoInstallments, final Short minNoInstallments, final Short defNoInstallments,
+                          final boolean loanCounter, final boolean intDedDisbursement, final boolean prinDueLastInst,
+                          final MeetingBO meeting, final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode, boolean waiverInterest)
             throws ProductDefinitionException {
         this(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, null,
                 null, null, null, interestTypes, minLoanAmount, maxLoanAmount, minLoanAmount, maxInterestRate,
                 minInterestRate, defInterestRate, maxNoInstallments, minNoInstallments, defNoInstallments, loanCounter,
-                intDedDisbursement, prinDueLastInst, null, null, meeting, principalGLcode, interestGLcode);
+                intDedDisbursement, prinDueLastInst, null, null, meeting, principalGLcode, interestGLcode, waiverInterest);
     }
 
     /**
@@ -254,21 +258,21 @@ public class LoanOfferingBO extends PrdOfferingBO {
      */
     @Deprecated
     public LoanOfferingBO(final UserContext userContext, final String prdOfferingName,
-            final String prdOfferingShortName, final ProductCategoryBO prdCategory,
-            final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
-            final String description, final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,
-            final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount,
-            final Money defaultLoanAmount, final Double maxInterestRate, final Double minInterestRate,
-            final Double defInterestRate, final Short maxNoInstallments, final Short minNoInstallments,
-            final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
-            final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final MeetingBO meeting,
-            final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode) throws ProductDefinitionException {
+                          final String prdOfferingShortName, final ProductCategoryBO prdCategory,
+                          final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
+                          final String description, final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,
+                          final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount,
+                          final Money defaultLoanAmount, final Double maxInterestRate, final Double minInterestRate,
+                          final Double defInterestRate, final Short maxNoInstallments, final Short minNoInstallments,
+                          final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
+                          final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final MeetingBO meeting,
+                          final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode, boolean waiverInterest) throws ProductDefinitionException {
         this(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, endDate,
                 description, gracePeriodType, gracePeriodDuration, interestTypes, minLoanAmount, maxLoanAmount,
                 defaultLoanAmount, maxInterestRate, minInterestRate, defInterestRate, maxNoInstallments,
                 minNoInstallments, defNoInstallments, loanCounter, intDedDisbursement, prinDueLastInst, funds, fees,
                 meeting, principalGLcode, interestGLcode, LOANAMOUNTSAMEFORALLLOAN.toString(),
-                NOOFINSTALLSAMEFORALLLOAN.toString());
+                NOOFINSTALLSAMEFORALLLOAN.toString(), waiverInterest);
     }
 
     /**
@@ -276,16 +280,16 @@ public class LoanOfferingBO extends PrdOfferingBO {
      */
     @Deprecated
     public LoanOfferingBO(final UserContext userContext, final String prdOfferingName,
-            final String prdOfferingShortName, final ProductCategoryBO prdCategory,
-            final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
-            final String description, final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,
-            final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount,
-            final Money defaultLoanAmount, final Double maxInterestRate, final Double minInterestRate,
-            final Double defInterestRate, final Short maxNoInstallments, final Short minNoInstallments,
-            final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
-            final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final MeetingBO meeting,
-            final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode, final String loanAmtCalcType,
-            final String calcInstallmentType) throws ProductDefinitionException {
+                          final String prdOfferingShortName, final ProductCategoryBO prdCategory,
+                          final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
+                          final String description, final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,
+                          final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount,
+                          final Money defaultLoanAmount, final Double maxInterestRate, final Double minInterestRate,
+                          final Double defInterestRate, final Short maxNoInstallments, final Short minNoInstallments,
+                          final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
+                          final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final MeetingBO meeting,
+                          final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode, final String loanAmtCalcType,
+                          final String calcInstallmentType, boolean waiverInterest) throws ProductDefinitionException {
         super(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, endDate,
                 description);
         prdLogger.debug("building Loan offering");
@@ -295,6 +299,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 principalGLcode, interestGLcode);
         setCreateDetails();
         setLoanCounter(loanCounter);
+        setWaiverInterest(waiverInterest);
         setIntDedDisbursement(intDedDisbursement);
         setPrinDueLastInst(prinDueLastInst);
         setGracePeriodTypeAndDuration(intDedDisbursement, gracePeriodType, gracePeriodDuration);
@@ -340,14 +345,14 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
     @Deprecated
     public LoanOfferingBO(final UserContext userContext, final String prdOfferingName,
-            final String prdOfferingShortName, final ProductCategoryBO prdCategory,
-            final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
-            final String description, final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,
-            final InterestTypesEntity interestTypes, final Double maxInterestRate, final Double minInterestRate,
-            final Double defInterestRate, final boolean loanCounter, final boolean intDedDisbursement,
-            final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final MeetingBO meeting,
-            final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode,
-            final LoanPrdActionForm loanPrdActionForm) throws ProductDefinitionException {
+                          final String prdOfferingShortName, final ProductCategoryBO prdCategory,
+                          final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
+                          final String description, final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,
+                          final InterestTypesEntity interestTypes, final Double maxInterestRate, final Double minInterestRate,
+                          final Double defInterestRate, final boolean loanCounter, final boolean intDedDisbursement,
+                          final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final MeetingBO meeting,
+                          final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode,
+                          final LoanPrdActionForm loanPrdActionForm, boolean waiverInterest) throws ProductDefinitionException {
 
         super(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, endDate,
                 description);
@@ -357,6 +362,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 principalGLcode, interestGLcode);
         setCreateDetails();
         setLoanCounter(loanCounter);
+        setWaiverInterest(waiverInterest);
         setIntDedDisbursement(intDedDisbursement);
         setPrinDueLastInst(prinDueLastInst);
         setGracePeriodTypeAndDuration(intDedDisbursement, gracePeriodType, gracePeriodDuration);
@@ -389,6 +395,10 @@ public class LoanOfferingBO extends PrdOfferingBO {
             }
         }
         prdLogger.debug("Loan offering build :" + getGlobalPrdOfferingNum());
+    }
+
+    private void setWaiverInterest(boolean waiverInterest) {
+        this.waiverInterest = waiverInterest ? YesNoFlag.YES.getValue() : YesNoFlag.NO.getValue();
     }
 
     /**
@@ -480,6 +490,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
     public boolean isIncludeInLoanCounter() {
         return this.loanCounter.equals(YesNoFlag.YES.getValue());
+    }
+    public boolean isInterestWaived() {
+        return this.waiverInterest.equals(YesNoFlag.YES.getValue());
     }
 
     public Set<LoanOfferingFundEntity> getLoanOfferingFunds() {
@@ -607,16 +620,17 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     // FIXME this update is only used by tests, is not the right logic
+
     public void update(final Short userId, final String prdOfferingName, final String prdOfferingShortName,
-            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster,
-            final Date startDate, final Date endDate, final String description, final PrdStatus status,
-            final GracePeriodTypeEntity gracePeriodType, final InterestTypesEntity interestTypes,
-            final Short gracePeriodDuration, final Money maxLoanAmount, final Money minLoanAmount,
-            final Money defaultLoanAmount, final Double maxInterestRate, final Double minInterestRate,
-            final Double defInterestRate, final Short maxNoInstallments, final Short minNoInstallments,
-            final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
-            final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final Short recurAfter,
-            final RecurrenceType recurrenceType) throws ProductDefinitionException {
+                       final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster,
+                       final Date startDate, final Date endDate, final String description, final PrdStatus status,
+                       final GracePeriodTypeEntity gracePeriodType, final InterestTypesEntity interestTypes,
+                       final Short gracePeriodDuration, final Money maxLoanAmount, final Money minLoanAmount,
+                       final Money defaultLoanAmount, final Double maxInterestRate, final Double minInterestRate,
+                       final Double defInterestRate, final Short maxNoInstallments, final Short minNoInstallments,
+                       final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
+                       final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final Short recurAfter,
+                       final RecurrenceType recurrenceType, boolean waiverInterest) throws ProductDefinitionException {
         prdLogger.debug("Updating loan Offering :" + prdOfferingName);
         super.update(userId, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate,
                 endDate, description, status);
@@ -631,6 +645,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
         this.minInterestRate = minInterestRate;
         this.defInterestRate = defInterestRate;
         setLoanCounter(loanCounter);
+        setWaiverInterest(waiverInterest);
         setIntDedDisbursement(intDedDisbursement);
         setPrinDueLastInst(prinDueLastInst);
         if (this.loanOfferingMeeting.getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId().equals(
@@ -672,13 +687,13 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     public void update(final Short userId, final String prdOfferingName, final String prdOfferingShortName,
-            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster,
-            final Date startDate, final Date endDate, final String description, final PrdStatus status,
-            final GracePeriodTypeEntity gracePeriodType, final InterestTypesEntity interestTypes,
-            final Short gracePeriodDuration, final Double maxInterestRate, final Double minInterestRate,
-            final Double defInterestRate, final boolean loanCounter, final boolean intDedDisbursement,
-            final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final Short recurAfter,
-            final RecurrenceType recurrenceType, final LoanPrdActionForm loanPrdActionForm)
+                       final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster,
+                       final Date startDate, final Date endDate, final String description, final PrdStatus status,
+                       final GracePeriodTypeEntity gracePeriodType, final InterestTypesEntity interestTypes,
+                       final Short gracePeriodDuration, final Double maxInterestRate, final Double minInterestRate,
+                       final Double defInterestRate, final boolean loanCounter, final boolean intDedDisbursement,
+                       final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final Short recurAfter,
+                       final RecurrenceType recurrenceType, final LoanPrdActionForm loanPrdActionForm, boolean waiverInterest)
             throws ProductDefinitionException {
         prdLogger.debug("Updating loan Offering :" + prdOfferingName);
         super.update(userId, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate,
@@ -692,6 +707,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
         this.minInterestRate = minInterestRate;
         this.defInterestRate = defInterestRate;
         setLoanCounter(loanCounter);
+        setWaiverInterest(waiverInterest);
         setIntDedDisbursement(intDedDisbursement);
         setPrinDueLastInst(prinDueLastInst);
         populateLoanAmountAndInstall(loanPrdActionForm);
@@ -785,7 +801,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     private void setGracePeriodTypeAndDuration(final boolean intDedDisbursement,
-            final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration) {
+                                               final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration) {
         prdLogger
                 .debug("Loan offering setGracePeriodTypeAndDuration called - intDedDisbursement:" + intDedDisbursement);
         if (intDedDisbursement || gracePeriodType == null || gracePeriodType.getId().equals(GraceType.NONE.getValue())) {
@@ -929,7 +945,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     public LoanOfferingInstallmentRange eligibleNoOfInstall(final Money lastLoanAmount,
-            final Short customerLastLoanCycleCount) {
+                                                            final Short customerLastLoanCycleCount) {
         if (isNoOfInstallTypeSameForAllLoan()) {
             return getEligibleInstallmentSameForAllLoan();
         }

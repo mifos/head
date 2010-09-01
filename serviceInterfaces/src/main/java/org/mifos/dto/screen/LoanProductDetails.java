@@ -32,10 +32,12 @@ public class LoanProductDetails {
     private final DateTime endDate;
     private final Integer applicableFor;
     private final boolean includeInLoanCycleCounter;
+    private final boolean waiverInterest;
     private final Integer currencyId;
 
     public LoanProductDetails(String name, String shortName, String description, Integer category, DateTime startDate,
-            DateTime endDate, Integer applicableFor, boolean includeInLoanCycleCounter, Integer currencyId) {
+            DateTime endDate, Integer applicableFor, boolean includeInLoanCycleCounter, boolean waiverInterest,
+            Integer currencyId) {
         this.name = name;
         this.shortName = shortName;
         this.description = description;
@@ -44,6 +46,7 @@ public class LoanProductDetails {
         this.endDate = endDate;
         this.applicableFor = applicableFor;
         this.includeInLoanCycleCounter = includeInLoanCycleCounter;
+        this.waiverInterest = waiverInterest;
         this.currencyId = currencyId;
     }
 
@@ -81,5 +84,9 @@ public class LoanProductDetails {
 
     public Integer getCurrencyId() {
         return this.currencyId;
+    }
+
+    public boolean shouldWaiverInterest() {
+        return this.waiverInterest;
     }
 }

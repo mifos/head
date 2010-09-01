@@ -46,7 +46,6 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;     // NOPMD
 
 @RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("PMD")
 public class QuestionGroupFormTest {
 
     @Test
@@ -186,7 +185,7 @@ public class QuestionGroupFormTest {
         currentQuestion.setTitle(" Question1 ");
         currentQuestion.setType("Free Text");
         questionGroupForm.setCurrentQuestion(currentQuestion);
-        questionGroupForm.setAddOrSelectFlag(true);
+        questionGroupForm.setAddQuestionFlag(true);
         questionGroupForm.setSectionName(sectionName);
         questionGroupForm.addCurrentSection();
         List<SectionDetailForm> sections = questionGroupForm.getSections();
@@ -252,7 +251,7 @@ public class QuestionGroupFormTest {
         currentQuestion.setTitle(" Question1 ");
         currentQuestion.setType("Free Text");
         questionGroupForm.setCurrentQuestion(currentQuestion);
-        questionGroupForm.setAddOrSelectFlag(true);
+        questionGroupForm.setAddQuestionFlag(true);
         questionGroupForm.setSectionName(sectionName);
         questionGroupForm.addCurrentSection();
         questionGroupForm.getCurrentQuestion().setTitle("Question2 ");

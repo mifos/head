@@ -204,7 +204,7 @@ public class LoanPrdAction extends BaseAction {
                         .getStartDateValue(locale), MeetingType.LOAN_INSTALLMENT), findGLCodeEntity(request,
                         ProductDefinitionConstants.LOANPRICIPALGLCODELIST, loanPrdActionForm.getPrincipalGLCode()),
                 findGLCodeEntity(request, ProductDefinitionConstants.LOANINTERESTGLCODELIST, loanPrdActionForm.getInterestGLCode()),
-                loanPrdActionForm);
+                loanPrdActionForm, loanPrdActionForm.shouldWaiverInterest());
 
         loanOffering.setCurrency(getCurrency(loanPrdActionForm.getCurrencyId()));
         loanOffering.save();
@@ -298,7 +298,7 @@ public class LoanPrdAction extends BaseAction {
                         ProductDefinitionConstants.SRCFUNDSLIST, request), loanPrdActionForm.getLoanOfferingFunds()),
                 getFeeList((List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE, request),
                         loanPrdActionForm.getPrdOfferinFees()), loanPrdActionForm.getRecurAfterValue(), RecurrenceType
-                        .fromInt(loanPrdActionForm.getFreqOfInstallmentsValue()), loanPrdActionForm);
+                        .fromInt(loanPrdActionForm.getFreqOfInstallmentsValue()), loanPrdActionForm, loanPrdActionForm.shouldWaiverInterest());
         prdDefLogger.debug("update method of Loan Product Action called" + loanPrdActionForm.getPrdOfferingId());
         return mapping.findForward(ActionForwards.update_success.toString());
     }
@@ -513,6 +513,7 @@ public class LoanPrdAction extends BaseAction {
         loanPrdActionForm.setIntDedDisbursementFlag(getStringValue(loanProduct.isIntDedDisbursement()));
         loanPrdActionForm.setPrinDueLastInstFlag(getStringValue(loanProduct.isPrinDueLastInst()));
         loanPrdActionForm.setLoanCounter(getStringValue(loanProduct.isIncludeInLoanCounter()));
+        loanPrdActionForm.setWaiverInterest(getStringValue(loanProduct.isInterestWaived()));
         loanPrdActionForm.setRecurAfter(getStringValue(loanProduct.getLoanOfferingMeeting().getMeeting()
                 .getMeetingDetails().getRecurAfter()));
         loanPrdActionForm.setFreqOfInstallments(getStringValue(loanProduct.getLoanOfferingMeeting().getMeeting()

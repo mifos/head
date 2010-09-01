@@ -18,10 +18,10 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.migration;
+package org.mifos.application.questionnaire.migration;
 
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.platform.questionnaire.migration.mappers.QuestionnaireMigrationMapper;
+import org.mifos.application.questionnaire.migration.mappers.QuestionnaireMigrationMapper;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.springframework.beans.factory.annotation.Autowired;

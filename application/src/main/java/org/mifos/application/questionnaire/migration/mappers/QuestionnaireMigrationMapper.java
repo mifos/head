@@ -18,7 +18,7 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.migration.mappers;
+package org.mifos.application.questionnaire.migration.mappers;
 
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;

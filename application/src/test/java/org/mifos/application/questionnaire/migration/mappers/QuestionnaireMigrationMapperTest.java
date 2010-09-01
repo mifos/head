@@ -18,7 +18,7 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.mappers;
+package org.mifos.application.questionnaire.migration.mappers;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,8 +28,6 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.platform.questionnaire.migration.mappers.QuestionnaireMigrationMapper;
-import org.mifos.platform.questionnaire.migration.mappers.QuestionnaireMigrationMapperImpl;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
@@ -53,7 +51,7 @@ public class QuestionnaireMigrationMapperTest {
     public void setUp() {
         mapper = new QuestionnaireMigrationMapperImpl();
     }
-    
+
     @Test
     public void shouldMapToQuestionDto() {
         CustomFieldDefinitionEntity customField = new CustomFieldDefinitionEntity("Favourite color", CustomerLevel.CLIENT.getValue(),

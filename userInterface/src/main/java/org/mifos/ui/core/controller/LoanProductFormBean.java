@@ -42,6 +42,8 @@ public class LoanProductFormBean {
 
     private boolean includeInLoanCycleCounter;
 
+    private boolean waiverInterest;
+
     @NotEmpty
     private String selectedLoanAmountCalculationType;
     private Map<String, String> loanAmountCalculationTypeOptions;
@@ -96,8 +98,8 @@ public class LoanProductFormBean {
     private Map<String, String> applicableFundOptions;
     private Map<String, String> selectedFundOptions;
     private String[] applicableFunds;
-    private String[] selectedFunds;
 
+    private String[] selectedFunds;
     @NotEmpty
     private String selectedInterest;
     private Map<String, String> interestGeneralLedgerOptions;
@@ -108,6 +110,14 @@ public class LoanProductFormBean {
 
     public boolean isIncludeInLoanCycleCounter() {
         return this.includeInLoanCycleCounter;
+    }
+
+    public boolean isWaiverInterest() {
+        return waiverInterest;
+    }
+
+    public void setWaiverInterest(boolean waiverInterest) {
+        this.waiverInterest = waiverInterest;
     }
 
     public void setIncludeInLoanCycleCounter(boolean includeInLoanCycleCounter) {
@@ -237,6 +247,7 @@ public class LoanProductFormBean {
     public Map<String, String> getPrincipalGeneralLedgerOptions() {
         return this.principalGeneralLedgerOptions;
     }
+
 
     public void setPrincipalGeneralLedgerOptions(Map<String, String> principalGeneralLedgerOptions) {
         this.principalGeneralLedgerOptions = principalGeneralLedgerOptions;

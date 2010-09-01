@@ -55,7 +55,7 @@ public class CreateQuestionGroupPage extends MifosPage {
     }
 
     public void addSection(CreateQuestionGroupParameters createQuestionGroupParameters) {
-        selenium.check("id=addOrSelectFlag0");
+        selenium.check("id=addQuestionFlag0");
         selenium.type("id=sectionName", createQuestionGroupParameters.getSectionName());
         selectSectionQuestions(createQuestionGroupParameters);
         selenium.click("id=_eventId_addSection");
@@ -64,7 +64,7 @@ public class CreateQuestionGroupPage extends MifosPage {
 
     public void addQuestion(String questionToAdd, String sectionName) {
         if (StringUtils.isNotEmpty(questionToAdd)) {
-            selenium.check("id=addOrSelectFlag1");
+            selenium.check("id=addQuestionFlag1");
             selenium.type("id=currentQuestion.title", questionToAdd);
             selenium.type("id=sectionName", sectionName);
             selenium.click("id=_eventId_addQuestion");

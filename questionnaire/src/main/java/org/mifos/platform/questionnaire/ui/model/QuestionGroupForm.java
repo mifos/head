@@ -48,7 +48,7 @@ public class QuestionGroupForm extends ScreenObject {
     private final List<SectionQuestionDetail> questionPool = new ArrayList<SectionQuestionDetail>();
     @javax.validation.Valid
     private Question currentQuestion = new Question(new QuestionDetail());
-    private boolean addOrSelectFlag;
+    private boolean addQuestionFlag;
     private List<SectionDetailForm> sections;
     private int initialCountOfSections;
 
@@ -118,7 +118,7 @@ public class QuestionGroupForm extends ScreenObject {
         currentSection.trimName();
         String sectionName = getSectionName();
         addCurrentSectionToSections();
-        if (addOrSelectFlag) {
+        if (addQuestionFlag) {
             addNewQuestion();
         } else {
             addSelectedQuestionsToCurrentSection();
@@ -291,12 +291,12 @@ public class QuestionGroupForm extends ScreenObject {
         this.currentQuestion = currentQuestion;
     }
 
-    public boolean isAddOrSelectFlag() {
-        return addOrSelectFlag;
+    public boolean isAddQuestionFlag() {
+        return addQuestionFlag;
     }
 
-    public void setAddOrSelectFlag(boolean addOrSelectFlag) {
-        this.addOrSelectFlag = addOrSelectFlag;
+    public void setAddQuestionFlag(boolean addQuestionFlag) {
+        this.addQuestionFlag = addQuestionFlag;
     }
 
     public void setQuestionGroupDetail(QuestionGroupDetail questionGroupDetail) {

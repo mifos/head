@@ -1738,6 +1738,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         String description = loanProductRequest.getLoanProductDetails().getDescription();
         Integer category = loanProductRequest.getLoanProductDetails().getCategory();
         boolean loanCycleCounter = loanProductRequest.getLoanProductDetails().isIncludeInLoanCycleCounter();
+        boolean waiverInterest = loanProductRequest.getLoanProductDetails().shouldWaiverInterest();
 
         MifosCurrency currency = Money.getDefaultCurrency();
         if (AccountingRules.isMultiCurrencyEnabled()) {
@@ -1796,9 +1797,10 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             PrdStatusEntity activeStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.LOAN_ACTIVE);
             PrdStatusEntity inActiveStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.LOAN_INACTIVE);
 
-            return LoanOfferingBO.createNew(userId, globalPrdOfferingNum.toString(), name, shortName, description, productCategory, startDate, endDate, applicableToEntity, currency,
-                    interestTypeEntity, minRate, maxRate, defaultRate, recurrence, recurEvery, interestGlCode, principalGlCode,
-                    activeStatus, inActiveStatus, gracePeriodTypeEntity, gracePeriodDuration, loanCycleCounter, loanAmountCalculation, loanInstallmentCalculation, applicableFees, applicableFunds);
+            return LoanOfferingBO.createNew(userId, globalPrdOfferingNum.toString(), name, shortName, description, productCategory, startDate,
+                    endDate, applicableToEntity, currency, interestTypeEntity, minRate, maxRate, defaultRate,
+                    recurrence, recurEvery, interestGlCode, principalGlCode, activeStatus, inActiveStatus, gracePeriodTypeEntity,
+                    gracePeriodDuration, waiverInterest, loanCycleCounter, loanAmountCalculation, loanInstallmentCalculation, applicableFees, applicableFunds);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
