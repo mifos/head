@@ -114,8 +114,11 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     public void init(ServletContextEvent ctx) {
         try {
             synchronized (ApplicationInitializer.class) {
-                ApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx.getServletContext());
-                
+                ApplicationContext applicationContext = null;
+                if(ctx !=null){
+                    applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx.getServletContext());
+                }
+
                 /*
                 * If we do not call MifosLogManager as first step of initialization
                 * MifosLogManager.loggerRepository will be null.
@@ -174,16 +177,16 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     final MifosScheduler mifosScheduler = new MifosScheduler();
                     mifosScheduler.registerTasks();
                     final ShutdownManager shutdownManager = new ShutdownManager();
-                    if (null != ctx) {
-                        ctx.getServletContext().setAttribute(MifosScheduler.class.getName(), mifosScheduler);
-                        ctx.getServletContext().setAttribute(ShutdownManager.class.getName(), shutdownManager);
-                    }
 
                     Configuration.getInstance();
                     MifosConfiguration.getInstance().init();
                     configureAuditLogValues(Localization.getInstance().getMainLocale());
                     ConfigLocale configLocale = new ConfigLocale();
-                    ctx.getServletContext().setAttribute(ConfigLocale.class.getSimpleName(), configLocale);
+                    if (null != ctx) {
+                        ctx.getServletContext().setAttribute(MifosScheduler.class.getName(), mifosScheduler);
+                        ctx.getServletContext().setAttribute(ShutdownManager.class.getName(), shutdownManager);
+                        ctx.getServletContext().setAttribute(ConfigLocale.class.getSimpleName(), configLocale);
+                    }
                 }
             }
         } catch (Exception e) {
