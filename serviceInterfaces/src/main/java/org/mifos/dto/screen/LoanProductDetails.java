@@ -35,6 +35,7 @@ public class LoanProductDetails {
     private final boolean waiverInterest;
     private final Integer currencyId;
 
+    @SuppressWarnings("PMD")
     public LoanProductDetails(String name, String shortName, String description, Integer category, DateTime startDate,
             DateTime endDate, Integer applicableFor, boolean includeInLoanCycleCounter, boolean waiverInterest,
             Integer currencyId) {
