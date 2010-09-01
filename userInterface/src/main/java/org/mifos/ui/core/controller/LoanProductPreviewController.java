@@ -120,27 +120,19 @@ public class LoanProductPreviewController {
 
         if (StringUtils.isNotBlank(cancel)) {
             modelAndView.setViewName(REDIRECT_TO_ADMIN);
+            status.setComplete();
         } else if (StringUtils.isNotBlank(edit)) {
             modelAndView.setViewName(editFormview);
             modelAndView.addObject("loanProduct", loanProduct);
 
-            for (String selectedFee : loanProduct.getSelectedFees()) {
-                if (loanProduct.getApplicableFeeOptions().containsKey(selectedFee)) {
-                    String value = loanProduct.getApplicableFeeOptions().remove(selectedFee);
-                    loanProduct.getSelectedFeeOptions().put(selectedFee, value);
-                }
-            }
-
-            for (String selectedFund : loanProduct.getSelectedFunds()) {
-                if (loanProduct.getApplicableFundOptions().containsKey(selectedFund)) {
-                    String value = loanProduct.getApplicableFundOptions().remove(selectedFund);
-                    loanProduct.getSelectedFundOptions().put(selectedFund, value);
-                }
-            }
+            resetMultiSelectListBoxes(loanProduct);
 
         } else if (result.hasErrors()) {
             modelAndView.setViewName("previewloanProducts");
+
             modelAndView.addObject("loanProduct", loanProduct);
+            resetMultiSelectListBoxes(loanProduct);
+
             modelAndView.addObject("editFormview", editFormview);
             populateModelAndViewForPreview(loanProduct, modelAndView);
         } else {
@@ -151,6 +143,22 @@ public class LoanProductPreviewController {
         }
 
         return modelAndView;
+    }
+
+    private void resetMultiSelectListBoxes(LoanProductFormBean loanProduct) {
+        for (String selectedFee : loanProduct.getSelectedFees()) {
+            if (loanProduct.getApplicableFeeOptions().containsKey(selectedFee)) {
+                String value = loanProduct.getApplicableFeeOptions().remove(selectedFee);
+                loanProduct.getSelectedFeeOptions().put(selectedFee, value);
+            }
+        }
+
+        for (String selectedFund : loanProduct.getSelectedFunds()) {
+            if (loanProduct.getApplicableFundOptions().containsKey(selectedFund)) {
+                String value = loanProduct.getApplicableFundOptions().remove(selectedFund);
+                loanProduct.getSelectedFundOptions().put(selectedFund, value);
+            }
+        }
     }
 
     public void setLoanProductFormBeanAssembler(LoanProductFormBeanAssembler loanProductFormBeanAssembler) {
