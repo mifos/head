@@ -20,21 +20,6 @@
 
 package org.mifos.framework;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Properties;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRequestEvent;
-import javax.servlet.ServletRequestListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.config.AccountingRules;
@@ -56,17 +41,28 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
-import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyCompositeUserType;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.ActivityMapper;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.ServletRequestEvent;
+import javax.servlet.ServletRequestListener;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Locale;
 
 /**
  * This class should prepare all the sub-systems that are required by the app. Cleanup should also happen here when the
@@ -118,11 +114,12 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     public void init(ServletContextEvent ctx) {
         try {
             synchronized (ApplicationInitializer.class) {
-
+                ApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx.getServletContext());
+                
                 /*
-                 * If we do not call MifosLogManager as first step of initialization
-                 * MifosLogManager.loggerRepository will be null.
-                 */
+                * If we do not call MifosLogManager as first step of initialization
+                * MifosLogManager.loggerRepository will be null.
+                */
                 LOG = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
                 LOG.info("Logger has been initialised", false, null);
 
@@ -133,7 +130,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 // if a database upgrade loads an instance of Money then MoneyCompositeUserType needs the default currency
                 MoneyCompositeUserType.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
                 AccountingRules.init(); // load the additional currencies
-                DatabaseMigrator migrator = new DatabaseMigrator();
+                DatabaseMigrator migrator = new DatabaseMigrator(applicationContext);
                 try {
                     /*
                      * This is an easy way to force an actual database query to happen via Hibernate. Simply opening a

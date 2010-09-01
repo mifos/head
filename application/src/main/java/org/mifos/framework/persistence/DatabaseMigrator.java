@@ -20,6 +20,17 @@
 
 package org.mifos.framework.persistence;
 
+import org.mifos.core.ClasspathResource;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.reports.business.ReportsCategoryBO;
+import org.mifos.reports.persistence.AddReport;
+import org.mifos.security.AddActivity;
+import org.mifos.security.util.SecurityConstants;
+import org.springframework.context.ApplicationContext;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -34,19 +45,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.Map.Entry;
-
-import org.mifos.core.ClasspathResource;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.reports.business.ReportsCategoryBO;
-import org.mifos.reports.persistence.AddReport;
-import org.mifos.security.AddActivity;
-import org.mifos.security.util.SecurityConstants;
 
 /**
  * This class handles automated database schema and data changes.
@@ -76,6 +77,7 @@ public class DatabaseMigrator {
     private static final String APPLIED_UPGRADES = "applied_upgrades";
 
     private static MifosLogger log = null;
+    private ApplicationContext applicationContext;
 
     public DatabaseMigrator() {
         this(StaticHibernateUtil.getSessionTL().connection(), getAvailableUpgrades(),
@@ -99,6 +101,11 @@ public class DatabaseMigrator {
         this.availableUpgrades = availableUpgrades;
         this.upgradesPackage = upgradesPackage;
 
+    }
+
+    public DatabaseMigrator(ApplicationContext applicationContext) {
+        this();
+        this.applicationContext = applicationContext;
     }
 
     static SortedMap<Integer, String> getAvailableUpgrades() {
@@ -337,6 +344,7 @@ public class DatabaseMigrator {
             cs = c.getDeclaredConstructor();
             cs.setAccessible(true);
             upgrade = (Upgrade) cs.newInstance();
+            upgrade.setUpgradeContext(applicationContext);
 
         } catch (SecurityException e) {
             // TODO Auto-generated catch block

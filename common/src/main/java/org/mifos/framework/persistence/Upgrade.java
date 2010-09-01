@@ -20,6 +20,11 @@
 
 package org.mifos.framework.persistence;
 
+import org.apache.commons.lang.StringUtils;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.exceptions.SystemException;
+import org.springframework.context.ApplicationContext;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,10 +32,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
-
-import org.apache.commons.lang.StringUtils;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.exceptions.SystemException;
 
 @SuppressWarnings("PMD.AbstractNaming")
 public abstract class Upgrade {
@@ -42,6 +43,7 @@ public abstract class Upgrade {
      */
     private static final Logger LOG = Logger.getLogger(LoggerConstants.FRAMEWORKLOGGER);
     public static final String WRONG_CONSTRUCTOR = "This db version is higher than 174 so it needs to use the constructor with lookupValueKey parameter.";
+    private ApplicationContext upgradeContext;
 
     protected Logger getLogger() {
         return LOG;
@@ -263,4 +265,11 @@ public abstract class Upgrade {
     }
 
 
+    public void setUpgradeContext(ApplicationContext upgradeContext) {
+        this.upgradeContext = upgradeContext;
+    }
+
+    protected ApplicationContext getUpgradeContext() {
+        return upgradeContext;
+    }
 }

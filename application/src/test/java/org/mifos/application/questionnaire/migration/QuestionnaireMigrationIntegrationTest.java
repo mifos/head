@@ -18,7 +18,7 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.migration;
+package org.mifos.application.questionnaire.migration;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,7 +43,7 @@ import static org.junit.Assert.assertThat;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.DEFAULT_SECTION_NAME;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/test-questionnaire-migration-dbContext.xml", "/test-questionnaire-migration-persistenceContext.xml", "/META-INF/spring/QuestionnaireMigrationContext.xml"})
+@ContextConfiguration(locations = { "/integration-test-context.xml", "/org/mifos/config/resources/applicationContext.xml"})
 @TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
 public class QuestionnaireMigrationIntegrationTest {
 
