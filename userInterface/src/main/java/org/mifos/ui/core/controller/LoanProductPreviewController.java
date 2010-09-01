@@ -83,27 +83,9 @@ public class LoanProductPreviewController {
         }
         String interestRateCalculation = loanProduct.getInterestRateCalculationTypeOptions().get(loanProduct.getSelectedInterestRateCalculationType());
 
-        List<String> fees = new ArrayList<String>();
-        if (loanProduct.getSelectedFees() != null) {
-            for (String selectedFee : loanProduct.getSelectedFees()) {
-                if (loanProduct.getApplicableFeeOptions().containsKey(selectedFee)) {
-                    fees.add(loanProduct.getApplicableFeeOptions().get(selectedFee));
-                } else if (loanProduct.getSelectedFeeOptions().containsKey(selectedFee)) {
-                    fees.add(loanProduct.getSelectedFeeOptions().get(selectedFee));
-                }
-            }
-        }
+        List<String> fees = populateFees(loanProduct);
 
-        List<String> funds = new ArrayList<String>();
-        if (loanProduct.getSelectedFunds() != null) {
-            for (String selectedFund : loanProduct.getSelectedFunds()) {
-                if (loanProduct.getApplicableFundOptions().containsKey(selectedFund)) {
-                    funds.add(loanProduct.getApplicableFundOptions().get(selectedFund));
-                } else if (loanProduct.getSelectedFundOptions().containsKey(selectedFund)) {
-                    funds.add(loanProduct.getSelectedFundOptions().get(selectedFund));
-                }
-            }
-        }
+        List<String> funds = populateFunds(loanProduct);
 
         // accounting
         String principalGlCode = loanProduct.getPrincipalGeneralLedgerOptions().get(loanProduct.getSelectedPrincipal());
@@ -115,6 +97,36 @@ public class LoanProductPreviewController {
 
         modelAndView.addObject("principalGlCode", principalGlCode);
         modelAndView.addObject("interestGlCode", interestGlCode);
+    }
+
+    private List<String> populateFunds(LoanProductFormBean loanProduct) {
+
+        List<String> funds = new ArrayList<String>();
+
+        if (loanProduct.getSelectedFunds() != null) {
+            for (String selectedFund : loanProduct.getSelectedFunds()) {
+                if (loanProduct.getApplicableFundOptions().containsKey(selectedFund)) {
+                    funds.add(loanProduct.getApplicableFundOptions().get(selectedFund));
+                } else if (loanProduct.getSelectedFundOptions().containsKey(selectedFund)) {
+                    funds.add(loanProduct.getSelectedFundOptions().get(selectedFund));
+                }
+            }
+        }
+        return funds;
+    }
+
+    private List<String> populateFees(LoanProductFormBean loanProduct) {
+        List<String> fees = new ArrayList<String>();
+        if (loanProduct.getSelectedFees() != null) {
+            for (String selectedFee : loanProduct.getSelectedFees()) {
+                if (loanProduct.getApplicableFeeOptions().containsKey(selectedFee)) {
+                    fees.add(loanProduct.getApplicableFeeOptions().get(selectedFee));
+                } else if (loanProduct.getSelectedFeeOptions().containsKey(selectedFee)) {
+                    fees.add(loanProduct.getSelectedFeeOptions().get(selectedFee));
+                }
+            }
+        }
+        return fees;
     }
 
     @RequestMapping(method = RequestMethod.POST)

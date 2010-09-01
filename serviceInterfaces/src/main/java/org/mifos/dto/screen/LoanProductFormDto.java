@@ -36,6 +36,7 @@ public class LoanProductFormDto {
     private final List<ListElement> currencyOptions;
     private final boolean multiCurrencyEnabled;
 
+    @SuppressWarnings("PMD")
     public LoanProductFormDto(List<ListElement> productCategories, List<ListElement> gracePeriodTypes,
             List<ListElement> sourceOfFunds, List<ListElement> loanFees, List<ListElement> principalGlCodes,
             List<ListElement> interestGlCodes, List<ListElement> interestCalculationTypes,
