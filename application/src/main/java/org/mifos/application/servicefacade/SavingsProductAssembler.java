@@ -42,6 +42,7 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -121,8 +122,9 @@ public class SavingsProductAssembler {
             GLCodeEntity depositGlEntity = this.generalLedgerDao.findGlCodeById(savingsProductRequest.getDepositGlCode().shortValue());
             GLCodeEntity interestGlEntity = this.generalLedgerDao.findGlCodeById(savingsProductRequest.getInterestGlCode().shortValue());
 
+            MifosCurrency currency = Money.getDefaultCurrency();
             return SavingsOfferingBO.createNew(user.getUserId(), globalNum, name, shortName, description,
-                        productCategory, startDate, endDate, applicableToEntity, selectedStatus,
+                        productCategory, startDate, endDate, applicableToEntity, currency, selectedStatus,
                         savingsTypeEntity, recommendedAmntUnitEntity, amountForDeposit, maxWithdrawal,
                         interestRate, interestCalcTypeEntity, interestCalculationMeeting, interestPostingMeeting, minAmountForCalculation, depositGlEntity, interestGlEntity);
 

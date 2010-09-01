@@ -48,6 +48,8 @@ public class LoanProductFormBeanAssembler {
         GeneralProductBean productDetails = productBeanAssembler.assembleFromRefData(loanProductRefData);
         loanProductFormBean.setGeneralDetails(productDetails);
 
+        populateCurrenciesDropdown(loanProductRefData, loanProductFormBean);
+
         Map<String, String> loanAmountCalculationTypeOptions = populateLoanAmountCalculationRadioButtons(loanProductFormBean);
 
         populateInterestRateDropdown(loanProductRefData, loanProductFormBean);
@@ -65,6 +67,16 @@ public class LoanProductFormBeanAssembler {
         populatePrincipalGlCodesDropdown(loanProductRefData, loanProductFormBean);
 
         return loanProductFormBean;
+    }
+
+    private void populateCurrenciesDropdown(LoanProductFormDto loanProductRefData,
+            LoanProductFormBean loanProductFormBean) {
+        Map<String, String> currencyOptions = new LinkedHashMap<String, String>();
+        for (ListElement currency : loanProductRefData.getCurrencyOptions()) {
+            currencyOptions.put(currency.getId().toString(), currency.getName());
+        }
+        loanProductFormBean.setCurrencyOptions(currencyOptions);
+        loanProductFormBean.setMultiCurrencyEnabled(loanProductRefData.isMultiCurrencyEnabled());
     }
 
     private void populatePrincipalGlCodesDropdown(LoanProductFormDto loanProductRefData,
@@ -209,8 +221,13 @@ public class LoanProductFormBeanAssembler {
             endDate = new DateTime().withDate(Integer.valueOf(loanProductFormBean.getGeneralDetails().getEndDateYear()), loanProductFormBean.getGeneralDetails().getEndDateMonth(), loanProductFormBean.getGeneralDetails().getEndDateDay());
         }
 
+        Integer currencyId = null;
+        if (StringUtils.isNotBlank(loanProductFormBean.getSelectedCurrency())) {
+            currencyId = Integer.valueOf(loanProductFormBean.getSelectedCurrency());
+        }
+
         return new LoanProductDetails(loanProductFormBean.getGeneralDetails().getName(), loanProductFormBean.getGeneralDetails().getShortName(), loanProductFormBean.getGeneralDetails().getDescription(), category,
-                startDate, endDate, applicableFor, loanProductFormBean.isIncludeInLoanCycleCounter());
+                startDate, endDate, applicableFor, loanProductFormBean.isIncludeInLoanCycleCounter(), currencyId);
     }
 
     private LoanAmountDetailsDto translateToLoanAmountDetails(LoanProductFormBean loanProductFormBean) {

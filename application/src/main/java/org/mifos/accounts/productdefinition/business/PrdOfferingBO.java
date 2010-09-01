@@ -89,7 +89,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
      * minimal legal constructor (based on table schema)
      */
     public PrdOfferingBO(Integer userId, String globalProductId, String name, String shortName, ProductCategoryBO productCategory,
-            PrdStatusEntity status, PrdApplicableMasterEntity applicableToEntity, DateTime startDate) {
+            PrdStatusEntity status, PrdApplicableMasterEntity applicableToEntity, DateTime startDate, MifosCurrency currency) {
         this.prdOfferingId = null;
         this.prdOfferingName = name;
         this.prdOfferingShortName = shortName;
@@ -101,6 +101,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
         this.startDate = startDate.toDate();
         this.createdBy = userId.shortValue();
         this.createdDate = new DateTime().toDate();
+        this.currency = currency;
     }
 
     @Deprecated

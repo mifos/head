@@ -77,23 +77,31 @@ public class LoanProductPreviewController {
         new ProductModelAndViewPopulator().populateProductDetails(bean, modelAndView);
 
         // loan product specific
+        if (loanProduct.isMultiCurrencyEnabled()) {
+            String currencyCode = loanProduct.getCurrencyOptions().get(loanProduct.getSelectedCurrency());
+            modelAndView.addObject("currencyCode", currencyCode);
+        }
         String interestRateCalculation = loanProduct.getInterestRateCalculationTypeOptions().get(loanProduct.getSelectedInterestRateCalculationType());
 
         List<String> fees = new ArrayList<String>();
-        for (String selectedFee : loanProduct.getSelectedFees()) {
-            if (loanProduct.getApplicableFeeOptions().containsKey(selectedFee)) {
-                fees.add(loanProduct.getApplicableFeeOptions().get(selectedFee));
-            } else if (loanProduct.getSelectedFeeOptions().containsKey(selectedFee)) {
-                fees.add(loanProduct.getSelectedFeeOptions().get(selectedFee));
+        if (loanProduct.getSelectedFees() != null) {
+            for (String selectedFee : loanProduct.getSelectedFees()) {
+                if (loanProduct.getApplicableFeeOptions().containsKey(selectedFee)) {
+                    fees.add(loanProduct.getApplicableFeeOptions().get(selectedFee));
+                } else if (loanProduct.getSelectedFeeOptions().containsKey(selectedFee)) {
+                    fees.add(loanProduct.getSelectedFeeOptions().get(selectedFee));
+                }
             }
         }
 
         List<String> funds = new ArrayList<String>();
-        for (String selectedFund : loanProduct.getSelectedFunds()) {
-            if (loanProduct.getApplicableFundOptions().containsKey(selectedFund)) {
-                funds.add(loanProduct.getApplicableFundOptions().get(selectedFund));
-            } else if (loanProduct.getSelectedFundOptions().containsKey(selectedFund)) {
-                funds.add(loanProduct.getSelectedFundOptions().get(selectedFund));
+        if (loanProduct.getSelectedFunds() != null) {
+            for (String selectedFund : loanProduct.getSelectedFunds()) {
+                if (loanProduct.getApplicableFundOptions().containsKey(selectedFund)) {
+                    funds.add(loanProduct.getApplicableFundOptions().get(selectedFund));
+                } else if (loanProduct.getSelectedFundOptions().containsKey(selectedFund)) {
+                    funds.add(loanProduct.getSelectedFundOptions().get(selectedFund));
+                }
             }
         }
 
@@ -125,13 +133,12 @@ public class LoanProductPreviewController {
             modelAndView.setViewName(editFormview);
             modelAndView.addObject("loanProduct", loanProduct);
 
-            resetMultiSelectListBoxes(loanProduct);
-
+            loanProduct.resetMultiSelectListBoxes();
         } else if (result.hasErrors()) {
             modelAndView.setViewName("previewloanProducts");
 
             modelAndView.addObject("loanProduct", loanProduct);
-            resetMultiSelectListBoxes(loanProduct);
+            loanProduct.resetMultiSelectListBoxes();
 
             modelAndView.addObject("editFormview", editFormview);
             populateModelAndViewForPreview(loanProduct, modelAndView);
@@ -143,22 +150,6 @@ public class LoanProductPreviewController {
         }
 
         return modelAndView;
-    }
-
-    private void resetMultiSelectListBoxes(LoanProductFormBean loanProduct) {
-        for (String selectedFee : loanProduct.getSelectedFees()) {
-            if (loanProduct.getApplicableFeeOptions().containsKey(selectedFee)) {
-                String value = loanProduct.getApplicableFeeOptions().remove(selectedFee);
-                loanProduct.getSelectedFeeOptions().put(selectedFee, value);
-            }
-        }
-
-        for (String selectedFund : loanProduct.getSelectedFunds()) {
-            if (loanProduct.getApplicableFundOptions().containsKey(selectedFund)) {
-                String value = loanProduct.getApplicableFundOptions().remove(selectedFund);
-                loanProduct.getSelectedFundOptions().put(selectedFund, value);
-            }
-        }
     }
 
     public void setLoanProductFormBeanAssembler(LoanProductFormBeanAssembler loanProductFormBeanAssembler) {

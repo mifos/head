@@ -55,6 +55,7 @@ import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.master.business.InterestTypesEntity;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -108,7 +109,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     private final Set<NoOfInstallSameForAllLoanBO> noOfInstallSameForAllLoan;
 
     public static LoanOfferingBO createNew(Integer userId, String globalProductId, String name, String shortName, String description, ProductCategoryBO productCategory,
-            DateTime startDate, DateTime endDate, PrdApplicableMasterEntity applicableToEntity, InterestTypesEntity interestTypeEntity, Double minRate,
+            DateTime startDate, DateTime endDate, PrdApplicableMasterEntity applicableToEntity, MifosCurrency currency, InterestTypesEntity interestTypeEntity, Double minRate,
             Double maxRate, Double defaultRate, RecurrenceType recurrence, Integer recurEvery, GLCodeEntity interestGlCode, GLCodeEntity principalGlCode,
             PrdStatusEntity activeStatus, PrdStatusEntity inActiveStatus, GracePeriodTypeEntity gracePeriodTypeEntity,
             Integer gracePeriodDuration, boolean loanCycleCounter, LoanAmountCalculation loanAmountCalculation, LoanInstallmentCalculation loanInstallmentCalculation, List<FeeBO> applicableFees, List<FundBO> applicableFunds) {
@@ -122,7 +123,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
             MeetingBO meeting = new MeetingBO(recurrence, recurEvery.shortValue(), startDate.toDate(), MeetingType.LOAN_INSTALLMENT);
             PrdOfferingMeetingEntity meetingEntity = new PrdOfferingMeetingEntity(meeting, null, MeetingType.LOAN_INSTALLMENT);
 
-            LoanOfferingBO loanProduct = new LoanOfferingBO(userId, globalProductId, name, shortName, productCategory, status, applicableToEntity, startDate,
+            LoanOfferingBO loanProduct = new LoanOfferingBO(userId, globalProductId, name, shortName, productCategory, status, applicableToEntity, startDate, currency,
                     interestTypeEntity, minRate, maxRate, defaultRate, interestGlCode, principalGlCode, gracePeriodTypeEntity, gracePeriodDuration,
                     loanCycleCounter, meetingEntity);
 
@@ -168,8 +169,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
      * minimal legal constructor
      */
     private LoanOfferingBO(Integer userId, String globalProductId, String name, String shortName, ProductCategoryBO productCategory, PrdStatusEntity status, PrdApplicableMasterEntity applicableToEntity, DateTime startDate,
-            InterestTypesEntity interestTypeEntity, Double minRate, Double maxRate, Double defaultRate, GLCodeEntity interestGlCode, GLCodeEntity principalGlCode, GracePeriodTypeEntity gracePeriodTypeEntity, Integer gracePeriodDuration, boolean loanCycleCounter, PrdOfferingMeetingEntity meetingEntity) {
-        super(userId, globalProductId, name, shortName, productCategory, status, applicableToEntity, startDate);
+            MifosCurrency currency, InterestTypesEntity interestTypeEntity, Double minRate, Double maxRate, Double defaultRate, GLCodeEntity interestGlCode, GLCodeEntity principalGlCode, GracePeriodTypeEntity gracePeriodTypeEntity, Integer gracePeriodDuration, boolean loanCycleCounter, PrdOfferingMeetingEntity meetingEntity) {
+        super(userId, globalProductId, name, shortName, productCategory, status, applicableToEntity, startDate, currency);
         this.interestTypes = interestTypeEntity;
         this.minInterestRate = minRate;
         this.maxInterestRate = maxRate;
@@ -1245,8 +1246,10 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     public void setNoOfInstallSameForAllLoan(final NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoan) {
-        noOfInstallSameForAllLoan.setLoanOffering(this);
-        getNoOfInstallSameForAllLoan().clear();
-        getNoOfInstallSameForAllLoan().add(noOfInstallSameForAllLoan);
+        if (noOfInstallSameForAllLoan != null) {
+            noOfInstallSameForAllLoan.setLoanOffering(this);
+            getNoOfInstallSameForAllLoan().clear();
+            getNoOfInstallSameForAllLoan().add(noOfInstallSameForAllLoan);
+        }
     }
 }

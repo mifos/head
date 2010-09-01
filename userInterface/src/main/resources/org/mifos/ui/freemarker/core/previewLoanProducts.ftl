@@ -45,6 +45,12 @@
             	<span class="span-8 fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.applicablefor"/]:&nbsp;</span>
             	<span class="span-4">${applicableTo}</span>
 			</div>
+			[#if loanProduct.multiCurrencyEnabled]
+			<div class="span-20 ">
+            	<span class="span-8 fontBold">[@spring.message "manageLoanProducts.defineLoanProduct.currency"/]:&nbsp;</span>
+            	<span class="span-4">${currencyCode}</span>
+			</div>
+			[/#if]
             <div class="span-20 ">
             	<span class="span-8 fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.includeinLoancyclecounter"/]:&nbsp;</span>
             	<span class="span-4">

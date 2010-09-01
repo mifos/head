@@ -34,6 +34,7 @@ import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.dto.domain.ProductDetailsDto;
@@ -70,11 +71,11 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 
     public static SavingsOfferingBO createNew(Integer userId, String systemId, String name, String shortName, String description,
             ProductCategoryBO productCategory, DateTime startDate, DateTime endDate,
-            PrdApplicableMasterEntity applicableToEntity, PrdStatusEntity selectedStatus, SavingsTypeEntity savingsTypeEntity, RecommendedAmntUnitEntity recommendedAmntUnitEntity, Money amountForDeposit, Money maxWithdrawal,
+            PrdApplicableMasterEntity applicableToEntity, MifosCurrency currency, PrdStatusEntity selectedStatus, SavingsTypeEntity savingsTypeEntity, RecommendedAmntUnitEntity recommendedAmntUnitEntity, Money amountForDeposit, Money maxWithdrawal,
             BigDecimal interestRate, InterestCalcTypeEntity interestCalcTypeEntity, MeetingBO interestCalculationMeeting, MeetingBO interestPostingMeeting,
             Money minAmountForInterestCalculation, GLCodeEntity depositGlEntity, GLCodeEntity interestGlEntity) {
 
-        SavingsOfferingBO savingsProduct = new SavingsOfferingBO(userId, systemId, name, shortName, productCategory, selectedStatus, applicableToEntity, startDate, savingsTypeEntity, interestRate, interestCalcTypeEntity, interestCalculationMeeting, interestPostingMeeting, depositGlEntity, interestGlEntity);
+        SavingsOfferingBO savingsProduct = new SavingsOfferingBO(userId, systemId, name, shortName, productCategory, selectedStatus, applicableToEntity, startDate, currency, savingsTypeEntity, interestRate, interestCalcTypeEntity, interestCalculationMeeting, interestPostingMeeting, depositGlEntity, interestGlEntity);
         savingsProduct.setDescription(description);
         if (endDate != null) {
             savingsProduct.setEndDate(endDate.toDate());
@@ -97,13 +98,12 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 
     /**
      * minimal legal constructor for creating savings products
-     * @param interestPostingMeeting
      */
     public SavingsOfferingBO(Integer userId, String systemId, String name, String shortName,
             ProductCategoryBO productCategory, PrdStatusEntity status,
-            PrdApplicableMasterEntity applicableToEntity, DateTime startDate, SavingsTypeEntity savingsTypeEntity,
+            PrdApplicableMasterEntity applicableToEntity, DateTime startDate, MifosCurrency currency, SavingsTypeEntity savingsTypeEntity,
             BigDecimal interestRate, InterestCalcTypeEntity interestCalcTypeEntity, MeetingBO interestCalculationMeeting, MeetingBO interestPostingMeeting, GLCodeEntity depositGlEntity, GLCodeEntity interestGlEntity) {
-        super(userId, systemId, name, shortName, productCategory, status, applicableToEntity, startDate);
+        super(userId, systemId, name, shortName, productCategory, status, applicableToEntity, startDate, currency);
 
         this.savingsType = savingsTypeEntity;
         this.interestRate = interestRate.doubleValue();

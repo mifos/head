@@ -130,6 +130,7 @@ public class DefineLoanProductsFormController {
             status.setComplete();
         } else if (result.hasErrors()) {
             viewName = "defineLoanProducts";
+            loanProductFormBean.resetMultiSelectListBoxes();
         }
 
         return viewName;

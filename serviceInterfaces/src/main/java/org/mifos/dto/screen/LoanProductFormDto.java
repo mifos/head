@@ -33,10 +33,14 @@ public class LoanProductFormDto {
     private final List<ListElement> interestCalculationTypes;
     private final List<ListElement> applicableCustomerTypes;
     private final List<ListElement> statusOptions;
+    private final List<ListElement> currencyOptions;
+    private final boolean multiCurrencyEnabled;
 
     public LoanProductFormDto(List<ListElement> productCategories, List<ListElement> gracePeriodTypes,
             List<ListElement> sourceOfFunds, List<ListElement> loanFees, List<ListElement> principalGlCodes,
-            List<ListElement> interestGlCodes, List<ListElement> interestCalculationTypes, List<ListElement> applicableCustomerTypes,  List<ListElement> statusOptions) {
+            List<ListElement> interestGlCodes, List<ListElement> interestCalculationTypes,
+            List<ListElement> applicableCustomerTypes,  List<ListElement> statusOptions, List<ListElement> currencyOptions,
+            boolean multiCurrencyEnabled) {
         this.productCategories = productCategories;
         this.gracePeriodTypes = gracePeriodTypes;
         this.sourceOfFunds = sourceOfFunds;
@@ -46,6 +50,8 @@ public class LoanProductFormDto {
         this.interestCalculationTypes = interestCalculationTypes;
         this.applicableCustomerTypes = applicableCustomerTypes;
         this.statusOptions = statusOptions;
+        this.currencyOptions = currencyOptions;
+        this.multiCurrencyEnabled = multiCurrencyEnabled;
     }
 
     public List<ListElement> getProductCategories() {
@@ -82,5 +88,13 @@ public class LoanProductFormDto {
 
     public List<ListElement> getStatusOptions() {
         return this.statusOptions;
+    }
+
+    public List<ListElement> getCurrencyOptions() {
+        return this.currencyOptions;
+    }
+
+    public boolean isMultiCurrencyEnabled() {
+        return this.multiCurrencyEnabled;
     }
 }

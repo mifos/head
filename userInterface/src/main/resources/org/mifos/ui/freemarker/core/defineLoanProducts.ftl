@@ -196,6 +196,15 @@ function switchLoanInstallmentType()
               	</span>
             </div>
             
+            [#if loanProduct.multiCurrencyEnabled]
+            <div class="span-23 ">
+            	<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.currency" /]&nbsp;:</span>
+            	<span class="span-4">
+            		[@spring.formSingleSelect "loanProduct.selectedCurrency" loanProduct.currencyOptions /]
+              	</span>
+            </div>
+            [/#if]
+            
             <div class="span-23 "><span class="pull-3 span-8 rightAlign">[@spring.message "manageLoanProducts.defineLoanProduct.includeinLoancyclecounter" /]&nbsp;:</span>
             	<span class="span-4">
             		[@spring.formCheckbox "loanProduct.includeInLoanCycleCounter" "createLoanProduct.checkbox.loanCounter" /]

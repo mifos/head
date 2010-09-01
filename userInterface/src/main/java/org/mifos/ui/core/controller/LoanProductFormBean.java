@@ -36,6 +36,10 @@ public class LoanProductFormBean {
     @Valid
     private GeneralProductBean generalDetails;
 
+    private boolean multiCurrencyEnabled;
+    private String selectedCurrency;
+    private Map<String, String> currencyOptions;
+
     private boolean includeInLoanCycleCounter;
 
     @NotEmpty
@@ -380,5 +384,49 @@ public class LoanProductFormBean {
 
     public void setGeneralDetails(GeneralProductBean generalDetails) {
         this.generalDetails = generalDetails;
+    }
+
+    public void resetMultiSelectListBoxes() {
+        if (this.selectedFees != null) {
+            for (String selectedFee : this.selectedFees) {
+                if (this.applicableFeeOptions.containsKey(selectedFee)) {
+                    String value = this.applicableFeeOptions.remove(selectedFee);
+                    this.selectedFeeOptions.put(selectedFee, value);
+                }
+            }
+        }
+
+        if (this.selectedFunds != null) {
+            for (String selectedFund : this.selectedFunds) {
+                if (this.applicableFundOptions.containsKey(selectedFund)) {
+                    String value = this.applicableFundOptions.remove(selectedFund);
+                    this.selectedFundOptions.put(selectedFund, value);
+                }
+            }
+        }
+    }
+
+    public String getSelectedCurrency() {
+        return this.selectedCurrency;
+    }
+
+    public void setSelectedCurrency(String selectedCurrency) {
+        this.selectedCurrency = selectedCurrency;
+    }
+
+    public Map<String, String> getCurrencyOptions() {
+        return this.currencyOptions;
+    }
+
+    public void setCurrencyOptions(Map<String, String> currencyOptions) {
+        this.currencyOptions = currencyOptions;
+    }
+
+    public boolean isMultiCurrencyEnabled() {
+        return this.multiCurrencyEnabled;
+    }
+
+    public void setMultiCurrencyEnabled(boolean multiCurrencyEnabled) {
+        this.multiCurrencyEnabled = multiCurrencyEnabled;
     }
 }

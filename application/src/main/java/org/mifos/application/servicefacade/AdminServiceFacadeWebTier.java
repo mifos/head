@@ -22,6 +22,7 @@ package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -81,6 +82,7 @@ import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
@@ -88,6 +90,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.config.persistence.ApplicationConfigurationPersistence;
@@ -140,6 +143,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
@@ -210,11 +214,8 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
     private List<ProductDisplayDto> productsToDto(final List<Object[]> queryResult) {
 
-        if (queryResult.size() == 0) {
-            return null;
-        }
-
         List<ProductDisplayDto> products = new ArrayList<ProductDisplayDto>();
+
         Short prdOfferingId;
         String prdOfferingName;
         Short prdOfferingStatusId;
@@ -229,6 +230,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                     prdOfferingStatusName);
             products.add(product);
         }
+
         return products;
     }
 
@@ -1574,7 +1576,16 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
             List<ListElement> statusOptions = new ArrayList<ListElement>();
 
-            return new LoanProductFormDto(productCategoryOptions, gracePeriodTypeOptions, sourceOfFunds, loanFee, principalGlCodes, interestGlCodes, interestCalcTypesOptions, applicableForOptions, statusOptions);
+            boolean multiCurrencyEnabled = AccountingRules.isMultiCurrencyEnabled();
+            List<ListElement> currencyOptions = new ArrayList<ListElement>();
+            if (multiCurrencyEnabled) {
+                LinkedList<MifosCurrency> currencies = AccountingRules.getCurrencies();
+                for (MifosCurrency mifosCurrency : currencies) {
+                    currencyOptions.add(new ListElement(mifosCurrency.getCurrencyId().intValue(), mifosCurrency.getCurrencyCode()));
+                }
+            }
+
+            return new LoanProductFormDto(productCategoryOptions, gracePeriodTypeOptions, sourceOfFunds, loanFee, principalGlCodes, interestGlCodes, interestCalcTypesOptions, applicableForOptions, statusOptions, currencyOptions, multiCurrencyEnabled);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         } catch (SystemException e) {
@@ -1728,6 +1739,11 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         Integer category = loanProductRequest.getLoanProductDetails().getCategory();
         boolean loanCycleCounter = loanProductRequest.getLoanProductDetails().isIncludeInLoanCycleCounter();
 
+        MifosCurrency currency = Money.getDefaultCurrency();
+        if (AccountingRules.isMultiCurrencyEnabled()) {
+            currency = AccountingRules.getCurrencyByCurrencyId(loanProductRequest.getLoanProductDetails().getCurrencyId().shortValue());
+        }
+
         ProductCategoryBO productCategory = this.loanProductDao.findActiveProductCategoryById(category);
         DateTime startDate = loanProductRequest.getLoanProductDetails().getStartDate();
         DateTime endDate = loanProductRequest.getLoanProductDetails().getEndDate();
@@ -1780,7 +1796,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             PrdStatusEntity activeStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.LOAN_ACTIVE);
             PrdStatusEntity inActiveStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.LOAN_INACTIVE);
 
-            return LoanOfferingBO.createNew(userId, globalPrdOfferingNum.toString(), name, shortName, description, productCategory, startDate, endDate, applicableToEntity,
+            return LoanOfferingBO.createNew(userId, globalPrdOfferingNum.toString(), name, shortName, description, productCategory, startDate, endDate, applicableToEntity, currency,
                     interestTypeEntity, minRate, maxRate, defaultRate, recurrence, recurEvery, interestGlCode, principalGlCode,
                     activeStatus, inActiveStatus, gracePeriodTypeEntity, gracePeriodDuration, loanCycleCounter, loanAmountCalculation, loanInstallmentCalculation, applicableFees, applicableFunds);
         } catch (PersistenceException e) {
