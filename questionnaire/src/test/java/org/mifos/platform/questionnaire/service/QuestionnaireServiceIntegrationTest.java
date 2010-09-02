@@ -442,7 +442,15 @@ public class QuestionnaireServiceIntegrationTest {
                         new EventSourceDto("Create", "Group", "Create Group"),
                         new EventSourceDto("Approve", "Loan", "Approve Loan"),
                         new EventSourceDto("Close", "Client", "Close Client"),
-                        new EventSourceDto("Create", "Loan", "Create Loan"))));
+                        new EventSourceDto("Create", "Loan", "Create Loan"),
+                        new EventSourceDto("View", "Loan", "View Loan"),
+                        new EventSourceDto("View", "Group", "View Group"),
+                        new EventSourceDto("Create", "Center", "Create Center"),
+                        new EventSourceDto("View", "Center", "View Center"),
+                        new EventSourceDto("Disburse", "Loan", "Disburse Loan"),
+                        new EventSourceDto("Create", "Savings", "Create Savings"),
+                        new EventSourceDto("View", "Savings", "View Savings")
+                        )));
     }
 
     @Test

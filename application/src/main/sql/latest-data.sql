@@ -64,6 +64,7 @@ insert into applied_upgrades(upgrade_id) values(1280793109);
 insert into applied_upgrades(upgrade_id) values(1282247229);
 insert into applied_upgrades(upgrade_id) values(1283237728);
 insert into applied_upgrades(upgrade_id) values(1283320210);
+insert into applied_upgrades(upgrade_id) values(1283416834);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -3242,3 +3243,22 @@ insert into activity (activity_id, parent_id, activity_name_lookup_id, descripti
 insert into roles_activity (activity_id, role_id) values
 (240,1);
 /* Upgrade - 1283320210*/
+
+/* Upgrade - 1283416834 Additional event sources for question groups */
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (7, (select entity_type_id from entity_master where entity_type = 'Loan'), 2, 'View Loan');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (8, (select entity_type_id from entity_master where entity_type = 'Group'), 2, 'View Group');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (9, (select entity_type_id from entity_master where entity_type = 'Center'), 1, 'Create Center');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (10, (select entity_type_id from entity_master where entity_type = 'Center'), 2, 'View Center');
+
+insert into events (id, name) values (5, 'Disburse');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (11, (select entity_type_id from entity_master where entity_type = 'Loan'), 5, 'Disburse Loan');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (12, (select entity_type_id from entity_master where entity_type = 'Savings'), 1, 'Create Savings');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (13, (select entity_type_id from entity_master where entity_type = 'Savings'), 2, 'View Savings');
+/* Upgrade - 1283416834 */
