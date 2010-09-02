@@ -48,9 +48,8 @@ public class BatchJobException extends ApplicationException {
     public String getKey() {
         if (null == key) {
             return "exception.framework.BatchJobException";
-        } else {
-            return this.key;
         }
+        return this.key;
     }
 
     public String getErrorMessage() {

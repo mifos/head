@@ -92,7 +92,7 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
      * A method responsible for the actual launch of the Spring Batch job.
      * @param forcedStatus - if null, job will execute normally. Otherwise, job will be executed and
      * it's batch status will be updated with the given one afterwards. It's important to note that forcedStatus
-     * cannot be more positive than job's actual outcome, i.e. batch job's actual status FAILED cannot
+     * cannot be more 'positive' than job's actual outcome, i.e. batch job's actual status FAILED cannot
      * be replaced by COMPLETE.
      */
     private BatchStatus launchJob(Job job, JobParameters jobParameters, BatchStatus forcedStatus) throws BatchJobException {
@@ -121,7 +121,7 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
 
     /**
      * This method is a wrapper around {@link #launchJob(Job, JobParameters, BatchStatus)}. It checks whether previous
-     * runs of the job executed successfully and attempts to re-run then in case they did not.
+     * runs of the job executed successfully and attempts to re-run them in case they did not.
      * @param lookUpDepth
      */
     private BatchStatus checkAndLaunchJob(Job job, JobParameters jobParameters, int lookUpDepth) throws BatchJobException {
