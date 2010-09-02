@@ -43,7 +43,7 @@ public abstract class Upgrade {
      */
     private static final Logger LOG = Logger.getLogger(LoggerConstants.FRAMEWORKLOGGER);
     public static final String WRONG_CONSTRUCTOR = "This db version is higher than 174 so it needs to use the constructor with lookupValueKey parameter.";
-    private ApplicationContext upgradeContext;
+    protected ApplicationContext upgradeContext;
 
     protected Logger getLogger() {
         return LOG;
@@ -269,7 +269,4 @@ public abstract class Upgrade {
         this.upgradeContext = upgradeContext;
     }
 
-    protected ApplicationContext getUpgradeContext() {
-        return upgradeContext;
-    }
 }

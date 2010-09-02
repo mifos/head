@@ -22,10 +22,12 @@ package org.mifos.application.questionnaire.migration;
 
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.questionnaire.migration.mappers.QuestionnaireMigrationMapper;
+import org.mifos.customers.surveys.business.Survey;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionnaireMigration {
@@ -49,5 +51,15 @@ public class QuestionnaireMigration {
     public Integer migrate(List<CustomFieldDefinitionEntity> customFields) {
         QuestionGroupDto questionGroupDto = questionnaireMigrationMapper.map(customFields);
         return questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
+    }
+
+    public List<Integer> migrateSurveys(List<Survey> surveys) {
+        List<Integer> questionGroupIds = new ArrayList<Integer>();
+        for (Survey survey : surveys) {
+            QuestionGroupDto questionGroupDto = questionnaireMigrationMapper.map(survey);
+            Integer questionGroupId = questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
+            questionGroupIds.add(questionGroupId);
+        }
+        return questionGroupIds;
     }
 }
