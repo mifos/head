@@ -30,11 +30,11 @@ import org.joda.time.DateTime;
 import org.mifos.dto.domain.LoanProductRequest;
 import org.mifos.dto.domain.LowerUpperMinMaxDefaultDto;
 import org.mifos.dto.domain.MinMaxDefaultDto;
+import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.dto.domain.RepaymentDetailsDto;
 import org.mifos.dto.screen.AccountingDetailsDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.LoanAmountDetailsDto;
-import org.mifos.dto.screen.LoanProductDetails;
 import org.mifos.dto.screen.LoanProductFormDto;
 
 public class LoanProductFormBeanAssembler {
@@ -173,7 +173,8 @@ public class LoanProductFormBeanAssembler {
     }
 
     public LoanProductRequest toLoanProductDto(LoanProductFormBean loanProductFormBean) {
-        LoanProductDetails loanProductDetails = translateToLoanProductDetails(loanProductFormBean);
+
+        ProductDetailsDto loanProductDetails = translateToLoanProductDetails(loanProductFormBean);
 
         LoanAmountDetailsDto loanAmountDetails = translateToLoanAmountDetails(loanProductFormBean);
 
@@ -194,7 +195,12 @@ public class LoanProductFormBeanAssembler {
 
         AccountingDetailsDto accountDetails = translateToAccountingDetails(loanProductFormBean);
 
-        return new LoanProductRequest(loanProductDetails, loanAmountDetails, interestRateType, interestRateRange, repaymentDetails, applicableFees, accountDetails);
+        Integer currencyId = null;
+        if (StringUtils.isNotBlank(loanProductFormBean.getSelectedCurrency())) {
+            currencyId = Integer.valueOf(loanProductFormBean.getSelectedCurrency());
+        }
+
+        return new LoanProductRequest(loanProductDetails, loanProductFormBean.isIncludeInLoanCycleCounter(), loanProductFormBean.isWaiverInterest(), currencyId, loanAmountDetails, interestRateType, interestRateRange, repaymentDetails, applicableFees, accountDetails);
     }
 
     private AccountingDetailsDto translateToAccountingDetails(LoanProductFormBean loanProductFormBean) {
@@ -211,7 +217,7 @@ public class LoanProductFormBeanAssembler {
         return new AccountingDetailsDto(applicableFunds, interestGlCodeId, principalClCodeId);
     }
 
-    private LoanProductDetails translateToLoanProductDetails(LoanProductFormBean loanProductFormBean) {
+    private ProductDetailsDto translateToLoanProductDetails(LoanProductFormBean loanProductFormBean) {
 
         Integer category = Integer.valueOf(loanProductFormBean.getGeneralDetails().getSelectedCategory());
         Integer applicableFor = Integer.valueOf(loanProductFormBean.getGeneralDetails().getSelectedApplicableFor());
@@ -221,13 +227,8 @@ public class LoanProductFormBeanAssembler {
             endDate = new DateTime().withDate(Integer.valueOf(loanProductFormBean.getGeneralDetails().getEndDateYear()), loanProductFormBean.getGeneralDetails().getEndDateMonth(), loanProductFormBean.getGeneralDetails().getEndDateDay());
         }
 
-        Integer currencyId = null;
-        if (StringUtils.isNotBlank(loanProductFormBean.getSelectedCurrency())) {
-            currencyId = Integer.valueOf(loanProductFormBean.getSelectedCurrency());
-        }
-
-        return new LoanProductDetails(loanProductFormBean.getGeneralDetails().getName(), loanProductFormBean.getGeneralDetails().getShortName(), loanProductFormBean.getGeneralDetails().getDescription(), category,
-                startDate, endDate, applicableFor, loanProductFormBean.isIncludeInLoanCycleCounter(), loanProductFormBean.isWaiverInterest(), currencyId);
+        return new ProductDetailsDto(loanProductFormBean.getGeneralDetails().getName(), loanProductFormBean.getGeneralDetails().getShortName(),
+                loanProductFormBean.getGeneralDetails().getDescription(), category, startDate, endDate, applicableFor);
     }
 
     private LoanAmountDetailsDto translateToLoanAmountDetails(LoanProductFormBean loanProductFormBean) {
@@ -266,7 +267,7 @@ public class LoanProductFormBeanAssembler {
         }
 
         if (Integer.valueOf(3).equals(calculationType)) {
-            byLoanCycleList = translateLoanCycleBeanToMinMaxDefaultDto(loanProductFormBean.getLoanAmountByLoanCycle());
+            byLoanCycleList = translateLoanCycleBeanToMinMaxDefaultDto(loanProductFormBean.getInstallmentsByLoanCycle());
         }
 
         return new LoanAmountDetailsDto(calculationType, sameForAllLoanRange, byLastLoanAmountList, byLoanCycleList);

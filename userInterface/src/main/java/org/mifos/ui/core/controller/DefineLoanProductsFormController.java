@@ -90,30 +90,6 @@ public class DefineLoanProductsFormController {
         return loanProductFormBean;
     }
 
-    private ByLoanCycleBean[] createByLoanCycleBeans() {
-
-        ByLoanCycleBean zeroCycle = new ByLoanCycleBean(1);
-        ByLoanCycleBean oneCycle = new ByLoanCycleBean(2);
-        ByLoanCycleBean twoCycle = new ByLoanCycleBean(3);
-        ByLoanCycleBean threeCycle = new ByLoanCycleBean(4);
-        ByLoanCycleBean fourCycle = new ByLoanCycleBean(5);
-        ByLoanCycleBean greaterThanFourCycle = new ByLoanCycleBean(6);
-
-        return new ByLoanCycleBean[] {zeroCycle,oneCycle, twoCycle, threeCycle, fourCycle, greaterThanFourCycle};
-    }
-
-    private ByLastLoanAmountBean[] createByLastLoanAmountBeans() {
-        ByLastLoanAmountBean zero = new ByLastLoanAmountBean();
-        zero.setLower(Double.valueOf("0"));
-        ByLastLoanAmountBean one = new ByLastLoanAmountBean();
-        ByLastLoanAmountBean two = new ByLastLoanAmountBean();
-        ByLastLoanAmountBean three = new ByLastLoanAmountBean();
-        ByLastLoanAmountBean four = new ByLastLoanAmountBean();
-        ByLastLoanAmountBean five = new ByLastLoanAmountBean();
-
-        return new ByLastLoanAmountBean[] {zero, one, two, three, four, five};
-    }
-
     @RequestMapping(method = RequestMethod.POST)
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
             @ModelAttribute("loanProduct") @Valid LoanProductFormBean loanProductFormBean, BindingResult result, SessionStatus status) {
@@ -340,5 +316,29 @@ public class DefineLoanProductsFormController {
 
     public void setLoanProductFormBeanAssembler(LoanProductFormBeanAssembler loanProductFormBeanAssembler) {
         this.loanProductFormBeanAssembler = loanProductFormBeanAssembler;
+    }
+
+    private ByLoanCycleBean[] createByLoanCycleBeans() {
+
+        ByLoanCycleBean zeroCycle = new ByLoanCycleBean(1);
+        ByLoanCycleBean oneCycle = new ByLoanCycleBean(2);
+        ByLoanCycleBean twoCycle = new ByLoanCycleBean(3);
+        ByLoanCycleBean threeCycle = new ByLoanCycleBean(4);
+        ByLoanCycleBean fourCycle = new ByLoanCycleBean(5);
+        ByLoanCycleBean greaterThanFourCycle = new ByLoanCycleBean(6);
+
+        return new ByLoanCycleBean[] {zeroCycle,oneCycle, twoCycle, threeCycle, fourCycle, greaterThanFourCycle};
+    }
+
+    private ByLastLoanAmountBean[] createByLastLoanAmountBeans() {
+        ByLastLoanAmountBean zero = new ByLastLoanAmountBean();
+        zero.setLower(Double.valueOf("0"));
+        ByLastLoanAmountBean one = new ByLastLoanAmountBean();
+        ByLastLoanAmountBean two = new ByLastLoanAmountBean();
+        ByLastLoanAmountBean three = new ByLastLoanAmountBean();
+        ByLastLoanAmountBean four = new ByLastLoanAmountBean();
+        ByLastLoanAmountBean five = new ByLastLoanAmountBean();
+
+        return new ByLastLoanAmountBean[] {zero, one, two, three, four, five};
     }
 }

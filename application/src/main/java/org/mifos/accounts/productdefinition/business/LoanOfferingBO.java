@@ -34,6 +34,7 @@ import static org.mifos.framework.util.CollectionUtils.find;
 import static org.mifos.framework.util.CollectionUtils.first;
 import static org.mifos.framework.util.CollectionUtils.last;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -47,6 +48,7 @@ import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.productdefinition.LoanAmountCalculation;
 import org.mifos.accounts.productdefinition.LoanInstallmentCalculation;
+import org.mifos.accounts.productdefinition.LoanProductCalculationType;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
@@ -63,6 +65,13 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.dto.domain.LoanProductRequest;
+import org.mifos.dto.domain.LowerUpperMinMaxDefaultDto;
+import org.mifos.dto.domain.MinMaxDefaultDto;
+import org.mifos.dto.domain.ProductDetailsDto;
+import org.mifos.dto.domain.RepaymentDetailsDto;
+import org.mifos.dto.screen.AccountingDetailsDto;
+import org.mifos.dto.screen.LoanAmountDetailsDto;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -1267,5 +1276,59 @@ public class LoanOfferingBO extends PrdOfferingBO {
             getNoOfInstallSameForAllLoan().clear();
             getNoOfInstallSameForAllLoan().add(noOfInstallSameForAllLoan);
         }
+    }
+
+    public LoanProductRequest toFullDto() {
+        ProductDetailsDto details = super.toDetailsDto();
+        Integer currencyId = super.getCurrency().getCurrencyId().intValue();
+        boolean includeInLoanCounter = this.loanCounter == YesNoFlag.YES.getValue() ? true : false;
+        boolean waiverInterestBool = this.waiverInterest == YesNoFlag.YES.getValue() ? true : false;
+
+        Integer frequencyType = this.loanOfferingMeeting.getMeeting().getRecurrenceType().getValue().intValue();
+        Integer recurs = this.loanOfferingMeeting.getMeeting().getRecurAfter().intValue();
+
+        Integer calculationType = LoanProductCalculationType.UNKNOWN.getValue();
+        MinMaxDefaultDto sameForAllLoanRange = null;
+        List<LowerUpperMinMaxDefaultDto> byLastLoanAmountList = new ArrayList<LowerUpperMinMaxDefaultDto>();
+        List<MinMaxDefaultDto> byLoanCycleList = new ArrayList<MinMaxDefaultDto>();
+
+        if (!this.loanAmountSameForAllLoan.isEmpty()) {
+            calculationType = LoanProductCalculationType.SAME_FOR_ALL_LOANS.getValue();
+            LoanAmountSameForAllLoanBO loanAmountSameForAllLoans = getEligibleLoanAmountSameForAllLoan();
+            sameForAllLoanRange = MinMaxDefaultDto.create(loanAmountSameForAllLoans.getMinLoanAmount(), loanAmountSameForAllLoans.getMaxLoanAmount(), loanAmountSameForAllLoans.getDefaultLoanAmount());
+        }
+
+        if (!this.loanAmountFromLastLoan.isEmpty()) {
+
+        }
+
+        LoanAmountDetailsDto loanAmountDetails = new LoanAmountDetailsDto(calculationType, sameForAllLoanRange, byLastLoanAmountList, byLoanCycleList);
+
+        // FIXME - keithw - do installments
+        LoanAmountDetailsDto installmentCalculationDetails = new LoanAmountDetailsDto(calculationType, sameForAllLoanRange, byLastLoanAmountList, byLoanCycleList);
+
+        RepaymentDetailsDto repaymentDetails = new RepaymentDetailsDto(frequencyType, recurs,
+                installmentCalculationDetails, this.gracePeriodType.getId().intValue(), this.gracePeriodDuration.intValue());
+
+        Integer interestRateType = this.interestTypes.getId().intValue();
+        MinMaxDefaultDto interestRateRange = MinMaxDefaultDto.create(this.minInterestRate, this.maxInterestRate, this.defInterestRate);
+
+        List<Integer> applicableFees = new ArrayList<Integer>();
+        for (LoanOfferingFeesEntity fee : this.loanOfferingFees) {
+            applicableFees.add(fee.getFees().getFeeId().intValue());
+        }
+
+        List<Integer> applicableFunds = new ArrayList<Integer>();
+        for (LoanOfferingFundEntity fund : this.loanOfferingFunds) {
+            applicableFunds.add(fund.getFund().getFundId().intValue());
+        }
+        Integer interestGlCodeId = this.interestGLcode.getGlcodeId().intValue();
+        Integer principalClCodeId = this.principalGLcode.getGlcodeId().intValue();
+        AccountingDetailsDto accountDetails = new AccountingDetailsDto(applicableFunds, interestGlCodeId, principalClCodeId);
+
+        LoanProductRequest loanProductDto = new LoanProductRequest(details, includeInLoanCounter, waiverInterestBool,
+                currencyId, loanAmountDetails, interestRateType, interestRateRange, repaymentDetails, applicableFees, accountDetails);
+
+        return loanProductDto;
     }
 }

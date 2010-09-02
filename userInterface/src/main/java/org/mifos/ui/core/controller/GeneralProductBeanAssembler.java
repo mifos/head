@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.joda.time.DateTime;
+import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.LoanProductFormDto;
 import org.mifos.dto.screen.SavingsProductFormDto;
@@ -86,5 +87,27 @@ public class GeneralProductBeanAssembler {
         if (options.size() == 1) {
             formBean.setSelectedCategory(options.get(0).getId().toString());
         }
+    }
+
+    public GeneralProductBean assembleFrom(GeneralProductBean productBean, ProductDetailsDto productDto) {
+        productBean.setId(productDto.getId());
+        productBean.setName(productDto.getName());
+        productBean.setShortName(productDto.getShortName());
+        productBean.setDescription(productDto.getDescription());
+        productBean.setSelectedCategory(productDto.getCategory().toString());
+        productBean.setStartDateDay(productDto.getStartDate().getDayOfMonth());
+        productBean.setStartDateMonth(productDto.getStartDate().getMonthOfYear());
+        productBean.setStartDateYear(Integer.valueOf(productDto.getStartDate().getYearOfEra()).toString());
+
+        if (productDto.getEndDate() != null) {
+            productBean.setEndDateDay(productDto.getEndDate().getDayOfMonth());
+            productBean.setEndDateMonth(productDto.getEndDate().getMonthOfYear());
+            productBean.setEndDateYear(Integer.valueOf(productDto.getEndDate().getYearOfEra()).toString());
+        }
+
+        productBean.setSelectedApplicableFor(productDto.getApplicableFor().toString());
+        productBean.setSelectedStatus(productDto.getStatus().toString());
+
+        return productBean;
     }
 }

@@ -24,11 +24,13 @@ import java.util.List;
 
 import org.mifos.dto.screen.AccountingDetailsDto;
 import org.mifos.dto.screen.LoanAmountDetailsDto;
-import org.mifos.dto.screen.LoanProductDetails;
 
 public class LoanProductRequest {
 
-    private final LoanProductDetails loanProductDetails;
+    private final ProductDetailsDto productDetails;
+    private final boolean includeInLoanCycleCounter;
+    private final boolean waiverInterest;
+    private final Integer currencyId;
     private final Integer interestRateType;
     private final MinMaxDefaultDto interestRateRange;
     private final RepaymentDetailsDto repaymentDetails;
@@ -36,10 +38,13 @@ public class LoanProductRequest {
     private final List<Integer> applicableFees;
     private final AccountingDetailsDto accountDetails;
 
-
-    public LoanProductRequest(LoanProductDetails loanProductDetails, LoanAmountDetailsDto loanAmountDetails, Integer interestRateType,
+    @SuppressWarnings("PMD")
+    public LoanProductRequest(ProductDetailsDto loanProductDetails, final boolean includeInLoanCycleCounter, boolean waiverInterest, Integer currencyId, LoanAmountDetailsDto loanAmountDetails, Integer interestRateType,
             MinMaxDefaultDto interestRateRange, RepaymentDetailsDto repaymentDetails, List<Integer> applicableFees, AccountingDetailsDto accountDetails) {
-        this.loanProductDetails = loanProductDetails;
+        this.productDetails = loanProductDetails;
+        this.includeInLoanCycleCounter = includeInLoanCycleCounter;
+        this.waiverInterest = waiverInterest;
+        this.currencyId = currencyId;
         this.loanAmountDetails = loanAmountDetails;
         this.interestRateType = interestRateType;
         this.interestRateRange = interestRateRange;
@@ -60,10 +65,6 @@ public class LoanProductRequest {
         return this.repaymentDetails;
     }
 
-    public LoanProductDetails getLoanProductDetails() {
-        return this.loanProductDetails;
-    }
-
     public LoanAmountDetailsDto getLoanAmountDetails() {
         return this.loanAmountDetails;
     }
@@ -74,5 +75,21 @@ public class LoanProductRequest {
 
     public AccountingDetailsDto getAccountDetails() {
         return this.accountDetails;
+    }
+
+    public boolean isIncludeInLoanCycleCounter() {
+        return this.includeInLoanCycleCounter;
+    }
+
+    public boolean isWaiverInterest() {
+        return this.waiverInterest;
+    }
+
+    public Integer getCurrencyId() {
+        return this.currencyId;
+    }
+
+    public ProductDetailsDto getProductDetails() {
+        return this.productDetails;
     }
 }

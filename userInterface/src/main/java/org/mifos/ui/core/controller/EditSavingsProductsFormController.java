@@ -64,26 +64,10 @@ public class EditSavingsProductsFormController {
         SavingsProductDto savingsProductDto = adminServiceFacade.retrieveSavingsProductDetails(productId);
         SavingsProductFormBean savingsProductBean = new SavingsProductFormBeanAssembler().assembleReferenceData(referenceData);
 
-        GeneralProductBean productBean = savingsProductBean.getGeneralDetails();
         ProductDetailsDto productDto = savingsProductDto.getProductDetails();
+        GeneralProductBean productBean = new GeneralProductBeanAssembler().assembleFrom(savingsProductBean.getGeneralDetails(), productDto);
 
-        productBean.setId(productDto.getId());
-        productBean.setName(productDto.getName());
-        productBean.setShortName(productDto.getShortName());
-        productBean.setDescription(productDto.getDescription());
-        productBean.setSelectedCategory(productDto.getCategory().toString());
-        productBean.setStartDateDay(productDto.getStartDate().getDayOfMonth());
-        productBean.setStartDateMonth(productDto.getStartDate().getMonthOfYear());
-        productBean.setStartDateYear(Integer.valueOf(productDto.getStartDate().getYearOfEra()).toString());
-
-        if (productDto.getEndDate() != null) {
-            productBean.setEndDateDay(productDto.getEndDate().getDayOfMonth());
-            productBean.setEndDateMonth(productDto.getEndDate().getMonthOfYear());
-            productBean.setEndDateYear(Integer.valueOf(productDto.getEndDate().getYearOfEra()).toString());
-        }
-
-        productBean.setSelectedApplicableFor(productDto.getApplicableFor().toString());
-        productBean.setSelectedStatus(productDto.getStatus().toString());
+        savingsProductBean.setGeneralDetails(productBean);
 
         savingsProductBean.setSelectedDepositType(savingsProductDto.getDepositType().toString());
         savingsProductBean.setAmountForDeposit(savingsProductDto.getAmountForDeposit());

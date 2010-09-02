@@ -126,6 +126,9 @@ public interface AdminServiceFacade {
     List<PrdOfferingDto> retrieveLoanProductsNotMixed();
 
     @PreAuthorize("isFullyAuthenticated()")
+    LoanProductRequest retrieveLoanProductDetails(Integer productId);
+
+    @PreAuthorize("isFullyAuthenticated()")
     SavingsProductDto retrieveSavingsProductDetails(Integer productId);
 
     @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CAN_CREATE_NEW_SAVINGS_PRODUCT', 'ROLE_CAN_EDIT_SAVINGS_PRODUCT')")

@@ -30,8 +30,8 @@
     	<div class="marginTop15">
     	<div class="span-22 marginLeft30"> 
     		<ul>
-    		[#list formBean as loans]
-    		<li><a href="loanproductaction.do?method=get&prdOfferingId=${loans.prdOfferingId}">${loans.prdOfferingName}</a></li>
+    		[#list formBean as loanProduct]
+    		<li><a href="viewEditLoanProduct.ftl?productId=${loanProduct.prdOfferingId}">${loanProduct.prdOfferingName}</a></li>
     		[/#list]
         	</ul>	
     	</div> 

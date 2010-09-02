@@ -44,6 +44,8 @@ import org.mifos.customers.business.CustomerLevelEntity;
  */
 public interface LoanProductDao {
 
+    LoanOfferingBO findById(Integer productId);
+
     List<LoanOfferingBO> findActiveLoanProductsApplicableToCustomerLevel(CustomerLevelEntity customerLevel);
 
     List<ValueListElement> findAllLoanPurposes();

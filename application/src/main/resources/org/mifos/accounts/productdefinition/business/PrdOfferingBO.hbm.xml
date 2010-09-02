@@ -358,4 +358,7 @@
 	<query name="savingsProduct.byid">
 		<![CDATA[from SavingsOfferingBO sp where sp.prdOfferingId=:prdOfferingId]]>
 	</query>
+	<query name="loanProduct.byid">
+		<![CDATA[from LoanOfferingBO lp where lp.prdOfferingId=:prdOfferingId]]>
+	</query>
 </hibernate-mapping>

@@ -115,6 +115,7 @@ import org.mifos.dto.domain.LoanProductRequest;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.dto.domain.ProductTypeDto;
 import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
@@ -1733,22 +1734,24 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         Integer userId = user.getUserId();
         Integer userBranchId = Integer.valueOf(user.getBranchId());
 
-        String name = loanProductRequest.getLoanProductDetails().getName();
-        String shortName = loanProductRequest.getLoanProductDetails().getShortName();
-        String description = loanProductRequest.getLoanProductDetails().getDescription();
-        Integer category = loanProductRequest.getLoanProductDetails().getCategory();
-        boolean loanCycleCounter = loanProductRequest.getLoanProductDetails().isIncludeInLoanCycleCounter();
-        boolean waiverInterest = loanProductRequest.getLoanProductDetails().shouldWaiverInterest();
+        ProductDetailsDto productDetails = loanProductRequest.getProductDetails();
+
+        String name = productDetails.getName();
+        String shortName = productDetails.getShortName();
+        String description = productDetails.getDescription();
+        Integer category = productDetails.getCategory();
+        boolean loanCycleCounter = loanProductRequest.isIncludeInLoanCycleCounter();
+        boolean waiverInterest = loanProductRequest.isWaiverInterest();
 
         MifosCurrency currency = Money.getDefaultCurrency();
         if (AccountingRules.isMultiCurrencyEnabled()) {
-            currency = AccountingRules.getCurrencyByCurrencyId(loanProductRequest.getLoanProductDetails().getCurrencyId().shortValue());
+            currency = AccountingRules.getCurrencyByCurrencyId(loanProductRequest.getCurrencyId().shortValue());
         }
 
         ProductCategoryBO productCategory = this.loanProductDao.findActiveProductCategoryById(category);
-        DateTime startDate = loanProductRequest.getLoanProductDetails().getStartDate();
-        DateTime endDate = loanProductRequest.getLoanProductDetails().getEndDate();
-        ApplicableTo applicableTo = ApplicableTo.fromInt(loanProductRequest.getLoanProductDetails().getApplicableFor());
+        DateTime startDate = productDetails.getStartDate();
+        DateTime endDate = productDetails.getEndDate();
+        ApplicableTo applicableTo = ApplicableTo.fromInt(productDetails.getApplicableFor());
         PrdApplicableMasterEntity applicableToEntity = this.loanProductDao.findApplicableProductType(applicableTo);
 
         LoanAmountCalculation loanAmountCalculation = this.loanProductCaluclationTypeAssembler.assembleLoanAmountCalculationFromDto(loanProductRequest.getLoanAmountDetails());
@@ -1784,7 +1787,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         }
 
         GLCodeEntity interestGlCode = this.generalLedgerDao.findGlCodeById(loanProductRequest.getAccountDetails().getInterestGlCodeId().shortValue());
-        GLCodeEntity principalGlCode = this.generalLedgerDao.findGlCodeById(loanProductRequest.getAccountDetails().getInterestGlCodeId().shortValue());
+        GLCodeEntity principalGlCode = this.generalLedgerDao.findGlCodeById(loanProductRequest.getAccountDetails().getPrincipalClCodeId().shortValue());
 
         StringBuilder globalPrdOfferingNum = new StringBuilder();
         globalPrdOfferingNum.append(userBranchId);
@@ -1816,6 +1819,12 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
         SavingsOfferingBO savingsProduct = this.savingsProductDao.findById(productId);
         return savingsProduct.toFullDto();
+    }
+
+    @Override
+    public LoanProductRequest retrieveLoanProductDetails(Integer productId) {
+        LoanOfferingBO loanProduct = this.loanProductDao.findById(productId);
+        return loanProduct.toFullDto();
     }
 
     @Override
