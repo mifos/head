@@ -20,14 +20,15 @@
 
 package org.mifos.customers.surveys.business;
 
-import java.util.Date;
-import java.util.Set;
-
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.surveys.helpers.InstanceStatus;
+import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.framework.business.AbstractEntity;
+
+import java.util.Date;
+import java.util.Set;
 
 public class SurveyInstance extends AbstractEntity {
 
@@ -139,5 +140,15 @@ public class SurveyInstance extends AbstractEntity {
 
     public Set<SurveyResponse> getSurveyResponses() {
         return surveyResponses;
+    }
+
+    public boolean isForCustomer() {
+        SurveyType appliesTo = survey.getAppliesToAsEnum();
+        return appliesTo == SurveyType.CLIENT || appliesTo == SurveyType.GROUP || appliesTo == SurveyType.CENTER;
+    }
+
+    public boolean isForAccount() {
+        SurveyType appliesTo = survey.getAppliesToAsEnum();
+        return appliesTo == SurveyType.LOAN || appliesTo == SurveyType.SAVINGS;
     }
 }

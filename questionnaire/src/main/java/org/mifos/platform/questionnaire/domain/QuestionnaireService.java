@@ -27,6 +27,7 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 
 import java.util.List;
 
@@ -64,4 +65,6 @@ public interface QuestionnaireService {
     List<String> getAllCountriesForPPI();
 
     Integer uploadPPIQuestionGroup(String country);
+
+    Integer saveQuestionGroupInstance(QuestionGroupInstanceDto questionGroupInstanceDto);
 }

@@ -476,5 +476,6 @@ public interface SecurityConstants {
     /** Can shutdown Mifos */
     short CAN_OPEN_SHUTDOWN_PAGE = 234;
     short CAN_VIEW_ACTIVE_SESSIONS = 238;
+    short CAN_MANAGE_QUESTION_GROUPS = 240;
     short CAN_SHUT_DOWN_MIFOS = 239;
 }

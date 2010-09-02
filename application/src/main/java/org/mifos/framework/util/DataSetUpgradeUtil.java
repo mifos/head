@@ -20,19 +20,6 @@
 
 package org.mifos.framework.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -48,10 +35,24 @@ import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.mifos.framework.ApplicationInitializer;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.SqlExecutor;
 import org.mifos.framework.persistence.SqlResource;
 import org.mifos.framework.spring.SpringTestUtil;
 import org.mifos.service.test.TestingService;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 
 
@@ -187,8 +188,8 @@ public class DataSetUpgradeUtil {
         SpringTestUtil.initializeSpring();
         ApplicationInitializer applicationInitializer = new ApplicationInitializer();
         applicationInitializer.init(null);
+        StaticHibernateUtil.closeSession();
         System.out.println(" upgrade done!");
-
     }
 
     @SuppressWarnings("PMD.CloseResource")

@@ -29,6 +29,8 @@ import org.mifos.framework.business.EntityMaster;
 import org.mifos.platform.questionnaire.builders.ChoiceDetailBuilder;
 import org.mifos.platform.questionnaire.builders.QuestionDtoBuilder;
 import org.mifos.platform.questionnaire.builders.QuestionGroupDtoBuilder;
+import org.mifos.platform.questionnaire.builders.QuestionGroupInstanceDtoBuilder;
+import org.mifos.platform.questionnaire.builders.QuestionGroupResponseDtoBuilder;
 import org.mifos.platform.questionnaire.builders.SectionDtoBuilder;
 import org.mifos.platform.questionnaire.domain.AnswerType;
 import org.mifos.platform.questionnaire.domain.ChoiceTagEntity;
@@ -50,8 +52,6 @@ import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
-import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
-import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
@@ -59,10 +59,13 @@ import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupResponseDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -78,6 +81,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -232,7 +236,7 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapQuestionGroupDefinitionToQuestionGroup() {
-        when(eventSourceDao.retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString())).thenReturn(new ArrayList());
+        when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList());
         when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
         EventSourceDto eventSourceDto = getEventSource("Create", "Client");
         List<SectionDetail> sectionDetails = asList(getSectionDefinition("S1", 12), getSectionDefinition("S2", 0));
@@ -241,13 +245,13 @@ public class QuestionnaireMapperTest {
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         assertQuestionGroup(questionGroup, QuestionGroupState.INACTIVE);
         assertThat(questionGroup.isEditable(), is(true));
-        verify(eventSourceDao, times(1)).retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString());
+        verify(eventSourceDao, times(1)).retrieveByEventAndSource(anyString(), anyString());
         verify(questionDao, times(1)).getDetails(12);
     }
 
     @Test
     public void shouldMapQuestionGroupDefinitionToExistingQuestionGroup() {
-        when(eventSourceDao.retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString())).thenReturn(new ArrayList());
+        when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList());
         when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
         when(questionGroupDao.getDetails(123)).thenReturn(getQuestionGroup(123, "QG Title", getSection("S1")));
         EventSourceDto eventSourceDto = getEventSource("Create", "Client");
@@ -257,7 +261,7 @@ public class QuestionnaireMapperTest {
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         assertQuestionGroup(questionGroup, QuestionGroupState.INACTIVE);
         assertThat(questionGroup.isEditable(), is(true));
-        verify(eventSourceDao, times(1)).retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString());
+        verify(eventSourceDao, times(1)).retrieveByEventAndSource(anyString(), anyString());
         verify(questionDao, times(1)).getDetails(12);
         verify(questionGroupDao, times(1)).getDetails(123);
     }
@@ -670,7 +674,7 @@ public class QuestionnaireMapperTest {
         SectionDto section1 = new SectionDtoBuilder().withName("Sec1").withOrder(1).addQuestions(question1, question2).build();
         QuestionGroupDto questionGroupDto = new QuestionGroupDtoBuilder().withTitle("QG1").withEventSource("Create", "Client").addSections(section1).build();
         assertQuestionGroupEntity(questionnaireMapper.mapToQuestionGroup(questionGroupDto));
-        verify(eventSourceDao, times(1)).retrieveByEventAndSource(Matchers.anyString(), Matchers.anyString());
+        verify(eventSourceDao, times(1)).retrieveByEventAndSource(anyString(), anyString());
     }
 
     private void assertQuestionGroupEntity(QuestionGroup questionGroup) {
@@ -728,6 +732,39 @@ public class QuestionnaireMapperTest {
         entityMaster.setEntityType(source);
         eventSource.setSource(entityMaster);
         return eventSource;
+    }
+
+    @Test
+    public void shouldMapToQuestionGroupInstance() {
+        QuestionGroupInstanceDto questionGroupInstanceDto = getQuestionGroupInstanceDto();
+        QuestionGroup questionGroup = new QuestionGroup();
+        when(questionGroupDao.getDetails(123)).thenReturn(questionGroup);
+        SectionQuestion sectionQuestion = new SectionQuestion();
+        when(sectionQuestionDao.getDetails(999)).thenReturn(sectionQuestion);
+        QuestionGroupInstance questionGroupInstance = questionnaireMapper.mapToQuestionGroupInstance(questionGroupInstanceDto);
+        assertThat(questionGroupInstance, is(notNullValue()));
+        assertThat(questionGroupInstance.getCompletedStatus(), is(1));
+        assertThat(questionGroupInstance.getCreatorId(), is(111));
+        assertThat(questionGroupInstance.getEntityId(), is(12345));
+        assertThat(questionGroupInstance.getVersionNum(), is(1));
+        assertThat(questionGroupInstance.getQuestionGroup(), is(questionGroup));
+        List<QuestionGroupResponse> questionGroupResponses = questionGroupInstance.getQuestionGroupResponses();
+        assertThat(questionGroupResponses, is(notNullValue()));
+        assertThat(questionGroupResponses.size(), is(1));
+        QuestionGroupResponse questionGroupResponse = questionGroupResponses.get(0);
+        assertThat(questionGroupResponse.getResponse(), is("Answer1"));
+        assertThat(questionGroupResponse.getSectionQuestion(), is(sectionQuestion));
+        verify(questionGroupDao).getDetails(123);
+        verify(sectionQuestionDao).getDetails(999);
+    }
+
+    private QuestionGroupInstanceDto getQuestionGroupInstanceDto() {
+        QuestionGroupInstanceDtoBuilder instanceBuilder = new QuestionGroupInstanceDtoBuilder();
+        QuestionGroupResponseDtoBuilder responseBuilder = new QuestionGroupResponseDtoBuilder();
+        responseBuilder.withResponse("Answer1").withSectionQuestion(999);
+        QuestionGroupResponseDto questionGroupResponseDto = responseBuilder.build();
+        instanceBuilder.withQuestionGroup(123).withCompleted(true).withCreator(111).withEntity(12345).withVersion(1).addResponses(questionGroupResponseDto);
+        return instanceBuilder.build();
     }
 }
 

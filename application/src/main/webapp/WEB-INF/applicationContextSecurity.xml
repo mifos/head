@@ -36,9 +36,13 @@
 		<intercept-url pattern="/**/*.html" filters="none" />	
 		<intercept-url pattern="/login.ftl*" filters="none" />
 		
-    	<intercept-url pattern="/createQuestion.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_CUSTOM_FIELDS')"/>
-    	<intercept-url pattern="/createQuestionGroup.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_CUSTOM_FIELDS')"/>
-    	<intercept-url pattern="/**" access="isFullyAuthenticated()" />
+    	<intercept-url pattern="/createQuestion.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
+    	<intercept-url pattern="/createQuestionGroup.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
+    	<intercept-url pattern="/viewAndEditQuestion.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
+    	<intercept-url pattern="/viewAndEditQuestionGroup.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
+    	<intercept-url pattern="/uploadQuestionGroup.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
+
+        <intercept-url pattern="/**" access="isFullyAuthenticated()" />
     	<logout logout-success-url="/login.ftl?loggedout"/>
   	</http>
   	

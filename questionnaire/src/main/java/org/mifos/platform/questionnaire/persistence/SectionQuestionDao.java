@@ -22,5 +22,8 @@ package org.mifos.platform.questionnaire.persistence;
 import org.mifos.platform.persistence.GenericDao;
 import org.mifos.platform.questionnaire.domain.SectionQuestion;
 
+import java.util.List;
+
 public interface SectionQuestionDao extends GenericDao<SectionQuestion, Integer> {
+    List<Integer> retrieveIdFromQuestionGroupIdQuestionIdSectionName(String sectionName, Integer questionId, Integer questionGroupId);
 }

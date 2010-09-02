@@ -332,6 +332,7 @@ public class DatabaseMigrator {
 
         Statement stmt = connection.createStatement();
         stmt.execute("insert into " + APPLIED_UPGRADES + " values (" + upgradeNumber + ")");
+        stmt.close();
         connection.commit();
     }
 
@@ -385,6 +386,7 @@ public class DatabaseMigrator {
                 appliedUpgrades.add(rs.getInt(1));
             }
             rs.close();
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
