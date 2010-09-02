@@ -63,12 +63,20 @@
               [@mifosmacros.boolRadioButtons "questionGroupForm.addQuestionFlag", {"false":selectQuestions, "true":addNewQuestion},'','' /]
             </li>
             <li>
+                [#if questionGroupForm.addQuestionFlag]
+                <ol id="addQuestionDiv" name="addQuestionDiv">
+                [#else]
                 <ol id="addQuestionDiv" name="addQuestionDiv" style="display: none;">
+                [/#if]
                     [#include "addQuestion.ftl"]
                 </ol>
             </li>
             <li>
+                [#if questionGroupForm.addQuestionFlag]
+                <ol id="selectQuestionsDiv" name="selectQuestionsDiv" style="display: none;">
+                [#else]
                 <ol id="selectQuestionsDiv" name="selectQuestionsDiv">
+                [/#if]
                     [#include "selectQuestions.ftl"]
                 </ol>
             </li>
