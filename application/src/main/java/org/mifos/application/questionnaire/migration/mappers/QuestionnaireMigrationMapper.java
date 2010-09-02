@@ -36,5 +36,5 @@ public interface QuestionnaireMigrationMapper {
 
     QuestionGroupDto map(Survey survey);
 
-    QuestionGroupInstanceDto map(SurveyInstance surveyInstance);
+    QuestionGroupInstanceDto map(SurveyInstance surveyInstance, Integer questionGroupId);
 }

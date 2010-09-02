@@ -102,4 +102,8 @@ public class QuestionGroupInstanceDto implements Serializable {
     public void setDateConducted(Date dateConducted) {
         this.dateConducted = dateConducted;
     }
+
+    public void setCompleted(int completed) {
+        this.completed = completed == 1;
+    }
 }

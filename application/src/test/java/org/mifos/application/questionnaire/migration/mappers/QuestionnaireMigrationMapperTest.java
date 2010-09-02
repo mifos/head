@@ -29,13 +29,20 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.surveys.business.QuestionUtils;
 import org.mifos.customers.surveys.business.Survey;
+import org.mifos.customers.surveys.business.SurveyInstance;
+import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupResponseDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
@@ -45,15 +52,22 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mifos.customers.surveys.business.SurveyUtils.getSurvey;
+import static org.mifos.customers.surveys.business.SurveyUtils.getSurveyInstance;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionnaireMigrationMapperTest {
 
     private QuestionnaireMigrationMapper mapper;
 
+    @Mock
+    private SectionQuestionDao sectionQuestionDao;
+
     @Before
     public void setUp() {
-        mapper = new QuestionnaireMigrationMapperImpl();
+        mapper = new QuestionnaireMigrationMapperImpl(sectionQuestionDao);
     }
 
     @Test
@@ -111,6 +125,53 @@ public class QuestionnaireMigrationMapperTest {
         assertThat(sections, is(notNullValue()));
         assertThat(sections.size(), is(1));
         assertSection(sections.get(0));
+    }
+
+    @Test
+    public void shouldMapToQuestionGroupInstanceDto() throws ApplicationException {
+        Survey survey = getSurvey("Sur1", "Ques1");
+        SurveyInstance surveyInstance = getSurveyInstance(survey, 12, 101, "Answer1");
+        Integer questionGroupId = 11, sectionQuestionId = 112233;
+        Integer questionId = survey.getQuestions().get(0).getQuestion().getQuestionId();
+        when(sectionQuestionDao.retrieveIdFromQuestionGroupIdQuestionIdSectionName("Misc", questionId, questionGroupId)).thenReturn(asList(sectionQuestionId));
+        QuestionGroupInstanceDto questionGroupInstanceDto = mapper.map(surveyInstance, questionGroupId);
+        assertThat(questionGroupInstanceDto, is(notNullValue()));
+        assertThat(questionGroupInstanceDto.getCreatorId(), is(12));
+        assertThat(questionGroupInstanceDto.getEntityId(), is(101));
+        assertThat(questionGroupInstanceDto.getQuestionGroupId(), is(questionGroupId));
+        assertThat(questionGroupInstanceDto.getDateConducted(), is(surveyInstance.getDateConducted()));
+        List<QuestionGroupResponseDto> questionGroupResponses = questionGroupInstanceDto.getQuestionGroupResponseDtos();
+        assertThat(questionGroupResponses, is(notNullValue()));
+        assertThat(questionGroupResponses.size(), is(1));
+        assertThat(questionGroupResponses.get(0).getResponse(), is("Answer1"));
+        assertThat(questionGroupResponses.get(0).getSectionQuestionId(), is(sectionQuestionId));
+        verify(sectionQuestionDao, times(1)).retrieveIdFromQuestionGroupIdQuestionIdSectionName("Misc", questionId, questionGroupId);
+    }
+
+    @Test
+    public void shouldMapToQuestionGroupInstanceDtoForMultiSelect() throws ApplicationException {
+        Survey survey = getSurvey("Sur1", "Ques1");
+        survey.getQuestions().get(0).getQuestion().setAnswerType(AnswerType.MULTISELECT);
+        SurveyInstance surveyInstance = getSurveyInstance(survey, 12, 101, ",Answer1,Answer2,,Answer3");
+        Integer questionGroupId = 11, sectionQuestionId = 112233;
+        Integer questionId = survey.getQuestions().get(0).getQuestion().getQuestionId();
+        when(sectionQuestionDao.retrieveIdFromQuestionGroupIdQuestionIdSectionName("Misc", questionId, questionGroupId)).thenReturn(asList(sectionQuestionId));
+        QuestionGroupInstanceDto questionGroupInstanceDto = mapper.map(surveyInstance, questionGroupId);
+        assertThat(questionGroupInstanceDto, is(notNullValue()));
+        assertThat(questionGroupInstanceDto.getCreatorId(), is(12));
+        assertThat(questionGroupInstanceDto.getEntityId(), is(101));
+        assertThat(questionGroupInstanceDto.getQuestionGroupId(), is(questionGroupId));
+        assertThat(questionGroupInstanceDto.getDateConducted(), is(surveyInstance.getDateConducted()));
+        List<QuestionGroupResponseDto> questionGroupResponses = questionGroupInstanceDto.getQuestionGroupResponseDtos();
+        assertThat(questionGroupResponses, is(notNullValue()));
+        assertThat(questionGroupResponses.size(), is(3));
+        assertThat(questionGroupResponses.get(0).getResponse(), is("Answer1"));
+        assertThat(questionGroupResponses.get(0).getSectionQuestionId(), is(sectionQuestionId));
+        assertThat(questionGroupResponses.get(1).getResponse(), is("Answer2"));
+        assertThat(questionGroupResponses.get(1).getSectionQuestionId(), is(sectionQuestionId));
+        assertThat(questionGroupResponses.get(2).getResponse(), is("Answer3"));
+        assertThat(questionGroupResponses.get(2).getSectionQuestionId(), is(sectionQuestionId));
+        verify(sectionQuestionDao, times(1)).retrieveIdFromQuestionGroupIdQuestionIdSectionName("Misc", questionId, questionGroupId);
     }
 
     private void assertSection(SectionDto sectionDto) {

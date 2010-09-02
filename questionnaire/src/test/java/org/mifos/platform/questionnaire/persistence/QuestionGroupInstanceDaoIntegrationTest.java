@@ -18,7 +18,7 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.service;
+package org.mifos.platform.questionnaire.persistence;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,9 +29,11 @@ import org.mifos.platform.questionnaire.domain.QuestionGroupInstance;
 import org.mifos.platform.questionnaire.domain.QuestionGroupResponse;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
 import org.mifos.platform.questionnaire.domain.SectionQuestion;
-import org.mifos.platform.questionnaire.persistence.EventSourceDao;
-import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
-import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
+import org.mifos.platform.questionnaire.service.QuestionDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.SectionDetail;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -159,7 +161,7 @@ public class QuestionGroupInstanceDaoIntegrationTest {
                 getQuestionGroupInstance(2010, 7, 26, questionGroup3, 101, 2)
         );
         questionGroupInstanceDao.saveOrUpdateAll(questionGroupInstances);
-        int eventSourceId = ((EventSourceEntity) eventSourceDao.retrieveByEventAndSource("View", "Client").get(0)).getId();
+        int eventSourceId = eventSourceDao.retrieveByEventAndSource("View", "Client").get(0).getId();
         //  questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, eventSourceId)
         //  is a hack to flush the entities as method under test is in SQL and not HQL
         questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, eventSourceId);

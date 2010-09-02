@@ -67,18 +67,23 @@ public class QuestionnaireMigration {
     public List<Integer> migrateSurveys(List<Survey> surveys) throws PersistenceException {
         List<Integer> questionGroupIds = new ArrayList<Integer>();
         for (Survey survey : surveys) {
-            QuestionGroupDto questionGroupDto = questionnaireMigrationMapper.map(survey);
-            Integer questionGroupId = questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
-            migrateSurveyResponses(survey);
+            Integer questionGroupId = migrateSurvey(survey);
             questionGroupIds.add(questionGroupId);
         }
         return questionGroupIds;
     }
 
-    private void migrateSurveyResponses(Survey survey) throws PersistenceException {
+    private Integer migrateSurvey(Survey survey) throws PersistenceException {
+        QuestionGroupDto questionGroupDto = questionnaireMigrationMapper.map(survey);
+        Integer questionGroupId = questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
+        migrateSurveyResponses(survey, questionGroupId);
+        return questionGroupId;
+    }
+
+    private void migrateSurveyResponses(Survey survey, Integer questionGroupId) throws PersistenceException {
         List<SurveyInstance> surveyInstances = surveysPersistence.retrieveInstancesBySurvey(survey);
         for (SurveyInstance surveyInstance : surveyInstances) {
-            QuestionGroupInstanceDto questionGroupInstanceDto = questionnaireMigrationMapper.map(surveyInstance);
+            QuestionGroupInstanceDto questionGroupInstanceDto = questionnaireMigrationMapper.map(surveyInstance, questionGroupId);
             questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto);
         }
     }

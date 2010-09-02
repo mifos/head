@@ -20,6 +20,7 @@
 
 package org.mifos.application.questionnaire.migration.mappers;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
@@ -28,15 +29,19 @@ import org.mifos.customers.surveys.business.QuestionChoice;
 import org.mifos.customers.surveys.business.Survey;
 import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.surveys.business.SurveyQuestion;
+import org.mifos.customers.surveys.business.SurveyResponse;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.SurveyType;
+import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupResponseDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +50,10 @@ import java.util.Map;
 import static java.lang.String.format;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.DEFAULT_EVENT_FOR_CUSTOM_FIELDS;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.DEFAULT_EVENT_FOR_SURVEYS;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.DEFAULT_ORDER;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.DEFAULT_SECTION_NAME;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.DEFAULT_VERSION;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.MULTI_SELECT_DELIMITER;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_FOR_ADDITIONAL_FIELDS;
 import static org.mifos.platform.util.CollectionUtils.asMap;
 import static org.mifos.platform.util.MapEntry.makeEntry;
@@ -56,13 +64,21 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     private Map<EntityType, String> entityTypeToSourceMap;
     private Map<SurveyType, String> surveyTypeToSourceMap;
     private Map<AnswerType, QuestionType> answerToQuestionType;
-    private static final int DEFAULT_ORDER = 0;
+
+    @Autowired
+    private SectionQuestionDao sectionQuestionDao;
 
     public QuestionnaireMigrationMapperImpl() {
         populateTypeMappings();
         populateEntityTypeToSourceMappings();
         populateSurveyTypeToSourceMappings();
         populateAnswerToQuestionTypeMappings();
+    }
+
+    // Intended to be used from unit tests for injecting mocks
+    public QuestionnaireMigrationMapperImpl(SectionQuestionDao sectionQuestionDao) {
+        this();
+        this.sectionQuestionDao = sectionQuestionDao;
     }
 
     @Override
@@ -95,8 +111,71 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     }
 
     @Override
-    public QuestionGroupInstanceDto map(SurveyInstance surveyInstance) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public QuestionGroupInstanceDto map(SurveyInstance surveyInstance, Integer questionGroupId) {
+        QuestionGroupInstanceDto questionGroupInstanceDto = new QuestionGroupInstanceDto();
+        questionGroupInstanceDto.setDateConducted(surveyInstance.getDateConducted());
+        questionGroupInstanceDto.setCompleted(surveyInstance.getCompletedStatus());
+        questionGroupInstanceDto.setCreatorId(Integer.valueOf(surveyInstance.getCreator().getPersonnelId()));
+        questionGroupInstanceDto.setEntityId(mapToEntityId(surveyInstance));
+        questionGroupInstanceDto.setQuestionGroupId(questionGroupId);
+        questionGroupInstanceDto.setVersion(DEFAULT_VERSION);
+        questionGroupInstanceDto.setQuestionGroupResponseDtos(mapToQuestionGroupResponseDtos(surveyInstance, questionGroupId));
+        return questionGroupInstanceDto;
+    }
+
+    private List<QuestionGroupResponseDto> mapToQuestionGroupResponseDtos(SurveyInstance surveyInstance, Integer questionGroupId) {
+        List<QuestionGroupResponseDto> questionGroupResponseDtos = new ArrayList<QuestionGroupResponseDto>();
+        for (SurveyResponse surveyResponse : surveyInstance.getSurveyResponses()) {
+            if (surveyResponse.getQuestion().getAnswerTypeAsEnum() != AnswerType.MULTISELECT) {
+                questionGroupResponseDtos.add(mapToQuestionGroupResponse(questionGroupId, surveyResponse));
+            } else {
+                questionGroupResponseDtos.addAll(mapToQuestionGroupResponses(questionGroupId, surveyResponse));
+            }
+        }
+        return questionGroupResponseDtos;
+    }
+
+    private List<QuestionGroupResponseDto> mapToQuestionGroupResponses(Integer questionGroupId, SurveyResponse surveyResponse) {
+        List<QuestionGroupResponseDto> questionGroupResponseDtos = new ArrayList<QuestionGroupResponseDto>();
+        String multiSelectValue = surveyResponse.getMultiSelectValue();
+        if (StringUtils.isNotEmpty(multiSelectValue)) {
+            Integer questionId = surveyResponse.getQuestion().getQuestionId();
+            Integer sectionQuestionId = getSectionQuestionId(questionGroupId, questionId);
+            String[] answers = StringUtils.split(multiSelectValue, MULTI_SELECT_DELIMITER);
+            for (String answer : answers) {
+                if (StringUtils.isNotEmpty(answer)) {
+                    questionGroupResponseDtos.add(mapToQuestionGroupResponse(sectionQuestionId, answer));
+                }
+            }
+        }
+        return questionGroupResponseDtos;
+    }
+
+    private QuestionGroupResponseDto mapToQuestionGroupResponse(Integer sectionQuestionId, String answer) {
+        QuestionGroupResponseDto questionGroupResponseDto = new QuestionGroupResponseDto();
+        questionGroupResponseDto.setResponse(answer);
+        questionGroupResponseDto.setSectionQuestionId(sectionQuestionId);
+        return questionGroupResponseDto;
+    }
+
+    private QuestionGroupResponseDto mapToQuestionGroupResponse(Integer questionGroupId, SurveyResponse surveyResponse) {
+        Integer questionId = surveyResponse.getQuestion().getQuestionId();
+        Integer sectionQuestionId = getSectionQuestionId(questionGroupId, questionId);
+        return mapToQuestionGroupResponse(sectionQuestionId, surveyResponse.toString());
+    }
+
+    private Integer getSectionQuestionId(Integer questionGroupId, Integer questionId) {
+        return sectionQuestionDao.retrieveIdFromQuestionGroupIdQuestionIdSectionName(DEFAULT_SECTION_NAME, questionId, questionGroupId).get(0);
+    }
+
+    private Integer mapToEntityId(SurveyInstance surveyInstance) {
+        Integer result = 0;
+        if (surveyInstance.isForCustomer()) {
+            result = surveyInstance.getCustomer().getCustomerId();
+        } else if (surveyInstance.isForAccount()) {
+            result = surveyInstance.getAccount().getAccountId();
+        }
+        return result;
     }
 
     private SectionDto mapToSectionForSurvey(List<SurveyQuestion> questions) {
