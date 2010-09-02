@@ -17,19 +17,20 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+package org.mifos.application.master.persistence;
 
-package org.mifos.security.rolesandpermission;
+import org.mifos.framework.persistence.Upgrade;
+import org.mifos.security.AddActivity;
+import org.mifos.security.util.SecurityConstants;
 
-public class RoleTestUtil {
-    /**
-     * The total number of activities for the built in Admin role. Whenever a
-     * new activity is added to the role this number must be increased by one.
-     */
-    public static final int EXPECTED_ACTIVITIES_FOR_ROLE = 164;
-    /**
-     * The total number of activities. Whenever a new activity is added to the
-     * role this number must be increased by one.
-     */
-    public static final int EXPECTED_ACTIVITY_COUNT = 185;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
+public class Upgrade1283320210 extends Upgrade {
+    @Override
+    public void upgrade(Connection connection) throws IOException, SQLException {
+        new AddActivity("Permissions-CanManageQuestionGroups", SecurityConstants.CAN_MANAGE_QUESTION_GROUPS,
+                SecurityConstants.CONFIGURATION_MANAGEMENT).upgrade(connection);
+    }
 }

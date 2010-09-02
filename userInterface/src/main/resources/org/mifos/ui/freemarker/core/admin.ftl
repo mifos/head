@@ -48,6 +48,7 @@
         <li type="circle"><a id="admin.link.defineAcceptedPaymentType" href="defineAcceptedPaymentTypes.ftl" >[@spring.message "admin.defineacceptedpayments"/]</a></li>
         <li type="circle"><a id="admin.link.viewOrganizationSettings" href="viewOrganizationSettings.ftl" >[@spring.message "admin.viewOrganizationSettings"/]</a></li>
         <li type="circle"><a id="admin.link.viewPPI" href="ppiAction.do?method=get" >[@spring.message "admin.viewPPIsettings" /]</a>&nbsp;|&nbsp;<a Id="admin.link.configurePPI" href="ppiAction.do?method=configure">[@spring.message "admin.ConfigurePPIsettings"/]</a></li>
+        <li type="circle"><a id="admin.link.uploadPPI" href="uploadQuestionGroup.ftl" >[@spring.message "admin.uploadPPI"/]</a></li>
       </ul>
       </p>
       <p><span class="fontBold">[@spring.message "admin.datadisplayandrules" /] </span>
@@ -113,7 +114,7 @@
       <ul>
         <li type="circle"><a id="admin.link.questions" href="viewQuestions.ftl">[@spring.message "admin.viewquestions" /]</a> | <a id="admin.link.defineNewQuestion" href="createQuestion.ftl">[@spring.message "admin.definenewquestion" /]</a></li>
         <li type="circle"><a id="admin.link.questiongroups" href="viewQuestionGroups.ftl">[@spring.message "admin.viewquestiongroups" /]</a> | <a id="admin.link.defineNewQuestionGroup" href="createQuestionGroup.ftl">[@spring.message "admin.definenewquestiongroup" /]</a></li>
-      </ul>          
+      </ul>
     </div>
   </div>
   </div>

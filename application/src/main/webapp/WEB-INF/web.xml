@@ -241,6 +241,11 @@
         <location>/pageNotFound.ftl</location>
     </error-page>
 
+    <error-page>
+        <error-code>403</error-code>
+        <location>/accessDenied.ftl</location>
+    </error-page>
+
     <!-- section: birt web viewer -->
     <!-- this section is copied from reporting/BirtWebViewer/WEB-INF/web.xml -->
 

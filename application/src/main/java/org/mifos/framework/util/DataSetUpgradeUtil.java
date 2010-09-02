@@ -188,7 +188,7 @@ public class DataSetUpgradeUtil {
         SpringTestUtil.initializeSpring();
         ApplicationInitializer applicationInitializer = new ApplicationInitializer();
         applicationInitializer.init(null);
-        StaticHibernateUtil.flushAndCloseSession();
+        StaticHibernateUtil.closeSession();
         System.out.println(" upgrade done!");
     }
 

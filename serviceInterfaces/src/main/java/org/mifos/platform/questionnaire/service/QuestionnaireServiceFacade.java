@@ -64,6 +64,6 @@ public interface QuestionnaireServiceFacade {
 
     List<String> getAllCountriesForPPI();
 
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_CUSTOM_FIELDS')")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')")
     void uploadPPIQuestionGroup(String country);
 }

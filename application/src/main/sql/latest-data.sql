@@ -63,6 +63,7 @@ insert into applied_upgrades(upgrade_id) values(1280721170);
 insert into applied_upgrades(upgrade_id) values(1280793109);
 insert into applied_upgrades(upgrade_id) values(1282247229);
 insert into applied_upgrades(upgrade_id) values(1283237728);
+insert into applied_upgrades(upgrade_id) values(1283320210);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -3230,3 +3231,14 @@ insert into event_sources (id, entity_type_id, event_id, description) values
 insert into event_sources (id, entity_type_id, event_id, description) values
     (6, (select entity_type_id from entity_master where entity_type = 'Client'), 4, 'Close Client');
 /* Upgrade 268 END */
+
+
+/* Upgrade - 1283320210 Permissions to manage question groups*/
+insert into lookup_value (lookup_id, entity_id, lookup_name) values
+(632,87,'Permissions-CanManageQuestionGroups');
+insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(962, 1, 632, null);
+insert into activity (activity_id, parent_id, activity_name_lookup_id, description_lookup_id) values
+(240,203,632,632);
+insert into roles_activity (activity_id, role_id) values
+(240,1);
+/* Upgrade - 1283320210*/
