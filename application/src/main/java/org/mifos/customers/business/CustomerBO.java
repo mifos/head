@@ -20,20 +20,6 @@
 
 package org.mifos.customers.business;
 
-import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
-import static org.mifos.framework.util.helpers.MoneyUtils.zero;
-
-import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
@@ -87,6 +73,20 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
+import static org.mifos.framework.util.helpers.MoneyUtils.zero;
+
 /**
  * A class that represents a customer entity after being created.
  */
@@ -94,7 +94,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
 
-    private final Integer customerId;
+    private Integer customerId;
     private String globalCustNum;
     private String displayName;
     private String displayAddress;
@@ -1383,5 +1383,11 @@ public abstract class CustomerBO extends AbstractBusinessObject {
             loanOfficerId = this.personnel.getPersonnelId();
         }
         return loanOfficerId;
+    }
+
+    // To be used strictly from test code
+    @Deprecated
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
     }
 }

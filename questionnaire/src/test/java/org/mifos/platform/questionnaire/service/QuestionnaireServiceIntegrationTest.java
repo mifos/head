@@ -29,6 +29,8 @@ import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.builders.ChoiceDetailBuilder;
 import org.mifos.platform.questionnaire.builders.QuestionDtoBuilder;
 import org.mifos.platform.questionnaire.builders.QuestionGroupDtoBuilder;
+import org.mifos.platform.questionnaire.builders.QuestionGroupInstanceDtoBuilder;
+import org.mifos.platform.questionnaire.builders.QuestionGroupResponseDtoBuilder;
 import org.mifos.platform.questionnaire.builders.SectionDtoBuilder;
 import org.mifos.platform.questionnaire.domain.AnswerType;
 import org.mifos.platform.questionnaire.domain.ChoiceTagEntity;
@@ -53,6 +55,8 @@ import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupResponseDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -548,6 +552,34 @@ public class QuestionnaireServiceIntegrationTest {
         QuestionGroupDto questionGroupDto = new QuestionGroupDtoBuilder().withTitle(qgTitle).withEventSource("Create", "Client").addSections(section1).build();
         Integer questionGroupId = questionnaireService.defineQuestionGroup(questionGroupDto);
         assertQuestionGroup(questionGroupDao.getDetails(questionGroupId), qgTitle, ques1Title, ques2Title);
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldSaveQuestionGroupInstance() {
+        String title = "QG1" + currentTimeMillis();
+        QuestionGroupDetail qgDetail = defineQuestionGroup(title, "Create", "Client", asList(getSection("S1")), true);
+        Integer sectionQuestionId = qgDetail.getSectionDetail(0).getQuestionDetail(0).getId();
+        QuestionGroupInstanceDto qgInstanceDto = getQuestionGroupInstanceDto("1234", 121, 567, qgDetail.getId(), sectionQuestionId);
+        Integer qgInstanceId = questionnaireService.saveQuestionGroupInstance(qgInstanceDto);
+        assertThat(qgInstanceId, is(notNullValue()));
+        QuestionGroupInstance instance = questionGroupInstanceDao.getDetails(qgInstanceId);
+        assertThat(instance, is(notNullValue()));
+        assertThat(instance.getCreatorId(), is(121));
+        assertThat(instance.getEntityId(), is(567));
+        List<QuestionGroupResponse> questionGroupResponses = instance.getQuestionGroupResponses();
+        assertThat(questionGroupResponses, is(notNullValue()));
+        assertThat(questionGroupResponses.size(), is(1));
+        assertThat(questionGroupResponses.get(0).getResponse(), is("1234"));
+    }
+    
+    private QuestionGroupInstanceDto getQuestionGroupInstanceDto(String response, Integer creatorId, Integer entityId, Integer questionGroupId, Integer sectionQuestionId) {
+        QuestionGroupInstanceDtoBuilder instanceBuilder = new QuestionGroupInstanceDtoBuilder();
+        QuestionGroupResponseDtoBuilder responseBuilder = new QuestionGroupResponseDtoBuilder();
+        responseBuilder.withResponse(response).withSectionQuestion(sectionQuestionId);
+        QuestionGroupResponseDto questionGroupResponseDto = responseBuilder.build();
+        instanceBuilder.withQuestionGroup(questionGroupId).withCompleted(true).withCreator(creatorId).withEntity(entityId).withVersion(1).addResponses(questionGroupResponseDto);
+        return instanceBuilder.build();
     }
 
     private void createSingleSelectQuestion(String ques1Title) {

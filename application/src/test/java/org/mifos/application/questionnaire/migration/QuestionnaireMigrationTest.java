@@ -29,14 +29,21 @@ import org.mifos.application.questionnaire.migration.mappers.QuestionnaireMigrat
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.surveys.business.Survey;
+import org.mifos.customers.surveys.business.SurveyInstance;
+import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.builders.QuestionDtoBuilder;
 import org.mifos.platform.questionnaire.builders.QuestionGroupDtoBuilder;
+import org.mifos.platform.questionnaire.builders.QuestionGroupInstanceDtoBuilder;
+import org.mifos.platform.questionnaire.builders.QuestionGroupResponseDtoBuilder;
 import org.mifos.platform.questionnaire.builders.SectionDtoBuilder;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupResponseDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -49,6 +56,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mifos.customers.surveys.business.SurveyUtils.getSurvey;
+import static org.mifos.customers.surveys.business.SurveyUtils.getSurveyInstance;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -61,6 +71,9 @@ public class QuestionnaireMigrationTest {
     @Mock
     private QuestionnaireServiceFacade questionnaireServiceFacade;
 
+    @Mock
+    private SurveysPersistence surveysPersistence;
+
     private QuestionnaireMigration questionnaireMigration;
 
     private static final int QUESTION_GROUP_ID = 123;
@@ -69,7 +82,7 @@ public class QuestionnaireMigrationTest {
 
     @Before
     public void setUp() {
-        questionnaireMigration = new QuestionnaireMigration(questionnaireMigrationMapper, questionnaireServiceFacade);
+        questionnaireMigration = new QuestionnaireMigration(questionnaireMigrationMapper, questionnaireServiceFacade, surveysPersistence);
         calendar = Calendar.getInstance();
     }
 
@@ -86,20 +99,43 @@ public class QuestionnaireMigrationTest {
     }
 
     @Test
-    public void shouldMigrateSurveys() {
+    public void shouldMigrateSurveys() throws ApplicationException {
         Survey survey1 = getSurvey("Sur1", "Ques1", calendar.getTime());
         Survey survey2 = getSurvey("Sur2", "Ques2", calendar.getTime());
         QuestionGroupDto questionGroupDto1 = getQuestionGroupDto("Sur1", "Ques1", "View", "Client");
         QuestionGroupDto questionGroupDto2 = getQuestionGroupDto("Sur2", "Ques2", "View", "Client");
+        SurveyInstance surveyInstance1 = getSurveyInstance(survey1, 12, 101, "Answer1");
+        QuestionGroupInstanceDto questionGroupInstanceDto1 = getQuestionGroupInstanceDto("Answer1", 12, 101);
+        SurveyInstance surveyInstance2 = getSurveyInstance(survey1, 13, 102, "Answer2");
+        QuestionGroupInstanceDto questionGroupInstanceDto2 = getQuestionGroupInstanceDto("Answer2", 13, 102);
+        SurveyInstance surveyInstance3 = getSurveyInstance(survey2, 12, 101, "Answer3");
+        QuestionGroupInstanceDto questionGroupInstanceDto3 = getQuestionGroupInstanceDto("Answer3", 12, 101);
+        SurveyInstance surveyInstance4 = getSurveyInstance(survey2, 13, 102, "Answer4");
+        QuestionGroupInstanceDto questionGroupInstanceDto4 = getQuestionGroupInstanceDto("Answer4", 13, 102);
         when(questionnaireMigrationMapper.map(survey1)).thenReturn(questionGroupDto1);
         when(questionnaireMigrationMapper.map(survey2)).thenReturn(questionGroupDto2);
+        when(questionnaireMigrationMapper.map(surveyInstance1)).thenReturn(questionGroupInstanceDto1);
+        when(questionnaireMigrationMapper.map(surveyInstance2)).thenReturn(questionGroupInstanceDto2);
+        when(questionnaireMigrationMapper.map(surveyInstance3)).thenReturn(questionGroupInstanceDto3);
+        when(questionnaireMigrationMapper.map(surveyInstance4)).thenReturn(questionGroupInstanceDto4);
         when(questionnaireServiceFacade.createQuestionGroup(questionGroupDto1)).thenReturn(121);
         when(questionnaireServiceFacade.createQuestionGroup(questionGroupDto2)).thenReturn(122);
+        when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto1)).thenReturn(1111);
+        when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto2)).thenReturn(2222);
+        when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto3)).thenReturn(3333);
+        when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto4)).thenReturn(4444);
+        when(surveysPersistence.retrieveInstancesBySurvey(survey1)).thenReturn(asList(surveyInstance1, surveyInstance2));
+        when(surveysPersistence.retrieveInstancesBySurvey(survey2)).thenReturn(asList(surveyInstance3, surveyInstance4));
         List<Integer> questionGroupIds = questionnaireMigration.migrateSurveys(asList(survey1, survey2));
         assertThat(questionGroupIds, is(notNullValue()));
         assertThat(questionGroupIds.size(), is(2));
         assertThat(questionGroupIds.get(0), is(121));
         assertThat(questionGroupIds.get(1), is(122));
+        verify(questionnaireMigrationMapper, times(2)).map(any(Survey.class));
+        verify(questionnaireMigrationMapper, times(4)).map(any(SurveyInstance.class));
+        verify(questionnaireServiceFacade, times(2)).createQuestionGroup(any(QuestionGroupDto.class));
+        verify(questionnaireServiceFacade, times(4)).saveQuestionGroupInstance(any(QuestionGroupInstanceDto.class));
+        verify(surveysPersistence, times(2)).retrieveInstancesBySurvey(any(Survey.class));
     }
 
     private QuestionGroupDto getQuestionGroupDto(String questionGroupTitle, String questionTitle, String event, String source) {
@@ -108,6 +144,15 @@ public class QuestionnaireMigrationTest {
         SectionDto sectionDto = new SectionDtoBuilder().withName("Misc").withOrder(0).withQuestions(asList(questionDto)).build();
         questionGroupDtoBuilder.withTitle(questionGroupTitle).withEventSource(event, source).withSections(asList(sectionDto));
         return questionGroupDtoBuilder.build();
+    }
+
+    private QuestionGroupInstanceDto getQuestionGroupInstanceDto(String response, Integer creatorId, Integer entityId) {
+        QuestionGroupInstanceDtoBuilder instanceBuilder = new QuestionGroupInstanceDtoBuilder();
+        QuestionGroupResponseDtoBuilder responseBuilder = new QuestionGroupResponseDtoBuilder();
+        responseBuilder.withResponse(response).withSectionQuestion(999);
+        QuestionGroupResponseDto questionGroupResponseDto = responseBuilder.build();
+        instanceBuilder.withQuestionGroup(123).withCompleted(true).withCreator(creatorId).withEntity(entityId).withVersion(1).addResponses(questionGroupResponseDto);
+        return instanceBuilder.build();
     }
 
     private List<CustomFieldDefinitionEntity> getCustomFields() {

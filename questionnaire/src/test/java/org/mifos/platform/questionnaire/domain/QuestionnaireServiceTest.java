@@ -33,6 +33,8 @@ import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.builders.ChoiceDetailBuilder;
 import org.mifos.platform.questionnaire.builders.QuestionDtoBuilder;
 import org.mifos.platform.questionnaire.builders.QuestionGroupDtoBuilder;
+import org.mifos.platform.questionnaire.builders.QuestionGroupInstanceDtoBuilder;
+import org.mifos.platform.questionnaire.builders.QuestionGroupResponseDtoBuilder;
 import org.mifos.platform.questionnaire.builders.SectionDtoBuilder;
 import org.mifos.platform.questionnaire.domain.ppi.PPISurveyLocator;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
@@ -56,6 +58,8 @@ import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupResponseDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.mockito.Matchers;
@@ -835,6 +839,20 @@ public class QuestionnaireServiceTest {
         verify(questionGroupDao).create(any(QuestionGroup.class));
     }
 
+    @Test
+    public void shouldSaveQuestionGroupInstance() {
+        QuestionGroupInstanceDtoBuilder instanceBuilder = new QuestionGroupInstanceDtoBuilder();
+        QuestionGroupResponseDtoBuilder responseBuilder = new QuestionGroupResponseDtoBuilder();
+        responseBuilder.withResponse("Answer1").withSectionQuestion(999);
+        QuestionGroupResponseDto questionGroupResponseDto = responseBuilder.build();
+        instanceBuilder.withQuestionGroup(123).withCompleted(true).withCreator(111).withEntity(12345).withVersion(1).addResponses(questionGroupResponseDto);
+        QuestionGroupInstanceDto questionGroupInstanceDto = instanceBuilder.build();
+        when(questionGroupInstanceDao.create(Matchers.<QuestionGroupInstance>any())).thenReturn(789);
+        Integer qgInstanceId = questionnaireService.saveQuestionGroupInstance(questionGroupInstanceDto);
+        assertThat(qgInstanceId, is(789));
+        verify(questionGroupInstanceDao).create(any(QuestionGroupInstance.class));
+    }
+    
     private EventSourceEntity getEventSourceEntity(int id) {
         EventSourceEntity eventSource = new EventSourceEntity();
         eventSource.setId(id);

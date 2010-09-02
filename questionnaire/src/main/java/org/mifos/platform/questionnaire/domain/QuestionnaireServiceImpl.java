@@ -37,6 +37,7 @@ import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -266,6 +267,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         String ppiXmlForCountry = ppiSurveyLocator.getPPIUploadFileForCountry(country);
         QuestionGroupDto questionGroupDto = questionGroupDefinitionParser.parse(ppiXmlForCountry);
         return defineQuestionGroup(questionGroupDto);
+    }
+
+    @Override
+    public Integer saveQuestionGroupInstance(QuestionGroupInstanceDto questionGroupInstanceDto) {
+        QuestionGroupInstance questionGroupInstance = questionnaireMapper.mapToQuestionGroupInstance(questionGroupInstanceDto);
+        return questionGroupInstanceDao.create(questionGroupInstance);
     }
 
     private EventSourceEntity getEventSourceEntity(EventSourceDto eventSourceDto) {

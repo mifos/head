@@ -26,6 +26,7 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.business.QuestionChoice;
 import org.mifos.customers.surveys.business.Survey;
+import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.surveys.business.SurveyQuestion;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.SurveyType;
@@ -34,6 +35,7 @@ import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 
 import java.util.ArrayList;
@@ -90,6 +92,11 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
         questionGroupDto.setEventSourceDto(mapEventSourceForSurvey(survey));
         questionGroupDto.addSection(mapToSectionForSurvey(survey.getQuestions()));
         return questionGroupDto;
+    }
+
+    @Override
+    public QuestionGroupInstanceDto map(SurveyInstance surveyInstance) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     private SectionDto mapToSectionForSurvey(List<SurveyQuestion> questions) {

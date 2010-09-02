@@ -84,6 +84,10 @@ public class QuestionGroupInstance implements Serializable {
         this.completedStatus = completedStatus;
     }
 
+    public void setCompletedStatus(boolean completedStatus) {
+        this.completedStatus = completedStatus ? 1 : 0;
+    }
+
     public int getCreatorId() {
         return creatorId;
     }

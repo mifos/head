@@ -35,6 +35,7 @@ import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -321,6 +322,15 @@ public class QuestionnaireServiceFacadeTest {
     public void testUploadPPIQuestionGroup() {
         questionnaireServiceFacade.uploadPPIQuestionGroup("India");
         verify(questionnaireService).uploadPPIQuestionGroup("India");
+    }
+    
+    @Test
+    public void testSaveQuestionGroupInstance() {
+        QuestionGroupInstanceDto questionGroupInstanceDto = new QuestionGroupInstanceDto();
+        when(questionnaireService.saveQuestionGroupInstance(questionGroupInstanceDto)).thenReturn(1234);
+        Integer qgInstanceId = questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto);
+        assertThat(qgInstanceId, is(1234));
+        verify(questionnaireService).saveQuestionGroupInstance(questionGroupInstanceDto);
     }
     
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail() {

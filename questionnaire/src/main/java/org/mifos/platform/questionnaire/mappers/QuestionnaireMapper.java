@@ -32,6 +32,7 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 
 import java.util.List;
 
@@ -61,4 +62,6 @@ public interface QuestionnaireMapper {
     QuestionGroupInstanceDetail mapToEmptyQuestionGroupInstanceDetail(QuestionGroup questionGroup);
 
     QuestionGroup mapToQuestionGroup(QuestionGroupDto questionGroupDto);
+
+    QuestionGroupInstance mapToQuestionGroupInstance(QuestionGroupInstanceDto questionGroupInstanceDto);
 }
