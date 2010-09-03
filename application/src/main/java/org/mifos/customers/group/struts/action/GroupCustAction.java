@@ -51,12 +51,14 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
@@ -65,6 +67,9 @@ import org.mifos.service.MifosServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
@@ -241,11 +246,39 @@ public class GroupCustAction extends CustAction {
 
         // John W - 'BusinessKey' attribute linked to GroupBo is still used by other actions (e.g. meeting related)
         // further on and also breadcrumb.
-        GroupBO group = (GroupBO) this.customerDao.findCustomerById(groupInformationDto.getGroupDisplay().getCustomerId());
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
+        GroupBO groupBO = (GroupBO) this.customerDao.findCustomerById(groupInformationDto.getGroupDisplay().getCustomerId());
+        SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, groupBO, request);
+        setCurrentPageUrl(request, groupBO);
+        setQuestionGroupInstances(request, groupBO);
 
         logger.debug("Exiting GroupCustAction get method ");
         return mapping.findForward(ActionForwards.get_success.toString());
+    }
+
+    private void setQuestionGroupInstances(HttpServletRequest request, GroupBO groupBO) throws PageExpiredException {
+        QuestionnaireServiceFacade questionnaireServiceFacade = MifosServiceFactory.getQuestionnaireServiceFacade(request);
+        if (questionnaireServiceFacade == null) {
+            return;
+        }
+        setQuestionGroupInstances(questionnaireServiceFacade, request, groupBO.getCustomerId());
+    }
+
+    // Intentionally made public to aid testing !
+    public void setQuestionGroupInstances(QuestionnaireServiceFacade questionnaireServiceFacade, HttpServletRequest request, Integer customerId) throws PageExpiredException {
+        List<QuestionGroupInstanceDetail> instanceDetails = questionnaireServiceFacade.getQuestionGroupInstances(customerId, "View", "Group");
+        SessionUtils.setCollectionAttribute("questionGroupInstances", instanceDetails, request);
+    }
+
+    private void setCurrentPageUrl(HttpServletRequest request, GroupBO groupBO) throws PageExpiredException, UnsupportedEncodingException {
+        SessionUtils.removeThenSetAttribute("currentPageUrl", constructCurrentPageUrl(request, groupBO), request);
+    }
+
+    private String constructCurrentPageUrl(HttpServletRequest request, GroupBO groupBO) throws UnsupportedEncodingException {
+        String officerId = request.getParameter("recordOfficeId");
+        String loanOfficerId = request.getParameter("recordLoanOfficerId");
+        String url = String.format("groupCustAction.do?globalCustNum=%s&recordOfficeId=%s&recordLoanOfficerId=%s",
+                groupBO.getGlobalCustNum(), officerId, loanOfficerId);
+        return URLEncoder.encode(url, "UTF-8");
     }
 
     @TransactionDemarcate(joinToken = true)
