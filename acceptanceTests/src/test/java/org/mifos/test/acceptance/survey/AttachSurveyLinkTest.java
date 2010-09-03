@@ -78,7 +78,7 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         loanAccountDetailPage.verifyPage();
 
         AttachSurveyPage attachSurveyPage = loanAccountDetailPage.navigateToAttachSurveyPage();
-        attachSurveyPage.verifyPage("create_instance_choosesurvey");
+        attachSurveyPage.verifyPage("selectQuestionnaire");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -89,7 +89,7 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         LoanAccountPage loanAccountDetailPage = navigationHelper.navigateToLoanAccountPage("000100000000206");
 
         AttachSurveyPage attachSurveyPage = loanAccountDetailPage.navigateToAttachSurveyPage();
-        attachSurveyPage.verifyPage("create_instance_choosesurvey");
+        attachSurveyPage.verifyPage("selectQuestionnaire");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
