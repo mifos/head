@@ -45,12 +45,11 @@ public class MifosSchedulerTest {
         mifosScheduler.initializeBatchJobs();
         List<String> taskNames = mifosScheduler.getTaskNames();
 
-        Assert.assertEquals(10, taskNames.size());
+        Assert.assertEquals(9, taskNames.size());
         Assert.assertTrue(taskNames.contains("ProductStatus"));
-        Assert.assertTrue(taskNames.contains("LoanArrearsTask"));
         Assert.assertTrue(taskNames.contains("SavingsIntCalcTask"));
         Assert.assertTrue(taskNames.contains("SavingsIntPostingTask"));
-        Assert.assertTrue(taskNames.contains("PortfolioAtRiskTask"));
+        Assert.assertTrue(taskNames.contains("LoanArrearsAndPortfolioAtRiskTask"));
         Assert.assertTrue(taskNames.contains("ApplyCustomerFeeChangesTask"));
         Assert.assertTrue(taskNames.contains("GenerateMeetingsForCustomerAndSavingsTask"));
         Assert.assertTrue(taskNames.contains("LoanArrearsAgingTask"));

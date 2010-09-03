@@ -18,17 +18,6 @@
         <property name="jobDetail" ref="ProductStatus" />
         <property name="cronExpression" value="0/15 * * * * ?" />
     </bean>
-   
-    <!--
-               LoanArrearsTask:
-    -->
-    <bean name="LoanArrearsTask" class="org.springframework.scheduling.quartz.JobDetailBean">
-      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.LoanArrearsTask" />
-    </bean>
-    <bean id="LoanArrearsTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-        <property name="jobDetail" ref="LoanArrearsTask" />
-        <property name="cronExpression" value="0 0 0 * * ?" />
-    </bean>
     
     <!--
                 SavingsIntCalcTask:
@@ -88,11 +77,11 @@
     <!--
                 PortfolioAtRiskTask:
     -->
-    <bean name="PortfolioAtRiskTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+    <bean name="LoanArrearsAndPortfolioAtRiskTask" class="org.springframework.scheduling.quartz.JobDetailBean">
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskTask" />
     </bean>
-    <bean id="PortfolioAtRiskTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-        <property name="jobDetail" ref="PortfolioAtRiskTask" />
+    <bean id="LoanArrearsAndPortfolioAtRiskTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="LoanArrearsAndPortfolioAtRiskTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
     
@@ -133,13 +122,12 @@
         <property name="triggers">
             <list>
                 <ref bean="ProductStatusTrigger" />
-                <ref bean="LoanArrearsTaskTrigger" />
                 <ref bean="SavingsIntCalcTaskTrigger" />
                 <ref bean="SavingsIntPostingTaskTrigger" />
                 <ref bean="ApplyCustomerFeeChangesTaskTrigger" />
                 <ref bean="LoanArrearsAgingTaskTrigger" />
                 <ref bean="ApplyHolidayChangesTaskTrigger" />
-                <ref bean="PortfolioAtRiskTaskTrigger" />
+                <ref bean="LoanArrearsAndPortfolioAtRiskTaskTrigger" />
                 <ref bean="GenerateMeetingsForCustomerAndSavingsTaskTrigger" />
                 <ref bean="BranchReportTaskTrigger" />
             </list>
