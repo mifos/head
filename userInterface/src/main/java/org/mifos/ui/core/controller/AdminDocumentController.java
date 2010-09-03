@@ -39,6 +39,7 @@ public class AdminDocumentController {
         return createStub();
     }
 
+    @SuppressWarnings("PMD")
     private List<AdminDocumentDto> createStub(){
         List<AdminDocumentDto> docs = new ArrayList<AdminDocumentDto>();
 

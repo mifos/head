@@ -25,13 +25,13 @@ public class AdminDocumentDto {
     private final Integer id;
     private final String name;
     private final String identifier;
-    private final boolean isActive;
+    private final boolean active;
 
-    public AdminDocumentDto(Integer id, String name, String identifier, boolean isActive) {
+    public AdminDocumentDto(Integer id, String name, String identifier, boolean active) {
         this.id = id;
         this.name = name;
         this.identifier = identifier;
-        this.isActive = isActive;
+        this.active = active;
     }
 
     public Integer getId() {
@@ -47,6 +47,6 @@ public class AdminDocumentDto {
     }
 
     public boolean isActive() {
-        return this.isActive;
+        return this.active;
     }
 }
