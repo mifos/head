@@ -35,7 +35,7 @@ explanation of the license and how it is applied.
 <%-- Struts Tiles definition for the header and menu --%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="ViewClientDetails" />
+	<span id="page.id" title="ViewClientDetails" ></span>
 		<script language="javascript">
   function photopopup(custId , custName, currentFlow){
 	  window.open("clientCustAction.do?method=showPicture&customerId="+ custId + "&displayName=" + custName+ "&currentFlowKey=" + currentFlow,null,"height=250,width=200,status=no,scrollbars=no,toolbar=no,menubar=no,location=no");
@@ -374,7 +374,7 @@ explanation of the license and how it is applied.
 										name="client.MeetingsHeading" bundle="ClientUIResources" isColonRequired="yes"/>&nbsp;
 									<c:out value="${clientInformationDto.customerMeeting.meetingSchedule}" /></span>									
 									<span class="fontnormal"><br></span>
-									</span> <span class="fontnormal"> <c:if
+									<span class="fontnormal"> <c:if
 										test="${clientInformationDto.customerMeeting.meetingPlace!=null && !empty clientInformationDto.customerMeeting.meetingPlace}">
 										<c:out
 											value="${clientInformationDto.customerMeeting.meetingPlace}" />
@@ -438,7 +438,7 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr>
 							<td class="fontnormal"><span class="fontnormal"> <mifos:mifoslabel
-								name="client.DateOfBirth" bundle="ClientUIResources"></mifos:mifoslabel>
+								name="client.DateOfBirth" bundle="ClientUIResources"></mifos:mifoslabel></span>
 							<!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
 							<span id="viewClientDetails.text.dateOfBirth"><c:out
 								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,clientInformationDto.clientDisplay.dateOfBirth)}" /></span>;
@@ -686,21 +686,19 @@ explanation of the license and how it is applied.
 										</td>
 									</tr>
 								</c:forEach>
-  							</c:if>
-							<tr><td class="paddingL10"> <br>
-							<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Create&source=Client&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
-							    <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
-							</a> <br>
-							<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${clientInformationDto.clientDisplay.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
-							    <mifos:mifoslabel name="client.HistoricalDataLink" bundle="ClientUIResources" />
-							</a> <br>
-							<html-el:link styleId="viewClientDetails.link.viewChangeLog" href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=${clientInformationDto.clientDisplay.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
-							<mifos:mifoslabel name="client.ChangeLogLink" bundle="ClientUIResources"/>
-							</html-el:link> <br>
-  							</td></tr>
-						
-					</table>
-					
+							</table>
+					</c:if>
+							<span class="paddingL10"> <br>
+								<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Create&source=Client&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+								    <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
+								</a> <br>
+								<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${clientInformationDto.clientDisplay.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+								    <mifos:mifoslabel name="client.HistoricalDataLink" bundle="ClientUIResources" />
+								</a> <br>
+								<html-el:link styleId="viewClientDetails.link.viewChangeLog" href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=${clientInformationDto.clientDisplay.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
+								<mifos:mifoslabel name="client.ChangeLogLink" bundle="ClientUIResources"/>
+								</html-el:link> <br>
+  							</span>
 					</td>
 					
 					<!-- Performance History -->

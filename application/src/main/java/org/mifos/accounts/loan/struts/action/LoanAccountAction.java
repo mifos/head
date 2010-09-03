@@ -100,6 +100,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.reports.admindocuments.persistence.AdminDocAccStateMixPersistence;
 import org.mifos.reports.admindocuments.persistence.AdminDocumentPersistence;
@@ -112,6 +113,8 @@ import org.mifos.service.MifosServiceFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -245,6 +248,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                         return MifosServiceFactory.getQuestionnaireServiceFacade(request);
                     }
                 });
+
+
 
     public LoanAccountAction() throws Exception {
         this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
@@ -643,8 +648,37 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         // John W - temporarily put back because needed in applychargeaction - update
         LoanBO loan = new LoanDaoHibernate(new GenericDaoHibernate()).findById(loanInformationDto.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+        setCurrentPageUrl(request, loan);
+        setQuestionGroupInstances(request, loan);
 
         return mapping.findForward(ActionForwards.get_success.toString());
+    }
+
+    private void setQuestionGroupInstances(HttpServletRequest request, LoanBO loanBO) throws PageExpiredException {
+        QuestionnaireServiceFacade questionnaireServiceFacade = MifosServiceFactory.getQuestionnaireServiceFacade(request);
+        if (questionnaireServiceFacade == null) {
+            return;
+        }
+        setQuestionGroupInstances(questionnaireServiceFacade, request, loanBO.getAccountId());
+    }
+
+    // Intentionally made public to aid testing !
+    public void setQuestionGroupInstances(QuestionnaireServiceFacade questionnaireServiceFacade, HttpServletRequest request, Integer loanAccountId) throws PageExpiredException {
+        List<QuestionGroupInstanceDetail> instanceDetails = questionnaireServiceFacade.getQuestionGroupInstances(loanAccountId, "View", "Loan");
+        SessionUtils.setCollectionAttribute("questionGroupInstances", instanceDetails, request);
+    }
+
+    private void setCurrentPageUrl(HttpServletRequest request, LoanBO loanBO) throws PageExpiredException, UnsupportedEncodingException {
+        SessionUtils.removeThenSetAttribute("currentPageUrl", constructCurrentPageUrl(request, loanBO), request);
+    }
+
+    private String constructCurrentPageUrl(HttpServletRequest request, LoanBO loanBO) throws UnsupportedEncodingException {
+        String globalAccountNum = request.getParameter("globalAccountNum");
+        String officerId = request.getParameter("recordOfficeId");
+        String loanOfficerId = request.getParameter("recordLoanOfficerId");
+        String url = String.format("loanAccountAction.do?globalAccountNum=%s&customerId=%s&recordOfficeId=%s&recordLoanOfficerId=%s",
+                globalAccountNum, Integer.toString(loanBO.getAccountId()), officerId, loanOfficerId);
+        return URLEncoder.encode(url, "UTF-8");
     }
 
     @TransactionDemarcate(joinToken = true)
