@@ -20,6 +20,8 @@
 
 package org.mifos.customers.center.struts.action;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,9 +52,12 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.MifosServiceFactory;
 
 public class CenterCustAction extends CustAction {
 
@@ -269,10 +274,38 @@ public class CenterCustAction extends CustAction {
         SessionUtils.removeThenSetAttribute("centerInformationDto", centerInformationDto, request);
 
         // John W - 'BusinessKey' attribute used by breadcrumb but is not in associated jsp
-        CenterBO center = (CenterBO) this.customerDao.findCustomerById(centerInformationDto.getCenterDisplay().getCustomerId());
-        SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, center, request);
+        CenterBO centerBO = (CenterBO) this.customerDao.findCustomerById(centerInformationDto.getCenterDisplay().getCustomerId());
+        SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, centerBO, request);
+        setCurrentPageUrl(request, centerBO);
+        setQuestionGroupInstances(request, centerBO);
 
         return mapping.findForward(ActionForwards.get_success.toString());
+    }
+
+    private void setQuestionGroupInstances(HttpServletRequest request, CenterBO centerBO) throws PageExpiredException {
+        QuestionnaireServiceFacade questionnaireServiceFacade = MifosServiceFactory.getQuestionnaireServiceFacade(request);
+        if (questionnaireServiceFacade == null) {
+            return;
+        }
+        setQuestionGroupInstances(questionnaireServiceFacade, request, centerBO.getCustomerId());
+    }
+
+    // Intentionally made public to aid testing !
+    public void setQuestionGroupInstances(QuestionnaireServiceFacade questionnaireServiceFacade, HttpServletRequest request, Integer customerId) throws PageExpiredException {
+        List<QuestionGroupInstanceDetail> instanceDetails = questionnaireServiceFacade.getQuestionGroupInstances(customerId, "View", "Center");
+        SessionUtils.setCollectionAttribute("questionGroupInstances", instanceDetails, request);
+    }
+
+    private void setCurrentPageUrl(HttpServletRequest request, CenterBO centerBO) throws PageExpiredException, UnsupportedEncodingException {
+        SessionUtils.removeThenSetAttribute("currentPageUrl", constructCurrentPageUrl(request, centerBO), request);
+    }
+
+    private String constructCurrentPageUrl(HttpServletRequest request, CenterBO centerBO) throws UnsupportedEncodingException {
+        String officerId = request.getParameter("recordOfficeId");
+        String loanOfficerId = request.getParameter("recordLoanOfficerId");
+        String url = String.format("centerCustAction.do?globalCustNum=%s&recordOfficeId=%s&recordLoanOfficerId=%s",
+                centerBO.getGlobalCustNum(), officerId, loanOfficerId);
+        return URLEncoder.encode(url, "UTF-8");
     }
 
     @TransactionDemarcate(conditionToken = true)
