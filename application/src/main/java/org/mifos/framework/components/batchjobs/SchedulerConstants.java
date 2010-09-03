@@ -26,6 +26,10 @@ public interface SchedulerConstants {
     String SCHEDULER_CONFIGURATION_FILE_NAME = "quartz.properties";
 
     String SPRING_SCHEDULER_BEAN_NAME = "schedulerFactoryBean";
+    String JOB_EXPLORER_BEAN_NAME = "jobExplorer";
+    String JOB_REPOSITORY_BEAN_NAME = "jobRepository";
+    String JOB_LAUNCHER_BEAN_NAME = "jobLauncher";
+    String JOB_LOCATOR_BEAN_NAME = "jobRegistry";
 
     String SPRING_BEANS_FILE_ROOT_TAG = "beans";
 

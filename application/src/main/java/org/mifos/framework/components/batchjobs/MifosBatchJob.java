@@ -53,10 +53,10 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
     private static boolean batchJobRunning = false;
     private static boolean requiresExclusiveAccess = true;
 
-    public static JobLauncher jobLauncher;
-    public static JobLocator jobLocator;
-    public static JobExplorer jobExplorer;
-    public static JobRepository jobRepository;
+    private JobLauncher jobLauncher;
+    private JobLocator jobLocator;
+    private JobExplorer jobExplorer;
+    private JobRepository jobRepository;
 
     public void setJobLauncher(JobLauncher jobLauncher) {
         this.jobLauncher = jobLauncher;
@@ -195,22 +195,6 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
      * return an appropriate Helper class containing business logic.
      */
     public abstract TaskHelper getTaskHelper();
-
-    public static JobLauncher getJobLauncherObject() {
-        return jobLauncher;
-    }
-
-    public static JobLocator getJobLocatorObject() {
-        return jobLocator;
-    }
-
-    public static JobExplorer getJobExplorerObject() {
-        return jobExplorer;
-    }
-
-    public static JobRepository getJobRepositoryObject() {
-        return jobRepository;
-    }
 
     /**
      * This method determines if users can continue to use the system while this task/batch job is running.

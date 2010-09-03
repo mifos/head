@@ -49,7 +49,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.components.batchjobs.MifosBatchJob;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
@@ -103,7 +102,7 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
         int statusChangeHistorySize = loanAccount.getAccountStatusChangeHistory().size();
         mifosScheduler.runIndividualTask(jobName);
         Thread.sleep(1000);
-        JobExplorer explorer = MifosBatchJob.getJobExplorerObject();
+        JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
         List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 10);
         Assert.assertEquals(1, jobInstances.size());
         JobInstance lastInstance = jobInstances.get(0);

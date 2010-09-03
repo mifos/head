@@ -47,6 +47,10 @@ import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.TriggerListener;
 import org.quartz.impl.StdSchedulerFactory;
+import org.springframework.batch.core.configuration.JobLocator;
+import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.w3c.dom.Document;
@@ -62,7 +66,8 @@ public class MifosScheduler {
 
     private static final String BATCH_JOB_CLASS_PATH_PREFIX = "org.mifos.framework.components.batchjobs.helpers.";
     private static final String LISTENERS_CLASS_PATH_PREFIX = "org.mifos.framework.components.batchjobs.listeners.";
-    Scheduler scheduler = null;
+    private Scheduler scheduler = null;
+    private ConfigurableApplicationContext springTaskContext = null;
     private static MifosLogger logger = MifosLogManager.getLogger(MifosScheduler.class.getName());
     private ConfigurationLocator configurationLocator;
 
@@ -73,9 +78,8 @@ public class MifosScheduler {
             Document document = builder.parse(getTaskConfigurationInputSource());
             NodeList rootElement = document.getElementsByTagName(SchedulerConstants.SPRING_BEANS_FILE_ROOT_TAG);
             if(rootElement.getLength() > 0) {
-                ConfigurableApplicationContext context = null;
-                context = new FileSystemXmlApplicationContext("file:"+getTaskConfigurationFilePath());
-                scheduler = (Scheduler)context.getBean(SchedulerConstants.SPRING_SCHEDULER_BEAN_NAME);
+                springTaskContext = new FileSystemXmlApplicationContext("file:"+getTaskConfigurationFilePath());
+                scheduler = (Scheduler)springTaskContext.getBean(SchedulerConstants.SPRING_SCHEDULER_BEAN_NAME);
             } else {
                 StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
                 String configPath = getQuartzSchedulerConfigurationFilePath();
@@ -473,6 +477,22 @@ public class MifosScheduler {
         }
     }
 
+    public JobExplorer getBatchJobExplorer() {
+        return (JobExplorer)springTaskContext.getBean(SchedulerConstants.JOB_EXPLORER_BEAN_NAME);
+    }
+
+    public JobRepository getBatchJobRepository() {
+        return (JobRepository)springTaskContext.getBean(SchedulerConstants.JOB_REPOSITORY_BEAN_NAME);
+    }
+
+    public JobLauncher getBatchJobLauncher() {
+        return (JobLauncher)springTaskContext.getBean(SchedulerConstants.JOB_LAUNCHER_BEAN_NAME);
+    }
+
+    public JobLocator getBatchJobLocator() {
+        return (JobLocator)springTaskContext.getBean(SchedulerConstants.JOB_LOCATOR_BEAN_NAME);
+    }
+
     private InputSource getTaskConfigurationInputSource() throws FileNotFoundException, IOException {
         File configurationFile = getConfigurationLocator().getFile(SchedulerConstants.CONFIGURATION_FILE_NAME);
         FileReader fileReader = new FileReader(configurationFile);
@@ -486,7 +506,7 @@ public class MifosScheduler {
         return configurationFile.getAbsolutePath();
     }
 
-    public String getQuartzSchedulerConfigurationFilePath() throws FileNotFoundException, IOException {
+    private String getQuartzSchedulerConfigurationFilePath() throws FileNotFoundException, IOException {
         File configurationFile = getConfigurationLocator().getFile(SchedulerConstants.SCHEDULER_CONFIGURATION_FILE_NAME);
         logger.info("Reading scheduler configuration from: " + configurationFile.getAbsolutePath());
         return configurationFile.getAbsolutePath();
