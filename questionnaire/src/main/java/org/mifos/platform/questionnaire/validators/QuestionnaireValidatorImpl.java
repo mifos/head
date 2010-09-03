@@ -59,9 +59,6 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     private EventSourceDao eventSourceDao;
 
     @Autowired
-    private QuestionGroupDao questionGroupDao;
-
-    @Autowired
     private QuestionDao questionDao;
 
     @SuppressWarnings({"UnusedDeclaration"})
@@ -70,7 +67,6 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
 
     public QuestionnaireValidatorImpl(EventSourceDao eventSourceDao, QuestionGroupDao questionGroupDao, QuestionDao questionDao) {
         this.eventSourceDao = eventSourceDao;
-        this.questionGroupDao = questionGroupDao;
         this.questionDao = questionDao;
     }
 
@@ -477,15 +473,8 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
             title = title.trim();
             if (title.length() >= MAX_LENGTH_FOR_TITILE) {
                 parentException.addChildException(new ValidationException(QUESTION_GROUP_TITLE_TOO_BIG));
-            } else if (isDuplicateQuestionGroupTitle(title)) {
-                parentException.addChildException(new ValidationException(QUESTION_GROUP_TITLE_DUPLICATE));
             }
         }
-    }
-
-    private boolean isDuplicateQuestionGroupTitle(String questionGroupTitle) {
-        List<Long> result = questionGroupDao.retrieveCountOfQuestionGroupsWithTitle(questionGroupTitle);
-        return isNotEmpty(result) && result.get(0) > 0;
     }
 
     private void validateResponsesInQuestionGroup(QuestionGroupDetail questionGroupDetail, ValidationException validationException) {

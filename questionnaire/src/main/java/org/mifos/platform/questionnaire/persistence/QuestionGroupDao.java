@@ -27,5 +27,4 @@ import java.util.List;
 
 public interface QuestionGroupDao extends GenericDao<QuestionGroup, Integer> {
     List<QuestionGroup> retrieveQuestionGroupsByEventSource(String event, String source);
-    List<Long> retrieveCountOfQuestionGroupsWithTitle(String questionGroupTitle);
 }
