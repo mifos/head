@@ -1281,31 +1281,67 @@ public class LoanOfferingBO extends PrdOfferingBO {
     public LoanProductRequest toFullDto() {
         ProductDetailsDto details = super.toDetailsDto();
         Integer currencyId = super.getCurrency().getCurrencyId().intValue();
-        boolean includeInLoanCounter = this.loanCounter == YesNoFlag.YES.getValue() ? true : false;
-        boolean waiverInterestBool = this.waiverInterest == YesNoFlag.YES.getValue() ? true : false;
+        boolean includeInLoanCounter = YesNoFlag.YES.getValue().equals(this.loanCounter);
+        boolean waiverInterestBool = YesNoFlag.YES.getValue().equals(this.waiverInterest);
 
         Integer frequencyType = this.loanOfferingMeeting.getMeeting().getRecurrenceType().getValue().intValue();
         Integer recurs = this.loanOfferingMeeting.getMeeting().getRecurAfter().intValue();
 
-        Integer calculationType = LoanProductCalculationType.UNKNOWN.getValue();
-        MinMaxDefaultDto sameForAllLoanRange = null;
-        List<LowerUpperMinMaxDefaultDto> byLastLoanAmountList = new ArrayList<LowerUpperMinMaxDefaultDto>();
-        List<MinMaxDefaultDto> byLoanCycleList = new ArrayList<MinMaxDefaultDto>();
+        Integer loanAmountCalculationType = LoanProductCalculationType.UNKNOWN.getValue();
+        MinMaxDefaultDto loanAmountSameForAllLoanRange = null;
+        List<LowerUpperMinMaxDefaultDto> loanAmountByLastLoanAmountList = new ArrayList<LowerUpperMinMaxDefaultDto>();
+        List<MinMaxDefaultDto> loanAmountByLoanCycleList = new ArrayList<MinMaxDefaultDto>();
 
         if (!this.loanAmountSameForAllLoan.isEmpty()) {
-            calculationType = LoanProductCalculationType.SAME_FOR_ALL_LOANS.getValue();
-            LoanAmountSameForAllLoanBO loanAmountSameForAllLoans = getEligibleLoanAmountSameForAllLoan();
-            sameForAllLoanRange = MinMaxDefaultDto.create(loanAmountSameForAllLoans.getMinLoanAmount(), loanAmountSameForAllLoans.getMaxLoanAmount(), loanAmountSameForAllLoans.getDefaultLoanAmount());
+            loanAmountCalculationType = LoanProductCalculationType.SAME_FOR_ALL_LOANS.getValue();
+            LoanAmountSameForAllLoanBO sameForAllLoans = getEligibleLoanAmountSameForAllLoan();
+            loanAmountSameForAllLoanRange = MinMaxDefaultDto.create(sameForAllLoans.getMinLoanAmount(), sameForAllLoans.getMaxLoanAmount(), sameForAllLoans.getDefaultLoanAmount());
         }
 
         if (!this.loanAmountFromLastLoan.isEmpty()) {
-
+            loanAmountCalculationType = LoanProductCalculationType.BY_LAST_LOAN.getValue();
+            for (LoanAmountFromLastLoanAmountBO loanCycle : this.loanAmountFromLastLoan) {
+                LowerUpperMinMaxDefaultDto cycle = LowerUpperMinMaxDefaultDto.create(loanCycle.getStartRange(), loanCycle.getEndRange(), loanCycle.getMinLoanAmount(), loanCycle.getMaxLoanAmount(), loanCycle.getDefaultLoanAmount());
+                loanAmountByLastLoanAmountList.add(cycle);
+            }
         }
 
-        LoanAmountDetailsDto loanAmountDetails = new LoanAmountDetailsDto(calculationType, sameForAllLoanRange, byLastLoanAmountList, byLoanCycleList);
+        if (!this.loanAmountFromLoanCycle.isEmpty()) {
+            loanAmountCalculationType = LoanProductCalculationType.BY_LOAN_CYCLE.getValue();
+            for (LoanAmountFromLoanCycleBO loanCycle : this.loanAmountFromLoanCycle) {
+                MinMaxDefaultDto cycle = MinMaxDefaultDto.create(loanCycle.getMinLoanAmount(), loanCycle.getMaxLoanAmount(), loanCycle.getDefaultLoanAmount());
+                loanAmountByLoanCycleList.add(cycle);
+            }
+        }
+        LoanAmountDetailsDto loanAmountDetails = new LoanAmountDetailsDto(loanAmountCalculationType, loanAmountSameForAllLoanRange, loanAmountByLastLoanAmountList, loanAmountByLoanCycleList);
 
-        // FIXME - keithw - do installments
-        LoanAmountDetailsDto installmentCalculationDetails = new LoanAmountDetailsDto(calculationType, sameForAllLoanRange, byLastLoanAmountList, byLoanCycleList);
+        Integer installmentCalculationType = LoanProductCalculationType.UNKNOWN.getValue();
+        MinMaxDefaultDto installmentSameForAllLoanRange = null;
+        List<LowerUpperMinMaxDefaultDto> installmentByLastLoanAmountList = new ArrayList<LowerUpperMinMaxDefaultDto>();
+        List<MinMaxDefaultDto> installmentByLoanCycleList = new ArrayList<MinMaxDefaultDto>();
+
+        if (!this.noOfInstallSameForAllLoan.isEmpty()) {
+            installmentCalculationType = LoanProductCalculationType.SAME_FOR_ALL_LOANS.getValue();
+            LoanOfferingInstallmentRange sameForAllLoans = getEligibleInstallmentSameForAllLoan();
+            installmentSameForAllLoanRange = MinMaxDefaultDto.create(sameForAllLoans.getMinNoOfInstall(), sameForAllLoans.getMaxNoOfInstall(), sameForAllLoans.getDefaultNoOfInstall());
+        }
+
+        if (!this.noOfInstallFromLastLoan.isEmpty()) {
+            installmentCalculationType = LoanProductCalculationType.BY_LAST_LOAN.getValue();
+            for (NoOfInstallFromLastLoanAmountBO loanCycle : this.noOfInstallFromLastLoan) {
+                LowerUpperMinMaxDefaultDto cycle = LowerUpperMinMaxDefaultDto.create(loanCycle.getStartRange(), loanCycle.getEndRange(), loanCycle.getMinNoOfInstall(), loanCycle.getMaxNoOfInstall(), loanCycle.getDefaultNoOfInstall());
+                installmentByLastLoanAmountList.add(cycle);
+            }
+        }
+
+        if (!this.noOfInstallFromLoanCycle.isEmpty()) {
+            installmentCalculationType = LoanProductCalculationType.BY_LOAN_CYCLE.getValue();
+            for (NoOfInstallFromLoanCycleBO loanCycle : this.noOfInstallFromLoanCycle) {
+                MinMaxDefaultDto cycle = MinMaxDefaultDto.create(loanCycle.getMinNoOfInstall(), loanCycle.getMaxNoOfInstall(), loanCycle.getDefaultNoOfInstall());
+                installmentByLoanCycleList.add(cycle);
+            }
+        }
+        LoanAmountDetailsDto installmentCalculationDetails = new LoanAmountDetailsDto(installmentCalculationType, installmentSameForAllLoanRange, installmentByLastLoanAmountList, installmentByLoanCycleList);
 
         RepaymentDetailsDto repaymentDetails = new RepaymentDetailsDto(frequencyType, recurs,
                 installmentCalculationDetails, this.gracePeriodType.getId().intValue(), this.gracePeriodDuration.intValue());
@@ -1322,8 +1358,10 @@ public class LoanOfferingBO extends PrdOfferingBO {
         for (LoanOfferingFundEntity fund : this.loanOfferingFunds) {
             applicableFunds.add(fund.getFund().getFundId().intValue());
         }
+
         Integer interestGlCodeId = this.interestGLcode.getGlcodeId().intValue();
         Integer principalClCodeId = this.principalGLcode.getGlcodeId().intValue();
+
         AccountingDetailsDto accountDetails = new AccountingDetailsDto(applicableFunds, interestGlCodeId, principalClCodeId);
 
         LoanProductRequest loanProductDto = new LoanProductRequest(details, includeInLoanCounter, waiverInterestBool,

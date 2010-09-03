@@ -200,7 +200,7 @@ function switchLoanInstallmentType()
             <div class="span-23 ">
             	<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.currency" /]&nbsp;:</span>
             	<span class="span-4">
-            		[@spring.formSingleSelect "loanProduct.selectedCurrency" loanProduct.currencyOptions /]
+            		[@spring.formSingleSelect "loanProduct.selectedCurrency", loanProduct.currencyOptions, "disabled=disabled" /]
               	</span>
             </div>
             [/#if]
@@ -372,6 +372,14 @@ function switchLoanInstallmentType()
             </div>
           </div>
           <div class="clear">&nbsp;</div>
+          <p class="fontBold">Status</p>
+          <div class="prepend-3  span-23 last">
+          	<div class="span-23">
+	      		<span class="pull-3 span-8 rightAlign"><span class="red">* </span>Status&nbsp;</span>
+		      	<span class="span-6">[@mifos.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedStatus", loanProduct.generalDetails.statusOptions, "--select one--" /]</span>
+            </div>
+          </div>
+          
           <p class="fontBold">[@spring.message "manageLoanProducts.defineLoanProduct.repaymentschedule" /]</p>
           <div class="prepend-2  span-23 last">
           	<div class="span-23 ">
@@ -572,11 +580,11 @@ function switchLoanInstallmentType()
             	<span class="span-6 ">
             		<span class="span-2">[@spring.message "manageLoanProducts.defineLoanProduct.interest" /]&nbsp;:</span>
             		<span class="span-3">
-						[@mifos.formSingleSelectWithPrompt "loanProduct.selectedInterest", loanProduct.interestGeneralLedgerOptions, "--select one--" /]            	
+						[@mifos.formSingleSelectWithPrompt "loanProduct.selectedInterest", loanProduct.interestGeneralLedgerOptions, "--select one--", "disabled=disabled" /]            	
               		</span>
                 
                 	<span class="span-2">[@spring.message "manageLoanProducts.defineLoanProduct.principal" /]&nbsp;:</span>
-                		[@mifos.formSingleSelectWithPrompt "loanProduct.selectedPrincipal", loanProduct.principalGeneralLedgerOptions, "--select one--" /]	
+                		[@mifos.formSingleSelectWithPrompt "loanProduct.selectedPrincipal", loanProduct.principalGeneralLedgerOptions, "--select one--", "disabled=disabled" /]	
                 	<span class="span-3">
               		</span> 
                	</span>

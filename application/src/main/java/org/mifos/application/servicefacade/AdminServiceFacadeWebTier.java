@@ -162,6 +162,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private final FundDao fundDao;
     private final GeneralLedgerDao generalLedgerDao;
     private LoanProductCaluclationTypeAssembler loanProductCaluclationTypeAssembler = new LoanProductCaluclationTypeAssembler();
+    private LoanProductAssembler loanProductAssembler;
 
     public AdminServiceFacadeWebTier(ProductService productService, OfficeHierarchyService officeHierarchyService,
             MandatoryHiddenFieldService mandatoryHiddenFieldService, LoanProductDao loanProductDao,
@@ -176,6 +177,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         this.applicationConfigurationDao = applicationConfigurationDao;
         this.fundDao = fundDao;
         this.generalLedgerDao = generalLedgerDao;
+        this.loanProductAssembler = new LoanProductAssembler(this.loanProductDao, this.generalLedgerDao);
     }
 
     @Override
@@ -1576,6 +1578,10 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             }
 
             List<ListElement> statusOptions = new ArrayList<ListElement>();
+            List<PrdStatusEntity> applicableStatuses = service.getApplicablePrdStatus(Short.valueOf("1"));
+            for (PrdStatusEntity entity : applicableStatuses) {
+                statusOptions.add(new ListElement(entity.getOfferingStatusId().intValue(), entity.getPrdState().getName()));
+            }
 
             boolean multiCurrencyEnabled = AccountingRules.isMultiCurrencyEnabled();
             List<ListElement> currencyOptions = new ArrayList<ListElement>();
@@ -1593,6 +1599,45 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             throw new MifosRuntimeException(e);
         } catch (ApplicationException e) {
             throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    @Override
+    public PrdOfferingDto updateLoanProduct(LoanProductRequest loanProductRequest) {
+
+        LoanOfferingBO loanProductForUpdate = this.loanProductDao.findById(loanProductRequest.getProductDetails().getId());
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        LoanOfferingBO newSavingsDetails = this.loanProductAssembler.fromDto(user, loanProductRequest);
+
+        UserContext userContext = new UserContext();
+        userContext.setBranchId(user.getBranchId());
+        userContext.setId(Short.valueOf((short) user.getUserId()));
+        userContext.setName(user.getUsername());
+
+        loanProductForUpdate.updateDetails(userContext);
+
+        HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+
+        try {
+            transactionHelper.startTransaction();
+            transactionHelper.beginAuditLoggingFor(loanProductForUpdate);
+
+            loanProductForUpdate.updateProductDetails(newSavingsDetails.getPrdOfferingName(), newSavingsDetails.getPrdOfferingShortName(),
+                    newSavingsDetails.getDescription(), newSavingsDetails.getPrdCategory(), newSavingsDetails.getStartDate(), newSavingsDetails.getEndDate(),
+                    newSavingsDetails.getPrdApplicableMaster(), newSavingsDetails.getPrdStatus());
+
+//            loanProductForUpdate.updateLoanDetails();
+
+            this.loanProductDao.save(loanProductForUpdate);
+            transactionHelper.commitTransaction();
+            return loanProductForUpdate.toDto();
+        } catch (Exception e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            transactionHelper.closeSession();
         }
     }
 

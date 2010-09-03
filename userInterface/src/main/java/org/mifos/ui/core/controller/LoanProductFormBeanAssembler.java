@@ -227,8 +227,10 @@ public class LoanProductFormBeanAssembler {
             endDate = new DateTime().withDate(Integer.valueOf(loanProductFormBean.getGeneralDetails().getEndDateYear()), loanProductFormBean.getGeneralDetails().getEndDateMonth(), loanProductFormBean.getGeneralDetails().getEndDateDay());
         }
 
-        return new ProductDetailsDto(loanProductFormBean.getGeneralDetails().getName(), loanProductFormBean.getGeneralDetails().getShortName(),
+        ProductDetailsDto productDetailsDto = new ProductDetailsDto(loanProductFormBean.getGeneralDetails().getName(), loanProductFormBean.getGeneralDetails().getShortName(),
                 loanProductFormBean.getGeneralDetails().getDescription(), category, startDate, endDate, applicableFor);
+        productDetailsDto.setId(loanProductFormBean.getGeneralDetails().getId());
+        return productDetailsDto;
     }
 
     private LoanAmountDetailsDto translateToLoanAmountDetails(LoanProductFormBean loanProductFormBean) {
@@ -306,5 +308,124 @@ public class LoanProductFormBeanAssembler {
             list.add(LowerUpperMinMaxDefaultDto.create(bean.getLower(), bean.getUpper(), bean.getMin(), bean.getMax(), bean.getTheDefault()));
         }
         return list;
+    }
+
+    public void populateWithLoanProductDetails(LoanProductFormBean loanProductFormBean, LoanProductRequest loanProductRequest) {
+        ProductDetailsDto productDto = loanProductRequest.getProductDetails();
+
+        GeneralProductBean productBean = new GeneralProductBeanAssembler().assembleFrom(loanProductFormBean.getGeneralDetails(), productDto);
+        loanProductFormBean.setGeneralDetails(productBean);
+
+        loanProductFormBean.setSelectedCurrency(loanProductRequest.getCurrencyId().toString());
+        loanProductFormBean.setIncludeInLoanCycleCounter(loanProductRequest.isIncludeInLoanCycleCounter());
+        loanProductFormBean.setWaiverInterest(loanProductRequest.isWaiverInterest());
+
+        LoanAmountDetailsDto loanAmountDetailsDto = loanProductRequest.getLoanAmountDetails();
+        loanProductFormBean.setSelectedLoanAmountCalculationType(loanAmountDetailsDto.getCalculationType().toString());
+
+        SameForAllLoanBean loanAmountSameForAllLoans = new SameForAllLoanBean();
+        if (loanAmountDetailsDto.getSameForAllLoanRange() != null) {
+            loanAmountSameForAllLoans.setMin(loanAmountDetailsDto.getSameForAllLoanRange().getMin().doubleValue());
+            loanAmountSameForAllLoans.setMax(loanAmountDetailsDto.getSameForAllLoanRange().getMax().doubleValue());
+            loanAmountSameForAllLoans.setTheDefault(loanAmountDetailsDto.getSameForAllLoanRange().getTheDefault().doubleValue());
+        }
+
+        ByLastLoanAmountBean[] loanAmountByLastLoanAmount = loanProductFormBean.createByLastLoanAmountBeans();
+        int loanAmountByLastLoanAmountIndex = 0;
+        for (LowerUpperMinMaxDefaultDto dto : loanAmountDetailsDto.getByLastLoanAmountList()) {
+            ByLastLoanAmountBean bean = loanAmountByLastLoanAmount[loanAmountByLastLoanAmountIndex];
+            bean.setLower(dto.getLower().doubleValue());
+            bean.setUpper(dto.getUpper().doubleValue());
+            bean.setMin(dto.getMin().doubleValue());
+            bean.setMax(dto.getMax().doubleValue());
+            bean.setTheDefault(dto.getTheDefault().doubleValue());
+            loanAmountByLastLoanAmountIndex++;
+        }
+
+        ByLoanCycleBean[] loanAmountByLoanCycle = loanProductFormBean.createByLoanCycleBeans();
+        int loanAmountCycleIndex = 0;
+        for (MinMaxDefaultDto dto : loanAmountDetailsDto.getByLoanCycleList()) {
+            ByLoanCycleBean bean = loanAmountByLoanCycle[loanAmountCycleIndex];
+            bean.setMin(dto.getMin().doubleValue());
+            bean.setMax(dto.getMax().doubleValue());
+            bean.setTheDefault(dto.getTheDefault().doubleValue());
+            loanAmountCycleIndex++;
+        }
+
+        loanProductFormBean.setLoanAmountSameForAllLoans(loanAmountSameForAllLoans);
+        loanProductFormBean.setLoanAmountByLastLoanAmount(loanAmountByLastLoanAmount);
+        loanProductFormBean.setLoanAmountByLoanCycle(loanAmountByLoanCycle);
+
+        loanProductFormBean.setSelectedInterestRateCalculationType(loanProductRequest.getInterestRateType().toString());
+        loanProductFormBean.setMinInterestRate(loanProductRequest.getInterestRateRange().getMin().doubleValue());
+        loanProductFormBean.setMaxInterestRate(loanProductRequest.getInterestRateRange().getMax().doubleValue());
+        loanProductFormBean.setDefaultInterestRate(loanProductRequest.getInterestRateRange().getTheDefault().doubleValue());
+
+        loanProductFormBean.setInstallmentFrequencyPeriod(loanProductRequest.getRepaymentDetails().getFrequencyType().toString());
+        loanProductFormBean.setInstallmentFrequencyRecurrenceEvery(loanProductRequest.getRepaymentDetails().getRecurs());
+
+        LoanAmountDetailsDto installmentDetailsDto = loanProductRequest.getRepaymentDetails().getInstallmentCalculationDetails();
+        loanProductFormBean.setSelectedInstallmentsCalculationType(installmentDetailsDto.getCalculationType().toString());
+
+        SameForAllLoanBean installmentsSameForAllLoans = new SameForAllLoanBean();
+        if (installmentDetailsDto.getSameForAllLoanRange() != null) {
+            installmentsSameForAllLoans.setMin(installmentDetailsDto.getSameForAllLoanRange().getMin().doubleValue());
+            installmentsSameForAllLoans.setMax(installmentDetailsDto.getSameForAllLoanRange().getMax().doubleValue());
+            installmentsSameForAllLoans.setTheDefault(installmentDetailsDto.getSameForAllLoanRange().getTheDefault().doubleValue());
+        }
+
+        ByLastLoanAmountBean[] installmentsByLastLoanAmount = loanProductFormBean.createByLastLoanAmountBeans();
+        int installmentsByLastLoanAmountIndex = 0;
+        for (LowerUpperMinMaxDefaultDto dto : installmentDetailsDto.getByLastLoanAmountList()) {
+            ByLastLoanAmountBean bean = installmentsByLastLoanAmount[installmentsByLastLoanAmountIndex];
+            bean.setLower(dto.getLower().doubleValue());
+            bean.setUpper(dto.getUpper().doubleValue());
+            bean.setMin(dto.getMin().doubleValue());
+            bean.setMax(dto.getMax().doubleValue());
+            bean.setTheDefault(dto.getTheDefault().doubleValue());
+            installmentsByLastLoanAmountIndex++;
+        }
+
+        ByLoanCycleBean[] installmentsByLoanCycle = loanProductFormBean.createByLoanCycleBeans();
+        int installIndex = 0;
+        for (MinMaxDefaultDto dto : installmentDetailsDto.getByLoanCycleList()) {
+            ByLoanCycleBean bean = installmentsByLoanCycle[installIndex];
+            bean.setMin(dto.getMin().doubleValue());
+            bean.setMax(dto.getMax().doubleValue());
+            bean.setTheDefault(dto.getTheDefault().doubleValue());
+            installIndex++;
+        }
+
+        loanProductFormBean.setInstallmentsSameForAllLoans(installmentsSameForAllLoans);
+        loanProductFormBean.setInstallmentsByLastLoanAmount(installmentsByLastLoanAmount);
+        loanProductFormBean.setInstallmentsByLoanCycle(installmentsByLoanCycle);
+
+        loanProductFormBean.setSelectedGracePeriodType(loanProductRequest.getRepaymentDetails().getGracePeriodType().toString());
+        loanProductFormBean.setGracePeriodDurationInInstallments(loanProductRequest.getRepaymentDetails().getGracePeriodDuration());
+
+        if (!loanProductRequest.getApplicableFees().isEmpty()) {
+            String[] selectedFees = new String[loanProductRequest.getApplicableFees().size()];
+            int index = 0;
+            for (Integer feeId : loanProductRequest.getApplicableFees()) {
+                selectedFees[index] = feeId.toString();
+                index++;
+            }
+            loanProductFormBean.setSelectedFees(selectedFees);
+        }
+
+        if (!loanProductRequest.getAccountDetails().getApplicableFunds().isEmpty()) {
+
+            String[] selectedFunds = new String[loanProductRequest.getAccountDetails().getApplicableFunds().size()];
+            int index = 0;
+            for (Integer fundId : loanProductRequest.getAccountDetails().getApplicableFunds()) {
+                selectedFunds[index] = fundId.toString();
+                index++;
+            }
+            loanProductFormBean.setSelectedFunds(selectedFunds);
+        }
+
+        loanProductFormBean.resetMultiSelectListBoxes();
+        loanProductFormBean.setSelectedInterest(loanProductRequest.getAccountDetails().getInterestGlCodeId().toString());
+        loanProductFormBean.setSelectedPrincipal(loanProductRequest.getAccountDetails().getPrincipalClCodeId().toString());
     }
 }

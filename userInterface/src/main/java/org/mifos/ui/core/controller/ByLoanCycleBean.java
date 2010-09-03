@@ -40,6 +40,10 @@ public class ByLoanCycleBean {
     @NotNull
     private Double theDefault;
 
+    public ByLoanCycleBean() {
+        // default constructor for binding
+    }
+
     public ByLoanCycleBean(final int loanCycleNumber) {
         this.loanCycleNumber = loanCycleNumber;
     }

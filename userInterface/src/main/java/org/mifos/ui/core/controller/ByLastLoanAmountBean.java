@@ -45,6 +45,11 @@ public class ByLastLoanAmountBean {
     @NotNull
     private Double theDefault;
 
+    @SuppressWarnings("PMD") // needed for binding for some reason
+    public ByLastLoanAmountBean() {
+        // default constructor for binding
+    }
+
     public Double getLower() {
         return this.lower;
     }

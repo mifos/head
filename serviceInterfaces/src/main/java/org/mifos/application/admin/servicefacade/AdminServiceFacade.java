@@ -142,4 +142,7 @@ public interface AdminServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     List<AuditLogDto> retrieveSavingsProductAuditLogs(Integer productId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    PrdOfferingDto updateLoanProduct(LoanProductRequest loanProductRequest);
 }
