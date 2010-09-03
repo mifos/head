@@ -20,12 +20,6 @@
 
 package org.mifos.security.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.mifos.accounts.fees.struts.action.FeeAction;
 import org.mifos.accounts.loan.struts.action.AccountStatusAction;
 import org.mifos.accounts.loan.struts.action.LoanAccountAction;
@@ -53,6 +47,7 @@ import org.mifos.application.collectionsheet.struts.action.CollectionSheetEntryA
 import org.mifos.application.holiday.struts.action.HolidayAction;
 import org.mifos.application.importexport.struts.action.ImportTransactionsAction;
 import org.mifos.application.meeting.struts.action.MeetingAction;
+import org.mifos.application.questionnaire.migration.struts.action.MigrateAction;
 import org.mifos.config.struts.action.CustomFieldsAction;
 import org.mifos.config.struts.action.LookupOptionsAction;
 import org.mifos.customers.center.struts.action.CenterCustAction;
@@ -92,6 +87,12 @@ import org.mifos.reports.struts.action.ReportsUserParamsAction;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.login.struts.action.LoginAction;
 import org.mifos.security.rolesandpermission.struts.action.RolesPermissionsAction;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Singleton.
@@ -238,6 +239,7 @@ public class ActivityMapper {
         parseActionSecurity(ReportsCategoryAction.getSecurity());
         parseActionSecurity(BirtAdminDocumentUploadAction.getSecurity());
         parseActionSecurity(ImportTransactionsAction.getSecurity());
+        parseActionSecurity(MigrateAction.getSecurity());
     }
 
     private void addCustomerSearchMappings() {
