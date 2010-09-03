@@ -755,7 +755,7 @@ explanation of the license and how it is applied.
                   <c:remove var="urlMap" />
                   <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
                   <c:set target="${urlMap}" property="${groupInformationDto.groupDisplay.displayName}" value="groupCustAction.do?method=get&globalCustNum=${groupInformationDto.groupDisplay.globalCustNum}"/>
-                  <a id="viewGroupDetails.link.attachSurvey" href="questionnaire.ftl?source=Group&event=View&entityId=${groupInformationDto.groupDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=groupCustAction.do%3Fmethod%3Dget">
+                  <a id="viewgroupdetails.link.attachSurvey" href="questionnaire.ftl?source=Group&event=View&entityId=${groupInformationDto.groupDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=groupCustAction.do%3Fmethod%3Dget">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
                 </span>
