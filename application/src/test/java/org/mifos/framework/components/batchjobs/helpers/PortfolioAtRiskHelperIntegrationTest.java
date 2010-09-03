@@ -76,24 +76,10 @@ public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCa
         StaticHibernateUtil.closeSession();
     }
 
-    // TODO QUARTZ PortfolioAtRisk needs this LoanArrearsTask to run successfully first
-    /*private Task insertLoanArrearsTask() throws Exception {
-        Task task = new Task();
-        task.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
-        task.setStartTime(new Timestamp(System.currentTimeMillis()));
-        task.setEndTime(new Timestamp(System.currentTimeMillis()));
-        task.setStatus(TaskStatus.COMPLETE.getValue());
-        task.setTask("LoanArrearsTask");
-
-        TaskPersistence p = new TaskPersistence();
-        p.saveAndCommitTask(task);
-        return task;
-
-    }*/
-
     @Test
     public void testExecute() throws Exception {
-        /*TODO QUARTZ Task task = insertLoanArrearsTask();*/
+        LoanArrearsHelper loanArrearsHelper = new LoanArrearsHelper();
+        loanArrearsHelper.execute(System.currentTimeMillis());
         createInitialObject();
 
         group = TestObjectFactory.getCustomer(group.getCustomerId());
@@ -114,12 +100,8 @@ public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCa
         TestObjectFactory.updateObject(group);
         TestObjectFactory.flushandCloseSession();
 
-        PortfolioAtRiskTask portfolioAtRiskTask = new PortfolioAtRiskTask();
-        PortfolioAtRiskHelper portfolioAtRiskHelper = (PortfolioAtRiskHelper) portfolioAtRiskTask.getTaskHelper();
+        PortfolioAtRiskHelper portfolioAtRiskHelper = new PortfolioAtRiskHelper();//(PortfolioAtRiskHelper) portfolioAtRiskTask.getTaskHelper();
         portfolioAtRiskHelper.execute(System.currentTimeMillis());
-        // Session session = StaticHibernateUtil.getSessionTL();
-        // session.delete(task);
-        /*TODO QUARTZ TestObjectFactory.removeObject(task);*/
 
         StaticHibernateUtil.closeSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
@@ -157,4 +139,5 @@ public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCa
             break;
         }
     }
+
 }

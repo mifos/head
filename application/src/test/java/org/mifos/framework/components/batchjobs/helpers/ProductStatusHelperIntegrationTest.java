@@ -20,12 +20,19 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
 import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Date;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -41,12 +48,26 @@ import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.components.batchjobs.MifosScheduler;
+import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
+import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.springframework.batch.core.BatchStatus;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobInstance;
+import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.core.io.ClassPathResource;
 
 public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase {
+
+    MifosScheduler mifosScheduler;
+
+    String jobName;
 
     LoanOfferingBO product;
 
@@ -54,8 +75,9 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
 
     @Before
     public void setUp() throws Exception {
-        ProductStatus productStatus = new ProductStatus();
-        productStatusHelper = (ProductStatusHelper) productStatus.getTaskHelper();
+        productStatusHelper = new ProductStatusHelper();
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/productStatusTestMockTask.xml");
+        jobName = "ProductStatusJob";
     }
 
     @After
@@ -67,17 +89,14 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testExecute() throws PersistenceException, BatchJobException {
         createInactiveLoanOffering();
-
         productStatusHelper.execute(System.currentTimeMillis());
-
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
-       Assert.assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
+        Assert.assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
     }
 
     @Test
     public void testExecuteFailure() throws PersistenceException {
         createInactiveLoanOffering();
-
         TestObjectFactory.simulateInvalidConnection();
         try {
             productStatusHelper.execute(System.currentTimeMillis());
@@ -88,24 +107,32 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
            Assert.assertTrue(true);
         }
         StaticHibernateUtil.closeSession();
-
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
-       Assert.assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
+        Assert.assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
     }
 
     @Test
-    public void testExecuteTask() throws PersistenceException, BatchJobException {
-        // TODO QUARTZ: Create a test running ProductStatus task, testing if it completed successfully and below assertion is met:
-        // createInactiveLoanOffering();
-        // run task, check (Assert) if it executed correctly
-        // product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
-        // Assert.assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
+    public void testExecuteTask() throws Exception {
+        createInactiveLoanOffering();
+        mifosScheduler.runIndividualTask(jobName);
+        Thread.sleep(1000);
+        JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
+        List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 10);
+        Assert.assertTrue(jobInstances.size() > 0);
+        JobInstance lastInstance = jobInstances.get(0);
+        List<JobExecution> jobExecutions = explorer.getJobExecutions(lastInstance);
+        Assert.assertEquals(1, jobExecutions.size());
+        JobExecution lastExecution = jobExecutions.get(0);
+        Assert.assertEquals(BatchStatus.COMPLETED, lastExecution.getStatus());
+        product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
+        Assert.assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
     }
 
     @Test
-    public void testExecuteTaskFailure() throws PersistenceException {
+    public void testExecuteTaskFailure() {
         // TODO QUARTZ: This test tested invalid task execution when DB connection was invalid. Since quartz requires a DB for
         // it's JobStore to run, we should think of a different test case..
+
     }
 
     @Test
@@ -132,4 +159,17 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
         TestObjectFactory.updateObject(product);
         StaticHibernateUtil.closeSession();
     }
+
+    private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws TaskSystemException, IOException, FileNotFoundException {
+        ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
+        expect(mockConfigurationLocator.getFile(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
+                new ClassPathResource(taskConfigurationPath).getFile());
+        expectLastCall().times(2);
+        replay(mockConfigurationLocator);
+        MifosScheduler mifosScheduler = new MifosScheduler();
+        mifosScheduler.setConfigurationLocator(mockConfigurationLocator);
+        mifosScheduler.initialize();
+        return mifosScheduler;
+    }
+
 }
