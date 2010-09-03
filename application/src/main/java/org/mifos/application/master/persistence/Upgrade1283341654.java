@@ -24,25 +24,31 @@ import org.mifos.application.questionnaire.migration.QuestionnaireMigration;
 import org.mifos.customers.surveys.business.Survey;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Upgrade;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Upgrade1283341654 extends Upgrade {
     private QuestionnaireMigration questionnaireMigration;
     private SurveysPersistence surveysPersistence;
+    private MifosLogger mifosLogger;
 
     public Upgrade1283341654() {
         super();
-        initializeDependencies();
+        mifosLogger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
     }
 
     // Should only be used from tests to inject mocks
     public Upgrade1283341654(QuestionnaireMigration questionnaireMigration, SurveysPersistence surveysPersistence) {
+        this();
         this.questionnaireMigration = questionnaireMigration;
         this.surveysPersistence = surveysPersistence;
     }
@@ -50,6 +56,7 @@ public class Upgrade1283341654 extends Upgrade {
     @Override
     public void upgrade(Connection connection) throws IOException, SQLException {
         try {
+            initializeDependencies();
             migrateSurveys();
         } catch (PersistenceException e) {
             throw new SQLException(e);
@@ -61,12 +68,22 @@ public class Upgrade1283341654 extends Upgrade {
     }
 
     private List<Integer> migrateSurveys(SurveyType surveyType) throws PersistenceException {
-        List<Survey> surveys = surveysPersistence.retrieveSurveysByType(surveyType);
+        List<Survey> surveys = getSurveys(surveyType);
         return questionnaireMigration.migrateSurveys(surveys);
     }
 
+    private List<Survey> getSurveys(SurveyType surveyType) {
+        List<Survey> surveys = new ArrayList<Survey>(0);
+        try {
+            surveys = surveysPersistence.retrieveSurveysByType(surveyType);
+        } catch (PersistenceException e) {
+            mifosLogger.error("Unable to retrieve surveys of type " + surveyType, e);
+        }
+        return surveys;
+    }
+
     private void initializeDependencies() {
-        questionnaireMigration = (QuestionnaireMigration) upgradeContext.getBean("questionnaireMigration");
-        surveysPersistence = (SurveysPersistence) upgradeContext.getBean("surveysPersistence");
+        if(questionnaireMigration == null) questionnaireMigration = (QuestionnaireMigration) upgradeContext.getBean("questionnaireMigration");
+        if (surveysPersistence == null) surveysPersistence = (SurveysPersistence) upgradeContext.getBean("surveysPersistence");
     }
 }
