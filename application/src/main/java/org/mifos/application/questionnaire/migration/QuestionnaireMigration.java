@@ -36,6 +36,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.format;
+
 public class QuestionnaireMigration {
 
     @Autowired
@@ -80,17 +82,17 @@ public class QuestionnaireMigration {
 
     private Integer migrateSurvey(Survey survey) {
         QuestionGroupDto questionGroupDto = questionnaireMigrationMapper.map(survey);
-        Integer questionGroupId = createQuestionGroup(questionGroupDto);
+        Integer questionGroupId = createQuestionGroup(questionGroupDto, survey);
         migrateSurveyResponses(survey, questionGroupId);
         return questionGroupId;
     }
 
-    private Integer createQuestionGroup(QuestionGroupDto questionGroupDto) {
+    private Integer createQuestionGroup(QuestionGroupDto questionGroupDto, Survey survey) {
         Integer questionGroupId = null;
         try {
             questionGroupId = questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
         } catch (Exception e) {
-            mifosLogger.error("Unable to convert the survey " + questionGroupDto.getTitle() + " to a Question Group", e);
+            mifosLogger.error(format("Unable to convert the survey, '%s' with ID, %s to a Question Group", survey.getName(), survey.getSurveyId()), e);
         }
         return questionGroupId;
     }
@@ -109,7 +111,8 @@ public class QuestionnaireMigration {
         try {
             questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto);
         } catch (Exception e) {
-            mifosLogger.error("Unable to migrate a survey instance for the survey " + surveyInstance.getSurvey().getName(), e);
+            Survey survey = surveyInstance.getSurvey();
+            mifosLogger.error(format("Unable to migrate a survey instance for the survey, '%s' with ID, %s", survey.getName(), survey.getSurveyId()), e);
         }
     }
 
@@ -118,7 +121,7 @@ public class QuestionnaireMigration {
         try {
             surveyInstances = surveysPersistence.retrieveInstancesBySurvey(survey);
         } catch (Exception e) {
-            mifosLogger.error("Unable to retrieve survey instances for " + survey.getName(), e);
+            mifosLogger.error(format("Unable to retrieve survey instances for survey, '%s' with ID, %s", survey.getName(), survey.getSurveyId()), e);
         }
         return surveyInstances;
     }

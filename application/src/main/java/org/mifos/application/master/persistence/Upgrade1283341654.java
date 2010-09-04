@@ -77,7 +77,7 @@ public class Upgrade1283341654 extends Upgrade {
         try {
             surveys = surveysPersistence.retrieveSurveysByType(surveyType);
         } catch (PersistenceException e) {
-            mifosLogger.error("Unable to retrieve surveys of type " + surveyType, e);
+            mifosLogger.error(String.format("Unable to retrieve surveys of type %s", surveyType), e);
         }
         return surveys;
     }

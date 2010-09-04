@@ -27,6 +27,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.startsWithIgnoreCase;
 import static org.mifos.platform.util.CollectionUtils.isEmpty;
 
 @SuppressWarnings("PMD")
@@ -35,6 +36,7 @@ public class ValidationException extends SystemException {
     private static final long serialVersionUID = -8094463668575047971L;
     private List<ValidationException> childExceptions;
     protected final String questionTitle;
+    private static final String MIFOS_PACKAGE_PREFIX = "org.mifos";
 
     public ValidationException(String key) {
         this(key, null);
@@ -86,15 +88,20 @@ public class ValidationException extends SystemException {
         return buffer.toString();
     }
 
+    // Filters 'noise' frames from the stack trace by including only the frames from the 'mifos' code base
     private void makeStackTrace(StringBuilder buffer, StackTraceElement[] stackTraceElements, String key) {
         buffer.append(key);
         if (stackTraceElements != null) {
             for (StackTraceElement stackTraceElement : stackTraceElements) {
-                buffer.append("\n   at ").append(stackTraceElement.toString());
+                String stackFrameStr = stackTraceElement.toString();
+                if (startsWithIgnoreCase(stackFrameStr, MIFOS_PACKAGE_PREFIX)) {
+                    buffer.append("\n   at ").append(stackFrameStr);
+                }
             }
         } else {
             buffer.append("\n   <no stack trace available>");
         }
         buffer.append("\n");
     }
+
 }
