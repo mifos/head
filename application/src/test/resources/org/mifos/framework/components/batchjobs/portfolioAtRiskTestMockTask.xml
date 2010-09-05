@@ -89,7 +89,7 @@
        id="jobRepository"
        transaction-manager="transactionManager"
        data-source="integrationDataSource"
-       table-prefix="batch_"
+       table-prefix="BATCH_"
     />
     
     <bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
@@ -103,7 +103,7 @@
     
     <bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
        <property name="dataSource" ref="integrationDataSource" />
-       <property name="tablePrefix" value="batch_" />
+       <property name="tablePrefix" value="BATCH_" />
     </bean>
     
     <bean id="jobRegistryBeanPostProcessor" class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">

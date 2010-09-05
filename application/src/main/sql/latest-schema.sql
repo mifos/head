@@ -4393,7 +4393,7 @@ create table applied_upgrades(
 	primary key (upgrade_id)
 ) engine=innodb character set utf8;
 
-create table qrtz_JOB_DETAILS(
+create table QRTZ_JOB_DETAILS(
     job_name  varchar(200) not null,
     job_group varchar(200) not null,
     description varchar(250) null,
@@ -4406,16 +4406,16 @@ create table qrtz_JOB_DETAILS(
     primary key (job_name,job_group)
 ) engine=innodb character set utf8;
 
-create table qrtz_JOB_LISTENERS(
+create table QRTZ_JOB_LISTENERS(
     job_name  varchar(200) not null,
     job_group varchar(200) not null,
     job_listener varchar(200) not null,
     primary key (job_name,job_group,job_listener),
     foreign key (job_name,job_group)
-        references qrtz_JOB_DETAILS(job_name,job_group)
+        references QRTZ_JOB_DETAILS(job_name,job_group)
 ) engine=innodb character set utf8;
 
-create table qrtz_TRIGGERS(
+create table QRTZ_TRIGGERS(
     trigger_name varchar(200) not null,
     trigger_group varchar(200) not null,
     job_name  varchar(200) not null,
@@ -4434,10 +4434,10 @@ create table qrtz_TRIGGERS(
     job_data blob null,
     primary key (trigger_name,trigger_group),
     foreign key (job_name,job_group)
-        references qrtz_JOB_DETAILS(job_name,job_group)
+        references QRTZ_JOB_DETAILS(job_name,job_group)
 ) engine=innodb character set utf8;
 
-create table qrtz_SIMPLE_TRIGGERS(
+create table QRTZ_SIMPLE_TRIGGERS(
     trigger_name varchar(200) not null,
     trigger_group varchar(200) not null,
     repeat_count bigint(7) not null,
@@ -4445,49 +4445,49 @@ create table qrtz_SIMPLE_TRIGGERS(
     times_triggered bigint(10) not null,
     primary key (trigger_name,trigger_group),
     foreign key (trigger_name,trigger_group)
-        references qrtz_TRIGGERS(trigger_name,trigger_group)
+        references QRTZ_TRIGGERS(trigger_name,trigger_group)
 ) engine=innodb character set utf8;
 
-create table qrtz_CRON_TRIGGERS(
+create table QRTZ_CRON_TRIGGERS(
     trigger_name varchar(200) not null,
     trigger_group varchar(200) not null,
     cron_expression varchar(200) not null,
     time_zone_id varchar(80),
     primary key (trigger_name,trigger_group),
     foreign key (trigger_name,trigger_group)
-        references qrtz_TRIGGERS(trigger_name,trigger_group)
+        references QRTZ_TRIGGERS(trigger_name,trigger_group)
 ) engine=innodb character set utf8;
 
-create table qrtz_BLOB_TRIGGERS(
+create table QRTZ_BLOB_TRIGGERS(
     trigger_name varchar(200) not null,
     trigger_group varchar(200) not null,
     blob_data blob null,
     primary key (trigger_name,trigger_group),
     foreign key (trigger_name,trigger_group)
-        references qrtz_TRIGGERS(trigger_name,trigger_group)
+        references QRTZ_TRIGGERS(trigger_name,trigger_group)
 ) engine=innodb character set utf8;
 
-create table qrtz_TRIGGER_LISTENERS(
+create table QRTZ_TRIGGER_LISTENERS(
     trigger_name  varchar(200) not null,
     trigger_group varchar(200) not null,
     trigger_listener varchar(200) not null,
     primary key (trigger_name,trigger_group,trigger_listener),
     foreign key (trigger_name,trigger_group)
-        references qrtz_TRIGGERS(trigger_name,trigger_group)
+        references QRTZ_TRIGGERS(trigger_name,trigger_group)
 ) engine=innodb character set utf8;
 
-create table qrtz_CALENDARS(
+create table QRTZ_CALENDARS(
     calendar_name  varchar(200) not null,
     calendar blob not null,
     primary key (calendar_name)
 ) engine=innodb character set utf8;
 
-create table qrtz_PAUSED_TRIGGER_GRPS(
+create table QRTZ_PAUSED_TRIGGER_GRPS(
     trigger_group  varchar(200) not null,
     primary key (trigger_group)
 );
 
-create table qrtz_FIRED_TRIGGERS(
+create table QRTZ_FIRED_TRIGGERS(
     entry_id varchar(95) not null,
     trigger_name varchar(200) not null,
     trigger_group varchar(200) not null,
@@ -4503,19 +4503,19 @@ create table qrtz_FIRED_TRIGGERS(
     primary key (entry_id)
 ) engine=innodb character set utf8;
 
-create table qrtz_SCHEDULER_STATE(
+create table QRTZ_SCHEDULER_STATE(
     instance_name varchar(200) not null,
     last_checkin_time bigint(13) not null,
     checkin_interval bigint(13) not null,
     primary key (instance_name)
 ) engine=innodb character set utf8;
 
-create table qrtz_LOCKS(
+create table QRTZ_LOCKS(
     lock_name  varchar(40) not null,
     primary key (lock_name)
 ) engine=innodb character set utf8;
 
-create table batch_job_instance  (
+create table BATCH_JOB_INSTANCE  (
 	job_instance_id bigint  not null primary key ,
 	version bigint ,
 	job_name varchar(100) not null,
@@ -4523,7 +4523,7 @@ create table batch_job_instance  (
 	constraint job_inst_un unique (job_name, job_key)
 ) engine=innodb character set utf8;
 
-create table batch_job_execution  (
+create table BATCH_JOB_EXECUTION  (
 	job_execution_id bigint  not null primary key ,
 	version bigint  ,
 	job_instance_id bigint not null,
@@ -4535,10 +4535,10 @@ create table batch_job_execution  (
 	exit_message varchar(2500) ,
 	last_updated datetime,
 	constraint job_inst_exec_fk foreign key (job_instance_id)
-	references batch_job_instance(job_instance_id)
+	references BATCH_JOB_INSTANCE(job_instance_id)
 ) engine=innodb character set utf8;
 
-create table batch_job_params  (
+create table BATCH_JOB_PARAMS  (
 	job_instance_id bigint not null ,
 	type_cd varchar(6) not null ,
 	key_name varchar(100) not null ,
@@ -4547,10 +4547,10 @@ create table batch_job_params  (
 	long_val bigint ,
 	double_val double precision ,
 	constraint job_inst_params_fk foreign key (job_instance_id)
-	references batch_job_instance(job_instance_id)
+	references BATCH_JOB_INSTANCE(job_instance_id)
 ) engine=innodb character set utf8;
 
-create table batch_step_execution  (
+create table BATCH_STEP_EXECUTION  (
 	step_execution_id bigint  not null primary key ,
 	version bigint not null,
 	step_name varchar(100) not null,
@@ -4570,27 +4570,27 @@ create table batch_step_execution  (
 	exit_message varchar(2500) ,
 	last_updated datetime,
 	constraint job_exec_step_fk foreign key (job_execution_id)
-	references batch_job_execution(job_execution_id)
+	references BATCH_JOB_EXECUTION(job_execution_id)
 ) engine=innodb character set utf8;
 
-create table batch_step_execution_context  (
+create table BATCH_STEP_EXECUTION_CONTEXT  (
 	step_execution_id bigint not null primary key,
 	short_context varchar(2500) not null,
 	serialized_context text ,
 	constraint step_exec_ctx_fk foreign key (step_execution_id)
-	references batch_step_execution(step_execution_id)
+	references BATCH_STEP_EXECUTION(step_execution_id)
 ) engine=innodb character set utf8;
 
-create table batch_job_execution_context  (
+create table BATCH_JOB_EXECUTION_CONTEXT  (
 	job_execution_id bigint not null primary key,
 	short_context varchar(2500) not null,
 	serialized_context text ,
 	constraint job_exec_ctx_fk foreign key (job_execution_id)
-	references batch_job_execution(job_execution_id)
+	references BATCH_JOB_EXECUTION(job_execution_id)
 ) engine=innodb character set utf8;
 
-create table batch_step_execution_seq (id bigint not null) engine=myisam;
+create table BATCH_STEP_EXECUTION_SEQ (id bigint not null) engine=myisam;
 
-create table batch_job_execution_seq (id bigint not null) engine=myisam;
+create table BATCH_JOB_EXECUTION_SEQ (id bigint not null) engine=myisam;
 
-create table batch_job_seq (id bigint not null) engine=myisam;
+create table BATCH_JOB_SEQ (id bigint not null) engine=myisam;

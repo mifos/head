@@ -3249,13 +3249,13 @@ insert into event_sources (id, entity_type_id, event_id, description) values
 /* Upgrade 268 END */
 
 /* Quartz related inserts */
-insert into qrtz_LOCKS values('TRIGGER_ACCESS');
-insert into qrtz_LOCKS values('JOB_ACCESS');
-insert into qrtz_LOCKS values('CALENDAR_ACCESS');
-insert into qrtz_LOCKS values('STATE_ACCESS');
-insert into qrtz_LOCKS values('MISFIRE_ACCESS');
+insert into QRTZ_LOCKS values('TRIGGER_ACCESS');
+insert into QRTZ_LOCKS values('JOB_ACCESS');
+insert into QRTZ_LOCKS values('CALENDAR_ACCESS');
+insert into QRTZ_LOCKS values('STATE_ACCESS');
+insert into QRTZ_LOCKS values('MISFIRE_ACCESS');
 
 /* Spring Batch related inserts */
-insert into batch_step_execution_seq values(0);
-insert into batch_job_execution_seq values(0);
-insert into batch_job_seq values(0);
+insert into BATCH_STEP_EXECUTION_SEQ values(0);
+insert into BATCH_JOB_EXECUTION_SEQ values(0);
+insert into BATCH_JOB_SEQ values(0);

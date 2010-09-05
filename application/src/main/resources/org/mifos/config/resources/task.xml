@@ -215,7 +215,7 @@
 	   id="jobRepository"
 	   transaction-manager="transactionManager"
 	   data-source="dataSource"
-	   table-prefix="batch_"
+	   table-prefix="BATCH_"
 	/>
 	
 	<bean id="transactionManager" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager"/>
@@ -231,7 +231,7 @@
 	
 	<bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
 	   <property name="dataSource" ref="dataSource" />
-	   <property name="tablePrefix" value="batch_" />
+	   <property name="tablePrefix" value="BATCH_" />
 	</bean>
 	
 	<bean id="jobRegistryBeanPostProcessor" class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
