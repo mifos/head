@@ -539,8 +539,9 @@ explanation of the license and how it is applied.
 								height="8"></td>
 						</tr>
 					</table>
-               <c:if test="${centerInformationDto.activeSurveys}">
-		<table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
+    <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'questionGroupInstances')}"
+               var="questionGroupInstances" />
+          <table id="questionGroupInstances" name="questionGroupInstances" width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
             <tr>
               <td colspan="2" class="bluetablehead05">
                 <span class="fontnormalbold">
@@ -551,41 +552,46 @@ explanation of the license and how it is applied.
             <tr>
               <td colspan="2" class="paddingL10"><img src="pages/framework/images/trans.gif" width="10" height="2"></td>
             </tr>
-            <c:forEach items="${centerInformationDto.customerSurveys}" var="surveyInstance">
+          <c:if test="${!empty questionGroupInstances}">
+            <c:forEach items="${questionGroupInstances}" var="questionGroupInstance">
               <tr>
                 <td width="70%" class="paddingL10">
                   <span class="fontnormal8pt">
-                    <a id="viewCenterDetails.link.survey" href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=center">
-                      <c:out value="${surveyInstance.surveyName}"/>
+                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${centerInformationDto.centerDisplay.customerId}&instanceId=${questionGroupInstance.id}&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+                      <c:out value="${questionGroupInstance.questionGroupTitle}"/>
                     </a>
                   </span>
                 </td>
                 <td width="30%" align="left" class="paddingL10">
                   <span class="fontnormal8pt">
-                    <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,surveyInstance.dateConducted)}" />
+                    <label id="label.${questionGroupInstance.id}">
+                        <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale, questionGroupInstance.dateCompleted)}" />
+                    </label>
                   </span>
                 </td>
               </tr>
             </c:forEach>
+          </c:if>
             <tr>
               <td colspan="2" align="right" class="paddingleft05">
                 <span class="fontnormal8pt">
-                  <a id="viewCenterDetails.link.attachSurvey" href="surveyInstanceAction.do?method=choosesurvey&globalNum=${centerInformationDto.centerDisplay.globalCustNum}&surveyType=center">
+                  <c:set var="questionnaireFor" scope="session" value="${centerInformationDto.centerDisplay.displayName}"/>
+                  <c:remove var="urlMap" />
+                  <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
+                  <c:set target="${urlMap}" property="${centerInformationDto.centerDisplay.displayName}" value="centerCustAction.do?method=get&globalCustNum=${centerInformationDto.centerDisplay.globalCustNum}"/>
+                  <a id="viewCenterDetails.link.attachSurvey" href="questionnaire.ftl?source=Center&event=View&entityId=${centerInformationDto.centerDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=centerCustAction.do%3Fmethod%3Dget">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
-                  <a id="viewCenterDetails.link.viewAllSurveys" href="surveysAction.do?method=mainpage">
-                    <mifos:mifoslabel name="Surveys.viewallsurveys" bundle="SurveysUIResources"/>
-                  </a>
+                </span>
               </td>
             </tr>
           </table>
-          <table width="95%" border="0" cellspacing="0" cellpadding="0">
-						<tr>
-							<td><img src="pages/framework/images/trans.gif" width="7"
-								height="8"></td>
-						</tr>
-		</table>
-		</c:if>
+        <table width="95%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td><img src="pages/framework/images/trans.gif" width="7"
+                    height="8"></td>
+            </tr>
+        </table>
           <table width="100%" border="0" cellpadding="2" cellspacing="0"
 						class="bluetableborder">
 						<tr>

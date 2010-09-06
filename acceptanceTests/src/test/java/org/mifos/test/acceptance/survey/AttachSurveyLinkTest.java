@@ -109,7 +109,7 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         GroupViewDetailsPage groupViewDetailsPage = navigationHelper.navigateToGroupViewDetailsPage("MyGroup1233266255641");
 
         AttachSurveyPage attachSurveyPage = groupViewDetailsPage.navigateToAttachSurveyPage();
-        attachSurveyPage.verifyPage("create_instance_choosesurvey");
+        attachSurveyPage.verifyPage("selectQuestionnaire");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -119,6 +119,6 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         CenterViewDetailsPage centerViewDetailsPage = navigationHelper.navigateToCenterViewDetailsPage("MyCenter1233266210775");
 
         AttachSurveyPage attachSurveyPage = centerViewDetailsPage.navigateToAttachSurveyPage();
-        attachSurveyPage.verifyPage("create_instance_choosesurvey");
+        attachSurveyPage.verifyPage("selectQuestionnaire");
     }
 }
