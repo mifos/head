@@ -629,10 +629,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 .getLastPaymentAction(loanInformationDto.getAccountId()), request);
         SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
 
-        request.setAttribute(CustomerConstants.SURVEY_KEY, loanInformationDto.getAccountSurveys());
-        request.setAttribute(CustomerConstants.SURVEY_COUNT, loanInformationDto.getActiveSurveys());
-        request.setAttribute(AccountConstants.SURVEY_KEY, loanInformationDto.getAccountSurveys());
-
         Integer administrativeDocumentsIsEnabled = configurationPersistence.getConfigurationKeyValueInteger(
                 ADMINISTRATIVE_DOCUMENT_IS_ENABLED).getValue();
 

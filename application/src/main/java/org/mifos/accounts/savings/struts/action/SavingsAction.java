@@ -20,6 +20,8 @@
 
 package org.mifos.accounts.savings.struts.action;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -78,12 +80,15 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.MifosServiceFactory;
 
 public class SavingsAction extends AccountAppAction {
 
@@ -307,13 +312,36 @@ public class SavingsAction extends AccountAppAction {
         SessionUtils.setCollectionAttribute(SavingsConstants.NOTES, savings.getRecentAccountNotes(), request);
         logger.info(" Savings object retrieved successfully");
 
-        SurveysPersistence surveysPersistence = new SurveysPersistence();
-        List<SurveyInstance> surveys = surveysPersistence.retrieveInstancesByAccount(savings);
-        boolean activeSurveys = surveysPersistence.isActiveSurveysForSurveyType(SurveyType.SAVINGS);
-        request.setAttribute(CustomerConstants.SURVEY_KEY, surveys);
-        request.setAttribute(CustomerConstants.SURVEY_COUNT, activeSurveys);
-        request.setAttribute(AccountConstants.SURVEY_KEY, surveys);
+        setCurrentPageUrl(request, savings);
+        setQuestionGroupInstances(request, savings);
+
         return mapping.findForward("get_success");
+    }
+    private void setQuestionGroupInstances(HttpServletRequest request, SavingsBO savingsBO) throws PageExpiredException {
+        QuestionnaireServiceFacade questionnaireServiceFacade = MifosServiceFactory.getQuestionnaireServiceFacade(request);
+        if (questionnaireServiceFacade == null) {
+            return;
+        }
+        setQuestionGroupInstances(questionnaireServiceFacade, request, savingsBO.getAccountId());
+    }
+
+    // Intentionally made public to aid testing !
+    public void setQuestionGroupInstances(QuestionnaireServiceFacade questionnaireServiceFacade, HttpServletRequest request, Integer savingsAccountId) throws PageExpiredException {
+        List<QuestionGroupInstanceDetail> instanceDetails = questionnaireServiceFacade.getQuestionGroupInstances(savingsAccountId, "View", "Savings");
+        SessionUtils.setCollectionAttribute("questionGroupInstances", instanceDetails, request);
+    }
+
+    private void setCurrentPageUrl(HttpServletRequest request, SavingsBO savingsBO) throws PageExpiredException, UnsupportedEncodingException {
+        SessionUtils.removeThenSetAttribute("currentPageUrl", constructCurrentPageUrl(request, savingsBO), request);
+    }
+
+    private String constructCurrentPageUrl(HttpServletRequest request, SavingsBO savingsBO) throws UnsupportedEncodingException {
+        String globalAccountNum = request.getParameter("globalAccountNum");
+        String officerId = request.getParameter("recordOfficeId");
+        String loanOfficerId = request.getParameter("recordLoanOfficerId");
+        String url = String.format("savingsAction.do?globalAccountNum=%s&customerId=%s&recordOfficeId=%s&recordLoanOfficerId=%s",
+                globalAccountNum, Integer.toString(savingsBO.getAccountId()), officerId, loanOfficerId);
+        return URLEncoder.encode(url, "UTF-8");
     }
 
     @TransactionDemarcate(joinToken = true)
