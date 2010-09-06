@@ -23,8 +23,11 @@ package org.mifos.accounts.productdefinition.persistence;
 import java.util.List;
 
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 
 public interface SavingsProductDao {
+
+    SavingsOfferingBO findById(Integer productId);
 
     ProductTypeEntity findSavingsProductConfiguration();
 
@@ -32,4 +35,9 @@ public interface SavingsProductDao {
 
     List<Object[]> findAllSavingsProducts();
 
+    void save(SavingsOfferingBO savingsProduct);
+
+    void validateProductWithSameNameDoesNotExist(String name);
+
+    void validateProductWithSameShortNameDoesNotExist(String shortName);
 }

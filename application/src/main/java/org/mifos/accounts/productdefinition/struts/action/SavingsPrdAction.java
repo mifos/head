@@ -65,6 +65,12 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
+/**
+ * @deprecated this entire class is no longer used and will be deleted after localisation of messages.properties files is complete.
+ *
+ * note: all struts/jsp and tests around this will also be removed.
+ */
+@Deprecated
 public class SavingsPrdAction extends BaseAction {
 
     private MifosLogger prdDefLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
@@ -141,8 +147,10 @@ public class SavingsPrdAction extends BaseAction {
         SavingsPrdActionForm savingsprdForm = (SavingsPrdActionForm) form;
         UserContext userContext = getUserContext(request);
         Locale locale = getLocale(userContext);
+
         MasterDataEntity recommendedAmountUnit = findMasterEntity(request, ProductDefinitionConstants.RECAMNTUNITLIST,
                 savingsprdForm.getRecommendedAmntUnitValue());
+
         SavingsOfferingBO savingsOffering = new SavingsOfferingBO(userContext, savingsprdForm.getPrdOfferingName(),
                 savingsprdForm.getPrdOfferingShortName(), getProductCategory(((List<ProductCategoryBO>) SessionUtils
                         .getAttribute(ProductDefinitionConstants.SAVINGSPRODUCTCATEGORYLIST, request)), savingsprdForm
@@ -151,25 +159,26 @@ public class SavingsPrdAction extends BaseAction {
                 savingsprdForm.getStartDateValue(locale), savingsprdForm.getEndDateValue(locale), savingsprdForm
                         .getDescription(), recommendedAmountUnit == null ? null
                         : (RecommendedAmntUnitEntity) recommendedAmountUnit, (SavingsTypeEntity) findMasterEntity(
-                        request, ProductDefinitionConstants.SAVINGSTYPELIST, savingsprdForm.getSavingsTypeValue()
-                                .getValue()), (InterestCalcTypeEntity) findMasterEntity(request,
-                        ProductDefinitionConstants.INTCALCTYPESLIST, savingsprdForm.getInterestCalcTypeValue()),
-                new MeetingBO(RecurrenceType.fromInt(savingsprdForm.getRecurTypeFortimeForInterestCaclValue()),
+                        request, ProductDefinitionConstants.SAVINGSTYPELIST, savingsprdForm.getSavingsTypeValue().getValue()),
+                        (InterestCalcTypeEntity) findMasterEntity(request, ProductDefinitionConstants.INTCALCTYPESLIST, savingsprdForm.getInterestCalcTypeValue()),
+
+                        new MeetingBO(RecurrenceType.fromInt(savingsprdForm.getRecurTypeFortimeForInterestCaclValue()),
                         savingsprdForm.getTimeForInterestCalcValue(), new DateTimeService().getCurrentJavaDateTime(),
                         MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD), new MeetingBO(RecurrenceType.MONTHLY,
                         savingsprdForm.getFreqOfInterestValue(), new DateTimeService().getCurrentJavaDateTime(),
                         MeetingType.SAVINGS_INTEREST_POSTING),
                         new Money(Money.getDefaultCurrency(), savingsprdForm.getRecommendedAmount()),
                         new Money(Money.getDefaultCurrency(), savingsprdForm.getMaxAmntWithdrawl()),
-                        new Money(Money.getDefaultCurrency(), savingsprdForm.getMinAmntForInt()), savingsprdForm
-                        .getInterestRateValue(), findGLCodeEntity(request,
+                        new Money(Money.getDefaultCurrency(), savingsprdForm.getMinAmntForInt()), savingsprdForm.getInterestRateValue(),
+                        findGLCodeEntity(request,
                         ProductDefinitionConstants.SAVINGSDEPOSITGLCODELIST, savingsprdForm.getDepositGLCodeValue()),
                 findGLCodeEntity(request, ProductDefinitionConstants.SAVINGSINTERESTGLCODELIST, savingsprdForm
                         .getInterestGLCodeValue()));
+
         savingsOffering.save();
+
         request.setAttribute(ProductDefinitionConstants.SAVINGSPRODUCTID, savingsOffering.getPrdOfferingId());
-        request.setAttribute(ProductDefinitionConstants.SAVINGSPRDGLOBALOFFERINGNUM, savingsOffering
-                .getGlobalPrdOfferingNum());
+        request.setAttribute(ProductDefinitionConstants.SAVINGSPRDGLOBALOFFERINGNUM, savingsOffering.getGlobalPrdOfferingNum());
 
         return mapping.findForward(ActionForwards.create_success.toString());
     }

@@ -20,6 +20,12 @@
 
 package org.mifos.application.admin.servicefacade;
 
+import java.util.List;
+import java.util.Locale;
+
+import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.OfficeDto;
+import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.OfficeFormDto;
 import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
 
@@ -29,4 +35,9 @@ public interface OfficeServiceFacade {
 
     OfficeFormDto retrieveOfficeFormInformation(Short officeLevelId);
 
+    OfficeDto retrieveOfficeById(Short id);
+
+    List<CustomFieldDto> retrieveCustomFieldsForOffice();
+
+    ListElement createOffice(Short userId, Locale preferredLocale, Short operationMode, OfficeDto officeDto);
 }

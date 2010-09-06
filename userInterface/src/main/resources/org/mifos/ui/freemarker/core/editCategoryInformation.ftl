@@ -1,16 +1,28 @@
 [#ftl]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
-[@mifos.header "title" /]
-  [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-  <!--  Left Sidebar Begins-->
-  <div class="sidebar ht600">
-  [#include "adminLeftPane.ftl" ]
-  </div> 
-  <!--  Left Sidebar Ends-->
+[#--
+* Copyright (c) 2005-2010 Grameen Foundation USA
+*  All rights reserved.
+*
+*  Licensed under the Apache License, Version 2.0 (the "License");
+*  you may not use this file except in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+*  implied. See the License for the specific language governing
+*  permissions and limitations under the License.
+*
+*  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+*  explanation of the license and how it is applied.
+--]
+[#include "layout.ftl"]
+[@adminLeftPaneLayout]
    <!--  Main Content Begins-->  
-  <div class=" content leftMargin180">
-  	<form method="POST" action="editCategoryInformation.ftl" name="editCategoryInformation">
+  <div class="content">
+  	<form method="post" action="editCategoryInformation.ftl" name="editCategoryInformation">
   	[#assign breadcrumb = {"admin":"AdminAction.do?method=load", "admin.viewproductcategories":"viewProductCategories.ftl",formBean.productCategoryName:""}/] 	
     [@mifos.crumbpairs breadcrumb/]  	  	
     <div class="span-24">  		
@@ -28,7 +40,8 @@
         	<span class="red">* </span>
         	[@spring.message "fieldsmarkedwithanasteriskarerequired." /]
         </div>
-        <p class="error" id="error1"></p>
+        [@spring.bind "formBean"/]
+        [@mifos.showAllErrors "formBean.*"/] 
         <p class="fontBold">
         	[@spring.message "manageProducts.editCategory.categoryDetails" /]
         </p>
@@ -41,18 +54,15 @@
         		<span class="span-4">
         		[@spring.bind "formBean.productCategoryName"/]
         			<input type="text" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
-        		[@spring.showErrors "<br />"/]
         		</span>
         	</div>
             <div class="span-22">
             	<span class="span-4 rightAlign">
-            		<span class="red"> * </span>
             		[@spring.message "manageProducts.editCategory.description" /]
             	</span>
             	<span>
             	[@spring.bind "formBean.productCategoryDesc"/]
-            		<textarea cols="50" rows="6" name="${spring.status.expression}">${spring.status.value?default("")}</textarea>
-            	[@spring.showErrors "<br />"/]
+            		<textarea cols="50" rows="6" name="${spring.status.expression}">${spring.status.value?default("")}</textarea>            	
             	</span>
             </div>
         </div>
@@ -68,12 +78,20 @@
             <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
             [@spring.bind "formBean.globalPrdCategoryNum"/]
             <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
+            [#assign statusTypes={"1":"active","2":"inactive"}/]
             [@spring.bind "formBean.productCategoryStatusId"/]
             <select id="${spring.status.expression}" name="${spring.status.expression}">
-            		<option value="" [#if spring.status.value?string == ""] selected=="selected"[/#if] >[@spring.message "--select--"/]</option>
-            		<option value="1" [#if spring.status.value?string == "1"] selected=="selected"[/#if] >[@spring.message "active"/]</option>
-                    <option value="2" [#if spring.status.value?string == "2"] selected=="selected"[/#if] >[@spring.message "inactive"/]</option>
-                </select>
+					        <option value="" [@spring.checkSelected ""/]>${springMacroRequestContext.getMessage("--Select--")}</option>
+					        [#if statusTypes?is_hash]
+					            [#list statusTypes?keys as value]
+					            <option value="${value?html}"[@spring.checkSelected value/]>${springMacroRequestContext.getMessage(statusTypes[value]?html)}</option>
+					            [/#list]
+					        [#else]
+					            [#list statusTypes as value]
+					            <option value="${value?html}"[@spring.checkSelected value/]>${springMacroRequestContext.getMessage(value?html)}</option>
+					            [/#list]
+					        [/#if]
+			</select>
             </span>
         </div>
         <div class="clear">&nbsp;</div>
@@ -85,4 +103,4 @@
 	</div>
    	</form> 
   </div><!--Main Content Ends-->
-  [@mifos.footer/]
+[/@adminLeftPaneLayout]

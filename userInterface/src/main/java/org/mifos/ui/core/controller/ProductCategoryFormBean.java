@@ -1,12 +1,22 @@
 package org.mifos.ui.core.controller;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class ProductCategoryFormBean {
 
     private String productType;
-    private Short productTypeId;
+
+    @NotEmpty
+    private String productTypeId;
+
+    @NotEmpty
     private String productCategoryName;
+
     private String productCategoryDesc;
-    private Short productCategoryStatusId;
+
+    @NotEmpty
+    private String productCategoryStatusId;
+
     private String globalPrdCategoryNum;
 
     public String getProductType() {
@@ -15,10 +25,10 @@ public class ProductCategoryFormBean {
     public void setProductType(String productType) {
         this.productType = productType;
     }
-    public Short getProductTypeId() {
+    public String getProductTypeId() {
         return this.productTypeId;
     }
-    public void setProductTypeId(Short productTypeId) {
+    public void setProductTypeId(String productTypeId) {
         this.productTypeId = productTypeId;
     }
     public String getProductCategoryName() {
@@ -33,10 +43,10 @@ public class ProductCategoryFormBean {
     public void setProductCategoryDesc(String productCategoryDesc) {
         this.productCategoryDesc = productCategoryDesc;
     }
-    public Short getProductCategoryStatusId() {
+    public String getProductCategoryStatusId() {
         return this.productCategoryStatusId;
     }
-    public void setProductCategoryStatusId(Short productCategoryStatusId) {
+    public void setProductCategoryStatusId(String productCategoryStatusId) {
         this.productCategoryStatusId = productCategoryStatusId;
     }
     public String getGlobalPrdCategoryNum() {

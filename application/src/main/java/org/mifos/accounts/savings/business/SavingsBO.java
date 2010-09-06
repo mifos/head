@@ -48,7 +48,6 @@ import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
-import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
@@ -428,8 +427,6 @@ public class SavingsBO extends AccountBO {
         setInterestCalcType(getSavingsOffering().getInterestCalcType());
         try {
             setTimePerForInstcalc(getMeeting(getSavingsOffering().getTimePerForInstcalc().getMeeting()));
-        } catch (ProductDefinitionException e) {
-            throw new AccountException(e);
         } catch (MeetingException me) {
             throw new AccountException(me);
         }
@@ -551,8 +548,6 @@ public class SavingsBO extends AccountBO {
             try {
                 setNextIntPostDate(helper.getNextScheduleDate(getActivationDate(), getLastIntPostDate(),
                         getMeeting(getSavingsOffering().getFreqOfPostIntcalc().getMeeting())));
-            } catch (ProductDefinitionException e) {
-                throw new AccountException(e);
             } catch (MeetingException me) {
                 throw new AccountException(me);
             }
@@ -1241,8 +1236,6 @@ public class SavingsBO extends AccountBO {
             Date intPostDate = helper.getNextScheduleDate(getActivationDate(), null, getMeeting(getSavingsOffering()
                     .getFreqOfPostIntcalc().getMeeting()));
             this.setNextIntPostDate(intPostDate);
-        } catch (ProductDefinitionException e) {
-            throw new AccountException(e);
         } catch (MeetingException me) {
             throw new AccountException(me);
         }

@@ -193,5 +193,7 @@ public enum ActionForwards {
     confirm_delete,
     download_success,
     captureQuestionResponses,
-    editQuestionResponses;
+    editQuestionResponses,
+    migrate_success,
+    migrate_failure
 }

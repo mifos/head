@@ -40,6 +40,7 @@ import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.OfficeDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
@@ -266,6 +267,32 @@ public class OffActionForm extends BaseActionForm {
         }
         if (officeBO.getParentOffice() != null) {
             this.parentOfficeId = officeBO.getParentOffice().getOfficeId().toString();
+        } else {
+            this.parentOfficeId = null;
+        }
+    }
+
+    public void populate(OfficeDto office) throws OfficeException {
+
+        this.officeId = office.getId().toString();
+        this.officeLevel = office.getLevelId().toString();
+        this.officeStatus = office.getStatusId().toString();
+        this.officeName = office.getName();
+        this.shortName = office.getOfficeShortName();
+        if (office.getAddress() != null) {
+            this.address.setLine1(office.getAddress().getLine1());
+            this.address.setLine2(office.getAddress().getLine2());
+            this.address.setLine3(office.getAddress().getLine3());
+            this.address.setPhoneNumber(office.getAddress().getPhoneNumber());
+            this.address.setCity(office.getAddress().getCity());
+            this.address.setState(office.getAddress().getState());
+            this.address.setCountry(office.getAddress().getCountry());
+            this.address.setZip(office.getAddress().getZip());
+        } else {
+            this.address = new Address();
+        }
+        if (office.getParentId() != null) {
+            this.parentOfficeId = office.getParentId().toString();
         } else {
             this.parentOfficeId = null;
         }

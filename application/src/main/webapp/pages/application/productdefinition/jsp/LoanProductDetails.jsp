@@ -118,7 +118,16 @@ explanation of the license and how it is applied.
 													<c:otherwise>
 														<mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
 													</c:otherwise>
-												</c:choose> <br> 
+												</c:choose> <br>
+												<mifos:mifoslabel name="product.include.interest.waiver" bundle="ProductDefUIResources" isColonRequired="yes"/>
+												<c:choose>
+													<c:when test="${loanPrd.interestWaived}">
+														<mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
+													</c:when>
+													<c:otherwise>
+														<mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
+													</c:otherwise>
+												</c:choose> <br>
 												<%--<mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.amount"
 													bundle="ProductDefUIResources" />: <c:out value="${loanPrd.maxLoanAmount}" /> <br> <mifos:mifoslabel name="product.min" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.minLoanAmount}" /> <br> <mifos:mifoslabel name="product.default" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.amount"

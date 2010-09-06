@@ -33,20 +33,9 @@ $(document).ready(function () {
 		});
 	});
 
-	$("input[name$='addOrSelectFlag']").change(function(event) {
-        if ($("input[name$='addOrSelectFlag']:checked").val() == 'true') {
-            $("#addQuestionDiv").show();
-            $("#selectQuestionsDiv").hide();
-        }
-        else if ($("input[name$='addOrSelectFlag']:checked").val() == 'false') {
-            $("#addQuestionDiv").hide();
-            $("#selectQuestionsDiv").show();
-        }
-        else {
-            $("#addQuestionDiv").hide();
-            $("#selectQuestionsDiv").hide();
-        }
+	$("input[name=addQuestionFlag]").change(function(event) {
+        $("#addQuestionDiv").toggle();
+        $("#selectQuestionsDiv").toggle();
     });
 
-    $("input[name$='addOrSelectFlag']").change();
 });

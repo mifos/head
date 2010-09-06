@@ -20,11 +20,6 @@
 
 package org.mifos.customers.surveys.persistence;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.hibernate.Query;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.application.NamedQueryConstants;
@@ -42,7 +37,15 @@ import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class SurveysPersistence extends Persistence {
+
+    public SurveysPersistence() {
+    }
 
     public List<Survey> retrieveAllSurveys() throws PersistenceException {
         Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_RETRIEVE_ALL);

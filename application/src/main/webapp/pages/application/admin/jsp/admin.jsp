@@ -24,6 +24,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.adminUIResources"/>
@@ -162,11 +163,11 @@ while(enn.hasMoreElements()){
 								action="ppiAction.do?method=configure">
 								<mifos:mifoslabel name="admin.configurePPI" /></html-el:link></td>
 						</tr>
-						<tr class="fontnormal">
-							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
-								height="11"></td>
-							<td><a id="admin.link.uploadPPI" href="uploadQuestionGroup.ftl"><mifos:mifoslabel name="admin.uploadPPI" /></a></td>
-						</tr>
+                        <tr class="fontnormal">
+                            <td><img src="pages/framework/images/bullet_circle.gif" width="9"
+                                height="11"></td>
+                            <td><a id="admin.link.uploadPPI" href="uploadQuestionGroup.ftl"><mifos:mifoslabel name="admin.uploadPPI" /></a></td>
+                        </tr>
 					</table>
 					 <br>
 					<span class="fontnormalbold"><mifos:mifoslabel name="admin.datadisplayrules" /></span><br>
@@ -265,11 +266,16 @@ while(enn.hasMoreElements()){
 							<td width="3%"><img
 								src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
-							<td width="97%"><html-el:link styleId="admin.link.viewProductCategories"
-								href="productCategoryAction.do?method=getAllCategories&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.viewprdcat" /></html-el:link> | <html-el:link styleId="admin.link.defineNewProductCategory"
-								href="productCategoryAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.defnewcat" /></html-el:link></td>
+							<td width="97%">
+								<!--
+								<html-el:link styleId="admin.link.viewProductCategories" href="productCategoryAction.do?method=getAllCategories&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								<mifos:mifoslabel name="admin.viewprdcat" />
+								</html-el:link> | <html-el:link styleId="admin.link.defineNewProductCategory" href="productCategoryAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								<mifos:mifoslabel name="admin.defnewcat" />
+								</html-el:link>
+								-->
+								<a href="viewProductCategories.ftl" id="admin.link.viewProductCategories"><mifos:mifoslabel name="admin.viewprdcat" /></a> | <a href="defineNewCategory.ftl" id="admin.link.defineNewProductCategory"><mifos:mifoslabel name="admin.defnewcat" /></a>								
+							</td>
 						</tr>
 						<tr class="fontnormal">
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
@@ -331,17 +337,25 @@ while(enn.hasMoreElements()){
 								src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<!-- Bug id 28065  Added a  parameter input in the link of admin page.-->
-							<td width="97%"><html-el:link styleId="admin.link.viewSavingsProducts"
-								href="savingsproductaction.do?method=search&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<fmt:message key="admin.viewSavingsProducts">
-									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
-								</fmt:message>
-									</html-el:link> | <html-el:link styleId="admin.link.defineNewSavingsProduct"
-								href="savingsproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<fmt:message key="admin.defineNewSavingsProduct">
-									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
-								</fmt:message>
-								</html-el:link></td>
+							<td width="97%">
+								<!-- 
+								<html-el:link styleId="admin.link.viewSavingsProducts" href="savingsproductaction.do?method=search&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								</html-el:link>
+								-->
+								<a id="admin.link.viewSavingsProducts" href="viewSavingsProducts.ftl">
+									<fmt:message key="admin.viewSavingsProducts">
+										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
+									</fmt:message>
+								</a> | <a id="admin.link.defineNewSavingsProduct" href="defineSavingsProduct.ftl">
+									<fmt:message key="admin.defineNewSavingsProduct">
+										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
+									</fmt:message>
+									</a>
+									<!--
+									<html-el:link styleId="admin.link.defineNewSavingsProduct" href="savingsproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+									</html-el:link>
+									 -->
+								</td>
 						</tr>
 					</table>
 					<br>
@@ -409,17 +423,20 @@ while(enn.hasMoreElements()){
 
                 </table>
                 <br>
-
-		<span class="headingorange"><mifos:mifoslabel name="admin.Manage" /> <mifos:mifoslabel name="admin.questions" /></span><br />
-                  <table width="90%" border="0" cellspacing="0" cellpadding="0">
-                    <tr class="fontnormal">
-                      <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-                      <td width="97%"><a id="admin.link.questions" href="viewQuestions.ftl"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.questions" /></a> | <html-el:link styleId="admin.link.defineNewQuestion" href="createQuestion.ftl"><mifos:mifoslabel name="admin.definenew" /> <mifos:mifoslabel name="admin.question" /></html-el:link></td>
-                    </tr>
-                    <tr class="fontnormal">
-                      <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-                      <td width="97%"><a id="admin.link.questiongroups" href="viewQuestionGroups.ftl"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.questiongroups" /></a> | <html-el:link styleId="admin.link.defineNewQuestionGroup" href="createQuestionGroup.ftl"><mifos:mifoslabel name="admin.definenew" /> <mifos:mifoslabel name="admin.questiongroup" /></html-el:link></td>
-                    </tr>
+                <span class="headingorange"><mifos:mifoslabel name="admin.Manage" /> <mifos:mifoslabel name="admin.questions" /></span><br />
+                <table width="90%" border="0" cellspacing="0" cellpadding="0">
+                <tr class="fontnormal">
+                  <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                  <td width="97%"><a id="admin.link.questions" href="viewQuestions.ftl"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.questions" /></a> | <html-el:link styleId="admin.link.defineNewQuestion" href="createQuestion.ftl"><mifos:mifoslabel name="admin.definenew" /> <mifos:mifoslabel name="admin.question" /></html-el:link></td>
+                </tr>
+                <tr class="fontnormal">
+                  <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                  <td width="97%"><a id="admin.link.questiongroups" href="viewQuestionGroups.ftl"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.questiongroups" /></a> | <html-el:link styleId="admin.link.defineNewQuestionGroup" href="createQuestionGroup.ftl"><mifos:mifoslabel name="admin.definenew" /> <mifos:mifoslabel name="admin.questiongroup" /></html-el:link></td>
+                </tr>
+                <tr class="fontnormal">
+                  <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                  <td width="97%"><a id="admin.link.migrate.questiongroups" href="migrateAction.do?method=get"><mifos:mifoslabel name="admin.migrate.questiongroups" bundle="adminUIResources" /></a></td>
+                </tr>
                 </table>
 			</td>
 			</tr>

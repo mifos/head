@@ -63,8 +63,11 @@ insert into applied_upgrades(upgrade_id) values(1280721170);
 insert into applied_upgrades(upgrade_id) values(1280793109);
 insert into applied_upgrades(upgrade_id) values(1282247229);
 insert into applied_upgrades(upgrade_id) values(1282389745);
-insert into applied_upgrades(upgrade_id) values(1282567274);
 insert into applied_upgrades(upgrade_id) values(1282814250);
+insert into applied_upgrades(upgrade_id) values(1283237728);
+insert into applied_upgrades(upgrade_id) values(1283320210);
+insert into applied_upgrades(upgrade_id) values(1283416834);
+insert into applied_upgrades(upgrade_id) values(1283765911);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -1661,10 +1664,10 @@ insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_va
 insert into lookup_value (lookup_id, entity_id, lookup_name) values(631, 87, 'Permissions-CanStartMifosShutDown');
 insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(961, 1, 631, null);
 
-insert into lookup_value (lookup_id, entity_id, lookup_name) values(632,87,'Permissions-CanRunBatchJobsOnDemand');
-insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(962, 1, 632, null);
-insert into lookup_value (lookup_id, entity_id, lookup_name) values(633,87,'Permissions-CanUpdateBatchJobsConfiguration');
+insert into lookup_value (lookup_id, entity_id, lookup_name) values(633,87,'Permissions-CanRunBatchJobsOnDemand');
 insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(963, 1, 633, null);
+insert into lookup_value (lookup_id, entity_id, lookup_name) values(634,87,'Permissions-CanUpdateBatchJobsConfiguration');
+insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(964, 1, 634, null);
 
 insert into lookup_value (lookup_id, entity_id, lookup_name) values(627, 87, 'Permissions-CanDefineHoliday');
 insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(957, 1, 627, null);
@@ -3037,13 +3040,13 @@ insert into roles_activity values (239,1);
 
 -- For permission "Can run Batch Jobs on demand" under System Information category
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
-values(240,227,632,632);
-insert into roles_activity values (240,1);
+values(241,227,633,633);
+insert into roles_activity values (241,1);
 
 -- For permission "Can update Batch Jobs configuration" under System Information category
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
-values(241,227,633,633);
-insert into roles_activity values (241,1);
+values(242,227,634,634);
+insert into roles_activity values (242,1);
 
 -- For permission "Can define holiday" under Organization Management category
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
@@ -3259,3 +3262,32 @@ insert into QRTZ_LOCKS values('MISFIRE_ACCESS');
 insert into BATCH_STEP_EXECUTION_SEQ values(0);
 insert into BATCH_JOB_EXECUTION_SEQ values(0);
 insert into BATCH_JOB_SEQ values(0);
+
+/* Upgrade - 1283320210 Permissions to manage question groups*/
+insert into lookup_value (lookup_id, entity_id, lookup_name) values
+(632,87,'Permissions-CanManageQuestionGroups');
+insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(962, 1, 632, null);
+insert into activity (activity_id, parent_id, activity_name_lookup_id, description_lookup_id) values
+(240,203,632,632);
+insert into roles_activity (activity_id, role_id) values
+(240,1);
+/* Upgrade - 1283320210*/
+
+/* Upgrade - 1283416834 Additional event sources for question groups */
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (7, (select entity_type_id from entity_master where entity_type = 'Loan'), 2, 'View Loan');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (8, (select entity_type_id from entity_master where entity_type = 'Group'), 2, 'View Group');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (9, (select entity_type_id from entity_master where entity_type = 'Center'), 1, 'Create Center');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (10, (select entity_type_id from entity_master where entity_type = 'Center'), 2, 'View Center');
+
+insert into events (id, name) values (5, 'Disburse');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (11, (select entity_type_id from entity_master where entity_type = 'Loan'), 5, 'Disburse Loan');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (12, (select entity_type_id from entity_master where entity_type = 'Savings'), 1, 'Create Savings');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (13, (select entity_type_id from entity_master where entity_type = 'Savings'), 2, 'View Savings');
+/* Upgrade - 1283416834 */

@@ -20,24 +20,14 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
-import org.mifos.dto.domain.LoanProductRequest;
-import org.mifos.dto.domain.MinMaxDefaultDto;
-import org.mifos.dto.domain.RepaymentDetailsDto;
-import org.mifos.dto.screen.AccountingDetailsDto;
-import org.mifos.dto.screen.LoanAmountDetails;
-import org.mifos.dto.screen.LoanProductDetails;
 import org.mifos.dto.screen.LoanProductFormDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,9 +35,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
+import java.util.Set;
+
 @Controller
 @RequestMapping("/defineLoanProducts")
 @SessionAttributes("loanProduct")
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="DB_DUPLICATE_SWITCH_CLAUSES", justification="..")
 public class DefineLoanProductsFormController {
 
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
@@ -55,14 +51,18 @@ public class DefineLoanProductsFormController {
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
-    private LoanProductAssembler loanProductAssembler = new LoanProductAssembler();
+
+    @Autowired
+    private LocalValidatorFactoryBean validator;
+
+    private LoanProductFormBeanAssembler loanProductFormBeanAssembler = new LoanProductFormBeanAssembler();
 
     protected DefineLoanProductsFormController(){
         //for spring autowiring
     }
 
-    public DefineLoanProductsFormController(final AdminServiceFacade adminServicefacade){
-        this.adminServiceFacade=adminServicefacade;
+    public DefineLoanProductsFormController(final AdminServiceFacade adminServiceFacade){
+        this.adminServiceFacade = adminServiceFacade;
     }
 
     @SuppressWarnings("PMD")
@@ -72,21 +72,20 @@ public class DefineLoanProductsFormController {
 
         LoanProductFormDto loanProductRefData = this.adminServiceFacade.retrieveLoanProductFormReferenceData();
 
-        LoanProductFormBean loanProductFormBean = loanProductAssembler.populateWithReferenceData(loanProductRefData);
-
-        DateTime startDate = new DateTime();
-        loanProductFormBean.setStartDateDay(startDate.getDayOfMonth());
-        loanProductFormBean.setStartDateMonth(startDate.getMonthOfYear());
-        loanProductFormBean.setStartDateYear(Integer.valueOf(startDate.getYearOfEra()).toString());
-
-        SameForAllLoanBean installmentsSameForAllLoans = new SameForAllLoanBean();
-        installmentsSameForAllLoans.setMin(Double.valueOf("1"));
-        loanProductFormBean.setInstallmentsSameForAllLoans(installmentsSameForAllLoans);
+        LoanProductFormBean loanProductFormBean = loanProductFormBeanAssembler.populateWithReferenceData(loanProductRefData);
 
         loanProductFormBean.setIncludeInLoanCycleCounter(false);
         loanProductFormBean.setInstallmentFrequencyRecurrenceEvery(Integer.valueOf(1));
         loanProductFormBean.setGracePeriodDurationInInstallments(Integer.valueOf(0));
 
+        loanProductFormBean.setLoanAmountByLastLoanAmount(createByLastLoanAmountBeans());
+        loanProductFormBean.setLoanAmountByLoanCycle(createByLoanCycleBeans());
+
+        SameForAllLoanBean installmentsSameForAllLoans = new SameForAllLoanBean();
+        installmentsSameForAllLoans.setMin(Double.valueOf("1"));
+        loanProductFormBean.setInstallmentsSameForAllLoans(installmentsSameForAllLoans);
+        loanProductFormBean.setInstallmentsByLastLoanAmount(createByLastLoanAmountBeans());
+        loanProductFormBean.setInstallmentsByLoanCycle(createByLoanCycleBeans());
 
         return loanProductFormBean;
     }
@@ -95,107 +94,251 @@ public class DefineLoanProductsFormController {
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
             @ModelAttribute("loanProduct") @Valid LoanProductFormBean loanProductFormBean, BindingResult result, SessionStatus status) {
 
-        String viewName = REDIRECT_TO_ADMIN_SCREEN;
+        String viewName = "redirect:/previewLoanProducts.ftl?editFormview=defineLoanProducts";
+
+        validateLoanAmount(loanProductFormBean, result);
+        validateInterestRateRange(loanProductFormBean, result);
+        validateInstallments(loanProductFormBean, result);
 
         if (StringUtils.isNotBlank(cancel)) {
             viewName = REDIRECT_TO_ADMIN_SCREEN;
             status.setComplete();
         } else if (result.hasErrors()) {
             viewName = "defineLoanProducts";
-        } else {
-
-            LoanProductRequest loanProduct = translateFrom(loanProductFormBean);
-
-            adminServiceFacade.createLoanProduct(loanProduct);
-            status.setComplete();
+            loanProductFormBean.resetMultiSelectListBoxes();
         }
 
         return viewName;
     }
 
-    private LoanProductRequest translateFrom(LoanProductFormBean loanProductFormBean) {
+    private void validateInterestRateRange(LoanProductFormBean loanProductFormBean, BindingResult result) {
+        if (!result.hasErrors()) {
+            if (loanProductFormBean.getMinInterestRate() > loanProductFormBean.getMaxInterestRate()) {
+                ObjectError error = new ObjectError("loanProduct", new String[] {"Range.loanProduct.maxInterestRate"},
+                        new Object[] {}, "The min must be less than max.");
+                result.addError(error);
+            }
 
-        LoanProductDetails loanProductDetails = translateToLoanProductDetails(loanProductFormBean);
-
-        LoanAmountDetails loanAmountDetails = translateToLoanAmountDetails(loanProductFormBean);
-
-        Integer interestRateType = Integer.valueOf(loanProductFormBean.getSelectedInterestRateCalculationType());
-        Double maxInterest = Double.valueOf(loanProductFormBean.getMaxInterestRate());
-        Double minInterest = Double.valueOf(loanProductFormBean.getMinInterestRate());
-        Double defaultInterest = Double.valueOf(loanProductFormBean.getDefaultInterestRate());
-        MinMaxDefaultDto<Double> interestRateRange = new MinMaxDefaultDto<Double>(minInterest, maxInterest, defaultInterest);
-
-        RepaymentDetailsDto repaymentDetails = translateToRepaymentDetails(loanProductFormBean);
-
-        List<Integer> applicableFees = new ArrayList<Integer>();
-        if (loanProductFormBean.getSelectedFees() != null) {
-            for (String feeId : loanProductFormBean.getSelectedFees()) {
-                applicableFees.add(Integer.valueOf(feeId));
+            if (loanProductFormBean.getDefaultInterestRate() < loanProductFormBean.getMinInterestRate() ||
+                loanProductFormBean.getDefaultInterestRate() > loanProductFormBean.getMaxInterestRate()) {
+                ObjectError error = new ObjectError("loanProduct", new String[] {"Range.loanProduct.defaultInterestRate"},
+                        new Object[] {}, "The min must be less than max.");
+                result.addError(error);
             }
         }
-
-        AccountingDetailsDto accountDetails = translateToAccountDetails(loanProductFormBean);
-
-        return new LoanProductRequest(loanProductDetails, loanAmountDetails, interestRateType, interestRateRange, repaymentDetails, applicableFees, accountDetails);
     }
 
-    private AccountingDetailsDto translateToAccountDetails(LoanProductFormBean loanProductFormBean) {
-
-        List<Integer> applicableFunds = new ArrayList<Integer>();
-        if (loanProductFormBean.getSelectedFunds() != null) {
-            for (String fundId : loanProductFormBean.getSelectedFunds()) {
-                applicableFunds.add(Integer.valueOf(fundId));
+    private void validateInstallments(LoanProductFormBean loanProductFormBean, BindingResult result) {
+        Integer loanAmountType = Integer.valueOf(loanProductFormBean.getSelectedInstallmentsCalculationType());
+        switch (loanAmountType) {
+        case 1:
+            SameForAllLoanBean sameForAllLoanBean = loanProductFormBean.getInstallmentsSameForAllLoans();
+            Set<ConstraintViolation<SameForAllLoanBean>> violations = validator.validate(sameForAllLoanBean);
+            for (ConstraintViolation<SameForAllLoanBean> constraintViolation : violations) {
+                ObjectError error = new ObjectError("loanProduct", new String[] {buildViolationMessage("loanProduct.installmentsSameForAllLoans", constraintViolation)},
+                        new Object[] {}, constraintViolation.getMessage());
+                result.addError(error);
             }
+
+            if (violations.isEmpty() && !sameForAllLoanBean.minIsLessThanMax()) {
+                ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.installmentsSameForAllLoans.max"},
+                        new Object[] {}, "The min must be less than max.");
+                result.addError(error);
+            }
+
+            if (violations.isEmpty() && !sameForAllLoanBean.defaultIsBetweenMinAndMax()) {
+                ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.installmentsSameForAllLoans.theDefault"},
+                        new Object[] {}, "The default is not within min and max range.");
+                result.addError(error);
+            }
+            break;
+        case 2:
+            ByLastLoanAmountBean[] byLastLoanAmounts = loanProductFormBean.getInstallmentsByLastLoanAmount();
+            int lastLoanRow = 0;
+            for (ByLastLoanAmountBean byLoanCycle : byLastLoanAmounts) {
+                Set<ConstraintViolation<ByLastLoanAmountBean>> cycleViolations = validator.validate(byLoanCycle);
+                for (ConstraintViolation<ByLastLoanAmountBean> constraintViolation : cycleViolations) {
+                    ObjectError error = new ObjectError("loanProduct", new String[] {buildViolationMessage("loanProduct.installmentsByLastLoanAmount" + lastLoanRow, constraintViolation)},
+                            new Object[] {}, constraintViolation.getMessage());
+                    result.addError(error);
+
+                }
+
+                if (cycleViolations.isEmpty() && !byLoanCycle.isRangeValid()) {
+                    ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.installmentsByLastLoanAmount" + lastLoanRow + ".upper"},
+                            new Object[] {}, "The upper value must be greater than lower.");
+                    result.addError(error);
+                }
+
+                if (cycleViolations.isEmpty() && !byLoanCycle.minIsLessThanMax()) {
+                    ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.installmentsByLastLoanAmount" + lastLoanRow + ".max"},
+                            new Object[] {}, "The min must be less than max.");
+                    result.addError(error);
+                }
+
+                if (cycleViolations.isEmpty() && !byLoanCycle.defaultIsBetweenMinAndMax()) {
+                    ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.installmentsByLastLoanAmount" + lastLoanRow + ".theDefault"},
+                            new Object[] {}, "The default is not within min and max range.");
+                    result.addError(error);
+                }
+                lastLoanRow++;
+            }
+        break;
+        case 3:
+            ByLoanCycleBean[] byLoanCycleBeans = loanProductFormBean.getInstallmentsByLoanCycle();
+            int loanCycleRow = 0;
+            for (ByLoanCycleBean byLoanCycle : byLoanCycleBeans) {
+                Set<ConstraintViolation<ByLoanCycleBean>> cycleViolations = validator.validate(byLoanCycle);
+                for (ConstraintViolation<ByLoanCycleBean> constraintViolation : cycleViolations) {
+                    ObjectError error = new ObjectError("loanProduct", new String[] {buildViolationMessage("loanProduct.installmentsByLoanCycle" + loanCycleRow, constraintViolation)},
+                            new Object[] {}, constraintViolation.getMessage());
+                    result.addError(error);
+
+                }
+
+                if (cycleViolations.isEmpty() && !byLoanCycle.minIsLessThanMax()) {
+                    ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.installmentsByLoanCycle" + loanCycleRow + ".max"},
+                            new Object[] {}, "The min must be less than max.");
+                    result.addError(error);
+                }
+
+                if (cycleViolations.isEmpty() && !byLoanCycle.defaultIsBetweenMinAndMax()) {
+                    ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.installmentsByLoanCycle" + loanCycleRow + ".theDefault"},
+                            new Object[] {}, "The default is not within min and max range.");
+                    result.addError(error);
+                }
+                loanCycleRow++;
+            }
+
+            break;
+        default:
+            break;
         }
-        Integer interestGlCodeId = Integer.valueOf(loanProductFormBean.getSelectedInterest());
-        Integer principalClCodeId = Integer.valueOf(loanProductFormBean.getSelectedPrincipal());
+}
 
-        return new AccountingDetailsDto(applicableFunds, interestGlCodeId, principalClCodeId);
-    }
+    private void validateLoanAmount(LoanProductFormBean loanProductFormBean, BindingResult result) {
+        Integer loanAmountType = Integer.valueOf(loanProductFormBean.getSelectedLoanAmountCalculationType());
+        switch (loanAmountType) {
+        case 1:
+            SameForAllLoanBean sameForAllLoanBean = loanProductFormBean.getLoanAmountSameForAllLoans();
+            Set<ConstraintViolation<SameForAllLoanBean>> violations = validator.validate(sameForAllLoanBean);
+            for (ConstraintViolation<SameForAllLoanBean> constraintViolation : violations) {
+                ObjectError error = new ObjectError("loanProduct", new String[] {buildViolationMessage("loanProduct.sameForAllLoans", constraintViolation)},
+                        new Object[] {}, constraintViolation.getMessage());
+                result.addError(error);
+            }
 
-    private LoanAmountDetails translateToLoanAmountDetails(LoanProductFormBean loanProductFormBean) {
-        Integer calculationType = Integer.valueOf(loanProductFormBean.getSelectedLoanAmountCalculationType());
-        MinMaxDefaultDto<Double> sameForAllLoanRange = translate(loanProductFormBean.getLoanAmountSameForAllLoans());
-        return new LoanAmountDetails(calculationType, sameForAllLoanRange);
-    }
 
-    private LoanProductDetails translateToLoanProductDetails(LoanProductFormBean loanProductFormBean) {
-        Integer category = Integer.valueOf(loanProductFormBean.getSelectedCategory());
-        Integer applicableFor = Integer.valueOf(loanProductFormBean.getSelectedApplicableFor());
-        DateTime startDate = new DateTime().withDate(Integer.valueOf(loanProductFormBean.getStartDateYear()), loanProductFormBean.getStartDateMonth(), loanProductFormBean.getStartDateDay());
-        DateTime endDate = null;
-        if (StringUtils.isNotBlank(loanProductFormBean.getEndDateYear())) {
-            endDate = new DateTime().withDate(Integer.valueOf(loanProductFormBean.getEndDateYear()), loanProductFormBean.getEndDateMonth(), loanProductFormBean.getEndDateDay());
+            if (violations.isEmpty() && !sameForAllLoanBean.minIsLessThanMax()) {
+                ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.sameForAllLoans.max"},
+                        new Object[] {}, "The min must be less than max.");
+                result.addError(error);
+            }
+
+            if (violations.isEmpty() && !sameForAllLoanBean.defaultIsBetweenMinAndMax()) {
+                ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.sameForAllLoans.theDefault"},
+                        new Object[] {}, "The default is not within min and max range.");
+                result.addError(error);
+            }
+
+            break;
+        case 2:
+            ByLastLoanAmountBean[] byLastLoanAmounts = loanProductFormBean.getLoanAmountByLastLoanAmount();
+            int lastLoanRow = 0;
+            for (ByLastLoanAmountBean byLoanCycle : byLastLoanAmounts) {
+                Set<ConstraintViolation<ByLastLoanAmountBean>> cycleViolations = validator.validate(byLoanCycle);
+                for (ConstraintViolation<ByLastLoanAmountBean> constraintViolation : cycleViolations) {
+                    ObjectError error = new ObjectError("loanProduct", new String[] {buildViolationMessage("loanProduct.loanAmountByLastLoanAmount" + lastLoanRow, constraintViolation)},
+                            new Object[] {}, constraintViolation.getMessage());
+                    result.addError(error);
+
+                }
+
+                if (cycleViolations.isEmpty() && !byLoanCycle.isRangeValid()) {
+                    ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.loanAmountByLastLoanAmount" + lastLoanRow + ".upper"},
+                            new Object[] {}, "The upper value must be greater than lower.");
+                    result.addError(error);
+                }
+
+                if (cycleViolations.isEmpty() && !byLoanCycle.minIsLessThanMax()) {
+                    ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.loanAmountByLastLoanAmount" + lastLoanRow + ".max"},
+                            new Object[] {}, "The min must be less than max.");
+                    result.addError(error);
+                }
+
+                if (cycleViolations.isEmpty() && !byLoanCycle.defaultIsBetweenMinAndMax()) {
+                    ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.loanAmountByLastLoanAmount" + lastLoanRow + ".theDefault"},
+                            new Object[] {}, "The default is not within min and max range.");
+                    result.addError(error);
+                }
+                lastLoanRow++;
+            }
+        break;
+        case 3:
+            ByLoanCycleBean[] byLoanCycleBeans = loanProductFormBean.getLoanAmountByLoanCycle();
+            int loanCycleRow = 0;
+            for (ByLoanCycleBean byLoanCycle : byLoanCycleBeans) {
+                Set<ConstraintViolation<ByLoanCycleBean>> cycleViolations = validator.validate(byLoanCycle);
+                for (ConstraintViolation<ByLoanCycleBean> constraintViolation : cycleViolations) {
+                    ObjectError error = new ObjectError("loanProduct", new String[] {buildViolationMessage("loanProduct.loanAmountByLoanCycle" + loanCycleRow, constraintViolation)},
+                            new Object[] {}, constraintViolation.getMessage());
+                    result.addError(error);
+
+                }
+
+                if (cycleViolations.isEmpty() && !byLoanCycle.minIsLessThanMax()) {
+                    ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.loanAmountByLoanCycle" + loanCycleRow + ".max"},
+                            new Object[] {}, "The min must be less than max.");
+                    result.addError(error);
+                }
+
+                if (cycleViolations.isEmpty() && !byLoanCycle.defaultIsBetweenMinAndMax()) {
+                    ObjectError error = new ObjectError("loanProduct", new String[] {"Max.loanProduct.loanAmountByLoanCycle" + loanCycleRow + ".theDefault"},
+                            new Object[] {}, "The default is not within min and max range.");
+                    result.addError(error);
+                }
+                loanCycleRow++;
+            }
+
+            break;
+        default:
+            break;
         }
-
-        return new LoanProductDetails(loanProductFormBean.getName(), loanProductFormBean.getShortName(), loanProductFormBean.getDescription(), category,
-                startDate, endDate, applicableFor, loanProductFormBean.isIncludeInLoanCycleCounter());
     }
 
-    private RepaymentDetailsDto translateToRepaymentDetails(LoanProductFormBean loanProductFormBean) {
-
-        Integer frequencyType = Integer.valueOf(loanProductFormBean.getInstallmentFrequencyPeriod());
-        Integer recurs = Integer.valueOf(loanProductFormBean.getInstallmentFrequencyRecurrenceEvery());
-        Integer calculationType = Integer.valueOf(loanProductFormBean.getSelectedInstallmentsCalculationType());
-        MinMaxDefaultDto<Integer> sameForAllLoanRange = translateToMinMaxDefault(loanProductFormBean.getInstallmentsSameForAllLoans());
-
-        Integer gracePeriodType = Integer.valueOf(loanProductFormBean.getSelectedGracePeriodType());
-        Integer gracePeriodDuration = loanProductFormBean.getGracePeriodDurationInInstallments();
-
-        RepaymentDetailsDto details = new RepaymentDetailsDto(frequencyType, recurs, calculationType, sameForAllLoanRange, gracePeriodType, gracePeriodDuration);
-
-        return details;
+    private String buildViolationMessage(String objectName, ConstraintViolation<?> constraintViolation) {
+        StringBuilder builder = new StringBuilder();
+        String constraintMessage = constraintViolation.getMessageTemplate().substring(30);
+        String constraintType = constraintMessage.substring(0, constraintMessage.indexOf('.'));
+        builder.append(constraintType).append('.').append(objectName).append('.').append(constraintViolation.getPropertyPath().toString());
+        return builder.toString();
     }
 
-    private MinMaxDefaultDto<Integer> translateToMinMaxDefault(SameForAllLoanBean bean) {
-        return new MinMaxDefaultDto<Integer>(bean.getMin().intValue(), bean.getMax().intValue(), bean.getTheDefault().intValue());
+    public void setLoanProductFormBeanAssembler(LoanProductFormBeanAssembler loanProductFormBeanAssembler) {
+        this.loanProductFormBeanAssembler = loanProductFormBeanAssembler;
     }
 
-    private MinMaxDefaultDto<Double> translate(SameForAllLoanBean bean) {
-        return new MinMaxDefaultDto<Double>(bean.getMin(), bean.getMax(), bean.getTheDefault());
+    private ByLoanCycleBean[] createByLoanCycleBeans() {
+
+        ByLoanCycleBean zeroCycle = new ByLoanCycleBean(1);
+        ByLoanCycleBean oneCycle = new ByLoanCycleBean(2);
+        ByLoanCycleBean twoCycle = new ByLoanCycleBean(3);
+        ByLoanCycleBean threeCycle = new ByLoanCycleBean(4);
+        ByLoanCycleBean fourCycle = new ByLoanCycleBean(5);
+        ByLoanCycleBean greaterThanFourCycle = new ByLoanCycleBean(6);
+
+        return new ByLoanCycleBean[] {zeroCycle,oneCycle, twoCycle, threeCycle, fourCycle, greaterThanFourCycle};
     }
 
-    public void setLoanProductAssembler(LoanProductAssembler loanProductAssembler) {
-        this.loanProductAssembler = loanProductAssembler;
+    private ByLastLoanAmountBean[] createByLastLoanAmountBeans() {
+        ByLastLoanAmountBean zero = new ByLastLoanAmountBean();
+        zero.setLower(Double.valueOf("0"));
+        ByLastLoanAmountBean one = new ByLastLoanAmountBean();
+        ByLastLoanAmountBean two = new ByLastLoanAmountBean();
+        ByLastLoanAmountBean three = new ByLastLoanAmountBean();
+        ByLastLoanAmountBean four = new ByLastLoanAmountBean();
+        ByLastLoanAmountBean five = new ByLastLoanAmountBean();
+
+        return new ByLastLoanAmountBean[] {zero, one, two, three, four, five};
     }
 }

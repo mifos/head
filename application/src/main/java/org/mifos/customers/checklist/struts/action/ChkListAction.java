@@ -34,6 +34,9 @@ import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.service.ProductCategoryBusinessService;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.admin.servicefacade.CheckListServiceFacade;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.util.helpers.ConfigurationConstants;
@@ -51,6 +54,9 @@ import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
 import org.mifos.customers.checklist.util.helpers.CheckListType;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.screen.AccountCheckBoxItemDto;
+import org.mifos.dto.screen.CustomerCheckBoxItemDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
@@ -63,6 +69,7 @@ import org.mifos.security.util.SecurityConstants;
 
 public class ChkListAction extends BaseAction {
 
+    private final CheckListServiceFacade checkListServiceFacade = DependencyInjectedServiceLocator.locateCheckListServiceFacade();
     @Override
     protected BusinessService getService() throws ServiceException {
         return new CheckListBusinessService();
@@ -185,10 +192,13 @@ public class ChkListAction extends BaseAction {
     public ActionForward loadAllChecklist(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         request.getSession().setAttribute("ChkListActionForm", null);
-        List<CustomerCheckListBO> customerCheckLists = ((CheckListBusinessService) getService())
-                .retreiveAllCustomerCheckLists();
-        List<AccountCheckListBO> accountCheckLists = ((CheckListBusinessService) getService())
-                .retreiveAllAccountCheckLists();
+//        List<CustomerCheckListBO> customerCheckLists = ((CheckListBusinessService) getService())
+//                .retreiveAllCustomerCheckLists();
+//        List<AccountCheckListBO> accountCheckLists = ((CheckListBusinessService) getService())
+//                .retreiveAllAccountCheckLists();
+        List<CustomerCheckBoxItemDto> customerCheckLists = checkListServiceFacade.retreiveAllCustomerCheckLists();
+        List<AccountCheckBoxItemDto> accountCheckLists = checkListServiceFacade.retreiveAllAccountCheckLists();
+
         Short localeId = getUserContext(request).getLocaleId();
         SessionUtils.setCollectionAttribute(CheckListConstants.CENTER_CHECKLIST, getCustomerCheckLists(
                 customerCheckLists, CustomerLevel.CENTER, localeId), request);
@@ -346,13 +356,30 @@ public class ChkListAction extends BaseAction {
         return null;
     }
 
-    private List<CustomerCheckListBO> getCustomerCheckLists(List<CustomerCheckListBO> checkLists, CustomerLevel level,
+//    private List<CustomerCheckListBO> getCustomerCheckLists(List<CustomerCheckListBO> checkLists, CustomerLevel level,
+//            Short localeId) {
+//        List<CustomerCheckListBO> customerCheckLists = new ArrayList<CustomerCheckListBO>();
+//        if (checkLists != null && checkLists.size() > 0) {
+//            for (CustomerCheckListBO checkList : checkLists) {
+//                if (checkList.getCustomerLevel().getId().equals(level.getValue())) {
+//                    checkList.getCustomerStatus().setLocaleId(localeId);
+//                    customerCheckLists.add(checkList);
+//                }
+//            }
+//        }
+//        return customerCheckLists;
+//    }
+
+    private List<CustomerCheckBoxItemDto> getCustomerCheckLists(List<CustomerCheckBoxItemDto> checkLists, CustomerLevel level,
             Short localeId) {
-        List<CustomerCheckListBO> customerCheckLists = new ArrayList<CustomerCheckListBO>();
+        List<CustomerCheckBoxItemDto> customerCheckLists = new ArrayList<CustomerCheckBoxItemDto>();
         if (checkLists != null && checkLists.size() > 0) {
-            for (CustomerCheckListBO checkList : checkLists) {
-                if (checkList.getCustomerLevel().getId().equals(level.getValue())) {
-                    checkList.getCustomerStatus().setLocaleId(localeId);
+            for (CustomerCheckBoxItemDto checkList : checkLists) {
+                if (checkList.getCustomerLevelId().equals(level.getValue())) {
+//                    CustomerStatusEntity entity = new CustomerStatusEntity(CustomerStatus.fromInt(checkList.getCustomerStatusId()));
+//                    entity.setLocaleId(localeId);
+//                    checkList.setLookUpName(entity.getLookUpValue().getLookUpName());
+//                    checkList.setName(MessageLookup.getInstance().lookup(checkList.getLookUpName()));
                     customerCheckLists.add(checkList);
                 }
             }
@@ -360,13 +387,30 @@ public class ChkListAction extends BaseAction {
         return customerCheckLists;
     }
 
-    private List<AccountCheckListBO> getAccountCheckLists(List<AccountCheckListBO> checkLists, ProductType productType,
+//    private List<AccountCheckListBO> getAccountCheckLists(List<AccountCheckListBO> checkLists, ProductType productType,
+//            Short localeId) {
+//        List<AccountCheckListBO> accountCheckLists = new ArrayList<AccountCheckListBO>();
+//        if (checkLists != null && checkLists.size() > 0) {
+//            for (AccountCheckListBO checkList : checkLists) {
+//                if (checkList.getProductTypeEntity().getProductTypeID().equals(productType.getValue())) {
+//                    checkList.getAccountStateEntity().setLocaleId(localeId);
+//                    accountCheckLists.add(checkList);
+//                }
+//            }
+//        }
+//        return accountCheckLists;
+//    }
+
+    private List<AccountCheckBoxItemDto> getAccountCheckLists(List<AccountCheckBoxItemDto> checkLists, ProductType productType,
             Short localeId) {
-        List<AccountCheckListBO> accountCheckLists = new ArrayList<AccountCheckListBO>();
+        List<AccountCheckBoxItemDto> accountCheckLists = new ArrayList<AccountCheckBoxItemDto>();
         if (checkLists != null && checkLists.size() > 0) {
-            for (AccountCheckListBO checkList : checkLists) {
-                if (checkList.getProductTypeEntity().getProductTypeID().equals(productType.getValue())) {
-                    checkList.getAccountStateEntity().setLocaleId(localeId);
+            for (AccountCheckBoxItemDto checkList : checkLists) {
+                if (checkList.getProductTypeId().equals(productType.getValue())) {
+//                    AccountStateEntity entity = new AccountStateEntity(AccountState.fromShort(checkList.getAccountStateId()));
+//                    entity.setLocaleId(localeId);
+//                    checkList.setLookUpName(entity.getLookUpValue().getLookUpName());
+//                    checkList.setName(entity.getName());
                     accountCheckLists.add(checkList);
                 }
             }

@@ -21,6 +21,7 @@
 package org.mifos.dto.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 @SuppressWarnings("PMD")
@@ -39,6 +40,11 @@ public class OfficeDto implements Serializable {
     private Integer versionNum = Integer.valueOf(0);
     private final String lookupNameKey;
 
+    private final String officeStatusName;
+    private final String officeLevelName;
+    private final AddressDto address;
+    private final List<CustomFieldDto> customFields;
+
     public OfficeDto(final Short officeId, String officeName, String searchId, String officeShortName, String globalNum, Short parentId, Short statusId, Short levelId) {
         this.id = officeId;
         this.name = officeName;
@@ -50,6 +56,10 @@ public class OfficeDto implements Serializable {
         this.levelId = levelId;
         this.parentOfficeName = "";
         this.lookupNameKey = "";
+        this.officeStatusName = "";
+        this.officeLevelName = "";
+        this.address = null;
+        this.customFields = null;
     }
 
     public OfficeDto(final Short officeId, String officeName, String searchId, String officeShortName, String globalNum, Short parentId, Short statusId, Short levelId, String parentOfficeName) {
@@ -63,6 +73,10 @@ public class OfficeDto implements Serializable {
         this.levelId = levelId;
         this.parentOfficeName = parentOfficeName;
         this.lookupNameKey = "";
+        this.officeStatusName = "";
+        this.officeLevelName = "";
+        this.address = null;
+        this.customFields = null;
     }
 
     public OfficeDto(final Short officeId, String officeName, String searchId, String officeShortName, String globalNum, Integer versionNum, Short statusId, Short levelId, String lookupNameKey) {
@@ -77,6 +91,49 @@ public class OfficeDto implements Serializable {
         this.parentOfficeName = "";
         this.versionNum = versionNum;
         this.lookupNameKey = lookupNameKey;
+        this.officeStatusName = "";
+        this.officeLevelName = "";
+        this.address = null;
+        this.customFields = null;
+    }
+
+    public OfficeDto(Short id, String name, String searchId, String officeShortName, String globalNum, Short parentId,
+            Short statusId, Short levelId, String parentOfficeName, Integer versionNum, String officeStatusName, String officeLevelName,
+            AddressDto address, List<CustomFieldDto> customFields) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.searchId = searchId;
+        this.officeShortName = officeShortName;
+        this.globalNum = globalNum;
+        this.parentId = parentId;
+        this.statusId = statusId;
+        this.levelId = levelId;
+        this.parentOfficeName = parentOfficeName;
+        this.versionNum = versionNum;
+        this.lookupNameKey = "";
+        this.officeStatusName = officeStatusName;
+        this.officeLevelName = officeLevelName;
+        this.address = address;
+        this.customFields = customFields;
+    }
+
+    public OfficeDto(Short levelId, Short parentId, List<CustomFieldDto> customFields, String name, String officeShortName, AddressDto address) {
+        this.id = null;
+        this.name = name;
+        this.searchId = "";
+        this.officeShortName = officeShortName;
+        this.globalNum = null;
+        this.parentId = parentId;
+        this.statusId = null;
+        this.levelId = levelId;
+        this.parentOfficeName = "";
+        this.versionNum = null;
+        this.lookupNameKey = "";
+        this.officeStatusName = null;
+        this.officeLevelName = null;
+        this.address = address;
+        this.customFields = customFields;
     }
 
     public String getSearchId() {
@@ -125,5 +182,21 @@ public class OfficeDto implements Serializable {
 
     public String getLookupNameKey() {
         return this.lookupNameKey;
+    }
+
+    public String getOfficeStatusName() {
+        return this.officeStatusName;
+    }
+
+    public String getOfficeLevelName() {
+        return this.officeLevelName;
+    }
+
+    public AddressDto getAddress() {
+        return this.address;
+    }
+
+    public List<CustomFieldDto> getCustomFields() {
+        return this.customFields;
     }
 }

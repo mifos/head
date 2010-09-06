@@ -125,7 +125,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     private final SavingsPersistence savingsPersistence = new SavingsPersistence();
     private final AccountPersistence accountPersistence = new AccountPersistence();
     private final CustomerPersistence customerPersistence = new CustomerPersistence();
-    private final MifosCurrency currency = Configuration.getInstance().getSystemConfig().getCurrency();
+    private MifosCurrency currency = null;
     private PersonnelBO createdBy = null;
 
     private Money getRoundedMoney(final Money value) {
@@ -141,6 +141,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.disableCommits();
         userContext = TestUtils.makeUser();
         createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
+        currency = Configuration.getInstance().getSystemConfig().getCurrency();
     }
 
     @After

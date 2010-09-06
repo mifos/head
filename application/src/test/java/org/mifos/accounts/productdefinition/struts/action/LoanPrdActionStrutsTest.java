@@ -305,6 +305,44 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    /**
+     * The user must get a validation error if he enters a number of installments greater than Short range.
+     * (see MIFOS-3365)
+     */
+    public void testPreviewWithOutOfRangeMinMaxDefInstallments() throws Exception {
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+        addRequestParameter("prdOfferingName", "Loan Offering");
+        addRequestParameter("prdOfferingShortName", "LOAN");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", DateUtils.getCurrentDate(userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "2000");
+        addRequestParameter("maxLoanAmount", "11000");
+        addRequestParameter("defaultLoanAmount", "5000");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "999999999");
+        addRequestParameter("minNoInstallments", "999999999");
+        addRequestParameter("defNoInstallments", "999999999");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("principalGLCode", "7");
+        addRequestParameter("interestGLCode", "7");
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+        actionPerform();
+        verifyActionErrors(new String[] { ProductDefinitionConstants.ERRORS_RANGE,
+                ProductDefinitionConstants.ERRORS_RANGE, ProductDefinitionConstants.ERRORS_RANGE });
+        verifyInputForward();
+    }
+
     public void testPreviewWithGraceTypeNotNoneAndNoGraceDuration() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "preview");

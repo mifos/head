@@ -71,11 +71,6 @@ public interface SecurityConstants {
      */
     short ORGANIZATION_MANAGEMENT = 1;
 
-    // funds
-    short FUNDS_CREATE_FUNDS = 3;
-
-    short FUNDS_EDIT_FUNDS = 4;
-
     // fees
     short FEES_CREATE_FEES = 6;
 
@@ -233,13 +228,6 @@ public interface SecurityConstants {
     short CENTER_EDIT_STATUS = 81;
 
     short CENTER_EDIT_CENTER_STATUS = 186;
-
-    // Product definition
-    short DEFINE_NEW_PRODUCT_CATEGORIES = 91;
-
-    short EDIT_PRODUCT_CATEGORIES = 92;
-
-    short UPDATE_LATENESS_DORMANCY = 195;
 
     // loan product
     short DEFINE_NEW_LOAN_PRODUCT_INSTANCE = 94;
@@ -412,9 +400,6 @@ public interface SecurityConstants {
     short CAN_REVERSE_LOAN_DISBURSAL = 202;
 
     short CONFIGURATION_MANAGEMENT = 203;
-    short CAN_DEFINE_LABELS = 204;
-
-    short CAN_DEFINE_HIDDEN_MANDATORY_FIELDS = 205;
 
     // Remove Group MemberShip
     short CAN_REMOVE_CLIENTS_FROM_GROUPS = 206;
@@ -431,10 +416,6 @@ public interface SecurityConstants {
     // Limiting product combination
     short PRODUCT_MIX = 209;
 
-    short CAN_DEFINE_PRODUCT_MIX = 210;
-
-    short CAN_EDIT_PRODUCT_MIX = 211;
-
     short CAN_VIEW_ACTIVE_LOANS_BY_LOAN_OFFICER = 212;
 
     short CAN_DEFINE_LOOKUP_OPTIONS = 213;
@@ -448,8 +429,6 @@ public interface SecurityConstants {
     short CAN_ADJUST_PAYMENT_WHEN_OBLIGATION_MET = 217;
 
     short CAN_REDO_LOAN_DISPURSAL = 218;
-
-    short CAN_DEFINE_ACCEPTED_PAYMENT_TYPE = 219;
 
     short DEFINE_REPORT_CATEGORY = 220;
 
@@ -482,9 +461,6 @@ public interface SecurityConstants {
     // CAN_VIEW_SYSTEM_INFO
     short SYSTEM_INFORMATION = 227;
 
-    /** Can view database driver version, svn build revision, etc. */
-    short CAN_VIEW_SYSTEM_INFO = 228;
-
     /** Can view install-time configuration settings. */
     short CAN_VIEW_ORGANIZATION_SETTINGS = 230;
 
@@ -500,9 +476,10 @@ public interface SecurityConstants {
     /** Can shutdown Mifos */
     short CAN_OPEN_SHUTDOWN_PAGE = 234;
     short CAN_VIEW_ACTIVE_SESSIONS = 238;
+    short CAN_MANAGE_QUESTION_GROUPS = 240;
     short CAN_SHUT_DOWN_MIFOS = 239;
 
     /** Batch Jobs */
-    short CAN_RUN_BATCH_JOBS_ON_DEMAND = 240;
-    short CAN_UPDATE_BATCH_JOBS_CONFIGURATION = 241;
+    short CAN_RUN_BATCH_JOBS_ON_DEMAND = 241;
+    short CAN_UPDATE_BATCH_JOBS_CONFIGURATION = 242;
 }

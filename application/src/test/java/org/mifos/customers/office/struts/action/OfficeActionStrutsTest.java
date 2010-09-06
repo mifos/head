@@ -182,9 +182,9 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "1");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        OfficeBO office = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        OfficeDto office = (OfficeDto) SessionUtils.getAttribute("officeDto", request);
         Assert.assertNotNull(office);
-        Assert.assertEquals(1, office.getOfficeId().intValue());
+        Assert.assertEquals(1, office.getId().intValue());
 
     }
 

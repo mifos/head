@@ -216,12 +216,13 @@ public class LoanOfferingTestUtils {
             final boolean intDedDisbursement, final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees,
             final MeetingBO meeting, final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode)
             throws ProductDefinitionException {
+        boolean waiverInterest = true;
         LoanOfferingBO loanOffering = new LoanOfferingBO(userContext, prdOfferingName, prdOfferingShortName,
                 prdCategory, prdApplicableMaster, new DateTimeService().getCurrentJavaDateTime(), endDate, description,
                 gracePeriodType, gracePeriodDuration, interestTypes, minLoanAmount, maxLoanAmount, defaultLoanAmount,
                 maxInterestRate, minInterestRate, defInterestRate, maxNoInstallments, minNoInstallments,
                 defNoInstallments, loanCounter, intDedDisbursement, prinDueLastInst, funds, fees, meeting,
-                principalGLcode, interestGLcode);
+                principalGLcode, interestGLcode, waiverInterest);
         loanOffering.setStartDate(startDate);
         return loanOffering;
     }

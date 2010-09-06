@@ -22,6 +22,7 @@ package org.mifos.framework.components.audit.util.helpers;
 
 import java.util.Locale;
 
+import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.framework.struts.tags.MifosTagUtils;
 import org.mifos.framework.util.helpers.DateUtils;
 
@@ -51,8 +52,6 @@ public class AuditLogView {
     }
 
     public String getMfiDate() {
-        // return DateUtils.getUserLocaleDate(getMfiLocale(),
-        // getDate().toString());
         return DateUtils.getUserLocaleDate(getDate().toString());
     }
 
@@ -88,4 +87,7 @@ public class AuditLogView {
         this.user = user;
     }
 
+    public AuditLogDto toDto() {
+        return new AuditLogDto(getMfiDate(), getField(), getOldValue(), getNewValue(), getUser());
+    }
 }

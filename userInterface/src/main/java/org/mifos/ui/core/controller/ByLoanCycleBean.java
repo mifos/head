@@ -20,12 +20,29 @@
 
 package org.mifos.ui.core.controller;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 public class ByLoanCycleBean {
 
+    @NotNull
     private Integer loanCycleNumber;
+
+    @Min(value=0)
+    @NotNull
     private Double min;
+
+    @Min(value=0)
+    @NotNull
     private Double max;
+
+    @Min(value=0)
+    @NotNull
     private Double theDefault;
+
+    public ByLoanCycleBean(final int loanCycleNumber) {
+        this.loanCycleNumber = loanCycleNumber;
+    }
 
     public Integer getLoanCycleNumber() {
         return this.loanCycleNumber;
@@ -57,5 +74,13 @@ public class ByLoanCycleBean {
 
     public void setTheDefault(Double theDefault) {
         this.theDefault = theDefault;
+    }
+
+    public boolean minIsLessThanMax() {
+        return this.min.doubleValue() < this.max.doubleValue();
+    }
+
+    public boolean defaultIsBetweenMinAndMax() {
+        return minIsLessThanMax() && this.theDefault.doubleValue() <= this.max.doubleValue();
     }
 }

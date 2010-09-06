@@ -272,6 +272,9 @@ public interface ProductDefinitionConstants {
     String FORBYLOANCYCLEATROW = "product.forbyloancycleatrow";
     String INVALIDRATE = "errors.intRate";
     String FORNUMBEROFLASTLOLANINSTALLMENTATROW = "product.fornumberoflastloaninstallmentatrow";
+    String DEFAULTNOOFINSTALLMENTS = "product.definst";
+    String MINIMUMNOOFINSTALLMENTS = "product.mininst";
+    String MAXIMUMNOOFINSTALLMENTS = "product.maxinst";
 
     String ERRORMINIMUMLOANAMOUNTINVALIDFORMAT = "errors.minloanamountinvalidformat";
     String ERRORMAXIMUMLOANAMOUNTINVALIDFORMAT = "errors.maxloanamountinvalidformat";

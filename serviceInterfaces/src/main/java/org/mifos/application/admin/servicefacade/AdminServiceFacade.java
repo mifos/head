@@ -23,12 +23,14 @@ package org.mifos.application.admin.servicefacade;
 import java.util.List;
 
 import org.mifos.dto.domain.AcceptedPaymentTypeDto;
+import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.CreateOrUpdateProductCategory;
 import org.mifos.dto.domain.LoanProductRequest;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.ProductTypeDto;
+import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.dto.screen.LoanProductFormDto;
@@ -39,6 +41,7 @@ import org.mifos.dto.screen.ProductConfigurationDto;
 import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductDto;
 import org.mifos.dto.screen.ProductMixDetailsDto;
+import org.mifos.dto.screen.SavingsProductFormDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface AdminServiceFacade {
@@ -62,7 +65,7 @@ public interface AdminServiceFacade {
     LoanProductFormDto retrieveLoanProductFormReferenceData();
 
     @PreAuthorize("isFullyAuthenticated()")
-    void createLoanProduct(LoanProductRequest loanProduct);
+    PrdOfferingDto createLoanProduct(LoanProductRequest loanProduct);
 
     @PreAuthorize("isFullyAuthenticated()")
     List<ProductDisplayDto> retrieveSavingsProducts();
@@ -114,11 +117,29 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     List<ProductCategoryTypeDto> retrieveProductCategoryTypes();
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CREATE_PRODUCT_CATEGORIES')")
     void createProductCategory(CreateOrUpdateProductCategory productCategory);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_EDIT_PRODUCT_CATEGORIES')")
     void updateProductCategory(CreateOrUpdateProductCategory productCategory);
 
     List<PrdOfferingDto> retrieveLoanProductsNotMixed();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanProductRequest retrieveLoanProductDetails(Integer productId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    SavingsProductDto retrieveSavingsProductDetails(Integer productId);
+
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CAN_CREATE_NEW_SAVINGS_PRODUCT', 'ROLE_CAN_EDIT_SAVINGS_PRODUCT')")
+    SavingsProductFormDto retrieveSavingsProductFormReferenceData();
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CREATE_NEW_SAVINGS_PRODUCT')")
+    PrdOfferingDto createSavingsProduct(SavingsProductDto savingsProductRequest);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_EDIT_SAVINGS_PRODUCT')")
+    PrdOfferingDto updateSavingsProduct(SavingsProductDto savingsProduct);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<AuditLogDto> retrieveSavingsProductAuditLogs(Integer productId);
 }

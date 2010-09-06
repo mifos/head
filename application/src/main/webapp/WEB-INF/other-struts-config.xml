@@ -120,7 +120,6 @@
             <forward name="updatePassword_failure" path="/pages/application/login/jsp/changePassword.jsp"/>
             <forward name="updateSettings_success" path="/yourSettings.do?method=get"/>
         </action>
-        <!-- Product Category -->
         <!-- meeting action -->
         <action path="/meetingAction" type="org.mifos.application.meeting.struts.action.MeetingAction"
                 name="meetingActionForm" parameter="method" input="/meetingAction.do?method=validate" validate="true">
@@ -380,6 +379,17 @@
             <forward name="edit_success" path="/pages/application/surveys/jsp/edit_question.jsp"/>
             <forward name="update_success" path="/pages/application/surveys/jsp/question_details.jsp"/>
             <forward name="preview_success" path="/pages/application/surveys/jsp/preview_question.jsp"/>
+        </action>
+
+        <action path="/migrateAction"
+                type="org.mifos.application.questionnaire.migration.struts.action.MigrateAction"
+                parameter="method"
+                validate="false"
+                name="genericActionForm"
+                input="/migrateAction.do?method=validate">
+            <forward name="load_success" path="/pages/application/questionnaire/migration/jsp/migrate.jsp"/>
+            <forward name="migrate_success" path="/AdminAction.do?method=load" redirect="true"/>
+            <forward name="migrate_failure" path="/pages/application/questionnaire/migration/jsp/migrate.jsp"/>
         </action>
 
         <action path="/surveyInstanceAction"

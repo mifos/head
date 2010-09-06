@@ -69,6 +69,8 @@
 				column="prin_due_last_inst_flag" access="field" type="short" />
 			<property name="loanCounter" column="loan_counter_flag"
 				access="field" type="short" />
+            <property name="waiverInterest" column="interest_waiver_flag"
+				access="field" type="short" />
 
 			<many-to-one name="gracePeriodType"
 				column="graceperiod_type_id"
@@ -352,5 +354,11 @@
 		<![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO prdOffering
         where prdOffering.prdMixFlag =1 order by prdOffering.prdOfferingName
 		]]>
+	</query>
+	<query name="savingsProduct.byid">
+		<![CDATA[from SavingsOfferingBO sp where sp.prdOfferingId=:prdOfferingId]]>
+	</query>
+	<query name="loanProduct.byid">
+		<![CDATA[from LoanOfferingBO lp where lp.prdOfferingId=:prdOfferingId]]>
 	</query>
 </hibernate-mapping>

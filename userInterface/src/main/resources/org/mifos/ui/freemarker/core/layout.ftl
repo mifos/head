@@ -2,6 +2,7 @@
 [#import "spring.ftl" as spring]
 [#import "newblueprintmacros.ftl" as mifos]
 [#import "macros.ftl" as mifosmacros]
+[#assign security=JspTaglibs["http://www.springframework.org/security/tags"]]
 
 [#macro adminLeftPaneLayout]
     [@mifos.header "title" /]
@@ -17,7 +18,7 @@
             </div>
             <div class="col2">
                 <div class="side_bar">
-                    [#include "newadminLeftPane.ftl" /]
+                    [#include "adminLeftPane.ftl" /]
                 </div>
             </div>
         </div>

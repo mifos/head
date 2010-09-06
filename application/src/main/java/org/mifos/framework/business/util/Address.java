@@ -21,6 +21,7 @@
 package org.mifos.framework.business.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.dto.domain.AddressDto;
 
 
 public class Address {
@@ -141,4 +142,8 @@ public class Address {
         return displayAddress;
     }
 
+    public static AddressDto toDto(Address address) {
+        return new AddressDto(address.getLine1(), address.getLine2(), address.getLine3(), address.getCity(), address.getState(),
+                address.getCountry(), address.getZip(), address.getPhoneNumber());
+    }
 }

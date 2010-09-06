@@ -20,18 +20,6 @@
 
 package org.mifos.framework;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Locale;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRequestEvent;
-import javax.servlet.ServletRequestListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.config.AccountingRules;
@@ -62,6 +50,19 @@ import org.mifos.framework.util.helpers.MoneyCompositeUserType;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.ActivityMapper;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.ServletRequestEvent;
+import javax.servlet.ServletRequestListener;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Locale;
 
 /**
  * This class should prepare all the sub-systems that are required by the app. Cleanup should also happen here when the
@@ -118,11 +119,15 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             System.setProperty("org.terracotta.quartz.skipUpdateCheck", "true");
 
             synchronized (ApplicationInitializer.class) {
+                ApplicationContext applicationContext = null;
+                if(ctx !=null){
+                    applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx.getServletContext());
+                }
 
                 /*
-                 * If we do not call MifosLogManager as first step of initialization
-                 * MifosLogManager.loggerRepository will be null.
-                 */
+                * If we do not call MifosLogManager as first step of initialization
+                * MifosLogManager.loggerRepository will be null.
+                */
                 LOG = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
                 LOG.info("Logger has been initialised", false, null);
 
@@ -133,7 +138,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 // if a database upgrade loads an instance of Money then MoneyCompositeUserType needs the default currency
                 MoneyCompositeUserType.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
                 AccountingRules.init(); // load the additional currencies
-                DatabaseMigrator migrator = new DatabaseMigrator();
+                DatabaseMigrator migrator = new DatabaseMigrator(applicationContext);
                 try {
                     /*
                      * This is an easy way to force an actual database query to happen via Hibernate. Simply opening a
@@ -178,16 +183,16 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     mifosScheduler.initialize();
                     mifosScheduler.initializeBatchJobs();
                     final ShutdownManager shutdownManager = new ShutdownManager();
-                    if (null != ctx) {
-                        ctx.getServletContext().setAttribute(MifosScheduler.class.getName(), mifosScheduler);
-                        ctx.getServletContext().setAttribute(ShutdownManager.class.getName(), shutdownManager);
-                    }
 
                     Configuration.getInstance();
                     MifosConfiguration.getInstance().init();
                     configureAuditLogValues(Localization.getInstance().getMainLocale());
                     ConfigLocale configLocale = new ConfigLocale();
-                    ctx.getServletContext().setAttribute(ConfigLocale.class.getSimpleName(), configLocale);
+                    if (null != ctx) {
+                        ctx.getServletContext().setAttribute(MifosScheduler.class.getName(), mifosScheduler);
+                        ctx.getServletContext().setAttribute(ShutdownManager.class.getName(), shutdownManager);
+                        ctx.getServletContext().setAttribute(ConfigLocale.class.getSimpleName(), configLocale);
+                    }
                 }
             }
         } catch (Exception e) {
