@@ -542,6 +542,10 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
         this.prdStatus = prdStatusEntity;
     }
 
+    public void updateStatus(PrdStatusEntity status) {
+        this.prdStatus = status;
+    }
+
     public boolean isDifferentName(final String name) {
         return !this.prdOfferingName.equals(name);
     }

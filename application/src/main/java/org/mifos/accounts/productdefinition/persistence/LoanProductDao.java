@@ -68,6 +68,8 @@ public interface LoanProductDao {
 
     List<InterestTypesEntity> retrieveInterestTypes();
 
+    InterestTypesEntity retrieveInterestType(InterestType interestType);
+
     List<InterestCalcTypeEntity> retrieveInterestCalcTypes();
 
     InterestCalcTypeEntity retrieveInterestCalcType(InterestCalcType interestCalcType);

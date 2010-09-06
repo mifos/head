@@ -26,11 +26,14 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.business.service.GeneralLedgerDao;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.productdefinition.LoanAmountCalculation;
 import org.mifos.accounts.productdefinition.LoanInstallmentCalculation;
+import org.mifos.accounts.productdefinition.LoanProductCaluclationTypeAssembler;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
@@ -39,11 +42,14 @@ import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.accounts.productdefinition.util.helpers.GraceType;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.config.AccountingRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.LoanProductRequest;
 import org.mifos.dto.domain.ProductDetailsDto;
@@ -55,22 +61,42 @@ public class LoanProductAssembler {
 
     private final LoanProductDao loanProductDao;
     private final GeneralLedgerDao generalLedgerDao;
+    private final FundDao fundDao;
+    private LoanProductCaluclationTypeAssembler loanProductCaluclationTypeAssembler = new LoanProductCaluclationTypeAssembler();
 
-    public LoanProductAssembler(LoanProductDao loanProductDao, GeneralLedgerDao generalLedgerDao) {
+    public LoanProductAssembler(LoanProductDao loanProductDao, GeneralLedgerDao generalLedgerDao, FundDao fundDao) {
         this.loanProductDao = loanProductDao;
         this.generalLedgerDao = generalLedgerDao;
+        this.fundDao = fundDao;
     }
 
-    public LoanOfferingBO fromDto(MifosUser user, LoanProductRequest savingsProductRequest) {
+    public LoanOfferingBO fromDto(MifosUser user, LoanProductRequest loanProductRequest) {
 
         try {
-            // FIXME - keithw - this is general assembler common to both savings and loans i.e. all products. so
-            // ProductDao and ProductAssembler
-            ProductDetailsDto productDetails = savingsProductRequest.getProductDetails();
+
+            Integer userId = user.getUserId();
+            ProductDetailsDto productDetails = loanProductRequest.getProductDetails();
+
             String name = productDetails.getName();
             String shortName = productDetails.getShortName();
             String description = productDetails.getDescription();
             Integer category = productDetails.getCategory();
+            boolean loanCycleCounter = loanProductRequest.isIncludeInLoanCycleCounter();
+            boolean waiverInterest = loanProductRequest.isWaiverInterest();
+
+            PrdStatusEntity activeStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.SAVINGS_ACTIVE);
+            PrdStatusEntity inActiveStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.SAVINGS_INACTIVE);
+
+            PrdStatusEntity selectedStatus = activeStatus;
+            if (productDetails.getStatus() != null
+                    && inActiveStatus.getOfferingStatusId().equals(productDetails.getStatus().shortValue())) {
+                selectedStatus = inActiveStatus;
+            }
+
+            MifosCurrency currency = Money.getDefaultCurrency();
+            if (AccountingRules.isMultiCurrencyEnabled()) {
+                currency = AccountingRules.getCurrencyByCurrencyId(loanProductRequest.getCurrencyId().shortValue());
+            }
 
             ProductCategoryBO productCategory = this.loanProductDao.findActiveProductCategoryById(category);
             DateTime startDate = productDetails.getStartDate();
@@ -78,68 +104,58 @@ public class LoanProductAssembler {
             ApplicableTo applicableTo = ApplicableTo.fromInt(productDetails.getApplicableFor());
             PrdApplicableMasterEntity applicableToEntity = this.loanProductDao.findApplicableProductType(applicableTo);
 
-            PrdStatusEntity activeStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.SAVINGS_ACTIVE);
-            PrdStatusEntity inActiveStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.SAVINGS_INACTIVE);
+            LoanAmountCalculation loanAmountCalculation = this.loanProductCaluclationTypeAssembler
+                    .assembleLoanAmountCalculationFromDto(loanProductRequest.getLoanAmountDetails());
 
-            PrdStatusEntity selectedStatus = activeStatus;
-            if (productDetails.getStatus() != null && inActiveStatus.getOfferingStatusId().equals(productDetails.getStatus().shortValue())) {
-                selectedStatus = inActiveStatus;
+            InterestType interestType = InterestType.fromInt(loanProductRequest.getInterestRateType());
+            Double minRate = loanProductRequest.getInterestRateRange().getMin().doubleValue();
+            Double maxRate = loanProductRequest.getInterestRateRange().getMax().doubleValue();
+            Double defaultRate = loanProductRequest.getInterestRateRange().getTheDefault().doubleValue();
+
+            InterestTypesEntity interestTypeEntity = this.loanProductDao.findInterestType(interestType);
+
+            RecurrenceType recurrence = RecurrenceType.fromInt(loanProductRequest.getRepaymentDetails()
+                    .getFrequencyType().shortValue());
+            Integer recurEvery = loanProductRequest.getRepaymentDetails().getRecurs();
+
+            LoanInstallmentCalculation loanInstallmentCalculation = this.loanProductCaluclationTypeAssembler
+                    .assembleLoanInstallmentCalculationFromDto(loanProductRequest.getRepaymentDetails()
+                            .getInstallmentCalculationDetails());
+
+            GraceType gracePeriodType = GraceType
+                    .fromInt(loanProductRequest.getRepaymentDetails().getGracePeriodType());
+            GracePeriodTypeEntity gracePeriodTypeEntity = this.loanProductDao.findGracePeriodType(gracePeriodType);
+            Integer gracePeriodDuration = loanProductRequest.getRepaymentDetails().getGracePeriodDuration();
+
+            List<FeeBO> applicableFees = new ArrayList<FeeBO>();
+            List<Integer> applicableFeeIds = loanProductRequest.getApplicableFees();
+            for (Integer feeId : applicableFeeIds) {
+                FeeBO fee = new FeePersistence().findFeeById(feeId.shortValue());
+                applicableFees.add(fee);
             }
+
+            List<FundBO> applicableFunds = new ArrayList<FundBO>();
+            List<Integer> applicableFundIds = loanProductRequest.getAccountDetails().getApplicableFunds();
+            for (Integer fundId : applicableFundIds) {
+                FundBO fund = this.fundDao.findById(fundId.shortValue());
+                applicableFunds.add(fund);
+            }
+
+            GLCodeEntity interestGlCode = this.generalLedgerDao.findGlCodeById(loanProductRequest.getAccountDetails()
+                    .getInterestGlCodeId().shortValue());
+            GLCodeEntity principalGlCode = this.generalLedgerDao.findGlCodeById(loanProductRequest.getAccountDetails()
+                    .getPrincipalClCodeId().shortValue());
 
             String globalProductId = generateProductGlobalNum(user);
 
-//            // savings specific
-//            SavingsType savingsType = SavingsType.fromInt(savingsProductRequest.getDepositType());
-//            SavingsTypeEntity savingsTypeEntity = this.loanProductDao.retrieveSavingsType(savingsType);
-//
-//            RecommendedAmntUnitEntity recommendedAmntUnitEntity = null;
-//            if (savingsProductRequest.getGroupMandatorySavingsType() != null) {
-//                RecommendedAmountUnit recommendedAmountType = RecommendedAmountUnit.fromInt(savingsProductRequest.getGroupMandatorySavingsType());
-//                recommendedAmntUnitEntity = this.loanProductDao.retrieveRecommendedAmountType(recommendedAmountType);
-//            }
-//
-//            Money amountForDeposit = new Money(Money.getDefaultCurrency(), BigDecimal.valueOf(savingsProductRequest.getAmountForDeposit()));
-//            Money maxWithdrawal = new Money(Money.getDefaultCurrency(), BigDecimal.valueOf(savingsProductRequest.getMaxWithdrawal()));
-//
-//            // interest specific
-//            BigDecimal interestRate = savingsProductRequest.getInterestRate();
-//
-//            InterestCalcType interestCalcType = InterestCalcType.fromInt(savingsProductRequest.getInterestCalculationType());
-//            InterestCalcTypeEntity interestCalcTypeEntity = this.loanProductDao.retrieveInterestCalcType(interestCalcType);
-//
-//            RecurrenceType recurrence = RecurrenceType.fromInt(savingsProductRequest.getInterestCalculationFrequencyPeriod().shortValue());
-//            Integer every = savingsProductRequest.getInterestCalculationFrequency();
-//            MeetingBO interestCalculationMeeting = new MeetingBO(recurrence, every.shortValue(), new Date(), MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD);
-//
-//            Integer interestPostingEveryMonthFreq = savingsProductRequest.getInterestPostingMonthlyFrequency();
-//            MeetingBO interestPostingMeeting = new MeetingBO(RecurrenceType.MONTHLY, interestPostingEveryMonthFreq.shortValue(), new Date(), MeetingType.SAVINGS_INTEREST_POSTING);
-//
-//            Money minAmountForCalculation = new Money(Money.getDefaultCurrency(), savingsProductRequest.getMinBalanceForInterestCalculation());
-//
-//            GLCodeEntity depositGlEntity = this.generalLedgerDao.findGlCodeById(savingsProductRequest.getDepositGlCode().shortValue());
-//            GLCodeEntity interestGlEntity = this.generalLedgerDao.findGlCodeById(savingsProductRequest.getInterestGlCode().shortValue());
-
-            MifosCurrency currency = Money.getDefaultCurrency();
-            InterestTypesEntity interestTypeEntity = null;
-            Double minRate = Double.valueOf("0");
-            Double maxRate = Double.valueOf("0");
-            Double defaultRate = Double.valueOf("0");
-            RecurrenceType recurrence = RecurrenceType.WEEKLY;
-            Integer recurEvery = Integer.valueOf(1);
-            GLCodeEntity interestGlCode = null;
-            GLCodeEntity principalGlCode = null;
-            GracePeriodTypeEntity gracePeriodTypeEntity = null;
-            Integer gracePeriodDuration = Integer.valueOf(0);
-            boolean waiverInterest = false;
-            boolean loanCycleCounter = false;
-            LoanAmountCalculation loanAmountCalculation = null;
-            LoanInstallmentCalculation loanInstallmentCalculation = null;
-            List<FeeBO> applicableFees = new ArrayList<FeeBO>();
-            List<FundBO> applicableFunds = new ArrayList<FundBO>();
-            return LoanOfferingBO.createNew(user.getUserId(), globalProductId, name, shortName, description, productCategory, startDate, endDate, applicableToEntity,
-                    currency, interestTypeEntity, minRate, maxRate, defaultRate, recurrence, recurEvery, interestGlCode, principalGlCode,
-                    activeStatus, inActiveStatus, gracePeriodTypeEntity, gracePeriodDuration, waiverInterest, loanCycleCounter,
-                    loanAmountCalculation, loanInstallmentCalculation, applicableFees, applicableFunds);
+            LoanOfferingBO loanProduct = LoanOfferingBO.createNew(userId, globalProductId, name, shortName,
+                    description, productCategory, startDate, endDate, applicableToEntity, currency, interestTypeEntity,
+                    minRate, maxRate, defaultRate, recurrence, recurEvery, interestGlCode, principalGlCode,
+                    activeStatus, inActiveStatus, gracePeriodTypeEntity, gracePeriodDuration, waiverInterest,
+                    loanCycleCounter, loanAmountCalculation, loanInstallmentCalculation, applicableFees,
+                    applicableFunds);
+            loanProduct.updateStatus(selectedStatus);
+            return loanProduct;
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }

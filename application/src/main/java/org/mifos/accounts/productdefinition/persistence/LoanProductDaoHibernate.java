@@ -167,6 +167,18 @@ public class LoanProductDaoHibernate implements LoanProductDao {
     }
 
     @Override
+    public InterestTypesEntity retrieveInterestType(InterestType interestType) {
+        InterestTypesEntity selected = null;
+        List<InterestTypesEntity> interestTypes = retrieveInterestTypes();
+        for (InterestTypesEntity entity : interestTypes) {
+            if (entity.getId().equals(interestType.getValue())) {
+                selected = entity;
+            }
+        }
+        return selected;
+    }
+
+    @Override
     public List<InterestTypesEntity> retrieveInterestTypes() {
         return doFetchListOfMasterDataFor(InterestTypesEntity.class);
     }
