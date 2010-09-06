@@ -20,14 +20,14 @@
 
 package org.mifos.customers.surveys.business;
 
-import java.util.Date;
-
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.customers.ppi.business.PPIChoice;
 import org.mifos.customers.surveys.exceptions.SurveyExceptionConstants;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.DateUtils;
+
+import java.util.Date;
 
 public class SurveyResponse implements Comparable<SurveyResponse> {
     private int responseId;
@@ -86,7 +86,8 @@ public class SurveyResponse implements Comparable<SurveyResponse> {
     }
 
     public void setChoiceValue(QuestionChoice choice) throws ApplicationException {
-        if (getQuestion().getAnswerTypeAsEnum() != AnswerType.CHOICE) {
+        AnswerType answerType = getQuestion().getAnswerTypeAsEnum();
+        if (answerType != AnswerType.CHOICE && answerType != AnswerType.SINGLESELECT) {
             throw new ApplicationException(SurveyExceptionConstants.WRONG_RESPONSE_TYPE);
         }
         this.choiceValue = choice;
@@ -148,7 +149,7 @@ public class SurveyResponse implements Comparable<SurveyResponse> {
             return getDateValue();
         }
 
-        else if (answerType == AnswerType.CHOICE) {
+        else if (answerType == AnswerType.CHOICE || answerType == AnswerType.SINGLESELECT) {
             return getChoiceValue();
         }
 
@@ -173,7 +174,7 @@ public class SurveyResponse implements Comparable<SurveyResponse> {
             return DateUtils.makeDateAsSentFromBrowser(getDateValue());
         }
 
-        else if (answerType == AnswerType.CHOICE) {
+        else if (answerType == AnswerType.CHOICE || answerType == AnswerType.SINGLESELECT) {
             return Integer.toString(getChoiceValue().getChoiceId());
         }
 
@@ -205,7 +206,7 @@ public class SurveyResponse implements Comparable<SurveyResponse> {
         } else if (answerType == AnswerType.DATE) {
             Date dateValue = DateUtils.getDateAsSentFromBrowser(value);
             setDateValue(dateValue);
-        } else if (answerType == AnswerType.CHOICE) {
+        } else if (answerType == AnswerType.CHOICE || answerType == AnswerType.SINGLESELECT) {
             int choiceId = Integer.parseInt(value);
             QuestionChoice choice = null;
             for (QuestionChoice qc : getQuestion().getChoices()) {
@@ -243,7 +244,7 @@ public class SurveyResponse implements Comparable<SurveyResponse> {
                 setNumberValue((Double) value);
             }
 
-            else if (answerType == AnswerType.CHOICE) {
+            else if (answerType == AnswerType.CHOICE || answerType == AnswerType.SINGLESELECT) {
                 setChoiceValue((QuestionChoice) value);
             }
 

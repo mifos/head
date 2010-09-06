@@ -24,6 +24,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -137,6 +138,16 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     @Override
     public void uploadPPIQuestionGroup(String country) {
         questionnaireService.uploadPPIQuestionGroup(country);
+    }
+
+    @Override
+    public Integer saveQuestionGroupInstance(QuestionGroupInstanceDto questionGroupInstanceDto) {
+        return questionnaireService.saveQuestionGroupInstance(questionGroupInstanceDto);
+    }
+
+    @Override
+    public Integer getSectionQuestionId(String sectionName, Integer questionId, Integer questionGroupId) {
+        return questionnaireService.getSectionQuestionId(sectionName, questionId, questionGroupId);
     }
 
     private EventSourceDto getEventSource(String event, String source) {

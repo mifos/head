@@ -20,13 +20,13 @@
 		</list>
 	</class>
 	<query name="questions.getNum">
-       <![CDATA[select count(*) from Question as question]]>
+       <![CDATA[select count(*) from Question as question where question.answerType in (1,2,3,4,5,6)]]>
     </query>
 	<query name="questions.retrieveAll">
-       <![CDATA[from Question as question order by question.shortName]]>
+       <![CDATA[from Question as question where question.answerType in (1,2,3,4,5,6) order by question.shortName]]>
     </query>
  	<query name="Question.retrieveByState">
-       <![CDATA[from Question as question where question.questionState=:QUESTION_STATE order by question.shortName]]>
+       <![CDATA[from Question as question where question.questionState=:QUESTION_STATE and question.answerType in (1,2,3,4,5,6) order by question.shortName]]>
     </query>
     <query name="questions.retrieveByName">
        <![CDATA[from Question as question where question.shortName=:SHORT_NAME]]>

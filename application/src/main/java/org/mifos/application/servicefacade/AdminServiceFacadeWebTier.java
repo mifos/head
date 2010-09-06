@@ -22,11 +22,13 @@ package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.accounts.acceptedpaymenttype.business.TransactionTypeEntity;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
@@ -42,26 +44,26 @@ import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.productdefinition.LoanAmountCalculation;
 import org.mifos.accounts.productdefinition.LoanInstallmentCalculation;
-import org.mifos.accounts.productdefinition.LoanInstallmentCaluclationFactory;
-import org.mifos.accounts.productdefinition.LoanProductCalculationType;
-import org.mifos.accounts.productdefinition.LoanAmountCaluclationFactory;
+import org.mifos.accounts.productdefinition.LoanProductCaluclationTypeAssembler;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
-import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
+import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
-import org.mifos.accounts.productdefinition.business.PrdCategoryStatusEntity;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.ProductCategoryBusinessService;
 import org.mifos.accounts.productdefinition.business.service.ProductService;
-import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.accounts.productdefinition.business.service.SavingsPrdBusinessService;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
+import org.mifos.accounts.productdefinition.persistence.ProductCategoryPersistence;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
@@ -80,12 +82,15 @@ import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.config.persistence.ApplicationConfigurationPersistence;
@@ -102,6 +107,7 @@ import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.AcceptedPaymentTypeDto;
 import org.mifos.dto.domain.AccountStatusesLabelDto;
+import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.ConfigurableLookupLabelDto;
 import org.mifos.dto.domain.CreateOrUpdateProductCategory;
 import org.mifos.dto.domain.GracePeriodDto;
@@ -109,7 +115,9 @@ import org.mifos.dto.domain.LoanProductRequest;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.dto.domain.ProductTypeDto;
+import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.dto.screen.ListElement;
@@ -124,6 +132,9 @@ import org.mifos.dto.screen.ProductDisplayDto;
 import org.mifos.dto.screen.ProductDto;
 import org.mifos.dto.screen.ProductMixDetailsDto;
 import org.mifos.dto.screen.ProductMixDto;
+import org.mifos.dto.screen.SavingsProductFormDto;
+import org.mifos.framework.components.audit.business.service.AuditBusinessService;
+import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -133,9 +144,11 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
@@ -148,6 +161,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private final ApplicationConfigurationDao applicationConfigurationDao;
     private final FundDao fundDao;
     private final GeneralLedgerDao generalLedgerDao;
+    private LoanProductCaluclationTypeAssembler loanProductCaluclationTypeAssembler = new LoanProductCaluclationTypeAssembler();
 
     public AdminServiceFacadeWebTier(ProductService productService, OfficeHierarchyService officeHierarchyService,
             MandatoryHiddenFieldService mandatoryHiddenFieldService, LoanProductDao loanProductDao,
@@ -201,11 +215,8 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
     private List<ProductDisplayDto> productsToDto(final List<Object[]> queryResult) {
 
-        if (queryResult.size() == 0) {
-            return null;
-        }
-
         List<ProductDisplayDto> products = new ArrayList<ProductDisplayDto>();
+
         Short prdOfferingId;
         String prdOfferingName;
         Short prdOfferingStatusId;
@@ -220,6 +231,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                     prdOfferingStatusName);
             products.add(product);
         }
+
         return products;
     }
 
@@ -1235,18 +1247,44 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public void createProductCategory(CreateOrUpdateProductCategory productCategory) {
+    public void createProductCategory(CreateOrUpdateProductCategory productCategoryDto) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         UserContext userContext = new UserContext();
-        userContext.setId(productCategory.getUserId());
-        userContext.setBranchId(productCategory.getBranchId());
-        ProductCategoryBO productCategoryBO;
+        userContext.setId(Integer.valueOf(user.getUserId()).shortValue());
+        userContext.setBranchId(user.getBranchId());
+
+        this.loanProductDao.validateNameIsAvailableForCategory(productCategoryDto.getProductCategoryName(),
+                productCategoryDto.getProductTypeEntityId());
+
+        HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
         try {
-            productCategoryBO = new ProductCategoryBO(userContext, new ProductTypeEntity(productCategory
-                    .getProductTypeEntityId()), productCategory.getProductCategoryName(), productCategory
-                    .getProductCategoryDesc());
-            productCategoryBO.save();
-        } catch (ProductDefinitionException e) {
+
+            // FIXME - delegate to globalNumberGenerationStrategy
+            StringBuilder globalPrdOfferingNum = new StringBuilder();
+            globalPrdOfferingNum.append(userContext.getBranchId());
+            globalPrdOfferingNum.append("-");
+            Short maxPrdID = new ProductCategoryPersistence().getMaxPrdCategoryId();
+            globalPrdOfferingNum.append(StringUtils.leftPad(String.valueOf(maxPrdID != null ? maxPrdID + 1
+                    : ProductDefinitionConstants.DEFAULTMAX), 3, '0'));
+            String globalNumber = globalPrdOfferingNum.toString();
+
+            ProductTypeEntity productType = new ProductTypeEntity(productCategoryDto.getProductTypeEntityId());
+            ProductCategoryBO productCategoryBO = new ProductCategoryBO(productType, productCategoryDto
+                    .getProductCategoryName(), productCategoryDto.getProductCategoryDesc(), globalNumber);
+
+            transactionHelper.startTransaction();
+            this.loanProductDao.save(productCategoryBO);
+            transactionHelper.commitTransaction();
+
+        } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
+        } catch (Exception e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            transactionHelper.closeSession();
         }
     }
 
@@ -1268,37 +1306,42 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public void updateProductCategory(CreateOrUpdateProductCategory productCategory) {
+    public void updateProductCategory(CreateOrUpdateProductCategory productCategoryDto) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         UserContext userContext = new UserContext();
-        userContext.setId(productCategory.getUserId());
-        userContext.setBranchId(productCategory.getBranchId());
-        ProductCategoryBO productCategoryBO;
-        try {
-            productCategoryBO = new ProductCategoryBO(userContext, new ProductTypeEntity(productCategory
-                    .getProductTypeEntityId()), productCategory.getProductCategoryName(), productCategory
-                    .getProductCategoryDesc());
-            productCategoryBO.updateProductCategory(productCategory.getProductCategoryName(), productCategory
-                    .getProductCategoryDesc(), new PrdCategoryStatusEntity(getProductCategoryStatus(productCategory
-                    .getProductCategoryStatusId())));
-        } catch (ProductDefinitionException e) {
-            throw new MifosRuntimeException(e);
-        }
-    }
+        userContext.setId(Integer.valueOf(user.getUserId()).shortValue());
+        userContext.setBranchId(user.getBranchId());
 
-    private PrdCategoryStatus getProductCategoryStatus(Short statusId) {
-        if (statusId == PrdCategoryStatus.ACTIVE.getValue()) {
-            return PrdCategoryStatus.ACTIVE;
+        HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+        try {
+            ProductCategoryBO categoryForUpdate = this.loanProductDao.findProductCategoryByGlobalNum(productCategoryDto.getGlobalPrdCategoryNum());
+            if (categoryForUpdate.hasDifferentName(productCategoryDto.getProductCategoryName())) {
+                this.loanProductDao.validateNameIsAvailableForCategory(productCategoryDto.getProductCategoryName(), productCategoryDto.getProductTypeEntityId());
+            }
+
+            transactionHelper.startTransaction();
+            categoryForUpdate.update(productCategoryDto.getProductCategoryName(), productCategoryDto.getProductCategoryDesc(), PrdCategoryStatus.fromInt(productCategoryDto.getProductCategoryStatusId()));
+            this.loanProductDao.save(categoryForUpdate);
+            transactionHelper.commitTransaction();
+
+        } catch (BusinessRuleException e) {
+            transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getMessageKey(), e);
+        } catch (Exception e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            transactionHelper.closeSession();
         }
-        return PrdCategoryStatus.INACTIVE;
     }
 
     @Override
     public List<ProductTypeDto> retrieveProductTypesApplicableToProductMix() {
         List<ProductTypeDto> poductTypes = new ArrayList<ProductTypeDto>();
 
-        poductTypes
-                .add(new ProductTypeDto(ProductType.LOAN.getValue().intValue(), "manageProduct.viewProductMix.loan"));
+        poductTypes.add(new ProductTypeDto(ProductType.LOAN.getValue().intValue(), "manageProduct.viewProductMix.loan"));
 
         return poductTypes;
     }
@@ -1403,6 +1446,82 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
+    public SavingsProductFormDto retrieveSavingsProductFormReferenceData() {
+
+        try {
+            SavingsPrdBusinessService service = new SavingsPrdBusinessService();
+
+            List<ListElement> statusOptions = new ArrayList<ListElement>();
+            List<PrdStatusEntity> applicableStatuses = service.getApplicablePrdStatus(Short.valueOf("1"));
+            for (PrdStatusEntity entity : applicableStatuses) {
+                statusOptions.add(new ListElement(entity.getOfferingStatusId().intValue(), entity.getPrdState().getName()));
+            }
+
+            List<ListElement> productCategoryOptions = new ArrayList<ListElement>();
+            List<ProductCategoryBO> productCategories = service.getActiveSavingsProductCategories();
+            for (ProductCategoryBO category : productCategories) {
+                productCategoryOptions.add(new ListElement(category.getProductCategoryID().intValue(), category
+                        .getProductCategoryName()));
+            }
+
+            List<ListElement> applicableForOptions = new ArrayList<ListElement>();
+            List<PrdApplicableMasterEntity> applicableCustomerTypes = this.loanProductDao
+                    .retrieveSavingsApplicableProductCategories();
+            for (PrdApplicableMasterEntity entity : applicableCustomerTypes) {
+                applicableForOptions.add(new ListElement(entity.getId().intValue(), entity.getName()));
+            }
+
+            List<ListElement> savingsTypeOptions = new ArrayList<ListElement>();
+            List<SavingsTypeEntity> savingsTypes = this.loanProductDao.retrieveSavingsTypes();
+            for (SavingsTypeEntity entity : savingsTypes) {
+                savingsTypeOptions.add(new ListElement(entity.getId().intValue(), entity.getName()));
+            }
+
+            List<ListElement> recommendedAmountTypeOptions = new ArrayList<ListElement>();
+            List<RecommendedAmntUnitEntity> recommendedAmountTypes = this.loanProductDao
+                    .retrieveRecommendedAmountTypes();
+            for (RecommendedAmntUnitEntity entity : recommendedAmountTypes) {
+                recommendedAmountTypeOptions.add(new ListElement(entity.getId().intValue(), entity.getName()));
+            }
+
+            List<ListElement> interestCalcTypeOptions = new ArrayList<ListElement>();
+            List<InterestCalcTypeEntity> interestCalcTypes = this.loanProductDao.retrieveInterestCalcTypes();
+            for (InterestCalcTypeEntity entity : interestCalcTypes) {
+                interestCalcTypeOptions.add(new ListElement(entity.getId().intValue(), entity.getName()));
+            }
+
+            List<ListElement> timePeriodOptions = new ArrayList<ListElement>();
+            List<RecurrenceTypeEntity> applicableRecurrences = service.getSavingsApplicableRecurrenceTypes();
+            for (RecurrenceTypeEntity entity : applicableRecurrences) {
+                timePeriodOptions.add(new ListElement(entity.getRecurrenceId().intValue(), entity.getRecurrenceName()));
+            }
+
+            List<GLCodeEntity> depositGlCodeList = new ArrayList<GLCodeEntity>();
+            depositGlCodeList.addAll(new FinancialBusinessService().getGLCodes(FinancialActionConstants.MANDATORYDEPOSIT, FinancialConstants.CREDIT));
+            depositGlCodeList.addAll(new FinancialBusinessService().getGLCodes(FinancialActionConstants.VOLUNTORYDEPOSIT, FinancialConstants.CREDIT));
+
+            List<ListElement> depositGlCodeOptions = new ArrayList<ListElement>();
+            for (GLCodeEntity glCode : depositGlCodeList) {
+                depositGlCodeOptions.add(new ListElement(glCode.getGlcodeId().intValue(), glCode.getGlcode()));
+            }
+
+            List<GLCodeEntity> interestGlCodeList = new FinancialBusinessService().getGLCodes(FinancialActionConstants.SAVINGS_INTERESTPOSTING, FinancialConstants.DEBIT);
+            List<ListElement> interestGlCodes = new ArrayList<ListElement>();
+            for (GLCodeEntity glCode : interestGlCodeList) {
+                interestGlCodes.add(new ListElement(glCode.getGlcodeId().intValue(), glCode.getGlcode()));
+            }
+
+            return new SavingsProductFormDto(productCategoryOptions, applicableForOptions, savingsTypeOptions, recommendedAmountTypeOptions, interestCalcTypeOptions, timePeriodOptions, depositGlCodeOptions, interestGlCodes, statusOptions);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        } catch (SystemException e) {
+            throw new MifosRuntimeException(e);
+        } catch (ApplicationException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    @Override
     public LoanProductFormDto retrieveLoanProductFormReferenceData() {
 
         try {
@@ -1456,7 +1575,18 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                 interestGlCodes.add(new ListElement(glCode.getGlcodeId().intValue(), glCode.getGlcode()));
             }
 
-            return new LoanProductFormDto(productCategoryOptions, gracePeriodTypeOptions, sourceOfFunds, loanFee, principalGlCodes, interestGlCodes, interestCalcTypesOptions, applicableForOptions);
+            List<ListElement> statusOptions = new ArrayList<ListElement>();
+
+            boolean multiCurrencyEnabled = AccountingRules.isMultiCurrencyEnabled();
+            List<ListElement> currencyOptions = new ArrayList<ListElement>();
+            if (multiCurrencyEnabled) {
+                LinkedList<MifosCurrency> currencies = AccountingRules.getCurrencies();
+                for (MifosCurrency mifosCurrency : currencies) {
+                    currencyOptions.add(new ListElement(mifosCurrency.getCurrencyId().intValue(), mifosCurrency.getCurrencyCode()));
+                }
+            }
+
+            return new LoanProductFormDto(productCategoryOptions, gracePeriodTypeOptions, sourceOfFunds, loanFee, principalGlCodes, interestGlCodes, interestCalcTypesOptions, applicableForOptions, statusOptions, currencyOptions, multiCurrencyEnabled);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         } catch (SystemException e) {
@@ -1467,7 +1597,118 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public void createLoanProduct(LoanProductRequest loanProductRequest) {
+    public PrdOfferingDto updateSavingsProduct(SavingsProductDto savingsProductRequest) {
+
+        SavingsOfferingBO savingsProductForUpdate = this.savingsProductDao.findById(savingsProductRequest.getProductDetails().getId());
+
+        // enforced by integrity constraints on table also.
+        if (savingsProductForUpdate.isDifferentName(savingsProductRequest.getProductDetails().getName())) {
+            this.savingsProductDao.validateProductWithSameNameDoesNotExist(savingsProductRequest.getProductDetails().getName());
+        }
+
+        if (savingsProductForUpdate.isDifferentShortName(savingsProductRequest.getProductDetails().getShortName())) {
+            this.savingsProductDao.validateProductWithSameShortNameDoesNotExist(savingsProductRequest.getProductDetails().getShortName());
+        }
+
+        // domain rule validation - put on domain entity
+        if (savingsProductForUpdate.isDifferentStartDate(savingsProductRequest.getProductDetails().getStartDate())) {
+            validateStartDateIsNotBeforeToday(savingsProductRequest.getProductDetails().getStartDate());
+            validateStartDateIsNotOverOneYearFromToday(savingsProductRequest.getProductDetails().getStartDate());
+
+            validateEndDateIsPastStartDate(savingsProductRequest.getProductDetails().getStartDate(), savingsProductRequest.getProductDetails().getEndDate());
+        }
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        SavingsOfferingBO newSavingsDetails = new SavingsProductAssembler(this.loanProductDao, this.generalLedgerDao).fromDto(user, savingsProductRequest);
+
+        UserContext userContext = new UserContext();
+        userContext.setBranchId(user.getBranchId());
+        userContext.setId(Short.valueOf((short) user.getUserId()));
+        userContext.setName(user.getUsername());
+
+        savingsProductForUpdate.updateDetails(userContext);
+
+        HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+
+        try {
+            transactionHelper.startTransaction();
+            transactionHelper.beginAuditLoggingFor(savingsProductForUpdate);
+
+            savingsProductForUpdate.updateProductDetails(newSavingsDetails.getPrdOfferingName(), newSavingsDetails.getPrdOfferingShortName(),
+                    newSavingsDetails.getDescription(), newSavingsDetails.getPrdCategory(), newSavingsDetails.getStartDate(), newSavingsDetails.getEndDate(),
+                    newSavingsDetails.getPrdApplicableMaster(), newSavingsDetails.getPrdStatus());
+
+            savingsProductForUpdate.updateSavingsDetails(newSavingsDetails.getSavingsType(), newSavingsDetails.getRecommendedAmount(), newSavingsDetails.getRecommendedAmntUnit(),
+                    newSavingsDetails.getMaxAmntWithdrawl(), newSavingsDetails.getInterestRate(), newSavingsDetails.getInterestCalcType(),
+                    newSavingsDetails.getTimePerForInstcalc(), newSavingsDetails.getFreqOfPostIntcalc(), newSavingsDetails.getMinAmntForInt());
+
+            this.savingsProductDao.save(savingsProductForUpdate);
+            transactionHelper.commitTransaction();
+            return savingsProductForUpdate.toDto();
+        } catch (Exception e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            transactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public PrdOfferingDto createSavingsProduct(SavingsProductDto savingsProductRequest) {
+
+        // enforced by integrity constraints on table also.
+        this.savingsProductDao.validateProductWithSameNameDoesNotExist(savingsProductRequest.getProductDetails().getName());
+        this.savingsProductDao.validateProductWithSameShortNameDoesNotExist(savingsProductRequest.getProductDetails().getShortName());
+
+        // domain rule validation - put on domain entity
+        validateStartDateIsNotBeforeToday(savingsProductRequest.getProductDetails().getStartDate());
+        validateStartDateIsNotOverOneYearFromToday(savingsProductRequest.getProductDetails().getStartDate());
+        validateEndDateIsPastStartDate(savingsProductRequest.getProductDetails().getStartDate(), savingsProductRequest.getProductDetails().getEndDate());
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        SavingsOfferingBO savingsProduct = new SavingsProductAssembler(this.loanProductDao, this.generalLedgerDao).fromDto(user, savingsProductRequest);
+
+        HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+
+        try {
+            transactionHelper.startTransaction();
+            this.savingsProductDao.save(savingsProduct);
+            transactionHelper.commitTransaction();
+            return savingsProduct.toDto();
+        } catch (Exception e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            transactionHelper.closeSession();
+        }
+    }
+
+    private void validateEndDateIsPastStartDate(DateTime startDate, DateTime endDate) {
+        if (endDate != null) {
+            if (new LocalDate(endDate).isBefore(new LocalDate(startDate))) {
+                throw new BusinessRuleException("Min.generalDetails.endDate");
+            }
+        }
+    }
+
+    private void validateStartDateIsNotOverOneYearFromToday(DateTime startDate) {
+        LocalDate oneYearFromToday = new LocalDate(new DateTime().plusYears(1));
+        if (new LocalDate(startDate).isAfter(oneYearFromToday)) {
+            throw new BusinessRuleException("Max.generalDetails.startDate");
+        }
+    }
+
+    private void validateStartDateIsNotBeforeToday(DateTime startDate) {
+        LocalDate today = new LocalDate(new DateTime());
+        if (new LocalDate(startDate).isBefore(today)) {
+            throw new BusinessRuleException("Min.generalDetails.startDate");
+        }
+    }
+
+    @Override
+    public PrdOfferingDto createLoanProduct(LoanProductRequest loanProductRequest) {
 
         LoanOfferingBO loanProduct = assembleFrom(loanProductRequest);
 
@@ -1477,6 +1718,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             transactionHelper.startTransaction();
             this.loanProductDao.save(loanProduct);
             transactionHelper.commitTransaction();
+            return loanProduct.toDto();
         } catch (Exception e) {
             transactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
@@ -1487,45 +1729,44 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
     private LoanOfferingBO assembleFrom(LoanProductRequest loanProductRequest) {
 
-        // FIXME - keithw - pass down into service facade
-        Integer userId = Integer.valueOf(1);
-        Integer userBranchId = Integer.valueOf(3);
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        String name = loanProductRequest.getLoanProductDetails().getName();
-        String shortName = loanProductRequest.getLoanProductDetails().getShortName();
-        String description = loanProductRequest.getLoanProductDetails().getDescription();
-        Integer category = loanProductRequest.getLoanProductDetails().getCategory();
-        boolean loanCycleCounter = loanProductRequest.getLoanProductDetails().isIncludeInLoanCycleCounter();
+        Integer userId = user.getUserId();
+        Integer userBranchId = Integer.valueOf(user.getBranchId());
 
-        ProductCategoryBO productCategory = this.loanProductDao.findProductCategoryById(category);
-        DateTime startDate = loanProductRequest.getLoanProductDetails().getStartDate();
-        DateTime endDate = loanProductRequest.getLoanProductDetails().getEndDate();
-        ApplicableTo applicableTo = ApplicableTo.fromInt(loanProductRequest.getLoanProductDetails().getApplicableFor());
+        ProductDetailsDto productDetails = loanProductRequest.getProductDetails();
 
-        LoanProductCalculationType calculationType = LoanProductCalculationType.fromInt(loanProductRequest.getLoanAmountDetails().getCalculationType());
-        Double min = loanProductRequest.getLoanAmountDetails().getSameForAllLoanRange().getMin();
-        Double max = loanProductRequest.getLoanAmountDetails().getSameForAllLoanRange().getMax();
-        Double theDefault = loanProductRequest.getLoanAmountDetails().getSameForAllLoanRange().getTheDefault();
+        String name = productDetails.getName();
+        String shortName = productDetails.getShortName();
+        String description = productDetails.getDescription();
+        Integer category = productDetails.getCategory();
+        boolean loanCycleCounter = loanProductRequest.isIncludeInLoanCycleCounter();
+        boolean waiverInterest = loanProductRequest.isWaiverInterest();
 
-        LoanAmountCalculation loanAmountCalculation = LoanAmountCaluclationFactory.create(calculationType, min, max, theDefault);
+        MifosCurrency currency = Money.getDefaultCurrency();
+        if (AccountingRules.isMultiCurrencyEnabled()) {
+            currency = AccountingRules.getCurrencyByCurrencyId(loanProductRequest.getCurrencyId().shortValue());
+        }
+
+        ProductCategoryBO productCategory = this.loanProductDao.findActiveProductCategoryById(category);
+        DateTime startDate = productDetails.getStartDate();
+        DateTime endDate = productDetails.getEndDate();
+        ApplicableTo applicableTo = ApplicableTo.fromInt(productDetails.getApplicableFor());
+        PrdApplicableMasterEntity applicableToEntity = this.loanProductDao.findApplicableProductType(applicableTo);
+
+        LoanAmountCalculation loanAmountCalculation = this.loanProductCaluclationTypeAssembler.assembleLoanAmountCalculationFromDto(loanProductRequest.getLoanAmountDetails());
 
         InterestType interestType = InterestType.fromInt(loanProductRequest.getInterestRateType());
-        Double minRate = loanProductRequest.getInterestRateRange().getMin();
-        Double maxRate = loanProductRequest.getInterestRateRange().getMax();
-        Double defaultRate = loanProductRequest.getInterestRateRange().getTheDefault();
+        Double minRate = loanProductRequest.getInterestRateRange().getMin().doubleValue();
+        Double maxRate = loanProductRequest.getInterestRateRange().getMax().doubleValue();
+        Double defaultRate = loanProductRequest.getInterestRateRange().getTheDefault().doubleValue();
 
-        PrdApplicableMasterEntity applicableToEntity = this.loanProductDao.findApplicableProductType(applicableTo);
         InterestTypesEntity interestTypeEntity = this.loanProductDao.findInterestType(interestType);
 
         RecurrenceType recurrence = RecurrenceType.fromInt(loanProductRequest.getRepaymentDetails().getFrequencyType().shortValue());
         Integer recurEvery = loanProductRequest.getRepaymentDetails().getRecurs();
 
-        LoanProductCalculationType installmentCalculation = LoanProductCalculationType.fromInt(loanProductRequest.getRepaymentDetails().getCalculationType());
-        Integer minAllowed = loanProductRequest.getRepaymentDetails().getSameForAllLoanRange().getMin();
-        Integer maxAllowed = loanProductRequest.getRepaymentDetails().getSameForAllLoanRange().getMax();
-        Integer defaultAllowed = loanProductRequest.getRepaymentDetails().getSameForAllLoanRange().getTheDefault();
-
-        LoanInstallmentCalculation loanInstallmentCalculation = LoanInstallmentCaluclationFactory.create(installmentCalculation, minAllowed, maxAllowed, defaultAllowed);
+        LoanInstallmentCalculation loanInstallmentCalculation = this.loanProductCaluclationTypeAssembler.assembleLoanInstallmentCalculationFromDto(loanProductRequest.getRepaymentDetails().getInstallmentCalculationDetails());
 
         GraceType gracePeriodType = GraceType.fromInt(loanProductRequest.getRepaymentDetails().getGracePeriodType());
         GracePeriodTypeEntity gracePeriodTypeEntity = this.loanProductDao.findGracePeriodType(gracePeriodType);
@@ -1546,7 +1787,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         }
 
         GLCodeEntity interestGlCode = this.generalLedgerDao.findGlCodeById(loanProductRequest.getAccountDetails().getInterestGlCodeId().shortValue());
-        GLCodeEntity principalGlCode = this.generalLedgerDao.findGlCodeById(loanProductRequest.getAccountDetails().getInterestGlCodeId().shortValue());
+        GLCodeEntity principalGlCode = this.generalLedgerDao.findGlCodeById(loanProductRequest.getAccountDetails().getPrincipalClCodeId().shortValue());
 
         StringBuilder globalPrdOfferingNum = new StringBuilder();
         globalPrdOfferingNum.append(userBranchId);
@@ -1554,14 +1795,49 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
         try {
             Short maxPrdID = new PrdOfferingPersistence().getMaxPrdOffering();
-            PrdStatusEntity activeStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.LOAN_ACTIVE);
-            PrdStatusEntity inActiveStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.LOAN_INACTIVE);
             globalPrdOfferingNum.append(StringUtils.leftPad(String.valueOf(maxPrdID != null ? maxPrdID + 1 : ProductDefinitionConstants.DEFAULTMAX + 1), 3, '0'));
 
-            return LoanOfferingBO.createNew(userId, globalPrdOfferingNum.toString(), name, shortName, description, productCategory, startDate, endDate, applicableToEntity,
-                    interestTypeEntity, minRate, maxRate, defaultRate, recurrence, recurEvery, interestGlCode, principalGlCode,
-                    activeStatus, inActiveStatus, gracePeriodTypeEntity, gracePeriodDuration, loanCycleCounter, loanAmountCalculation, loanInstallmentCalculation, applicableFees, applicableFunds);
+            PrdStatusEntity activeStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.LOAN_ACTIVE);
+            PrdStatusEntity inActiveStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.LOAN_INACTIVE);
+
+            return LoanOfferingBO.createNew(userId, globalPrdOfferingNum.toString(), name, shortName, description, productCategory, startDate,
+                    endDate, applicableToEntity, currency, interestTypeEntity, minRate, maxRate, defaultRate,
+                    recurrence, recurEvery, interestGlCode, principalGlCode, activeStatus, inActiveStatus, gracePeriodTypeEntity,
+                    gracePeriodDuration, waiverInterest, loanCycleCounter, loanAmountCalculation, loanInstallmentCalculation, applicableFees, applicableFunds);
         } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    public void setLoanProductCaluclationTypeAssembler(
+            LoanProductCaluclationTypeAssembler loanProductCaluclationTypeAssembler) {
+        this.loanProductCaluclationTypeAssembler = loanProductCaluclationTypeAssembler;
+    }
+
+    @Override
+    public SavingsProductDto retrieveSavingsProductDetails(Integer productId) {
+
+        SavingsOfferingBO savingsProduct = this.savingsProductDao.findById(productId);
+        return savingsProduct.toFullDto();
+    }
+
+    @Override
+    public LoanProductRequest retrieveLoanProductDetails(Integer productId) {
+        LoanOfferingBO loanProduct = this.loanProductDao.findById(productId);
+        return loanProduct.toFullDto();
+    }
+
+    @Override
+    public List<AuditLogDto> retrieveSavingsProductAuditLogs(Integer productId) {
+        List<AuditLogDto> auditLogDtos = new ArrayList<AuditLogDto>();
+        AuditBusinessService auditBusinessService = new AuditBusinessService();
+        try {
+            List<AuditLogView> auditLogs = auditBusinessService.getAuditLogRecords(EntityType.SAVINGSPRODUCT.getValue(), productId);
+            for (AuditLogView auditLogView : auditLogs) {
+                auditLogDtos.add(auditLogView.toDto());
+            }
+            return auditLogDtos;
+        } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         }
     }

@@ -39,6 +39,8 @@ import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProduc
 import org.mifos.test.acceptance.framework.user.CreateUserParameters;
 import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
 import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
+import org.mifos.test.acceptance.questionnaire.ViewAllQuestionGroupsPage;
+import org.mifos.test.acceptance.questionnaire.ViewAllQuestionsPage;
 import org.mifos.test.acceptance.util.StringUtil;
 
 /**

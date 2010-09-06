@@ -20,21 +20,20 @@
 
 package org.mifos.dto.domain;
 
+import org.mifos.dto.screen.LoanAmountDetailsDto;
+
 public class RepaymentDetailsDto {
 
     private final Integer frequencyType;
     private final Integer recurs;
-    private final Integer calculationType;
-    private final MinMaxDefaultDto<Integer> sameForAllLoanRange;
     private final Integer gracePeriodType;
     private final Integer gracePeriodDuration;
+    private final LoanAmountDetailsDto installmentCalculationDetails;
 
-    public RepaymentDetailsDto(Integer frequencyType, Integer recurs, Integer calculationType,
-            MinMaxDefaultDto<Integer> sameForAllLoanRange, Integer gracePeriodType, Integer gracePeriodDuration) {
+    public RepaymentDetailsDto(Integer frequencyType, Integer recurs, LoanAmountDetailsDto installmentCalculationDetails, Integer gracePeriodType, Integer gracePeriodDuration) {
         this.frequencyType = frequencyType;
         this.recurs = recurs;
-        this.calculationType = calculationType;
-        this.sameForAllLoanRange = sameForAllLoanRange;
+        this.installmentCalculationDetails = installmentCalculationDetails;
         this.gracePeriodType = gracePeriodType;
         this.gracePeriodDuration = gracePeriodDuration;
     }
@@ -47,19 +46,15 @@ public class RepaymentDetailsDto {
         return this.recurs;
     }
 
-    public Integer getCalculationType() {
-        return this.calculationType;
-    }
-
-    public MinMaxDefaultDto<Integer> getSameForAllLoanRange() {
-        return this.sameForAllLoanRange;
-    }
-
     public Integer getGracePeriodType() {
         return this.gracePeriodType;
     }
 
     public Integer getGracePeriodDuration() {
         return this.gracePeriodDuration;
+    }
+
+    public LoanAmountDetailsDto getInstallmentCalculationDetails() {
+        return this.installmentCalculationDetails;
     }
 }

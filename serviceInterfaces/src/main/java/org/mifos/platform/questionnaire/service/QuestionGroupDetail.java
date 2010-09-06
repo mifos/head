@@ -20,10 +20,12 @@
 
 package org.mifos.platform.questionnaire.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class QuestionGroupDetail implements Serializable {
@@ -125,5 +127,19 @@ public class QuestionGroupDetail implements Serializable {
             }
         }
         return questionIds;
+    }
+
+    public void addSection(SectionDetail sectionDetail) {
+        this.sectionDetails.add(sectionDetail);
+    }
+
+    public void removeSection(SectionDetail sectionToDelete) {
+        for (Iterator<SectionDetail> iterator = sectionDetails.iterator(); iterator.hasNext();) {
+            SectionDetail sectionDetail = iterator.next();
+            if (StringUtils.equalsIgnoreCase(sectionToDelete.getName(), sectionDetail.getName())) {
+                iterator.remove();
+                break;
+            }
+        }
     }
 }

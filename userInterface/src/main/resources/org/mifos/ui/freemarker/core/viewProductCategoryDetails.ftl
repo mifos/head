@@ -1,21 +1,32 @@
 [#ftl]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
-
-[@mifos.header "title" /]
-<div class="container">&nbsp;
-  [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-  <div class="sidebar htTotal">
-  [#include "adminLeftPane.ftl" ]
-  </div>
-  <div class=" content leftMargin180">
-   	<form method="" action="" name="formname">
-    <div class="span-22">
+[#--
+* Copyright (c) 2005-2010 Grameen Foundation USA
+*  All rights reserved.
+*
+*  Licensed under the Apache License, Version 2.0 (the "License");
+*  you may not use this file except in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+*  implied. See the License for the specific language governing
+*  permissions and limitations under the License.
+*
+*  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+*  explanation of the license and how it is applied.
+--]
+[#include "layout.ftl"]
+[@adminLeftPaneLayout]
+  <div class=" content">
+    <div class="span-21">
   		[@mifos.crumbs breadcrumbs/]
         <div class="clear">&nbsp;</div>
-    	<div class="span-24">
+    	<div class="span-20">
         	<div class="span-19">
-            	<span class="orangeheading">${detailsDto.productCategoryName}</span><br /><br />
+            	<span class="orangeheading">${detailsDto.productCategoryName}</span><br />
                 <span>
                 [#switch detailsDto.productCategoryStatusId]
                 	[#case 1]
@@ -34,8 +45,8 @@
                 	  			[/#if]
                 	  		[/#list]
                 	  </span>
-                </span><br />
-                <span class="span-4 rightAlign"><a href="editCategoryInformation.ftl?globalPrdCategoryNum=${globalPrdCategoryNum}">[@spring.message "manageProducts.editCategory.editcategoryinformation"/]</a></span>
+                </span>
+                <span class="span-19 rightAlign"><a href="editCategoryInformation.ftl?globalPrdCategoryNum=${globalPrdCategoryNum}">[@spring.message "manageProducts.editCategory.editcategoryinformation"/]</a></span>                
         	</div>        	
         </div>        
         <div class="clear">&nbsp;</div>
@@ -48,8 +59,5 @@
 		<br />
         </p>
 	</div>
-   	</form> 
-  </div><!--Main Content Ends-->
-  <div class="footer">&nbsp;</div>
-</div><!--Container Ends--> 
-[@mifos.footer/]
+  </div><!--Main Content Ends--> 
+[/@adminLeftPaneLayout]

@@ -33,11 +33,17 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
+import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
+import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -48,6 +54,7 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.customers.business.CustomerLevelEntity;
+import org.mifos.service.BusinessRuleException;
 
 /**
  *
@@ -95,6 +102,11 @@ public class LoanProductDaoHibernate implements LoanProductDao {
     }
 
     @Override
+    public void save(ProductCategoryBO productCategory) {
+        this.genericDao.createOrUpdate(productCategory);
+    }
+
+    @Override
     public void save(ProductTypeEntity productType) {
         this.genericDao.createOrUpdate(productType);
     }
@@ -108,6 +120,12 @@ public class LoanProductDaoHibernate implements LoanProductDao {
     @Override
     public List<Object[]> findAllLoanProducts() {
         return (List<Object[]>) genericDao.executeNamedQuery("findAllLoanProducts", null);
+    }
+
+    @Override
+    public List<PrdApplicableMasterEntity> retrieveSavingsApplicableProductCategories() {
+        List<PrdApplicableMasterEntity> applicableCategories = doFetchListOfMasterDataFor(PrdApplicableMasterEntity.class);
+        return applicableCategories;
     }
 
     @Override
@@ -137,8 +155,54 @@ public class LoanProductDaoHibernate implements LoanProductDao {
     }
 
     @Override
+    public InterestCalcTypeEntity retrieveInterestCalcType(InterestCalcType interestCalcType) {
+        InterestCalcTypeEntity result = null;
+        List<InterestCalcTypeEntity> allSavingsTypes = retrieveInterestCalcTypes();
+        for (InterestCalcTypeEntity entity : allSavingsTypes) {
+            if (entity.getId().equals(interestCalcType.getValue())) {
+                result = entity;
+            }
+        }
+        return result;
+    }
+
+    @Override
     public List<InterestTypesEntity> retrieveInterestTypes() {
         return doFetchListOfMasterDataFor(InterestTypesEntity.class);
+    }
+
+    @Override
+    public List<SavingsTypeEntity> retrieveSavingsTypes() {
+        return doFetchListOfMasterDataFor(SavingsTypeEntity.class);
+    }
+
+    @Override
+    public SavingsTypeEntity retrieveSavingsType(SavingsType savingsType) {
+        SavingsTypeEntity result = null;
+        List<SavingsTypeEntity> allSavingsTypes = retrieveSavingsTypes();
+        for (SavingsTypeEntity entity : allSavingsTypes) {
+            if (entity.getId().equals(savingsType.getValue())) {
+                result = entity;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<RecommendedAmntUnitEntity> retrieveRecommendedAmountTypes() {
+        return doFetchListOfMasterDataFor(RecommendedAmntUnitEntity.class);
+    }
+
+    @Override
+    public RecommendedAmntUnitEntity retrieveRecommendedAmountType(RecommendedAmountUnit recommendedAmountType) {
+        RecommendedAmntUnitEntity result = null;
+        List<RecommendedAmntUnitEntity> allSavingsTypes = retrieveRecommendedAmountTypes();
+        for (RecommendedAmntUnitEntity entity : allSavingsTypes) {
+            if (entity.getId().equals(recommendedAmountType.getValue())) {
+                result = entity;
+            }
+        }
+        return result;
     }
 
     @SuppressWarnings("unchecked")
@@ -173,11 +237,43 @@ public class LoanProductDaoHibernate implements LoanProductDao {
     }
 
     @Override
-    public ProductCategoryBO findProductCategoryById(Integer category) {
+    public ProductCategoryBO findActiveProductCategoryById(Integer category) {
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("productCategoryID", category.shortValue());
         queryParameters.put("prdCategoryStatusId", PrdCategoryStatus.ACTIVE.getValue());
         return (ProductCategoryBO) this.genericDao.executeUniqueResultNamedQuery("product.findById", queryParameters);
+    }
+
+    @Override
+    public ProductCategoryBO findProductCategoryByNameAndType(String productCategoryName, Short productCategoryId) {
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("productCategoryID", productCategoryId);
+        queryParameters.put("productCategoryName", productCategoryName);
+        return (ProductCategoryBO) this.genericDao.executeUniqueResultNamedQuery("product.findByNameAndId", queryParameters);
+    }
+
+    @Override
+    public void validateNameIsAvailableForCategory(String productCategoryName, Short productCategoryId) {
+        ProductCategoryBO category = findProductCategoryByNameAndType(productCategoryName, productCategoryId);
+        if (category != null) {
+            throw new BusinessRuleException(ProductDefinitionConstants.DUPLICATE_CATEGORY_NAME);
+        }
+    }
+
+    @Override
+    public ProductCategoryBO findProductCategoryByGlobalNum(String globalPrdCategoryNum) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("globalPrdCategoryNum", globalPrdCategoryNum);
+        return (ProductCategoryBO) this.genericDao.executeUniqueResultNamedQuery("product.findByGlobalNum", queryParameters);
+    }
+
+    @Override
+    public LoanOfferingBO findById(Integer productId) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("prdOfferingId", productId.shortValue());
+
+        return (LoanOfferingBO) this.genericDao.executeUniqueResultNamedQuery("loanProduct.byid", queryParameters);
     }
 }

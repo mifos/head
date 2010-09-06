@@ -20,11 +20,12 @@
 package org.mifos.test.acceptance.questionnaire;
 
 import com.thoughtworks.selenium.Selenium;
-import org.apache.commons.lang.StringUtils;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 public class CreateQuestionGroupPage extends MifosPage {
     public static final String PAGE_ID = "createQuestionGroup";
@@ -55,16 +56,24 @@ public class CreateQuestionGroupPage extends MifosPage {
     }
 
     public void addSection(CreateQuestionGroupParameters createQuestionGroupParameters) {
+        selenium.check("id=addQuestionFlag0");
+        if (!selenium.isVisible("id=selectQuestionsDiv")) {
+            selenium.fireEvent("name=addQuestionFlag", "change");
+        }
         selenium.type("id=sectionName", createQuestionGroupParameters.getSectionName());
         selectSectionQuestions(createQuestionGroupParameters);
         selenium.click("id=_eventId_addSection");
         waitForPageToLoad();
     }
 
-    public void addQuestion(String questionToAdd) {
-        if (StringUtils.isNotEmpty(questionToAdd)) {
-            selenium.check("id=addOrSelectFlag1");
+    public void addQuestion(String questionToAdd, String sectionName) {
+        if (isNotEmpty(questionToAdd)) {
+            selenium.check("id=addQuestionFlag1");
+            if (!selenium.isVisible("id=addQuestionDiv")) {
+                selenium.fireEvent("name=addQuestionFlag", "change");
+            }
             selenium.type("id=currentQuestion.title", questionToAdd);
+            selenium.type("id=sectionName", sectionName);
             selenium.click("id=_eventId_addQuestion");
             waitForPageToLoad();
         }
@@ -96,5 +105,9 @@ public class CreateQuestionGroupPage extends MifosPage {
                 selenium.click("id=sections["+i+"].sectionQuestions["+i+"].mandatory");
             }
         }
+    }
+
+    public void setTitle(String title) {
+        selenium.type("name=title", title);
     }
 }

@@ -9,9 +9,6 @@
         <!-- Savings Product -->
         <form-bean name="savingsproductactionform"
                    type="org.mifos.accounts.productdefinition.struts.actionforms.SavingsPrdActionForm"/>
-        <!-- M2 Product Category -->
-        <form-bean name="productCategoryActionForm"
-                   type="org.mifos.accounts.productdefinition.struts.actionforms.PrdCategoryActionForm"/>
     </form-beans>
 
     <action-mappings>
@@ -89,27 +86,7 @@
                      path="/pages/application/productdefinition/jsp/viewSavingsPrdChangeLog.jsp"/>
             <forward name="cancelSavingsProductChangeLog" path="/savingsproductaction.do?method=get"/>
         </action>
-
-        <!-- M2 Product Category -->
-		<action path="/productCategoryAction" name="productCategoryActionForm" type="org.mifos.accounts.productdefinition.struts.action.PrdCategoryAction" input="/productCategoryAction.do?method=validate" parameter="method" validate="true" scope="session">
-
-			<forward name="load_success" path="/pages/application/productdefinition/jsp/CreateProductCategory.jsp"></forward>
-			<forward name="previous_success" path="/pages/application/productdefinition/jsp/CreateProductCategory.jsp"></forward>
-			<forward name="preview_success" path="/pages/application/productdefinition/jsp/CreateProductCategoryPreview.jsp"></forward>
-			<forward name="create_success" path="/pages/application/productdefinition/jsp/CreateProductCategoryConfirm.jsp"></forward>
-			<forward name="get_success" path="/pages/application/productdefinition/jsp/ProductCategoryDetails.jsp"></forward>
-			<forward name="manage_success" path="/pages/application/productdefinition/jsp/ManageProductCategory.jsp"></forward>
-			<forward name="editprevious_success" path="/pages/application/productdefinition/jsp/ManageProductCategory.jsp"></forward>
-			<forward name="editpreview_success" path="/pages/application/productdefinition/jsp/ManageProductCategoryPreview.jsp"></forward>
-			<forward name="update_success" path="/productCategoryAction.do?method=get"></forward>
-			<forward name="preview_failure" path="/pages/application/productdefinition/jsp/CreateProductCategory.jsp"></forward>
-			<forward name="create_failure" path="/pages/application/productdefinition/jsp/CreateProductCategoryPreview.jsp"></forward>
-			<forward name="managepreview_failure" path="/pages/application/productdefinition/jsp/ManageProductCategory.jsp"></forward>
-			<forward name="update_failure" path="/pages/application/productdefinition/jsp/ManageProductCategoryPreview.jsp"></forward>
-			<forward name="search_success" path="/pages/application/productdefinition/jsp/ViewProductCategories.jsp"></forward>
-		</action>
-    </action-mappings>
-
+	</action-mappings>
     <message-resources key="ProductDefUIResources"
                        parameter="org.mifos.config.localizedResources.ProductDefinitionResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>

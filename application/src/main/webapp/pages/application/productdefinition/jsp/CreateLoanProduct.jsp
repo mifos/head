@@ -340,6 +340,16 @@ explanation of the license and how it is applied.
 									</fmt:message> :</td>
 									<td valign="top"><html-el:checkbox styleId="createLoanProduct.checkbox.loanCounter" property="loanCounter"
 										value="1" /></td>
+								<tr class="fontnormal">
+									<td align="right"><fmt:message
+										key="product.include.interest.waiver">
+										<fmt:param>
+											<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"
+												bundle="ProductDefUIResources" />
+										</fmt:param>
+									</fmt:message> :</td>
+									<td valign="top"><html-el:checkbox styleId="createLoanProduct.checkbox.waiverInterest" property="waiverInterest"
+										value="1" /></td>
 								</tr>
 								<table width="93%" border="0" cellpadding="3" cellspacing="0">
 									<tr>

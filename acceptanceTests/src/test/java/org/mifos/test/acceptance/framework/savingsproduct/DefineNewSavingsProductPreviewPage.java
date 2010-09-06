@@ -31,7 +31,7 @@ public class DefineNewSavingsProductPreviewPage extends MifosPage {
     }
 
     public void verifyPage() {
-        verifyPage("CreateSavingsProductPreview");
+        verifyPage("SavingsProductPreview");
     }
 
     public DefineNewSavingsProductConfirmationPage submitAndNavigateToDefineNewSavingsProductConfirmationPage() {

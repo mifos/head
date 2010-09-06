@@ -65,7 +65,7 @@ explanation of the license and how it is applied.
 												<html-el:link href="chkListAction.do?method=get&checkListId=${checklist.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">	
 															${checklist.checklistName}
 														</html-el:link>
-														(${checklist.customerStatus.name})
+														(${checklist.name})
 														<c:if test="${checklist.checklistStatus == 0}">
 													<img src="pages/framework/images/status_closedblack.gif">
 														<mifos:mifoslabel name="checklist.inactive" />
@@ -81,7 +81,7 @@ explanation of the license and how it is applied.
 												<html-el:link href="chkListAction.do?method=get&checkListId=${checklist.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">	
 															${checklist.checklistName}
 														</html-el:link>
-														(${checklist.customerStatus.name})
+														(${checklist.name})
 														<c:if test="${checklist.checklistStatus == 0}">
 													<img src="pages/framework/images/status_closedblack.gif">
 														<mifos:mifoslabel name="checklist.inactive" />
@@ -97,7 +97,7 @@ explanation of the license and how it is applied.
 												<html-el:link href="chkListAction.do?method=get&checkListId=${checklist.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">	
 															${checklist.checklistName}
 														</html-el:link>
-														(${checklist.customerStatus.name})
+														(${checklist.name})
 														<c:if test="${checklist.checklistStatus == 0}">
 													<img src="pages/framework/images/status_closedblack.gif">
 														<mifos:mifoslabel name="checklist.inactive" />
@@ -112,7 +112,7 @@ explanation of the license and how it is applied.
 												<html-el:link href="chkListAction.do?method=get&checkListId=${checklist.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">	
 															${checklist.checklistName}
 														</html-el:link>
-														(${checklist.accountStateEntity.name})
+														(${checklist.name})
 														<c:if test="${checklist.checklistStatus == 0}">
 													<img src="pages/framework/images/status_closedblack.gif">
 														<mifos:mifoslabel name="checklist.inactive" />
@@ -127,7 +127,7 @@ explanation of the license and how it is applied.
 												<html-el:link href="chkListAction.do?method=get&checkListId=${checklist.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">	
 															${checklist.checklistName}
 														</html-el:link>
-														(${checklist.accountStateEntity.name})
+														(${checklist.name})
 														<c:if test="${checklist.checklistStatus == 0}">
 													<img src="pages/framework/images/status_closedblack.gif">
 														<mifos:mifoslabel name="checklist.inactive" />

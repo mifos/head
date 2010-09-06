@@ -36,8 +36,9 @@
     	<constructor-arg ref="personnelDao" />
     </bean>
 
-    <bean id="RolesPermissionServiceFacade" class="org.mifos.application.servicefacade.RolesPermissionServiceFacadeWebTier">
-    </bean>
+    <bean id="RolesPermissionServiceFacade" class="org.mifos.application.servicefacade.RolesPermissionServiceFacadeWebTier"/>
+
+    <bean id="CheckListServiceFacade" class="org.mifos.application.servicefacade.CheckListServiceFacadeWebTier"/>
 
     <bean id="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade" >
     	<constructor-arg ref="feeService" />
@@ -128,4 +129,20 @@
     <bean id="personnelService" class="org.mifos.customers.personnel.business.service.PersonnelServiceImpl" >
     	<constructor-arg ref="personnelDao" />
     </bean>
+
+    <bean id="surveysPersistence" class="org.mifos.customers.surveys.persistence.SurveysPersistence" />
+
+    <bean name="questionnaireService" class="org.mifos.platform.questionnaire.domain.QuestionnaireServiceImpl"/>
+    <bean name="questionnaireServiceFacade" class="org.mifos.platform.questionnaire.service.QuestionnaireServiceFacadeImpl"/>
+    <bean name="questionnaireValidator" class="org.mifos.platform.questionnaire.validators.QuestionnaireValidatorImpl"/>
+    <bean name="questionnaireMapper" class="org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl"/>
+    <bean name="questionnaireMigration" class="org.mifos.application.questionnaire.migration.QuestionnaireMigration"/>
+    <bean name="questionnaireMigrationMapper" class="org.mifos.application.questionnaire.migration.mappers.QuestionnaireMigrationMapperImpl"/>
+    <bean name="questionGroupDefinitionParser" class="org.mifos.platform.questionnaire.parsers.QuestionGroupDefinitionParserImpl"/>
+    <bean name="ppiSurveyLocator" class="org.mifos.platform.questionnaire.domain.ppi.PPISurveyLocatorImpl">
+        <constructor-arg>
+            <value/>
+        </constructor-arg>
+    </bean>
+
 </beans>

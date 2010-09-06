@@ -48,6 +48,8 @@ import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupResponseDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.mifos.platform.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -378,6 +380,37 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setState(QuestionGroupState.ACTIVE);
         questionGroup.setSections(mapToSectionsFromDtos(questionGroupDto.getSections()));
         return questionGroup;
+    }
+
+    @Override
+    public QuestionGroupInstance mapToQuestionGroupInstance(QuestionGroupInstanceDto questionGroupInstanceDto) {
+        QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
+        questionGroupInstance.setCompletedStatus(questionGroupInstanceDto.isCompleted());
+        questionGroupInstance.setCreatorId(questionGroupInstanceDto.getCreatorId());
+        questionGroupInstance.setDateConducted(questionGroupInstanceDto.getDateConducted());
+        questionGroupInstance.setEntityId(questionGroupInstanceDto.getEntityId());
+        questionGroupInstance.setVersionNum(questionGroupInstanceDto.getVersion());
+        questionGroupInstance.setQuestionGroup(questionGroupDao.getDetails(questionGroupInstanceDto.getQuestionGroupId()));
+        questionGroupInstance.setQuestionGroupResponses(mapToQuestionGroupResponses(questionGroupInstance, questionGroupInstanceDto.getQuestionGroupResponseDtos()));
+        return questionGroupInstance;
+    }
+
+    private List<QuestionGroupResponse> mapToQuestionGroupResponses(QuestionGroupInstance questionGroupInstance, List<QuestionGroupResponseDto> questionGroupResponseDtos) {
+        List<QuestionGroupResponse> questionGroupResponses = new ArrayList<QuestionGroupResponse>();
+        if (isNotEmpty(questionGroupResponseDtos)) {
+            for (QuestionGroupResponseDto questionGroupResponseDto : questionGroupResponseDtos) {
+                questionGroupResponses.add(mapToQuestionGroupResponse(questionGroupInstance, questionGroupResponseDto));
+            }
+        }
+        return questionGroupResponses;
+    }
+
+    private QuestionGroupResponse mapToQuestionGroupResponse(QuestionGroupInstance questionGroupInstance, QuestionGroupResponseDto questionGroupResponseDto) {
+        QuestionGroupResponse questionGroupResponse = new QuestionGroupResponse();
+        questionGroupResponse.setResponse(questionGroupResponseDto.getResponse());
+        questionGroupResponse.setQuestionGroupInstance(questionGroupInstance);
+        questionGroupResponse.setSectionQuestion(sectionQuestionDao.getDetails(questionGroupResponseDto.getSectionQuestionId()));
+        return questionGroupResponse;
     }
 
     private List<Section> mapToSectionsFromDtos(List<SectionDto> sectionDtos) {

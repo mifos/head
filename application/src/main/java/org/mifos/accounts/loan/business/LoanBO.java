@@ -123,17 +123,10 @@ import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
-import org.mifos.security.util.ActivityMapper;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class LoanBO extends AccountBO {
 
-    /**
-     * Is this used? Is it related to the activity IDs in places like
-     * {@link ActivityMapper#SAVING_CANCHANGESTATETO_PARTIALAPPLICATION} or {@link SecurityConstants#FUNDS_CREATE_FUNDS}
-     * ?
-     */
     private Integer businessActivityId;
 
     private Money loanAmount;
