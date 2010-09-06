@@ -128,7 +128,7 @@ public class QuestionnaireServiceTest {
         QuestionnaireMapper questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao, questionGroupInstanceDao);
         questionnaireService = new QuestionnaireServiceImpl(questionnaireValidator, questionDao, questionnaireMapper,
                                             questionGroupDao, eventSourceDao, questionGroupInstanceDao,
-                                            ppiSurveyLocator, questionGroupDefinitionParser);
+                                            ppiSurveyLocator, questionGroupDefinitionParser, null);
     }
 
     @Test

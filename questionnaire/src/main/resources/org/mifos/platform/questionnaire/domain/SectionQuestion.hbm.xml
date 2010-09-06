@@ -18,6 +18,7 @@
 		    class="org.mifos.platform.questionnaire.domain.QuestionEntity"
 		    access="field"/>
 	</class>
+<!--
     <sql-query name="SectionQuestion.retrieveIdFromQuestionGroupIdQuestionIdSectionName">
         <return-scalar column="sectionQuestionId" type="integer"/>
               <![CDATA[
@@ -26,4 +27,11 @@
                     sec.name = :SECTION_NAME and sec_ques.question_id = :QUESTION_ID
               ]]>
     </sql-query>
+-->
+    <query name="SectionQuestion.retrieveIdFromQuestionGroupIdQuestionIdSectionName">
+              <![CDATA[select sectionQuestion.id from SectionQuestion as sectionQuestion, QuestionGroup as questionGroup join questionGroup.sections section
+                       where section = sectionQuestion.section and questionGroup.id = :QUESTION_GROUP_ID and section.name = :SECTION_NAME and
+                       sectionQuestion.question.questionId = :QUESTION_ID
+              ]]>
+    </query>
 </hibernate-mapping>

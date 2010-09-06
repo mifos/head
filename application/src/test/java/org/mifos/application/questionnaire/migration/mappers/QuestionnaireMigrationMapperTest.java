@@ -33,8 +33,8 @@ import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
 import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
@@ -63,11 +63,11 @@ public class QuestionnaireMigrationMapperTest {
     private QuestionnaireMigrationMapper mapper;
 
     @Mock
-    private SectionQuestionDao sectionQuestionDao;
+    private QuestionnaireServiceFacade questionnaireServiceFacade;
 
     @Before
     public void setUp() {
-        mapper = new QuestionnaireMigrationMapperImpl(sectionQuestionDao);
+        mapper = new QuestionnaireMigrationMapperImpl(questionnaireServiceFacade);
     }
 
     @Test
@@ -133,7 +133,7 @@ public class QuestionnaireMigrationMapperTest {
         SurveyInstance surveyInstance = getSurveyInstance(survey, 12, 101, "Answer1");
         Integer questionGroupId = 11, sectionQuestionId = 112233;
         Integer questionId = survey.getQuestions().get(0).getQuestion().getQuestionId();
-        when(sectionQuestionDao.retrieveIdFromQuestionGroupIdQuestionIdSectionName("Misc", questionId, questionGroupId)).thenReturn(asList(sectionQuestionId));
+        when(questionnaireServiceFacade.getSectionQuestionId("Misc", questionId, questionGroupId)).thenReturn(sectionQuestionId);
         QuestionGroupInstanceDto questionGroupInstanceDto = mapper.map(surveyInstance, questionGroupId);
         assertThat(questionGroupInstanceDto, is(notNullValue()));
         assertThat(questionGroupInstanceDto.getCreatorId(), is(12));
@@ -145,7 +145,7 @@ public class QuestionnaireMigrationMapperTest {
         assertThat(questionGroupResponses.size(), is(1));
         assertThat(questionGroupResponses.get(0).getResponse(), is("Answer1"));
         assertThat(questionGroupResponses.get(0).getSectionQuestionId(), is(sectionQuestionId));
-        verify(sectionQuestionDao, times(1)).retrieveIdFromQuestionGroupIdQuestionIdSectionName("Misc", questionId, questionGroupId);
+        verify(questionnaireServiceFacade, times(1)).getSectionQuestionId("Misc", questionId, questionGroupId);
     }
 
     @Test
@@ -155,7 +155,7 @@ public class QuestionnaireMigrationMapperTest {
         SurveyInstance surveyInstance = getSurveyInstance(survey, 12, 101, ",Answer1,Answer2,,Answer3");
         Integer questionGroupId = 11, sectionQuestionId = 112233;
         Integer questionId = survey.getQuestions().get(0).getQuestion().getQuestionId();
-        when(sectionQuestionDao.retrieveIdFromQuestionGroupIdQuestionIdSectionName("Misc", questionId, questionGroupId)).thenReturn(asList(sectionQuestionId));
+        when(questionnaireServiceFacade.getSectionQuestionId("Misc", questionId, questionGroupId)).thenReturn(sectionQuestionId);
         QuestionGroupInstanceDto questionGroupInstanceDto = mapper.map(surveyInstance, questionGroupId);
         assertThat(questionGroupInstanceDto, is(notNullValue()));
         assertThat(questionGroupInstanceDto.getCreatorId(), is(12));
@@ -171,7 +171,7 @@ public class QuestionnaireMigrationMapperTest {
         assertThat(questionGroupResponses.get(1).getSectionQuestionId(), is(sectionQuestionId));
         assertThat(questionGroupResponses.get(2).getResponse(), is("Answer3"));
         assertThat(questionGroupResponses.get(2).getSectionQuestionId(), is(sectionQuestionId));
-        verify(sectionQuestionDao, times(1)).retrieveIdFromQuestionGroupIdQuestionIdSectionName("Misc", questionId, questionGroupId);
+        verify(questionnaireServiceFacade, times(1)).getSectionQuestionId("Misc", questionId, questionGroupId);
     }
 
     private void assertSection(SectionDto sectionDto) {

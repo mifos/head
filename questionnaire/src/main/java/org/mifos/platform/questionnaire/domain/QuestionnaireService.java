@@ -67,4 +67,7 @@ public interface QuestionnaireService {
     Integer uploadPPIQuestionGroup(String country);
 
     Integer saveQuestionGroupInstance(QuestionGroupInstanceDto questionGroupInstanceDto);
+
+    // Added for data migration. Shouldn't be used outside.
+    Integer getSectionQuestionId(String sectionName, Integer questionId, Integer questionGroupId);
 }

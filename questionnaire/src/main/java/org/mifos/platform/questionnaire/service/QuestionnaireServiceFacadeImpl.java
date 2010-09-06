@@ -145,6 +145,11 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         return questionnaireService.saveQuestionGroupInstance(questionGroupInstanceDto);
     }
 
+    @Override
+    public Integer getSectionQuestionId(String sectionName, Integer questionId, Integer questionGroupId) {
+        return questionnaireService.getSectionQuestionId(sectionName, questionId, questionGroupId);
+    }
+
     private EventSourceDto getEventSource(String event, String source) {
         return new EventSourceDto(event, source, String.format("%s.%s", event, source));
     }

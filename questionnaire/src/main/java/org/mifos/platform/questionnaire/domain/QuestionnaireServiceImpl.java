@@ -29,6 +29,7 @@ import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
+import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
@@ -75,6 +76,9 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Autowired
     private QuestionGroupDefinitionParser questionGroupDefinitionParser;
 
+    @Autowired
+    private SectionQuestionDao sectionQuestionDao;
+
     @SuppressWarnings({"UnusedDeclaration"})
     private QuestionnaireServiceImpl() {
     }
@@ -82,7 +86,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public QuestionnaireServiceImpl(QuestionnaireValidator questionnaireValidator, QuestionDao questionDao,
                                     QuestionnaireMapper questionnaireMapper, QuestionGroupDao questionGroupDao,
                                     EventSourceDao eventSourceDao, QuestionGroupInstanceDao questionGroupInstanceDao,
-                                    PPISurveyLocator ppiSurveyLocator, QuestionGroupDefinitionParser questionGroupDefinitionParser) {
+                                    PPISurveyLocator ppiSurveyLocator, QuestionGroupDefinitionParser questionGroupDefinitionParser,
+                                    SectionQuestionDao sectionQuestionDao) {
         this.questionnaireValidator = questionnaireValidator;
         this.questionDao = questionDao;
         this.questionnaireMapper = questionnaireMapper;
@@ -91,6 +96,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         this.questionGroupInstanceDao = questionGroupInstanceDao;
         this.ppiSurveyLocator = ppiSurveyLocator;
         this.questionGroupDefinitionParser = questionGroupDefinitionParser;
+        this.sectionQuestionDao = sectionQuestionDao;
     }
 
     @Override
@@ -273,6 +279,13 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public Integer saveQuestionGroupInstance(QuestionGroupInstanceDto questionGroupInstanceDto) {
         QuestionGroupInstance questionGroupInstance = questionnaireMapper.mapToQuestionGroupInstance(questionGroupInstanceDto);
         return questionGroupInstanceDao.create(questionGroupInstance);
+    }
+
+    @SuppressWarnings("PMD.NullAssignment")
+    @Override
+    public Integer getSectionQuestionId(String sectionName, Integer questionId, Integer questionGroupId) {
+        List<Integer> sectionQuestionIds = sectionQuestionDao.retrieveIdFromQuestionGroupIdQuestionIdSectionName(sectionName, questionId, questionGroupId);
+        return isNotEmpty(sectionQuestionIds)? sectionQuestionIds.get(0): null;
     }
 
     private EventSourceEntity getEventSourceEntity(EventSourceDto eventSourceDto) {

@@ -25,7 +25,9 @@ import org.mifos.application.questionnaire.migration.mappers.QuestionnaireMigrat
 import org.mifos.customers.surveys.business.Survey;
 import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
-import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
@@ -33,6 +35,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.String.format;
 
 public class QuestionnaireMigration {
 
@@ -45,15 +49,18 @@ public class QuestionnaireMigration {
     @Autowired
     private SurveysPersistence surveysPersistence;
 
+    private MifosLogger mifosLogger;
+
     @SuppressWarnings({"UnusedDeclaration"})
     public QuestionnaireMigration() {
-        // used for Spring wiring
+        mifosLogger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
     }
 
     // Intended to be used only from unit tests for injecting mocks
     public QuestionnaireMigration(QuestionnaireMigrationMapper questionnaireMigrationMapper,
                                   QuestionnaireServiceFacade questionnaireServiceFacade,
                                   SurveysPersistence surveysPersistence) {
+        this();
         this.questionnaireMigrationMapper = questionnaireMigrationMapper;
         this.questionnaireServiceFacade = questionnaireServiceFacade;
         this.surveysPersistence = surveysPersistence;
@@ -64,27 +71,58 @@ public class QuestionnaireMigration {
         return questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
     }
 
-    public List<Integer> migrateSurveys(List<Survey> surveys) throws PersistenceException {
+    public List<Integer> migrateSurveys(List<Survey> surveys) {
         List<Integer> questionGroupIds = new ArrayList<Integer>();
         for (Survey survey : surveys) {
             Integer questionGroupId = migrateSurvey(survey);
-            questionGroupIds.add(questionGroupId);
+            if (questionGroupId != null) questionGroupIds.add(questionGroupId);
         }
         return questionGroupIds;
     }
 
-    private Integer migrateSurvey(Survey survey) throws PersistenceException {
+    private Integer migrateSurvey(Survey survey) {
         QuestionGroupDto questionGroupDto = questionnaireMigrationMapper.map(survey);
-        Integer questionGroupId = questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
+        Integer questionGroupId = createQuestionGroup(questionGroupDto, survey);
         migrateSurveyResponses(survey, questionGroupId);
         return questionGroupId;
     }
 
-    private void migrateSurveyResponses(Survey survey, Integer questionGroupId) throws PersistenceException {
-        List<SurveyInstance> surveyInstances = surveysPersistence.retrieveInstancesBySurvey(survey);
-        for (SurveyInstance surveyInstance : surveyInstances) {
-            QuestionGroupInstanceDto questionGroupInstanceDto = questionnaireMigrationMapper.map(surveyInstance, questionGroupId);
-            questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto);
+    private Integer createQuestionGroup(QuestionGroupDto questionGroupDto, Survey survey) {
+        Integer questionGroupId = null;
+        try {
+            questionGroupId = questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
+        } catch (Exception e) {
+            mifosLogger.error(format("Unable to convert the survey, '%s' with ID, %s to a Question Group", survey.getName(), survey.getSurveyId()), e);
         }
+        return questionGroupId;
+    }
+
+    private void migrateSurveyResponses(Survey survey, Integer questionGroupId) {
+        if (questionGroupId != null) {
+            List<SurveyInstance> surveyInstances = getSurveyInstances(survey);
+            for (SurveyInstance surveyInstance : surveyInstances) {
+                QuestionGroupInstanceDto questionGroupInstanceDto = questionnaireMigrationMapper.map(surveyInstance, questionGroupId);
+                saveQuestionGroupInstance(questionGroupInstanceDto, surveyInstance);
+            }
+        }
+    }
+
+    private void saveQuestionGroupInstance(QuestionGroupInstanceDto questionGroupInstanceDto, SurveyInstance surveyInstance) {
+        try {
+            questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto);
+        } catch (Exception e) {
+            Survey survey = surveyInstance.getSurvey();
+            mifosLogger.error(format("Unable to migrate a survey instance for the survey, '%s' with ID, %s", survey.getName(), survey.getSurveyId()), e);
+        }
+    }
+
+    private List<SurveyInstance> getSurveyInstances(Survey survey) {
+        List<SurveyInstance> surveyInstances = new ArrayList<SurveyInstance>(0);
+        try {
+            surveyInstances = surveysPersistence.retrieveInstancesBySurvey(survey);
+        } catch (Exception e) {
+            mifosLogger.error(format("Unable to retrieve survey instances for survey, '%s' with ID, %s", survey.getName(), survey.getSurveyId()), e);
+        }
+        return surveyInstances;
     }
 }

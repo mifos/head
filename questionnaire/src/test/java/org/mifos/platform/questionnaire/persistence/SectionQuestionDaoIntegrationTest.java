@@ -68,8 +68,8 @@ public class SectionQuestionDaoIntegrationTest {
         List<SectionDetail> details = asList(sectionDetail1, sectionDetail2);
         QuestionGroupDetail questionGroupDetail = defineQuestionGroup(title, "Create", "Client", details, false);
         QuestionGroup questionGroup = questionGroupDao.getDetails(questionGroupDetail.getId());
-        Integer questionId = questionGroup.getSections().get(1).getQuestions().get(0).getQuestion().getQuestionId();
-        Integer sectionQuestionId = questionGroup.getSections().get(1).getQuestions().get(0).getId();
+        Integer questionId = questionGroup.getSections().get(1).getQuestions().get(1).getQuestion().getQuestionId();
+        Integer sectionQuestionId = questionGroup.getSections().get(1).getQuestions().get(1).getId();
         List<Integer> sectionQuestionIds = sectionQuestionDao.retrieveIdFromQuestionGroupIdQuestionIdSectionName("S2", questionId, questionGroup.getId());
         assertThat(sectionQuestionIds, is(notNullValue()));
         assertThat(sectionQuestionIds.size(), is(1));
@@ -87,9 +87,9 @@ public class SectionQuestionDaoIntegrationTest {
     private SectionDetail getSection(String name) throws SystemException {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        String questionTitle = "Question" + name + currentTimeMillis();
-        QuestionDetail questionDetail = defineQuestion(questionTitle, QuestionType.NUMERIC);
-        section.addQuestion(new SectionQuestionDetail(questionDetail, true));
+        section.addQuestion(new SectionQuestionDetail(defineQuestion("Question1" + name + currentTimeMillis(), QuestionType.NUMERIC), true));
+        section.addQuestion(new SectionQuestionDetail(defineQuestion("Question2" + name + currentTimeMillis(), QuestionType.DATE), true));
+        section.addQuestion(new SectionQuestionDetail(defineQuestion("Question3" + name + currentTimeMillis(), QuestionType.FREETEXT), false));
         return section;
     }
 }

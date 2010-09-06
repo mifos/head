@@ -32,8 +32,8 @@ import org.mifos.customers.surveys.business.SurveyQuestion;
 import org.mifos.customers.surveys.business.SurveyResponse;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
 import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
@@ -66,7 +66,7 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     private Map<AnswerType, QuestionType> answerToQuestionType;
 
     @Autowired
-    private SectionQuestionDao sectionQuestionDao;
+    private QuestionnaireServiceFacade questionnaireServiceFacade;
 
     public QuestionnaireMigrationMapperImpl() {
         populateTypeMappings();
@@ -76,9 +76,9 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     }
 
     // Intended to be used from unit tests for injecting mocks
-    public QuestionnaireMigrationMapperImpl(SectionQuestionDao sectionQuestionDao) {
+    public QuestionnaireMigrationMapperImpl(QuestionnaireServiceFacade questionnaireServiceFacade) {
         this();
-        this.sectionQuestionDao = sectionQuestionDao;
+        this.questionnaireServiceFacade = questionnaireServiceFacade;
     }
 
     @Override
@@ -165,7 +165,7 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     }
 
     private Integer getSectionQuestionId(Integer questionGroupId, Integer questionId) {
-        return sectionQuestionDao.retrieveIdFromQuestionGroupIdQuestionIdSectionName(DEFAULT_SECTION_NAME, questionId, questionGroupId).get(0);
+        return questionnaireServiceFacade.getSectionQuestionId(DEFAULT_SECTION_NAME, questionId, questionGroupId);
     }
 
     private Integer mapToEntityId(SurveyInstance surveyInstance) {
