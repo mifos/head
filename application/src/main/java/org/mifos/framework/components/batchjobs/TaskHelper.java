@@ -59,7 +59,7 @@ public abstract class TaskHelper implements Tasklet {
     @Override
     @SuppressWarnings("unused")
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        Date scheduledFireTime = (Date)chunkContext.getStepContext().getJobParameters().get(MifosBatchJob.JOB_EXECUTION_TIME_KEY);
+        Date scheduledFireTime = new Date(chunkContext.getStepContext().getStepExecution().getJobParameters().getLong(MifosBatchJob.JOB_EXECUTION_TIME_KEY));
         execute(scheduledFireTime.getTime());
         return RepeatStatus.FINISHED;
     }

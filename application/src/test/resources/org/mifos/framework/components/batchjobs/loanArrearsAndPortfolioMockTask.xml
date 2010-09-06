@@ -15,22 +15,26 @@
     -->
 
     <!--
-                ProductStatusTask:
+                LoanArrearsAndPortfolioAtRiskTask:
     -->
-    <bean name="ProductStatus" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
-      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.ProductStatus" />
-      <property name="name" value="ProductStatusJob" />
+    <bean name="LoanArrearsAndPortfolioAtRiskTask" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
+      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskTask" />
+      <property name="name" value="LoanArrearsAndPortfolioAtRiskTaskJob" />
     </bean>
-    <bean id="ProductStatusTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-        <property name="jobDetail" ref="ProductStatus" />
+    <bean id="LoanArrearsAndPortfolioAtRiskTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="LoanArrearsAndPortfolioAtRiskTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
-    <batch:job id="ProductStatusJob" parent="jobBase" job-repository="jobRepository">
-        <batch:step id="ProductStatus-step-1">
-            <batch:tasklet ref="ProductStatusTasklet" />
+    <batch:job id="LoanArrearsAndPortfolioAtRiskTaskJob" parent="jobBase" job-repository="jobRepository">
+        <batch:step id="LoanArrearsAndPortfolioAtRiskTask-step-1" next="LoanArrearsAndPortfolioAtRiskTask-step-2">
+            <batch:tasklet ref="LoanArrearsTaskTasklet" />
+        </batch:step>
+        <batch:step id="LoanArrearsAndPortfolioAtRiskTask-step-2">
+            <batch:tasklet ref="PortfolioAtRiskTaskTasklet" />
         </batch:step>
     </batch:job>
-    <bean name="ProductStatusTasklet" class="org.mifos.framework.components.batchjobs.helpers.ProductStatusHelper" />
+    <bean name="LoanArrearsTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.LoanArrearsHelper" />
+    <bean name="PortfolioAtRiskTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskHelper" />
     
     <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="quartzProperties">
@@ -46,7 +50,7 @@
         </property>
         <property name="triggers">
             <list>
-                <ref bean="ProductStatusTrigger" />
+                <ref bean="LoanArrearsAndPortfolioAtRiskTaskTrigger" />
             </list>
         </property>
     </bean>
@@ -127,4 +131,3 @@
     <bean id="jobListener" class="org.mifos.framework.components.batchjobs.BatchJobListener" />
     
 </beans>
-    

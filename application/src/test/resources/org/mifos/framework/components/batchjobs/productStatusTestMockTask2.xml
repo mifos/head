@@ -30,7 +30,7 @@
             <batch:tasklet ref="ProductStatusTasklet" />
         </batch:step>
     </batch:job>
-    <bean name="ProductStatusTasklet" class="org.mifos.framework.components.batchjobs.helpers.ProductStatusHelper" />
+    <bean name="ProductStatusTasklet" class="org.mifos.framework.components.batchjobs.helpers.MockProductStatusHelper" />
     
     <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="quartzProperties">

@@ -127,4 +127,3 @@
     <bean id="jobListener" class="org.mifos.framework.components.batchjobs.BatchJobListener" />
     
 </beans>
-    

@@ -130,11 +130,12 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
             return launchJob(job, jobParameters, null);
         }
         JobInstance jobInstance = jobInstances.get(0);
-        JobExecution jobExecution = jobRepository.getLastJobExecution(jobInstance.getJobName(), jobInstance.getJobParameters());
+        List<JobExecution> jobExecutions = jobExplorer.getJobExecutions(jobInstance);
+        JobExecution jobExecution = jobExecutions.get(0); // latest execution
         if(jobExecution.getStatus() == BatchStatus.COMPLETED) {
             return launchJob(job, jobParameters, null);
         }
-        BatchStatus exitStatus = checkAndLaunchJob(job, jobInstance.getJobParameters(), lookUpDepth+1);
+        BatchStatus exitStatus = checkAndLaunchJob(job, jobExecution.getJobInstance().getJobParameters(), lookUpDepth+1);
         if(exitStatus == BatchStatus.COMPLETED) {
             return launchJob(job, jobParameters, null);
         }
@@ -146,11 +147,11 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
         List<JobInstance> jobInstances = jobExplorer.getJobInstances(job.getName(), 0, 1);
         if(jobInstances.size() > 0) {
             JobInstance jobInstance = jobInstances.get(0);
-            Date previousFireTime = jobInstance.getJobParameters().getDate(JOB_EXECUTION_TIME_KEY);
+            Date previousFireTime = new Date(jobInstance.getJobParameters().getLong(JOB_EXECUTION_TIME_KEY));
             Date scheduledFireTime = context.getScheduledFireTime();
             List<Date> missedLaunches = computeMissedJobLaunches(previousFireTime, scheduledFireTime, context.getTrigger());
             for(Date missedLaunch : missedLaunches) {
-                JobParameters jobParameters = createJobParameters(missedLaunch);
+                JobParameters jobParameters = createJobParameters(missedLaunch.getTime());
                 checkAndLaunchJob(job, jobParameters, 0);
             }
         }
@@ -180,13 +181,13 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
 
     public static JobParameters getJobParametersFromContext(JobExecutionContext context) {
         JobParametersBuilder builder = new JobParametersBuilder();
-        builder.addDate(JOB_EXECUTION_TIME_KEY, context.getScheduledFireTime());
+        builder.addLong(JOB_EXECUTION_TIME_KEY, context.getScheduledFireTime().getTime());
         return builder.toJobParameters();
     }
 
-    public static JobParameters createJobParameters(Date scheduledLaunchTime) {
+    public static JobParameters createJobParameters(long scheduledLaunchTime) {
         JobParametersBuilder builder = new JobParametersBuilder();
-        builder.addDate(JOB_EXECUTION_TIME_KEY, scheduledLaunchTime);
+        builder.addLong(JOB_EXECUTION_TIME_KEY, scheduledLaunchTime);
         return builder.toJobParameters();
     }
 

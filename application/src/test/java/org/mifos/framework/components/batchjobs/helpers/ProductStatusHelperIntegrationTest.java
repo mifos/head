@@ -75,8 +75,8 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
 
     @Before
     public void setUp() throws Exception {
+        TestDatabase.resetMySQLDatabase();
         productStatusHelper = new ProductStatusHelper();
-        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/productStatusTestMockTask.xml");
         jobName = "ProductStatusJob";
     }
 
@@ -114,6 +114,7 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testExecuteTask() throws Exception {
         createInactiveLoanOffering();
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/productStatusTestMockTask.xml");
         mifosScheduler.runIndividualTask(jobName);
         Thread.sleep(1000);
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
@@ -129,23 +130,26 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
     }
 
     @Test
-    public void testExecuteTaskFailure() {
-        // TODO QUARTZ: This test tested invalid task execution when DB connection was invalid. Since quartz requires a DB for
-        // it's JobStore to run, we should think of a different test case..
-
-    }
-
-    @Test
-    public void testRegisterStartup() throws BatchJobException {
-        // TODO QUARTZ: Create a test running ProductStatus and checking if it's startup was registered correctly.
+    public void testExecuteTaskFailure() throws Exception {
+        createInactiveLoanOffering();
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/productStatusTestMockTask2.xml");
+        mifosScheduler.runIndividualTask(jobName);
+        Thread.sleep(1000);
+        JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
+        List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 10);
+        Assert.assertTrue(jobInstances.size() > 0);
+        JobInstance lastInstance = jobInstances.get(0);
+        List<JobExecution> jobExecutions = explorer.getJobExecutions(lastInstance);
+        Assert.assertEquals(1, jobExecutions.size());
+        JobExecution lastExecution = jobExecutions.get(0);
+        Assert.assertEquals(BatchStatus.FAILED, lastExecution.getStatus());
+        product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
+        Assert.assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
     }
 
     // TODO QUARTZ: Test cases involving invalid database connections..
 
-    @Test
-    public void testRegisterCompletion() throws BatchJobException {
-        // TODO QUARTZ: Create a test running ProductStatus successfully task and checking if it's completion was correctly registered
-    }
+    // TODO QUARTZ: Test cases involving testing proper listener work (to be confirmed).
 
     private void createInactiveLoanOffering() throws PersistenceException {
         Date startDate = new Date(System.currentTimeMillis());

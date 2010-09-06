@@ -21,17 +21,45 @@
 package org.mifos.framework.components.batchjobs.persistence;
 
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+
+import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 
-import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.components.batchjobs.MifosScheduler;
+import org.mifos.framework.components.batchjobs.SchedulerConstants;
+import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
+import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.util.ConfigurationLocator;
+import org.springframework.batch.core.BatchStatus;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobInstance;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.core.io.ClassPathResource;
 
 public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
+    MifosScheduler mifosScheduler;
+
+    String jobName;
+
     @Before
     public void setUp() throws Exception {
+        TestDatabase.resetMySQLDatabase();
+        jobName = "LoanArrearsAndPortfolioAtRiskTaskJob";
     }
 
     @After
@@ -39,80 +67,55 @@ public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testHasLoanArrearsTaskRunSuccessfully() throws PersistenceException {
-        /* TODO QUARTZ
-        Task task1 = new Task();
-        task1.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
-        task1.setStartTime(new Timestamp(System.currentTimeMillis()));
-        task1.setEndTime(new Timestamp(System.currentTimeMillis()));
-        task1.setStatus(TaskStatus.COMPLETE.getValue());
-        task1.setTask("LoanArrearsTask");
-
-        TaskPersistence p = new TaskPersistence();
-        p.saveAndCommitTask(task1);
-
-        StaticHibernateUtil.closeSession();
-        p = new TaskPersistence();
-       Assert.assertTrue(p.hasLoanArrearsTaskRunSuccessfully());
-        Task task2 = new Task();
-        task2.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
-        task2.setStartTime(new Timestamp(System.currentTimeMillis()));
-        task2.setEndTime(new Timestamp(System.currentTimeMillis()));
-        task2.setStatus(TaskStatus.INCOMPLETE.getValue());
-        task2.setTask("LoanArrearsTask");
-        new TaskPersistence().saveAndCommitTask(task2);
-
-        StaticHibernateUtil.closeSession();
-        Assert.assertFalse(p.hasLoanArrearsTaskRunSuccessfully());
-        TestObjectFactory.removeObject(task1);
-        TestObjectFactory.removeObject(task2);*/
-    }
-
-    @Test
-    public void testSaveAndCommit() throws PersistenceException {
-        /* TODO QUARTZ
-        Task task = new Task();
-        task.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
-        task.setStartTime(new Timestamp(System.currentTimeMillis()));
-        task.setEndTime(new Timestamp(System.currentTimeMillis()));
-        task.setStatus(TaskStatus.COMPLETE.getValue());
-        task.setTask("ProductStatus");
-        new TaskPersistence().saveAndCommitTask(task);
-        StaticHibernateUtil.closeSession();
-        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
-        List<Task> tasks = query.list();
-        Assert.assertNotNull(tasks);
-       Assert.assertEquals(1, tasks.size());
-        for (Task task1 : tasks) {
-           Assert.assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task1.getStatus());
-           Assert.assertEquals("ProductStatus", task1.getTask());
-           Assert.assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task1.getDescription());
-            TestObjectFactory.removeObject(task1);
-        }*/
-    }
-
-    @Test
-    public void testSaveAndCommitForInvalidConnection() {
-        /* TODO QUARTZ
-        Task task = new Task();
-        task.setId(1);
-        task.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
-        task.setStartTime(new Timestamp(System.currentTimeMillis()));
-        task.setEndTime(new Timestamp(System.currentTimeMillis()));
-        task.setStatus(TaskStatus.COMPLETE.getValue());
-        task.setTask("ProductStatus");
-        try {
-            new TaskPersistence().saveAndCommitTask(task);
-            Assert.fail();
-        } catch (PersistenceException e) {
-           Assert.assertTrue(true);
+    public void testLoanArrearsTaskRunSuccessfull() throws Exception {
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/loanArrearsAndPortfolioMockTask.xml");
+        mifosScheduler.runIndividualTask(jobName);
+        Thread.sleep(1000);
+        JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
+        List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 10);
+        Assert.assertTrue(jobInstances.size() > 0);
+        JobInstance lastInstance = jobInstances.get(0);
+        List<JobExecution> jobExecutions = explorer.getJobExecutions(lastInstance);
+        Assert.assertEquals(1, jobExecutions.size());
+        JobExecution lastExecution = jobExecutions.get(0);
+        Assert.assertEquals(BatchStatus.COMPLETED, lastExecution.getStatus());
+        Collection<StepExecution> stepExecutions = lastExecution.getStepExecutions();
+        Assert.assertEquals(2, stepExecutions.size());
+        for(StepExecution stepExecution : stepExecutions) {
+            Assert.assertEquals(BatchStatus.COMPLETED, stepExecution.getStatus());
         }
-        StaticHibernateUtil.closeSession();
+    }
 
-        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
-        List<Task> tasks = query.list();
-        Assert.assertNotNull(tasks);
-       Assert.assertEquals(0, tasks.size());*/
+    @Test
+    public void testLoanArrearsTaskRunFailed() throws Exception {
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/loanArrearsAndPortfolioMockTask2.xml");
+        mifosScheduler.runIndividualTask(jobName);
+        Thread.sleep(1000);
+        JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
+        List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 10);
+        Assert.assertTrue(jobInstances.size() > 0);
+        JobInstance lastInstance = jobInstances.get(0);
+        List<JobExecution> jobExecutions = explorer.getJobExecutions(lastInstance);
+        Assert.assertEquals(1, jobExecutions.size());
+        JobExecution lastExecution = jobExecutions.get(0);
+        Assert.assertEquals(BatchStatus.FAILED, lastExecution.getStatus());
+        Collection<StepExecution> stepExecutions = lastExecution.getStepExecutions();
+        Assert.assertEquals(1, stepExecutions.size());
+        for(StepExecution stepExecution : stepExecutions) {
+            Assert.assertEquals(BatchStatus.FAILED, stepExecution.getStatus());
+        }
+    }
+
+    private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws TaskSystemException, IOException, FileNotFoundException {
+        ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
+        expect(mockConfigurationLocator.getFile(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
+                new ClassPathResource(taskConfigurationPath).getFile());
+        expectLastCall().times(2);
+        replay(mockConfigurationLocator);
+        MifosScheduler mifosScheduler = new MifosScheduler();
+        mifosScheduler.setConfigurationLocator(mockConfigurationLocator);
+        mifosScheduler.initialize();
+        return mifosScheduler;
     }
 
 }
