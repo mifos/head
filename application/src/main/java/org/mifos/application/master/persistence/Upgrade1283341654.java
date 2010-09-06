@@ -20,7 +20,9 @@
 
 package org.mifos.application.master.persistence;
 
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.questionnaire.migration.QuestionnaireMigration;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.surveys.business.Survey;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
@@ -29,6 +31,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Upgrade;
+import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -39,32 +42,50 @@ import java.util.List;
 public class Upgrade1283341654 extends Upgrade {
     private QuestionnaireMigration questionnaireMigration;
     private SurveysPersistence surveysPersistence;
+    private CustomerDao customerDao;
     private MifosLogger mifosLogger;
 
     public Upgrade1283341654() {
         super();
-        mifosLogger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
     }
 
     // Should only be used from tests to inject mocks
-    public Upgrade1283341654(QuestionnaireMigration questionnaireMigration, SurveysPersistence surveysPersistence) {
-        this();
+    public Upgrade1283341654(QuestionnaireMigration questionnaireMigration, SurveysPersistence surveysPersistence, CustomerDao customerDao, MifosLogger mifosLogger) {
         this.questionnaireMigration = questionnaireMigration;
         this.surveysPersistence = surveysPersistence;
+        this.customerDao = customerDao;
+        this.mifosLogger = mifosLogger;
     }
 
     @Override
     public void upgrade(Connection connection) throws IOException, SQLException {
         try {
-            initializeDependencies();
             migrateSurveys();
+            migrateAdditionalFields();
         } catch (PersistenceException e) {
             throw new SQLException(e);
         }
     }
 
-    private void migrateSurveys() throws PersistenceException {
-        migrateSurveys(SurveyType.CLIENT);
+    // Intended to be invoked from MigrateAction for manual migration of surveys
+    public List<Integer> migrateSurveys() throws PersistenceException {
+        return migrateSurveys(SurveyType.CLIENT);
+    }
+
+    // Intended to be invoked from MigrateAction for manual migration of additional fields
+    public Integer migrateAdditionalFields() {
+        List<CustomFieldDefinitionEntity> customFields = getCustomerCustomFields();
+        return questionnaireMigration.migrateAdditionalFields(customFields);
+    }
+
+    private List<CustomFieldDefinitionEntity> getCustomerCustomFields() {
+        List<CustomFieldDefinitionEntity> customFields = new ArrayList<CustomFieldDefinitionEntity>(0);
+        try {
+            customFields = customerDao.retrieveCustomFieldEntitiesForClient();
+        } catch (Exception e) {
+            mifosLogger.error("Unable to retrieve customer custom fields", e);
+        }
+        return customFields;
     }
 
     private List<Integer> migrateSurveys(SurveyType surveyType) throws PersistenceException {
@@ -83,7 +104,15 @@ public class Upgrade1283341654 extends Upgrade {
     }
 
     private void initializeDependencies() {
-        if(questionnaireMigration == null) questionnaireMigration = (QuestionnaireMigration) upgradeContext.getBean("questionnaireMigration");
+        if (questionnaireMigration == null) questionnaireMigration = (QuestionnaireMigration) upgradeContext.getBean("questionnaireMigration");
         if (surveysPersistence == null) surveysPersistence = (SurveysPersistence) upgradeContext.getBean("surveysPersistence");
+        if (customerDao == null) customerDao = (CustomerDao) upgradeContext.getBean("customerDao");
+        if (mifosLogger == null) mifosLogger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
+    }
+
+    @Override
+    public void setUpgradeContext(ApplicationContext upgradeContext) {
+        super.setUpgradeContext(upgradeContext);
+        initializeDependencies();
     }
 }

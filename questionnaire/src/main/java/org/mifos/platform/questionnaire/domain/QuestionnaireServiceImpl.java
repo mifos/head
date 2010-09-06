@@ -23,6 +23,7 @@ package org.mifos.platform.questionnaire.domain;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.domain.ppi.PPISurveyLocator;
+import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
 import org.mifos.platform.questionnaire.parsers.QuestionGroupDefinitionParser;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
@@ -37,6 +38,7 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
@@ -286,6 +288,22 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public Integer getSectionQuestionId(String sectionName, Integer questionId, Integer questionGroupId) {
         List<Integer> sectionQuestionIds = sectionQuestionDao.retrieveIdFromQuestionGroupIdQuestionIdSectionName(sectionName, questionId, questionGroupId);
         return isNotEmpty(sectionQuestionIds)? sectionQuestionIds.get(0): null;
+    }
+
+    @Override
+    public Integer defineQuestion(QuestionDto questionDto) {
+        questionnaireValidator.validateForDefineQuestion(questionDto);
+        QuestionEntity questionEntity = questionnaireMapper.mapToQuestion(questionDto);
+        return createQuestion(questionEntity);
+    }
+
+    @SuppressWarnings("PMD.PreserveStackTrace")
+    private Integer createQuestion(QuestionEntity questionEntity) {
+        try {
+            return questionDao.create(questionEntity);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            throw new ValidationException(QuestionnaireConstants.QUESTION_TITLE_DUPLICATE);
+        }
     }
 
     private EventSourceEntity getEventSourceEntity(EventSourceDto eventSourceDto) {

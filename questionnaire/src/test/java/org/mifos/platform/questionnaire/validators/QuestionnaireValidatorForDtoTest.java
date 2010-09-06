@@ -159,6 +159,25 @@ public class QuestionnaireValidatorForDtoTest {
     }
 
     @Test
+    public void shouldValidateForInvalidQuestionDto_QuestionTitleExceedsMaxChars() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        QuestionDto questionDto = questionGroupDto.getSections().get(0).getQuestions().get(0);
+        questionDto.setTitle("this is more than fifty characters string for question group title");
+        try {
+            questionnaireValidator.validateForDefineQuestion(questionDto);
+            fail("Should have thrown validationException");
+        } catch (ValidationException e) {
+            assertThat(e.getKey(), is(GENERIC_VALIDATION));
+            assertThat(e.containsChildExceptions(), is(true));
+            List<ValidationException> childExceptions = e.getChildExceptions();
+            assertThat(childExceptions, is(notNullValue()));
+            assertThat(childExceptions.size(), is(1));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITLE_TOO_BIG));
+        }
+    }
+
+    @Test
     public void shouldValidateForInvalidQuestionGroupDto_InvalidEventSorce() {
         when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(0L));
         QuestionGroupDto questionGroupDto = getQuestionGroupDto();
@@ -200,6 +219,25 @@ public class QuestionnaireValidatorForDtoTest {
         questionGroupDto.getSections().get(0).getQuestions().get(0).setTitle(null);
         try {
             questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+            fail("Should have thrown validationException");
+        } catch (ValidationException e) {
+            assertThat(e.getKey(), is(GENERIC_VALIDATION));
+            assertThat(e.containsChildExceptions(), is(true));
+            List<ValidationException> childExceptions = e.getChildExceptions();
+            assertThat(childExceptions, is(notNullValue()));
+            assertThat(childExceptions.size(), is(1));
+            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TITLE_NOT_PROVIDED));
+        }
+    }
+
+    @Test
+    public void shouldValidateForInvalidQuestionDto_MissingQuestionTitle() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        QuestionDto questionDto = questionGroupDto.getSections().get(0).getQuestions().get(0);
+        questionDto.setTitle(null);
+        try {
+            questionnaireValidator.validateForDefineQuestion(questionDto);
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));

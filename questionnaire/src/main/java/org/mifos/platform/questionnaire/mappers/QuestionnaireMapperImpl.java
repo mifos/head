@@ -446,7 +446,8 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return sectionQuestion;
     }
 
-    private QuestionEntity mapToQuestion(QuestionDto questionDto) {
+    @Override
+    public QuestionEntity mapToQuestion(QuestionDto questionDto) {
         QuestionEntity questionEntity = new QuestionEntity();
         questionEntity.setShortName(questionDto.getTitle());
         questionEntity.setQuestionText(questionDto.getTitle());

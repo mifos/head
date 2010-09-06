@@ -80,7 +80,7 @@ public class SurveyUtils {
         return surveyResponses;
     }
 
-    private static ClientBO getClientBO(Integer customerId) {
+    public static ClientBO getClientBO(Integer customerId) {
         Money.setDefaultCurrency(TestUtils.RUPEE);
         ClientBO clientBO = new ClientBuilder().buildForUnitTests();
         clientBO.setCustomerId(customerId);

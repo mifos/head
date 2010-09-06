@@ -64,7 +64,7 @@ public class QuestionnaireMigrationIntegrationTest {
         assertThat(customFields, is(notNullValue()));
         int size = customFields.size();
         assertThat(size > 0, is(true));
-        Integer questionGroupId = questionnaireMigration.migrate(customFields);
+        Integer questionGroupId = questionnaireMigration.migrateAdditionalFields(customFields);
         assertThat(questionGroupId, is(notNullValue()));
         QuestionGroup questionGroup = questionGroupDao.getDetails(questionGroupId);
         assertThat(questionGroup, is(notNullValue()));

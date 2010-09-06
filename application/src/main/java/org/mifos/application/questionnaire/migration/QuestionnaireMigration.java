@@ -22,6 +22,8 @@ package org.mifos.application.questionnaire.migration;
 
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.questionnaire.migration.mappers.QuestionnaireMigrationMapper;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.surveys.business.Survey;
 import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
@@ -34,7 +36,10 @@ import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.String.format;
 
@@ -49,6 +54,9 @@ public class QuestionnaireMigration {
     @Autowired
     private SurveysPersistence surveysPersistence;
 
+    @Autowired
+    private CustomerDao customerDao;
+
     private MifosLogger mifosLogger;
 
     @SuppressWarnings({"UnusedDeclaration"})
@@ -59,16 +67,49 @@ public class QuestionnaireMigration {
     // Intended to be used only from unit tests for injecting mocks
     public QuestionnaireMigration(QuestionnaireMigrationMapper questionnaireMigrationMapper,
                                   QuestionnaireServiceFacade questionnaireServiceFacade,
-                                  SurveysPersistence surveysPersistence) {
+                                  SurveysPersistence surveysPersistence, CustomerDao customerDao) {
         this();
         this.questionnaireMigrationMapper = questionnaireMigrationMapper;
         this.questionnaireServiceFacade = questionnaireServiceFacade;
         this.surveysPersistence = surveysPersistence;
+        this.customerDao = customerDao;
     }
 
-    public Integer migrate(List<CustomFieldDefinitionEntity> customFields) {
-        QuestionGroupDto questionGroupDto = questionnaireMigrationMapper.map(customFields);
-        return questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
+    public Integer migrateAdditionalFields(List<CustomFieldDefinitionEntity> customFields) {
+        Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
+        QuestionGroupDto questionGroupDto = questionnaireMigrationMapper.map(customFields, customFieldQuestionIdMap);
+        Integer questionGroupId = questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
+        migrateAdditionalFieldsResponses(customFields, questionGroupId, customFieldQuestionIdMap);
+        return questionGroupId;
+    }
+
+    private void migrateAdditionalFieldsResponses(List<CustomFieldDefinitionEntity> customFields, Integer questionGroupId, Map<Short, Integer> customFieldQuestionIdMap) {
+        Map<Integer, List<CustomerCustomFieldEntity>> customerResponsesMap = getCustomerResponses(customFields);
+        for (Integer customerId : customerResponsesMap.keySet()) {
+            List<CustomerCustomFieldEntity> customerResponses = customerResponsesMap.get(customerId);
+            QuestionGroupInstanceDto questionGroupInstanceDto = questionnaireMigrationMapper.map(questionGroupId, customerResponses, customFieldQuestionIdMap);
+            questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto);
+        }
+    }
+
+    private Map<Integer, List<CustomerCustomFieldEntity>> getCustomerResponses(List<CustomFieldDefinitionEntity> customFields) {
+        Map<Integer, List<CustomerCustomFieldEntity>> customerResponsesMap = new HashMap<Integer, List<CustomerCustomFieldEntity>>();
+        for (CustomFieldDefinitionEntity customField : customFields) {
+            List<CustomerCustomFieldEntity> customFieldResponses = customerDao.getCustomFieldResponses(Integer.valueOf(customField.getFieldId()));
+            for (CustomerCustomFieldEntity customFieldResponse : customFieldResponses) {
+                addOrUpdate(customerResponsesMap, customFieldResponse);
+            }
+        }
+        return customerResponsesMap;
+    }
+
+    private void addOrUpdate(Map<Integer, List<CustomerCustomFieldEntity>> customerResponsesMap, CustomerCustomFieldEntity customFieldResponse) {
+        Integer customerId = customFieldResponse.getCustomerId();
+        if (customerResponsesMap.containsKey(customerId)) {
+            customerResponsesMap.get(customerId).add(customFieldResponse);
+        } else {
+            customerResponsesMap.put(customerId, new LinkedList<CustomerCustomFieldEntity>());
+        }
     }
 
     public List<Integer> migrateSurveys(List<Survey> surveys) {
@@ -112,7 +153,7 @@ public class QuestionnaireMigration {
             questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto);
         } catch (Exception e) {
             Survey survey = surveyInstance.getSurvey();
-            mifosLogger.error(format("Unable to migrate a survey instance for the survey, '%s' with ID, %s", survey.getName(), survey.getSurveyId()), e);
+            mifosLogger.error(format("Unable to migrate a survey instance with ID, %s for the survey, '%s' with ID, %s", surveyInstance.getInstanceId(), survey.getName(), survey.getSurveyId()), e);
         }
     }
 

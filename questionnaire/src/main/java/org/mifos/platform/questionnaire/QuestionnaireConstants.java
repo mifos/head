@@ -45,7 +45,7 @@ public class QuestionnaireConstants {
     public static final String SELECT_ONE = "--select one--";
     public static final String DEFAULT_SECTION_NAME = "Misc";
     public static final String DEFAULT_EVENT_FOR_CUSTOM_FIELDS = "Create";
-    public static final String QUESTION_GROUP_TITLE_FOR_ADDITIONAL_FIELDS = "Additional Fields for %s";
+    public static final String QUESTION_GROUP_TITLE_FOR_ADDITIONAL_FIELDS = "Additional_Fields_%s";
     public static final String DEFAULT_EVENT_FOR_SURVEYS = "View";
     public static final int DEFAULT_VERSION = 1;
     public static final int DEFAULT_ORDER = 0;

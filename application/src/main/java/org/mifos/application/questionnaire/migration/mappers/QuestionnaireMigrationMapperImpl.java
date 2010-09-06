@@ -24,6 +24,8 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.business.QuestionChoice;
 import org.mifos.customers.surveys.business.Survey;
@@ -92,11 +94,14 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     }
 
     @Override
-    public QuestionGroupDto map(List<CustomFieldDefinitionEntity> customFields) {
+    public QuestionGroupDto map(List<CustomFieldDefinitionEntity> customFields, Map<Short, Integer> customFieldQuestionIdMap) {
         SectionDto sectionDto = getDefaultSection();
         for (int i = 0, customFieldsSize = customFields.size(); i < customFieldsSize; i++) {
             CustomFieldDefinitionEntity customField = customFields.get(i);
-            sectionDto.addQuestion(map(customField, i));
+            QuestionDto questionDto = map(customField, i);
+            Integer questionId = questionnaireServiceFacade.createQuestion(questionDto);
+            sectionDto.addQuestion(questionDto);
+            customFieldQuestionIdMap.put(customField.getFieldId(), questionId);
         }
         return getQuestionGroup(sectionDto, customFields.get(0).getEntityType());
     }
@@ -121,6 +126,37 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
         questionGroupInstanceDto.setVersion(DEFAULT_VERSION);
         questionGroupInstanceDto.setQuestionGroupResponseDtos(mapToQuestionGroupResponseDtos(surveyInstance, questionGroupId));
         return questionGroupInstanceDto;
+    }
+
+    @Override
+    public QuestionGroupInstanceDto map(Integer questionGroupId, List<CustomerCustomFieldEntity> customerResponses, Map<Short, Integer> customFieldQuestionIdMap) {
+        QuestionGroupInstanceDto questionGroupInstanceDto = new QuestionGroupInstanceDto();
+        CustomerBO customer = customerResponses.get(0).getCustomer();
+        questionGroupInstanceDto.setDateConducted(customer.getCreatedDate());
+        questionGroupInstanceDto.setCompleted(true);
+        questionGroupInstanceDto.setCreatorId(Integer.valueOf(customer.getCreatedBy()));
+        questionGroupInstanceDto.setEntityId(customer.getCustomerId());
+        questionGroupInstanceDto.setQuestionGroupId(questionGroupId);
+        questionGroupInstanceDto.setVersion(DEFAULT_VERSION);
+        questionGroupInstanceDto.setQuestionGroupResponseDtos(mapToQuestionGroupResponseDtos(questionGroupId, customerResponses, customFieldQuestionIdMap));
+        return questionGroupInstanceDto;
+    }
+
+    private List<QuestionGroupResponseDto> mapToQuestionGroupResponseDtos(Integer questionGroupId, List<CustomerCustomFieldEntity> customerResponses, Map<Short, Integer> customFieldQuestionIdMap) {
+        List<QuestionGroupResponseDto> questionGroupResponseDtos = new ArrayList<QuestionGroupResponseDto>();
+        for (CustomerCustomFieldEntity customerResponse : customerResponses) {
+            questionGroupResponseDtos.add(mapToQuestionGroupResponseDto(questionGroupId, customFieldQuestionIdMap, customerResponse));
+        }
+        return questionGroupResponseDtos;
+    }
+
+    private QuestionGroupResponseDto mapToQuestionGroupResponseDto(Integer questionGroupId, Map<Short, Integer> customFieldQuestionIdMap, CustomerCustomFieldEntity customerResponse) {
+        QuestionGroupResponseDto questionGroupResponseDto = new QuestionGroupResponseDto();
+        questionGroupResponseDto.setResponse(customerResponse.getFieldValue());
+        Integer questionId = customFieldQuestionIdMap.get(customerResponse.getFieldId());
+        Integer sectionQuestionId = questionnaireServiceFacade.getSectionQuestionId(DEFAULT_SECTION_NAME, questionId, questionGroupId);
+        questionGroupResponseDto.setSectionQuestionId(sectionQuestionId);
+        return questionGroupResponseDto;
     }
 
     private List<QuestionGroupResponseDto> mapToQuestionGroupResponseDtos(SurveyInstance surveyInstance, Integer questionGroupId) {

@@ -20,12 +20,6 @@
 
 package org.mifos.application.master.business;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.util.helpers.EntityType;
@@ -36,6 +30,12 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 /**
  * Represents a named custom field of a given type {@link CustomFieldType}
  * defined for a particular entity {@link EntityType}.
@@ -45,7 +45,7 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
 
     private static final Short DEFAULT_LOCALE_ID = 1;
 
-    private final Short fieldId;
+    private Short fieldId;
 
     /*
      * The name of the custom field
@@ -266,5 +266,11 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
         }
 
         return customFieldDtos;
+    }
+
+    // To be used strictly from test code
+    @Deprecated
+    public void setFieldId(Short fieldId) {
+        this.fieldId = fieldId;
     }
 }
