@@ -19,36 +19,52 @@
  */
 package org.mifos.application.servicefacade;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.hasItem;
-import static org.mockito.Mockito.when;
-
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.customers.client.business.service.ClientBusinessService;
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fund.persistence.FundDao;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.BusinessActivityEntity;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItem;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 
 /**
  *
@@ -90,6 +106,9 @@ public class LoanServiceFacadeWebTierTest {
 
     @Mock
     private LoanOfferingBO activeLoanProduct;
+
+    @Mock
+    private LoanBO loanBO;
 
     private MeetingBO meeting;
 
@@ -142,4 +161,37 @@ public class LoanServiceFacadeWebTierTest {
         assertThat(glimData.getActiveClientsOfGroup(), hasItem(client));
     }
 
+    @Test
+    public void shouldReturnRepayLoanDtoWithAllDataPopulated() throws PersistenceException {
+        String accountNumber = "1234";
+        LoanBO loanBO = mock(LoanBO.class);
+        Money repaymentAmount = TestUtils.createMoney("1234");
+        AcceptedPaymentTypePersistence persistence = mock(AcceptedPaymentTypePersistence.class);
+        List<PaymentTypeEntity> paymentTypeEntities = new ArrayList<PaymentTypeEntity>();
+        when(loanDao.findByGlobalAccountNum(accountNumber)).thenReturn(loanBO);
+        when(persistence.getAcceptedPaymentTypesForATransaction(TestObjectFactory.TEST_LOCALE, TrxnTypes.loan_repayment.getValue())).thenReturn(paymentTypeEntities);
+        when(loanBO.getEarlyRepayAmount()).thenReturn(repaymentAmount);
+        Money interest = TestUtils.createMoney("100");
+        when(loanBO.waiverAmount()).thenReturn(interest);
+        Money waivedAmount = repaymentAmount.subtract(interest);
+        RepayLoanDto repayLoanDto = loanServiceFacade.getRepaymentDetails(accountNumber, TestObjectFactory.TEST_LOCALE, persistence);
+        assertEquals(repayLoanDto.getEarlyRepaymentMoney(), repaymentAmount);
+        assertEquals(repayLoanDto.getWaivedRepaymentMoney(), waivedAmount);
+        assertEquals(repayLoanDto.getPaymentTypeEntities(), paymentTypeEntities);
+    }
+
+    @Test
+    public void testMakeEarlyRepayment() throws AccountException {
+        Mockito.when(loanDao.findByGlobalAccountNum("1")).thenReturn(loanBO);
+        MifosCurrency dollar = new MifosCurrency(Short.valueOf("1"), "Dollar", BigDecimal.valueOf(1), "USD");
+        Mockito.when(loanBO.getCurrency()).thenReturn(dollar);
+        Date date = new Date(new java.util.Date().getTime());
+        boolean waiveInterest = true;
+        String paymentMethod = "Cash";
+        String receiptNumber = "001";
+        loanServiceFacade.makeEarlyRepayment("1", "100", receiptNumber,
+                date, paymentMethod, (short) 1, waiveInterest);
+        short userId = (short) 1;
+        Mockito.verify(loanBO).makeEarlyRepayment(new Money(dollar, "100"), receiptNumber, date, paymentMethod, userId, waiveInterest);
+    }
 }

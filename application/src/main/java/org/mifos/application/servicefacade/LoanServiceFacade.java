@@ -20,6 +20,7 @@
 
 package org.mifos.application.servicefacade;
 
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.customers.client.business.service.ClientBusinessService;
 import java.util.Date;
@@ -43,7 +44,6 @@ import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
 public interface LoanServiceFacade {
@@ -92,13 +92,13 @@ public interface LoanServiceFacade {
 
     List<AccountStatusChangeHistoryEntity> retrieveLoanAccountStatusChangeHistory(UserContext userContext, String globalAccountNum);
 
-    Money getTotalEarlyRepayAmount(String globalAccountNum);
-
     void makeEarlyRepayment(String globalAccountNum, String earlyRepayAmount, String receiptNumber,
-            java.sql.Date receiptDate, String paymentTypeId, Short id) throws AccountException;
+                            java.sql.Date receiptDate, String paymentTypeId, Short id, boolean waiveInterest) throws AccountException;
 
     LoanInformationDto getLoanInformationDto(String globalAccountNum, UserContext userContext) throws ServiceException;
 
     List<LoanAccountDetailsDto> getLoanAccountDetailsViewList(LoanInformationDto loanInformationDto, List<BusinessActivityEntity> businessActEntity, LoanBusinessService loanBusinessService, ClientBusinessService clientBusinessService)
             throws ServiceException;
+
+    RepayLoanDto getRepaymentDetails(String globalAccountNumber, Short localeId, AcceptedPaymentTypePersistence acceptedPaymentTypePersistence) throws PersistenceException;
 }

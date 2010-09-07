@@ -20,13 +20,6 @@
 
 package org.mifos.accounts.loan.business;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
@@ -40,6 +33,13 @@ import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class LoanScheduleEntity extends AccountActionDateEntity {
     private Money principal;
@@ -247,20 +247,25 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
             setPenaltyPaid(getPenaltyPaid().add(getPenaltyDue()));
             setMiscFeePaid(getMiscFeePaid().add(getMiscFee()));
             setMiscPenaltyPaid(getMiscPenaltyPaid().add(getMiscPenalty()));
-            setPaymentStatus(PaymentStatus.PAID);
-            setPaymentDate(new DateTimeService().getCurrentJavaSqlDate());
-            Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this.getAccountFeesActionDetails();
-            for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet) {
-                ((LoanFeeScheduleEntity) accountFeesActionDetailEntity).makeRepaymentEnteries(payFullOrPartial);
-            }
+            makeRepaymentEntries(payFullOrPartial);
+        } else if (payFullOrPartial.equals(LoanConstants.PAY_FEES_PENALTY)) {
+            setPrincipalPaid(getPrincipalPaid().add(getPrincipalDue()));
+            setPenaltyPaid(getPenaltyPaid().add(getPenaltyDue()));
+            setMiscFeePaid(getMiscFeePaid().add(getMiscFee()));
+            setMiscPenaltyPaid(getMiscPenaltyPaid().add(getMiscPenalty()));
+            makeRepaymentEntries(payFullOrPartial);
         } else {
             setPrincipalPaid(getPrincipalPaid().add(getPrincipalDue()));
-            setPaymentStatus(PaymentStatus.PAID);
-            setPaymentDate(new DateTimeService().getCurrentJavaSqlDate());
-            Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this.getAccountFeesActionDetails();
-            for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet) {
-                ((LoanFeeScheduleEntity) accountFeesActionDetailEntity).makeRepaymentEnteries(payFullOrPartial);
-            }
+            makeRepaymentEntries(payFullOrPartial);
+        }
+    }
+
+    private void makeRepaymentEntries(String payFullOrPartial) {
+        setPaymentStatus(PaymentStatus.PAID);
+        setPaymentDate(new DateTimeService().getCurrentJavaSqlDate());
+        Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this.getAccountFeesActionDetails();
+        for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet) {
+            ((LoanFeeScheduleEntity) accountFeesActionDetailEntity).makeRepaymentEnteries(payFullOrPartial);
         }
     }
 

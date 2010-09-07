@@ -20,21 +20,6 @@
 
 package org.mifos.accounts.business;
 
-import static org.mifos.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
-import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -90,6 +75,21 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.mifos.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
+import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
 
 public class AccountBO extends AbstractBusinessObject {
 
@@ -865,14 +865,20 @@ public class AccountBO extends AbstractBusinessObject {
         return futureActionDateList;
     }
 
-    protected List<AccountActionDateEntity> getApplicableIdsForDueInstallments() {
+    protected List<AccountActionDateEntity> getApplicableIdsForNextInstallmentAndArrears() {
+        List<AccountActionDateEntity> dueActionDateList = new ArrayList<AccountActionDateEntity>(getApplicableIdsForArrears());
+        AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+        if (nextInstallment != null && !nextInstallment.isPaid()) {
+            dueActionDateList.add(nextInstallment);
+        }
+        return dueActionDateList;
+    }
+
+    protected List<AccountActionDateEntity> getApplicableIdsForArrears() {
         List<AccountActionDateEntity> dueActionDateList = new ArrayList<AccountActionDateEntity>();
         AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
         if (nextInstallment == null || !nextInstallment.isPaid()) {
             dueActionDateList.addAll(getDetailsOfInstallmentsInArrears());
-            if (nextInstallment != null) {
-                dueActionDateList.add(nextInstallment);
-            }
         }
         return dueActionDateList;
     }

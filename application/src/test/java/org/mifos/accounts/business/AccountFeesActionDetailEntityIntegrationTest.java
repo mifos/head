@@ -20,10 +20,7 @@
 
 package org.mifos.accounts.business;
 
-import java.util.Date;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +41,8 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+import java.util.Date;
+
 public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrationTestCase {
 
     protected AccountBO accountBO = null;
@@ -59,6 +58,19 @@ public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrati
             for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
                     .getAccountFeesActionDetails()) {
                 accountFeesActionDetailEntity.makeRepaymentEnteries(LoanConstants.PAY_FEES_PENALTY_INTEREST);
+               Assert.assertEquals(accountFeesActionDetailEntity.getFeeAmount(), accountFeesActionDetailEntity
+                        .getFeeAmountPaid());
+            }
+        }
+    }
+    
+    @Test
+    public void testMakeEarlyRepaymentEnteriesForFeePaymentWithInterestWaiver() {
+        for (AccountActionDateEntity installment : accountBO.getAccountActionDates()) {
+            LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) installment;
+            for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
+                    .getAccountFeesActionDetails()) {
+                accountFeesActionDetailEntity.makeRepaymentEnteries(LoanConstants.PAY_FEES_PENALTY);
                Assert.assertEquals(accountFeesActionDetailEntity.getFeeAmount(), accountFeesActionDetailEntity
                         .getFeeAmountPaid());
             }
