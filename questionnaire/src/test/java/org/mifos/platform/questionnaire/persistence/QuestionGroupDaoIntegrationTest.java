@@ -23,8 +23,8 @@ package org.mifos.platform.questionnaire.persistence;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
+import org.mifos.platform.questionnaire.domain.Section;
 import org.mifos.platform.questionnaire.domain.SectionQuestion;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
@@ -50,16 +50,14 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/test-questionnaire-dbContext.xml", "/test-questionnaire-persistenceContext.xml", "/META-INF/spring/QuestionnaireContext.xml"})
 @TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
-public class SectionQuestionDaoIntegrationTest {
+public class QuestionGroupDaoIntegrationTest {
+
     @Autowired
     private QuestionnaireService questionnaireService;
 
     @Autowired
     private QuestionGroupDao questionGroupDao;
 
-    @Autowired
-    private SectionQuestionDao sectionQuestionDao;
-    
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldRetrieveSectionQuestionIdByQuestionGroupNameSectionNameQuestionId() {
@@ -68,30 +66,17 @@ public class SectionQuestionDaoIntegrationTest {
         SectionDetail sectionDetail2 = getSection("S2");
         List<SectionDetail> details = asList(sectionDetail1, sectionDetail2);
         QuestionGroupDetail questionGroupDetail = defineQuestionGroup(title, "Create", "Client", details, false);
-        QuestionGroup questionGroup = questionGroupDao.getDetails(questionGroupDetail.getId());
-        Integer questionId = questionGroup.getSections().get(1).getQuestions().get(1).getQuestion().getQuestionId();
-        Integer sectionQuestionId = questionGroup.getSections().get(1).getQuestions().get(1).getId();
-        List<Integer> sectionQuestionIds = sectionQuestionDao.retrieveIdFromQuestionGroupIdQuestionIdSectionName("S2", questionId, questionGroup.getId());
-        assertThat(sectionQuestionIds, is(notNullValue()));
-        assertThat(sectionQuestionIds.size(), is(1));
-        assertThat(sectionQuestionIds.get(0), is(sectionQuestionId));
-    }
-
-    @Test
-    @Transactional(rollbackFor = DataAccessException.class)
-    public void shouldRetrieveSectionQuestionByQuestionIdSectionId() {
-        String title = "QG1" + currentTimeMillis();
-        SectionDetail sectionDetail1 = getSection("S1");
-        SectionDetail sectionDetail2 = getSection("S2");
-        List<SectionDetail> details = asList(sectionDetail1, sectionDetail2);
-        QuestionGroupDetail questionGroupDetail = defineQuestionGroup(title, "Create", "Client", details, false);
-        QuestionGroup questionGroup = questionGroupDao.getDetails(questionGroupDetail.getId());
-        Integer questionId = questionGroup.getSections().get(1).getQuestions().get(1).getQuestion().getQuestionId();
-        Integer sectionId = questionGroup.getSections().get(1).getId();
-        List<SectionQuestion> sectionQuestions = sectionQuestionDao.retrieveFromQuestionIdSectionId(sectionId, questionId);
-        assertThat(sectionQuestions, is(notNullValue()));
-        assertThat(sectionQuestions.size(), is(1));
-        assertThat(sectionQuestions.get(0).getQuestionTitle(), is(sectionDetail2.getQuestionDetail(1).getTitle()));
+        List<Section> sections = questionGroupDao.retrieveSectionByNameAndQuestionGroupId("S2", questionGroupDetail.getId());
+        assertThat(sections, is(notNullValue()));
+        assertThat(sections.size(), is(1));
+        Section section2 = sections.get(0);
+        assertThat(section2.getName(), is("S2"));
+        List<SectionQuestion> sections2Questions = section2.getQuestions();
+        assertThat(sections2Questions, is(notNullValue()));
+        assertThat(sections2Questions.size(), is(3));
+        assertThat(sections2Questions.get(0).getQuestionTitle(), is(sectionDetail2.getQuestionDetail(0).getTitle()));
+        assertThat(sections2Questions.get(1).getQuestionTitle(), is(sectionDetail2.getQuestionDetail(1).getTitle()));
+        assertThat(sections2Questions.get(2).getQuestionTitle(), is(sectionDetail2.getQuestionDetail(2).getTitle()));
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws SystemException {

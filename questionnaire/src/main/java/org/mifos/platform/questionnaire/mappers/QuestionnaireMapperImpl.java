@@ -196,7 +196,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setTitle(questionGroupDetail.getTitle());
         questionGroup.setState(QuestionGroupState.getQuestionGroupStateAsEnum(questionGroupDetail.isActive()));
         questionGroup.setDateOfCreation(getCurrentDateTime());
-        questionGroup.setSections(mapToSections(questionGroupDetail.getSectionDetails()));
+        questionGroup.setSections(mapToSections(questionGroupDetail));
         questionGroup.setEventSources(mapToEventSources(questionGroupDetail.getEventSource()));
         questionGroup.setEditable(questionGroupDetail.isEditable());
         return questionGroup;
@@ -215,17 +215,29 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return eventSources;
     }
 
-    private List<Section> mapToSections(List<SectionDetail> sectionDetails) {
+    private List<Section> mapToSections(QuestionGroupDetail questionGroupDetail) {
         List<Section> sections = new ArrayList<Section>();
-        for (SectionDetail sectionDetail : sectionDetails) {
-            sections.add(mapToSection(sectionDetail));
+        for (SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()) {
+            sections.add(mapToSection(questionGroupDetail, sectionDetail));
         }
         return sections;
     }
 
-    private Section mapToSection(SectionDetail sectionDetail) {
-        Section section = new Section(sectionDetail.getName());
+    private Section mapToSection(QuestionGroupDetail questionGroupDetail, SectionDetail sectionDetail) {
+        Section section = getSection(questionGroupDetail, sectionDetail);
         section.setQuestions(mapToSectionQuestions(sectionDetail.getQuestions(), section));
+        return section;
+    }
+
+    private Section getSection(QuestionGroupDetail questionGroupDetail, SectionDetail sectionDetail) {
+        String sectionName = sectionDetail.getName();
+        Section section = new Section(sectionName);
+        if (!questionGroupDetail.isNewQuestionGroup()) {
+            List<Section> sections = questionGroupDao.retrieveSectionByNameAndQuestionGroupId(sectionName, questionGroupDetail.getId());
+            if (isNotEmpty(sections)) {
+                section = sections.get(0);
+            }
+        }
         return section;
     }
 
@@ -239,11 +251,25 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private SectionQuestion mapToSectionQuestion(SectionQuestionDetail sectionQuestionDetail, int seqNum, Section section) {
-        SectionQuestion sectionQuestion = new SectionQuestion();
+        QuestionDetail questionDetail = sectionQuestionDetail.getQuestionDetail();
+        SectionQuestion sectionQuestion = getSectionQuestion(questionDetail, section);
         sectionQuestion.setRequired(sectionQuestionDetail.isMandatory());
-        sectionQuestion.setQuestion(mapToQuestion(sectionQuestionDetail.getQuestionDetail()));
-        sectionQuestion.setSequenceNumber(seqNum);
-        sectionQuestion.setSection(section);
+        if (sectionQuestion.isNewSectionQuestion()) {
+            sectionQuestion.setQuestion(mapToQuestion(questionDetail));
+            sectionQuestion.setSequenceNumber(seqNum);
+            sectionQuestion.setSection(section);
+        }
+        return sectionQuestion;
+    }
+
+    private SectionQuestion getSectionQuestion(QuestionDetail questionDetail, Section section) {
+        SectionQuestion sectionQuestion = new SectionQuestion();
+        if (!questionDetail.isNewQuestion() && !section.isNewSection()) {
+            List<SectionQuestion> sectionQuestions = sectionQuestionDao.retrieveFromQuestionIdSectionId(section.getId(), questionDetail.getId());
+            if (isNotEmpty(sectionQuestions)) {
+                sectionQuestion = sectionQuestions.get(0);
+            }
+        }
         return sectionQuestion;
     }
 
@@ -348,7 +374,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroupInstanceDetail.setId(questionGroupInstance.getId());
         questionGroupInstanceDetail.setDateCompleted(questionGroupInstance.getDateConducted());
         questionGroupInstanceDetail.setQuestionGroupDetail(questionGroupDetail);
-        mapQuestionResponses(questionGroupInstanceDetail, questionGroupInstance.getQuestionGroupResponses());
+        mapQuestionResponses(questionGroupInstance.getQuestionGroupResponses(), questionGroupInstanceDetail.getQuestionGroupDetail());
         return questionGroupInstanceDetail;
     }
 
@@ -463,9 +489,9 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return Calendar.getInstance().getTime();
     }
 
-    private void mapQuestionResponses(QuestionGroupInstanceDetail questionGroupInstanceDetail, List<QuestionGroupResponse> questionGroupResponses) {
+    private void mapQuestionResponses(List<QuestionGroupResponse> questionGroupResponses, QuestionGroupDetail questionGroupDetail) {
         if (isNotEmpty(questionGroupResponses)) {
-            for (SectionDetail sectionDetail : questionGroupInstanceDetail.getQuestionGroupDetail().getSectionDetails()) {
+            for (SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()) {
                 for (SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()) {
                     mapToQuestionResponse(sectionQuestionDetail, questionGroupResponses);
                 }
