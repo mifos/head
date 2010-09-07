@@ -57,13 +57,13 @@ import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.core.io.ClassPathResource;
 
-public class TaskHelperIntegrationTest extends MifosIntegrationTestCase {
+public class BatchJobCatchUpIntegrationTest extends MifosIntegrationTestCase {
 
     MifosScheduler mifosScheduler;
 
     String jobName;
 
-    public TaskHelperIntegrationTest() throws Exception {
+    public BatchJobCatchUpIntegrationTest() throws Exception {
         super();
     }
 
@@ -79,7 +79,7 @@ public class TaskHelperIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testIncompleteTaskDelay() throws Exception {
-        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/catchUpMockTask.xml");
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/catchUpTask.xml");
         Scheduler scheduler = mifosScheduler.getScheduler();
         ProductStatus productStatusTask = new ProductStatus();
         productStatusTask.setJobExplorer(mifosScheduler.getBatchJobExplorer());
@@ -112,7 +112,7 @@ public class TaskHelperIntegrationTest extends MifosIntegrationTestCase {
         JobLauncher jobLauncher = mifosScheduler.getBatchJobLauncher();
         JobLocator jobLocator = mifosScheduler.getBatchJobLocator();
         jobLauncher.run(jobLocator.getJob(jobName), MifosBatchJob.createJobParameters(previousFireTime.getTime()));
-        Thread.sleep(1000);
+        Thread.sleep(1500);
         productStatusTask.catchUpMissedLaunches(jobLocator.getJob(jobName), jobExecutionContext);
 
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
@@ -128,13 +128,13 @@ public class TaskHelperIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testIncompleteTaskHandling() throws Exception {
-        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/catchUpMockTask2.xml");
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/catchUpTask2.xml");
         JobLauncher jobLauncher = mifosScheduler.getBatchJobLauncher();
         JobLocator jobLocator = mifosScheduler.getBatchJobLocator();
 
         for(int i = 0; i < 3; i++) {
             jobLauncher.run(jobLocator.getJob(jobName), MifosBatchJob.createJobParameters(new Date().getTime()));
-            Thread.sleep(1000);
+            Thread.sleep(1500);
         }
 
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
@@ -147,7 +147,7 @@ public class TaskHelperIntegrationTest extends MifosIntegrationTestCase {
         }
 
         mifosScheduler.runIndividualTask(jobName);
-        Thread.sleep(1000);
+        Thread.sleep(1500);
 
         jobInstances = explorer.getJobInstances(jobName, 0, 10);
         Assert.assertEquals(4, jobInstances.size());
@@ -159,13 +159,13 @@ public class TaskHelperIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testFailureDuringIncompleteTaskHandling() throws Exception {
-        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/catchUpMockTask3.xml");
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/catchUpTask3.xml");
         JobLauncher jobLauncher = mifosScheduler.getBatchJobLauncher();
         JobLocator jobLocator = mifosScheduler.getBatchJobLocator();
 
         for(int i = 0; i < 3; i++) {
             jobLauncher.run(jobLocator.getJob(jobName), MifosBatchJob.createJobParameters(new Date().getTime()));
-            Thread.sleep(1000);
+            Thread.sleep(1500);
         }
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
         List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 10);
@@ -177,7 +177,7 @@ public class TaskHelperIntegrationTest extends MifosIntegrationTestCase {
         }
 
         mifosScheduler.runIndividualTask(jobName);
-        Thread.sleep(1000);
+        Thread.sleep(1500);
 
         explorer = mifosScheduler.getBatchJobExplorer();
         jobInstances = explorer.getJobInstances(jobName, 0, 10);

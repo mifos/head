@@ -79,7 +79,7 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
     @Before
     public void setUp() throws Exception {
         TestDatabase.resetMySQLDatabase();
-        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/loanArrearsIntegrationTestMockTask.xml");
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/loanArrearsTestTask.xml");
         jobName = "LoanArrearsTaskJob";
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
@@ -101,7 +101,7 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
     public void testExecute() throws Exception {
         int statusChangeHistorySize = loanAccount.getAccountStatusChangeHistory().size();
         mifosScheduler.runIndividualTask(jobName);
-        Thread.sleep(1000);
+        Thread.sleep(1500);
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
         List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 10);
         Assert.assertEquals(1, jobInstances.size());

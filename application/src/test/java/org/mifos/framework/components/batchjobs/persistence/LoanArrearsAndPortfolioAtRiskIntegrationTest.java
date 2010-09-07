@@ -50,7 +50,7 @@ import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.core.io.ClassPathResource;
 
-public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
+public class LoanArrearsAndPortfolioAtRiskIntegrationTest extends MifosIntegrationTestCase {
 
     MifosScheduler mifosScheduler;
 
@@ -68,7 +68,7 @@ public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testLoanArrearsTaskRunSuccessfull() throws Exception {
-        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/loanArrearsAndPortfolioMockTask.xml");
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/loanArrearsAndPortfolioTask.xml");
         mifosScheduler.runIndividualTask(jobName);
         Thread.sleep(1000);
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
@@ -88,7 +88,7 @@ public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testLoanArrearsTaskRunFailed() throws Exception {
-        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/loanArrearsAndPortfolioMockTask2.xml");
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/loanArrearsAndPortfolioTask2.xml");
         mifosScheduler.runIndividualTask(jobName);
         Thread.sleep(1000);
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();

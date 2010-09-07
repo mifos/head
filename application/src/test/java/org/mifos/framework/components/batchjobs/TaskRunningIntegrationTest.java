@@ -1,0 +1,75 @@
+package org.mifos.framework.components.batchjobs;
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+
+import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
+import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.util.ConfigurationLocator;
+import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.core.io.ClassPathResource;
+
+public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
+
+    MifosScheduler mifosScheduler;
+
+    @Before
+    public void setUp() throws Exception {
+        TestDatabase.resetMySQLDatabase();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+    }
+
+    @Test
+    public void testRunningSpecificTask() throws Exception {
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/taskRunningTestTask.xml");
+        String jobName = "BranchReportTaskJob";
+        mifosScheduler.runIndividualTask(jobName);
+        Thread.sleep(1000);
+        JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
+        List<String> executedJobs = explorer.getJobNames();
+        Assert.assertEquals(1, executedJobs.size());
+        Assert.assertTrue(jobName.equals(executedJobs.get(0)));
+    }
+
+    @Test
+    public void testRunningAllTasks() throws Exception {
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/taskRunningTestTask.xml");
+        mifosScheduler.runAllTasks();
+        Thread.sleep(3000);
+        JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
+        List<String> executedJobs = explorer.getJobNames();
+        Assert.assertEquals(9, executedJobs.size());
+        List<String> jobNames = mifosScheduler.getTaskNames();
+        for(String jobName : jobNames) {
+            Assert.assertTrue(executedJobs.contains(jobName));
+        }
+    }
+
+    private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws TaskSystemException, IOException, FileNotFoundException {
+        ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
+        expect(mockConfigurationLocator.getFile(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
+                new ClassPathResource(taskConfigurationPath).getFile());
+        expectLastCall().times(2);
+        replay(mockConfigurationLocator);
+        MifosScheduler mifosScheduler = new MifosScheduler();
+        mifosScheduler.setConfigurationLocator(mockConfigurationLocator);
+        mifosScheduler.initialize();
+        return mifosScheduler;
+    }
+
+}

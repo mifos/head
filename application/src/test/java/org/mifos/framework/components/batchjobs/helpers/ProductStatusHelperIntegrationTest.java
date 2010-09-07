@@ -114,7 +114,7 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testExecuteTask() throws Exception {
         createInactiveLoanOffering();
-        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/productStatusTestMockTask.xml");
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/productStatusTestTask.xml");
         mifosScheduler.runIndividualTask(jobName);
         Thread.sleep(1000);
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
@@ -132,7 +132,7 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testExecuteTaskFailure() throws Exception {
         createInactiveLoanOffering();
-        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/productStatusTestMockTask2.xml");
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/productStatusTestTask2.xml");
         mifosScheduler.runIndividualTask(jobName);
         Thread.sleep(1000);
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
@@ -146,10 +146,6 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
         Assert.assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
     }
-
-    // TODO QUARTZ: Test cases involving invalid database connections..
-
-    // TODO QUARTZ: Test cases involving testing proper listener work (to be confirmed).
 
     private void createInactiveLoanOffering() throws PersistenceException {
         Date startDate = new Date(System.currentTimeMillis());
