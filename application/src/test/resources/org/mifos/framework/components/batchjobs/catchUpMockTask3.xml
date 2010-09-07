@@ -23,14 +23,14 @@
     </bean>
     <bean id="ProductStatusTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="ProductStatus" />
-        <property name="cronExpression" value="0 0 0 31 DEC ?" />
+        <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
     <batch:job id="ProductStatusJob" parent="jobBase" job-repository="jobRepository">
         <batch:step id="ProductStatus-step-1">
             <batch:tasklet ref="ProductStatusTasklet" />
         </batch:step>
     </batch:job>
-    <bean name="ProductStatusTasklet" class="org.mifos.framework.components.batchjobs.helpers.ProductStatusHelper" />
+    <bean name="ProductStatusTasklet" class="org.mifos.framework.components.batchjobs.helpers.CatchUpErrorMockHelper" />
     
     <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="quartzProperties">

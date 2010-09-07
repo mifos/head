@@ -120,11 +120,11 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
     }
 
     /**
-     * This method is a wrapper around {@link #launchJob(Job, JobParameters, BatchStatus)}. It checks whether previous
+     * This method is a wrapper around launchJob method. It checks whether previous
      * runs of the job executed successfully and attempts to re-run them in case they did not.
      * @param lookUpDepth
      */
-    private BatchStatus checkAndLaunchJob(Job job, JobParameters jobParameters, int lookUpDepth) throws BatchJobException {
+    public BatchStatus checkAndLaunchJob(Job job, JobParameters jobParameters, int lookUpDepth) throws BatchJobException {
         List<JobInstance> jobInstances = jobExplorer.getJobInstances(job.getName(), lookUpDepth, lookUpDepth+1);
         if(jobInstances.size() == 0) {
             return launchJob(job, jobParameters, null);
@@ -143,7 +143,7 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
         return launchJob(job, jobParameters, BatchStatus.FAILED);
     }
 
-    private void catchUpMissedLaunches(Job job, JobExecutionContext context) throws Exception {
+    public void catchUpMissedLaunches(Job job, JobExecutionContext context) throws Exception {
         List<JobInstance> jobInstances = jobExplorer.getJobInstances(job.getName(), 0, 1);
         if(jobInstances.size() > 0) {
             JobInstance jobInstance = jobInstances.get(0);
@@ -158,7 +158,7 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
     }
 
     @SuppressWarnings("unchecked")
-    private List<Date> computeMissedJobLaunches(Date from, Date to, Trigger trigger) throws Exception {
+    public List<Date> computeMissedJobLaunches(Date from, Date to, Trigger trigger) throws Exception {
         List<Date> missedLaunches = new LinkedList<Date>();
         List<Date> computationOutcome = null;
         if(trigger instanceof CronTrigger) {
