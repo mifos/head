@@ -181,7 +181,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     // FIXME: replace with Spring-managed beans
                     final MifosScheduler mifosScheduler = new MifosScheduler();
                     mifosScheduler.initialize();
-                    mifosScheduler.initializeBatchJobs();
                     final ShutdownManager shutdownManager = new ShutdownManager();
 
                     Configuration.getInstance();

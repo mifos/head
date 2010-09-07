@@ -42,7 +42,6 @@ public class MifosSchedulerTest {
     public void testRegisterTasks() throws Exception {
 
         MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/schedulerTestTask.xml");
-        mifosScheduler.initializeBatchJobs();
         List<String> taskNames = mifosScheduler.getTaskNames();
 
         Assert.assertEquals(9, taskNames.size());
@@ -59,8 +58,8 @@ public class MifosSchedulerTest {
 
     @Test
     public void testCallsConfigurationLocator() throws Exception {
+
         MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/schedulerTestTask2.xml");
-        mifosScheduler.initializeBatchJobs();
         List<String> taskNames = mifosScheduler.getTaskNames();
 
         Assert.assertEquals(1, taskNames.size());
