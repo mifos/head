@@ -88,6 +88,10 @@ public class MifosScheduler {
 
     private static final String BATCH_JOB_CLASS_PATH_PREFIX = "org.mifos.framework.components.batchjobs.helpers.";
     private Scheduler scheduler = null;
+    private JobLauncher jobLauncher;
+    private JobExplorer jobExplorer;
+    private JobRepository jobRepository;
+    private JobLocator jobLocator;
     private ConfigurableApplicationContext springTaskContext = null;
     private static MifosLogger logger = MifosLogManager.getLogger(MifosScheduler.class.getName());
     private ConfigurationLocator configurationLocator;
@@ -101,15 +105,20 @@ public class MifosScheduler {
             if(rootElement.getLength() > 0) { // new Quartz scheduler
                 springTaskContext = new FileSystemXmlApplicationContext("file:"+getTaskConfigurationFilePath());
                 scheduler = (Scheduler)springTaskContext.getBean(SchedulerConstants.SPRING_SCHEDULER_BEAN_NAME);
+                jobExplorer = (JobExplorer)springTaskContext.getBean(SchedulerConstants.JOB_EXPLORER_BEAN_NAME);
+                jobRepository = (JobRepository)springTaskContext.getBean(SchedulerConstants.JOB_REPOSITORY_BEAN_NAME);
+                jobLauncher = (JobLauncher)springTaskContext.getBean(SchedulerConstants.JOB_LAUNCHER_BEAN_NAME);
+                jobLocator = (JobLocator)springTaskContext.getBean(SchedulerConstants.JOB_LOCATOR_BEAN_NAME);
             } else { // old legacy Mifos Scheduler
                 StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
                 String configPath = getQuartzSchedulerConfigurationFilePath();
                 schedulerFactory.initialize(configPath);
                 scheduler = schedulerFactory.getScheduler();
-                if (scheduler.isInStandbyMode()) {
-                    registerTasksOldConfigurationFile(document);
-                    scheduler.start();
+                if (!scheduler.isInStandbyMode()) {
+                    scheduler.standby();
                 }
+                registerTasksOldConfigurationFile(document);
+                scheduler.start();
             }
         } catch (Exception e) {
             throw new TaskSystemException(e);
@@ -161,7 +170,7 @@ public class MifosScheduler {
         } catch (ClassNotFoundException cnfe) {
             throw new TaskSystemException(cnfe);
         }
-        jobDetailBean.setName(jobName);
+        jobDetailBean.setName(jobName+"Job");
         jobDetailBean.setGroup(Scheduler.DEFAULT_GROUP);
         jobDetailBean.afterPropertiesSet();
 
@@ -226,7 +235,7 @@ public class MifosScheduler {
         } catch (ClassNotFoundException cnfe) {
             throw new TaskSystemException(cnfe);
         }
-        jobDetailBean.setName(jobName);
+        jobDetailBean.setName(jobName+"Job");
         jobDetailBean.setGroup(Scheduler.DEFAULT_GROUP);
         jobDetailBean.afterPropertiesSet();
 
@@ -307,6 +316,7 @@ public class MifosScheduler {
             SimpleJdbcTemplate jdbcTemplate = new SimpleJdbcTemplate(dataSource);
 
             JobRegistry jobRegistry = new MapJobRegistry();
+            this.jobLocator = jobRegistry;
 
             JdbcJobInstanceDao jobInstanceDao = new JdbcJobInstanceDao();
             jobInstanceDao.setJdbcTemplate(jdbcTemplate);
@@ -328,13 +338,16 @@ public class MifosScheduler {
             executionContextDao.afterPropertiesSet();
 
             JobRepository jobRepository = new SimpleJobRepository(jobInstanceDao, jobExecutionDao, stepExecutionDao, executionContextDao);
+            this.jobRepository = jobRepository;
 
             SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
             jobLauncher.setJobRepository(jobRepository);
             jobLauncher.setTaskExecutor(new SyncTaskExecutor());
             jobLauncher.afterPropertiesSet();
+            this.jobLauncher = jobLauncher;
 
             JobExplorer jobExplorer = new SimpleJobExplorer(jobInstanceDao, jobExecutionDao, stepExecutionDao, executionContextDao);
+            this.jobExplorer = jobExplorer;
 
             Map jobData = new HashMap();
             jobData.put("jobLocator", jobRegistry);
@@ -369,18 +382,19 @@ public class MifosScheduler {
                 if (Long.parseLong(delayTime) < 86400) {
                     throw new IllegalArgumentException("Please specify the delay time >= 86400(1 day)");
                 }
-                if(scheduler.getJobDetail(taskName, Scheduler.DEFAULT_GROUP) == null) {
-                    if ("LoanArrearsTask".equals(taskName)) {
-                        loanArrearsTaskInitialTime = parseInitialTime(initialTime);
-                        loanArrearsTaskDelayTime = Long.parseLong(delayTime) * 1000;
-                        continue;
-                    }
-                    if ("PortfolioAtRiskTask".equals(taskName)) {
-                        portfolioAtRiskTaskExists = true;
-                        continue;
-                    }
-                    schedule(taskName, parseInitialTime(initialTime), Long.parseLong(delayTime) * 1000, jobRegistry, jobRepository, jobData, transactionManager);
+                if(scheduler.getJobDetail(taskName, Scheduler.DEFAULT_GROUP) != null) {
+                    scheduler.unscheduleJob(taskName, Scheduler.DEFAULT_GROUP);
                 }
+                if ("LoanArrearsTask".equals(taskName)) {
+                    loanArrearsTaskInitialTime = parseInitialTime(initialTime);
+                    loanArrearsTaskDelayTime = Long.parseLong(delayTime) * 1000;
+                    continue;
+                }
+                if ("PortfolioAtRiskTask".equals(taskName)) {
+                    portfolioAtRiskTaskExists = true;
+                    continue;
+                }
+                schedule(taskName, parseInitialTime(initialTime), Long.parseLong(delayTime) * 1000, jobRegistry, jobRepository, jobData, transactionManager);
             }
             if (loanArrearsTaskInitialTime != null) {
                 if (portfolioAtRiskTaskExists) {
@@ -506,19 +520,19 @@ public class MifosScheduler {
     }
 
     public JobExplorer getBatchJobExplorer() {
-        return (JobExplorer)springTaskContext.getBean(SchedulerConstants.JOB_EXPLORER_BEAN_NAME);
+        return jobExplorer;
     }
 
     public JobRepository getBatchJobRepository() {
-        return (JobRepository)springTaskContext.getBean(SchedulerConstants.JOB_REPOSITORY_BEAN_NAME);
+        return jobRepository;
     }
 
     public JobLauncher getBatchJobLauncher() {
-        return (JobLauncher)springTaskContext.getBean(SchedulerConstants.JOB_LAUNCHER_BEAN_NAME);
+        return jobLauncher;
     }
 
     public JobLocator getBatchJobLocator() {
-        return (JobLocator)springTaskContext.getBean(SchedulerConstants.JOB_LOCATOR_BEAN_NAME);
+        return jobLocator;
     }
 
     private InputSource getTaskConfigurationInputSource() throws IOException {

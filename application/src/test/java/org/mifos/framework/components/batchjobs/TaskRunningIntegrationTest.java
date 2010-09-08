@@ -37,7 +37,7 @@ public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testRunningSpecificTask() throws Exception {
         mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/taskRunningTestTask.xml");
-        String jobName = "BranchReportTaskJob";
+        String jobName = "ApplyHolidayChangesTaskJob";
         mifosScheduler.runIndividualTask(jobName);
         Thread.sleep(1000);
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
@@ -60,11 +60,50 @@ public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
+    public void testRunningSpecificTaskOnOldConfigurationFile() throws Exception {
+        mifosScheduler = getMifosSchedulerOldConfigurationFile("org/mifos/framework/components/batchjobs/old-task.xml", "org/mifos/framework/components/batchjobs/quartz.properties");
+        String jobName = "ApplyHolidayChangesTaskJob";
+        mifosScheduler.runIndividualTask(jobName);
+        Thread.sleep(1000);
+        JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
+        List<String> executedJobs = explorer.getJobNames();
+        Assert.assertEquals(1, executedJobs.size());
+        Assert.assertTrue(jobName.equals(executedJobs.get(0)));
+    }
+
+    @Test
+    public void testRunningAllTasksOnOldConfigurationFile() throws Exception {
+        mifosScheduler = getMifosSchedulerOldConfigurationFile("org/mifos/framework/components/batchjobs/old-task.xml", "org/mifos/framework/components/batchjobs/quartz2.properties");
+        mifosScheduler.runAllTasks();
+        Thread.sleep(3000);
+        JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
+        List<String> executedJobs = explorer.getJobNames();
+        Assert.assertEquals(9, executedJobs.size());
+        List<String> jobNames = mifosScheduler.getTaskNames();
+        for(String jobName : jobNames) {
+            Assert.assertTrue(executedJobs.contains(jobName));
+        }
+    }
+
     private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws TaskSystemException, IOException, FileNotFoundException {
         ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
         expect(mockConfigurationLocator.getFile(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
                 new ClassPathResource(taskConfigurationPath).getFile());
         expectLastCall().times(2);
+        replay(mockConfigurationLocator);
+        MifosScheduler mifosScheduler = new MifosScheduler();
+        mifosScheduler.setConfigurationLocator(mockConfigurationLocator);
+        mifosScheduler.initialize();
+        return mifosScheduler;
+    }
+
+    private MifosScheduler getMifosSchedulerOldConfigurationFile(String taskFilePath, String quartzFilePath) throws IOException, TaskSystemException {
+        ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
+        expect(mockConfigurationLocator.getFile(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
+                new ClassPathResource(taskFilePath).getFile());
+        expect(mockConfigurationLocator.getFile(SchedulerConstants.SCHEDULER_CONFIGURATION_FILE_NAME)).andReturn(
+                new ClassPathResource(quartzFilePath).getFile());
         replay(mockConfigurationLocator);
         MifosScheduler mifosScheduler = new MifosScheduler();
         mifosScheduler.setConfigurationLocator(mockConfigurationLocator);
