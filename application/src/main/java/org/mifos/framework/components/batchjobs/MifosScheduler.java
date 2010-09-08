@@ -137,7 +137,7 @@ public class MifosScheduler {
 
                 @Override
                 public Job createJob() {
-                    SimpleJob job = new SimpleJob(jobName);
+                    SimpleJob job = new SimpleJob(jobName+"Job");
                     job.setJobRepository(jobRepository);
                     job.setRestartable(true);
                     job.registerJobExecutionListener(new BatchJobListener());
@@ -147,7 +147,7 @@ public class MifosScheduler {
 
                 @Override
                 public String getJobName() {
-                    return jobName;
+                    return jobName+"Job";
                 }
             });
         } catch (Exception e) {
@@ -201,7 +201,7 @@ public class MifosScheduler {
 
                 @Override
                 public Job createJob() {
-                    SimpleJob job = new SimpleJob(jobName);
+                    SimpleJob job = new SimpleJob(jobName+"Job");
                     job.setJobRepository(jobRepository);
                     job.setRestartable(true);
                     job.registerJobExecutionListener(new BatchJobListener());
@@ -212,7 +212,7 @@ public class MifosScheduler {
 
                 @Override
                 public String getJobName() {
-                    return jobName;
+                    return jobName+"Job";
                 }
             });
         } catch (Exception e) {
@@ -244,16 +244,36 @@ public class MifosScheduler {
     }
 
     private String getHelperName(String jobName) throws TaskSystemException {
-        if ("ProductStatus".equals(jobName)) return "ProductStatusHelper";
-        if ("LoanArrearsTask".equals(jobName)) return "LoanArrearsHelper";
-        if ("SavingsIntCalcTask".equals(jobName)) return "SavingsIntCalcHelper";
-        if ("SavingsIntPostingTask".equals(jobName)) return "SavingsIntPostingHelper";
-        if ("ApplyCustomerFeeChangesTask".equals(jobName)) return "ApplyCustomerFeeChangesHelper";
-        if ("LoanArrearsAgingTask".equals(jobName)) return "LoanArrearsAgingHelper";
-        if ("ApplyHolidayChangesTask".equals(jobName)) return "ApplyHolidayChangesHelper";
-        if ("PortfolioAtRiskTask".equals(jobName)) return "PortfolioAtRiskHelper";
-        if ("GenerateMeetingsForCustomerAndSavingsTask".equals(jobName)) return "GenerateMeetingsForCustomerAndSavingsHelper";
-        if ("BranchReportTask".equals(jobName)) return "BranchReportHelper";
+        if ("ProductStatus".equals(jobName)) {
+            return "ProductStatusHelper";
+        }
+        if ("LoanArrearsTask".equals(jobName)) {
+            return "LoanArrearsHelper";
+        }
+        if ("SavingsIntCalcTask".equals(jobName)) {
+            return "SavingsIntCalcHelper";
+        }
+        if ("SavingsIntPostingTask".equals(jobName)) {
+            return "SavingsIntPostingHelper";
+        }
+        if ("ApplyCustomerFeeChangesTask".equals(jobName)) {
+            return "ApplyCustomerFeeChangesHelper";
+        }
+        if ("LoanArrearsAgingTask".equals(jobName)) {
+            return "LoanArrearsAgingHelper";
+        }
+        if ("ApplyHolidayChangesTask".equals(jobName)) {
+            return "ApplyHolidayChangesHelper";
+        }
+        if ("PortfolioAtRiskTask".equals(jobName)) {
+            return "PortfolioAtRiskHelper";
+        }
+        if ("GenerateMeetingsForCustomerAndSavingsTask".equals(jobName)) {
+            return "GenerateMeetingsForCustomerAndSavingsHelper";
+        }
+        if ("BranchReportTask".equals(jobName)) {
+            return "BranchReportHelper";
+        }
 
         throw new TaskSystemException("Unknown helper for " + jobName);
     }
@@ -272,8 +292,8 @@ public class MifosScheduler {
      * This method reads all the task from an xml file and registers them with
      * the MifosScheduler
      *
-     * @throws TaskSystemException when something goes wrong
      * @param document Task configuration document
+     * @throws TaskSystemException when something goes wrong
      */
     @Deprecated
     private void registerTasksOldConfigurationFile(Document document) throws TaskSystemException {
