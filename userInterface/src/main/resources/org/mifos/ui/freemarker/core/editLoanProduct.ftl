@@ -593,7 +593,7 @@ function switchLoanInstallmentType()
           <div class="clear">&nbsp;</div>
           <hr />
 	        <div class="prepend-9">
-	        	<input class="buttn" type="submit" id="CreateLoanProduct.button.preview" name="preview" value="Preview" onclick="selectAllOptions(this.form.selectedFees);selectAllOptions(this.form.selectedFunds);" />
+	            <input class="buttn" type="submit" id="CreateLoanProduct.button.preview" name="preview" value="Preview" onclick="selectAllOptions(this.form.selectedFees);selectAllOptions(this.form.applicableFees);selectAllOptions(this.form.selectedFunds);selectAllOptions(this.form.applicableFunds);" />
 	        	<input class="buttn2" type="submit" id="CreateLoanProduct.button.cancel" name="CANCEL" value="Cancel" />
 	      	</div>
           <div class="clear">&nbsp;</div>
@@ -603,5 +603,4 @@ function switchLoanInstallmentType()
     </div>
   </div>
   <!--Main Content Ends-->
-  [@mifos.footer/]
-  
+  [@mifos.footer/]  
