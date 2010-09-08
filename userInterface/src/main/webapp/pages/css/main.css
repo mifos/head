@@ -19,7 +19,6 @@ html, body { height: 100% }
 .top_menu {
     margin-left: 205px;
     margin-top: 55px;
-    float: left;
 }
 .top_menu ul {
     list-style: none;
