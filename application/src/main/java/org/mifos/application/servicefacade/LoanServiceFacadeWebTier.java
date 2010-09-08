@@ -19,22 +19,9 @@
  */
 package org.mifos.application.servicefacade;
 
-import static org.apache.commons.lang.StringUtils.EMPTY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_RANGE_IS_NOT_MET;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_RANGE_IS_NOT_MET;
-
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.customers.client.business.service.ClientBusinessService;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
@@ -52,6 +39,7 @@ import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.service.AccountFeesDto;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.business.service.LoanPerformanceHistoryDto;
 import org.mifos.accounts.loan.business.service.LoanService;
@@ -99,6 +87,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
@@ -106,6 +95,7 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -124,12 +114,23 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_RANGE_IS_NOT_MET;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_RANGE_IS_NOT_MET;
 
 /**
  * Implementation of {@link LoanServiceFacade} for web application usage.
@@ -863,19 +864,13 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         return new ArrayList<AccountStatusChangeHistoryEntity>(loan.getAccountStatusChangeHistory());
     }
 
-    public Money getTotalEarlyRepayAmount(String globalAccountNum) {
-
-        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
-        return loan.getTotalEarlyRepayAmount();
-    }
-
     @Override
     public void makeEarlyRepayment(String globalAccountNum, String earlyRepayAmountStr, String receiptNumber,
-            java.sql.Date receiptDate, String paymentTypeId, Short userId) throws AccountException {
+                                   java.sql.Date receiptDate, String paymentTypeId, Short userId, boolean waiveInterest) throws AccountException {
 
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
         Money earlyRepayAmount = new Money(loan.getCurrency(), earlyRepayAmountStr);
-        loan.makeEarlyRepayment(earlyRepayAmount, receiptNumber, receiptDate, paymentTypeId, userId);
+        loan.makeEarlyRepayment(earlyRepayAmount, receiptNumber, receiptDate, paymentTypeId, userId, waiveInterest);
     }
 
     public LoanInformationDto getLoanInformationDto(String globalAccountNum, UserContext userContext) throws ServiceException {
@@ -1081,5 +1076,15 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             loanAccountDetailsViewList.add(loandetails);
         }
         return loanAccountDetailsViewList;
+    }
+
+    @Override
+    public RepayLoanDto getRepaymentDetails(String globalAccountNumber, Short localeId, AcceptedPaymentTypePersistence acceptedPaymentTypePersistence) throws PersistenceException {
+        LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNumber);
+        Money repaymentAmount = loan.getEarlyRepayAmount();
+        Money waivedRepaymentAmount = repaymentAmount.subtract(loan.waiverAmount());
+        return new RepayLoanDto(repaymentAmount, waivedRepaymentAmount,
+                acceptedPaymentTypePersistence.getAcceptedPaymentTypesForATransaction(localeId, TrxnTypes.loan_repayment.getValue()),
+                loan.shouldWaiverInterest());
     }
 }

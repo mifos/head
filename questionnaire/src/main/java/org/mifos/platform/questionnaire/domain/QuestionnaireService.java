@@ -26,6 +26,7 @@ import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
+import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 
@@ -67,4 +68,10 @@ public interface QuestionnaireService {
     Integer uploadPPIQuestionGroup(String country);
 
     Integer saveQuestionGroupInstance(QuestionGroupInstanceDto questionGroupInstanceDto);
+
+    // Added for data migration. Shouldn't be used outside.
+    Integer getSectionQuestionId(String sectionName, Integer questionId, Integer questionGroupId);
+
+    // Added for data migration. Shouldn't be used outside.
+    Integer defineQuestion(QuestionDto questionDto);
 }

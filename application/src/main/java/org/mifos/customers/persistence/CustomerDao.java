@@ -20,10 +20,6 @@
 
 package org.mifos.customers.persistence;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -32,6 +28,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
@@ -63,6 +60,10 @@ import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.security.util.UserContext;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  *
@@ -227,4 +228,6 @@ public interface CustomerDao {
     void checkPermissionForDefaultFeeRemovalFromLoan(UserContext userContext, CustomerBO customer) throws CustomerException;
 
     List<PersonnelLevelEntity> retrievePersonnelLevels();
+
+    List<CustomerCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
 }

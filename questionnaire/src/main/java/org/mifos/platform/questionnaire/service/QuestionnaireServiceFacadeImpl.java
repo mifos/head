@@ -23,6 +23,7 @@ package org.mifos.platform.questionnaire.service;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,6 +144,16 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     @Override
     public Integer saveQuestionGroupInstance(QuestionGroupInstanceDto questionGroupInstanceDto) {
         return questionnaireService.saveQuestionGroupInstance(questionGroupInstanceDto);
+    }
+
+    @Override
+    public Integer getSectionQuestionId(String sectionName, Integer questionId, Integer questionGroupId) {
+        return questionnaireService.getSectionQuestionId(sectionName, questionId, questionGroupId);
+    }
+
+    @Override
+    public Integer createQuestion(QuestionDto questionDto) {
+        return questionnaireService.defineQuestion(questionDto);
     }
 
     private EventSourceDto getEventSource(String event, String source) {

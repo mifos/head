@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.builders.QuestionDtoBuilder;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.exceptions.ValidationException;
@@ -34,6 +35,7 @@ import org.mifos.platform.questionnaire.matchers.QuestionDetailMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 import org.mockito.Mock;
@@ -331,6 +333,16 @@ public class QuestionnaireServiceFacadeTest {
         Integer qgInstanceId = questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto);
         assertThat(qgInstanceId, is(1234));
         verify(questionnaireService).saveQuestionGroupInstance(questionGroupInstanceDto);
+    }
+    
+    @Test
+    public void testSaveQuestionDto() {
+        QuestionDtoBuilder questionDtoBuilder = new QuestionDtoBuilder();
+        QuestionDto questionDto = questionDtoBuilder.withTitle("Ques1").withType(QuestionType.FREETEXT).build();
+        when(questionnaireService.defineQuestion(questionDto)).thenReturn(1234);
+        Integer questionId = questionnaireServiceFacade.createQuestion(questionDto);
+        assertThat(questionId, is(1234));
+        verify(questionnaireService).defineQuestion(questionDto);
     }
     
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail() {

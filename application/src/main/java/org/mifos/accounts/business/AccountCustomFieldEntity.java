@@ -20,17 +20,28 @@
 
 package org.mifos.accounts.business;
 
+import org.mifos.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.framework.business.AbstractEntity;
+import org.mifos.framework.exceptions.ApplicationException;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import org.mifos.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.framework.business.AbstractEntity;
-import org.mifos.framework.exceptions.ApplicationException;
 
+@NamedQueries(
+ {
+  @NamedQuery(
+    name="AccountCustomFieldEntity.getResponses",
+    query="from AccountCustomFieldEntity as acfe where acfe.fieldId = :CUSTOM_FIELD_ID"
+  )
+ }
+)
 @Entity
 @Table(name = "account_custom_field")
 public class AccountCustomFieldEntity extends AbstractEntity {
@@ -96,4 +107,9 @@ public class AccountCustomFieldEntity extends AbstractEntity {
     public void save(AccountCustomFieldEntity accountCustomFieldEntity) throws ApplicationException {
         new SavingsPersistence().createOrUpdate(accountCustomFieldEntity);
     }
+
+    public Integer getAccountId() {
+        return account.getAccountId();
+    }
+
 }

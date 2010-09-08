@@ -453,7 +453,7 @@ public class CustomerAccountBO extends AccountBO {
     @Override
     public void waiveAmountOverDue(@SuppressWarnings("unused") final WaiveEnum chargeType) throws AccountException {
         Money chargeWaived = new Money(getCurrency());
-        List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
+        List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForNextInstallmentAndArrears();
         accountActionDateList.remove(accountActionDateList.size() - 1);
         for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
             chargeWaived = chargeWaived.add(((CustomerScheduleEntity) accountActionDateEntity).waiveCharges());

@@ -73,4 +73,8 @@ public class Section implements Serializable {
     public void setSequenceNumber(Integer sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
     }
+
+    public boolean isNewSection() {
+        return id == null || id == 0;
+    }
 }

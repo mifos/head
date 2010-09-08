@@ -33,4 +33,10 @@
         ]]>
     </query>
 
+    <query name="CustomerCustomFieldEntity.getResponses">
+        <![CDATA[
+        from CustomerCustomFieldEntity as ccfe
+        where ccfe.fieldId = :CUSTOM_FIELD_ID ]]>
+    </query>
+
 </hibernate-mapping>

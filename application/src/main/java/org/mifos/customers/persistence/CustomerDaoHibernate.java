@@ -20,20 +20,6 @@
 
 package org.mifos.customers.persistence;
 
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
@@ -65,6 +51,7 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
@@ -96,12 +83,12 @@ import org.mifos.customers.util.helpers.CustomerNoteDto;
 import org.mifos.customers.util.helpers.CustomerPositionDto;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.customers.util.helpers.GroupDisplayDto;
 import org.mifos.customers.util.helpers.LoanCycleCounter;
 import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.HibernateSearchException;
@@ -113,6 +100,20 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -1647,6 +1648,13 @@ public class CustomerDaoHibernate implements CustomerDao {
     @Override
     public List<PersonnelLevelEntity> retrievePersonnelLevels() {
         return doFetchListOfMasterDataFor(PersonnelLevelEntity.class);
+    }
+
+    @Override
+    public List<CustomerCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
+        return (List<CustomerCustomFieldEntity>) genericDao.executeNamedQuery("CustomerCustomFieldEntity.getResponses", queryParameters);
     }
 
     @Override

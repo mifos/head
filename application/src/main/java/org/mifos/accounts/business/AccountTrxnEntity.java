@@ -165,7 +165,7 @@ public abstract class AccountTrxnEntity extends AbstractEntity {
         return personnel;
     }
 
-    public void addFinancialTransction(final FinancialTransactionBO financialTransaction) {
+    public void addFinancialTransaction(final FinancialTransactionBO financialTransaction) {
         this.financialTransactions.add(financialTransaction);
     }
 

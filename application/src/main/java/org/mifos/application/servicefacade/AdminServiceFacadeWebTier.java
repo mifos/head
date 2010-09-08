@@ -1034,7 +1034,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         try {
             Short transactionId = transactionType.getValue();
             List<AcceptedPaymentType> paymentTypeList = paymentTypePersistence
-                    .getAcceptedPaymentTypesForATransaction(transactionId);
+                    .getAcceptedPaymentTypesForATransaction(transactionId, TrxnTypes.loan_repayment);
 
             List<PaymentTypeDto> inList = new ArrayList<PaymentTypeDto>(payments);
             List<PaymentTypeDto> outList = new ArrayList<PaymentTypeDto>();

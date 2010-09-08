@@ -22,10 +22,12 @@ package org.mifos.platform.questionnaire.exceptions;
 
 import org.mifos.framework.exceptions.SystemException;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static org.apache.commons.lang.StringUtils.startsWithIgnoreCase;
 import static org.mifos.platform.util.CollectionUtils.isEmpty;
 
 @SuppressWarnings("PMD")
@@ -34,6 +36,7 @@ public class ValidationException extends SystemException {
     private static final long serialVersionUID = -8094463668575047971L;
     private List<ValidationException> childExceptions;
     protected final String questionTitle;
+    private static final String MIFOS_PACKAGE_PREFIX = "org.mifos";
 
     public ValidationException(String key) {
         this(key, null);
@@ -49,19 +52,6 @@ public class ValidationException extends SystemException {
         childExceptions.add(validationException);
     }
 
-    @Override
-    public StackTraceElement[] getStackTrace() {
-        StackTraceElement[] stackTraceElements = super.getStackTrace();
-        if (containsChildExceptions()) {
-            List<StackTraceElement> stackTraceElementList = new ArrayList<StackTraceElement>();
-            for (ValidationException validationException : childExceptions) {
-                stackTraceElementList.addAll(asList(validationException.getStackTrace()));
-            }
-            stackTraceElements = stackTraceElementList.toArray(new StackTraceElement[childExceptions.size()]);
-        }
-        return stackTraceElements;
-    }
-
     public List<ValidationException> getChildExceptions() {
         return childExceptions;
     }
@@ -73,4 +63,47 @@ public class ValidationException extends SystemException {
     public String getQuestionTitle() {
         return questionTitle;
     }
+
+    @Override
+    public void printStackTrace() {
+        System.err.println(getStackTraceString());
+    }
+
+    @Override
+    public void printStackTrace(PrintStream printStream) {
+        printStream.println(getStackTraceString());
+    }
+
+    @Override
+    public void printStackTrace(PrintWriter printWriter) {
+        printWriter.println(getStackTraceString());
+    }
+
+    public String getStackTraceString() {
+        StringBuilder buffer = new StringBuilder();
+        makeStackTrace(buffer, getStackTrace(), getKey());
+        if (childExceptions != null) {
+            for (ValidationException childException : childExceptions) {
+                makeStackTrace(buffer, childException.getStackTrace(), childException.getKey());
+            }
+        }
+        return buffer.toString();
+    }
+
+    // Filters 'noise' frames from the stack trace by including only the frames from the 'mifos' code base
+    private void makeStackTrace(StringBuilder buffer, StackTraceElement[] stackTraceElements, String key) {
+        buffer.append(key);
+        if (stackTraceElements != null) {
+            for (StackTraceElement stackTraceElement : stackTraceElements) {
+                String stackFrameStr = stackTraceElement.toString();
+                if (startsWithIgnoreCase(stackFrameStr, MIFOS_PACKAGE_PREFIX)) {
+                    buffer.append("\n   at ").append(stackFrameStr);
+                }
+            }
+        } else {
+            buffer.append("\n   <no stack trace available>");
+        }
+        buffer.append("\n");
+    }
+
 }

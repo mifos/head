@@ -21,11 +21,11 @@
 package org.mifos.application.master.persistence;
 
 import org.mifos.application.questionnaire.migration.QuestionnaireMigration;
-import org.mifos.customers.surveys.business.Survey;
-import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.customers.surveys.persistence.SurveysPersistence;
-import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.persistence.Upgrade;
+import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -34,39 +34,42 @@ import java.util.List;
 
 public class Upgrade1283341654 extends Upgrade {
     private QuestionnaireMigration questionnaireMigration;
-    private SurveysPersistence surveysPersistence;
+    private MifosLogger mifosLogger;
 
     public Upgrade1283341654() {
         super();
-        initializeDependencies();
     }
 
     // Should only be used from tests to inject mocks
-    public Upgrade1283341654(QuestionnaireMigration questionnaireMigration, SurveysPersistence surveysPersistence) {
+    public Upgrade1283341654(QuestionnaireMigration questionnaireMigration, MifosLogger mifosLogger) {
         this.questionnaireMigration = questionnaireMigration;
-        this.surveysPersistence = surveysPersistence;
+        this.mifosLogger = mifosLogger;
     }
 
     @Override
     public void upgrade(Connection connection) throws IOException, SQLException {
-        try {
-            migrateSurveys();
-        } catch (PersistenceException e) {
-            throw new SQLException(e);
-        }
+        migrateSurveys();
+        migrateAdditionalFields();
     }
 
-    private void migrateSurveys() throws PersistenceException {
-        migrateSurveys(SurveyType.CLIENT);
+    // Intended to be invoked from MigrateAction for manual migration of surveys
+    public List<Integer> migrateSurveys() {
+        return questionnaireMigration.migrateSurveys();
     }
 
-    private List<Integer> migrateSurveys(SurveyType surveyType) throws PersistenceException {
-        List<Survey> surveys = surveysPersistence.retrieveSurveysByType(surveyType);
-        return questionnaireMigration.migrateSurveys(surveys);
+    // Intended to be invoked from MigrateAction for manual migration of additional fields
+    public List<Integer> migrateAdditionalFields() {
+        return questionnaireMigration.migrateAdditionalFields();
     }
 
     private void initializeDependencies() {
-        questionnaireMigration = (QuestionnaireMigration) upgradeContext.getBean("questionnaireMigration");
-        surveysPersistence = (SurveysPersistence) upgradeContext.getBean("surveysPersistence");
+        if (questionnaireMigration == null) questionnaireMigration = (QuestionnaireMigration) upgradeContext.getBean("questionnaireMigration");
+        if (mifosLogger == null) mifosLogger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
+    }
+
+    @Override
+    public void setUpgradeContext(ApplicationContext upgradeContext) {
+        super.setUpgradeContext(upgradeContext);
+        initializeDependencies();
     }
 }

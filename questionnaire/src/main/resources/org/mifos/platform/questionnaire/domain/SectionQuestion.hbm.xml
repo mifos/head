@@ -18,12 +18,15 @@
 		    class="org.mifos.platform.questionnaire.domain.QuestionEntity"
 		    access="field"/>
 	</class>
-    <sql-query name="SectionQuestion.retrieveIdFromQuestionGroupIdQuestionIdSectionName">
-        <return-scalar column="sectionQuestionId" type="integer"/>
-              <![CDATA[
-                    select sec_ques.id as sectionQuestionId from sections_questions sec_ques, sections sec
-                    where sec_ques.section_id = sec.id and sec.question_group_id = :QUESTION_GROUP_ID and
-                    sec.name = :SECTION_NAME and sec_ques.question_id = :QUESTION_ID
+    <query name="SectionQuestion.retrieveIdFromQuestionGroupIdQuestionIdSectionName">
+              <![CDATA[select sectionQuestion.id from SectionQuestion as sectionQuestion, QuestionGroup as questionGroup join questionGroup.sections section
+                       where section = sectionQuestion.section and questionGroup.id = :QUESTION_GROUP_ID and section.name = :SECTION_NAME and
+                       sectionQuestion.question.questionId = :QUESTION_ID
               ]]>
-    </sql-query>
+    </query>
+    <query name="SectionQuestion.retrieveFromQuestionIdSectionId">
+              <![CDATA[from SectionQuestion as sectionQuestion where sectionQuestion.question.questionId = :QUESTION_ID
+                        and sectionQuestion.section.id = :SECTION_ID
+              ]]>
+    </query>
 </hibernate-mapping>
