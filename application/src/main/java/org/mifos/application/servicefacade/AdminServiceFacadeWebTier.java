@@ -114,6 +114,7 @@ import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.ProductTypeDto;
+import org.mifos.dto.domain.ReportCategoryDto;
 import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
@@ -141,6 +142,8 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.reports.business.ReportsCategoryBO;
+import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
@@ -1857,5 +1860,40 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    @Override
+    public List<ReportCategoryDto> retrieveReportCategories() {
+
+        List<ReportCategoryDto> reportCategories = new ArrayList<ReportCategoryDto>();
+
+        List<ReportsCategoryBO> allCategories = new ReportsPersistence().getAllReportCategories();
+        for (ReportsCategoryBO category : allCategories) {
+            reportCategories.add(category.toDto());
+        }
+
+        return reportCategories;
+    }
+
+    @Override
+    public void createReportsCategory(ReportCategoryDto reportCategory) {
+
+        ReportsCategoryBO newReportCategory = new ReportsCategoryBO();
+        newReportCategory.setReportCategoryName(reportCategory.getName());
+        try {
+            new ReportsPersistence().createOrUpdate(newReportCategory);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    @Override
+    public ReportCategoryDto retrieveReportCategory(Integer reportCategoryId) {
+
+        ReportsCategoryBO reportsCategoryBO = new ReportsPersistence().getReportCategoryByCategoryId(reportCategoryId.shortValue());
+        return reportsCategoryBO.toDto();
     }
 }

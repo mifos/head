@@ -30,6 +30,7 @@ import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.ProductTypeDto;
+import org.mifos.dto.domain.ReportCategoryDto;
 import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
@@ -149,4 +150,12 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     List<AuditLogDto> retrieveLoanProductAuditLogs(Integer productId);
 
+    @PreAuthorize("isFullyAuthenticated()")
+    List<ReportCategoryDto> retrieveReportCategories();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void createReportsCategory(ReportCategoryDto reportCategory);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    ReportCategoryDto retrieveReportCategory(Integer reportCategoryId);
 }
