@@ -83,6 +83,13 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
+/**
+ * @deprecated this entire class will soon be no longer used and will be deleted after localisation of messages.properties files is complete.
+ *
+ * note: all struts/jsp and tests around this will also be removed when view and define loan products links are switched over to use ftl/spring.
+ */
+@Deprecated
+
 public class LoanPrdAction extends BaseAction {
     private MifosLogger prdDefLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
     private LoanPrdBusinessService loanPrdBusinessService;

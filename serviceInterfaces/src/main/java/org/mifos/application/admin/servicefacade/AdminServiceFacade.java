@@ -62,12 +62,6 @@ public interface AdminServiceFacade {
     List<ProductDisplayDto> retrieveLoanProducts();
 
     @PreAuthorize("isFullyAuthenticated()")
-    LoanProductFormDto retrieveLoanProductFormReferenceData();
-
-    @PreAuthorize("isFullyAuthenticated()")
-    PrdOfferingDto createLoanProduct(LoanProductRequest loanProduct);
-
-    @PreAuthorize("isFullyAuthenticated()")
     List<ProductDisplayDto> retrieveSavingsProducts();
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_PRODUCT_MIX')")
@@ -134,15 +128,25 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CAN_CREATE_NEW_SAVINGS_PRODUCT', 'ROLE_CAN_EDIT_SAVINGS_PRODUCT')")
     SavingsProductFormDto retrieveSavingsProductFormReferenceData();
 
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CAN_CREATE_NEW_LOAN_PRODUCT', 'ROLE_CAN_EDIT_LOAN_PRODUCT')")
+    LoanProductFormDto retrieveLoanProductFormReferenceData();
+
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CREATE_NEW_SAVINGS_PRODUCT')")
     PrdOfferingDto createSavingsProduct(SavingsProductDto savingsProductRequest);
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CREATE_NEW_LOAN_PRODUCT')")
+    PrdOfferingDto createLoanProduct(LoanProductRequest loanProduct);
+
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_EDIT_SAVINGS_PRODUCT')")
     PrdOfferingDto updateSavingsProduct(SavingsProductDto savingsProduct);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_EDIT_LOAN_PRODUCT')")
+    PrdOfferingDto updateLoanProduct(LoanProductRequest loanProductRequest);
 
     @PreAuthorize("isFullyAuthenticated()")
     List<AuditLogDto> retrieveSavingsProductAuditLogs(Integer productId);
 
     @PreAuthorize("isFullyAuthenticated()")
-    PrdOfferingDto updateLoanProduct(LoanProductRequest loanProductRequest);
+    List<AuditLogDto> retrieveLoanProductAuditLogs(Integer productId);
+
 }

@@ -1843,4 +1843,19 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             throw new MifosRuntimeException(e);
         }
     }
+
+    @Override
+    public List<AuditLogDto> retrieveLoanProductAuditLogs(Integer productId) {
+        List<AuditLogDto> auditLogDtos = new ArrayList<AuditLogDto>();
+        AuditBusinessService auditBusinessService = new AuditBusinessService();
+        try {
+            List<AuditLogView> auditLogs = auditBusinessService.getAuditLogRecords(EntityType.LOANPRODUCT.getValue(), productId);
+            for (AuditLogView auditLogView : auditLogs) {
+                auditLogDtos.add(auditLogView.toDto());
+            }
+            return auditLogDtos;
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
 }
