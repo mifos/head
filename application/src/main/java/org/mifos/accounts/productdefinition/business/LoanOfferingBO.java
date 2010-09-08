@@ -1282,6 +1282,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     public LoanProductRequest toFullDto() {
         ProductDetailsDto details = super.toDetailsDto();
         Integer currencyId = super.getCurrency().getCurrencyId().intValue();
+        String currencyCode = super.getCurrency().getCurrencyName();
         boolean includeInLoanCounter = YesNoFlag.YES.getValue().equals(this.loanCounter);
         boolean waiverInterestBool = YesNoFlag.YES.getValue().equals(this.waiverInterest);
 
@@ -1350,23 +1351,36 @@ public class LoanOfferingBO extends PrdOfferingBO {
         Integer interestRateType = this.interestTypes.getId().intValue();
         MinMaxDefaultDto interestRateRange = MinMaxDefaultDto.create(this.minInterestRate, this.maxInterestRate, this.defInterestRate);
 
+        List<String> fees = new ArrayList<String>();
         List<Integer> applicableFees = new ArrayList<Integer>();
         for (LoanOfferingFeesEntity fee : this.loanOfferingFees) {
             applicableFees.add(fee.getFees().getFeeId().intValue());
+            fees.add(fee.getFees().getFeeName());
         }
 
+        List<String> funds = new ArrayList<String>();
         List<Integer> applicableFunds = new ArrayList<Integer>();
         for (LoanOfferingFundEntity fund : this.loanOfferingFunds) {
             applicableFunds.add(fund.getFund().getFundId().intValue());
+            funds.add(fund.getFund().getFundName());
         }
 
         Integer interestGlCodeId = this.interestGLcode.getGlcodeId().intValue();
+        String interestGlCodeValue = this.interestGLcode.getGlcode();
         Integer principalClCodeId = this.principalGLcode.getGlcodeId().intValue();
+        String principalGlCodeValue = this.principalGLcode.getGlcode();
 
         AccountingDetailsDto accountDetails = new AccountingDetailsDto(applicableFunds, interestGlCodeId, principalClCodeId);
 
         LoanProductRequest loanProductDto = new LoanProductRequest(details, includeInLoanCounter, waiverInterestBool,
                 currencyId, loanAmountDetails, interestRateType, interestRateRange, repaymentDetails, applicableFees, accountDetails);
+        loanProductDto.setMultiCurrencyEnabled(false);
+        loanProductDto.setCurrencyCode(currencyCode);
+        loanProductDto.setInterestRateTypeName(this.interestTypes.getName());
+        loanProductDto.setFees(fees);
+        loanProductDto.setFunds(funds);
+        loanProductDto.setInterestGlCodeValue(interestGlCodeValue);
+        loanProductDto.setPrincipalGlCodeValue(principalGlCodeValue);
 
         return loanProductDto;
     }

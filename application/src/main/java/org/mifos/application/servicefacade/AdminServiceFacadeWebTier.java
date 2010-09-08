@@ -1822,7 +1822,11 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     @Override
     public LoanProductRequest retrieveLoanProductDetails(Integer productId) {
         LoanOfferingBO loanProduct = this.loanProductDao.findById(productId);
-        return loanProduct.toFullDto();
+        boolean multiCurrencyEnabled = AccountingRules.isMultiCurrencyEnabled();
+
+        LoanProductRequest productDetails = loanProduct.toFullDto();
+        productDetails.setMultiCurrencyEnabled(multiCurrencyEnabled);
+        return productDetails;
     }
 
     @Override

@@ -21,6 +21,8 @@
 package org.mifos.ui.core.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
@@ -48,6 +50,64 @@ public class ProductModelAndViewPopulator {
         modelAndView.addObject("startDateFormatted", startDateFormatted);
         modelAndView.addObject("endDateFormatted", endDateFormatted);
         modelAndView.addObject("applicableTo", applicableTo);
+    }
+
+    public void populateModelAndViewForPreview(LoanProductFormBean loanProduct, ModelAndView modelAndView) {
+        GeneralProductBean bean = loanProduct.getGeneralDetails();
+
+        populateProductDetails(bean, modelAndView);
+
+        // loan product specific
+        if (loanProduct.isMultiCurrencyEnabled()) {
+            String currencyCode = loanProduct.getCurrencyOptions().get(loanProduct.getSelectedCurrency());
+            modelAndView.addObject("currencyCode", currencyCode);
+        }
+        String interestRateCalculation = loanProduct.getInterestRateCalculationTypeOptions().get(loanProduct.getSelectedInterestRateCalculationType());
+
+        List<String> fees = populateFees(loanProduct);
+
+        List<String> funds = populateFunds(loanProduct);
+
+        // accounting
+        String principalGlCode = loanProduct.getPrincipalGeneralLedgerOptions().get(loanProduct.getSelectedPrincipal());
+        String interestGlCode = loanProduct.getInterestGeneralLedgerOptions().get(loanProduct.getSelectedInterest());
+
+        modelAndView.addObject("interestRateCalculation", interestRateCalculation);
+        modelAndView.addObject("fees", fees);
+        modelAndView.addObject("funds", funds);
+
+        modelAndView.addObject("principalGlCode", principalGlCode);
+        modelAndView.addObject("interestGlCode", interestGlCode);
+    }
+
+    private List<String> populateFunds(LoanProductFormBean loanProduct) {
+
+        List<String> funds = new ArrayList<String>();
+
+        if (loanProduct.getSelectedFunds() != null) {
+            for (String selectedFund : loanProduct.getSelectedFunds()) {
+                if (loanProduct.getApplicableFundOptions().containsKey(selectedFund)) {
+                    funds.add(loanProduct.getApplicableFundOptions().get(selectedFund));
+                } else if (loanProduct.getSelectedFundOptions().containsKey(selectedFund)) {
+                    funds.add(loanProduct.getSelectedFundOptions().get(selectedFund));
+                }
+            }
+        }
+        return funds;
+    }
+
+    private List<String> populateFees(LoanProductFormBean loanProduct) {
+        List<String> fees = new ArrayList<String>();
+        if (loanProduct.getSelectedFees() != null) {
+            for (String selectedFee : loanProduct.getSelectedFees()) {
+                if (loanProduct.getApplicableFeeOptions().containsKey(selectedFee)) {
+                    fees.add(loanProduct.getApplicableFeeOptions().get(selectedFee));
+                } else if (loanProduct.getSelectedFeeOptions().containsKey(selectedFee)) {
+                    fees.add(loanProduct.getSelectedFeeOptions().get(selectedFee));
+                }
+            }
+        }
+        return fees;
     }
 
 }
