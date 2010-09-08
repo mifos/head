@@ -155,12 +155,14 @@ public class LoanProductPreviewController {
             modelAndView.addObject("editFormview", editFormview);
             populateModelAndViewForPreview(loanProduct, modelAndView);
         } else {
-            LoanProductRequest loanProductRequest = loanProductFormBeanAssembler.toLoanProductDto(loanProduct);
-            if ("defineLoanProduct".equals(editFormview)) {
+            if ("defineLoanProducts".equals(editFormview)) {
+                LoanProductRequest loanProductRequest = loanProductFormBeanAssembler.toLoanProductDto(loanProduct);
                 PrdOfferingDto product = adminServiceFacade.createLoanProduct(loanProductRequest);
                 modelAndView.setViewName("redirect:/confirmLoanProduct.ftl");
                 modelAndView.addObject("product", product);
             } else {
+                loanProduct.removeMultiSelectItems();
+                LoanProductRequest loanProductRequest = loanProductFormBeanAssembler.toLoanProductDto(loanProduct);
                 PrdOfferingDto product = adminServiceFacade.updateLoanProduct(loanProductRequest);
                 modelAndView.setViewName("redirect:/viewEditLoanProduct.ftl?productId="+ product.getPrdOfferingId());
                 modelAndView.addObject("product", product);

@@ -417,6 +417,35 @@ public class LoanProductFormBean {
         }
     }
 
+    public void removeMultiSelectItems() {
+
+        if (this.selectedFees != null && this.selectedFees.length == 1) {
+            for (String selectedFee : this.selectedFees) {
+                if (containsKey(this.applicableFees, selectedFee)) {
+                    this.selectedFees = null;
+                }
+            }
+        }
+
+        if (this.selectedFunds != null && this.selectedFunds.length == 1) {
+            for (String selectedFund : this.selectedFunds) {
+                if (containsKey(this.applicableFunds, selectedFund)) {
+                    this.selectedFunds = null;
+                }
+            }
+        }
+    }
+
+    private boolean containsKey(String[] unselectedKey, String key) {
+        boolean found = false;
+        for (String item : unselectedKey) {
+            if (item.equals(key)) {
+                found = true;
+            }
+        }
+        return found;
+    }
+
     public String getSelectedCurrency() {
         return this.selectedCurrency;
     }

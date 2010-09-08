@@ -47,6 +47,7 @@ import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
+import org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
@@ -57,6 +58,7 @@ import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessServ
 import org.mifos.accounts.productdefinition.business.service.ProductCategoryBusinessService;
 import org.mifos.accounts.productdefinition.business.service.ProductService;
 import org.mifos.accounts.productdefinition.business.service.SavingsPrdBusinessService;
+import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
@@ -79,7 +81,10 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
+import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -1636,7 +1641,32 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                     newLoanProductDetails.getDescription(), newLoanProductDetails.getPrdCategory(), newLoanProductDetails.getStartDate(), newLoanProductDetails.getEndDate(),
                     newLoanProductDetails.getPrdApplicableMaster(), newLoanProductDetails.getPrdStatus());
 
-//            loanProductForUpdate.updateLoanDetails();
+            loanProductForUpdate.update(newLoanProductDetails.isIncludeInLoanCounter(), newLoanProductDetails.isInterestWaived());
+
+            if (newLoanProductDetails.isLoanAmountTypeSameForAllLoan()) {
+                loanProductForUpdate.updateLoanAmountDetails(newLoanProductDetails.getEligibleLoanAmountSameForAllLoan());
+            } else if (newLoanProductDetails.isLoanAmountTypeAsOfLastLoanAmount()) {
+                loanProductForUpdate.updateLoanAmountByLastLoanDetails(newLoanProductDetails.getLoanAmountFromLastLoan());
+            } else if (newLoanProductDetails.isLoanAmountTypeFromLoanCycle()) {
+                loanProductForUpdate.updateLoanAmountLoanCycleDetails(newLoanProductDetails.getLoanAmountFromLoanCycle());
+            }
+
+            loanProductForUpdate.updateInterestRateDetails(newLoanProductDetails.getMinInterestRate(), newLoanProductDetails.getMaxInterestRate(), newLoanProductDetails.getDefInterestRate());
+
+            PrdOfferingMeetingEntity entity = newLoanProductDetails.getLoanOfferingMeeting();
+            MeetingBO meeting = new MeetingBO(entity.getMeeting().getRecurrenceType(), entity.getMeeting().getRecurAfter(), entity.getMeeting().getStartDate() ,MeetingType.LOAN_INSTALLMENT);
+            loanProductForUpdate.updateRepaymentDetails(meeting, newLoanProductDetails.getGracePeriodType(), newLoanProductDetails.getGracePeriodDuration());
+
+            if (newLoanProductDetails.isNoOfInstallTypeSameForAllLoan()) {
+                loanProductForUpdate.updateInstallmentDetails(newLoanProductDetails.getNoOfInstallSameForAllLoan());
+            } else if (newLoanProductDetails.isNoOfInstallTypeFromLastLoan()) {
+                loanProductForUpdate.updateInstallmentByLastLoanDetails(newLoanProductDetails.getNoOfInstallFromLastLoan());
+            } else if (newLoanProductDetails.isNoOfInstallTypeFromLoanCycle()) {
+                loanProductForUpdate.updateInstallmentLoanCycleDetails(newLoanProductDetails.getNoOfInstallFromLoanCycle());
+            }
+
+            loanProductForUpdate.updateFees(newLoanProductDetails.getLoanOfferingFees());
+            loanProductForUpdate.updateFunds(newLoanProductDetails.getLoanOfferingFunds());
 
             this.loanProductDao.save(loanProductForUpdate);
             transactionHelper.commitTransaction();

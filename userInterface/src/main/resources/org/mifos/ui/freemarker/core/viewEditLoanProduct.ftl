@@ -31,10 +31,10 @@
        		<div class="span-18 ">
            	<span class="orangeheading">${loanProductDetails.productDetails.name}</span><br /><br />
            	[#switch loanProductDetails.productDetails.status]
-            	[#case 2]
+            	[#case 1]
             	<span><img src="pages/framework/images/status_activegreen.gif" /></span>&nbsp;<span>[@spring.message "active" /]</span>
             	[#break]
-            	[#case 5]
+            	[#case 4]
             	<span><img src="pages/framework/images/status_closedblack.gif" /></span>&nbsp;<span>[@spring.message "inactive"/]</span>
             	[#break]
             [/#switch] 

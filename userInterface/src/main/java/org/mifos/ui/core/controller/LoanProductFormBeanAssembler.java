@@ -239,6 +239,11 @@ public class LoanProductFormBeanAssembler {
                 loanProductFormBean.getGeneralDetails().getShortName(), loanProductFormBean.getGeneralDetails()
                         .getDescription(), category, startDate, endDate, applicableFor);
         productDetailsDto.setId(loanProductFormBean.getGeneralDetails().getId());
+
+        if (StringUtils.isNotBlank(loanProductFormBean.getGeneralDetails().getSelectedStatus())) {
+            productDetailsDto.setStatus(Integer.valueOf(loanProductFormBean.getGeneralDetails().getSelectedStatus()));
+        }
+
         return productDetailsDto;
     }
 

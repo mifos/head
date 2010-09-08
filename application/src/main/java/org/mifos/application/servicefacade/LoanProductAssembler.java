@@ -84,8 +84,8 @@ public class LoanProductAssembler {
             boolean loanCycleCounter = loanProductRequest.isIncludeInLoanCycleCounter();
             boolean waiverInterest = loanProductRequest.isWaiverInterest();
 
-            PrdStatusEntity activeStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.SAVINGS_ACTIVE);
-            PrdStatusEntity inActiveStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.SAVINGS_INACTIVE);
+            PrdStatusEntity activeStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.LOAN_ACTIVE);
+            PrdStatusEntity inActiveStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.LOAN_INACTIVE);
 
             PrdStatusEntity selectedStatus = activeStatus;
             if (productDetails.getStatus() != null

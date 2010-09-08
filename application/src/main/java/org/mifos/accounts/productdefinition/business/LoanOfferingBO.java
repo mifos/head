@@ -79,6 +79,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 
 /**
  * A loan product is a set of rules (interest rate, number of installments, maximum amount, etc) which describes a
@@ -1368,5 +1369,98 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 currencyId, loanAmountDetails, interestRateType, interestRateRange, repaymentDetails, applicableFees, accountDetails);
 
         return loanProductDto;
+    }
+
+    public void updateInterestRateDetails(Double minInterestRate, Double maxInterestRate, Double defaultInterestRate) {
+        this.minInterestRate = minInterestRate;
+        this.maxInterestRate = maxInterestRate;
+        this.defInterestRate = defaultInterestRate;
+    }
+
+    public void update(boolean includeInLoanCounter, boolean interestWaived) {
+        setLoanCounter(includeInLoanCounter);
+        setWaiverInterest(interestWaived);
+    }
+
+    public void updateLoanAmountDetails(LoanAmountSameForAllLoanBO loanAmountSameForAllLoan) {
+        clearLoanAmountData();
+        setLoanAmountSameForAllLoan(loanAmountSameForAllLoan);
+    }
+
+    public void updateLoanAmountByLastLoanDetails(Set<LoanAmountFromLastLoanAmountBO> loanAmountFromLastLoanSet) {
+        clearLoanAmountData();
+        for (LoanAmountFromLastLoanAmountBO loanAmountFromLastLoanAmount : loanAmountFromLastLoanSet) {
+            addLoanAmountFromLastLoanAmount(loanAmountFromLastLoanAmount);
+        }
+    }
+
+    public void updateLoanAmountLoanCycleDetails(Set<LoanAmountFromLoanCycleBO> loanAmountFromLoanCycleSet) {
+        clearLoanAmountData();
+        for (LoanAmountFromLoanCycleBO loanAmountFromLoanCycleBO : loanAmountFromLoanCycleSet) {
+            addLoanAmountFromLoanCycle(loanAmountFromLoanCycleBO);
+        }
+    }
+
+    public void updateInstallmentDetails(NoOfInstallSameForAllLoanBO eligibleInstallmentSameForAllLoan) {
+        clearNoOfInstallmentsData();
+        setNoOfInstallSameForAllLoan(eligibleInstallmentSameForAllLoan);
+    }
+
+    public void updateInstallmentDetails(Set<NoOfInstallSameForAllLoanBO> noOfInstallSameForAllLoan) {
+        clearNoOfInstallmentsData();
+        for (NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoanBO : noOfInstallSameForAllLoan) {
+            setNoOfInstallSameForAllLoan(noOfInstallSameForAllLoanBO);
+        }
+    }
+
+    public void updateInstallmentByLastLoanDetails(Set<NoOfInstallFromLastLoanAmountBO> noOfInstallFromLastLoan) {
+        clearNoOfInstallmentsData();
+        for (NoOfInstallFromLastLoanAmountBO lastLoan : noOfInstallFromLastLoan) {
+            addNoOfInstallFromLastLoanAmount(lastLoan);
+        }
+    }
+
+    public void updateInstallmentLoanCycleDetails(Set<NoOfInstallFromLoanCycleBO> noOfInstallFromLoanCycle) {
+        clearNoOfInstallmentsData();
+        for (NoOfInstallFromLoanCycleBO byCycle : noOfInstallFromLoanCycle) {
+            addNoOfInstallFromLoanCycle(byCycle);
+        }
+    }
+
+    public void updateRepaymentDetails(MeetingBO loanProductMeeting, GracePeriodTypeEntity gracePeriodType, Short gracePeriodDuration) {
+
+        if (this.loanOfferingMeeting.getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId().equals(
+                loanProductMeeting.getMeetingDetails().getRecurrenceType().getRecurrenceId())) {
+            this.loanOfferingMeeting.getMeeting().getMeetingDetails().setRecurAfter(loanProductMeeting.getRecurAfter());
+        } else {
+           this.loanOfferingMeeting.setMeeting(loanProductMeeting);
+        }
+        this.gracePeriodType = gracePeriodType;
+        this.gracePeriodDuration = gracePeriodDuration;
+    }
+
+    public void updateFees(Set<LoanOfferingFeesEntity> fees) {
+
+        this.loanOfferingFees.clear();
+        if (fees != null) {
+            for (LoanOfferingFeesEntity fee : fees) {
+                try {
+                    if (isFrequencyMatchingOfferingFrequency(fee.getFees(), this.loanOfferingMeeting.getMeeting())) {
+                        addPrdOfferingFee(new LoanOfferingFeesEntity(this, fee.getFees()));
+                    }
+                } catch (ProductDefinitionException e) {
+                    throw new BusinessRuleException(e.getKey(), e);
+                }
+            }
+        }
+    }
+
+    public void updateFunds(Set<LoanOfferingFundEntity> funds) {
+        this.loanOfferingFunds.clear();
+        if (funds != null) {
+            for (LoanOfferingFundEntity fund : funds) {
+                addLoanOfferingFund(new LoanOfferingFundEntity(fund.getFund(), this));
+            }
+        }
     }
 }
