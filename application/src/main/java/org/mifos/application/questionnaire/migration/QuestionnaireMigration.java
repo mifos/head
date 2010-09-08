@@ -75,12 +75,29 @@ public class QuestionnaireMigration {
         this.customerDao = customerDao;
     }
 
-    public Integer migrateAdditionalFields(List<CustomFieldDefinitionEntity> customFields) {
+    public List<Integer> migrateAdditionalFields() {
+        List<Integer> questionGroupIds = new ArrayList<Integer>();
+        questionGroupIds.add(migrateAdditionalFieldsForCustomer());
+        return questionGroupIds;
+    }
+
+    private Integer migrateAdditionalFieldsForCustomer() {
+        List<CustomFieldDefinitionEntity> customFields = getCustomFieldsForClient();
         Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
         QuestionGroupDto questionGroupDto = questionnaireMigrationMapper.map(customFields, customFieldQuestionIdMap);
         Integer questionGroupId = questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
         migrateAdditionalFieldsResponses(customFields, questionGroupId, customFieldQuestionIdMap);
         return questionGroupId;
+    }
+
+    private List<CustomFieldDefinitionEntity> getCustomFieldsForClient() {
+        List<CustomFieldDefinitionEntity> customFields = new ArrayList<CustomFieldDefinitionEntity>(0);
+        try {
+            customFields = customerDao.retrieveCustomFieldEntitiesForClient();
+        } catch (Exception e) {
+            mifosLogger.error("Unable to retrieve custom fields for Create Client", e);
+        }
+        return customFields;
     }
 
     private void migrateAdditionalFieldsResponses(List<CustomFieldDefinitionEntity> customFields, Integer questionGroupId, Map<Short, Integer> customFieldQuestionIdMap) {

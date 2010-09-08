@@ -23,8 +23,6 @@ package org.mifos.application.master.persistence;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.questionnaire.migration.QuestionnaireMigration;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.surveys.business.Survey;
@@ -41,8 +39,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mifos.customers.surveys.business.CustomFieldUtils.getCustomerCustomField;
 import static org.mifos.customers.surveys.business.SurveyUtils.getSurvey;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -65,7 +63,7 @@ public class Upgrade1283341654Test {
 
     @Before
     public void setUp() {
-        upgrade1283341654 = new Upgrade1283341654(questionnaireMigration, surveysPersistence, customerDao, null);
+        upgrade1283341654 = new Upgrade1283341654(questionnaireMigration, surveysPersistence, null);
         calendar = Calendar.getInstance();
     }
 
@@ -85,15 +83,11 @@ public class Upgrade1283341654Test {
 
     @Test
     public void shouldMigrateAdditionalFields() throws IOException, SQLException {
-        CustomFieldDefinitionEntity customField1 = getCustomerCustomField("CustomField1", CustomFieldType.ALPHA_NUMERIC);
-        CustomFieldDefinitionEntity customField2 = getCustomerCustomField("CustomField2", CustomFieldType.DATE);
-        CustomFieldDefinitionEntity customField3 = getCustomerCustomField("CustomField3", CustomFieldType.NUMERIC);
-        List<CustomFieldDefinitionEntity> customFields = asList(customField1, customField2, customField3);
-        when(customerDao.retrieveCustomFieldEntitiesForClient()).thenReturn(customFields);
-        when(questionnaireMigration.migrateAdditionalFields(customFields)).thenReturn(3333);
-        Integer questionGroupId = upgrade1283341654.migrateAdditionalFields();
-        assertThat(questionGroupId, is(3333));
-        verify(customerDao).retrieveCustomFieldEntitiesForClient();
-        verify(questionnaireMigration).migrateAdditionalFields(customFields);
+        when(questionnaireMigration.migrateAdditionalFields()).thenReturn(asList(3333));
+        List<Integer> questionGroupIds = upgrade1283341654.migrateAdditionalFields();
+        assertThat(questionGroupIds, is(notNullValue()));
+        assertThat(questionGroupIds.size(), is(1));
+        assertThat(questionGroupIds.get(0), is(3333));
+        verify(questionnaireMigration).migrateAdditionalFields();
     }
 }

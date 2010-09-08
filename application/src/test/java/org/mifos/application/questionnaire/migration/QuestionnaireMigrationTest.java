@@ -146,6 +146,7 @@ public class QuestionnaireMigrationTest {
         CustomFieldDefinitionEntity customFieldDef2 = getCustomFieldDef(2, "CustomField2", CustomerLevel.CLIENT, CustomFieldType.DATE, EntityType.CLIENT);
         List<CustomFieldDefinitionEntity> customFields = asList(customFieldDef1, customFieldDef2);
         Map<Short,Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
+        when(customerDao.retrieveCustomFieldEntitiesForClient()).thenReturn(customFields);
         when(questionnaireMigrationMapper.map(customFields, customFieldQuestionIdMap)).thenReturn(questionGroupDto);
         when(questionnaireServiceFacade.createQuestionGroup(questionGroupDto)).thenReturn(QUESTION_GROUP_ID);
         ClientBO clientBO1 = SurveyUtils.getClientBO(11);
@@ -164,11 +165,14 @@ public class QuestionnaireMigrationTest {
         when(customerDao.getCustomFieldResponses(2)).thenReturn(customerResponses2);
         when(questionnaireMigrationMapper.map(QUESTION_GROUP_ID, customerResponses2, customFieldQuestionIdMap)).thenReturn(new QuestionGroupInstanceDto());
         when(questionnaireServiceFacade.saveQuestionGroupInstance(any(QuestionGroupInstanceDto.class))).thenReturn(0);
-        Integer questionGroupId = questionnaireMigration.migrateAdditionalFields(customFields);
-        assertThat(questionGroupId, is(QUESTION_GROUP_ID));
+        List<Integer> questionGroupIds = questionnaireMigration.migrateAdditionalFields();
+        assertThat(questionGroupIds, is(notNullValue()));
+        assertThat(questionGroupIds.size(), is(1));
+        assertThat(questionGroupIds.get(0), is(QUESTION_GROUP_ID));
         verify(questionnaireMigrationMapper).map(customFields, customFieldQuestionIdMap);
         verify(questionnaireServiceFacade).createQuestionGroup(questionGroupDto);
         verify(customerDao, times(2)).getCustomFieldResponses(anyInt());
+        verify(customerDao, times(1)).retrieveCustomFieldEntitiesForClient();
         verify(questionnaireMigrationMapper, times(2)).map(eq(QUESTION_GROUP_ID), Matchers.<List<CustomerCustomFieldEntity>>any(), eq(customFieldQuestionIdMap));
         verify(questionnaireServiceFacade, times(2)).saveQuestionGroupInstance(any(QuestionGroupInstanceDto.class));
     }
