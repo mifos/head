@@ -84,8 +84,6 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
         } catch(Exception ex) {
             throw new JobExecutionException(ex);
         }
-        // TODO QUARTZ: Add proper support for old task.xml file.
-        // getTaskHelper().execute(context.getScheduledFireTime().getTime());
     }
 
     /**

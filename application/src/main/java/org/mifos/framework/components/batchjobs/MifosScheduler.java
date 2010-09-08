@@ -28,32 +28,53 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.sql.DataSource;
 
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.DateTimeService;
-import org.quartz.CronTrigger;
-import org.quartz.JobDetail;
-import org.quartz.JobListener;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
-import org.quartz.TriggerListener;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobInstance;
 import org.springframework.batch.core.configuration.JobLocator;
+import org.springframework.batch.core.configuration.JobRegistry;
+import org.springframework.batch.core.configuration.JobFactory;
+import org.springframework.batch.core.configuration.support.MapJobRegistry;
+import org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor;
 import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.batch.core.explore.support.SimpleJobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.repository.dao.JdbcJobInstanceDao;
+import org.springframework.batch.core.repository.dao.JdbcJobExecutionDao;
+import org.springframework.batch.core.repository.dao.JdbcStepExecutionDao;
+import org.springframework.batch.core.repository.dao.JdbcExecutionContextDao;
+import org.springframework.batch.core.repository.support.SimpleJobRepository;
+import org.springframework.batch.core.job.SimpleJob;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.step.tasklet.TaskletStep;
+import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.scheduling.quartz.JobDetailBean;
+import org.springframework.orm.hibernate3.SessionFactoryUtils;
+import org.springframework.core.task.SyncTaskExecutor;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.support.incrementer.MySQLMaxValueIncrementer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -66,7 +87,6 @@ import edu.emory.mathcs.backport.java.util.Collections;
 public class MifosScheduler {
 
     private static final String BATCH_JOB_CLASS_PATH_PREFIX = "org.mifos.framework.components.batchjobs.helpers.";
-    private static final String LISTENERS_CLASS_PATH_PREFIX = "org.mifos.framework.components.batchjobs.listeners.";
     private Scheduler scheduler = null;
     private ConfigurableApplicationContext springTaskContext = null;
     private static MifosLogger logger = MifosLogManager.getLogger(MifosScheduler.class.getName());
@@ -100,76 +120,51 @@ public class MifosScheduler {
         return this.scheduler;
     }
 
-    /**
-     * Method schedules specified batch job to run accordingly to given cron expression, with given priority.
-     * Since quartz scheduler used in mifos is configured to use a single working thread, it's ensured that
-     * jobs with higher priority will execute before ones with lower priority.
-     *
-     * @param jobName - the name of job to be scheduled. It's read from batch jobs xml file and must be the same
-     * as the name of the Job class used to execute job's behaviour
-     * @param jobGroup - name of the batch jobs group to which this job will belong
-     * @param cronExpression - a cron expression. Important note: specifying both day-of-week and day-of-month
-     * is not completely implemented in current (1.8.3) quartz version - only one should be specified, with other
-     * being replaced by '?' character.
-     * @param jobPriority - can be any value between 1 and 10, the higher the value the higher job's priority
-     * @param jobListeners - a list of names of job listeners to be bound to this job. Names must match class names of
-     * listener implementations
-     * @param triggerListeners - a list of names of trigger listeners to be bound to this job's trigger. Names must
-     * match class names of listener implementations
-     * @throws TaskSystemException when something goes wrong
-     */
-    public void schedule(
-            String jobName,
-            String jobGroup,
-            String cronExpression,
-            int jobPriority,
-            List<String> jobListeners,
-            List<String> triggerListeners) throws TaskSystemException {
+    @Deprecated
+    public void schedule(final String jobName, Date initialTime, long delay,
+                         JobRegistry jobRegistry, final JobRepository jobRepository,
+                         Map jobData, ResourcelessTransactionManager transactionManager) throws TaskSystemException {
 
         try {
-            JobDetail jobDetail = new JobDetail();
-            jobDetail.setName(jobName);
-            jobDetail.setGroup(jobGroup);
-            jobDetail.setJobClass(Class.forName(BATCH_JOB_CLASS_PATH_PREFIX + jobName));
-            jobDetail.setRequestsRecovery(true);
-            for(String jobListener : jobListeners) {
-                jobDetail.addJobListener(jobListener);
-                instantiateJobListener(jobListener, false);
-            }
-            CronTrigger trigger = new CronTrigger();
-            trigger.setName(jobName);
-            trigger.setGroup(jobGroup);
-            trigger.setCronExpression(cronExpression);
-            trigger.setPriority(jobPriority);
-            for(String triggerListener : triggerListeners) {
-                trigger.addTriggerListener(triggerListener);
-                instantiateTriggerListener(triggerListener, false);
-            }
-            scheduler.scheduleJob(jobDetail, trigger);
-        }
-        catch (Exception e) {
+            final TaskletStep step = new TaskletStep();
+            step.setName(jobName);
+            Tasklet tasklet = (Tasklet) Class.forName(BATCH_JOB_CLASS_PATH_PREFIX + getHelperName(jobName)).newInstance();
+            step.setTasklet(tasklet);
+            step.setJobRepository(jobRepository);
+            step.setTransactionManager(transactionManager);
+            step.afterPropertiesSet();
+            jobRegistry.register(new JobFactory() {
+
+                @Override
+                public Job createJob() {
+                    SimpleJob job = new SimpleJob(jobName);
+                    job.setJobRepository(jobRepository);
+                    job.setRestartable(true);
+                    job.registerJobExecutionListener(new BatchJobListener());
+                    job.addStep(step);
+                    return job;
+                }
+
+                @Override
+                public String getJobName() {
+                    return jobName;
+                }
+            });
+        } catch (Exception e) {
             throw new TaskSystemException(e);
         }
-    }
 
-    @Deprecated
-    public void schedule(String jobName, Date initialTime, long delay) throws TaskSystemException {
-        JobDetail jobDetail = new JobDetail();
-        jobDetail.setName(jobName);
-        jobDetail.setGroup(Scheduler.DEFAULT_GROUP);
+        JobDetailBean jobDetailBean = new JobDetailBean();
+        jobDetailBean.setJobDataAsMap(jobData);
         try {
-            jobDetail.setJobClass(Class.forName(BATCH_JOB_CLASS_PATH_PREFIX + jobName));
+            jobDetailBean.setJobClass(Class.forName(BATCH_JOB_CLASS_PATH_PREFIX + jobName));
         } catch (ClassNotFoundException cnfe) {
             throw new TaskSystemException(cnfe);
         }
-        jobDetail.setRequestsRecovery(true);
-        try {
-            String jobListenerName = Class.forName(LISTENERS_CLASS_PATH_PREFIX + jobName + "Listener").getSimpleName();
-            jobDetail.addJobListener(jobListenerName);
-            instantiateJobListener(jobListenerName, false);
-        } catch (ClassNotFoundException cnfe) {
-            // do nothing
-        }
+        jobDetailBean.setName(jobName);
+        jobDetailBean.setGroup(Scheduler.DEFAULT_GROUP);
+        jobDetailBean.afterPropertiesSet();
+
         SimpleTrigger trigger = new SimpleTrigger();
         trigger.setName(jobName);
         trigger.setGroup(Scheduler.DEFAULT_GROUP);
@@ -177,69 +172,90 @@ public class MifosScheduler {
         trigger.setRepeatInterval(delay);
         trigger.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
         try {
-            String triggerListenerName = Class.forName(LISTENERS_CLASS_PATH_PREFIX + jobName + "TriggerListener").getSimpleName();
-            trigger.addTriggerListener(triggerListenerName);
-            instantiateTriggerListener(triggerListenerName, false);
-        } catch (ClassNotFoundException cnfe) {
-            // do nothing
-        }
-        try {
-            scheduler.scheduleJob(jobDetail, trigger);
+            scheduler.scheduleJob(jobDetailBean, trigger);
         } catch(SchedulerException se) {
             throw new TaskSystemException(se);
         }
     }
 
-    /**
-     * Adds a single instance of specified job listener to the scheduler. Calling this method
-     * with the same 'listener' argument more than once has no effect (there is a single instance of
-     * each listener).<br />
-     * If listener should be bound to a single job, it's name must be provided to the job
-     * during scheduling.
-     *
-     * @param listener - name of the job listener, it must match the name of a class implementing
-     * listeners's behavior.
-     * @param isGlobal - determines whether this listener should be bound to all jobs, or only to a specific one.
-     * @throws TaskSystemException when something goes wrong
-     * @see #schedule(String, String, String, int, List, List)
-     */
-    public void instantiateJobListener(String listener, boolean isGlobal) throws TaskSystemException  {
+    @Deprecated
+    public void scheduleLoanArrearsAndPortfolioAtRisk(Date initialTime, long delay,
+                         JobRegistry jobRegistry, final JobRepository jobRepository,
+                         Map jobData, ResourcelessTransactionManager transactionManager) throws TaskSystemException {
+        final String jobName = "LoanArrearsAndPortfolioAtRiskTask";
         try {
-            JobListener newListener = (JobListener)Class.forName(LISTENERS_CLASS_PATH_PREFIX + listener).newInstance();
-            if(isGlobal) {
-                scheduler.addGlobalJobListener(newListener);
-            } else {
-                scheduler.addJobListener(newListener);
-            }
+            final TaskletStep step1 = new TaskletStep();
+            step1.setName("LoanArrearsAndPortfolioAtRiskTask-step-1");
+            step1.setTasklet((Tasklet) Class.forName(BATCH_JOB_CLASS_PATH_PREFIX + getHelperName("LoanArrearsTask")).newInstance());
+            step1.setJobRepository(jobRepository);
+            step1.setTransactionManager(transactionManager);
+            step1.afterPropertiesSet();
+
+            final TaskletStep step2 = new TaskletStep();
+            step2.setName("LoanArrearsAndPortfolioAtRiskTask-step-2");
+            step2.setTasklet((Tasklet) Class.forName(BATCH_JOB_CLASS_PATH_PREFIX + getHelperName("PortfolioAtRiskTask")).newInstance());
+            step2.setJobRepository(jobRepository);
+            step2.setTransactionManager(transactionManager);
+            step2.afterPropertiesSet();
+            jobRegistry.register(new JobFactory() {
+
+                @Override
+                public Job createJob() {
+                    SimpleJob job = new SimpleJob(jobName);
+                    job.setJobRepository(jobRepository);
+                    job.setRestartable(true);
+                    job.registerJobExecutionListener(new BatchJobListener());
+                    job.addStep(step1);
+                    job.addStep(step2);
+                    return job;
+                }
+
+                @Override
+                public String getJobName() {
+                    return jobName;
+                }
+            });
         } catch (Exception e) {
             throw new TaskSystemException(e);
+        }
+
+        JobDetailBean jobDetailBean = new JobDetailBean();
+        jobDetailBean.setJobDataAsMap(jobData);
+        try {
+            jobDetailBean.setJobClass(Class.forName(BATCH_JOB_CLASS_PATH_PREFIX + "PortfolioAtRiskTask"));
+        } catch (ClassNotFoundException cnfe) {
+            throw new TaskSystemException(cnfe);
+        }
+        jobDetailBean.setName(jobName);
+        jobDetailBean.setGroup(Scheduler.DEFAULT_GROUP);
+        jobDetailBean.afterPropertiesSet();
+
+        SimpleTrigger trigger = new SimpleTrigger();
+        trigger.setName(jobName);
+        trigger.setGroup(Scheduler.DEFAULT_GROUP);
+        trigger.setStartTime(initialTime);
+        trigger.setRepeatInterval(delay);
+        trigger.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
+        try {
+            scheduler.scheduleJob(jobDetailBean, trigger);
+        } catch(SchedulerException se) {
+            throw new TaskSystemException(se);
         }
     }
 
-    /**
-     * Adds a single instance of specified trigger listener to the scheduler. Calling this method
-     * with the same 'listener' argument more than once has no effect (there is a single instance of
-     * each listener).<br />
-     * If listener should be bound to a single trigger, it's name must be provided to the job
-     * during scheduling.
-     *
-     * @param listener - name of the trigger listener, it must match the name of a class implementing
-     * listeners's behavior.
-     * @param isGlobal - determines whether this listener should be bound to all triggers, or only to a specific one.
-     * @throws TaskSystemException when something goes wrong
-     * @see #schedule(String, String, String, int, List, List)
-     */
-    public void instantiateTriggerListener(String listener, boolean isGlobal) throws TaskSystemException {
-        try {
-            TriggerListener newListener = (TriggerListener)Class.forName(LISTENERS_CLASS_PATH_PREFIX + listener).newInstance();
-            if(isGlobal) {
-                scheduler.addGlobalTriggerListener(newListener);
-            } else {
-                scheduler.addTriggerListener(newListener);
-            }
-        } catch (Exception e) {
-            throw new TaskSystemException(e);
-        }
+    private String getHelperName(String jobName) throws TaskSystemException {
+        if ("ProductStatus".equals(jobName)) return "ProductStatusHelper";
+        if ("LoanArrearsTask".equals(jobName)) return "LoanArrearsHelper";
+        if ("SavingsIntCalcTask".equals(jobName)) return "SavingsIntCalcHelper";
+        if ("SavingsIntPostingTask".equals(jobName)) return "SavingsIntPostingHelper";
+        if ("ApplyCustomerFeeChangesTask".equals(jobName)) return "ApplyCustomerFeeChangesHelper";
+        if ("LoanArrearsAgingTask".equals(jobName)) return "LoanArrearsAgingHelper";
+        if ("ApplyHolidayChangesTask".equals(jobName)) return "ApplyHolidayChangesHelper";
+        if ("PortfolioAtRiskTask".equals(jobName)) return "PortfolioAtRiskHelper";
+        if ("GenerateMeetingsForCustomerAndSavingsTask".equals(jobName)) return "GenerateMeetingsForCustomerAndSavingsHelper";
+        if ("BranchReportTask".equals(jobName)) return "BranchReportHelper";
+
+        throw new TaskSystemException("Unknown helper for " + jobName);
     }
 
     public void shutdown() throws TaskSystemException {
@@ -266,6 +282,54 @@ public class MifosScheduler {
             NodeList rootSchedulerTasks = document.getElementsByTagName(SchedulerConstants.SCHEDULER_TASKS);
             Element rootNodeName = (Element) rootSchedulerTasks.item(0);
             NodeList collectionOfScheduledTasks = rootNodeName.getElementsByTagName(SchedulerConstants.SCHEDULER);
+
+            DataSource dataSource = SessionFactoryUtils.getDataSource(StaticHibernateUtil.getSessionFactory());
+            SimpleJdbcTemplate jdbcTemplate = new SimpleJdbcTemplate(dataSource);
+
+            JobRegistry jobRegistry = new MapJobRegistry();
+
+            JdbcJobInstanceDao jobInstanceDao = new JdbcJobInstanceDao();
+            jobInstanceDao.setJdbcTemplate(jdbcTemplate);
+            jobInstanceDao.setJobIncrementer(new MySQLMaxValueIncrementer(dataSource, "BATCH_JOB_SEQ", "id"));
+            jobInstanceDao.afterPropertiesSet();
+
+            JdbcJobExecutionDao jobExecutionDao = new JdbcJobExecutionDao();
+            jobExecutionDao.setJdbcTemplate(jdbcTemplate);
+            jobExecutionDao.setJobExecutionIncrementer(new MySQLMaxValueIncrementer(dataSource, "BATCH_JOB_EXECUTION_SEQ", "id"));
+            jobExecutionDao.afterPropertiesSet();
+
+            JdbcStepExecutionDao stepExecutionDao = new JdbcStepExecutionDao();
+            stepExecutionDao.setJdbcTemplate(jdbcTemplate);
+            stepExecutionDao.setStepExecutionIncrementer(new MySQLMaxValueIncrementer(dataSource, "BATCH_STEP_EXECUTION_SEQ", "id"));
+            stepExecutionDao.afterPropertiesSet();
+
+            JdbcExecutionContextDao executionContextDao = new JdbcExecutionContextDao();
+            executionContextDao.setJdbcTemplate(jdbcTemplate);
+            executionContextDao.afterPropertiesSet();
+
+            JobRepository jobRepository = new SimpleJobRepository(jobInstanceDao, jobExecutionDao, stepExecutionDao, executionContextDao);
+
+            SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
+            jobLauncher.setJobRepository(jobRepository);
+            jobLauncher.setTaskExecutor(new SyncTaskExecutor());
+            jobLauncher.afterPropertiesSet();
+
+            JobExplorer jobExplorer = new SimpleJobExplorer(jobInstanceDao, jobExecutionDao, stepExecutionDao, executionContextDao);
+
+            Map jobData = new HashMap();
+            jobData.put("jobLocator", jobRegistry);
+            jobData.put("jobLauncher", jobLauncher);
+            jobData.put("jobExplorer", jobExplorer);
+            jobData.put("jobRepository", jobRepository);
+
+            JobRegistryBeanPostProcessor jobRegistryProcessor = new JobRegistryBeanPostProcessor();
+            jobRegistryProcessor.setJobRegistry(jobRegistry);
+            ResourcelessTransactionManager transactionManager = new ResourcelessTransactionManager();
+
+            Date loanArrearsTaskInitialTime = null;
+            Long loanArrearsTaskDelayTime = null;
+            boolean portfolioAtRiskTaskExists = false;
+
             for (int i = 0; i < collectionOfScheduledTasks.getLength(); i++) {
                 Element scheduledTask = (Element) collectionOfScheduledTasks.item(i);
                 Element subNodeName1 = (Element) scheduledTask.getElementsByTagName(SchedulerConstants.TASK_CLASS_NAME)
@@ -286,12 +350,26 @@ public class MifosScheduler {
                     throw new IllegalArgumentException("Please specify the delay time >= 86400(1 day)");
                 }
                 if(scheduler.getJobDetail(taskName, Scheduler.DEFAULT_GROUP) == null) {
-                    schedule(taskName, parseInitialTime(initialTime), Long.parseLong(delayTime) * 1000);
+                    if ("LoanArrearsTask".equals(taskName)) {
+                        loanArrearsTaskInitialTime = parseInitialTime(initialTime);
+                        loanArrearsTaskDelayTime = Long.parseLong(delayTime) * 1000;
+                        continue;
+                    }
+                    if ("PortfolioAtRiskTask".equals(taskName)) {
+                        portfolioAtRiskTaskExists = true;
+                        continue;
+                    }
+                    schedule(taskName, parseInitialTime(initialTime), Long.parseLong(delayTime) * 1000, jobRegistry, jobRepository, jobData, transactionManager);
                 }
             }
-            // Hard-coded initialization of default global listeners, as they don't exist in old configuration file:
-            instantiateJobListener(SchedulerConstants.GLOBAL_JOB_LISTENER_NAME, true);
-            instantiateTriggerListener(SchedulerConstants.GLOBAL_TRIGGER_LISTENER_NAME, true);
+            if (loanArrearsTaskInitialTime != null) {
+                if (portfolioAtRiskTaskExists) {
+                    scheduleLoanArrearsAndPortfolioAtRisk(loanArrearsTaskInitialTime, loanArrearsTaskDelayTime, jobRegistry, jobRepository, jobData, transactionManager);
+                }
+                else {
+                    schedule("LoanArrearsTask", loanArrearsTaskInitialTime, loanArrearsTaskDelayTime, jobRegistry, jobRepository, jobData, transactionManager);
+                }
+            }
         } catch (Exception e) {
             throw new TaskSystemException(e);
         }
