@@ -20,13 +20,14 @@
 
 package org.mifos.customers.surveys.business;
 
+import org.mifos.accounts.business.AccountCustomFieldEntity;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.util.helpers.CustomerLevel;
 
 public class CustomFieldUtils {
@@ -41,8 +42,12 @@ public class CustomFieldUtils {
         return customField1;
     }
 
-    public static CustomerCustomFieldEntity getCustomField(Integer fieldId, String fieldValue, CustomerBO clientBO) {
+    public static CustomerCustomFieldEntity getCustomerCustomField(Integer fieldId, String fieldValue, CustomerBO clientBO) {
         return new CustomerCustomFieldEntity(Short.valueOf(fieldId.toString()), fieldValue, null, clientBO);
+    }
+
+    public static AccountCustomFieldEntity getLoanCustomField(Integer fieldId, String fieldValue, LoanBO loanBO) {
+        return new AccountCustomFieldEntity(loanBO, Short.valueOf(fieldId.toString()), fieldValue);
     }
 
 }

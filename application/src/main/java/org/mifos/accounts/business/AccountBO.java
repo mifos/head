@@ -93,7 +93,7 @@ import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
 
 public class AccountBO extends AbstractBusinessObject {
 
-    private final Integer accountId;
+    private Integer accountId;
     protected String globalAccountNum;
     private String externalId;
     protected final AccountTypeEntity accountType;
@@ -1772,4 +1772,9 @@ public class AccountBO extends AbstractBusinessObject {
         }
     }
 
+    // To be used strictly from test code
+    @Deprecated
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
+    }
 }

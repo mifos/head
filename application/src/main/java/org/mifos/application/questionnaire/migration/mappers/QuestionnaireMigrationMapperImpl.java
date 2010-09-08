@@ -21,6 +21,8 @@
 package org.mifos.application.questionnaire.migration.mappers;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
@@ -129,7 +131,7 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     }
 
     @Override
-    public QuestionGroupInstanceDto map(Integer questionGroupId, List<CustomerCustomFieldEntity> customerResponses, Map<Short, Integer> customFieldQuestionIdMap) {
+    public QuestionGroupInstanceDto mapForCustomers(Integer questionGroupId, List<CustomerCustomFieldEntity> customerResponses, Map<Short, Integer> customFieldQuestionIdMap) {
         QuestionGroupInstanceDto questionGroupInstanceDto = new QuestionGroupInstanceDto();
         CustomerBO customer = customerResponses.get(0).getCustomer();
         questionGroupInstanceDto.setDateConducted(customer.getCreatedDate());
@@ -138,22 +140,48 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
         questionGroupInstanceDto.setEntityId(customer.getCustomerId());
         questionGroupInstanceDto.setQuestionGroupId(questionGroupId);
         questionGroupInstanceDto.setVersion(DEFAULT_VERSION);
-        questionGroupInstanceDto.setQuestionGroupResponseDtos(mapToQuestionGroupResponseDtos(questionGroupId, customerResponses, customFieldQuestionIdMap));
+        questionGroupInstanceDto.setQuestionGroupResponseDtos(mapToQuestionGroupResponseDtosForCustomer(questionGroupId, customerResponses, customFieldQuestionIdMap));
         return questionGroupInstanceDto;
     }
 
-    private List<QuestionGroupResponseDto> mapToQuestionGroupResponseDtos(Integer questionGroupId, List<CustomerCustomFieldEntity> customerResponses, Map<Short, Integer> customFieldQuestionIdMap) {
+    @Override
+    public QuestionGroupInstanceDto mapForAccounts(Integer questionGroupId, List<AccountCustomFieldEntity> accountResponses, Map<Short, Integer> customFieldQuestionIdMap) {
+        QuestionGroupInstanceDto questionGroupInstanceDto = new QuestionGroupInstanceDto();
+        AccountBO account = accountResponses.get(0).getAccount();
+        questionGroupInstanceDto.setDateConducted(account.getCreatedDate());
+        questionGroupInstanceDto.setCompleted(true);
+        questionGroupInstanceDto.setCreatorId(Integer.valueOf(account.getCreatedBy()));
+        questionGroupInstanceDto.setEntityId(account.getAccountId());
+        questionGroupInstanceDto.setQuestionGroupId(questionGroupId);
+        questionGroupInstanceDto.setVersion(DEFAULT_VERSION);
+        questionGroupInstanceDto.setQuestionGroupResponseDtos(mapToQuestionGroupResponseDtosForAccount(questionGroupId, accountResponses, customFieldQuestionIdMap));
+        return questionGroupInstanceDto;
+    }
+
+    private List<QuestionGroupResponseDto> mapToQuestionGroupResponseDtosForCustomer(Integer questionGroupId, List<CustomerCustomFieldEntity> customerResponses, Map<Short, Integer> customFieldQuestionIdMap) {
         List<QuestionGroupResponseDto> questionGroupResponseDtos = new ArrayList<QuestionGroupResponseDto>();
         for (CustomerCustomFieldEntity customerResponse : customerResponses) {
-            questionGroupResponseDtos.add(mapToQuestionGroupResponseDto(questionGroupId, customFieldQuestionIdMap, customerResponse));
+            Short fieldId = customerResponse.getFieldId();
+            String fieldValue = customerResponse.getFieldValue();
+            questionGroupResponseDtos.add(mapToQuestionGroupResponseDto(questionGroupId, customFieldQuestionIdMap, fieldId, fieldValue));
         }
         return questionGroupResponseDtos;
     }
 
-    private QuestionGroupResponseDto mapToQuestionGroupResponseDto(Integer questionGroupId, Map<Short, Integer> customFieldQuestionIdMap, CustomerCustomFieldEntity customerResponse) {
+    private List<QuestionGroupResponseDto> mapToQuestionGroupResponseDtosForAccount(Integer questionGroupId, List<AccountCustomFieldEntity> accountResponses, Map<Short, Integer> customFieldQuestionIdMap) {
+        List<QuestionGroupResponseDto> questionGroupResponseDtos = new ArrayList<QuestionGroupResponseDto>();
+        for (AccountCustomFieldEntity accountResponse : accountResponses) {
+            Short fieldId = accountResponse.getFieldId();
+            String fieldValue = accountResponse.getFieldValue();
+            questionGroupResponseDtos.add(mapToQuestionGroupResponseDto(questionGroupId, customFieldQuestionIdMap, fieldId, fieldValue));
+        }
+        return questionGroupResponseDtos;
+    }
+
+    private QuestionGroupResponseDto mapToQuestionGroupResponseDto(Integer questionGroupId, Map<Short, Integer> customFieldQuestionIdMap, Short fieldId, String fieldValue) {
         QuestionGroupResponseDto questionGroupResponseDto = new QuestionGroupResponseDto();
-        questionGroupResponseDto.setResponse(customerResponse.getFieldValue());
-        Integer questionId = customFieldQuestionIdMap.get(customerResponse.getFieldId());
+        questionGroupResponseDto.setResponse(fieldValue);
+        Integer questionId = customFieldQuestionIdMap.get(fieldId);
         Integer sectionQuestionId = questionnaireServiceFacade.getSectionQuestionId(DEFAULT_SECTION_NAME, questionId, questionGroupId);
         questionGroupResponseDto.setSectionQuestionId(sectionQuestionId);
         return questionGroupResponseDto;

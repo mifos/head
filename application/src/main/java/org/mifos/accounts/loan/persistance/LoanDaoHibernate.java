@@ -1,15 +1,19 @@
 package org.mifos.accounts.loan.persistance;
 
+import org.mifos.accounts.business.AccountCustomFieldEntity;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.util.helpers.EntityType;
+import org.mifos.customers.util.helpers.SurveyDto;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.application.NamedQueryConstants;
-import org.mifos.customers.util.helpers.SurveyDto;
 
 public class LoanDaoHibernate implements LoanDao {
 
@@ -60,4 +64,26 @@ public class LoanDaoHibernate implements LoanDao {
         }
         return accountSurveys;
     }
+
+    @Override
+    public final List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForLoan() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.LOAN.getValue());
+        return retrieveCustomFieldDefinitions(queryParameters);
+    }
+
+    @Override
+    public List<AccountCustomFieldEntity> getCustomFieldResponses(Integer customFieldId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
+        return (List<AccountCustomFieldEntity>) genericDao.executeNamedQuery("AccountCustomFieldEntity.getResponses", queryParameters);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<CustomFieldDefinitionEntity> retrieveCustomFieldDefinitions(Map<String, Object> queryParameters) {
+        List<CustomFieldDefinitionEntity> customFieldsForCenter = (List<CustomFieldDefinitionEntity>) genericDao
+                .executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+        return customFieldsForCenter;
+    }
+
 }

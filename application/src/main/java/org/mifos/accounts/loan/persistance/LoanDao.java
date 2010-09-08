@@ -20,10 +20,12 @@
 
 package org.mifos.accounts.loan.persistance;
 
-import java.util.List;
-
+import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.customers.util.helpers.SurveyDto;
+
+import java.util.List;
 
 public interface LoanDao {
 
@@ -33,4 +35,7 @@ public interface LoanDao {
 
     List<SurveyDto> getAccountSurveyDto(Integer accountId);
 
+    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForLoan();
+
+    List<AccountCustomFieldEntity> getCustomFieldResponses(Integer customFieldId);
 }
