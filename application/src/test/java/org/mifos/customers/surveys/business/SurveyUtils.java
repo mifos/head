@@ -21,7 +21,9 @@
 package org.mifos.customers.surveys.business;
 
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
+import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.InstanceStatus;
@@ -85,6 +87,13 @@ public class SurveyUtils {
         ClientBO clientBO = new ClientBuilder().buildForUnitTests();
         clientBO.setCustomerId(customerId);
         return clientBO;
+    }
+
+    public static GroupBO getGroupBO(Integer customerId) {
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+        GroupBO groupBO = new GroupBuilder().build();
+        groupBO.setCustomerId(customerId);
+        return groupBO;
     }
 
     private static SurveyResponse getSurveyResponse(Survey survey, String response, SurveyInstance surveyInstance) throws ApplicationException {

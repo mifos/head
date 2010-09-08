@@ -24,6 +24,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.util.helpers.CustomerLevel;
@@ -40,7 +41,7 @@ public class CustomFieldUtils {
         return customField1;
     }
 
-    public static CustomerCustomFieldEntity getCustomField(Integer fieldId, String fieldValue, ClientBO clientBO) {
+    public static CustomerCustomFieldEntity getCustomField(Integer fieldId, String fieldValue, CustomerBO clientBO) {
         return new CustomerCustomFieldEntity(Short.valueOf(fieldId.toString()), fieldValue, null, clientBO);
     }
 

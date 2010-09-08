@@ -29,6 +29,7 @@ import org.mifos.application.questionnaire.migration.mappers.QuestionnaireMigrat
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.surveys.business.Survey;
 import org.mifos.customers.surveys.business.SurveyInstance;
@@ -143,8 +144,10 @@ public class QuestionnaireMigrationTest {
     }
 
     @Test
-    public void shouldMigrateAdditionalFields() {
+    public void shouldMigrateAdditionalFieldsForClient() {
         QuestionGroupDto questionGroupDto = new QuestionGroupDto();
+        QuestionGroupInstanceDto questionGroupInstanceDto1 = new QuestionGroupInstanceDto();
+        QuestionGroupInstanceDto questionGroupInstanceDto2 = new QuestionGroupInstanceDto();
         CustomFieldDefinitionEntity customFieldDef1 = getCustomFieldDef(1, "CustomField1", CustomerLevel.CLIENT, CustomFieldType.ALPHA_NUMERIC, EntityType.CLIENT);
         CustomFieldDefinitionEntity customFieldDef2 = getCustomFieldDef(2, "CustomField2", CustomerLevel.CLIENT, CustomFieldType.DATE, EntityType.CLIENT);
         List<CustomFieldDefinitionEntity> customFields = asList(customFieldDef1, customFieldDef2);
@@ -158,26 +161,64 @@ public class QuestionnaireMigrationTest {
         CustomerCustomFieldEntity customField3 = getCustomField(1, "Ans3", clientBO1);
         List<CustomerCustomFieldEntity> customerResponses1 = asList(customField1, customField2, customField3);
         when(customerDao.getCustomFieldResponses(1)).thenReturn(customerResponses1);
-        when(questionnaireMigrationMapper.map(QUESTION_GROUP_ID, customerResponses1, customFieldQuestionIdMap)).thenReturn(new QuestionGroupInstanceDto());
-        when(questionnaireServiceFacade.saveQuestionGroupInstance(any(QuestionGroupInstanceDto.class))).thenReturn(0);
+        when(questionnaireMigrationMapper.map(QUESTION_GROUP_ID, customerResponses1, customFieldQuestionIdMap)).thenReturn(questionGroupInstanceDto1);
+        when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto1)).thenReturn(0);
         ClientBO clientBO2 = SurveyUtils.getClientBO(22);
         CustomerCustomFieldEntity customField4 = getCustomField(2, "Ans11", clientBO2);
         CustomerCustomFieldEntity customField5 = getCustomField(2, "Ans22", clientBO2);
         CustomerCustomFieldEntity customField6 = getCustomField(2, "Ans33", clientBO2);
         List<CustomerCustomFieldEntity> customerResponses2 = asList(customField4, customField5, customField6);
         when(customerDao.getCustomFieldResponses(2)).thenReturn(customerResponses2);
-        when(questionnaireMigrationMapper.map(QUESTION_GROUP_ID, customerResponses2, customFieldQuestionIdMap)).thenReturn(new QuestionGroupInstanceDto());
-        when(questionnaireServiceFacade.saveQuestionGroupInstance(any(QuestionGroupInstanceDto.class))).thenReturn(0);
-        List<Integer> questionGroupIds = questionnaireMigration.migrateAdditionalFields();
-        assertThat(questionGroupIds, is(notNullValue()));
-        assertThat(questionGroupIds.size(), is(1));
-        assertThat(questionGroupIds.get(0), is(QUESTION_GROUP_ID));
+        when(questionnaireMigrationMapper.map(QUESTION_GROUP_ID, customerResponses2, customFieldQuestionIdMap)).thenReturn(questionGroupInstanceDto2);
+        when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto2)).thenReturn(0);
+        Integer questionGroupId = questionnaireMigration.migrateAdditionalFieldsForClient();
+        assertThat(questionGroupId, is(QUESTION_GROUP_ID));
         verify(questionnaireMigrationMapper).map(customFields, customFieldQuestionIdMap);
         verify(questionnaireServiceFacade).createQuestionGroup(questionGroupDto);
         verify(customerDao, times(2)).getCustomFieldResponses(anyInt());
         verify(customerDao, times(1)).retrieveCustomFieldEntitiesForClient();
         verify(questionnaireMigrationMapper, times(2)).map(eq(QUESTION_GROUP_ID), Matchers.<List<CustomerCustomFieldEntity>>any(), eq(customFieldQuestionIdMap));
-        verify(questionnaireServiceFacade, times(2)).saveQuestionGroupInstance(any(QuestionGroupInstanceDto.class));
+        verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto1);
+        verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto2);
+    }
+
+    @Test
+    public void shouldMigrateAdditionalFieldsForGroup() {
+        QuestionGroupDto questionGroupDto = new QuestionGroupDto();
+        QuestionGroupInstanceDto questionGroupInstanceDto1 = new QuestionGroupInstanceDto();
+        QuestionGroupInstanceDto questionGroupInstanceDto2 = new QuestionGroupInstanceDto();
+        CustomFieldDefinitionEntity customFieldDef1 = getCustomFieldDef(1, "CustomField1", CustomerLevel.GROUP, CustomFieldType.ALPHA_NUMERIC, EntityType.GROUP);
+        CustomFieldDefinitionEntity customFieldDef2 = getCustomFieldDef(2, "CustomField2", CustomerLevel.GROUP, CustomFieldType.DATE, EntityType.GROUP);
+        List<CustomFieldDefinitionEntity> customFields = asList(customFieldDef1, customFieldDef2);
+        Map<Short,Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
+        when(customerDao.retrieveCustomFieldEntitiesForGroup()).thenReturn(customFields);
+        when(questionnaireMigrationMapper.map(customFields, customFieldQuestionIdMap)).thenReturn(questionGroupDto);
+        when(questionnaireServiceFacade.createQuestionGroup(questionGroupDto)).thenReturn(QUESTION_GROUP_ID);
+        GroupBO groupBO1 = SurveyUtils.getGroupBO(11);
+        CustomerCustomFieldEntity customField1 = getCustomField(1, "Ans1", groupBO1);
+        CustomerCustomFieldEntity customField2 = getCustomField(1, "Ans2", groupBO1);
+        CustomerCustomFieldEntity customField3 = getCustomField(1, "Ans3", groupBO1);
+        List<CustomerCustomFieldEntity> customerResponses1 = asList(customField1, customField2, customField3);
+        when(customerDao.getCustomFieldResponses(1)).thenReturn(customerResponses1);
+        when(questionnaireMigrationMapper.map(QUESTION_GROUP_ID, customerResponses1, customFieldQuestionIdMap)).thenReturn(questionGroupInstanceDto1);
+        when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto1)).thenReturn(0);
+        GroupBO groupBO2 = SurveyUtils.getGroupBO(22);
+        CustomerCustomFieldEntity customField4 = getCustomField(2, "Ans11", groupBO2);
+        CustomerCustomFieldEntity customField5 = getCustomField(2, "Ans22", groupBO2);
+        CustomerCustomFieldEntity customField6 = getCustomField(2, "Ans33", groupBO2);
+        List<CustomerCustomFieldEntity> customerResponses2 = asList(customField4, customField5, customField6);
+        when(customerDao.getCustomFieldResponses(2)).thenReturn(customerResponses2);
+        when(questionnaireMigrationMapper.map(QUESTION_GROUP_ID, customerResponses2, customFieldQuestionIdMap)).thenReturn(questionGroupInstanceDto2);
+        when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto2)).thenReturn(0);
+        Integer questionGroupId = questionnaireMigration.migrateAdditionalFieldsForGroup();
+        assertThat(questionGroupId, is(QUESTION_GROUP_ID));
+        verify(questionnaireMigrationMapper).map(customFields, customFieldQuestionIdMap);
+        verify(questionnaireServiceFacade).createQuestionGroup(questionGroupDto);
+        verify(customerDao, times(2)).getCustomFieldResponses(anyInt());
+        verify(customerDao, times(1)).retrieveCustomFieldEntitiesForGroup();
+        verify(questionnaireMigrationMapper, times(2)).map(eq(QUESTION_GROUP_ID), Matchers.<List<CustomerCustomFieldEntity>>any(), eq(customFieldQuestionIdMap));
+        verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto1);
+        verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto2);
     }
 
     private QuestionGroupDto getQuestionGroupDto(String questionGroupTitle, String questionTitle, String event, String source) {
