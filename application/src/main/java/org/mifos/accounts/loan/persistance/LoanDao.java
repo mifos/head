@@ -37,5 +37,5 @@ public interface LoanDao {
 
     List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForLoan();
 
-    List<AccountCustomFieldEntity> getCustomFieldResponses(Integer customFieldId);
+    List<AccountCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
 }

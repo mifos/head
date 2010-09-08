@@ -1651,7 +1651,7 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
-    public List<CustomerCustomFieldEntity> getCustomFieldResponses(Integer customFieldId) {
+    public List<CustomerCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
         return (List<CustomerCustomFieldEntity>) genericDao.executeNamedQuery("CustomerCustomFieldEntity.getResponses", queryParameters);

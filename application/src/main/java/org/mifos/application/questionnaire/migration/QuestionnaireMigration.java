@@ -251,7 +251,7 @@ public class QuestionnaireMigration {
     private List<AccountCustomFieldEntity> getCustomFieldResponsesForLoan(CustomFieldDefinitionEntity customField) {
         List<AccountCustomFieldEntity> customFieldResponses = new ArrayList<AccountCustomFieldEntity>(0);
         try {
-            customFieldResponses = loanDao.getCustomFieldResponses(Integer.valueOf(customField.getFieldId()));
+            customFieldResponses = loanDao.getCustomFieldResponses(customField.getFieldId());
         } catch (Exception e) {
             mifosLogger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
         }
@@ -293,7 +293,7 @@ public class QuestionnaireMigration {
     private List<CustomerCustomFieldEntity> getCustomFieldResponsesForCustomer(CustomFieldDefinitionEntity customField) {
         List<CustomerCustomFieldEntity> customFieldResponses = new ArrayList<CustomerCustomFieldEntity>(0);
         try {
-            customFieldResponses = customerDao.getCustomFieldResponses(Integer.valueOf(customField.getFieldId()));
+            customFieldResponses = customerDao.getCustomFieldResponses(customField.getFieldId());
         } catch (Exception e) {
             mifosLogger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
         }

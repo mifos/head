@@ -73,7 +73,7 @@ public class LoanDaoHibernate implements LoanDao {
     }
 
     @Override
-    public List<AccountCustomFieldEntity> getCustomFieldResponses(Integer customFieldId) {
+    public List<AccountCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
         return (List<AccountCustomFieldEntity>) genericDao.executeNamedQuery("AccountCustomFieldEntity.getResponses", queryParameters);

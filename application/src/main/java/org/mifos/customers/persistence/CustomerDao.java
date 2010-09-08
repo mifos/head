@@ -229,5 +229,5 @@ public interface CustomerDao {
 
     List<PersonnelLevelEntity> retrievePersonnelLevels();
 
-    List<CustomerCustomFieldEntity> getCustomFieldResponses(Integer customFieldId);
+    List<CustomerCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
 }
