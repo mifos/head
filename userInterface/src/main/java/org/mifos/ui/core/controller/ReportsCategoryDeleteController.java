@@ -49,19 +49,9 @@ public class ReportsCategoryDeleteController {
     protected ReportsCategoryDeleteController(){
         //for spring autowiring
     }
+
     public ReportsCategoryDeleteController(final AdminServiceFacade adminServicefacade){
         this.adminServiceFacade = adminServicefacade;
-    }
-
-    @RequestMapping(method = RequestMethod.GET)
-    @ModelAttribute("reportCategory")
-    public ReportCategoryFormBean showEmptyForm(@RequestParam(value = "categoryId", required = true) Integer reportCategoryId) {
-
-        ReportCategoryDto reportCategoryDetails = adminServiceFacade.retrieveReportCategory(reportCategoryId);
-
-        ReportCategoryFormBean bean = new ReportCategoryFormBean();
-        bean.setName(reportCategoryDetails.getName());
-        return bean;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -76,5 +66,16 @@ public class ReportsCategoryDeleteController {
         status.setComplete();
 
         return modelAndView;
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    @ModelAttribute("reportCategory")
+    public ReportCategoryFormBean showEmptyForm(@RequestParam(value = "categoryId", required = true) Integer reportCategoryId) {
+
+        ReportCategoryDto reportCategoryDetails = adminServiceFacade.retrieveReportCategory(reportCategoryId);
+
+        ReportCategoryFormBean bean = new ReportCategoryFormBean();
+        bean.setName(reportCategoryDetails.getName());
+        return bean;
     }
 }

@@ -23,8 +23,6 @@ package org.mifos.ui.core.controller;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.application.admin.servicefacade.AdminServiceFacade;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -43,22 +41,14 @@ public class ReportsCategoryDefineController {
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
     private static final String CANCEL_PARAM = "CANCEL";
 
-    @Autowired
-    private AdminServiceFacade adminServiceFacade;
-
     protected ReportsCategoryDefineController(){
         //for spring autowiring
-    }
-    public ReportsCategoryDefineController(final AdminServiceFacade adminServicefacade){
-        this.adminServiceFacade = adminServicefacade;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("reportCategory")
     public ReportCategoryFormBean showEmptyForm() {
-        ReportCategoryFormBean bean = new ReportCategoryFormBean();
-        bean.setName("test");
-        return bean;
+        return new ReportCategoryFormBean();
     }
 
     @RequestMapping(method = RequestMethod.POST)

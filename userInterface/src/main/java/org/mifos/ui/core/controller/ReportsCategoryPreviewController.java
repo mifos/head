@@ -77,13 +77,13 @@ public class ReportsCategoryPreviewController {
             modelAndView.addObject("reportCategory", reportCategoryFormBean);
         } else {
 
-            if (editFormView.equals("editReportCategory")) {
+//            if (editFormView.equals("editReportCategory")) {
 //                ReportCategoryDto reportCategory = new ReportCategoryDto(null, reportCategoryFormBean.getName());
 //                adminServiceFacade.updateReportCategory(reportCategory);
-            } else {
+//            } else {
                 ReportCategoryDto reportCategory = new ReportCategoryDto(null, reportCategoryFormBean.getName());
                 adminServiceFacade.createReportsCategory(reportCategory);
-            }
+//            }
         }
 
         return modelAndView;
