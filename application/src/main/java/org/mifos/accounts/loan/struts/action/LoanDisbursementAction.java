@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 import static org.mifos.framework.util.helpers.DateUtils.getUserLocaleDate;
 
 import java.math.BigDecimal;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -49,9 +51,13 @@ import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanDisbursalDto;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
+import org.mifos.accounts.savings.struts.actionforms.SavingsActionForm;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
+import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
+import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -66,9 +72,11 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.MifosServiceFactory;
 
 public class LoanDisbursementAction extends BaseAction {
 
@@ -90,6 +98,8 @@ public class LoanDisbursementAction extends BaseAction {
         security.allow("preview", SecurityConstants.VIEW);
         security.allow("previous", SecurityConstants.VIEW);
         security.allow("update", SecurityConstants.VIEW);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
         return security;
     }
 
@@ -142,8 +152,8 @@ public class LoanDisbursementAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
             final HttpServletResponse response) throws Exception {
-
-        return mapping.findForward(Constants.PREVIEW_SUCCESS);
+        LoanDisbursementActionForm loanDisbursementActionForm = (LoanDisbursementActionForm) form;
+        return createGroupQuestionnaire.fetchAppliedQuestions(mapping, loanDisbursementActionForm, request, ActionForwards.preview_success);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -165,6 +175,7 @@ public class LoanDisbursementAction extends BaseAction {
         Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc.getPreferredLocale());
 
         Integer loanAccountId = Integer.valueOf(actionForm.getAccountId());
+        createGroupQuestionnaire.saveResponses(request, actionForm, loanAccountId);
         if (!loanServiceFacade.isTrxnDateValid(loanAccountId, trxnDate)) {
             throw new AccountException("errors.invalidTxndate");
         }
@@ -228,5 +239,37 @@ public class LoanDisbursementAction extends BaseAction {
     protected boolean isNewBizRequired(final HttpServletRequest request) throws ServiceException {
         return false;
     }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward captureQuestionResponses(
+            final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "captureQuestionResponses");
+        ActionErrors errors = createGroupQuestionnaire.validateResponses(request, (LoanDisbursementActionForm) form);
+        if (errors != null && !errors.isEmpty()) {
+            addErrors(request, errors);
+            return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
+        }
+        return createGroupQuestionnaire.rejoinFlow(mapping);
+    }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward editQuestionResponses(
+            final ActionMapping mapping, final ActionForm form,
+            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "editQuestionResponses");
+        return createGroupQuestionnaire.editResponses(mapping, request, (LoanDisbursementActionForm) form);
+    }
+
+    private QuestionnaireFlowAdapter createGroupQuestionnaire =
+        new QuestionnaireFlowAdapter("Disburse", "Loan",
+                ActionForwards.preview_success,
+                "custSearchAction.do?method=loadMainSearch",
+                new QuestionnaireServiceFacadeLocator() {
+                    @Override
+                    public QuestionnaireServiceFacade getService(HttpServletRequest request) {
+                        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
+                    }
+                });
 
 }

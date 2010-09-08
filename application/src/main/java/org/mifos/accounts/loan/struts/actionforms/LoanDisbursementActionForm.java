@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.loan.struts.actionforms;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -33,14 +34,28 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
+import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 
-public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm {
+public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm implements QuestionResponseCapturer{
 
     private String loanAmount;
 
     private String paymentModeOfPayment;
+
+    private List<QuestionGroupDetail> questionGroups;
+
+    @Override
+    public void setQuestionGroups(List<QuestionGroupDetail> questionGroups) {
+        this.questionGroups = questionGroups;
+    }
+
+    @Override
+    public List<QuestionGroupDetail> getQuestionGroups() {
+        return this.questionGroups;
+    }
 
     @Override
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
@@ -107,6 +122,7 @@ public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm {
         super.clear();
         this.loanAmount = null;
         this.paymentModeOfPayment = null;
+        this.questionGroups = null;
     }
 
 }
