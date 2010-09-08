@@ -103,6 +103,7 @@
                      path="/pages/application/center/jsp/center_search_transfer_group.jsp"/>
             <forward name="viewCenterChangeLog" path="/pages/application/center/jsp/viewChangeLog.jsp"/>
             <forward name="cancelCenterChangeLog" path="/centerCustAction.do?method=get"/>
+            <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
         </action>
 
                 <!-- Group action M2 style-->

@@ -20,6 +20,8 @@
 
 package org.mifos.customers.center.struts.action;
 
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
@@ -27,11 +29,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.servicefacade.CenterCreation;
 import org.mifos.application.servicefacade.CenterDto;
 import org.mifos.application.servicefacade.CenterFormCreationDto;
@@ -82,6 +87,8 @@ public class CenterCustAction extends CustAction {
 
         security.allow("loadTransferSearch", SecurityConstants.VIEW);
         security.allow("searchTransfer", SecurityConstants.VIEW);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
         return security;
     }
 
@@ -138,12 +145,25 @@ public class CenterCustAction extends CustAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward preview(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
-            @SuppressWarnings("unused") HttpServletRequest request,
+    public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         // NOTE - pulls information from session scope variables and from actionform in session scope
-        return mapping.findForward(ActionForwards.preview_success.toString());
+        CenterCustActionForm actionForm = (CenterCustActionForm) form;
+        return createCenterQuestionnaire.fetchAppliedQuestions(
+                mapping, actionForm, request, ActionForwards.preview_success);
     }
+
+    private QuestionnaireFlowAdapter createCenterQuestionnaire =
+        new QuestionnaireFlowAdapter("Create", "Center",
+                ActionForwards.preview_success,
+                "custSearchAction.do?method=loadMainSearch",
+                new QuestionnaireServiceFacadeLocator() {
+                    @Override
+                    public QuestionnaireServiceFacade getService(HttpServletRequest request) {
+                        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
+                    }
+                }
+        );
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward previous(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
@@ -162,6 +182,7 @@ public class CenterCustAction extends CustAction {
 
         List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(actionForm.getCustomFields(), null);
         CustomerDetailsDto centerDetails = this.customerServiceFacade.createNewCenter(actionForm, meeting, userContext, customerCustomFields);
+        createCenterQuestionnaire.saveResponses(request, actionForm, centerDetails.getId());
 
         actionForm.setCustomerId(centerDetails.getId().toString());
         actionForm.setGlobalCustNum(centerDetails.getGlobalCustNum());
@@ -361,5 +382,26 @@ public class CenterCustAction extends CustAction {
             throws PageExpiredException {
         actionForm.setSearchString(null);
         cleanUpSearch(request);
+    }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward captureQuestionResponses(
+            final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "captureQuestionResponses");
+        ActionErrors errors = createCenterQuestionnaire.validateResponses(request, (CenterCustActionForm) form);
+        if (errors != null && !errors.isEmpty()) {
+            addErrors(request, errors);
+            return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
+        }
+        return createCenterQuestionnaire.rejoinFlow(mapping);
+    }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward editQuestionResponses(
+            final ActionMapping mapping, final ActionForm form,
+            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "editQuestionResponses");
+        return createCenterQuestionnaire.editResponses(mapping, request, (CenterCustActionForm) form);
     }
 }

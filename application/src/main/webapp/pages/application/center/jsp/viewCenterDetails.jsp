@@ -472,11 +472,17 @@ explanation of the license and how it is applied.
 							<br>
 							</span>
 							</c:if>
-							<html-el:link styleId="viewCenterDetails.link.viewChangeLog" href="centerCustAction.do?method=loadChangeLog&entityType=Center&entityId=${centerInformationDto.centerDisplay.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
-							<mifos:mifoslabel
-								name="Center.ChangeLogLink" bundle="CenterUIResources"></mifos:mifoslabel>
-							</html-el:link> <br>
-
+							<span class="fontnormal">
+	                            <c:set var="questionnaireFor" scope="session" value="${centerInformationDto.centerDisplay.displayName}"/>
+	                            <a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${centerInformationDto.centerDisplay.customerId}&event=Create&source=Center&backPageUrl=centerCustAction.do?method%3Dget%26globalAccountNum%3D${client.globalCustNum}%26recordOfficeId%3D${centerInformationDto.centerDisplay.branchId}%26recordLoanOfficerId%3D${centerInformationDto.centerDisplay.loanOfficerId}">
+	                                <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
+	                            </a>
+	                            <br/>
+								<html-el:link styleId="viewCenterDetails.link.viewChangeLog" href="centerCustAction.do?method=loadChangeLog&entityType=Center&entityId=${centerInformationDto.centerDisplay.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
+								<mifos:mifoslabel
+									name="Center.ChangeLogLink" bundle="CenterUIResources"></mifos:mifoslabel>
+								</html-el:link> <br>
+                            </span>
 						</tr>
 					</table>
 
