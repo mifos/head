@@ -26,10 +26,12 @@ import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.surveys.business.Survey;
 import org.mifos.customers.surveys.business.SurveyInstance;
+import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
@@ -81,6 +83,10 @@ public class QuestionnaireMigration {
         return questionGroupIds;
     }
 
+    public List<Integer> migrateSurveys() {
+        return migrateSurveysForClient();
+    }
+
     private Integer migrateAdditionalFieldsForCustomer() {
         List<CustomFieldDefinitionEntity> customFields = getCustomFieldsForClient();
         Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
@@ -129,16 +135,27 @@ public class QuestionnaireMigration {
         }
     }
 
-    public List<Integer> migrateSurveys(List<Survey> surveys) {
+    private List<Integer> migrateSurveysForClient() {
+        List<Survey> surveys = getSurveys(SurveyType.CLIENT);
         List<Integer> questionGroupIds = new ArrayList<Integer>();
         for (Survey survey : surveys) {
-            Integer questionGroupId = migrateSurvey(survey);
+            Integer questionGroupId = migrateSurveyForClient(survey);
             if (questionGroupId != null) questionGroupIds.add(questionGroupId);
         }
         return questionGroupIds;
     }
 
-    private Integer migrateSurvey(Survey survey) {
+    private List<Survey> getSurveys(SurveyType surveyType) {
+        List<Survey> surveys = new ArrayList<Survey>(0);
+        try {
+            surveys = surveysPersistence.retrieveSurveysByType(surveyType);
+        } catch (PersistenceException e) {
+            mifosLogger.error(String.format("Unable to retrieve surveys of type %s", surveyType), e);
+        }
+        return surveys;
+    }
+
+    private Integer migrateSurveyForClient(Survey survey) {
         QuestionGroupDto questionGroupDto = questionnaireMigrationMapper.map(survey);
         Integer questionGroupId = createQuestionGroup(questionGroupDto, survey);
         migrateSurveyResponses(survey, questionGroupId);

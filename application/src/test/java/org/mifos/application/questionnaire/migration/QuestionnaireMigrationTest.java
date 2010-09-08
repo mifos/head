@@ -33,6 +33,7 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.surveys.business.Survey;
 import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.surveys.business.SurveyUtils;
+import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -103,6 +104,7 @@ public class QuestionnaireMigrationTest {
     public void shouldMigrateSurveys() throws ApplicationException {
         Survey survey1 = getSurvey("Sur1", "Ques1", calendar.getTime());
         Survey survey2 = getSurvey("Sur2", "Ques2", calendar.getTime());
+        when(surveysPersistence.retrieveSurveysByType(SurveyType.CLIENT)).thenReturn(asList(survey1, survey2));
         QuestionGroupDto questionGroupDto1 = getQuestionGroupDto("Sur1", "Ques1", "View", "Client");
         QuestionGroupDto questionGroupDto2 = getQuestionGroupDto("Sur2", "Ques2", "View", "Client");
         SurveyInstance surveyInstance1 = getSurveyInstance(survey1, 12, 101, "Answer1");
@@ -127,7 +129,7 @@ public class QuestionnaireMigrationTest {
         when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto4)).thenReturn(4444);
         when(surveysPersistence.retrieveInstancesBySurvey(survey1)).thenReturn(asList(surveyInstance1, surveyInstance2));
         when(surveysPersistence.retrieveInstancesBySurvey(survey2)).thenReturn(asList(surveyInstance3, surveyInstance4));
-        List<Integer> questionGroupIds = questionnaireMigration.migrateSurveys(asList(survey1, survey2));
+        List<Integer> questionGroupIds = questionnaireMigration.migrateSurveys();
         assertThat(questionGroupIds, is(notNullValue()));
         assertThat(questionGroupIds.size(), is(2));
         assertThat(questionGroupIds.get(0), is(121));
@@ -136,6 +138,7 @@ public class QuestionnaireMigrationTest {
         verify(questionnaireMigrationMapper, times(4)).map(any(SurveyInstance.class), anyInt());
         verify(questionnaireServiceFacade, times(2)).createQuestionGroup(any(QuestionGroupDto.class));
         verify(questionnaireServiceFacade, times(4)).saveQuestionGroupInstance(any(QuestionGroupInstanceDto.class));
+        verify(surveysPersistence, times(1)).retrieveSurveysByType(SurveyType.CLIENT);
         verify(surveysPersistence, times(2)).retrieveInstancesBySurvey(any(Survey.class));
     }
 
