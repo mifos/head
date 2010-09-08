@@ -25,6 +25,7 @@ import java.util.List;
 import org.mifos.dto.screen.AccountingDetailsDto;
 import org.mifos.dto.screen.LoanAmountDetailsDto;
 
+@SuppressWarnings("PMD")
 public class LoanProductRequest {
 
     private final ProductDetailsDto productDetails;
@@ -47,7 +48,6 @@ public class LoanProductRequest {
     private String interestGlCodeValue;
     private String principalGlCodeValue;
 
-    @SuppressWarnings("PMD")
     public LoanProductRequest(ProductDetailsDto loanProductDetails, final boolean includeInLoanCycleCounter, boolean waiverInterest, Integer currencyId, LoanAmountDetailsDto loanAmountDetails, Integer interestRateType,
             MinMaxDefaultDto interestRateRange, RepaymentDetailsDto repaymentDetails, List<Integer> applicableFees, AccountingDetailsDto accountDetails) {
         this.productDetails = loanProductDetails;
