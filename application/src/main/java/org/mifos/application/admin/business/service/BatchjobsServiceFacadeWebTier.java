@@ -59,21 +59,21 @@ public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
                 JobDetail jobDetail = scheduler.getJobDetail(jobName, groupName);
                 if (trigger != null && jobDetail != null) {
                     Date nextFire = trigger.getNextFireTime() != null ? trigger.getNextFireTime() : new Date(0);
-                    Date lastFire = trigger.getPreviousFireTime() != null ? trigger.getPreviousFireTime() : new Date(0);
+                    Date lastFire = mifosScheduler.getJobsPreviousRunTime(jobName);
                     int priority = trigger.getPriority();
                     String frequency = "";
                     String taskType = "";
-                    if (trigger.getClass().getSimpleName().equals(CRON_TRIGGER)) {
+                    if (trigger instanceof CronTrigger) {
                         frequency = ((CronTrigger) trigger).getCronExpression();
                         taskType = CRON_TRIGGER;
                     }
-                    if ((trigger.getClass().getSimpleName().equals(SIMPLE_TRIGGER))) {
+                    if (trigger instanceof SimpleTrigger) {
                         frequency = Long.toString(((SimpleTrigger) trigger).getRepeatInterval());
                         taskType = SIMPLE_TRIGGER;
                     }
-                    String description = jobDetail.getDescription() != null ? jobDetail.getDescription() : "";
+                    String previousRunStatus = mifosScheduler.getJobsPreviousRunStatus(jobName);
                     int triggerState = scheduler.getTriggerState(trigger.getName(), groupName);
-                    batchjobs.add(new BatchjobsDto(jobName, frequency, taskType, priority, description, lastFire, nextFire, triggerState));
+                    batchjobs.add(new BatchjobsDto(jobName, frequency, taskType, priority, previousRunStatus, lastFire, nextFire, triggerState));
                 }
             }
         }

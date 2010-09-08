@@ -64,6 +64,7 @@
                             </span>
                             <span class="span-1">${batchjobs_index + 1}.</span>
                             <span class="span-9"><strong>${batchjobs.name}</strong></span>
+                            <!-- Secific task pausing to be implemented in the future.
                             <span class="span-8">
                                 [@spring.message "systemAdministration.batchjobs.taskStatus" /]:&nbsp;
                                 [#if batchjobs.state == 0]
@@ -72,6 +73,7 @@
                                     [@spring.message "systemAdministration.batchjobs.paused" /]
                                 [/#if]
                             </span>
+                            -->
                         </div>
                         <div class="span-21">
                             <span class="span-2">&nbsp;</span>

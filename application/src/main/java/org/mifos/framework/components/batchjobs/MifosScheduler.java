@@ -47,6 +47,8 @@ import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.TriggerListener;
 import org.quartz.impl.StdSchedulerFactory;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobInstance;
 import org.springframework.batch.core.configuration.JobLocator;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
@@ -426,6 +428,32 @@ public class MifosScheduler {
             throw new TaskSystemException(e);
         }
 
+    }
+
+    public Date getJobsPreviousRunTime(String jobName) {
+        JobExplorer explorer = getBatchJobExplorer();
+        List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 1);
+        if(jobInstances.size() == 0) {
+            return new Date(0);
+        }
+        JobInstance jobInstance = jobInstances.get(0);
+        long executionTimeInMillis = jobInstance.getJobParameters().getLong(MifosBatchJob.JOB_EXECUTION_TIME_KEY);
+        return new Date(executionTimeInMillis);
+    }
+
+    public String getJobsPreviousRunStatus(String jobName) {
+        JobExplorer explorer = getBatchJobExplorer();
+        List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 1);
+        if(jobInstances.size() == 0) {
+            return "Never executed yet";
+        }
+        List<JobExecution> jobExecutions = explorer.getJobExecutions(jobInstances.get(0));
+        if(jobExecutions.size() == 0) {
+            return "Never executed yet";
+        }
+        String runStatus = jobExecutions.get(0).getStatus().toString();
+        runStatus = runStatus.substring(0, 1) + runStatus.substring(1).toLowerCase();
+        return runStatus;
     }
 
     @SuppressWarnings("unchecked")
