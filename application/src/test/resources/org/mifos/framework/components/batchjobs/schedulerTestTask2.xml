@@ -5,24 +5,39 @@
                         http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd">
     
     <!--
+        ========= Import declarations: =========
+    -->
+    
+    <import resource="classpath:integration-test-context.xml" />
+
+    <!--
         ========= Batch jobs configurations: =========
     -->
 
     <!--
-                MockTask:
+                ApplyHolidayChangesTask
     -->
     <bean name="MockTask" class="org.springframework.scheduling.quartz.JobDetailBean">
-      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.BranchReportTask" />
+      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.ApplyHolidayChangesTask" />
+      <property name="name" value="MockTaskJob" />
     </bean>
     <bean id="MockTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="MockTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
+    <batch:job id="MockTaskJob" parent="jobBase" job-repository="jobRepository">
+        <batch:step id="MockTask-step-1">
+            <batch:tasklet ref="ApplyHolidayChangesTaskTasklet" />
+        </batch:step>
+    </batch:job>
+    <bean name="ApplyHolidayChangesTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.ApplyHolidayChangesHelper" />
+    
+    
     
     <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="quartzProperties">
             <props>
-                <prop key="org.quartz.scheduler.instanceName">MockQuartzScheduler2</prop>
+                <prop key="org.quartz.scheduler.instanceName">MifosQuartzScheduler</prop>
                 <prop key="org.quartz.scheduler.instanceId">AUTO</prop>
                 <prop key="org.quartz.scheduler.skipUpdateCheck">true</prop>
                 <prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
@@ -37,6 +52,80 @@
             </list>
         </property>
     </bean>
-        
-</beans>
     
+    <!--
+        ========= Framework-specific configurations: =========
+    -->
+    
+    <bean id="configurationLocator" class="org.mifos.framework.util.ConfigurationLocator"/>
+    
+    <bean id="defaultProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
+        <constructor-arg value="mainDatabase.properties"/>
+    </bean>
+
+    <bean id="integrationProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
+        <constructor-arg value="integrationDatabase.properties"/>
+    </bean>
+
+    <bean id="customProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
+        <constructor-arg value="local.properties"/>
+    </bean>
+    
+    <bean id="mainPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="ignoreResourceNotFound" value="false"/>
+        <property name="locations">
+            <list>
+                <ref bean="defaultProperties"/>
+                <ref bean="integrationProperties"/>
+                <ref bean="customProperties"/>
+            </list>
+        </property>
+    </bean>
+    
+    <batch:job-repository
+       id="jobRepository"
+       transaction-manager="transactionManager"
+       data-source="integrationDataSource"
+       table-prefix="BATCH_"
+    />
+    
+    <bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+       <property name="jobRepository" ref="jobRepository" />
+       <property name="taskExecutor">
+           <bean class="org.springframework.core.task.SyncTaskExecutor" />
+       </property>
+    </bean>
+        
+    <bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
+    
+    <bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
+       <property name="dataSource" ref="integrationDataSource" />
+       <property name="tablePrefix" value="BATCH_" />
+    </bean>
+    
+    <bean id="jobRegistryBeanPostProcessor" class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
+        <property name="jobRegistry" ref="jobRegistry"/>
+    </bean>
+    
+    <bean id="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
+       <property name="jobDataAsMap">
+        <map>
+            <entry key="jobLocator" value-ref="jobRegistry" />
+            <entry key="jobLauncher" value-ref="jobLauncher" />
+            <entry key="jobExplorer" value-ref="jobExplorer" />
+            <entry key="jobRepository" value-ref="jobRepository" />
+        </map>
+    </property>
+       
+    </bean>
+    
+    <batch:job id="jobBase" abstract="true">
+        <batch:listeners>
+            <batch:listener ref="jobListener"/>
+        </batch:listeners>
+    </batch:job>
+    
+    <bean id="jobListener" class="org.mifos.framework.components.batchjobs.BatchJobListener" />
+    
+</beans>

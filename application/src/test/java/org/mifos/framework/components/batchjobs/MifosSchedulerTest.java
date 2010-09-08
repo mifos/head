@@ -45,15 +45,15 @@ public class MifosSchedulerTest {
         List<String> taskNames = mifosScheduler.getTaskNames();
 
         Assert.assertEquals(9, taskNames.size());
-        Assert.assertTrue(taskNames.contains("ProductStatus"));
-        Assert.assertTrue(taskNames.contains("SavingsIntCalcTask"));
-        Assert.assertTrue(taskNames.contains("SavingsIntPostingTask"));
-        Assert.assertTrue(taskNames.contains("LoanArrearsAndPortfolioAtRiskTask"));
-        Assert.assertTrue(taskNames.contains("ApplyCustomerFeeChangesTask"));
-        Assert.assertTrue(taskNames.contains("GenerateMeetingsForCustomerAndSavingsTask"));
-        Assert.assertTrue(taskNames.contains("LoanArrearsAgingTask"));
-        Assert.assertTrue(taskNames.contains("ApplyHolidayChangesTask"));
-        Assert.assertTrue(taskNames.contains("BranchReportTask"));
+        Assert.assertTrue(taskNames.contains("ProductStatusJob"));
+        Assert.assertTrue(taskNames.contains("SavingsIntCalcTaskJob"));
+        Assert.assertTrue(taskNames.contains("SavingsIntPostingTaskJob"));
+        Assert.assertTrue(taskNames.contains("LoanArrearsAndPortfolioAtRiskTaskJob"));
+        Assert.assertTrue(taskNames.contains("ApplyCustomerFeeChangesTaskJob"));
+        Assert.assertTrue(taskNames.contains("GenerateMeetingsForCustomerAndSavingsTaskJob"));
+        Assert.assertTrue(taskNames.contains("LoanArrearsAgingTaskJob"));
+        Assert.assertTrue(taskNames.contains("ApplyHolidayChangesTaskJob"));
+        Assert.assertTrue(taskNames.contains("BranchReportTaskJob"));
     }
 
     @Test
@@ -63,7 +63,7 @@ public class MifosSchedulerTest {
         List<String> taskNames = mifosScheduler.getTaskNames();
 
         Assert.assertEquals(1, taskNames.size());
-        Assert.assertTrue(taskNames.contains("MockTask"));
+        Assert.assertTrue(taskNames.contains("MockTaskJob"));
     }
 
     private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws TaskSystemException, IOException, FileNotFoundException {
