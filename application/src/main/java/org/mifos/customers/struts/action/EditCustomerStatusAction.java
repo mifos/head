@@ -20,17 +20,23 @@
 
 package org.mifos.customers.struts.action;
 
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.hibernate.Hibernate;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
+import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.struts.actionforms.EditCustomerStatusActionForm;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -46,9 +52,11 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.MifosServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -79,6 +87,8 @@ public class EditCustomerStatusAction extends BaseAction {
         security.allow("previousStatus", SecurityConstants.VIEW);
         security.allow("updateStatus", SecurityConstants.VIEW);
         security.allow("cancelStatus", SecurityConstants.VIEW);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
         return security;
     }
 
@@ -109,8 +119,25 @@ public class EditCustomerStatusAction extends BaseAction {
         logger.debug("In EditCustomerStatusAction:preview()");
         CustomerBO customerBO = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         setCustomerStatusDetails(form, customerBO, request, getUserContext(request));
+        EditCustomerStatusActionForm actionForm = (EditCustomerStatusActionForm) form;
+        if (actionForm.getNewStatusIdValue().equals(CustomerStatus.CLIENT_CLOSED.getValue())) {
+            return createClientQuestionnaire.fetchAppliedQuestions(
+                mapping, actionForm, request, ActionForwards.previewStatus_success);
+        }
         return mapping.findForward(ActionForwards.previewStatus_success.toString());
     }
+
+    private QuestionnaireFlowAdapter createClientQuestionnaire =
+        new QuestionnaireFlowAdapter("Close", "Client",
+                ActionForwards.previewStatus_success,
+                "clientCustAction.do?method=get",
+                new QuestionnaireServiceFacadeLocator() {
+                    @Override
+                    public QuestionnaireServiceFacade getService(HttpServletRequest request) {
+                        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
+                    }
+                }
+        );
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward previousStatus(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
@@ -129,6 +156,8 @@ public class EditCustomerStatusAction extends BaseAction {
         UserContext userContext = getUserContext(request);
 
         this.customerServiceFacade.updateCustomerStatus(customerBOInSession.getCustomerId(), customerBOInSession.getVersionNo(), editStatusActionForm.getFlagId(), editStatusActionForm.getNewStatusId(), editStatusActionForm.getNotes(), userContext);
+
+        createClientQuestionnaire.saveResponses(request, editStatusActionForm, customerBOInSession.getCustomerId());
 
         return mapping.findForward(getDetailAccountPage(form));
     }
@@ -189,7 +218,7 @@ public class EditCustomerStatusAction extends BaseAction {
         String flagName = null;
         List<CustomerCheckListBO> checklist = customerService.getStatusChecklist(
                 statusActionForm.getNewStatusIdValue(), statusActionForm.getLevelIdValue());
-        
+
         SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHECK_LIST, checklist, request);
         newStatusName = getStatusName(customerBO, userContext.getLocaleId(), statusActionForm.getNewStatusId(),
                 statusActionForm.getNewStatusIdValue());
@@ -229,6 +258,7 @@ public class EditCustomerStatusAction extends BaseAction {
         editCustomerStatusActionForm.setNotes(null);
         editCustomerStatusActionForm.setNewStatusId(null);
         editCustomerStatusActionForm.setFlagId(null);
+        editCustomerStatusActionForm.setQuestionGroups(null);
     }
 
     private String getDetailAccountPage(ActionForm form) {
@@ -251,5 +281,26 @@ public class EditCustomerStatusAction extends BaseAction {
                 AccountTypes.CUSTOMER_ACCOUNT, customerBO.getLevel());
         setFormAttributes(form, customerBO);
         customerBO.getCustomerStatus().setLocaleId(userContext.getLocaleId());
+    }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward captureQuestionResponses(
+            final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "captureQuestionResponses");
+        ActionErrors errors = createClientQuestionnaire.validateResponses(request, (EditCustomerStatusActionForm) form);
+        if (errors != null && !errors.isEmpty()) {
+            addErrors(request, errors);
+            return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
+        }
+        return createClientQuestionnaire.rejoinFlow(mapping);
+    }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward editQuestionResponses(
+            final ActionMapping mapping, final ActionForm form,
+            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "editQuestionResponses");
+        return createClientQuestionnaire.editResponses(mapping, request, (EditCustomerStatusActionForm) form);
     }
 }
