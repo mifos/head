@@ -102,35 +102,39 @@ public class QuestionnaireMigration {
 
     // Made 'public' to aid unit testing
     public Integer migrateAdditionalFieldsForGroup() {
-        return migrateAdditionalFieldsForCustomer(getCustomFieldsForGroup(), EntityType.GROUP);
-    }
-
-    // Made 'public' to aid unit testing
-    public Integer migrateAdditionalFieldsForClient() {
-        return migrateAdditionalFieldsForCustomer(getCustomFieldsForClient(), EntityType.CLIENT);
-    }
-
-    // Made 'public' to aid unit testing
-    public Integer migrateAdditionalFieldsForLoan() {
-        return migrateAdditionalFieldsForLoan(getCustomFieldsForLoan());
-    }
-
-    private Integer migrateAdditionalFieldsForLoan(Iterator<CustomFieldDefinitionEntity> customFields) {
+        Iterator<CustomFieldDefinitionEntity> customFields = getCustomFieldsForGroup();
         Integer questionGroupId = null;
         if (customFields != null) {
             Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
-            questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.LOAN);
-            migrateAdditionalFieldsResponsesForLoan(customFields, questionGroupId, customFieldQuestionIdMap);
+            questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.GROUP);
+            customFields = getCustomFieldsForGroup();
+            migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, customFieldQuestionIdMap);
         }
         return questionGroupId;
     }
 
-    private Integer migrateAdditionalFieldsForCustomer(Iterator<CustomFieldDefinitionEntity> customFields, EntityType entityType) {
+    // Made 'public' to aid unit testing
+    public Integer migrateAdditionalFieldsForClient() {
+        Iterator<CustomFieldDefinitionEntity> customFields = getCustomFieldsForClient();
         Integer questionGroupId = null;
         if (customFields != null) {
             Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
-            questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, entityType);
+            questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.CLIENT);
+            customFields = getCustomFieldsForClient();
             migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, customFieldQuestionIdMap);
+        }
+        return questionGroupId;
+    }
+
+    // Made 'public' to aid unit testing
+    public Integer migrateAdditionalFieldsForLoan() {
+        Iterator<CustomFieldDefinitionEntity> customFields = getCustomFieldsForLoan();
+        Integer questionGroupId = null;
+        if (customFields != null) {
+            Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
+            questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.LOAN);
+            customFields = getCustomFieldsForLoan();
+            migrateAdditionalFieldsResponsesForLoan(customFields, questionGroupId, customFieldQuestionIdMap);
         }
         return questionGroupId;
     }
