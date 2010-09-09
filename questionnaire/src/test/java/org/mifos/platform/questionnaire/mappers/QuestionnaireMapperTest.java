@@ -463,7 +463,7 @@ public class QuestionnaireMapperTest {
         int countOfQuestions = 10;
         List<QuestionGroup> questionGroups = new ArrayList<QuestionGroup>();
         for (int i = 0; i < countOfQuestions; i++) {
-            questionGroups.add(getQuestionGroup(1991, TITLE + i, getSection(SECTION + i), getSection(SECTION + (i + 1))));
+            questionGroups.add(getQuestionGroup(1991, TITLE + i,"View","Loan", QuestionGroupState.ACTIVE, true, getSection(SECTION + i), getSection(SECTION + (i + 1))));
         }
         List<QuestionGroupDetail> questionGroupDetails = questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
         assertThat(questionGroupDetails, is(notNullValue()));
@@ -709,6 +709,17 @@ public class QuestionnaireMapperTest {
         questionGroup.setId(id);
         questionGroup.setTitle(title);
         questionGroup.setSections(asList(sections));
+        return questionGroup;
+    }
+
+    private QuestionGroup getQuestionGroup(int id, String title, String event, String source, QuestionGroupState state, boolean editable, Section... sections) {
+        QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setId(id);
+        questionGroup.setTitle(title);
+        questionGroup.setSections(asList(sections));
+        questionGroup.setState(state);
+        questionGroup.setEditable(editable);
+        questionGroup.setEventSources(getEventSources(event, source));
         return questionGroup;
     }
 

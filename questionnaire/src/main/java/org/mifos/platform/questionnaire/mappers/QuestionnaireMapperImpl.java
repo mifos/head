@@ -334,7 +334,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     public List<QuestionGroupDetail> mapToQuestionGroupDetails(List<QuestionGroup> questionGroups) {
         List<QuestionGroupDetail> questionGroupDetails = new ArrayList<QuestionGroupDetail>();
         for (QuestionGroup questionGroup : questionGroups) {
-            questionGroupDetails.add(new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), mapToSectionDetails(questionGroup.getSections())));
+            questionGroupDetails.add(new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), mapToEventSource(questionGroup.getEventSources()), mapToSectionDetails(questionGroup.getSections()), questionGroup.isEditable(), questionGroup.getState().state()));
         }
         return questionGroupDetails;
     }
