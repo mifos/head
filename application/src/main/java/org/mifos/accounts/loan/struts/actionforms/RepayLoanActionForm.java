@@ -20,12 +20,12 @@
 
 package org.mifos.accounts.loan.struts.actionforms;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class RepayLoanActionForm extends BaseActionForm {
 
@@ -35,8 +35,10 @@ public class RepayLoanActionForm extends BaseActionForm {
     private String receiptDate;
     private String dateOfPayment;
     private String paymentTypeId;
+    private boolean waiverInterest;
 
     public RepayLoanActionForm() {
+        waiverInterest = true;
     }
 
     public String getPaymentTypeId() {
@@ -106,4 +108,11 @@ public class RepayLoanActionForm extends BaseActionForm {
         return errors;
     }
 
+    public boolean isWaiverInterest() {
+        return waiverInterest;
+    }
+
+    public void setWaiverInterest(boolean waiverInterest) {
+        this.waiverInterest = waiverInterest;
+    }
 }

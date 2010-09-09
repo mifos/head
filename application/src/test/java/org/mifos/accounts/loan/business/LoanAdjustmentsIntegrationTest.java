@@ -287,7 +287,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
 
     private void makeEarlyPayment(LoanBO loan) throws AccountException {
 
-        loan.makeEarlyRepayment(loan.getTotalEarlyRepayAmount(), null, null, "1", testUser().getPersonnelId());
+        loan.makeEarlyRepayment(loan.getEarlyRepayAmount(), null, null, "1", testUser().getPersonnelId(), false);
         StaticHibernateUtil.commitTransaction();
     }
 

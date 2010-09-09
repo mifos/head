@@ -20,22 +20,6 @@
 
 package org.mifos.accounts.loan.business;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
-
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -124,6 +108,22 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
 
 public class LoanBO extends AccountBO {
 
@@ -1056,22 +1056,38 @@ public class LoanBO extends AccountBO {
                 disbursalPayment.getPaymentType().getId(), false);
     }
 
-    public Money getTotalEarlyRepayAmount() {
-        Money amount = new Money(getCurrency());
-        List<AccountActionDateEntity> dueInstallmentsList = getApplicableIdsForDueInstallments();
-        List<AccountActionDateEntity> futureInstallmentsList = getApplicableIdsForFutureInstallments();
-        for (AccountActionDateEntity accountActionDateEntity : dueInstallmentsList) {
-            amount = amount.add(((LoanScheduleEntity) accountActionDateEntity).getTotalDueWithFees());
-        }
+    public Money getEarlyRepayAmount() {
+        return nextInstallmentAndArrears().add(principleOfFutureInstallments());
+    }
 
-        for (AccountActionDateEntity accountActionDateEntity : futureInstallmentsList) {
-            amount = amount.add(((LoanScheduleEntity) accountActionDateEntity).getPrincipalDue());
+    public Money waiverAmount() {
+        LoanScheduleEntity nextInstallment = (LoanScheduleEntity) getDetailsOfNextInstallment();
+        if (nextInstallment == null || nextInstallment.isPaid()) {
+            return new Money(getCurrency());
+        }
+        return nextInstallment.getInterestDue();
+    }
+
+    private Money principleOfFutureInstallments() {
+        Money amount = new Money(getCurrency());
+        List<AccountActionDateEntity> futureInstallments = getApplicableIdsForFutureInstallments();
+        for (AccountActionDateEntity futureInstallment : futureInstallments) {
+            amount = amount.add(((LoanScheduleEntity) futureInstallment).getPrincipalDue());
+        }
+        return amount;
+    }
+
+    private Money nextInstallmentAndArrears() {
+        Money amount = new Money(getCurrency());
+        List<AccountActionDateEntity> dueInstallments = getApplicableIdsForNextInstallmentAndArrears();
+        for (AccountActionDateEntity dueInstallment : dueInstallments) {
+            amount = amount.add(((LoanScheduleEntity) dueInstallment).getTotalDueWithFees());
         }
         return amount;
     }
 
     public void makeEarlyRepayment(final Money totalAmount, final String receiptNumber, final Date receiptDate,
-            final String paymentTypeId, final Short personnelId) throws AccountException {
+                                   final String paymentTypeId, final Short personnelId, boolean waiveInterest) throws AccountException {
         try {
             MasterPersistence masterPersistence = new MasterPersistence();
             PersonnelBO currentUser = new PersonnelPersistence().getPersonnel(personnelId);
@@ -1082,10 +1098,9 @@ public class LoanBO extends AccountBO {
                     receiptDate, getPaymentTypeEntity(Short.valueOf(paymentTypeId)), transactionDate);
             addAccountPayment(accountPaymentEntity);
 
-            makeEarlyRepaymentForDueInstallments(accountPaymentEntity, AccountConstants.PAYMENT_RCVD,
-                    AccountActionTypes.LOAN_REPAYMENT, currentUser);
-            makeEarlyRepaymentForFutureInstallments(accountPaymentEntity, AccountConstants.PAYMENT_RCVD,
-                    AccountActionTypes.LOAN_REPAYMENT, currentUser);
+            makeEarlyRepaymentForArrears(accountPaymentEntity, AccountConstants.PAYMENT_RCVD, AccountActionTypes.LOAN_REPAYMENT, currentUser);
+            makeEarlyRepaymentForNextInstallment(currentUser, accountPaymentEntity, waiveInterest);
+            makeEarlyRepaymentForFutureInstallments(accountPaymentEntity, AccountConstants.PAYMENT_RCVD, AccountActionTypes.LOAN_REPAYMENT, currentUser);
 
             if (getPerformanceHistory() != null) {
                 getPerformanceHistory().setNoOfPayments(getPerformanceHistory().getNoOfPayments() + 1);
@@ -1110,6 +1125,18 @@ public class LoanBO extends AccountBO {
             getLoanPersistence().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new AccountException(e);
+        }
+    }
+
+    private void makeEarlyRepaymentForNextInstallment(PersonnelBO currentUser, AccountPaymentEntity accountPaymentEntity, boolean waiveInterest) {
+        AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+        if (nextInstallment != null && !nextInstallment.isPaid()) {
+            if(waiveInterest){
+                repayInstallmentWithInterestWaiver(nextInstallment,accountPaymentEntity, AccountConstants.PAYMENT_RCVD,
+                        AccountActionTypes.LOAN_REPAYMENT, currentUser);
+            }else{
+                repayInstallment(nextInstallment, accountPaymentEntity, AccountActionTypes.LOAN_REPAYMENT, currentUser, AccountConstants.PAYMENT_RCVD);
+            }
         }
     }
 
@@ -1168,7 +1195,7 @@ public class LoanBO extends AccountBO {
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, getEarlyClosureAmount(), null,
                     null, getPaymentTypeEntity(Short.valueOf("1")), transactionDate);
             this.addAccountPayment(accountPaymentEntity);
-            makeEarlyRepaymentForDueInstallments(accountPaymentEntity, AccountConstants.LOAN_WRITTEN_OFF,
+            makeEarlyRepaymentForArrears(accountPaymentEntity, AccountConstants.LOAN_WRITTEN_OFF,
                     AccountActionTypes.WRITEOFF, currentUser);
             makeEarlyRepaymentForFutureInstallments(accountPaymentEntity, AccountConstants.LOAN_WRITTEN_OFF,
                     AccountActionTypes.WRITEOFF, currentUser);
@@ -1193,7 +1220,7 @@ public class LoanBO extends AccountBO {
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, getEarlyClosureAmount(), null,
                     null, getPaymentTypeEntity(Short.valueOf("1")), transactionDate);
             this.addAccountPayment(accountPaymentEntity);
-            makeEarlyRepaymentForDueInstallments(accountPaymentEntity, AccountConstants.LOAN_RESCHEDULED,
+            makeEarlyRepaymentForArrears(accountPaymentEntity, AccountConstants.LOAN_RESCHEDULED,
                     AccountActionTypes.LOAN_RESCHEDULED, currentUser);
             makeEarlyRepaymentForFutureInstallments(accountPaymentEntity, AccountConstants.LOAN_RESCHEDULED,
                     AccountActionTypes.LOAN_RESCHEDULED, currentUser);
@@ -1208,7 +1235,7 @@ public class LoanBO extends AccountBO {
     }
 
     private void waiveFeeAmountDue() throws AccountException {
-        List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
+        List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForNextInstallmentAndArrears();
         LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountActionDateList
                 .get(accountActionDateList.size() - 1);
         Money chargeWaived = accountActionDateEntity.waiveFeeCharges();
@@ -1228,7 +1255,7 @@ public class LoanBO extends AccountBO {
     }
 
     private void waivePenaltyAmountDue() throws AccountException {
-        List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
+        List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForNextInstallmentAndArrears();
         LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountActionDateList
                 .get(accountActionDateList.size() - 1);
         Money principal = new Money(getCurrency());
@@ -1252,7 +1279,7 @@ public class LoanBO extends AccountBO {
         Money principal = new Money(getCurrency());
         Money interest = new Money(getCurrency());
         Money penalty = new Money(getCurrency());
-        List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
+        List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForNextInstallmentAndArrears();
 
         // Remove last installment only if there is a next installment exists
         // Fix for http://mifosforge.jira.com/browse/MIFOS-2397
@@ -1281,7 +1308,7 @@ public class LoanBO extends AccountBO {
         Money principal = new Money(getCurrency());
         Money interest = new Money(getCurrency());
         Money fee = new Money(getCurrency());
-        List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
+        List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForNextInstallmentAndArrears();
         // Remove last installment only if a next installment exists
         // Fix for http://mifosforge.jira.com/browse/MIFOS-2826
         if (getDetailsOfNextInstallment() != null) {
@@ -2679,7 +2706,7 @@ public class LoanBO extends AccountBO {
 
     private Money getTotalRepayableAmount() {
         Money amount = new Money(getCurrency());
-        for (AccountActionDateEntity accountActionDateEntity : getApplicableIdsForDueInstallments()) {
+        for (AccountActionDateEntity accountActionDateEntity : getApplicableIdsForNextInstallmentAndArrears()) {
             amount = amount.add(((LoanScheduleEntity) accountActionDateEntity).getTotalDueWithFees());
         }
         for (AccountActionDateEntity accountActionDateEntity : getApplicableIdsForFutureInstallments()) {
@@ -2704,42 +2731,62 @@ public class LoanBO extends AccountBO {
         this.redone = val;
     }
 
-    private void makeEarlyRepaymentForDueInstallments(final AccountPaymentEntity accountPaymentEntity,
+    private void makeEarlyRepaymentForArrears(final AccountPaymentEntity accountPaymentEntity,
             final String comments, final AccountActionTypes accountActionTypes, final PersonnelBO currentUser) {
-        List<AccountActionDateEntity> dueInstallmentsList = getApplicableIdsForDueInstallments();
-        for (AccountActionDateEntity accountActionDateEntity : dueInstallmentsList) {
-            LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDateEntity;
-            Money principal = loanSchedule.getPrincipalDue();
-            Money interest = loanSchedule.getInterestDue();
-            Money fees = loanSchedule.getTotalFeeDueWithMiscFeeDue();
-            Money penalty = loanSchedule.getPenaltyDue();
-            Money totalAmt = principal.add(interest).add(fees).add(penalty);
-
-            LoanTrxnDetailEntity loanTrxnDetailEntity;
-
-            loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes, loanSchedule
-                    .getInstallmentId(), loanSchedule.getActionDate(), currentUser, new DateTimeService()
-                    .getCurrentJavaDateTime(), totalAmt, comments, null, principal, interest, loanSchedule.getPenalty()
-                    .subtract(loanSchedule.getPenaltyPaid()), loanSchedule.getMiscFeeDue(), loanSchedule
-                    .getMiscPenaltyDue(), null, getLoanPersistence());
-
-            for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanSchedule
-                    .getAccountFeesActionDetails()) {
-                if (accountFeesActionDetailEntity.getFeeDue().isGreaterThanZero()) {
-                    FeesTrxnDetailEntity feesTrxnDetailEntity = new FeesTrxnDetailEntity(loanTrxnDetailEntity,
-                            accountFeesActionDetailEntity.getAccountFee(), accountFeesActionDetailEntity.getFeeDue());
-                    loanTrxnDetailEntity.addFeesTrxnDetail(feesTrxnDetailEntity);
-                }
-            }
-
-            accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-
-            loanSchedule.makeEarlyRepaymentEnteries(LoanConstants.PAY_FEES_PENALTY_INTEREST);
-
-            if (!accountActionTypeIsWrittenOffOrRescheduled(accountActionTypes)) {
-                loanSummary.updatePaymentDetails(principal, interest, penalty, fees);
-            }
+        List<AccountActionDateEntity> applicableArrears = getApplicableIdsForArrears();
+        for (AccountActionDateEntity applicableArrear : applicableArrears) {
+            repayInstallment(applicableArrear, accountPaymentEntity, accountActionTypes, currentUser, comments);
         }
+    }
+
+    private void makeEarlyRepaymentForNextInstallment(final AccountPaymentEntity accountPaymentEntity,
+                                                      final String comments, final AccountActionTypes accountActionTypes, final PersonnelBO currentUser) {
+        AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+        if (nextInstallment != null && !nextInstallment.isPaid()) {
+            repayInstallment(nextInstallment, accountPaymentEntity, accountActionTypes, currentUser, comments);
+        }
+    }
+
+    private void repayInstallment(AccountActionDateEntity installment, AccountPaymentEntity accountPaymentEntity, AccountActionTypes accountActionTypes, PersonnelBO currentUser, String comments) {
+        LoanScheduleEntity loanSchedule = (LoanScheduleEntity) installment;
+        Money principal = loanSchedule.getPrincipalDue();
+        Money interest = loanSchedule.getInterestDue();
+        Money fees = loanSchedule.getTotalFeeDueWithMiscFeeDue();
+        Money penalty = loanSchedule.getPenaltyDue();
+        Money totalAmt = principal.add(interest).add(fees).add(penalty);
+
+        LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes, loanSchedule
+                .getInstallmentId(), loanSchedule.getActionDate(), currentUser, new DateTimeService()
+                .getCurrentJavaDateTime(), totalAmt, comments, null, principal, interest, loanSchedule.getPenalty()
+                .subtract(loanSchedule.getPenaltyPaid()), loanSchedule.getMiscFeeDue(), loanSchedule
+                .getMiscPenaltyDue(), null, getLoanPersistence());
+
+        addFeeTransactions(loanTrxnDetailEntity, loanSchedule.getAccountFeesActionDetails());
+        accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
+        loanSchedule.makeEarlyRepaymentEnteries(LoanConstants.PAY_FEES_PENALTY_INTEREST);
+        updatePaymentDetails(accountActionTypes, principal, interest, penalty, fees);
+    }
+
+    private void repayInstallmentWithInterestWaiver(AccountActionDateEntity nextInstallment, final AccountPaymentEntity accountPaymentEntity,
+                                              final String comments, final AccountActionTypes accountActionTypes, final PersonnelBO currentUser) {
+        LoanScheduleEntity loanSchedule = (LoanScheduleEntity) nextInstallment;
+        Money principal = loanSchedule.getPrincipalDue();
+        Money interest = loanSchedule.getInterestDue();
+        Money fees = loanSchedule.getTotalFeeDueWithMiscFeeDue();
+        Money penalty = loanSchedule.getPenaltyDue();
+        Money totalAmt = principal.add(fees).add(penalty);
+
+        LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes, loanSchedule
+                .getInstallmentId(), loanSchedule.getActionDate(), currentUser, new DateTimeService()
+                .getCurrentJavaDateTime(), totalAmt, comments, null, principal, new Money(getCurrency()), loanSchedule.getPenalty()
+                .subtract(loanSchedule.getPenaltyPaid()), loanSchedule.getMiscFeeDue(), loanSchedule
+                .getMiscPenaltyDue(), null, getLoanPersistence());
+
+        addFeeTransactions(loanTrxnDetailEntity, loanSchedule.getAccountFeesActionDetails());
+        accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
+        loanSchedule.makeEarlyRepaymentEnteries(LoanConstants.PAY_FEES_PENALTY);
+        loanSummary.decreaseBy(null, interest, null, null);
+        updatePaymentDetails(accountActionTypes, principal, null, penalty, fees);
     }
 
     private void makeEarlyRepaymentForFutureInstallments(final AccountPaymentEntity accountPaymentEntity,
@@ -2751,26 +2798,36 @@ public class LoanBO extends AccountBO {
             Money interest = loanSchedule.getInterestDue();
             Money fees = loanSchedule.getTotalFeeDueWithMiscFeeDue();
             Money penalty = loanSchedule.getPenaltyDue();
+            Money totalAmt = principal;
 
-            LoanTrxnDetailEntity loanTrxnDetailEntity;
-
-            loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes, loanSchedule
+            LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes, loanSchedule
                     .getInstallmentId(), loanSchedule.getActionDate(), currentUser, new DateTimeService()
-                    .getCurrentJavaDateTime(), principal, comments, null, principal, new Money(getCurrency()),
+                    .getCurrentJavaDateTime(), totalAmt, comments, null, principal, new Money(getCurrency()),
                     new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null,
                     getLoanPersistence());
 
             accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-
             loanSchedule.makeEarlyRepaymentEnteries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST);
-
             loanSummary.decreaseBy(null, interest, penalty, fees);
-            if (!accountActionTypeIsWrittenOffOrRescheduled(accountActionTypes)) {
-                loanSummary.updatePaymentDetails(principal, null, null, null);
-            }
-
+            updatePaymentDetails(accountActionTypes, principal, null, null, null);
         }
 
+    }
+
+    private void addFeeTransactions(LoanTrxnDetailEntity loanTrxnDetailEntity, Set<AccountFeesActionDetailEntity> accountFeesActionDetails) {
+        for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
+            if (accountFeesActionDetailEntity.getFeeDue().isGreaterThanZero()) {
+                FeesTrxnDetailEntity feesTrxnDetailEntity = new FeesTrxnDetailEntity(loanTrxnDetailEntity,
+                        accountFeesActionDetailEntity.getAccountFee(), accountFeesActionDetailEntity.getFeeDue());
+                loanTrxnDetailEntity.addFeesTrxnDetail(feesTrxnDetailEntity);
+            }
+        }
+    }
+
+    private void updatePaymentDetails(AccountActionTypes accountActionTypes, Money principal, Money interest, Money penalty, Money fees) {
+        if (!accountActionTypeIsWrittenOffOrRescheduled(accountActionTypes)) {
+            loanSummary.updatePaymentDetails(principal, interest, penalty, fees);
+        }
     }
 
     public int getDisbursementTerm() {
@@ -3839,6 +3896,10 @@ public class LoanBO extends AccountBO {
             totalFees = totalFees.add(currentInstallment.getTotalFeeDue());
         }
         return totalFees;
+    }
+
+    public boolean shouldWaiverInterest() {
+        return loanOffering.isInterestWaived();
     }
 
     /**

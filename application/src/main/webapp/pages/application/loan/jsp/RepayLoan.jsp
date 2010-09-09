@@ -43,7 +43,9 @@ explanation of the license and how it is applied.
 					}
 		</script>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
-		
+        <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+		<SCRIPT SRC="pages/application/loan/js/repayLoan.js"></SCRIPT>
+
 		<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
 		
@@ -81,7 +83,28 @@ explanation of the license and how it is applied.
 							</tr>
 						</table>
 						<br>
+						<div id="waiverInterestWarning" class="fontnormalRed">
+                            <mifos:mifoslabel name="loan.waiverInterestWarning"/>
+                            <br>
+						</div>
 						<table width="95%" border="0" cellspacing="0" cellpadding="3">
+						    <tr>
+                                    <c:choose>
+                                        <c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'waiverInterest')==true}">
+            						        <td align="right" class="fontnormal">
+                                                <html-el:radio property="waiverInterest" value="true"/>
+                                                <mifos:mifoslabel name="loan.waiverInterest"/>
+                                            </td>
+						                    <td align="left" class="fontnormal">
+                                                <html-el:radio property="waiverInterest" value="false"/>
+                                                <mifos:mifoslabel name="loan.donotwaiverInterest"/>
+                                            </td>
+                                         </c:when>
+                                         <c:otherwise>
+                                            <input type="radio" style="visibility: hidden;" value="false" name="waiverInterest" checked="checked">
+                                         </c:otherwise>
+                                    </c:choose>
+						    </tr>
 							<tr>
 								<td colspan="2" align="right" class="fontnormal">
 									<img src="pages/framework/images/trans.gif" width="10" height="2">
@@ -102,7 +125,12 @@ explanation of the license and how it is applied.
 									:
 								</td>
 								<td class="fontnormal">
-									<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'totalRepaymentAmount')}" />
+                                    <div id="totalRepaymentAmount">
+                                        <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'totalRepaymentAmount')}"/>
+                                    </div>
+                                    <div id="waivedRepaymentAmount">
+                                        <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'waivedRepaymentAmount')}"/>
+                                    </div>
 								</td>
 							</tr>
 							<tr>
@@ -170,6 +198,8 @@ explanation of the license and how it is applied.
 			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}" />
 			<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}" />
 			<html-el:hidden property="amount" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'totalRepaymentAmount')}" />
+			<html-el:hidden property="repaymentAmount" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'totalRepaymentAmount')}" />
+			<html-el:hidden property="waivedAmount" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'waivedRepaymentAmount')}" />
 			<html-el:hidden property="dateOfPayment" value="${loanfn:getCurrrentDate(sessionScope.UserContext.preferredLocale)}" />
 		</html-el:form>
 	</tiles:put>

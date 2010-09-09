@@ -77,4 +77,8 @@ public class SectionQuestion implements Serializable {
     public String getQuestionTitle() {
         return question.getShortName();
     }
+
+    public boolean isNewSectionQuestion() {
+        return id == 0;
+    }
 }

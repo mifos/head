@@ -23,10 +23,16 @@ package org.mifos.application.questionnaire.migration.mappers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.business.AccountCustomFieldEntity;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.surveys.business.CustomFieldUtils;
 import org.mifos.customers.surveys.business.QuestionUtils;
 import org.mifos.customers.surveys.business.Survey;
 import org.mifos.customers.surveys.business.SurveyInstance;
@@ -45,14 +51,20 @@ import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mifos.customers.surveys.business.CustomFieldUtils.getLoanCustomField;
+import static org.mifos.customers.surveys.business.SurveyUtils.getClientBO;
+import static org.mifos.customers.surveys.business.SurveyUtils.getLoanBO;
 import static org.mifos.customers.surveys.business.SurveyUtils.getSurvey;
 import static org.mifos.customers.surveys.business.SurveyUtils.getSurveyInstance;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -64,6 +76,9 @@ public class QuestionnaireMigrationMapperTest {
 
     @Mock
     private QuestionnaireServiceFacade questionnaireServiceFacade;
+
+    @Mock
+    private CustomerDao customerDao;
 
     @Before
     public void setUp() {
@@ -90,9 +105,13 @@ public class QuestionnaireMigrationMapperTest {
                CustomFieldType.DATE, EntityType.CLIENT, "Def2", YesNoFlag.YES);
         CustomFieldDefinitionEntity customField3 = new CustomFieldDefinitionEntity("CustomField3", CustomerLevel.CLIENT.getValue(),
                CustomFieldType.NUMERIC, EntityType.CLIENT, "Def3", YesNoFlag.YES);
-        QuestionGroupDto questionGroupDto = mapper.map(asList(customField1, customField2, customField3));
+        when(questionnaireServiceFacade.createQuestion(any(QuestionDto.class))).thenReturn(0);
+        when(questionnaireServiceFacade.createQuestion(any(QuestionDto.class))).thenReturn(0);
+        when(questionnaireServiceFacade.createQuestion(any(QuestionDto.class))).thenReturn(0);
+        Map<Short,Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
+        QuestionGroupDto questionGroupDto = mapper.map(asList(customField1, customField2, customField3), customFieldQuestionIdMap);
         assertThat(questionGroupDto, is(notNullValue()));
-        assertThat(questionGroupDto.getTitle(), is("Additional Fields for Create Client"));
+        assertThat(questionGroupDto.getTitle(), is("Additional_Fields_Create Client"));
         EventSourceDto eventSourceDto = questionGroupDto.getEventSourceDto();
         assertThat(eventSourceDto, is(notNullValue()));
         assertThat(eventSourceDto.getEvent(), is("Create"));
@@ -108,6 +127,7 @@ public class QuestionnaireMigrationMapperTest {
         assertQuestion(questions.get(0), "CustomField1", QuestionType.FREETEXT, 0);
         assertQuestion(questions.get(1), "CustomField2", QuestionType.DATE, 1);
         assertQuestion(questions.get(2), "CustomField3", QuestionType.NUMERIC, 2);
+        verify(questionnaireServiceFacade, times(3)).createQuestion(any(QuestionDto.class));
     }
 
     @Test
@@ -128,7 +148,7 @@ public class QuestionnaireMigrationMapperTest {
     }
 
     @Test
-    public void shouldMapToQuestionGroupInstanceDto() throws ApplicationException {
+    public void shouldMapSurveyInstanceToQuestionGroupInstanceDto() throws ApplicationException {
         Survey survey = getSurvey("Sur1", "Ques1");
         SurveyInstance surveyInstance = getSurveyInstance(survey, 12, 101, "Answer1");
         Integer questionGroupId = 11, sectionQuestionId = 112233;
@@ -172,6 +192,78 @@ public class QuestionnaireMigrationMapperTest {
         assertThat(questionGroupResponses.get(2).getResponse(), is("Answer3"));
         assertThat(questionGroupResponses.get(2).getSectionQuestionId(), is(sectionQuestionId));
         verify(questionnaireServiceFacade, times(1)).getSectionQuestionId("Misc", questionId, questionGroupId);
+    }
+
+    @Test
+    public void shouldMapCustomerCustomFieldEntityToQuestionGroupInstanceDto() throws ApplicationException {
+        Integer questionGroupId = 1234, customerId = 11;
+        ClientBO clientBO = getClientBO(customerId);
+        CustomerCustomFieldEntity customField1 = CustomFieldUtils.getCustomerCustomField(1, "Ans1", clientBO);
+        CustomerCustomFieldEntity customField2 = CustomFieldUtils.getCustomerCustomField(2, "Ans2", clientBO);
+        CustomerCustomFieldEntity customField3 = CustomFieldUtils.getCustomerCustomField(3, "Ans3", clientBO);
+        Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
+        customFieldQuestionIdMap.put(Short.valueOf("1"), 11);
+        customFieldQuestionIdMap.put(Short.valueOf("2"), 22);
+        customFieldQuestionIdMap.put(Short.valueOf("3"), 33);
+        when(questionnaireServiceFacade.getSectionQuestionId("Misc", 11, questionGroupId)).thenReturn(111);
+        when(questionnaireServiceFacade.getSectionQuestionId("Misc", 22, questionGroupId)).thenReturn(222);
+        when(questionnaireServiceFacade.getSectionQuestionId("Misc", 33, questionGroupId)).thenReturn(333);
+        QuestionGroupInstanceDto questionGroupInstanceDto = mapper.mapForCustomers(questionGroupId, asList(customField1, customField2, customField3), customFieldQuestionIdMap);
+        assertThat(questionGroupInstanceDto, is(notNullValue()));
+        assertThat(questionGroupInstanceDto.getCreatorId(), is(Integer.valueOf(clientBO.getCreatedBy())));
+        assertThat(questionGroupInstanceDto.getQuestionGroupId(), is(questionGroupId));
+        assertThat(questionGroupInstanceDto.getDateConducted(), is(clientBO.getCreatedDate()));
+        assertThat(questionGroupInstanceDto.getEntityId(), is(clientBO.getCustomerId()));
+        assertThat(questionGroupInstanceDto.getQuestionGroupId(), is(questionGroupId));
+        assertThat(questionGroupInstanceDto.getVersion(), is(1));
+        List<QuestionGroupResponseDto> questionGroupResponses = questionGroupInstanceDto.getQuestionGroupResponseDtos();
+        assertThat(questionGroupResponses, is(notNullValue()));
+        assertThat(questionGroupResponses.size(), is(3));
+        assertThat(questionGroupResponses.get(0).getResponse(), is("Ans1"));
+        assertThat(questionGroupResponses.get(0).getSectionQuestionId(), is(111));
+        assertThat(questionGroupResponses.get(1).getResponse(), is("Ans2"));
+        assertThat(questionGroupResponses.get(1).getSectionQuestionId(), is(222));
+        assertThat(questionGroupResponses.get(2).getResponse(), is("Ans3"));
+        assertThat(questionGroupResponses.get(2).getSectionQuestionId(), is(333));
+        verify(questionnaireServiceFacade).getSectionQuestionId("Misc", 11, questionGroupId);
+        verify(questionnaireServiceFacade).getSectionQuestionId("Misc", 22, questionGroupId);
+        verify(questionnaireServiceFacade).getSectionQuestionId("Misc", 33, questionGroupId);
+    }
+
+    @Test
+    public void shouldMapAccountCustomFieldEntityToQuestionGroupInstanceDto() throws ApplicationException {
+        Integer questionGroupId = 1234, customerId = 11;
+        LoanBO clientBO = getLoanBO(customerId);
+        AccountCustomFieldEntity customField1 = getLoanCustomField(1, "Ans1", clientBO);
+        AccountCustomFieldEntity customField2 = getLoanCustomField(2, "Ans2", clientBO);
+        AccountCustomFieldEntity customField3 = getLoanCustomField(3, "Ans3", clientBO);
+        Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
+        customFieldQuestionIdMap.put(Short.valueOf("1"), 11);
+        customFieldQuestionIdMap.put(Short.valueOf("2"), 22);
+        customFieldQuestionIdMap.put(Short.valueOf("3"), 33);
+        when(questionnaireServiceFacade.getSectionQuestionId("Misc", 11, questionGroupId)).thenReturn(111);
+        when(questionnaireServiceFacade.getSectionQuestionId("Misc", 22, questionGroupId)).thenReturn(222);
+        when(questionnaireServiceFacade.getSectionQuestionId("Misc", 33, questionGroupId)).thenReturn(333);
+        QuestionGroupInstanceDto questionGroupInstanceDto = mapper.mapForAccounts(questionGroupId, asList(customField1, customField2, customField3), customFieldQuestionIdMap);
+        assertThat(questionGroupInstanceDto, is(notNullValue()));
+        assertThat(questionGroupInstanceDto.getCreatorId(), is(Integer.valueOf(clientBO.getCreatedBy())));
+        assertThat(questionGroupInstanceDto.getQuestionGroupId(), is(questionGroupId));
+        assertThat(questionGroupInstanceDto.getDateConducted(), is(clientBO.getCreatedDate()));
+        assertThat(questionGroupInstanceDto.getEntityId(), is(clientBO.getAccountId()));
+        assertThat(questionGroupInstanceDto.getQuestionGroupId(), is(questionGroupId));
+        assertThat(questionGroupInstanceDto.getVersion(), is(1));
+        List<QuestionGroupResponseDto> questionGroupResponses = questionGroupInstanceDto.getQuestionGroupResponseDtos();
+        assertThat(questionGroupResponses, is(notNullValue()));
+        assertThat(questionGroupResponses.size(), is(3));
+        assertThat(questionGroupResponses.get(0).getResponse(), is("Ans1"));
+        assertThat(questionGroupResponses.get(0).getSectionQuestionId(), is(111));
+        assertThat(questionGroupResponses.get(1).getResponse(), is("Ans2"));
+        assertThat(questionGroupResponses.get(1).getSectionQuestionId(), is(222));
+        assertThat(questionGroupResponses.get(2).getResponse(), is("Ans3"));
+        assertThat(questionGroupResponses.get(2).getSectionQuestionId(), is(333));
+        verify(questionnaireServiceFacade).getSectionQuestionId("Misc", 11, questionGroupId);
+        verify(questionnaireServiceFacade).getSectionQuestionId("Misc", 22, questionGroupId);
+        verify(questionnaireServiceFacade).getSectionQuestionId("Misc", 33, questionGroupId);
     }
 
     private void assertSection(SectionDto sectionDto) {

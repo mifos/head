@@ -82,8 +82,10 @@ public class ValidationException extends SystemException {
     public String getStackTraceString() {
         StringBuilder buffer = new StringBuilder();
         makeStackTrace(buffer, getStackTrace(), getKey());
-        for (ValidationException childException : childExceptions) {
-            makeStackTrace(buffer, childException.getStackTrace(), childException.getKey());
+        if (childExceptions != null) {
+            for (ValidationException childException : childExceptions) {
+                makeStackTrace(buffer, childException.getStackTrace(), childException.getKey());
+            }
         }
         return buffer.toString();
     }

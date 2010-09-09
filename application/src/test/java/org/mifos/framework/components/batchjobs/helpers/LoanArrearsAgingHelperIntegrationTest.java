@@ -20,16 +20,7 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.hibernate.Query;
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -63,6 +54,14 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestCase {
 
@@ -357,7 +356,40 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
                 + totalInterest);
         String receiptNumber = "1";
         loan.makeEarlyRepayment(totalAmount, receiptNumber, dateTime.toDate(), PaymentTypes.CASH.getValue().toString(),
-                loan.getPersonnel().getPersonnelId());
+                loan.getPersonnel().getPersonnelId(), false);
+
+        //jpw runLoanArrearsThenLoanArrearsAging();
+
+        loan = new LoanPersistence().getAccount(loan.getAccountId());
+
+        Assert.assertNull(loan.getLoanArrearsAgingEntity());
+        Assert.assertTrue(loan.getState().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET));
+
+    }
+
+    @Test
+    public void testLoanWithEarlyRepaymentWithInterestWaiver() throws Exception {
+        LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
+
+        Assert.assertNull(loan.getLoanArrearsAgingEntity());
+
+        short daysPastPaymentDate = 3;
+
+        // advance time daysOverdue past the second repayment interval
+        dateTime = dateTime.plusDays(repaymentInterval + daysPastPaymentDate);
+        new DateTimeService().setCurrentDateTimeFixed(dateTime);
+
+        runLoanArrearsThenLoanArrearsAging();
+
+        loan = new LoanPersistence().getAccount(loan.getAccountId());
+
+        Assert.assertNotNull(loan.getLoanArrearsAgingEntity());
+
+        Money totalAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "" + loanAmount
+                + 0);
+        String receiptNumber = "1";
+        loan.makeEarlyRepayment(totalAmount, receiptNumber, dateTime.toDate(), PaymentTypes.CASH.getValue().toString(),
+                loan.getPersonnel().getPersonnelId(), true);
 
         //jpw runLoanArrearsThenLoanArrearsAging();
 

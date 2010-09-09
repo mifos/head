@@ -20,7 +20,9 @@
 
 package org.mifos.application.questionnaire.migration.mappers;
 
+import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.surveys.business.Survey;
 import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
@@ -28,13 +30,18 @@ import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 
 import java.util.List;
+import java.util.Map;
 
 public interface QuestionnaireMigrationMapper {
     QuestionDto map(CustomFieldDefinitionEntity customField, Integer questionOrder);
 
-    QuestionGroupDto map(List<CustomFieldDefinitionEntity> customFields);
+    QuestionGroupDto map(List<CustomFieldDefinitionEntity> customFields, Map<Short, Integer> customFieldQuestionIdMap);
 
     QuestionGroupDto map(Survey survey);
 
     QuestionGroupInstanceDto map(SurveyInstance surveyInstance, Integer questionGroupId);
+
+    QuestionGroupInstanceDto mapForCustomers(Integer questionGroupId, List<CustomerCustomFieldEntity> customerResponses, Map<Short, Integer> customFieldQuestionIdMap);
+
+    QuestionGroupInstanceDto mapForAccounts(Integer questionGroupId, List<AccountCustomFieldEntity> accountResponses, Map<Short, Integer> customFieldQuestionIdMap);
 }

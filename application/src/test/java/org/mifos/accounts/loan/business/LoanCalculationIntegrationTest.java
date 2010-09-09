@@ -20,28 +20,7 @@
 
 package org.mifos.accounts.loan.business;
 
-import static org.apache.commons.lang.math.NumberUtils.DOUBLE_ZERO;
-import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -91,6 +70,26 @@ import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import static org.apache.commons.lang.math.NumberUtils.DOUBLE_ZERO;
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 
 /*
  * LoanCalculationTest is a starting point for defining and exploring
@@ -618,22 +617,22 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
+
         // pay one payment
-        for (int i = 0; i < 1; i++) {
-            loanSchedule = paymentsArray[i];
-            Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest());
-            paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
-                    .getActionDate());
-            accountBO.applyPayment(paymentData, true);
-        }
+        loanSchedule = paymentsArray[0];
+        Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest());
+        paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
+                .getActionDate());
+        accountBO.applyPayment(paymentData, true);
+
         new TestObjectPersistence().persist(accountBO);
         actionDateEntities = accountBO.getAccountActionDates();
         paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
         printLoanScheduleEntities(paymentsArray);
         // loan repay
         UserContext uc = TestUtils.makeUser();
-        ((LoanBO) accountBO).makeEarlyRepayment(((LoanBO) accountBO).getTotalEarlyRepayAmount(), null, null, "1", uc
-                .getId());
+        ((LoanBO) accountBO).makeEarlyRepayment(((LoanBO) accountBO).getEarlyRepayAmount(), null, null, "1", uc
+                .getId(), false);
         new TestObjectPersistence().persist(accountBO);
         actionDateEntities = accountBO.getAccountActionDates();
         paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());

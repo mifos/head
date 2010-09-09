@@ -33,4 +33,9 @@
                        where eventSource.event.name = :EVENT and eventSource.source.entityType = :SOURCE and questionGroup.state = 1
               ]]>
     </query>
+    <query name="QuestionGroup.retrieveSectionByNameAndQuestionGroupId">
+              <![CDATA[select section from QuestionGroup as questionGroup join questionGroup.sections section
+                       where questionGroup.id = :QUESTION_GROUP_ID and section.name = :SECTION_NAME
+              ]]>
+    </query>
 </hibernate-mapping>

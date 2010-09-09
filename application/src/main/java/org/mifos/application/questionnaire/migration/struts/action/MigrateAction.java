@@ -57,13 +57,17 @@ public class MigrateAction extends BaseAction {
         Upgrade1283341654 upgrade1283341654 = new Upgrade1283341654();
         ServletContext servletContext = request.getSession().getServletContext();
         upgrade1283341654.setUpgradeContext(WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext));
-        upgrade1283341654.upgrade(null);
+        upgrade1283341654.migrateSurveys();
         return mapping.findForward(ActionForwards.migrate_success.toString());
     }
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward migrateAdditionalFields(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        Upgrade1283341654 upgrade1283341654 = new Upgrade1283341654();
+        ServletContext servletContext = request.getSession().getServletContext();
+        upgrade1283341654.setUpgradeContext(WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext));
+        upgrade1283341654.migrateAdditionalFields();
         return mapping.findForward(ActionForwards.migrate_success.toString());
     }
 }

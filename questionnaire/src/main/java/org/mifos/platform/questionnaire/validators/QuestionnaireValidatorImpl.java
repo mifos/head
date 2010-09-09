@@ -145,8 +145,19 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         }
     }
 
+    @Override
+    public void validateForDefineQuestion(QuestionDto questionDto) {
+        ValidationException parentException = new ValidationException(GENERIC_VALIDATION);
+        validateQuestion(questionDto, parentException);
+        if (parentException.containsChildExceptions()) {
+            throw parentException;
+        }
+    }
+
     private void validateQuestion(QuestionDto question, ValidationException parentException) {
-        if (question.getTitle().length() >= MAX_LENGTH_FOR_TITILE) {
+        if (StringUtils.isEmpty(question.getTitle())) {
+            parentException.addChildException(new ValidationException(QUESTION_TITLE_NOT_PROVIDED));
+        } else if (question.getTitle().length() >= MAX_LENGTH_FOR_TITILE) {
             parentException.addChildException(new ValidationException(QUESTION_TITLE_TOO_BIG));
         } else if (questionHasDuplicateTitle(question)) {
             parentException.addChildException(new ValidationException(QUESTION_TITILE_MATCHES_EXISTING_QUESTION));
