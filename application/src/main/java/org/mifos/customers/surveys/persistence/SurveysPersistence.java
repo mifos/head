@@ -39,6 +39,7 @@ import org.mifos.framework.persistence.Persistence;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -192,5 +193,17 @@ public class SurveysPersistence extends Persistence {
         Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYINSTANCE_RETRIEVE_BY_SURVEY);
         query.setParameter("INSTANCE_SURVEY", survey);
         return query.list();
+    }
+
+    public Iterator<SurveyInstance> retrieveInstancesBySurveyIterator(Survey survey) throws PersistenceException {
+        Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYINSTANCE_RETRIEVE_BY_SURVEY);
+        query.setParameter("INSTANCE_SURVEY", survey);
+        return query.iterate();
+    }
+
+    public Iterator<Survey> retrieveSurveysByTypeIterator(SurveyType type) throws PersistenceException {
+        Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_RETRIEVE_BY_TYPE);
+        query.setParameter("SURVEY_TYPE", type.getValue());
+        return query.iterate();
     }
 }

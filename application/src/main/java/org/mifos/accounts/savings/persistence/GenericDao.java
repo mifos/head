@@ -19,11 +19,11 @@
  */
 package org.mifos.accounts.savings.persistence;
 
+import org.hibernate.Query;
+
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.hibernate.Query;
-import org.mifos.accounts.productsmix.business.ProductMixBO;
 
 /**
  *
@@ -46,4 +46,5 @@ public interface GenericDao {
 
     void delete(Object entity);
 
+    Iterator<? extends Object> executeNamedQueryIterator(String queryName, Map<String, ?> queryParameters);
 }

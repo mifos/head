@@ -110,6 +110,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1651,17 +1652,33 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
-    public List<CustomerCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
-        return (List<CustomerCustomFieldEntity>) genericDao.executeNamedQuery("CustomerCustomFieldEntity.getResponses", queryParameters);
-    }
-
-    @Override
     public List<ValueListElement> retrieveLanguages() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("entityType", MasterConstants.LANGUAGE);
 
         return retrieveMasterData(queryParameters);
+    }
+
+    @Override
+    public Iterator<CustomerCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
+        return (Iterator<CustomerCustomFieldEntity>) genericDao.executeNamedQueryIterator("CustomerCustomFieldEntity.getResponses", queryParameters);
+    }
+
+    @Override
+    public Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForClientIterator() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.CLIENT.getValue());
+        return (Iterator<CustomFieldDefinitionEntity>) genericDao
+                .executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+    }
+
+    @Override
+    public Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForGroupIterator() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.GROUP.getValue());
+        return (Iterator<CustomFieldDefinitionEntity>) genericDao
+                .executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
     }
 }
