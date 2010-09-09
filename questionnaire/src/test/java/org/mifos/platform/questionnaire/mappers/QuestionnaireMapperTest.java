@@ -239,7 +239,7 @@ public class QuestionnaireMapperTest {
         when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList());
         when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
         EventSourceDto eventSourceDto = getEventSource("Create", "Client");
-        List<SectionDetail> sectionDetails = asList(getSectionDefinition("S1", 12), getSectionDefinition("S2", 0));
+        List<SectionDetail> sectionDetails = asList(getSectionDefinition("S1", 12, TITLE), getSectionDefinition("S2", 0, TITLE));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, TITLE, eventSourceDto, sectionDetails, true);
         questionGroupDetail.setActive(false);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
@@ -253,9 +253,11 @@ public class QuestionnaireMapperTest {
     public void shouldMapQuestionGroupDefinitionToExistingQuestionGroup() {
         when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList());
         when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
-        when(questionGroupDao.getDetails(123)).thenReturn(getQuestionGroup(123, "QG Title", getSection("S1")));
+        Section section = getSection("S1");
+        when(questionGroupDao.getDetails(123)).thenReturn(getQuestionGroup(123, "QG Title", section));
+        when(questionGroupDao.retrieveSectionByNameAndQuestionGroupId("S1", 123)).thenReturn(asList(section));
         EventSourceDto eventSourceDto = getEventSource("Create", "Client");
-        List<SectionDetail> sectionDetails = asList(getSectionDefinition("S1", 12), getSectionDefinition("S2", 0));
+        List<SectionDetail> sectionDetails = asList(getSectionDefinition("S1", 12, TITLE), getSectionDefinition("S2", 0, TITLE));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, TITLE, eventSourceDto, sectionDetails, true);
         questionGroupDetail.setActive(false);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
@@ -264,6 +266,91 @@ public class QuestionnaireMapperTest {
         verify(eventSourceDao, times(1)).retrieveByEventAndSource(anyString(), anyString());
         verify(questionDao, times(1)).getDetails(12);
         verify(questionGroupDao, times(1)).getDetails(123);
+        verify(questionGroupDao, times(1)).retrieveSectionByNameAndQuestionGroupId("S1", 123);
+    }
+
+    @Test
+    public void shouldMapQuestionGroupToExistingQuestionGroupWhileAddingQuestionToOldSection() {
+        Integer questionGroupId = 123;
+        EventSourceDto eventSourceDto = getEventSource("Create", "Client");
+        SectionDetail sectionDetail = new SectionDetail();
+        sectionDetail.setName("Misc");
+        SectionQuestionDetail sectionQuestionDetail1 = getSectionQuestionDetail(111, 999, "Ques1");
+        SectionQuestionDetail sectionQuestionDetail2 = getSectionQuestionDetail(0, 0, "Ques2");
+        sectionDetail.setQuestionDetails(asList(sectionQuestionDetail1, sectionQuestionDetail2));
+        List<SectionDetail> sectionDetails = asList(sectionDetail);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(questionGroupId, TITLE, eventSourceDto, sectionDetails, true, true);
+        SectionQuestion sectionQuestion = getSectionQuestion(getQuestionEntity(999, "Ques1"), 333);
+        Section section = getSection(sectionQuestion, 222, "Misc");
+        when(questionGroupDao.retrieveSectionByNameAndQuestionGroupId("Misc", 123)).thenReturn(asList(section));
+        when(questionGroupDao.getDetails(questionGroupId)).thenReturn(getQuestionGroup(questionGroupId, "QG Title", section));
+        when(sectionQuestionDao.retrieveFromQuestionIdSectionId(222, 999)).thenReturn(asList(sectionQuestion));
+        when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList());
+        QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
+        assertQuestionGroupForExistingQuestion(questionGroup, QuestionGroupState.ACTIVE);
+        verify(questionGroupDao).retrieveSectionByNameAndQuestionGroupId("Misc", 123);
+        verify(questionGroupDao).getDetails(questionGroupId);
+        verify(sectionQuestionDao).retrieveFromQuestionIdSectionId(222, 999);
+        verify(eventSourceDao).retrieveByEventAndSource(anyString(), anyString());
+    }
+
+    private void assertQuestionGroupForExistingQuestion(QuestionGroup questionGroup, QuestionGroupState questionGroupState) {
+        assertThat(questionGroup, notNullValue());
+        assertThat(questionGroup.getTitle(), is(TITLE));
+        assertThat(questionGroup.getState(), is(questionGroupState));
+        assertCreationDate(questionGroup.getDateOfCreation());
+        assertSectionsForExistingQuestion(questionGroup.getSections());
+    }
+
+    private void assertSectionsForExistingQuestion(List<Section> sections) {
+        assertThat(sections, is(notNullValue()));
+        assertThat(sections.size(), is(1));
+        Section section = sections.get(0);
+        assertThat(section.getName(), is("Misc"));
+        List<SectionQuestion> questions = section.getQuestions();
+        assertThat(questions, is(notNullValue()));
+        assertThat(questions.size(), is(2));
+        assertThat(questions.get(0).getQuestionTitle(), is("Ques1"));
+        assertThat(questions.get(0).getId(), is(333));
+        assertThat(questions.get(0).getQuestion().getQuestionId(), is(999));
+        assertThat(questions.get(1).getQuestionTitle(), is("Ques2"));
+    }
+
+    private Section getSection(SectionQuestion sectionQuestion, int sectionId, String sectionName) {
+        Section section = new Section();
+        section.setId(sectionId);
+        section.setName(sectionName);
+        section.setSequenceNumber(0);
+        section.setQuestions(asList(sectionQuestion));
+        return section;
+    }
+
+    private SectionQuestion getSectionQuestion(QuestionEntity questionEntity, int secQuesId) {
+        SectionQuestion sectionQuestion = new SectionQuestion();
+        sectionQuestion.setId(secQuesId);
+        sectionQuestion.setSequenceNumber(0);
+        sectionQuestion.setQuestion(questionEntity);
+        return sectionQuestion;
+    }
+
+    private QuestionEntity getQuestionEntity(int questionId, String shortName) {
+        QuestionEntity questionEntity = new QuestionEntity();
+        questionEntity.setQuestionId(questionId);
+        questionEntity.setShortName(shortName);
+        questionEntity.setAnswerType(AnswerType.FREETEXT);
+        questionEntity.setQuestionState(QuestionState.ACTIVE);
+        return questionEntity;
+    }
+
+    private SectionQuestionDetail getSectionQuestionDetail(int secQuesId, int quesId, String quesText) {
+        SectionQuestionDetail sectionQuestionDetail1 = new SectionQuestionDetail();
+        sectionQuestionDetail1.setId(secQuesId);
+        QuestionDetail questionDetail = new QuestionDetail();
+        questionDetail.setId(quesId);
+        questionDetail.setTitle(quesText);
+        questionDetail.setType(QuestionType.FREETEXT);
+        sectionQuestionDetail1.setQuestionDetail(questionDetail);
+        return sectionQuestionDetail1;
     }
 
     private void assertQuestionGroup(QuestionGroup questionGroup, QuestionGroupState questionGroupState) {
@@ -296,10 +383,10 @@ public class QuestionnaireMapperTest {
         assertThat(sectionQuestion.getSequenceNumber(), is(0));
     }
 
-    private SectionDetail getSectionDefinition(String name, int questionId) {
+    private SectionDetail getSectionDefinition(String name, int questionId, String questionTitle) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, TITLE, TITLE, QuestionType.FREETEXT, true), true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, questionTitle, questionTitle, QuestionType.FREETEXT, true), true));
         return section;
     }
 
@@ -341,9 +428,14 @@ public class QuestionnaireMapperTest {
     }
 
     private Section getSection(String sectionName) {
+        return getSection(sectionName, 123);
+    }
+
+    private Section getSection(String sectionName, int questionId) {
         Section section = new Section(sectionName);
         SectionQuestion sectionQuestion = new SectionQuestion();
         QuestionEntity question = new QuestionEntity();
+        question.setQuestionId(questionId);
         question.setShortName(sectionName);
         question.setAnswerType(AnswerType.DATE);
         question.setChoices(new LinkedList<QuestionChoiceEntity>());

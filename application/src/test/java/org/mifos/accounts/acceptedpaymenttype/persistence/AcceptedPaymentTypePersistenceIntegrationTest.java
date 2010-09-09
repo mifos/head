@@ -63,7 +63,7 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
         allAcceptedPaymentTypes = new ArrayList<TransactionAcceptedPaymentTypes>();
         for (TrxnTypes transactionType : TrxnTypes.values()) {
             List<AcceptedPaymentType> acceptedPaymentTypes = acceptedPaymentTypePersistence
-                    .getAcceptedPaymentTypesForATransaction(transactionType.getValue());
+                    .getAcceptedPaymentTypesForATransaction(transactionType.getValue(), TrxnTypes.loan_repayment);
             TransactionAcceptedPaymentTypes transactionAcceptedPaymentTypes = new TransactionAcceptedPaymentTypes();
             transactionAcceptedPaymentTypes.setAcceptedPaymentTypes(acceptedPaymentTypes);
             transactionAcceptedPaymentTypes.setTransactionType(transactionType);
@@ -171,7 +171,7 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
             TrxnTypes transactionType) throws Exception {
 
         List<AcceptedPaymentType> acceptedPaymentTypesFromDB = acceptedPaymentTypePersistence
-                .getAcceptedPaymentTypesForATransaction(transactionType.getValue());
+                .getAcceptedPaymentTypesForATransaction(transactionType.getValue(), TrxnTypes.loan_repayment);
         List<AcceptedPaymentType> acceptedPaymentTypes = GetBeforeTestPaymentTypes(transactionType);
         for (AcceptedPaymentType a : acceptedPaymentTypesFromDB) {
             if (IsDeleted(a, acceptedPaymentTypes)) {
@@ -194,7 +194,7 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
         // verify results
         for (TrxnTypes transactionType : TrxnTypes.values()) {
             List<AcceptedPaymentType> acceptedPaymentTypes = acceptedPaymentTypePersistence
-                    .getAcceptedPaymentTypesForATransaction(transactionType.getValue());
+                    .getAcceptedPaymentTypesForATransaction(transactionType.getValue(), TrxnTypes.loan_repayment);
             List<AcceptedPaymentType> savedAcceptedPaymentTypes = GetSavePaymentTypes(transactionType);
             verify(savedAcceptedPaymentTypes, acceptedPaymentTypes);
         }
@@ -210,7 +210,7 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
         // verify results
         for (TrxnTypes transactionType : TrxnTypes.values()) {
             List<AcceptedPaymentType> acceptedPaymentTypes = acceptedPaymentTypePersistence
-                    .getAcceptedPaymentTypesForATransaction(transactionType.getValue());
+                    .getAcceptedPaymentTypesForATransaction(transactionType.getValue(), TrxnTypes.loan_repayment);
             List<AcceptedPaymentType> savedAcceptedPaymentTypes = GetBeforeTestPaymentTypes(transactionType);
             verify(savedAcceptedPaymentTypes, acceptedPaymentTypes);
         }
@@ -239,7 +239,7 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
         for (TrxnTypes transactionType : TrxnTypes.values()) {
             Short transactionId = transactionType.getValue();
             List<AcceptedPaymentType> acceptedPaymentTypes = acceptedPaymentTypePersistence
-                    .getAcceptedPaymentTypesForATransaction(transactionId);
+                    .getAcceptedPaymentTypesForATransaction(transactionId, TrxnTypes.loan_repayment);
             List<PaymentTypeEntity> paymentTypeEntities = acceptedPaymentTypePersistence
                     .getAcceptedPaymentTypesForATransaction(DEFAULT_LOCALE_ID, transactionId);
             compare(paymentTypeEntities, acceptedPaymentTypes);

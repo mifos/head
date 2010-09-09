@@ -853,6 +853,17 @@ public class QuestionnaireServiceTest {
         verify(questionGroupInstanceDao).create(any(QuestionGroupInstance.class));
     }
     
+    @Test
+    public void shouldSaveQuestionDto() {
+        QuestionDtoBuilder questionDtoBuilder = new QuestionDtoBuilder();
+        QuestionDto questionDto = questionDtoBuilder.withTitle("Ques1").withType(QuestionType.SMART_SELECT).addChoices(new ChoiceDto("Ch1"), new ChoiceDto("Ch2")).build();
+        when(questionDao.create(any(QuestionEntity.class))).thenReturn(1234);
+        Integer questionId = questionnaireService.defineQuestion(questionDto);
+        assertThat(questionId, is(1234));
+        verify(questionnaireValidator).validateForDefineQuestion(questionDto);
+        verify(questionDao).create(any(QuestionEntity.class));
+    }
+
     private EventSourceEntity getEventSourceEntity(int id) {
         EventSourceEntity eventSource = new EventSourceEntity();
         eventSource.setId(id);

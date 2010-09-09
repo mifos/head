@@ -20,8 +20,12 @@
 
 package org.mifos.customers.surveys.business;
 
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
+import org.mifos.application.collectionsheet.persistence.GroupBuilder;
+import org.mifos.application.collectionsheet.persistence.LoanAccountBuilder;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.InstanceStatus;
@@ -80,11 +84,25 @@ public class SurveyUtils {
         return surveyResponses;
     }
 
-    private static ClientBO getClientBO(Integer customerId) {
+    public static ClientBO getClientBO(Integer clientId) {
         Money.setDefaultCurrency(TestUtils.RUPEE);
         ClientBO clientBO = new ClientBuilder().buildForUnitTests();
-        clientBO.setCustomerId(customerId);
+        clientBO.setCustomerId(clientId);
         return clientBO;
+    }
+
+    public static GroupBO getGroupBO(Integer groupId) {
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+        GroupBO groupBO = new GroupBuilder().build();
+        groupBO.setCustomerId(groupId);
+        return groupBO;
+    }
+
+    public static LoanBO getLoanBO(Integer loanId) {
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+        LoanBO loanBO = new LoanAccountBuilder().build();
+        loanBO.setAccountId(loanId);
+        return loanBO;
     }
 
     private static SurveyResponse getSurveyResponse(Survey survey, String response, SurveyInstance surveyInstance) throws ApplicationException {

@@ -24,21 +24,20 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.questionnaire.migration.QuestionnaireMigration;
-import org.mifos.customers.surveys.business.Survey;
-import org.mifos.customers.surveys.helpers.SurveyType;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Calendar;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.mifos.customers.surveys.business.SurveyUtils.getSurvey;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -52,28 +51,31 @@ public class Upgrade1283341654Test {
     private SurveysPersistence surveysPersistence;
 
     @Mock
-    private Connection connection;
+    private CustomerDao customerDao;
 
     private Upgrade1283341654 upgrade1283341654;
 
-    private Calendar calendar;
-
     @Before
     public void setUp() {
-        upgrade1283341654 = new Upgrade1283341654(questionnaireMigration, surveysPersistence);
-        calendar = Calendar.getInstance();
+        upgrade1283341654 = new Upgrade1283341654(questionnaireMigration, null);
     }
 
     @Test
     public void shouldMigrateViewClientSurveys() throws PersistenceException, IOException, SQLException {
-        Survey survey1 = getSurvey("Sur1", "Ques1", calendar.getTime());
-        Survey survey2 = getSurvey("Sur2", "Ques2", calendar.getTime());
-        List<Survey> surveys = asList(survey1, survey2);
-        when(surveysPersistence.retrieveSurveysByType(SurveyType.CLIENT)).thenReturn(surveys);
-        when(questionnaireMigration.migrateSurveys(surveys)).thenReturn(asList(1111));
-        upgrade1283341654.upgrade(connection);
-        verify(surveysPersistence).retrieveSurveysByType(SurveyType.CLIENT);
-        verify(questionnaireMigration).migrateSurveys(surveys);
+        List<Integer> qgIds = asList(1111, 2222);
+        when(questionnaireMigration.migrateSurveys()).thenReturn(qgIds);
+        List<Integer> questionGroupIds = upgrade1283341654.migrateSurveys();
+        assertThat(questionGroupIds, is(qgIds));
+        verify(questionnaireMigration).migrateSurveys();
     }
 
+    @Test
+    public void shouldMigrateAdditionalFields() throws IOException, SQLException {
+        when(questionnaireMigration.migrateAdditionalFields()).thenReturn(asList(3333));
+        List<Integer> questionGroupIds = upgrade1283341654.migrateAdditionalFields();
+        assertThat(questionGroupIds, is(notNullValue()));
+        assertThat(questionGroupIds.size(), is(1));
+        assertThat(questionGroupIds.get(0), is(3333));
+        verify(questionnaireMigration).migrateAdditionalFields();
+    }
 }

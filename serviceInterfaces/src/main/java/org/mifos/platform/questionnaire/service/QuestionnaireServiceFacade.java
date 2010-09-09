@@ -22,6 +22,7 @@ package org.mifos.platform.questionnaire.service;
 
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -72,4 +73,7 @@ public interface QuestionnaireServiceFacade {
 
     // Added for data migration. Shouldn't be used outside.
     Integer getSectionQuestionId(String sectionName, Integer questionId, Integer questionGroupId);
+
+    // Added for data migration. Shouldn't be used outside.
+    Integer createQuestion(QuestionDto questionDto);
 }

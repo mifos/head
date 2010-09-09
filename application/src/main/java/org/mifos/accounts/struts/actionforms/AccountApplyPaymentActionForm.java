@@ -69,6 +69,8 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     private String receiptDateYY;
 
     private String paymentTypeId;
+    
+    private String waiverInterest;
 
     private String globalAccountNum;
 
@@ -352,5 +354,13 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 
     public void setCurrencyId(Short currencyId) {
         this.currencyId = currencyId;
+    }
+
+    public String getWaiverInterest() {
+        return waiverInterest;
+    }
+
+    public void setWaiverInterest(String waiverInterest) {
+        this.waiverInterest = waiverInterest;
     }
 }

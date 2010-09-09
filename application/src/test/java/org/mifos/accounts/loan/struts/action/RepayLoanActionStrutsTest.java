@@ -20,12 +20,7 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -46,6 +41,10 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -103,7 +102,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward(Constants.LOAD_SUCCESS);
         Money amount = (Money) SessionUtils.getAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, request);
-       Assert.assertEquals(amount, ((LoanBO) accountBO).getTotalEarlyRepayAmount());
+       Assert.assertEquals(amount, ((LoanBO) accountBO).getEarlyRepayAmount());
     }
 
     public void testRepaymentPreview() {
@@ -126,7 +125,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
     public void testMakeRepaymentForCurrentDateSameAsInstallmentDate() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
-        Money amount = ((LoanBO) accountBO).getTotalEarlyRepayAmount();
+        Money amount = ((LoanBO) accountBO).getEarlyRepayAmount();
         setRequestPathInfo("/repayLoanAction");
         addRequestParameter("method", "makeRepayment");
         addRequestParameter("globalAccountNum", accountBO.getGlobalAccountNum());
@@ -135,6 +134,60 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
         RepayLoanActionForm repayLoanActionForm = new RepayLoanActionForm();
         repayLoanActionForm.setAmount(amount.toString());
+        repayLoanActionForm.setWaiverInterest(false);
+        setActionForm(repayLoanActionForm);
+        actionPerform();
+        verifyForward(Constants.UPDATE_SUCCESS);
+
+       Assert.assertEquals(accountBO.getAccountState().getId(), Short.valueOf(AccountStates.LOANACC_OBLIGATIONSMET));
+
+        LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
+       Assert.assertEquals(amount, loanSummaryEntity.getPrincipalPaid().add(loanSummaryEntity.getFeesPaid()).add(
+                loanSummaryEntity.getInterestPaid()).add(loanSummaryEntity.getPenaltyPaid()));
+
+    }
+    
+    public void testMakeRepaymentForCurrentDateSameAsInstallmentDateWithInterestWaiver() throws Exception {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
+        Money amount = ((LoanBO) accountBO).getEarlyRepayAmount();
+        Money waivedAmount = amount.subtract(((LoanBO) accountBO).waiverAmount());
+        setRequestPathInfo("/repayLoanAction");
+        addRequestParameter("method", "makeRepayment");
+        addRequestParameter("globalAccountNum", accountBO.getGlobalAccountNum());
+        addRequestParameter("paymentTypeId", "1");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+
+        RepayLoanActionForm repayLoanActionForm = new RepayLoanActionForm();
+        repayLoanActionForm.setAmount(amount.toString());
+        repayLoanActionForm.setWaiverInterest(true);
+        setActionForm(repayLoanActionForm);
+        actionPerform();
+        verifyForward(Constants.UPDATE_SUCCESS);
+
+       Assert.assertEquals(accountBO.getAccountState().getId(), Short.valueOf(AccountStates.LOANACC_OBLIGATIONSMET));
+
+        LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
+       Assert.assertEquals(waivedAmount, loanSummaryEntity.getPrincipalPaid().add(loanSummaryEntity.getFeesPaid()).add(
+                loanSummaryEntity.getInterestPaid()).add(loanSummaryEntity.getPenaltyPaid()));
+
+    }
+
+    public void testMakeRepaymentForCurrentDateLiesBetweenInstallmentDates() throws Exception {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        changeFirstInstallmentDate(accountBO);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
+        Money amount = ((LoanBO) accountBO).getEarlyRepayAmount();
+
+        setRequestPathInfo("/repayLoanAction");
+        addRequestParameter("method", "makeRepayment");
+        addRequestParameter("globalAccountNum", accountBO.getGlobalAccountNum());
+        addRequestParameter("paymentTypeId", "1");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+
+        RepayLoanActionForm repayLoanActionForm = new RepayLoanActionForm();
+        repayLoanActionForm.setAmount(amount.toString());
+        repayLoanActionForm.setWaiverInterest(false);
         setActionForm(repayLoanActionForm);
         actionPerform();
         verifyForward(Constants.UPDATE_SUCCESS);
@@ -147,11 +200,12 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
-    public void testMakeRepaymentForCurrentDateLiesBetweenInstallmentDates() throws Exception {
+    public void testMakeRepaymentForCurrentDateLiesBetweenInstallmentDatesWithInterestWaiver() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         changeFirstInstallmentDate(accountBO);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
-        Money amount = ((LoanBO) accountBO).getTotalEarlyRepayAmount();
+        Money amount = ((LoanBO) accountBO).getEarlyRepayAmount();
+        Money waivedAmount = amount.subtract(((LoanBO) accountBO).waiverAmount());
 
         setRequestPathInfo("/repayLoanAction");
         addRequestParameter("method", "makeRepayment");
@@ -161,6 +215,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
         RepayLoanActionForm repayLoanActionForm = new RepayLoanActionForm();
         repayLoanActionForm.setAmount(amount.toString());
+        repayLoanActionForm.setWaiverInterest(true);
         setActionForm(repayLoanActionForm);
         actionPerform();
         verifyForward(Constants.UPDATE_SUCCESS);
@@ -168,7 +223,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(accountBO.getAccountState().getId(), Short.valueOf(AccountStates.LOANACC_OBLIGATIONSMET));
 
         LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
-       Assert.assertEquals(amount, loanSummaryEntity.getPrincipalPaid().add(loanSummaryEntity.getFeesPaid()).add(
+       Assert.assertEquals(waivedAmount, loanSummaryEntity.getPrincipalPaid().add(loanSummaryEntity.getFeesPaid()).add(
                 loanSummaryEntity.getInterestPaid()).add(loanSummaryEntity.getPenaltyPaid()));
 
     }

@@ -122,8 +122,11 @@ public interface LoanConstants {
     Short INTEREST_DEDUCTED_AT_DISBURSEMENT = 1;
 
     String TOTAL_REPAYMENT_AMOUNT = "totalRepaymentAmount";
+    String WAIVED_REPAYMENT_AMOUNT = "waivedRepaymentAmount";    
     String DONOT_PAY_FEES_PENALTY_INTEREST = "doNotPayFeesPenaltyAndInterest";
     String PAY_FEES_PENALTY_INTEREST = "payFeesPenaltyAndInterest";
+    String PAY_FEES_PENALTY = "payFeesPenalty";
+    String WAIVER_INTEREST = "waiverInterest";
 
     String STATUS_CHANGE_NOT_ALLOWED = "error.statuschangenotallowed";
     String FUTUREDISBURSALDATE = "FutureDate";
@@ -152,15 +155,15 @@ public interface LoanConstants {
     String FEE = "Fee";
     String PROPOSED_DISBURSAL_DATE = "proposedDisbDate";
     String RECURRENCEID = "recurrenceId";
-    String RECURRENCENAME = "recurrenceName";
 
+    String RECURRENCENAME = "recurrenceName";
     String NOSEARCHRESULTS = "errors.nosearchresults";
     String FEE_WAIVED = "Fee waived";
     String PENALTY_WAIVED = "Penalty waived";
     String CUSTOM_FIELDS = "customFields";
     String ERRORS_SPECIFY_CUSTOM_FIELD_VALUE = "errors.Account.specifyCustomFieldValue";
-    String ERRORS_CUSTOM_DATE_FIELD = "errors.Account.customdatefield";
 
+    String ERRORS_CUSTOM_DATE_FIELD = "errors.Account.customdatefield";
     String MULTIPLE_LOANS_ACTION_FORM = "multipleloansactionform";
     String MULTIPLE_LOANS_OFFICES_LIST = "multipleloansofficeslist";
     String MULTIPLE_LOANS_LOAN_OFFICERS_LIST = "multipleloansloanofficerslist";
@@ -168,8 +171,8 @@ public interface LoanConstants {
     String MULTIPLE_LOANS_CENTERS_LIST = "multipleloanscenterslist";
     String LOANOFFICERS = "Loan officer";
     String LOAN_AMOUNT_FOR = "Loan Amount for ";
-    String APPL_RECORDS = "applicableRecords";
 
+    String APPL_RECORDS = "applicableRecords";
     String REVERSE_LOAN_DIBURSAL_ACTION_FORM = "reverseloandisbactionform";
     String LOANACTIVEINGOODSTAND = "loanactiveingoodstand";
     String LOANACTIVEINBADSTAND = "loanactiveinbadstand";
@@ -192,8 +195,8 @@ public interface LoanConstants {
     String ADMINISTRATIVE_DOCUMENT_IS_ENABLED = "AdministrativeDocumentsIsEnabled";
     String MIN_RANGE_IS_NOT_MET = "errors.minrangeisnotmet";
     String MAX_RANGE_IS_NOT_MET = "errors.maxrangeisnotmet";
-    String METHODCALLED = "methodCalled";
 
+    String METHODCALLED = "methodCalled";
     // Configurable mandatory fields
     String PURPOSE_OF_LOAN = "PurposeOfLoan";
     String SOURCE_OF_FUND = "SourceOfFund";
@@ -203,6 +206,6 @@ public interface LoanConstants {
     String LOAN_ACCOUNT_OWNER_IS_GROUP_YES = "yes";
     int MINIMUM_NUMBER_OF_CLIENTS_IN_GROUP_LOAN = 2;
     int GLIM_ENABLED_VALUE = 1;
-    int GLIM_DISABLED_VALUE = 0;
 
+    int GLIM_DISABLED_VALUE = 0;
 }

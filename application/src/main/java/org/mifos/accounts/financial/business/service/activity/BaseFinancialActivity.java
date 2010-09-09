@@ -54,7 +54,7 @@ public abstract class BaseFinancialActivity {
         }
 
         for (FinancialTransactionBO financialTransaction : financialTransactions) {
-            accountTrxn.addFinancialTransction(financialTransaction);
+            accountTrxn.addFinancialTransaction(financialTransaction);
         }
     }
 

@@ -20,17 +20,18 @@
 
 package org.mifos.accounts.acceptedpaymenttype.persistence;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import org.hibernate.Session;
 import org.mifos.accounts.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class AcceptedPaymentTypePersistence extends Persistence {
 
@@ -39,7 +40,7 @@ public class AcceptedPaymentTypePersistence extends Persistence {
         return (AcceptedPaymentType) session.get(AcceptedPaymentType.class, paymentTypeId);
     }
 
-    public List<AcceptedPaymentType> getAcceptedPaymentTypesForATransaction(Short transactionId)
+    public List<AcceptedPaymentType> getAcceptedPaymentTypesForATransaction(Short transactionId, TrxnTypes loan_repayment)
             throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("transactionId", transactionId);

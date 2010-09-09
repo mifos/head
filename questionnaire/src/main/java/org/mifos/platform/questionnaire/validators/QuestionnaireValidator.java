@@ -24,6 +24,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 
 import java.util.List;
@@ -39,4 +40,6 @@ public interface QuestionnaireValidator {
     void validateForQuestionGroupResponses(List<QuestionGroupDetail> questionGroupDetails);
 
     void validateForDefineQuestionGroup(QuestionGroupDto questionGroupDto);
+
+    void validateForDefineQuestion(QuestionDto questionDto);
 }
