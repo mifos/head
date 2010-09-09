@@ -175,7 +175,7 @@ public class MifosScheduler {
         jobDetailBean.afterPropertiesSet();
 
         SimpleTrigger trigger = new SimpleTrigger();
-        trigger.setName(jobName);
+        trigger.setName(jobName+"Job");
         trigger.setGroup(Scheduler.DEFAULT_GROUP);
         trigger.setStartTime(initialTime);
         trigger.setRepeatInterval(delay);
@@ -240,7 +240,7 @@ public class MifosScheduler {
         jobDetailBean.afterPropertiesSet();
 
         SimpleTrigger trigger = new SimpleTrigger();
-        trigger.setName(jobName);
+        trigger.setName(jobName+"Job");
         trigger.setGroup(Scheduler.DEFAULT_GROUP);
         trigger.setStartTime(initialTime);
         trigger.setRepeatInterval(delay);

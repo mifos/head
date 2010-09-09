@@ -21,7 +21,8 @@
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.ProductStatus" />
       <property name="name" value="ProductStatusJob" />
     </bean>
-    <bean id="ProductStatusTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <bean id="productStatusTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="name" value="ProductStatusJob"/>
         <property name="jobDetail" ref="ProductStatus" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
@@ -39,7 +40,8 @@
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.SavingsIntCalcTask" />
       <property name="name" value="SavingsIntCalcTaskJob" />
     </bean>
-    <bean id="SavingsIntCalcTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <bean id="savingsIntCalcTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="name" value="SavingsIntCalcTaskJob"/>
         <property name="jobDetail" ref="SavingsIntCalcTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
@@ -57,7 +59,8 @@
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.SavingsIntPostingTask" />
       <property name="name" value="SavingsIntPostingTaskJob" />
     </bean>
-    <bean id="SavingsIntPostingTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <bean id="savingsIntPostingTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="name" value="SavingsIntPostingTaskJob"/>
         <property name="jobDetail" ref="SavingsIntPostingTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
@@ -75,7 +78,8 @@
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.ApplyCustomerFeeChangesTask" />
       <property name="name" value="ApplyCustomerFeeChangesTaskJob" />
     </bean>
-    <bean id="ApplyCustomerFeeChangesTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <bean id="applyCustomerFeeChangesTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="name" value="ApplyCustomerFeeChangesTaskJob"/>
         <property name="jobDetail" ref="ApplyCustomerFeeChangesTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
@@ -93,7 +97,8 @@
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.LoanArrearsAgingTask" />
       <property name="name" value="LoanArrearsAgingTaskJob" />
     </bean>
-    <bean id="LoanArrearsAgingTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <bean id="loanArrearsAgingTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="name" value="LoanArrearsAgingTaskJob"/>
         <property name="jobDetail" ref="LoanArrearsAgingTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
@@ -111,7 +116,8 @@
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.ApplyHolidayChangesTask" />
       <property name="name" value="ApplyHolidayChangesTaskJob" />
     </bean>
-    <bean id="ApplyHolidayChangesTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <bean id="applyHolidayChangesTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="name" value="ApplyHolidayChangesTaskJob"/>
         <property name="jobDetail" ref="ApplyHolidayChangesTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
@@ -129,7 +135,8 @@
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskTask" />
       <property name="name" value="LoanArrearsAndPortfolioAtRiskTaskJob" />
     </bean>
-    <bean id="LoanArrearsAndPortfolioAtRiskTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <bean id="loanArrearsAndPortfolioAtRiskTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="name" value="LoanArrearsAndPortfolioAtRiskTaskJob"/>
         <property name="jobDetail" ref="LoanArrearsAndPortfolioAtRiskTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
@@ -151,7 +158,8 @@
       <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.GenerateMeetingsForCustomerAndSavingsTask" />
       <property name="name" value="GenerateMeetingsForCustomerAndSavingsTaskJob" />
     </bean>
-    <bean id="GenerateMeetingsForCustomerAndSavingsTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <bean id="generateMeetingsForCustomerAndSavingsTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="name" value="GenerateMeetingsForCustomerAndSavingsTaskJob"/>
         <property name="jobDetail" ref="GenerateMeetingsForCustomerAndSavingsTask" />
         <property name="cronExpression" value="0 0 0 * * ?" />
     </bean>
@@ -169,7 +177,8 @@
 	  <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.BranchReportTask" />
 	  <property name="name" value="BranchReportTaskJob" />
 	</bean>
-	<bean id="BranchReportTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	<bean id="branchReportTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="name" value="BranchReportTaskJob"/>
 	    <property name="jobDetail" ref="BranchReportTask" />
 	    <property name="cronExpression" value="0 5 0 * * ?" />
 	</bean>
@@ -194,15 +203,15 @@
         </property>
 	    <property name="triggers">
 	        <list>
-	            <ref bean="ProductStatusTrigger" />
-	            <ref bean="SavingsIntCalcTaskTrigger" />
-	            <ref bean="SavingsIntPostingTaskTrigger" />
-	            <ref bean="ApplyCustomerFeeChangesTaskTrigger" />
-	            <ref bean="LoanArrearsAgingTaskTrigger" />
-	            <ref bean="ApplyHolidayChangesTaskTrigger" />
-	            <ref bean="LoanArrearsAndPortfolioAtRiskTaskTrigger" />
-	            <ref bean="GenerateMeetingsForCustomerAndSavingsTaskTrigger" />
-	            <ref bean="BranchReportTaskTrigger" />
+	            <ref bean="productStatusTrigger" />
+	            <ref bean="savingsIntCalcTaskTrigger" />
+	            <ref bean="savingsIntPostingTaskTrigger" />
+	            <ref bean="applyCustomerFeeChangesTaskTrigger" />
+	            <ref bean="loanArrearsAgingTaskTrigger" />
+	            <ref bean="applyHolidayChangesTaskTrigger" />
+	            <ref bean="loanArrearsAndPortfolioAtRiskTaskTrigger" />
+	            <ref bean="generateMeetingsForCustomerAndSavingsTaskTrigger" />
+	            <ref bean="branchReportTaskTrigger" />
 	        </list>
 	    </property>
 	</bean>

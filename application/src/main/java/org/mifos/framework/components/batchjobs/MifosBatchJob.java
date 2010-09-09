@@ -32,6 +32,8 @@ import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
 import org.quartz.Trigger;
 import org.quartz.TriggerUtils;
+import org.quartz.SimpleTrigger;
+import org.quartz.Scheduler;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
@@ -88,10 +90,14 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
 
     /**
      * A method responsible for the actual launch of the Spring Batch job.
+     * @param job Job class
+     * @param jobParameters Job parameters
      * @param forcedStatus - if null, job will execute normally. Otherwise, job will be executed and
      * it's batch status will be updated with the given one afterwards. It's important to note that forcedStatus
      * cannot be more 'positive' than job's actual outcome, i.e. batch job's actual status FAILED cannot
      * be replaced by COMPLETE.
+     * @return Batch computation status
+     * @throws BatchJobException when something goes wrong
      */
     private BatchStatus launchJob(Job job, JobParameters jobParameters, BatchStatus forcedStatus) throws BatchJobException {
         BatchStatus exitStatus = BatchStatus.UNKNOWN;
@@ -120,7 +126,11 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
     /**
      * This method is a wrapper around launchJob method. It checks whether previous
      * runs of the job executed successfully and attempts to re-run them in case they did not.
-     * @param lookUpDepth
+     * @param job Job class
+     * @param jobParameters Job parameters
+     * @param lookUpDepth Counter used to track current recurrence depth
+     * @return Batch computation status
+     * @throws BatchJobException when something goes wrong
      */
     public BatchStatus checkAndLaunchJob(Job job, JobParameters jobParameters, int lookUpDepth) throws BatchJobException {
         List<JobInstance> jobInstances = jobExplorer.getJobInstances(job.getName(), lookUpDepth, lookUpDepth+1);
@@ -147,7 +157,13 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
             JobInstance jobInstance = jobInstances.get(0);
             Date previousFireTime = new Date(jobInstance.getJobParameters().getLong(JOB_EXECUTION_TIME_KEY));
             Date scheduledFireTime = context.getScheduledFireTime();
-            List<Date> missedLaunches = computeMissedJobLaunches(previousFireTime, scheduledFireTime, context.getTrigger());
+            Trigger trigger = context.getTrigger();
+            boolean onDemandRun = false;
+            if (Scheduler.DEFAULT_MANUAL_TRIGGERS.equals(trigger.getGroup())) { // this is a manual run
+                trigger = context.getScheduler().getTrigger(job.getName(), Scheduler.DEFAULT_GROUP);
+                onDemandRun = true;
+            }
+            List<Date> missedLaunches = computeMissedJobLaunches(previousFireTime, scheduledFireTime, trigger, onDemandRun);
             for(Date missedLaunch : missedLaunches) {
                 JobParameters jobParameters = createJobParameters(missedLaunch.getTime());
                 checkAndLaunchJob(job, jobParameters, 0);
@@ -156,9 +172,8 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
     }
 
     @SuppressWarnings("unchecked")
-    public List<Date> computeMissedJobLaunches(Date from, Date to, Trigger trigger) throws Exception {
+    public List<Date> computeMissedJobLaunches(Date from, Date to, Trigger trigger, boolean onDemandRun) throws Exception {
         List<Date> missedLaunches = new LinkedList<Date>();
-        List<Date> computationOutcome = null;
         if(trigger instanceof CronTrigger) {
             CronTrigger cronTrigger = new CronTrigger();
             cronTrigger.setStartTime(from);
@@ -169,10 +184,25 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
             } catch(ParseException pe) {
                 throw new Exception(pe);
             }
-            computationOutcome = TriggerUtils.computeFireTimesBetween(cronTrigger, null, from, to);
+            List<Date> computationOutcome = TriggerUtils.computeFireTimesBetween(cronTrigger, null, from, to);
             missedLaunches.addAll(computationOutcome);
             missedLaunches.remove(0);
-            missedLaunches.remove(missedLaunches.size()-1);
+            if (!onDemandRun && missedLaunches.size() > 0) {
+                missedLaunches.remove(missedLaunches.size()-1);
+            }
+        }
+        else if (trigger instanceof SimpleTrigger) {
+            SimpleTrigger simpleTrigger = new SimpleTrigger();
+            simpleTrigger.setStartTime(from);
+            simpleTrigger.setNextFireTime(from);
+            simpleTrigger.setRepeatInterval(((SimpleTrigger)trigger).getRepeatInterval());
+            simpleTrigger.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
+            List<Date> computationOutcome = TriggerUtils.computeFireTimesBetween(simpleTrigger, null, from, to);
+            missedLaunches.addAll(computationOutcome);
+            missedLaunches.remove(0);
+            if (!onDemandRun && missedLaunches.size() > 0) {
+                missedLaunches.remove(missedLaunches.size()-1);
+            }
         }
         return missedLaunches;
     }
@@ -192,6 +222,8 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
     /**
      * Classes inheriting from MifosBatchJob must override this method and
      * return an appropriate Helper class containing business logic.
+     *
+     * @return Helper class containing business logic
      */
     public abstract TaskHelper getTaskHelper();
 

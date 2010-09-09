@@ -117,13 +117,19 @@ public class BatchjobsController {
 
     private ModelAndView produceModelAndView(HttpServletRequest request, List<String> errorMessages) {
         ServletContext context = request.getSession().getServletContext();
-        List<BatchjobsDto> batchjobs = null;
-        BatchjobsSchedulerDto batchjobsScheduler = null;
+        List<BatchjobsDto> batchjobs;
+        BatchjobsSchedulerDto batchjobsScheduler;
         try {
             batchjobs = batchjobsServiceFacade.getBatchjobs(context);
+        } catch(Exception tse) {
+            errorMessages.add("Error when retrieving batch jobs information: " + tse.getMessage());
+            batchjobs = new ArrayList<BatchjobsDto>();
+        }
+        try {
             batchjobsScheduler = batchjobsServiceFacade.getBatchjobsScheduler(context);
         } catch(Exception tse) {
-            new ArrayList<BatchjobsDto>();
+            errorMessages.add("Error when retrieving batch jobs information: " + tse.getMessage());
+            batchjobsScheduler = new BatchjobsSchedulerDto(false);
         }
 
         Map<String, Object> model = new HashMap<String, Object>();

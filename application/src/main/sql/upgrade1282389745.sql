@@ -125,5 +125,3 @@ insert into QRTZ_LOCKS values('JOB_ACCESS');
 insert into QRTZ_LOCKS values('CALENDAR_ACCESS');
 insert into QRTZ_LOCKS values('STATE_ACCESS');
 insert into QRTZ_LOCKS values('MISFIRE_ACCESS');
-
-drop table scheduled_tasks;
