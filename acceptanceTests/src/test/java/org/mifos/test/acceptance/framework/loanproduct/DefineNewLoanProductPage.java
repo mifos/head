@@ -80,9 +80,10 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private int gracePeriodType;
         private String interestGLCode;
         private String principalGLCode;
+        private boolean interestWaiver;
 
 
-        public String getBranch() {
+       public String getBranch() {
             return this.branch;
         }
 
@@ -234,7 +235,14 @@ public class DefineNewLoanProductPage extends AbstractPage {
             this.principalGLCode = principalGLCode;
         }
 
-    }
+       public void setInterestWaiver(boolean interestWaiver) {
+           this.interestWaiver = interestWaiver;
+       }
+
+       public boolean isInterestWaiver() {
+           return interestWaiver;
+       }
+   }
 
     public void fillLoanParameters(SubmitFormParameters parameters) {
         selenium.type("createLoanProduct.input.prdOffering", parameters.getOfferingName());

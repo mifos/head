@@ -85,10 +85,10 @@ explanation of the license and how it is applied.
                             <c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'waiverInterest')==true}">
 						    <tr>
                                 <td align="right" class="fontnormalbold">
-                    	        <mifos:mifoslabel name="loan.waiverInterestPreview"/>
+                    	        <mifos:mifoslabel name="loan.waiverInterestPreview" isColonRequired="yes"/>
                                 </td>
                                 <td>
-                                    <span class="fontnormal">
+                                    <span class="fontnormal" id="waiverInterest">
                                         <c:choose>
 							                <c:when test="${sessionScope.repayLoanActionForm.waiverInterest==true}">
 									            <mifos:mifoslabel name="loan.yes"/>

@@ -20,14 +20,6 @@
 
 package org.mifos.accounts.loan.struts.uihelpers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTagSupport;
-
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
@@ -41,6 +33,13 @@ import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
+
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class LoanRepaymentTag extends BodyTagSupport {
     Locale locale = null;
@@ -227,12 +226,12 @@ public class LoanRepaymentTag extends BodyTagSupport {
                     // add a tr with 2 td for each of the 2 tables
                     html.startTag("tr");
                     html.startTag("td", "width", "70%");
-                    html.startTag("table", "width", "95%", "border", "0", "cellspacing", "0", "cellpadding", "5");
+                    html.startTag("table", "width", "95%", "border", "0", "cellspacing", "0", "cellpadding", "5", "id", "repaymentScheduleTable");
                     html.append(html1);
                     html.endTag("table");
                     html.endTag("td");
                     html.startTag("td", "width", "25%", "valign", "top");
-                    html.startTag("table", "width", "95%", "border", "0", "cellspacing", "0", "cellpadding", "5");
+                    html.startTag("table", "width", "95%", "border", "0", "cellspacing", "0", "cellpadding", "5", "id", "runningBalanceTable");
                     html.append(html2);
                     html.endTag("table");
                     html.endTag("td");
