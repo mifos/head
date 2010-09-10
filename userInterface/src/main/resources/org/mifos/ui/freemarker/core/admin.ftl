@@ -48,7 +48,6 @@
         <li type="circle"><a id="admin.link.defineAcceptedPaymentType" href="defineAcceptedPaymentTypes.ftl" >[@spring.message "admin.defineacceptedpayments"/]</a></li>
         <li type="circle"><a id="admin.link.viewOrganizationSettings" href="viewOrganizationSettings.ftl" >[@spring.message "admin.viewOrganizationSettings"/]</a></li>
         <li type="circle"><a id="admin.link.viewPPI" href="ppiAction.do?method=get" >[@spring.message "admin.viewPPIsettings" /]</a>&nbsp;|&nbsp;<a Id="admin.link.configurePPI" href="ppiAction.do?method=configure">[@spring.message "admin.ConfigurePPIsettings"/]</a></li>
-        <li type="circle"><a id="admin.link.uploadPPI" href="uploadQuestionGroup.ftl" >[@spring.message "admin.uploadPPI"/]</a></li>
       </ul>
       </p>
       <p><span class="fontBold">[@spring.message "admin.datadisplayandrules" /] </span>
@@ -57,6 +56,7 @@
         <li type="circle"><a id="admin.link.defineLookupOption"	href="defineLookupOptions.ftl">[@spring.message "admin.defineLookupOptions"/]</a></li>
         <li type="circle"><a id="admin.link.defineHiddenMandatoryFields" href="defineMandatoryHiddenFields.ftl">[@spring.message "admin.definemandatory/hiddenfields"/]</a></li>
         <li type="circle"><a id="admin.link.viewAdditionalFields" href="viewAdditionalFields.ftl">[@spring.message "admin.viewAdditionalFields"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineAdditionalFields"	href="defineAdditionalFields.ftl">[@spring.message "admin.defineAdditionalFields"/]</a></li>
+        <li type="circle"><a id="admin.link.uploadPPI" href="uploadQuestionGroup.ftl" >[@spring.message "admin.uploadPPI"/]</a></li>
       </ul>
       </p>
       <p class="orangeheading">[@spring.message "admin.manageimports"/]</p>

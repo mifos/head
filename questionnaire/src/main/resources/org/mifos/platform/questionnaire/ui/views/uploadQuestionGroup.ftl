@@ -26,7 +26,7 @@
     [@mifos.crumbpairs breadcrumb/]
     <div class="content_panel">
         <h1>
-            [@spring.message "questionnaire.uploadQuestionGroupTitle"/]
+            [@spring.message "questionnaire.uploadQuestionGroup"/]
         </h1>
         <div class="allErrorsDiv">
             [@mifosmacros.showAllErrors "uploadQuestionGroupForm.*"/]
@@ -39,7 +39,7 @@
                 <ol>
                     <li>
                         <label for="selectedCountry"><span class="red">*</span>[@spring.message
-                            "questionnaire.country"/]:</label>
+                            "questionnaire.select.questionGroup"/]:</label>
                         [@mifosmacros.formSingleSelectWithPrompt "uploadQuestionGroupForm.selectedCountry", uploadQuestionGroupForm.countries,
                         "--select one--" /]
                     </li>
