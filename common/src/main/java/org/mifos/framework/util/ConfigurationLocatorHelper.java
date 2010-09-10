@@ -33,7 +33,21 @@ public class ConfigurationLocatorHelper {
     }
 
     public String getEnvironmentProperty(String environmentPropertyName) {
-        return System.getenv(environmentPropertyName);
+        String environmentProperty = System.getenv(environmentPropertyName);
+        if (environmentProperty == null) {
+            environmentProperty = evaluateForMifosConf(environmentPropertyName);
+        }
+        return environmentProperty;
     }
 
+    private String evaluateForMifosConf(String environmentPropertyName) {
+        String property = null;
+        if ("MIFOS_CONF".equals(environmentPropertyName)) {
+            property = getHomeProperty("mifos.conf");
+            if (property == null) {
+                property = getHomeProperty("user.home") + "/.mifos";
+            }
+        }
+        return property;
+    }
 }

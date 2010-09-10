@@ -21,6 +21,8 @@
 package org.mifos.platform.questionnaire.domain.ppi;
 
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.util.ConfigurationLocator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -36,6 +38,8 @@ import static org.mifos.platform.questionnaire.QuestionnaireConstants.*; //NOPMD
 import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 
 public final class PPISurveyLocatorImpl implements PPISurveyLocator, ResourceLoaderAware {
+    @Autowired
+    private ConfigurationLocator configurationLocator;
     private ResourceLoader resourceLoader;
     private final String ppiXmlFolder;
 
@@ -46,7 +50,7 @@ public final class PPISurveyLocatorImpl implements PPISurveyLocator, ResourceLoa
     @Override
     public List<String> getAllPPISurveyFiles() {
         try {
-            Resource resource = this.resourceLoader.getResource(ppiXmlFolder);
+            Resource resource = this.resourceLoader.getResource(resolvePath());
             return getPPISurveyFiles(resource.getFile());
         } catch (IOException e) {
             throw new SystemException(FETCH_PPI_XMLS_FAILED, e);
@@ -57,7 +61,7 @@ public final class PPISurveyLocatorImpl implements PPISurveyLocator, ResourceLoa
     public String getPPIUploadFileForCountry(String country) {
         try {
             String fileName = getPPIXmlFileName(country);
-            Resource resource = this.resourceLoader.getResource(ppiXmlFolder);
+            Resource resource = this.resourceLoader.getResource(resolvePath());
             return getPPIFilePath(fileName, resource.getFile());
         } catch (IOException e) {
             throw new SystemException(FETCH_PPI_COUNTRY_XML_FAILED, e);
@@ -88,6 +92,11 @@ public final class PPISurveyLocatorImpl implements PPISurveyLocator, ResourceLoa
     @Override
     public void setResourceLoader(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
+    }
+
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings
+    private String resolvePath() {
+        return this.configurationLocator.resolvePath(ppiXmlFolder);
     }
 
     private static class PPIPartialFileNameFilter implements FilenameFilter {
