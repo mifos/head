@@ -53,6 +53,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -104,18 +105,20 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     }
 
     @Override
-    public QuestionGroupDto map(List<CustomFieldDefinitionEntity> customFields, Map<Short, Integer> customFieldQuestionIdMap) {
+    public QuestionGroupDto map(Iterator<CustomFieldDefinitionEntity> customFields, Map<Short, Integer> customFieldQuestionIdMap, EntityType entityType) {
         SectionDto sectionDto = getDefaultSection();
-        for (int i = 0, customFieldsSize = customFields.size(); i < customFieldsSize; i++) {
-            CustomFieldDefinitionEntity customField = customFields.get(i);
-            QuestionDto questionDto = map(customField, i);
-            Integer questionId = createQuestion(questionDto, customField.getFieldId());
-            if (questionId != null) {
-                sectionDto.addQuestion(questionDto);
-                customFieldQuestionIdMap.put(customField.getFieldId(), questionId);
+        if (customFields != null) {
+            for (int i = 0; customFields.hasNext(); i++) {
+                CustomFieldDefinitionEntity customField = customFields.next();
+                QuestionDto questionDto = map(customField, i);
+                Integer questionId = createQuestion(questionDto, customField.getFieldId());
+                if (questionId != null) {
+                    sectionDto.addQuestion(questionDto);
+                    customFieldQuestionIdMap.put(customField.getFieldId(), questionId);
+                }
             }
         }
-        return getQuestionGroup(sectionDto, customFields.get(0).getEntityType());
+        return getQuestionGroup(sectionDto, entityType.getValue());
     }
 
     private Integer createQuestion(QuestionDto questionDto, Short fieldId) {

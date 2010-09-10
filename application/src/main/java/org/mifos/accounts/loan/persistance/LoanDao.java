@@ -25,6 +25,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.customers.util.helpers.SurveyDto;
 
+import java.util.Iterator;
 import java.util.List;
 
 public interface LoanDao {
@@ -35,7 +36,7 @@ public interface LoanDao {
 
     List<SurveyDto> getAccountSurveyDto(Integer accountId);
 
-    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForLoan();
+    Iterator<AccountCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
 
-    List<AccountCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
+    Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForLoan();
 }

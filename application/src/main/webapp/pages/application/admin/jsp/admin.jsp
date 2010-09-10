@@ -163,11 +163,6 @@ while(enn.hasMoreElements()){
 								action="ppiAction.do?method=configure">
 								<mifos:mifoslabel name="admin.configurePPI" /></html-el:link></td>
 						</tr>
-                        <tr class="fontnormal">
-                            <td><img src="pages/framework/images/bullet_circle.gif" width="9"
-                                height="11"></td>
-                            <td><a id="admin.link.uploadPPI" href="uploadQuestionGroup.ftl"><mifos:mifoslabel name="admin.uploadPPI" /></a></td>
-                        </tr>
 					</table>
 					 <br>
 					<span class="fontnormalbold"><mifos:mifoslabel name="admin.datadisplayrules" /></span><br>
@@ -201,6 +196,11 @@ while(enn.hasMoreElements()){
 								action="customFieldsAction.do?method=loadDefineCustomFields&randomNUm=${sessionScope.randomNUm}" >
 								<mifos:mifoslabel name="admin.defineadditionalfields" /></html-el:link></td>
 							</tr>
+                            <tr class="fontnormal">
+                                <td><img src="pages/framework/images/bullet_circle.gif" width="9"
+                                    height="11"></td>
+                                <td><a id="admin.link.uploadPPI" href="uploadQuestionGroup.ftl"><mifos:mifoslabel name="admin.uploadPPI" /></a></td>
+                            </tr>
 						</table>
 
 					<!-- spacer -->

@@ -12,6 +12,7 @@ import org.mifos.customers.util.helpers.SurveyDto;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -66,24 +67,18 @@ public class LoanDaoHibernate implements LoanDao {
     }
 
     @Override
-    public final List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForLoan() {
+    public final Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForLoan() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.LOAN.getValue());
-        return retrieveCustomFieldDefinitions(queryParameters);
+        return (Iterator<CustomFieldDefinitionEntity>) genericDao
+                .executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
     }
 
     @Override
-    public List<AccountCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
+    public Iterator<AccountCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
-        return (List<AccountCustomFieldEntity>) genericDao.executeNamedQuery("AccountCustomFieldEntity.getResponses", queryParameters);
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<CustomFieldDefinitionEntity> retrieveCustomFieldDefinitions(Map<String, Object> queryParameters) {
-        List<CustomFieldDefinitionEntity> customFieldsForCenter = (List<CustomFieldDefinitionEntity>) genericDao
-                .executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
-        return customFieldsForCenter;
+        return (Iterator<AccountCustomFieldEntity>) genericDao.executeNamedQueryIterator("AccountCustomFieldEntity.getResponses", queryParameters);
     }
 
 }

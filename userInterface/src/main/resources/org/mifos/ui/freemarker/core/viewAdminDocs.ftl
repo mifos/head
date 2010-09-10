@@ -24,7 +24,7 @@
 [@adminLeftPaneLayout]
 
     <span id="page.id" title="viewAdministrativeDocuments"></span>
-    [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "admin.viewadministrativedocuments":""}/]
+    [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "manageReports.viewadministrativedocuments":""}/]
     [@mifos.crumbpairs breadcrumb /]
     <div class="content_panel">
         <h1>

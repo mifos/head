@@ -77,7 +77,7 @@
     <bean name="questionGroupDefinitionParser" class="org.mifos.platform.questionnaire.parsers.QuestionGroupDefinitionParserImpl"/>
     <bean name="ppiSurveyLocator" class="org.mifos.platform.questionnaire.domain.ppi.PPISurveyLocatorImpl">
         <constructor-arg>
-            <value>${GeneralConfig.UploadPPIDirectory}</value>
+            <value>${GeneralConfig.UploadQGDirectory}</value>
         </constructor-arg>
     </bean>
 
