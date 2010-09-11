@@ -47,11 +47,17 @@ public final class PPISurveyLocatorImpl implements PPISurveyLocator, ResourceLoa
         this.ppiXmlFolder = ppiXmlFolder;
     }
 
+    @SuppressWarnings("PMD")
     @Override
     public List<String> getAllPPISurveyFiles() {
         try {
-            Resource resource = this.resourceLoader.getResource(resolvePath());
-            return getPPISurveyFiles(resource.getFile());
+            String path = resolvePath();
+            Resource resource = this.resourceLoader.getResource(path);
+            List<String> surveyFiles = getPPISurveyFiles(resource.getFile());
+            if (surveyFiles.isEmpty()) {
+                throw new RuntimeException("No PPI files found at " + path);
+            }
+            return surveyFiles;
         } catch (IOException e) {
             throw new SystemException(FETCH_PPI_XMLS_FAILED, e);
         }
