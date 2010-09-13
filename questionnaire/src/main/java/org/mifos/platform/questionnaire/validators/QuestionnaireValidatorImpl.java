@@ -508,7 +508,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         } else if (sectionQuestionDetail.hasAnswer() && sectionQuestionDetail.isNumeric()) {
             Integer allowedMinValue = sectionQuestionDetail.getNumericMin();
             Integer allowedMaxValue = sectionQuestionDetail.getNumericMax();
-            if (invalidNumericAnswer(sectionQuestionDetail.getAnswer(), allowedMinValue, allowedMaxValue)) {
+            if (invalidNumericAnswer(sectionQuestionDetail.getValue(), allowedMinValue, allowedMaxValue)) {
                 validationException.addChildException(new BadNumericResponseException(questionTitle, allowedMinValue, allowedMaxValue));
             }
         }

@@ -59,6 +59,7 @@ import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.SelectionDetail;
 import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
@@ -524,16 +525,22 @@ public class QuestionnaireMapperTest {
         List<SectionDetail> sectionDetails2 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails2, null, null));
         QuestionGroupDetail questionGroupDetail2 = new QuestionGroupDetail(11, "QG2", new EventSourceDto("Create", "Client", null), sectionDetails2, true);
 
-        QuestionDetail questionDetail = new QuestionDetail(13, "Question 2", "Question 2", QuestionType.MULTI_SELECT, true);
-        questionDetail.setAnswerChoices(asList(new ChoiceDto("a1"), new ChoiceDto("a2"), new ChoiceDto("a3")));
-        List<QuestionDetail> questionDetails3 = asList(questionDetail);
+        QuestionDetail questionDetail1 = new QuestionDetail(13, "Question 3", "Question 3", QuestionType.MULTI_SELECT, true);
+        questionDetail1.setAnswerChoices(asList(getChoiceDto("a1"), getChoiceDto("a2"), getChoiceDto("a3")));
+        List<QuestionDetail> questionDetails3 = asList(questionDetail1);
         List<SectionDetail> sectionDetails3 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails3, null, asList("a2", "a3")));
         QuestionGroupDetail questionGroupDetail3 = new QuestionGroupDetail(11, "QG2", new EventSourceDto("Create", "Client", null), sectionDetails3, true);
 
+        QuestionDetail questionDetail2 = new QuestionDetail(13, "Question 4", "Question 4", QuestionType.SMART_SELECT, true);
+        questionDetail2.setAnswerChoices(asList(getChoiceDto("a1", "Tag1", "Tag2"), getChoiceDto("a2", "Tag11", "Tag22"), getChoiceDto("a3", "Tag111", "Tag222")));
+        questionDetails3 = asList(questionDetail2);
+        sectionDetails3 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails3, asList(getSelectionDetail("a1", "Tag2"), getSelectionDetail("a3", "Tag111"))));
+        QuestionGroupDetail questionGroupDetail4 = new QuestionGroupDetail(11, "QG2", new EventSourceDto("Create", "Client", null), sectionDetails3, true);
+
         List<QuestionGroupInstance> questionGroupInstances =
-                questionnaireMapper.mapToQuestionGroupInstances(new QuestionGroupDetails(101, 201, asList(questionGroupDetail1, questionGroupDetail2, questionGroupDetail3)));
+                questionnaireMapper.mapToQuestionGroupInstances(new QuestionGroupDetails(101, 201, asList(questionGroupDetail1, questionGroupDetail2, questionGroupDetail3, questionGroupDetail4)));
         assertThat(questionGroupInstances, is(notNullValue()));
-        assertThat(questionGroupInstances.size(), is(3));
+        assertThat(questionGroupInstances.size(), is(4));
         QuestionGroupInstance questionGroupInstance1 = questionGroupInstances.get(0);
         assertThat(questionGroupInstance1.getQuestionGroup().getId(), is(10));
         assertThat(questionGroupInstance1.getCompletedStatus(), is(1));
@@ -572,8 +579,25 @@ public class QuestionnaireMapperTest {
         assertThat(questionGroupResponses3.get(0).getResponse(), is("a2"));
         assertThat(questionGroupResponses3.get(1).getResponse(), is("a3"));
 
+        QuestionGroupInstance questionGroupInstance4 = questionGroupInstances.get(3);
+        List<QuestionGroupResponse> questionGroupResponses4 = questionGroupInstance4.getQuestionGroupResponses();
+        assertThat(questionGroupInstance4, is(notNullValue()));
+        assertThat(questionGroupResponses4.size(), is(2));
+        assertThat(questionGroupResponses4.get(0).getResponse(), is("a1"));
+        assertThat(questionGroupResponses4.get(0).getTag(), is("Tag2"));
+        assertThat(questionGroupResponses4.get(1).getResponse(), is("a3"));
+        assertThat(questionGroupResponses4.get(1).getTag(), is("Tag111"));
+
         verify(questionGroupInstanceDao, times(1)).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201, 10);
-        verify(questionGroupInstanceDao, times(2)).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201, 11);
+        verify(questionGroupInstanceDao, times(3)).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201, 11);
+    }
+
+    private ChoiceDto getChoiceDto(String choiceText, String... tags) {
+        ChoiceDto choiceDto = new ChoiceDto(choiceText);
+        for (String tag : tags) {
+            choiceDto.addTag(tag);
+        }
+        return choiceDto;
     }
 
     @Test
@@ -590,12 +614,12 @@ public class QuestionnaireMapperTest {
         assertQuestionGroupInstanceDetail(questionGroupInstanceDetails.get(1), "QG3", 2009, 2, 12);
         QuestionGroupInstanceDetail detail = questionGroupInstanceDetails.get(2);
         assertThat(detail.getQuestionGroupTitle(), is("QG5"));
-        List<String> values = detail.getQuestionGroupDetail().getSectionDetail(0).getQuestionDetail(0).getValues();
+        List<SelectionDetail> values = detail.getQuestionGroupDetail().getSectionDetail(0).getQuestionDetail(0).getSelections();
         assertThat(values, is(notNullValue()));
         assertThat(values.size(), is(3));
-        assertThat(values.get(0), is("Choice1"));
-        assertThat(values.get(1), is("Choice3"));
-        assertThat(values.get(2), is("Choice4"));
+        assertThat(values.get(0).getSelectedChoice(), is("Choice1"));
+        assertThat(values.get(1).getSelectedChoice(), is("Choice3"));
+        assertThat(values.get(2).getSelectedChoice(), is("Choice4"));
     }
 
     @Test
@@ -678,16 +702,47 @@ public class QuestionnaireMapperTest {
         return questionGroupInstance;
     }
 
+    private SelectionDetail getSelectionDetail(String selectedChoice, String selectedTag) {
+        SelectionDetail selectionDetail1 = new SelectionDetail();
+        selectionDetail1.setSelectedChoice(selectedChoice);
+        selectionDetail1.setSelectedTag(selectedTag);
+        return selectionDetail1;
+    }
+
+    private SectionDetail getSectionDetailWithQuestions(int id, String name, List<QuestionDetail> questionDetails, List<SelectionDetail> answers) {
+        SectionDetail sectionDetail = new SectionDetail();
+        sectionDetail.setName(name);
+        List<SectionQuestionDetail> sectionQuestionDetails = new ArrayList<SectionQuestionDetail>();
+        for (QuestionDetail questionDetail : questionDetails) {
+            SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(id, questionDetail, false, null, answers);
+            sectionQuestionDetails.add(sectionQuestionDetail);
+        }
+        sectionDetail.setQuestionDetails(sectionQuestionDetails);
+        return sectionDetail;
+    }
+
     private SectionDetail getSectionDetailWithQuestions(int id, String name, List<QuestionDetail> questionDetails, String answer, List<String> answers) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
         List<SectionQuestionDetail> sectionQuestionDetails = new ArrayList<SectionQuestionDetail>();
         for (QuestionDetail questionDetail : questionDetails) {
-            SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(id, questionDetail, false, answer, answers);
+            SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(id, questionDetail, false, answer, getSelections(answers));
             sectionQuestionDetails.add(sectionQuestionDetail);
         }
         sectionDetail.setQuestionDetails(sectionQuestionDetails);
         return sectionDetail;
+    }
+
+    private List<SelectionDetail> getSelections(List<String> answers) {
+        List<SelectionDetail> selectionDetails = new ArrayList<SelectionDetail>();
+        if (answers != null) {
+            for (String answer : answers) {
+                SelectionDetail selectionDetail = new SelectionDetail();
+                selectionDetail.setSelectedChoice(answer);
+                selectionDetails.add(selectionDetail);
+            }
+        }
+        return selectionDetails;
     }
 
     private List<EventSourceEntity> getEventSourceEntities(String event, String source, String description) {

@@ -140,10 +140,12 @@ explanation of the license and how it is applied.
 				                            <ol class="questionList" id="questionList" style="overflow:auto; width:19em; height:180px; border:1px solid #336699; padding-left:5px">
                                               <input type="checkbox" checked="checked" name="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="" style="display:none;"/>
 				                              <c:forEach var="choiceValue" items="${question.answerChoices}" >
-                                                 <li class="noPadding">
-								    				<html:multibox property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="${choiceValue}" />
-								    				<label tags="${choiceValue.commaSeparatedTags}" style="float:none;">${choiceValue}</label>
-								                 </li>
+				                                <c:forEach var="tagValue" items="${choiceValue.tags}" >
+                                                     <li class="noPadding">
+                                                        <html:multibox property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="${choiceValue}" />
+                                                        <label tag="${tagValue}" style="float:none;">${choiceValue}&nbsp;:&nbsp;${tagValue}</label>
+                                                     </li>
+							                    </c:forEach>
 							                  </c:forEach>
 				                            </ol>
 				                          </fieldset>

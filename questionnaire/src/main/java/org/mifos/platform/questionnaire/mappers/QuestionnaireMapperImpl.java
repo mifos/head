@@ -37,6 +37,7 @@ import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
+import org.mifos.platform.questionnaire.service.SelectionDetail;
 import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
@@ -508,13 +509,20 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private void setMultiChoiceResponses(List<QuestionGroupResponse> questionGroupResponses, SectionQuestionDetail sectionQuestionDetail) {
-        List<String> answers = new ArrayList<String>();
+        List<SelectionDetail> answers = new ArrayList<SelectionDetail>();
         for (QuestionGroupResponse questionGroupResponse : questionGroupResponses) {
             if (questionGroupResponse.getSectionQuestion().getId() == sectionQuestionDetail.getId()) {
-                answers.add(questionGroupResponse.getResponse());
+                answers.add(mapToSelectionDetail(questionGroupResponse));
             }
         }
-        sectionQuestionDetail.setValues(answers);
+        sectionQuestionDetail.setSelections(answers);
+    }
+
+    private SelectionDetail mapToSelectionDetail(QuestionGroupResponse questionGroupResponse) {
+        SelectionDetail selectionDetail = new SelectionDetail();
+        selectionDetail.setSelectedChoice(questionGroupResponse.getResponse());
+        selectionDetail.setSelectedTag(questionGroupResponse.getTag());
+        return selectionDetail;
     }
 
     private QuestionGroupInstance mapToQuestionGroupInstance(int creatorId, int entityId, QuestionGroupDetail questionGroupDetail) {
@@ -544,13 +552,29 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         List<QuestionGroupResponse> questionGroupResponses = new LinkedList<QuestionGroupResponse>();
         for (SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()) {
             for (SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()) {
-                for (String value : sectionQuestionDetail.getAnswers()) {
-                    SectionQuestion sectionQuestion = sectionQuestionDao.getDetails(sectionQuestionDetail.getId());
-                    questionGroupResponses.add(mapToQuestionGroupResponse(questionGroupInstance, sectionQuestion, value));
+                SectionQuestion sectionQuestion = sectionQuestionDao.getDetails(sectionQuestionDetail.getId());
+                if (sectionQuestionDetail.hasAnswer()) {
+                    mapToQuestionGroupResponse(questionGroupInstance, questionGroupResponses, sectionQuestionDetail, sectionQuestion);
                 }
             }
         }
         return questionGroupResponses;
+    }
+
+    private void mapToQuestionGroupResponse(QuestionGroupInstance questionGroupInstance, List<QuestionGroupResponse> questionGroupResponses, SectionQuestionDetail sectionQuestionDetail, SectionQuestion sectionQuestion) {
+        if (sectionQuestionDetail.isMultiSelectQuestion()) {
+            for (SelectionDetail selectionDetail : sectionQuestionDetail.getSelections()) {
+                questionGroupResponses.add(mapToQuestionGroupResponse(questionGroupInstance, sectionQuestion, selectionDetail));
+            }
+        } else {
+            questionGroupResponses.add(mapToQuestionGroupResponse(questionGroupInstance, sectionQuestion, sectionQuestionDetail.getValue()));
+        }
+    }
+
+    private QuestionGroupResponse mapToQuestionGroupResponse(QuestionGroupInstance questionGroupInstance, SectionQuestion sectionQuestion, SelectionDetail selectionDetail) {
+        QuestionGroupResponse questionGroupResponse = mapToQuestionGroupResponse(questionGroupInstance, sectionQuestion, selectionDetail.getSelectedChoice());
+        questionGroupResponse.setTag(selectionDetail.getSelectedTag());
+        return questionGroupResponse;
     }
 
     private QuestionGroupResponse mapToQuestionGroupResponse(QuestionGroupInstance questionGroupInstance, SectionQuestion sectionQuestion, String value) {

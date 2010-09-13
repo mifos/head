@@ -10,5 +10,6 @@
         <many-to-one name="questionGroupInstance" column="question_group_instance_id" cascade="save-update" access="field" not-null="true"/>
         <many-to-one name="sectionQuestion" column="sections_questions_id"/>
         <property name="response" column="response" />
+        <property name="tag" column="tag" />
     </class>
 </hibernate-mapping>
