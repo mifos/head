@@ -65,6 +65,7 @@ insert into applied_upgrades(upgrade_id) values(1282247229);
 insert into applied_upgrades(upgrade_id) values(1283237728);
 insert into applied_upgrades(upgrade_id) values(1283320210);
 insert into applied_upgrades(upgrade_id) values(1283416834);
+insert into applied_upgrades(upgrade_id) values(1284365506);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
