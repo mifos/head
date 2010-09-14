@@ -37,7 +37,7 @@ $(document).ready(function(evt){
             var search_text = $(this).val();
             var rg = new RegExp(search_text,'i');
             $(this).parent().parent().find(".questionList li label").each(function(){
-                if($.trim($(this).html()).search(rg) == -1 && $(this).attr("tags").search(rg) == -1 ) {
+                if($(this).attr("tag").search(rg) == -1 && $(this).attr("choice").search(rg) == -1) {
                     $(this).parent().css('display', 'none');
                     $(this).css('display', 'none');
                     $(this).next().css('display', 'none');

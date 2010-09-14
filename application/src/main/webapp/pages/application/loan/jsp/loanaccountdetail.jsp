@@ -197,7 +197,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</tr>
 						</table>
 					</c:if>
-					<table width="96%" border="0" cellpadding="3" cellspacing="0">
+					<table width="96%" border="0" cellpadding="3" cellspacing="0" id="loanSummaryTable">
 						<tr class="drawtablerow">
 							<td width="24%">&nbsp;</td>
 							<td width="20%" align="right" class="drawtablerowboldnoline">

@@ -41,16 +41,17 @@
             [@mifosmacros.showAllErrors "questionDefinition.*"/]
         </div>
         <form name="editquestionform" action="viewAndEditQuestion.ftl?execution=${flowExecutionKey}" method="POST" focus="currentQuestion.title">
-            <fieldset>
-             <ol>
-                [#include "questionDefinition.ftl"]
-                <li class="buttonWidth">
+
+
+            [#include "questionDefinition.ftl"]
+        <div class="button_footer">
+            <div class="button_container">
                     <input type="submit" id="_eventId_update" name="_eventId_update" value="[@spring.message "questionnaire.submit"/]" class="buttn"/>
                     &nbsp;
                     <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
-                </li>
-             </ol>
-            </fieldset>
+            </div>
+        </div>
+
         </form>
     </div>
 [/@adminLeftPaneLayout]

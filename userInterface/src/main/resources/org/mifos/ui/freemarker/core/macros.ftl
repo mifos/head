@@ -118,6 +118,26 @@
     <input type="hidden" name="_${spring.status.expression}" value="on"/>
 [/#macro]
 
+[#macro formCheckboxesWithTags path options separator attributes=""]
+	[@spring.bind path /]
+    [#list options as option]
+        [#if option.tags?exists && option.tags?size > 0]
+            [#list option.tags as tag]
+                [#assign id="${spring.status.expression}${option_index}${tag_index}"]
+                [#assign isSelected = spring.contains(spring.status.value?default([""]), option.value + ":" + tag)]
+                <input type="checkbox" id="${id}" name="${spring.status.expression}" value="${option.value?html}:${tag?html}"[#if isSelected] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
+                <label for="${id}" choice="${option.value}" tag="${tag}" style="float:none;">${option.value?html}&nbsp;:&nbsp;${tag?html}</label>${separator}
+            [/#list]
+        [#else]
+            [#assign id="${spring.status.expression}${option_index}"]
+            [#assign isSelected = spring.contains(spring.status.value?default([""]), option.value)]
+            <input type="checkbox" id="${id}" name="${spring.status.expression}" value="${option.value?html}"[#if isSelected] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
+            <label for="${id}" choice="${option.value}" tag="" style="float:none;">${option.value?html}</label>${separator}
+        [/#if]
+    [/#list]
+    <input type="hidden" name="_${spring.status.expression}" value="on"/>
+[/#macro]
+
 [#macro formRadioButtons path options separator attributes=""]
 	[@spring.bind path /]
     [#list options as value]

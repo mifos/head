@@ -54,6 +54,11 @@ import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSchedulePreview
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchResultsPage;
 import org.mifos.test.acceptance.framework.loan.ViewInstallmentDetailsPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPage;
+import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
+import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
@@ -191,6 +196,17 @@ public class LoanTestHelper {
         loanAccountPage.verifyPage();
 
         return loanAccountPage;
+    }
+
+    public void editLoanProduct(String loanProduct, boolean interestWaiver) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ViewLoanProductsPage viewLoanProducts = adminPage.navigateToViewLoanProducts();
+        LoanProductDetailsPage loanProductDetailsPage = viewLoanProducts.viewLoanProductDetails(loanProduct);
+        EditLoanProductPage editLoanProductPage = loanProductDetailsPage.editLoanProduct();
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = new DefineNewLoanProductPage.SubmitFormParameters();
+        formParameters.setInterestWaiver(interestWaiver);
+        EditLoanProductPreviewPage editLoanProductPreviewPage = editLoanProductPage.submitInterestWaiverChanges(formParameters);
+        loanProductDetailsPage = editLoanProductPreviewPage.submit();
     }
 
     public DisburseLoanPage prepareToDisburseLoan(String loanId) {

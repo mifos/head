@@ -70,5 +70,14 @@ public class EditLoanProductPage extends MifosPage {
         return selenium.getValue("EditLoanProduct.input.description");
     }
 
-
+    public EditLoanProductPreviewPage submitInterestWaiverChanges(SubmitFormParameters formParameters) {
+        if (formParameters.isInterestWaiver()) {
+            selenium.check("EditLoanProduct.input.includeInterestWaiver");
+        } else {
+            selenium.uncheck("EditLoanProduct.input.includeInterestWaiver");
+        }
+        selenium.click("EditLoanProduct.button.preview");
+        waitForPageToLoad();
+        return new EditLoanProductPreviewPage(selenium);
+    }
 }

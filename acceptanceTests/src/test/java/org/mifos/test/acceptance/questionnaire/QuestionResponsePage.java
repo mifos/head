@@ -49,7 +49,7 @@ public class QuestionResponsePage extends MifosPage {
         for (String tag : tags.keySet()) {
             selenium.type(smartSelectId, tag);
             selenium.keyUp(smartSelectId, " ");
-            selenium.check("css=input[value=" + tags.get(tag) + "]");
+            selenium.check(String.format("css=input[value=%s:%s]", tags.get(tag), tag));
         }
     }
 

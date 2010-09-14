@@ -23,7 +23,14 @@ package org.mifos.accounts.business;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import junit.framework.Assert;
 import org.junit.Test;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mockito.Mockito;
+
+import java.util.ArrayList;
 
 /**
  * In memory unit tests for AccountBO.
@@ -41,6 +48,61 @@ public class AccountBOTest {
         account.setExternalId(externalId);
 
         assertThat(account.getExternalId(), is(externalId));
+    }
+    
+    @Test
+    public void testGetLastPmntToBeAdjustedReturnsFirstNonZeroElementInTheList(){
+        AccountBO account = new AccountBO(1);
+        AccountPaymentEntity accountPaymentEntity1 = Mockito.mock(AccountPaymentEntity.class);
+        AccountPaymentEntity accountPaymentEntity2 = Mockito.mock(AccountPaymentEntity.class);
+        AccountPaymentEntity accountPaymentEntity3 = Mockito.mock(AccountPaymentEntity.class);
+
+        ArrayList<AccountPaymentEntity> accountPayments = new ArrayList<AccountPaymentEntity>();
+        accountPayments.add(accountPaymentEntity1);
+        accountPayments.add(accountPaymentEntity2);
+        accountPayments.add(accountPaymentEntity3);
+
+        account.setAccountPayments(accountPayments);
+        Mockito.when(accountPaymentEntity1.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"0"));
+        Mockito.when(accountPaymentEntity2.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"2"));
+        Mockito.when(accountPaymentEntity3.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"3"));
+
+        Assert.assertSame(accountPaymentEntity2,account.getLastPmntToBeAdjusted());
+    }
+    
+    @Test
+    public void testGetLastPmntToBeAdjustedReturnsNullForAListWithOnePayment(){
+        AccountBO account = new AccountBO(1);
+        AccountPaymentEntity accountPaymentEntity = Mockito.mock(AccountPaymentEntity.class);
+
+        ArrayList<AccountPaymentEntity> accountPayments = new ArrayList<AccountPaymentEntity>();
+        accountPayments.add(accountPaymentEntity);
+
+        account.setAccountPayments(accountPayments);
+        Mockito.when(accountPaymentEntity.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"1"));
+
+        Assert.assertNull(account.getLastPmntToBeAdjusted());
+    }
+
+
+    @Test
+    public void testGetLastPmntToBeAdjustedReturnsNullIfNoNonZerPaymentIsDone(){
+        AccountBO account = new AccountBO(1);
+        AccountPaymentEntity accountPaymentEntity1 = Mockito.mock(AccountPaymentEntity.class);
+        AccountPaymentEntity accountPaymentEntity2 = Mockito.mock(AccountPaymentEntity.class);
+        AccountPaymentEntity accountPaymentEntity3 = Mockito.mock(AccountPaymentEntity.class);
+
+        ArrayList<AccountPaymentEntity> accountPayments = new ArrayList<AccountPaymentEntity>();
+        accountPayments.add(accountPaymentEntity1);
+        accountPayments.add(accountPaymentEntity2);
+        accountPayments.add(accountPaymentEntity3);
+
+        account.setAccountPayments(accountPayments);
+        Mockito.when(accountPaymentEntity1.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"0"));
+        Mockito.when(accountPaymentEntity2.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"0"));
+        Mockito.when(accountPaymentEntity3.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"0"));
+
+        Assert.assertNull(account.getLastPmntToBeAdjusted());
 
     }
 }

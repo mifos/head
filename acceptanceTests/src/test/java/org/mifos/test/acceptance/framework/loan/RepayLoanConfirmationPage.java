@@ -20,9 +20,9 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
-import org.mifos.test.acceptance.framework.MifosPage;
-
 import com.thoughtworks.selenium.Selenium;
+import org.apache.commons.lang.StringUtils;
+import org.mifos.test.acceptance.framework.MifosPage;
 
 public class RepayLoanConfirmationPage extends MifosPage {
 
@@ -40,4 +40,17 @@ public class RepayLoanConfirmationPage extends MifosPage {
         return new LoanAccountPage(selenium);
     }
 
+    public String getSelectedValueForInterestWaiver() {
+        String result = null;
+        if (!StringUtils.equals("null", selenium.getEval("window.document.getElementById('waiverInterest')"))) {
+            result = selenium.getEval("window.document.getElementById('waiverInterest').innerHTML").trim();
+        }
+        return result;
+    }
+
+    public RepayLoanPage edit() {
+        selenium.click("Review_RepayLoan.button.edit");
+        waitForPageToLoad();
+        return new RepayLoanPage(selenium);
+    }
 }

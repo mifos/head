@@ -20,14 +20,6 @@
 
 package org.mifos.accounts.loan.struts.uihelpers;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTagSupport;
-
 import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.MessageLookup;
@@ -38,6 +30,13 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 import org.mifos.security.util.UserContext;
+
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 public class LoanActivityTag extends BodyTagSupport {
     Locale locale = null;
@@ -54,7 +53,7 @@ public class LoanActivityTag extends BodyTagSupport {
                 UserContext userContext = (UserContext) pageContext.getSession().getAttribute(
                         Constants.USER_CONTEXT_KEY);
                 locale = userContext.getPreferredLocale();
-                xmlBuilder.startTag("table", "width", "100%", "border", "0", "cellspacing", "0", "cellpadding", "0");
+                xmlBuilder.startTag("table", "width", "100%", "border", "0", "cellspacing", "0", "cellpadding", "0", "id", "accountActivityTable");
                 xmlBuilder.startTag("tr");
                 xmlBuilder.startTag("td", "colspan", "8");
                 xmlBuilder.nonBreakingSpace();

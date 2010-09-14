@@ -30,57 +30,64 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 public class SectionQuestionDetailTest {
+    
+    @Test
+    public void shouldGenerateValuesArrayFromSelections() {
+        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail();
+        sectionQuestionDetail.setSelections(asList(getSelectionDetail("Ch1", "Tag2"), getSelectionDetail("Ch2", "Tag3")));
+        String[] valuesAsArray = sectionQuestionDetail.getValues();
+        assertThat(valuesAsArray, is(notNullValue()));
+        assertThat(valuesAsArray.length, is(2));
+        assertThat(valuesAsArray[0], is("Ch1:Tag2"));
+        assertThat(valuesAsArray[1], is("Ch2:Tag3"));
+    }
 
     @Test
-    public void shouldGetAnswersForNoAnswer() {
-        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", QuestionType.MULTI_SELECT), true);
-        sectionQuestionDetail.setValue(null);
-        sectionQuestionDetail.setValues(null);
-        List<String> answers = sectionQuestionDetail.getAnswers();
-        assertThat(answers, is(notNullValue()));
-        assertThat(answers.size(), is(0));
+    public void shouldSetSelectionsFromValuesArray() {
+        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail();
+        sectionQuestionDetail.setValues(new String[] {"Ch1:Tag2", "Ch2:Tag3", "Ch3:Tag1"});
+        List<SelectionDetail> selections = sectionQuestionDetail.getSelections();
+        assertThat(selections, is(notNullValue()));
+        assertThat(selections.size(), is(3));
+        assertSelection(selections.get(0), "Ch1", "Tag2");
+        assertSelection(selections.get(1), "Ch2", "Tag3");
+        assertSelection(selections.get(2), "Ch3", "Tag1");
     }
     
     @Test
-    public void shouldGetAnswersForSingleAnswer() {
-        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", QuestionType.FREETEXT), true);
-        sectionQuestionDetail.setValue("Hello");
-        List<String> answers = sectionQuestionDetail.getAnswers();
-        assertThat(answers, is(notNullValue()));
-        assertThat(answers.size(), is(1));
-        assertThat(answers.get(0), is("Hello"));
+    public void shouldMultiSelectValue() {
+        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail();
+        sectionQuestionDetail.setSelections(asList(getSelectionDetail("Ch1", "Tag2"), getSelectionDetail("Ch2", "Tag3")));
+        assertThat(sectionQuestionDetail.getMultiSelectValue(), is("Ch1:Tag2, Ch2:Tag3"));
     }
 
     @Test
-    public void shouldGetAnswersForMultipleAnswers() {
-        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", QuestionType.MULTI_SELECT), true);
-        sectionQuestionDetail.setValues(asList("Ans1", "Ans2", "Ans3"));
-        List<String> answers = sectionQuestionDetail.getAnswers();
-        assertThat(answers, is(notNullValue()));
-        assertThat(answers.size(), is(3));
-        assertThat(answers.get(0), is("Ans1"));
-        assertThat(answers.get(1), is("Ans2"));
-        assertThat(answers.get(2), is("Ans3"));
+    public void shouldGetAnswerStringForSelections() {
+        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail();
+        sectionQuestionDetail.setQuestionDetail(new QuestionDetail("Text", QuestionType.SMART_SELECT));
+        sectionQuestionDetail.setSelections(asList(getSelectionDetail("Ch1", "Tag2"), getSelectionDetail("Ch2", "Tag3")));
+        assertThat(sectionQuestionDetail.getAnswer(), is("Ch1:Tag2, Ch2:Tag3"));
     }
 
     @Test
-    public void shouldGetAnswerForNoAnswer() {
-        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", QuestionType.FREETEXT), true);
+    public void shouldGetAnswerStringForSingleResponse() {
+        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail();
+        sectionQuestionDetail.setQuestionDetail(new QuestionDetail("Text", QuestionType.FREETEXT));
+        sectionQuestionDetail.setValue("Response");
+        assertThat(sectionQuestionDetail.getAnswer(), is("Response"));
+        sectionQuestionDetail.setValue(null);
         assertThat(sectionQuestionDetail.getAnswer(), is(""));
     }
-    
-    @Test
-    public void shouldGetAnswerForSingleAnswer() {
-        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", QuestionType.FREETEXT), true);
-        sectionQuestionDetail.setValue("Hello");
-        assertThat(sectionQuestionDetail.getAnswer(), is("Hello"));
+
+    private void assertSelection(SelectionDetail selectionDetail, String choice, String tag) {
+        assertThat(selectionDetail.getSelectedChoice(), is(choice));
+        assertThat(selectionDetail.getSelectedTag(), is(tag));
     }
 
-    @Test
-    public void shouldGetAnswerForMultipleAnswers() {
-        SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(new QuestionDetail("Title", QuestionType.MULTI_SELECT), true);
-        sectionQuestionDetail.setValues(asList("Ans1", "Ans2", "Ans3"));
-        String answer = sectionQuestionDetail.getAnswer();
-        assertThat(answer, is("Ans1, Ans2, Ans3"));
+    private SelectionDetail getSelectionDetail(String selectedChoice, String selectedTag) {
+        SelectionDetail selectionDetail = new SelectionDetail();
+        selectionDetail.setSelectedChoice(selectedChoice);
+        selectionDetail.setSelectedTag(selectedTag);
+        return selectionDetail;
     }
 }

@@ -87,6 +87,18 @@ public class LoanAccountPage extends AbstractPage {
         return new HomePage(selenium);
     }
 
+    public void navigateToRepaymentSchedulePage() {
+        selenium.click("link=View repayment schedule");
+        waitForPageToLoad();
+    }
+
+    public AccountActivityPage navigateToAccountActivityPage() {
+        selenium.click("link=View all account activity");
+        waitForPageToLoad();
+        return new AccountActivityPage(selenium);
+    }
+
+
     public ViewInstallmentDetailsPage navigateToViewInstallmentDetails() {
         selenium.click("id=loanaccountdetail.link.viewInstallmentDetails");
         waitForPageToLoad();
@@ -158,4 +170,65 @@ public class LoanAccountPage extends AbstractPage {
         waitForPageToLoad();
         return new ViewQuestionResponseDetailPage(selenium);
     }
+
+    public String getTotalBalance() {
+        return selenium.getTable("loanSummaryTable.5.3").trim();
+    }
+
+    public String getTotalPaid() {
+        return selenium.getTable("loanSummaryTable.5.2").trim();
+    }
+
+    public String getOriginalTotalAmount() {
+        return selenium.getTable("loanSummaryTable.5.1").trim();
+    }
+
+    public String getPenaltyBalance() {
+        return selenium.getTable("loanSummaryTable.4.3").trim();
+    }
+
+    public String getPenaltyPaid() {
+        return selenium.getTable("loanSummaryTable.4.2").trim();
+    }
+
+    public String getOriginalPenaltyAmount() {
+        return selenium.getTable("loanSummaryTable.4.1").trim();
+    }
+
+    public String getFeesBalance() {
+        return selenium.getTable("loanSummaryTable.3.3").trim();
+    }
+
+    public String getFeesPaid() {
+        return selenium.getTable("loanSummaryTable.3.2").trim();
+    }
+
+    public String getOriginalFeesAmount() {
+        return selenium.getTable("loanSummaryTable.3.1").trim();
+    }
+
+    public String getInterestBalance() {
+        return selenium.getTable("loanSummaryTable.2.3").trim();
+    }
+
+    public String getInterestPaid() {
+        return selenium.getTable("loanSummaryTable.2.2").trim();
+    }
+
+    public String getOriginalInterestAmount() {
+        return selenium.getTable("loanSummaryTable.2.1").trim();
+    }
+
+    public String getPrincipleBalance() {
+        return selenium.getTable("loanSummaryTable.1.3").trim();
+    }
+
+    public String getPrinciplePaid() {
+        return selenium.getTable("loanSummaryTable.1.2").trim();
+    }
+
+    public String getOriginalLoanAmount() {
+        return selenium.getTable("loanSummaryTable.1.1").trim();
+    }
+
 }
