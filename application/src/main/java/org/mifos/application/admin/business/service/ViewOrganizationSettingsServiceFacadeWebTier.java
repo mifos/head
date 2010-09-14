@@ -131,8 +131,6 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
                 .isClientPendingApprovalStateEnabled()));
         processFlowRules.setProperty("groupPendingState", booleanToYesNo(ProcessFlowRules
                 .isGroupPendingApprovalStateEnabled()));
-        processFlowRules.setProperty("loanDisbursedState", booleanToYesNo(ProcessFlowRules
-                .isLoanDisbursedToLoanOfficerStateEnabled()));
         processFlowRules.setProperty("loanPendingState", booleanToYesNo(ProcessFlowRules
                 .isLoanPendingApprovalStateEnabled()));
         processFlowRules.setProperty("savingsPendingState", booleanToYesNo(ProcessFlowRules

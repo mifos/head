@@ -280,19 +280,11 @@ public class AccountStateMachines {
         logger.debug("In AccountStateMachines::getConfigurationName()");
         String configurationName = null;
         if (accountType.equals(AccountTypes.LOAN_ACCOUNT)) {
-            if (ProcessFlowRules.isLoanDisbursedToLoanOfficerStateEnabled()) {
-                if (ProcessFlowRules.isLoanPendingApprovalStateEnabled()) {
-                    configurationName = "configuration 1";
-                } else {
-                    configurationName = "configuration 2";
-                }
-            } else {
                 if (ProcessFlowRules.isLoanPendingApprovalStateEnabled()) {
                     configurationName = "configuration 3";
                 } else {
                     configurationName = "configuration 4";
                 }
-            }
         } else if (accountType.equals(AccountTypes.SAVINGS_ACCOUNT)) {
             if (ProcessFlowRules.isSavingsPendingApprovalStateEnabled()) {
                 configurationName = "configuration 1";
