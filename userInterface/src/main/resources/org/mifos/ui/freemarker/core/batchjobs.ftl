@@ -43,7 +43,7 @@
                     <div class="span-21 borderbtm">
                         <span class="span-1">&nbsp;</span>
                         <span  class="span-10">
-                            <p class="font15 orangeheading">[@spring.message "systemAdministration.batchjobs.tasksSendForExecution" /]:</p>
+                            <p class="font15 orangeheading">[@spring.message "systemAdministration.batchjobs.tasksSentForExecution" /]:</p>
                             <ul>
                                 [#list model.executedTasks as task]
                                     <li>${task}</li>
