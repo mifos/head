@@ -75,6 +75,8 @@ public class SectionQuestionDetailTest {
         sectionQuestionDetail.setQuestionDetail(new QuestionDetail("Text", QuestionType.FREETEXT));
         sectionQuestionDetail.setValue("Response");
         assertThat(sectionQuestionDetail.getAnswer(), is("Response"));
+        sectionQuestionDetail.setValue(null);
+        assertThat(sectionQuestionDetail.getAnswer(), is(""));
     }
 
     private void assertSelection(SelectionDetail selectionDetail, String choice, String tag) {

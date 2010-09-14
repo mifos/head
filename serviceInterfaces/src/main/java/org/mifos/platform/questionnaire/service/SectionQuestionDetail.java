@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 @SuppressWarnings("PMD")
@@ -237,6 +238,6 @@ public class SectionQuestionDetail implements Serializable {
     }
 
     public String getAnswer() {
-        return isMultiSelectQuestion()? getMultiSelectValue(): getValue();
+        return isMultiSelectQuestion()? getMultiSelectValue(): (isEmpty(this.value)? EMPTY: this.value);
     }
 }
