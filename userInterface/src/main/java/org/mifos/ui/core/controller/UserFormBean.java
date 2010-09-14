@@ -269,10 +269,12 @@ public class UserFormBean implements Serializable {
         this.confirmedPassword = confirmedPassword;
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="..")
     public String[] getAvailableRoles() {
         return this.availableRoles;
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="..")
     public void setAvailableRoles(String[] availableRoles) {
         this.availableRoles = availableRoles;
     }
@@ -285,10 +287,12 @@ public class UserFormBean implements Serializable {
         this.availableRolesOptions = availableRolesOptions;
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="..")
     public String[] getSelectedRoles() {
         return this.selectedRoles;
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="..")
     public void setSelectedRoles(String[] selectedRoles) {
         this.selectedRoles = selectedRoles;
     }
