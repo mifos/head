@@ -210,7 +210,7 @@ public class OfficePersistence extends Persistence {
     public List<OfficeDetailsDto> getStatusList() throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         List<OfficeDetailsDto> queryResult = executeNamedQuery(NamedQueryConstants.GETOFFICESTATUS, queryParameters);
-        if (queryResult != null) {
+        if (queryResult == null) {
             queryResult = new ArrayList<OfficeDetailsDto>();
         }
         return queryResult;
