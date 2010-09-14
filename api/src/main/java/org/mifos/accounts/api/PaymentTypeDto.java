@@ -100,4 +100,8 @@ public class PaymentTypeDto {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return this.getClass().getCanonicalName() + " [value=" + this.value + ", name=" + this.name + "]";
+    }
 }
