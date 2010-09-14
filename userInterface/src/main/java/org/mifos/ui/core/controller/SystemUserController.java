@@ -82,4 +82,15 @@ public class SystemUserController {
 
         return bean;
     }
+
+    public UserFormBean createUserFormBean(Long officeId) {
+
+        OfficeDto selectedOffice = this.officeServiceFacade.retrieveOfficeById(officeId.shortValue());
+
+        UserFormBean formBean = new UserFormBean();
+        formBean.setOfficeId(officeId);
+        formBean.setOfficeName(selectedOffice.getName());
+
+        return formBean;
+    }
 }

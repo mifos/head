@@ -365,8 +365,7 @@ public class OffAction extends BaseAction {
     }
 
     private void loadOfficeStatus(HttpServletRequest request) throws Exception {
-        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESTATUSLIST, ((OfficeBusinessService) getService())
-                .getStatusList(getUserContext(request).getLocaleId()), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESTATUSLIST, ((OfficeBusinessService) getService()).getStatusList(), request);
 
     }
 }

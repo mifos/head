@@ -83,9 +83,13 @@ public class OfficeBusinessService implements BusinessService {
         }
     }
 
-    public List<OfficeDetailsDto> getStatusList(Short localeId) throws ServiceException {
+    public List<OfficeDetailsDto> getStatusList() throws ServiceException {
         try {
-            return officePersistence.getStatusList(localeId);
+            List<OfficeDetailsDto> statusList = officePersistence.getStatusList();
+            for (OfficeDetailsDto officeDetailsDto : statusList) {
+                officeDetailsDto.setLevelName(MessageLookup.getInstance().lookup(officeDetailsDto.getLevelNameKey()));
+            }
+            return statusList;
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

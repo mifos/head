@@ -116,14 +116,14 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     @Test
     public void testGetStatusList() throws NumberFormatException, ServiceException {
-        Assert.assertEquals(2, officeBusinessService.getStatusList(Short.valueOf("1")).size());
+        Assert.assertEquals(2, officeBusinessService.getStatusList().size());
     }
 
     @Test
     public void testGetStatusListFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
-            officeBusinessService.getStatusList(Short.valueOf("1"));
+            officeBusinessService.getStatusList();
             Assert.fail();
         } catch (ServiceException e) {
             Assert.assertTrue(true);

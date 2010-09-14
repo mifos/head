@@ -16,17 +16,19 @@
         <p class="font15"><span class="fontBold">[@spring.message "systemUsers.preview.addanewuser"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "review&Submit"/]</span></p>
         <div>[@spring.message "systemUsers.preview.reviewtheinformationbelow"/]</div>
         <p>&nbsp;</p>
-        <p><span class="fontBold">[@spring.message "systemUsers.preview.office"/] </span><span>&nbsp;</span></p>
+        <p><span class="fontBold">[@spring.message "systemUsers.preview.office"/] </span><span>${userFormBean.officeName}</span></p>
+        
         <div><span class="orangeheading">[@spring.message "systemUsers.preview.userInformation"/] </span><span>&nbsp;</span></div>
         <div class="clear">&nbsp;</div>
+        
         <div class="prepend-1  span-21 last">
-        	<div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.firstName"/]&nbsp;</span><span></span>
+        	<div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.firstName"/]&nbsp;</span><span>${userFormBean.firstName}</span>
   			</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.middleName"/]&nbsp;</span><span></span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.middleName"/]&nbsp;</span><span>${userFormBean.middleName}</span>
   			</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.secondLastName"/]&nbsp;</span><span></span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.secondLastName"/]&nbsp;</span><span>${userFormBean.secondLastName}</span>
 			</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.lastName"/]&nbsp;</span><span></span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.lastName"/]&nbsp;</span><span>${userFormBean.lastName}</span>
   			</div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.governmentID"/]&nbsp;</span><span></span> 
   			</div>
