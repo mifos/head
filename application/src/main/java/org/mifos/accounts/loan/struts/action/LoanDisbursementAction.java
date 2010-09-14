@@ -58,6 +58,9 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
 import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
@@ -71,6 +74,7 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class LoanDisbursementAction extends BaseAction {
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
     private AccountService accountService = null;
 
@@ -174,7 +178,7 @@ public class LoanDisbursementAction extends BaseAction {
                 .valueOf(modeOfPayment);
         try {
             final List<AccountPaymentParametersDto> payment = new ArrayList<AccountPaymentParametersDto>();
-            final org.mifos.accounts.api.PaymentTypeDto paymentType = getLoanPaymentTypeDtoForId(Short
+            final org.mifos.accounts.api.PaymentTypeDto paymentType = getLoanDisbursementTypeDtoForId(Short
                     .valueOf(modeOfPaymentId));
             final String comment = "";
             final BigDecimal disbursalAmount = new BigDecimal(actionForm.getLoanAmount());
@@ -187,15 +191,16 @@ public class LoanDisbursementAction extends BaseAction {
             if (e.getMessage().startsWith("errors.")) {
                 throw e;
             }
-            throw new AccountException("errors.cannotDisburseLoan.because.disburseFailed");
+            String msg = "errors.cannotDisburseLoan.because.disburseFailed";
+            logger.error(msg, e);
+            throw new AccountException(msg);
         }
 
         return mapping.findForward(Constants.UPDATE_SUCCESS);
     }
 
-    // FIXME: share code with AccountApplyPaymentAction getLoanPaymentTypeDtoForId()
-    private org.mifos.accounts.api.PaymentTypeDto getLoanPaymentTypeDtoForId(short id) throws Exception {
-        for (org.mifos.accounts.api.PaymentTypeDto paymentTypeDto : getAccountService().getLoanPaymentTypes()) {
+    private org.mifos.accounts.api.PaymentTypeDto getLoanDisbursementTypeDtoForId(short id) throws Exception {
+        for (org.mifos.accounts.api.PaymentTypeDto paymentTypeDto : getAccountService().getLoanDisbursementTypes()) {
             if (paymentTypeDto.getValue() == id) {
                 return paymentTypeDto;
             }
