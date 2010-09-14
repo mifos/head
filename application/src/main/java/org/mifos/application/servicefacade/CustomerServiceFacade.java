@@ -32,6 +32,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.struts.action.GroupSearchResultsDto;
 import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.security.util.UserContext;
 

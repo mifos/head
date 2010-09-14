@@ -18,22 +18,20 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.dto.screen;
+package org.mifos.ui.core.controller;
 
 import java.io.Serializable;
+import java.util.List;
+
+import org.mifos.dto.screen.ListElement;
 
 @SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="required for spring web flow storage at a minimum - should disable at filter level and also for pmd")
-public class ListElement implements Serializable {
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_NO_SERIALVERSIONID", justification = "required for spring web flow storage at a minimum - should disable at filter level and also for pmd")
+public class BranchOnlyHierarchyBean implements Serializable {
 
     private Integer id;
     private String name;
-
-    public ListElement(Integer id, String name) {
-        super();
-        this.id = id;
-        this.name = name;
-    }
+    private List<ListElement> children;
 
     public Integer getId() {
         return this.id;
@@ -50,4 +48,13 @@ public class ListElement implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public List<ListElement> getChildren() {
+        return this.children;
+    }
+
+    public void setChildren(List<ListElement> children) {
+        this.children = children;
+    }
+
 }

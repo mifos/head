@@ -3,7 +3,7 @@
 [#import "blueprintmacros.ftl" as mifos]
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-     <!--  Main Content Begins-->
+  <!--  Main Content Begins-->
   <div class="content marginAuto">
     <div class="borders span-22">
       <div class="borderbtm span-22">
@@ -12,7 +12,7 @@
         <p class="span-3 arrowIMG orangeheading last">[@spring.message "review&Submit"/]</p>
       </div>
       <div class="subcontent ">
-      <form method="" action="" name="formname">
+      <form method="post" name="formname" action="user.ftl?execution=${flowExecutionKey}">
         <p class="font15"><span class="fontBold">[@spring.message "systemUsers.preview.addanewuser"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "review&Submit"/]</span></p>
         <div>[@spring.message "systemUsers.preview.reviewtheinformationbelow"/]</div>
         <p>&nbsp;</p>
@@ -78,22 +78,23 @@
             </div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userName"/]&nbsp;</span><span></span>
             </div>
-         <div class="clear">&nbsp;</div>
+         	<div class="clear">&nbsp;</div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.additionalInformation"/]</span>
             </div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.externalId"/]&nbsp;</span><span></span>
             </div>
+            
             <div class="clear">&nbsp;</div>
-            <input class="buttn2" type="button" name="edit" value="Edit personal information" onclick="location.href='newUserInfo.html'"/>
-        </div>
+            	<input class="buttn2" type="submit" name="_eventId_reedit" value="Edit personal information" />
+        	</div>
+            
             <div class="clear">&nbsp;</div>
             <hr />
             <div class="clear">&nbsp;</div>
             <div class="prepend-9">
-          		<input class="buttn" type="button" name="submit" value="Submit" onclick="location.href='userCreated.html'" />
-          		<input class="buttn2" type="button" name="cancel" value="Cancel" onclick="location.href='admin.html'"/>
+          		<input class="buttn" type="submit" name="_eventId_submit" value="Submit" />
+          		<input class="buttn2" type="submit" name="_eventId_cancel" value="Cancel" />
         	</div>
-		 
         </form>
       </div>
     </div>

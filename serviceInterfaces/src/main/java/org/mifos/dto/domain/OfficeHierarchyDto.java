@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.center.struts.action;
+package org.mifos.dto.domain;
 
 import java.io.IOException;
 import java.util.LinkedList;

@@ -71,7 +71,6 @@ import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.client.business.AttendanceType;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.service.ClientAttendanceDto;
-import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -80,6 +79,7 @@ import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -388,7 +388,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         customerDto.setCustomerSearchId(center.getSearchId());
         customerDto.setCustomerLevelId(center.getCustomerLevel().getId());
 
-        final OfficeDetailsDto officeDetailsDto = new OfficeDetailsDto(Short.valueOf("3"), "", OfficeLevel.BRANCHOFFICE, "levelNameKey",
+        final OfficeDetailsDto officeDetailsDto = new OfficeDetailsDto(Short.valueOf("3"), "", OfficeLevel.BRANCHOFFICE.getValue(), "levelNameKey",
                 Integer.valueOf(-1));
         final PersonnelDto personnelDto = new PersonnelDto(Short.valueOf("3"), "");
 

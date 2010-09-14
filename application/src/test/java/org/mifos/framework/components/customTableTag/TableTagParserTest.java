@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
 
 import org.mifos.core.ClasspathResource;
-import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.testng.annotations.Test;
 

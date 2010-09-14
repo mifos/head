@@ -35,13 +35,13 @@ import org.dom4j.DocumentException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
+import org.mifos.dto.domain.OfficeDetailsDto;
+import org.mifos.dto.domain.OfficeHierarchyDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.security.util.UserContext;
@@ -172,9 +172,9 @@ public class OfficeListTagTest {
 
     private List<OfficeDetailsDto> headRegionalBranch() {
         List<OfficeDetailsDto> levels = new ArrayList<OfficeDetailsDto>();
-        levels.add(new OfficeDetailsDto(null, null, OfficeLevel.HEADOFFICE, "Head", 0));
-        levels.add(new OfficeDetailsDto(null, null, OfficeLevel.REGIONALOFFICE, "Regional", 0));
-        levels.add(new OfficeDetailsDto(null, null, OfficeLevel.BRANCHOFFICE, "Branch", 0));
+        levels.add(new OfficeDetailsDto(null, null, OfficeLevel.HEADOFFICE.getValue(), "Head", 0));
+        levels.add(new OfficeDetailsDto(null, null, OfficeLevel.REGIONALOFFICE.getValue(), "Regional", 0));
+        levels.add(new OfficeDetailsDto(null, null, OfficeLevel.BRANCHOFFICE.getValue(), "Branch", 0));
         return Collections.unmodifiableList(levels);
     }
 

@@ -18,16 +18,16 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.dto.screen;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 
-import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
-import org.mifos.customers.office.business.OfficeDetailsDto;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.dto.domain.OfficeDetailsDto;
+import org.mifos.dto.domain.OfficeHierarchyDto;
 
-public class OnlyBranchOfficeHierarchyDto implements DataTransferObject {
+public class OnlyBranchOfficeHierarchyDto implements Serializable {
 
     public static final String IDENTIFIER = "branchOnlyOffices";
 

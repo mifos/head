@@ -18,24 +18,18 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.office.business;
+package org.mifos.dto.domain;
 
-import org.mifos.application.master.MessageLookup;
-import org.mifos.customers.office.util.helpers.OfficeLevel;
-import org.mifos.framework.business.service.DataTransferObject;
+import java.io.Serializable;
 
-/*
- * Feb 2008 i18n work in progress.
- * looks like we need to make officeName, officeNameKey and
- * levelName, levelNameKey and then go through MessageLookup to resolve them
- */
-public class OfficeDetailsDto implements DataTransferObject {
+public class OfficeDetailsDto implements Serializable {
 
     private final Short officeId;
     private final String officeName;
     private final Short levelId;
     private final String levelNameKey;
     private final Integer versionNo;
+    private String levelName;
 
     /**
      * used by hibernate queries
@@ -67,10 +61,6 @@ public class OfficeDetailsDto implements DataTransferObject {
         this.versionNo = versionNo;
     }
 
-    public OfficeDetailsDto(final Short officeId, final String officeName, final OfficeLevel level, final String levelNameKey, final Integer versionNo) {
-        this(officeId, officeName, level.getValue(), levelNameKey, versionNo);
-    }
-
     public OfficeDetailsDto(final Short officeId, final String officeName, final Short levelId, final String levelNameKey, final Integer versionNo) {
         this.officeId = officeId;
         this.officeName = officeName;
@@ -95,11 +85,19 @@ public class OfficeDetailsDto implements DataTransferObject {
         return versionNo;
     }
 
-    public String getLevelName() {
-        return MessageLookup.getInstance().lookup(levelNameKey);
-    }
-
     public String getDisplayName() {
         return getLevelName() + "(" + officeName + ")";
+    }
+
+    public String getLevelName() {
+        return this.levelName;
+    }
+
+    public void setLevelName(String levelName) {
+        this.levelName = levelName;
+    }
+
+    public String getLevelNameKey() {
+        return this.levelNameKey;
     }
 }

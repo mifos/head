@@ -27,8 +27,8 @@ import java.util.List;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.servicefacade.ProductDto;
-import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.personnel.business.PersonnelDto;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.framework.business.service.DataTransferObject;
 
 /**

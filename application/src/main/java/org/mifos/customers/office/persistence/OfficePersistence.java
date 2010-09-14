@@ -28,12 +28,12 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeTemplate;
-import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.persistence.Persistence;
@@ -199,10 +199,11 @@ public class OfficePersistence extends Persistence {
     public List<OfficeDetailsDto> getActiveLevels(Short localeId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         List<OfficeDetailsDto> queryResult = executeNamedQuery(NamedQueryConstants.GETACTIVELEVELS, queryParameters);
-        if (queryResult != null && queryResult.size() != 0) {
-            return queryResult;
+        if (queryResult == null) {
+            queryResult = new ArrayList<OfficeDetailsDto>();
         }
-        return null;
+
+        return queryResult;
 
     }
 

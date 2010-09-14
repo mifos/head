@@ -29,7 +29,6 @@ import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.exceptions.OfficeValidationException;
@@ -41,16 +40,21 @@ import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeDto;
+import org.mifos.dto.domain.OfficeHierarchyDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.OfficeFormDto;
 import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
+import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, OfficeServiceFacade {
 
@@ -280,5 +284,29 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
         } catch (OfficeException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    @Override
+    public OnlyBranchOfficeHierarchyDto retrieveBranchOnlyOfficeHierarchy() {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        OfficeDto office = officeDao.findOfficeDtoById(user.getBranchId());
+        List<OfficeBO> branchParents = officeDao.findBranchsOnlyWithParentsMatching(office.getSearchId());
+        List<OfficeDetailsDto> levels = officeDao.findActiveOfficeLevels();
+
+        List<OfficeHierarchyDto> branchOnlyOfficeHierarchy = OfficeBO
+                .convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(branchParents);
+
+        return new OnlyBranchOfficeHierarchyDto(Locale.getDefault(), levels, office.getSearchId(), branchOnlyOfficeHierarchy);
+    }
+
+    @Override
+    public List<OfficeDto> retrieveAllNonBranchOfficesApplicableToLoggedInUser() {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        OfficeDto office = officeDao.findOfficeDtoById(user.getBranchId());
+        return officeDao.findNonBranchesOnlyWithParentsMatching(office.getSearchId());
     }
 }
