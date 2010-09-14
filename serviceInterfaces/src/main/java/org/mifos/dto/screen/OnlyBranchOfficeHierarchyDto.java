@@ -27,6 +27,8 @@ import java.util.Locale;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeHierarchyDto;
 
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
 public class OnlyBranchOfficeHierarchyDto implements Serializable {
 
     public static final String IDENTIFIER = "branchOnlyOffices";

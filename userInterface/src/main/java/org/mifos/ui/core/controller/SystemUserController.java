@@ -45,6 +45,7 @@ public class SystemUserController {
         this.officeServiceFacade = serviceFacade;
     }
 
+    @SuppressWarnings("PMD")
     public OfficeHierarchyFormBean showBranchHierarchy() {
 
         OnlyBranchOfficeHierarchyDto hierarchy = this.officeServiceFacade.retrieveBranchOnlyOfficeHierarchy();
