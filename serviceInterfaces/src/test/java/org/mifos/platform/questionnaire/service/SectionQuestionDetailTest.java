@@ -48,9 +48,10 @@ public class SectionQuestionDetailTest {
         sectionQuestionDetail.setValues(new String[] {"Ch1:Tag2", "Ch2:Tag3", "Ch3:Tag1"});
         List<SelectionDetail> selections = sectionQuestionDetail.getSelections();
         assertThat(selections, is(notNullValue()));
-        assertThat(selections.size(), is(2));
-        assertSelection(selections.get(0), "Ch2", "Tag3");
-        assertSelection(selections.get(1), "Ch3", "Tag1");
+        assertThat(selections.size(), is(3));
+        assertSelection(selections.get(0), "Ch1", "Tag2");
+        assertSelection(selections.get(1), "Ch2", "Tag3");
+        assertSelection(selections.get(2), "Ch3", "Tag1");
     }
     
     @Test
