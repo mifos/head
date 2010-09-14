@@ -69,7 +69,7 @@
                           <fieldset class="right_section" style="width:70%">
                             <ol class="noPadding">
                               <li class="noPadding">
-                                [@mifosmacros.formCheckboxes "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,'</li><li class="noPadding">', ''/]
+                                [@mifosmacros.formCheckboxesWithTags "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,'</li><li class="noPadding">', ''/]
                               </li>
                             </ol>
                           </fieldset>
@@ -81,7 +81,7 @@
                                 </li>
                                 <ol class="questionList" id="questionList" style="overflow:auto; width:19em; height:180px; border:1px solid #336699; padding-left:5px">
                                     <li style="padding-bottom: 0pt;">
-                                        [@mifosmacros.formCheckboxes "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,'</li><li class="noPadding">', ''/]
+                                        [@mifosmacros.formCheckboxesWithTags "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,'</li><li class="noPadding">', ''/]
                                     </li>
                                 </ol>
                           </fieldset>

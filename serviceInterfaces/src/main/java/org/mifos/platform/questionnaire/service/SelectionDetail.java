@@ -24,12 +24,26 @@ import java.io.Serializable;
 
 import static java.lang.String.format;
 import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.apache.commons.lang.StringUtils.split;
 
 public class SelectionDetail implements Serializable {
     private static final long serialVersionUID = 6631044340750607074L;
 
     private String selectedChoice;
     private String selectedTag;
+
+    @SuppressWarnings("PMD.UncommentedEmptyConstructor")
+    public SelectionDetail() {
+    }
+
+    @SuppressWarnings("PMD.NullAssignment")
+    public SelectionDetail(String choiceTagString) {
+        String[] values = split(choiceTagString, ':');
+        if (values != null && values.length > 0) {
+            selectedChoice = values[0];
+            selectedTag = (values.length > 1)? values[1]: null;
+        }
+    }
 
     public String getSelectedChoice() {
         return selectedChoice;
