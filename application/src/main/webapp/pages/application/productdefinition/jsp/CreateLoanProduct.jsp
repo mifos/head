@@ -666,6 +666,27 @@ explanation of the license and how it is applied.
 									</tr>
 									<tr class="fontnormal">
 										<td width="30%" align="right" valign="top"><mifos:mifoslabel
+											name="product.canConfigureVariableInstallments"
+											bundle="ProductDefUIResources" /> :</td>
+                                        <td valign="top"><html-el:checkbox styleId="createLoanProduct.checkbox.canConfigureVariableInstallments" property="canConfigureVariableInstallments"
+                                            value="1" /></td>
+									</tr>
+									<tr class="fontnormal">
+										<td width="30%" align="right" valign="top"><mifos:mifoslabel
+											name="product.minimumGapBetweenInstallments"
+											bundle="ProductDefUIResources" /> :</td>
+                                        <td valign="top"><mifos:mifosnumbertext property="minimumGapBetweenInstallments" />
+                                        <span id="days"> <mifos:mifoslabel name="product.days" bundle="ProductDefUIResources" /> </span></td>
+									</tr>
+									<tr class="fontnormal">
+										<td width="30%" align="right" valign="top"><mifos:mifoslabel
+											name="product.maximumGapBetweenInstallments"
+											bundle="ProductDefUIResources" /> :</td>
+                                        <td valign="top"><mifos:mifosnumbertext property="maximumGapBetweenInstallments" />
+                                        <span id="days"> <mifos:mifoslabel name="product.days" bundle="ProductDefUIResources" /> </span></td>
+									</tr>
+									<tr class="fontnormal">
+										<td width="30%" align="right" valign="top"><mifos:mifoslabel
 											mandatory="yes" name="product.freqofinst"
 											bundle="ProductDefUIResources" /> :</td>
 										<td width="70%" valign="top">
@@ -952,8 +973,6 @@ explanation of the license and how it is applied.
 										<tr class="fontnormal" id="intdeddis">
 											<td valign="top"><c:if
 												test="${repaymentSchedulesIndependentOfMeetingIsEnabled == '0'}">
-
-
 												<html-el:checkbox style="visibility:hidden"
 													property="intDedDisbursementFlag" value="1"
 													onclick="fnIntDesbr();" />

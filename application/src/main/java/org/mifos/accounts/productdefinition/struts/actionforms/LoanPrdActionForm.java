@@ -20,14 +20,6 @@
 
 package org.mifos.accounts.productdefinition.struts.actionforms;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -37,7 +29,6 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
@@ -61,6 +52,13 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class LoanPrdActionForm extends BaseActionForm {
     private final MifosLogger logger;
@@ -296,6 +294,10 @@ public class LoanPrdActionForm extends BaseActionForm {
     private Double maxInterestRateValue;
     private Double minInterestRateValue;
     private Double defInterestRateValue;
+
+    private Boolean canConfigureVariableInstallments;
+    private Integer minimumGapBetweenInstallments;
+    private Integer maximumGapBetweenInstallments;
 
     public Double getLastLoanDefaultLoanAmt1Value() {
         if (lastLoanDefaultLoanAmt1Value != null) {
@@ -2687,5 +2689,29 @@ public class LoanPrdActionForm extends BaseActionForm {
                         ProductDefinitionConstants.ERRORSTARTENDINSTALLMENT, error, rownum);
             }
         }
+    }
+
+    public Boolean getCanConfigureVariableInstallments() {
+        return canConfigureVariableInstallments;
+    }
+
+    public void setCanConfigureVariableInstallments(Boolean canConfigureVariableInstallments) {
+        this.canConfigureVariableInstallments = canConfigureVariableInstallments;
+    }
+
+    public Integer getMinimumGapBetweenInstallments() {
+        return minimumGapBetweenInstallments;
+    }
+
+    public void setMinimumGapBetweenInstallments(Integer minimumGapBetweenInstallments) {
+        this.minimumGapBetweenInstallments = minimumGapBetweenInstallments;
+    }
+
+    public Integer getMaximumGapBetweenInstallments() {
+        return maximumGapBetweenInstallments;
+    }
+
+    public void setMaximumGapBetweenInstallments(Integer maximumGapBetweenInstallments) {
+        this.maximumGapBetweenInstallments = maximumGapBetweenInstallments;
     }
 }
