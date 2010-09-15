@@ -24,7 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -35,7 +36,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public final class EntityMasterData {
 
-    private static final Logger logger = Logger.getLogger(EntityMasterData.class);
+    private static final Logger logger = LoggerFactory.getLogger(EntityMasterData.class);
 
     public static Map<Object, Object> entityMap = new HashMap<Object, Object>();
 

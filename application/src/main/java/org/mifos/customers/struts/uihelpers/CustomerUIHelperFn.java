@@ -22,7 +22,8 @@ package org.mifos.customers.struts.uihelpers;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
@@ -35,7 +36,7 @@ import org.mifos.security.util.UserContext;
  */
 public class CustomerUIHelperFn {
 
-    private static final Logger logger = Logger.getLogger(CustomerUIHelperFn.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomerUIHelperFn.class);
 
     public CustomerUIHelperFn() {
         super();

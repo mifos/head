@@ -25,7 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
@@ -49,7 +50,7 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 
-    private static final Logger logger = Logger.getLogger(LoanTrxnDetailEntity.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoanTrxnDetailEntity.class);
 
     private final Money principalAmount;
 

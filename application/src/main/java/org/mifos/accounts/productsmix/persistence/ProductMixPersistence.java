@@ -24,7 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
@@ -35,10 +36,10 @@ import org.mifos.framework.persistence.Persistence;
 
 public class ProductMixPersistence extends Persistence {
 
-    private static final Logger prdLogger = Logger.getLogger(ProductMixPersistence.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProductMixPersistence.class);
 
     public ProductMixBO getAllLoanOfferingMixByID(Short prdofferingMixId) throws PersistenceException {
-        prdLogger.debug("in getAllLoanOfferingMix");
+        logger.debug("in getAllLoanOfferingMix");
         return (ProductMixBO) getPersistentObject(ProductMixBO.class, prdofferingMixId);
     }
 

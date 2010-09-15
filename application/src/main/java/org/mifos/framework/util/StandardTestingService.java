@@ -27,7 +27,8 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ConfigLocale;
@@ -48,7 +49,7 @@ import org.mifos.service.test.TestingService;
  * Encapsulates all logic necessary to have the application behave differently during acceptance and integration tests.
  */
 public class StandardTestingService implements TestingService {
-    private static final Logger logger = Logger.getLogger(StandardTestingService.class);
+    private static final Logger logger = LoggerFactory.getLogger(StandardTestingService.class);
     private final ConfigurationLocator configurationLocator;
 
     public StandardTestingService() {

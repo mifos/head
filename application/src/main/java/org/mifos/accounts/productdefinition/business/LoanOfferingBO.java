@@ -40,7 +40,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -88,7 +89,7 @@ import org.mifos.service.BusinessRuleException;
  */
 public class LoanOfferingBO extends PrdOfferingBO {
 
-    private static final Logger logger = Logger.getLogger(LoanOfferingBO.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoanOfferingBO.class);
     public static LoanOfferingBO ALL_LOAN_PRD = new LoanOfferingBO();
     static {
         ALL_LOAN_PRD.setPrdOfferingName("ALL");

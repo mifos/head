@@ -30,7 +30,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -102,7 +103,7 @@ import org.mifos.security.util.UserContext;
 
 public class SavingsBO extends AccountBO {
 
-    private static final Logger logger = Logger.getLogger(SavingsBO.class);
+    private static final Logger logger = LoggerFactory.getLogger(SavingsBO.class);
 
     private Money recommendedAmount;
     private Money savingsBalance;

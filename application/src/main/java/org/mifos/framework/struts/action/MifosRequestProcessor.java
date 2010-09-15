@@ -30,7 +30,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.Globals;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionErrors;
@@ -49,7 +50,7 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class MifosRequestProcessor extends TilesRequestProcessor {
-    private static final Logger logger = Logger.getLogger(MifosRequestProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(MifosRequestProcessor.class);
 
     private ActivityContext setActivityContextFromRequest(HttpServletRequest request, Short activityId) {
         HttpSession session = request.getSession();

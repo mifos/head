@@ -26,7 +26,8 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
@@ -57,7 +58,7 @@ import org.mifos.security.util.UserContext;
  */
 public abstract class PrdOfferingBO extends AbstractBusinessObject {
 
-    private static final Logger logger = Logger.getLogger(PrdOfferingBO.class);
+    private static final Logger logger = LoggerFactory.getLogger(PrdOfferingBO.class);
 
     private final Short prdOfferingId;
     private String prdOfferingName;

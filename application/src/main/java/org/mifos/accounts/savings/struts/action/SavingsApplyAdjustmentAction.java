@@ -23,7 +23,8 @@ package org.mifos.accounts.savings.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -57,7 +58,7 @@ import org.mifos.security.util.UserContext;
 public class SavingsApplyAdjustmentAction extends BaseAction {
     private SavingsBusinessService savingsService;
 
-    private static final Logger logger = Logger.getLogger(SavingsApplyAdjustmentAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(SavingsApplyAdjustmentAction.class);
 
     @Override
     protected BusinessService getService() throws ServiceException {

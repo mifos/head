@@ -21,7 +21,8 @@
 package org.mifos.customers.struts.action;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -55,7 +56,7 @@ public class EditCustomerStatusAction extends BaseAction {
 
     private CustomerBusinessService customerService;
 
-    private static final Logger logger = Logger.getLogger(EditCustomerStatusAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(EditCustomerStatusAction.class);
 
     public EditCustomerStatusAction() {
         customerService = new CustomerBusinessService();

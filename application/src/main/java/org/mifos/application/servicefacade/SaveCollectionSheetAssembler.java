@@ -24,7 +24,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
@@ -57,7 +58,7 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class SaveCollectionSheetAssembler {
 
-    private static final Logger logger = Logger.getLogger(SaveCollectionSheetAssembler.class);
+    private static final Logger logger = LoggerFactory.getLogger(SaveCollectionSheetAssembler.class);
 
     private final CustomerPersistence customerPersistence = new CustomerPersistence();
     private final ClientPersistence clientPersistence = new ClientPersistence();

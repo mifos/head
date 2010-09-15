@@ -23,7 +23,8 @@ package org.mifos.application.collectionsheet.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDto;
 import org.mifos.accounts.loan.util.helpers.LoanAccountsProductDto;
@@ -40,7 +41,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public class CollectionSheetEntryDto implements DataTransferObject {
 
-    private static final Logger logger = Logger.getLogger(CollectionSheetEntryDto.class);
+    private static final Logger logger = LoggerFactory.getLogger(CollectionSheetEntryDto.class);
 
     private boolean hasChild;
 

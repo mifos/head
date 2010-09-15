@@ -21,12 +21,13 @@
 package org.mifos.framework.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,7 +45,7 @@ public class ConfigurationLocator {
     private static final String HOME_PROPERTY_NAME = "user.home";
     private static final String MIFOS_USER_CONFIG_DIRECTORY_NAME = ".mifos";
     private static final String DEFAULT_CONFIGURATION_PATH = "org/mifos/config/resources/";
-    private static final Logger LOG = Logger.getLogger(ConfigurationLocator.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(ConfigurationLocator.class);
 
     @SuppressWarnings("PMD.ImmutableField")
     private ConfigurationLocatorHelper configurationLocatorHelper;
@@ -98,7 +99,7 @@ public class ConfigurationLocator {
     public String getConfigurationDirectory() {
         for (String directoryPath : getDirectoriesToSearch()) {
             if (directoryExists(directoryPath)) {
-                LOG.info("ConfigurationLocator found configuration directory: " + directoryPath);
+                logger.info("ConfigurationLocator found configuration directory: " + directoryPath);
                 return directoryPath;
             }
         }
@@ -132,7 +133,7 @@ public class ConfigurationLocator {
 
     public File getFile(String filename) throws IOException {
         File fileToReturn = getConfigurationFile(filename);
-        LOG.info("ConfigurationLocator found configuration file: " + fileToReturn);
+        logger.info("ConfigurationLocator found configuration file: " + fileToReturn);
         return fileToReturn;
     }
 

@@ -23,7 +23,8 @@ package org.mifos.accounts.productdefinition.persistence;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
@@ -39,7 +40,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
 public class PrdOfferingPersistence extends Persistence {
-    private static final Logger logger = Logger.getLogger(PrdOfferingPersistence.class);
+    private static final Logger logger = LoggerFactory.getLogger(PrdOfferingPersistence.class);
 
     public Short getMaxPrdOffering() throws PersistenceException {
         logger.debug("getting the max prd offering id");

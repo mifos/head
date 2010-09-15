@@ -27,7 +27,8 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.master.business.CustomValueListElementDto;
@@ -41,7 +42,7 @@ import org.mifos.security.util.UserContext;
 
 public class LookupOptionsActionForm extends BaseActionForm {
 
-    private static final Logger logger = Logger.getLogger(LookupOptionsActionForm.class);
+    private static final Logger logger = LoggerFactory.getLogger(LookupOptionsActionForm.class);
 
     private String salutation;
     private String userTitle;

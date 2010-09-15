@@ -21,7 +21,8 @@
 package org.mifos.accounts.business;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -92,7 +93,7 @@ import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
 
 public class AccountBO extends AbstractBusinessObject {
 
-    private static final Logger logger = Logger.getLogger(AccountBO.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccountBO.class);
 
     private Integer accountId;
     protected String globalAccountNum;

@@ -24,7 +24,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -81,7 +82,7 @@ public class ClientRules {
      */
     private static Set<String> allowedNameParts;
 
-    private static final Logger logger = Logger.getLogger(ClientRules.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClientRules.class);
 
     private static ConfigurationPersistence configPersistence;
 

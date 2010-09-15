@@ -27,7 +27,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -42,7 +43,7 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class AccountPaymentEntity extends AbstractEntity {
 
-    private static final Logger logger = Logger.getLogger(AccountPaymentEntity.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccountPaymentEntity.class);
 
     private final Integer paymentId = null;
 

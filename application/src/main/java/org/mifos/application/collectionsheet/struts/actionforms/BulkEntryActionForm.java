@@ -28,7 +28,8 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -50,7 +51,7 @@ import org.mifos.security.util.UserContext;
  */
 public class BulkEntryActionForm extends BaseActionForm {
 
-    private static final Logger logger = Logger.getLogger(BulkEntryActionForm.class);
+    private static final Logger logger = LoggerFactory.getLogger(BulkEntryActionForm.class);
     private String customerId;
     private String loanOfficerId;
     private String paymentId;

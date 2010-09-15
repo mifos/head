@@ -20,7 +20,8 @@
 
 package org.mifos.application.questionnaire.migration;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -49,7 +50,7 @@ import static java.lang.String.format;
 
 public class QuestionnaireMigration {
 
-    private static final Logger logger = Logger.getLogger(QuestionnaireMigration.class);
+    private static final Logger logger = LoggerFactory.getLogger(QuestionnaireMigration.class);
 
     @Autowired
     private QuestionnaireMigrationMapper questionnaireMigrationMapper;

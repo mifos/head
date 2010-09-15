@@ -20,13 +20,14 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.framework.business.AbstractEntity;
 
 public class LoanOfferingFeesEntity extends AbstractEntity {
 
-    private static final Logger logger = Logger.getLogger(LoanOfferingFeesEntity.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoanOfferingFeesEntity.class);
 
     private final Short prdOfferingFeeId;
 

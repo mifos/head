@@ -22,7 +22,8 @@ package org.mifos.reports.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
@@ -32,7 +33,7 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
  */
 public class ReportsUserParamsActionForm extends BaseActionForm {
 
-    private static final Logger logger = Logger.getLogger(ReportsUserParamsActionForm.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReportsUserParamsActionForm.class);
 
     public ReportsUserParamsActionForm() {
         super();

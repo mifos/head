@@ -24,7 +24,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
@@ -50,7 +51,7 @@ import org.mifos.security.util.UserContext;
  */
 public class LoanDaoLegacyImpl implements DataAccessObject {
 
-    private static final Logger logger = Logger.getLogger(LoanDaoLegacyImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoanDaoLegacyImpl.class);
 
     public LoanBO createLoan(UserContext userContext, LoanOfferingBO loanOffering, CustomerBO customer,
             AccountState accountState, Money loanAmount, Short noOfinstallments, Date disbursementDate,

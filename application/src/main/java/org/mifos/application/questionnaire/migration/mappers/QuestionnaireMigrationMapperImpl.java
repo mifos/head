@@ -21,7 +21,8 @@
 package org.mifos.application.questionnaire.migration.mappers;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -68,7 +69,7 @@ import static org.mifos.platform.util.MapEntry.makeEntry;
 
 public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationMapper {
 
-    private static final Logger logger = Logger.getLogger(QuestionnaireMigrationMapperImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(QuestionnaireMigrationMapperImpl.class);
 
     private Map<CustomFieldType, QuestionType> customFieldTypeToQuestionTypeMap;
     private Map<EntityType, String> entityTypeToSourceMap;

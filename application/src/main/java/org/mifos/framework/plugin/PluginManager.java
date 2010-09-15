@@ -28,7 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.api.StandardAccountService;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
@@ -40,7 +41,7 @@ import org.mifos.spi.TransactionImport;
 
 public class PluginManager {
 
-    private static final Logger logger = Logger.getLogger(PluginManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(PluginManager.class);
 
     /**
      * Returns specified import plugin or null.
@@ -95,7 +96,7 @@ public class PluginManager {
                 try {
                     urls.add(file.toURI().toURL());
                 } catch (MalformedURLException e) {
-                    logger.warn(e);
+                    logger.warn("plugin loading failed",e);
                 }
             }
         }

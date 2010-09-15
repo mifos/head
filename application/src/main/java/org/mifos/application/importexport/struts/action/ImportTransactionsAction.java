@@ -33,7 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -61,7 +62,7 @@ import org.mifos.spi.TransactionImport;
  */
 
 public class ImportTransactionsAction extends BaseAction {
-    private static final Logger logger = Logger.getLogger(ImportTransactionsAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImportTransactionsAction.class);
 
     static final String IMPORT_TEMPORARY_FILENAME = "importTemporaryFilename";
     static final String IMPORT_PLUGIN_CLASSNAME = "importPluginClassname";

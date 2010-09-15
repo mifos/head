@@ -32,7 +32,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
@@ -46,7 +47,7 @@ import org.mifos.security.login.util.helpers.LoginConstants;
  */
 public class LoginFilter implements Filter {
 
-    private static final Logger logger = Logger.getLogger(LoginFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoginFilter.class);
     /**
      * This function implements the login filter it checks if user is not login
      * it forces the user to login by redirecting him to login page

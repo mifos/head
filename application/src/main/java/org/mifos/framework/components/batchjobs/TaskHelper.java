@@ -22,7 +22,8 @@ package org.mifos.framework.components.batchjobs;
 
 import java.sql.Timestamp;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.framework.components.batchjobs.business.Task;
@@ -41,7 +42,7 @@ public abstract class TaskHelper {
 
     long timeInMillis = 0;
 
-    private static final Logger logger = Logger.getLogger(TaskHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(TaskHelper.class);
 
     public TaskHelper(MifosTask mifosTask) {
         this.mifosTask = mifosTask;

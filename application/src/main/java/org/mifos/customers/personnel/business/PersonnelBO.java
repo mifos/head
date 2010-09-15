@@ -30,7 +30,8 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.SupportedLocalesEntity;
@@ -63,7 +64,7 @@ import org.mifos.security.util.UserContext;
 
 public class PersonnelBO extends AbstractBusinessObject {
 
-    private static final Logger logger = Logger.getLogger(PersonnelBO.class);
+    private static final Logger logger = LoggerFactory.getLogger(PersonnelBO.class);
 
     public static PersonnelBO ALL_PERSONNEL = new PersonnelBO();
     static {

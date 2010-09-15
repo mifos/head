@@ -20,7 +20,8 @@
 
 package org.mifos.application.master.persistence;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.application.questionnaire.migration.QuestionnaireMigration;
 import org.mifos.framework.persistence.Upgrade;
 import org.springframework.context.ApplicationContext;
@@ -32,7 +33,7 @@ import java.util.List;
 
 public class Upgrade1283341654 extends Upgrade {
     private QuestionnaireMigration questionnaireMigration;
-    private static final Logger logger = Logger.getLogger(Upgrade1283341654.class);
+    private static final Logger logger = LoggerFactory.getLogger(Upgrade1283341654.class);
 
     public Upgrade1283341654() {
         super();

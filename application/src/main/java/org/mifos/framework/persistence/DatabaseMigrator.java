@@ -20,7 +20,8 @@
 
 package org.mifos.framework.persistence;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.reports.business.ReportsCategoryBO;
@@ -60,7 +61,7 @@ import java.util.TreeMap;
  */
 public class DatabaseMigrator {
 
-    private static final Logger logger = Logger.getLogger(DatabaseMigrator.class);
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseMigrator.class);
 
     private Connection connection;
 

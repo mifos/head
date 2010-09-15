@@ -40,7 +40,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -87,7 +88,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrationTestCase {
 
-    private static final Logger logger = Logger.getLogger(AccountRegenerateScheduleIntegrationTestCase.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccountRegenerateScheduleIntegrationTestCase.class);
 
     public AccountRegenerateScheduleIntegrationTestCase() throws Exception {
         super();

@@ -28,7 +28,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.EntityMode;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.proxy.HibernateProxy;
@@ -48,7 +49,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public class InterceptHelper {
 
-    private static final  Logger logger = Logger.getLogger(InterceptHelper.class);
+    private static final  Logger logger = LoggerFactory.getLogger(InterceptHelper.class);
 
     private Map<Object, Object> initialValues;
     private Map<Object, Object> changedValues;

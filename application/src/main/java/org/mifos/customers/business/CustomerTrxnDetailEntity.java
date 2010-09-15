@@ -24,7 +24,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
@@ -37,7 +38,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 
-    private static final Logger logger = Logger.getLogger(CustomerTrxnDetailEntity.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomerTrxnDetailEntity.class);
 
     private final Set<FeesTrxnDetailEntity> feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
 

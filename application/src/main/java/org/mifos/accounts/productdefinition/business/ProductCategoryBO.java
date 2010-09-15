@@ -21,7 +21,8 @@
 package org.mifos.accounts.productdefinition.business;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.persistence.ProductCategoryPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
@@ -34,7 +35,7 @@ import org.mifos.security.util.UserContext;
 
 public class ProductCategoryBO extends AbstractBusinessObject {
 
-    private static final Logger logger = Logger.getLogger(ProductCategoryBO.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProductCategoryBO.class);
 
     private final Short productCategoryID;
 

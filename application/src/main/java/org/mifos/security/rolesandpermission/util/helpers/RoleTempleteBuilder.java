@@ -29,7 +29,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 
 /**
@@ -38,7 +39,7 @@ import org.mifos.security.rolesandpermission.business.ActivityEntity;
  */
 public class RoleTempleteBuilder {
 
-    private static final Logger logger = Logger.getLogger(RoleTempleteBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(RoleTempleteBuilder.class);
 
     /** ***********************************Fields******************** */
     /**

@@ -24,7 +24,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public interface ServiceLogger {
 
@@ -39,7 +40,7 @@ public interface ServiceLogger {
     };
 
     public static final ServiceLogger ARGS_LOGGER = new ServiceLogger() {
-        final Logger logger = Logger.getLogger(ServiceLogger.class);
+        final Logger logger = LoggerFactory.getLogger(ServiceLogger.class);
 
         @Override
         public void endOfServiceCall(Method method, Object[] args) {

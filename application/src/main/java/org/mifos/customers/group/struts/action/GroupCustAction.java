@@ -20,7 +20,8 @@
 
 package org.mifos.customers.group.struts.action;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -69,7 +70,7 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 public class GroupCustAction extends CustAction {
 
-    private static final Logger logger = Logger.getLogger(GroupCustAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(GroupCustAction.class);
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("groupCustAction");

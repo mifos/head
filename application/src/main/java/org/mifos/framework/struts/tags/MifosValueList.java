@@ -26,7 +26,8 @@ import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.taglib.TagUtils;
 import org.mifos.application.master.business.CustomValueListElementDto;
 
@@ -36,7 +37,7 @@ import org.mifos.application.master.business.CustomValueListElementDto;
 
 public class MifosValueList extends BodyTagSupport {
 
-    private static final Logger logger = Logger.getLogger(MifosValueList.class);
+    private static final Logger logger = LoggerFactory.getLogger(MifosValueList.class);
     /**
      * Name of the bean action form which contains the listbox. This name is
      * defined in the struts-config.xml file. For example, the name of the bean

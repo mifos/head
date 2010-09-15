@@ -22,7 +22,8 @@ package org.mifos.framework.hibernate.helper;
 
 import java.lang.reflect.Method;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.type.Type;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.util.DateTimeService;
@@ -38,7 +39,7 @@ import org.mifos.framework.util.DateTimeService;
 
 public class DTOBuilder {
 
-    private static final Logger logger = Logger.getLogger(DTOBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(DTOBuilder.class);
 
     String dtoPath = "";
 

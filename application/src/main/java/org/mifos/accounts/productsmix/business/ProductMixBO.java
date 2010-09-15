@@ -20,7 +20,8 @@
 
 package org.mifos.accounts.productsmix.business;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productsmix.persistence.ProductMixPersistence;
@@ -37,7 +38,7 @@ public class ProductMixBO extends AbstractBusinessObject {
     private PrdOfferingBO prdOfferingId;
     private PrdOfferingBO prdOfferingNotAllowedId;
 
-    private static final Logger logger = Logger.getLogger(ProductMixBO.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProductMixBO.class);
 
     public ProductMixBO() {
         this.prdOfferingMixId = null;

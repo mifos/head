@@ -30,7 +30,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
@@ -86,7 +87,7 @@ import org.springframework.util.Assert;
  */
 public class ClientBO extends CustomerBO {
 
-    private static final Logger logger = Logger.getLogger(ClientBO.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClientBO.class);
 
     private CustomerPictureEntity customerPicture;
     private Date dateOfBirth;

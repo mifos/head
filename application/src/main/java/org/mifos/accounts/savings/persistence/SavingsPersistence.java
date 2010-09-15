@@ -25,7 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.Session;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateEntity;
@@ -51,7 +52,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public class SavingsPersistence extends Persistence {
 
-    private static final Logger logger = Logger.getLogger(SavingsPersistence.class);
+    private static final Logger logger = LoggerFactory.getLogger(SavingsPersistence.class);
 
     public List<PrdOfferingDto> getSavingsProducts(OfficeBO branch, CustomerLevelEntity customerLevel,
             short savingsTypeId) throws PersistenceException {

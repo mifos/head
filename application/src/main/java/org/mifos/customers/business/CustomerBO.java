@@ -21,7 +21,8 @@
 package org.mifos.customers.business;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
@@ -90,7 +91,7 @@ import static org.mifos.framework.util.helpers.MoneyUtils.zero;
  */
 public abstract class CustomerBO extends AbstractBusinessObject {
 
-    private static final Logger logger = Logger.getLogger(CustomerBO.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomerBO.class);
 
     private Integer customerId;
     private String globalCustNum;

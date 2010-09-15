@@ -27,7 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -94,7 +95,7 @@ public class AccountStateMachines {
 
     private List<CustomerStatusEntity> customerStatusListForGroup = new ArrayList<CustomerStatusEntity>();
 
-    private static final Logger logger = Logger.getLogger(AccountStateMachines.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccountStateMachines.class);
 
     public void initialize(Short localeId, Short officeId, AccountTypes accountType, CustomerLevel level)
             throws StatesInitializationException {

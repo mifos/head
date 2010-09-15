@@ -23,11 +23,12 @@ package org.mifos.framework.components.logger;
 import java.lang.reflect.Method;
 
 import org.apache.commons.lang.time.StopWatch;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ServiceActivityLogger implements ServiceLogger {
 
-    private static final Logger logger = Logger.getLogger(ServiceActivityLogger.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServiceActivityLogger.class);
     protected final String serviceName;
     private StopWatch stopWatch;
 

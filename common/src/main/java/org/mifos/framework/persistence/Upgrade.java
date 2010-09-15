@@ -21,7 +21,8 @@
 package org.mifos.framework.persistence;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.framework.exceptions.SystemException;
 import org.springframework.context.ApplicationContext;
 
@@ -35,7 +36,7 @@ import java.sql.Statement;
 @SuppressWarnings("PMD.AbstractNaming")
 public abstract class Upgrade {
 
-    private static final Logger logger = Logger.getLogger(Upgrade.class);
+    private static final Logger logger = LoggerFactory.getLogger(Upgrade.class);
     public static final String WRONG_CONSTRUCTOR = "This db version is higher than 174 so it needs to use the constructor with lookupValueKey parameter.";
     protected ApplicationContext upgradeContext;
 

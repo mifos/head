@@ -28,7 +28,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -39,7 +40,7 @@ import org.mifos.security.util.UserContext;
 
 public class RoleBO extends AbstractBusinessObject {
 
-    private static final Logger logger = Logger.getLogger(RoleBO.class);
+    private static final Logger logger = LoggerFactory.getLogger(RoleBO.class);
 
     private Short id = null;
 

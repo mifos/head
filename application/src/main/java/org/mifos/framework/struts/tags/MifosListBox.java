@@ -26,7 +26,8 @@ import java.lang.reflect.Method;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.taglib.TagUtils;
 
 /**
@@ -35,7 +36,7 @@ import org.apache.struts.taglib.TagUtils;
 
 public class MifosListBox extends BodyTagSupport {
 
-    private static final Logger logger = Logger.getLogger(MifosListBox.class);
+    private static final Logger logger = LoggerFactory.getLogger(MifosListBox.class);
 
     /** Name of the bean from which you want to pupulate the list */
     private String name;

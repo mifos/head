@@ -28,7 +28,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -87,7 +88,7 @@ import org.mifos.security.util.UserContext;
  */
 public class CustomerAccountBO extends AccountBO {
 
-    private static final Logger logger = Logger.getLogger(CustomerAccountBO.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomerAccountBO.class);
 
     private List<CustomerActivityEntity> customerActivitDetails = new ArrayList<CustomerActivityEntity>();
 

@@ -29,7 +29,8 @@ import java.util.Date;
 
 import junit.framework.ComparisonFailure;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.FilteredDataSet;

@@ -25,7 +25,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
@@ -46,7 +47,7 @@ import org.mifos.security.util.UserContext;
 
 public class SavingsOfferingBO extends PrdOfferingBO {
 
-    private static final Logger logger = Logger.getLogger(SavingsOfferingBO.class);
+    private static final Logger logger = LoggerFactory.getLogger(SavingsOfferingBO.class);
 
     private Money recommendedAmount;
     private Money maxAmntWithdrawl;

@@ -20,7 +20,8 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -48,7 +49,7 @@ import java.sql.Date;
 
 public class RepayLoanAction extends BaseAction {
 
-    private static final Logger logger = Logger.getLogger(RepayLoanAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(RepayLoanAction.class);
 
     @Override
     protected BusinessService getService() throws ServiceException {

@@ -26,7 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
@@ -50,7 +51,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
  */
 public class CollectionSheetServiceImpl implements CollectionSheetService {
 
-    private static final Logger logger = Logger.getLogger(CollectionSheetServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(CollectionSheetServiceImpl.class);
 
     private final ClientAttendanceDao clientAttendanceDao;
     private final LoanPersistence loanPersistence;

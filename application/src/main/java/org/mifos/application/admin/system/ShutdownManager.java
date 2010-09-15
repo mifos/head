@@ -30,14 +30,15 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class ShutdownManager implements Serializable {
 
-    private static final Logger logger = Logger.getLogger(ShutdownManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(ShutdownManager.class);
 
     private Long shutdownTime;
     private final Map<String, HttpSession> activeSessions = new HashMap<String, HttpSession>();

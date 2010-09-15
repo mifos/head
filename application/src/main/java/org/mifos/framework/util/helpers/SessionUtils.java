@@ -30,7 +30,8 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -41,7 +42,7 @@ import org.mifos.framework.hibernate.helper.QueryResult;
  */
 public class SessionUtils {
 
-    private static final Logger logger = Logger.getLogger(SessionUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(SessionUtils.class);
     /**
      * Sets the attribute in the session and the key is formed by appending path
      * to the key passed. These attributes would be removed from the session

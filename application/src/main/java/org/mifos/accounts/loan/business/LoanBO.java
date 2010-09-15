@@ -20,7 +20,8 @@
 
 package org.mifos.accounts.loan.business;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -126,7 +127,7 @@ import java.util.Set;
 
 public class LoanBO extends AccountBO {
 
-    private static final Logger logger = Logger.getLogger(LoanBO.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoanBO.class);
     private Integer businessActivityId;
 
     private Money loanAmount;

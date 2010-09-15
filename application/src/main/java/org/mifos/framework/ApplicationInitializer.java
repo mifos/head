@@ -20,7 +20,8 @@
 
 package org.mifos.framework;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.config.AccountingRules;
@@ -78,7 +79,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         Throwable error = null;
 
         void logError() {
-            logger.fatal(errmsg, error);
+            logger.error(errmsg, error);
         }
     }
 
@@ -124,7 +125,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 * If we do not call MifosLogManager as first step of initialization
                 * MifosLogManager.loggerRepository will be null.
                 */
-                logger = Logger.getLogger(ApplicationInitializer.class);
+                logger = LoggerFactory.getLogger(ApplicationInitializer.class);
                 logger.info("Logger has been initialised");
 
                 initializeHibernate();

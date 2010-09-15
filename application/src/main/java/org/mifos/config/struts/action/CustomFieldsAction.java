@@ -31,7 +31,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -66,7 +67,7 @@ import org.mifos.security.util.UserContext;
 
 public class CustomFieldsAction extends BaseAction {
 
-    private static final Logger logger = Logger.getLogger(CustomFieldsAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomFieldsAction.class);
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("customFieldsAction");

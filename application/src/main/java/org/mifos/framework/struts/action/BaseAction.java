@@ -30,7 +30,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -94,7 +95,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public abstract class BaseAction extends DispatchAction {
 
-    private static final Logger logger = Logger.getLogger(BaseAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(BaseAction.class);
 
     protected BusinessService getService() throws ServiceException {
         return null;

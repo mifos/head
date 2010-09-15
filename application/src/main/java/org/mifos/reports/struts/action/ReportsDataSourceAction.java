@@ -23,7 +23,8 @@ package org.mifos.reports.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -45,7 +46,7 @@ public class ReportsDataSourceAction extends BaseAction {
 
     private ReportsBusinessService reportsBusinessService;
     private ReportsPersistence reportsPersistence;
-    private static final Logger logger = Logger.getLogger(ReportsDataSourceAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReportsDataSourceAction.class);
 
     public ReportsDataSourceAction() throws ServiceException {
         reportsBusinessService = new ReportsBusinessService();

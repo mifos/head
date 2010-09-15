@@ -25,7 +25,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -45,7 +46,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
  */
 public abstract class Persistence {
 
-    private static final Logger logger = Logger.getLogger(Persistence.class);
+    private static final Logger logger = LoggerFactory.getLogger(Persistence.class);
 
     public HibernateUtil getHibernateUtil() {
         return HibernateUtil.getInstance();
