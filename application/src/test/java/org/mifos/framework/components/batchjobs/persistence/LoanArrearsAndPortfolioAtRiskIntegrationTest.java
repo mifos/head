@@ -70,7 +70,7 @@ public class LoanArrearsAndPortfolioAtRiskIntegrationTest extends MifosIntegrati
     public void testLoanArrearsTaskRunSuccessfull() throws Exception {
         mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/loanArrearsAndPortfolioTask.xml");
         mifosScheduler.runIndividualTask(jobName);
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
         List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 10);
         Assert.assertTrue(jobInstances.size() > 0);
