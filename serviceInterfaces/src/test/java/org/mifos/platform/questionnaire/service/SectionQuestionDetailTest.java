@@ -25,8 +25,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*; // NOPMD
 import static org.junit.Assert.assertThat;
 
 public class SectionQuestionDetailTest {
@@ -45,13 +44,13 @@ public class SectionQuestionDetailTest {
     @Test
     public void shouldSetSelectionsFromValuesArray() {
         SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail();
-        sectionQuestionDetail.setValues(new String[] {"Ch1:Tag2", "Ch2:Tag3", "Ch3:Tag1"});
+        sectionQuestionDetail.setValues(new String[] {"Ch1:Tag2", "Ch2:Tag3", "Ch3"});
         List<SelectionDetail> selections = sectionQuestionDetail.getSelections();
         assertThat(selections, is(notNullValue()));
         assertThat(selections.size(), is(3));
         assertSelection(selections.get(0), "Ch1", "Tag2");
         assertSelection(selections.get(1), "Ch2", "Tag3");
-        assertSelection(selections.get(2), "Ch3", "Tag1");
+        assertSelection(selections.get(2), "Ch3", null);
     }
     
     @Test
@@ -81,7 +80,11 @@ public class SectionQuestionDetailTest {
 
     private void assertSelection(SelectionDetail selectionDetail, String choice, String tag) {
         assertThat(selectionDetail.getSelectedChoice(), is(choice));
-        assertThat(selectionDetail.getSelectedTag(), is(tag));
+        if (tag == null) {
+            assertThat(selectionDetail.getSelectedTag(), is(nullValue()));
+        } else {
+            assertThat(selectionDetail.getSelectedTag(), is(tag));
+        }
     }
 
     private SelectionDetail getSelectionDetail(String selectedChoice, String selectedTag) {

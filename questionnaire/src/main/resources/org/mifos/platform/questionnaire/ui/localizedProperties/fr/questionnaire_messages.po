@@ -1,0 +1,527 @@
+# extracted from questionnaire_messages.properties
+#. extracted from ../../../questionnaire/src/main/resources/org/mifos/platform/questionnaire/ui/localizedProperties/questionnaire_messages.properties
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-09-14 09:26-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.5.3\n"
+
+#: questionnaire.view.questions
+msgid "View Questions"
+msgstr ""
+
+#: questionnaire.create.question.prompt
+msgid "Click on a question below to view details and make changes or"
+msgstr ""
+
+#: questionnaire.create.question.link
+msgid "define a new question"
+msgstr ""
+
+#: questionnaire.view.question
+msgid "View Question Details"
+msgstr ""
+
+#: questionnaire.question
+msgid "Question"
+msgstr ""
+
+#: questionnaire.answer.type
+msgid "Answer Type"
+msgstr ""
+
+#: questionnaire.add.questions
+msgid "Add Questions"
+msgstr ""
+
+#: questionnaire.view.question.groups
+msgid "View Question Groups"
+msgstr ""
+
+#: questionnaire.create.question.group.prompt
+msgid "Click on a question group below to view details and make changes or"
+msgstr ""
+
+#: questionnaire.create.question.group.link
+msgid "define a new question group"
+msgstr ""
+
+#: questionnaire.view.question.group
+msgid "View Question Group Details"
+msgstr ""
+
+#: questionnaire.question.name
+msgid "Question Name"
+msgstr ""
+
+#: questionnaire.question.mandatory
+msgid "Mandatory"
+msgstr ""
+
+#: questionnaire.error.no.question.in.section
+msgid "Section should have at least one question."
+msgstr ""
+
+#: questionnaire.error.question.title.empty
+msgctxt "questionnaire.error.question.title.empty"
+msgid "Please specify the question title."
+msgstr ""
+
+#: questionnaire.error.question.duplicate
+msgid "Question title already exists."
+msgstr ""
+
+#: questionnaire.serivce.failure
+msgid ""
+"There was an unexpected failure. Please retry or contact technical support."
+msgstr ""
+
+#: questionnaire.create.question.success
+msgid "Your question has been created successfully."
+msgstr ""
+
+#: questionnaire.error.questionGroup.invalid
+msgid "Question group id is invalid."
+msgstr ""
+
+#: questionnaire.error.questionGroup.notFound
+msgid "Question group does not exist."
+msgstr ""
+
+#: questionnaire.error.question.invalid
+msgid "Question id is invalid."
+msgstr ""
+
+#: questionnaire.error.question.notFound
+msgid "Question does not exist."
+msgstr ""
+
+#: questionnaire.error.section.name.empty
+msgid "Please specify section name."
+msgstr ""
+
+#: questionnaire.error.section.atLeastOne
+msgid "Please add at least one section."
+msgstr ""
+
+#: questionnaire.error.appliesTo.mandatory
+msgid "Please choose a valid 'Applies To' value."
+msgstr ""
+
+#: questionnaire.error.question.choices
+msgid "Please specify at least 2 choices."
+msgstr ""
+
+#: questionnaire.addQuestionGroup
+msgid "Add Question Group"
+msgstr ""
+
+#: questionnaire.questionGroupTitle
+msgid "Question Group Title"
+msgstr ""
+
+#: questionnaire.questionGroupAppliesTo
+msgid "Applies To"
+msgstr ""
+
+#: questionnaire.currentSectionTitle
+msgid "Section Heading"
+msgstr ""
+
+#: questionnaire.remove
+msgid "Remove"
+msgstr ""
+
+#: questionnaire.tags
+msgid "Tags"
+msgstr ""
+
+#: questionnaire.remove.link
+msgid "remove"
+msgstr ""
+
+#: questionnaire.question.delete
+msgid "Delete"
+msgstr ""
+
+#: questionnaire.yes
+msgid "Yes"
+msgstr ""
+
+#: questionnaire.no
+msgid "No"
+msgstr ""
+
+#: questionnaire.submit
+msgid "Submit"
+msgstr ""
+
+#: questionnaire.cancel
+msgid "Cancel"
+msgstr ""
+
+#: questionnaire.continue
+msgid "Continue"
+msgstr ""
+
+#: questionnaire.quesiton.choices.freetext
+msgid "Free Text"
+msgstr ""
+
+#: questionnaire.quesiton.choices.number
+msgid "Number"
+msgstr ""
+
+#: questionnaire.quesiton.choices.date
+msgid "Date"
+msgstr ""
+
+#: questionnaire.quesiton.choices.multiselect
+msgid "Multi Select"
+msgstr ""
+
+#: questionnaire.quesiton.choices.singleselect
+msgid "Single Select"
+msgstr ""
+
+#: questionnaire.quesiton.choices.smartselect
+msgid "Smart Select"
+msgstr ""
+
+#: questionnaire.quesiton.choices.notapplicable
+msgid "Not Applicable"
+msgstr ""
+
+#: questionnaire.quesiton.choices
+msgid "Answer Choices"
+msgstr ""
+
+#: questionnaire.quesiton.choice
+msgid "Answer Choice"
+msgstr ""
+
+#: questionnaire.quesiton.add
+msgid "Add"
+msgstr ""
+
+#: questionnaire.choice
+msgid "Choice"
+msgstr ""
+
+#: questionnaire.choices
+msgid "Choices"
+msgstr ""
+
+#: questionnaire.editable
+msgid "Is response editable?"
+msgstr ""
+
+#: questionnaire.status
+msgid "Status"
+msgstr ""
+
+#: questionnaire.active
+msgid "Active"
+msgstr ""
+
+#: questionnaire.inactive
+msgid "Inactive"
+msgstr ""
+
+#: questionnaire.question.title
+msgid "Question Title"
+msgstr ""
+
+#: questionnaire.attach
+msgid "Attach Survey"
+msgstr ""
+
+#: questionnaire.instructions
+msgid ""
+"Select a survey from the list below. Then click Continue. Click Cancel to "
+"return to client details without submitting information"
+msgstr ""
+
+#: questionnaire.enterdata
+msgid "Enter survey data"
+msgstr ""
+
+#: questionnaire.selectquestionnaire
+msgid "Select Survey"
+msgstr ""
+
+#: questionnaire.selectone
+msgid "select one"
+msgstr ""
+
+#: questionnaire.edit
+msgid "Edit"
+msgstr ""
+
+#: questionnaire.editquestion
+msgid "Edit Question"
+msgstr ""
+
+#: questionnaire.editquestion.warning
+msgid "Note: Significant modifications of questions could affect reporting."
+msgstr ""
+
+#: questionnaire.editquestion.instructions
+msgid ""
+"Complete the fields below and click submit. Click Cancel to return to View "
+"question page without submitting information."
+msgstr ""
+
+#: questionnaire.noresponse
+msgid "Please specify {0}."
+msgstr ""
+
+#: questionnaire.invalid.numeric.min.response
+msgid "Please specify a number greater than {0} for {1}."
+msgstr ""
+
+#: questionnaire.invalid.numeric.max.response
+msgid "Please specify a number lesser than {0} for {1}."
+msgstr ""
+
+#: questionnaire.invalid.numeric.range.response
+msgid "Please specify a number between {0} and {1} for {2}."
+msgstr ""
+
+#: questionnaire.invalid.numeric.response
+msgid "Please specify a number for {0}."
+msgstr ""
+
+#. #validation constraints
+#: questionnaire.error.questionGroup.title.empty
+msgid "Please specify Question Group title."
+msgstr ""
+
+#: NotNull.QuestionForm.currentQuestion.title
+msgctxt "NotNull.QuestionForm.currentQuestion.title"
+msgid "Please specify the question title."
+msgstr ""
+
+#: Pattern.QuestionForm.currentQuestion.title
+msgctxt "Pattern.QuestionForm.currentQuestion.title"
+msgid "Please specify the question title."
+msgstr ""
+
+#: Size.QuestionForm.currentQuestion.title
+msgctxt "Size.QuestionForm.currentQuestion.title"
+msgid "Question title must be less than 200 characters."
+msgstr ""
+
+#: Pattern.QuestionForm.currentQuestion.type
+msgctxt "Pattern.QuestionForm.currentQuestion.type"
+msgid "Answer type should be specified."
+msgstr ""
+
+#: NotNull.QuestionForm.currentQuestion.type
+msgctxt "NotNull.QuestionForm.currentQuestion.type"
+msgid "Answer type must be specified."
+msgstr ""
+
+#: questionnaire.select.questions
+msgid "Select Questions"
+msgstr ""
+
+#: questionnaire.view.question.group.responses
+msgid "View Question Group Response(s)"
+msgstr ""
+
+#: questionnaire.back.to.details
+msgid "Back to Details Page"
+msgstr ""
+
+#: questionnaire.quesiton.numeric.min
+msgid "Minimum value"
+msgstr ""
+
+#: questionnaire.quesiton.numeric.max
+msgid "Maximum value"
+msgstr ""
+
+#: questionnaire.question.addtag
+msgid "Add Tag"
+msgstr ""
+
+#: questionnaire.uploadQuestionGroup
+msgid "Activate Question Group"
+msgstr ""
+
+#: questionnaire.uploadQuestionGroupMessage
+msgid ""
+"Select the Question Group and click Submit. Click cancel to return to Admin "
+"screen."
+msgstr ""
+
+#: questionnaire.select.questionGroup
+msgid "Select Question Group"
+msgstr ""
+
+#: questionnaire.error.ppi.country
+msgid "Please specify the Country"
+msgstr ""
+
+#: questionnaire.error.FetchPPICountryXmlFailed
+msgid ""
+"An error occured while fetching the PPI xml file for the selected country."
+msgstr ""
+
+#: questionnaire.error.PPISurveyUploadFailed
+msgid "Unable to upload the PPI xml file for the selected country."
+msgstr ""
+
+#: questionnaire.error.QuestionGroupTitleNotProvided
+msgid "Question Group title is not specified."
+msgstr ""
+
+#: questionnaire.error.QuestionGroupTitleTooBig
+msgid "Question Group title must not exceed 50 characters."
+msgstr ""
+
+#: questionnaire.error.QuestionGroupTitleDuplicate
+msgid "A Question Group with the specified title already exists."
+msgstr ""
+
+#: questionnaire.error.InvalidEventSourceProvided
+msgid "Question Group applies to is invalid."
+msgstr ""
+
+#: questionnaire.error.QuestionGroupSectionNotProvided
+msgid "Please specify atleast one section for the Question Group."
+msgstr ""
+
+#: questionnaire.error.SectionTitleNotProvided
+msgid "One or more sections do not have the name specified."
+msgstr ""
+
+#: questionnaire.error.SectionTitleDuplicate
+msgid "Two or more sections have the same name specified."
+msgstr ""
+
+#: questionnaire.error.SectionOrderNotProvided
+msgid "One or more sections do not have the order specified."
+msgstr ""
+
+#: questionnaire.error.SectionOrderDuplicate
+msgid "Two or more sections have the same order specified."
+msgstr ""
+
+#: questionnaire.error.no.questions.found.in.section
+msgid "One or more sections have no questions specified."
+msgstr ""
+
+#: questionnaire.error.QuestionTitleNotProvided
+msgid "One or more questions do not have the title specified."
+msgstr ""
+
+#: questionnaire.error.DuplicateQuestion
+msgid "Two or more questions have the same title specified."
+msgstr ""
+
+#: questionnaire.error.QuestionOrderNotProvided
+msgid "One or more questions do not have the order specified."
+msgstr ""
+
+#: questionnaire.error.QuestionOrderDuplicate
+msgid "Two or more questions have the same order specified."
+msgstr ""
+
+#: questionnaire.error.QuestionTypeNotProvided
+msgid "One or more questions do not have the question type specified."
+msgstr ""
+
+#: questionnaire.error.QuestionChoicesInsufficient
+msgid ""
+"Please specify atleast 2 choices for single select, multi select and smart "
+"select questions."
+msgstr ""
+
+#: questionnaire.error.QuestionChoicesInvalid
+msgid ""
+"One or more questions have invalid answer choices. Every choice within a "
+"question must have unique value and order."
+msgstr ""
+
+#: questionnaire.error.invalid.numeric.bounds
+msgid "Please ensure maximum value is greater than minimum value."
+msgstr ""
+
+#: questionnaire.error.SectionNameTooBig
+msgid "Section name must not exceed 50 characters."
+msgstr ""
+
+#: questionnaire.error.QuestionTitleTooBig
+msgid "Question title must not exceed 50 characters."
+msgstr ""
+
+#: questionnaire.error.PPISurveyFileNotFound
+msgid "Unable to find the PPI xml file for the specified country."
+msgstr ""
+
+#: questionnaire.error.PPISurveyParseError
+msgid ""
+"An error occured while processing the PPI xml file for the specified "
+"country."
+msgstr ""
+
+#: questionnaire.error.PPISurveyConversionError
+msgid ""
+"An error occured while creating the PPI question group for the specified "
+"country."
+msgstr ""
+
+#: questionnaire.error.QuestionTitleMatchesExistingQuestion
+msgid "A question with different answer type or choice already exists."
+msgstr ""
+
+#: questionnaire.addNewQuestion
+msgid "Add new question"
+msgstr ""
+
+#: questionnaire.selectQuestions
+msgid "Select from list of existing questions"
+msgstr ""
+
+#: NotNull.QuestionGroupForm.currentQuestion.title
+msgctxt "NotNull.QuestionGroupForm.currentQuestion.title"
+msgid "Please specify the question title."
+msgstr ""
+
+#: Pattern.QuestionGroupForm.currentQuestion.title
+msgctxt "Pattern.QuestionGroupForm.currentQuestion.title"
+msgid "Please specify the question title."
+msgstr ""
+
+#: Size.QuestionGroupForm.currentQuestion.title
+msgctxt "Size.QuestionGroupForm.currentQuestion.title"
+msgid "Question title must be less than 200 characters."
+msgstr ""
+
+#: Pattern.QuestionGroupForm.currentQuestion.type
+msgctxt "Pattern.QuestionGroupForm.currentQuestion.type"
+msgid "Answer type should be specified."
+msgstr ""
+
+#: NotNull.QuestionGroupForm.currentQuestion.type
+msgctxt "NotNull.QuestionGroupForm.currentQuestion.type"
+msgid "Answer type must be specified."
+msgstr ""
+
+#: questionnaire.questionGroup
+msgid "Question Group"
+msgstr ""
+
+#: questionnaire.editQuestionGroup
+msgid "Edit Question Group"
+msgstr ""

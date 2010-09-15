@@ -31,6 +31,7 @@ public class SelectionDetail implements Serializable {
 
     private String selectedChoice;
     private String selectedTag;
+    private static final char CHOICE_TAG_SEPARATOR = ':';
 
     @SuppressWarnings("PMD.UncommentedEmptyConstructor")
     public SelectionDetail() {
@@ -38,7 +39,7 @@ public class SelectionDetail implements Serializable {
 
     @SuppressWarnings("PMD.NullAssignment")
     public SelectionDetail(String choiceTagString) {
-        String[] values = split(choiceTagString, ':');
+        String[] values = split(choiceTagString, CHOICE_TAG_SEPARATOR);
         if (values != null && values.length > 0) {
             selectedChoice = values[0];
             selectedTag = (values.length > 1)? values[1]: null;
@@ -63,6 +64,6 @@ public class SelectionDetail implements Serializable {
 
     @Override
     public String toString() {
-        return isEmpty(selectedTag)? selectedChoice: format("%s:%s", selectedChoice, selectedTag);
+        return isEmpty(selectedTag)? selectedChoice: format("%s%s%s", selectedChoice, CHOICE_TAG_SEPARATOR, selectedTag);
     }
 }
