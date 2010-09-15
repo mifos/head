@@ -20,9 +20,11 @@
 
 package org.mifos.customers;
 
-import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +37,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
-import org.mifos.application.collectionsheet.persistence.FeeBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -140,41 +139,6 @@ public class CustomerAccountGenerateNextSetOfMeetingDatesTest {
         customerAccount.generateNextSetOfMeetingDates(scheduledDateGeneration);
 
         //verification
-        assertThat(customerAccount.getAccountActionDates().size(), is(20));
-    }
-
-    @Test
-    public void canGenerateNextSetOfMeetingScheduleOnTopOfPreviousMeetingScheduleWithRecurringFees() {
-
-        // use default setup
-        MeetingBuilder weeklyMeetingBuilder = new MeetingBuilder().customerMeeting().weekly().every(1);
-        MeetingBO customerMeeting = weeklyMeetingBuilder.build();
-        customer = new CenterBuilder().active().with(customerMeeting).build();
-
-        AmountFeeBO recurringFee = new FeeBuilder().appliesToAllCustomers().periodic().with(weeklyMeetingBuilder).withFeeAmount("3.0").build();
-        AccountFeesEntity recurringFeeEntity = new AccountFeesEntity(null, recurringFee, recurringFee.getFeeAmount().getAmountDoubleValue());
-
-        accountFees = new ArrayList<AccountFeesEntity>();
-        accountFees.add(recurringFeeEntity);
-
-        customerAccount = CustomerAccountBO.createNew(customer, accountFees, customerMeeting, calendarEvent);
-
-        // setup
-        AccountFeesEntity sameButDifferentRecurringFeeEntity = new AccountFeesEntity(customerAccount, recurringFee, recurringFee.getFeeAmount().getAmountDoubleValue());
-        customerAccount.getAccountFees().clear();
-        customerAccount.addAccountFees(sameButDifferentRecurringFeeEntity);
-
-        List<AccountActionDateEntity> schedules = new ArrayList<AccountActionDateEntity>(customerAccount.getAccountActionDates());
-        DateTime lastScheduledDate = new DateTime(schedules.get(9).getActionDate());
-        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
-
-        // stubbing
-        List<DateTime> generatedDates = elevenDatesStartingFromAndIncluding(lastScheduledDate, scheduledEvent);
-        when(scheduledDateGeneration.generateScheduledDates(anyInt(), (DateTime)anyObject(), (ScheduledEvent)anyObject())).thenReturn(generatedDates);
-
-        // exercise test
-        customerAccount.generateNextSetOfMeetingDates(scheduledDateGeneration);
-
         assertThat(customerAccount.getAccountActionDates().size(), is(20));
     }
 
