@@ -21,6 +21,7 @@
 package org.mifos.platform.questionnaire.service;
 
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.platform.questionnaire.AuditLogService;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
@@ -35,8 +36,16 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     @Autowired
     private QuestionnaireService questionnaireService;
 
+    @Autowired
+    private AuditLogService auditLogService;
+
     public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService) {
         this.questionnaireService = questionnaireService;
+    }
+
+    public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService, AuditLogService auditLogService) {
+        this.questionnaireService = questionnaireService;
+        this.auditLogService = auditLogService;
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
@@ -99,6 +108,9 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     @Override
     public void saveResponses(QuestionGroupDetails questionGroupDetails) {
         questionnaireService.saveResponses(questionGroupDetails);
+        if (auditLogService != null) {
+            auditLogService.addAuditLogRegistry(questionGroupDetails);
+        }
     }
 
     @Override
