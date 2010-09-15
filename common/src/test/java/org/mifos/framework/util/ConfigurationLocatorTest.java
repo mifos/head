@@ -20,19 +20,20 @@
 
 package org.mifos.framework.util;
 
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ConfigurationLocatorTest {
@@ -86,5 +87,16 @@ public class ConfigurationLocatorTest {
         // verification
         Assert.assertNotNull(configurationDirectory);
         Assert.assertEquals(EXPECTED_PATH, configurationDirectory);
+    }
+
+    @Test
+    public void testResolvePath() {
+        when(configurationLocatorHelper.getEnvironmentProperty("MIFOS_CONF")).thenReturn("/users/admin/.mifos");
+        when(configurationLocatorHelper.getHomeProperty("question.group.folder")).thenReturn("question/groups/xmls");
+        String path = configurationLocator.resolvePath("$MIFOS_CONF/${question.group.folder}/ppi/PPIIndia.xml");
+        Assert.assertEquals("/users/admin/.mifos/question/groups/xmls/ppi/PPIIndia.xml", path);
+        verify(configurationLocatorHelper, times(1)).getEnvironmentProperty("MIFOS_CONF");
+        verify(configurationLocatorHelper, times(1)).getHomeProperty("question.group.folder");
+        Assert.assertEquals("/users/admin/.mifos/question/groups/xmls/ppi/PPIIndia.xml", configurationLocator.resolvePath("/users/admin/.mifos/question/groups/xmls/ppi/PPIIndia.xml"));
     }
 }

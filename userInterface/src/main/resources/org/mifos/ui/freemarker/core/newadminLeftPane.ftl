@@ -7,7 +7,7 @@
         <label for="searchString">
         [@spring.message "admin.searchbynamesystemIDoraccountnumber"/]
         </label>
-        <input class="t_box" type="text" name="searchString" maxlength="200" size="15" value="">
+        <input class="t_box" type="text" id="searchString" name="searchString" maxlength="200" size="15" value="">
       </p>
      <p class="form_button">
          <input class="buttn" type="submit" name="searchButton" value="[@spring.message "admin.search" /]" >

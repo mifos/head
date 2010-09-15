@@ -25,4 +25,5 @@
 
     <bean id="databaseTestUtils" class="org.mifos.test.framework.util.DatabaseTestUtils" />
 
+    <import resource="classpath:META-INF/spring/QuestionnaireContext.xml"/>
 </beans>

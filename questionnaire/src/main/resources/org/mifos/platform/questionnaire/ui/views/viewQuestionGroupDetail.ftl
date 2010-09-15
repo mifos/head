@@ -35,8 +35,7 @@
         <form name="viewQuestionGroupDetailsForm" action="viewAndEditQuestionGroup.ftl?execution=${flowExecutionKey}" method="POST" class="marginLeft30">
             [#assign boolean_text_yes][@spring.message "questionnaire.yes"/][/#assign]
             [#assign boolean_text_no][@spring.message "questionnaire.no"/][/#assign]
-            <fieldset>
-                <ol>
+            <ul class="no_bullet">
                     <li>
                         <a href="editQuestionGroup#" class="topRight">[@spring.message "questionnaire.edit"/]</a>
                         <input type="submit" id="_eventId_editQuestionGroup" name="_eventId_editQuestionGroup" value="${questionGroupForm.questionGroupDetail.id}" style="display:none"/>
@@ -48,26 +47,29 @@
                     <li id="questionGroup.editable">
                         [@spring.message "questionnaire.editable"/]: ${questionGroupForm.questionGroupDetail.editable?string(boolean_text_yes, boolean_text_no)}
                     </li>
-                    <li id="questionGroup.sections">
+                    <li id="questionGroup.sections" class="question_list_table">
                         [#list questionGroupForm.sections as section]
                             <b>${section.name}</b><br/>
-                            <table id="sections.table.${section.name}" name="sections.table.${section.name}">
+                            <table class="table_common" id="sections.table.${section.name}" name="sections.table.${section.name}">
+                                <thead>
                                  <tr>
-                                     <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.name"/]</td>
-                                     <td class="drawtablehd" width="25%">[@spring.message "questionnaire.question.mandatory"/]</td>
-                                     <td class="drawtablehd" width="25%">[@spring.message "questionnaire.status"/]</td>
+                                     <th class="name">[@spring.message "questionnaire.question.name"/]</th>
+                                     <th class="mandatory">[@spring.message "questionnaire.question.mandatory"/]</th>
+                                     <th class="status">[@spring.message "questionnaire.status"/]</th>
                                  </tr>
+                                 </thead>
+                                <tbody>
                                 [#list section.sectionQuestions as sectionQuestion]
                                      <tr>
-                                         <td class="drawtablerow" width="50%"><a href="viewAndEditQuestion.ftl?questionId=${sectionQuestion.questionId}">${sectionQuestion.title}</a></td>
-                                         <td class="drawtablerow" width="25%">
+                                         <td class="name" ><a href="viewAndEditQuestion.ftl?questionId=${sectionQuestion.questionId}">${sectionQuestion.title}</a></td>
+                                         <td class="mandatory" >
                                              [#if sectionQuestion.mandatory]
                                                  [@spring.message "questionnaire.yes"/]
                                              [#else]
                                                  [@spring.message "questionnaire.no"/]
                                              [/#if]
                                          </td>
-                                         <td class="drawtablerow" width="25%">
+                                         <td class="status" >
                                              [#if sectionQuestion.active]
                                                  [@spring.message "questionnaire.active"/]
                                              [#else]
@@ -76,11 +78,11 @@
                                          </td>
                                      </tr>
                                 [/#list]
+                                </tbody>
                             </table>
                         [/#list]
                     </li>
-                </ol>
-            </fieldset>
+              </ul>
         </form>
     [/#if]
     </div>

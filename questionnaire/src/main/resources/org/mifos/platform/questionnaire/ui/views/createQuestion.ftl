@@ -35,20 +35,22 @@
         </div>
         <form name="createquestionform" action="createQuestion.ftl?execution=${flowExecutionKey}" method="POST" focus="currentQuestion.title">
             <input type="submit" id="_eventId_removeQuestion" name="_eventId_removeQuestion" value="" style="visibility:hidden"/>
-            <fieldset>
-             <ol>
+            <div class="create_question">
                 [#include "questionDefinition.ftl"]
-                <li class="buttonWidth">
-                    <input type="submit" name="_eventId_addQuestion" value="Add Question" class="buttn" id="_eventId_addQuestion">
-                </li>
+                <div class="add_question">
+                    <div class="button_container">
+                        <input type="submit" name="_eventId_addQuestion" value="Add Question" class="buttn" id="_eventId_addQuestion">
+                    </div>
+                </div>
                 [#include "questionListing.ftl"]
-                <li class="buttonWidth">
-                    <input type="submit" id="_eventId_createQuestions" name="_eventId_createQuestions" value="[@spring.message "questionnaire.submit"/]" class="buttn"/>
-                    &nbsp;
-                    <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
-                </li>
-             </ol>
-            </fieldset>
+                <div class="button_footer">
+                    <div class="button_container">
+                        <input type="submit" id="_eventId_createQuestions" name="_eventId_createQuestions" value="[@spring.message "questionnaire.submit"/]" class="buttn"/>
+                        &nbsp;
+                        <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
+                    </div>
+                </div>
+             </div>
         </form>
     </div>
 [/@adminLeftPaneLayout]

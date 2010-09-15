@@ -109,7 +109,8 @@ public class QuestionnaireMigrationMapperTest {
         when(questionnaireServiceFacade.createQuestion(any(QuestionDto.class))).thenReturn(0);
         when(questionnaireServiceFacade.createQuestion(any(QuestionDto.class))).thenReturn(0);
         Map<Short,Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
-        QuestionGroupDto questionGroupDto = mapper.map(asList(customField1, customField2, customField3), customFieldQuestionIdMap);
+        List<CustomFieldDefinitionEntity> customFields = asList(customField1, customField2, customField3);
+        QuestionGroupDto questionGroupDto = mapper.map(customFields.iterator(), customFieldQuestionIdMap, EntityType.CLIENT);
         assertThat(questionGroupDto, is(notNullValue()));
         assertThat(questionGroupDto.getTitle(), is("Additional_Fields_Create Client"));
         EventSourceDto eventSourceDto = questionGroupDto.getEventSourceDto();

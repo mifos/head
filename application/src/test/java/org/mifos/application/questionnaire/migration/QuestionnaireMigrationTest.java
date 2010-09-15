@@ -60,6 +60,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -113,7 +114,8 @@ public class QuestionnaireMigrationTest {
     public void shouldMigrateSurveys() throws ApplicationException {
         Survey survey1 = getSurvey("Sur1", "Ques1", calendar.getTime());
         Survey survey2 = getSurvey("Sur2", "Ques2", calendar.getTime());
-        when(surveysPersistence.retrieveSurveysByType(SurveyType.CLIENT)).thenReturn(asList(survey1, survey2));
+        List<Survey> surveys = asList(survey1, survey2);
+        when(surveysPersistence.retrieveSurveysByTypeIterator(SurveyType.CLIENT)).thenReturn(surveys.iterator());
         QuestionGroupDto questionGroupDto1 = getQuestionGroupDto("Sur1", "Ques1", "View", "Client");
         QuestionGroupDto questionGroupDto2 = getQuestionGroupDto("Sur2", "Ques2", "View", "Client");
         SurveyInstance surveyInstance1 = getSurveyInstance(survey1, 12, 101, "Answer1");
@@ -136,8 +138,10 @@ public class QuestionnaireMigrationTest {
         when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto2)).thenReturn(2222);
         when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto3)).thenReturn(3333);
         when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto4)).thenReturn(4444);
-        when(surveysPersistence.retrieveInstancesBySurvey(survey1)).thenReturn(asList(surveyInstance1, surveyInstance2));
-        when(surveysPersistence.retrieveInstancesBySurvey(survey2)).thenReturn(asList(surveyInstance3, surveyInstance4));
+        List<SurveyInstance> surveyInstances1 = asList(surveyInstance1, surveyInstance2);
+        when(surveysPersistence.retrieveInstancesBySurveyIterator(survey1)).thenReturn(surveyInstances1.iterator());
+        List<SurveyInstance> surveyInstances2 = asList(surveyInstance3, surveyInstance4);
+        when(surveysPersistence.retrieveInstancesBySurveyIterator(survey2)).thenReturn(surveyInstances2.iterator());
         List<Integer> questionGroupIds = questionnaireMigration.migrateSurveys();
         assertThat(questionGroupIds, is(notNullValue()));
         assertThat(questionGroupIds.size(), is(2));
@@ -147,8 +151,8 @@ public class QuestionnaireMigrationTest {
         verify(questionnaireMigrationMapper, times(4)).map(any(SurveyInstance.class), anyInt());
         verify(questionnaireServiceFacade, times(2)).createQuestionGroup(any(QuestionGroupDto.class));
         verify(questionnaireServiceFacade, times(4)).saveQuestionGroupInstance(any(QuestionGroupInstanceDto.class));
-        verify(surveysPersistence, times(1)).retrieveSurveysByType(SurveyType.CLIENT);
-        verify(surveysPersistence, times(2)).retrieveInstancesBySurvey(any(Survey.class));
+        verify(surveysPersistence, times(1)).retrieveSurveysByTypeIterator(SurveyType.CLIENT);
+        verify(surveysPersistence, times(2)).retrieveInstancesBySurveyIterator(any(Survey.class));
     }
 
     @Test
@@ -160,15 +164,16 @@ public class QuestionnaireMigrationTest {
         CustomFieldDefinitionEntity customFieldDef2 = getCustomFieldDef(2, "CustomField2", CustomerLevel.CLIENT, CustomFieldType.DATE, EntityType.CLIENT);
         List<CustomFieldDefinitionEntity> customFields = asList(customFieldDef1, customFieldDef2);
         Map<Short,Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
-        when(customerDao.retrieveCustomFieldEntitiesForClient()).thenReturn(customFields);
-        when(questionnaireMigrationMapper.map(customFields, customFieldQuestionIdMap)).thenReturn(questionGroupDto);
+        Iterator<CustomFieldDefinitionEntity> customFieldIterator = customFields.iterator();
+        when(customerDao.retrieveCustomFieldEntitiesForClientIterator()).thenReturn(customFieldIterator);
+        when(questionnaireMigrationMapper.map(customFieldIterator, customFieldQuestionIdMap, EntityType.CLIENT)).thenReturn(questionGroupDto);
         when(questionnaireServiceFacade.createQuestionGroup(questionGroupDto)).thenReturn(QUESTION_GROUP_ID);
         ClientBO clientBO1 = SurveyUtils.getClientBO(11);
         CustomerCustomFieldEntity customField1 = CustomFieldUtils.getCustomerCustomField(1, "Ans1", clientBO1);
         CustomerCustomFieldEntity customField2 = CustomFieldUtils.getCustomerCustomField(1, "Ans2", clientBO1);
         CustomerCustomFieldEntity customField3 = CustomFieldUtils.getCustomerCustomField(1, "Ans3", clientBO1);
         List<CustomerCustomFieldEntity> customerResponses1 = asList(customField1, customField2, customField3);
-        when(customerDao.getCustomFieldResponses(Short.valueOf("1"))).thenReturn(customerResponses1);
+        when(customerDao.getCustomFieldResponses(Short.valueOf("1"))).thenReturn(customerResponses1.iterator());
         when(questionnaireMigrationMapper.mapForCustomers(QUESTION_GROUP_ID, customerResponses1, customFieldQuestionIdMap)).thenReturn(questionGroupInstanceDto1);
         when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto1)).thenReturn(0);
         ClientBO clientBO2 = SurveyUtils.getClientBO(22);
@@ -176,15 +181,15 @@ public class QuestionnaireMigrationTest {
         CustomerCustomFieldEntity customField5 = CustomFieldUtils.getCustomerCustomField(2, "Ans22", clientBO2);
         CustomerCustomFieldEntity customField6 = CustomFieldUtils.getCustomerCustomField(2, "Ans33", clientBO2);
         List<CustomerCustomFieldEntity> customerResponses2 = asList(customField4, customField5, customField6);
-        when(customerDao.getCustomFieldResponses(Short.valueOf("2"))).thenReturn(customerResponses2);
+        when(customerDao.getCustomFieldResponses(Short.valueOf("2"))).thenReturn(customerResponses2.iterator());
         when(questionnaireMigrationMapper.mapForCustomers(QUESTION_GROUP_ID, customerResponses2, customFieldQuestionIdMap)).thenReturn(questionGroupInstanceDto2);
         when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto2)).thenReturn(0);
         Integer questionGroupId = questionnaireMigration.migrateAdditionalFieldsForClient();
         assertThat(questionGroupId, is(QUESTION_GROUP_ID));
-        verify(questionnaireMigrationMapper).map(customFields, customFieldQuestionIdMap);
+        verify(questionnaireMigrationMapper).map(customFieldIterator, customFieldQuestionIdMap, EntityType.CLIENT);
         verify(questionnaireServiceFacade).createQuestionGroup(questionGroupDto);
         verify(customerDao, times(2)).getCustomFieldResponses(any(Short.class));
-        verify(customerDao, times(1)).retrieveCustomFieldEntitiesForClient();
+        verify(customerDao, times(2)).retrieveCustomFieldEntitiesForClientIterator();
         verify(questionnaireMigrationMapper, times(2)).mapForCustomers(eq(QUESTION_GROUP_ID), Matchers.<List<CustomerCustomFieldEntity>>any(), eq(customFieldQuestionIdMap));
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto1);
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto2);
@@ -199,15 +204,16 @@ public class QuestionnaireMigrationTest {
         CustomFieldDefinitionEntity customFieldDef2 = getCustomFieldDef(2, "CustomField2", CustomerLevel.GROUP, CustomFieldType.DATE, EntityType.GROUP);
         List<CustomFieldDefinitionEntity> customFields = asList(customFieldDef1, customFieldDef2);
         Map<Short,Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
-        when(customerDao.retrieveCustomFieldEntitiesForGroup()).thenReturn(customFields);
-        when(questionnaireMigrationMapper.map(customFields, customFieldQuestionIdMap)).thenReturn(questionGroupDto);
+        Iterator<CustomFieldDefinitionEntity> customFieldIterator = customFields.iterator();
+        when(customerDao.retrieveCustomFieldEntitiesForGroupIterator()).thenReturn(customFieldIterator);
+        when(questionnaireMigrationMapper.map(customFieldIterator, customFieldQuestionIdMap, EntityType.GROUP)).thenReturn(questionGroupDto);
         when(questionnaireServiceFacade.createQuestionGroup(questionGroupDto)).thenReturn(QUESTION_GROUP_ID);
         GroupBO groupBO1 = getGroupBO(11);
         CustomerCustomFieldEntity customField1 = CustomFieldUtils.getCustomerCustomField(1, "Ans1", groupBO1);
         CustomerCustomFieldEntity customField2 = CustomFieldUtils.getCustomerCustomField(1, "Ans2", groupBO1);
         CustomerCustomFieldEntity customField3 = CustomFieldUtils.getCustomerCustomField(1, "Ans3", groupBO1);
         List<CustomerCustomFieldEntity> customerResponses1 = asList(customField1, customField2, customField3);
-        when(customerDao.getCustomFieldResponses(Short.valueOf("1"))).thenReturn(customerResponses1);
+        when(customerDao.getCustomFieldResponses(Short.valueOf("1"))).thenReturn(customerResponses1.iterator());
         when(questionnaireMigrationMapper.mapForCustomers(QUESTION_GROUP_ID, customerResponses1, customFieldQuestionIdMap)).thenReturn(questionGroupInstanceDto1);
         when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto1)).thenReturn(0);
         GroupBO groupBO2 = getGroupBO(22);
@@ -215,15 +221,15 @@ public class QuestionnaireMigrationTest {
         CustomerCustomFieldEntity customField5 = CustomFieldUtils.getCustomerCustomField(2, "Ans22", groupBO2);
         CustomerCustomFieldEntity customField6 = CustomFieldUtils.getCustomerCustomField(2, "Ans33", groupBO2);
         List<CustomerCustomFieldEntity> customerResponses2 = asList(customField4, customField5, customField6);
-        when(customerDao.getCustomFieldResponses(Short.valueOf("2"))).thenReturn(customerResponses2);
+        when(customerDao.getCustomFieldResponses(Short.valueOf("2"))).thenReturn(customerResponses2.iterator());
         when(questionnaireMigrationMapper.mapForCustomers(QUESTION_GROUP_ID, customerResponses2, customFieldQuestionIdMap)).thenReturn(questionGroupInstanceDto2);
         when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto2)).thenReturn(0);
         Integer questionGroupId = questionnaireMigration.migrateAdditionalFieldsForGroup();
         assertThat(questionGroupId, is(QUESTION_GROUP_ID));
-        verify(questionnaireMigrationMapper).map(customFields, customFieldQuestionIdMap);
+        verify(questionnaireMigrationMapper).map(customFieldIterator, customFieldQuestionIdMap, EntityType.GROUP);
         verify(questionnaireServiceFacade).createQuestionGroup(questionGroupDto);
         verify(customerDao, times(2)).getCustomFieldResponses(any(Short.class));
-        verify(customerDao, times(1)).retrieveCustomFieldEntitiesForGroup();
+        verify(customerDao, times(2)).retrieveCustomFieldEntitiesForGroupIterator();
         verify(questionnaireMigrationMapper, times(2)).mapForCustomers(eq(QUESTION_GROUP_ID), Matchers.<List<CustomerCustomFieldEntity>>any(), eq(customFieldQuestionIdMap));
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto1);
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto2);
@@ -238,15 +244,16 @@ public class QuestionnaireMigrationTest {
         CustomFieldDefinitionEntity customFieldDef2 = getCustomFieldDef(2, "CustomField2", CustomerLevel.CLIENT, CustomFieldType.DATE, EntityType.LOAN);
         List<CustomFieldDefinitionEntity> customFields = asList(customFieldDef1, customFieldDef2);
         Map<Short,Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
-        when(loanDao.retrieveCustomFieldEntitiesForLoan()).thenReturn(customFields);
-        when(questionnaireMigrationMapper.map(customFields, customFieldQuestionIdMap)).thenReturn(questionGroupDto);
+        Iterator<CustomFieldDefinitionEntity> customFieldIterator = customFields.iterator();
+        when(loanDao.retrieveCustomFieldEntitiesForLoan()).thenReturn(customFieldIterator);
+        when(questionnaireMigrationMapper.map(customFieldIterator, customFieldQuestionIdMap, EntityType.LOAN)).thenReturn(questionGroupDto);
         when(questionnaireServiceFacade.createQuestionGroup(questionGroupDto)).thenReturn(QUESTION_GROUP_ID);
         LoanBO loanBO1 = getLoanBO(11);
         AccountCustomFieldEntity customField1 = CustomFieldUtils.getLoanCustomField(1, "Ans1", loanBO1);
         AccountCustomFieldEntity customField2 = CustomFieldUtils.getLoanCustomField(1, "Ans2", loanBO1);
         AccountCustomFieldEntity customField3 = CustomFieldUtils.getLoanCustomField(1, "Ans3", loanBO1);
         List<AccountCustomFieldEntity> loanResponses1 = asList(customField1, customField2, customField3);
-        when(loanDao.getCustomFieldResponses(Short.valueOf("1"))).thenReturn(loanResponses1);
+        when(loanDao.getCustomFieldResponses(Short.valueOf("1"))).thenReturn(loanResponses1.iterator());
         when(questionnaireMigrationMapper.mapForAccounts(QUESTION_GROUP_ID, loanResponses1, customFieldQuestionIdMap)).thenReturn(questionGroupInstanceDto1);
         when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto1)).thenReturn(0);
         LoanBO loanBO2 = getLoanBO(22);
@@ -254,15 +261,15 @@ public class QuestionnaireMigrationTest {
         AccountCustomFieldEntity customField5 = CustomFieldUtils.getLoanCustomField(2, "Ans22", loanBO2);
         AccountCustomFieldEntity customField6 = CustomFieldUtils.getLoanCustomField(2, "Ans33", loanBO2);
         List<AccountCustomFieldEntity> customerResponses2 = asList(customField4, customField5, customField6);
-        when(loanDao.getCustomFieldResponses(Short.valueOf("2"))).thenReturn(customerResponses2);
+        when(loanDao.getCustomFieldResponses(Short.valueOf("2"))).thenReturn(customerResponses2.iterator());
         when(questionnaireMigrationMapper.mapForAccounts(QUESTION_GROUP_ID, customerResponses2, customFieldQuestionIdMap)).thenReturn(questionGroupInstanceDto2);
         when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto2)).thenReturn(0);
         Integer questionGroupId = questionnaireMigration.migrateAdditionalFieldsForLoan();
         assertThat(questionGroupId, is(QUESTION_GROUP_ID));
-        verify(questionnaireMigrationMapper).map(customFields, customFieldQuestionIdMap);
+        verify(questionnaireMigrationMapper).map(customFieldIterator, customFieldQuestionIdMap, EntityType.LOAN);
         verify(questionnaireServiceFacade).createQuestionGroup(questionGroupDto);
         verify(loanDao, times(2)).getCustomFieldResponses(any(Short.class));
-        verify(loanDao, times(1)).retrieveCustomFieldEntitiesForLoan();
+        verify(loanDao, times(2)).retrieveCustomFieldEntitiesForLoan();
         verify(questionnaireMigrationMapper, times(2)).mapForAccounts(eq(QUESTION_GROUP_ID), Matchers.<List<AccountCustomFieldEntity>>any(), eq(customFieldQuestionIdMap));
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto1);
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto2);

@@ -22,11 +22,7 @@ package org.mifos.config;
 
 import junit.framework.Assert;
 
-import org.junit.After;
 import org.junit.Test;
-import org.mifos.accounts.business.AccountStateEntity;
-import org.mifos.accounts.persistence.AccountPersistence;
-import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.persistence.CustomerPersistence;
@@ -40,14 +36,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class ProcessFlowRulesIntegrationTest extends MifosIntegrationTestCase {
 
-    @After
-    public void tearDown() {
-        AccountPersistence ap = new AccountPersistence();
-        AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class,
-                AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
-        ase.setIsOptional(false);
-        StaticHibernateUtil.commitTransaction();
-    }
 
     @Test
     public void testOverrideNeeded() throws Exception {
@@ -95,15 +83,9 @@ public class ProcessFlowRulesIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testInvalidOverrideAgainstDb() throws Exception {
         try {
-            AccountPersistence ap = new AccountPersistence();
-            AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class,
-                    AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
-            ase.setIsOptional(true);
-            StaticHibernateUtil.commitTransaction();
-           Assert.assertTrue(ase.getIsOptional());
-            Assert.assertFalse(ProcessFlowRules.isLoanDisbursedToLoanOfficerStateEnabled());
+
             ProcessFlowRules.init();
-            Assert.fail("Expected ConfigurationException");
+
         } catch (ConfigurationException e){
             // expected
         }

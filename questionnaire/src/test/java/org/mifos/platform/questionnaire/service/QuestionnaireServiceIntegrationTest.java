@@ -477,28 +477,67 @@ public class QuestionnaireServiceIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldSaveResponse() throws SystemException {
         String title = "QG1" + currentTimeMillis();
-        List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
+        List<SectionDetail> details = asList(getSection("S1"), getSectionWithSmartSelectQuestion("S2"));
         QuestionGroupDetail questionGroupDetail = defineQuestionGroup(title, "Create", "Client", details, true);
         questionGroupDetail.getSectionDetail(0).getQuestionDetail(0).setValue("1");
-        questionGroupDetail.getSectionDetail(1).getQuestionDetail(0).setValue("2");
+        SelectionDetail selectionDetail1 = getSelectionDetail("Ch1", "Tag2");
+        SelectionDetail selectionDetail2 = getSelectionDetail("Ch3", "Tag1");
+        questionGroupDetail.getSectionDetail(1).getQuestionDetail(0).setSelections(asList(selectionDetail1, selectionDetail2));
         questionnaireService.saveResponses(new QuestionGroupDetails(1, 1, asList(questionGroupDetail)));
         List<QuestionGroupInstance> instances = questionGroupInstanceDao.getDetailsAll();
         assertThat(instances.size(), is(1));
         QuestionGroupInstance instance = getMatchingQuestionGroupInstance(questionGroupDetail.getId(), 1, instances, 0);
         assertThat(instance, is(notNullValue()));
         List<QuestionGroupResponse> groupResponses = instance.getQuestionGroupResponses();
+        assertThat(groupResponses.size(), is(3));
         Assert.assertEquals(groupResponses.get(0).getResponse(), "1");
-        Assert.assertEquals(groupResponses.get(1).getResponse(), "2");
+        Assert.assertEquals(groupResponses.get(1).getResponse(), "Ch1");
+        Assert.assertEquals(groupResponses.get(1).getTag(), "Tag2");
+        Assert.assertEquals(groupResponses.get(2).getResponse(), "Ch3");
+        Assert.assertEquals(groupResponses.get(2).getTag(), "Tag1");
 
-        questionGroupDetail.getSectionDetail(1).getQuestionDetail(0).setValue("3");
+        questionGroupDetail.getSectionDetail(0).getQuestionDetail(0).setValue("3");
         questionnaireService.saveResponses(new QuestionGroupDetails(1, 1, asList(questionGroupDetail)));
         instances = questionGroupInstanceDao.getDetailsAll();
         assertThat(instances.size(), is(2));
         instance = getMatchingQuestionGroupInstance(questionGroupDetail.getId(), 1, instances, 1);
         assertThat(instance, is(notNullValue()));
         groupResponses = instance.getQuestionGroupResponses();
-        Assert.assertEquals(groupResponses.get(0).getResponse(), "1");
-        Assert.assertEquals(groupResponses.get(1).getResponse(), "3");
+        Assert.assertEquals(groupResponses.get(0).getResponse(), "3");
+    }
+
+    private SelectionDetail getSelectionDetail(String selectedChoice, String selectedTag) {
+        SelectionDetail selectionDetail1 = new SelectionDetail();
+        selectionDetail1.setSelectedChoice(selectedChoice);
+        selectionDetail1.setSelectedTag(selectedTag);
+        return selectionDetail1;
+    }
+
+    private QuestionDetail defineQuestionWithSmartSelect(String questionTitle, List<ChoiceDto> choiceDtos) throws SystemException {
+        QuestionDetail questionDetail = new QuestionDetail(questionTitle, QuestionType.SMART_SELECT);
+        questionDetail.setActive(true);
+        questionDetail.setAnswerChoices(choiceDtos);
+        return questionnaireService.defineQuestion(questionDetail);
+    }
+
+    private SectionDetail getSectionWithSmartSelectQuestion(String name) throws SystemException {
+        SectionDetail section = new SectionDetail();
+        section.setName(name);
+        String questionTitle = "Question" + name + currentTimeMillis();
+        ChoiceDto choiceDto1 = getChoiceDto("Ch1", "Tag1", "Tag2", "Tag3");
+        ChoiceDto choiceDto2 = getChoiceDto("Ch2", "Tag11", "Tag22", "Tag33");
+        ChoiceDto choiceDto3 = getChoiceDto("Ch3", "Tag111", "Tag222", "Tag333");
+        QuestionDetail questionDetail = defineQuestionWithSmartSelect(questionTitle, asList(choiceDto1, choiceDto2, choiceDto3));
+        section.addQuestion(new SectionQuestionDetail(questionDetail, true));
+        return section;
+    }
+
+    private ChoiceDto getChoiceDto(String choiceText, String... tags) {
+        ChoiceDto choiceDto = new ChoiceDto(choiceText);
+        for (String tag : tags) {
+            choiceDto.addTag(tag);
+        }
+        return choiceDto;
     }
 
     @Test

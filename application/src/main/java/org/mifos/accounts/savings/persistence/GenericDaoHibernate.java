@@ -19,14 +19,15 @@
  */
 package org.mifos.accounts.savings.persistence;
 
-import java.util.List;
-import java.util.Map;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -73,6 +74,20 @@ public class GenericDaoHibernate implements GenericDao {
             Query query = session.getNamedQuery(queryName);
             query.setProperties(queryParameters);
             return query.list();
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public final Iterator<? extends Object> executeNamedQueryIterator(final String queryName, final Map<String, ?> queryParameters) {
+
+        try {
+            Session session = getHibernateUtil().getSessionTL();
+            Query query = session.getNamedQuery(queryName);
+            query.setProperties(queryParameters);
+            return query.iterate();
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
         }

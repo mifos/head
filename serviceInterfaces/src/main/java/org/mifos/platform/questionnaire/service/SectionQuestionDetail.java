@@ -25,13 +25,11 @@ import org.mifos.platform.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.apache.commons.lang.StringUtils.isEmpty;
-import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 
 @SuppressWarnings("PMD")
 public class SectionQuestionDetail implements Serializable {
@@ -42,7 +40,7 @@ public class SectionQuestionDetail implements Serializable {
     private String value;
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_BAD_FIELD")
-    private List<String> values;
+    private List<SelectionDetail> selections = new ArrayList<SelectionDetail>();
 
     private int id;
 
@@ -63,15 +61,15 @@ public class SectionQuestionDetail implements Serializable {
     }
 
     public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean mandatory, String value) {
-        this(id, questionDetail, mandatory, value, new LinkedList<String>());
+        this(id, questionDetail, mandatory, value, new LinkedList<SelectionDetail>());
     }
 
-    public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean mandatory, String value, List<String> values) {
+    public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean mandatory, String value, List<SelectionDetail> selections) {
         this.id = id;
         this.questionDetail = questionDetail;
         this.mandatory = mandatory;
         this.value = value;
-        this.values = values;
+        this.selections = selections;
     }
 
     public int getId() {
@@ -114,12 +112,12 @@ public class SectionQuestionDetail implements Serializable {
         this.value = value;
     }
 
-    public List<String> getValues() {
-        return values;
+    public List<SelectionDetail> getSelections() {
+        return selections;
     }
 
-    public void setValues(List<String> values) {
-        this.values = values;
+    public void setSelections(List<SelectionDetail> selections) {
+        this.selections = selections;
     }
 
     public boolean hasNoAnswer() {
@@ -127,7 +125,7 @@ public class SectionQuestionDetail implements Serializable {
     }
 
     public boolean hasAnswer() {
-        return !isEmpty(this.value) || !CollectionUtils.isEmpty(this.values);
+        return !isEmpty(this.value) || !CollectionUtils.isEmpty(this.selections);
     }
 
     @Override
@@ -160,23 +158,6 @@ public class SectionQuestionDetail implements Serializable {
                 QuestionType.SMART_SELECT.equals(questionType);
     }
 
-    public List<String> getAnswers() {
-        List<String> answers = new LinkedList<String>();
-        if (hasAnswer()) {
-            if (isMultiSelectQuestion()) {
-                answers.addAll(getValues());
-            } else {
-                answers.add(getValue());
-            }
-        }
-        return answers;
-    }
-
-    public String getAnswer() {
-        List<String> answers = getAnswers();
-        return isNotEmpty(answers) ? CollectionUtils.toString(answers) : EMPTY;
-    }
-
     public boolean isNumeric() {
         return QuestionType.NUMERIC.equals(getQuestionType());
     }
@@ -200,14 +181,34 @@ public class SectionQuestionDetail implements Serializable {
     //Used for legacy Struts binding support.
     @Deprecated
     public String[] getValuesAsArray() {
-        return values.toArray(new String[values.size()]);
+        return getValues();
     }
 
     //Used for legacy Struts binding support
     @Deprecated
     public void setValuesAsArray(String[] valuesArr) {
-        this.values = new ArrayList(Arrays.asList(valuesArr));
+        setValues(valuesArr);
         removeDefaultSelection();
+    }
+
+    public String[] getValues() {
+        String[] values = new String[selections.size()];
+        for (int i = 0, selectionsSize = selections.size(); i < selectionsSize; i++) {
+            values[i] = selections.get(i).toString();
+        }
+        return values;
+    }
+
+    public void setValues(String[] valuesArr) {
+        this.selections = getSelections(valuesArr);
+    }
+
+    private List<SelectionDetail> getSelections(String[] valuesArr) {
+        List<SelectionDetail> selectionDetails = new ArrayList<SelectionDetail>();
+        for (String value : valuesArr) {
+            selectionDetails.add(new SelectionDetail(value));
+        }
+        return selectionDetails;
     }
 
     /*  This is a work around for the bug in Struts 1 tag html:multibox
@@ -219,8 +220,8 @@ public class SectionQuestionDetail implements Serializable {
     */
     @Deprecated    
     private void removeDefaultSelection() {
-        if (CollectionUtils.isNotEmpty(values)) {
-            values.remove(0);
+        if (CollectionUtils.isNotEmpty(selections)) {
+            selections.remove(0);
         }
     }
 
@@ -230,5 +231,13 @@ public class SectionQuestionDetail implements Serializable {
 
     public void setQuestionDetail(QuestionDetail questionDetail) {
         this.questionDetail = questionDetail;
+    }
+
+    public String getMultiSelectValue() {
+        return CollectionUtils.toString(this.selections);
+    }
+
+    public String getAnswer() {
+        return isMultiSelectQuestion()? getMultiSelectValue(): (isEmpty(this.value)? EMPTY: this.value);
     }
 }

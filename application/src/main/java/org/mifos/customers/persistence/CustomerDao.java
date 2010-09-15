@@ -61,6 +61,7 @@ import org.mifos.framework.components.fieldConfiguration.business.FieldConfigura
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.security.util.UserContext;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -229,5 +230,9 @@ public interface CustomerDao {
 
     List<PersonnelLevelEntity> retrievePersonnelLevels();
 
-    List<CustomerCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
+    Iterator<CustomerCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
+
+    Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForClientIterator();
+
+    Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForGroupIterator();
 }

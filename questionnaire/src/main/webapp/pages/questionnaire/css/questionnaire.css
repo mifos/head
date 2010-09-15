@@ -14,7 +14,14 @@ fieldset ol {
     list-style: none;
 }
 
-fieldset li {
+ul.form_content, .form_content, ul.no_bullet {
+    overflow: hidden;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+fieldset li, .form_content li {
     float: left;
     clear: left;
     width: 100%;
@@ -28,12 +35,15 @@ fieldset.submit {
     padding-left: 15em;
 }
 
-fieldset label {
+fieldset label, .form_content li label {
     float: left;
     width: 12em;
     margin-right: 1em;
     text-align: right;
-    word-wrap:break-word;
+    word-wrap: break-word;
+}
+input.long_t_box, .long_t_box input[type="text"], .form_content select {
+    width: 250px;
 }
 fieldset.right_section {
     margin: 0;
@@ -42,16 +52,7 @@ fieldset.right_section label{
     text-align: left;
     width: auto;
 }
-fieldset .questionList input {
-    float: left;
-}
-fieldset .questionList label {
-    text-align: left;
-    width: 15em;
-    margin: 0 0 0 5px;
-    float: none;
-    display: inline-block;
-}
+
 .allErrorsDiv {
     color:#FF0000;
     font-family:Arial,Verdana,Helvetica,sans-serif;
@@ -65,53 +66,97 @@ fieldset .questionList label {
     padding: 1em 1em 0 1em;
     list-style-type: disc;
 }
-
-.choiceStyle{
-    float:left;
-    margin-right:1em;
-    margin-left:1em;
-    width:28%;
-    word-wrap:break-word;
+/* Table style */
+.table_common {
+    border-collapse: collapse;
+    margin-bottom: 1em;
+    width: 100%;
+}
+.table_common thead {
+    background-color: #D7DEEE;
+}
+.table_common th, .table_common td{
+    padding: 5px;
+    border-bottom: 1px solid #D7DEEE;
+}
+.table_common .remove {
+    width: 85px;
+}
+.table_common .mandatory {
+    width: 100px;
+}
+.table_common .status {
+    width: 150px;
+}
+#choiceDiv .table_common {
+    margin-top: 1em;
+}
+#choiceTagsDiv {
+    margin-top: -1em;
+}
+#choiceTagsDiv .col4 .choice{
+    width: 30%;
+}
+#choiceTagsDiv .col4 .tag{
+    width: 20%;
+}
+#choiceTagsDiv .col4 .remove{
+    width: 75px;
+}
+.question_list {
+    margin-top: 1em;
+}
+.question_list .table_common .title {
+    width: 40%;
+}
+.question_list .table_common .ans_type {
+    width: 20%;
+}
+.question_list .table_common .choice {
+    width: 20%;
 }
 
-.addTagStyle{
-    float:left;
-    margin-right:1em;
-    margin-left:1em;
-    padding-top:3px;
-    word-wrap:break-word;
+li.question_list_table {
+    margin-top: 1em;
+}
+.button_footer {
+   /* background: #EEEEEE;
+    border-top: 1px solid #CCCCCC;
+    padding: 10px 0;*/
+    clear: both;
+}
+.button_container {
+    clear: both;
+    margin: 5px auto;
+    text-align: center;
+}
+.add_question .button_container{
+    margin-left: 220px;
+    text-align: left;
+}
+.questionList_box {
+    overflow: auto;
+    width: 250px;
+    height: 180px;
+    border: 1px solid #336699;
+    padding: 0;
+    list-style: none;
+}
+.questionList_box li{
+    padding-bottom: 3px
+}
+.questionList_box li input {
+    float: left;
+    top:0;
+}
+.questionList_box li label {
+    text-align: left;
+    width: 15em;
+    margin: 0 0 0 5px;
+    float: none;
+    display: inline-block;
 }
 
-.tagStyle{
-    float:left;
-    margin-right:1em;
-    margin-left:1em;
-    width:28%;
-    word-wrap:break-word;
-}
-
-.removeStyle{
-    float:left;
-    margin-right:0em;
-    margin-left:1em;
-    width:8%;
-    word-wrap:break-word;
-}
-
-.choiceHeaderStyle{
-    background-color:#D7DEEE;
-    border-top:1px solid #D7DEEE;
-    font-family:Arial,Verdana,Helvetica,sans-serif;
-    font-size:9pt;
-    font-weight:bold;
-    padding:2px 0px;
-    text-decoration:none;
-}
-
-.choiceOlStyle{
-    margin-left:6em;
-    width:60%;
-}
 
 .buttonWidth{
     margin-left:10em;

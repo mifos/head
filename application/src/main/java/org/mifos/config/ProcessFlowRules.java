@@ -50,7 +50,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 public class ProcessFlowRules {
     private static final String SAVINGS_PENDING_APPROVAL = "ProcessFlow.SavingsPendingApprovalStateEnabled";
     private static final String LOAN_PENDING_APPROVAL = "ProcessFlow.LoanPendingApprovalStateEnabled";
-    private static final String LOAN_DISBURSED_TO_LOAN_OFFICER = "ProcessFlow.LoanDisbursedToLoanOfficerStateEnabled";
     private static final String GROUP_PENDING_APPROVAL = "ProcessFlow.GroupPendingApprovalStateEnabled";
     private static final String CLIENT_PENDING_APPROVAL = "ProcessFlow.ClientPendingApprovalStateEnabled";
 
@@ -64,14 +63,10 @@ public class ProcessFlowRules {
         try {
             initClientPendingApprovalState();
             initGroupPendingApprovalState();
-            initLoanDisbursedToLoanOfficerState();
             initLoanPendingApprovalState();
             initSavingsPendingApprovalState();
 
             StaticHibernateUtil.commitTransaction();
-        } catch (PersistenceException pe) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw pe;
         } catch (ConfigurationException ce) {
             StaticHibernateUtil.rollbackTransaction();
             throw ce;
@@ -192,31 +187,6 @@ public class ProcessFlowRules {
     public static boolean isGroupPendingApprovalStateEnabled() {
         ConfigurationManager cm = ConfigurationManager.getInstance();
         return cm.getBoolean(GROUP_PENDING_APPROVAL);
-    }
-
-    private static void initLoanDisbursedToLoanOfficerState() throws PersistenceException, ConfigurationException {
-        AccountPersistence ap = new AccountPersistence();
-        AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class,
-                AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
-
-        boolean fromDb = isLoanPendingApprovalStateEnabledOnDatabaseConfig(ase);
-        boolean fromCfg = isLoanDisbursedToLoanOfficerStateEnabled();
-        String errMsg = getBadOverrideMsg(LOAN_DISBURSED_TO_LOAN_OFFICER,
-                "Records for loans in the 'disbursed to loan officer' state" + " may already exist.");
-
-        if (!isValidOverride(fromDb, fromCfg)) {
-            throw new ConfigurationException(errMsg);
-        }
-
-        if (needsOverride(fromDb, fromCfg)) {
-            ase.setIsOptional(fromCfg);
-            ap.createOrUpdate(ase);
-        }
-    }
-
-    public static boolean isLoanDisbursedToLoanOfficerStateEnabled() {
-        ConfigurationManager cm = ConfigurationManager.getInstance();
-        return cm.getBoolean(LOAN_DISBURSED_TO_LOAN_OFFICER);
     }
 
     private static void initLoanPendingApprovalState() throws ConfigurationException {

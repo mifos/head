@@ -4386,6 +4386,7 @@ create table question_group_response(
     question_group_instance_id integer not null,
     sections_questions_id integer not null,
     response varchar(200) not null,
+    tag varchar(50),
     primary key (id),
     foreign key (sections_questions_id) references sections_questions(id),
     foreign key (question_group_instance_id) references question_group_instance(id)

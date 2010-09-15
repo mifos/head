@@ -139,7 +139,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         } else {
             if (!questionsHaveInvalidNames(questions, parentException) && !questionsHaveInvalidOrders(questions, parentException)) {
                 for (QuestionDto question : questions) {
-                    validateQuestion(question, parentException);
+                    validateQuestion(question, parentException, true);
                 }
             }
         }
@@ -148,18 +148,18 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     @Override
     public void validateForDefineQuestion(QuestionDto questionDto) {
         ValidationException parentException = new ValidationException(GENERIC_VALIDATION);
-        validateQuestion(questionDto, parentException);
+        validateQuestion(questionDto, parentException, false);
         if (parentException.containsChildExceptions()) {
             throw parentException;
         }
     }
 
-    private void validateQuestion(QuestionDto question, ValidationException parentException) {
+    private void validateQuestion(QuestionDto question, ValidationException parentException, boolean withDuplicateQuestionTypeCheck) {
         if (StringUtils.isEmpty(question.getTitle())) {
             parentException.addChildException(new ValidationException(QUESTION_TITLE_NOT_PROVIDED));
         } else if (question.getTitle().length() >= MAX_LENGTH_FOR_TITILE) {
             parentException.addChildException(new ValidationException(QUESTION_TITLE_TOO_BIG));
-        } else if (questionHasDuplicateTitle(question)) {
+        } else if (questionHasDuplicateTitle(question, withDuplicateQuestionTypeCheck)) {
             parentException.addChildException(new ValidationException(QUESTION_TITILE_MATCHES_EXISTING_QUESTION));
         } else {
             if (QuestionType.INVALID == question.getType()) {
@@ -248,12 +248,15 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         return result;
     }
 
-    private boolean questionHasDuplicateTitle(QuestionDto question) {
+    private boolean questionHasDuplicateTitle(QuestionDto question, boolean withQuestionTypeCheck) {
         List<QuestionEntity> questions = questionDao.retrieveByName(question.getTitle());
         boolean result = false;
         if (isNotEmpty(questions)) {
-            QuestionEntity questionEntity = questions.get(0);
-            result = !areSameQuestionTypes(question.getType(), questionEntity.getAnswerTypeAsEnum()) || haveIncompatibleChoices(question, questionEntity);
+            result = true;
+            if (withQuestionTypeCheck) {
+                QuestionEntity questionEntity = questions.get(0);
+                result = !areSameQuestionTypes(question.getType(), questionEntity.getAnswerTypeAsEnum()) || haveIncompatibleChoices(question, questionEntity);
+            }
         }
         return result;
     }
@@ -505,7 +508,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         } else if (sectionQuestionDetail.hasAnswer() && sectionQuestionDetail.isNumeric()) {
             Integer allowedMinValue = sectionQuestionDetail.getNumericMin();
             Integer allowedMaxValue = sectionQuestionDetail.getNumericMax();
-            if (invalidNumericAnswer(sectionQuestionDetail.getAnswer(), allowedMinValue, allowedMaxValue)) {
+            if (invalidNumericAnswer(sectionQuestionDetail.getValue(), allowedMinValue, allowedMaxValue)) {
                 validationException.addChildException(new BadNumericResponseException(questionTitle, allowedMinValue, allowedMaxValue));
             }
         }

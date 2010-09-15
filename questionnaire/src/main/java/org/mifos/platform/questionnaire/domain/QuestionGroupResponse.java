@@ -30,6 +30,7 @@ public class QuestionGroupResponse implements Serializable {
 
     private SectionQuestion sectionQuestion;
     private String response;
+    private String tag;
     private QuestionGroupInstance questionGroupInstance;
 
     @SuppressWarnings({"PMD.UnnecessaryConstructor","PMD.UncommentedEmptyConstructor"})
@@ -66,5 +67,13 @@ public class QuestionGroupResponse implements Serializable {
 
     public void setQuestionGroupInstance(QuestionGroupInstance questionGroupInstance) {
         this.questionGroupInstance = questionGroupInstance;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

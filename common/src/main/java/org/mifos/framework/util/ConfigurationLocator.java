@@ -20,14 +20,16 @@
 
 package org.mifos.framework.util;
 
+import org.apache.commons.lang.StringUtils;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.springframework.core.io.ClassPathResource;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Logger;
-
-import org.apache.commons.lang.StringUtils;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.springframework.core.io.ClassPathResource;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Encapsulates logic for determining which directory to look in for
@@ -48,6 +50,8 @@ public class ConfigurationLocator {
     @SuppressWarnings("PMD.ImmutableField")
     private ConfigurationLocatorHelper configurationLocatorHelper;
     private String defaultConfigPath;
+    private static final Pattern propertyPattern = Pattern.compile("\\$\\{([^\\$\\s/\\{\\}]+)\\}");
+    private static final Pattern envVarPattern = Pattern.compile("\\$([^\\$\\W\\{\\}/]+)");
 
     public ConfigurationLocator() {
         super();
@@ -145,4 +149,32 @@ public class ConfigurationLocator {
         return StringUtils.isBlank(this.defaultConfigPath) ? DEFAULT_CONFIGURATION_PATH : this.defaultConfigPath; 
     }
 
+    public String resolvePath(String fileName) {
+        StringBuilder fileBuffer = new StringBuilder(fileName);
+        resolveHomeProperties(fileName, fileBuffer);
+        resolveEnvironmentProperties(fileName, fileBuffer);
+        return fileBuffer.toString();
+    }
+
+    private void resolveEnvironmentProperties(String fileName, StringBuilder fileBuffer) {
+        Matcher envVarMatcher = envVarPattern.matcher(fileName);
+        while (envVarMatcher.find()) {
+            String envVar = envVarMatcher.group();
+            String environmentProperty = configurationLocatorHelper.getEnvironmentProperty(envVar.substring(1));
+            if (environmentProperty != null) {
+                fileBuffer.replace(envVarMatcher.start(), envVarMatcher.end(), environmentProperty);
+            }
+        }
+    }
+
+    private void resolveHomeProperties(String fileName, StringBuilder fileBuffer) {
+        Matcher matcher = propertyPattern.matcher(fileName);
+        while (matcher.find()) {
+            String property = matcher.group();
+            String homeProperty = configurationLocatorHelper.getHomeProperty(property.substring(2, property.length() - 1));
+            if (homeProperty != null) {
+                fileBuffer.replace(matcher.start(), matcher.end(), homeProperty);
+            }
+        }
+    }
 }
