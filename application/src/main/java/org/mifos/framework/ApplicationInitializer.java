@@ -180,7 +180,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
                     // FIXME: replace with Spring-managed beans
                     final MifosScheduler mifosScheduler = new MifosScheduler();
-                    mifosScheduler.initialize();
                     final ShutdownManager shutdownManager = new ShutdownManager();
 
                     Configuration.getInstance();
@@ -188,6 +187,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     configureAuditLogValues(Localization.getInstance().getMainLocale());
                     ConfigLocale configLocale = new ConfigLocale();
                     if (null != ctx) {
+                        mifosScheduler.initialize();
                         ctx.getServletContext().setAttribute(MifosScheduler.class.getName(), mifosScheduler);
                         ctx.getServletContext().setAttribute(ShutdownManager.class.getName(), shutdownManager);
                         ctx.getServletContext().setAttribute(ConfigLocale.class.getSimpleName(), configLocale);
