@@ -21,11 +21,17 @@
 package org.mifos.ui.core.controller;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
+import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.domain.OfficeHierarchyDto;
+import org.mifos.dto.screen.DefinePersonnelDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +43,16 @@ public class SystemUserController {
     @Autowired
     private OfficeServiceFacade officeServiceFacade;
 
+    @Autowired
+    private PersonnelServiceFacade personnelServiceFacade;
+
     protected SystemUserController() {
         // default contructor for spring autowiring
     }
 
-    public SystemUserController(final OfficeServiceFacade serviceFacade) {
+    public SystemUserController(final OfficeServiceFacade serviceFacade, final PersonnelServiceFacade personnelServiceFacade) {
         this.officeServiceFacade = serviceFacade;
+        this.personnelServiceFacade = personnelServiceFacade;
     }
 
     @SuppressWarnings("PMD")
@@ -90,6 +100,50 @@ public class SystemUserController {
         UserFormBean formBean = new UserFormBean();
         formBean.setOfficeId(officeId);
         formBean.setOfficeName(selectedOffice.getName());
+
+        DefinePersonnelDto userRefData = this.personnelServiceFacade.retrieveInfoForNewUserDefinition(officeId.shortValue(), Locale.getDefault());
+
+        Map<String, String> genderOptions = new LinkedHashMap<String, String>();
+        for (ListElement option : userRefData.getGenderList()) {
+            genderOptions.put(option.getId().toString(), option.getName());
+        }
+        formBean.setGenderOptions(genderOptions);
+
+        Map<String, String> maritalStatusOptions = new LinkedHashMap<String, String>();
+        for (ListElement option : userRefData.getMaritalStatusList()) {
+            maritalStatusOptions.put(option.getId().toString(), option.getName());
+        }
+        formBean.setMaritalStatusOptions(maritalStatusOptions);
+
+        Map<String, String> preferredLanguageOptions = new LinkedHashMap<String, String>();
+        for (ListElement option : userRefData.getLanguageList()) {
+            preferredLanguageOptions.put(option.getId().toString(), option.getName());
+        }
+        formBean.setPreferredLanguageOptions(preferredLanguageOptions);
+
+        Map<String, String> userTitleOptions = new LinkedHashMap<String, String>();
+        for (ListElement option : userRefData.getTitleList()) {
+            userTitleOptions.put(option.getId().toString(), option.getName());
+        }
+        formBean.setUserTitleOptions(userTitleOptions);
+
+        Map<String, String> userHierarchyOptions = new LinkedHashMap<String, String>();
+        for (ListElement option : userRefData.getPersonnelLevelList()) {
+            userHierarchyOptions.put(option.getId().toString(), option.getName());
+        }
+        formBean.setUserHierarchyOptions(userHierarchyOptions);
+
+        Map<String, String> availableRolesOptions = new LinkedHashMap<String, String>();
+        for (ListElement option : userRefData.getRolesList()) {
+            availableRolesOptions.put(option.getId().toString(), option.getName());
+        }
+        formBean.setAvailableRolesOptions(availableRolesOptions);
+        formBean.setSelectedRolesOptions(new LinkedHashMap<String, String>());
+
+        DateTime today = new DateTime();
+        formBean.setMfiJoiningDateDay(today.getDayOfMonth());
+        formBean.setMfiJoiningDateMonth(today.getMonthOfYear());
+        formBean.setMfiJoiningDateYear(today.getYearOfEra());
 
         return formBean;
     }

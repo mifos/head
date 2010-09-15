@@ -36,8 +36,8 @@
         
         <hr />
         <div class="prepend-8">
-        	<form name="enterUserDetails" method="post" action="user.ftl?execution=${flowExecutionKey}">
-	        	<input class="buttn2" id="choose_office.button.cancel" type="submit" name="_eventId_cancel" value="Cancel" />
+        	<form method="post" action="user.ftl?execution=${flowExecutionKey}">
+	        	<input class="buttn2" type="submit" name="_eventId_cancel" value="Cancel" />
 	        </form>
         </div>
       </div>

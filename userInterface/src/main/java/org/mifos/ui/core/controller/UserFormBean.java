@@ -28,9 +28,11 @@ import java.util.Map;
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="required for spring web flow storage at a minimum - should disable at filter level and also for pmd")
 public class UserFormBean implements Serializable {
 
+    // office
     private Long officeId;
     private String officeName;
 
+    // user details
     private String firstName;
     private String middleName;
     private String secondLastName;
@@ -42,6 +44,9 @@ public class UserFormBean implements Serializable {
     private Number dateOfBirthMonth;
     private Number dateOfBirthYear;
 
+    private String selectedGender;
+    private Map<String, String> genderOptions = new LinkedHashMap<String, String>();
+
     private String selectedMaritalStatus;
     private Map<String, String> maritalStatusOptions = new LinkedHashMap<String, String>();
 
@@ -52,6 +57,10 @@ public class UserFormBean implements Serializable {
     private Number mfiJoiningDateMonth;
     private Number mfiJoiningDateYear;
 
+    // address details
+    private AddressBean address = new AddressBean();
+
+    // permissions
     private String selectedUserTitle;
     private Map<String, String> userTitleOptions = new LinkedHashMap<String, String>();
 
@@ -303,5 +312,29 @@ public class UserFormBean implements Serializable {
 
     public void setSelectedRolesOptions(Map<String, String> selectedRolesOptions) {
         this.selectedRolesOptions = selectedRolesOptions;
+    }
+
+    public AddressBean getAddress() {
+        return this.address;
+    }
+
+    public void setAddress(AddressBean address) {
+        this.address = address;
+    }
+
+    public String getSelectedGender() {
+        return this.selectedGender;
+    }
+
+    public void setSelectedGender(String selectedGender) {
+        this.selectedGender = selectedGender;
+    }
+
+    public Map<String, String> getGenderOptions() {
+        return this.genderOptions;
+    }
+
+    public void setGenderOptions(Map<String, String> genderOptions) {
+        this.genderOptions = genderOptions;
     }
 }

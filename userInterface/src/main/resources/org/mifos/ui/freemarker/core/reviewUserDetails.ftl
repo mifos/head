@@ -30,9 +30,9 @@
 			</div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.lastName"/]&nbsp;</span><span>${userFormBean.lastName}</span>
   			</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.governmentID"/]&nbsp;</span><span></span> 
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.governmentID"/]&nbsp;</span><span>${userFormBean.governmentId}</span> 
   			</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.email"/]&nbsp;</span><span></span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.email"/]&nbsp;</span><span>${userFormBean.email}</span>
             </div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.dateofBirth"/]&nbsp;</span><span> </span>
             </div>
@@ -51,24 +51,22 @@
             </div>
             <div class="clear">&nbsp;</div>
         	<div class="clear">&nbsp;</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.address"/]&nbsp;</span><span></span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.address"/]&nbsp;</span><span>${userFormBean.address.address1}, ${userFormBean.address.address2}, ${userFormBean.address.address3}</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.city/District"/]&nbsp;</span><span></span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.city"/]&nbsp;</span><span>${userFormBean.address.cityDistrict}</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.state"/]&nbsp;</span><span>  </span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.state"/]&nbsp;</span><span>${userFormBean.address.state}</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.country"/]&nbsp;</span><span> </span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.country"/]&nbsp;</span><span>${userFormBean.address.country}</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.postalCode"/]&nbsp;</span><span></span>
-            </div>
-            <div class="clear">&nbsp;</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.telephone"/]&nbsp;</span><span></span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.postalcode"/]&nbsp;</span><span>${userFormBean.address.postalCode}</span>
             </div>
             <div class="clear">&nbsp;</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.office&Permissions"/]</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.telephone"/]&nbsp;</span><span>${userFormBean.address.telephoneNumber}</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.office"/]&nbsp;</span><span></span>
-            </div>
+            <div class="clear">&nbsp;</div>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.office&Permissions"/]</span></div>
+          
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userTitle"/]&nbsp;</span><span></span>
             </div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userHierarchy"/]&nbsp;</span><span>	</span>
@@ -78,13 +76,10 @@
             <div class="clear">&nbsp;</div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.loginInformation"/]</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userName"/]&nbsp;</span><span></span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userName"/]&nbsp;</span><span>${userFormBean.username}</span>
             </div>
          	<div class="clear">&nbsp;</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.additionalInformation"/]</span>
-            </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.externalId"/]&nbsp;</span><span></span>
-            </div>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.additionalInformation"/]</span></div>
             
             <div class="clear">&nbsp;</div>
             	<input class="buttn2" type="submit" name="_eventId_reedit" value="Edit personal information" />

@@ -3,6 +3,60 @@
 [#import "blueprintmacros.ftl" as mifos]
 
 [@mifos.header "title" /]
+<script type="text/javascript">
+function addOption(root, text, value)
+{
+  var newOpt = new Option(text, value);
+  var rootLength = root.length;
+  root.options[rootLength] = newOpt;
+}
+
+function deleteOption(root, index)
+{ 
+  var rootLength= root.length;
+  if(rootLength>0)
+  {
+    root.options[index] = null;
+  }
+}
+
+function moveOptions(root, destination)
+{
+  var rootLength= root.length;
+  var rootText = new Array();
+  var rootValues = new Array();
+  var rootCount = 0;
+  
+  var i; 
+  for(i=rootLength-1; i>=0; i--)
+  {
+    if(root.options[i].selected)
+    {
+      rootText[rootCount] = root.options[i].text;
+      rootValues[rootCount] = root.options[i].value;
+      deleteOption(root, i);
+      rootCount++;
+    }
+  }  
+  for(i=rootCount-1; i>=0; i--)
+  {
+    addOption(destination, rootText[i], rootValues[i]);
+  }  
+}
+
+function selectAllOptions(outSel)
+{
+	if(null != outSel) {
+	 	var selLength =outSel.length;
+		outSel.multiple=true;
+		for(i=selLength-1; i>=0; i--)
+		{
+			outSel.options[i].selected=true;
+		}
+	}
+}
+</script>
+
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
  <!--  Main Content Begins-->
   <div class="content marginAuto">
@@ -57,6 +111,9 @@
 	        <label for="selectedMaritalStatus">[@spring.message "systemUsers.preview.maritalStatus" /]:</label>
 	        [@mifos.formSingleSelectWithPrompt "userFormBean.selectedMaritalStatus", userFormBean.maritalStatusOptions, "--select one--" /]<br />
 	        
+	        <label for="selectedGender"><span class="red">*</span>[@spring.message "systemUsers.preview.gender" /]:</label>
+	        [@mifos.formSingleSelectWithPrompt "userFormBean.selectedGender", userFormBean.genderOptions, "--select one--" /]<br />
+	        
 	        <label for="selectedPreferredLanguage">[@spring.message "systemUsers.preview.languagePreferred" /]:</label>
 	        [@mifos.formSingleSelectWithPrompt "userFormBean.selectedPreferredLanguage", userFormBean.preferredLanguageOptions, "--select one--" /]<br />
 	        
@@ -72,16 +129,38 @@
 	        
 	        
 	        <div class="fontBold">[@spring.message "systemUsers.preview.address" /]</div>
+	        <label for="address.address1">[@spring.message "systemUsers.preview.address1" /]:</label>
+	        [@spring.formInput "userFormBean.address.address1" /]<br />
+	        
+	        <label for="address.address2">[@spring.message "systemUsers.preview.address2" /]:</label>
+	        [@spring.formInput "userFormBean.address.address2" /]<br />
+	        
+	        <label for="address.address3">[@spring.message "systemUsers.preview.address3" /]:</label>
+	        [@spring.formInput "userFormBean.address.address3" /]<br />
+	        
+	        <label for="address.city">[@spring.message "systemUsers.preview.city" /]:</label>
+	        [@spring.formInput "userFormBean.address.cityDistrict" /]<br />
+	        
+	        <label for="address.state">[@spring.message "systemUsers.preview.state" /]:</label>
+	        [@spring.formInput "userFormBean.address.state" /]<br />
+	        
+	        <label for="address.country">[@spring.message "systemUsers.preview.country" /]:</label>
+	        [@spring.formInput "userFormBean.address.country" /]<br />
+	        
+	        <label for="address.postalcode">[@spring.message "systemUsers.preview.postalcode" /]:</label>
+	        [@spring.formInput "userFormBean.address.postalCode" /]<br />
+	        
+	        <label for="address.telephone">[@spring.message "systemUsers.preview.telephone" /]:</label>
+	        [@spring.formInput "userFormBean.address.telephoneNumber" /]<br />
 	        
 	        <div class="fontBold">[@spring.message "systemUsers.preview.permissions" /]</div>
 	        <label for="userTitle">[@spring.message "systemUsers.preview.userTitle" /]:</label>
 	        [@mifos.formSingleSelectWithPrompt "userFormBean.selectedUserTitle", userFormBean.userTitleOptions, "--select one--" /]<br />
 	        
-	        <label for="userTitle">[@spring.message "systemUsers.preview.userHierarchy" /]:</label>
+	        <label for="userTitle"><span class="red">*</span>[@spring.message "systemUsers.preview.userHierarchy" /]:</label>
 	        [@mifos.formSingleSelectWithPrompt "userFormBean.selectedUserHierarchy", userFormBean.userHierarchyOptions, "--select one--" /]<br />
 	        
           	<div class="span-23">
-          		<span class="pull-3 span-8 rightAlign">[@spring.message "systemUsers.preview.roles" /]</span>
             	<span class="span-12 ">
                 	<span class="span-8">[@spring.message "systemUsers.preview.roles" /]</span>
                     <span class="span-4">
