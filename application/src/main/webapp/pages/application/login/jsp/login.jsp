@@ -118,6 +118,8 @@ explanation of the license and how it is applied.
 			</td>
 		</tr>
 	</table>
+	<span class="fontnormal7pt"><mifos:mifoslabel name="login.chinese.translation.attribution" bundle="LoginUIResources"/></span>
+	
 </html-el:form>
 </body>
 </mifos:html>
