@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.loan.business;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -94,8 +95,6 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.AbstractEntity;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.DateTimeService;
@@ -127,6 +126,7 @@ import java.util.Set;
 
 public class LoanBO extends AccountBO {
 
+    private static final Logger logger = Logger.getLogger(LoanBO.class);
     private Integer businessActivityId;
 
     private Money loanAmount;
@@ -661,12 +661,12 @@ public class LoanBO extends AccountBO {
                 || getAccountState().getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue()) || getAccountState()
                 .getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue()))) {
 
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+            logger.debug(
                     "State is not active hence adjustment is not possible");
             return false;
         }
 
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+        logger.debug(
                 "Total payments on this account is  " + getAccountPayments().size());
         AccountPaymentEntity accountPayment = getLastPmntToBeAdjusted();
         if (accountPayment != null) {
@@ -681,7 +681,7 @@ public class LoanBO extends AccountBO {
         if (null != getLastPmntToBeAdjusted() && getLastPmntAmntToBeAdjusted() != 0) {
             return true;
         }
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Adjustment is not possible ");
+        logger.debug("Adjustment is not possible ");
         return false;
     }
 
@@ -1823,17 +1823,17 @@ public class LoanBO extends AccountBO {
 
         Double feeAmount = accountFees.getFeeAmount();
 
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Fee amount..." + feeAmount);
+        logger.debug("Fee amount..." + feeAmount);
 
         if (accountFees.getFees().getFeeType().equals(RateAmountFlag.AMOUNT)) {
             accountFeeAmount = new Money(getCurrency(), feeAmount.toString());
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+            logger.debug(
                     "AccountFeeAmount for amount fee.." + feeAmount);
         } else if (accountFees.getFees().getFeeType().equals(RateAmountFlag.RATE)) {
             RateFeeBO rateFeeBO = new FeePersistence().getRateFee(accountFees.getFees().getFeeId());
             accountFeeAmount = new Money(getCurrency(), getRateBasedOnFormula(feeAmount, rateFeeBO.getFeeFormula(),
                     loanInterest));
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+            logger.debug(
                     "AccountFeeAmount for Formula fee.." + feeAmount);
         }
         return accountFeeAmount;
@@ -1850,7 +1850,7 @@ public class LoanBO extends AccountBO {
         List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
         while (feeDatesIterator.hasNext()) {
             Date feeDate = feeDatesIterator.next();
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Handling periodic fee.." + feeDate);
+            logger.debug("Handling periodic fee.." + feeDate);
             Short installmentId = getMatchingInstallmentId(installmentDates, feeDate);
             feeInstallmentList.add(buildFeeInstallment(installmentId, accountFeeAmount, accountFees));
         }
@@ -1884,7 +1884,7 @@ public class LoanBO extends AccountBO {
         List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
         while (feeDatesIterator.hasNext()) {
             Date feeDate = feeDatesIterator.next();
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Handling periodic fee.." + feeDate);
+            logger.debug("Handling periodic fee.." + feeDate);
 
             Short installmentId = getMatchingInstallmentId(installmentDates, feeDate);
             feeInstallmentList.add(buildFeeInstallment(installmentId, accountFeeAmount, accountFees));
@@ -2073,9 +2073,9 @@ public class LoanBO extends AccountBO {
 
     private void validateSize(final List<InstallmentDate> installmentDates, final List<EMIInstallment> EMIInstallments)
             throws AccountException {
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+        logger.debug(
                 "Validating installment size  " + installmentDates.size());
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+        logger.debug(
                 "Validating emi installment size  " + EMIInstallments.size());
         if (installmentDates.size() != EMIInstallments.size()) {
             throw new AccountException(AccountConstants.DATES_MISMATCH);
@@ -2084,7 +2084,7 @@ public class LoanBO extends AccountBO {
 
     public static Boolean isDisbursementDateValid(final CustomerBO specifiedCustomer, final Date disbursementDate)
             throws AccountException {
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("IsDisbursementDateValid invoked ");
+        logger.debug("IsDisbursementDateValid invoked ");
         Boolean isValid = false;
         try {
             isValid = specifiedCustomer.getCustomerMeeting().getMeeting().isValidMeetingDate(disbursementDate,
@@ -2927,7 +2927,7 @@ public class LoanBO extends AccountBO {
     private void generateMeetingSchedule(final boolean isRepaymentIndepOfMeetingEnabled,
             final MeetingBO newMeetingForRepaymentDay) throws AccountException {
 
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Generating meeting schedule... ");
+        logger.debug("Generating meeting schedule... ");
 
         // WHY?
         if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null) {
@@ -2941,12 +2941,12 @@ public class LoanBO extends AccountBO {
                 getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled), isRepaymentIndepOfMeetingEnabled,
                 false);
 
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Obtained intallments dates");
+        logger.debug("Obtained intallments dates");
 
         Money loanInterest = getLoanInterest_v2();
         List<EMIInstallment> EMIInstallments = generateEMI_v2(loanInterest);
 
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Emi installment  obtained ");
+        logger.debug("Emi installment  obtained ");
 
         validateSize(installmentDates, EMIInstallments);
         List<FeeInstallment> feeInstallment = new ArrayList<FeeInstallment>();
@@ -2964,11 +2964,11 @@ public class LoanBO extends AccountBO {
             // feeInstallment = mergeFeeInstallments(getFeeInstallments(installmentDates, nonAdjustedInstallmentDates));
         }
 
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Fee installment obtained ");
+        logger.debug("Fee installment obtained ");
 
         generateRepaymentSchedule(installmentDates, EMIInstallments, feeInstallment);
 
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Meeting schedule generated  ");
+        logger.debug("Meeting schedule generated  ");
 
         applyRounding_v2();
     }
@@ -3037,11 +3037,11 @@ public class LoanBO extends AccountBO {
         Double interestRate = getInterestRate();
         // TODO: durationInYears should be a BigDeciaml ?
         Double durationInYears = getTotalDurationInYears_v2();
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+        logger.debug(
                 "Get interest duration in years..." + durationInYears);
         // the calls to Money.multiply() and Money.divide() round prematurely!
         Money interest = getLoanAmount().multiply(interestRate).multiply(durationInYears).divide(new BigDecimal("100"));
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Get interest accumulated..." + interest);
+        logger.debug("Get interest accumulated..." + interest);
         return interest;
     }
 
@@ -3102,20 +3102,20 @@ public class LoanBO extends AccountBO {
         if (recurrenceType.equals(RecurrenceType.MONTHLY.getValue())) {
             double totalMonthDays = duration * daysInMonth;
             double durationInYears = totalMonthDays / AccountConstants.INTEREST_DAYS_360;
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Get total month days.." + totalMonthDays);
+            logger.debug("Get total month days.." + totalMonthDays);
             return durationInYears;
         } else if (interestDays == AccountConstants.INTEREST_DAYS_360) {
             if (recurrenceType.equals(RecurrenceType.WEEKLY.getValue())) {
                 double totalWeekDays = duration * daysInWeek;
                 double durationInYears = totalWeekDays / AccountConstants.INTEREST_DAYS_360;
-                MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
+                logger
                         .debug("Get total week days.." + totalWeekDays);
                 return durationInYears;
             }
             throw new AccountException(AccountConstants.NOT_SUPPORTED_DURATION_TYPE);
         } else if (interestDays == AccountConstants.INTEREST_DAYS_365) {
             if (recurrenceType.equals(RecurrenceType.WEEKLY.getValue())) {
-                MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Get interest week 365 days");
+                logger.debug("Get interest week 365 days");
                 double totalWeekDays = duration * daysInWeek;
                 double durationInYears = totalWeekDays / AccountConstants.INTEREST_DAYS_365;
                 return durationInYears;
@@ -3579,17 +3579,17 @@ public class LoanBO extends AccountBO {
         Money accountFeeAmount = new Money(getCurrency());
         Double feeAmount = accountFees.getFeeAmount();
 
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Fee amount..." + feeAmount);
+        logger.debug("Fee amount..." + feeAmount);
 
         if (accountFees.getFees().getFeeType().equals(RateAmountFlag.AMOUNT)) {
             accountFeeAmount = new Money(getCurrency(), feeAmount.toString());
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+            logger.debug(
                     "AccountFeeAmount for amount fee.." + feeAmount);
         } else if (accountFees.getFees().getFeeType().equals(RateAmountFlag.RATE)) {
             RateFeeBO rateFeeBO = new FeePersistence().getRateFee(accountFees.getFees().getFeeId());
             accountFeeAmount = new Money(getCurrency(), getRateBasedOnFormula(feeAmount, rateFeeBO.getFeeFormula(),
                     loanInterest));
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+            logger.debug(
                     "AccountFeeAmount for Formula fee.." + feeAmount);
         }
         return accountFeeAmount;

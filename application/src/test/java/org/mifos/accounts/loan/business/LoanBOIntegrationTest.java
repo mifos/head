@@ -410,6 +410,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             validateLoanForMonthlyCurrencyTests(loanAmount, initialInstallmentPrincipal, finalInstallmentPrincipal,
                     initialInstallmentInterest, finalInstallmentInterest, startDate, currency, numInstallments);
         } finally {
+            TestObjectFactory.cleanUp(accountBO);
             new DateTimeService().resetToCurrentSystemDateTime();
 
             configMgr.clearProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL+currencyCodeSuffix);

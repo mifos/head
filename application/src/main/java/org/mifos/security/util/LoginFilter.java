@@ -32,11 +32,10 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.login.util.helpers.LoginConstants;
@@ -47,6 +46,7 @@ import org.mifos.security.login.util.helpers.LoginConstants;
  */
 public class LoginFilter implements Filter {
 
+    private static final Logger logger = Logger.getLogger(LoginFilter.class);
     /**
      * This function implements the login filter it checks if user is not login
      * it forces the user to login by redirecting him to login page
@@ -61,11 +61,11 @@ public class LoginFilter implements Filter {
         try {
             if (uri == null || uri.equalsIgnoreCase(LoginConstants.LOGINPAGEURI)
                     || uri.equalsIgnoreCase(LoginConstants.LOGINACTION)) {
-                MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER).debug("Inside Filter uri is for login page");
+                logger.debug("Inside Filter uri is for login page");
                 chain.doFilter(req, res);
             } else {
                 if (request.getSession(false) == null) {
-                    MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER).debug("Inside Filter session is null");
+                    logger.debug("Inside Filter session is null");
                     ActionErrors error = new ActionErrors();
                     error.add(LoginConstants.SESSIONTIMEOUT, new ActionMessage(LoginConstants.SESSIONTIMEOUT));
                     request.setAttribute(Globals.ERROR_KEY, error);
@@ -86,7 +86,7 @@ public class LoginFilter implements Filter {
 
             }
         } catch (IllegalStateException ise) {
-            MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER).error("Inside Filter ISE" + ise.getMessage());
+            logger.error("Inside Filter ISE" + ise.getMessage());
             ActionMessage error = new ActionMessage(LoginConstants.IllEGALSTATE);
             request.setAttribute(Globals.ERROR_KEY, error);
             ((HttpServletResponse) res).sendRedirect(request.getContextPath() + LoginConstants.LOGINPAGEURI);

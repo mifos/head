@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -43,9 +44,6 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.config.util.helpers.LookupOptionData;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
@@ -61,7 +59,7 @@ import org.mifos.security.util.UserContext;
 
 public class LookupOptionsAction extends BaseAction {
 
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
+    private static final Logger logger = Logger.getLogger(LookupOptionsAction.class);
 
     @Override
     protected boolean skipActionFormToBusinessObjectConversion(String method) {

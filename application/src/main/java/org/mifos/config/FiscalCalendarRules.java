@@ -24,15 +24,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.joda.time.Days;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 
 public class FiscalCalendarRules {
 
-    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
+    private static final Logger logger = Logger.getLogger(FiscalCalendarRules.class);
 
     public static final String FiscalCalendarRulesWorkingDays = "FiscalCalendarRules.WorkingDays";
     @Deprecated

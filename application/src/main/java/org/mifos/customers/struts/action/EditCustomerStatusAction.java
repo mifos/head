@@ -21,6 +21,7 @@
 package org.mifos.customers.struts.action;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -36,10 +37,6 @@ import org.mifos.customers.struts.actionforms.EditCustomerStatusActionForm;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -58,7 +55,7 @@ public class EditCustomerStatusAction extends BaseAction {
 
     private CustomerBusinessService customerService;
 
-    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERNOTELOGGER);
+    private static final Logger logger = Logger.getLogger(EditCustomerStatusAction.class);
 
     public EditCustomerStatusAction() {
         customerService = new CustomerBusinessService();
@@ -189,7 +186,7 @@ public class EditCustomerStatusAction extends BaseAction {
         String flagName = null;
         List<CustomerCheckListBO> checklist = customerService.getStatusChecklist(
                 statusActionForm.getNewStatusIdValue(), statusActionForm.getLevelIdValue());
-        
+
         SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHECK_LIST, checklist, request);
         newStatusName = getStatusName(customerBO, userContext.getLocaleId(), statusActionForm.getNewStatusId(),
                 statusActionForm.getNewStatusIdValue());

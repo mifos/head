@@ -26,20 +26,18 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.util.helpers.ConfigurationConstants;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.util.UserContext;
 
 public class ReverseLoanDisbursalActionForm extends BaseActionForm {
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+    private static final Logger logger = Logger.getLogger(ReverseLoanDisbursalActionForm.class);
 
     private String searchString;
 

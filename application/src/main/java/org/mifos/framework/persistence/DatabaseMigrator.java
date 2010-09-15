@@ -20,10 +20,8 @@
 
 package org.mifos.framework.persistence;
 
+import org.apache.log4j.Logger;
 import org.mifos.core.ClasspathResource;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.reports.business.ReportsCategoryBO;
 import org.mifos.reports.persistence.AddReport;
@@ -62,6 +60,8 @@ import java.util.TreeMap;
  */
 public class DatabaseMigrator {
 
+    private static final Logger logger = Logger.getLogger(DatabaseMigrator.class);
+
     private Connection connection;
 
     private SortedMap<Integer, String> availableUpgrades;
@@ -76,14 +76,11 @@ public class DatabaseMigrator {
 
     private static final String APPLIED_UPGRADES = "applied_upgrades";
 
-    private static MifosLogger log = null;
     private ApplicationContext applicationContext;
 
     public DatabaseMigrator() {
         this(StaticHibernateUtil.getSessionTL().connection(), getAvailableUpgrades(),
                 "org.mifos.application.master.persistence");
-        log = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
-
     }
 
     public DatabaseMigrator(Connection connection) {
@@ -127,7 +124,7 @@ public class DatabaseMigrator {
             }
 
         } catch (IOException e) {
-            log.error("An error occurred whilst reading the upgrades.txt file");
+            logger.error("An error occurred whilst reading the upgrades.txt file");
 
         } finally {
             if (reader != null) {

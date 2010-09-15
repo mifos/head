@@ -21,7 +21,6 @@
 package org.mifos.framework.util;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.framework.components.logger.LoggerConstants;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
@@ -45,7 +44,7 @@ public class ConfigurationLocator {
     private static final String HOME_PROPERTY_NAME = "user.home";
     private static final String MIFOS_USER_CONFIG_DIRECTORY_NAME = ".mifos";
     private static final String DEFAULT_CONFIGURATION_PATH = "org/mifos/config/resources/";
-    private static final Logger LOG = Logger.getLogger(LoggerConstants.FRAMEWORKLOGGER);
+    private static final Logger LOG = Logger.getLogger(ConfigurationLocator.class.getName());
 
     @SuppressWarnings("PMD.ImmutableField")
     private ConfigurationLocatorHelper configurationLocatorHelper;
@@ -146,7 +145,7 @@ public class ConfigurationLocator {
     }
 
     private String getDefaultConfigPath() {
-        return StringUtils.isBlank(this.defaultConfigPath) ? DEFAULT_CONFIGURATION_PATH : this.defaultConfigPath; 
+        return StringUtils.isBlank(this.defaultConfigPath) ? DEFAULT_CONFIGURATION_PATH : this.defaultConfigPath;
     }
 
     public String resolvePath(String fileName) {

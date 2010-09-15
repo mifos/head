@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
@@ -39,16 +40,13 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.dto.domain.SavingsProductDto;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
 public class SavingsOfferingBO extends PrdOfferingBO {
 
-    private static final MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+    private static final Logger logger = Logger.getLogger(SavingsOfferingBO.class);
 
     private Money recommendedAmount;
     private Money maxAmntWithdrawl;
@@ -163,7 +161,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
             final GLCodeEntity depositGLCode, final GLCodeEntity interestGLCode) throws ProductDefinitionException {
         super(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, endDate,
                 description);
-        prdLogger.debug("creating savings product offering");
+        logger.debug("creating savings product offering");
         validate(savingsType, interestCalcType, recommendedAmntUnit, timePerForInstcalc, freqOfPostIntcalc,
                 recommendedAmount, interestRate, depositGLCode, interestGLCode);
         setCreateDetails();
@@ -181,7 +179,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         this.minAmntForInt = minAmntForInt;
         this.depositGLCode = depositGLCode;
         this.interestGLCode = interestGLCode;
-        prdLogger.debug("creating savings product offering done :" + getGlobalPrdOfferingNum());
+        logger.debug("creating savings product offering done :" + getGlobalPrdOfferingNum());
     }
 
     /**
@@ -293,14 +291,14 @@ public class SavingsOfferingBO extends PrdOfferingBO {
      */
     @Deprecated
     public void save() throws ProductDefinitionException {
-        prdLogger.debug("creating the saving offering ");
+        logger.debug("creating the saving offering ");
         try {
             new SavingsPrdPersistence().createOrUpdate(this);
 
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
-        prdLogger.debug("creating the saving offering Done : " + getPrdOfferingName());
+        logger.debug("creating the saving offering Done : " + getPrdOfferingName());
     }
 
     @Override
@@ -340,7 +338,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
-        prdLogger.debug("updated savings product offering done :" + getGlobalPrdOfferingNum());
+        logger.debug("updated savings product offering done :" + getGlobalPrdOfferingNum());
     }
 
     private PrdOfferingMeetingEntity getPrdOfferingMeeting(final MeetingType meetingType) {
@@ -360,14 +358,14 @@ public class SavingsOfferingBO extends PrdOfferingBO {
             final RecommendedAmntUnitEntity recommendedAmntUnit, final MeetingBO timePerForInstcalc, final MeetingBO freqOfPostIntcalc,
             final Money recommendedAmount, final Double interestRate, final GLCodeEntity depositGLCode, final GLCodeEntity interestGLCode)
             throws ProductDefinitionException {
-        prdLogger.debug("Validating the fields in savings Offering");
+        logger.debug("Validating the fields in savings Offering");
         if (savingsType == null || interestCalcType == null || timePerForInstcalc == null || freqOfPostIntcalc == null
                 || interestRate == null || depositGLCode == null || interestGLCode == null
                 || savingsType.getId().equals(SavingsType.MANDATORY.getValue()) && recommendedAmount == null
                 || getPrdApplicableMasterEnum() == ApplicableTo.GROUPS && recommendedAmntUnit == null) {
             throw new ProductDefinitionException("errors.create");
         }
-        prdLogger.debug("Validating the fields in savings Offering done");
+        logger.debug("Validating the fields in savings Offering done");
     }
 
     public SavingsProductDto toFullDto() {

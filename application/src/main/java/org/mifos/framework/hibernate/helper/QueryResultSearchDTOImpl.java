@@ -23,12 +23,10 @@ package org.mifos.framework.hibernate.helper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.customers.util.helpers.Param;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.HibernateSearchException;
 
 /**
@@ -41,7 +39,7 @@ import org.mifos.framework.exceptions.HibernateSearchException;
 public class QueryResultSearchDTOImpl extends QueryResultDTOImpl {
 
     List<?> list = new ArrayList<Object>();
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER);
+    private static final Logger logger = Logger.getLogger(QueryResultSearchDTOImpl.class);
 
     /** Set the query inputs which will be used for query execution */
     @Override

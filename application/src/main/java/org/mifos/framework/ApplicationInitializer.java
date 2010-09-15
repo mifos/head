@@ -20,6 +20,7 @@
 
 package org.mifos.framework;
 
+import org.apache.log4j.Logger;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.config.AccountingRules;
@@ -32,9 +33,7 @@ import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
-import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.AppNotConfiguredException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -70,7 +69,7 @@ import java.util.Locale;
  */
 public class ApplicationInitializer implements ServletContextListener, ServletRequestListener, HttpSessionListener {
 
-    private static MifosLogger LOG = null;
+    private static Logger logger = null;
 
     private static class DatabaseError {
         boolean isError = false;
@@ -79,7 +78,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         Throwable error = null;
 
         void logError() {
-            LOG.fatal(errmsg, false, null, error);
+            logger.fatal(errmsg, error);
         }
     }
 
@@ -114,6 +113,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     public void init(ServletContextEvent ctx) {
         try {
             synchronized (ApplicationInitializer.class) {
+                MifosLogManager.configure();
+
                 ApplicationContext applicationContext = null;
                 if(ctx !=null){
                     applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx.getServletContext());
@@ -123,12 +124,12 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 * If we do not call MifosLogManager as first step of initialization
                 * MifosLogManager.loggerRepository will be null.
                 */
-                LOG = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
-                LOG.info("Logger has been initialised", false, null);
+                logger = Logger.getLogger(ApplicationInitializer.class);
+                logger.info("Logger has been initialised");
 
                 initializeHibernate();
 
-                LOG.info(getDatabaseConnectionInfo(), false, null);
+                logger.info(getDatabaseConnectionInfo());
 
                 // if a database upgrade loads an instance of Money then MoneyCompositeUserType needs the default currency
                 MoneyCompositeUserType.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
@@ -191,11 +192,11 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             }
         } catch (Exception e) {
             String errMsgStart = "unable to start Mifos web application";
-            if (null == LOG) {
+            if (null == logger) {
                 System.err.println(errMsgStart + " and logger is not available!");
                 e.printStackTrace();
             } else {
-                LOG.error(errMsgStart, e);
+                logger.error(errMsgStart, e);
             }
             throw new Error(e);
         }
@@ -341,7 +342,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         ServletContext ctx = servletContextEvent.getServletContext();
-        LOG.info("shutting down scheduler");
+        logger.info("shutting down scheduler");
         final MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
         ctx.removeAttribute(MifosScheduler.class.getName());
         mifosScheduler.shutdown();

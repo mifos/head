@@ -27,13 +27,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -43,7 +41,7 @@ import org.mifos.security.util.UserContext;
 
 public class CustomFieldsActionForm extends BaseActionForm {
 
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
+    private static final Logger logger = Logger.getLogger(CustomFieldsActionForm.class);
 
     private String categoryType; // id
     private String labelName;

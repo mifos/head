@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionErrors;
@@ -39,9 +40,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.tiles.TilesRequestProcessor;
 import org.mifos.customers.client.util.helpers.ClientConstants;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.PreviousRequestValues;
 import org.mifos.security.authorization.AuthorizationManager;
@@ -51,13 +49,7 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class MifosRequestProcessor extends TilesRequestProcessor {
-    private MifosLogger LOG = null;
-    private MifosLogger HITLOG = null;
-
-    public MifosRequestProcessor() {
-        LOG = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
-        HITLOG = MifosLogManager.getLogger(LoggerConstants.FRAMEWORK_STRUTS_LOGGER);
-    }
+    private static final Logger logger = Logger.getLogger(MifosRequestProcessor.class);
 
     private ActivityContext setActivityContextFromRequest(HttpServletRequest request, Short activityId) {
         HttpSession session = request.getSession();
@@ -219,7 +211,7 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
                 String nextName = (String) requestAttributes.nextElement();
                 if (nextName.startsWith(Constants.STORE_ATTRIBUTE)
                         || nextName.equalsIgnoreCase(Constants.CURRENTFLOWKEY)) {
-                    LOG.debug(nextName + "=" + request.getAttribute(nextName));
+                    logger.debug(nextName + "=" + request.getAttribute(nextName));
                     previousRequestValues.getPreviousRequestValueMap().put(nextName, request.getAttribute(nextName));
                 }
 
@@ -245,7 +237,7 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
         }
 
         if (null != forward) {
-            HITLOG.info("forward.path=" + forward.getPath());
+            logger.info("forward.path=" + forward.getPath());
         }
 
         return forward;

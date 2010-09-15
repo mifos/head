@@ -24,14 +24,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ExceptionHandler;
 import org.apache.struts.config.ExceptionConfig;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 
 /**
  * This class extends from ExceptionHandler class provided by Struts.Finally all
@@ -43,6 +42,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
  */
 public class MifosExceptionHandler extends ExceptionHandler {
 
+    private static final Logger logger = Logger.getLogger(MifosExceptionHandler.class);
     /**
      * This method is used to log the exceptions. If the exception is of type
      * {@link SystemException} or {@link ApplicationException} it logs exception
@@ -53,8 +53,7 @@ public class MifosExceptionHandler extends ExceptionHandler {
 
         if (e instanceof SystemException) {
             SystemException sysException = (SystemException) e;
-            MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(sysException.getKey(), true,
-                    sysException.getValues(), e);
+           logger.error(sysException.getKey(), e);
         } else {
             super.logException(e);
         }

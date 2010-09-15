@@ -23,9 +23,7 @@ package org.mifos.framework.spring;
 import java.util.ArrayList;
 import java.io.IOException;
 
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
+import org.apache.log4j.Logger;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.context.ApplicationContext;
@@ -43,7 +41,7 @@ public class SpringTestUtil {
      * appropriate. {@link LoggerConstants#CONFIGURATION_LOGGER} might also be a
      * good choice.
      */
-    private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER);
+    private static final Logger logger = Logger.getLogger(SpringTestUtil.class);
 
     /**
      * Dynamically fetches config files since an exception is thrown if a nonexistant file is passed into

@@ -26,10 +26,9 @@ import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.taglib.TagUtils;
 import org.mifos.application.master.business.CustomValueListElementDto;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 
 /**
  * This class renders a listbox
@@ -37,6 +36,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 
 public class MifosValueList extends BodyTagSupport {
 
+    private static final Logger logger = Logger.getLogger(MifosValueList.class);
     /**
      * Name of the bean action form which contains the listbox. This name is
      * defined in the struts-config.xml file. For example, the name of the bean
@@ -155,36 +155,36 @@ public class MifosValueList extends BodyTagSupport {
         List<CustomValueListElementDto> inputList = null;
         Object obj = null;
         try {
-            MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("Inside doEndTag of MifosValueList Tag");
+            logger.debug("Inside doEndTag of MifosValueList Tag");
             obj = pageContext.findAttribute(getName());
             if (null == obj) {
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+                logger.debug(
                         "Can't get the bean form from the bean name");
                 throw new Exception(
                         "Can't get the bean form from the bean name. Please check the bean name defined in the name attribute");
             }
-            MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("object is " + obj);
+            logger.debug("object is " + obj);
 
             if (null == getUserContext()) {
 
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("userContext is null");
+                logger.debug("userContext is null");
 
                 getList = obj.getClass().getDeclaredMethod("get" + getProperty2(), (Class[]) null);
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("method called is " + getList);
+                logger.debug("method called is " + getList);
 
                 inputList = (List<CustomValueListElementDto>) getList.invoke(obj, (Object[]) null);
 
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("List got is " + inputList);
+                logger.debug("List got is " + inputList);
             } else {
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("userContext is not null");
+                logger.debug("userContext is not null");
 
                 getList = obj.getClass().getDeclaredMethod("get" + getProperty2(), new Class[] { Object.class });
 
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("method called is " + getList);
+                logger.debug("method called is " + getList);
 
                 inputList = (List<CustomValueListElementDto>) getList.invoke(obj, new Object[] { new Object() });
 
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("List got is " + inputList);
+                logger.debug("List got is " + inputList);
             }
 
         } catch (Exception e) {

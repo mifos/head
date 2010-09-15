@@ -28,6 +28,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import org.apache.log4j.Logger;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.collectionsheet.struts.uihelpers.BulkEntryDisplayHelper;
@@ -35,9 +36,6 @@ import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryCo
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.config.ClientRules;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.SystemException;
@@ -47,7 +45,7 @@ import org.mifos.security.util.UserContext;
 
 public class BulkEntryTag extends BodyTagSupport {
 
-    private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER);
+    private static final Logger logger = Logger.getLogger(BulkEntryTag.class);
 
     @SuppressWarnings("unchecked")
     @Override

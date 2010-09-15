@@ -28,11 +28,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
@@ -44,6 +43,9 @@ import org.mifos.security.util.UserContext;
 import org.springframework.util.Assert;
 
 public class HierarchyManager implements Observer {
+
+    private static final Logger logger = Logger.getLogger(HierarchyManager.class);
+
     private static Map<Short, OfficeCacheDto> hierarchyMap;
     private static HierarchyManager hierarchyManager;
 
@@ -59,7 +61,7 @@ public class HierarchyManager implements Observer {
     }
 
     public void handleEvent(SecurityEvent e) {
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Map before" + hierarchyMap);
+        logger.info("Map before" + hierarchyMap);
         List<OfficeCacheDto> officeList = convertToOfficeCacheList((List<OfficeSearch>) e.getObject());
         if (e.getEventType().equals(Constants.CREATE)) {
             updateMapForCreateEvent(officeList);
@@ -67,7 +69,7 @@ public class HierarchyManager implements Observer {
             updateMapForUpdateEvent(officeList);
         }
 
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Map after " + hierarchyMap);
+        logger.info("Map after " + hierarchyMap);
     }
 
     private void updateMapForCreateEvent(List<OfficeCacheDto> officeList) {

@@ -27,22 +27,20 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Logger;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.api.StandardAccountService;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
-import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.spi.TransactionImport;
 
 public class PluginManager {
 
-    private static final Logger LOG = Logger.getLogger(LoggerConstants.FRAMEWORKLOGGER);
+    private static final Logger logger = Logger.getLogger(PluginManager.class);
 
     /**
      * Returns specified import plugin or null.
@@ -97,7 +95,7 @@ public class PluginManager {
                 try {
                     urls.add(file.toURI().toURL());
                 } catch (MalformedURLException e) {
-                    LOG.log(Level.WARNING, this.getClass().getName(), e);
+                    logger.warn(e);
                 }
             }
         }

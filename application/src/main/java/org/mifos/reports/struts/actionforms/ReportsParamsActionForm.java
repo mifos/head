@@ -22,16 +22,17 @@ package org.mifos.reports.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 
 /**
  * This class is the ActionForm associated with the ReportParams Action.
  */
 public class ReportsParamsActionForm extends BaseActionForm {
+
+    private static final Logger logger = Logger.getLogger(ReportsParamsActionForm.class);
 
     // ----------------------constructors-----------------------
 
@@ -62,7 +63,7 @@ public class ReportsParamsActionForm extends BaseActionForm {
      */
     @Override
     public void reset(ActionMapping mapping, HttpServletRequest request) {
-        MifosLogManager.getLogger(LoggerConstants.REPORTSLOGGER).info("In Login Reset");
+        logger.info("In Login Reset");
         name = null;
         type = null;
         classname = null;

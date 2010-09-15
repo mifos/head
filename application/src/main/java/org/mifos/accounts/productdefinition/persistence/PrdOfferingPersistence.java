@@ -23,6 +23,7 @@ package org.mifos.accounts.productdefinition.persistence;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
@@ -34,27 +35,24 @@ import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConsta
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
 public class PrdOfferingPersistence extends Persistence {
-    private MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+    private static final Logger logger = Logger.getLogger(PrdOfferingPersistence.class);
 
     public Short getMaxPrdOffering() throws PersistenceException {
-        prdLogger.debug("getting the max prd offering id");
+        logger.debug("getting the max prd offering id");
         return (Short) execUniqueResultNamedQuery(NamedQueryConstants.PRODUCTOFFERING_MAX, null);
     }
 
     public PrdStatusEntity getPrdStatus(PrdStatus prdStatus) throws PersistenceException {
-        prdLogger.debug("getting the product status for :" + prdStatus);
+        logger.debug("getting the product status for :" + prdStatus);
         return (PrdStatusEntity) getPersistentObject(PrdStatusEntity.class, prdStatus.getValue());
     }
 
     public Integer getProductOfferingNameCount(String productOfferingName) throws PersistenceException {
-        prdLogger.debug("getting the product offering name count for :" + productOfferingName);
+        logger.debug("getting the product offering name count for :" + productOfferingName);
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(ProductDefinitionConstants.PRDOFFERINGNAME, productOfferingName);
         return ((Number) execUniqueResultNamedQuery(NamedQueryConstants.PRODUCTOFFERING_CREATEOFFERINGNAMECOUNT,
@@ -62,7 +60,7 @@ public class PrdOfferingPersistence extends Persistence {
     }
 
     public Integer getProductOfferingShortNameCount(String productOfferingShortName) throws PersistenceException {
-        prdLogger.debug("getting the product offering short name count for :" + productOfferingShortName);
+        logger.debug("getting the product offering short name count for :" + productOfferingShortName);
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(ProductDefinitionConstants.PRDOFFERINGSHORTNAME, productOfferingShortName);
         return ((Number) execUniqueResultNamedQuery(NamedQueryConstants.PRODUCTOFFERING_CREATEOFFERINGSHORTNAMECOUNT,
@@ -71,7 +69,7 @@ public class PrdOfferingPersistence extends Persistence {
 
     public List<ProductCategoryBO> getApplicableProductCategories(ProductType productType,
             PrdCategoryStatus prdCategoryStatus) throws PersistenceException {
-        prdLogger.debug("getting the applicable product categories");
+        logger.debug("getting the applicable product categories");
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(ProductDefinitionConstants.PRODUCTTYPEID, productType.getValue());
         queryParameters.put(ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID, prdCategoryStatus.getValue());
@@ -83,14 +81,14 @@ public class PrdOfferingPersistence extends Persistence {
                 productCategory.getProductType();
             }
         }
-        prdLogger.debug("getting the applicable product categories Done and : " + queryResult);
+        logger.debug("getting the applicable product categories Done and : " + queryResult);
         return queryResult;
     }
 
     @SuppressWarnings("cast")
     public List<PrdStatusEntity> getApplicablePrdStatus(ProductType productType, Short localeId)
             throws PersistenceException {
-        prdLogger.debug("getting the applicable product Status");
+        logger.debug("getting the applicable product Status");
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(ProductDefinitionConstants.PRODUCTTYPEID, productType.getValue());
         List<PrdStatusEntity> prdStatusList = (List<PrdStatusEntity>) executeNamedQuery(
@@ -100,7 +98,7 @@ public class PrdOfferingPersistence extends Persistence {
             initialize(prdStatus.getPrdState());
             prdStatus.getPrdState().setLocaleId(localeId);
         }
-        prdLogger.debug("getting the applicable product Status Done and : " + prdStatusList);
+        logger.debug("getting the applicable product Status Done and : " + prdStatusList);
         return prdStatusList;
     }
 
@@ -177,7 +175,7 @@ public class PrdOfferingPersistence extends Persistence {
     }
 
     public PrdOfferingBO getPrdOfferingByID(Short prdId) throws PersistenceException {
-        prdLogger.debug("getting the product offering by id :" + prdId);
+        logger.debug("getting the product offering by id :" + prdId);
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(ProductDefinitionConstants.PRODUCTID, Short.valueOf(prdId));
         PrdOfferingBO prdOffring = (PrdOfferingBO) execUniqueResultNamedQuery(NamedQueryConstants.PRD_BYID,

@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.hibernate.EntityMode;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.proxy.HibernateProxy;
@@ -41,14 +42,13 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.framework.business.AbstractBusinessObject;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class InterceptHelper {
+
+    private static final  Logger logger = Logger.getLogger(InterceptHelper.class);
 
     private Map<Object, Object> initialValues;
     private Map<Object, Object> changedValues;
@@ -59,10 +59,8 @@ public class InterceptHelper {
     private Integer entityId;
     private StringBuilder initialArray = null;
     private StringBuilder changeArray = null;
-    private MifosLogger logger;
 
     public InterceptHelper() {
-        logger = MifosLogManager.getLogger(LoggerConstants.AUDITLOGGER);
         initialValues = new HashMap<Object, Object>();
         changedValues = new HashMap<Object, Object>();
         columnNames = new HashMap<Object, Object>();

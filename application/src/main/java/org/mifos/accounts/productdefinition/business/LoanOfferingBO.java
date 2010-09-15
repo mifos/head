@@ -40,6 +40,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -72,9 +73,6 @@ import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.dto.domain.RepaymentDetailsDto;
 import org.mifos.dto.screen.AccountingDetailsDto;
 import org.mifos.dto.screen.LoanAmountDetailsDto;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
@@ -90,7 +88,7 @@ import org.mifos.service.BusinessRuleException;
  */
 public class LoanOfferingBO extends PrdOfferingBO {
 
-    private static final MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+    private static final Logger logger = Logger.getLogger(LoanOfferingBO.class);
     public static LoanOfferingBO ALL_LOAN_PRD = new LoanOfferingBO();
     static {
         ALL_LOAN_PRD.setPrdOfferingName("ALL");
@@ -302,7 +300,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
                           final String calcInstallmentType, boolean waiverInterest) throws ProductDefinitionException {
         super(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, endDate,
                 description);
-        prdLogger.debug("building Loan offering");
+        logger.debug("building Loan offering");
         validate(gracePeriodType, gracePeriodDuration, interestTypes, minLoanAmount, maxLoanAmount, defaultLoanAmount,
                 maxInterestRate, minInterestRate, defInterestRate, maxNoInstallments, minNoInstallments,
                 defNoInstallments, loanCounter, intDedDisbursement, prinDueLastInst, funds, fees, meeting,
@@ -350,7 +348,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 }
             }
         }
-        prdLogger.debug("Loan offering build :" + getGlobalPrdOfferingNum());
+        logger.debug("Loan offering build :" + getGlobalPrdOfferingNum());
     }
 
     @Deprecated
@@ -366,7 +364,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
         super(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, endDate,
                 description);
-        prdLogger.debug("building Loan offering");
+        logger.debug("building Loan offering");
         validate(gracePeriodType, gracePeriodDuration, interestTypes, maxInterestRate, minInterestRate,
                 defInterestRate, loanCounter, intDedDisbursement, prinDueLastInst, funds, fees, meeting,
                 principalGLcode, interestGLcode);
@@ -404,7 +402,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 }
             }
         }
-        prdLogger.debug("Loan offering build :" + getGlobalPrdOfferingNum());
+        logger.debug("Loan offering build :" + getGlobalPrdOfferingNum());
     }
 
     private void setWaiverInterest(boolean waiverInterest) {
@@ -610,7 +608,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     public boolean isFeePresent(final FeeBO fee) {
-        prdLogger.debug("checking isFeePresent :" + fee);
+        logger.debug("checking isFeePresent :" + fee);
         if (loanOfferingFees != null && loanOfferingFees.size() > 0) {
             for (LoanOfferingFeesEntity prdOfferingFee : loanOfferingFees) {
                 if (prdOfferingFee.isFeePresent(fee.getFeeId())) {
@@ -641,7 +639,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
                        final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
                        final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final Short recurAfter,
                        final RecurrenceType recurrenceType, boolean waiverInterest) throws ProductDefinitionException {
-        prdLogger.debug("Updating loan Offering :" + prdOfferingName);
+        logger.debug("Updating loan Offering :" + prdOfferingName);
         super.update(userId, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate,
                 endDate, description, status);
         validateForUpdate(gracePeriodType, gracePeriodDuration, interestTypes, minLoanAmount, maxLoanAmount,
@@ -693,7 +691,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
-        prdLogger.debug("Loan Offering updated:" + prdOfferingName);
+        logger.debug("Loan Offering updated:" + prdOfferingName);
     }
 
     public void update(final Short userId, final String prdOfferingName, final String prdOfferingShortName,
@@ -705,7 +703,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
                        final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final Short recurAfter,
                        final RecurrenceType recurrenceType, final LoanPrdActionForm loanPrdActionForm, boolean waiverInterest)
             throws ProductDefinitionException {
-        prdLogger.debug("Updating loan Offering :" + prdOfferingName);
+        logger.debug("Updating loan Offering :" + prdOfferingName);
         super.update(userId, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate,
                 endDate, description, status);
         validateForUpdate(gracePeriodType, gracePeriodDuration, interestTypes, maxInterestRate, minInterestRate,
@@ -756,7 +754,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
-        prdLogger.debug("Loan Offering updated:" + prdOfferingName);
+        logger.debug("Loan Offering updated:" + prdOfferingName);
     }
 
     private void validate(final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,
@@ -766,7 +764,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
             final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
             final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final MeetingBO meeting,
             final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode) throws ProductDefinitionException {
-        prdLogger.debug("validating fields in Loan offering ");
+        logger.debug("validating fields in Loan offering ");
         if (interestTypes == null || minLoanAmount == null || maxLoanAmount == null || maxInterestRate == null
                 || minInterestRate == null || defInterestRate == null || maxNoInstallments == null
                 || minNoInstallments == null || defNoInstallments == null || meeting == null || principalGLcode == null
@@ -793,7 +791,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
             final Double defInterestRate, final boolean loanCounter, final boolean intDedDisbursement,
             final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final MeetingBO meeting,
             final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode) throws ProductDefinitionException {
-        prdLogger.debug("validating fields in Loan offering ");
+        logger.debug("validating fields in Loan offering ");
         if (interestTypes == null || maxInterestRate == null || minInterestRate == null || defInterestRate == null
                 || meeting == null || principalGLcode == null || interestGLcode == null
                 || minInterestRate > maxInterestRate || defInterestRate < minInterestRate
@@ -812,7 +810,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
     private void setGracePeriodTypeAndDuration(final boolean intDedDisbursement,
                                                final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration) {
-        prdLogger
+        logger
                 .debug("Loan offering setGracePeriodTypeAndDuration called - intDedDisbursement:" + intDedDisbursement);
         if (intDedDisbursement || gracePeriodType == null || gracePeriodType.getId().equals(GraceType.NONE.getValue())) {
             this.gracePeriodType = new GracePeriodTypeEntity(GraceType.NONE);
@@ -821,13 +819,13 @@ public class LoanOfferingBO extends PrdOfferingBO {
             this.gracePeriodType = gracePeriodType;
             this.gracePeriodDuration = gracePeriodDuration;
         }
-        prdLogger.debug("After Loan offering setGracePeriodTypeAndDuration called- gracePeriodType:"
+        logger.debug("After Loan offering setGracePeriodTypeAndDuration called- gracePeriodType:"
                 + this.gracePeriodType + "-gracePeriodDuration :" + this.gracePeriodDuration);
     }
 
     private boolean isFrequencyMatchingOfferingFrequency(final FeeBO fee, final MeetingBO meeting)
             throws ProductDefinitionException {
-        prdLogger.debug("Loan offering isFrequencyMatchingOfferingFrequency called - fee:" + fee);
+        logger.debug("Loan offering isFrequencyMatchingOfferingFrequency called - fee:" + fee);
         if (fee.isOneTime()) {
             return true;
         } else if (fee.getFeeFrequency().getFeeMeetingFrequency().getMeetingDetails().getRecurrenceType()
@@ -846,7 +844,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
             final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
             final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final Short recurAfter)
             throws ProductDefinitionException {
-        prdLogger.debug("validating fields in Loan offering for update");
+        logger.debug("validating fields in Loan offering for update");
         if (interestTypes == null || minLoanAmount == null || maxLoanAmount == null || maxInterestRate == null
                 || minInterestRate == null || defInterestRate == null || maxNoInstallments == null
                 || minNoInstallments == null || defNoInstallments == null || recurAfter == null
@@ -866,7 +864,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
             final Double defInterestRate, final boolean loanCounter, final boolean intDedDisbursement,
             final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final Short recurAfter)
             throws ProductDefinitionException {
-        prdLogger.debug("validating fields in Loan offering for update");
+        logger.debug("validating fields in Loan offering for update");
         if (interestTypes == null || maxInterestRate == null || minInterestRate == null || defInterestRate == null
                 || recurAfter == null || minInterestRate > maxInterestRate || defInterestRate < minInterestRate
                 || defInterestRate > maxInterestRate || !intDedDisbursement && gracePeriodType != null

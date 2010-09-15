@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
@@ -35,8 +36,6 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.persistence.DataAccessObject;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -50,6 +49,8 @@ import org.mifos.security.util.UserContext;
  * the Factory pattern.
  */
 public class LoanDaoLegacyImpl implements DataAccessObject {
+
+    private static final Logger logger = Logger.getLogger(LoanDaoLegacyImpl.class);
 
     public LoanBO createLoan(UserContext userContext, LoanOfferingBO loanOffering, CustomerBO customer,
             AccountState accountState, Money loanAmount, Short noOfinstallments, Date disbursementDate,
@@ -102,7 +103,7 @@ public class LoanDaoLegacyImpl implements DataAccessObject {
 
     private Boolean isDisbursementDateValid(CustomerBO specifiedCustomer, Date disbursementDate)
             throws AccountException {
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("IsDisbursementDateValid invoked ");
+        logger.debug("IsDisbursementDateValid invoked ");
         Boolean isValid = false;
         try {
             isValid = specifiedCustomer.getCustomerMeeting().getMeeting().isValidMeetingDate(disbursementDate,

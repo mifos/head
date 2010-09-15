@@ -23,6 +23,7 @@ package org.mifos.reports.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -32,9 +33,6 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.struts.action.BaseAction;
@@ -51,7 +49,9 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 
 public class ReportsCategoryAction extends BaseAction {
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.REPORTSLOGGER);
+
+    private static final Logger logger = Logger.getLogger(ReportsCategoryAction.class);
+
     private ReportsBusinessService reportsBusinessService;
 
     public ReportsCategoryAction() {
