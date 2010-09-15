@@ -41,6 +41,7 @@ public class MifosLogManager {
         if (!initialized) {
             String configFileName = new ConfigurationLocator().getFilePath(FilePaths.LOG_CONFIGURATION_FILE);
             DOMConfigurator.configureAndWatch(configFileName, DELAY);
+            initialized = true;
         }
     }
 }
