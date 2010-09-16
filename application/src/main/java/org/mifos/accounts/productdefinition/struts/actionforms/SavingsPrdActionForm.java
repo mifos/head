@@ -29,6 +29,8 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -39,9 +41,6 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.DateTimeService;
@@ -54,7 +53,8 @@ import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 
 public class SavingsPrdActionForm extends BaseActionForm {
-    private MifosLogger prdDefLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+
+    private static final Logger logger = LoggerFactory.getLogger(SavingsPrdActionForm.class);
 
     private String prdOfferingId;
 
@@ -342,7 +342,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
 
     @Override
     public void reset(ActionMapping mapping, HttpServletRequest request) {
-        prdDefLogger.debug("start reset method of Savings Product Action form method ");
+        logger.debug("start reset method of Savings Product Action form method ");
         super.reset(mapping, request);
         String method = request.getParameter(ProductDefinitionConstants.METHOD);
         if (method != null && method.equals(Methods.load.toString())) {
@@ -355,7 +355,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
         if (method != null && method.equals(Methods.preview.toString())) {
             recommendedAmntUnit = null;
         }
-        prdDefLogger.debug("reset method of Savings Product Action form method called ");
+        logger.debug("reset method of Savings Product Action form method called ");
     }
 
     @Override
@@ -363,7 +363,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
         ActionErrors errors = new ActionErrors();
         request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
         String method = request.getParameter(ProductDefinitionConstants.METHOD);
-        prdDefLogger.debug("validate method of Savings Product Action form method called :" + method);
+        logger.debug("validate method of Savings Product Action form method called :" + method);
         try {
             if (method != null) {
 
@@ -382,7 +382,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
         if (method != null && !method.equals(Methods.validate.toString())) {
             request.setAttribute(ProductDefinitionConstants.METHODCALLED, method);
         }
-        prdDefLogger.debug("validate method of Savings Product Action form called and error size:" + errors.size());
+        logger.debug("validate method of Savings Product Action form called and error size:" + errors.size());
         return errors;
     }
 

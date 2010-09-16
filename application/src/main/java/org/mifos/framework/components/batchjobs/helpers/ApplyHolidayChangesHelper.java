@@ -315,7 +315,6 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     }
 
     private void logMessage(String finalMessage) {
-        System.out.println(finalMessage);
         getLogger().info(finalMessage);
     }
 

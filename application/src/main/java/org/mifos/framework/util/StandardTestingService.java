@@ -24,10 +24,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ConfigLocale;
@@ -38,7 +39,6 @@ import org.mifos.core.MifosException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.batchjobs.MifosTask;
-import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
@@ -49,7 +49,7 @@ import org.mifos.service.test.TestingService;
  * Encapsulates all logic necessary to have the application behave differently during acceptance and integration tests.
  */
 public class StandardTestingService implements TestingService {
-    private static final Logger LOG = Logger.getLogger(LoggerConstants.FRAMEWORKLOGGER);
+    private static final Logger logger = LoggerFactory.getLogger(StandardTestingService.class);
     private final ConfigurationLocator configurationLocator;
 
     public StandardTestingService() {
@@ -82,7 +82,7 @@ public class StandardTestingService implements TestingService {
             settingsFilenames.add(optionalOverrides);
         } catch (FileNotFoundException e) {
             // basically ignore; no matter if they don't have local overrides
-            LOG.info("no local overrides in use.");
+            logger.info("no local overrides in use.");
         }
         return settingsFilenames.toArray(new String[] {});
     }
@@ -183,14 +183,14 @@ public class StandardTestingService implements TestingService {
 
     @Override
     public void runAllBatchJobs(final ServletContext ctx) {
-        LOG.info("running all batch jobs");
+        logger.info("running all batch jobs");
         MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
         mifosScheduler.runAllTasks();
     }
 
     @Override
     public void runIndividualBatchJob(final String requestedJob, final ServletContext ctx) {
-        LOG.info("running batch job with name like: " + requestedJob + "*");
+        logger.info("running batch job with name like: " + requestedJob + "*");
         boolean jobFound = false;
         final MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
         OUTER: for (String taskName : mifosScheduler.getTaskNames()) {

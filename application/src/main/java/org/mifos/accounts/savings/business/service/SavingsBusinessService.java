@@ -22,6 +22,8 @@ package org.mifos.accounts.savings.business.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
@@ -31,9 +33,6 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.util.UserContext;
@@ -41,7 +40,7 @@ import org.mifos.security.util.UserContext;
 public class SavingsBusinessService implements BusinessService {
     private SavingsPersistence savingsPersistence = new SavingsPersistence();
 
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+    private static final Logger logger = LoggerFactory.getLogger(SavingsBusinessService.class);
 
     @Override
     public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused")UserContext userContext) {

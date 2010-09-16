@@ -33,8 +33,8 @@ import java.util.Timer;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.DateTimeService;
 import org.w3c.dom.Document;
@@ -48,7 +48,7 @@ public class MifosScheduler {
     private static final String BATCH_JOB_CLASS_PATH_PREFIX = "org.mifos.framework.components.batchjobs.helpers.";
     Timer timer = null;
     ArrayList<MifosTask> tasks = new ArrayList<MifosTask>();
-    private static MifosLogger logger = MifosLogManager.getLogger(MifosScheduler.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(MifosScheduler.class);
     private ConfigurationLocator configurationLocator;
 
     public MifosScheduler() {

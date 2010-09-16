@@ -21,7 +21,8 @@
 package org.mifos.framework.persistence;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.framework.components.logger.LoggerConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.framework.exceptions.SystemException;
 import org.springframework.context.ApplicationContext;
 
@@ -31,22 +32,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Logger;
 
 @SuppressWarnings("PMD.AbstractNaming")
 public abstract class Upgrade {
 
-    /*
-     * FIXME: use MifosLogger instead. And note that this will require pulling
-     * lots of code into the common module, and/or an extensive refactor of
-     * logging code in Mifos.
-     */
-    private static final Logger LOG = Logger.getLogger(LoggerConstants.FRAMEWORKLOGGER);
+    private static final Logger logger = LoggerFactory.getLogger(Upgrade.class);
     public static final String WRONG_CONSTRUCTOR = "This db version is higher than 174 so it needs to use the constructor with lookupValueKey parameter.";
     protected ApplicationContext upgradeContext;
 
     protected Logger getLogger() {
-        return LOG;
+        return logger;
     }
 
     @SuppressWarnings("PMD.AbstractNaming")

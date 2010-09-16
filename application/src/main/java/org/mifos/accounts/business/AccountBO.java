@@ -21,6 +21,8 @@
 package org.mifos.accounts.business;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -64,8 +66,6 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.AbstractBusinessObject;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -92,6 +92,8 @@ import static org.mifos.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
 import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
 
 public class AccountBO extends AbstractBusinessObject {
+
+    private static final Logger logger = LoggerFactory.getLogger(AccountBO.class);
 
     private Integer accountId;
     protected String globalAccountNum;
@@ -540,7 +542,7 @@ public class AccountBO extends AbstractBusinessObject {
 
     public final void adjustPmnt(final String adjustmentComment) throws AccountException {
         if (isAdjustPossibleOnLastTrxn()) {
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+            logger.debug(
                     "Adjustment is possible hence attempting to adjust.");
             adjustPayment(getLastPmnt(), getLoggedInUser(), adjustmentComment);
             try {
@@ -555,7 +557,7 @@ public class AccountBO extends AbstractBusinessObject {
 
     public final void adjustLastPayment(final String adjustmentComment) throws AccountException {
         if (isAdjustPossibleOnLastTrxn()) {
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+            logger.debug(
                     "Adjustment is possible hence attempting to adjust.");
 
             adjustPayment(getLastPmntToBeAdjusted(), getLoggedInUser(), adjustmentComment);
@@ -642,7 +644,7 @@ public class AccountBO extends AbstractBusinessObject {
         }
 
         try {
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+            logger.debug(
                     "In the change status method of AccountBO:: new StatusId= " + newStatusId);
             activationDateHelper(newStatusId);
             MasterPersistence masterPersistence = getMasterPersistence();
@@ -689,7 +691,7 @@ public class AccountBO extends AbstractBusinessObject {
                 ((SavingsBO) this).resetRecommendedAmountOnFutureInstallments();
             }
 
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+            logger.debug(
                     "Coming out successfully from the change status method of AccountBO");
         } catch (PersistenceException e) {
             throw new AccountException(e);
@@ -1239,7 +1241,7 @@ public class AccountBO extends AbstractBusinessObject {
             final Short installmentToSkip, final boolean isRepaymentIndepOfMeetingEnabled,
             final boolean adjustForHolidays) {
 
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Generating intallment dates");
+        logger.debug("Generating intallment dates");
 
         List<InstallmentDate> dueInstallmentDates = new ArrayList<InstallmentDate>();
         if (noOfInstallments > 0) {
@@ -1618,9 +1620,9 @@ public class AccountBO extends AbstractBusinessObject {
             final List<InstallmentDate> installmentDates) {
         Money accountFeeAmount = accountFee.getAccountFeeAmount();
         Date feeDate = installmentDates.get(0).getInstallmentDueDate();
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Handling OneTime fee" + feeDate);
+        logger.debug("Handling OneTime fee" + feeDate);
         Short installmentId = getMatchingInstallmentId(installmentDates, feeDate);
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+        logger.debug(
                 "OneTime fee applicable installment id " + installmentId);
         return buildFeeInstallment(installmentId, accountFeeAmount, accountFee);
     }

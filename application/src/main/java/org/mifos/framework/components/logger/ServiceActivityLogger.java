@@ -23,8 +23,12 @@ package org.mifos.framework.components.logger;
 import java.lang.reflect.Method;
 
 import org.apache.commons.lang.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class ServiceActivityLogger extends AbstractServiceLogger {
+public class ServiceActivityLogger implements ServiceLogger {
+
+    private static final Logger logger = LoggerFactory.getLogger(ServiceActivityLogger.class);
     protected final String serviceName;
     private StopWatch stopWatch;
 
@@ -50,11 +54,11 @@ public class ServiceActivityLogger extends AbstractServiceLogger {
     }
 
     private void logStartActivity(Method method) {
-        info("Calling Service  : " + createStartLogMessage(method));
+        logger.info("Calling Service  : " + createStartLogMessage(method));
     }
 
     private void logEndActivity(Method method) {
-        info("Finished Service : " + createEndLogMessage(method));
+        logger.info("Finished Service : " + createEndLogMessage(method));
     }
 
     protected String createStartLogMessage(Method method) {

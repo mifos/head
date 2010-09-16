@@ -29,6 +29,8 @@ import java.util.Date;
 
 import junit.framework.ComparisonFailure;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.FilteredDataSet;
@@ -47,6 +49,7 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
@@ -80,6 +83,7 @@ public class MifosIntegrationTestCase {
 
     @BeforeClass
     public static void init() throws Exception {
+        MifosLogManager.configure();
         verifyDatabaseState = false;
         excludeTables.excludeTable("config_key_value_integer");
         excludeTables.excludeTable("personnel");

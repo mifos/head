@@ -22,15 +22,14 @@ package org.mifos.framework.components.batchjobs;
 
 import java.sql.Timestamp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.components.batchjobs.helpers.TaskStatus;
 import org.mifos.framework.components.batchjobs.persistence.TaskPersistence;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
@@ -43,19 +42,14 @@ public abstract class TaskHelper {
 
     long timeInMillis = 0;
 
-    private MifosLogger logger;
+    private static final Logger logger = LoggerFactory.getLogger(TaskHelper.class);
 
     public TaskHelper(MifosTask mifosTask) {
         this.mifosTask = mifosTask;
-        this.logger = MifosLogManager.getLogger(LoggerConstants.BATCH_JOBS);
     }
 
-    protected MifosLogger getLogger() {
+    protected Logger getLogger() {
         return logger;
-    }
-
-    protected void setLogger(MifosLogger logger) {
-        this.logger = logger;
     }
 
     /**

@@ -23,14 +23,13 @@ package org.mifos.reports.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
@@ -44,8 +43,9 @@ import org.mifos.security.util.SecurityConstants;
 
 public class ReportsAction extends BaseAction {
 
+    private static final Logger logger = LoggerFactory.getLogger(ReportsAction.class);
+
     private ReportsBusinessService reportsBusinessService;
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
     public ReportsAction() throws ServiceException {
         reportsBusinessService = (ReportsBusinessService) ServiceFactory.getInstance().getBusinessService(

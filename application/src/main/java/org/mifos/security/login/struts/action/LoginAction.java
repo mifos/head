@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -42,9 +44,6 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -66,7 +65,8 @@ import org.mifos.security.util.UserContext;
  */
 public class LoginAction extends BaseAction {
 
-    private static final MifosLogger loginLogger = MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER);
+    private static final Logger logger = LoggerFactory.getLogger(LoginAction.class);
+
     private final LegacyLoginServiceFacade loginServiceFacade = DependencyInjectedServiceLocator.locationLoginServiceFacade();
 
     @Override
@@ -89,7 +89,7 @@ public class LoginAction extends BaseAction {
 
     public ActionForward load(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        loginLogger.debug("Inside load of LoginAction");
+        logger.debug("Inside load of LoginAction");
         SessionUtils.setAttribute(LoginConstants.LOGINACTIONFORM, null, request.getSession());
         request.getSession(false).setAttribute(Constants.FLOWMANAGER, new FlowManager());
         return mapping.findForward(ActionForwards.load_success.toString());
@@ -98,9 +98,9 @@ public class LoginAction extends BaseAction {
     @TransactionDemarcate(saveToken = true)
     public ActionForward login(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        loginLogger.debug("Inside login of LoginAction");
-        loginLogger.debug("Using Thread: " + Thread.currentThread().getName());
-        loginLogger.debug("Using hibernate session: " + StaticHibernateUtil.getSessionTL().hashCode());
+        logger.debug("Inside login of LoginAction");
+        logger.debug("Using Thread: " + Thread.currentThread().getName());
+        logger.debug("Using hibernate session: " + StaticHibernateUtil.getSessionTL().hashCode());
 
         ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class
                 .getName());
@@ -143,7 +143,7 @@ public class LoginAction extends BaseAction {
     public ActionForward logout(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
-        loginLogger.debug("Inside logout of LoginAction");
+        logger.debug("Inside logout of LoginAction");
 
         ResourceBundle resources;
         UserContext userContext = getUserContext(request);
@@ -172,7 +172,7 @@ public class LoginAction extends BaseAction {
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward updatePassword(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        loginLogger.debug("Inside updatePassword of LoginAction");
+        logger.debug("Inside updatePassword of LoginAction");
         LoginActionForm loginActionForm = (LoginActionForm) form;
         UserContext userContext = null;
         String userName = loginActionForm.getUserName();

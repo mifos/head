@@ -23,13 +23,12 @@ package org.mifos.reports.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.reports.business.ReportsParamsMapValue;
@@ -47,7 +46,7 @@ public class ReportsParamsMapAction extends BaseAction {
 
     private ReportsBusinessService reportsBusinessService;
     private ReportsPersistence reportsPersistence;
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+    private static final Logger logger = LoggerFactory.getLogger(ReportsParamsMapAction.class);
 
     public ReportsParamsMapAction() throws ServiceException {
         reportsBusinessService = new ReportsBusinessService();

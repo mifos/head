@@ -20,19 +20,17 @@
 
 package org.mifos.security.rolesandpermission.business;
 
-import junit.framework.TestCase;
-
+import org.junit.Test;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.logger.TestLogger;
-import org.testng.annotations.Test;
 
-public class RoleActivityEntityTest extends TestCase {
+public class RoleActivityEntityTest {
 
+    @Test
     public void testEquals() throws Exception {
-        RoleBO x = new RoleBO(new TestLogger(), 78);
-        RoleBO notx = new RoleBO(new TestLogger(), 77);
-        RoleBO y = new RoleBO(new TestLogger(), 78);
-        RoleBO z = new RoleBO(new TestLogger(), 78);
+        RoleBO x = new RoleBO(78);
+        RoleBO notx = new RoleBO(77);
+        RoleBO y = new RoleBO(78);
+        RoleBO z = new RoleBO(78);
 
         TestUtils.assertEqualsAndHashContract(x, notx, y, z);
     }

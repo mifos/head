@@ -24,6 +24,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -32,8 +35,6 @@ import org.hibernate.exception.GenericJDBCException;
 import org.hibernate.transform.Transformers;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.util.helpers.Param;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -44,7 +45,8 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
  * over just by changing what they inherit from, with no further changes).
  */
 public abstract class Persistence {
-    private HibernateUtil hibernateUtil;
+
+    private static final Logger logger = LoggerFactory.getLogger(Persistence.class);
 
     public HibernateUtil getHibernateUtil() {
         return HibernateUtil.getInstance();
@@ -105,7 +107,7 @@ public abstract class Persistence {
     public Query createdNamedQuery(final String queryName) {
         Session session = getHibernateUtil().getSessionTL();
         Query query = session.getNamedQuery(queryName);
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+        logger.debug(
                 "The query object for the query with the name  " + queryName + " has been obtained");
         return query;
     }
@@ -116,7 +118,7 @@ public abstract class Persistence {
             Session session = getHibernateUtil().getSessionTL();
             if (null != session) {
                 query = session.getNamedQuery(queryName);
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+                logger.debug(
                         "The query object for the query with the name  " + queryName + " has been obtained");
             }
 

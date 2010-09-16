@@ -20,6 +20,8 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -30,9 +32,6 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.servicefacade.RepayLoanDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -50,7 +49,7 @@ import java.sql.Date;
 
 public class RepayLoanAction extends BaseAction {
 
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+    private static final Logger logger = LoggerFactory.getLogger(RepayLoanAction.class);
 
     @Override
     protected BusinessService getService() throws ServiceException {
@@ -69,7 +68,7 @@ public class RepayLoanAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadRepayment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
                                        HttpServletResponse response) throws Exception {
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).info("Loading repay loan page");
+        logger.info("Loading repay loan page");
         clearActionForm(form);
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         RepayLoanDto repayLoanDto = loanServiceFacade.getRepaymentDetails(request.getParameter("globalAccountNum"), userContext.getLocaleId(), new AcceptedPaymentTypePersistence());
@@ -84,7 +83,7 @@ public class RepayLoanAction extends BaseAction {
     @CloseSession
     public ActionForward makeRepayment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).info("Performing loan repayment");
+        logger.info("Performing loan repayment");
 
         SessionUtils.removeAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, request);
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());

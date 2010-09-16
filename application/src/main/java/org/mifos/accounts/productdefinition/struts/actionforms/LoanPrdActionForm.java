@@ -21,6 +21,8 @@
 package org.mifos.accounts.productdefinition.struts.actionforms;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -39,9 +41,6 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
@@ -61,7 +60,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class LoanPrdActionForm extends BaseActionForm {
-    private final MifosLogger logger;
+    private static final Logger logger = LoggerFactory.getLogger(LoanPrdActionForm.class);
 
     private String prdOfferingId;
 
@@ -1349,14 +1348,9 @@ public class LoanPrdActionForm extends BaseActionForm {
     }
 
     public LoanPrdActionForm() {
-        this(MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER));
-    }
-
-    public LoanPrdActionForm(MifosLogger logger) {
         super();
         prdOfferinFees = null;
         loanOfferingFunds = null;
-        this.logger = logger;
     }
 
     public String getDefaultLoanAmount() {
