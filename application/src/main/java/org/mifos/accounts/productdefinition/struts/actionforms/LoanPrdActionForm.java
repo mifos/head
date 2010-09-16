@@ -297,6 +297,7 @@ public class LoanPrdActionForm extends BaseActionForm {
     private Boolean canConfigureVariableInstallments;
     private Integer minimumGapBetweenInstallments;
     private Integer maximumGapBetweenInstallments;
+    private Double minimumInstallmentAmount;
 
     public Double getLastLoanDefaultLoanAmt1Value() {
         if (lastLoanDefaultLoanAmt1Value != null) {
@@ -2707,5 +2708,13 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     public void setMaximumGapBetweenInstallments(Integer maximumGapBetweenInstallments) {
         this.maximumGapBetweenInstallments = maximumGapBetweenInstallments;
+    }
+
+    public Double getMinimumInstallmentAmount() {
+        return minimumInstallmentAmount;
+    }
+
+    public void setMinimumInstallmentAmount(Double minimumInstallmentAmount) {
+        this.minimumInstallmentAmount = minimumInstallmentAmount;
     }
 }

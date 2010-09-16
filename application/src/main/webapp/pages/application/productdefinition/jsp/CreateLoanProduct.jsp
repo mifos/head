@@ -687,6 +687,13 @@ explanation of the license and how it is applied.
 									</tr>
 									<tr class="fontnormal">
 										<td width="30%" align="right" valign="top"><mifos:mifoslabel
+											name="product.minimumInstallmentAmount"
+											bundle="ProductDefUIResources" /> :</td>
+                                        <td valign="top"><mifos:decimalinput
+											styleId= "createLoanProduct.input.minimumInstallmentAmount" property="minimumInstallmentAmount" />
+									</tr>
+									<tr class="fontnormal">
+										<td width="30%" align="right" valign="top"><mifos:mifoslabel
 											mandatory="yes" name="product.freqofinst"
 											bundle="ProductDefUIResources" /> :</td>
 										<td width="70%" valign="top">
