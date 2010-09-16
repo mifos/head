@@ -922,6 +922,7 @@ explanation of the license and how it is applied.
 										checkType();
 										showLoanAmountType();
 										showInstallType();
+										showVariableInstallmentInputs();
 									</script>
 
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">

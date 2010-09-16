@@ -1840,6 +1840,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         validatePrincDueOnLastInstAndPrincGraceType(errors);
         setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
         validateInterestGLCode(request, errors);
+        validateVariableInstallmentPeriods(errors);
         logger.debug("validateForPreview method of Loan Product Action form method called :" + prdOfferingName);
     }
 
@@ -2717,4 +2718,43 @@ public class LoanPrdActionForm extends BaseActionForm {
     public void setMinimumInstallmentAmount(Double minimumInstallmentAmount) {
         this.minimumInstallmentAmount = minimumInstallmentAmount;
     }
+
+    private void validateVariableInstallmentPeriods(ActionErrors actionErrors) {
+        if (this.canConfigureVariableInstallments != null && this.canConfigureVariableInstallments == Boolean.TRUE) {
+            validateMinimumGapForVariableInstallments(actionErrors);
+            validateMaximumGapForVariableInstallments(actionErrors);
+            if (minimumGapBetweenInstallments != null && maximumGapBetweenInstallments != null
+                    && minimumGapBetweenInstallments >= maximumGapBetweenInstallments) {
+                addError(actionErrors, "minimumGapBetweenInstallments",
+                        ProductDefinitionConstants.MIN_GAP_MORE_THAN_MAX_GAP_FOR_VARIABLE_INSTALLMENT_PRODUCT);
+            }
+        }
+    }
+
+    private void validateMaximumGapForVariableInstallments(ActionErrors actionErrors) {
+        if (maximumGapBetweenInstallments != null) {
+            if (maximumGapBetweenInstallments <= 0) {
+                addError(actionErrors, "maximumGapBetweenInstallments",
+                        ProductDefinitionConstants.VARIABLE_INSTALLMENT_MAX_GAP_NEGATIVE_OR_ZERO);
+            }
+            if (maximumGapBetweenInstallments > ProductDefinitionConstants.MAX_ALLOWED_INSTALLMENT_GAP) {
+                addError(actionErrors, "maximumGapBetweenInstallments",
+                        ProductDefinitionConstants.VARIABLE_INSTALLMENT_MAX_GAP_MORE_THAN_ALLOWED);
+            }
+        }
+    }
+
+    private void validateMinimumGapForVariableInstallments(ActionErrors actionErrors) {
+        if (minimumGapBetweenInstallments != null) {
+            if (minimumGapBetweenInstallments <= 0) {
+                addError(actionErrors, "minimumGapBetweenInstallments",
+                        ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_NEGATIVE_OR_ZERO);
+            }
+            if (minimumGapBetweenInstallments > ProductDefinitionConstants.MAX_ALLOWED_INSTALLMENT_GAP) {
+                addError(actionErrors, "minimumGapBetweenInstallments",
+                        ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_MORE_THAN_ALLOWED);
+            }
+        }
+    }
+
 }
