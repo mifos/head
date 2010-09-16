@@ -134,7 +134,8 @@ msgstr ""
 "Cliquez sur valider lorsque vous avez fini."
 
 #: login.chinese.translation.attribution
-msgid "(for translation only in Chinese)"
+msgctxt "login.chinese.translation.attribution"
+msgid ""
 msgstr ""
 
 #: login.confirmpassword

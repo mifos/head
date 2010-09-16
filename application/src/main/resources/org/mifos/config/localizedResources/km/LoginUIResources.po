@@ -132,7 +132,8 @@ msgstr ""
 "រួចហើយជ្រើសរើសពាក្យសំងាត់ថ្មី។​ចុចបញ្ជូននៅពេលដែលអ្នកបានបញ្ចប់"
 
 #: login.chinese.translation.attribution
-msgid "(for translation only in Chinese)"
+msgctxt "login.chinese.translation.attribution"
+msgid ""
 msgstr ""
 
 #: login.confirmpassword
