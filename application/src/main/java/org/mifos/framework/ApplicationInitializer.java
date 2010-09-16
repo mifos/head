@@ -354,7 +354,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         try {
             mifosScheduler.shutdown();
         } catch(Exception e) {
-            LOG.error("error while shutting down scheduler", e);
+            logger.error("error while shutting down scheduler", e);
         }
     }
 

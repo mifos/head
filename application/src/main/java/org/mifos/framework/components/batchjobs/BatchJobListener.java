@@ -20,21 +20,17 @@
 
 package org.mifos.framework.components.batchjobs;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.mifos.framework.components.batchjobs.helpers.TaskStatus;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 
 public class BatchJobListener implements JobExecutionListener {
 
-    private MifosLogger logger;
+    private static final Logger logger = LoggerFactory.getLogger(BatchJobListener.class);
 
-    public BatchJobListener() {
-        this.logger = MifosLogManager.getLogger(LoggerConstants.BATCH_JOBS);
-    }
 
     @Override
     public void beforeJob(JobExecution jobExecution) {
@@ -80,12 +76,8 @@ public class BatchJobListener implements JobExecutionListener {
         }
     }
 
-    protected MifosLogger getLogger() {
+    protected Logger getLogger() {
         return logger;
-    }
-
-    protected void setLogger(MifosLogger logger) {
-        this.logger = logger;
     }
 
 }
