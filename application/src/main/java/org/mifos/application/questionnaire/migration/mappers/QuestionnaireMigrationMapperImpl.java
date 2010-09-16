@@ -135,6 +135,8 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     public QuestionGroupDto map(Survey survey) {
         QuestionGroupDto questionGroupDto = new QuestionGroupDto();
         questionGroupDto.setTitle(survey.getName());
+        questionGroupDto.setEditable(false);
+        questionGroupDto.setPpi(false);
         questionGroupDto.setEventSourceDto(mapEventSourceForSurvey(survey));
         questionGroupDto.addSection(mapToSectionForSurvey(survey.getQuestions()));
         return questionGroupDto;
@@ -182,15 +184,22 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     }
 
     private Date mapToDateConducted(Date createdDate, Date updatedDate) {
-        if (createdDate != null) return createdDate;
-        else if (updatedDate != null) return updatedDate;
+        if (createdDate != null) {
+            return createdDate;
+        } else if (updatedDate != null) {
+            return updatedDate;
+        }
         return Calendar.getInstance().getTime();
     }
 
     private Integer mapToCreatorId(Short createdBy, Short updatedBy) {
-        if (createdBy != null) return Integer.valueOf(createdBy);
-        else if (updatedBy != null) return Integer.valueOf(updatedBy);
-        else return 0;
+        if (createdBy != null) {
+            return Integer.valueOf(createdBy);
+        } else if (updatedBy != null) {
+            return Integer.valueOf(updatedBy);
+        } else {
+            return 0;
+        }
     }
 
     private List<QuestionGroupResponseDto> mapToQuestionGroupResponseDtosForCustomer(Integer questionGroupId, List<CustomerCustomFieldEntity> customerResponses, Map<Short, Integer> customFieldQuestionIdMap) {
@@ -199,7 +208,9 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
             Short fieldId = customerResponse.getFieldId();
             String fieldValue = customerResponse.getFieldValue();
             QuestionGroupResponseDto questionGroupResponseDto = mapToQuestionGroupResponseDto(questionGroupId, customFieldQuestionIdMap, fieldId, fieldValue);
-            if (questionGroupResponseDto != null) questionGroupResponseDtos.add(questionGroupResponseDto);
+            if (questionGroupResponseDto != null) {
+                questionGroupResponseDtos.add(questionGroupResponseDto);
+            }
         }
         return questionGroupResponseDtos;
     }
@@ -210,7 +221,9 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
             Short fieldId = accountResponse.getFieldId();
             String fieldValue = accountResponse.getFieldValue();
             QuestionGroupResponseDto questionGroupResponseDto = mapToQuestionGroupResponseDto(questionGroupId, customFieldQuestionIdMap, fieldId, fieldValue);
-            if (questionGroupResponseDto != null) questionGroupResponseDtos.add(questionGroupResponseDto);
+            if (questionGroupResponseDto != null) {
+                questionGroupResponseDtos.add(questionGroupResponseDto);
+            }
         }
         return questionGroupResponseDtos;
     }
@@ -300,10 +313,11 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
         questionDto.setOrder(surveyQuestion.getOrder());
         AnswerType answerType = question.getAnswerTypeAsEnum();
         questionDto.setType(answerToQuestionType.get(answerType));
-        if (answerType == AnswerType.NUMBER)
+        if (answerType == AnswerType.NUMBER) {
             mapNumberQuestion(questionDto, question);
-        else if (answerType == AnswerType.SINGLESELECT || answerType == AnswerType.MULTISELECT || answerType == AnswerType.CHOICE)
+        } else if (answerType == AnswerType.SINGLESELECT || answerType == AnswerType.MULTISELECT || answerType == AnswerType.CHOICE) {
             mapChoiceBasedQuestion(questionDto, question.getChoices());
+        }
         return questionDto;
     }
 
@@ -381,7 +395,10 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
         surveyTypeToSourceMap = asMap(
                 makeEntry(SurveyType.CLIENT, "Client"),
                 makeEntry(SurveyType.GROUP, "Group"),
-                makeEntry(SurveyType.CENTER, "Center")
+                makeEntry(SurveyType.CENTER, "Center"),
+                makeEntry(SurveyType.LOAN, "Loan"),
+                makeEntry(SurveyType.SAVINGS, "Savings"),
+                makeEntry(SurveyType.ALL, "All")
         );
     }
 

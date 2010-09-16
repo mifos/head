@@ -63,8 +63,12 @@ public class Upgrade1283341654 extends Upgrade {
     }
 
     private void initializeDependencies() {
-        if (questionnaireMigration == null) questionnaireMigration = (QuestionnaireMigration) upgradeContext.getBean("questionnaireMigration");
-        if (mifosLogger == null) mifosLogger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
+        if (questionnaireMigration == null) {
+            questionnaireMigration = (QuestionnaireMigration) upgradeContext.getBean("questionnaireMigration");
+        }
+        if (mifosLogger == null) {
+            mifosLogger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
+        }
     }
 
     @Override

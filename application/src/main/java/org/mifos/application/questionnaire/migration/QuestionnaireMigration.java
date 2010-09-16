@@ -88,16 +88,28 @@ public class QuestionnaireMigration {
     public List<Integer> migrateAdditionalFields() {
         List<Integer> questionGroupIds = new ArrayList<Integer>();
         Integer questionGroupId = migrateAdditionalFieldsForClient();
-        if (questionGroupId != null) questionGroupIds.add(questionGroupId);
+        if (questionGroupId != null) {
+            questionGroupIds.add(questionGroupId);
+        }
         questionGroupId = migrateAdditionalFieldsForGroup();
-        if (questionGroupId != null) questionGroupIds.add(questionGroupId);
+        if (questionGroupId != null) {
+            questionGroupIds.add(questionGroupId);
+        }
         questionGroupId = migrateAdditionalFieldsForLoan();
-        if (questionGroupId != null) questionGroupIds.add(questionGroupId);
+        if (questionGroupId != null) {
+            questionGroupIds.add(questionGroupId);
+        }
         return questionGroupIds;
     }
 
     public List<Integer> migrateSurveys() {
-        return migrateSurveysForClient();
+        List<Integer> questionGroupIds = new ArrayList<Integer>();
+        for (SurveyType surveyType : SurveyType.values()){
+            if(surveyType!=SurveyType.ALL) {
+                questionGroupIds.addAll(migrateSurveys(surveyType));
+            }
+        }
+        return questionGroupIds;
     }
 
     // Made 'public' to aid unit testing
@@ -150,7 +162,9 @@ public class QuestionnaireMigration {
     private Integer createQuestionGroup(QuestionGroupDto questionGroupDto) {
         Integer questionGroupId = null;
         try {
-            if (questionGroupDto != null) questionGroupId = questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
+            if (questionGroupDto != null) {
+                questionGroupId = questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
+            }
         } catch (Exception e) {
             mifosLogger.error("Unable to create a Question Group from custom fields", e);
         }
@@ -324,13 +338,19 @@ public class QuestionnaireMigration {
         }
     }
 
-    private List<Integer> migrateSurveysForClient() {
+    private List<Integer> migrateSurveys(SurveyType surveyType) {
         List<Integer> questionGroupIds = new ArrayList<Integer>();
-        Iterator<Survey> surveyIterator = getSurveys(SurveyType.CLIENT);
+        Iterator<Survey> surveyIterator = getSurveys(surveyType);
         if (surveyIterator != null) {
             while (surveyIterator.hasNext()) {
-                Integer questionGroupId = migrateSurveyForClient(surveyIterator.next());
-                if (questionGroupId != null) questionGroupIds.add(questionGroupId);
+                Survey sur = surveyIterator.next();
+                if(sur.getAppliesToAsEnum()!=surveyType) {
+                    sur.setAppliesTo(surveyType);
+                }
+                Integer questionGroupId = migrateSurvey(sur);
+                if (questionGroupId != null) {
+                    questionGroupIds.add(questionGroupId);
+                }
             }
         }
         return questionGroupIds;
@@ -346,7 +366,7 @@ public class QuestionnaireMigration {
         return surveys;
     }
 
-    private Integer migrateSurveyForClient(Survey survey) {
+    private Integer migrateSurvey(Survey survey) {
         QuestionGroupDto questionGroupDto = questionnaireMigrationMapper.map(survey);
         Integer questionGroupId = createQuestionGroup(questionGroupDto, survey);
         migrateSurveyResponses(survey, questionGroupId);

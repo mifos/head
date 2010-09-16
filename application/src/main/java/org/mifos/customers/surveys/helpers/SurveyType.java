@@ -24,7 +24,7 @@ public enum SurveyType {
 
     CLIENT("client"), GROUP("group"), CENTER("center"), LOAN("loan"), SAVINGS("savings"), ALL("all");
 
-    private String type;
+    private final String type;
 
     private SurveyType(String type) {
         this.type = type;
