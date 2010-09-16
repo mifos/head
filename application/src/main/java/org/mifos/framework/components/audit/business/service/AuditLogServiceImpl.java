@@ -11,30 +11,65 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.platform.questionnaire.AuditLogService;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.SectionDetail;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 
 public class AuditLogServiceImpl implements AuditLogService {
+    public static final String CREATE = "create";
 
     @Override
-    public void addAuditLogRegistry(QuestionGroupDetails questionGroupDetails) {
-        if (questionGroupDetails.getDetails().size() > 0) {
-            PersonnelBusinessService pbs = new PersonnelBusinessService();
-            String source = questionGroupDetails.getDetails().get(0).getEventSource().getSource();
-            String event = questionGroupDetails.getDetails().get(0).getEventSource().getEvent();
-            String modifierName;
-            if (event.toUpperCase().equals("CREATE")) {
-                try {
-                    modifierName = pbs.getPersonnel((short) (questionGroupDetails.getCreatorId())).getDisplayName();
-                } catch (ServiceException e) {
-                    modifierName = "";
+    public void addAuditLogRegistry(QuestionGroupDetail questionGroupDetail,
+            QuestionGroupDetail oldQuestionGroupDetail, int creatorId, int entityId, String source, String event) {
+        PersonnelBusinessService pbs = new PersonnelBusinessService();
+        String modifierName;
+        if (oldQuestionGroupDetail != null && event.toLowerCase().equals(CREATE)) {
+            String questionGroupName;
+            String sectionName;
+            String fieldName;
+            String fieldValue;
+            try {
+                modifierName = pbs.getPersonnel((short) creatorId).getDisplayName();
+            } catch (ServiceException e) {
+                modifierName = "";
+            }
+            questionGroupName = questionGroupDetail.getTitle();
+            AuditLog auditLog = new AuditLog(entityId, EntityType.getEntityValue(source.toUpperCase()), modifierName,
+                    new DateTimeService().getCurrentJavaSqlDate(), (short) creatorId);
+            Set<AuditLogRecord> auditLogRecords = new HashSet<AuditLogRecord>();
+            for (int sectionPosition = 0; sectionPosition < questionGroupDetail.getSectionDetails().size(); sectionPosition++) {
+                SectionDetail sectionDetail = questionGroupDetail.getSectionDetails().get(sectionPosition);
+                sectionName = sectionDetail.getName();
+                for (int questionPosition = 0; questionPosition < sectionDetail.getQuestions().size(); questionPosition++) {
+                    SectionQuestionDetail sectionQuestionDetail = sectionDetail.getQuestions().get(questionPosition);
+                    fieldName = sectionQuestionDetail.getTitle();
+                    fieldValue = sectionQuestionDetail.getAnswer();
+                    String oldFieldValue = null;
+                    for (SectionDetail oldSectionDetail : oldQuestionGroupDetail.getSectionDetails()) {
+                        if (oldSectionDetail.getName().equals(sectionName)) {
+                            for (SectionQuestionDetail oldSectionQuestionDetail : oldSectionDetail.getQuestions()) {
+                                if (oldSectionQuestionDetail.getTitle().equals(fieldName)) {
+                                    oldFieldValue = oldSectionQuestionDetail.getAnswer();
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    if (!fieldValue.equals("")) {
+                        if (oldFieldValue != null && !oldFieldValue.equals("")) {
+                            if (!oldFieldValue.equals(fieldValue)) {
+                                auditLogRecords.add(new AuditLogRecord(questionGroupName + "/" + sectionName + "/" + fieldName,
+                                        oldFieldValue, fieldValue, auditLog));
+                            }
+                        }
+                        else {
+                            auditLogRecords.add(new AuditLogRecord(questionGroupName + "/" + sectionName + "/" + fieldName,
+                                    "—", fieldValue, auditLog));
+                        }
+                    }
                 }
-                AuditLog auditLog = new AuditLog(questionGroupDetails.getEntityId(), EntityType.getEntityValue(source
-                        .toUpperCase()), modifierName, new DateTimeService().getCurrentJavaSqlDate(),
-                        (short) questionGroupDetails.getCreatorId());
-                Set<AuditLogRecord> auditLogRecords = new HashSet<AuditLogRecord>();
-                for (QuestionGroupDetail group : questionGroupDetails.getDetails()) {
-                    auditLogRecords.add(new AuditLogRecord(group.getTitle(), "-", "-", auditLog));
-                }
+            }
+            if (!auditLogRecords.isEmpty()) {
                 auditLog.addAuditLogRecords(auditLogRecords);
                 auditLog.save();
             }

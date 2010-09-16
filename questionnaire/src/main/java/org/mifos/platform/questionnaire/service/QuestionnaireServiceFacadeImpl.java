@@ -109,7 +109,31 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     public void saveResponses(QuestionGroupDetails questionGroupDetails) {
         questionnaireService.saveResponses(questionGroupDetails);
         if (auditLogService != null) {
-            auditLogService.addAuditLogRegistry(questionGroupDetails);
+            int creatorId = questionGroupDetails.getCreatorId();
+            int entityId = questionGroupDetails.getEntityId();
+            for (QuestionGroupDetail questionGroupDetail : questionGroupDetails.getDetails()) {
+                EventSourceDto eventSourceDto = questionGroupDetail.getEventSource();
+                String source = eventSourceDto.getSource();
+                String event = eventSourceDto.getEvent();
+
+                QuestionGroupDetail secondLastQuestionGroupDetail = null;
+                int max = 0;
+                int secondMax = 0;
+                List<QuestionGroupInstanceDetail> oldQuestionGroupDetails = questionnaireService.getQuestionGroupInstances(entityId, eventSourceDto, false, false);
+                for (QuestionGroupInstanceDetail oldQuestionGroupDetail : oldQuestionGroupDetails) {
+                    if (oldQuestionGroupDetail.getId() >= max) {
+                        secondMax = max;
+                        max = oldQuestionGroupDetail.getId();
+                    }
+                    else if (oldQuestionGroupDetail.getId() > secondMax) {
+                            secondMax = oldQuestionGroupDetail.getId();
+                        }
+                }
+                if (secondMax != 0) {
+                    secondLastQuestionGroupDetail = questionnaireService.getQuestionGroupInstance(secondMax).getQuestionGroupDetail();
+                }
+                auditLogService.addAuditLogRegistry(questionGroupDetail, secondLastQuestionGroupDetail, creatorId, entityId, source, event);
+            }
         }
     }
 

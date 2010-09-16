@@ -71,7 +71,7 @@
     </bean>
 
     <bean name="questionnaireService" class="org.mifos.platform.questionnaire.domain.QuestionnaireServiceImpl"/>
-    <bean name="auditLogService" class="org.mifos.platform.questionnaire.service.FakeAuditLogServiceImpl"/>
+    <bean name="auditLogService" class="org.mifos.framework.components.audit.business.service.AuditLogServiceImpl"/>
     <bean name="questionnaireServiceFacade" class="org.mifos.platform.questionnaire.service.QuestionnaireServiceFacadeImpl"/>
     <bean name="questionnaireValidator" class="org.mifos.platform.questionnaire.validators.QuestionnaireValidatorImpl"/>
     <bean name="questionnaireMapper" class="org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl"/>
