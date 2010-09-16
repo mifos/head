@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2005-2010 Grameen Foundation USA
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
 package org.mifos.dto.domain;
 
 import java.util.List;
@@ -7,6 +27,7 @@ import org.mifos.dto.screen.ListElement;
 
 @SuppressWarnings("PMD")
 public class CreateOrUpdatePersonnelInformation {
+
     private final Short personnelLevelId;
     private final Short officeId;
     private final Integer title;
@@ -27,18 +48,14 @@ public class CreateOrUpdatePersonnelInformation {
     private final DateTime dateOfJoiningMFI;
     private final DateTime dateOfJoiningBranch;
     private final AddressDto address;
-    private final Short createdBy;
 
     private final Short personnelStatusId;
-    private final Short updatedById;
 
     public CreateOrUpdatePersonnelInformation(Short personnelLevelId, Short officeId, Integer title,
             Short preferredLocale, String password, String userName, String emailId, List<ListElement> roles,
             List<CustomFieldDto> customFields, String firstName, String middleName, String lastName,
             String secondLastName, String governmentIdNumber, DateTime dob, Integer maritalStatus, Integer gender,
-            DateTime dateOfJoiningMFI, DateTime dateOfJoiningBranch, AddressDto address, Short createdBy,
-            Short personnelStatusId, Short updatedById) {
-        super();
+            DateTime dateOfJoiningMFI, DateTime dateOfJoiningBranch, AddressDto address, Short personnelStatusId) {
         this.personnelLevelId = personnelLevelId;
         this.officeId = officeId;
         this.title = title;
@@ -59,9 +76,7 @@ public class CreateOrUpdatePersonnelInformation {
         this.dateOfJoiningMFI = dateOfJoiningMFI;
         this.dateOfJoiningBranch = dateOfJoiningBranch;
         this.address = address;
-        this.createdBy = createdBy;
         this.personnelStatusId = personnelStatusId;
-        this.updatedById = updatedById;
     }
 
     public Short getPersonnelLevelId() {
@@ -144,15 +159,7 @@ public class CreateOrUpdatePersonnelInformation {
         return this.address;
     }
 
-    public Short getCreatedBy() {
-        return this.createdBy;
-    }
-
     public Short getPersonnelStatusId() {
         return this.personnelStatusId;
-    }
-
-    public Short getUpdatedById() {
-        return this.updatedById;
     }
 }

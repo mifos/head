@@ -66,6 +66,7 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.screen.DefinePersonnelDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.PersonnelInformationDto;
@@ -211,13 +212,17 @@ public class PersonAction extends SearchAction {
         Address address = personActionForm.getAddress();
         AddressDto addressDto = new AddressDto(address.getLine1(), address.getLine2(), address.getLine3(), address.getCity(), address.getState(),
                 address.getCountry(), address.getZip(), address.getPhoneNumber());
+
         CreateOrUpdatePersonnelInformation perosonnelInfo = new CreateOrUpdatePersonnelInformation(level.getValue(), office.getOfficeId(), title,
                 preferredLocale, personActionForm.getUserPassword(), personActionForm.getLoginName(), personActionForm.getEmailId(), roleList,
                 personActionForm.getCustomFields(), personActionForm.getFirstName(), personActionForm.getMiddleName(), personActionForm.getLastName(),
                 personActionForm.getSecondLastName(), personActionForm.getGovernmentIdNumber(), new DateTime(dob),
                 getIntegerValue(personActionForm.getMaritalStatus()), getIntegerValue(personActionForm.getGender()), new DateTime(dateOfJoiningMFI),
-                new DateTimeService().getCurrentDateTime(), addressDto, userContext.getId(), null, null);
-        String globalPersonnelNum = this.personnelServiceFacade.createPersonnelInformation(perosonnelInfo);
+                new DateTimeService().getCurrentDateTime(), addressDto, null);
+
+        UserDetailDto userDetails = this.personnelServiceFacade.createPersonnelInformation(perosonnelInfo);
+
+        String globalPersonnelNum = userDetails.getSystemId();
         Name name = new Name(personActionForm.getFirstName(), personActionForm.getMiddleName(), personActionForm.getSecondLastName(), personActionForm.getLastName());
 
         request.setAttribute("displayName", name.getDisplayName());

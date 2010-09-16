@@ -21,8 +21,14 @@
 package org.mifos.ui.core.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="required for spring web flow storage at a minimum - should disable at filter level and also for pmd")
@@ -77,6 +83,17 @@ public class UserFormBean implements Serializable {
     private String username;
     private String password;
     private String confirmedPassword;
+
+    // preview fields
+    private DateTime dateOfBirth;
+    private Integer age;
+    private DateTime mfiJoiningDate;
+    private List<String> selectedRoleNames;
+    private String maritalStatusName = "";
+    private String genderName = "";
+    private String preferredLanguageName = "";
+    private String userTitleName = "";
+    private String userHierarchyName = "";
 
     public String getOfficeName() {
         return this.officeName;
@@ -336,5 +353,82 @@ public class UserFormBean implements Serializable {
 
     public void setGenderOptions(Map<String, String> genderOptions) {
         this.genderOptions = genderOptions;
+    }
+
+    public void prepareForPreview() {
+        this.dateOfBirth = new DateTime().withDate(this.dateOfBirthYear.intValue(), this.dateOfBirthMonth.intValue(), this.dateOfBirthDay.intValue());
+        this.age = new DateTime().yearOfEra().getDifference(this.dateOfBirth);
+        this.mfiJoiningDate = new DateTime().withDate(this.mfiJoiningDateYear.intValue(), this.mfiJoiningDateMonth.intValue(), this.mfiJoiningDateDay.intValue());
+
+        if (StringUtils.isNotBlank(this.selectedMaritalStatus)) {
+            this.maritalStatusName = this.maritalStatusOptions.get(this.selectedMaritalStatus);
+        }
+
+        this.genderName = this.genderOptions.get(this.selectedGender);
+
+        if (StringUtils.isNotBlank(this.selectedPreferredLanguage)) {
+            this.preferredLanguageName = this.preferredLanguageOptions.get(this.selectedPreferredLanguage);
+        }
+
+        if (StringUtils.isNotBlank(this.selectedUserTitle)) {
+            this.userTitleName = this.userTitleOptions.get(this.selectedUserTitle);
+        }
+
+        this.userHierarchyName = this.userHierarchyOptions.get(this.selectedUserHierarchy);
+
+        this.selectedRoleNames = new ArrayList<String>();
+        if (this.selectedRoles != null) {
+            for (String roleName : this.selectedRoles) {
+                if (this.selectedRolesOptions.containsKey(roleName)) {
+                    this.selectedRoleNames.add(this.selectedRolesOptions.get(roleName));
+                } else if (this.availableRolesOptions.containsKey(roleName)) {
+                    this.selectedRoleNames.add(this.availableRolesOptions.get(roleName));
+                }
+            }
+        }
+    }
+
+    public String getDateOfBirth() {
+        return org.joda.time.format.DateTimeFormat.forPattern("dd/MM/yyyy").withLocale(Locale.getDefault()).print(this.dateOfBirth);
+    }
+
+    public DateTime getDateOfBirthAsDateTime() {
+        return this.dateOfBirth;
+    }
+
+    public Integer getAge() {
+        return this.age;
+    }
+
+    public String getMfiJoiningDate() {
+        return org.joda.time.format.DateTimeFormat.forPattern("dd/MM/yyyy").withLocale(Locale.getDefault()).print(this.mfiJoiningDate);
+    }
+
+    public DateTime getMfiJoiningDateAsDateTime() {
+        return this.mfiJoiningDate;
+    }
+
+    public List<String> getSelectedRoleNames() {
+        return this.selectedRoleNames;
+    }
+
+    public String getMaritalStatusName() {
+        return this.maritalStatusName;
+    }
+
+    public String getGenderName() {
+        return this.genderName;
+    }
+
+    public String getPreferredLanguageName() {
+        return this.preferredLanguageName;
+    }
+
+    public String getUserTitleName() {
+        return this.userTitleName;
+    }
+
+    public String getUserHierarchyName() {
+        return this.userHierarchyName;
     }
 }

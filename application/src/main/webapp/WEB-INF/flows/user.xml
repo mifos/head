@@ -17,17 +17,27 @@
     </action-state>
 
 	<view-state id="enterUserDetailsStep" view="enterUserDetails" model="userFormBean">
-		<transition on="preview" to="reviewUserDetailsStep" />
+		<transition on="preview" to="prepareUserFormBeanForPreview" />
 		<transition on="cancel" to="cancel" />
 	</view-state>
+	
+	<action-state id="prepareUserFormBeanForPreview">
+        <evaluate expression="flowScope.userFormBean.prepareForPreview()" />
+        <transition to="reviewUserDetailsStep" />
+    </action-state>
 	
 	<view-state id="reviewUserDetailsStep" view="reviewUserDetails" model="userFormBean">
 		<transition on="reedit" to="enterUserDetailsStep" />
-		<transition on="submit" to="success" />
+		<transition on="submit" to="success">
+			<evaluate expression="systemUserController.createUser(userFormBean)" result="flowScope.userDetails" />
+		</transition>
 		<transition on="cancel" to="cancel" />
 	</view-state>
 	
-	<end-state id="success" view="externalRedirect:contextRelative:/AdminAction.do?method=load" />
+	<end-state id="success" view="confirmSystemUser">
+		<output name="userDetails" value="flowScope.userDetails" />
+	</end-state>
+	
     <end-state id="cancel" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
 	
 </flow>

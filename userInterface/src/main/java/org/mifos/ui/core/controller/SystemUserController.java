@@ -29,8 +29,12 @@ import java.util.Map;
 import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
+import org.mifos.dto.domain.AddressDto;
+import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.domain.OfficeHierarchyDto;
+import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.screen.DefinePersonnelDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
@@ -146,5 +150,54 @@ public class SystemUserController {
         formBean.setMfiJoiningDateYear(today.getYearOfEra());
 
         return formBean;
+    }
+
+    public UserDetailDto createUser(final UserFormBean userFormBean) {
+
+        Short officeId = userFormBean.getOfficeId().shortValue();
+        String firstName = userFormBean.getFirstName();
+        String middleName = userFormBean.getMiddleName();
+        String secondLastName = userFormBean.getSecondLastName();
+        String lastName = userFormBean.getLastName();
+        String governmentIdNumber = userFormBean.getGovernmentId();
+        DateTime dateOfBirth = userFormBean.getDateOfBirthAsDateTime();
+        Integer maritalStatus = Integer.valueOf(userFormBean.getSelectedMaritalStatus());
+        Integer gender = Integer.valueOf(userFormBean.getSelectedGender());
+        DateTime mfiJoiningDate = userFormBean.getMfiJoiningDateAsDateTime();
+        DateTime branchJoiningDate = userFormBean.getMfiJoiningDateAsDateTime();
+
+        Short personnelLevelId = Short.valueOf(userFormBean.getSelectedUserHierarchy());
+
+        Integer title = Integer.valueOf(userFormBean.getSelectedUserTitle());
+
+        List<ListElement> roles = new ArrayList<ListElement>();
+        String[] selectedRoles = userFormBean.getSelectedRoles();
+        if (selectedRoles != null) {
+            for (String role : selectedRoles) {
+                roles.add(new ListElement(Integer.valueOf(role), userFormBean.getSelectedRolesOptions().get(role)));
+            }
+        }
+
+        AddressBean bean = userFormBean.getAddress();
+        AddressDto address = new AddressDto(bean.getAddress1(), bean.getAddress2(), bean.getAddress3(), bean.getCityDistrict(),
+                bean.getState(), bean.getCountry(), bean.getPostalCode(), bean.getTelephoneNumber());
+
+        Short preferredLocale = Short.valueOf("1");
+        String password = userFormBean.getPassword();
+        String username = userFormBean.getUsername();
+        String email = userFormBean.getEmail();
+
+        Short personnelStatusId = Short.valueOf("1"); // active
+
+
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+
+        CreateOrUpdatePersonnelInformation personnel = new CreateOrUpdatePersonnelInformation(personnelLevelId, officeId, title, preferredLocale,
+                password, username, email, roles, customFields, firstName, middleName, lastName, secondLastName,
+                governmentIdNumber, dateOfBirth, maritalStatus, gender, mfiJoiningDate, branchJoiningDate, address, personnelStatusId);
+
+        UserDetailDto userDetails = this.personnelServiceFacade.createPersonnelInformation(personnel);
+
+        return userDetails;
     }
 }

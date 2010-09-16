@@ -52,6 +52,7 @@ import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.OfficeDto;
+import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.domain.UserSearchDto;
 import org.mifos.dto.screen.DefinePersonnelDto;
 import org.mifos.dto.screen.ListElement;
@@ -64,10 +65,13 @@ import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.ValidationException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.business.RoleBO;
+import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
@@ -244,30 +248,56 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
     }
 
     @Override
-    public String createPersonnelInformation(CreateOrUpdatePersonnelInformation personnel) {
-        PersonnelBusinessService personnelBusinessService = new PersonnelBusinessService();
-        List<RoleBO> roles = new ArrayList<RoleBO>();
+    public UserDetailDto createPersonnelInformation(CreateOrUpdatePersonnelInformation personnel) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         try {
-        for(ListElement element: personnel.getRoles()) {
-            RoleBO role = personnelBusinessService.getRoleById(new Short(element.getId().shortValue()));
-            roles.add(role);
-        }
 
-        AddressDto addressDto = personnel.getAddress();
-        Address address = new Address(addressDto.getLine1(), addressDto.getLine2(), addressDto.getLine3(), addressDto.getCity(), addressDto.getState(),
-                addressDto.getCountry(), addressDto.getZip(), addressDto.getPhoneNumber());
+            PersonnelBusinessService personnelBusinessService = new PersonnelBusinessService();
+            List<RoleBO> roles = new ArrayList<RoleBO>();
 
-            PersonnelBO personnelBO = new PersonnelBO(PersonnelLevel.fromInt(personnel.getPersonnelLevelId().intValue()) ,
-                                officeDao.findOfficeById(personnel.getOfficeId()), personnel.getTitle(), personnel.getPreferredLocale(),
-                                personnel.getPassword(), personnel.getUserName(), personnel.getEmailId(), roles, personnel.getCustomFields(),
-                                new Name(personnel.getFirstName(), personnel.getMiddleName(), personnel.getSecondLastName(), personnel.getLastName()),
-                                personnel.getGovernmentIdNumber(), personnel.getDob().toDate(), personnel.getMaritalStatus(),
-                                personnel.getGender(), personnel.getDateOfJoiningMFI().toDate(), personnel.getDateOfJoiningBranch().toDate(), address,
-                                personnel.getCreatedBy());
-            personnelBO.save();
-            return personnelBO.getGlobalPersonnelNum();
-        } catch (Exception e) {
+            for (ListElement element : personnel.getRoles()) {
+                RoleBO role = personnelBusinessService.getRoleById(new Short(element.getId().shortValue()));
+                roles.add(role);
+            }
+
+            AddressDto addressDto = personnel.getAddress();
+            Address address = new Address(addressDto.getLine1(), addressDto.getLine2(), addressDto.getLine3(),
+                    addressDto.getCity(), addressDto.getState(), addressDto.getCountry(), addressDto.getZip(),
+                    addressDto.getPhoneNumber());
+
+            OfficeBO office = officeDao.findOfficeById(personnel.getOfficeId());
+
+            PersonnelBO newPersonnel = new PersonnelBO(PersonnelLevel.fromInt(personnel.getPersonnelLevelId()
+                    .intValue()), office, personnel.getTitle(), personnel.getPreferredLocale(),
+                    personnel.getPassword(), personnel.getUserName(), personnel.getEmailId(), roles, personnel
+                            .getCustomFields(), new Name(personnel.getFirstName(), personnel.getMiddleName(), personnel
+                            .getSecondLastName(), personnel.getLastName()), personnel.getGovernmentIdNumber(),
+                    personnel.getDob().toDate(), personnel.getMaritalStatus(), personnel.getGender(), personnel
+                            .getDateOfJoiningMFI().toDate(), personnel.getDateOfJoiningBranch().toDate(), address,
+                    Integer.valueOf(user.getUserId()).shortValue());
+
+            StaticHibernateUtil.startTransaction();
+            this.personnelDao.save(newPersonnel);
+            StaticHibernateUtil.flushSession();
+            newPersonnel.generateGlobalPersonnelNum();
+            this.personnelDao.save(newPersonnel);
+            StaticHibernateUtil.commitTransaction();
+
+            return newPersonnel.toDto();
+
+        } catch (PersistenceException e) {
+            StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);
+        } catch (ValidationException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } catch (ServiceException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
         }
     }
 }

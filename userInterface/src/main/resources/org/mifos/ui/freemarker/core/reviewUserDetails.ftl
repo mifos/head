@@ -12,7 +12,7 @@
         <p class="span-3 arrowIMG orangeheading last">[@spring.message "review&Submit"/]</p>
       </div>
       <div class="subcontent ">
-      <form method="post" name="formname" action="user.ftl?execution=${flowExecutionKey}">
+      <form method="post" action="user.ftl?execution=${flowExecutionKey}">
         <p class="font15"><span class="fontBold">[@spring.message "systemUsers.preview.addanewuser"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "review&Submit"/]</span></p>
         <div>[@spring.message "systemUsers.preview.reviewtheinformationbelow"/]</div>
         <p>&nbsp;</p>
@@ -34,21 +34,19 @@
   			</div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.email"/]&nbsp;</span><span>${userFormBean.email}</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.dateofBirth"/]&nbsp;</span><span> </span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.dateofBirth"/]&nbsp;</span><span>${userFormBean.dateOfBirth}</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.age"/]&nbsp;</span><span></span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.age"/]&nbsp;</span><span>${userFormBean.age}</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.maritalStatus"/]&nbsp;</span><span></span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.maritalStatus"/]&nbsp;</span><span>${userFormBean.maritalStatusName}</span>
   			</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.gender"/]&nbsp;</span><span></span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.gender"/]&nbsp;</span><span>${userFormBean.genderName}</span>
   			</div>
             <div class="clear">&nbsp;</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.languagePreferred"/]&nbsp;</span><span></span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.languagePreferred"/]&nbsp;</span><span>${userFormBean.preferredLanguageName}</span>
   			</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.mFIJoiningDate"/]:&nbsp;</span><span> </span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.mFIJoiningDate"/]:&nbsp;</span><span>${userFormBean.mfiJoiningDate}</span>
   			</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.status"/]&nbsp;</span><span></span>
-            </div>
             <div class="clear">&nbsp;</div>
         	<div class="clear">&nbsp;</div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.address"/]&nbsp;</span><span>${userFormBean.address.address1}, ${userFormBean.address.address2}, ${userFormBean.address.address3}</span>
@@ -67,11 +65,18 @@
             <div class="clear">&nbsp;</div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.office&Permissions"/]</span></div>
           
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userTitle"/]&nbsp;</span><span></span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userTitle"/]&nbsp;</span><span>${userFormBean.userTitleName}</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userHierarchy"/]&nbsp;</span><span>	</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userHierarchy"/]&nbsp;</span><span>${userFormBean.userHierarchyName}</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.roles"/]&nbsp;</span><span></span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.roles"/]&nbsp;</span>
+            <span>
+            <ol>
+            [#list userFormBean.selectedRoleNames as role]
+            	<li>${role}</li>
+            [/#list]
+            <ol>
+            </span>
             </div>
             <div class="clear">&nbsp;</div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.loginInformation"/]</span>
@@ -82,7 +87,7 @@
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.additionalInformation"/]</span></div>
             
             <div class="clear">&nbsp;</div>
-            	<input class="buttn2" type="submit" name="_eventId_reedit" value="Edit personal information" />
+            	<input class="buttn2" type="submit" name="_eventId_reedit" value="Edit user information" />
         	</div>
             
             <div class="clear">&nbsp;</div>

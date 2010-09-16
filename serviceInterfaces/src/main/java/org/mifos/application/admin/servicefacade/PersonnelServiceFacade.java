@@ -25,6 +25,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
+import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.domain.UserSearchDto;
 import org.mifos.dto.screen.DefinePersonnelDto;
 import org.mifos.dto.screen.PersonnelInformationDto;
@@ -43,7 +44,7 @@ public interface PersonnelServiceFacade {
     PersonnelInformationDto getPersonnelInformationDto(String globalCustNum);
 
     @PreAuthorize("isFullyAuthenticated()")
-    String createPersonnelInformation(CreateOrUpdatePersonnelInformation personnel);
+    UserDetailDto createPersonnelInformation(CreateOrUpdatePersonnelInformation personnel);
 
     @PreAuthorize("isFullyAuthenticated()")
     SystemUserSearchResultsDto searchUser(UserSearchDto searchDto);

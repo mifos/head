@@ -100,11 +100,11 @@ function selectAllOptions(outSel)
 	        
 	        <div>
 	        	<span><span class="red">*</span>[@spring.message "systemUsers.preview.dateofBirth" /]:</span>
-	        	<span>[@spring.formInput "userFormBean.dateOfBirthDay" /]</span>
+	        	<span>[@spring.formInput "userFormBean.dateOfBirthDay", "size=1 maxlength=2" /]</span>
 	        	<span>DD</span>
-	        	<span>[@spring.formInput "userFormBean.dateOfBirthMonth" /]</span>
+	        	<span>[@spring.formInput "userFormBean.dateOfBirthMonth", "size=1 maxlength=2" /]</span>
 	        	<span>MM</span>
-	        	<span>[@spring.formInput "userFormBean.dateOfBirthYear" /]</span>
+	        	<span>[@spring.formInput "userFormBean.dateOfBirthYear", "size=2 maxlength=4" /]</span>
 	        	<span>YYYY</span>
 	        </div>
 	        
@@ -119,11 +119,11 @@ function selectAllOptions(outSel)
 	        
 	         <div>
 	        	<span>[@spring.message "systemUsers.preview.mFIJoiningDate" /]:</span>
-	        	<span>[@spring.formInput "userFormBean.mfiJoiningDateDay" /]</span>
+	        	<span>[@spring.formInput "userFormBean.mfiJoiningDateDay", "size=1 maxlength=2" /]</span>
 	        	<span>DD</span>
-	        	<span>[@spring.formInput "userFormBean.mfiJoiningDateMonth" /]</span>
+	        	<span>[@spring.formInput "userFormBean.mfiJoiningDateMonth", "size=1 maxlength=2" /]</span>
 	        	<span>MM</span>
-	        	<span>[@spring.formInput "userFormBean.mfiJoiningDateYear" /]</span>
+	        	<span>[@spring.formInput "userFormBean.mfiJoiningDateYear", "size=2 maxlength=4" /]</span>
 	        	<span>YYYY</span>
 	        </div>
 	        
@@ -191,7 +191,7 @@ function selectAllOptions(outSel)
         	</fieldset>
         
 	        <div class="prepend-8">
-	        	<input class="buttn" type="submit" id="preview" name="_eventId_preview" value="Preview" />
+	        	<input class="buttn" type="submit" id="preview" name="_eventId_preview" value="Preview" onclick="selectAllOptions(this.form.selectedRoles);selectAllOptions(this.form.availableRoles);" />
 	        	<input class="buttn2" type="submit" id="cancel" name="_eventId_cancel" value="Cancel" />
 	        </div>
         </form>

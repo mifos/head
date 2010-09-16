@@ -385,6 +385,10 @@ public class PersonnelBO extends AbstractBusinessObject {
         this.personnelNotes.add(personnelNotes);
     }
 
+    /**
+     * @deprecated use creational pattern from tests to for saving personnel.
+     */
+    @Deprecated
     public void save() throws PersonnelException {
         try {
             PersonnelPersistence persistence = new PersonnelPersistence();
@@ -405,6 +409,11 @@ public class PersonnelBO extends AbstractBusinessObject {
         } catch (PersistenceException e) {
             throw new PersonnelException(e);
         }
+    }
+
+    public void generateGlobalPersonnelNum() {
+        String paddedSystemId = generateGlobalPersonnelNum(this.office.getGlobalOfficeNum(), this.personnelId);
+        this.globalPersonnelNum = paddedSystemId;
     }
 
     private String generateGlobalPersonnelNum(final String officeGlobalNum, final int maxPersonnelId) {
