@@ -112,8 +112,11 @@ msgid ""
 msgstr "输入当前密码后填写新密码。填写完成后点击“提交”按钮。"
 
 #: login.chinese.translation.attribution
-msgid "Chinese version is contributed by China Social Entrepreneur Foundation"
-msgstr "本中文版的原始翻译是由友成企业家扶贫基金会提供的"
+msgctxt "login.chinese.translation.attribution"
+msgid ""
+msgstr ""
+"The original translation for this Chinese version was contributed by the "
+"China Social Entrepreneur Foundation; 本中文版的原始翻译是由友成企业家扶贫基金会提供的"
 
 #: login.confirmpassword
 msgid "Confirm New Password"
