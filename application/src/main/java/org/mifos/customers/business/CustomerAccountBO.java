@@ -517,7 +517,8 @@ public class CustomerAccountBO extends AccountBO {
 
     boolean feeIsAppliedTo(CustomerScheduleEntity scheduleEntity, AccountFeesEntity accountFee) {
         for (AccountFeesActionDetailEntity feeActionDetail : scheduleEntity.getAccountFeesActionDetails()) {
-            if (feeActionDetail.getAccountFee().equals(accountFee)) {
+            if (feeActionDetail.getAccountFee().getAccountFeeId().equals(accountFee.getAccountFeeId())) {
+//            if (feeActionDetail.getAccountFee().equals(accountFee)) {
                 return true;
             }
         }
