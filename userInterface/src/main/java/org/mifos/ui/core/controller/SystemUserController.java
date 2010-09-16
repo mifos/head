@@ -152,6 +152,7 @@ public class SystemUserController {
         return formBean;
     }
 
+    @SuppressWarnings("PMD")
     public UserDetailDto createUser(final UserFormBean userFormBean) {
 
         Short officeId = userFormBean.getOfficeId().shortValue();
