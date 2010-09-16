@@ -18,13 +18,16 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire;
+package org.mifos.platform.questionnaire.service;
 
+import org.mifos.platform.questionnaire.AuditLogService;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 
-public interface AuditLogService {
+public class AuditLogServiceImpl implements AuditLogService {
 
-    void addAuditLogRegistry(QuestionGroupDetail questionGroupDetail, QuestionGroupDetail oldQuestionGroupDetail,
-            int creatorId, int entityId, String source, String event);
+    @Override
+    public void addAuditLogRegistry(QuestionGroupDetail questionGroupDetail,
+            QuestionGroupDetail oldQuestionGroupDetail, int creatorId, int entityId, String source, String event) {
+    }
 
 }
