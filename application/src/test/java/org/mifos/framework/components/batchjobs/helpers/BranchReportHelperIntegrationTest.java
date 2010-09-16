@@ -60,7 +60,7 @@ public class BranchReportHelperIntegrationTest extends BranchReportIntegrationTe
     @Test
     public void testBatchCreatesRowForBranchReportBatchBO() throws PersistenceException, ServiceException,
             BatchJobException {
-        branchReportHelper = new BranchReportHelper(new BranchReportTask());
+        branchReportHelper = new BranchReportHelper();
         OfficeBO office = new OfficeBusinessService().getOffice(BRANCH_ID_SHORT);
         BranchReportBO generatedBranchReport = branchReportHelper.createBranchReport(session, office, RUN_DATE);
         IBranchReportService branchReportService = new BranchReportService();

@@ -20,17 +20,22 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
 import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
 import junit.framework.Assert;
 
-import org.hibernate.Query;
 import org.hibernate.SessionException;
 import org.junit.After;
 import org.junit.Before;
@@ -43,14 +48,26 @@ import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
-import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
+import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.springframework.batch.core.BatchStatus;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobInstance;
+import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.core.io.ClassPathResource;
 
 public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase {
+
+    MifosScheduler mifosScheduler;
+
+    String jobName;
 
     LoanOfferingBO product;
 
@@ -58,9 +75,9 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
 
     @Before
     public void setUp() throws Exception {
-        ProductStatus productStatus = new ProductStatus();
-        productStatus.name = "ProductStatus";
-        productStatusHelper = (ProductStatusHelper) productStatus.getTaskHelper();
+        TestDatabase.resetMySQLDatabase();
+        productStatusHelper = new ProductStatusHelper();
+        jobName = "ProductStatusJob";
     }
 
     @After
@@ -72,17 +89,14 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testExecute() throws PersistenceException, BatchJobException {
         createInactiveLoanOffering();
-
         productStatusHelper.execute(System.currentTimeMillis());
-
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
-       Assert.assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
+        Assert.assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
     }
 
     @Test
     public void testExecuteFailure() throws PersistenceException {
         createInactiveLoanOffering();
-
         TestObjectFactory.simulateInvalidConnection();
         try {
             productStatusHelper.execute(System.currentTimeMillis());
@@ -93,115 +107,45 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
            Assert.assertTrue(true);
         }
         StaticHibernateUtil.closeSession();
-
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
-       Assert.assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
+        Assert.assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
     }
 
     @Test
-    public void testExecuteTask() throws PersistenceException, BatchJobException {
+    public void testExecuteTask() throws Exception {
         createInactiveLoanOffering();
-
-        productStatusHelper.executeTask();
-
-        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
-        List<Task> tasks = query.list();
-        Assert.assertNotNull(tasks);
-       Assert.assertEquals(1, tasks.size());
-        for (Task task : tasks) {
-           Assert.assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task.getStatus());
-           Assert.assertEquals("ProductStatus", task.getTask());
-           Assert.assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task.getDescription());
-            TestObjectFactory.removeObject(task);
-        }
-
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/productStatusTestTask.xml");
+        mifosScheduler.runIndividualTask(jobName);
+        Thread.sleep(1000);
+        JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
+        List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 10);
+        Assert.assertTrue(jobInstances.size() > 0);
+        JobInstance lastInstance = jobInstances.get(0);
+        List<JobExecution> jobExecutions = explorer.getJobExecutions(lastInstance);
+        Assert.assertEquals(1, jobExecutions.size());
+        JobExecution lastExecution = jobExecutions.get(0);
+        Assert.assertEquals(BatchStatus.COMPLETED, lastExecution.getStatus());
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
-       Assert.assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
+        Assert.assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
     }
 
     @Test
-    public void testExecuteTaskFailure() throws PersistenceException {
+    public void testExecuteTaskFailure() throws Exception {
         createInactiveLoanOffering();
-
-        TestObjectFactory.simulateInvalidConnection();
-        productStatusHelper.executeTask();
-        StaticHibernateUtil.closeSession();
-
-        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
-        List<Task> tasks = query.list();
-       Assert.assertEquals(0, tasks.size());
-
+        mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/productStatusTestTask2.xml");
+        mifosScheduler.runIndividualTask(jobName);
+        Thread.sleep(1000);
+        JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
+        List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 10);
+        Assert.assertTrue(jobInstances.size() > 0);
+        JobInstance lastInstance = jobInstances.get(0);
+        List<JobExecution> jobExecutions = explorer.getJobExecutions(lastInstance);
+        Assert.assertEquals(1, jobExecutions.size());
+        JobExecution lastExecution = jobExecutions.get(0);
+        Assert.assertEquals(BatchStatus.FAILED, lastExecution.getStatus());
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
-       Assert.assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
+        Assert.assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
     }
-
-    @Test
-    public void testRegisterStartup() throws BatchJobException {
-        productStatusHelper.registerStartup(System.currentTimeMillis());
-        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
-        List<Task> tasks = query.list();
-        Assert.assertNotNull(tasks);
-       Assert.assertEquals(1, tasks.size());
-        for (Task task : tasks) {
-           Assert.assertEquals(TaskStatus.INCOMPLETE.getValue().shortValue(), task.getStatus());
-           Assert.assertEquals("ProductStatus", task.getTask());
-           Assert.assertEquals(SchedulerConstants.START, task.getDescription());
-            TestObjectFactory.removeObject(task);
-        }
-    }
-
-    @Test
-    public void testIsTaskAllowedToRun() {
-       Assert.assertTrue(productStatusHelper.isTaskAllowedToRun());
-    }
-
-    @Test
-    public void testRegisterStartupFailure() {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            productStatusHelper.registerStartup(System.currentTimeMillis());
-            Assert.fail();
-        } catch (BatchJobException e) {
-           Assert.assertTrue(true);
-        }
-    }
-
-    @Test
-    public void testRegisterCompletion() throws BatchJobException {
-        productStatusHelper.registerStartup(System.currentTimeMillis());
-        productStatusHelper.registerCompletion(0, SchedulerConstants.FINISHED_SUCCESSFULLY, TaskStatus.COMPLETE);
-        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
-        List<Task> tasks = query.list();
-        Assert.assertNotNull(tasks);
-       Assert.assertEquals(1, tasks.size());
-        for (Task task : tasks) {
-           Assert.assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task.getStatus());
-           Assert.assertEquals("ProductStatus", task.getTask());
-           Assert.assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task.getDescription());
-            TestObjectFactory.removeObject(task);
-        }
-    }
-
-    @Test
-    public void testRegisterCompletionFailure() throws BatchJobException {
-        productStatusHelper.registerStartup(System.currentTimeMillis());
-
-        TestObjectFactory.simulateInvalidConnection();
-        productStatusHelper.registerCompletion(0, SchedulerConstants.FINISHED_SUCCESSFULLY, TaskStatus.COMPLETE);
-        StaticHibernateUtil.closeSession();
-
-        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
-        List<Task> tasks = query.list();
-        Assert.assertNotNull(tasks);
-       Assert.assertEquals(1, tasks.size());
-        for (Task task : tasks) {
-           Assert.assertEquals(TaskStatus.INCOMPLETE.getValue().shortValue(), task.getStatus());
-           Assert.assertEquals("ProductStatus", task.getTask());
-           Assert.assertEquals(SchedulerConstants.START, task.getDescription());
-            TestObjectFactory.removeObject(task);
-        }
-    }
-
 
     private void createInactiveLoanOffering() throws PersistenceException {
         Date startDate = new Date(System.currentTimeMillis());
@@ -215,4 +159,17 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
         TestObjectFactory.updateObject(product);
         StaticHibernateUtil.closeSession();
     }
+
+    private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws TaskSystemException, IOException, FileNotFoundException {
+        ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
+        expect(mockConfigurationLocator.getFile(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
+                new ClassPathResource(taskConfigurationPath).getFile());
+        expectLastCall().times(2);
+        replay(mockConfigurationLocator);
+        MifosScheduler mifosScheduler = new MifosScheduler();
+        mifosScheduler.setConfigurationLocator(mockConfigurationLocator);
+        mifosScheduler.initialize();
+        return mifosScheduler;
+    }
+
 }

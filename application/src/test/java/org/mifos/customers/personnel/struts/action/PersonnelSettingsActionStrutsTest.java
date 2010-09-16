@@ -40,7 +40,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.components.batchjobs.MifosTask;
+import org.mifos.framework.components.batchjobs.MifosBatchJob;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
@@ -351,8 +351,8 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testGet_batchJobNotRunningThatRequiresExclusiveAccess() throws Exception {
-        MifosTask.batchJobFinished();
-        Assert.assertEquals(false, MifosTask.isBatchJobRunningThatRequiresExclusiveAccess());
+        MifosBatchJob.batchJobFinished();
+        Assert.assertEquals(false, MifosBatchJob.isBatchJobRunningThatRequiresExclusiveAccess());
         createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.get.toString());
@@ -363,9 +363,9 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testGet_batchJobRunningThatDoesntRequireExclusiveAccess() throws Exception {
-        MifosTask.batchJobStarted();
-        MifosTask.batchJobRequiresExclusiveAccess(false);
-        Assert.assertEquals(false, MifosTask.isBatchJobRunningThatRequiresExclusiveAccess());
+        MifosBatchJob.batchJobStarted();
+        MifosBatchJob.batchJobRequiresExclusiveAccess(false);
+        Assert.assertEquals(false, MifosBatchJob.isBatchJobRunningThatRequiresExclusiveAccess());
         createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.get.toString());
@@ -376,15 +376,15 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testGet_batchJobRunningThatRequiresExclusiveAccess() throws Exception {
-        MifosTask.batchJobStarted(); /*should default to requiring exclusive access */
-        Assert.assertEquals(true, MifosTask.isBatchJobRunningThatRequiresExclusiveAccess());
+        MifosBatchJob.batchJobStarted(); /*should default to requiring exclusive access */
+        Assert.assertEquals(true, MifosBatchJob.isBatchJobRunningThatRequiresExclusiveAccess());
         createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.get.toString());
         addRequestParameter("globalPersonnelNum", personnel.getGlobalPersonnelNum());
         actionPerform();
         verifyForward(ActionForwards.load_main_page.toString());
-        MifosTask.batchJobFinished();
+        MifosBatchJob.batchJobFinished();
     }
 
     private void verifyMasterData() throws Exception {

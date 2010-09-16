@@ -20,14 +20,19 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import org.mifos.framework.components.batchjobs.MifosTask;
+import org.mifos.framework.components.batchjobs.MifosBatchJob;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 
-public class BranchReportTask extends MifosTask {
+public class BranchReportTask extends MifosBatchJob {
 
     @Override
     public TaskHelper getTaskHelper() {
-        return new BranchReportHelper(this);
+        return new BranchReportHelper();
+    }
+
+    @Override
+    public void requiresExclusiveAccess() {
+        MifosBatchJob.batchJobRequiresExclusiveAccess(false);
     }
 
 }

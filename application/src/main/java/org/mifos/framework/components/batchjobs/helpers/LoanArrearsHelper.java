@@ -29,7 +29,6 @@ import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.config.GeneralConfig;
-import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
@@ -38,8 +37,8 @@ import org.mifos.framework.util.DateTimeService;
 
 public class LoanArrearsHelper extends TaskHelper {
 
-    public LoanArrearsHelper(MifosTask mifosTask) {
-        super(mifosTask);
+    public LoanArrearsHelper() {
+        super();
     }
 
     @Override
@@ -107,11 +106,6 @@ public class LoanArrearsHelper extends TaskHelper {
         if (errorList.size() > 0) {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
         }
-    }
-
-    @Override
-    public boolean isTaskAllowedToRun() {
-        return true;
     }
 
 }

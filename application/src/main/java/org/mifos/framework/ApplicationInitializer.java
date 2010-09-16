@@ -113,6 +113,11 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
     public void init(ServletContextEvent ctx) {
         try {
+            // prevent ehcache "phone home"
+            System.setProperty("net.sf.ehcache.skipUpdateCheck", "true");
+            // prevent quartz "phone home"
+            System.setProperty("org.terracotta.quartz.skipUpdateCheck", "true");
+
             synchronized (ApplicationInitializer.class) {
                 MifosLogManager.configure();
 
@@ -177,7 +182,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
                     // FIXME: replace with Spring-managed beans
                     final MifosScheduler mifosScheduler = new MifosScheduler();
-                    mifosScheduler.registerTasks();
                     final ShutdownManager shutdownManager = new ShutdownManager();
 
                     Configuration.getInstance();
@@ -185,6 +189,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     configureAuditLogValues(Localization.getInstance().getMainLocale());
                     ConfigLocale configLocale = new ConfigLocale();
                     if (null != ctx) {
+                        mifosScheduler.initialize();
                         ctx.getServletContext().setAttribute(MifosScheduler.class.getName(), mifosScheduler);
                         ctx.getServletContext().setAttribute(ShutdownManager.class.getName(), shutdownManager);
                         ctx.getServletContext().setAttribute(ConfigLocale.class.getSimpleName(), configLocale);
@@ -346,7 +351,11 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         logger.info("shutting down scheduler");
         final MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
         ctx.removeAttribute(MifosScheduler.class.getName());
-        mifosScheduler.shutdown();
+        try {
+            mifosScheduler.shutdown();
+        } catch(Exception e) {
+            LOG.error("error while shutting down scheduler", e);
+        }
     }
 
     @Override

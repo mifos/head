@@ -18,26 +18,24 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.framework.components.batchjobs.business;
+package org.mifos.framework.components.batchjobs.exceptions;
 
-import junit.framework.TestCase;
+public class TaskSystemException extends Exception {
 
-import org.mifos.framework.components.batchjobs.helpers.TaskStatus;
-import org.testng.annotations.Test;
+    public TaskSystemException() {
+        super();
+    }
 
-@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
-public class TaskTest extends TestCase {
+    public TaskSystemException(String message) {
+        super(message);
+    }
 
-    public void testStatus() throws Exception {
-        /*
-         * More or less a test of setters/getters, but there is some enum magic
-         * going on
-         */
-        Task task = new Task();
-        task.setStatus(TaskStatus.COMPLETE);
-        assertSame(TaskStatus.COMPLETE, task.getStatusEnum());
-        task.setStatus(TaskStatus.INCOMPLETE);
-        assertSame(TaskStatus.INCOMPLETE, task.getStatusEnum());
+    public TaskSystemException(Throwable cause) {
+        super(cause);
+    }
+
+    public TaskSystemException(String message, Throwable cause) {
+        super(message, cause);
     }
 
 }

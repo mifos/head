@@ -27,6 +27,6 @@ public class BatchJobRunnerIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testRunBatch() throws Exception {
-        new BranchReportHelper(new BranchReportTask()).execute(System.currentTimeMillis());
+        new BranchReportHelper().execute(System.currentTimeMillis());
     }
 }

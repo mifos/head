@@ -26,15 +26,14 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
-import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class ProductStatusHelper extends TaskHelper {
 
-    public ProductStatusHelper(MifosTask mifosTask) {
-        super(mifosTask);
+    public ProductStatusHelper() {
+        super();
     }
 
     @Override
@@ -85,8 +84,4 @@ public class ProductStatusHelper extends TaskHelper {
         }
     }
 
-    @Override
-    public void requiresExclusiveAccess() {
-        MifosTask.batchJobRequiresExclusiveAccess(false);
-    }
 }
