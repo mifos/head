@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
@@ -97,11 +98,10 @@ public class SystemUserController {
         return bean;
     }
 
-    public UserFormBean createUserFormBean(Long officeId) {
+    public UserFormBean createUserFormBean(final Long officeId, final UserFormBean formBean) {
 
         OfficeDto selectedOffice = this.officeServiceFacade.retrieveOfficeById(officeId.shortValue());
 
-        UserFormBean formBean = new UserFormBean();
         formBean.setOfficeId(officeId);
         formBean.setOfficeName(selectedOffice.getName());
 
@@ -162,14 +162,24 @@ public class SystemUserController {
         String lastName = userFormBean.getLastName();
         String governmentIdNumber = userFormBean.getGovernmentId();
         DateTime dateOfBirth = userFormBean.getDateOfBirthAsDateTime();
-        Integer maritalStatus = Integer.valueOf(userFormBean.getSelectedMaritalStatus());
-        Integer gender = Integer.valueOf(userFormBean.getSelectedGender());
         DateTime mfiJoiningDate = userFormBean.getMfiJoiningDateAsDateTime();
         DateTime branchJoiningDate = userFormBean.getMfiJoiningDateAsDateTime();
 
-        Short personnelLevelId = Short.valueOf(userFormBean.getSelectedUserHierarchy());
+        String email = userFormBean.getEmail();
 
-        Integer title = Integer.valueOf(userFormBean.getSelectedUserTitle());
+        Integer maritalStatus = null;
+        if (StringUtils.isNotBlank(userFormBean.getSelectedMaritalStatus())) {
+            maritalStatus = Integer.valueOf(userFormBean.getSelectedMaritalStatus());
+        }
+        Integer gender = Integer.valueOf(userFormBean.getSelectedGender());
+
+        Integer title = null;
+
+        if (StringUtils.isNotBlank(userFormBean.getSelectedUserTitle())) {
+            title = Integer.valueOf(userFormBean.getSelectedUserTitle());
+        }
+
+        Short personnelLevelId = Short.valueOf(userFormBean.getSelectedUserHierarchy());
 
         List<ListElement> roles = new ArrayList<ListElement>();
         String[] selectedRoles = userFormBean.getSelectedRoles();
@@ -186,10 +196,8 @@ public class SystemUserController {
         Short preferredLocale = Short.valueOf("1");
         String password = userFormBean.getPassword();
         String username = userFormBean.getUsername();
-        String email = userFormBean.getEmail();
 
         Short personnelStatusId = Short.valueOf("1"); // active
-
 
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 

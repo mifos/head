@@ -1,6 +1,7 @@
 [#ftl]
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
+[#import "macros.ftl" as mifosmacros]
 
 [@mifos.header "title" /]
 <script type="text/javascript">
@@ -74,6 +75,9 @@ function selectAllOptions(outSel)
         
         <form name="enterUserDetails" method="post" action="user.ftl?execution=${flowExecutionKey}">
         	<fieldset>
+        	<div id="allErrorsDiv" class="allErrorsDiv">
+            	[@mifosmacros.showAllErrors "userFormBean.*"/]
+        	</div>
         	<div class="fontBold">[@spring.message "systemUsers.preview.office" /]</div>
 	        [@spring.formHiddenInput "userFormBean.officeId" /]
 	        <div><span>[@spring.message "systemUsers.defineNewSystemUser.form.office" /]:</span>

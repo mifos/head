@@ -27,29 +27,50 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
+import org.mifos.platform.validation.MifosBeanValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.binding.message.MessageBuilder;
+import org.springframework.binding.message.MessageContext;
+import org.springframework.binding.validation.ValidationContext;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="required for spring web flow storage at a minimum - should disable at filter level and also for pmd")
 public class UserFormBean implements Serializable {
 
     // office
+    @NotNull
     private Long officeId;
     private String officeName;
 
     // user details
+    @NotEmpty
     private String firstName;
     private String middleName;
     private String secondLastName;
+    @NotEmpty
     private String lastName;
     private String governmentId;
     private String email;
 
+    @Min(value=1)
+    @Max(value=31)
+    @NotNull
     private Number dateOfBirthDay;
+    @Min(value=1)
+    @Max(value=31)
+    @NotNull
     private Number dateOfBirthMonth;
+    @NotNull
     private Number dateOfBirthYear;
 
+    @NotEmpty
     private String selectedGender;
     private Map<String, String> genderOptions = new LinkedHashMap<String, String>();
 
@@ -59,7 +80,11 @@ public class UserFormBean implements Serializable {
     private String selectedPreferredLanguage;
     private Map<String, String> preferredLanguageOptions = new LinkedHashMap<String, String>();
 
+    @Min(value=1)
+    @Max(value=31)
     private Number mfiJoiningDateDay;
+    @Min(value=1)
+    @Max(value=12)
     private Number mfiJoiningDateMonth;
     private Number mfiJoiningDateYear;
 
@@ -70,6 +95,7 @@ public class UserFormBean implements Serializable {
     private String selectedUserTitle;
     private Map<String, String> userTitleOptions = new LinkedHashMap<String, String>();
 
+    @NotEmpty
     private String selectedUserHierarchy;
     private Map<String, String> userHierarchyOptions = new LinkedHashMap<String, String>();
 
@@ -80,7 +106,10 @@ public class UserFormBean implements Serializable {
     private Map<String, String> selectedRolesOptions = new LinkedHashMap<String, String>();
 
     // login info
+    @NotEmpty
     private String username;
+
+    // custom validation
     private String password;
     private String confirmedPassword;
 
@@ -94,6 +123,88 @@ public class UserFormBean implements Serializable {
     private String preferredLanguageName = "";
     private String userTitleName = "";
     private String userHierarchyName = "";
+
+    @Autowired
+    private transient MifosBeanValidator validator;
+
+    public void setValidator(MifosBeanValidator validator) {
+        this.validator = validator;
+    }
+
+    public void validateEnterUserDetailsStep(ValidationContext context) {
+        MessageContext messages = context.getMessageContext();
+
+        validator.validate(this, messages);
+
+        try {
+            this.dateOfBirth = new DateTime().withDate(this.dateOfBirthYear.intValue(), this.dateOfBirthMonth.intValue(), this.dateOfBirthDay.intValue());
+        } catch (Exception e) {
+            messages.addMessage(new MessageBuilder().error().source("dateOfBrith").code("NotValid.UserFormBean.dateOfBrith").defaultText("dateOfBirth is not valid").build());
+        }
+
+        try {
+            this.mfiJoiningDate = new DateTime().withDate(this.mfiJoiningDateYear.intValue(), this.mfiJoiningDateMonth.intValue(), this.mfiJoiningDateDay.intValue());
+        } catch (Exception e) {
+            messages.addMessage(new MessageBuilder().error().source("mfiJoiningDate").code("NotValid.UserFormBean.mfiJoiningDate").defaultText("mfiJoiningDate is not valid").build());
+        }
+
+        if (this.password.trim().isEmpty() || this.confirmedPassword.trim().isEmpty()) {
+            messages.addMessage(new MessageBuilder().error().source("password").code("NotEmpty.UserFormBean.password").defaultText("password is not correct.").build());
+        } else if (!this.password.equals(this.confirmedPassword)) {
+            messages.addMessage(new MessageBuilder().error().source("password").code("NotEqual.UserFormBean.password").defaultText("password is not correct.").build());
+        }
+
+        if (messages.hasErrorMessages()) {
+            this.prepateForReEdit();
+        }
+    }
+
+    public void prepateForReEdit() {
+
+        // handle edge case scenario
+        if (this.selectedRoles != null && this.selectedRoles.length == 1 && this.availableRoles != null && this.availableRoles.length == 1 && this.selectedRoles[0].equals(this.availableRoles[0])) {
+            String role = this.availableRoles[0];
+            if (this.availableRolesOptions.containsKey(role)) {
+               this.availableRoles = null;
+               this.selectedRoles = null;
+               String value = this.availableRolesOptions.remove(role);
+               this.selectedRolesOptions.put(role, value);
+            } else if (this.selectedRolesOptions.containsKey(role)) {
+               this.availableRoles = null;
+               this.selectedRoles = null;
+               String value = this.selectedRolesOptions.remove(role);
+               this.availableRolesOptions.put(role, value);
+            }
+        }
+
+        String[] chosenRoles = this.selectedRoles;
+        if (chosenRoles != null) {
+            for (String role : chosenRoles) {
+                if (this.availableRolesOptions.containsKey(role)) {
+                    String value = this.availableRolesOptions.remove(role);
+                    this.selectedRolesOptions.put(role, value);
+                }
+
+                if (this.availableRoles != null && this.availableRoles.length == 1 && this.availableRoles[0].equals(role)) {
+                    this.availableRoles = null;
+                }
+            }
+        }
+
+        String[] notChosenRoles = this.availableRoles;
+        if (notChosenRoles != null) {
+            for (String role : notChosenRoles) {
+                if (this.selectedRolesOptions.containsKey(role)) {
+                    String value = this.selectedRolesOptions.remove(role);
+                    this.availableRolesOptions.put(role, value);
+                }
+
+                if (this.selectedRoles != null && this.selectedRoles.length == 1 && this.selectedRoles[0].equals(role)) {
+                    this.selectedRoles = null;
+                }
+            }
+        }
+    }
 
     public String getOfficeName() {
         return this.officeName;

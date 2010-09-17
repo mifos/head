@@ -1,6 +1,8 @@
 [#ftl]
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
+[#import "macros.ftl" as mifosmacros]
+
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Main Content Begins-->
@@ -12,14 +14,17 @@
         <p class="span-3 arrowIMG orangeheading last">[@spring.message "review&Submit"/]</p>
       </div>
       <div class="subcontent ">
-      <form method="post" action="user.ftl?execution=${flowExecutionKey}">
         <p class="font15"><span class="fontBold">[@spring.message "systemUsers.preview.addanewuser"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "review&Submit"/]</span></p>
         <div>[@spring.message "systemUsers.preview.reviewtheinformationbelow"/]</div>
         <p>&nbsp;</p>
         <p><span class="fontBold">[@spring.message "systemUsers.preview.office"/] </span><span>${userFormBean.officeName}</span></p>
         
         <div><span class="orangeheading">[@spring.message "systemUsers.preview.userInformation"/] </span><span>&nbsp;</span></div>
+	<form method="post" action="user.ftl?execution=${flowExecutionKey}">
         <div class="clear">&nbsp;</div>
+        <div id="allErrorsDiv" class="allErrorsDiv">
+           	[@mifosmacros.showAllErrors "userFormBean.*"/]
+        </div>
         
         <div class="prepend-1  span-21 last">
         	<div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.firstName"/]&nbsp;</span><span>${userFormBean.firstName}</span>

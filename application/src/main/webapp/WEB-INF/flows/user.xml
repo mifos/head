@@ -3,6 +3,8 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
+	<var name="userFormBean" class="org.mifos.ui.core.controller.UserFormBean"/>
+
 	<view-state id="chooseOfficeStep" view="chooseUserOffice">
 		<on-entry>
             <evaluate expression="systemUserController.showBranchHierarchy()" result="flowScope.officeDetails" />
@@ -12,13 +14,13 @@
 	</view-state>
 	
 	<action-state id="createUserFormBean">
-        <evaluate expression="systemUserController.createUserFormBean(requestParameters.officeId)" result="flowScope.userFormBean" />
+        <evaluate expression="systemUserController.createUserFormBean(requestParameters.officeId, userFormBean)" result="flowScope.userFormBean" />
         <transition to="enterUserDetailsStep" />
     </action-state>
 
 	<view-state id="enterUserDetailsStep" view="enterUserDetails" model="userFormBean">
 		<transition on="preview" to="prepareUserFormBeanForPreview" />
-		<transition on="cancel" to="cancel" />
+		<transition on="cancel" to="cancel" validate="false"/>
 	</view-state>
 	
 	<action-state id="prepareUserFormBeanForPreview">
@@ -27,11 +29,13 @@
     </action-state>
 	
 	<view-state id="reviewUserDetailsStep" view="reviewUserDetails" model="userFormBean">
-		<transition on="reedit" to="enterUserDetailsStep" />
-		<transition on="submit" to="success">
+		<transition on="reedit" to="enterUserDetailsStep" validate="false">
+			<evaluate expression="userFormBean.prepateForReEdit()" />
+		</transition>
+		<transition on="submit" to="success" history="discard">
 			<evaluate expression="systemUserController.createUser(userFormBean)" result="flowScope.userDetails" />
 		</transition>
-		<transition on="cancel" to="cancel" />
+		<transition on="cancel" to="cancel" validate="false"/>
 	</view-state>
 	
 	<end-state id="success" view="confirmSystemUser">
