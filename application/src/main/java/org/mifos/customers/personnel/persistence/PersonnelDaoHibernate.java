@@ -28,7 +28,14 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.Session;
+import org.hibernate.criterion.LogicalExpression;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.servicefacade.CenterCreation;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -36,6 +43,9 @@ import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
+import org.mifos.dto.domain.UserDetailDto;
+import org.mifos.dto.domain.UserSearchDto;
+import org.mifos.dto.screen.SystemUserSearchResultsDto;
 import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.springframework.security.core.GrantedAuthority;
@@ -150,5 +160,75 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public SystemUserSearchResultsDto search(UserSearchDto searchDto, MifosUser user) {
 
+        Short userId = Integer.valueOf(user.getUserId()).shortValue();
+
+        PersonnelBO loggedInUser = findPersonnelById(userId);
+
+        final PersonnelLevel level = loggedInUser.getLevelEnum();
+        final String searchAllSubOfficesInclusiveOfLoggedInUserOffice = loggedInUser.getOfficeSearchId() + "%";
+        final String searchString = org.mifos.framework.util.helpers.SearchUtils.normalizeSearchString(searchDto.getSearchTerm());
+        final String username = searchString + "%";
+        String firstName = "";
+        String secondPartOfName = "";
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SEARCH_ALL", searchAllSubOfficesInclusiveOfLoggedInUserOffice);
+        queryParameters.put("USERID", userId);
+        queryParameters.put("LOID", PersonnelLevel.LOAN_OFFICER.getValue());
+        queryParameters.put("USERLEVEL_ID", level.getValue());
+        queryParameters.put("USER_NAME", username);
+
+        if (searchString.contains(" ")) {
+            firstName = searchString.substring(0, searchString.indexOf(" "));
+            secondPartOfName = searchString.substring(searchString.indexOf(" ") + 1,searchString.length());
+            queryParameters.put("USER_NAME1", firstName);
+            queryParameters.put("USER_NAME2", secondPartOfName);
+        } else {
+            firstName = searchString;
+            secondPartOfName = "";
+            queryParameters.put("USER_NAME1", searchString);
+            queryParameters.put("USER_NAME2", "");
+        }
+
+        Long searchResultsCount = (Long) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.PERSONNEL_SEARCH_COUNT, queryParameters);
+
+        Session session = ((GenericDaoHibernate) this.genericDao).getHibernateUtil().getSessionTL();
+        Criteria criteriaQuery = session.createCriteria(PersonnelBO.class);
+        criteriaQuery.createAlias("office", "o");
+        criteriaQuery.createAlias("personnelDetails", "d");
+
+        if (PersonnelLevel.LOAN_OFFICER.getValue().equals(Short.valueOf("2"))) {
+            criteriaQuery.add(Restrictions.eq("personnelId", userId));
+        }
+        criteriaQuery.add(Restrictions.like("o.searchId", searchAllSubOfficesInclusiveOfLoggedInUserOffice));
+
+        LogicalExpression firstOrLastNameMatchUsername =  Restrictions.or(Restrictions.like("d.name.firstName", username), Restrictions.like("d.name.lastName", username));
+        LogicalExpression firstNameAndLastNameMatchGivenParts = Restrictions.and(Restrictions.like("d.name.firstName", firstName), Restrictions.like("d.name.lastName", secondPartOfName));
+
+        criteriaQuery.add(Restrictions.or(firstOrLastNameMatchUsername, firstNameAndLastNameMatchGivenParts));
+        criteriaQuery.addOrder(Order.asc("o.officeName"));
+        criteriaQuery.addOrder(Order.asc("d.name.lastName"));
+
+        criteriaQuery.setFetchMode("office", FetchMode.JOIN);
+        criteriaQuery.setFetchMode("level", FetchMode.JOIN);
+        criteriaQuery.setFetchMode("personnelDetails", FetchMode.JOIN);
+
+        int firstResult = (searchDto.getPage() * searchDto.getPageSize()) - searchDto.getPageSize();
+        criteriaQuery.setFirstResult(firstResult);
+        criteriaQuery.setMaxResults(searchDto.getPageSize());
+
+        List<PersonnelBO> pagedResults = criteriaQuery.list();
+        List<UserDetailDto> pagedUserDetails = new ArrayList<UserDetailDto>();
+        for (PersonnelBO personnelBO : pagedResults) {
+            pagedUserDetails.add(personnelBO.toDto());
+        }
+
+        SystemUserSearchResultsDto resultsDto = new SystemUserSearchResultsDto(searchResultsCount.intValue(), firstResult, searchDto.getPage(), searchDto.getPageSize(), pagedUserDetails);
+
+        return resultsDto;
+    }
 }

@@ -49,8 +49,6 @@ public class ViewEditLoanProductController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView showLoanProductDetails(@RequestParam("productId") Integer productId) {
 
-//        new ProductModelAndViewPopulator().populateModelAndViewForPreview(loanProduct, modelAndView);
-
         LoanProductRequest loanProductDetails = adminServiceFacade.retrieveLoanProductDetails(productId);
 
         ModelAndView mav = new ModelAndView("viewEditLoanProduct");

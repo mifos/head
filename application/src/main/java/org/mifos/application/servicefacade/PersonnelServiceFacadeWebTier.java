@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2005-2010 Grameen Foundation USA
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
 package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
@@ -32,11 +52,13 @@ import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.OfficeDto;
+import org.mifos.dto.domain.UserSearchDto;
 import org.mifos.dto.screen.DefinePersonnelDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.PersonnelDetailsDto;
 import org.mifos.dto.screen.PersonnelInformationDto;
 import org.mifos.dto.screen.PersonnelNoteDto;
+import org.mifos.dto.screen.SystemUserSearchResultsDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -44,7 +66,9 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.business.RoleBO;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
@@ -57,6 +81,14 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         this.officeDao = officeDao;
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
+    }
+
+    @Override
+    public SystemUserSearchResultsDto searchUser(UserSearchDto searchDto) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return this.personnelDao.search(searchDto, user);
     }
 
     @Override

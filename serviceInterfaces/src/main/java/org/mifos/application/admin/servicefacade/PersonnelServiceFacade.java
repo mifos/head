@@ -25,13 +25,15 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
+import org.mifos.dto.domain.UserSearchDto;
 import org.mifos.dto.screen.DefinePersonnelDto;
 import org.mifos.dto.screen.PersonnelInformationDto;
+import org.mifos.dto.screen.SystemUserSearchResultsDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface PersonnelServiceFacade {
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @Deprecated
     void searchUser(String searchString, Short userId, HttpServletRequest request);
 
     @PreAuthorize("isFullyAuthenticated()")
@@ -42,4 +44,7 @@ public interface PersonnelServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     String createPersonnelInformation(CreateOrUpdatePersonnelInformation personnel);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    SystemUserSearchResultsDto searchUser(UserSearchDto searchDto);
 }

@@ -38,7 +38,7 @@ import java.util.Map;
 public class GenericController extends AbstractController {
 
     @Override
-    @RequestMapping(value={"/accessDenied.ftl","/pageNotFound.ftl","/ping.ftl","/cheetah.css.ftl","/gazelle.css.ftl","/adminHome.ftl","/maincss.css","/screen.css","/maincss.css.ftl","/screen.css.ftl","/admin.ftl","/defineLookupOptions.ftl","/viewChecklists.ftl","/viewEditCheckLists.ftl","/viewOffices.ftl","/viewSystemUsers.ftl","/viewAdditionalFields.ftl","/viewReportsTemplates.ftl","/defineAdditionalFields.ftl","/defineNewChecklist.ftl","/defineNewOffice.ftl","/defineNewSystemUser.ftl","/redoLoansDisbursal.ftl","/editAdditionalFields.ftl","/editOfficeInformation.ftl", "/previewChecklist.ftl","/previewOfficeDetails.ftl","/previewSystemUser.ftl", "confirmProductMix.ftl","confirmSavingsProduct.ftl", "confirmLoanProduct.ftl"})
+    @RequestMapping(value={"/accessDenied.ftl","/pageNotFound.ftl","/ping.ftl","/cheetah.css.ftl","/gazelle.css.ftl","/adminHome.ftl","/maincss.css","/screen.css","/maincss.css.ftl","/screen.css.ftl","/admin.ftl","/defineLookupOptions.ftl","/viewChecklists.ftl","/viewEditCheckLists.ftl","/viewOffices.ftl","/viewAdditionalFields.ftl","/viewReportsTemplates.ftl","/defineAdditionalFields.ftl","/defineNewChecklist.ftl","/defineNewOffice.ftl","/redoLoansDisbursal.ftl","/editAdditionalFields.ftl","/editOfficeInformation.ftl", "/previewChecklist.ftl","/previewOfficeDetails.ftl", "confirmProductMix.ftl","confirmSavingsProduct.ftl", "confirmLoanProduct.ftl"})
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)  {
             Map<String, Object> model = new HashMap<String, Object>();
             model.put("request", request);

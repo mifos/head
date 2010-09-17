@@ -45,6 +45,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -837,5 +838,9 @@ public class PersonnelBO extends AbstractBusinessObject {
 
     public boolean isDifferentIdentityTo(PersonnelBO personnel) {
         return !this.personnelId.equals(personnel.getPersonnelId());
+    }
+
+    public UserDetailDto toDto() {
+        return new UserDetailDto(this.office.getOfficeName(), this.personnelId.intValue(), this.globalPersonnelNum, this.personnelDetails.getName().getFirstName(), this.personnelDetails.getName().getLastName());
     }
 }

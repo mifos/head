@@ -23,6 +23,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -30,6 +32,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.dto.domain.UserSearchDto;
+import org.mifos.dto.screen.SystemUserSearchResultsDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.StandardTestingService;
@@ -95,4 +99,25 @@ public class PersonnelDaoHibernateIntegrationTest extends MifosIntegrationTestCa
         assertThat(user.getUsername(), is("mifos"));
         assertThat(user.getAuthorities().isEmpty(), is(false));
     }
+
+    @Test
+    public void shouldFindUsersByNameWhenSearching() {
+
+        // setup
+        MifosUser user = personnelDao.findAuthenticatedUserByUsername("mifos");
+
+        // exercise test
+        String searchString = "mifos";
+        Integer page = 1;
+        Integer pageSize = 10;
+
+        UserSearchDto searchDto = new UserSearchDto(searchString, page, pageSize);
+
+        SystemUserSearchResultsDto searchResults = personnelDao.search(searchDto, user);
+
+        // verification
+        assertNotNull(searchResults);
+//        assertThat(searchResults.size(), is(1));
+    }
+
 }
