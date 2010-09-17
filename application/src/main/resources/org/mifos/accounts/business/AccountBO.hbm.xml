@@ -451,6 +451,25 @@
 			]]>
 	</sql-query>
 
+	<sql-query name="getCustomerAccountsWithSchedulesMissingPeriodicFees">
+		<return-scalar column="accountId" type="integer" />
+	    <![CDATA[
+select a.account_id as accountId
+from account a 
+join customer c on c.customer_id = a.customer_id
+join customer_schedule cs on cs.account_id = a.account_id
+left join customer_fee_schedule cfs on cfs.id = cs.id  
+where exists
+(select 'f' from customer_fee_schedule cfs2
+join customer_schedule cs2 on cs2.id = cfs2.id
+where cs2.account_id = a.account_id)
+and c.status_id in (3,9,13) and a.account_state_id = 11
+group by a.customer_id, a.account_id
+having max(cs.installment_id) > max(cfs.installment_id)
+			]]>
+	</sql-query>
+
+
 	<sql-query name="getActiveSavingsAccountIdsForGenerateMeetingsTask">
 		<return-scalar column="accountId" type="integer" />
 	    <![CDATA[select a.account_id as accountId
