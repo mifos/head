@@ -99,7 +99,6 @@ public class UpdateCustomerFeesHelper extends TaskHelper {
                 AccountBO accountBO = accountPersistence.getAccount(accountId);
 
                 if (accountBO instanceof CustomerAccountBO) {
-//                    ((CustomerAccountBO) accountBO).generateNextSetOfMeetingDates(scheduleGenerationStrategy);
                     ((CustomerAccountBO) accountBO).applyPeriodicFeesToNextSetOfMeetingDates();
                     updatedRecordCount++;
                 }
