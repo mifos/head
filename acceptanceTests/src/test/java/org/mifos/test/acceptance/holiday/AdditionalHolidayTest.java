@@ -32,6 +32,11 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.FeesCreatePage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.client.ApplyChargesPage;
+import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
+import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.client.ViewClientChargesDetail;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayConfirmationPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage;
 import org.mifos.test.acceptance.framework.holiday.ViewHolidaysPage;
@@ -43,6 +48,7 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameter
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
+import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +59,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "smoke","holiday", "schedules", "acceptance", "ui" })
 
+@Test(sequential = true, groups = { "smoke", "holiday", "schedules", "acceptance", "ui" })
 public class AdditionalHolidayTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -125,7 +131,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
     // TC08
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-
     public void createHolidayOnAMeetingWithRepaymentSameDay() throws Exception {
         initRemote
                 .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
@@ -150,7 +155,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createHolidayOnAMeetingWithRepaymentNextWorkingDay() throws Exception {
         initRemote
-        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
 
         createWeeklyLoanScheduleAndAHoliday(CreateHolidaySubmitParameters.NEXT_WORKING_DAY);
 
@@ -167,7 +172,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createHolidayOnAMeetingWithRepaymentNextMeeting() throws Exception {
         initRemote
-        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
 
         createWeeklyLoanScheduleWithTwoMeetingsAndAHoliday(CreateHolidaySubmitParameters.NEXT_MEETING_OR_REPAYMENT);
 
@@ -178,7 +183,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         verifyLoanSchedule("AdditionalHolidayTest_012_result_dbunit.xml.zip");
 
     }
-
 
     // TC11
     @Test(enabled = true)
@@ -457,17 +461,64 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         // create two weeks of moratorium in MyOffice1232993831593
         createMoratoriumForMay("2");
 
-
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         adminPage.navigateToViewHolidaysPage();
         selenium.isTextPresent("MyOffice1232993831593");
     }
 
-
     @Test
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    //MIFOSTEST-282
+    public void testMoratoriumPushesFeesToFutureMeeting() throws Exception{
+        // MIFOSTEST-281
+
+        initRemote
+        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+
+        // create new fees
+        SubmitFormParameters formParameters = FormParametersHelper.getCreatePeriodicFeesParameters();
+        formParameters.setFeeName("Weekly Client Fee");
+        AdminPage adminPage = loginAndNavigateToAdminPage();
+        adminPage.defineNewFees(formParameters);
+
+
+        // apply fees to client
+        applyFeesToClient("Stu1233171716380 Client1233171716380", formParameters.getFeeName());
+
+        // Create moratorium holiday for upcoming meeting
+        createHolidayOn("March Moratorium", CreateHolidaySubmitParameters.MORATORIUM, "18", "03", "2009");
+
+        // Run batch jobs
+        List<String> jobsToRun = new ArrayList<String>();
+        jobsToRun.add("ApplyHolidayChangesTask");
+        new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
+
+        // Move system date to moratorium holiday date
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(
+                selenium);
+        DateTime targetTime = new DateTime(2009, 3, 25, 0, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+
+        verifyFees("AdditionalHolidayTest_014_result_dbunit.xml.zip");
+
+    }
+
+    private void applyFeesToClient(String clientSearchString, String feeName) {
+        ClientsAndAccountsHomepage clientsAndAccountsHomepage = loginAndNavigatetoClientsAndAccountsHomepage();
+        ClientSearchResultsPage clientSearchResultsPage = clientsAndAccountsHomepage.searchForClient(clientSearchString);
+        ClientViewDetailsPage clientViewDetailsPage = clientSearchResultsPage.navigateToSearchResult("Stu1233171716380 Client1233171716380: ID 0003-000000006");
+
+        ViewClientChargesDetail viewClientChargesDetail = clientViewDetailsPage.navigateToViewClientChargesDetail();
+        ApplyChargesPage applyChargesPage = viewClientChargesDetail.navigateToApplyCharges();
+        applyChargesPage.applyCharge(feeName);
+
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test
+
+    // MIFOSTEST-282
     public void testMoratoriumPushesLoanPaymentToFutureMeeting() throws Exception {
         initRemote
                 .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
@@ -483,11 +534,24 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         jobsToRun.add("ApplyHolidayChangesTask");
         new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
 
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(
+                selenium);
+        DateTime targetTime = new DateTime(2009, 5, 1, 0, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
         // verify loan, saving and fee schedules
         verifyLoanSchedule("AdditionalHolidayTest_013_result_dbunit.xml.zip");
     }
 
- @Test(enabled = false)
+
+//    @Test
+//    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+//    //MIFOSTEST-283
+//    public void testMoratoriumPushesSavingsPaymentsToFuture() throws Exception {
+//
+//    }
+
+    @Test(enabled = false)
     private void createWeeklyLoanScheduleWithTwoMeetingsAndAHoliday(final String repaymentRule) {
         // create a loan for a client who meet at Wednesdays, client with system ID 0003-000000006
         // in the acceptance_small_003 data set.
@@ -500,7 +564,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
         this.createLoan(searchParameters, submitAccountParameters);
 
-     // create a holiday that overlaps two Wednesdays
+        // create a holiday that overlaps two Wednesdays
         this.createHolidayFrom14thJulyThru23rd(repaymentRule);
     }
 
@@ -580,7 +644,8 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         createHoliday(params);
     }
 
-	@Test(enabled = false)
+
+    @Test(enabled = false)
     private void createLoan(final CreateLoanAccountSearchParameters searchParameters,
             final CreateLoanAccountSubmitParameters submitAccountParameters) {
         logOut();
@@ -601,7 +666,19 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         dbUnitUtilities.verifyTable(LOAN_SCHEDULE, databaseDataSet, expectedDataSet);
     }
 
-	@Test(enabled = false)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = false)
+    private void verifyFees(String resultDataSetFile) throws Exception {
+        String[] tablesToValidate = { "CUSTOMER_FEE_SCHEDULE"};
+
+        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
+        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
+
+        dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
+
+    }
+
+    @Test(enabled = false)
     private CreateLoanAccountSearchPage navigateToCreateLoanAccountSearchPage() {
         LoginPage loginPage = appLauncher.launchMifos();
         loginPage.verifyPage();
@@ -610,7 +687,14 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         return clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
     }
 
+
     private AdminPage loginAndNavigateToAdminPage() {
         return appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials().navigateToAdminPage();
+
+    }
+
+    @Test(enabled=false)
+    private ClientsAndAccountsHomepage loginAndNavigatetoClientsAndAccountsHomepage() {
+        return appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials().navigateToClientsAndAccountsUsingHeaderTab();
     }
 }
