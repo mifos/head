@@ -190,5 +190,11 @@ public class ClientViewDetailsPage extends MifosPage {
         waitForPageToLoad();
         return new ViewQuestionResponseDetailPage(selenium);
     }
+
+    public ViewClientChargesDetail navigateToViewClientChargesDetail(){
+        selenium.click("viewClientDetails.link.viewDetails");
+        waitForPageToLoad();
+        return new ViewClientChargesDetail(selenium);
+    }
 }
 
