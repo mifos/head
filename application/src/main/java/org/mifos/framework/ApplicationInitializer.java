@@ -62,7 +62,11 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.util.Enumeration;
 import java.util.Locale;
+import java.util.logging.LogManager;
 
 /**
  * This class should prepare all the sub-systems that are required by the app. Cleanup should also happen here when the
@@ -122,14 +126,11 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 MifosLogManager.configure();
 
                 ApplicationContext applicationContext = null;
-                if(ctx !=null){
-                    applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx.getServletContext());
+                if (ctx != null) {
+                    applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx
+                            .getServletContext());
                 }
 
-                /*
-                * If we do not call MifosLogManager as first step of initialization
-                * MifosLogManager.loggerRepository will be null.
-                */
                 logger = LoggerFactory.getLogger(ApplicationInitializer.class);
                 logger.info("Logger has been initialised");
 
@@ -137,8 +138,10 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
                 logger.info(getDatabaseConnectionInfo());
 
-                // if a database upgrade loads an instance of Money then MoneyCompositeUserType needs the default currency
-                MoneyCompositeUserType.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
+                // if a database upgrade loads an instance of Money then MoneyCompositeUserType needs the default
+                // currency
+                MoneyCompositeUserType.setDefaultCurrency(AccountingRules
+                        .getMifosCurrency(new ConfigurationPersistence()));
                 AccountingRules.init(); // load the additional currencies
                 DatabaseMigrator migrator = new DatabaseMigrator(applicationContext);
                 try {
@@ -353,9 +356,86 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         ctx.removeAttribute(MifosScheduler.class.getName());
         try {
             mifosScheduler.shutdown();
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error("error while shutting down scheduler", e);
         }
+
+        // Print out what thread locals are still registered for the threads
+        // in the container. This code helps with finding leaks that prevent
+        // proper unloading of the context.
+        if (false) {
+            try {
+                int n = Thread.activeCount();
+                Thread[] threadlist = new Thread[n];
+                Thread.enumerate(threadlist);
+                for (Thread t : threadlist) {
+                    if (t == null) {
+                        continue;
+                    }
+                    java.lang.reflect.Field thread_threadLocals = Thread.class.getDeclaredField("threadLocals");
+                    thread_threadLocals.setAccessible(true);
+                    Object thread_local_map = thread_threadLocals.get(t); // a java.lang.Threadlocal$ThreadLocalMap
+                    if (thread_local_map == null) {
+                        continue;
+                    }
+                    java.lang.reflect.Field threadLocalMap_table = thread_local_map.getClass()
+                            .getDeclaredField("table");
+                    threadLocalMap_table.setAccessible(true);
+                    Object table = threadLocalMap_table.get(thread_local_map); // array of
+                                                                               // java.lang.ThreadLocal$ThreadLocalMap$Entry
+                    for (int i = 0; i < java.lang.reflect.Array.getLength(table); i++) {
+                        Object entry = java.lang.reflect.Array.get(table, i); // java.lang.ThreadLocal$ThreadLocalMap$Entry
+                        if (entry == null) {
+                            continue;
+                        }
+                        java.lang.reflect.Field entry_value = entry.getClass().getDeclaredField("value");
+                        entry_value.setAccessible(true);
+                        Object value = entry_value.get(entry);
+                        if (value == null) {
+                            continue;
+                        }
+                        ClassLoader ldr = value.getClass().getClassLoader();
+                        logger.info(value.getClass() + ": " + value.getClass().getClassLoader() + ": " + value);
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("can't print threadLocals", e);
+            }
+        }
+
+        // birt stashes a logger here (a org.eclipse.birt.report.engine.api.impl.EngineLoggerHandler instance at
+        // "org.eclipse.birt")
+        LogManager.getLogManager().reset();
+
+        // unregister any jdbc drivers (mysql driver)
+        try {
+            for (Enumeration<Driver> e = DriverManager.getDrivers(); e.hasMoreElements();) {
+                Driver driver = e.nextElement();
+                if (driver.getClass().getClassLoader() == getClass().getClassLoader()) {
+                    DriverManager.deregisterDriver(driver);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("can't unregister jdbc drivers", e);
+        }
+
+        // mysql statement cancellation timer (mysql bug 36565)
+        try {
+            java.lang.reflect.Field f = com.mysql.jdbc.ConnectionImpl.class.getDeclaredField("cancelTimer");
+            f.setAccessible(true);
+            java.util.Timer t = (java.util.Timer) f.get(null);
+            if (t != null) {
+                t.cancel();
+            }
+        } catch (Exception e) {
+            logger.error("can't cancel mysql statement cancellation timer", e);
+        }
+
+        // kill ehcache threads
+        // (net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread)
+        // hooked in as a listener in web.xml
+        logger.info("destroyed context");
+
     }
 
     @Override
