@@ -33,12 +33,12 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Servlet Filter implementation class MifosLogFilter
  */
-public class MifosLogFilter implements Filter {
+public class MifosAccessLogFilter implements Filter {
 
     /**
      * Default constructor.
      */
-    public MifosLogFilter() {
+    public MifosAccessLogFilter() {
 
     }
 

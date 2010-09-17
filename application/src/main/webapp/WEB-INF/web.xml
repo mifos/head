@@ -49,13 +49,13 @@
     </filter-mapping>
     
     <filter>
-        <display-name>MifosLogFilter</display-name>
-        <filter-name>MifosLogFilter</filter-name>
-        <filter-class>org.mifos.servlet.filters.MifosLogFilter</filter-class>
+        <display-name>MifosAccessLogFilter</display-name>
+        <filter-name>MifosAccessLogFilter</filter-name>
+        <filter-class>org.mifos.servlet.filters.MifosAccessLogFilter</filter-class>
     </filter>
 
     <filter-mapping>
-        <filter-name>MifosLogFilter</filter-name>
+        <filter-name>MifosAccessLogFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
@@ -136,17 +136,29 @@
         <url-pattern>/developer/*</url-pattern>
     </servlet-mapping>
 
+    <!-- Bootstrap listener for custom log4j initialization in a web environment. -->
+    <listener>
+        <listener-class>org.mifos.web.listener.Log4jConfigListener</listener-class>
+    </listener>
+
     <!--
         - Loads the root application context of this web app at startup. - The application context is then available via
         - WebApplicationContextUtils.getWebApplicationContext(servletContext).
     -->
     <listener>
-        <listener-class>org.mifos.MifosSpringContextListener</listener-class>
+        <listener-class>org.mifos.web.listener.MifosSpringContextListener</listener-class>
     </listener>
 
     <listener>
         <listener-class>org.mifos.framework.ApplicationInitializer</listener-class>
     </listener>
+	<!-- Listener for correct shutdown of ehcache
+	  instructions from http://ehcache.org/documentation/shutdown.html
+	  TODO: this should be done by whatever calls ehcache (hibernate?),
+	  not by us. -->
+	<listener>
+	    <listener-class>net.sf.ehcache.constructs.web.ShutdownListener</listener-class>
+	</listener>
 
     <welcome-file-list>
         <welcome-file>
