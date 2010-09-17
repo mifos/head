@@ -22,6 +22,10 @@ package org.mifos.ui.core.controller;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.binding.message.MessageBuilder;
+import org.springframework.binding.message.MessageContext;
+
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="required for spring web flow storage at a minimum - should disable at filter level and also for pmd")
 public class AddressBean implements Serializable {
@@ -34,6 +38,13 @@ public class AddressBean implements Serializable {
     private String country;
     private String postalCode;
     private String telephoneNumber;
+    private boolean address1Mandatory;
+    private boolean address2Hidden;
+    private boolean address3Hidden;
+    private boolean cityDistrictHidden;
+    private boolean stateHidden;
+    private boolean countryHidden;
+    private boolean postalCodeHidden;
 
     public String getAddress1() {
         return this.address1;
@@ -97,5 +108,67 @@ public class AddressBean implements Serializable {
 
     public void setTelephoneNumber(String telephoneNumber) {
         this.telephoneNumber = telephoneNumber;
+    }
+
+    public boolean isAddress1Mandatory() {
+        return this.address1Mandatory;
+    }
+
+    public void setAddress1Mandatory(boolean address1Mandatory) {
+        this.address1Mandatory = address1Mandatory;
+    }
+
+    public boolean isAddress2Hidden() {
+        return this.address2Hidden;
+    }
+
+    public void setAddress2Hidden(boolean address2Hidden) {
+        this.address2Hidden = address2Hidden;
+    }
+
+    public boolean isAddress3Hidden() {
+        return this.address3Hidden;
+    }
+
+    public void setAddress3Hidden(boolean address3Hidden) {
+        this.address3Hidden = address3Hidden;
+    }
+
+    public boolean isCityDistrictHidden() {
+        return this.cityDistrictHidden;
+    }
+
+    public void setCityDistrictHidden(boolean cityDistrictHidden) {
+        this.cityDistrictHidden = cityDistrictHidden;
+    }
+
+    public boolean isStateHidden() {
+        return this.stateHidden;
+    }
+
+    public void setStateHidden(boolean stateHidden) {
+        this.stateHidden = stateHidden;
+    }
+
+    public boolean isCountryHidden() {
+        return this.countryHidden;
+    }
+
+    public void setCountryHidden(boolean countryHidden) {
+        this.countryHidden = countryHidden;
+    }
+
+    public boolean isPostalCodeHidden() {
+        return this.postalCodeHidden;
+    }
+
+    public void setPostalCodeHidden(boolean postalCodeHidden) {
+        this.postalCodeHidden = postalCodeHidden;
+    }
+
+    public void validate(MessageContext messages, String parentObjectName) {
+        if (this.address1Mandatory && StringUtils.isBlank(this.address1)) {
+            messages.addMessage(new MessageBuilder().error().source("address1").code("NotEmpty." + parentObjectName + ".address.address1").defaultText("address1 is mandatory.").build());
+        }
     }
 }

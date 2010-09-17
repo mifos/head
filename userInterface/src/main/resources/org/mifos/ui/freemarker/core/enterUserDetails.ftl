@@ -133,26 +133,51 @@ function selectAllOptions(outSel)
 	        
 	        
 	        <div class="fontBold">[@spring.message "systemUsers.preview.address" /]</div>
-	        <label for="address.address1">[@spring.message "systemUsers.preview.address1" /]:</label>
+	        
+	        <label for="address.address1">[#if userFormBean.address.address1Mandatory]<span class="red">*</span>[/#if][@spring.message "systemUsers.preview.address1" /]:</label>
 	        [@spring.formInput "userFormBean.address.address1" /]<br />
 	        
-	        <label for="address.address2">[@spring.message "systemUsers.preview.address2" /]:</label>
-	        [@spring.formInput "userFormBean.address.address2" /]<br />
+	         [#if userFormBean.address.address2Hidden]
+	        	[@spring.formHiddenInput "userFormBean.address.address2" /]
+	        [#else]
+	        	<label for="address.address2">[@spring.message "systemUsers.preview.address2" /]:</label>
+	        	[@spring.formInput "userFormBean.address.address2" /]<br />
+	        [/#if]
+
+	         [#if userFormBean.address.address3Hidden]
+	        	[@spring.formHiddenInput "userFormBean.address.address3" /]
+	        [#else]	        
+	        	<label for="address.address3">[@spring.message "systemUsers.preview.address3" /]:</label>
+	        	[@spring.formInput "userFormBean.address.address3" /]<br />
+	        [/#if]
 	        
-	        <label for="address.address3">[@spring.message "systemUsers.preview.address3" /]:</label>
-	        [@spring.formInput "userFormBean.address.address3" /]<br />
-	        
+	        [#if userFormBean.address.cityDistrictHidden]
+	        	[@spring.formHiddenInput "userFormBean.address.cityDistrict" /]
+	        [#else]	        
 	        <label for="address.city">[@spring.message "systemUsers.preview.city" /]:</label>
 	        [@spring.formInput "userFormBean.address.cityDistrict" /]<br />
+	        [/#if]
 	        
+	        [#if userFormBean.address.stateHidden]
+	        	[@spring.formHiddenInput "userFormBean.address.state" /]
+	        [#else]
 	        <label for="address.state">[@spring.message "systemUsers.preview.state" /]:</label>
 	        [@spring.formInput "userFormBean.address.state" /]<br />
+	        [/#if]
 	        
+	        [#if userFormBean.address.countryHidden]
+	        	[@spring.formHiddenInput "userFormBean.address.country" /]
+	        [#else]
 	        <label for="address.country">[@spring.message "systemUsers.preview.country" /]:</label>
 	        [@spring.formInput "userFormBean.address.country" /]<br />
+	        [/#if]
 	        
+	        [#if userFormBean.address.postalCodeHidden]
+	        	[@spring.formHiddenInput "userFormBean.address.postalCode" /]
+	        [#else]
 	        <label for="address.postalcode">[@spring.message "systemUsers.preview.postalcode" /]:</label>
 	        [@spring.formInput "userFormBean.address.postalCode" /]<br />
+	        [/#if]
 	        
 	        <label for="address.telephone">[@spring.message "systemUsers.preview.telephone" /]:</label>
 	        [@spring.formInput "userFormBean.address.telephoneNumber" /]<br />
@@ -192,6 +217,11 @@ function selectAllOptions(outSel)
 	        <label for="confirmedPassword"><span class="red">*</span>[@spring.message "systemUsers.preview.confirmedPassword" /]:</label>
 	        [@spring.formPasswordInput "userFormBean.confirmedPassword" /]<br />
 	        
+	        <div class="fontBold">[@spring.message "systemUsers.preview.additionalInformation" /]</div>
+	        [#list userFormBean.customFields as additional]
+	        	<label for="confirmedPassword"><span class="red">*</span>${additional.label}:</label>
+	        	${additional.fieldValue} - ${additional.mandatoryString}<br />
+	        [/#list]
         	</fieldset>
         
 	        <div class="prepend-8">

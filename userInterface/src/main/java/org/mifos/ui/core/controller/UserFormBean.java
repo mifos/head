@@ -34,6 +34,7 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
@@ -113,6 +114,8 @@ public class UserFormBean implements Serializable {
     private String password;
     private String confirmedPassword;
 
+    private List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+
     // preview fields
     private DateTime dateOfBirth;
     private Integer age;
@@ -154,6 +157,8 @@ public class UserFormBean implements Serializable {
         } else if (!this.password.equals(this.confirmedPassword)) {
             messages.addMessage(new MessageBuilder().error().source("password").code("NotEqual.UserFormBean.password").defaultText("password is not correct.").build());
         }
+
+        this.address.validate(messages, "UserFormBean");
 
         if (messages.hasErrorMessages()) {
             this.prepateForReEdit();
@@ -542,5 +547,13 @@ public class UserFormBean implements Serializable {
 
     public String getUserHierarchyName() {
         return this.userHierarchyName;
+    }
+
+    public List<CustomFieldDto> getCustomFields() {
+        return this.customFields;
+    }
+
+    public void setCustomFields(List<CustomFieldDto> customFields) {
+        this.customFields = customFields;
     }
 }

@@ -28,11 +28,13 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.domain.OfficeHierarchyDto;
 import org.mifos.dto.domain.UserDetailDto;
@@ -47,6 +49,9 @@ public class SystemUserController {
 
     @Autowired
     private OfficeServiceFacade officeServiceFacade;
+
+    @Autowired
+    private AdminServiceFacade adminServiceFacade;
 
     @Autowired
     private PersonnelServiceFacade personnelServiceFacade;
@@ -105,7 +110,19 @@ public class SystemUserController {
         formBean.setOfficeId(officeId);
         formBean.setOfficeName(selectedOffice.getName());
 
+        MandatoryHiddenFieldsDto dtoFields = this.adminServiceFacade.retrieveHiddenMandatoryFields();
+
+        formBean.getAddress().setAddress1Mandatory(dtoFields.isMandatorySystemAddress1());
+        formBean.getAddress().setAddress2Hidden(dtoFields.isHideSystemAddress2());
+        formBean.getAddress().setAddress3Hidden(dtoFields.isHideSystemAddress3());
+        formBean.getAddress().setCityDistrictHidden(dtoFields.isHideSystemCity());
+        formBean.getAddress().setStateHidden(dtoFields.isHideSystemState());
+        formBean.getAddress().setCountryHidden(dtoFields.isHideSystemCountry());
+        formBean.getAddress().setPostalCodeHidden(dtoFields.isHideSystemPostalCode());
+
         DefinePersonnelDto userRefData = this.personnelServiceFacade.retrieveInfoForNewUserDefinition(officeId.shortValue(), Locale.getDefault());
+
+        formBean.setCustomFields(userRefData.getCustomFields());
 
         Map<String, String> genderOptions = new LinkedHashMap<String, String>();
         for (ListElement option : userRefData.getGenderList()) {
