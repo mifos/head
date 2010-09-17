@@ -294,7 +294,7 @@ public class LoanPrdActionForm extends BaseActionForm {
     private Double minInterestRateValue;
     private Double defInterestRateValue;
 
-    private Boolean canConfigureVariableInstallments;
+    private String canConfigureVariableInstallments;
     private Integer minimumGapBetweenInstallments;
     private Integer maximumGapBetweenInstallments;
 
@@ -1740,6 +1740,7 @@ public class LoanPrdActionForm extends BaseActionForm {
             loanOfferingFunds = null;
             gracePeriodType = null;
             gracePeriodDuration = null;
+            canConfigureVariableInstallments = null;
         }
         logger.debug("reset method of Savings Product Action form method called ");
     }
@@ -2689,14 +2690,6 @@ public class LoanPrdActionForm extends BaseActionForm {
         }
     }
 
-    public Boolean getCanConfigureVariableInstallments() {
-        return canConfigureVariableInstallments;
-    }
-
-    public void setCanConfigureVariableInstallments(Boolean canConfigureVariableInstallments) {
-        this.canConfigureVariableInstallments = canConfigureVariableInstallments;
-    }
-
     public Integer getMinimumGapBetweenInstallments() {
         return minimumGapBetweenInstallments;
     }
@@ -2721,7 +2714,7 @@ public class LoanPrdActionForm extends BaseActionForm {
     }
 
     private void validateVariableInstallmentPeriods(ActionErrors actionErrors, Locale locale) {
-        if (this.canConfigureVariableInstallments != null && this.canConfigureVariableInstallments == Boolean.TRUE) {
+        if (getBooleanValue(this.canConfigureVariableInstallments)) {
             validateMinimumGapForVariableInstallments(actionErrors);
             validateMaximumGapForVariableInstallments(actionErrors);
             validateMinMaxGapsForVariableInstallments(actionErrors);
@@ -2785,5 +2778,13 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     public void setMinimumInstallmentAmount(String minimumInstallmentAmount) {
         this.minimumInstallmentAmount = minimumInstallmentAmount;
+    }
+
+    public String getCanConfigureVariableInstallments() {
+        return canConfigureVariableInstallments;
+    }
+
+    public void setCanConfigureVariableInstallments(String canConfigureVariableInstallments) {
+        this.canConfigureVariableInstallments = canConfigureVariableInstallments;
     }
 }

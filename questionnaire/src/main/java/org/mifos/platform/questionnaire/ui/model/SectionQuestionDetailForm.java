@@ -55,17 +55,4 @@ public class SectionQuestionDetailForm {
     public void setMandatory(boolean mandatory) {
         sectionQuestionDetail.setMandatory(mandatory);
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SectionQuestionDetailForm that = (SectionQuestionDetailForm) o;
-        return getQuestionId() == that.getQuestionId();
-    }
-
-    @Override
-    public int hashCode() {
-        return getQuestionId();
-    }
 }

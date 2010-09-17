@@ -1359,7 +1359,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("loanAmtCalcType", "1");
         addRequestParameter("calcInstallmentType", "1");
 
-        addRequestParameter("canConfigureVariableInstallments", "true");
+        addRequestParameter("canConfigureVariableInstallments", "1");
         addRequestParameter("minimumGapBetweenInstallments", "10");
         addRequestParameter("maximumGapBetweenInstallments", "1");
 
@@ -1398,7 +1398,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("loanAmtCalcType", "1");
         addRequestParameter("calcInstallmentType", "1");
 
-        addRequestParameter("canConfigureVariableInstallments", "true");
+        addRequestParameter("canConfigureVariableInstallments", "1");
         addRequestParameter("minimumGapBetweenInstallments", "-10");
 
         actionPerform();
@@ -1436,7 +1436,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("loanAmtCalcType", "1");
         addRequestParameter("calcInstallmentType", "1");
 
-        addRequestParameter("canConfigureVariableInstallments", "true");
+        addRequestParameter("canConfigureVariableInstallments", "1");
         addRequestParameter("maximumGapBetweenInstallments", "-10");
 
         actionPerform();
@@ -1474,7 +1474,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("loanAmtCalcType", "1");
         addRequestParameter("calcInstallmentType", "1");
 
-        addRequestParameter("canConfigureVariableInstallments", "true");
+        addRequestParameter("canConfigureVariableInstallments", "1");
         addRequestParameter("minimumGapBetweenInstallments", "1234");
 
         actionPerform();
@@ -1512,7 +1512,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("loanAmtCalcType", "1");
         addRequestParameter("calcInstallmentType", "1");
 
-        addRequestParameter("canConfigureVariableInstallments", "true");
+        addRequestParameter("canConfigureVariableInstallments", "1");
         addRequestParameter("maximumGapBetweenInstallments", "1234");
 
         actionPerform();
@@ -1550,7 +1550,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("loanAmtCalcType", "1");
         addRequestParameter("calcInstallmentType", "1");
 
-        addRequestParameter("canConfigureVariableInstallments", "true");
+        addRequestParameter("canConfigureVariableInstallments", "1");
         addRequestParameter("minimumInstallmentAmount", "abcd");
 
         actionPerform();
