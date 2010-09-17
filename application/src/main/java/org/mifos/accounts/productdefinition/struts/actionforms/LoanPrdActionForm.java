@@ -297,7 +297,9 @@ public class LoanPrdActionForm extends BaseActionForm {
     private Boolean canConfigureVariableInstallments;
     private Integer minimumGapBetweenInstallments;
     private Integer maximumGapBetweenInstallments;
-    private Double minimumInstallmentAmount;
+
+    private String minimumInstallmentAmount;
+    private Double minimumInstallmentAmountValue;
 
     public Double getLastLoanDefaultLoanAmt1Value() {
         if (lastLoanDefaultLoanAmt1Value != null) {
@@ -1840,7 +1842,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         validatePrincDueOnLastInstAndPrincGraceType(errors);
         setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
         validateInterestGLCode(request, errors);
-        validateVariableInstallmentPeriods(errors);
+        validateVariableInstallmentPeriods(errors, locale);
         logger.debug("validateForPreview method of Loan Product Action form method called :" + prdOfferingName);
     }
 
@@ -2711,23 +2713,43 @@ public class LoanPrdActionForm extends BaseActionForm {
         this.maximumGapBetweenInstallments = maximumGapBetweenInstallments;
     }
 
-    public Double getMinimumInstallmentAmount() {
-        return minimumInstallmentAmount;
+    public Double getMinimumInstallmentAmountValue() {
+        if (minimumInstallmentAmountValue != null) {
+            return minimumInstallmentAmountValue;
+        }
+        return getDoubleValueForMoney(minimumInstallmentAmount);
     }
 
-    public void setMinimumInstallmentAmount(Double minimumInstallmentAmount) {
-        this.minimumInstallmentAmount = minimumInstallmentAmount;
-    }
-
-    private void validateVariableInstallmentPeriods(ActionErrors actionErrors) {
+    private void validateVariableInstallmentPeriods(ActionErrors actionErrors, Locale locale) {
         if (this.canConfigureVariableInstallments != null && this.canConfigureVariableInstallments == Boolean.TRUE) {
             validateMinimumGapForVariableInstallments(actionErrors);
             validateMaximumGapForVariableInstallments(actionErrors);
-            if (minimumGapBetweenInstallments != null && maximumGapBetweenInstallments != null
-                    && minimumGapBetweenInstallments >= maximumGapBetweenInstallments) {
-                addError(actionErrors, "minimumGapBetweenInstallments",
-                        ProductDefinitionConstants.MIN_GAP_MORE_THAN_MAX_GAP_FOR_VARIABLE_INSTALLMENT_PRODUCT);
+            validateMinMaxGapsForVariableInstallments(actionErrors);
+            validateMinimumInstallmentAmountForValriableInstallments(actionErrors, locale);
+        }
+    }
+
+    private void validateMinimumInstallmentAmountForValriableInstallments(ActionErrors actionErrors, Locale locale) {
+        if (StringUtils.isNotEmpty(minimumInstallmentAmount)) {
+            DoubleConversionResult conversionResult = parseDoubleForMoney(minimumInstallmentAmount);
+            List<ConversionError> errorList = conversionResult.getErrors();
+            if (errorList.isEmpty()) {
+                minimumInstallmentAmountValue = conversionResult.getDoubleValue();
+            } else {
+                for (ConversionError error : errorList) {
+                    addError(actionErrors, "minimumInstallmentAmount",
+                            ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_AMOUNT_INVALID_FORMAT,
+                            getConversionErrorText(error, locale));
+                }
             }
+        }
+    }
+
+    private void validateMinMaxGapsForVariableInstallments(ActionErrors actionErrors) {
+        if (minimumGapBetweenInstallments != null && maximumGapBetweenInstallments != null
+                && minimumGapBetweenInstallments >= maximumGapBetweenInstallments) {
+            addError(actionErrors, "minimumGapBetweenInstallments",
+                    ProductDefinitionConstants.MIN_GAP_MORE_THAN_MAX_GAP_FOR_VARIABLE_INSTALLMENT_PRODUCT);
         }
     }
 
@@ -2757,4 +2779,11 @@ public class LoanPrdActionForm extends BaseActionForm {
         }
     }
 
+    public String getMinimumInstallmentAmount() {
+        return minimumInstallmentAmount;
+    }
+
+    public void setMinimumInstallmentAmount(String minimumInstallmentAmount) {
+        this.minimumInstallmentAmount = minimumInstallmentAmount;
+    }
 }

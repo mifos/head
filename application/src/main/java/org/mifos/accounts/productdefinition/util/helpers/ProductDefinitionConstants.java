@@ -300,5 +300,6 @@ public interface ProductDefinitionConstants {
     String VARIABLE_INSTALLMENT_MAX_GAP_NEGATIVE_OR_ZERO = "errors.variableInstallmentMaxGapNegativeOrZero";
     String VARIABLE_INSTALLMENT_MIN_GAP_MORE_THAN_ALLOWED = "errors.variableInstallmentMinGapMoreThanAllowed";
     String VARIABLE_INSTALLMENT_MAX_GAP_MORE_THAN_ALLOWED = "errors.variableInstallmentMaxGapMoreThanAllowed";
+    String VARIABLE_INSTALLMENT_MIN_AMOUNT_INVALID_FORMAT = "errors.minInstallmentAmountInvalidFormat";
     int MAX_ALLOWED_INSTALLMENT_GAP = 999;
 }
