@@ -135,23 +135,22 @@ public class MifosPatternParser extends PatternParser {
                 // if it is %C{2} then logger.MifosPattern is shown.
                 if (precision <= 0) {
                     return n;
-                } else {
-                    int len = n.length();
-
-                    // We substract 1 from 'len' when assigning to 'end' to
-                    // avoid out of
-                    // bounds exception in return r.substring(end+1, len). This
-                    // can happen if
-                    // precision is 1 and the category name ends with a dot.
-                    int end = len - 1;
-                    for (int i = precision; i > 0; i--) {
-                        end = n.lastIndexOf('.', end - 1);
-                        if (end == -1) {
-                            return n;
-                        }
-                    }
-                    return n.substring(end + 1, len);
                 }
+                int len = n.length();
+
+                // We substract 1 from 'len' when assigning to 'end' to
+                // avoid out of
+                // bounds exception in return r.substring(end+1, len). This
+                // can happen if
+                // precision is 1 and the category name ends with a dot.
+                int end = len - 1;
+                for (int i = precision; i > 0; i--) {
+                    end = n.lastIndexOf('.', end - 1);
+                    if (end == -1) {
+                        return n;
+                    }
+                }
+                return n.substring(end + 1, len);
             default:
                 return null;
             }

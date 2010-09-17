@@ -57,7 +57,7 @@ public class Upgrade1283341654Test {
 
     @Before
     public void setUp() {
-        upgrade1283341654 = new Upgrade1283341654(questionnaireMigration, null);
+        upgrade1283341654 = new Upgrade1283341654(questionnaireMigration);
     }
 
     @Test

@@ -371,9 +371,6 @@ drop table if exists lookup_value;
 drop table if exists lookup_entity;
 
 
-
-drop table if exists scheduled_tasks;
-
 drop table if exists temp_id;
 
 drop table if exists currency;
@@ -417,3 +414,26 @@ drop table if exists event_sources;
 drop table if exists events;
 
 drop table if exists applied_upgrades;
+
+drop table if exists QRTZ_JOB_DETAILS;
+drop table if exists QRTZ_JOB_LISTENERS;
+drop table if exists QRTZ_TRIGGERS;
+drop table if exists QRTZ_SIMPLE_TRIGGERS;
+drop table if exists QRTZ_CRON_TRIGGERS;
+drop table if exists QRTZ_BLOB_TRIGGERS;
+drop table if exists QRTZ_TRIGGER_LISTENERS;
+drop table if exists QRTZ_CALENDARS;
+drop table if exists QRTZ_PAUSED_TRIGGER_GRPS;
+drop table if exists QRTZ_FIRED_TRIGGERS;
+drop table if exists QRTZ_SCHEDULER_STATE;
+drop table if exists QRTZ_LOCKS;
+
+drop table if exists BATCH_JOB_INSTANCE;
+drop table if exists BATCH_JOB_EXECUTION;
+drop table if exists BATCH_JOB_PARAMS;
+drop table if exists BATCH_STEP_EXECUTION;
+drop table if exists BATCH_STEP_EXECUTION_CONTEXT;
+drop table if exists BATCH_JOB_EXECUTION_CONTEXT;
+drop table if exists BATCH_STEP_EXECUTION_SEQ;
+drop table if exists BATCH_JOB_EXECUTION_SEQ;
+drop table if exists BATCH_JOB_SEQ;

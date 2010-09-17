@@ -23,13 +23,16 @@ package org.mifos.framework.components.batchjobs;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.EasyMock.expectLastCall;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.core.io.ClassPathResource;
 
@@ -38,39 +41,42 @@ public class MifosSchedulerTest {
     @Test
     public void testRegisterTasks() throws Exception {
 
-        MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/config/resources/task.xml");
-
-        mifosScheduler.registerTasks();
+        MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/schedulerTestTask.xml");
         List<String> taskNames = mifosScheduler.getTaskNames();
 
-        Assert.assertTrue(taskNames.contains("ProductStatus"));
-        Assert.assertTrue(taskNames.contains("LoanArrearsTask"));
-        Assert.assertTrue(taskNames.contains("SavingsIntCalcTask"));
-        Assert.assertTrue(taskNames.contains("SavingsIntPostingTask"));
-        Assert.assertTrue(taskNames.contains("PortfolioAtRiskTask"));
-        Assert.assertTrue(taskNames.contains("ApplyCustomerFeeChangesTask"));
-        Assert.assertTrue(taskNames.contains("GenerateMeetingsForCustomerAndSavingsTask"));
-        Assert.assertTrue(taskNames.contains("LoanArrearsAgingTask"));
-        Assert.assertTrue(taskNames.contains("ApplyHolidayChangesTask"));
-        Assert.assertTrue(taskNames.contains("BranchReportTask"));
+        Assert.assertEquals(9, taskNames.size());
+        Assert.assertTrue(taskNames.contains("ProductStatusJob"));
+        Assert.assertTrue(taskNames.contains("SavingsIntCalcTaskJob"));
+        Assert.assertTrue(taskNames.contains("SavingsIntPostingTaskJob"));
+        Assert.assertTrue(taskNames.contains("LoanArrearsAndPortfolioAtRiskTaskJob"));
+        Assert.assertTrue(taskNames.contains("ApplyCustomerFeeChangesTaskJob"));
+        Assert.assertTrue(taskNames.contains("GenerateMeetingsForCustomerAndSavingsTaskJob"));
+        Assert.assertTrue(taskNames.contains("LoanArrearsAgingTaskJob"));
+        Assert.assertTrue(taskNames.contains("ApplyHolidayChangesTaskJob"));
+        Assert.assertTrue(taskNames.contains("BranchReportTaskJob"));
     }
 
     @Test
     public void testCallsConfigurationLocator() throws Exception {
-        MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/mockTask.xml");
-        mifosScheduler.registerTasks();
+
+        MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/schedulerTestTask2.xml");
         List<String> taskNames = mifosScheduler.getTaskNames();
+
         Assert.assertEquals(1, taskNames.size());
-        Assert.assertTrue(taskNames.contains("MockTask"));
+        Assert.assertTrue(taskNames.contains("MockTaskJob"));
     }
 
-    private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws IOException {
+    private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws TaskSystemException, IOException, FileNotFoundException {
         ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
         expect(mockConfigurationLocator.getFile(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
                 new ClassPathResource(taskConfigurationPath).getFile());
+        expectLastCall().times(2);
         replay(mockConfigurationLocator);
+
         MifosScheduler mifosScheduler = new MifosScheduler();
         mifosScheduler.setConfigurationLocator(mockConfigurationLocator);
+        mifosScheduler.initialize();
+
         return mifosScheduler;
     }
 

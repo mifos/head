@@ -29,16 +29,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
-import org.mifos.security.util.SecurityConstants;
 
 /**
  * This class build the templete for the activities in the system so that user
  * can create of see what all activities are associated with the given role
  */
 public class RoleTempleteBuilder {
+
+    private static final Logger logger = LoggerFactory.getLogger(RoleTempleteBuilder.class);
 
     /** ***********************************Fields******************** */
     /**
@@ -292,10 +293,10 @@ public class RoleTempleteBuilder {
 
     private void buildCheckedItems(List<ActivityEntity> l) {
 
-        MifosLogManager.getLogger(LoggerConstants.ROLEANDPERMISSIONLOGGER).debug("size of list is" + l.size());
+        logger.debug("size of list is" + l.size());
 
         List<ActivityEntity> li = getChildren(l, Short.valueOf("0"));
-        MifosLogManager.getLogger(LoggerConstants.ROLEANDPERMISSIONLOGGER).debug("child list size " + li.size());
+        logger.debug("child list size " + li.size());
 
         childMap.put(Short.valueOf("0"), li);
         int[] currentDepth = { 0 };
@@ -343,7 +344,7 @@ public class RoleTempleteBuilder {
             }
         }
         if (checked) {
-            MifosLogManager.getLogger(LoggerConstants.ROLEANDPERMISSIONLOGGER).debug(
+            logger.debug(
                     "item with id= " + id + "is checked");
 
             checkedLinks.add(id);

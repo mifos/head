@@ -26,15 +26,17 @@ import java.lang.reflect.Method;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.taglib.TagUtils;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 
 /**
  * This class renders the listbox with anchors in it on screen
  */
 
 public class MifosListBox extends BodyTagSupport {
+
+    private static final Logger logger = LoggerFactory.getLogger(MifosListBox.class);
 
     /** Name of the bean from which you want to pupulate the list */
     private String name;
@@ -186,15 +188,15 @@ public class MifosListBox extends BodyTagSupport {
     public int doEndTag() throws JspException {
 
         // String mifosLocale=null;
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("Inside doEndTag of MifosListBox Tag");
+        logger.debug("Inside doEndTag of MifosListBox Tag");
         StringBuffer results = new StringBuffer();
         Object obj = pageContext.findAttribute(getName());
         if (null == obj) {
 
-            MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("object of the bean is null");
+            logger.debug("object of the bean is null");
 
         }
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("object is " + obj);
+        logger.debug("object is " + obj);
         String[] inputList = null;
 
         /*
@@ -203,25 +205,25 @@ public class MifosListBox extends BodyTagSupport {
 
         try {
             if (null == getUserContext()) {
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("userContext is null");
+                logger.debug("userContext is null");
 
                 getList = obj.getClass().getDeclaredMethod("get" + getProperty(), (Class[]) null);
 
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("method called is " + getList);
+                logger.debug("method called is " + getList);
 
                 inputList = (String[]) getList.invoke(obj, (Object[]) null);
 
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("List got is " + inputList);
+                logger.debug("List got is " + inputList);
             } else {
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("userContext is not null");
+                logger.debug("userContext is not null");
 
                 getList = obj.getClass().getDeclaredMethod("get" + getProperty(), new Class[] { Object.class });
 
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("method called is " + getList);
+                logger.debug("method called is " + getList);
 
                 inputList = (String[]) getList.invoke(obj, new Object[] { new Object() });
 
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("List got is " + inputList);
+                logger.debug("List got is " + inputList);
             }
 
         } catch (Exception e) {
@@ -272,7 +274,7 @@ public class MifosListBox extends BodyTagSupport {
     private String BuildHref(String text, Object obj)
 
     {
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("BuildHref method is invoked");
+        logger.debug("BuildHref method is invoked");
         StringBuffer buff = new StringBuffer();
         try {
             buff.append("<li><a href=\"");
@@ -281,12 +283,12 @@ public class MifosListBox extends BodyTagSupport {
         }
 
         catch (NoSuchMethodException nsme) {
-            MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error("No Such Method Found");
+            logger.error("No Such Method Found");
 
         } catch (InvocationTargetException ite) {
-            MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("Invocation target exception");
+            logger.debug("Invocation target exception");
         } catch (IllegalAccessException iae) {
-            MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("Illegal access");
+            logger.debug("Illegal access");
         }
 
         return buff.toString();

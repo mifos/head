@@ -20,13 +20,12 @@
 
 package org.mifos.accounts.productsmix.business;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productsmix.persistence.ProductMixPersistence;
 import org.mifos.framework.business.AbstractBusinessObject;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 
 /**
@@ -39,13 +38,12 @@ public class ProductMixBO extends AbstractBusinessObject {
     private PrdOfferingBO prdOfferingId;
     private PrdOfferingBO prdOfferingNotAllowedId;
 
-    private MifosLogger prdMixLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+    private static final Logger logger = LoggerFactory.getLogger(ProductMixBO.class);
 
     public ProductMixBO() {
         this.prdOfferingMixId = null;
         this.prdOfferingId = null;
         this.prdOfferingNotAllowedId = null;
-        this.prdMixLogger = null;
     }
 
     public ProductMixBO(PrdOfferingBO prdOfferingId, PrdOfferingBO prdOfferingNotAllowedId) {
@@ -53,14 +51,6 @@ public class ProductMixBO extends AbstractBusinessObject {
         this.prdOfferingId = prdOfferingId;
         this.prdOfferingNotAllowedId = prdOfferingNotAllowedId;
 
-    }
-
-    public MifosLogger getPrdMixLogger() {
-        return prdMixLogger;
-    }
-
-    public void setPrdMixLogger(MifosLogger prdMixLogger) {
-        this.prdMixLogger = prdMixLogger;
     }
 
     public PrdOfferingBO getPrdOfferingId() {

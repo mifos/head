@@ -29,7 +29,6 @@ import org.hibernate.Transaction;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
-import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -47,8 +46,8 @@ public class BranchReportHelper extends TaskHelper {
     private IBranchReportService branchReportService;
     private BranchReportConfigService branchReportConfigService;
 
-    public BranchReportHelper(MifosTask mifosTask) {
-        super(mifosTask);
+    public BranchReportHelper() {
+        super();
         customerBusinessService = new CustomerBusinessService();
         officeBusinessService = new OfficeBusinessService();
         branchReportService = new BranchReportService();
@@ -112,8 +111,4 @@ public class BranchReportHelper extends TaskHelper {
         branchReportService.removeBranchReports(branchReportService.getBranchReports(runDate));
     }
 
-    @Override
-    public void requiresExclusiveAccess() {
-        MifosTask.batchJobRequiresExclusiveAccess(false);
-    }
 }

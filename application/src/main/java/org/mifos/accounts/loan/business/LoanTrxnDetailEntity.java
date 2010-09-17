@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
@@ -38,8 +40,6 @@ import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.Money;
 
@@ -49,6 +49,8 @@ import org.mifos.framework.util.helpers.Money;
  * Possible types of transactions are described by AccountActionTypes.
  */
 public class LoanTrxnDetailEntity extends AccountTrxnEntity {
+
+    private static final Logger logger = LoggerFactory.getLogger(LoanTrxnDetailEntity.class);
 
     private final Money principalAmount;
 
@@ -145,7 +147,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
     @Override
     protected AccountTrxnEntity generateReverseTrxn(PersonnelBO loggedInUser, String adjustmentComment)
             throws AccountException {
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+        logger.debug(
                 "Inside generate reverse transaction method of loan trxn detail");
         String comment = null;
         if (null == adjustmentComment) {
@@ -164,12 +166,12 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 
 
         if (null != getFeesTrxnDetails() && getFeesTrxnDetails().size() > 0) {
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+            logger.debug(
                     "Before generating reverse entries for fees");
             for (FeesTrxnDetailEntity feeTrxnDetail : getFeesTrxnDetails()) {
                 reverseAccntTrxn.addFeesTrxnDetail(feeTrxnDetail.generateReverseTrxn(reverseAccntTrxn));
             }
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
+            logger
                     .debug("after generating reverse entries for fees");
         }
 

@@ -24,20 +24,19 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
-import org.mifos.framework.components.logger.TestLogger;
 import org.testng.annotations.Test;
 
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class LoanPrdActionFormTest extends TestCase {
 
     public void testApplicableMaster() throws Exception {
-        LoanPrdActionForm form = new LoanPrdActionForm(new TestLogger());
+        LoanPrdActionForm form = new LoanPrdActionForm();
         form.setPrdApplicableMaster("" + ApplicableTo.CLIENTS.getValue());
        Assert.assertEquals(ApplicableTo.CLIENTS, form.getPrdApplicableMasterEnum());
     }
 
     public void testSetFromEnum() throws Exception {
-        LoanPrdActionForm form = new LoanPrdActionForm(new TestLogger());
+        LoanPrdActionForm form = new LoanPrdActionForm();
         form.setPrdApplicableMaster(ApplicableTo.ALLCUSTOMERS);
        Assert.assertEquals(ApplicableTo.ALLCUSTOMERS, form.getPrdApplicableMasterEnum());
     }

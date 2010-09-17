@@ -24,25 +24,34 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public interface ServiceLogger {
 
     public static final ServiceLogger MUTED_LOGGER = new ServiceLogger() {
+        @Override
         public void endOfServiceCall(Method method, Object[] args) {
         }
 
+        @Override
         public void startOfServiceCall(Method method, Object[] args) {
         }
     };
 
-    public static final ServiceLogger ARGS_LOGGER = new AbstractServiceLogger() {
+    public static final ServiceLogger ARGS_LOGGER = new ServiceLogger() {
+        final Logger logger = LoggerFactory.getLogger(ServiceLogger.class);
+
+        @Override
         public void endOfServiceCall(Method method, Object[] args) {
         }
 
+        @Override
         public void startOfServiceCall(Method method, Object[] args) {
-            info(method.getName() + ":" + Arrays.toString(args));
+            logger.info(method.getName() + ":" + Arrays.toString(args));
             for (Object arg : args) {
                 if (arg instanceof Date) {
-                    info("Date" + ((Date) arg).getTime());
+                    logger.info("Date" + ((Date) arg).getTime());
                 }
             }
         }

@@ -20,13 +20,13 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import org.mifos.framework.components.batchjobs.MifosTask;
+import org.mifos.framework.components.batchjobs.MifosBatchJob;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 
-public class SavingsIntPostingTask extends MifosTask {
+public class SavingsIntPostingTask extends MifosBatchJob {
 
     @Override
     public TaskHelper getTaskHelper() {
-        return new SavingsIntPostingHelper(this);
+        return new SavingsIntPostingHelper();
     }
 }

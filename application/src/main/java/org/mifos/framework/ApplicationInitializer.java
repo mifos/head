@@ -20,6 +20,8 @@
 
 package org.mifos.framework;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.config.AccountingRules;
@@ -32,9 +34,6 @@ import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.AppNotConfiguredException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -62,7 +61,13 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.logging.LogManager;
 
 /**
  * This class should prepare all the sub-systems that are required by the app. Cleanup should also happen here when the
@@ -70,7 +75,7 @@ import java.util.Locale;
  */
 public class ApplicationInitializer implements ServletContextListener, ServletRequestListener, HttpSessionListener {
 
-    private static MifosLogger LOG = null;
+    private static Logger logger = LoggerFactory.getLogger(ApplicationInitializer.class);
 
     private static class DatabaseError {
         boolean isError = false;
@@ -79,7 +84,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         Throwable error = null;
 
         void logError() {
-            LOG.fatal(errmsg, false, null, error);
+            logger.error(errmsg, error);
         }
     }
 
@@ -112,26 +117,31 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     }
 
     public void init(ServletContextEvent ctx) {
+
         try {
+            // prevent ehcache "phone home"
+            System.setProperty("net.sf.ehcache.skipUpdateCheck", "true");
+            // prevent quartz "phone home"
+            System.setProperty("org.terracotta.quartz.skipUpdateCheck", "true");
+
             synchronized (ApplicationInitializer.class) {
+
                 ApplicationContext applicationContext = null;
-                if(ctx !=null){
-                    applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx.getServletContext());
+                if (ctx != null) {
+                    applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx
+                            .getServletContext());
                 }
 
-                /*
-                * If we do not call MifosLogManager as first step of initialization
-                * MifosLogManager.loggerRepository will be null.
-                */
-                LOG = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
-                LOG.info("Logger has been initialised", false, null);
+                logger.info("Logger has been initialised");
 
                 initializeHibernate();
 
-                LOG.info(getDatabaseConnectionInfo(), false, null);
+                logger.info(getDatabaseConnectionInfo());
 
-                // if a database upgrade loads an instance of Money then MoneyCompositeUserType needs the default currency
-                MoneyCompositeUserType.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
+                // if a database upgrade loads an instance of Money then MoneyCompositeUserType needs the default
+                // currency
+                MoneyCompositeUserType.setDefaultCurrency(AccountingRules
+                        .getMifosCurrency(new ConfigurationPersistence()));
                 AccountingRules.init(); // load the additional currencies
                 DatabaseMigrator migrator = new DatabaseMigrator(applicationContext);
                 try {
@@ -175,7 +185,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
                     // FIXME: replace with Spring-managed beans
                     final MifosScheduler mifosScheduler = new MifosScheduler();
-                    mifosScheduler.registerTasks();
                     final ShutdownManager shutdownManager = new ShutdownManager();
 
                     Configuration.getInstance();
@@ -183,6 +192,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     configureAuditLogValues(Localization.getInstance().getMainLocale());
                     ConfigLocale configLocale = new ConfigLocale();
                     if (null != ctx) {
+                        mifosScheduler.initialize();
                         ctx.getServletContext().setAttribute(MifosScheduler.class.getName(), mifosScheduler);
                         ctx.getServletContext().setAttribute(ShutdownManager.class.getName(), shutdownManager);
                         ctx.getServletContext().setAttribute(ConfigLocale.class.getSimpleName(), configLocale);
@@ -191,11 +201,11 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             }
         } catch (Exception e) {
             String errMsgStart = "unable to start Mifos web application";
-            if (null == LOG) {
+            if (null == logger) {
                 System.err.println(errMsgStart + " and logger is not available!");
                 e.printStackTrace();
             } else {
-                LOG.error(errMsgStart, e);
+                logger.error(errMsgStart, e);
             }
             throw new Error(e);
         }
@@ -341,10 +351,117 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         ServletContext ctx = servletContextEvent.getServletContext();
-        LOG.info("shutting down scheduler");
+        logger.info("shutting down scheduler");
         final MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
         ctx.removeAttribute(MifosScheduler.class.getName());
-        mifosScheduler.shutdown();
+        try {
+            mifosScheduler.shutdown();
+        } catch (Exception e) {
+            logger.error("error while shutting down scheduler", e);
+        }
+
+        if (true) {
+            printRemaingThreadLocal();
+        }
+
+        unregisterMySQLDriver();
+        cancleMySQLStatement();
+
+        // kill ehcache threads
+        // (net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread)
+        // hooked in as a listener in web.xml
+        logger.info("destroyed context");
+    }
+
+    /**
+     * Print out what thread locals are still registered for the threads in the container. This code helps with finding
+     * leaks that prevent proper unloading of the context.
+     */
+    private void printRemaingThreadLocal() {
+
+        try {
+            int n = Thread.activeCount();
+            Thread[] threadlist = new Thread[n];
+            Thread.enumerate(threadlist);
+            for (Thread t : threadlist) {
+                if (t == null) {
+                    continue;
+                }
+                java.lang.reflect.Field thread_threadLocals = Thread.class.getDeclaredField("threadLocals");
+                thread_threadLocals.setAccessible(true);
+                Object thread_local_map = thread_threadLocals.get(t); // a java.lang.Threadlocal$ThreadLocalMap
+                if (thread_local_map == null) {
+                    continue;
+                }
+                java.lang.reflect.Field threadLocalMap_table = thread_local_map.getClass().getDeclaredField("table");
+                threadLocalMap_table.setAccessible(true);
+                Object table = threadLocalMap_table.get(thread_local_map); // array of
+                                                                           // java.lang.ThreadLocal$ThreadLocalMap$Entry
+                for (int i = 0; i < java.lang.reflect.Array.getLength(table); i++) {
+                    Object entry = java.lang.reflect.Array.get(table, i); // java.lang.ThreadLocal$ThreadLocalMap$Entry
+                    if (entry == null) {
+                        continue;
+                    }
+                    java.lang.reflect.Field entry_value = entry.getClass().getDeclaredField("value");
+                    entry_value.setAccessible(true);
+                    Object value = entry_value.get(entry);
+                    if (value == null) {
+                        continue;
+                    }
+                    ClassLoader ldr = value.getClass().getClassLoader();
+                    logger.warn(value.getClass() + ": " + value.getClass().getClassLoader() + ": " + value);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("can't print threadLocals", e);
+        }
+    }
+
+    private void unregisterMySQLDriver() {
+        // unregister any jdbc drivers (mysql driver)
+        try {
+            for (Enumeration<Driver> e = DriverManager.getDrivers(); e.hasMoreElements();) {
+                Driver driver = e.nextElement();
+                if (driver.getClass().getClassLoader() == getClass().getClassLoader()) {
+                    DriverManager.deregisterDriver(driver);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("can't unregister jdbc drivers", e);
+        }
+    }
+
+    private void cancleMySQLStatement() {
+        // mysql statement cancellation timer (mysql bug 36565)
+        ClassLoader myClassLoader = this.getClass().getClassLoader();
+        Class clazz;
+        try {
+            clazz = Class.forName("com.mysql.jdbc.ConnectionImpl", false, myClassLoader);
+
+            if (!(clazz.getClassLoader() == myClassLoader)) {
+                logger.info("MySQL ConnectionImpl was loaded with another ClassLoader: (" + clazz.getClassLoader()
+                        + "): cancelling anyway");
+            } else {
+                logger.info("MySQL ConnectionImpl was loaded with the WebappClassLoader: cancelling the Timer");
+            }
+
+            Field f = clazz.getDeclaredField("cancelTimer");
+            f.setAccessible(true);
+            Timer timer = (Timer) f.get(null);
+            timer.cancel();
+            logger.info("completed timer cancellation");
+
+        } catch (ClassNotFoundException e) {
+            logger.warn("failed mysql timer cancellation", e);
+        } catch (SecurityException e) {
+            logger.warn("failed mysql timer cancellation", e);
+        } catch (NoSuchFieldException e) {
+            logger.warn("failed mysql timer cancellation", e);
+        } catch (IllegalArgumentException e) {
+            logger.warn("failed mysql timer cancellation", e);
+        } catch (IllegalAccessException e) {
+            logger.warn("failed mysql timer cancellation", e);
+        }
     }
 
     @Override

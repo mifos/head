@@ -27,6 +27,8 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -50,9 +52,6 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.DateTimeService;
@@ -73,7 +72,7 @@ import org.mifos.security.util.UserContext;
 @Deprecated
 public class SavingsPrdAction extends BaseAction {
 
-    private MifosLogger prdDefLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+    private static final Logger logger = LoggerFactory.getLogger(SavingsPrdAction.class);
 
     @Override
     protected BusinessService getService() {
@@ -107,17 +106,17 @@ public class SavingsPrdAction extends BaseAction {
     @TransactionDemarcate(saveToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        prdDefLogger.debug("start Load method of Savings Product Action");
+        logger.debug("start Load method of Savings Product Action");
         request.getSession().setAttribute(ProductDefinitionConstants.SAVINGSPRODUCTACTIONFORM, null);
         loadMasterData(request);
-        prdDefLogger.debug("Load method of Savings Product Action called");
+        logger.debug("Load method of Savings Product Action called");
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        prdDefLogger.debug("start validate method of Savings Product Action");
+        logger.debug("start validate method of Savings Product Action");
         String forward = null;
         String method = (String) request.getAttribute("methodCalled");
         if (method != null) {
@@ -129,21 +128,21 @@ public class SavingsPrdAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        prdDefLogger.debug("start preview method of Savings Product Action");
+        logger.debug("start preview method of Savings Product Action");
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        prdDefLogger.debug("start previous method of Savings Product Action");
+        logger.debug("start previous method of Savings Product Action");
         return mapping.findForward(ActionForwards.previous_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        prdDefLogger.debug("start create method of Savings Product Action");
+        logger.debug("start create method of Savings Product Action");
         SavingsPrdActionForm savingsprdForm = (SavingsPrdActionForm) form;
         UserContext userContext = getUserContext(request);
         Locale locale = getLocale(userContext);
@@ -186,21 +185,21 @@ public class SavingsPrdAction extends BaseAction {
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward cancelCreate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        prdDefLogger.debug("start cancelCreate method of Savings Product Action");
+        logger.debug("start cancelCreate method of Savings Product Action");
         return mapping.findForward(ActionForwards.cancelCreate_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward cancelEdit(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        prdDefLogger.debug("start cancelCreate method of Savings Product Action");
+        logger.debug("start cancelCreate method of Savings Product Action");
         return mapping.findForward(ActionForwards.cancelEdit_success.toString());
     }
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        prdDefLogger.debug("start get method of Savings Product Action");
+        logger.debug("start get method of Savings Product Action");
         SavingsPrdActionForm savingsprdForm = (SavingsPrdActionForm) form;
         SavingsOfferingBO savingsOffering = ((SavingsPrdBusinessService) getService())
                 .getSavingsProduct(getShortValue(savingsprdForm.getPrdOfferingId()));
@@ -243,7 +242,7 @@ public class SavingsPrdAction extends BaseAction {
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        prdDefLogger.debug("start create method of Savings Product Action");
+        logger.debug("start create method of Savings Product Action");
         SavingsPrdActionForm savingsprdForm = (SavingsPrdActionForm) form;
         UserContext userContext = getUserContext(request);
         Locale locale = getLocale(userContext);
@@ -284,14 +283,14 @@ public class SavingsPrdAction extends BaseAction {
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         SavingsPrdBusinessService service = new SavingsPrdBusinessService();
-        prdDefLogger.debug("start Load method of Savings Product Action");
+        logger.debug("start Load method of Savings Product Action");
         List<SavingsOfferingBO> savingsOfferingList = service.getAllSavingsProducts();
         for (SavingsOfferingBO savingsOffering : savingsOfferingList) {
             savingsOffering.getPrdStatus().getPrdState().setLocaleId(getUserContext(request).getLocaleId());
         }
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SAVINGSPRODUCTLIST, service
                 .getAllSavingsProducts(), request);
-        prdDefLogger.debug("Load method of Savings Product Action called");
+        logger.debug("Load method of Savings Product Action called");
         return mapping.findForward(ActionForwards.search_success.toString());
     }
 
@@ -370,7 +369,7 @@ public class SavingsPrdAction extends BaseAction {
     }
 
     private void loadMasterData(HttpServletRequest request) throws Exception {
-        prdDefLogger.debug("start Load master data method of Savings Product Action ");
+        logger.debug("start Load master data method of Savings Product Action ");
         SavingsPrdBusinessService service = new SavingsPrdBusinessService();
         Short localeId = getUserContext(request).getLocaleId();
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SAVINGSPRODUCTCATEGORYLIST, service
@@ -389,17 +388,17 @@ public class SavingsPrdAction extends BaseAction {
                 getGLCodesForDeposit(), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SAVINGSINTERESTGLCODELIST, getGLCodes(
                 FinancialActionConstants.SAVINGS_INTERESTPOSTING, FinancialConstants.DEBIT), request);
-        prdDefLogger.debug("Load master data method of Savings Product Action called");
+        logger.debug("Load master data method of Savings Product Action called");
     }
 
     private List<GLCodeEntity> getGLCodes(FinancialActionConstants financialAction, FinancialConstants debitCredit)
             throws Exception {
-        prdDefLogger.debug("getGLCodes method of Savings Product Action called");
+        logger.debug("getGLCodes method of Savings Product Action called");
         return new FinancialBusinessService().getGLCodes(financialAction, debitCredit);
     }
 
     private List<GLCodeEntity> getGLCodesForDeposit() throws Exception {
-        prdDefLogger.debug("getGLCodes for deposit method of Savings Product Action called");
+        logger.debug("getGLCodes for deposit method of Savings Product Action called");
         List<GLCodeEntity> glCodeList = new ArrayList<GLCodeEntity>();
         glCodeList.addAll(getGLCodes(FinancialActionConstants.MANDATORYDEPOSIT, FinancialConstants.CREDIT));
         glCodeList.addAll(getGLCodes(FinancialActionConstants.VOLUNTORYDEPOSIT, FinancialConstants.CREDIT));

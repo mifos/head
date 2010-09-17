@@ -30,10 +30,10 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 
@@ -42,6 +42,7 @@ import org.mifos.framework.hibernate.helper.QueryResult;
  */
 public class SessionUtils {
 
+    private static final Logger logger = LoggerFactory.getLogger(SessionUtils.class);
     /**
      * Sets the attribute in the session and the key is formed by appending path
      * to the key passed. These attributes would be removed from the session
@@ -49,7 +50,7 @@ public class SessionUtils {
      */
     public static void setRemovableAttribute(String key, Object value, String path, HttpSession session) {
         session.setAttribute(path + "_" + key, value);
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+        logger.debug(
                 "An attribute being set in the session with key being " + path + "_" + key);
     }
 
@@ -62,7 +63,7 @@ public class SessionUtils {
      * attributes are removed from session only when session is invalidated
      */
     public static void setAttribute(String key, Serializable value, HttpSession session) {
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+        logger.debug(
                 "An attribute being set in the session with key being " + key);
         session.setAttribute(key, value);
     }
@@ -72,7 +73,7 @@ public class SessionUtils {
      * attributes are removed from session only when session is invalidated
      */
     public static void setCollectionAttribute(String key, Collection<? extends Serializable> value, HttpSession session) {
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+        logger.debug(
                 "An attribute being set in the session with key being " + key);
         session.setAttribute(key, value);
     }
@@ -83,7 +84,7 @@ public class SessionUtils {
      * <code>setRemovaleAttribute</code> or <code>setAttribute</code> methods.
      */
     public static Object getAttribute(String key, HttpSession session) {
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("The key to be compared is " + key);
+        logger.debug("The key to be compared is " + key);
         Enumeration keys = session.getAttributeNames();
 
         boolean sessionIsEmpty = null == keys;
@@ -94,7 +95,7 @@ public class SessionUtils {
             while (keys.hasMoreElements()) {
 
                 String attributeKey = (String) keys.nextElement();
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+                logger.debug(
                         "The attribute name with which it is trying " + "to compare is " + attributeKey);
                 // if the key passed is the same as in the enumeration
                 // return the corresponding object from the session
@@ -105,18 +106,18 @@ public class SessionUtils {
                 // using setRemovableAttribute method of SessionUtils
                 if (attributeKey.equals(key)) {
                     Object returnable = session.getAttribute(attributeKey);
-                    MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+                    logger.debug(
                             "An exact match has been found with key being " + key + " and attribute key being"
                                     + attributeKey);
                     return returnable;
                 } else if (attributeKey.endsWith("_" + key)) {
                     Object returnable = session.getAttribute(attributeKey);
-                    MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+                    logger.debug(
                             "An approximate match has been found with key " + "being " + key
                                     + " and attribute key being" + attributeKey);
                     return returnable;
                 } else {
-                    MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+                    logger.debug(
                             "No match was found for key " + key);
                 }// end-if
 
@@ -127,7 +128,7 @@ public class SessionUtils {
     }// end-getAttribute
 
     public static Object getContext(String key, HttpSession session) {
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("The key to be compared is   " + key);
+        logger.debug("The key to be compared is   " + key);
         Enumeration keys = session.getAttributeNames();
         String attributeKey = null;
         Object returnable = null;
@@ -139,7 +140,7 @@ public class SessionUtils {
             while (keys.hasMoreElements()) {
 
                 attributeKey = (String) keys.nextElement();
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+                logger.debug(
                         "The attribute name with which it is trying to compare is  " + attributeKey);
                 // if the key passed is the same as in the enumeration
                 // return the corresponding object from the session
@@ -150,12 +151,12 @@ public class SessionUtils {
                 // using setRemovableAttribute method of SessionUtils
                 if (attributeKey.equals(key)) {
                     returnable = session.getAttribute(attributeKey);
-                    MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+                    logger.debug(
                             "An exact match has been found with key being " + key + " and attribute key being"
                                     + attributeKey);
                     return returnable;
                 } else {
-                    MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+                    logger.debug(
                             "No match was found for key " + key);
                 }// end-if
 
@@ -170,13 +171,13 @@ public class SessionUtils {
      * prefix
      */
     public static void doCleanUp(String path, HttpSession session) {
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("Clean up in session utils has been called");
+        logger.debug("Clean up in session utils has been called");
         Enumeration keys = session.getAttributeNames();
         if (null != keys) {
             while (keys.hasMoreElements()) {
                 String attributeKey = (String) keys.nextElement();
                 if (attributeKey.startsWith(path)) {
-                    MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+                    logger.debug(
                             "The attribute being removed from session is" + attributeKey);
                     session.removeAttribute(attributeKey);
                 }// end-if
@@ -198,7 +199,7 @@ public class SessionUtils {
      */
     public static void setQueryResultAttribute(String key, QueryResult value, HttpServletRequest request)
             throws PageExpiredException {
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+        logger.debug(
                 "An attribute being set in the session with key being " + key);
         String currentFlowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
         HttpSession session = request.getSession();
@@ -211,7 +212,7 @@ public class SessionUtils {
      */
     public static void setAttribute(String key, Serializable value, HttpServletRequest request)
             throws PageExpiredException {
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+        logger.debug(
                 "An attribute being set in the session with key being " + key);
         String currentFlowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
         HttpSession session = request.getSession();
@@ -240,7 +241,7 @@ public class SessionUtils {
     }
 
     private static Flow getFlow(String key, HttpServletRequest request) throws PageExpiredException {
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+        logger.debug(
                 "An attribute being set in the session with key being " + key);
         String currentFlowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
         HttpSession session = request.getSession();
@@ -250,7 +251,7 @@ public class SessionUtils {
     }
 
     public static Object getAttribute(String key, HttpServletRequest request) throws PageExpiredException {
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("The key to be compared is " + key);
+        logger.debug("The key to be compared is " + key);
 
         String currentFlowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
         HttpSession session = request.getSession();
@@ -259,20 +260,20 @@ public class SessionUtils {
     }
 
     public static void removeAttribute(String key, HttpServletRequest request) throws PageExpiredException {
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("Clean up in session utils has been called");
+        logger.debug("Clean up in session utils has been called");
         String currentFlowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
         HttpSession session = request.getSession();
         FlowManager flowManager = (FlowManager) session.getAttribute(Constants.FLOWMANAGER);
 
         flowManager.removeFromFlow(currentFlowKey, key);
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+        logger.debug(
                 "The attribute being removed from session is" + key);
     }
 
     public static void removeAttribute(String key, HttpSession session) {
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("Clean up in session utils has been called");
+        logger.debug("Clean up in session utils has been called");
         session.removeAttribute(key);
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+        logger.debug(
                 "The attribute being removed from session is" + key);
     }
 

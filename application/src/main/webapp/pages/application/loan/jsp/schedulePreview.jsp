@@ -58,7 +58,8 @@ explanation of the license and how it is applied.
         <html-el:form action="/loanAccountAction.do">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountOwner')}" var="customer" />
-		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAmount')}" var="loanAmount" />
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'disbursementDate')}" var="disbursementDate" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="470" align="left" valign="top" bgcolor="#FFFFFF">
@@ -181,10 +182,10 @@ explanation of the license and how it is applied.
 											<td width="100%" height="23" class="fontnormalbold">
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 												<mifos:mifoslabel name="loan.amt" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.loanAmount}" /> <br> </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${loanAmount}" /> <br> </span>
 												<mifos:mifoslabel name="loan.proposed_date" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.disbursementDate)}" /> <br> </span> <span class="fontnormal"> <br> </span>
-												<c:forEach items="${BusinessKey.accountFees}" var="feesSet">
+												:&nbsp; <span class="fontnormal"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,disbursementDate)}" /> <br> </span> <span class="fontnormal"> <br> </span>
+												<c:forEach items="${accountFees}" var="feesSet">
 													<c:if test="${feesSet.timeOfDisbursement}">
 														<table cellpadding="0" cellspacing="0">
 															<tr>

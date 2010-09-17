@@ -3,14 +3,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"POT-Creation-Date: 2010-08-23 16:57+0200\n"
 "PO-Revision-Date: 2009-11-10 01:46+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.7.0\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
 "X-Accelerator-Marker: &\n"
 
 #. # Key value pairs in this file are for LOOKUP_VALUE entries
@@ -1005,6 +1005,10 @@ msgstr "Hitel törlesztésére jogosult"
 msgid "Can reverse Loan disbursals"
 msgstr "Hitel folyósítások visszaállítására jogosult"
 
+#: Permissions-CanRunBatchJobsOnDemand
+msgid "Can run Batch Jobs on demand"
+msgstr ""
+
 #: Permissions-CanShutdownMifos
 msgid "Can open shutdown page"
 msgstr ""
@@ -1020,6 +1024,10 @@ msgstr ""
 #: Permissions-CanUnlockAUser
 msgid "Can unlock a user"
 msgstr "Felhasználó zárolásának a feloldására jogosult"
+
+#: Permissions-CanUpdateBatchJobsConfiguration
+msgid "Can update Batch Jobs configuration"
+msgstr ""
 
 #: Permissions-CanUpdateSavingsAccount
 msgid "Can update Savings account"

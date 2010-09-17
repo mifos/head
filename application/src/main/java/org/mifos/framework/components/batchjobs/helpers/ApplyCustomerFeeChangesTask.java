@@ -20,17 +20,17 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import org.mifos.framework.components.batchjobs.MifosTask;
+import org.mifos.framework.components.batchjobs.MifosBatchJob;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 
 /**
  * Recalculates schedules when a fee's status or amount changes.
  */
-public class ApplyCustomerFeeChangesTask extends MifosTask {
+public class ApplyCustomerFeeChangesTask extends MifosBatchJob {
 
     @Override
     public TaskHelper getTaskHelper() {
-        return new ApplyCustomerFeeChangesHelper(this);
+        return new ApplyCustomerFeeChangesHelper();
     }
 
 }
