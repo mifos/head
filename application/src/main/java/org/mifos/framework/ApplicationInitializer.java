@@ -49,7 +49,7 @@ import org.mifos.framework.util.helpers.MoneyCompositeUserType;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.ActivityMapper;
-import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletContext;
@@ -59,6 +59,7 @@ import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
@@ -67,7 +68,6 @@ import java.sql.DriverManager;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Timer;
-import java.util.logging.LogManager;
 
 /**
  * This class should prepare all the sub-systems that are required by the app. Cleanup should also happen here when the
@@ -116,8 +116,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         init(ctx);
     }
 
-    public void init(ServletContextEvent ctx) {
-
+    public void init(ServletContextEvent servletContextEvent) {
+        ServletContext ctx = servletContextEvent.getServletContext();
         try {
             // prevent ehcache "phone home"
             System.setProperty("net.sf.ehcache.skipUpdateCheck", "true");
@@ -126,10 +126,9 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
             synchronized (ApplicationInitializer.class) {
 
-                ApplicationContext applicationContext = null;
+                WebApplicationContext applicationContext = null;
                 if (ctx != null) {
-                    applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx
-                            .getServletContext());
+                    applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx);
                 }
 
                 logger.info("Logger has been initialised");
@@ -193,9 +192,9 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     ConfigLocale configLocale = new ConfigLocale();
                     if (null != ctx) {
                         mifosScheduler.initialize();
-                        ctx.getServletContext().setAttribute(MifosScheduler.class.getName(), mifosScheduler);
-                        ctx.getServletContext().setAttribute(ShutdownManager.class.getName(), shutdownManager);
-                        ctx.getServletContext().setAttribute(ConfigLocale.class.getSimpleName(), configLocale);
+                        ctx.setAttribute(MifosScheduler.class.getName(), mifosScheduler);
+                        ctx.setAttribute(ShutdownManager.class.getName(), shutdownManager);
+                        ctx.setAttribute(ConfigLocale.class.getSimpleName(), configLocale);
                     }
                 }
             }
@@ -360,10 +359,12 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             logger.error("error while shutting down scheduler", e);
         }
 
-        if (true) {
-            printRemaingThreadLocal();
-        }
+       // WebApplicationContext applicationContext = null;
+      //  if (ctx != null) {
+       //     applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx);
+       // }
 
+        StaticHibernateUtil.shutdown();
         unregisterMySQLDriver();
         cancleMySQLStatement();
 
@@ -371,50 +372,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         // (net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread)
         // hooked in as a listener in web.xml
         logger.info("destroyed context");
-    }
-
-    /**
-     * Print out what thread locals are still registered for the threads in the container. This code helps with finding
-     * leaks that prevent proper unloading of the context.
-     */
-    private void printRemaingThreadLocal() {
-
-        try {
-            int n = Thread.activeCount();
-            Thread[] threadlist = new Thread[n];
-            Thread.enumerate(threadlist);
-            for (Thread t : threadlist) {
-                if (t == null) {
-                    continue;
-                }
-                java.lang.reflect.Field thread_threadLocals = Thread.class.getDeclaredField("threadLocals");
-                thread_threadLocals.setAccessible(true);
-                Object thread_local_map = thread_threadLocals.get(t); // a java.lang.Threadlocal$ThreadLocalMap
-                if (thread_local_map == null) {
-                    continue;
-                }
-                java.lang.reflect.Field threadLocalMap_table = thread_local_map.getClass().getDeclaredField("table");
-                threadLocalMap_table.setAccessible(true);
-                Object table = threadLocalMap_table.get(thread_local_map); // array of
-                                                                           // java.lang.ThreadLocal$ThreadLocalMap$Entry
-                for (int i = 0; i < java.lang.reflect.Array.getLength(table); i++) {
-                    Object entry = java.lang.reflect.Array.get(table, i); // java.lang.ThreadLocal$ThreadLocalMap$Entry
-                    if (entry == null) {
-                        continue;
-                    }
-                    java.lang.reflect.Field entry_value = entry.getClass().getDeclaredField("value");
-                    entry_value.setAccessible(true);
-                    Object value = entry_value.get(entry);
-                    if (value == null) {
-                        continue;
-                    }
-                    ClassLoader ldr = value.getClass().getClassLoader();
-                    logger.warn(value.getClass() + ": " + value.getClass().getClassLoader() + ": " + value);
-                }
-            }
-        } catch (Exception e) {
-            logger.error("can't print threadLocals", e);
-        }
     }
 
     private void unregisterMySQLDriver() {
@@ -461,6 +418,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             logger.warn("failed mysql timer cancellation", e);
         } catch (IllegalAccessException e) {
             logger.warn("failed mysql timer cancellation", e);
+        } catch (NullPointerException e) {
+            logger.info("No mysql timer cancellation required", e);
         }
     }
 
@@ -480,6 +439,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         final ShutdownManager shutdownManager = (ShutdownManager) ctx.getAttribute(ShutdownManager.class.getName());
         shutdownManager.sessionCreated(httpSessionEvent);
     }
+
 
     @Override
     public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
