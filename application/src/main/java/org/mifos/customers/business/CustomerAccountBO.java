@@ -765,8 +765,9 @@ public class CustomerAccountBO extends AccountBO {
                                                                               accountFee,
                                                                               dueInstallments.size(),
                                                                               dueInstallments.get(0).getInstallmentId());
-        Money totalFeeAmountApplied = applyFeeToInstallments(feeInstallmentList, dueInstallments);
-        updateCustomerActivity(fee.getFeeId(), totalFeeAmountApplied, fee.getFeeName() + AccountConstants.APPLIED);
+        // MIFOS-3701: we want to display only fee charge, not the totalFeeAmountApplied
+        applyFeeToInstallments(feeInstallmentList, dueInstallments);
+        updateCustomerActivity(fee.getFeeId(), charge, fee.getFeeName() + AccountConstants.APPLIED);
         accountFee.setFeeStatus(FeeStatus.ACTIVE);
     }
 
