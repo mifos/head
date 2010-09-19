@@ -269,6 +269,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
             OfficeBO office = officeDao.findOfficeById(personnel.getOfficeId());
 
+            // FIXME - extract out validation for duplicate user name from
             PersonnelBO newPersonnel = new PersonnelBO(PersonnelLevel.fromInt(personnel.getPersonnelLevelId()
                     .intValue()), office, personnel.getTitle(), personnel.getPreferredLocale(),
                     personnel.getPassword(), personnel.getUserName(), personnel.getEmailId(), roles, personnel

@@ -21,6 +21,7 @@
 package org.mifos.ui.core.controller;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -115,6 +116,7 @@ public class UserFormBean implements Serializable {
     private String confirmedPassword;
 
     private List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+    private List<DateFieldBean> customDateFields = new ArrayList<DateFieldBean>();
 
     // preview fields
     private DateTime dateOfBirth;
@@ -154,15 +156,81 @@ public class UserFormBean implements Serializable {
 
         if (this.password.trim().isEmpty() || this.confirmedPassword.trim().isEmpty()) {
             messages.addMessage(new MessageBuilder().error().source("password").code("NotEmpty.UserFormBean.password").defaultText("password is not correct.").build());
+        } else if (this.password.trim().length() < 6) {
+            messages.addMessage(new MessageBuilder().error().source("password").code("Min.UserFormBean.password").defaultText("password must have six characters at least.").build());
         } else if (!this.password.equals(this.confirmedPassword)) {
             messages.addMessage(new MessageBuilder().error().source("password").code("NotEqual.UserFormBean.password").defaultText("password is not correct.").build());
         }
 
         this.address.validate(messages, "UserFormBean");
 
+        // validate additional fields
+        for (CustomFieldDto additionalField : this.customFields) {
+
+            switch (additionalField.getFieldType().intValue()) {
+            case 0:
+                break;
+            case 1:
+                validateNumericField(messages, additionalField);
+                break;
+            case 2:
+                validateIfMandatoryField(messages, additionalField);
+                break;
+            case 3:
+                for (DateFieldBean dateFieldBean : this.customDateFields) {
+                    if (dateFieldBean.getId().equals(additionalField.getFieldId())) {
+                        validateAndBindDateField(messages, additionalField, dateFieldBean);
+                    }
+                }
+                break;
+            default:
+                break;
+            }
+        }
+
         if (messages.hasErrorMessages()) {
             this.prepateForReEdit();
         }
+    }
+
+    private boolean validateIfMandatoryField(MessageContext messages, CustomFieldDto additionalField) {
+        boolean validated = true;
+        if (additionalField.isMandatory() && StringUtils.isBlank(additionalField.getFieldValue())) {
+            messages.addMessage(new MessageBuilder().error().source("customFields").code("NotEmpty.UserFormBean.additionalfield").defaultText("mandatory additional field cannot be blank").build());
+            validated = false;
+        }
+        return validated;
+    }
+
+    private void validateAndBindDateField(MessageContext messages, CustomFieldDto additionalField, DateFieldBean additionalDateField) {
+        if (additionalDateField.isMandatory()) {
+            bindDateField(messages, additionalField, additionalDateField);
+        } else {
+            if (additionalDateField.getDay() != null || additionalDateField.getMonth() != null || additionalDateField.getYear() != null) {
+                bindDateField(messages, additionalField, additionalDateField);
+            }
+        }
+    }
+
+    private void bindDateField(MessageContext messages, CustomFieldDto additionalField, DateFieldBean additionalDateField) {
+        try {
+            DateTime date = new DateTime().withDate(additionalDateField.getYear().intValue(), additionalDateField.getMonth().intValue(), additionalDateField.getDay().intValue());
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            additionalField.setFieldValue(format.format(date.toDate()));
+        } catch (Throwable e) {
+            messages.addMessage(new MessageBuilder().error().source("customFields").code("Valid.UserFormBean.additionaldatefield").defaultText("date not valid.").build());
+        }
+    }
+
+    private void validateNumericField(MessageContext messages, CustomFieldDto additionalField) {
+        if (validateIfMandatoryField(messages, additionalField) && StringUtils.isNotBlank(additionalField.getFieldValue())) {
+            try {
+                Double.valueOf(additionalField.getFieldValue());
+            } catch (Exception e) {
+                messages.addMessage(new MessageBuilder().error().source("customFields").code("Valid.UserFormBean.additionalnumberfield").defaultText("number not provided.").build());
+            }
+        }
+
     }
 
     public void prepateForReEdit() {
@@ -555,5 +623,13 @@ public class UserFormBean implements Serializable {
 
     public void setCustomFields(List<CustomFieldDto> customFields) {
         this.customFields = customFields;
+    }
+
+    public List<DateFieldBean> getCustomDateFields() {
+        return this.customDateFields;
+    }
+
+    public void setCustomDateFields(List<DateFieldBean> customDateFields) {
+        this.customDateFields = customDateFields;
     }
 }

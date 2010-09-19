@@ -20,7 +20,10 @@
 
 package org.mifos.ui.core.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -41,6 +44,7 @@ import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.screen.DefinePersonnelDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
+import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -122,7 +126,7 @@ public class SystemUserController {
 
         DefinePersonnelDto userRefData = this.personnelServiceFacade.retrieveInfoForNewUserDefinition(officeId.shortValue(), Locale.getDefault());
 
-        formBean.setCustomFields(userRefData.getCustomFields());
+        populateCustomFields(formBean, userRefData);
 
         Map<String, String> genderOptions = new LinkedHashMap<String, String>();
         for (ListElement option : userRefData.getGenderList()) {
@@ -167,6 +171,34 @@ public class SystemUserController {
         formBean.setMfiJoiningDateYear(today.getYearOfEra());
 
         return formBean;
+    }
+
+    @SuppressWarnings("PMD")
+    private void populateCustomFields(final UserFormBean formBean, DefinePersonnelDto userRefData) {
+        formBean.setCustomFields(userRefData.getCustomFields());
+        List<DateFieldBean> dateFields = new ArrayList<DateFieldBean>();
+        for(CustomFieldDto additionalField : userRefData.getCustomFields()) {
+            if (additionalField.getFieldType().intValue() == 3) {
+
+                DateFieldBean bean = new DateFieldBean();
+                bean.setId(additionalField.getFieldId());
+                bean.setMandatory(additionalField.isMandatory());
+                if (StringUtils.isNotBlank(additionalField.getFieldValue())) {
+                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                    try {
+                        Date d = format.parse(additionalField.getFieldValue());
+                        DateTime dateValue = new DateTime(d);
+                        bean.setDay(dateValue.getDayOfMonth());
+                        bean.setMonth(dateValue.getMonthOfYear());
+                        bean.setYear(dateValue.getYearOfEra());
+                    } catch (ParseException e) {
+                        throw new BusinessRuleException("unable to parse additional field date value", e);
+                    }
+                }
+                dateFields.add(bean);
+            }
+        }
+        formBean.setCustomDateFields(dateFields);
     }
 
     @SuppressWarnings("PMD")
@@ -216,7 +248,7 @@ public class SystemUserController {
 
         Short personnelStatusId = Short.valueOf("1"); // active
 
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+        List<CustomFieldDto> customFields = userFormBean.getCustomFields();
 
         CreateOrUpdatePersonnelInformation personnel = new CreateOrUpdatePersonnelInformation(personnelLevelId, officeId, title, preferredLocale,
                 password, username, email, roles, customFields, firstName, middleName, lastName, secondLastName,

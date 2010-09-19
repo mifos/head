@@ -137,7 +137,7 @@ function selectAllOptions(outSel)
 	        <label for="address.address1">[#if userFormBean.address.address1Mandatory]<span class="red">*</span>[/#if][@spring.message "systemUsers.preview.address1" /]:</label>
 	        [@spring.formInput "userFormBean.address.address1" /]<br />
 	        
-	         [#if userFormBean.address.address2Hidden]
+	        [#if userFormBean.address.address2Hidden]
 	        	[@spring.formHiddenInput "userFormBean.address.address2" /]
 	        [#else]
 	        	<label for="address.address2">[@spring.message "systemUsers.preview.address2" /]:</label>
@@ -218,9 +218,33 @@ function selectAllOptions(outSel)
 	        [@spring.formPasswordInput "userFormBean.confirmedPassword" /]<br />
 	        
 	        <div class="fontBold">[@spring.message "systemUsers.preview.additionalInformation" /]</div>
+	        [#assign fieldNumber = 0]
+	        [#assign dateFieldNumber = 0]
 	        [#list userFormBean.customFields as additional]
-	        	<label for="confirmedPassword"><span class="red">*</span>${additional.label}:</label>
-	        	${additional.fieldValue} - ${additional.mandatoryString}<br />
+	        	[#assign fieldlabel = "customFields[" + fieldNumber + "].fieldValue"]
+	        	[#assign fieldvalue = "userFormBean.customFields[" + fieldNumber + "].fieldValue"]
+	        	[#assign datefieldvalueday = "userFormBean.customDateFields[" + dateFieldNumber + "].day"]
+	        	[#assign datefieldvaluemonth = "userFormBean.customDateFields[" + dateFieldNumber + "].month"]
+	        	[#assign datefieldvalueyear = "userFormBean.customDateFields[" + dateFieldNumber + "].year"]
+	        	[#switch additional.fieldType]
+	        		[#case 0]
+	        		[#case 1]
+	        		[#case 2]
+	        		<label for="${fieldlabel}">[#if additional.mandatory]<span class="red">*</span>[/#if]${additional.label}:</label>
+	        		[@spring.formInput fieldvalue /]<br />
+                    [#break]
+                    [#case 3]
+                    <div>
+                    <label>[#if additional.mandatory]<span class="red">*</span>[/#if]${additional.label}:</label>
+	            	<span>[@spring.formInput datefieldvalueday "size=1 maxlength=2" /]DD</span>
+	              	<span>[@spring.formInput datefieldvaluemonth "size=1 maxlength=2" /]MM</span>
+	              	<span>[@spring.formInput datefieldvalueyear "size=2 maxlength=4" /]YYYY</span>
+	              	</div>
+	              	<br />
+	              	[#assign dateFieldNumber = dateFieldNumber + 1]
+                    [#break]
+	        	[/#switch]
+	        	[#assign fieldNumber = fieldNumber + 1]
 	        [/#list]
         	</fieldset>
         
