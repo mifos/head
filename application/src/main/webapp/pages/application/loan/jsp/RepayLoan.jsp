@@ -85,6 +85,7 @@ explanation of the license and how it is applied.
 						<br>
 						<div id="waiverInterestWarning" class="fontnormalRed">
                             <mifos:mifoslabel name="loan.waiverInterestWarning"/>
+                            <br>
 						</div>
 						<table width="95%" border="0" cellspacing="0" cellpadding="3">
 						    <tr>
@@ -100,7 +101,7 @@ explanation of the license and how it is applied.
                                             </td>
                                          </c:when>
                                          <c:otherwise>
-                                            <html-el:hidden property="waiverInterest" value="0"/>
+                                            <input type="radio" style="visibility: hidden;" value="false" name="waiverInterest" checked="checked">
                                          </c:otherwise>
                                     </c:choose>
 						    </tr>
