@@ -47,6 +47,16 @@ public class HibernateUtil implements FactoryBean<HibernateUtil> {
         }
         return hibernateUtil;
     }
+
+    public void shutdown() {
+        try {
+            sessionFactory.close();
+        } catch (HibernateException e) {
+           e.printStackTrace(System.out);
+        }
+        sessionFactory = null;
+    }
+
     /**
      * @param sessionFactory the sessionFactory to set
      */

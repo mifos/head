@@ -96,4 +96,7 @@ public class StaticHibernateUtil {
         hibernateUtil.rollbackTransaction();
     }
 
+    public static void shutdown() {
+        hibernateUtil.shutdown();
+    }
 }
