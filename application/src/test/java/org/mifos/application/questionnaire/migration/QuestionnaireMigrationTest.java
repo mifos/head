@@ -26,6 +26,7 @@ import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.questionnaire.migration.mappers.QuestionnaireMigrationMapper;
@@ -33,7 +34,9 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.surveys.business.CustomFieldUtils;
 import org.mifos.customers.surveys.business.Survey;
 import org.mifos.customers.surveys.business.SurveyInstance;
@@ -98,6 +101,15 @@ public class QuestionnaireMigrationTest {
     @Mock
     private LoanDao loanDao;
 
+    @Mock
+    private SavingsDao savingsDao;
+
+    @Mock
+    private OfficeDao officeDao;
+
+    @Mock
+    private PersonnelDao personnelDao;
+
     private QuestionnaireMigration questionnaireMigration;
 
     private static final int QUESTION_GROUP_ID = 123;
@@ -106,7 +118,7 @@ public class QuestionnaireMigrationTest {
 
     @Before
     public void setUp() {
-        questionnaireMigration = new QuestionnaireMigration(questionnaireMigrationMapper, questionnaireServiceFacade, surveysPersistence, customerDao, loanDao);
+        questionnaireMigration = new QuestionnaireMigration(questionnaireMigrationMapper, questionnaireServiceFacade, surveysPersistence, customerDao, loanDao, savingsDao, officeDao, personnelDao);
         calendar = Calendar.getInstance();
     }
 

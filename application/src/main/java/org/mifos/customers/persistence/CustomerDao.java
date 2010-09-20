@@ -235,4 +235,6 @@ public interface CustomerDao {
     Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForClientIterator();
 
     Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForGroupIterator();
+
+    Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForCenterIterator();
 }

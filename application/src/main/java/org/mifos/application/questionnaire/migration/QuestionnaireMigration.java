@@ -22,11 +22,16 @@ package org.mifos.application.questionnaire.migration;
 
 import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.questionnaire.migration.mappers.QuestionnaireMigrationMapper;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.office.business.OfficeCustomFieldEntity;
+import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.surveys.business.Survey;
 import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.surveys.helpers.SurveyType;
@@ -66,6 +71,15 @@ public class QuestionnaireMigration {
     @Autowired
     private LoanDao loanDao;
 
+    @Autowired
+    private SavingsDao savingsDao;
+
+    @Autowired
+    private OfficeDao officeDao;
+
+    @Autowired
+    private PersonnelDao personnelDao;
+
     private MifosLogger mifosLogger;
 
     @SuppressWarnings({"UnusedDeclaration"})
@@ -76,13 +90,16 @@ public class QuestionnaireMigration {
     // Intended to be used only from unit tests for injecting mocks
     public QuestionnaireMigration(QuestionnaireMigrationMapper questionnaireMigrationMapper,
                                   QuestionnaireServiceFacade questionnaireServiceFacade,
-                                  SurveysPersistence surveysPersistence, CustomerDao customerDao, LoanDao loanDao) {
+                                  SurveysPersistence surveysPersistence, CustomerDao customerDao, LoanDao loanDao, SavingsDao savingsDao, OfficeDao officeDao, PersonnelDao personnelDao) {
         this();
         this.questionnaireMigrationMapper = questionnaireMigrationMapper;
         this.questionnaireServiceFacade = questionnaireServiceFacade;
         this.surveysPersistence = surveysPersistence;
         this.customerDao = customerDao;
         this.loanDao = loanDao;
+        this.personnelDao=personnelDao;
+        this.savingsDao=savingsDao;
+        this.officeDao=officeDao;
     }
 
     public List<Integer> migrateAdditionalFields() {
@@ -96,6 +113,22 @@ public class QuestionnaireMigration {
             questionGroupIds.add(questionGroupId);
         }
         questionGroupId = migrateAdditionalFieldsForLoan();
+        if (questionGroupId != null) {
+            questionGroupIds.add(questionGroupId);
+        }
+        questionGroupId = migrateAdditionalFieldsForSavings();
+        if (questionGroupId != null) {
+            questionGroupIds.add(questionGroupId);
+        }
+        questionGroupId = migrateAdditionalFieldsForCenter();
+        if (questionGroupId != null) {
+            questionGroupIds.add(questionGroupId);
+        }
+        questionGroupId = migrateAdditionalFieldsForOffice();
+        if (questionGroupId != null) {
+            questionGroupIds.add(questionGroupId);
+        }
+        questionGroupId = migrateAdditionalFieldsForPersonnel();
         if (questionGroupId != null) {
             questionGroupIds.add(questionGroupId);
         }
@@ -147,6 +180,58 @@ public class QuestionnaireMigration {
             questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.LOAN);
             customFields = getCustomFieldsForLoan();
             migrateAdditionalFieldsResponsesForLoan(customFields, questionGroupId, customFieldQuestionIdMap);
+        }
+        return questionGroupId;
+    }
+
+    // Made 'public' to aid unit testing
+    public Integer migrateAdditionalFieldsForPersonnel() {
+        Iterator<CustomFieldDefinitionEntity> customFields = getCustomFieldsForPersonnel();
+        Integer questionGroupId = null;
+        if (customFields != null) {
+            Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
+            questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.PERSONNEL);
+            customFields = getCustomFieldsForPersonnel();
+            migrateAdditionalFieldsResponsesForPersonnel(customFields, questionGroupId, customFieldQuestionIdMap);
+        }
+        return questionGroupId;
+    }
+
+    // Made 'public' to aid unit testing
+    public Integer migrateAdditionalFieldsForOffice() {
+        Iterator<CustomFieldDefinitionEntity> customFields = getCustomFieldsForOffice();
+        Integer questionGroupId = null;
+        if (customFields != null) {
+            Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
+            questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.OFFICE);
+            customFields = getCustomFieldsForOffice();
+            migrateAdditionalFieldsResponsesForOffice(customFields, questionGroupId, customFieldQuestionIdMap);
+        }
+        return questionGroupId;
+    }
+
+    // Made 'public' to aid unit testing
+    public Integer migrateAdditionalFieldsForCenter() {
+        Iterator<CustomFieldDefinitionEntity> customFields = getCustomFieldsForCenter();
+        Integer questionGroupId = null;
+        if (customFields != null) {
+            Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
+            questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.CENTER);
+            customFields = getCustomFieldsForCenter();
+            migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, customFieldQuestionIdMap);
+        }
+        return questionGroupId;
+    }
+
+    // Made 'public' to aid unit testing
+    public Integer migrateAdditionalFieldsForSavings() {
+        Iterator<CustomFieldDefinitionEntity> customFields = getCustomFieldsForSavings();
+        Integer questionGroupId = null;
+        if (customFields != null) {
+            Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
+            questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.SAVINGS);
+            customFields = getCustomFieldsForSavings();
+            migrateAdditionalFieldsResponsesForSavings(customFields, questionGroupId, customFieldQuestionIdMap);
         }
         return questionGroupId;
     }
@@ -207,7 +292,47 @@ public class QuestionnaireMigration {
         try {
             customFields = loanDao.retrieveCustomFieldEntitiesForLoan();
         } catch (Exception e) {
-            mifosLogger.error("Unable to retrieve custom fields for Create Client", e);
+            mifosLogger.error("Unable to retrieve custom fields for Create Loan", e);
+        }
+        return customFields;
+    }
+
+    private Iterator<CustomFieldDefinitionEntity> getCustomFieldsForPersonnel() {
+        Iterator<CustomFieldDefinitionEntity> customFields = null;
+        try {
+            customFields = personnelDao.retrieveCustomFieldEntitiesForPersonnel();
+        } catch (Exception e) {
+            mifosLogger.error("Unable to retrieve custom fields for Create Personnel", e);
+        }
+        return customFields;
+    }
+
+    private Iterator<CustomFieldDefinitionEntity> getCustomFieldsForOffice() {
+        Iterator<CustomFieldDefinitionEntity> customFields = null;
+        try {
+            customFields = officeDao.retrieveCustomFieldEntitiesForOffice();
+        } catch (Exception e) {
+            mifosLogger.error("Unable to retrieve custom fields for Create Office", e);
+        }
+        return customFields;
+    }
+
+    private Iterator<CustomFieldDefinitionEntity> getCustomFieldsForCenter() {
+        Iterator<CustomFieldDefinitionEntity> customFields = null;
+        try {
+            customFields = customerDao.retrieveCustomFieldEntitiesForCenterIterator();
+        } catch (Exception e) {
+            mifosLogger.error("Unable to retrieve custom fields for Create Center", e);
+        }
+        return customFields;
+    }
+
+    private Iterator<CustomFieldDefinitionEntity> getCustomFieldsForSavings() {
+        Iterator<CustomFieldDefinitionEntity> customFields = null;
+        try {
+            customFields = savingsDao.retrieveCustomFieldEntitiesForSavings();
+        } catch (Exception e) {
+            mifosLogger.error("Unable to retrieve custom fields for Create Savings", e);
         }
         return customFields;
     }
@@ -230,13 +355,178 @@ public class QuestionnaireMigration {
             Map<Integer, List<AccountCustomFieldEntity>> customFieldResponses = getCustomFieldResponsesForLoan(customFields);
             for (Integer entityId : customFieldResponses.keySet()) {
                 List<AccountCustomFieldEntity> accountResponses = customFieldResponses.get(entityId);
-                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForLoan(questionGroupId, customFieldQuestionIdMap, accountResponses);
+                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForAccount(questionGroupId, customFieldQuestionIdMap, accountResponses);
                 saveQuestionGroupInstance(questionGroupInstanceDto);
             }
         }
     }
 
-    private QuestionGroupInstanceDto mapToQuestionGroupInstanceForLoan(Integer questionGroupId, Map<Short, Integer> customFieldQuestionIdMap,
+    private void migrateAdditionalFieldsResponsesForPersonnel(Iterator<CustomFieldDefinitionEntity> customFields, Integer questionGroupId,
+            Map<Short, Integer> customFieldQuestionIdMap) {
+        if (questionGroupId != null) {
+            Map<Integer, List<PersonnelCustomFieldEntity>> customFieldResponses = getCustomFieldResponsesForPersonnel(customFields);
+            for (Integer entityId : customFieldResponses.keySet()) {
+                List<PersonnelCustomFieldEntity> accountResponses = customFieldResponses.get(entityId);
+                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForPersonnel(questionGroupId, customFieldQuestionIdMap, accountResponses);
+                saveQuestionGroupInstance(questionGroupInstanceDto);
+            }
+        }
+    }
+
+    private void migrateAdditionalFieldsResponsesForOffice(Iterator<CustomFieldDefinitionEntity> customFields, Integer questionGroupId,
+            Map<Short, Integer> customFieldQuestionIdMap) {
+        if (questionGroupId != null) {
+            Map<Integer, List<OfficeCustomFieldEntity>> customFieldResponses = getCustomFieldResponsesForOffice(customFields);
+            for (Integer entityId : customFieldResponses.keySet()) {
+                List<OfficeCustomFieldEntity> accountResponses = customFieldResponses.get(entityId);
+                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForOffice(questionGroupId, customFieldQuestionIdMap, accountResponses);
+                saveQuestionGroupInstance(questionGroupInstanceDto);
+            }
+        }
+    }
+
+    private void migrateAdditionalFieldsResponsesForSavings(Iterator<CustomFieldDefinitionEntity> customFields,
+            Integer questionGroupId, Map<Short, Integer> customFieldQuestionIdMap) {
+        if (questionGroupId != null) {
+            Map<Integer, List<AccountCustomFieldEntity>> customFieldResponses = getCustomFieldResponsesForSavings(customFields);
+            for (Integer entityId : customFieldResponses.keySet()) {
+                List<AccountCustomFieldEntity> accountResponses = customFieldResponses.get(entityId);
+                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForAccount(questionGroupId,
+                        customFieldQuestionIdMap, accountResponses);
+                saveQuestionGroupInstance(questionGroupInstanceDto);
+            }
+        }
+    }
+
+    private Map<Integer, List<AccountCustomFieldEntity>> getCustomFieldResponsesForSavings(Iterator<CustomFieldDefinitionEntity> customFields) {
+        Map<Integer, List<AccountCustomFieldEntity>> entityResponsesMap = new HashMap<Integer, List<AccountCustomFieldEntity>>();
+        if (customFields != null) {
+            while (customFields.hasNext()) {
+                Iterator<AccountCustomFieldEntity> customFieldResponses = getCustomFieldResponsesForSavings(customFields.next());
+                if (customFieldResponses != null) {
+                    while (customFieldResponses.hasNext()) {
+                        addOrUpdateForAccount(entityResponsesMap, customFieldResponses.next());
+                    }
+                }
+            }
+        }
+        return entityResponsesMap;
+    }
+
+    private Iterator<AccountCustomFieldEntity> getCustomFieldResponsesForSavings(CustomFieldDefinitionEntity customField) {
+        Iterator<AccountCustomFieldEntity> customFieldResponses = null;
+        try {
+            customFieldResponses = savingsDao.getCustomFieldResponses(customField.getFieldId());
+        } catch (Exception e) {
+            mifosLogger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
+        }
+        return customFieldResponses;
+    }
+
+    private Map<Integer, List<OfficeCustomFieldEntity>> getCustomFieldResponsesForOffice(Iterator<CustomFieldDefinitionEntity> customFields) {
+        Map<Integer, List<OfficeCustomFieldEntity>> entityResponsesMap = new HashMap<Integer, List<OfficeCustomFieldEntity>>();
+        if (customFields != null) {
+            while (customFields.hasNext()) {
+                Iterator<OfficeCustomFieldEntity> customFieldResponses = getCustomFieldResponsesForOffice(customFields.next());
+                if (customFieldResponses != null) {
+                    while (customFieldResponses.hasNext()) {
+                        addOrUpdateForOffice(entityResponsesMap, customFieldResponses.next());
+                    }
+                }
+            }
+        }
+        return entityResponsesMap;
+    }
+
+    private Iterator<OfficeCustomFieldEntity> getCustomFieldResponsesForOffice(CustomFieldDefinitionEntity customField) {
+        Iterator<OfficeCustomFieldEntity> customFieldResponses = null;
+        try {
+            customFieldResponses = officeDao.getCustomFieldResponses(customField.getFieldId());
+        } catch (Exception e) {
+            mifosLogger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
+        }
+        return customFieldResponses;
+    }
+
+    private void addOrUpdateForOffice(Map<Integer, List<OfficeCustomFieldEntity>> entityResponsesMap, OfficeCustomFieldEntity customFieldResponse) {
+        Integer officeId = customFieldResponse.getOffice().getOfficeId().intValue();
+        if (entityResponsesMap.containsKey(officeId)) {
+            entityResponsesMap.get(officeId).add(customFieldResponse);
+        } else {
+            entityResponsesMap.put(officeId, new LinkedList<OfficeCustomFieldEntity>());
+            entityResponsesMap.get(officeId).add(customFieldResponse);
+        }
+    }
+
+    private QuestionGroupInstanceDto mapToQuestionGroupInstanceForOffice(Integer questionGroupId,
+            Map<Short, Integer> customFieldQuestionIdMap, List<OfficeCustomFieldEntity> officeResponses) {
+        QuestionGroupInstanceDto questionGroupInstanceDto = null;
+        try {
+            questionGroupInstanceDto = questionnaireMigrationMapper.mapForOffice(questionGroupId, officeResponses,
+                    customFieldQuestionIdMap);
+        } catch (Exception e) {
+            mifosLogger
+                    .error(format(
+                            "Unable to convert responses given for account with ID, %d for custom fields, to Question Group responses",
+                            officeResponses.get(0).getOffice().getOfficeId().intValue()), e);
+        }
+        return questionGroupInstanceDto;
+    }
+
+
+    //poczatek
+    private Map<Integer, List<PersonnelCustomFieldEntity>> getCustomFieldResponsesForPersonnel(Iterator<CustomFieldDefinitionEntity> customFields) {
+        Map<Integer, List<PersonnelCustomFieldEntity>> entityResponsesMap = new HashMap<Integer, List<PersonnelCustomFieldEntity>>();
+        if (customFields != null) {
+            while (customFields.hasNext()) {
+                Iterator<PersonnelCustomFieldEntity> customFieldResponses = getCustomFieldResponsesForPersonnel(customFields.next());
+                if (customFieldResponses != null) {
+                    while (customFieldResponses.hasNext()) {
+                        addOrUpdateForPersonnel(entityResponsesMap, customFieldResponses.next());
+                    }
+                }
+            }
+        }
+        return entityResponsesMap;
+    }
+
+    private Iterator<PersonnelCustomFieldEntity> getCustomFieldResponsesForPersonnel(CustomFieldDefinitionEntity customField) {
+        Iterator<PersonnelCustomFieldEntity> customFieldResponses = null;
+        try {
+            customFieldResponses = personnelDao.getCustomFieldResponses(customField.getFieldId());
+        } catch (Exception e) {
+            mifosLogger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
+        }
+        return customFieldResponses;
+    }
+
+    private void addOrUpdateForPersonnel(Map<Integer, List<PersonnelCustomFieldEntity>> entityResponsesMap, PersonnelCustomFieldEntity customFieldResponse) {
+        Integer personnelId = customFieldResponse.getPersonnel().getPersonnelId().intValue();
+        if (entityResponsesMap.containsKey(personnelId)) {
+            entityResponsesMap.get(personnelId).add(customFieldResponse);
+        } else {
+            entityResponsesMap.put(personnelId, new LinkedList<PersonnelCustomFieldEntity>());
+            entityResponsesMap.get(personnelId).add(customFieldResponse);
+        }
+    }
+
+    private QuestionGroupInstanceDto mapToQuestionGroupInstanceForPersonnel(Integer questionGroupId,
+            Map<Short, Integer> customFieldQuestionIdMap, List<PersonnelCustomFieldEntity> personnelResponses) {
+        QuestionGroupInstanceDto questionGroupInstanceDto = null;
+        try {
+            questionGroupInstanceDto = questionnaireMigrationMapper.mapForPersonnel(questionGroupId, personnelResponses,
+                    customFieldQuestionIdMap);
+        } catch (Exception e) {
+            mifosLogger
+                    .error(format(
+                            "Unable to convert responses given for account with ID, %d for custom fields, to Question Group responses",
+                            personnelResponses.get(0).getPersonnel().getPersonnelId().intValue()), e);
+        }
+        return questionGroupInstanceDto;
+    }
+    //koniec
+
+    private QuestionGroupInstanceDto mapToQuestionGroupInstanceForAccount(Integer questionGroupId, Map<Short, Integer> customFieldQuestionIdMap,
                                                                 List<AccountCustomFieldEntity> accountResponses) {
         QuestionGroupInstanceDto questionGroupInstanceDto = null;
         try {
@@ -254,7 +544,7 @@ public class QuestionnaireMigration {
                 Iterator<AccountCustomFieldEntity> customFieldResponses = getCustomFieldResponsesForLoan(customFields.next());
                 if (customFieldResponses != null) {
                     while (customFieldResponses.hasNext()) {
-                        addOrUpdateForLoan(entityResponsesMap, customFieldResponses.next());
+                        addOrUpdateForAccount(entityResponsesMap, customFieldResponses.next());
                     }
                 }
             }
@@ -262,7 +552,7 @@ public class QuestionnaireMigration {
         return entityResponsesMap;
     }
 
-    private void addOrUpdateForLoan(Map<Integer, List<AccountCustomFieldEntity>> entityResponsesMap, AccountCustomFieldEntity customFieldResponse) {
+    private void addOrUpdateForAccount(Map<Integer, List<AccountCustomFieldEntity>> entityResponsesMap, AccountCustomFieldEntity customFieldResponse) {
         Integer accountId = customFieldResponse.getAccountId();
         if (entityResponsesMap.containsKey(accountId)) {
             entityResponsesMap.get(accountId).add(customFieldResponse);

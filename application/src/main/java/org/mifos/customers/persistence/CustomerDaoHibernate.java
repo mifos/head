@@ -1681,4 +1681,12 @@ public class CustomerDaoHibernate implements CustomerDao {
         return (Iterator<CustomFieldDefinitionEntity>) genericDao
                 .executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
     }
+
+    @Override
+    public Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForCenterIterator() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.CENTER.getValue());
+        return (Iterator<CustomFieldDefinitionEntity>) genericDao
+                .executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+    }
 }

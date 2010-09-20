@@ -28,6 +28,10 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.business.OfficeCustomFieldEntity;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.business.QuestionChoice;
 import org.mifos.customers.surveys.business.Survey;
@@ -183,6 +187,34 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
         return questionGroupInstanceDto;
     }
 
+    @Override
+    public QuestionGroupInstanceDto mapForOffice(Integer questionGroupId, List<OfficeCustomFieldEntity> officeResponses, Map<Short, Integer> customFieldQuestionIdMap) {
+        QuestionGroupInstanceDto questionGroupInstanceDto = new QuestionGroupInstanceDto();
+        OfficeBO office = officeResponses.get(0).getOffice();
+        questionGroupInstanceDto.setDateConducted(mapToDateConducted(office.getCreatedDate(), office.getUpdatedDate()));
+        questionGroupInstanceDto.setCompleted(true);
+        questionGroupInstanceDto.setCreatorId(mapToCreatorId(office.getCreatedBy(), office.getUpdatedBy()));
+        questionGroupInstanceDto.setEntityId(office.getOfficeId().intValue());
+        questionGroupInstanceDto.setQuestionGroupId(questionGroupId);
+        questionGroupInstanceDto.setVersion(DEFAULT_VERSION);
+        questionGroupInstanceDto.setQuestionGroupResponseDtos(mapToQuestionGroupResponseDtosForOffice(questionGroupId, officeResponses, customFieldQuestionIdMap));
+        return questionGroupInstanceDto;
+    }
+
+    @Override
+    public QuestionGroupInstanceDto mapForPersonnel(Integer questionGroupId, List<PersonnelCustomFieldEntity> personnelResponses, Map<Short, Integer> customFieldQuestionIdMap) {
+        QuestionGroupInstanceDto questionGroupInstanceDto = new QuestionGroupInstanceDto();
+        PersonnelBO personnel = personnelResponses.get(0).getPersonnel();
+        questionGroupInstanceDto.setDateConducted(mapToDateConducted(personnel.getCreatedDate(), personnel.getUpdatedDate()));
+        questionGroupInstanceDto.setCompleted(true);
+        questionGroupInstanceDto.setCreatorId(mapToCreatorId(personnel.getCreatedBy(), personnel.getUpdatedBy()));
+        questionGroupInstanceDto.setEntityId(personnel.getPersonnelId().intValue());
+        questionGroupInstanceDto.setQuestionGroupId(questionGroupId);
+        questionGroupInstanceDto.setVersion(DEFAULT_VERSION);
+        questionGroupInstanceDto.setQuestionGroupResponseDtos(mapToQuestionGroupResponseDtosForPersonnel(questionGroupId, personnelResponses, customFieldQuestionIdMap));
+        return questionGroupInstanceDto;
+    }
+
     private Date mapToDateConducted(Date createdDate, Date updatedDate) {
         if (createdDate != null) {
             return createdDate;
@@ -220,6 +252,32 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
         for (AccountCustomFieldEntity accountResponse : accountResponses) {
             Short fieldId = accountResponse.getFieldId();
             String fieldValue = accountResponse.getFieldValue();
+            QuestionGroupResponseDto questionGroupResponseDto = mapToQuestionGroupResponseDto(questionGroupId, customFieldQuestionIdMap, fieldId, fieldValue);
+            if (questionGroupResponseDto != null) {
+                questionGroupResponseDtos.add(questionGroupResponseDto);
+            }
+        }
+        return questionGroupResponseDtos;
+    }
+
+    private List<QuestionGroupResponseDto> mapToQuestionGroupResponseDtosForOffice(Integer questionGroupId, List<OfficeCustomFieldEntity> officeResponses, Map<Short, Integer> customFieldQuestionIdMap) {
+        List<QuestionGroupResponseDto> questionGroupResponseDtos = new ArrayList<QuestionGroupResponseDto>();
+        for (OfficeCustomFieldEntity officeResponse : officeResponses) {
+            Short fieldId = officeResponse.getFieldId();
+            String fieldValue = officeResponse.getFieldValue();
+            QuestionGroupResponseDto questionGroupResponseDto = mapToQuestionGroupResponseDto(questionGroupId, customFieldQuestionIdMap, fieldId, fieldValue);
+            if (questionGroupResponseDto != null) {
+                questionGroupResponseDtos.add(questionGroupResponseDto);
+            }
+        }
+        return questionGroupResponseDtos;
+    }
+
+    private List<QuestionGroupResponseDto> mapToQuestionGroupResponseDtosForPersonnel(Integer questionGroupId, List<PersonnelCustomFieldEntity> personnelResponses, Map<Short, Integer> customFieldQuestionIdMap) {
+        List<QuestionGroupResponseDto> questionGroupResponseDtos = new ArrayList<QuestionGroupResponseDto>();
+        for (PersonnelCustomFieldEntity personnelResponse : personnelResponses) {
+            Short fieldId = personnelResponse.getFieldId();
+            String fieldValue = personnelResponse.getFieldValue();
             QuestionGroupResponseDto questionGroupResponseDto = mapToQuestionGroupResponseDto(questionGroupId, customFieldQuestionIdMap, fieldId, fieldValue);
             if (questionGroupResponseDto != null) {
                 questionGroupResponseDtos.add(questionGroupResponseDto);
@@ -387,7 +445,10 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
                 makeEntry(EntityType.CLIENT, "Client"),
                 makeEntry(EntityType.GROUP, "Group"),
                 makeEntry(EntityType.CENTER, "Center"),
-                makeEntry(EntityType.LOAN, "Loan")
+                makeEntry(EntityType.LOAN, "Loan"),
+                makeEntry(EntityType.SAVINGS, "Savings"),
+                makeEntry(EntityType.OFFICE, "Office"),
+                makeEntry(EntityType.PERSONNEL, "Personnel")
         );
     }
 
