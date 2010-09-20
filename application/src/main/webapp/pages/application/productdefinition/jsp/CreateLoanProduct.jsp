@@ -44,6 +44,9 @@ explanation of the license and how it is applied.
 			onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) &&
 				validateMyForm(endDate,endDateFormat,endDateYY))"
 			focus="prdOfferingName">
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}"
+                var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
+
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
@@ -538,53 +541,55 @@ explanation of the license and how it is applied.
 										<br>
 										</td>
 									</tr>
-									<tr class="fontnormal">
-                                        <td width="30%" align="right" valign="top"><mifos:mifoslabel
-											name="product.canConfigureVariableInstallments"
-											bundle="ProductDefUIResources" /> :
-                                        </td>
-                                        <td valign="top"><html-el:checkbox styleId="createLoanProduct.checkbox.canConfigureVariableInstallments"
-                                            property="canConfigureVariableInstallments" onclick="showVariableInstallmentInputs();" value="1" />
-                                        </td>
-                                    </tr>
-                                    <tr class="fontnormal">                                        
-                                        <td width="30%" align="right" valign="top"> 
-								            <div id="minimumGapBetweenInstallmentsLabelDiv"  style="display: none;">
-                                                <mifos:mifoslabel name="product.minimumGapBetweenInstallments" bundle="ProductDefUIResources" /> :
-                                            </div>
-                                        </td>
-                                        <td valign="top">
-                                            <div id="minimumGapBetweenInstallmentsInputDiv" style="display: none;">
-                                                    <mifos:mifosnumbertext property="minimumGapBetweenInstallments" />
-                                                    <span id="days"> <mifos:mifoslabel name="product.days" bundle="ProductDefUIResources" /> </span>
-                                            </div>
-                                        </td>
-                                   </tr>
-                                   <tr class="fontnormal">
-                                        <td width="30%" align="right" valign="top">
-                                            <div id="maximumGapBetweenInstallmentsLabelDiv"  style="display: none;">
-                                                <mifos:mifoslabel name="product.maximumGapBetweenInstallments" bundle="ProductDefUIResources" /> :
-                                            </div>
-                                        </td>   
-                                        <td valign="top">
-                                            <div id="maximumGapBetweenInstallmentsInputDiv" style="display: none;">
-                                                    <mifos:mifosnumbertext property="maximumGapBetweenInstallments" />
-                                                    <span id="days"> <mifos:mifoslabel name="product.days" bundle="ProductDefUIResources" /> </span>
-                                            </div>
-                                        </td>
-                                   </tr>
-                                   <tr class="fontnormal">
-                                        <td width="30%" align="right" valign="top">
-                                            <div id="minimumInstallmentAmountLabelDiv"  style="display: none;">
-                                                <mifos:mifoslabel name="product.minimumInstallmentAmount" bundle="ProductDefUIResources" /> :
-                                            </div>
-								        </td>
-                                         <td valign="top">
-                                             <div id="minimumInstallmentAmountInputDiv" style="display: none;">
-                                                <mifos:decimalinput styleId= "createLoanProduct.input.minimumInstallmentAmount" property="minimumInstallmentAmount" />
-                                             </div>
-                                        </td>
-									</tr>
+                                    <c:if test="${repaymentSchedulesIndependentOfMeetingIsEnabled == '1'}">
+                                        <tr class="fontnormal">
+                                            <td width="30%" align="right" valign="top"><mifos:mifoslabel
+                                                name="product.canConfigureVariableInstallments"
+                                                bundle="ProductDefUIResources" /> :
+                                            </td>
+                                            <td valign="top"><html-el:checkbox styleId="createLoanProduct.checkbox.canConfigureVariableInstallments"
+                                                property="canConfigureVariableInstallments" onclick="showVariableInstallmentInputs();" value="1" />
+                                            </td>
+                                        </tr>
+                                        <tr class="fontnormal">
+                                            <td width="30%" align="right" valign="top">
+                                                <div id="minimumGapBetweenInstallmentsLabelDiv"  style="display: none;">
+                                                    <mifos:mifoslabel name="product.minimumGapBetweenInstallments" bundle="ProductDefUIResources" /> :
+                                                </div>
+                                            </td>
+                                            <td valign="top">
+                                                <div id="minimumGapBetweenInstallmentsInputDiv" style="display: none;">
+                                                        <mifos:mifosnumbertext property="minimumGapBetweenInstallments" />
+                                                        <span id="days"> <mifos:mifoslabel name="product.days" bundle="ProductDefUIResources" /> </span>
+                                                </div>
+                                            </td>
+                                       </tr>
+                                       <tr class="fontnormal">
+                                            <td width="30%" align="right" valign="top">
+                                                <div id="maximumGapBetweenInstallmentsLabelDiv"  style="display: none;">
+                                                    <mifos:mifoslabel name="product.maximumGapBetweenInstallments" bundle="ProductDefUIResources" /> :
+                                                </div>
+                                            </td>
+                                            <td valign="top">
+                                                <div id="maximumGapBetweenInstallmentsInputDiv" style="display: none;">
+                                                        <mifos:mifosnumbertext property="maximumGapBetweenInstallments" />
+                                                        <span id="days"> <mifos:mifoslabel name="product.days" bundle="ProductDefUIResources" /> </span>
+                                                </div>
+                                            </td>
+                                       </tr>
+                                       <tr class="fontnormal">
+                                            <td width="30%" align="right" valign="top">
+                                                <div id="minimumInstallmentAmountLabelDiv"  style="display: none;">
+                                                    <mifos:mifoslabel name="product.minimumInstallmentAmount" bundle="ProductDefUIResources" /> :
+                                                </div>
+                                            </td>
+                                             <td valign="top">
+                                                 <div id="minimumInstallmentAmountInputDiv" style="display: none;">
+                                                    <mifos:decimalinput styleId= "createLoanProduct.input.minimumInstallmentAmount" property="minimumInstallmentAmount" />
+                                                 </div>
+                                            </td>
+                                        </tr>
+                                    </c:if>
 									<tr class="fontnormal">
 										<td width="30%" align="right" valign="top"><mifos:mifoslabel
 											mandatory="yes" name="product.freqofinst"
@@ -866,10 +871,6 @@ explanation of the license and how it is applied.
 											</table>
 											</div>
 										</tr>
-										<c:set
-											value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}"
-											var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
-
 										<tr class="fontnormal" id="intdeddis">
 											<td valign="top"><c:if
 												test="${repaymentSchedulesIndependentOfMeetingIsEnabled == '0'}">

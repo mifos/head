@@ -1729,6 +1729,7 @@ public class LoanPrdActionForm extends BaseActionForm {
             }
             recurAfter = "1";
             minNoInstallments = "1";
+            minimumGapBetweenInstallments = 1;
         }
         if (method != null
                 && (method.equals(Methods.preview.toString()) || method.equals(Methods.editPreview.toString()))) {
