@@ -171,4 +171,26 @@ public class AddressBean implements Serializable {
             messages.addMessage(new MessageBuilder().error().source("address1").code("NotEmpty." + parentObjectName + ".address.address1").defaultText("address1 is mandatory.").build());
         }
     }
+
+    public String getDisplayAddress() {
+        StringBuilder displayAddressBuilder = new StringBuilder();
+        if (StringUtils.isNotBlank(this.address1)) {
+            displayAddressBuilder.append(this.address1);
+        }
+
+        if (StringUtils.isNotBlank(this.address2) && StringUtils.isNotBlank(this.address1)) {
+            displayAddressBuilder.append(", ").append(this.address2);
+        } else if (StringUtils.isNotBlank(this.address2)) {
+            displayAddressBuilder.append(this.address2);
+        }
+
+        if (StringUtils.isNotBlank(this.address3) && StringUtils.isNotBlank(this.address2)
+                || (StringUtils.isNotBlank(this.address3) && StringUtils.isNotBlank(this.address1))) {
+            displayAddressBuilder.append(", ").append(this.address3);
+        } else if (StringUtils.isNotBlank(this.address3)) {
+            displayAddressBuilder.append(", ").append(this.address3);
+        }
+
+        return displayAddressBuilder.toString();
+    }
 }
