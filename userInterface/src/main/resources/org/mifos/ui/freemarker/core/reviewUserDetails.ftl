@@ -86,6 +86,13 @@
          	<div class="clear">&nbsp;</div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.additionalInformation"/]</span></div>
             
+            [#list userFormBean.customFields as additional]
+           		<div class="span-20 ">
+           			<span class="fontBold">${additional.label}:</span>
+           			<span>${additional.fieldValue}</span>
+           		</div>
+			[/#list]
+            
             <div class="clear">&nbsp;</div>
             	<input class="buttn2" type="submit" name="_eventId_reedit" value="Edit user information" />
         	</div>

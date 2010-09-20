@@ -36,6 +36,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.screen.PersonnelNoteDto;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
@@ -52,12 +53,16 @@ public class UserFormBean implements Serializable {
     private String officeName;
 
     // user details
+    private Long userId;
+    private Integer statusId = Integer.valueOf(1);
     @NotEmpty
     private String firstName;
     private String middleName;
     private String secondLastName;
     @NotEmpty
     private String lastName;
+    private String displayName;
+
     private String governmentId;
     private String email;
 
@@ -128,6 +133,7 @@ public class UserFormBean implements Serializable {
     private String preferredLanguageName = "";
     private String userTitleName = "";
     private String userHierarchyName = "";
+    private List<PersonnelNoteDto> recentNotes = new ArrayList<PersonnelNoteDto>();
 
     @Autowired
     private transient MifosBeanValidator validator;
@@ -275,6 +281,39 @@ public class UserFormBean implements Serializable {
 
                 if (this.selectedRoles != null && this.selectedRoles.length == 1 && this.selectedRoles[0].equals(role)) {
                     this.selectedRoles = null;
+                }
+            }
+        }
+    }
+
+    public void prepareForPreview() {
+        this.dateOfBirth = new DateTime().withDate(this.dateOfBirthYear.intValue(), this.dateOfBirthMonth.intValue(), this.dateOfBirthDay.intValue());
+        this.age = new DateTime().yearOfEra().getDifference(this.dateOfBirth);
+        this.mfiJoiningDate = new DateTime().withDate(this.mfiJoiningDateYear.intValue(), this.mfiJoiningDateMonth.intValue(), this.mfiJoiningDateDay.intValue());
+
+        if (StringUtils.isNotBlank(this.selectedMaritalStatus)) {
+            this.maritalStatusName = this.maritalStatusOptions.get(this.selectedMaritalStatus);
+        }
+
+        this.genderName = this.genderOptions.get(this.selectedGender);
+
+        if (StringUtils.isNotBlank(this.selectedPreferredLanguage)) {
+            this.preferredLanguageName = this.preferredLanguageOptions.get(this.selectedPreferredLanguage);
+        }
+
+        if (StringUtils.isNotBlank(this.selectedUserTitle)) {
+            this.userTitleName = this.userTitleOptions.get(this.selectedUserTitle);
+        }
+
+        this.userHierarchyName = this.userHierarchyOptions.get(this.selectedUserHierarchy);
+
+        this.selectedRoleNames = new ArrayList<String>();
+        if (this.selectedRoles != null) {
+            for (String roleName : this.selectedRoles) {
+                if (this.selectedRolesOptions.containsKey(roleName)) {
+                    this.selectedRoleNames.add(this.selectedRolesOptions.get(roleName));
+                } else if (this.availableRolesOptions.containsKey(roleName)) {
+                    this.selectedRoleNames.add(this.availableRolesOptions.get(roleName));
                 }
             }
         }
@@ -540,39 +579,6 @@ public class UserFormBean implements Serializable {
         this.genderOptions = genderOptions;
     }
 
-    public void prepareForPreview() {
-        this.dateOfBirth = new DateTime().withDate(this.dateOfBirthYear.intValue(), this.dateOfBirthMonth.intValue(), this.dateOfBirthDay.intValue());
-        this.age = new DateTime().yearOfEra().getDifference(this.dateOfBirth);
-        this.mfiJoiningDate = new DateTime().withDate(this.mfiJoiningDateYear.intValue(), this.mfiJoiningDateMonth.intValue(), this.mfiJoiningDateDay.intValue());
-
-        if (StringUtils.isNotBlank(this.selectedMaritalStatus)) {
-            this.maritalStatusName = this.maritalStatusOptions.get(this.selectedMaritalStatus);
-        }
-
-        this.genderName = this.genderOptions.get(this.selectedGender);
-
-        if (StringUtils.isNotBlank(this.selectedPreferredLanguage)) {
-            this.preferredLanguageName = this.preferredLanguageOptions.get(this.selectedPreferredLanguage);
-        }
-
-        if (StringUtils.isNotBlank(this.selectedUserTitle)) {
-            this.userTitleName = this.userTitleOptions.get(this.selectedUserTitle);
-        }
-
-        this.userHierarchyName = this.userHierarchyOptions.get(this.selectedUserHierarchy);
-
-        this.selectedRoleNames = new ArrayList<String>();
-        if (this.selectedRoles != null) {
-            for (String roleName : this.selectedRoles) {
-                if (this.selectedRolesOptions.containsKey(roleName)) {
-                    this.selectedRoleNames.add(this.selectedRolesOptions.get(roleName));
-                } else if (this.availableRolesOptions.containsKey(roleName)) {
-                    this.selectedRoleNames.add(this.availableRolesOptions.get(roleName));
-                }
-            }
-        }
-    }
-
     public String getDateOfBirth() {
         return org.joda.time.format.DateTimeFormat.forPattern("dd/MM/yyyy").withLocale(Locale.getDefault()).print(this.dateOfBirth);
     }
@@ -631,5 +637,37 @@ public class UserFormBean implements Serializable {
 
     public void setCustomDateFields(List<DateFieldBean> customDateFields) {
         this.customDateFields = customDateFields;
+    }
+
+    public Long getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Integer getStatusId() {
+        return this.statusId;
+    }
+
+    public void setStatusId(Integer statusId) {
+        this.statusId = statusId;
+    }
+
+    public String getDisplayName() {
+        return this.displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public List<PersonnelNoteDto> getRecentNotes() {
+        return this.recentNotes;
+    }
+
+    public void setRecentNotes(List<PersonnelNoteDto> recentNotes) {
+        this.recentNotes = recentNotes;
     }
 }

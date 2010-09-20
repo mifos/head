@@ -13,7 +13,6 @@ public class PersonnelNoteDto implements Serializable {
     private final String personnelName;
 
     public PersonnelNoteDto(DateTime commentDate, String comment, String personnelName) {
-        super();
         this.commentDate = commentDate;
         this.comment = comment;
         this.personnelName = personnelName;

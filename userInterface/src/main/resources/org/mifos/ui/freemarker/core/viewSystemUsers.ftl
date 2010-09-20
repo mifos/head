@@ -36,7 +36,7 @@
     <ul>
 	    [#list pagedResults.pagedUserDetails as userDetail]
 	    <li>
-	        ${userDetail.officeName} /<a href="viewSystemUserDetail.ftl?userId=${userDetail.id}" id="userId_${userDetail.id}">${userDetail.firstName} ${userDetail.lastName}</a>
+	        ${userDetail.officeName} /<a href="viewSystemUserDetails.ftl?id=${userDetail.id}" id="userId_${userDetail.id}">${userDetail.firstName} ${userDetail.lastName}</a>
 	    </li>
 	    [/#list]
     </ul>

@@ -26,11 +26,8 @@ import org.apache.commons.lang.StringUtils;
 public class Name {
 
     private String firstName;
-
     private String middleName;
-
     private String lastName;
-
     private String secondLastName;
 
     public String getFirstName() {

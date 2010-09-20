@@ -324,17 +324,17 @@ public class PersonAction extends SearchAction {
     @TransactionDemarcate(saveToken = true)
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+
         PersonActionForm personActionForm = (PersonActionForm) form;
-        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
-                .getSession());
-        /* Now we are getting personnelInformationDto instead of PersonnelBO. PersonnelDetailsServiceFacade encapsulates
-                all calls to PersonnelDao to obtain PersonnelInformationDto */
-        PersonnelInformationDto personnelInformationDto = this.personnelServiceFacade.getPersonnelInformationDto(
-                ((PersonActionForm) form).getGlobalPersonnelNum());
 
-//        personnelInformationDto.getStatus().setLocaleId(userContext.getLocaleId());
+        String personnelId = ((PersonActionForm) form).getPersonnelId();
+        Long userId = null;
+        if (personnelId != null) {
+            userId = Long.valueOf(personnelId);
+        }
+        PersonnelInformationDto personnelInformationDto = this.personnelServiceFacade.getPersonnelInformationDto(userId, ((PersonActionForm) form).getGlobalPersonnelNum());
+
         SessionUtils.removeThenSetAttribute("personnelInformationDto", personnelInformationDto, request);
-
 
         // John W - for other actions downstream (like edit) business_key set (until all actions refactored)
         PersonnelBO personnelBO = ((PersonnelBusinessService) getService()).getPersonnel(personnelInformationDto.getPersonnelId());

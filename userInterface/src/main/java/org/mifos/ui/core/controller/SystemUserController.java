@@ -28,6 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
@@ -44,9 +45,14 @@ import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.screen.DefinePersonnelDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
+import org.mifos.dto.screen.PersonnelDetailsDto;
+import org.mifos.dto.screen.PersonnelInformationDto;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class SystemUserController {
@@ -257,5 +263,92 @@ public class SystemUserController {
         UserDetailDto userDetails = this.personnelServiceFacade.createPersonnelInformation(personnel);
 
         return userDetails;
+    }
+
+    @ModelAttribute("userFormBean")
+    @RequestMapping(value="viewSystemUserDetails.ftl")
+    public UserFormBean viewSystemUserDetails(@RequestParam(value="id", required=true) Long userId) {
+
+        UserFormBean formBean = new UserFormBean();
+        formBean.setUserId(userId);
+
+        UserFormBean userFormBean = createPopulatedUserFormBean(userId, formBean);
+
+        return userFormBean;
+    }
+
+    public UserFormBean createPopulatedUserFormBean(final Long userId, final UserFormBean formBean) {
+        PersonnelInformationDto personnelInformation = this.personnelServiceFacade.getPersonnelInformationDto(userId, "");
+
+        UserFormBean populatedBean = createUserFormBean(personnelInformation.getOfficeId().longValue(), formBean);
+
+        populatedBean.setStatusId(personnelInformation.getStatus().getId());
+        populatedBean.setDisplayName(personnelInformation.getDisplayName());
+        populatedBean.setEmail(personnelInformation.getEmailId());
+
+        PersonnelDetailsDto details = personnelInformation.getPersonnelDetails();
+        populatedBean.setGovernmentId(details.getGovernmentIdNumber());
+
+        populatedBean.setDateOfBirthDay(details.getDob().getDayOfMonth());
+        populatedBean.setDateOfBirthMonth(details.getDob().getMonthOfYear());
+        populatedBean.setDateOfBirthYear(details.getDob().getYearOfEra());
+
+        if (details.getDateOfJoiningMFI() != null) {
+            populatedBean.setMfiJoiningDateDay(details.getDateOfJoiningMFI().getDayOfMonth());
+            populatedBean.setMfiJoiningDateMonth(details.getDateOfJoiningMFI().getMonthOfYear());
+            populatedBean.setMfiJoiningDateYear(details.getDateOfJoiningMFI().getYearOfEra());
+        }
+
+        populatedBean.setSelectedGender(details.getGender().toString());
+        if (details.getMaritalStatus() != null) {
+            populatedBean.setSelectedMaritalStatus(details.getMaritalStatus().toString());
+        }
+
+        AddressDto address = details.getAddress();
+        AddressBean bean = new AddressBean();
+        bean.setAddress1(address.getLine1());
+        bean.setAddress2(address.getLine2());
+        bean.setAddress3(address.getLine3());
+        bean.setCityDistrict(address.getCity());
+        bean.setState(address.getState());
+        bean.setCountry(address.getCountry());
+        bean.setPostalCode(address.getZip());
+        bean.setTelephoneNumber(address.getPhoneNumber());
+
+        populatedBean.setAddress(bean);
+
+        if (personnelInformation.getTitle() != null) {
+            populatedBean.setSelectedUserTitle(personnelInformation.getTitle().toString());
+        }
+        populatedBean.setSelectedUserHierarchy(personnelInformation.getLevelId().toString());
+        populatedBean.setUsername(personnelInformation.getUserName());
+
+        List<CustomFieldDto> currentBeanFields = new ArrayList<CustomFieldDto>();
+        List<CustomFieldDto> defaultBeanFields = populatedBean.getCustomFields();
+        for (CustomFieldDto customFieldDto : defaultBeanFields) {
+            CustomFieldDto matchingField = findMatchingAndSetFieldValue(customFieldDto, personnelInformation.getCustomFields());
+            if (matchingField != null) {
+                currentBeanFields.add(matchingField);
+            }
+        }
+
+        populatedBean.setRecentNotes(personnelInformation.getRecentPersonnelNotes());
+
+        populatedBean.setCustomFields(currentBeanFields);
+
+        populatedBean.prepareForPreview();
+
+        return populatedBean;
+    }
+
+    private CustomFieldDto findMatchingAndSetFieldValue(CustomFieldDto source, Set<CustomFieldDto> customFields) {
+        CustomFieldDto match = null;
+        for (CustomFieldDto possibleMatch : customFields) {
+            if (source.getFieldId().equals(possibleMatch.getFieldId())) {
+                source.setFieldValue(possibleMatch.getFieldValue());
+                match = source;
+            }
+        }
+        return match;
     }
 }

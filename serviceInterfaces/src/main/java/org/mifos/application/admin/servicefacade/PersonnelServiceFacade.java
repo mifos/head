@@ -41,7 +41,7 @@ public interface PersonnelServiceFacade {
     DefinePersonnelDto retrieveInfoForNewUserDefinition(Short officeId, Locale preferredLocale);
 
     @PreAuthorize("isFullyAuthenticated()")
-    PersonnelInformationDto getPersonnelInformationDto(String globalCustNum);
+    PersonnelInformationDto getPersonnelInformationDto(Long userId, String globalPersonnelNum);
 
     @PreAuthorize("isFullyAuthenticated()")
     UserDetailDto createPersonnelInformation(CreateOrUpdatePersonnelInformation personnel);

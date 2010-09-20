@@ -194,22 +194,27 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
     }
 
     @Override
-    public PersonnelInformationDto getPersonnelInformationDto(String globalCustNum) {
+    public PersonnelInformationDto getPersonnelInformationDto(final Long userId, final String globalNumber) {
 
-        PersonnelBO personnel = personnelDao.findByGlobalPersonnelNum(globalCustNum);
+        PersonnelBO personnel = null;
+        if (userId != null) {
+            personnel = personnelDao.findPersonnelById(userId.shortValue());
+        } else {
+            personnel = personnelDao.findByGlobalPersonnelNum(globalNumber);
+        }
         if (personnel == null) {
-            throw new MifosRuntimeException("personnel not found for globalCustNum" + globalCustNum);
+            throw new MifosRuntimeException("personnel not found for id" + userId);
         }
 
         String displayName = personnel.getDisplayName();
         PersonnelStatusEntity personnelStatus = personnel.getStatus();
-//      personnel.getStatus().setLocaleId(userLocaleId);
         ListElement status = new ListElement(new Integer(personnelStatus.getId()), personnelStatus.getName());
         boolean locked =  personnel.isLocked();
         PersonnelDetailsEntity personnelDetailsEntity = personnel.getPersonnelDetails();
         Address address = personnelDetailsEntity.getAddress();
         AddressDto addressDto = new AddressDto(address.getLine1(), address.getLine2(), address.getLine3(), address.getCity(), address.getState(),
                                     address.getCountry(), address.getZip(), address.getPhoneNumber());
+
         PersonnelDetailsDto personnelDetails = new PersonnelDetailsDto(personnelDetailsEntity.getGovernmentIdNumber(), new DateTime(personnelDetailsEntity.getDob()),
                                                 personnelDetailsEntity.getMaritalStatus(), personnelDetailsEntity.getGender(),
                                                 new DateTime(personnelDetailsEntity.getDateOfJoiningMFI()), new DateTime(personnelDetailsEntity.getDateOfJoiningBranch()),
@@ -240,9 +245,9 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         for (PersonnelNotesEntity entity: personnelNotesEntity) {
             personnelNotes.add(new PersonnelNoteDto(new DateTime(entity.getCommentDate()), entity.getComment(), entity.getPersonnelName()));
         }
-        return new PersonnelInformationDto(displayName, status, locked,
+        return new PersonnelInformationDto(personnel.getPersonnelId().intValue(), displayName, status, locked,
                                            personnelDetails, emailId, preferredLocale.getLanguageName(),
-                                           level.getId(), office.getOfficeName(), title, personnelRoles,
+                                           level.getId(), office.getOfficeId().intValue(), office.getOfficeName(), title, personnelRoles,
                                            personnelId, userName, customFields,
                                            personnelNotes);
     }
@@ -269,7 +274,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
             OfficeBO office = officeDao.findOfficeById(personnel.getOfficeId());
 
-            // FIXME - extract out validation for duplicate user name from
+            // FIXME - extract out validation for duplicate user name from model pojo
             PersonnelBO newPersonnel = new PersonnelBO(PersonnelLevel.fromInt(personnel.getPersonnelLevelId()
                     .intValue()), office, personnel.getTitle(), personnel.getPreferredLocale(),
                     personnel.getPassword(), personnel.getUserName(), personnel.getEmailId(), roles, personnel
