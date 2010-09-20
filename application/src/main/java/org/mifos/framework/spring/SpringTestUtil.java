@@ -20,15 +20,15 @@
 
 package org.mifos.framework.spring;
 
-import java.util.ArrayList;
-import java.io.IOException;
-
+import org.mifos.framework.util.ConfigurationLocator;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * A (hopefully) temporary class to encapsulate Spring/Mifos integration. (-Adam
