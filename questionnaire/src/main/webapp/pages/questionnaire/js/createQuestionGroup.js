@@ -13,6 +13,13 @@ CreateQuestionGroup.removeQuestion = function (sectionName, questionId){
     questionToDeleteBtn.click();
 }
 
+CreateQuestionGroup.moveQuestionUp = function (sectionName, questionId){
+	var questionToMoveUpBtn = document.getElementById('_eventId_moveQuestionUp');
+	questionToMoveUpBtn.value = questionId;
+    document.getElementById('questionSection').value = sectionName;
+    questionToMoveUpBtn.click();
+}
+
 $(document).ready(function () {
 	$('#txtListSearch').keyup(function(event) {
 		var search_text = $('#txtListSearch').val();

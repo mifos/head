@@ -85,6 +85,9 @@ fieldset.right_section label{
 .table_common .mandatory {
     width: 100px;
 }
+.table_common .move {
+    width: 90px;
+}
 .table_common .status {
     width: 150px;
 }

@@ -102,6 +102,7 @@
                 <th class="name" >[@spring.message "questionnaire.question.name"/]</th>
                 <th class="mandatory" style="text-align:center">[@spring.message "questionnaire.question.mandatory"/]</th>
                 <th class="remove">[@spring.message "questionnaire.question.delete"/]</th>
+                <th class="move">[@spring.message "questionnaire.question.move"/]</th>
             </tr>
             </thead>
             <tbody>
@@ -118,6 +119,10 @@
                         <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
                     [/#if]
                 </td>
+                <td>
+                    <a href="javascript:CreateQuestionGroup.moveQuestionUp('${section.name}','${sectionQuestion.questionId}')">up</a>&nbsp;&nbsp;
+                    <a href="javascript:CreateQuestionGroup.moveQuestionUp('${section.name}','${sectionQuestion.questionId}')">down</a>
+                </td>
             </tr>
             [/#list]
             </tbody>
@@ -126,6 +131,7 @@
         <input type="submit" id="_eventId_deleteSection" name="_eventId_deleteSection" value="" style="visibility:hidden"/>
         <input type="submit" id="_eventId_deleteQuestion" name="_eventId_deleteQuestion" value="" style="visibility:hidden"/>
         <input type="hidden" id="questionSection" name="questionSection" value=""/>
+        <input type="submit" id="_eventId_moveQuestionUp" name="_eventId_moveQuestionUp" value="" style="visibility:hidden"/>
     </div>
     <div class="button_footer">
         <div class="button_container">

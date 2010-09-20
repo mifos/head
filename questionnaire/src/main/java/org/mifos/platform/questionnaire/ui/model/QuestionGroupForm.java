@@ -72,10 +72,12 @@ public class QuestionGroupForm extends ScreenObject {
     public void setTitle(String title) {
         this.questionGroupDetail.setTitle(trim(title));
     }
-    
+
     public String getEventSourceId() {
         EventSourceDto eventSourceDto = this.questionGroupDetail.getEventSource();
-        if (eventSourceDto == null || isEmpty(eventSourceDto.getEvent()) || isEmpty(eventSourceDto.getSource())) return null;
+        if (eventSourceDto == null || isEmpty(eventSourceDto.getEvent()) || isEmpty(eventSourceDto.getSource())) {
+            return null;
+        }
         return format("%s.%s", eventSourceDto.getEvent(), eventSourceDto.getSource());
     }
 
@@ -243,6 +245,29 @@ public class QuestionGroupForm extends ScreenObject {
         }
     }
 
+    public void moveQuestionUp(String sectionName, String questionId) {
+        for (SectionDetailForm section : sections) {
+            if (StringUtils.equalsIgnoreCase(sectionName, section.getName())) {
+                List<SectionQuestionDetail> questions = section.getSectionQuestionDetails();
+                for (SectionQuestionDetail question : questions) {
+                    if (Integer.parseInt(questionId) == question.getQuestionId()) {
+                        int listPosition = question.getSequenceNumber();
+                        if (listPosition > 0) {
+                            SectionQuestionDetail questionToSwap = questions.get(listPosition - 1);
+                            questions.set(listPosition, questionToSwap);
+                            questions.set(listPosition - 1, question);
+                            int actualSeqNumber = question.getSequenceNumber();
+                            question.setSequenceNumber(questionToSwap.getSequenceNumber());
+                            questionToSwap.setSequenceNumber(actualSeqNumber);
+                        }
+                        break;
+                    }
+                }
+            }
+            break;
+        }
+    }
+
     public boolean hasNoQuestionsInCurrentSection() {
         return selectedQuestionIds.size() == 0;
     }
@@ -272,7 +297,7 @@ public class QuestionGroupForm extends ScreenObject {
     }
 
     public void setEditable(boolean editable) {
-       questionGroupDetail.setEditable(editable); 
+       questionGroupDetail.setEditable(editable);
     }
 
     public boolean isActive() {
