@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos;
+package org.mifos.web.listener;
 
 import java.util.ArrayList;
 import java.util.List;

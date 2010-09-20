@@ -478,4 +478,8 @@ public interface SecurityConstants {
     short CAN_VIEW_ACTIVE_SESSIONS = 238;
     short CAN_MANAGE_QUESTION_GROUPS = 240;
     short CAN_SHUT_DOWN_MIFOS = 239;
+
+    /** Batch Jobs */
+    short CAN_RUN_BATCH_JOBS_ON_DEMAND = 241;
+    short CAN_UPDATE_BATCH_JOBS_CONFIGURATION = 242;
 }

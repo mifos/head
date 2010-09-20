@@ -184,7 +184,6 @@ truncate table  gl_code;
 truncate table  country;
 truncate table  transaction_type;
 truncate table  payment_type;
-truncate table  scheduled_tasks;
 truncate table  temp_id;
 truncate table  currency;
 truncate table  fund_code;
@@ -214,3 +213,26 @@ truncate table event_sources;
 truncate table events;
 
 truncate table applied_upgrades;
+
+truncate table QRTZ_JOB_DETAILS;
+truncate table QRTZ_JOB_LISTENERS;
+truncate table QRTZ_TRIGGERS;
+truncate table QRTZ_SIMPLE_TRIGGERS;
+truncate table QRTZ_CRON_TRIGGERS;
+truncate table QRTZ_BLOB_TRIGGERS;
+truncate table QRTZ_TRIGGER_LISTENERS;
+truncate table QRTZ_CALENDARS;
+truncate table QRTZ_PAUSED_TRIGGER_GRPS;
+truncate table QRTZ_FIRED_TRIGGERS;
+truncate table QRTZ_SCHEDULER_STATE;
+truncate table QRTZ_LOCKS;
+
+truncate table BATCH_JOB_INSTANCE;
+truncate table BATCH_JOB_EXECUTION;
+truncate table BATCH_JOB_PARAMS;
+truncate table BATCH_STEP_EXECUTION;
+truncate table BATCH_STEP_EXECUTION_CONTEXT;
+truncate table BATCH_JOB_EXECUTION_CONTEXT;
+truncate table BATCH_STEP_EXECUTION_SEQ;
+truncate table BATCH_JOB_EXECUTION_SEQ;
+truncate table BATCH_JOB_SEQ;

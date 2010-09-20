@@ -70,7 +70,6 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.util.DateTimeService;
@@ -766,8 +765,9 @@ public class CustomerAccountBO extends AccountBO {
                                                                               accountFee,
                                                                               dueInstallments.size(),
                                                                               dueInstallments.get(0).getInstallmentId());
-        Money totalFeeAmountApplied = applyFeeToInstallments(feeInstallmentList, dueInstallments);
-        updateCustomerActivity(fee.getFeeId(), totalFeeAmountApplied, fee.getFeeName() + AccountConstants.APPLIED);
+        // MIFOS-3701: we want to display only fee charge, not the totalFeeAmountApplied
+        applyFeeToInstallments(feeInstallmentList, dueInstallments);
+        updateCustomerActivity(fee.getFeeId(), charge, fee.getFeeName() + AccountConstants.APPLIED);
         accountFee.setFeeStatus(FeeStatus.ACTIVE);
     }
 

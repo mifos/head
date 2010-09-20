@@ -69,7 +69,7 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
-import org.mifos.framework.components.batchjobs.MifosTask;
+import org.mifos.framework.components.batchjobs.MifosBatchJob;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -140,7 +140,7 @@ public abstract class BaseAction extends DispatchAction {
             this.fundDao = springAppContext.getBean(FundDao.class);
         }
 
-        if (MifosTask.isBatchJobRunningThatRequiresExclusiveAccess()) {
+        if (MifosBatchJob.isBatchJobRunningThatRequiresExclusiveAccess()) {
             return logout(mapping, request);
         }
         ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class.getName());

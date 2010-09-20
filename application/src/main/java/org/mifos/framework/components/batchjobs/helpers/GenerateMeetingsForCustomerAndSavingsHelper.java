@@ -35,7 +35,6 @@ import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.GeneralConfig;
 import org.mifos.customers.business.CustomerAccountBO;
-import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
@@ -53,8 +52,8 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
     private List<Days> workingDays;
     private Map<Short, List<Holiday>> officeCurrentAndFutureHolidays;
 
-    public GenerateMeetingsForCustomerAndSavingsHelper(final MifosTask mifosTask) {
-        super(mifosTask);
+    public GenerateMeetingsForCustomerAndSavingsHelper() {
+        super();
     }
 
     @Override
@@ -197,13 +196,4 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
         getLogger().info(finalMessage);
     }
 
-    @Override
-    public boolean isTaskAllowedToRun() {
-        return true;
-    }
-
-    @Override
-    public void requiresExclusiveAccess() {
-        MifosTask.batchJobRequiresExclusiveAccess(false);
-    }
 }

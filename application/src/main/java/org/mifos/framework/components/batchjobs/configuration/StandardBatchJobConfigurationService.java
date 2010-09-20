@@ -28,14 +28,17 @@ import org.mifos.config.GeneralConfig;
 
 public class StandardBatchJobConfigurationService implements BatchJobConfigurationService {
 
+    @Override
     public int getBatchSizeForBatchJobs() {
         return GeneralConfig.getBatchSizeForBatchJobs();
     }
 
+    @Override
     public int getRecordCommittingSizeForBatchJobs() {
         return GeneralConfig.getRecordCommittingSizeForBatchJobs();
     }
 
+    @Override
     public int getOutputIntervalForBatchJobs() {
         return GeneralConfig.getOutputIntervalForBatchJobs();
     }

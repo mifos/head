@@ -118,12 +118,12 @@ public class CustomerBusinessService implements BusinessService {
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
-        List<CustomerActivityEntity> customerAtivityDetails = customerBO.getCustomerAccount()
+        List<CustomerActivityEntity> customerActivityDetails = customerBO.getCustomerAccount()
                 .getCustomerActivitDetails();
         List<CustomerRecentActivityDto> customerActivityViewList = new ArrayList<CustomerRecentActivityDto>();
 
         int count = 0;
-        for (CustomerActivityEntity customerActivityEntity : customerAtivityDetails) {
+        for (CustomerActivityEntity customerActivityEntity : customerActivityDetails) {
             customerActivityViewList.add(getCustomerActivityView(customerActivityEntity));
             if (++count == 3) {
                 break;
@@ -134,10 +134,10 @@ public class CustomerBusinessService implements BusinessService {
 
     public List<CustomerRecentActivityDto> getAllActivityView(String globalCustNum) throws ServiceException {
         CustomerBO customerBO = findBySystemId(globalCustNum);
-        List<CustomerActivityEntity> customerAtivityDetails = customerBO.getCustomerAccount()
+        List<CustomerActivityEntity> customerActivityDetails = customerBO.getCustomerAccount()
                 .getCustomerActivitDetails();
         List<CustomerRecentActivityDto> customerActivityViewList = new ArrayList<CustomerRecentActivityDto>();
-        for (CustomerActivityEntity customerActivityEntity : customerAtivityDetails) {
+        for (CustomerActivityEntity customerActivityEntity : customerActivityDetails) {
             customerActivityViewList.add(getCustomerActivityView(customerActivityEntity));
         }
         return customerActivityViewList;

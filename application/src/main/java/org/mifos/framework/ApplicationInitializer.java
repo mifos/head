@@ -34,7 +34,6 @@ import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.AppNotConfiguredException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -50,7 +49,7 @@ import org.mifos.framework.util.helpers.MoneyCompositeUserType;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.ActivityMapper;
-import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletContext;
@@ -60,9 +59,15 @@ import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Timer;
 
 /**
  * This class should prepare all the sub-systems that are required by the app. Cleanup should also happen here when the
@@ -70,7 +75,7 @@ import java.util.Locale;
  */
 public class ApplicationInitializer implements ServletContextListener, ServletRequestListener, HttpSessionListener {
 
-    private static Logger logger = null;
+    private static Logger logger = LoggerFactory.getLogger(ApplicationInitializer.class);
 
     private static class DatabaseError {
         boolean isError = false;
@@ -111,29 +116,31 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         init(ctx);
     }
 
-    public void init(ServletContextEvent ctx) {
+    public void init(ServletContextEvent servletContextEvent) {
+        ServletContext ctx = servletContextEvent.getServletContext();
         try {
-            synchronized (ApplicationInitializer.class) {
-                MifosLogManager.configure();
+            // prevent ehcache "phone home"
+            System.setProperty("net.sf.ehcache.skipUpdateCheck", "true");
+            // prevent quartz "phone home"
+            System.setProperty("org.terracotta.quartz.skipUpdateCheck", "true");
 
-                ApplicationContext applicationContext = null;
-                if(ctx !=null){
-                    applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx.getServletContext());
+            synchronized (ApplicationInitializer.class) {
+
+                WebApplicationContext applicationContext = null;
+                if (ctx != null) {
+                    applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx);
                 }
 
-                /*
-                * If we do not call MifosLogManager as first step of initialization
-                * MifosLogManager.loggerRepository will be null.
-                */
-                logger = LoggerFactory.getLogger(ApplicationInitializer.class);
                 logger.info("Logger has been initialised");
 
                 initializeHibernate();
 
                 logger.info(getDatabaseConnectionInfo());
 
-                // if a database upgrade loads an instance of Money then MoneyCompositeUserType needs the default currency
-                MoneyCompositeUserType.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
+                // if a database upgrade loads an instance of Money then MoneyCompositeUserType needs the default
+                // currency
+                MoneyCompositeUserType.setDefaultCurrency(AccountingRules
+                        .getMifosCurrency(new ConfigurationPersistence()));
                 AccountingRules.init(); // load the additional currencies
                 DatabaseMigrator migrator = new DatabaseMigrator(applicationContext);
                 try {
@@ -177,7 +184,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
                     // FIXME: replace with Spring-managed beans
                     final MifosScheduler mifosScheduler = new MifosScheduler();
-                    mifosScheduler.registerTasks();
                     final ShutdownManager shutdownManager = new ShutdownManager();
 
                     Configuration.getInstance();
@@ -185,9 +191,10 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     configureAuditLogValues(Localization.getInstance().getMainLocale());
                     ConfigLocale configLocale = new ConfigLocale();
                     if (null != ctx) {
-                        ctx.getServletContext().setAttribute(MifosScheduler.class.getName(), mifosScheduler);
-                        ctx.getServletContext().setAttribute(ShutdownManager.class.getName(), shutdownManager);
-                        ctx.getServletContext().setAttribute(ConfigLocale.class.getSimpleName(), configLocale);
+                        mifosScheduler.initialize();
+                        ctx.setAttribute(MifosScheduler.class.getName(), mifosScheduler);
+                        ctx.setAttribute(ShutdownManager.class.getName(), shutdownManager);
+                        ctx.setAttribute(ConfigLocale.class.getSimpleName(), configLocale);
                     }
                 }
             }
@@ -346,7 +353,74 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         logger.info("shutting down scheduler");
         final MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
         ctx.removeAttribute(MifosScheduler.class.getName());
-        mifosScheduler.shutdown();
+        try {
+            mifosScheduler.shutdown();
+        } catch (Exception e) {
+            logger.error("error while shutting down scheduler", e);
+        }
+
+       // WebApplicationContext applicationContext = null;
+      //  if (ctx != null) {
+       //     applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx);
+       // }
+
+        StaticHibernateUtil.shutdown();
+        unregisterMySQLDriver();
+        cancleMySQLStatement();
+
+        // kill ehcache threads
+        // (net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread)
+        // hooked in as a listener in web.xml
+        logger.info("destroyed context");
+    }
+
+    private void unregisterMySQLDriver() {
+        // unregister any jdbc drivers (mysql driver)
+        try {
+            for (Enumeration<Driver> e = DriverManager.getDrivers(); e.hasMoreElements();) {
+                Driver driver = e.nextElement();
+                if (driver.getClass().getClassLoader() == getClass().getClassLoader()) {
+                    DriverManager.deregisterDriver(driver);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("can't unregister jdbc drivers", e);
+        }
+    }
+
+    private void cancleMySQLStatement() {
+        // mysql statement cancellation timer (mysql bug 36565)
+        ClassLoader myClassLoader = this.getClass().getClassLoader();
+        Class clazz;
+        try {
+            clazz = Class.forName("com.mysql.jdbc.ConnectionImpl", false, myClassLoader);
+
+            if (!(clazz.getClassLoader() == myClassLoader)) {
+                logger.info("MySQL ConnectionImpl was loaded with another ClassLoader: (" + clazz.getClassLoader()
+                        + "): cancelling anyway");
+            } else {
+                logger.info("MySQL ConnectionImpl was loaded with the WebappClassLoader: cancelling the Timer");
+            }
+
+            Field f = clazz.getDeclaredField("cancelTimer");
+            f.setAccessible(true);
+            Timer timer = (Timer) f.get(null);
+            timer.cancel();
+            logger.info("completed timer cancellation");
+
+        } catch (ClassNotFoundException e) {
+            logger.warn("failed mysql timer cancellation", e);
+        } catch (SecurityException e) {
+            logger.warn("failed mysql timer cancellation", e);
+        } catch (NoSuchFieldException e) {
+            logger.warn("failed mysql timer cancellation", e);
+        } catch (IllegalArgumentException e) {
+            logger.warn("failed mysql timer cancellation", e);
+        } catch (IllegalAccessException e) {
+            logger.warn("failed mysql timer cancellation", e);
+        } catch (NullPointerException e) {
+            logger.info("No mysql timer cancellation required", e);
+        }
     }
 
     @Override
@@ -365,6 +439,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         final ShutdownManager shutdownManager = (ShutdownManager) ctx.getAttribute(ShutdownManager.class.getName());
         shutdownManager.sessionCreated(httpSessionEvent);
     }
+
 
     @Override
     public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
