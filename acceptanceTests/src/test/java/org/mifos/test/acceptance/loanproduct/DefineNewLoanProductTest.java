@@ -26,6 +26,7 @@ import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.loanproduct.*;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
@@ -50,6 +51,7 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     @Override
@@ -63,7 +65,7 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-
+    
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createWeeklyLoanProduct()throws Exception {
         SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
@@ -79,7 +81,44 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         adminPage.defineLoanProduct(formParameters);
+    }
 
+
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void verifyVariableInstalment()throws Exception {
+        verifyVariableInstalmentsInNewLoanProduct();
+        verifyVariableInstalmentsInEditLoanProduct();
+    }
+
+    private void verifyVariableInstalmentsInNewLoanProduct(){
+        AdminPage adminPage = loginAndNavigateToAdminPage();
+        adminPage.verifyPage();
+        DefineNewLoanProductPage defineLoanProductPage = adminPage.navigateToDefineLoanProduct();
+        defineLoanProductPage.verifyVariableInstalmentOptionsDefaults();
+        defineLoanProductPage.verifyMinimumAndMaximumInstalmentGapFields();
+        defineLoanProductPage.verifyMinimumVariableInstalmentAmountField();
+        SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
+        defineLoanProductPage.fillLoanParameters(formParameters);
+        defineLoanProductPage.fillVariableInstalmentOption("60","1","100");
+        DefineNewLoanProductPreviewPage productPreviewPage = defineLoanProductPage.submitAndGotoNewLoanProductPreviewPage();
+        productPreviewPage.verifyVariableInstalmentOption("60","1","100");
+        DefineNewLoanProductConfirmationPage loanProductConfirmationPage = productPreviewPage.submit();
+        loanProductConfirmationPage.verifyVariableInstalmentOption("60","1","100");
+    }
+
+    private void verifyVariableInstalmentsInEditLoanProduct() {
+        AdminPage adminPage = loginAndNavigateToAdminPage();
+        ViewLoanProductsPage viewLoanProductsPage = adminPage.navigateToViewLoanProducts();
+        LoanProductDetailsPage detailsPage = viewLoanProductsPage.viewLoanProductDetails("Educational");
+        EditLoanProductPage editProductPage = detailsPage.editLoanProduct();
+        editProductPage.verifyVariableInstalmentOptionsDefaults();
+        editProductPage.verifyMinimumAndMaximumInstalmentGapFields();
+        editProductPage.verifyMinimumVariableInstalmentAmountField();
+        EditLoanProductPreviewPage editProductPreviewPage = editProductPage.submitVariableInstalmentChange("60", "1", "100");
+        editProductPreviewPage.verifyVariableInstalmentOption("60","1","100");
+        editProductPreviewPage.submit();
+        detailsPage.verifyVariableInstalmentOption("60","1","100");
     }
 
     private AdminPage loginAndNavigateToAdminPage() {

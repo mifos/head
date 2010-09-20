@@ -50,4 +50,8 @@ public class DefineNewLoanProductPreviewPage extends AbstractPage {
     {
         Assert.assertTrue(selenium.isTextPresent(error));
     }
+
+    public void verifyVariableInstalmentOption(String maxGap, String minGap, String minInstalmentAmount) {
+        Assert.assertTrue(selenium.isElementPresent("")) ;
+    }
 }

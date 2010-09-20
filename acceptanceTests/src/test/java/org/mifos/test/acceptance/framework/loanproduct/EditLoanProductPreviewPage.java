@@ -40,4 +40,7 @@ public class EditLoanProductPreviewPage extends MifosPage {
     }
 
 
+    public void verifyVariableInstalmentOption(String maxGap, String minGap, String minInstalmantAmount) {
+        //To change body of created methods use File | Settings | File Templates.
+    }
 }

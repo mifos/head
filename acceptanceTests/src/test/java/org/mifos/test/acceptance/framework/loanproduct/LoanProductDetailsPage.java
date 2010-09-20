@@ -50,4 +50,7 @@ public class LoanProductDetailsPage  extends MifosPage {
             Assert.assertTrue(selenium.isTextPresent(amount));
         }
 
+        public void verifyVariableInstalmentOption(String maxGap, String minGap, String minInstalmantAmount) {
+            //To change body of created methods use File | Settings | File Templates.
+        }
 }

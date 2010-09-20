@@ -45,4 +45,7 @@ public class DefineNewLoanProductConfirmationPage extends MifosPage {
         this.verifyPage("CreateLoanProductConfirmation");
     }
 
+    public boolean verifyVariableInstalmentOption(String maxGap, String minGap, String minInstalmentAmount) {
+        return selenium.isElementPresent("");
+    }
 }
