@@ -437,3 +437,4 @@ drop table if exists BATCH_JOB_EXECUTION_CONTEXT;
 drop table if exists BATCH_STEP_EXECUTION_SEQ;
 drop table if exists BATCH_JOB_EXECUTION_SEQ;
 drop table if exists BATCH_JOB_SEQ;
+drop table if exists variable_installment_details;
