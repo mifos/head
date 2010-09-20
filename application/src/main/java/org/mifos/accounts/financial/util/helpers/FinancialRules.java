@@ -23,8 +23,6 @@ package org.mifos.accounts.financial.util.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mifos.framework.spring.SpringTestUtil;
-
 /**
  * A Spring bean useful in resolving financial actions with their associated GL
  * (general ledger) codes. GL codes are unique to GL accounts.
