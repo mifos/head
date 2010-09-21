@@ -170,7 +170,8 @@ public class CustSearchAction extends SearchAction {
     }
 
     private static void fixUpReportSecurity() {
-        ActivityMapper.getInstance().getActivityMap().put("/reportsUserParamsAction-loadAddList-" + 4, (short) -1);
+        // MIFOS-3108: the following line doesn't make too much sense (and causes permission problems).
+        // ActivityMapper.getInstance().getActivityMap().put("/reportsUserParamsAction-loadAddList-" + 4, (short) -1);
         try {
             AuthorizationManager.getInstance().init();
         } catch (ApplicationException e) {
