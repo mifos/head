@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.framework.spring;
+package org.mifos.framework;
 
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.helpers.FilePaths;
