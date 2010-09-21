@@ -31,6 +31,7 @@ import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPag
 import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
 import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -96,6 +97,8 @@ public class EditLoanProductTest extends UiTestCaseBase {
 
     }
 
+
+
     private ViewLoanProductsPage loginAndNavigateToViewLoanProductsPage() {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
@@ -111,6 +114,24 @@ public class EditLoanProductTest extends UiTestCaseBase {
          .loginSuccessfullyUsingDefaultCredentials()
          .navigateToAdminPage();
      }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void verifyVariableInstalment()throws Exception {
+        SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
+        formParameters.setOfferingName("Test_edit_loan");
+        AdminPage adminPage = loginAndNavigateToAdminPage();
+        adminPage.defineLoanProduct(formParameters);
+        loginAndNavigateToAdminPage();
+        ViewLoanProductsPage viewLoanProductsPage = adminPage.navigateToViewLoanProducts();
+        LoanProductDetailsPage detailsPage = viewLoanProductsPage.viewLoanProductDetails("Test_edit_loan");
+        EditLoanProductPage editProductPage = detailsPage.editLoanProduct();
+        editProductPage.verifyVariableInstalmentOptionsDefaults();
+        editProductPage.verifyVariableInstalmentOptionFields();
+        EditLoanProductPreviewPage editProductPreviewPage = editProductPage.submitVariableInstalmentChange("60", "1", "100");
+        editProductPreviewPage.verifyVariableInstalmentOption("60","1","100");
+        editProductPreviewPage.submit();
+        detailsPage.verifyVariableInstalmentOption("60","1","100");
+    }
 
 }
 
