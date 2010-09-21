@@ -1876,6 +1876,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         validatePrincDueOnLastInstAndPrincGraceType(errors);
         setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
         validateInterestGLCode(request, errors);
+        validateVariableInstallmentPeriods(errors, locale);
         logger.debug("validateForEditPreview method of Loan Product Action form method called :" + prdOfferingName);
     }
 

@@ -232,6 +232,8 @@ public class LoanPrdAction extends BaseAction {
         loanOffering.setVariableInstallmentsAllowed(variableInstallmentsAllowed);
         if (variableInstallmentsAllowed) {
             loanOffering.setVariableInstallmentDetails(mapToVariableInstallmentDetails(loanOffering, loanPrdActionForm));
+        } else {
+            loanOffering.setVariableInstallmentDetails(null);
         }
     }
 
@@ -310,6 +312,7 @@ public class LoanPrdAction extends BaseAction {
                 BusinessServiceName.LoanProduct)).getLoanOffering(loanPrdActionForm.getPrdOfferingIdValue());
         loanOffering.setUserContext(userContext);
         setInitialObjectForAuditLogging(loanOffering);
+        mapVariableInstallmentDetails(loanOffering, loanPrdActionForm);
         loanOffering.update(userContext.getId(), loanPrdActionForm.getPrdOfferingName(), loanPrdActionForm
                 .getPrdOfferingShortName(),
                 getProductCategory(((List<ProductCategoryBO>) SessionUtils.getAttribute(
@@ -545,7 +548,7 @@ public class LoanPrdAction extends BaseAction {
                 .getMeetingDetails().getRecurrenceType().getRecurrenceId()));
         loanPrdActionForm.setPrincipalGLCode(getStringValue(loanProduct.getPrincipalGLcode().getGlcodeId()));
         loanPrdActionForm.setInterestGLCode(getStringValue(loanProduct.getInterestGLcode().getGlcodeId()));
-        setVariableInstallmentDetails(loanPrdActionForm, loanProduct);
+        setVariableInstallmentDetailsOnLoanProductForm(loanPrdActionForm, loanProduct);
         if (loanProduct.isLoanAmountTypeSameForAllLoan()) {
             loanPrdActionForm.setLoanAmtCalcType(getStringValue(ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN));
             Iterator<LoanAmountSameForAllLoanBO> loanAmountSameForAllItr = loanProduct.getLoanAmountSameForAllLoan()
@@ -804,7 +807,7 @@ public class LoanPrdAction extends BaseAction {
 
     }
 
-    private void setVariableInstallmentDetails(LoanPrdActionForm loanPrdActionForm, LoanOfferingBO loanOfferingBO) {
+    private void setVariableInstallmentDetailsOnLoanProductForm(LoanPrdActionForm loanPrdActionForm, LoanOfferingBO loanOfferingBO) {
         boolean variableInstallmentsAllowed = loanOfferingBO.isVariableInstallmentsAllowed();
         loanPrdActionForm.setCanConfigureVariableInstallments(variableInstallmentsAllowed);
         if (variableInstallmentsAllowed) {
