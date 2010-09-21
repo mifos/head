@@ -517,6 +517,21 @@ explanation of the license and how it is applied.
 									<td width="100%" height="23" class="fontnormalbold"><mifos:mifoslabel
 										name="product.repaysch" bundle="ProductDefUIResources" /></td>
 								</tr>
+								<tr>
+								    <td height="23" class="fontnormalbold">
+                                        <mifos:mifoslabel name="product.canConfigureVariableInstallments" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                        <span class="fontnormal">
+                                            <c:choose>
+                                                <c:when test="${sessionScope.loanproductactionform.canConfigureVariableInstallments == '1'}">
+                                                    <mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </span>
+								    </td>
+								</tr>
 								<c:if test="${sessionScope.loanproductactionform.canConfigureVariableInstallments=='1'}">
                                     <tr>
                                         <td height="23" class="fontnormalbold">

@@ -236,6 +236,41 @@ explanation of the license and how it is applied.
 											<mifos:mifoslabel name="product.repaysch" bundle="ProductDefUIResources" />
 										</td>
 									</tr>
+                                    <tr>
+                                        <td height="23" class="fontnormal">
+                                            <mifos:mifoslabel name="product.canConfigureVariableInstallments" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                            <span class="fontnormal">
+                                                <c:choose>
+                                                    <c:when test="${loanPrd.variableInstallmentsAllowed}">
+                                                        <mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <c:if test="${loanPrd.variableInstallmentsAllowed}">
+                                        <tr>
+                                            <td height="23" class="fontnormal">
+                                                <mifos:mifoslabel name="product.minimumGapBetweenInstallments" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                                <span class="fontnormal">
+                                                    <c:out value="${loanPrd.variableInstallmentDetails.minGapInDays}" />
+                                                </span>
+                                                <br/>
+                                                <mifos:mifoslabel name="product.maximumGapBetweenInstallments" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                                <span class="fontnormal">
+                                                    <c:out value="${loanPrd.variableInstallmentDetails.maxGapInDays}" />
+                                                </span>
+                                                <br/>
+                                                <mifos:mifoslabel name="product.minimumInstallmentAmount" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                                <span class="fontnormal">
+                                                    <c:out value="${loanPrd.variableInstallmentDetails.minInstallmentAmount}" />
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </c:if>
 									<tr>
 										<td height="23" class="fontnormalbold">
 											<span class="fontnormal"> <mifos:mifoslabel name="product.freqofinst" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.loanOfferingMeeting.meeting.meetingDetails.recurAfter}" /> <c:if

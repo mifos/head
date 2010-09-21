@@ -709,7 +709,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private void assertVariableInstallmentDetails(LoanOfferingBO loanOfferingBO) {
-        Assert.assertTrue(loanOfferingBO.areVariableInstallmentsAllowed());
+        Assert.assertTrue(loanOfferingBO.isVariableInstallmentsAllowed());
         VariableInstallmentDetailsBO variableInstallmentDetails = loanOfferingBO.getVariableInstallmentDetails();
         Assert.assertNotNull(variableInstallmentDetails);
         Assert.assertEquals(10, variableInstallmentDetails.getMinGapInDays().intValue());

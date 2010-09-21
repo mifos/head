@@ -1479,7 +1479,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
         }
     }
 
-    public boolean areVariableInstallmentsAllowed() {
+    public boolean isVariableInstallmentsAllowed() {
         return variableInstallmentsAllowed.equals(YesNoFlag.YES.getValue());
     }
 
