@@ -154,6 +154,11 @@ public class QuestionGroupController extends QuestionnaireController {
         return "success";
     }
 
+    public String moveQuestionDown(QuestionGroupForm questionGroupForm, String sectionName, String questionId) {
+        questionGroupForm.moveQuestionDown(sectionName, questionId);
+        return "success";
+    }
+
     private String getEventSourceId(EventSourceDto evtSrc) {
         return evtSrc.getEvent().trim().concat(".").concat(evtSrc.getSource().trim());
     }

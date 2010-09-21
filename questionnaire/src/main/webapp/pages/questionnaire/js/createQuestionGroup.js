@@ -20,6 +20,13 @@ CreateQuestionGroup.moveQuestionUp = function (sectionName, questionId){
     questionToMoveUpBtn.click();
 }
 
+CreateQuestionGroup.moveQuestionDown = function (sectionName, questionId){
+	var questionToMoveDownBtn = document.getElementById('_eventId_moveQuestionDown');
+	questionToMoveDownBtn.value = questionId;
+    document.getElementById('questionSection').value = sectionName;
+    questionToMoveDownBtn.click();
+}
+
 $(document).ready(function () {
 	$('#txtListSearch').keyup(function(event) {
 		var search_text = $('#txtListSearch').val();

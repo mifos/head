@@ -120,8 +120,12 @@
                     [/#if]
                 </td>
                 <td>
-                    <a href="javascript:CreateQuestionGroup.moveQuestionUp('${section.name}','${sectionQuestion.questionId}')">up</a>&nbsp;&nbsp;
-                    <a href="javascript:CreateQuestionGroup.moveQuestionUp('${section.name}','${sectionQuestion.questionId}')">down</a>
+                    <a href="javascript:CreateQuestionGroup.moveQuestionUp('${section.name}','${sectionQuestion.questionId}')">
+                        <img src="pages/framework/images/smallarrowtop.gif" width="11" height="11">
+                    </a>&nbsp;&nbsp;
+                    <a href="javascript:CreateQuestionGroup.moveQuestionDown('${section.name}','${sectionQuestion.questionId}')">
+                        <img src="pages/framework/images/smallarrowdown.gif" width="11" height="11">
+                    </a>
                 </td>
             </tr>
             [/#list]
@@ -132,6 +136,7 @@
         <input type="submit" id="_eventId_deleteQuestion" name="_eventId_deleteQuestion" value="" style="visibility:hidden"/>
         <input type="hidden" id="questionSection" name="questionSection" value=""/>
         <input type="submit" id="_eventId_moveQuestionUp" name="_eventId_moveQuestionUp" value="" style="visibility:hidden"/>
+        <input type="submit" id="_eventId_moveQuestionDown" name="_eventId_moveQuestionDown" value="" style="visibility:hidden"/>
     </div>
     <div class="button_footer">
         <div class="button_container">

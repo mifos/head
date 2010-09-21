@@ -251,20 +251,41 @@ public class QuestionGroupForm extends ScreenObject {
                 List<SectionQuestionDetail> questions = section.getSectionQuestionDetails();
                 for (SectionQuestionDetail question : questions) {
                     if (Integer.parseInt(questionId) == question.getQuestionId()) {
-                        int listPosition = question.getSequenceNumber();
-                        if (listPosition > 0) {
-                            SectionQuestionDetail questionToSwap = questions.get(listPosition - 1);
-                            questions.set(listPosition, questionToSwap);
-                            questions.set(listPosition - 1, question);
-                            int actualSeqNumber = question.getSequenceNumber();
+                        int actualSeqNumber = question.getSequenceNumber();
+                        if (actualSeqNumber > 0) {
+                            SectionQuestionDetail questionToSwap = questions.get(actualSeqNumber - 1);
+                            questions.set(actualSeqNumber, questionToSwap);
+                            questions.set(actualSeqNumber - 1, question);
                             question.setSequenceNumber(questionToSwap.getSequenceNumber());
                             questionToSwap.setSequenceNumber(actualSeqNumber);
                         }
                         break;
                     }
                 }
+                break;
             }
-            break;
+        }
+    }
+
+    public void moveQuestionDown(String sectionName, String questionId) {
+        for (SectionDetailForm section : sections) {
+            if (StringUtils.equalsIgnoreCase(sectionName, section.getName())) {
+                List<SectionQuestionDetail> questions = section.getSectionQuestionDetails();
+                for (SectionQuestionDetail question : questions) {
+                    if (Integer.parseInt(questionId) == question.getQuestionId()) {
+                        int actualSeqNumber = question.getSequenceNumber();
+                        if (actualSeqNumber < questions.size()) {
+                            SectionQuestionDetail questionToSwap = questions.get(actualSeqNumber + 1);
+                            questions.set(actualSeqNumber, questionToSwap);
+                            questions.set(actualSeqNumber + 1, question);
+                            question.setSequenceNumber(questionToSwap.getSequenceNumber());
+                            questionToSwap.setSequenceNumber(actualSeqNumber);
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
         }
     }
 
