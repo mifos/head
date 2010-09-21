@@ -46,6 +46,9 @@ import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
+import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
+import org.mifos.framework.components.batchjobs.helpers.UpdateCustomerFeesHelper;
+import org.mifos.framework.components.batchjobs.helpers.UpdateCustomerFeesTask;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -53,6 +56,7 @@ import org.mifos.framework.exceptions.AppNotConfiguredException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateStartUpException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -195,6 +199,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     Configuration.getInstance();
                     MifosConfiguration.getInstance().init();
                     configureAuditLogValues(Localization.getInstance().getMainLocale());
+
+                    cleanUpRecurringFeesForMifos3712();
                 }
             }
         } catch (Exception e) {
@@ -206,6 +212,22 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 LOG.error(errMsgStart, e);
             }
             throw new Error(e);
+        }
+    }
+
+    /**
+     * Force a single run of the UpdateCustomerFeesHelper when Mifos starts up.
+     * Add an entry to the configKeyValueInteger store
+     */
+    private void cleanUpRecurringFeesForMifos3712() throws PersistenceException, BatchJobException {
+        String key = "Recurring fees cleanup done for MIFOS-3712";
+
+        ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+        if (configurationPersistence.getConfigurationKeyValueInteger(key) == null) {
+            long dummy = 0;
+            new UpdateCustomerFeesHelper(new UpdateCustomerFeesTask()).execute(dummy);
+            configurationPersistence.addConfigurationKeyValueInteger(key, 1);
+            StaticHibernateUtil.commitTransaction();
         }
     }
 
