@@ -42,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
+import org.springframework.format.annotation.NumberFormat;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="required for spring web flow storage at a minimum - should disable at filter level and also for pmd")
@@ -71,9 +72,10 @@ public class UserFormBean implements Serializable {
     @NotNull
     private Number dateOfBirthDay;
     @Min(value=1)
-    @Max(value=31)
+    @Max(value=12)
     @NotNull
     private Number dateOfBirthMonth;
+    @NumberFormat(pattern="####")
     @NotNull
     private Number dateOfBirthYear;
 
@@ -93,6 +95,7 @@ public class UserFormBean implements Serializable {
     @Min(value=1)
     @Max(value=12)
     private Number mfiJoiningDateMonth;
+    @NumberFormat(pattern="####")
     private Number mfiJoiningDateYear;
 
     // address details
@@ -220,7 +223,7 @@ public class UserFormBean implements Serializable {
 
     private void bindDateField(MessageContext messages, CustomFieldDto additionalField, DateFieldBean additionalDateField) {
         try {
-            DateTime date = new DateTime().withDate(additionalDateField.getYear().intValue(), additionalDateField.getMonth().intValue(), additionalDateField.getDay().intValue());
+            DateTime date = new DateTime().withDate(Integer.valueOf(additionalDateField.getYear()), additionalDateField.getMonth().intValue(), additionalDateField.getDay().intValue());
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
             additionalField.setFieldValue(format.format(date.toDate()));
         } catch (Throwable e) {
@@ -665,6 +668,10 @@ public class UserFormBean implements Serializable {
 
     public List<PersonnelNoteDto> getRecentNotes() {
         return this.recentNotes;
+    }
+
+    public boolean isRecentNotesEmpty() {
+        return this.recentNotes.isEmpty();
     }
 
     public void setRecentNotes(List<PersonnelNoteDto> recentNotes) {

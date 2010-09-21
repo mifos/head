@@ -40,6 +40,7 @@ public class PersonnelInformationDto implements Serializable {
     private final Boolean locked;
     private final PersonnelDetailsDto personnelDetails;
     private final String emailId;
+    private final Integer preferredLanguageId;
     private final String preferredLocaleLanguageName;
     private final Short levelId;
     private final Integer officeId;
@@ -53,7 +54,7 @@ public class PersonnelInformationDto implements Serializable {
 
     public PersonnelInformationDto(Integer id, String displayName, ListElement status, Boolean locked,
                                    PersonnelDetailsDto personnelDetails, String emailId, String preferredLocaleLanguageName,
-                                   Short levelId, Integer officeId, String officeName, Integer title, Set<ListElement> personnelRoles,
+                                   Integer preferredLanguageId, Short levelId, Integer officeId, String officeName, Integer title, Set<ListElement> personnelRoles,
                                    Short personnelId, String userName, Set<CustomFieldDto> customFields,
                                    Set<PersonnelNoteDto> personnelNotes) {
         this.id = id;
@@ -63,6 +64,7 @@ public class PersonnelInformationDto implements Serializable {
         this.personnelDetails = personnelDetails;
         this.emailId = emailId;
         this.preferredLocaleLanguageName = preferredLocaleLanguageName;
+        this.preferredLanguageId = preferredLanguageId;
         this.levelId = levelId;
         this.officeId = officeId;
         this.officeName = officeName;
@@ -179,5 +181,9 @@ public class PersonnelInformationDto implements Serializable {
 
     public Integer getOfficeId() {
         return this.officeId;
+    }
+
+    public Integer getPreferredLanguageId() {
+        return this.preferredLanguageId;
     }
 }

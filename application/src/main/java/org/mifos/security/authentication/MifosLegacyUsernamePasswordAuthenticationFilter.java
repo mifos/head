@@ -124,6 +124,7 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
             FlowManager flowManager = new FlowManager();
             String flowKey = String.valueOf(new DateTimeService().getCurrentDateTime().getMillis());
             flowManager.addFLow(flowKey, new Flow(), this.getFilterName());
+            flowManager.addFLow("123456789", new Flow(), this.getFilterName());
             request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 
             request.getSession(false).setAttribute(Constants.FLOWMANAGER, flowManager);

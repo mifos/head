@@ -28,6 +28,7 @@ import org.mifos.dto.domain.AddressDto;
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_NO_SERIALVERSIONID", justification = "should disable at filter level and also for pmd - not important for us")
 public class PersonnelDetailsDto implements Serializable {
+
     private final String governmentIdNumber;
     private final DateTime dob;
     private final Integer maritalStatus;
@@ -36,9 +37,14 @@ public class PersonnelDetailsDto implements Serializable {
     private final DateTime dateOfJoiningBranch;
     private final DateTime dateOfLeavingBranch;
     private final AddressDto address;
+    private final String firstName;
+    private final String middleName;
+    private final String secondLastName;
+    private final String lastName;
 
     public PersonnelDetailsDto(String governmentIdNumber, DateTime dob, Integer maritalStatus, Integer gender,
-            DateTime dateOfJoiningMFI, DateTime dateOfJoiningBranch, DateTime dateOfLeavingBranch, AddressDto address) {
+            DateTime dateOfJoiningMFI, DateTime dateOfJoiningBranch, DateTime dateOfLeavingBranch, AddressDto address,
+            String firstName, String middleName, String secondLastName, String lastName) {
         this.governmentIdNumber = governmentIdNumber;
         this.dob = dob;
         this.maritalStatus = maritalStatus;
@@ -47,6 +53,10 @@ public class PersonnelDetailsDto implements Serializable {
         this.dateOfJoiningBranch = dateOfJoiningBranch;
         this.dateOfLeavingBranch = dateOfLeavingBranch;
         this.address = address;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.secondLastName = secondLastName;
+        this.lastName = lastName;
     }
 
     public String getGovernmentIdNumber() {
@@ -79,5 +89,21 @@ public class PersonnelDetailsDto implements Serializable {
 
     public AddressDto getAddress() {
         return this.address;
+    }
+
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public String getMiddleName() {
+        return this.middleName;
+    }
+
+    public String getSecondLastName() {
+        return this.secondLastName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
     }
 }

@@ -132,7 +132,7 @@ public class SystemUserController {
 
         DefinePersonnelDto userRefData = this.personnelServiceFacade.retrieveInfoForNewUserDefinition(officeId.shortValue(), Locale.getDefault());
 
-        populateCustomFields(formBean, userRefData);
+        populateCustomFields(formBean, userRefData.getCustomFields());
 
         Map<String, String> genderOptions = new LinkedHashMap<String, String>();
         for (ListElement option : userRefData.getGenderList()) {
@@ -180,31 +180,41 @@ public class SystemUserController {
     }
 
     @SuppressWarnings("PMD")
-    private void populateCustomFields(final UserFormBean formBean, DefinePersonnelDto userRefData) {
-        formBean.setCustomFields(userRefData.getCustomFields());
+    private void populateCustomFields(final UserFormBean formBean, List<CustomFieldDto> customFields) {
+        formBean.setCustomFields(customFields);
         List<DateFieldBean> dateFields = new ArrayList<DateFieldBean>();
-        for(CustomFieldDto additionalField : userRefData.getCustomFields()) {
+        for(CustomFieldDto additionalField : customFields) {
             if (additionalField.getFieldType().intValue() == 3) {
 
                 DateFieldBean bean = new DateFieldBean();
                 bean.setId(additionalField.getFieldId());
                 bean.setMandatory(additionalField.isMandatory());
                 if (StringUtils.isNotBlank(additionalField.getFieldValue())) {
-                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                     try {
-                        Date d = format.parse(additionalField.getFieldValue());
-                        DateTime dateValue = new DateTime(d);
-                        bean.setDay(dateValue.getDayOfMonth());
-                        bean.setMonth(dateValue.getMonthOfYear());
-                        bean.setYear(dateValue.getYearOfEra());
-                    } catch (ParseException e) {
-                        throw new BusinessRuleException("unable to parse additional field date value", e);
+                        // always displayed in dd/MM/yyyy format
+                        parseAndPopulateDateAs(additionalField, bean, "dd/MM/yyyy");
+                    } catch (BusinessRuleException e) {
+                        // always persisted in yyyy-mm-dd format
+                        parseAndPopulateDateAs(additionalField, bean, "yyyy-mm-dd");
                     }
                 }
                 dateFields.add(bean);
             }
         }
         formBean.setCustomDateFields(dateFields);
+    }
+
+    private void parseAndPopulateDateAs(CustomFieldDto additionalField, DateFieldBean bean, String dateFormat) {
+        SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.getDefault());
+        try {
+            Date d = format.parse(additionalField.getFieldValue());
+            DateTime dateValue = new DateTime(d);
+            bean.setDay(dateValue.getDayOfMonth());
+            bean.setMonth(dateValue.getMonthOfYear());
+            bean.setYear(Integer.valueOf(dateValue.getYearOfEra()).toString());
+        } catch (ParseException e) {
+            throw new BusinessRuleException("unable to parse additional field date value", e);
+        }
     }
 
     @SuppressWarnings("PMD")
@@ -278,16 +288,21 @@ public class SystemUserController {
     }
 
     public UserFormBean createPopulatedUserFormBean(final Long userId, final UserFormBean formBean) {
+
         PersonnelInformationDto personnelInformation = this.personnelServiceFacade.getPersonnelInformationDto(userId, "");
 
         UserFormBean populatedBean = createUserFormBean(personnelInformation.getOfficeId().longValue(), formBean);
 
         populatedBean.setStatusId(personnelInformation.getStatus().getId());
         populatedBean.setDisplayName(personnelInformation.getDisplayName());
-        populatedBean.setEmail(personnelInformation.getEmailId());
 
         PersonnelDetailsDto details = personnelInformation.getPersonnelDetails();
+        populatedBean.setFirstName(details.getFirstName());
+        populatedBean.setMiddleName(details.getMiddleName());
+        populatedBean.setSecondLastName(details.getSecondLastName());
+        populatedBean.setLastName(details.getLastName());
         populatedBean.setGovernmentId(details.getGovernmentIdNumber());
+        populatedBean.setEmail(personnelInformation.getEmailId());
 
         populatedBean.setDateOfBirthDay(details.getDob().getDayOfMonth());
         populatedBean.setDateOfBirthMonth(details.getDob().getMonthOfYear());
@@ -303,9 +318,12 @@ public class SystemUserController {
         if (details.getMaritalStatus() != null) {
             populatedBean.setSelectedMaritalStatus(details.getMaritalStatus().toString());
         }
+        if (personnelInformation.getPreferredLanguageId() != null) {
+            populatedBean.setSelectedPreferredLanguage(personnelInformation.getPreferredLanguageId().toString());
+        }
 
         AddressDto address = details.getAddress();
-        AddressBean bean = new AddressBean();
+        AddressBean bean = populatedBean.getAddress();
         bean.setAddress1(address.getLine1());
         bean.setAddress2(address.getLine2());
         bean.setAddress3(address.getLine3());
@@ -321,6 +339,16 @@ public class SystemUserController {
             populatedBean.setSelectedUserTitle(personnelInformation.getTitle().toString());
         }
         populatedBean.setSelectedUserHierarchy(personnelInformation.getLevelId().toString());
+
+        Set<ListElement> roles = personnelInformation.getPersonnelRoles();
+        String[] selectedRoles = new String[roles.size()];
+        int roleIndex = 0;
+        for (ListElement listElement : roles) {
+            selectedRoles[roleIndex] = listElement.getId().toString();
+            roleIndex++;
+        }
+        populatedBean.setSelectedRoles(selectedRoles);
+
         populatedBean.setUsername(personnelInformation.getUserName());
 
         List<CustomFieldDto> currentBeanFields = new ArrayList<CustomFieldDto>();
@@ -335,8 +363,10 @@ public class SystemUserController {
         populatedBean.setRecentNotes(personnelInformation.getRecentPersonnelNotes());
 
         populatedBean.setCustomFields(currentBeanFields);
+        populateCustomFields(formBean, currentBeanFields);
 
         populatedBean.prepareForPreview();
+        populatedBean.prepateForReEdit();
 
         return populatedBean;
     }

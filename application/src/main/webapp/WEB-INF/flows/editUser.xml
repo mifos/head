@@ -5,10 +5,12 @@
 
 	<var name="userFormBean" class="org.mifos.ui.core.controller.UserFormBean"/>
 
-	<view-state id="editUserDetailsStep" view="editUserDetails">
-		<on-entry>
-            <evaluate expression="systemUserController.createPopulatedUserFormBean(requestParameters.id, userFormBean)" result="flowScope.userFormBean" />
-        </on-entry>
+	<action-state id="retrieveUserDetails">
+		<evaluate expression="systemUserController.createPopulatedUserFormBean(requestParameters.id, userFormBean)" result="flowScope.userFormBean" />
+		<transition to="editUserDetailsStep" />
+	</action-state>
+
+	<view-state id="editUserDetailsStep" view="editUserDetails" model="userFormBean">
 		<transition on="preview" to="prepareUserFormBeanForPreview" />
 		<transition on="cancel" to="cancel" validate="false"/>
 	</view-state>
@@ -22,9 +24,7 @@
 		<transition on="reedit" to="editUserDetailsStep" validate="false">
 			<evaluate expression="userFormBean.prepateForReEdit()" />
 		</transition>
-		<transition on="submit" to="success" history="discard">
-			<evaluate expression="systemUserController.createUser(userFormBean)" result="flowScope.userDetails" />
-		</transition>
+		<transition on="submit" to="success" history="discard" />
 		<transition on="cancel" to="cancel" validate="false"/>
 	</view-state>
 	

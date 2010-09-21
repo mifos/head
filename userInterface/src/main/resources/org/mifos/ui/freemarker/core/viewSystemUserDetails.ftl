@@ -34,8 +34,19 @@
 	        <span class="span-5 rightAlign"><a href="editUser.ftl?id=${userFormBean.userId}">[@spring.message "systemUsers.preview.edituser" /]</a></span>
 	        <div class="span-5 rightAlign">
 	        	<div class="span-5">[@spring.message "recentnotes"/]</div>
+	        	[#if userFormBean.recentNotesEmpty]
 	        	<div class="span-5">[@spring.message "recentnotes.noneavailable"/]</div>
-	        	<div class="span-5 rightAlign"><a href="addSystemUserNote.ftl?id=${userFormBean.userId}">[@spring.message "recentnotes.addnote"/]</a></div>
+	        	[#else]
+	        		[#list userFormBean.recentNotes as note]
+	        		<div class="span-5">
+	        		<span class="fontBold">${note.commentDateFormatted}:</span>
+	        		<span> ${note.comment}</span>
+	        		<span class="fontBold"> -${note.personnelName}</span>
+	        		</div>
+	        		[/#list]
+				<div class="span-5 rightAlign"><a href="personnelNoteAction.do?method=search&personnelId=${userFormBean.userId}&currentFlowKey=123456789">[@spring.message "recentnotes.allnotes"/]</a></div>
+	        	[/#if]
+	        	<div class="span-5 rightAlign"><a href="personnelNoteAction.do?method=load&personnelId=${userFormBean.userId}&currentFlowKey=123456789">[@spring.message "recentnotes.addnote"/]</a></div>
 	        </div>
         </div>
         <div class="span-10">

@@ -29,7 +29,7 @@ public class DateFieldBean implements Serializable {
     private Number id;
     private Number day;
     private Number month;
-    private Number year;
+    private String year;
     private boolean mandatory;
 
     public Number getId() {
@@ -56,11 +56,11 @@ public class DateFieldBean implements Serializable {
         this.month = month;
     }
 
-    public Number getYear() {
+    public String getYear() {
         return this.year;
     }
 
-    public void setYear(Number year) {
+    public void setYear(String year) {
         this.year = year;
     }
 

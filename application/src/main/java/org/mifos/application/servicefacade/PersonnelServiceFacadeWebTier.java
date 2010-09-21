@@ -215,10 +215,11 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         AddressDto addressDto = new AddressDto(address.getLine1(), address.getLine2(), address.getLine3(), address.getCity(), address.getState(),
                                     address.getCountry(), address.getZip(), address.getPhoneNumber());
 
+        Name name = personnelDetailsEntity.getName();
         PersonnelDetailsDto personnelDetails = new PersonnelDetailsDto(personnelDetailsEntity.getGovernmentIdNumber(), new DateTime(personnelDetailsEntity.getDob()),
                                                 personnelDetailsEntity.getMaritalStatus(), personnelDetailsEntity.getGender(),
                                                 new DateTime(personnelDetailsEntity.getDateOfJoiningMFI()), new DateTime(personnelDetailsEntity.getDateOfJoiningBranch()),
-                                                new DateTime(personnelDetailsEntity.getDateOfLeavingBranch()), addressDto);
+                                                new DateTime(personnelDetailsEntity.getDateOfLeavingBranch()), addressDto, name.getFirstName(), name.getMiddleName(), name.getSecondLastName(), name.getLastName());
         String emailId = personnel.getEmailId();
         SupportedLocalesEntity preferredLocale = personnel.getPreferredLocale();
         PersonnelLevelEntity level = personnel.getLevel();
@@ -227,7 +228,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         Set<PersonnelRoleEntity> personnelRoleEntities = personnel.getPersonnelRoles();
         Set<ListElement> personnelRoles = new LinkedHashSet<ListElement>();
         for(PersonnelRoleEntity entity: personnelRoleEntities) {
-            ListElement element = new ListElement(entity.getPersonnelRoleId(), entity.getRole().getName());
+            ListElement element = new ListElement(entity.getRole().getId().intValue(), entity.getRole().getName());
             personnelRoles.add(element);
         }
 
@@ -246,7 +247,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             personnelNotes.add(new PersonnelNoteDto(new DateTime(entity.getCommentDate()), entity.getComment(), entity.getPersonnelName()));
         }
         return new PersonnelInformationDto(personnel.getPersonnelId().intValue(), displayName, status, locked,
-                                           personnelDetails, emailId, preferredLocale.getLanguageName(),
+                                           personnelDetails, emailId, preferredLocale.getLanguageName(), preferredLocale.getLanguage().getLookUpValue().getLookUpId(),
                                            level.getId(), office.getOfficeId().intValue(), office.getOfficeName(), title, personnelRoles,
                                            personnelId, userName, customFields,
                                            personnelNotes);
