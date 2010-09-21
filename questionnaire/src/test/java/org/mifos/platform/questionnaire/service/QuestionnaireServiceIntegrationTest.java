@@ -290,8 +290,7 @@ public class QuestionnaireServiceIntegrationTest {
         List<QuestionGroupDetail> questionGroups = questionnaireService.getAllQuestionGroups();
         int finalCount = questionGroups.size();
         assertThat(finalCount - initialCount, is(2));
-        //assertThat(questionGroups, Matchers.hasItems(getQuestionGroupDetailMatcher(questionGroupTitle1, sectionsForQG1),
-        //        getQuestionGroupDetailMatcher(questionGroupTitle2, sectionsForQG2)));
+        assertThat(questionGroups, Matchers.hasItems(getQuestionGroupDetailMatcher(questionGroupTitle1, "Create", "Client", sectionsForQG1, false), getQuestionGroupDetailMatcher(questionGroupTitle2, "Create", "Client", sectionsForQG2, false)));
     }
 
     @Test
@@ -778,8 +777,8 @@ public class QuestionnaireServiceIntegrationTest {
         Assert.assertEquals("Create Client", eventSourceEntity.getDescription());
     }
 
-    private QuestionGroupDetailMatcher getQuestionGroupDetailMatcher(String questionGroupTitle, List<SectionDetail> sectionDetails) {
-        return new QuestionGroupDetailMatcher(new QuestionGroupDetail(0, questionGroupTitle, sectionDetails));
+    private QuestionGroupDetailMatcher getQuestionGroupDetailMatcher(String questionGroupTitle,  String event, String source, List<SectionDetail> sectionDetails, boolean editable) {
+        return new QuestionGroupDetailMatcher(new QuestionGroupDetail(0, questionGroupTitle, new EventSourceDto(event, source, null), sectionDetails, editable, true));
     }
 
     private QuestionGroupDetail getMatchingQGDetailById(Integer expectedId, List<QuestionGroupDetail> questionGroups) {

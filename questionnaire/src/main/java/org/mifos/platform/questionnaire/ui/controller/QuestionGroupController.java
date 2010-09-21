@@ -66,16 +66,20 @@ public class QuestionGroupController extends QuestionnaireController {
     @RequestMapping("/viewQuestionGroups.ftl")
     public String getAllQuestionGroups(ModelMap model, HttpServletRequest request) {
         List <QuestionGroupDetail> questionGroups = questionnaireServiceFacade.getAllQuestionGroups();
+        model.addAttribute("questionGroups", groupByEventSource(questionGroups));
+        return "viewQuestionGroups";
+    }
+
+    private Map<String,List <QuestionGroupDetail>> groupByEventSource(List <QuestionGroupDetail> questionGroups){
         Map <String,List <QuestionGroupDetail>> questionGroupsCategoriesSplit = new HashMap<String, List<QuestionGroupDetail>>();
-        for (QuestionGroupDetail qg : questionGroups){
-            String eventSource = qg.getEventSource().toString();
+        for (QuestionGroupDetail questionGroup : questionGroups){
+            String eventSource = questionGroup.getEventSource().toString();
             if(!questionGroupsCategoriesSplit.containsKey(eventSource)) {
                 questionGroupsCategoriesSplit.put(eventSource, new ArrayList<QuestionGroupDetail>());
             }
-            questionGroupsCategoriesSplit.get(eventSource).add(qg);
+            questionGroupsCategoriesSplit.get(eventSource).add(questionGroup);
         }
-        model.addAttribute("questionGroups", questionGroupsCategoriesSplit);
-        return "viewQuestionGroups";
+        return questionGroupsCategoriesSplit;
     }
 
     @RequestMapping("/viewQuestionGroupDetail.ftl")

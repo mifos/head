@@ -473,8 +473,6 @@ public class QuestionnaireMigration {
         return questionGroupInstanceDto;
     }
 
-
-    //poczatek
     private Map<Integer, List<PersonnelCustomFieldEntity>> getCustomFieldResponsesForPersonnel(Iterator<CustomFieldDefinitionEntity> customFields) {
         Map<Integer, List<PersonnelCustomFieldEntity>> entityResponsesMap = new HashMap<Integer, List<PersonnelCustomFieldEntity>>();
         if (customFields != null) {
@@ -524,7 +522,6 @@ public class QuestionnaireMigration {
         }
         return questionGroupInstanceDto;
     }
-    //koniec
 
     private QuestionGroupInstanceDto mapToQuestionGroupInstanceForAccount(Integer questionGroupId, Map<Short, Integer> customFieldQuestionIdMap,
                                                                 List<AccountCustomFieldEntity> accountResponses) {
