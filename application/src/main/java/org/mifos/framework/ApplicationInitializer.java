@@ -187,6 +187,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     EntityMasterData.getInstance().init();
                     initializeEntityMaster();
 
+                    cleanUpRecurringFeesForMifos3712();
+
                     // FIXME: replace with Spring-managed beans
                     final MifosScheduler mifosScheduler = new MifosScheduler();
                     mifosScheduler.registerTasks();
@@ -199,8 +201,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     Configuration.getInstance();
                     MifosConfiguration.getInstance().init();
                     configureAuditLogValues(Localization.getInstance().getMainLocale());
-
-                    cleanUpRecurringFeesForMifos3712();
                 }
             }
         } catch (Exception e) {
