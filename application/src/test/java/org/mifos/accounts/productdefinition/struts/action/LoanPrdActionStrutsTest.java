@@ -52,6 +52,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -703,22 +704,22 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM));
         Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
         LoanOfferingBO loanOfferingBO = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, (Short) loanProductId);
-        assertVariableInstallmentDetails(loanOfferingBO);
+        assertVariableInstallmentDetails(loanOfferingBO, 10, 15, 1234.0);
         TestObjectFactory.removeObject(loanOfferingBO);
         TestObjectFactory.cleanUp(fee);
     }
 
-    private void assertVariableInstallmentDetails(LoanOfferingBO loanOfferingBO) {
+    private void assertVariableInstallmentDetails(LoanOfferingBO loanOfferingBO, Integer minGap, Integer maxGap, Double minInstAmt) {
         Assert.assertTrue(loanOfferingBO.isVariableInstallmentsAllowed());
         VariableInstallmentDetailsBO variableInstallmentDetails = loanOfferingBO.getVariableInstallmentDetails();
         Assert.assertNotNull(variableInstallmentDetails);
-        Assert.assertEquals(10, variableInstallmentDetails.getMinGapInDays().intValue());
-        Assert.assertEquals(15, variableInstallmentDetails.getMaxGapInDays().intValue());
-        Assert.assertEquals(1234.0, variableInstallmentDetails.getMinInstallmentAmount().getAmountDoubleValue());
+        Assert.assertEquals(minGap, variableInstallmentDetails.getMinGapInDays());
+        Assert.assertEquals(maxGap, variableInstallmentDetails.getMaxGapInDays());
+        Assert.assertEquals(minInstAmt, variableInstallmentDetails.getMinInstallmentAmount().getAmountDoubleValue());
     }
 
     public void testManage() throws Exception {
-        loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
+        loanOffering = createLoanOfferingBOWithVariableInstallments("Loan Offering", "LOAN", 10, 100, "1000");
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "manage");
         addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId().toString());
@@ -802,6 +803,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
        Assert.assertEquals(loanOffering.getLoanOfferingFees().size(), (selectedFees).size());
        Assert.assertEquals(loanOffering.getLoanOfferingFunds().size(), (selectedFunds).size());
+       assertVariableInstallmentDetails(loanOffering, 10, 100, 1000.0);
     }
 
     public void testEditPreviewWithOutData() throws Exception {
@@ -1027,7 +1029,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testGet() throws PageExpiredException {
-        loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
+        loanOffering = createLoanOfferingBOWithVariableInstallments("Loan Offering", "LOAN", 10, 100, "1000");
         StaticHibernateUtil.closeSession();
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "get");
@@ -1086,6 +1088,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(loanOffering1.getInterestGLcode().getGlcode());
         Assert.assertNotNull(loanOffering1.getLoanOfferingFees());
         Assert.assertNotNull(loanOffering1.getLoanOfferingFunds());
+        assertVariableInstallmentDetails(loanOffering1, 10, 100, 1000.0);
         StaticHibernateUtil.closeSession();
     }
 
@@ -1338,11 +1341,28 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private LoanOfferingBO createLoanOfferingBO(String prdOfferingName, String shortName) {
-        Date startDate = new Date(System.currentTimeMillis());
         MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY, EVERY_WEEK,
                 LOAN_INSTALLMENT, MONDAY));
+        Date startDate = new Date(System.currentTimeMillis());
         return TestObjectFactory.createLoanOffering(prdOfferingName, shortName, ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, frequency, "1", "1",TestUtils.RUPEE);
+    }
+
+    private LoanOfferingBO createLoanOfferingBOWithVariableInstallments(String prdOfferingName, String shortName,
+                                                                        Integer minGap, Integer maxGap, String minInstAmount) {
+        MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
+        Date startDate = new Date(System.currentTimeMillis());
+        VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(minGap, maxGap, minInstAmount);
+        return TestObjectFactory.createLoanOffering(prdOfferingName, shortName, ApplicableTo.GROUPS, startDate,
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, frequency, "1", "1", TestUtils.RUPEE, variableInstallmentDetails);
+    }
+
+    private VariableInstallmentDetailsBO getVariableInstallmentDetails(Integer minGap, Integer maxGap, String minInstAmount) {
+        VariableInstallmentDetailsBO variableInstallmentDetails = new VariableInstallmentDetailsBO();
+        variableInstallmentDetails.setMinGapInDays(minGap);
+        variableInstallmentDetails.setMaxGapInDays(maxGap);
+        variableInstallmentDetails.setMinInstallmentAmount(new Money(getCurrency(), minInstAmount));
+        return variableInstallmentDetails;
     }
 
     public void testPreviewWithMinInstallmentGapMoreThanMaxInstallmentGap() throws Exception {

@@ -135,14 +135,18 @@ public class LoanPrdAction extends BaseAction {
         logger.debug("start Load method of loan Product Action");
         request.getSession().setAttribute(ProductDefinitionConstants.LOANPRODUCTACTIONFORM, null);
         loadMasterData(request);
-        boolean repaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
-        SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
-                repaymentIndepOfMeetingEnabled ? 1 : 0, request);
+        setRepaymentIndepOfMeetingEnabledFlag(request);
         loadSelectedFeesAndFunds(new ArrayList<FeeDto>(), new ArrayList<FundBO>(), request);
         logger.debug("Load method of loan Product Action called");
         request.getSession().setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
         request.getSession().setAttribute("currencies", AccountingRules.getCurrencies());
         return mapping.findForward(ActionForwards.load_success.toString());
+    }
+
+    private void setRepaymentIndepOfMeetingEnabledFlag(HttpServletRequest request) throws PageExpiredException {
+        boolean repaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+        SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
+                repaymentIndepOfMeetingEnabled ? 1 : 0, request);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -267,6 +271,7 @@ public class LoanPrdAction extends BaseAction {
         if (AccountingRules.isMultiCurrencyEnabled()) {
             request.getSession().setAttribute("currencyCode", loanOffering.getCurrency().getCurrencyCode());
         }
+        setRepaymentIndepOfMeetingEnabledFlag(request);
         logger.debug("manage of Loan Product Action called" + prdOfferingId);
         return mapping.findForward(ActionForwards.manage_success.toString());
     }
@@ -527,12 +532,6 @@ public class LoanPrdAction extends BaseAction {
         loanPrdActionForm.setGracePeriodType(getStringValue(loanProduct.getGracePeriodType().getId()));
         loanPrdActionForm.setGracePeriodDuration(getStringValue(loanProduct.getGracePeriodDuration()));
         loanPrdActionForm.setInterestTypes(getStringValue(loanProduct.getInterestTypes().getId()));
-        // loanPrdActionForm.setMaxInterestRate(BigDecimal.valueOf(
-        // loanProduct.getMaxInterestRate()).toString());
-        // loanPrdActionForm.setMinInterestRate(BigDecimal.valueOf(
-        // loanProduct.getMinInterestRate()).toString());
-        // loanPrdActionForm.setDefInterestRate(BigDecimal.valueOf(
-        // loanProduct.getDefInterestRate()).toString());
         loanPrdActionForm.setMaxInterestRate(getDoubleStringForInterest(loanProduct.getMaxInterestRate()));
         loanPrdActionForm.setMinInterestRate(getDoubleStringForInterest(loanProduct.getMinInterestRate()));
         loanPrdActionForm.setDefInterestRate(getDoubleStringForInterest(loanProduct.getDefInterestRate()));
@@ -546,7 +545,7 @@ public class LoanPrdAction extends BaseAction {
                 .getMeetingDetails().getRecurrenceType().getRecurrenceId()));
         loanPrdActionForm.setPrincipalGLCode(getStringValue(loanProduct.getPrincipalGLcode().getGlcodeId()));
         loanPrdActionForm.setInterestGLCode(getStringValue(loanProduct.getInterestGLcode().getGlcodeId()));
-
+        setVariableInstallmentDetails(loanPrdActionForm, loanProduct);
         if (loanProduct.isLoanAmountTypeSameForAllLoan()) {
             loanPrdActionForm.setLoanAmtCalcType(getStringValue(ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN));
             Iterator<LoanAmountSameForAllLoanBO> loanAmountSameForAllItr = loanProduct.getLoanAmountSameForAllLoan()
@@ -803,5 +802,17 @@ public class LoanPrdAction extends BaseAction {
         SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE, loanProduct.getStartDate(), request);
         logger.debug("setDataIntoActionForm method of Loan Product Action called");
 
+    }
+
+    private void setVariableInstallmentDetails(LoanPrdActionForm loanPrdActionForm, LoanOfferingBO loanOfferingBO) {
+        boolean variableInstallmentsAllowed = loanOfferingBO.isVariableInstallmentsAllowed();
+        loanPrdActionForm.setCanConfigureVariableInstallments(variableInstallmentsAllowed);
+        if (variableInstallmentsAllowed) {
+            VariableInstallmentDetailsBO variableInstallmentDetails = loanOfferingBO.getVariableInstallmentDetails();
+            loanPrdActionForm.setMinimumGapBetweenInstallments(variableInstallmentDetails.getMinGapInDays());
+            loanPrdActionForm.setMaximumGapBetweenInstallments(variableInstallmentDetails.getMaxGapInDays());
+            double amount = variableInstallmentDetails.getMinInstallmentAmount().getAmountDoubleValue();
+            loanPrdActionForm.setMinimumInstallmentAmount(String.valueOf(amount));
+        }
     }
 }

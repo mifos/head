@@ -2789,6 +2789,10 @@ public class LoanPrdActionForm extends BaseActionForm {
         this.canConfigureVariableInstallments = canConfigureVariableInstallments;
     }
 
+    public void setCanConfigureVariableInstallments(boolean canConfigureVariableInstallments) {
+        this.setCanConfigureVariableInstallments(getStringValue(canConfigureVariableInstallments));
+    }
+
     public boolean canConfigureVariableInstallments() {
         return getBooleanValue(canConfigureVariableInstallments);
     }
