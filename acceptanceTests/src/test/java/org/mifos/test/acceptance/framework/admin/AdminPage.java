@@ -304,4 +304,11 @@ public class AdminPage extends MifosPage {
         FeeDetailsPage feesDetailPage = confirmationPage.navigateToViewDetailsNowPage();
         feesDetailPage.verifyFeeDetails(formParameters);
     }
+
+    public BatchJobsPage navigateToBatchJobsPage() {
+        selenium.click("admin.link.batchjobs");
+        waitForPageToLoad();
+
+        return new BatchJobsPage(selenium);
+    }
 }

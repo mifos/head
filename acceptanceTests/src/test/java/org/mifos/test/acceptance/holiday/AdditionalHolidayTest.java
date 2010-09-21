@@ -94,6 +94,8 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         new MifosPage(selenium).logout();
     }
 
+
+
     /*
      * jhil comment: no db test is needed for this test since the actual test is just to click a link ? This is test
      * TC-07.
@@ -139,7 +141,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         createMonthlyLoanScheduleAndAHoliday(CreateHolidaySubmitParameters.SAME_DAY);
 
         List<String> jobsToRun = new ArrayList<String>();
-        jobsToRun.add("ApplyHolidayChangesTask");
+        jobsToRun.add("ApplyHolidayChangesTaskJob");
         new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
 
         verifyLoanSchedule("AdditionalHolidayTest_010_result_dbunit.xml.zip");
@@ -160,7 +162,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         createWeeklyLoanScheduleAndAHoliday(CreateHolidaySubmitParameters.NEXT_WORKING_DAY);
 
         List<String> jobsToRun = new ArrayList<String>();
-        jobsToRun.add("ApplyHolidayChangesTask");
+        jobsToRun.add("ApplyHolidayChangesTaskJob");
         new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
 
         verifyLoanSchedule("AdditionalHolidayTest_011_result_dbunit.xml.zip");
@@ -177,7 +179,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         createWeeklyLoanScheduleWithTwoMeetingsAndAHoliday(CreateHolidaySubmitParameters.NEXT_MEETING_OR_REPAYMENT);
 
         List<String> jobsToRun = new ArrayList<String>();
-        jobsToRun.add("ApplyHolidayChangesTask");
+        jobsToRun.add("ApplyHolidayChangesTaskJob");
         new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
 
         verifyLoanSchedule("AdditionalHolidayTest_012_result_dbunit.xml.zip");
@@ -490,7 +492,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
         // Run batch jobs
         List<String> jobsToRun = new ArrayList<String>();
-        jobsToRun.add("ApplyHolidayChangesTask");
+        jobsToRun.add("ApplyHolidayChangesTaskJob");
         new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
 
         // Move system date to moratorium holiday date
@@ -531,7 +533,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
         // run batch jobs
         List<String> jobsToRun = new ArrayList<String>();
-        jobsToRun.add("ApplyHolidayChangesTask");
+        jobsToRun.add("ApplyHolidayChangesTaskJob");
         new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
 
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(

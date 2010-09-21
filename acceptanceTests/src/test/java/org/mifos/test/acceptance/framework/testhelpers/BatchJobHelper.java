@@ -20,14 +20,16 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.BatchJobsPage;
 
 import com.thoughtworks.selenium.Selenium;
 
 public class BatchJobHelper {
-    private static final String SERVICE = "runBatchJobs.ftl";
+    //private static final String SERVICE = "runBatchJobs.ftl";
 
     private final Selenium selenium;
 
@@ -36,11 +38,40 @@ public class BatchJobHelper {
     }
 
     public void runAllBatchJobs() {
-        selenium.open(SERVICE + "?runAllBatchJobs=true");
+       //TODO Use more elegant means to select all jobs in the batch job page
+
+        AdminPage adminPage = new AdminPage(selenium);
+        adminPage.navigateToBatchJobsPage();
+
+       List<String> jobs = new ArrayList<String>();
+       jobs.add("ApplyHolidayChangesTaskJob");
+       jobs.add("SavingsIntCalcTaskJob");
+       jobs.add("SavingsIntPostingTaskJob");
+       jobs.add("LoanArrearsAgingTaskJob");
+       jobs.add("ApplyCustomerFeeChangesTaskJob");
+       jobs.add("BranchReportTaskJob");
+       jobs.add("LoanArrearsAndPortfolioAtRiskTaskJob");
+       jobs.add("ProductStatusJob");
+       jobs.add("GenerateMeetingsForCustomerAndSavingsTaskJob");
+
+//       String[] fields = selenium.getAllFields();
+//       for (String field: fields){
+//           if (field.endsWith("TaskJob")){
+//               jobs.add(field);
+//           }
+//       }
+
+       runSomeBatchJobs(jobs);
+
     }
 
     public void runSomeBatchJobs(List<String> jobsToRun) {
-        selenium.open(SERVICE + "?job=" + StringUtils.join(jobsToRun, "&job="));
+        AdminPage adminPage = new AdminPage(selenium);
+        BatchJobsPage batchJobsPage = adminPage.navigateToBatchJobsPage();
+        for (String name : jobsToRun) {
+            batchJobsPage.selectBatchJob(name);
+        }
+        batchJobsPage.runSelectedBatchJobs();
     }
 
 }
