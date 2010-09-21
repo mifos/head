@@ -71,6 +71,8 @@
 				access="field" type="short" />
             <property name="waiverInterest" column="interest_waiver_flag"
 				access="field" type="short" />
+            <property name="variableInstallmentsAllowed" column="variable_installment_flag"
+				access="field" type="short" />
 
 			<many-to-one name="gracePeriodType"
 				column="graceperiod_type_id"
@@ -87,6 +89,10 @@
 				column="interest_glcode_id"
 				class="org.mifos.accounts.financial.business.GLCodeEntity"
 				insert="true" update="false" access="field" />
+			<many-to-one name="variableInstallmentDetails"
+				column="variable_installment_details_id"
+				class="org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO"
+				cascade="all" unique="true"/>
 
 			<!--Mapping of loan offering to its associated funds-->
 			<set name="loanOfferingFunds" cascade="all,delete-orphan"

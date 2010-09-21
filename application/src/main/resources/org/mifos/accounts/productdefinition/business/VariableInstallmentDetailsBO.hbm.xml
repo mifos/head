@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+    <class name="org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO" table="variable_installment_details">
+        <id name="id" column="id" type="short" access="field">
+            <generator class="native" />
+        </id>
+        <property name="minGapInDays" column="min_gap_in_days" access="field" type="integer" />
+        <property name="maxGapInDays" column="max_gap_in_days" access="field" type="integer" />
+        <property name="minInstallmentAmount"
+            type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
+            <column name="min_loan_amount_currency_id" />
+            <column name="min_loan_amount" />
+        </property>
+    </class>
+</hibernate-mapping>

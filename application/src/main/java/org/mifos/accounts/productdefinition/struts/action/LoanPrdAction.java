@@ -46,6 +46,7 @@ import org.mifos.accounts.productdefinition.business.NoOfInstallFromLoanCycleBO;
 import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
@@ -66,6 +67,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
@@ -213,11 +215,29 @@ public class LoanPrdAction extends BaseAction {
                 loanPrdActionForm, loanPrdActionForm.shouldWaiverInterest());
 
         loanOffering.setCurrency(getCurrency(loanPrdActionForm.getCurrencyId()));
+        mapVariableInstallmentDetails(loanOffering, loanPrdActionForm);
         loanOffering.save();
         request.setAttribute(ProductDefinitionConstants.LOANPRODUCTID, loanOffering.getPrdOfferingId());
         request.setAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM, loanOffering.getGlobalPrdOfferingNum());
 
         return mapping.findForward(ActionForwards.create_success.toString());
+    }
+
+    private void mapVariableInstallmentDetails(LoanOfferingBO loanOffering, LoanPrdActionForm loanPrdActionForm) {
+        boolean variableInstallmentsAllowed = loanPrdActionForm.canConfigureVariableInstallments();
+        loanOffering.setVariableInstallmentsAllowed(variableInstallmentsAllowed);
+        if (variableInstallmentsAllowed) {
+            loanOffering.setVariableInstallmentDetails(mapToVariableInstallmentDetails(loanOffering, loanPrdActionForm));
+        }
+    }
+
+    private VariableInstallmentDetailsBO mapToVariableInstallmentDetails(LoanOfferingBO loanOffering, LoanPrdActionForm loanPrdActionForm) {
+        VariableInstallmentDetailsBO variableInstallmentDetails = new VariableInstallmentDetailsBO();
+        variableInstallmentDetails.setMinGapInDays(loanPrdActionForm.getMinimumGapBetweenInstallments());
+        variableInstallmentDetails.setMaxGapInDays(loanPrdActionForm.getMaximumGapBetweenInstallments());
+        Money minInstallmentAmount = new Money(loanOffering.getCurrency(), loanPrdActionForm.getMinimumInstallmentAmount());
+        variableInstallmentDetails.setMinInstallmentAmount(minInstallmentAmount);
+        return variableInstallmentDetails;
     }
 
     @TransactionDemarcate(joinToken = true)

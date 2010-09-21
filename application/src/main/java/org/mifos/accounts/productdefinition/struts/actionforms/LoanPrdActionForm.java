@@ -2715,7 +2715,7 @@ public class LoanPrdActionForm extends BaseActionForm {
     }
 
     private void validateVariableInstallmentPeriods(ActionErrors actionErrors, Locale locale) {
-        if (getBooleanValue(this.canConfigureVariableInstallments)) {
+        if (canConfigureVariableInstallments()) {
             validateMinimumGapForVariableInstallments(actionErrors);
             validateMaximumGapForVariableInstallments(actionErrors);
             validateMinMaxGapsForVariableInstallments(actionErrors);
@@ -2787,5 +2787,9 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     public void setCanConfigureVariableInstallments(String canConfigureVariableInstallments) {
         this.canConfigureVariableInstallments = canConfigureVariableInstallments;
+    }
+
+    public boolean canConfigureVariableInstallments() {
+        return getBooleanValue(canConfigureVariableInstallments);
     }
 }

@@ -20,28 +20,6 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.ERRORFEEFREQUENCY;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTTYPE_UNKNOWN;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALL_UNKNOWN;
-import static org.mifos.framework.util.CollectionUtils.find;
-import static org.mifos.framework.util.CollectionUtils.first;
-import static org.mifos.framework.util.CollectionUtils.last;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -79,6 +57,28 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.ERRORFEEFREQUENCY;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTTYPE_UNKNOWN;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALL_UNKNOWN;
+import static org.mifos.framework.util.CollectionUtils.find;
+import static org.mifos.framework.util.CollectionUtils.first;
+import static org.mifos.framework.util.CollectionUtils.last;
 
 /**
  * A loan product is a set of rules (interest rate, number of installments, maximum amount, etc) which describes a
@@ -105,6 +105,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
     private Short prinDueLastInst;
     private Short loanCounter;
     private Short waiverInterest;
+    private Short variableInstallmentsAllowed;
+    private VariableInstallmentDetailsBO variableInstallmentDetails;
     private PrdOfferingMeetingEntity loanOfferingMeeting;
     private final GLCodeEntity principalGLcode;
     private final GLCodeEntity interestGLcode;
@@ -1475,5 +1477,21 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 addLoanOfferingFund(new LoanOfferingFundEntity(fund.getFund(), this));
             }
         }
+    }
+
+    public boolean areVariableInstallmentsAllowed() {
+        return variableInstallmentsAllowed.equals(YesNoFlag.YES.getValue());
+    }
+
+    public void setVariableInstallmentsAllowed(boolean variableInstallmentsAllowed) {
+        this.variableInstallmentsAllowed = variableInstallmentsAllowed ? YesNoFlag.YES.getValue() : YesNoFlag.NO.getValue();
+    }
+
+    public VariableInstallmentDetailsBO getVariableInstallmentDetails() {
+        return variableInstallmentDetails;
+    }
+
+    public void setVariableInstallmentDetails(VariableInstallmentDetailsBO variableInstallmentDetails) {
+        this.variableInstallmentDetails = variableInstallmentDetails;
     }
 }

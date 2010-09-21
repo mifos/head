@@ -31,6 +31,7 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
@@ -684,6 +685,10 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("interestGLCode", TestGeneralLedgerCode.INTEREST.toString());
         addRequestParameter("loanAmtCalcType", "1");
         addRequestParameter("calcInstallmentType", "1");
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "10");
+        addRequestParameter("maximumGapBetweenInstallments", "15");
+        addRequestParameter("minimumInstallmentAmount", "1234");
         actionPerform();
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "create");
@@ -693,12 +698,23 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.create_success.toString());
 
-        Assert.assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID));
+        Object loanProductId = request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID);
+        Assert.assertNotNull(loanProductId);
         Assert.assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM));
         Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
-        TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class,
-                (Short) request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID)));
+        LoanOfferingBO loanOfferingBO = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, (Short) loanProductId);
+        assertVariableInstallmentDetails(loanOfferingBO);
+        TestObjectFactory.removeObject(loanOfferingBO);
         TestObjectFactory.cleanUp(fee);
+    }
+
+    private void assertVariableInstallmentDetails(LoanOfferingBO loanOfferingBO) {
+        Assert.assertTrue(loanOfferingBO.areVariableInstallmentsAllowed());
+        VariableInstallmentDetailsBO variableInstallmentDetails = loanOfferingBO.getVariableInstallmentDetails();
+        Assert.assertNotNull(variableInstallmentDetails);
+        Assert.assertEquals(10, variableInstallmentDetails.getMinGapInDays().intValue());
+        Assert.assertEquals(15, variableInstallmentDetails.getMaxGapInDays().intValue());
+        Assert.assertEquals(1234.0, variableInstallmentDetails.getMinInstallmentAmount().getAmountDoubleValue());
     }
 
     public void testManage() throws Exception {
