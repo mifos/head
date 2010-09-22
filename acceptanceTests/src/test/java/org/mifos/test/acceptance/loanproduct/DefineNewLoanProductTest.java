@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.loanproduct;
 
 
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
@@ -30,10 +31,14 @@ import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.sql.SQLException;
 
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
@@ -42,8 +47,8 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
 
-//    @Autowired
-//    private DriverManagerDataSource dataSource;
+    @Autowired
+    private DriverManagerDataSource dataSource;
 //    @Autowired
 //    private DbUnitUtilities dbUnitUtilities;
 //    @Autowired
@@ -82,18 +87,23 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void verifyVariableInstalment()throws Exception {
+        updateLSIM(1);
         SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         DefineNewLoanProductPage defineLoanProductPage = adminPage.navigateToDefineLoanProduct();
         defineLoanProductPage.fillLoanParameters(formParameters);
         defineLoanProductPage.verifyVariableInstalmentOptionsDefaults();
-        defineLoanProductPage.verifyVariableInstalmentOptionFields();
-        defineLoanProductPage.fillVariableInstalmentOption("60","1","100");
+        defineLoanProductPage.verifyVariableInstalmentOptionsFields();
+        defineLoanProductPage.fillVariableInstalmentOption("60","1","100.05");
         DefineNewLoanProductPreviewPage productPreviewPage = defineLoanProductPage.submitAndGotoNewLoanProductPreviewPage();
-        productPreviewPage.verifyVariableInstalmentOption("60","1","100");
+        productPreviewPage.verifyVariableInstalmentOption("60","1","100.05");
         DefineNewLoanProductConfirmationPage loanProductConfirmationPage = productPreviewPage.submit();
-        loanProductConfirmationPage.verifyVariableInstalmentOption("60","1","100");
+        loanProductConfirmationPage.verifyVariableInstalmentOption("60","1","100.05");
+    }
+
+    private void updateLSIM(int lsimValue) throws SQLException {
+        dataSource.getConnection().createStatement().executeUpdate("update config_key_value_integer set configuration_value=" + lsimValue + " where configuration_key='repaymentSchedulesIndependentOfMeetingIsEnabled'");
     }
 
     private AdminPage loginAndNavigateToAdminPage() {

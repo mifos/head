@@ -64,4 +64,8 @@ public class AbstractPage {
         Assert.assertEquals(selenium.getAttribute("page.id@title"), pageName);
     }
 
+    public void waitForElementToPresent(String locator){
+        selenium.waitForCondition("selenium.isElementPresent(\"" + locator + "\")",MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS);
+    }
+
 }

@@ -99,13 +99,13 @@ public class EditLoanProductPage extends MifosPage {
         return new EditLoanProductPreviewPage(selenium);
     }
 
-    public void verifyVariableInstalmentOptionsDefaults() {
-        Assert.assertTrue(!selenium.isChecked(configureVariableInstalmentsCheckbox)
-                & !selenium.isVisible(maxInstalmentGapTextBox)
-                & !selenium.isVisible(minInstalmentGapTextBox)
-                & !selenium.isVisible(minInstalmentAmountTextBox));
-
+    public void verifyVariableInstalmentOptionDefaults() {
+        verifyVariableInstalmentOptionsWhenPageLoads();
         selenium.click(configureVariableInstalmentsCheckbox);
+        verifyVariableInstalmentFieldsWhenSelected();
+    }
+
+    private void verifyVariableInstalmentFieldsWhenSelected() {
         selenium.waitForCondition("selenium.isVisible('minimumInstallmentAmount')","10000");
         Assert.assertTrue(selenium.isVisible(maxInstalmentGapTextBox));
         Assert.assertTrue(selenium.isVisible(minInstalmentGapTextBox));
@@ -113,6 +113,13 @@ public class EditLoanProductPage extends MifosPage {
 //      Assert.assertTrue(selenium.getValue(minInstalmentGapTextBox).equals("1"));
         Assert.assertTrue(selenium.getValue(maxInstalmentGapTextBox).equals(""));
         Assert.assertTrue(selenium.getValue(minInstalmentAmountTextBox).equals(""));
+    }
+
+    private void verifyVariableInstalmentOptionsWhenPageLoads() {
+        Assert.assertTrue(!selenium.isChecked(configureVariableInstalmentsCheckbox)
+                & !selenium.isVisible(maxInstalmentGapTextBox)
+                & !selenium.isVisible(minInstalmentGapTextBox)
+                & !selenium.isVisible(minInstalmentAmountTextBox));
     }
 
 

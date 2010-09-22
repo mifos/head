@@ -125,7 +125,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
         ViewLoanProductsPage viewLoanProductsPage = adminPage.navigateToViewLoanProducts();
         LoanProductDetailsPage detailsPage = viewLoanProductsPage.viewLoanProductDetails("Test_edit_loan");
         EditLoanProductPage editProductPage = detailsPage.editLoanProduct();
-        editProductPage.verifyVariableInstalmentOptionsDefaults();
+        editProductPage.verifyVariableInstalmentOptionDefaults();
         editProductPage.verifyVariableInstalmentOptionFields();
         EditLoanProductPreviewPage editProductPreviewPage = editProductPage.submitVariableInstalmentChange("60", "1", "100");
         editProductPreviewPage.verifyVariableInstalmentOption("60","1","100");
