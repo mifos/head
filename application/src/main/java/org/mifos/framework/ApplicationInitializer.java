@@ -20,8 +20,7 @@
 
 package org.mifos.framework;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.config.AccountingRules;
@@ -31,13 +30,16 @@ import org.mifos.config.Localization;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.Configuration;
 import org.mifos.config.business.MifosConfiguration;
+import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
+import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.exceptions.AppNotConfiguredException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateStartUpException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -49,7 +51,9 @@ import org.mifos.framework.util.helpers.MoneyCompositeUserType;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.ActivityMapper;
-import org.springframework.web.context.WebApplicationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletContext;
@@ -59,7 +63,6 @@ import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
@@ -117,7 +120,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     }
 
     public void init(ServletContextEvent servletContextEvent) {
-        ServletContext ctx = servletContextEvent.getServletContext();
+        ServletContext servletContext = servletContextEvent.getServletContext();
         try {
             // prevent ehcache "phone home"
             System.setProperty("net.sf.ehcache.skipUpdateCheck", "true");
@@ -125,78 +128,10 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             System.setProperty("org.terracotta.quartz.skipUpdateCheck", "true");
 
             synchronized (ApplicationInitializer.class) {
-
-                WebApplicationContext applicationContext = null;
-                if (ctx != null) {
-                    applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx);
+                if (servletContext != null) {
+                    dbUpgrade(WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext));
                 }
-
-                logger.info("Logger has been initialised");
-
-                initializeHibernate();
-
-                logger.info(getDatabaseConnectionInfo());
-
-                // if a database upgrade loads an instance of Money then MoneyCompositeUserType needs the default
-                // currency
-                MoneyCompositeUserType.setDefaultCurrency(AccountingRules
-                        .getMifosCurrency(new ConfigurationPersistence()));
-                AccountingRules.init(); // load the additional currencies
-                DatabaseMigrator migrator = new DatabaseMigrator(applicationContext);
-                try {
-                    /*
-                     * This is an easy way to force an actual database query to happen via Hibernate. Simply opening a
-                     * Hibernate session may not actually connect to the database.
-                     */
-                    migrator.isNSDU();
-                } catch (Throwable t) {
-                    setDatabaseError(DatabaseErrorCode.CONNECTION_FAILURE, "Unable to connect to database.", t);
-                }
-
-                if (!databaseError.isError) {
-                    try {
-                        migrator.upgrade();
-                    } catch (Throwable t) {
-                        setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE, "Failed to upgrade database.", t);
-                    }
-                }
-
-                if (databaseError.isError) {
-                    databaseError.logError();
-                } else {
-                    // this method is called so that supported locales will be
-                    // loaded
-                    // from db and stored in cache for later use
-                    Localization.getInstance().init();
-                    // Check ClientRules configuration in db and config file(s)
-                    // for errors. Also caches ClientRules values.
-                    ClientRules.init();
-                    // Check ProcessFlowRules configuration in db and config
-                    // file(s) for errors.
-                    ProcessFlowRules.init();
-                    initializeSecurity();
-
-                    Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
-
-                    FinancialInitializer.initialize();
-                    EntityMasterData.getInstance().init();
-                    initializeEntityMaster();
-
-                    // FIXME: replace with Spring-managed beans
-                    final MifosScheduler mifosScheduler = new MifosScheduler();
-                    final ShutdownManager shutdownManager = new ShutdownManager();
-
-                    Configuration.getInstance();
-                    MifosConfiguration.getInstance().init();
-                    configureAuditLogValues(Localization.getInstance().getMainLocale());
-                    ConfigLocale configLocale = new ConfigLocale();
-                    if (null != ctx) {
-                        mifosScheduler.initialize();
-                        ctx.setAttribute(MifosScheduler.class.getName(), mifosScheduler);
-                        ctx.setAttribute(ShutdownManager.class.getName(), shutdownManager);
-                        ctx.setAttribute(ConfigLocale.class.getSimpleName(), configLocale);
-                    }
-                }
+                setAttributesOnContext(servletContext);
             }
         } catch (Exception e) {
             String errMsgStart = "unable to start Mifos web application";
@@ -207,6 +142,81 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 logger.error(errMsgStart, e);
             }
             throw new Error(e);
+        }
+    }
+
+    public void dbUpgrade(ApplicationContext applicationContext) throws ConfigurationException, PersistenceException, FinancialException, TaskSystemException {
+        logger.info("Logger has been initialised");
+
+        initializeHibernate();
+
+        logger.info(getDatabaseConnectionInfo());
+
+        // if a database upgrade loads an instance of Money then MoneyCompositeUserType needs the default
+        // currency
+        MoneyCompositeUserType.setDefaultCurrency(AccountingRules
+                .getMifosCurrency(new ConfigurationPersistence()));
+        AccountingRules.init(); // load the additional currencies
+        DatabaseMigrator migrator = new DatabaseMigrator(applicationContext);
+        try {
+            /*
+             * This is an easy way to force an actual database query to happen via Hibernate. Simply opening a
+             * Hibernate session may not actually connect to the database.
+             */
+            migrator.isNSDU();
+        } catch (Throwable t) {
+            setDatabaseError(DatabaseErrorCode.CONNECTION_FAILURE, "Unable to connect to database.", t);
+        }
+
+        if (!databaseError.isError) {
+            try {
+                migrator.upgrade();
+            } catch (Throwable t) {
+                setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE, "Failed to upgrade database.", t);
+            }
+        }
+
+        if (databaseError.isError) {
+            databaseError.logError();
+        } else {
+            initializeDB();
+        }
+    }
+
+    private void initializeDB() throws ConfigurationException, PersistenceException, FinancialException {
+        // this method is called so that supported locales will be
+        // loaded
+        // from db and stored in cache for later use
+        Localization.getInstance().init();
+        // Check ClientRules configuration in db and config file(s)
+        // for errors. Also caches ClientRules values.
+        ClientRules.init();
+        // Check ProcessFlowRules configuration in db and config
+        // file(s) for errors.
+        ProcessFlowRules.init();
+        initializeSecurity();
+
+        Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
+
+        FinancialInitializer.initialize();
+        EntityMasterData.getInstance().init();
+        initializeEntityMaster();
+    }
+
+    public void setAttributesOnContext(ServletContext servletContext) throws TaskSystemException {
+        // FIXME: replace with Spring-managed beans
+        final MifosScheduler mifosScheduler = new MifosScheduler();
+        final ShutdownManager shutdownManager = new ShutdownManager();
+
+        Configuration.getInstance();
+        MifosConfiguration.getInstance().init();
+        configureAuditLogValues(Localization.getInstance().getMainLocale());
+        ConfigLocale configLocale = new ConfigLocale();
+        if (servletContext != null) {
+            mifosScheduler.initialize();
+            servletContext.setAttribute(MifosScheduler.class.getName(), mifosScheduler);
+            servletContext.setAttribute(ShutdownManager.class.getName(), shutdownManager);
+            servletContext.setAttribute(ConfigLocale.class.getSimpleName(), configLocale);
         }
     }
 

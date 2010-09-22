@@ -72,10 +72,12 @@ public class ReportsUserParamsActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testGetSecurityShouldGetReportSecurityConstantsCorrespondingReportId() {
         ActionSecurity security = ReportsUserParamsAction.getSecurity();
-       Assert.assertEquals(SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT, security.get("loadAddList-1").shortValue());
-       Assert.assertEquals(SecurityConstants.CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT, security.get("loadAddList-2")
+        Assert.assertEquals(SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT, security.get("loadAddList-1").shortValue());
+        Assert.assertEquals(SecurityConstants.CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT, security.get("loadAddList-2")
                 .shortValue());
-       Assert.assertEquals(SecurityConstants.CAN_VIEW_BRANCH_REPORT, security.get("loadAddList-3").shortValue());
+        Assert.assertEquals(SecurityConstants.CAN_VIEW_BRANCH_REPORT, security.get("loadAddList-3").shortValue());
+        Assert.assertEquals(SecurityConstants.CAN_VIEW_DETAILED_AGING_PORTFOLIO_AT_RISK, security.get("loadAddList-4").shortValue());
+        Assert.assertEquals(SecurityConstants.CAN_VIEW_GENERAL_LEDGER, security.get("loadAddList-5").shortValue());
 
     }
 
