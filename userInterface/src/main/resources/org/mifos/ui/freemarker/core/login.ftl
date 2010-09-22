@@ -11,7 +11,7 @@
   <!--  Main Login Begins-->
     <div class="borders maindiv marginAuto">
       <form method="POST" action="j_spring_security_check" id="login.form">
-        <div class="bluediv span-16 last"><span>[@spring.message "login.login"/]</span></div>
+        <div align="left" class="bluediv span-16 last"><span>[@spring.message "login.login"/]</span></div>
         <div class="span-7 LeftDiv normalFont" align="left">[@spring.message "login.welcomeToMifos"/]</div>
         <!--Begining of Right side div-->
         <div class="span-8 last" align="center">

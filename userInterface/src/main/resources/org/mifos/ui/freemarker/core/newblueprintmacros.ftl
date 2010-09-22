@@ -104,3 +104,11 @@
     </body>
     </html>
 [/#macro]
+
+[#macro editPageBreadcrumbs breadcrumbs]
+<div class="breadcrumb">
+	    [#list breadcrumbs?keys as text]  			
+    			<a href="${breadcrumbs[text]}">[@spring.messageText text, text/]</a>&nbsp;[#if text_has_next]/[/#if]  &nbsp;   			
+  		[/#list]
+ </div>
+[/#macro]
