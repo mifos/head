@@ -254,10 +254,10 @@ public class QuestionGroupForm extends ScreenObject {
                         int actualSeqNumber = question.getSequenceNumber();
                         if (actualSeqNumber > 0) {
                             SectionQuestionDetail questionToSwap = questions.get(actualSeqNumber - 1);
-                            questions.set(actualSeqNumber, questionToSwap);
-                            questions.set(actualSeqNumber - 1, question);
                             question.setSequenceNumber(questionToSwap.getSequenceNumber());
                             questionToSwap.setSequenceNumber(actualSeqNumber);
+                            questions.set(actualSeqNumber, questionToSwap);
+                            questions.set(actualSeqNumber - 1, question);
                         }
                         break;
                     }
@@ -276,13 +276,57 @@ public class QuestionGroupForm extends ScreenObject {
                         int actualSeqNumber = question.getSequenceNumber();
                         if (actualSeqNumber < questions.size()) {
                             SectionQuestionDetail questionToSwap = questions.get(actualSeqNumber + 1);
-                            questions.set(actualSeqNumber, questionToSwap);
-                            questions.set(actualSeqNumber + 1, question);
                             question.setSequenceNumber(questionToSwap.getSequenceNumber());
                             questionToSwap.setSequenceNumber(actualSeqNumber);
+                            questions.set(actualSeqNumber, questionToSwap);
+                            questions.set(actualSeqNumber + 1, question);
                         }
                         break;
                     }
+                }
+                break;
+            }
+        }
+    }
+
+    public void moveSectionUp(String sectionName) {
+        for (SectionDetailForm sectionForm : sections) {
+            SectionDetail section = sectionForm.getSectionDetail();
+            if (StringUtils.equalsIgnoreCase(sectionName, section.getName())) {
+                int actualSeqNumber = section.getSequenceNumber();
+                if (actualSeqNumber > 0) {
+                    SectionDetailForm sectionToSwap = sections.remove(actualSeqNumber - 1);
+                    section.setSequenceNumber(sectionToSwap.getSectionDetail().getSequenceNumber());
+                    sectionToSwap.getSectionDetail().setSequenceNumber(actualSeqNumber);
+                    sections.add(actualSeqNumber - 1, sectionForm);
+                    sections.set(actualSeqNumber, sectionToSwap);
+                    List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
+                    for (SectionDetailForm sectionDetailForm : sections) {
+                        sectionDetails.add(sectionDetailForm.getSectionDetail());
+                    }
+                    questionGroupDetail.setSectionDetails(sectionDetails);
+                }
+                break;
+            }
+        }
+    }
+
+    public void moveSectionDown(String sectionName) {
+        for (SectionDetailForm sectionForm : sections) {
+            SectionDetail section = sectionForm.getSectionDetail();
+            if (StringUtils.equalsIgnoreCase(sectionName, section.getName())) {
+                int actualSeqNumber = section.getSequenceNumber();
+                if (actualSeqNumber < sections.size()) {
+                    SectionDetailForm sectionToSwap = sections.remove(actualSeqNumber + 1);
+                    section.setSequenceNumber(sectionToSwap.getSectionDetail().getSequenceNumber());
+                    sectionToSwap.getSectionDetail().setSequenceNumber(actualSeqNumber);
+                    sections.add(actualSeqNumber + 1, sectionForm);
+                    sections.set(actualSeqNumber, sectionToSwap);
+                    List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
+                    for (SectionDetailForm sectionDetailForm : sections) {
+                        sectionDetails.add(sectionDetailForm.getSectionDetail());
+                    }
+                    questionGroupDetail.setSectionDetails(sectionDetails);
                 }
                 break;
             }

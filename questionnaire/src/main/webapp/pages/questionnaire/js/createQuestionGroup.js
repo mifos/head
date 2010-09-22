@@ -27,6 +27,18 @@ CreateQuestionGroup.moveQuestionDown = function (sectionName, questionId){
     questionToMoveDownBtn.click();
 }
 
+CreateQuestionGroup.moveSectionUp = function (sectionName){
+    var sectionToMoveUpBtn = document.getElementById('_eventId_moveSectionUp');
+	sectionToMoveUpBtn.value = sectionName;
+    sectionToMoveUpBtn.click();
+}
+
+CreateQuestionGroup.moveSectionDown = function (sectionName){
+    var sectionToMoveDownBtn = document.getElementById('_eventId_moveSectionDown');
+	sectionToMoveDownBtn.value = sectionName;
+    sectionToMoveDownBtn.click();
+}
+
 $(document).ready(function () {
 	$('#txtListSearch').keyup(function(event) {
 		var search_text = $('#txtListSearch').val();

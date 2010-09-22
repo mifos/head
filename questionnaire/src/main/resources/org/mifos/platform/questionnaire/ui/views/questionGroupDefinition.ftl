@@ -85,12 +85,20 @@
 
 
     <div id="divSections">
-        [#assign sectionsSize = questionGroupForm.sections?size]
-        [#assign reversedSections = questionGroupForm.sections?reverse]
-        [#list reversedSections as section]
-        [#assign reversed_section_index = sectionsSize - section_index - 1]
-        <b>${section.name}:&nbsp;&nbsp;</b>
-        [#if reversed_section_index gte questionGroupForm.initialCountOfSections]
+        [#list questionGroupForm.sections as section]
+        
+        <div style="width: 100%">
+            <b>${section.name}:&nbsp;&nbsp;</b>
+            <span style="float:right">
+                <a href="javascript:CreateQuestionGroup.moveSectionUp('${section.name}')">
+                    <img src="pages/framework/images/smallarrowtop.gif" width="11" height="11">
+                </a>&nbsp
+                <a href="javascript:CreateQuestionGroup.moveSectionDown('${section.name}')">
+                    <img src="pages/framework/images/smallarrowdown.gif" width="11" height="11">
+                </a>
+            </span>
+        </div>
+        [#if section_index gte questionGroupForm.initialCountOfSections]
             <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')">[@spring.message "questionnaire.remove.link"/]</a>
         [#else]
             <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
@@ -102,7 +110,7 @@
                 <th class="name" >[@spring.message "questionnaire.question.name"/]</th>
                 <th class="mandatory" style="text-align:center">[@spring.message "questionnaire.question.mandatory"/]</th>
                 <th class="remove">[@spring.message "questionnaire.question.delete"/]</th>
-                <th class="move">[@spring.message "questionnaire.question.move"/]</th>
+                <th>[@spring.message "questionnaire.question.move"/]</th>
             </tr>
             </thead>
             <tbody>
@@ -110,7 +118,7 @@
             <tr>
                 <td class="name">${sectionQuestion.title}</td>
                 <td align="center" valign="center" class="mandatory" style="text-align:center">
-                    [@mifosmacros.formCheckbox "questionGroupForm.sections[${reversed_section_index}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
+                    [@mifosmacros.formCheckbox "questionGroupForm.sections[${section_index}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
                 </td>
                 <td class="remove">
                     [#if sectionQuestion_index gte section.initialCountOfQuestions]
@@ -119,10 +127,10 @@
                         <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
                     [/#if]
                 </td>
-                <td>
+                <td class="move">
                     <a href="javascript:CreateQuestionGroup.moveQuestionUp('${section.name}','${sectionQuestion.questionId}')">
                         <img src="pages/framework/images/smallarrowtop.gif" width="11" height="11">
-                    </a>&nbsp;&nbsp;
+                    </a>&nbsp
                     <a href="javascript:CreateQuestionGroup.moveQuestionDown('${section.name}','${sectionQuestion.questionId}')">
                         <img src="pages/framework/images/smallarrowdown.gif" width="11" height="11">
                     </a>
@@ -137,6 +145,8 @@
         <input type="hidden" id="questionSection" name="questionSection" value=""/>
         <input type="submit" id="_eventId_moveQuestionUp" name="_eventId_moveQuestionUp" value="" style="visibility:hidden"/>
         <input type="submit" id="_eventId_moveQuestionDown" name="_eventId_moveQuestionDown" value="" style="visibility:hidden"/>
+        <input type="submit" id="_eventId_moveSectionUp" name="_eventId_moveSectionUp" value="" style="visibility:hidden"/>
+        <input type="submit" id="_eventId_moveSectionDown" name="_eventId_moveSectionDown" value="" style="visibility:hidden"/>
     </div>
     <div class="button_footer">
         <div class="button_container">

@@ -227,6 +227,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     private Section mapToSection(QuestionGroupDetail questionGroupDetail, SectionDetail sectionDetail) {
         Section section = getSection(questionGroupDetail, sectionDetail);
         section.setQuestions(mapToSectionQuestions(sectionDetail.getQuestions(), section));
+        section.setSequenceNumber(sectionDetail.getSequenceNumber());
         return section;
     }
 
@@ -303,6 +304,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     private SectionDetail mapToSectionDetail(Section section) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(section.getName());
+        sectionDetail.setSequenceNumber(section.getSequenceNumber());
         for (SectionQuestion sectionQuestion : section.getQuestions()) {
             QuestionEntity question = sectionQuestion.getQuestion();
             QuestionType type = mapToQuestionType(question.getAnswerTypeAsEnum());

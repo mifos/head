@@ -23,6 +23,8 @@
         <transition on="deleteQuestion" to="deleteQuestion"/>
         <transition on="moveQuestionUp" to="moveQuestionUp"/>
         <transition on="moveQuestionDown" to="moveQuestionDown"/>
+        <transition on="moveSectionUp" to="moveSectionUp"/>
+        <transition on="moveSectionDown" to="moveSectionDown"/>
         <transition on="addQuestion" to="addQuestion" />
         <transition on="addChoice" to="addChoice"/>
         <transition on="addSmartChoice" to="addSmartChoice"/>
@@ -51,6 +53,16 @@
 
     <action-state id="moveQuestionDown">
         <evaluate expression="questionGroupController.moveQuestionDown(questionGroupForm, requestParameters.questionSection ,requestParameters._eventId_moveQuestionDown)"/>
+        <transition on="success" to="editQuestionGroup" />
+    </action-state>
+
+    <action-state id="moveSectionUp">
+        <evaluate expression="questionGroupController.moveSectionUp(questionGroupForm, requestParameters._eventId_moveSectionUp)"/>
+        <transition on="success" to="editQuestionGroup" />
+    </action-state>
+
+   <action-state id="moveSectionDown">
+        <evaluate expression="questionGroupController.moveSectionDown(questionGroupForm, requestParameters._eventId_moveSectionDown)"/>
         <transition on="success" to="editQuestionGroup" />
     </action-state>
 

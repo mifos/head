@@ -159,6 +159,16 @@ public class QuestionGroupController extends QuestionnaireController {
         return "success";
     }
 
+    public String moveSectionUp(QuestionGroupForm questionGroupForm, String sectionName) {
+        questionGroupForm.moveSectionUp(sectionName);
+        return "success";
+    }
+
+    public String moveSectionDown(QuestionGroupForm questionGroupForm, String sectionName) {
+        questionGroupForm.moveSectionDown(sectionName);
+        return "success";
+    }
+
     private String getEventSourceId(EventSourceDto evtSrc) {
         return evtSrc.getEvent().trim().concat(".").concat(evtSrc.getSource().trim());
     }
