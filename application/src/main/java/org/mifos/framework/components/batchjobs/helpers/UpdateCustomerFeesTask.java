@@ -20,14 +20,14 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import org.mifos.framework.components.batchjobs.MifosTask;
+import org.mifos.framework.components.batchjobs.MifosBatchJob;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 
-public class UpdateCustomerFeesTask extends MifosTask {
+public class UpdateCustomerFeesTask extends MifosBatchJob {
 
     @Override
     public TaskHelper getTaskHelper() {
-        return new UpdateCustomerFeesHelper(this);
+        return new UpdateCustomerFeesHelper();
     }
 
 }

@@ -25,44 +25,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.persistence.AccountPersistence;
-import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
-import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.GeneralConfig;
 import org.mifos.customers.business.CustomerAccountBO;
-import org.mifos.framework.components.batchjobs.MifosTask;
+import org.mifos.framework.components.batchjobs.MifosBatchJob;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.schedule.ScheduledDateGeneration;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 
 public class UpdateCustomerFeesHelper extends TaskHelper {
 
-    private final HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
     private final AccountPersistence accountPersistence = new AccountPersistence();
 
-    private List<Days> workingDays;
-    private Map<Short, List<Holiday>> officeCurrentAndFutureHolidays;
-
-    public UpdateCustomerFeesHelper(final MifosTask mifosTask) {
-        super(mifosTask);
+    public UpdateCustomerFeesHelper() {
+        super();
     }
 
     @Override
     public void execute(@SuppressWarnings("unused") final long timeInMillis) throws BatchJobException {
-
-        workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        officeCurrentAndFutureHolidays = new HashMap<Short, List<Holiday>>();
 
         long taskStartTime = new DateTimeService().getCurrentDateTime().getMillis();
 
@@ -99,7 +83,6 @@ public class UpdateCustomerFeesHelper extends TaskHelper {
                 AccountBO accountBO = accountPersistence.getAccount(accountId);
 
                 if (accountBO instanceof CustomerAccountBO) {
-//                    ((CustomerAccountBO) accountBO).generateNextSetOfMeetingDates(scheduleGenerationStrategy);
                     ((CustomerAccountBO) accountBO).applyPeriodicFeesToNextSetOfMeetingDates();
                     updatedRecordCount++;
                 }
@@ -163,7 +146,6 @@ public class UpdateCustomerFeesHelper extends TaskHelper {
     private List<Integer> findAccountIdsToFix() throws BatchJobException {
         List<Integer> AccountIds = new ArrayList<Integer>();
         long time1 = new DateTimeService().getCurrentDateTime().getMillis();
-        //AccountIds.add(68256);
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         try {
@@ -186,12 +168,7 @@ public class UpdateCustomerFeesHelper extends TaskHelper {
     }
 
     @Override
-    public boolean isTaskAllowedToRun() {
-        return true;
-    }
-
-    @Override
     public void requiresExclusiveAccess() {
-        MifosTask.batchJobRequiresExclusiveAccess(false);
+        MifosBatchJob.batchJobRequiresExclusiveAccess(false);
     }
 }
