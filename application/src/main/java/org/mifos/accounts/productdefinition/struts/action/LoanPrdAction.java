@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.productdefinition.struts.action;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -241,8 +242,11 @@ public class LoanPrdAction extends BaseAction {
         VariableInstallmentDetailsBO variableInstallmentDetails = new VariableInstallmentDetailsBO();
         variableInstallmentDetails.setMinGapInDays(loanPrdActionForm.getMinimumGapBetweenInstallments());
         variableInstallmentDetails.setMaxGapInDays(loanPrdActionForm.getMaximumGapBetweenInstallments());
-        Money minInstallmentAmount = new Money(loanOffering.getCurrency(), loanPrdActionForm.getMinimumInstallmentAmount());
-        variableInstallmentDetails.setMinInstallmentAmount(minInstallmentAmount);
+        String minInstallmentAmountStr = loanPrdActionForm.getMinimumInstallmentAmount();
+        if (StringUtils.isNotEmpty(minInstallmentAmountStr)) {
+            Money minInstallmentAmount = new Money(loanOffering.getCurrency(), minInstallmentAmountStr);
+            variableInstallmentDetails.setMinInstallmentAmount(minInstallmentAmount);
+        }
         return variableInstallmentDetails;
     }
 
