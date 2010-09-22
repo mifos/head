@@ -21,7 +21,7 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
     <!--  Main Content Begins-->  
-  <div class="content leftMargin180">
+  <div class="content">
   [@mifos.crumbs breadcrumbs/]
   <p>&nbsp;&nbsp;</p>
     	<p class="marginLeft30 font15 orangeheading">[@spring.message "admin.viewLoanProducts"/]</p>

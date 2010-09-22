@@ -26,7 +26,7 @@
 					<div class="span-10 "><span class="rightAlign span-3">
 					<label for="changePassword.input.username">[@spring.message "changePassword.userName" /]:</label></span>
 					[@spring.bind "formBean.username" /]
-					<input type="text" id="changePassword.input.username" name="${spring.status.expression}" value="${spring.status.value?default("")}" />
+					<input type="hidden" id="changePassword.input.username" name="${spring.status.expression}" value="${spring.status.value?default("")}" />
 					[@spring.showErrors "<br>" /]
 					</div>
 					

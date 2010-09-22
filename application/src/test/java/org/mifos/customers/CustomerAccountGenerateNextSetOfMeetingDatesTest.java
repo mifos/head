@@ -20,9 +20,11 @@
 
 package org.mifos.customers;
 
-import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;

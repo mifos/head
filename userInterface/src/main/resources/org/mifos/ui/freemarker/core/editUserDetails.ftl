@@ -97,19 +97,14 @@ function selectAllOptions(outSel)
 	        [@spring.formInput "userFormBean.lastName" /]<br />
 	        
 	        <label for="governmentId">[@spring.message "systemUsers.preview.governmentID" /]:</label>
-	        [@spring.formInput "userFormBean.governmentId" /]<br />
+	        <span>${userFormBean.governmentId}</span><br />
 	        
 	        <label for="email">[@spring.message "systemUsers.preview.email" /]:</label>
 	        [@spring.formInput "userFormBean.email" /]<br />
 	        
 	        <div>
 	        	<span><span class="red">*</span>[@spring.message "systemUsers.preview.dateofBirth" /]:</span>
-	        	<span>[@spring.formInput "userFormBean.dateOfBirthDay", "size=1 maxlength=2" /]</span>
-	        	<span>DD</span>
-	        	<span>[@spring.formInput "userFormBean.dateOfBirthMonth", "size=1 maxlength=2" /]</span>
-	        	<span>MM</span>
-	        	<span>[@spring.formInput "userFormBean.dateOfBirthYear", "size=2 maxlength=4" /]</span>
-	        	<span>YYYY</span>
+	        	<span>${userFormBean.dateOfBirth}</span>
 	        </div>
 	        
 	        <label for="selectedMaritalStatus">[@spring.message "systemUsers.preview.maritalStatus" /]:</label>
@@ -123,14 +118,8 @@ function selectAllOptions(outSel)
 	        
 	         <div>
 	        	<span>[@spring.message "systemUsers.preview.mFIJoiningDate" /]:</span>
-	        	<span>[@spring.formInput "userFormBean.mfiJoiningDateDay", "size=1 maxlength=2" /]</span>
-	        	<span>DD</span>
-	        	<span>[@spring.formInput "userFormBean.mfiJoiningDateMonth", "size=1 maxlength=2" /]</span>
-	        	<span>MM</span>
-	        	<span>[@spring.formInput "userFormBean.mfiJoiningDateYear", "size=2 maxlength=4" /]</span>
-	        	<span>YYYY</span>
+	        	<span>${userFormBean.mfiJoiningDate}</span>
 	        </div>
-	        
 	        
 	        <div class="fontBold">[@spring.message "systemUsers.preview.address" /]</div>
 	        

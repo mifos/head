@@ -20,21 +20,36 @@
 
 package org.mifos.service;
 
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="should do copy of array")
+@SuppressWarnings("PMD")
 public class BusinessRuleException extends RuntimeException {
 
     private final String messageKey;
+    private final Object[] messageValues;
 
     public BusinessRuleException(String messageKey) {
         super();
         this.messageKey = messageKey;
+        this.messageValues = null;
+    }
+
+    public BusinessRuleException(String messageKey, Object[] messageValues) {
+        super();
+        this.messageKey = messageKey;
+        this.messageValues = messageValues;
     }
 
     public BusinessRuleException(String messageKey, Throwable e) {
         super(e);
         this.messageKey = messageKey;
+        this.messageValues = null;
     }
 
     public String getMessageKey() {
         return this.messageKey;
+    }
+
+    public Object[] getMessageValues() {
+        return this.messageValues;
     }
 }

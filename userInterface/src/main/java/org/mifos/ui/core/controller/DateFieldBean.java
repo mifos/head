@@ -18,45 +18,57 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.dto.domain;
+package org.mifos.ui.core.controller;
 
 import java.io.Serializable;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="required for spring web flow storage at a minimum - should disable at filter level and also for pmd")
-public class UserDetailDto implements Serializable {
+public class DateFieldBean implements Serializable {
 
-    private final String officeName;
-    private final String systemId;
-    private final Integer id;
-    private final String firstName;
-    private final String lastName;
+    private Number id;
+    private Number day;
+    private Number month;
+    private String year;
+    private boolean mandatory;
 
-    public UserDetailDto(String officeName, Integer id, String systemId, String firstName, String lastName) {
-        this.officeName = officeName;
-        this.id = id;
-        this.systemId = systemId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
-    public String getOfficeName() {
-        return this.officeName;
-    }
-
-    public String getSystemId() {
-        return this.systemId;
-    }
-
-    public Integer getId() {
+    public Number getId() {
         return this.id;
     }
 
-    public String getFirstName() {
-        return this.firstName;
+    public void setId(Number id) {
+        this.id = id;
     }
 
-    public String getLastName() {
-        return this.lastName;
+    public Number getDay() {
+        return this.day;
+    }
+
+    public void setDay(Number day) {
+        this.day = day;
+    }
+
+    public Number getMonth() {
+        return this.month;
+    }
+
+    public void setMonth(Number month) {
+        this.month = month;
+    }
+
+    public String getYear() {
+        return this.year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public boolean isMandatory() {
+        return this.mandatory;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
     }
 }
