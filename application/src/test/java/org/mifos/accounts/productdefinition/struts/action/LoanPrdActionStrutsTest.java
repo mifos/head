@@ -1550,10 +1550,48 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("calcInstallmentType", "1");
 
         addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "1");
         addRequestParameter("maximumGapBetweenInstallments", "-10");
 
         actionPerform();
-        verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MAX_GAP_NEGATIVE_OR_ZERO});
+        verifyActionErrors(new String[] { ProductDefinitionConstants.MIN_GAP_MORE_THAN_MAX_GAP_FOR_VARIABLE_INSTALLMENT_PRODUCT, ProductDefinitionConstants.VARIABLE_INSTALLMENT_MAX_GAP_NEGATIVE_OR_ZERO});
+        verifyInputForward();
+    }
+
+    public void testPreviewWithMinInstallmentGapNotProvided() throws Exception {
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+        addRequestParameter("prdOfferingName", "Loan Offering");
+        addRequestParameter("prdOfferingShortName", "LOAN");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", DateUtils.getCurrentDate(userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "1000");
+        addRequestParameter("maxLoanAmount", "2000");
+        addRequestParameter("defaultLoanAmount", "1500");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "10");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "4");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("principalGLCode", "7");
+        addRequestParameter("interestGLCode", "7");
+
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        
+        actionPerform();
+        verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_NOT_PROVIDED});
         verifyInputForward();
     }
 
@@ -1626,6 +1664,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("calcInstallmentType", "1");
 
         addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "1");
         addRequestParameter("maximumGapBetweenInstallments", "1234");
 
         actionPerform();
@@ -1667,7 +1706,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("minimumInstallmentAmount", "abcd");
 
         actionPerform();
-        verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_AMOUNT_INVALID_FORMAT});
+        verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_NOT_PROVIDED, ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_AMOUNT_INVALID_FORMAT});
         verifyInputForward();
     }
 
@@ -1786,9 +1825,10 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("loanAmtCalcType", "1");
         addRequestParameter("calcInstallmentType", "1");
         addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "1");
         addRequestParameter("maximumGapBetweenInstallments", "-10");
         actionPerform();
-        verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MAX_GAP_NEGATIVE_OR_ZERO});
+        verifyActionErrors(new String[] { ProductDefinitionConstants.MIN_GAP_MORE_THAN_MAX_GAP_FOR_VARIABLE_INSTALLMENT_PRODUCT, ProductDefinitionConstants.VARIABLE_INSTALLMENT_MAX_GAP_NEGATIVE_OR_ZERO});
         verifyInputForward();
     }
 
@@ -1866,6 +1906,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("loanAmtCalcType", "1");
         addRequestParameter("calcInstallmentType", "1");
         addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "1");
         addRequestParameter("maximumGapBetweenInstallments", "1234");
         actionPerform();
         verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MAX_GAP_MORE_THAN_ALLOWED});
@@ -1908,7 +1949,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("canConfigureVariableInstallments", "1");
         addRequestParameter("minimumInstallmentAmount", "abcd");
         actionPerform();
-        verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_AMOUNT_INVALID_FORMAT});
+        verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_NOT_PROVIDED, ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_AMOUNT_INVALID_FORMAT});
         verifyInputForward();
     }
 }

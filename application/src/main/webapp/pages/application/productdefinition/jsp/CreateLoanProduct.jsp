@@ -554,7 +554,7 @@ explanation of the license and how it is applied.
                                         <tr class="fontnormal">
                                             <td width="30%" align="right" valign="top">
                                                 <div id="minimumGapBetweenInstallmentsLabelDiv"  style="display: none;">
-                                                    <mifos:mifoslabel name="product.minimumGapBetweenInstallments" bundle="ProductDefUIResources" /> :
+                                                    <mifos:mifoslabel name="product.minimumGapBetweenInstallments" mandatory="yes" bundle="ProductDefUIResources"/> :
                                                 </div>
                                             </td>
                                             <td valign="top">

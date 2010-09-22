@@ -568,7 +568,7 @@ explanation of the license and how it is applied.
 								bundle="ProductDefUIResources" /></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><span class="mandatorytext">*</span> 
+							<td align="right"><span class="mandatorytext"><font color="#FF0000">*</font></span> 
 							<fmt:message key="product.defaultRate">
 								<fmt:param><mifos:mifoslabel
 								name="${ConfigurationConstants.SERVICE_CHARGE}"
@@ -601,7 +601,7 @@ explanation of the license and how it is applied.
                             <tr class="fontnormal">
                                 <td width="30%" align="right" valign="top">
                                     <div id="minimumGapBetweenInstallmentsLabelDiv"  style="display: none;">
-                                        <mifos:mifoslabel name="product.minimumGapBetweenInstallments" bundle="ProductDefUIResources" /> :
+                                        <mifos:mifoslabel name="product.minimumGapBetweenInstallments" mandatory="yes" bundle="ProductDefUIResources" /> :
                                     </div>
                                 </td>
                                 <td valign="top">

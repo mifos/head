@@ -2762,7 +2762,10 @@ public class LoanPrdActionForm extends BaseActionForm {
     }
 
     private void validateMinimumGapForVariableInstallments(ActionErrors actionErrors) {
-        if (minimumGapBetweenInstallments != null) {
+        if (minimumGapBetweenInstallments == null) {
+            addError(actionErrors, "minimumGapBetweenInstallments",
+                    ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_NOT_PROVIDED);
+        } else {
             if (minimumGapBetweenInstallments <= 0) {
                 addError(actionErrors, "minimumGapBetweenInstallments",
                         ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_NEGATIVE_OR_ZERO);
