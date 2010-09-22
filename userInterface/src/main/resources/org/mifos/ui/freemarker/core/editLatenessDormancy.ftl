@@ -21,7 +21,7 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
  <!--  Main Content Begins-->  
-  <div class=" content leftMargin180">
+  <div class=" content">
   	<form method="post" name="latenessanddormancy" action="editLatenessDormancy.ftl">
 [@mifos.crumbs breadcrumbs /]	
   		[@spring.bind "formBean" /]
