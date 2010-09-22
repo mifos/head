@@ -372,48 +372,6 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
-    public void testUpdateSuccess() throws Exception {
-        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
-        Assert.assertEquals(1, personnel.getPersonnelDetails().getGender().intValue());
-        Assert.assertEquals(1, personnel.getPersonnelDetails().getGender().intValue());
-        addActionAndMethod(Methods.manage.toString());
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        actionPerform();
-        verifyNoActionErrors();
-        verifyNoActionMessages();
-        verifyForward(ActionForwards.manage_success.toString());
-        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.TITLE_LIST, request));
-        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request));
-        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.GENDER_LIST, request));
-        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.MARITAL_STATUS_LIST, request));
-        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.LANGUAGE_LIST, request));
-        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST, request));
-        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
-        addActionAndMethod(Methods.previewManage.toString());
-
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        addRequestParameter("personnelRoles", "1");
-        addRequestParameter("gender", "2");
-        addRequestParameter("maritalStatus", "2");
-        addRequestParameter("userPassword", "abcdef");
-        addRequestParameter("passwordRepeat", "abcdef");
-        actionPerform();
-        verifyNoActionErrors();
-        verifyNoActionMessages();
-        verifyForward(ActionForwards.previewManage_success.toString());
-        addActionAndMethod(Methods.update.toString());
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        actionPerform();
-        verifyNoActionErrors();
-        verifyNoActionMessages();
-        verifyForward(ActionForwards.update_success.toString());
-
-        personnel = (PersonnelBO) TestObjectFactory.getObject(PersonnelBO.class, personnel.getPersonnelId());
-
-        Assert.assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
-    }
-
     public void testLoadUnLockUser() throws Exception {
         addActionAndMethod(Methods.loadUnLockUser.toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));

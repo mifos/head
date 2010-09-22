@@ -117,6 +117,7 @@ public class PersonnelTest extends UiTestCaseBase {
         userHelper.createUser(adminPage.getNonAdminUserParameters(), "MyOffice1233171674227");
     }
 
+    @Test(groups = {"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void changePasswordTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);

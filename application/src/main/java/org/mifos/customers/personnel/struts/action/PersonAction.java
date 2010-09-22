@@ -36,6 +36,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
@@ -57,6 +58,7 @@ import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
+import org.mifos.customers.personnel.exceptions.PersonnelException;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.struts.actionforms.PersonActionForm;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -91,6 +93,7 @@ import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 
 public class PersonAction extends SearchAction {
 
@@ -185,10 +188,41 @@ public class PersonAction extends SearchAction {
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        UserContext userContext = getUserContext(request);
+
         PersonActionForm personActionForm = (PersonActionForm) form;
+        CreateOrUpdatePersonnelInformation perosonnelInfo = translateFormToCreatePersonnelInformationDto(request, personActionForm);
+
+        try {
+            UserDetailDto userDetails = this.personnelServiceFacade.createPersonnelInformation(perosonnelInfo);
+
+            String globalPersonnelNum = userDetails.getSystemId();
+            Name name = new Name(personActionForm.getFirstName(), personActionForm.getMiddleName(), personActionForm.getSecondLastName(), personActionForm.getLastName());
+
+            request.setAttribute("displayName", name.getDisplayName());
+            request.setAttribute("globalPersonnelNum", globalPersonnelNum);
+            return mapping.findForward(ActionForwards.create_success.toString());
+        } catch (BusinessRuleException e) {
+            throw new PersonnelException(e.getMessageKey(), e);
+        }
+    }
+
+    private CreateOrUpdatePersonnelInformation translateFormToCreatePersonnelInformationDto(HttpServletRequest request,
+            PersonActionForm personActionForm) throws PageExpiredException, ServiceException, InvalidDateException {
+        UserContext userContext = getUserContext(request);
         PersonnelLevel level = PersonnelLevel.fromInt(getShortValue(personActionForm.getLevel()));
+
+        PersonnelStatus personnelStatus = PersonnelStatus.ACTIVE;
+        if (StringUtils.isNotBlank(personActionForm.getStatus())) {
+            personnelStatus = PersonnelStatus.getPersonnelStatus(getShortValue(personActionForm.getStatus()));
+        }
+
         OfficeBO office = (OfficeBO) SessionUtils.getAttribute(PersonnelConstants.OFFICE, request);
+        if (office == null) {
+            OfficeBusinessService officeService = (OfficeBusinessService) ServiceFactory.getInstance().getBusinessService(
+                    BusinessServiceName.Office);
+            office = officeService.getOffice(getShortValue(personActionForm.getOfficeId()));
+        }
+
         Integer title = getIntegerValue(personActionForm.getTitle());
         Short preferredLocale = getLocaleId(getPerefferedLocale(personActionForm, userContext));
         Date dob = null;
@@ -213,21 +247,18 @@ public class PersonAction extends SearchAction {
         AddressDto addressDto = new AddressDto(address.getLine1(), address.getLine2(), address.getLine3(), address.getCity(), address.getState(),
                 address.getCountry(), address.getZip(), address.getPhoneNumber());
 
-        CreateOrUpdatePersonnelInformation perosonnelInfo = new CreateOrUpdatePersonnelInformation(level.getValue(), office.getOfficeId(), title,
+        Long id = null;
+        if (StringUtils.isNotBlank(personActionForm.getPersonnelId())) {
+            id = Long.valueOf(personActionForm.getPersonnelId());
+        }
+
+        CreateOrUpdatePersonnelInformation perosonnelInfo = new CreateOrUpdatePersonnelInformation(id, level.getValue(), office.getOfficeId(), title,
                 preferredLocale, personActionForm.getUserPassword(), personActionForm.getLoginName(), personActionForm.getEmailId(), roleList,
                 personActionForm.getCustomFields(), personActionForm.getFirstName(), personActionForm.getMiddleName(), personActionForm.getLastName(),
                 personActionForm.getSecondLastName(), personActionForm.getGovernmentIdNumber(), new DateTime(dob),
                 getIntegerValue(personActionForm.getMaritalStatus()), getIntegerValue(personActionForm.getGender()), new DateTime(dateOfJoiningMFI),
-                new DateTimeService().getCurrentDateTime(), addressDto, null);
-
-        UserDetailDto userDetails = this.personnelServiceFacade.createPersonnelInformation(perosonnelInfo);
-
-        String globalPersonnelNum = userDetails.getSystemId();
-        Name name = new Name(personActionForm.getFirstName(), personActionForm.getMiddleName(), personActionForm.getSecondLastName(), personActionForm.getLastName());
-
-        request.setAttribute("displayName", name.getDisplayName());
-        request.setAttribute("globalPersonnelNum", globalPersonnelNum);
-        return mapping.findForward(ActionForwards.create_success.toString());
+                new DateTimeService().getCurrentDateTime(), addressDto, personnelStatus.getValue());
+        return perosonnelInfo;
     }
 
     private Short getPerefferedLocale(PersonActionForm personActionForm, UserContext userContext) {
@@ -272,32 +303,48 @@ public class PersonAction extends SearchAction {
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        UserContext userContext = getUserContext(request);
         PersonActionForm actionForm = (PersonActionForm) form;
-        PersonnelLevel level = PersonnelLevel.fromInt(getShortValue(actionForm.getLevel()));
-        PersonnelStatus personnelStatus = PersonnelStatus.getPersonnelStatus(getShortValue(actionForm.getStatus()));
-        OfficeBusinessService officeService = (OfficeBusinessService) ServiceFactory.getInstance().getBusinessService(
-                BusinessServiceName.Office);
-        OfficeBO office = officeService.getOffice(getShortValue(actionForm.getOfficeId()));
-        Integer title = getIntegerValue(actionForm.getTitle());
-        Short perefferedLocale = getLocaleId(getPerefferedLocale(actionForm, userContext));
 
-        PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+//        UserContext userContext = getUserContext(request);
+//        PersonnelLevel level = PersonnelLevel.fromInt(getShortValue(actionForm.getLevel()));
+//        PersonnelStatus personnelStatus = PersonnelStatus.getPersonnelStatus(getShortValue(actionForm.getStatus()));
+//        OfficeBusinessService officeService = (OfficeBusinessService) ServiceFactory.getInstance().getBusinessService(
+//                BusinessServiceName.Office);
+//        OfficeBO office = officeService.getOffice(getShortValue(actionForm.getOfficeId()));
+//        Integer title = getIntegerValue(actionForm.getTitle());
+//        Short perefferedLocale = getLocaleId(getPerefferedLocale(actionForm, userContext));
+//
+//        PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+//
+//        PersonnelBO personnelInit = ((PersonnelBusinessService) getService()).getPersonnel(Short.valueOf(actionForm
+//                .getPersonnelId()));
+//        checkVersionMismatch(personnel.getVersionNo(), personnelInit.getVersionNo());
+//        personnelInit.setVersionNo(personnel.getVersionNo());
+//        personnelInit.setUserContext(getUserContext(request));
+//        setInitialObjectForAuditLogging(personnelInit);
+//
+//        personnelInit.update(personnelStatus, level, office, title, perefferedLocale, actionForm.getUserPassword(),
+//                actionForm.getEmailId(), getRoles(request, actionForm), actionForm.getCustomFields(), actionForm
+//                        .getName(), getIntegerValue(actionForm.getMaritalStatus()), getIntegerValue(actionForm
+//                        .getGender()), actionForm.getAddress(), userContext.getId());
+//
+//        request.setAttribute("displayName", personnelInit.getDisplayName());
+//        request.setAttribute("globalPersonnelNum", personnelInit.getGlobalPersonnelNum());
 
-        PersonnelBO personnelInit = ((PersonnelBusinessService) getService()).getPersonnel(Short.valueOf(actionForm
-                .getPersonnelId()));
-        checkVersionMismatch(personnel.getVersionNo(), personnelInit.getVersionNo());
-        personnelInit.setVersionNo(personnel.getVersionNo());
-        personnelInit.setUserContext(getUserContext(request));
-        setInitialObjectForAuditLogging(personnelInit);
+        try {
+            CreateOrUpdatePersonnelInformation perosonnelInfo = translateFormToCreatePersonnelInformationDto(request, actionForm);
+            UserDetailDto userDetails = this.personnelServiceFacade.updatePersonnel(perosonnelInfo);
 
-        personnelInit.update(personnelStatus, level, office, title, perefferedLocale, actionForm.getUserPassword(),
-                actionForm.getEmailId(), getRoles(request, actionForm), actionForm.getCustomFields(), actionForm
-                        .getName(), getIntegerValue(actionForm.getMaritalStatus()), getIntegerValue(actionForm
-                        .getGender()), actionForm.getAddress(), userContext.getId());
-        request.setAttribute("displayName", personnelInit.getDisplayName());
-        request.setAttribute("globalPersonnelNum", personnelInit.getGlobalPersonnelNum());
-        return mapping.findForward(ActionForwards.update_success.toString());
+            String globalPersonnelNum = userDetails.getSystemId();
+            Name name = new Name(actionForm.getFirstName(), actionForm.getMiddleName(), actionForm.getSecondLastName(),
+                    actionForm.getLastName());
+            request.setAttribute("displayName", name.getDisplayName());
+            request.setAttribute("globalPersonnelNum", globalPersonnelNum);
+
+            return mapping.findForward(ActionForwards.update_success.toString());
+        } catch (BusinessRuleException e) {
+            throw new PersonnelException(e.getMessageKey(), e);
+        }
     }
 
     @TransactionDemarcate(joinToken = true)

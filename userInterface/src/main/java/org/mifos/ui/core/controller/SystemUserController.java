@@ -217,9 +217,21 @@ public class SystemUserController {
         }
     }
 
-    @SuppressWarnings("PMD")
+    public void updateUser(final UserFormBean userFormBean) {
+        CreateOrUpdatePersonnelInformation personnel = translateUserFormBeanToDto(userFormBean);
+
+        this.personnelServiceFacade.updatePersonnel(personnel);
+    }
+
     public UserDetailDto createUser(final UserFormBean userFormBean) {
 
+        CreateOrUpdatePersonnelInformation personnel = translateUserFormBeanToDto(userFormBean);
+
+        return this.personnelServiceFacade.createPersonnelInformation(personnel);
+    }
+
+    @SuppressWarnings("PMD")
+    private CreateOrUpdatePersonnelInformation translateUserFormBeanToDto(final UserFormBean userFormBean) {
         Short officeId = userFormBean.getOfficeId().shortValue();
         String firstName = userFormBean.getFirstName();
         String middleName = userFormBean.getMiddleName();
@@ -258,21 +270,23 @@ public class SystemUserController {
         AddressDto address = new AddressDto(bean.getAddress1(), bean.getAddress2(), bean.getAddress3(), bean.getCityDistrict(),
                 bean.getState(), bean.getCountry(), bean.getPostalCode(), bean.getTelephoneNumber());
 
-        Short preferredLocale = Short.valueOf("1");
+
+        Short preferredLocale = null;
+        if (StringUtils.isNotBlank(userFormBean.getSelectedPreferredLanguage())) {
+            preferredLocale = Short.valueOf(userFormBean.getSelectedPreferredLanguage());
+        }
         String password = userFormBean.getPassword();
         String username = userFormBean.getUsername();
 
+        // FIXME - add status to screen and support translation from bean to DTO
         Short personnelStatusId = Short.valueOf("1"); // active
 
         List<CustomFieldDto> customFields = userFormBean.getCustomFields();
 
-        CreateOrUpdatePersonnelInformation personnel = new CreateOrUpdatePersonnelInformation(personnelLevelId, officeId, title, preferredLocale,
+        CreateOrUpdatePersonnelInformation personnel = new CreateOrUpdatePersonnelInformation(userFormBean.getUserId(), personnelLevelId, officeId, title, preferredLocale,
                 password, username, email, roles, customFields, firstName, middleName, lastName, secondLastName,
                 governmentIdNumber, dateOfBirth, maritalStatus, gender, mfiJoiningDate, branchJoiningDate, address, personnelStatusId);
-
-        UserDetailDto userDetails = this.personnelServiceFacade.createPersonnelInformation(personnel);
-
-        return userDetails;
+        return personnel;
     }
 
     @ModelAttribute("userFormBean")
@@ -293,6 +307,7 @@ public class SystemUserController {
 
         UserFormBean populatedBean = createUserFormBean(personnelInformation.getOfficeId().longValue(), formBean);
 
+        populatedBean.setUserId(userId);
         populatedBean.setStatusId(personnelInformation.getStatus().getId());
         populatedBean.setDisplayName(personnelInformation.getDisplayName());
 

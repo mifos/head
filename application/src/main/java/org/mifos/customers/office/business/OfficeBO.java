@@ -677,4 +677,12 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     public boolean isDifferentParentOffice(OfficeBO newParentOffice) {
         return !newParentOffice.equals(this.parentOffice);
     }
+
+    public boolean isNotBranch() {
+        return OfficeLevel.BRANCHOFFICE.getValue().equals(this.level.getId());
+    }
+
+    public boolean isDifferent(OfficeBO newOffice) {
+        return !this.officeId.equals(newOffice.getOfficeId());
+    }
 }

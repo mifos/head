@@ -89,4 +89,11 @@ public class Name {
         }
         return displayName.toString();
     }
+
+    public void updateDetails(String firstName, String middleName, String secondLastName, String lastName) {
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.secondLastName = secondLastName;
+        this.lastName = lastName;
+    }
 }

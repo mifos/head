@@ -50,12 +50,14 @@ public class CreateOrUpdatePersonnelInformation {
     private final AddressDto address;
 
     private final Short personnelStatusId;
+    private final Long id;
 
-    public CreateOrUpdatePersonnelInformation(Short personnelLevelId, Short officeId, Integer title,
+    public CreateOrUpdatePersonnelInformation(Long id, Short personnelLevelId, Short officeId, Integer title,
             Short preferredLocale, String password, String userName, String emailId, List<ListElement> roles,
             List<CustomFieldDto> customFields, String firstName, String middleName, String lastName,
             String secondLastName, String governmentIdNumber, DateTime dob, Integer maritalStatus, Integer gender,
             DateTime dateOfJoiningMFI, DateTime dateOfJoiningBranch, AddressDto address, Short personnelStatusId) {
+        this.id = id;
         this.personnelLevelId = personnelLevelId;
         this.officeId = officeId;
         this.title = title;
@@ -161,5 +163,9 @@ public class CreateOrUpdatePersonnelInformation {
 
     public Short getPersonnelStatusId() {
         return this.personnelStatusId;
+    }
+
+    public Long getId() {
+        return this.id;
     }
 }

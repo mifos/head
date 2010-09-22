@@ -24,14 +24,13 @@
 		<transition on="reedit" to="editUserDetailsStep" validate="false">
 			<evaluate expression="userFormBean.prepateForReEdit()" />
 		</transition>
-		<transition on="submit" to="success" history="discard" />
+		<transition on="submit" to="success">
+			<evaluate expression="systemUserController.updateUser(userFormBean)" result="flowScope.userDetails"/>
+		</transition>
 		<transition on="cancel" to="cancel" validate="false"/>
 	</view-state>
 	
-	<end-state id="success" view="confirmSystemUser">
-		<output name="userDetails" value="flowScope.userDetails" />
-	</end-state>
-	
+	<end-state id="success" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
     <end-state id="cancel" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
 	
 </flow>

@@ -145,6 +145,10 @@ public class UserFormBean implements Serializable {
         this.validator = validator;
     }
 
+    public void validateEditUserDetailsStep(ValidationContext context) {
+        validateEnterUserDetailsStep(context);
+    }
+
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="REC_CATCH_EXCEPTION", justification="should be the exception thrown by jodatime but not sure what it is right now.")
     public void validateEnterUserDetailsStep(ValidationContext context) {
         MessageContext messages = context.getMessageContext();

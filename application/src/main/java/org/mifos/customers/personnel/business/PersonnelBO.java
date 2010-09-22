@@ -61,6 +61,7 @@ import org.mifos.security.authentication.EncryptionService;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 
 public class PersonnelBO extends AbstractBusinessObject {
 
@@ -850,5 +851,55 @@ public class PersonnelBO extends AbstractBusinessObject {
 
     public UserDetailDto toDto() {
         return new UserDetailDto(this.office.getOfficeName(), this.personnelId.intValue(), this.globalPersonnelNum, this.personnelDetails.getName().getFirstName(), this.personnelDetails.getName().getLastName());
+    }
+
+    public void updateUserDetails(String firstName, String middleName, String secondLastName, String lastName,
+            String email, Integer gender, Integer maritalStatus,
+            Short preferredLocale, PersonnelStatusEntity personnelStatus, Address address, Integer title, PersonnelLevelEntity personnelLevel, List<RoleBO> roles, String password, List<CustomFieldDto> customFields) {
+
+        this.emailId = email;
+        this.personnelDetails.updateNameDetails(firstName, middleName, secondLastName, lastName);
+        this.personnelDetails.updateDetails(maritalStatus, gender);
+        this.personnelDetails.updateAddress(address);
+        this.displayName = this.personnelDetails.getDisplayName();
+
+        if (title != null && title.intValue() == 0) {
+            this.title = null;
+        } else {
+            this.title = title;
+        }
+
+        this.preferredLocale = new SupportedLocalesEntity(preferredLocale);
+        this.status = personnelStatus;
+        this.level = personnelLevel;
+
+        // fix me, use encrpytion service outside of pojo?
+        if (StringUtils.isNotBlank(password)) {
+            this.encryptedPassword = getEncryptedPassword(password);
+        }
+
+        updatePersonnelRoles(roles);
+
+        try {
+            updateCustomFields(customFields);
+        } catch (InvalidDateException e) {
+            throw new BusinessRuleException("unable to update custom fields", e);
+        }
+    }
+
+    public boolean isNonLoanOfficer() {
+        return getLevelEnum().equals(PersonnelLevel.NON_LOAN_OFFICER);
+    }
+
+    public boolean isLevelDifferent(PersonnelLevel newLevel) {
+        return !newLevel.getValue().equals(this.level.getId());
+    }
+
+    public boolean isOfficeDifferent(OfficeBO newOffice) {
+        return this.office.isDifferent(newOffice);
+    }
+
+    public boolean isInActive() {
+        return !isActive();
     }
 }

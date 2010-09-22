@@ -48,4 +48,7 @@ public interface PersonnelServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     SystemUserSearchResultsDto searchUser(UserSearchDto searchDto);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    UserDetailDto updatePersonnel(CreateOrUpdatePersonnelInformation personnel);
 }
