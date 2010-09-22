@@ -29,19 +29,16 @@ import org.mifos.test.acceptance.framework.admin.BatchJobsPage;
 import com.thoughtworks.selenium.Selenium;
 
 public class BatchJobHelper {
-    //private static final String SERVICE = "runBatchJobs.ftl";
 
-    private final Selenium selenium;
+    private final BatchJobsPage batchJobsPage;
 
     public BatchJobHelper(Selenium selenium) {
-        this.selenium = selenium;
+        AdminPage adminPage = new AdminPage(selenium);
+        batchJobsPage = adminPage.navigateToBatchJobsPage();
     }
 
     public void runAllBatchJobs() {
        //TODO Use more elegant means to select all jobs in the batch job page
-
-        AdminPage adminPage = new AdminPage(selenium);
-        adminPage.navigateToBatchJobsPage();
 
        List<String> jobs = new ArrayList<String>();
        jobs.add("ApplyHolidayChangesTaskJob");
@@ -66,8 +63,6 @@ public class BatchJobHelper {
     }
 
     public void runSomeBatchJobs(List<String> jobsToRun) {
-        AdminPage adminPage = new AdminPage(selenium);
-        BatchJobsPage batchJobsPage = adminPage.navigateToBatchJobsPage();
         for (String name : jobsToRun) {
             batchJobsPage.selectBatchJob(name);
         }

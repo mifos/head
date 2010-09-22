@@ -21,7 +21,8 @@ public class BatchJobTest extends UiTestCaseBase{
 
         appLauncher = new AppLauncher(selenium);
     }
-    @Test
+
+    @Test(enabled = false)
     public void testRunAllBatchJobs(){
         loginAndNavigateToAdminPage();
 
