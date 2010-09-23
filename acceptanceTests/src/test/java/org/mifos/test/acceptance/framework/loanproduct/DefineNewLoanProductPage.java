@@ -59,22 +59,23 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public static final int DECLINING_BALANCE = 2;
 
         public static final int DECLINING_BALANCE_EPI = 4;
+
         // applicable for
         public static final int CLIENTS = 1;
         public static final int GROUPS = 2;
         // freq of installments
         public static final int WEEKS = 1;
-
         public static final int MONTHS = 2;
+
         // grace period type
         public static final int NONE = 1;
-
         private String branch;
-        private String offeringName;
 
+        private String offeringName;
         private String offeringShortName;
 
         private String description;
+
         private String category;
         private int applicableFor;
         private String minLoanAmount;
@@ -100,11 +101,10 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public String getOfferingName() {
             return this.offeringName;
         }
-
-
         public void setOfferingName(String offeringName) {
             this.offeringName = offeringName;
         }
+
 
         public String getOfferingShortName() {
             return this.offeringShortName;
@@ -337,6 +337,10 @@ public class DefineNewLoanProductPage extends AbstractPage {
     private void selectVariableInstalmentAndWaitForLoad() {
         selenium.click(configureVariableInstalmentsCheckbox);
         waitForElementToPresent(minInstalmentAmountTextBox);
+    }
+
+    public void verifyVariableInstalmentNotAvailable() {
+        Assert.assertTrue(!selenium.isElementPresent(configureVariableInstalmentsCheckbox));
     }
 
 

@@ -47,9 +47,7 @@ public class EditLoanProductPage extends MifosPage {
         selenium.type("EditLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
         selenium.type("EditLoanProduct.input.minInterestRate", parameters.getMinInterestRate() );
         selenium.type("EditLoanProduct.input.defaultInterestRate", parameters.getDefaultInterestRate());
-        selenium.click("EditLoanProduct.button.preview");
-        waitForPageToLoad();
-        return new EditLoanProductPreviewPage(selenium);
+        return submitAndGotoProductPreviewPage();
     }
 
     public void verifyModifiedDescriptionAndInterest(SubmitFormParameters formParameters) {
@@ -81,9 +79,7 @@ public class EditLoanProductPage extends MifosPage {
         } else {
             selenium.uncheck("EditLoanProduct.input.includeInterestWaiver");
         }
-        selenium.click("EditLoanProduct.button.preview");
-        waitForPageToLoad();
-        return new EditLoanProductPreviewPage(selenium);
+        return submitAndGotoProductPreviewPage();
     }
 
     public EditLoanProductPreviewPage submitVariableInstalmentChange(String maxGap, String minGap, String minInstalmentAmount) {
@@ -94,6 +90,10 @@ public class EditLoanProductPage extends MifosPage {
         selenium.type(maxInstalmentGapTextBox, maxGap);
         selenium.type(minInstalmentGapTextBox, minGap);
         selenium.type(minInstalmentAmountTextBox, minInstalmentAmount);
+        return submitAndGotoProductPreviewPage();
+    }
+
+    public EditLoanProductPreviewPage submitAndGotoProductPreviewPage() {
         selenium.click("EditLoanProduct.button.preview");
         waitForPageToLoad();
         return new EditLoanProductPreviewPage(selenium);
@@ -147,5 +147,8 @@ public class EditLoanProductPage extends MifosPage {
     }
 
 
+    public void verifyVariableInstalmentOptionDisabled() {
+        Assert.assertTrue(!selenium.isElementPresent(configureVariableInstalmentsCheckbox));
+    }
 
 }

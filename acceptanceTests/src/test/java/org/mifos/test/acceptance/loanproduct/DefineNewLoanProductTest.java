@@ -21,7 +21,6 @@
 package org.mifos.test.acceptance.loanproduct;
 
 
-import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
@@ -31,6 +30,8 @@ import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
+import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -38,38 +39,37 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.sql.SQLException;
 
-
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"smoke","loanproduct","acceptance"})
-public class DefineNewLoanProductTest extends UiTestCaseBase {                                                                                        
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"smoke", "loanproduct", "acceptance"})
+public class DefineNewLoanProductTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
 
     @Autowired
     private DriverManagerDataSource dataSource;
-//    @Autowired
-//    private DbUnitUtilities dbUnitUtilities;
-//    @Autowired
-//    private InitializeApplicationRemoteTestingService initRemote;
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
     @BeforeMethod
     @Override
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
-//        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        selenium.windowMaximize();
     }
 
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-    
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void createWeeklyLoanProduct()throws Exception {
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void createWeeklyLoanProduct() throws Exception {
         SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
@@ -77,17 +77,46 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
 
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void createMonthlyLoanProduct()throws Exception {
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void createMonthlyLoanProduct() throws Exception {
         SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         adminPage.defineLoanProduct(formParameters);
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void verifyVariableInstalment()throws Exception {
-        updateLSIM(1);
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void verifyLSIMDisabled() throws Exception {
+        applicationDatabaseOperation.updateLSIM(0);
+        AdminPage adminPage = loginAndNavigateToAdminPage();
+        adminPage.verifyPage();
+        DefineNewLoanProductPage defineLoanProductPage = adminPage.navigateToDefineLoanProduct();
+        defineLoanProductPage.verifyVariableInstalmentNotAvailable();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void verifyVariableInstalmentUnChecked() throws Exception {
+        applicationDatabaseOperation.updateLSIM(1);
+        SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
+        AdminPage adminPage = loginAndNavigateToAdminPage();
+        adminPage.verifyPage();
+        DefineNewLoanProductPage defineLoanProductPage = adminPage.navigateToDefineLoanProduct();
+        defineLoanProductPage.fillLoanParameters(formParameters);
+        DefineNewLoanProductPreviewPage productPreviewPage = defineLoanProductPage.submitAndGotoNewLoanProductPreviewPage();
+        productPreviewPage.verifyVariableInstalmentUnChecked();
+        DefineNewLoanProductConfirmationPage loanProductConfirmationPage = productPreviewPage.submit();
+        UserViewDetailsPage viewDetailsPage = loanProductConfirmationPage.navigateToViewLoanDetails();
+        viewDetailsPage.verifyVariableInstalmentUnChecked();
+    }
+
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void verifyVariableInstalment() throws Exception {
+        applicationDatabaseOperation.updateLSIM(1);
         SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
@@ -95,23 +124,21 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         defineLoanProductPage.fillLoanParameters(formParameters);
         defineLoanProductPage.verifyVariableInstalmentOptionsDefaults();
         defineLoanProductPage.verifyVariableInstalmentOptionsFields();
-        defineLoanProductPage.fillVariableInstalmentOption("60","1","100.05");
+        defineLoanProductPage.fillVariableInstalmentOption("60", "1", "100.5");
         DefineNewLoanProductPreviewPage productPreviewPage = defineLoanProductPage.submitAndGotoNewLoanProductPreviewPage();
-        productPreviewPage.verifyVariableInstalmentOption("60","1","100.05");
+        productPreviewPage.verifyVariableInstalmentOption("60", "1", "100.5", "Yes");
         DefineNewLoanProductConfirmationPage loanProductConfirmationPage = productPreviewPage.submit();
-        loanProductConfirmationPage.verifyVariableInstalmentOption("60","1","100.05");
+        UserViewDetailsPage viewDetailsPage = loanProductConfirmationPage.navigateToViewLoanDetails();
+        viewDetailsPage.verifyVariableInstalmentOption("60", "1", "100.5", "Yes");
     }
 
-    private void updateLSIM(int lsimValue) throws SQLException {
-        dataSource.getConnection().createStatement().executeUpdate("update config_key_value_integer set configuration_value=" + lsimValue + " where configuration_key='repaymentSchedulesIndependentOfMeetingIsEnabled'");
-    }
 
     private AdminPage loginAndNavigateToAdminPage() {
         return appLauncher
-         .launchMifos()
-         .loginSuccessfullyUsingDefaultCredentials()
-         .navigateToAdminPage();
-     }
+                .launchMifos()
+                .loginSuccessfullyUsingDefaultCredentials()
+                .navigateToAdminPage();
+    }
 
 }
 
