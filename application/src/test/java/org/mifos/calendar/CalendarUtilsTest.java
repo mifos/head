@@ -202,6 +202,38 @@ public class CalendarUtilsTest {
 
         assertThat(adjustedDate, is(monday29thOfMarch2010.plusDays(1)));
     }
+    
+    /*
+     * !!! This is unexpected behaviour of CalendarUtils.getNextDateForMonthOnDate
+     * shown while investigating MIFOS-3584.
+     */
+    @Test
+    public void shouldPlaceNextMonthDateInTheSameMonth() {
+    	DateTime adjustedInstallementDate = new DateTime(2010, 11, 1, 0, 0, 0, 0);
+    	DateTime next = CalendarUtils.getNextDateForMonthOnDate(adjustedInstallementDate, 30, 1);
+    	assertThat(next, is(new DateTime(2010, 12, 30, 0, 0, 0, 0)));
+    }
+
+    @Test
+    public void shouldSelectMarchFor28February() {
+    	DateTime lastDayOfFebruary = new DateTime(2006, 2, 28, 0, 0, 0, 0);
+    	DateTime next = CalendarUtils.getNextDateForMonthOnDate(lastDayOfFebruary, 31, 1);
+    	assertThat(next, is(new DateTime(2006, 3, 31, 0, 0, 0, 0)));
+    }
+
+    @Test
+    public void shouldSelectAugustFor28June() {
+    	DateTime lastDayOfJune = new DateTime(2006, 6, 30, 0, 0, 0, 0);
+    	DateTime next = CalendarUtils.getNextDateForMonthOnDate(lastDayOfJune, 31, 3);
+    	assertThat(next, is(new DateTime(2006, 9, 30, 0, 0, 0, 0)));
+    }
+
+    @Test
+    public void shouldSelectNextMonth() {
+    	DateTime lastDayOfJune = new DateTime(2006, 6, 30, 0, 0, 0, 0);
+    	DateTime next = CalendarUtils.getNextDateForMonthOnDate(lastDayOfJune, 31, 1);
+    	assertThat(next, is(new DateTime(2006, 7, 31, 0, 0, 0, 0)));
+    }
 
     private DateTime firstWednesdayOfTwoMonthsAway() {
         DateTime firstOfTwoMonthsAway = new DateTime().plusMonths(2).withDayOfMonth(1).toDateMidnight().toDateTime();
