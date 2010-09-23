@@ -85,23 +85,38 @@
 
 
     <div id="divSections">
-        [#assign sectionsSize = questionGroupForm.sections?size]
-        [#assign reversedSections = questionGroupForm.sections?reverse]
-        [#list reversedSections as section]
-        [#assign reversed_section_index = sectionsSize - section_index - 1]
-        <b>${section.name}:&nbsp;&nbsp;</b>
-        [#if reversed_section_index gte questionGroupForm.initialCountOfSections]
-            <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')">[@spring.message "questionnaire.remove.link"/]</a>
-        [#else]
-            <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
-        [/#if]
-        <br/>
+        [#list questionGroupForm.sections as section]
+        
+        <div style="width: 100%">
+            <b>${section.name}:&nbsp;&nbsp;</b>
+            [#assign sectionRemovable = false]
+            [#list questionGroupForm.sectionsToAdd as sectionToAdd]
+                [#if section.name == sectionToAdd]
+                    [#assign sectionRemovable = true]
+                    [#break]
+                [/#if]
+            [/#list]
+            [#if sectionRemovable == true]
+                <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')">[@spring.message "questionnaire.remove.link"/]</a>
+            [#else]
+                <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
+            [/#if]
+            <span style="float:right">
+                <a href="javascript:CreateQuestionGroup.moveSectionUp('${section.name}')">
+                    <img src="pages/framework/images/smallarrowtop.gif" width="11" height="11">
+                </a>&nbsp
+                <a href="javascript:CreateQuestionGroup.moveSectionDown('${section.name}')">
+                    <img src="pages/framework/images/smallarrowdown.gif" width="11" height="11">
+                </a>&nbsp
+            </span>
+        </div>
         <table class="table_common" id="sections.table" name="sections.table">
             <thead>
             <tr>
                 <th class="name" >[@spring.message "questionnaire.question.name"/]</th>
                 <th class="mandatory" style="text-align:center">[@spring.message "questionnaire.question.mandatory"/]</th>
                 <th class="remove">[@spring.message "questionnaire.question.delete"/]</th>
+                <th>[@spring.message "questionnaire.question.move"/]</th>
             </tr>
             </thead>
             <tbody>
@@ -109,14 +124,29 @@
             <tr>
                 <td class="name">${sectionQuestion.title}</td>
                 <td align="center" valign="center" class="mandatory" style="text-align:center">
-                    [@mifosmacros.formCheckbox "questionGroupForm.sections[${reversed_section_index}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
+                    [@mifosmacros.formCheckbox "questionGroupForm.sections[${section_index}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
                 </td>
                 <td class="remove">
-                    [#if sectionQuestion_index gte section.initialCountOfQuestions]
+                    [#assign questionRemovable = false]
+                    [#list questionGroupForm.questionsToAdd as questionToAdd]
+                        [#if sectionQuestion.questionId == questionToAdd]
+                            [#assign questionRemovable = true]
+                            [#break]
+                        [/#if]
+                    [/#list]
+                    [#if questionRemovable == true]
                         <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')">[@spring.message "questionnaire.remove.link"/]</a>
                     [#else]
                         <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
                     [/#if]
+                </td>
+                <td class="move">
+                    <a href="javascript:CreateQuestionGroup.moveQuestionUp('${section.name}','${sectionQuestion.questionId}')">
+                        <img src="pages/framework/images/smallarrowtop.gif" width="11" height="11">
+                    </a>&nbsp
+                    <a href="javascript:CreateQuestionGroup.moveQuestionDown('${section.name}','${sectionQuestion.questionId}')">
+                        <img src="pages/framework/images/smallarrowdown.gif" width="11" height="11">
+                    </a>
                 </td>
             </tr>
             [/#list]
@@ -126,6 +156,10 @@
         <input type="submit" id="_eventId_deleteSection" name="_eventId_deleteSection" value="" style="visibility:hidden"/>
         <input type="submit" id="_eventId_deleteQuestion" name="_eventId_deleteQuestion" value="" style="visibility:hidden"/>
         <input type="hidden" id="questionSection" name="questionSection" value=""/>
+        <input type="submit" id="_eventId_moveQuestionUp" name="_eventId_moveQuestionUp" value="" style="visibility:hidden"/>
+        <input type="submit" id="_eventId_moveQuestionDown" name="_eventId_moveQuestionDown" value="" style="visibility:hidden"/>
+        <input type="submit" id="_eventId_moveSectionUp" name="_eventId_moveSectionUp" value="" style="visibility:hidden"/>
+        <input type="submit" id="_eventId_moveSectionDown" name="_eventId_moveSectionDown" value="" style="visibility:hidden"/>
     </div>
     <div class="button_footer">
         <div class="button_container">

@@ -29,6 +29,7 @@ public class SectionDetail implements Serializable {
     private String name;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<SectionQuestionDetail> questionDetails;
+    private Integer sequenceNumber;
 
     public SectionDetail() {
         questionDetails = new ArrayList<SectionQuestionDetail>();
@@ -74,5 +75,13 @@ public class SectionDetail implements Serializable {
 
     public Integer getCountOfQuestions() {
         return this.questionDetails.size();
+    }
+
+    public Integer getSequenceNumber() {
+        return this.sequenceNumber;
+    }
+
+    public void setSequenceNumber(Integer sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
     }
 }
