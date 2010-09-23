@@ -202,6 +202,7 @@ public class QuestionGroupForm extends ScreenObject {
             sectionDetail.setSequenceNumber(sectionDetail.getSequenceNumber() + 1);
             sectionDetails.add(sectionDetail);
         }
+        currentSection.getSectionDetail().setSequenceNumber(0);
         sectionDetails.add(0, currentSection.getSectionDetail());
         sections.add(0, currentSection);
         questionGroupDetail.setSectionDetails(sectionDetails);

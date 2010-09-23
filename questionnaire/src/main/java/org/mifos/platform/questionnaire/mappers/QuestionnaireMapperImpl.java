@@ -227,7 +227,9 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     private Section mapToSection(QuestionGroupDetail questionGroupDetail, SectionDetail sectionDetail) {
         Section section = getSection(questionGroupDetail, sectionDetail);
         section.setQuestions(mapToSectionQuestions(sectionDetail.getQuestions(), section));
-        section.setSequenceNumber(sectionDetail.getSequenceNumber());
+        if (sectionDetail.getSequenceNumber() != null) {
+            section.setSequenceNumber(sectionDetail.getSequenceNumber());
+        }
         return section;
     }
 
@@ -304,7 +306,9 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     private SectionDetail mapToSectionDetail(Section section) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(section.getName());
-        sectionDetail.setSequenceNumber(section.getSequenceNumber());
+        if (section.getSequenceNumber() != null) {
+            sectionDetail.setSequenceNumber(section.getSequenceNumber());
+        }
         for (SectionQuestion sectionQuestion : section.getQuestions()) {
             QuestionEntity question = sectionQuestion.getQuestion();
             QuestionType type = mapToQuestionType(question.getAnswerTypeAsEnum());
@@ -316,7 +320,10 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private SectionQuestionDetail mapToSectionQuestionDetail(SectionQuestion sectionQuestion, boolean required, QuestionDetail questionDetail) {
-        return new SectionQuestionDetail(sectionQuestion.getId(), questionDetail, required, sectionQuestion.getSequenceNumber());
+        if (sectionQuestion.getSequenceNumber() != null) {
+            return new SectionQuestionDetail(sectionQuestion.getId(), questionDetail, required, sectionQuestion.getSequenceNumber());
+        }
+        return new SectionQuestionDetail(sectionQuestion.getId(), questionDetail, required);
     }
 
     private QuestionDetail mapToQuestionDetail(QuestionEntity question, QuestionType type) {

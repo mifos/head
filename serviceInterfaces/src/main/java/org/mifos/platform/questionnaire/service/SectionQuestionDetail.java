@@ -38,7 +38,7 @@ public class SectionQuestionDetail implements Serializable {
     private boolean mandatory;
     private QuestionDetail questionDetail;
     private String value;
-    private int sequenceNumber;
+    private Integer sequenceNumber;
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_BAD_FIELD")
     private List<SelectionDetail> selections = new ArrayList<SelectionDetail>();
@@ -247,11 +247,11 @@ public class SectionQuestionDetail implements Serializable {
         return isMultiSelectQuestion()? getMultiSelectValue(): (isEmpty(this.value)? EMPTY: this.value);
     }
 
-    public int getSequenceNumber() {
+    public Integer getSequenceNumber() {
         return this.sequenceNumber;
     }
 
-    public void setSequenceNumber(int sequenceNumber) {
+    public void setSequenceNumber(Integer sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
     }
 }
