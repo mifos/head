@@ -290,6 +290,47 @@
 		]]>
 	</sql-query>
 
+    <sql-query name="findActiveLoansforCustomerHierarchyAsDto">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="accountStateId" type="short" />
+		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="productId" type="short" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="principalDue" type="big_decimal" />
+		<return-scalar column="principalPaid" type="big_decimal" />
+		<return-scalar column="interestDue" type="big_decimal" />
+		<return-scalar column="interestPaid" type="big_decimal" />
+		<return-scalar column="penaltyDue" type="big_decimal" />
+		<return-scalar column="penaltyPaid" type="big_decimal" />
+		<return-scalar column="miscFeesDue" type="big_decimal" />
+		<return-scalar column="miscFeesPaid" type="big_decimal" />
+		<return-scalar column="miscPenaltyDue" type="big_decimal" />
+		<return-scalar column="miscPenaltyPaid" type="big_decimal" />
+		<![CDATA[
+            select c.customer_id as customerId, a.account_id as accountId, a.account_state_id as accountStateId, po.prd_offering_short_name as productShortName, po.prd_offering_id as productId, l.loan_balance_currency_id as currencyId,
+                    0.0 as principalDue,
+                    0.0 as principalPaid,
+                    0.0 as interestDue,
+                    0.0 as interestPaid,
+                    0.0 as penaltyDue,
+                    0.0 as penaltyPaid,
+                    0.0 as miscFeesDue,
+                    0.0 as miscFeesPaid,
+                    0.0 as miscPenaltyDue,
+                    0.0 as miscPenaltyPaid
+            from loan_account as l
+            join account a on l.account_id = a.account_id
+            join customer c on a.customer_id = c.customer_id
+            join prd_offering po on l.prd_offering_id = po.prd_offering_id
+            where c.search_id like :SEARCH_ID
+            and c.branch_id = :BRANCH_ID
+            and c.status_id in (3,4,9,10,13)
+            and a.account_state_id in (5, 9)
+            group by c.customer_id, a.account_id, a.account_state_id, po.prd_offering_short_name, po.prd_offering_id
+		]]>
+	</sql-query>
+
 	<sql-query name="findOutstandingFeesForLoansOnCustomerAtTopOfHierarchyAsDto">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
