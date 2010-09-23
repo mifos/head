@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.loanproduct;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
+import org.testng.Assert;
 
 public class EditLoanProductPreviewPage extends MifosPage {
 
@@ -38,6 +39,30 @@ public class EditLoanProductPreviewPage extends MifosPage {
         waitForPageToLoad();
         return new LoanProductDetailsPage(selenium);
     }
+
+
+    public void verifyVariableInstalmentOption(String maximumGap, String minGap, String minimumInstalmentAmount) {
+        Assert.assertTrue(selenium.isTextPresent("Minimum gap between installments: " + minGap + " days"));
+        if ("".equals(maximumGap)) {
+            Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: N/A"));
+        } else {
+            Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: " + maximumGap  + " days"));
+        }
+        if ("".equals(minimumInstalmentAmount)) {
+            Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: N/A")) ;
+        } else {
+            Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: " + minimumInstalmentAmount)) ;
+        }
+        Assert.assertTrue(selenium.isTextPresent("Can configure variable installments: Yes"));
+    }
+
+    public void verifyVariableInstalmentUnChecked() {
+        Assert.assertTrue(!selenium.isTextPresent("Minimum gap between installments:"));
+        Assert.assertTrue(!selenium.isTextPresent("Maximum gap between installments:"));
+        Assert.assertTrue(!selenium.isTextPresent("Minimum installment amount:")) ;
+        Assert.assertTrue(selenium.isTextPresent("Can configure variable installments: No"));
+    }
+
 
 
 }
