@@ -275,12 +275,14 @@ public class QuestionGroupControllerTest {
         verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.duplicate.question.found.in.section")));
     }
 
+    //TODO Question Groups added to testing data should have different titles, otherwise QuestionGroupSectionMatcher will throw exceptions. Matchers shouldn't throw exception when matching fail but return 'false'
     @Test
     public void shouldGetAllQuestionGroups() {
         List<QuestionGroupDetail> questionGroupDetails = asList(
-                getQuestionGroupDetail(1, TITLE,"View","Loan", true, true, "title1", "sectionName1"), getQuestionGroupDetail(1, TITLE,"View","Loan", true, true, "title1", "sectionName1"));
+                getQuestionGroupDetail(1, TITLE + "1","View","Loan", true, true, "title1", "sectionName1"), getQuestionGroupDetail(2, TITLE +"2","View","Loan", true, true, "title2", "sectionName2"), getQuestionGroupDetail(3, TITLE + "3","Create","Loan", true, true, "title3", "sectionName3"));
         Map <String,List <QuestionGroupDetail>> questionGroupsCategoriesSplit = new HashMap<String, List<QuestionGroupDetail>>();
-        questionGroupsCategoriesSplit.put("View Loan", questionGroupDetails);
+        questionGroupsCategoriesSplit.put("View Loan", asList(getQuestionGroupDetail(1, TITLE + "1","View","Loan", true, true, "title1", "sectionName1"), getQuestionGroupDetail(2, TITLE + "2","View","Loan", true, true, "title2", "sectionName2")));
+        questionGroupsCategoriesSplit.put("Create Loan", asList(getQuestionGroupDetail(3, TITLE + "3","Create","Loan", true, true, "title3", "sectionName3")));
         when(questionnaireServiceFacade.getAllQuestionGroups()).thenReturn(questionGroupDetails);
         String view = questionGroupController.getAllQuestionGroups(model, httpServletRequest);
         assertThat(view, Is.is("viewQuestionGroups"));

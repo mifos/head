@@ -41,7 +41,8 @@ public class QuestionGroupsGroupByEventSourceMatcher extends TypeSafeMatcher<Map
             for (String eventSource : this.questionGroupsEventSourceSplit.keySet()) {
                 if(this.questionGroupsEventSourceSplit.containsKey(eventSource)) {
                     Assert.assertThat(questionGroupsEventSourceSplit.get(eventSource), new QuestionGroupDetailListMatcher(this.questionGroupsEventSourceSplit.get(eventSource)));
-                } else {
+                }
+                else {
                     return false;
                 }
             }
