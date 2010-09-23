@@ -20,22 +20,12 @@
 
 package org.mifos.framework;
 
-import java.io.File;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.GregorianCalendar;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
-import org.mifos.framework.spring.SpringTestUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -45,8 +35,15 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.service.test.TestMode;
-
 import servletunit.struts.MockStrutsTestCase;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.util.Calendar;
+import java.util.Enumeration;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  * All classes extending this class must be names as <b>*StrutsTest.java</b> to support maven-surefire-plugin autofind

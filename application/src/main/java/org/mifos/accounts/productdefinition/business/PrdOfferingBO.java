@@ -26,6 +26,8 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
@@ -41,9 +43,6 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.framework.business.AbstractBusinessObject;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -59,7 +58,7 @@ import org.mifos.security.util.UserContext;
  */
 public abstract class PrdOfferingBO extends AbstractBusinessObject {
 
-    private static final MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+    private static final Logger logger = LoggerFactory.getLogger(PrdOfferingBO.class);
 
     private final Short prdOfferingId;
     private String prdOfferingName;
@@ -151,7 +150,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
             final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
             final String description) throws ProductDefinitionException {
         super(userContext);
-        prdLogger.debug("creating product offering");
+        logger.debug("creating product offering");
         validateUserContext(userContext);
         vaildate(prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate);
         validateStartDateAgainstCurrentDate(startDate);
@@ -175,7 +174,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
-        prdLogger.debug("creating product offering done");
+        logger.debug("creating product offering done");
     }
 
     public Short getPrdOfferingId() {
@@ -308,7 +307,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
     }
 
     private String generatePrdOfferingGlobalNum() throws ProductDefinitionException {
-        prdLogger.debug("Generating new product Offering global number");
+        logger.debug("Generating new product Offering global number");
         StringBuilder globalPrdOfferingNum = new StringBuilder();
         globalPrdOfferingNum.append(userContext.getBranchId());
         globalPrdOfferingNum.append("-");
@@ -320,26 +319,26 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
         }
         globalPrdOfferingNum.append(StringUtils.leftPad(String.valueOf(maxPrdID != null ? maxPrdID + 1
                 : ProductDefinitionConstants.DEFAULTMAX + 1), 3, '0'));
-        prdLogger.debug("Generation of new product Offering global number done" + globalPrdOfferingNum);
+        logger.debug("Generation of new product Offering global number done" + globalPrdOfferingNum);
         return globalPrdOfferingNum.toString();
     }
 
     private void vaildate(final String prdOfferingName, final String prdOfferingShortName, final ProductCategoryBO prdCategory,
             final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate) throws ProductDefinitionException {
-        prdLogger.debug("Validating the fields in Prd Offering");
+        logger.debug("Validating the fields in Prd Offering");
         if (prdOfferingName == null || prdOfferingShortName == null || prdCategory == null
                 || prdApplicableMaster == null || prdOfferingShortName.length() > 4 || startDate == null) {
             throw new ProductDefinitionException(ProductDefinitionConstants.ERROR_CREATE);
         }
-        prdLogger.debug("Validation of the fields in Prd Offering done.");
+        logger.debug("Validation of the fields in Prd Offering done.");
     }
 
     private void validateUserContext(final UserContext userContext) throws ProductDefinitionException {
-        prdLogger.debug("Validating the usercontext in Prd Offering");
+        logger.debug("Validating the usercontext in Prd Offering");
         if (userContext == null) {
             throw new ProductDefinitionException(ProductDefinitionConstants.ERROR_CREATE);
         }
-        prdLogger.debug("Validation of the fields in Prd Offering done.");
+        logger.debug("Validation of the fields in Prd Offering done.");
     }
 
     protected void validateStartDateAgainstCurrentDate(final Date startDate) throws ProductDefinitionException {
@@ -358,7 +357,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
     }
 
     private PrdStatusEntity getPrdStatus(final Date startDate, final ProductTypeEntity prdType) throws ProductDefinitionException {
-        prdLogger.debug("getting the Product status for prdouct offering with start date :" + startDate
+        logger.debug("getting the Product status for prdouct offering with start date :" + startDate
                 + " and product Type :" + prdType.getProductTypeID());
         PrdStatus prdStatus = null;
         if (startDate.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) == 0) {
@@ -367,7 +366,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
             prdStatus = getInActivePrdStatus(prdType);
         }
         try {
-            prdLogger.debug("getting the Product status for product status :" + prdStatus);
+            logger.debug("getting the Product status for product status :" + prdStatus);
             return new PrdOfferingPersistence().getPrdStatus(prdStatus);
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
@@ -375,7 +374,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
     }
 
     private PrdStatus getActivePrdStatus(final ProductTypeEntity prdType) {
-        prdLogger.debug("getting the Active Product status for product Type :" + prdType.getProductTypeID());
+        logger.debug("getting the Active Product status for product Type :" + prdType.getProductTypeID());
         if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue())) {
             return PrdStatus.LOAN_ACTIVE;
         }
@@ -384,7 +383,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
     }
 
     private PrdStatus getInActivePrdStatus(final ProductTypeEntity prdType) {
-        prdLogger.debug("getting the In Active Product status for product Type :" + prdType.getProductTypeID());
+        logger.debug("getting the In Active Product status for product Type :" + prdType.getProductTypeID());
         if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue())) {
             return PrdStatus.LOAN_INACTIVE;
         }
@@ -393,7 +392,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
     }
 
     private void validateDuplicateProductOfferingName(final String productOfferingName) throws ProductDefinitionException {
-        prdLogger.debug("Checking for duplicate product offering name");
+        logger.debug("Checking for duplicate product offering name");
         try {
             if (!new PrdOfferingPersistence().getProductOfferingNameCount(productOfferingName).equals(
                     Integer.valueOf("0"))) {
@@ -406,7 +405,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
 
     private void validateDuplicateProductOfferingShortName(final String productOfferingShortName)
             throws ProductDefinitionException {
-        prdLogger.debug("Checking for duplicate product offering short name");
+        logger.debug("Checking for duplicate product offering short name");
         try {
             if (!new PrdOfferingPersistence().getProductOfferingShortNameCount(productOfferingShortName).equals(
                     Integer.valueOf("0"))) {
@@ -441,7 +440,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
         } catch (PersistenceException pe) {
             throw new ProductDefinitionException(pe);
         }
-        prdLogger.debug("creating product offering done");
+        logger.debug("creating product offering done");
 
     }
 
@@ -540,6 +539,10 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
         this.endDate = endDate;
         this.prdApplicableMaster = applicableMasterEntity;
         this.prdStatus = prdStatusEntity;
+    }
+
+    public void updateStatus(PrdStatusEntity status) {
+        this.prdStatus = status;
     }
 
     public boolean isDifferentName(final String name) {

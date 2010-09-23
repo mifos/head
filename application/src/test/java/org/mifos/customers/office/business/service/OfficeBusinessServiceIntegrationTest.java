@@ -27,10 +27,10 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelFixture;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -116,14 +116,14 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     @Test
     public void testGetStatusList() throws NumberFormatException, ServiceException {
-        Assert.assertEquals(2, officeBusinessService.getStatusList(Short.valueOf("1")).size());
+        Assert.assertEquals(2, officeBusinessService.getStatusList().size());
     }
 
     @Test
     public void testGetStatusListFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
-            officeBusinessService.getStatusList(Short.valueOf("1"));
+            officeBusinessService.getStatusList();
             Assert.fail();
         } catch (ServiceException e) {
             Assert.assertTrue(true);

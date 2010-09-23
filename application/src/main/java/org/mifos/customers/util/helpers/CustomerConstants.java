@@ -131,6 +131,10 @@ public interface CustomerConstants {
     /** Request Parameters names */
     String LOAN_OFFICER_LIST = "loanOfficers";
 
+    String DISBURSEMENT_DATE ="disbursementDate";
+    String LOAN_AMOUNT="loanAmount";
+    String ACCOUNT_FEES="accountFees";
+
     String STATUS_LIST = "statusList";
     String FEES_LIST = "feesList";
     String ADMIN_FEES_LIST = "adminFeesList";

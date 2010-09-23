@@ -28,11 +28,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.AbstractBusinessObject;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.security.rolesandpermission.exceptions.RolesPermissionException;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
@@ -41,39 +40,36 @@ import org.mifos.security.util.UserContext;
 
 public class RoleBO extends AbstractBusinessObject {
 
+    private static final Logger logger = LoggerFactory.getLogger(RoleBO.class);
+
     private Short id = null;
 
     private String name;
 
     private Date createdDate;
-    
+
     private Short createdBy;
-    
+
     private Date updatedDate;
-    
+
     private Short updatedBy;
-    
+
     private Integer versionNo;
 
     private final Set<RoleActivityEntity> activities = new HashSet<RoleActivityEntity>();
 
-    MifosLogger logger;
-
     private RolesPermissionsPersistence rolesPermissionPersistence = new RolesPermissionsPersistence();
 
-    protected RoleBO() {
-        logger = MifosLogManager.getLogger(LoggerConstants.ROLEANDPERMISSIONLOGGER);
+    RoleBO() {
     }
 
-    RoleBO(MifosLogger logger, int id) {
-        this.logger = logger;
+    RoleBO(int id) {
         this.id = (short) id;
     }
 
     public RoleBO(UserContext userContext, String roleName, List<ActivityEntity> activityList)
             throws RolesPermissionException {
         super(userContext);
-        logger = MifosLogManager.getLogger(LoggerConstants.ROLEANDPERMISSIONLOGGER);
         logger.info("Creating a new role");
         validateRoleName(roleName);
         validateActivities(activityList);
@@ -110,7 +106,7 @@ public class RoleBO extends AbstractBusinessObject {
         }
         return ids;
     }
-    
+
         @Override
         public Short getCreatedBy() {
         return createdBy;

@@ -20,7 +20,6 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -42,9 +41,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.components.batchjobs.SchedulerConstants;
-import org.mifos.framework.components.batchjobs.business.Task;
-import org.mifos.framework.components.batchjobs.persistence.TaskPersistence;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -80,24 +76,10 @@ public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCa
         StaticHibernateUtil.closeSession();
     }
 
-    // PortfolioAtRisk needs this LoanArrearsTask to run successfully first
-    private Task insertLoanArrearsTask() throws Exception {
-        Task task = new Task();
-        task.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
-        task.setStartTime(new Timestamp(System.currentTimeMillis()));
-        task.setEndTime(new Timestamp(System.currentTimeMillis()));
-        task.setStatus(TaskStatus.COMPLETE.getValue());
-        task.setTask("LoanArrearsTask");
-
-        TaskPersistence p = new TaskPersistence();
-        p.saveAndCommitTask(task);
-        return task;
-
-    }
-
     @Test
     public void testExecute() throws Exception {
-        Task task = insertLoanArrearsTask();
+        LoanArrearsHelper loanArrearsHelper = new LoanArrearsHelper();
+        loanArrearsHelper.execute(System.currentTimeMillis());
         createInitialObject();
 
         group = TestObjectFactory.getCustomer(group.getCustomerId());
@@ -118,12 +100,8 @@ public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCa
         TestObjectFactory.updateObject(group);
         TestObjectFactory.flushandCloseSession();
 
-        PortfolioAtRiskTask portfolioAtRiskTask = new PortfolioAtRiskTask();
-        PortfolioAtRiskHelper portfolioAtRiskHelper = (PortfolioAtRiskHelper) portfolioAtRiskTask.getTaskHelper();
+        PortfolioAtRiskHelper portfolioAtRiskHelper = new PortfolioAtRiskHelper();//(PortfolioAtRiskHelper) portfolioAtRiskTask.getTaskHelper();
         portfolioAtRiskHelper.execute(System.currentTimeMillis());
-        // Session session = StaticHibernateUtil.getSessionTL();
-        // session.delete(task);
-        TestObjectFactory.removeObject(task);
 
         StaticHibernateUtil.closeSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
@@ -161,4 +139,5 @@ public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCa
             break;
         }
     }
+
 }

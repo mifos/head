@@ -24,14 +24,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.config.util.helpers.ConfigConstants;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Constants;
 
@@ -83,7 +82,7 @@ public class ClientRules {
      */
     private static Set<String> allowedNameParts;
 
-    private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
+    private static final Logger logger = LoggerFactory.getLogger(ClientRules.class);
 
     private static ConfigurationPersistence configPersistence;
 

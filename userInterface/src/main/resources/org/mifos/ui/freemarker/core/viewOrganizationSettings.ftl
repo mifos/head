@@ -78,7 +78,6 @@
         	<div class="fontBold marginTop10">[@spring.message "organizationSettings.viewOrganizationSettings.processflow/optionalstate"/]</div>
         	<div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.clientpendingapprovalstateenabled"/]</span>&nbsp;:&nbsp;<span class="fontnormal">${properties.clientPendingState}</span></div>
             <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.grouppendingapprovalstateenabled"/]</span>&nbsp;:&nbsp;<span class="fontnormal">${properties.groupPendingState}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.loandisbursedtoloanofficerstateenabled"/]</span>&nbsp;:&nbsp;<span class="fontnormal">${properties.loanDisbursedState}</span></div>
             <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.loanpendingapprovalstateenabled"/]</span>&nbsp;:&nbsp;<span class="fontnormal">${properties.loanPendingState}</span></div>
             <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.savingspendingapprovalstateenabled"/]</span>&nbsp;:&nbsp;<span class="fontnormal">${properties.savingsPendingState}</span></div>
         </p>

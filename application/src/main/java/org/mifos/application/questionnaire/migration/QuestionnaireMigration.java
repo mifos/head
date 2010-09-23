@@ -20,6 +20,8 @@
 
 package org.mifos.application.questionnaire.migration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.savings.persistence.SavingsDao;
@@ -36,9 +38,6 @@ import org.mifos.customers.surveys.business.Survey;
 import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
@@ -55,6 +54,8 @@ import java.util.Map;
 import static java.lang.String.format;
 
 public class QuestionnaireMigration {
+
+    private static final Logger logger = LoggerFactory.getLogger(QuestionnaireMigration.class);
 
     @Autowired
     private QuestionnaireMigrationMapper questionnaireMigrationMapper;
@@ -80,18 +81,15 @@ public class QuestionnaireMigration {
     @Autowired
     private PersonnelDao personnelDao;
 
-    private MifosLogger mifosLogger;
-
     @SuppressWarnings({"UnusedDeclaration"})
+
     public QuestionnaireMigration() {
-        mifosLogger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
     }
 
     // Intended to be used only from unit tests for injecting mocks
     public QuestionnaireMigration(QuestionnaireMigrationMapper questionnaireMigrationMapper,
                                   QuestionnaireServiceFacade questionnaireServiceFacade,
                                   SurveysPersistence surveysPersistence, CustomerDao customerDao, LoanDao loanDao, SavingsDao savingsDao, OfficeDao officeDao, PersonnelDao personnelDao) {
-        this();
         this.questionnaireMigrationMapper = questionnaireMigrationMapper;
         this.questionnaireServiceFacade = questionnaireServiceFacade;
         this.surveysPersistence = surveysPersistence;
@@ -251,7 +249,7 @@ public class QuestionnaireMigration {
                 questionGroupId = questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
             }
         } catch (Exception e) {
-            mifosLogger.error("Unable to create a Question Group from custom fields", e);
+            logger.error("Unable to create a Question Group from custom fields", e);
         }
         return questionGroupId;
     }
@@ -262,7 +260,7 @@ public class QuestionnaireMigration {
         try {
             questionGroupDto = questionnaireMigrationMapper.map(customFields, customFieldQuestionIdMap, entityType);
         } catch (Exception e) {
-            mifosLogger.error("Unable to migrate custom fields to a Question Group", e);
+            logger.error("Unable to migrate custom fields to a Question Group", e);
         }
         return questionGroupDto;
     }
@@ -272,7 +270,7 @@ public class QuestionnaireMigration {
         try {
             customFields = customerDao.retrieveCustomFieldEntitiesForGroupIterator();
         } catch (Exception e) {
-            mifosLogger.error("Unable to retrieve custom fields for Create Group", e);
+            logger.error("Unable to retrieve custom fields for Create Group", e);
         }
         return customFields;
     }
@@ -282,7 +280,7 @@ public class QuestionnaireMigration {
         try {
             customFields = customerDao.retrieveCustomFieldEntitiesForClientIterator();
         } catch (Exception e) {
-            mifosLogger.error("Unable to retrieve custom fields for Create Client", e);
+            logger.error("Unable to retrieve custom fields for Create Client", e);
         }
         return customFields;
     }
@@ -292,7 +290,7 @@ public class QuestionnaireMigration {
         try {
             customFields = loanDao.retrieveCustomFieldEntitiesForLoan();
         } catch (Exception e) {
-            mifosLogger.error("Unable to retrieve custom fields for Create Loan", e);
+            logger.error("Unable to retrieve custom fields for Create Loan", e);
         }
         return customFields;
     }
@@ -302,7 +300,7 @@ public class QuestionnaireMigration {
         try {
             customFields = personnelDao.retrieveCustomFieldEntitiesForPersonnel();
         } catch (Exception e) {
-            mifosLogger.error("Unable to retrieve custom fields for Create Personnel", e);
+            logger.error("Unable to retrieve custom fields for Create Personnel", e);
         }
         return customFields;
     }
@@ -312,7 +310,7 @@ public class QuestionnaireMigration {
         try {
             customFields = officeDao.retrieveCustomFieldEntitiesForOffice();
         } catch (Exception e) {
-            mifosLogger.error("Unable to retrieve custom fields for Create Office", e);
+            logger.error("Unable to retrieve custom fields for Create Office", e);
         }
         return customFields;
     }
@@ -322,7 +320,7 @@ public class QuestionnaireMigration {
         try {
             customFields = customerDao.retrieveCustomFieldEntitiesForCenterIterator();
         } catch (Exception e) {
-            mifosLogger.error("Unable to retrieve custom fields for Create Center", e);
+            logger.error("Unable to retrieve custom fields for Create Center", e);
         }
         return customFields;
     }
@@ -332,7 +330,7 @@ public class QuestionnaireMigration {
         try {
             customFields = savingsDao.retrieveCustomFieldEntitiesForSavings();
         } catch (Exception e) {
-            mifosLogger.error("Unable to retrieve custom fields for Create Savings", e);
+            logger.error("Unable to retrieve custom fields for Create Savings", e);
         }
         return customFields;
     }
@@ -418,7 +416,7 @@ public class QuestionnaireMigration {
         try {
             customFieldResponses = savingsDao.getCustomFieldResponses(customField.getFieldId());
         } catch (Exception e) {
-            mifosLogger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
+            logger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
         }
         return customFieldResponses;
     }
@@ -443,7 +441,7 @@ public class QuestionnaireMigration {
         try {
             customFieldResponses = officeDao.getCustomFieldResponses(customField.getFieldId());
         } catch (Exception e) {
-            mifosLogger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
+            logger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
         }
         return customFieldResponses;
     }
@@ -465,7 +463,7 @@ public class QuestionnaireMigration {
             questionGroupInstanceDto = questionnaireMigrationMapper.mapForOffice(questionGroupId, officeResponses,
                     customFieldQuestionIdMap);
         } catch (Exception e) {
-            mifosLogger
+            logger
                     .error(format(
                             "Unable to convert responses given for account with ID, %d for custom fields, to Question Group responses",
                             officeResponses.get(0).getOffice().getOfficeId().intValue()), e);
@@ -493,7 +491,7 @@ public class QuestionnaireMigration {
         try {
             customFieldResponses = personnelDao.getCustomFieldResponses(customField.getFieldId());
         } catch (Exception e) {
-            mifosLogger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
+            logger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
         }
         return customFieldResponses;
     }
@@ -515,7 +513,7 @@ public class QuestionnaireMigration {
             questionGroupInstanceDto = questionnaireMigrationMapper.mapForPersonnel(questionGroupId, personnelResponses,
                     customFieldQuestionIdMap);
         } catch (Exception e) {
-            mifosLogger
+            logger
                     .error(format(
                             "Unable to convert responses given for account with ID, %d for custom fields, to Question Group responses",
                             personnelResponses.get(0).getPersonnel().getPersonnelId().intValue()), e);
@@ -529,7 +527,7 @@ public class QuestionnaireMigration {
         try {
             questionGroupInstanceDto = questionnaireMigrationMapper.mapForAccounts(questionGroupId, accountResponses, customFieldQuestionIdMap);
         } catch (Exception e) {
-            mifosLogger.error(format("Unable to convert responses given for account with ID, %d for custom fields, to Question Group responses", accountResponses.get(0).getAccountId()), e);
+            logger.error(format("Unable to convert responses given for account with ID, %d for custom fields, to Question Group responses", accountResponses.get(0).getAccountId()), e);
         }
         return questionGroupInstanceDto;
     }
@@ -564,7 +562,7 @@ public class QuestionnaireMigration {
         try {
             customFieldResponses = loanDao.getCustomFieldResponses(customField.getFieldId());
         } catch (Exception e) {
-            mifosLogger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
+            logger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
         }
         return customFieldResponses;
     }
@@ -574,7 +572,7 @@ public class QuestionnaireMigration {
             try {
                 questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto);
             } catch (Exception e) {
-                mifosLogger.error(format("Unable to migrate responses from customer with ID, %d for custom fields", questionGroupInstanceDto.getEntityId()), e);
+                logger.error(format("Unable to migrate responses from customer with ID, %d for custom fields", questionGroupInstanceDto.getEntityId()), e);
             }
         }
     }
@@ -585,7 +583,7 @@ public class QuestionnaireMigration {
         try {
             questionGroupInstanceDto = questionnaireMigrationMapper.mapForCustomers(questionGroupId, customerResponses, customFieldQuestionIdMap);
         } catch (Exception e) {
-            mifosLogger.error(format("Unable to convert responses from customer with ID, %d for custom fields, to Question Group responses", customerResponses.get(0).getCustomerId()), e);
+            logger.error(format("Unable to convert responses from customer with ID, %d for custom fields, to Question Group responses", customerResponses.get(0).getCustomerId()), e);
         }
         return questionGroupInstanceDto;
     }
@@ -610,7 +608,7 @@ public class QuestionnaireMigration {
         try {
             customFieldResponses = customerDao.getCustomFieldResponses(customField.getFieldId());
         } catch (Exception e) {
-            mifosLogger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
+            logger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
         }
         return customFieldResponses;
     }
@@ -648,7 +646,7 @@ public class QuestionnaireMigration {
         try {
             surveys = surveysPersistence.retrieveSurveysByTypeIterator(surveyType);
         } catch (PersistenceException e) {
-            mifosLogger.error(String.format("Unable to retrieve surveys of type %s", surveyType), e);
+            logger.error(String.format("Unable to retrieve surveys of type %s", surveyType), e);
         }
         return surveys;
     }
@@ -665,7 +663,7 @@ public class QuestionnaireMigration {
         try {
             questionGroupId = questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
         } catch (Exception e) {
-            mifosLogger.error(format("Unable to convert the survey, '%s' with ID, %s to a Question Group", survey.getName(), survey.getSurveyId()), e);
+            logger.error(format("Unable to convert the survey, '%s' with ID, %s to a Question Group", survey.getName(), survey.getSurveyId()), e);
         }
         return questionGroupId;
     }
@@ -688,7 +686,7 @@ public class QuestionnaireMigration {
             questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto);
         } catch (Exception e) {
             Survey survey = surveyInstance.getSurvey();
-            mifosLogger.error(format("Unable to migrate a survey instance with ID, %s for the survey, '%s' with ID, %s", surveyInstance.getInstanceId(), survey.getName(), survey.getSurveyId()), e);
+            logger.error(format("Unable to migrate a survey instance with ID, %s for the survey, '%s' with ID, %s", surveyInstance.getInstanceId(), survey.getName(), survey.getSurveyId()), e);
         }
     }
 
@@ -697,7 +695,7 @@ public class QuestionnaireMigration {
         try {
             surveyInstances = surveysPersistence.retrieveInstancesBySurveyIterator(survey);
         } catch (Exception e) {
-            mifosLogger.error(format("Unable to retrieve survey instances for survey, '%s' with ID, %s", survey.getName(), survey.getSurveyId()), e);
+            logger.error(format("Unable to retrieve survey instances for survey, '%s' with ID, %s", survey.getName(), survey.getSurveyId()), e);
         }
         return surveyInstances;
     }

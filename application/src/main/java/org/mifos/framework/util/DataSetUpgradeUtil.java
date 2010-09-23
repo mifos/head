@@ -34,16 +34,20 @@ import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.operation.DatabaseOperation;
+import org.mifos.accounts.financial.exceptions.FinancialException;
+import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.framework.ApplicationInitializer;
+import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.SqlExecutor;
 import org.mifos.framework.persistence.SqlResource;
-import org.mifos.framework.spring.SpringTestUtil;
 import org.mifos.service.test.TestingService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -88,7 +92,7 @@ public class DataSetUpgradeUtil {
     DbUnitUtilities dbUnitUtilities;
 
     public static void main(String[] args) throws IOException, ClassNotFoundException,
-            SQLException, DatabaseUnitException, URISyntaxException {
+            SQLException, DatabaseUnitException, URISyntaxException, TaskSystemException, PersistenceException, ConfigurationException, FinancialException {
         DataSetUpgradeUtil util = new DataSetUpgradeUtil();
         util.doUpgrades(args);
     }
@@ -97,7 +101,7 @@ public class DataSetUpgradeUtil {
         defineOptions();
     }
 
-    public void doUpgrades(String[] args) throws IOException, ClassNotFoundException, SQLException, DatabaseUnitException, URISyntaxException {
+    public void doUpgrades(String[] args) throws IOException, ClassNotFoundException, SQLException, DatabaseUnitException, URISyntaxException, TaskSystemException, PersistenceException, ConfigurationException, FinancialException {
         parseOptions(args);
         System.out.println("Using database: " + databaseName);
         System.out.println("Using schema file: " + schemaFileName);
@@ -152,7 +156,7 @@ public class DataSetUpgradeUtil {
         }
     }
 
-    private void upgrade(String fileName) throws ClassNotFoundException, SQLException, DatabaseUnitException, IOException {
+    private void upgrade(String fileName) throws ClassNotFoundException, SQLException, DatabaseUnitException, IOException, TaskSystemException, PersistenceException, ConfigurationException, FinancialException {
         System.out.println("Upgrading: " + fileName);
         dbUnitUtilities = new DbUnitUtilities();
         IDataSet dataSet = null;
@@ -185,16 +189,23 @@ public class DataSetUpgradeUtil {
         }
 
         System.setProperty(TestingService.TEST_MODE_SYSTEM_PROPERTY,"acceptance");
-        SpringTestUtil.initializeSpring();
         ApplicationInitializer applicationInitializer = new ApplicationInitializer();
-        applicationInitializer.init(null);
+        applicationInitializer.dbUpgrade(initializeSpring());
+        applicationInitializer.setAttributesOnContext(null);
         StaticHibernateUtil.closeSession();
         System.out.println(" upgrade done!");
     }
 
+    public static ApplicationContext initializeSpring() {
+        return new ClassPathXmlApplicationContext(
+                                    "classpath:/org/mifos/config/resources/messageSourceBean.xml",
+                                    "classpath:/org/mifos/config/resources/persistenceContext.xml",
+                                    "classpath:/org/mifos/config/resources/dataSourceContext.xml");
+    }
+
     @SuppressWarnings("PMD.CloseResource")
     // Rationale: jdbcConnection is closed.
-    private void dump(String fileName) throws FileNotFoundException, ClassNotFoundException, SQLException, DatabaseUnitException, IOException {
+    private void dump(String fileName) throws ClassNotFoundException, SQLException, DatabaseUnitException, IOException {
         System.out.println("Dumping :" + fileName);
         Connection jdbcConnection = DriverManager.getConnection("jdbc:mysql://localhost/" + databaseName
                 + "?sessionVariables=FOREIGN_KEY_CHECKS=0", user, password);

@@ -96,8 +96,7 @@ padding-top:5px;
 	color:#CC6601;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-weight: bold;
-	font-size:9pt;
-	
+	font-size:9pt;	
 }
 .silverheading {
 	text-decoration:none;
@@ -309,7 +308,7 @@ padding-top:5px;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-size: 8pt;
 	font-weight: bold;
-	margin-right:-2px;
+	/*margin-right:-2px;*/
 	
 	/*border-top-left-radius: 8px;
 	-moz-border-radius-topleft: 8px;
@@ -345,7 +344,7 @@ padding-top:5px;
 	margin-top:55px;
 	margin-bottom:-1.5px;
 	margin-left:200px;
-	width:600px;
+	width:650px;
 }
 .sidebar {
 	margin-top:2px;

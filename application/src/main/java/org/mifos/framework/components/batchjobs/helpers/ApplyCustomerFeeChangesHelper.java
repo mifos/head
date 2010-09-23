@@ -31,7 +31,6 @@ import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
-import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
@@ -40,8 +39,8 @@ import org.mifos.security.util.UserContext;
 
 public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 
-    public ApplyCustomerFeeChangesHelper(MifosTask mifosTask) {
-        super(mifosTask);
+    public ApplyCustomerFeeChangesHelper() {
+        super();
     }
 
     @Override
@@ -94,8 +93,4 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
         customerAccount.updateFee(accountFee, feesBO);
     }
 
-    @Override
-    public boolean isTaskAllowedToRun() {
-        return true;
-    }
 }

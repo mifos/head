@@ -23,8 +23,15 @@ package org.mifos.test.acceptance.framework.loanproduct;
 import org.mifos.test.acceptance.framework.AbstractPage;
 
 import com.thoughtworks.selenium.Selenium;
+import org.testng.Assert;
 
 public class DefineNewLoanProductPage extends AbstractPage {
+
+    String configureVariableInstalmentsCheckbox = "canConfigureVariableInstallments";
+    String minInstalmentGapTextBox = "minimumGapBetweenInstallments";
+    String maxInstalmentGapTextBox = "maximumGapBetweenInstallments";
+    String previewButton = "createLoanProduct.button.preview";
+    String minInstalmentAmountTextBox = "minimumInstallmentAmount";
 
     public DefineNewLoanProductPage() {
         super();
@@ -43,28 +50,32 @@ public class DefineNewLoanProductPage extends AbstractPage {
         return this;
     }
 
-   @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
+    @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
    public static class SubmitFormParameters {
+
         // interest types
         public static final int FLAT = 1;
+
         public static final int DECLINING_BALANCE = 2;
+
         public static final int DECLINING_BALANCE_EPI = 4;
 
         // applicable for
         public static final int CLIENTS = 1;
         public static final int GROUPS = 2;
-
         // freq of installments
         public static final int WEEKS = 1;
         public static final int MONTHS = 2;
 
         // grace period type
         public static final int NONE = 1;
-
         private String branch;
+
         private String offeringName;
         private String offeringShortName;
+
         private String description;
+
         private String category;
         private int applicableFor;
         private String minLoanAmount;
@@ -81,23 +92,19 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String interestGLCode;
         private String principalGLCode;
         private boolean interestWaiver;
-
-
-       public String getBranch() {
+        public String getBranch() {
             return this.branch;
         }
-
         public void setBranch(String branch) {
             this.branch = branch;
         }
-
         public String getOfferingName() {
             return this.offeringName;
         }
-
         public void setOfferingName(String offeringName) {
             this.offeringName = offeringName;
         }
+
 
         public String getOfferingShortName() {
             return this.offeringShortName;
@@ -242,7 +249,8 @@ public class DefineNewLoanProductPage extends AbstractPage {
        public boolean isInterestWaiver() {
            return interestWaiver;
        }
-   }
+
+    }
 
     public void fillLoanParameters(SubmitFormParameters parameters) {
         selenium.type("createLoanProduct.input.prdOffering", parameters.getOfferingName());
@@ -266,11 +274,74 @@ public class DefineNewLoanProductPage extends AbstractPage {
     }
 
     public DefineNewLoanProductPreviewPage submitAndGotoNewLoanProductPreviewPage() {
-        selenium.click("createLoanProduct.button.preview");
+        selenium.click(previewButton);
         waitForPageToLoad();
         return new DefineNewLoanProductPreviewPage(selenium);
     }
 
+    public void verifyVariableInstalmentOptionsDefaults() {
+
+        Assert.assertTrue(!selenium.isChecked(configureVariableInstalmentsCheckbox)
+                & !selenium.isVisible(maxInstalmentGapTextBox)
+                & !selenium.isVisible(minInstalmentGapTextBox)
+                & !selenium.isVisible(minInstalmentAmountTextBox));
+        selectVariableInstalmentAndWaitForLoad();
+        Assert.assertTrue(selenium.isVisible(maxInstalmentGapTextBox) & selenium.isEditable(maxInstalmentGapTextBox));
+        Assert.assertTrue(selenium.isVisible(minInstalmentGapTextBox) & selenium.isEditable(minInstalmentGapTextBox));
+        Assert.assertTrue(selenium.isVisible(minInstalmentAmountTextBox) & selenium.isEditable(minInstalmentAmountTextBox));
+        Assert.assertTrue(selenium.getValue(minInstalmentGapTextBox).equals("1"));
+        Assert.assertTrue(selenium.getValue(maxInstalmentGapTextBox).equals(""));
+        Assert.assertTrue(selenium.getValue(minInstalmentAmountTextBox).equals(""));
+    }
+
+    public void verifyVariableInstalmentOptionsFields() {
+        fillInstalmentOptionsAndSubmit("text,", "text,", "text,");
+        Assert.assertTrue(selenium.isTextPresent("The min installment amount for variable installments is invalid because only numbers or decimal separator are allowed"));
+        Assert.assertTrue(!selenium.getValue(maxInstalmentGapTextBox).contains("text") & !selenium.getValue(maxInstalmentGapTextBox).contains(","));
+        Assert.assertTrue(!selenium.getValue(minInstalmentGapTextBox).contains("text") & !selenium.getValue(minInstalmentGapTextBox).contains(","));
+
+        fillInstalmentOptionsAndSubmit("1000","1000", "1");
+        Assert.assertTrue(selenium.isTextPresent("Minimum gap must be less than 4 digits for loans with variable installments"));
+        Assert.assertTrue(selenium.isTextPresent("Maximum gap must be less than 4 digits for loans with variable installments"));
+
+        fillInstalmentOptionsAndSubmit("-1","-1", "-1");
+        Assert.assertTrue(selenium.isTextPresent("Minimum gap must not be zero or negative for loans with variable installments"));
+        Assert.assertTrue(selenium.isTextPresent("Minimum gap must not be zero or negative for loans with variable installments"));
+        Assert.assertTrue(selenium.isTextPresent("The min installment amount for variable installments is invalid because only numbers or decimal separator are allowed."));
+
+        fillInstalmentOptionsAndSubmit("0","0", "0");
+        Assert.assertTrue(selenium.isTextPresent("Minimum gap must not be zero or negative for loans with variable installments"));
+        Assert.assertTrue(selenium.isTextPresent("Minimum gap must not be zero or negative for loans with variable installments"));
+
+        fillInstalmentOptionsAndSubmit("1", "10", "1");
+        Assert.assertTrue(selenium.isTextPresent("Minimum gap must be less than the maximum gap for loans with variable installments"));
+
+        fillVariableInstalmentOption("","","");
+//        Assert.assertTrue(selenium.isTextPresent("Minimum gap must be less than the maximum gap for loans with variable installments"));
+    }
+
+    private void fillInstalmentOptionsAndSubmit(String maxGap, String minGap, String minInstalmentAmount) {
+        fillVariableInstalmentOption(maxGap, minGap, minInstalmentAmount);
+        submitAndGotoNewLoanProductPreviewPage();
+    }
+
+    public void fillVariableInstalmentOption(String maxGap, String minGap, String minInstalmentAmount) {
+        if (!selenium.isChecked(configureVariableInstalmentsCheckbox)){
+            selectVariableInstalmentAndWaitForLoad();
+        }
+        selenium.type(maxInstalmentGapTextBox, maxGap);
+        selenium.type(minInstalmentGapTextBox, minGap);
+        selenium.type(minInstalmentAmountTextBox, minInstalmentAmount);
+    }
+
+    private void selectVariableInstalmentAndWaitForLoad() {
+        selenium.click(configureVariableInstalmentsCheckbox);
+        waitForElementToPresent(minInstalmentAmountTextBox);
+    }
+
+    public void verifyVariableInstalmentNotAvailable() {
+        Assert.assertTrue(!selenium.isElementPresent(configureVariableInstalmentsCheckbox));
+    }
 
 
 }

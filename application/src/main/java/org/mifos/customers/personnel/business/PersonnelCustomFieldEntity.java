@@ -68,6 +68,7 @@ public class PersonnelCustomFieldEntity extends AbstractEntity {
         this.fieldValue = fieldValue;
     }
 
+    @Deprecated
     public void save(PersonnelCustomFieldEntity personnelCustomFieldEntity) throws ApplicationException {
         new PersonnelPersistence().createOrUpdate(personnelCustomFieldEntity);
     }

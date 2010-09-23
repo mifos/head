@@ -22,12 +22,12 @@ package org.mifos.customers.struts.uihelpers;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerPositionDto;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -36,16 +36,18 @@ import org.mifos.security.util.UserContext;
  */
 public class CustomerUIHelperFn {
 
+    private static final Logger logger = LoggerFactory.getLogger(CustomerUIHelperFn.class);
+
     public CustomerUIHelperFn() {
         super();
 
     }
 
     public static String getClientPosition(Object customerPositions, Object customer) {
-        MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER).debug("Inside UI helper function getClientPositions");
+        logger.debug("Inside UI helper function getClientPositions");
         StringBuilder stringBuilder = new StringBuilder();
         if (customerPositions != null && customer != null) {
-            MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER).debug("Iterating over customerPositions list");
+            logger.debug("Iterating over customerPositions list");
             List<CustomerPositionDto> customerPositionList = (List<CustomerPositionDto>) customerPositions;
             String positionNames[] = new String[customerPositionList.size()];
             int i = 0;
@@ -55,8 +57,7 @@ public class CustomerUIHelperFn {
                         && customerDetails != null) {
                     if (customerPosition.getCustomerId().equals((customerDetails).getCustomerId())) {
                         String posName = customerPosition.getPositionName();
-                        MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER)
-                                .debug("The position name is " + posName);
+                        logger.debug("The position name is " + posName);
                         positionNames[i] = posName;
                         i++;
                     }

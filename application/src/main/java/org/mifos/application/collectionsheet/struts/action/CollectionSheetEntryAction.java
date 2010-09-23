@@ -28,6 +28,8 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -52,15 +54,12 @@ import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.FormEnteredDataAssembler;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.business.Configuration;
-import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
@@ -73,7 +72,7 @@ import org.mifos.security.util.UserContext;
 
 public class CollectionSheetEntryAction extends BaseAction {
 
-    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER);
+    private static final Logger logger = LoggerFactory.getLogger(CollectionSheetEntryAction.class);
 
     private final CollectionSheetServiceFacade collectionSheetServiceFacade = DependencyInjectedServiceLocator
             .locateCollectionSheetServiceFacade();

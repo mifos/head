@@ -36,7 +36,6 @@ import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.configuration.BatchJobConfigurationService;
@@ -72,8 +71,8 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     private List<String> errorList;
     private List<Holiday> unappliedHolidays;
 
-    public ApplyHolidayChangesHelper(MifosTask mifosTask) {
-        super(mifosTask);
+    public ApplyHolidayChangesHelper() {
+        super();
     }
 
     public BatchJobConfigurationService getBatchJobConfigurationService() {
@@ -277,11 +276,6 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         getHibernateUtil().commitTransaction();
     }
 
-    @Override
-    public boolean isTaskAllowedToRun() {
-        return true;
-    }
-
     private void initializeTaskGlobalParameters() {
 
         outputIntervalForBatchJobs = getBatchJobConfigurationService().getOutputIntervalForBatchJobs();
@@ -315,7 +309,6 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     }
 
     private void logMessage(String finalMessage) {
-        System.out.println(finalMessage);
         getLogger().info(finalMessage);
     }
 

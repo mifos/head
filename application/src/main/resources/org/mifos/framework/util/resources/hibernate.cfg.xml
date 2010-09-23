@@ -24,8 +24,6 @@
 		<mapping class="org.mifos.framework.business.EntityMaster" />
 		<mapping resource="org/mifos/framework/components/audit/business/AuditLog.hbm.xml" />
 		<mapping resource="org/mifos/framework/components/audit/business/AuditLogRecord.hbm.xml" />
-		<!-- Batch Jobs -->
-		<mapping resource="org/mifos/framework/components/batchjobs/business/Task.hbm.xml" />
 
         <!-- M2 style objects importexport-->
         <mapping resource="org/mifos/application/importexport/business/ImportedFilesEntity.hbm.xml" />
@@ -98,7 +96,8 @@
 		<mapping resource="org/mifos/accounts/productdefinition/business/NoOfInstallFromLoanCycleBO.hbm.xml" />
 		<mapping resource="org/mifos/accounts/productdefinition/business/LoanAmountSameForAllLoanBO.hbm.xml" />
 		<mapping resource="org/mifos/accounts/productdefinition/business/NoOfInstallSameForAllLoanBO.hbm.xml" />
-			
+        <mapping resource="org/mifos/accounts/productdefinition/business/VariableInstallmentDetailsBO.hbm.xml" />
+
 		<!--M2 style object for GLCODE-->
 		<mapping class="org.mifos.accounts.financial.business.GLCodeEntity" />
 		<mapping resource="org/mifos/accounts/business/AccountBO.hbm.xml" />
@@ -236,7 +235,7 @@
 		<mapping resource="org/mifos/reports/cashconfirmationreport/BranchCashConfirmationReportBO.hbm.xml" />	
 		<mapping resource="org/mifos/reports/cashconfirmationreport/BranchCashConfirmationCenterRecoveryBO.hbm.xml" />	
 		<mapping resource="org/mifos/reports/cashconfirmationreport/BranchCashConfirmationInfoBO.hbm.xml" />	
-		
+
 	</session-factory>
 
 </hibernate-configuration>

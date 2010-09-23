@@ -23,6 +23,7 @@ package org.mifos.customers.office.persistence;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 
@@ -39,13 +40,13 @@ import org.junit.Test;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.Localization;
-import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeDto;
+import org.mifos.dto.domain.OfficeHierarchyDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -229,6 +230,15 @@ public class OfficeDaoHibernateIntegrationTest extends MifosIntegrationTestCase 
 
         // verification
         assertThat(officeLevel.isConfigured(), is(true));
+    }
+
+    @Test
+    public void shouldRetrieveAllNonBranchOfficesUnderHeadOffice() {
+
+        List<OfficeDto> nonBranchOffices = officeDao.findNonBranchesOnlyWithParentsMatching(headOffice.getSearchId());
+
+        // verification
+        assertFalse(nonBranchOffices.isEmpty());
     }
 
     private void createOfficeHierarchy() {

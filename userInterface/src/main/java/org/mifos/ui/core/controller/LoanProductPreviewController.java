@@ -20,9 +20,6 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.LoanProductRequest;
@@ -66,68 +63,12 @@ public class LoanProductPreviewController {
         modelAndView.addObject("loanProduct", loanProduct);
         modelAndView.addObject("editFormview", editFormview);
 
-        populateModelAndViewForPreview(loanProduct, modelAndView);
+        new ProductModelAndViewPopulator().populateModelAndViewForPreview(loanProduct, modelAndView);
 
         return modelAndView;
     }
 
-    private void populateModelAndViewForPreview(LoanProductFormBean loanProduct, ModelAndView modelAndView) {
-        GeneralProductBean bean = loanProduct.getGeneralDetails();
 
-        new ProductModelAndViewPopulator().populateProductDetails(bean, modelAndView);
-
-        // loan product specific
-        if (loanProduct.isMultiCurrencyEnabled()) {
-            String currencyCode = loanProduct.getCurrencyOptions().get(loanProduct.getSelectedCurrency());
-            modelAndView.addObject("currencyCode", currencyCode);
-        }
-        String interestRateCalculation = loanProduct.getInterestRateCalculationTypeOptions().get(loanProduct.getSelectedInterestRateCalculationType());
-
-        List<String> fees = populateFees(loanProduct);
-
-        List<String> funds = populateFunds(loanProduct);
-
-        // accounting
-        String principalGlCode = loanProduct.getPrincipalGeneralLedgerOptions().get(loanProduct.getSelectedPrincipal());
-        String interestGlCode = loanProduct.getInterestGeneralLedgerOptions().get(loanProduct.getSelectedInterest());
-
-        modelAndView.addObject("interestRateCalculation", interestRateCalculation);
-        modelAndView.addObject("fees", fees);
-        modelAndView.addObject("funds", funds);
-
-        modelAndView.addObject("principalGlCode", principalGlCode);
-        modelAndView.addObject("interestGlCode", interestGlCode);
-    }
-
-    private List<String> populateFunds(LoanProductFormBean loanProduct) {
-
-        List<String> funds = new ArrayList<String>();
-
-        if (loanProduct.getSelectedFunds() != null) {
-            for (String selectedFund : loanProduct.getSelectedFunds()) {
-                if (loanProduct.getApplicableFundOptions().containsKey(selectedFund)) {
-                    funds.add(loanProduct.getApplicableFundOptions().get(selectedFund));
-                } else if (loanProduct.getSelectedFundOptions().containsKey(selectedFund)) {
-                    funds.add(loanProduct.getSelectedFundOptions().get(selectedFund));
-                }
-            }
-        }
-        return funds;
-    }
-
-    private List<String> populateFees(LoanProductFormBean loanProduct) {
-        List<String> fees = new ArrayList<String>();
-        if (loanProduct.getSelectedFees() != null) {
-            for (String selectedFee : loanProduct.getSelectedFees()) {
-                if (loanProduct.getApplicableFeeOptions().containsKey(selectedFee)) {
-                    fees.add(loanProduct.getApplicableFeeOptions().get(selectedFee));
-                } else if (loanProduct.getSelectedFeeOptions().containsKey(selectedFee)) {
-                    fees.add(loanProduct.getSelectedFeeOptions().get(selectedFee));
-                }
-            }
-        }
-        return fees;
-    }
 
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
@@ -153,12 +94,20 @@ public class LoanProductPreviewController {
             loanProduct.resetMultiSelectListBoxes();
 
             modelAndView.addObject("editFormview", editFormview);
-            populateModelAndViewForPreview(loanProduct, modelAndView);
+            new ProductModelAndViewPopulator().populateModelAndViewForPreview(loanProduct, modelAndView);
         } else {
-            LoanProductRequest loanProductRequest = loanProductFormBeanAssembler.toLoanProductDto(loanProduct);
-            PrdOfferingDto product = adminServiceFacade.createLoanProduct(loanProductRequest);
-            modelAndView.setViewName("redirect:/confirmLoanProduct.ftl");
-            modelAndView.addObject("product", product);
+            if ("defineLoanProducts".equals(editFormview)) {
+                LoanProductRequest loanProductRequest = loanProductFormBeanAssembler.toLoanProductDto(loanProduct);
+                PrdOfferingDto product = adminServiceFacade.createLoanProduct(loanProductRequest);
+                modelAndView.setViewName("redirect:/confirmLoanProduct.ftl");
+                modelAndView.addObject("product", product);
+            } else {
+                loanProduct.removeMultiSelectItems();
+                LoanProductRequest loanProductRequest = loanProductFormBeanAssembler.toLoanProductDto(loanProduct);
+                PrdOfferingDto product = adminServiceFacade.updateLoanProduct(loanProductRequest);
+                modelAndView.setViewName("redirect:/viewEditLoanProduct.ftl?productId="+ product.getPrdOfferingId());
+                modelAndView.addObject("product", product);
+            }
         }
 
         return modelAndView;

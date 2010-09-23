@@ -39,7 +39,6 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeCustomFieldEntity;
-import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.struts.OfficeUpdateRequest;
@@ -50,6 +49,7 @@ import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.OfficeFormDto;
@@ -365,8 +365,7 @@ public class OffAction extends BaseAction {
     }
 
     private void loadOfficeStatus(HttpServletRequest request) throws Exception {
-        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESTATUSLIST, ((OfficeBusinessService) getService())
-                .getStatusList(getUserContext(request).getLocaleId()), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESTATUSLIST, ((OfficeBusinessService) getService()).getStatusList(), request);
 
     }
 }

@@ -18,19 +18,48 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
+[#import "blueprintmacros.ftl" as mifos]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-  <!--  Main Content Begins-->  
+<!--  Main Content Begins-->  
   <div class="content">
-  	<form method="post" action="/mifos/PersonAction.do?method=search" name="personActionForm">
-  	<p class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "systemUsers.viewSystemUsers"/]</span></p>
+  	<form method="post" action="viewSystemUsers.ftl" name="searchSystemUsers">
+  	[#assign breadcrumb = {"admin":"AdminAction.do?method=load", "systemUsers.viewSystemUsers":""}/]
+    [@mifos.crumbpairs breadcrumb/]
   	<div class="marginLeft30">
     <div class="orangeheading">View system users</div>
-    <ul></ul>
     <p class="paddingLeft">[@spring.message "systemUsers.viewSystemUsers.searchUsersByName"/]<br />
-      <input type="text" id="txtid" name="searchString"/>&nbsp;&nbsp;<input class="buttn" type="submit" name="search" value="Search"/>
+    	[@spring.formInput "searchResults.search" /]
+    	<input class="buttn" type="submit" name="searchbutton" value="Search"/>
     </p>
     </div>
-   	</form> 
-  </div><!--Main Content Ends-->
+    <ul>
+	    [#list pagedResults.pagedUserDetails as userDetail]
+	    <li>
+	        ${userDetail.officeName} /<a href="viewSystemUserDetails.ftl?id=${userDetail.id}" id="userId_${userDetail.id}">${userDetail.firstName} ${userDetail.lastName}</a>
+	    </li>
+	    [/#list]
+    </ul>
+    [#if pagedResults.page > 0]
+    <div>
+        <input type="hidden" name="lastPage" value="${pagedResults.page}" />
+        <input type="hidden" name="lastSearch" value="${searchResults.search}" />
+    	<span class="span-8">
+    		[#if pagedResults.page > 1]
+    		<input class="buttn" type="submit" name="previous" value="Previous" />
+    		[/#if]
+    	</span>
+    	<span class="span-4">Results ${pagedResults.currentRange} of ${pagedResults.totalCount}</span>
+    	<span class="span-8">
+    		[#if pagedResults.notLastPage]
+    		<input class="buttn" type="submit" name="next" value="Next" />
+    		[/#if]
+    	</span>
+    </div>
+    [#else]
+    	<input type="hidden" name="lastPage" value="1" />
+    [/#if]
+    </form>
+  </div>
+<!--Main Content Ends-->
 [/@adminLeftPaneLayout]

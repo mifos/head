@@ -20,18 +20,18 @@
 
 package org.mifos.application.importexport.servicefacade;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.application.importexport.business.ImportedFilesEntity;
 import org.mifos.application.importexport.business.service.ImportedFilesService;
 import org.mifos.application.importexport.business.service.StandardImportedFilesService;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.security.util.UserContext;
 
 public class WebTierImportTransactionsServiceFacade implements ImportTransactionsServiceFacade {
 
-    private static final MifosLogger logger = MifosLogManager.getLogger(WebTierImportTransactionsServiceFacade.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(WebTierImportTransactionsServiceFacade.class);
 
     private ImportedFilesService importedFilesService;
 

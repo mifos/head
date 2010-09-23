@@ -62,11 +62,16 @@ insert into applied_upgrades(upgrade_id) values(1280719676);
 insert into applied_upgrades(upgrade_id) values(1280721170);
 insert into applied_upgrades(upgrade_id) values(1280793109);
 insert into applied_upgrades(upgrade_id) values(1282247229);
+insert into applied_upgrades(upgrade_id) values(1282389745);
+insert into applied_upgrades(upgrade_id) values(1282814250);
 insert into applied_upgrades(upgrade_id) values(1283237728);
 insert into applied_upgrades(upgrade_id) values(1283320210);
 insert into applied_upgrades(upgrade_id) values(1283416834);
+insert into applied_upgrades(upgrade_id) values(1283765911);
 insert into applied_upgrades(upgrade_id) values(1284365506);
+insert into applied_upgrades(upgrade_id) values(1284977483);
 insert into applied_upgrades(upgrade_id) values(1284986654);
+insert into applied_upgrades(upgrade_id) values(1285046834);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -1663,6 +1668,11 @@ insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_va
 insert into lookup_value (lookup_id, entity_id, lookup_name) values(631, 87, 'Permissions-CanStartMifosShutDown');
 insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(961, 1, 631, null);
 
+insert into lookup_value (lookup_id, entity_id, lookup_name) values(633,87,'Permissions-CanRunBatchJobsOnDemand');
+insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(963, 1, 633, null);
+insert into lookup_value (lookup_id, entity_id, lookup_name) values(634,87,'Permissions-CanUpdateBatchJobsConfiguration');
+insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(964, 1, 634, null);
+
 insert into lookup_value (lookup_id, entity_id, lookup_name) values(627, 87, 'Permissions-CanDefineHoliday');
 insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(957, 1, 627, null);
 
@@ -3032,6 +3042,16 @@ insert into activity(activity_id,parent_id,activity_name_lookup_id,description_l
 values(239,227,631,631);
 insert into roles_activity values (239,1);
 
+-- For permission "Can run Batch Jobs on demand" under System Information category
+insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
+values(241,227,633,633);
+insert into roles_activity values (241,1);
+
+-- For permission "Can update Batch Jobs configuration" under System Information category
+insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
+values(242,227,634,634);
+insert into roles_activity values (242,1);
+
 -- For permission "Can define holiday" under Organization Management category
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(235,1,627,627);
@@ -3235,6 +3255,17 @@ insert into event_sources (id, entity_type_id, event_id, description) values
     (6, (select entity_type_id from entity_master where entity_type = 'Client'), 4, 'Close Client');
 /* Upgrade 268 END */
 
+/* Quartz related inserts */
+insert into QRTZ_LOCKS values('TRIGGER_ACCESS');
+insert into QRTZ_LOCKS values('JOB_ACCESS');
+insert into QRTZ_LOCKS values('CALENDAR_ACCESS');
+insert into QRTZ_LOCKS values('STATE_ACCESS');
+insert into QRTZ_LOCKS values('MISFIRE_ACCESS');
+
+/* Spring Batch related inserts */
+insert into BATCH_STEP_EXECUTION_SEQ values(0);
+insert into BATCH_JOB_EXECUTION_SEQ values(0);
+insert into BATCH_JOB_SEQ values(0);
 
 /* Upgrade - 1283320210 Permissions to manage question groups*/
 insert into lookup_value (lookup_id, entity_id, lookup_name) values

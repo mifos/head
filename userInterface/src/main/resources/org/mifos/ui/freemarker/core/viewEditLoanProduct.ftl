@@ -31,10 +31,10 @@
        		<div class="span-18 ">
            	<span class="orangeheading">${loanProductDetails.productDetails.name}</span><br /><br />
            	[#switch loanProductDetails.productDetails.status]
-            	[#case 2]
+            	[#case 1]
             	<span><img src="pages/framework/images/status_activegreen.gif" /></span>&nbsp;<span>[@spring.message "active" /]</span>
             	[#break]
-            	[#case 5]
+            	[#case 4]
             	<span><img src="pages/framework/images/status_closedblack.gif" /></span>&nbsp;<span>[@spring.message "inactive"/]</span>
             	[#break]
             [/#switch] 
@@ -89,72 +89,307 @@
             	[#break]
             	[/#switch] 
             </div>
+            [#if loanProductDetails.multiCurrencyEnabled]
+			<div class="span-22">
+            	<span class="span-8">[@spring.message "manageLoanProducts.defineLoanProduct.currency"/]:&nbsp;</span>
+            	<span class="span-4">${loanProductDetails.currencyCode}</span>
+			</div>
+			[/#if]
             <div class="span-22 ">
-            	<span>[@spring.message "manageLoanProducts.editloanproduct.includeinLoancyclecounter" /]</span>
-            	<span>&nbsp;</span>
+            	<span class="span-8">[@spring.message "manageLoanProducts.editloanproduct.includeinLoancyclecounter" /]</span>
+            	<span class="span-4">
+            	[#if loanProductDetails.includeInLoanCycleCounter]
+            	[@spring.message "boolean.yes"/]
+            	[#else]
+            	[@spring.message "boolean.no"/]
+            	[/#if]
+            	</span>
             </div>
             <div class="span-22 ">
-            	<span>[@spring.message "manageLoanProducts.editloanproduct.calculateLoanAmountas" /]</span>
-            	<span>&nbsp;</span>
+            	<span class="span-8">[@spring.message "manageLoanProducts.editloanproduct.calculateLoanAmountas" /]</span>
+            	[#switch loanProductDetails.loanAmountDetails.calculationType]
+	            	[#case 1]
+	            	<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.sameforallLoans" /]</span>	
+	            	[#break]
+	            	[#case 2]
+	            	<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.bylastloanAmount" /]</span>
+	            	[#break]
+					[#case 3]
+					<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.byloanCycle" /]</span>
+	            	[#break]
+            	[/#switch]
             </div>
-            <div class="span-20 ">
-          		<div class="span-17 bluedivs fontBold paddingLeft">
-            		<span class="span-4">[@spring.message "manageLoanProducts.editloanproduct.minloanamount" /]</span>
-                    <span class="span-4">[@spring.message "manageLoanProducts.editloanproduct.maxloanamount" /]</span>
-                	<span class="span-5 last">[@spring.message "manageLoanProducts.editloanproduct.defaultamount" /]</span>
-            	</div>
-            	<div class="span-17 paddingLeft">
-                	<span class="span-4 ">&nbsp;</span>
-                	<span class="span-4 ">&nbsp;</span>
-                	<span class="span-5 last">&nbsp;</span>
-            	</div>
-          </div>
+            [#switch loanProductDetails.loanAmountDetails.calculationType]
+		      [#case 1]
+		      <div class="span-20 ">
+	          	<div class="span-17 bluedivs fontBold paddingLeft">
+	            	<span class="span-4">[@spring.message "manageLoanProducts.previewLoanProduct.minloanamount"/]</span>
+	                <span class="span-4">[@spring.message "manageLoanProducts.previewLoanProduct.maxloanamount"/]</span>
+	                <span class="span-5 last">[@spring.message "manageLoanProducts.previewLoanProduct.defaultamount"/]</span>
+	            </div>
+	            <div class="span-17 paddingLeft">
+	                <span class="span-4 ">${loanProductDetails.loanAmountDetails.sameForAllLoanRange.min}</span>
+	                <span class="span-4 ">${loanProductDetails.loanAmountDetails.sameForAllLoanRange.max}</span>
+	                <span class="span-5 last">${loanProductDetails.loanAmountDetails.sameForAllLoanRange.theDefault}</span>
+	            </div>
+	          	<div>&nbsp;</div>
+	          </div>	
+		      [#break]
+		      [#case 2]
+		      <div class="span-17 bluedivs fontBold paddingLeft">
+	      		<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.lastLoanAmount"/]</span>
+            	<span class="span-4">[@spring.message "manageLoanProducts.previewLoanProduct.minloanamount"/]</span>
+                <span class="span-4">[@spring.message "manageLoanProducts.previewLoanProduct.maxloanamount"/]</span>
+                <span class="span-5 last">[@spring.message "manageLoanProducts.previewLoanProduct.defaultamount"/]</span>
+	          </div>
+		      <div class="span-20 ">
+		      	[#list loanProductDetails.loanAmountDetails.byLastLoanAmountList as byLoanAmount]
+		      	<div class="span-17 paddingLeft">
+		      		<span class="span-4 ">${byLoanAmount.lower} - ${byLoanAmount.upper}</span>
+	                <span class="span-4 ">${byLoanAmount.min}</span>
+	                <span class="span-4 ">${byLoanAmount.max}</span>
+	                <span class="span-5 last">${byLoanAmount.theDefault}</span>
+	            </div>
+	            [/#list]
+		      	<div>&nbsp;</div>
+			  </div>
+		      [#break]
+		      [#case 3]
+		      
+		      <div class="span-20 ">
+			  	<div class="span-17 bluedivs fontBold paddingLeft">
+		      		<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo"/]</span>
+	            	<span class="span-4">[@spring.message "manageLoanProducts.previewLoanProduct.minloanamount"/]</span>
+	                <span class="span-4">[@spring.message "manageLoanProducts.previewLoanProduct.maxloanamount"/]</span>
+	                <span class="span-5 last">[@spring.message "manageLoanProducts.previewLoanProduct.defaultamount"/]</span>
+	          	</div>
+		      		<div class="span-20 ">
+		      		[#assign loanCycleNumber = 1]
+			      	[#list loanProductDetails.loanAmountDetails.byLoanCycleList as byLoanCycle]
+			      	<div class="span-17 paddingLeft">
+			      	    [#switch loanCycleNumber]
+			      	    [#case 1]
+		            	<span class="span-4 ">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.zero"/]</span>
+		            	[#break]
+		            	[#case 2]
+		            	<span class="span-4 ">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.one"/]</span>
+		            	[#break]
+		            	[#case 3]
+		            	<span class="span-4 ">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.two"/]</span>
+		            	[#break]
+		            	[#case 4]
+		            	<span class="span-4 ">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.three"/]</span>
+		            	[#break]
+		            	[#case 5]
+		            	<span class="span-4 ">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.four"/]</span>
+		            	[#break]
+		            	[#case 6]
+		            	<span class="span-4 ">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.abovefour"/]</span>
+		            	[#break]
+			      	    [/#switch]
+		                <span class="span-4 ">${byLoanCycle.min}</span>
+		                <span class="span-4 ">${byLoanCycle.max}</span>
+		                <span class="span-5 last">${byLoanCycle.theDefault}</span>
+		            </div>
+		            [#assign loanCycleNumber = loanCycleNumber + 1]
+		            [/#list]
+		      		<div>&nbsp;</div>
+			  	</div>
+		      	<div>&nbsp;</div>
+			  </div>
+		      [#break]
+		      [/#switch]
         </p>
         <p class="span-22 ">
 			<div class="fontBold span-22 ">[@spring.message "manageLoanProducts.editloanproduct.interestrate" /]</div>
-            <div class="span-22 "><span>[@spring.message "manageLoanProducts.editloanproduct.interestratetype" /]</span><span>&nbsp;</span></div>
-            <div class="span-22 "><span>[@spring.message "manageLoanProducts.editloanproduct.maxInterestrate" /]</span><span>&nbsp;</span></div>
-            <div class="span-22 "><span>[@spring.message "manageLoanProducts.editloanproduct.minInterestrate" /]</span><span>&nbsp;</span></div>
-            <div class="span-22 "><span>[@spring.message "manageLoanProducts.editloanproduct.defaultInterestrate" /]</span><span>&nbsp;</span></div>
+            <div class="span-22 ">
+            	<span>[@spring.message "manageLoanProducts.editloanproduct.interestratetype" /]</span>
+            	<span>${loanProductDetails.interestRateTypeName}</span>
+            </div>
+            <div class="span-22 ">
+            	<span>[@spring.message "manageLoanProducts.editloanproduct.maxInterestrate" /]</span>
+            	<span>${loanProductDetails.interestRateRange.max}</span>
+            </div>
+            <div class="span-22 ">
+            	<span>[@spring.message "manageLoanProducts.editloanproduct.minInterestrate" /]</span>
+            	<span>${loanProductDetails.interestRateRange.min}</span>
+            </div>
+            <div class="span-22 ">
+            	<span>[@spring.message "manageLoanProducts.editloanproduct.defaultInterestrate" /]</span>
+            	<span>${loanProductDetails.interestRateRange.theDefault}</span>
+            </div>
         </p>
         <div class="clear">&nbsp;</div>
         <p class="span-22 ">
 			<div class="fontBold span-22 ">[@spring.message "manageLoanProducts.editloanproduct.repaymentSchedule" /]</div>
             <div class="clear">&nbsp;</div>
-            <div class="span-22 "><span>[@spring.message "manageLoanProducts.editloanproduct.frequencyofinstallments" /]</span><span>&nbsp;</span></div>
-            <div class="span-22 "><span>[@spring.message "manageLoanProducts.editloanproduct.calculateofinstallmentsas" /]</span><span>&nbsp;</span></div>
-			<div class="span-20 ">
-          		<div class="span-17 bluedivs fontBold paddingLeft">
-            		<span class="span-4">[@spring.message "manageLoanProducts.editloanproduct.minofinstallments" /]</span>
-                	<span class="span-4">[@spring.message "manageLoanProducts.editloanproduct.maxofinstallments" /]</span>
-                	<span class="span-5 last">[@spring.message "manageLoanProducts.editloanproduct.defaultofinstallments" /]</span>
-            	</div>
-            	<div class="span-17 paddingLeft">
-                	<span class="span-4 ">&nbsp;</span>
-                	<span class="span-4 ">&nbsp;</span>
-                	<span class="span-5 last">&nbsp;</span>
-            	</div>
+            <div class="span-22 ">
+            	<span class="span-8">[@spring.message "manageLoanProducts.editloanproduct.frequencyofinstallments" /]</span>
+            	<span class="span-4">${loanProductDetails.repaymentDetails.recurs}
+          		[#switch loanProductDetails.repaymentDetails.frequencyType]
+	          		[#case 1]
+		            [@spring.message "manageLoanProducts.defineLoanProduct.week(s)"/]
+		            [#break]
+		            [#case 2]
+		            [@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]
+		            [#break]
+          		[/#switch]
+          	</span>
+            </div>
+            <div class="span-22 ">
+            	<span class="span-8">[@spring.message "manageLoanProducts.editloanproduct.calculateofinstallmentsas" /]</span>
+            	[#switch loanProductDetails.repaymentDetails.installmentCalculationDetails.calculationType]
+	            	[#case 1]
+	            	<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.sameforallLoans" /]</span>	
+	            	[#break]
+	            	[#case 2]
+	            	<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.bylastloanAmount" /]</span>
+	            	[#break]
+					[#case 3]
+					<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.byloanCycle" /]</span>
+	            	[#break]
+           		[/#switch]
+            </div>
+            [#switch loanProductDetails.repaymentDetails.installmentCalculationDetails.calculationType]
+		      [#case 1]
+		      <div class="span-20 ">
+		        <div class="span-17 bluedivs fontBold paddingLeft">
+	            	<span class="span-4">[@spring.message "manageLoanProducts.previewLoanProduct.minofinstallments"/]</span>
+	                <span class="span-4">[@spring.message "manageLoanProducts.previewLoanProduct.maxofinstallments"/]</span>
+	                <span class="span-5 last">[@spring.message "manageLoanProducts.previewLoanProduct.defaultofinstallments"/]</span>
+	            </div>
+	            <div class="span-17 paddingLeft">
+	                <span class="span-4 ">${loanProductDetails.repaymentDetails.installmentCalculationDetails.sameForAllLoanRange.min}</span>
+	                <span class="span-4 ">${loanProductDetails.repaymentDetails.installmentCalculationDetails.sameForAllLoanRange.max}</span>
+	                <span class="span-5 last">${loanProductDetails.repaymentDetails.installmentCalculationDetails.sameForAllLoanRange.theDefault}</span>
+	            </div>
+	          	<div>&nbsp;</div>
+	          </div>	
+		      [#break]
+		      [#case 2]
+		      	<div class="span-20 ">
+			  		<div class="span-17 bluedivs fontBold paddingLeft">
+			      		<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.lastLoanAmount"/]</span>
+		            	<span class="span-4">[@spring.message "manageLoanProducts.previewLoanProduct.minofinstallments"/]</span>
+	                	<span class="span-4">[@spring.message "manageLoanProducts.previewLoanProduct.maxofinstallments"/]</span>
+	                	<span class="span-5 last">[@spring.message "manageLoanProducts.previewLoanProduct.defaultofinstallments"/]</span>
+		          	</div>
+			      	<div class="span-20 ">
+				      	[#list loanProductDetails.repaymentDetails.installmentCalculationDetails.byLastLoanAmountList as byLoanAmount]
+				      	<div class="span-17 paddingLeft">
+				      		<span class="span-4 ">${byLoanAmount.lower} - ${byLoanAmount.upper}</span>
+			                <span class="span-4 ">${byLoanAmount.min}</span>
+			                <span class="span-4 ">${byLoanAmount.max}</span>
+			                <span class="span-5 last">${byLoanAmount.theDefault}</span>
+			            </div>
+			            [/#list]
+			        </div>
+			      	<div>&nbsp;</div>
+		  		</div>
+		      [#break]
+		      [#case 3]
+		      	<div class="span-20 ">
+				  	<div class="span-17 bluedivs fontBold paddingLeft">
+			      		<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo"/]</span>
+		            	<span class="span-4">[@spring.message "manageLoanProducts.previewLoanProduct.minofinstallments"/]</span>
+		                <span class="span-4">[@spring.message "manageLoanProducts.previewLoanProduct.maxofinstallments"/]</span>
+		                <span class="span-5 last">[@spring.message "manageLoanProducts.previewLoanProduct.defaultofinstallments"/]</span>
+		          	</div>
+			      	<div class="span-20 ">
+			      	    [#assign loanCycleNumber = 1]
+				      	[#list loanProductDetails.repaymentDetails.installmentCalculationDetails.byLoanCycleList as byLoanCycle]
+				      	<div class="span-17 paddingLeft">
+				      	    [#switch loanCycleNumber]
+				      	    [#case 1]
+			            	<span class="span-4 ">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.zero"/]</span>
+			            	[#break]
+			            	[#case 2]
+			            	<span class="span-4 ">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.one"/]</span>
+			            	[#break]
+			            	[#case 3]
+			            	<span class="span-4 ">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.two"/]</span>
+			            	[#break]
+			            	[#case 4]
+			            	<span class="span-4 ">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.three"/]</span>
+			            	[#break]
+			            	[#case 5]
+			            	<span class="span-4 ">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.four"/]</span>
+			            	[#break]
+			            	[#case 6]
+			            	<span class="span-4 ">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.abovefour"/]</span>
+			            	[#break]
+				      	    [/#switch]
+			                <span class="span-4 ">${byLoanCycle.min}</span>
+			                <span class="span-4 ">${byLoanCycle.max}</span>
+			                <span class="span-5 last">${byLoanCycle.theDefault}</span>
+			            </div>
+			            [#assign loanCycleNumber = loanCycleNumber + 1]
+			            [/#list]
+			      		<div>&nbsp;</div>
+				  	</div>
+			      	<div>&nbsp;</div>
+				  </div>
+		      [#break]
+	         [/#switch]
+          
+          <div class="span-22 ">
+          	<span class="span-8">[@spring.message "manageLoanProducts.editloanproduct.graceperiodtype" /]</span>
+          	[#switch loanProductDetails.repaymentDetails.gracePeriodType]
+	            [#case 1]
+	            <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.none" /]</span>	
+	            [#break]
+	            [#case 2]
+	            <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.graceonallrepayments" /]</span>
+	            [#break]
+				[#case 3]
+				<span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.principalonlygrace" /]</span>
+	            [#break]
+           	[/#switch]
           </div>
-          <div class="span-22 "><span>[@spring.message "manageLoanProducts.editloanproduct.graceperiodtype" /]</span><span>&nbsp;</span></div>
-          <div class="span-22 "><span>[@spring.message "manageLoanProducts.editloanproduct.graceperiodduration" /]</span><span>&nbsp;</span></div>
+          <div class="span-22 ">
+          	<span class="span-8">[@spring.message "manageLoanProducts.editloanproduct.graceperiodduration" /]</span>
+          	<span class="span-4">${loanProductDetails.repaymentDetails.gracePeriodDuration}</span>
+          </div>
         </p> 
+        
         <p class="fontBold span-22 ">[@spring.message "manageLoanProducts.editloanproduct.fees" /]</p>
+        <div class="span-20 ">
+            	<span class="span-8">[@spring.message "manageLoanProducts.editloanproduct.fees" /]</span>
+				<span class="span-4">
+		    	<ol>
+		            [#list loanProductDetails.fees as fee]
+		            <li>${fee}</li>
+		            [/#list]
+		        </ol>
+          		</span>
+		</div>
         <div class="clear">&nbsp;</div>       
+        
         <p class="span-22 ">
 			<div class="fontBold span-22 ">[@spring.message "manageLoanProducts.editloanproduct.accounting" /]</div>
-            <div class="span-20 "><span>[@spring.message "manageLoanProducts.editloanproduct.sourcesoffunds" /]&nbsp;&nbsp;</span><br /><span>&nbsp;</span>
+            <div class="span-20 ">
+            	<span class="span-8">[@spring.message "manageLoanProducts.editloanproduct.sourcesoffunds" /]</span>
+				<span class="span-4">
+		    	<ol>
+		            [#list loanProductDetails.funds as fund]
+		            <li>${fund}</li>
+		            [/#list]
+		        </ol>
+          		</span>
 			</div>
-            <div class="span-20 "><span>[@spring.message "manageLoanProducts.editloanproduct.productGLcode" /]&nbsp;&nbsp;</span></div>
-            <div class="span-20 "><span>[@spring.message "manageLoanProducts.editloanproduct.interest" /]&nbsp;&nbsp;</span>
-                    <span>&nbsp;</span>
+            <div class="span-20 "><span>[@spring.message "manageLoanProducts.editloanproduct.productGLcode" /]</span></div>
+            <div class="span-20 ">
+            	<span class="span-8">[@spring.message "manageLoanProducts.editloanproduct.interest" /]</span>
+                <span class="span-4">${loanProductDetails.interestGlCodeValue}</span>
 			</div>
-            <div class="span-20 "><span >[@spring.message "manageLoanProducts.editloanproduct.principal" /]&nbsp;&nbsp;</span>
-                    <span>&nbsp;</span>
+            <div class="span-20 ">
+            	<span class="span-8">[@spring.message "manageLoanProducts.editloanproduct.principal" /]</span>
+                <span class="span-4">${loanProductDetails.principalGlCodeValue}</span>
 			</div>
         </p>
         <div class="clear">&nbsp;</div> 
         <p class="span-22 ">
-            <div class="span-22 "><a href="#">[@spring.message "manageLoanProducts.editloanproduct.viewChangeLog" /]</a></div>
+            <div class="span-22 "><a href="viewLoanProductChangeLog.ftl?productId=${loanProductDetails.productDetails.id}">[@spring.message "manageLoanProducts.editloanproduct.viewChangeLog" /]</a></div>
         </p>
 	</div>
   </div>

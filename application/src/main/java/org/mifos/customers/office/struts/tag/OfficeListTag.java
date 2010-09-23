@@ -30,12 +30,12 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.struts.taglib.TagUtils;
-import org.mifos.application.servicefacade.OnlyBranchOfficeHierarchyDto;
-import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
+import org.mifos.dto.domain.OfficeDetailsDto;
+import org.mifos.dto.domain.OfficeHierarchyDto;
+import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;

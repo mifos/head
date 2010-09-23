@@ -22,46 +22,25 @@
 [@adminLeftPaneLayout]
 <!--  Main Content Begins-->  
   <div class=" content">
-  	<form method="" action="" name="formname">
-  	<p class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "viewreportscategory"/]</span></p>
-    <p class="font15 orangeheading">[@spring.message "viewreportscategory"/]</p>
-    <p><span>[@spring.message "clickonEdit/Deletetomakechangestoareportcategoryor"/] </span><a href="#">[@spring.message "addanewreportcategory"/] </a></p>
+  	<p class="bluedivs paddingLeft">
+  		<a href="AdminAction.do?method=load">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "admin.viewreportscategory"/]</span>
+  	</p>
+    <p class="font15 orangeheading">[@spring.message "admin.viewreportscategory"/]</p>
+    <p><span>[@spring.message "clickonEdit/Deletetomakechangestoareportcategoryor"/] </span><a href="defineReportCategory.ftl">[@spring.message "addanewreportcategory"/] </a></p>
     <div>&nbsp;</div>
     <div class="span-18">
     	<div class="span-22  borderbtm paddingLeft">
-        	<span class="span-17 fontBold ">[@spring.message "categoryName"/]</span>
+        	<span class="span-17 fontBold">[@spring.message "reports.categoryName"/]</span>
             <span class="span-3 ">&nbsp;</span>
         </div>
-        <div class="span-22  borderbtm paddingLeft ">
-            <span class="span-17 fontBold ">[@spring.message "clientDetail"/]</span>
-            <span class="span-2 rightAlign"><a href="#">[@spring.message "edit"/]</a>&nbsp;|&nbsp;<a href="#">[@spring.message "delete"/]</a></span>
-        </div>
-        <div class="span-22  borderbtm paddingLeft ">
-            <span class="span-17 fontBold">[@spring.message "performance"/]</span>
-            <span class="span-2 rightAlign"><a href="#">[@spring.message "edit"/]</a>&nbsp;|&nbsp;<a href="#">[@spring.message "delete"/]</a></span>
-        </div>
-        <div class="span-22  borderbtm paddingLeft ">
-            <span class="span-17 fontBold">[@spring.message "center"/]</span>
-            <span class="span-2 rightAlign"><a href="#">[@spring.message "edit"/]</a>&nbsp;|&nbsp;<a href="#">[@spring.message "delete"/]</a></span>
-        </div>
-        <div class="span-22  borderbtm paddingLeft ">
-            <span class="span-17 fontBold">[@spring.message "loanProductDetail"/]</span>
-            <span class="span-2 rightAlign"><a href="#">[@spring.message "edit"/]</a>&nbsp;|&nbsp;<a href="#">[@spring.message "delete"/]</a></span>
-        </div>
-        <div class="span-22  borderbtm paddingLeft ">
-            <span class="span-17 fontBold">[@spring.message "status"/]</span>
-            <span class="span-2 rightAlign"><a href="#">[@spring.message "edit"/]</a>&nbsp;|&nbsp;<a href="#">[@spring.message "delete"/]</a></span>
-        </div>
-        <div class="span-22  borderbtm paddingLeft ">
-            <span class="span-17 fontBold">[@spring.message "analysis"/]</span>
-            <span class="span-2 rightAlign"><a href="#">[@spring.message "edit"/]</a>&nbsp;|&nbsp;<a href="#">[@spring.message "delete"/]</a></span>
-        </div>
-        <div class="span-22  borderbtm paddingLeft ">
-            <span class="span-17 fontBold">[@spring.message "miscellaneous"/]</span>
-            <span class="span-2 rightAlign"><a href="#">[@spring.message "edit"/]</a>&nbsp;|&nbsp;<a href="#">[@spring.message "delete"/]</a></span>
-        </div>
         
+        [#list reportsCategoryList as category]
+        <div class="span-22  borderbtm paddingLeft ">
+            <span class="span-17">${category.name}</span>
+            <span class="span-2 rightAlign"><a href="editReportCategory.ftl?categoryId=${category.id}">[@spring.message "edit"/]</a>&nbsp;|&nbsp;<a href="deleteReportCategory.ftl?categoryId=${category.id}">[@spring.message "delete"/]</a></span>
+        </div>
+        [/#list]
     </div>
-   	</form> 
-  </div><!--Main Content Ends-->
+  </div>
+ <!--Main Content Ends-->
 [/@adminLeftPaneLayout]

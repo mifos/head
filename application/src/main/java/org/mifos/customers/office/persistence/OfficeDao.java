@@ -24,17 +24,16 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeCustomFieldEntity;
-import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeDto;
+import org.mifos.dto.domain.OfficeHierarchyDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.security.util.UserContext;
 
@@ -49,6 +48,8 @@ public interface OfficeDao {
     List<OfficeDto> findAllOffices();
 
     List<OfficeBO> findBranchsOnlyWithParentsMatching(String searchId);
+
+    List<OfficeDto> findNonBranchesOnlyWithParentsMatching(String searchId);
 
     List<OfficeDetailsDto> findActiveOfficeLevels();
 

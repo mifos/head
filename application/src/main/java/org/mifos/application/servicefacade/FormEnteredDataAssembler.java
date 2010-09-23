@@ -23,8 +23,8 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.customers.business.CustomerDto;
-import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.personnel.business.PersonnelDto;
+import org.mifos.dto.domain.OfficeDetailsDto;
 
 /**
  * An Assembler for building {@link CollectionSheetFormEnteredDataDto} from

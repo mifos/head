@@ -28,6 +28,7 @@ import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.OfficeFormDto;
 import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
+import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 
 public interface OfficeServiceFacade {
 
@@ -40,4 +41,8 @@ public interface OfficeServiceFacade {
     List<CustomFieldDto> retrieveCustomFieldsForOffice();
 
     ListElement createOffice(Short userId, Locale preferredLocale, Short operationMode, OfficeDto officeDto);
+
+    OnlyBranchOfficeHierarchyDto retrieveBranchOnlyOfficeHierarchy();
+
+    List<OfficeDto> retrieveAllNonBranchOfficesApplicableToLoggedInUser();
 }

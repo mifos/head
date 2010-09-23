@@ -20,7 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]  <!--  Main Content Begins-->  
-  <div class=" content leftMargin180">
+  <div class=" content">
   	<form method="POST" action="editFunds.ftl" name="editFunds">
     <div class="span-24">
     [@spring.bind "formBean.name"/]

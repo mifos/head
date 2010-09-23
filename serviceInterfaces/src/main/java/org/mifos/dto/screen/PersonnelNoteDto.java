@@ -1,6 +1,7 @@
 package org.mifos.dto.screen;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 import org.joda.time.DateTime;
 
@@ -13,10 +14,13 @@ public class PersonnelNoteDto implements Serializable {
     private final String personnelName;
 
     public PersonnelNoteDto(DateTime commentDate, String comment, String personnelName) {
-        super();
         this.commentDate = commentDate;
         this.comment = comment;
         this.personnelName = personnelName;
+    }
+
+    public String getCommentDateFormatted() {
+        return org.joda.time.format.DateTimeFormat.forPattern("dd/MM/yyyy").withLocale(Locale.getDefault()).print(this.commentDate);
     }
 
     public DateTime getCommentDate() {

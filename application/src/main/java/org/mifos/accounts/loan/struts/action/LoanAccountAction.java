@@ -481,6 +481,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 request);
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, loanScheduleDetailsDto
                 .isLoanPendingApprovalDefined(), request);
+        SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, disbursementDate, request);
+        SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, loanActionForm.getLoanAmount(), request);
 
         return createLoanQuestionnaire.fetchAppliedQuestions(
                 mapping, loanActionForm, request, ActionForwards.schedulePreview_success);

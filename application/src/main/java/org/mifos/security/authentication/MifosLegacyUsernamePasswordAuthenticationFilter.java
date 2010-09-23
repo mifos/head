@@ -36,7 +36,7 @@ import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.servicefacade.LoginActivityDto;
 import org.mifos.application.servicefacade.LegacyLoginServiceFacade;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.components.batchjobs.MifosTask;
+import org.mifos.framework.components.batchjobs.MifosBatchJob;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
@@ -76,7 +76,7 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
         AuthenticationException denied = null;
 
         boolean allowAuthenticationToContinue = true;
-        if (MifosTask.isBatchJobRunningThatRequiresExclusiveAccess()) {
+        if (MifosBatchJob.isBatchJobRunningThatRequiresExclusiveAccess()) {
             allowAuthenticationToContinue = false;
 
             request.getSession(false).invalidate();
@@ -124,6 +124,7 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
             FlowManager flowManager = new FlowManager();
             String flowKey = String.valueOf(new DateTimeService().getCurrentDateTime().getMillis());
             flowManager.addFLow(flowKey, new Flow(), this.getFilterName());
+
             request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 
             request.getSession(false).setAttribute(Constants.FLOWMANAGER, flowManager);

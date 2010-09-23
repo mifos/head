@@ -20,6 +20,8 @@
 
 package org.mifos.customers.group.struts.action;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -33,7 +35,6 @@ import org.mifos.application.servicefacade.CustomerDetailsDto;
 import org.mifos.application.servicefacade.GroupCreation;
 import org.mifos.application.servicefacade.GroupFormCreationDto;
 import org.mifos.application.servicefacade.GroupUpdate;
-import org.mifos.application.servicefacade.OnlyBranchOfficeHierarchyDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
@@ -48,10 +49,8 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -76,7 +75,7 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 public class GroupCustAction extends CustAction {
 
-    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER);
+    private static final Logger logger = LoggerFactory.getLogger(GroupCustAction.class);
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("groupCustAction");

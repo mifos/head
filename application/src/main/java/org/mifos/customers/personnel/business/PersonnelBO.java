@@ -30,6 +30,8 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.SupportedLocalesEntity;
@@ -45,12 +47,10 @@ import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
@@ -61,10 +61,11 @@ import org.mifos.security.authentication.EncryptionService;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 
 public class PersonnelBO extends AbstractBusinessObject {
 
-    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.PERSONNEL_LOGGER);
+    private static final Logger logger = LoggerFactory.getLogger(PersonnelBO.class);
 
     public static PersonnelBO ALL_PERSONNEL = new PersonnelBO();
     static {
@@ -384,6 +385,10 @@ public class PersonnelBO extends AbstractBusinessObject {
         this.personnelNotes.add(personnelNotes);
     }
 
+    /**
+     * @deprecated use creational pattern from tests to for saving personnel.
+     */
+    @Deprecated
     public void save() throws PersonnelException {
         try {
             PersonnelPersistence persistence = new PersonnelPersistence();
@@ -404,6 +409,11 @@ public class PersonnelBO extends AbstractBusinessObject {
         } catch (PersistenceException e) {
             throw new PersonnelException(e);
         }
+    }
+
+    public void generateGlobalPersonnelNum() {
+        String paddedSystemId = generateGlobalPersonnelNum(this.office.getGlobalOfficeNum(), this.personnelId);
+        this.globalPersonnelNum = paddedSystemId;
     }
 
     private String generateGlobalPersonnelNum(final String officeGlobalNum, final int maxPersonnelId) {
@@ -837,5 +847,59 @@ public class PersonnelBO extends AbstractBusinessObject {
 
     public boolean isDifferentIdentityTo(PersonnelBO personnel) {
         return !this.personnelId.equals(personnel.getPersonnelId());
+    }
+
+    public UserDetailDto toDto() {
+        return new UserDetailDto(this.office.getOfficeName(), this.personnelId.intValue(), this.globalPersonnelNum, this.personnelDetails.getName().getFirstName(), this.personnelDetails.getName().getLastName());
+    }
+
+    public void updateUserDetails(String firstName, String middleName, String secondLastName, String lastName,
+            String email, Integer gender, Integer maritalStatus,
+            Short preferredLocale, PersonnelStatusEntity personnelStatus, Address address, Integer title, PersonnelLevelEntity personnelLevel, List<RoleBO> roles, String password, List<CustomFieldDto> customFields) {
+
+        this.emailId = email;
+        this.personnelDetails.updateNameDetails(firstName, middleName, secondLastName, lastName);
+        this.personnelDetails.updateDetails(maritalStatus, gender);
+        this.personnelDetails.updateAddress(address);
+        this.displayName = this.personnelDetails.getDisplayName();
+
+        if (title != null && title.intValue() == 0) {
+            this.title = null;
+        } else {
+            this.title = title;
+        }
+
+        this.preferredLocale = new SupportedLocalesEntity(preferredLocale);
+        this.status = personnelStatus;
+        this.level = personnelLevel;
+
+        // fix me, use encrpytion service outside of pojo?
+        if (StringUtils.isNotBlank(password)) {
+            this.encryptedPassword = getEncryptedPassword(password);
+        }
+
+        updatePersonnelRoles(roles);
+
+        try {
+            updateCustomFields(customFields);
+        } catch (InvalidDateException e) {
+            throw new BusinessRuleException("unable to update custom fields", e);
+        }
+    }
+
+    public boolean isNonLoanOfficer() {
+        return getLevelEnum().equals(PersonnelLevel.NON_LOAN_OFFICER);
+    }
+
+    public boolean isLevelDifferent(PersonnelLevel newLevel) {
+        return !newLevel.getValue().equals(this.level.getId());
+    }
+
+    public boolean isOfficeDifferent(OfficeBO newOffice) {
+        return this.office.isDifferent(newOffice);
+    }
+
+    public boolean isInActive() {
+        return !isActive();
     }
 }

@@ -22,6 +22,8 @@ package org.mifos.accounts.financial.util.helpers;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -35,13 +37,10 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.config.ChartOfAccountsConfig;
 import org.mifos.config.GLAccount;
 import org.mifos.config.exceptions.ConfigurationException;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class FinancialInitializer {
-    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
+    private static final Logger logger = LoggerFactory.getLogger(FinancialInitializer.class);
 
     public static void initialize() throws FinancialException {
 

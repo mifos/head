@@ -417,6 +417,35 @@ public class LoanProductFormBean {
         }
     }
 
+    public void removeMultiSelectItems() {
+
+        if (this.selectedFees != null && this.selectedFees.length == 1) {
+            for (String selectedFee : this.selectedFees) {
+                if (containsKey(this.applicableFees, selectedFee)) {
+                    this.selectedFees = null;
+                }
+            }
+        }
+
+        if (this.selectedFunds != null && this.selectedFunds.length == 1) {
+            for (String selectedFund : this.selectedFunds) {
+                if (containsKey(this.applicableFunds, selectedFund)) {
+                    this.selectedFunds = null;
+                }
+            }
+        }
+    }
+
+    private boolean containsKey(String[] unselectedKey, String key) {
+        boolean found = false;
+        for (String item : unselectedKey) {
+            if (item.equals(key)) {
+                found = true;
+            }
+        }
+        return found;
+    }
+
     public String getSelectedCurrency() {
         return this.selectedCurrency;
     }
@@ -439,5 +468,29 @@ public class LoanProductFormBean {
 
     public void setMultiCurrencyEnabled(boolean multiCurrencyEnabled) {
         this.multiCurrencyEnabled = multiCurrencyEnabled;
+    }
+
+    public ByLoanCycleBean[] createByLoanCycleBeans() {
+
+        ByLoanCycleBean zeroCycle = new ByLoanCycleBean(1);
+        ByLoanCycleBean oneCycle = new ByLoanCycleBean(2);
+        ByLoanCycleBean twoCycle = new ByLoanCycleBean(3);
+        ByLoanCycleBean threeCycle = new ByLoanCycleBean(4);
+        ByLoanCycleBean fourCycle = new ByLoanCycleBean(5);
+        ByLoanCycleBean greaterThanFourCycle = new ByLoanCycleBean(6);
+
+        return new ByLoanCycleBean[] {zeroCycle,oneCycle, twoCycle, threeCycle, fourCycle, greaterThanFourCycle};
+    }
+
+    public ByLastLoanAmountBean[] createByLastLoanAmountBeans() {
+        ByLastLoanAmountBean zero = new ByLastLoanAmountBean();
+        zero.setLower(Double.valueOf("0"));
+        ByLastLoanAmountBean one = new ByLastLoanAmountBean();
+        ByLastLoanAmountBean two = new ByLastLoanAmountBean();
+        ByLastLoanAmountBean three = new ByLastLoanAmountBean();
+        ByLastLoanAmountBean four = new ByLastLoanAmountBean();
+        ByLastLoanAmountBean five = new ByLastLoanAmountBean();
+
+        return new ByLastLoanAmountBean[] {zero, one, two, three, four, five};
     }
 }

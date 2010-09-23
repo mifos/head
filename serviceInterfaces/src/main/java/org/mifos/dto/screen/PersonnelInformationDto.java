@@ -34,13 +34,16 @@ import org.mifos.dto.domain.CustomFieldDto;
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
 public class PersonnelInformationDto implements Serializable {
 
+    private final Integer id;
     private final String displayName;
     private final ListElement status;
     private final Boolean locked;
     private final PersonnelDetailsDto personnelDetails;
     private final String emailId;
+    private final Integer preferredLanguageId;
     private final String preferredLocaleLanguageName;
     private final Short levelId;
+    private final Integer officeId;
     private final String officeName;
     private final Integer title;
     private final Set<ListElement> personnelRoles;
@@ -49,20 +52,21 @@ public class PersonnelInformationDto implements Serializable {
     private final Set<CustomFieldDto> customFields;
     private final Set<PersonnelNoteDto> personnelNotes;
 
-
-    public PersonnelInformationDto(String displayName, ListElement status, Boolean locked,
+    public PersonnelInformationDto(Integer id, String displayName, ListElement status, Boolean locked,
                                    PersonnelDetailsDto personnelDetails, String emailId, String preferredLocaleLanguageName,
-                                   Short levelId, String officeName, Integer title, Set<ListElement> personnelRoles,
+                                   Integer preferredLanguageId, Short levelId, Integer officeId, String officeName, Integer title, Set<ListElement> personnelRoles,
                                    Short personnelId, String userName, Set<CustomFieldDto> customFields,
                                    Set<PersonnelNoteDto> personnelNotes) {
-        super();
+        this.id = id;
         this.displayName = displayName;
         this.status = status;
         this.locked = locked;
         this.personnelDetails = personnelDetails;
         this.emailId = emailId;
         this.preferredLocaleLanguageName = preferredLocaleLanguageName;
+        this.preferredLanguageId = preferredLanguageId;
         this.levelId = levelId;
+        this.officeId = officeId;
         this.officeName = officeName;
         this.title = title;
         this.personnelRoles = personnelRoles;
@@ -169,5 +173,17 @@ public class PersonnelInformationDto implements Serializable {
             }
         }
         return age;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public Integer getOfficeId() {
+        return this.officeId;
+    }
+
+    public Integer getPreferredLanguageId() {
+        return this.preferredLanguageId;
     }
 }

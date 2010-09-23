@@ -295,4 +295,12 @@ public interface ProductDefinitionConstants {
     String MAX_AMOUNT_WITHDRAWL_KEY = "product.maxamtwid";
     String MIN_BALANCE_FOR_CALC_KEY = "product.minBalForCalc";
     String ERROR_MUST_NOT_BE_NEGATIVE = "errors.mustNotBeNegative";
+    String MIN_GAP_MORE_THAN_MAX_GAP_FOR_VARIABLE_INSTALLMENT_PRODUCT = "errors.minGapMoreThanMaxGapForVariableInstallmentProduct";
+    String VARIABLE_INSTALLMENT_MIN_GAP_NEGATIVE_OR_ZERO = "errors.variableInstallmentMinGapNegativeOrZero";
+    String VARIABLE_INSTALLMENT_MAX_GAP_NEGATIVE_OR_ZERO = "errors.variableInstallmentMaxGapNegativeOrZero";
+    String VARIABLE_INSTALLMENT_MIN_GAP_NOT_PROVIDED = "errors.variableInstallmentMinGapNotProvided";
+    String VARIABLE_INSTALLMENT_MIN_GAP_MORE_THAN_ALLOWED = "errors.variableInstallmentMinGapMoreThanAllowed";
+    String VARIABLE_INSTALLMENT_MAX_GAP_MORE_THAN_ALLOWED = "errors.variableInstallmentMaxGapMoreThanAllowed";
+    String VARIABLE_INSTALLMENT_MIN_AMOUNT_INVALID_FORMAT = "errors.minInstallmentAmountInvalidFormat";
+    int MAX_ALLOWED_INSTALLMENT_GAP = 999;
 }

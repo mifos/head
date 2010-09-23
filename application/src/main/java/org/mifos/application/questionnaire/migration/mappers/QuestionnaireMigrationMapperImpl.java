@@ -21,6 +21,8 @@
 package org.mifos.application.questionnaire.migration.mappers;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -40,9 +42,6 @@ import org.mifos.customers.surveys.business.SurveyQuestion;
 import org.mifos.customers.surveys.business.SurveyResponse;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
@@ -74,6 +73,8 @@ import static org.mifos.platform.util.MapEntry.makeEntry;
 
 public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationMapper {
 
+    private static final Logger logger = LoggerFactory.getLogger(QuestionnaireMigrationMapperImpl.class);
+
     private Map<CustomFieldType, QuestionType> customFieldTypeToQuestionTypeMap;
     private Map<EntityType, String> entityTypeToSourceMap;
     private Map<SurveyType, String> surveyTypeToSourceMap;
@@ -82,14 +83,11 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     @Autowired
     private QuestionnaireServiceFacade questionnaireServiceFacade;
 
-    private MifosLogger mifosLogger;
-
     public QuestionnaireMigrationMapperImpl() {
         populateTypeMappings();
         populateEntityTypeToSourceMappings();
         populateSurveyTypeToSourceMappings();
         populateAnswerToQuestionTypeMappings();
-        mifosLogger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
     }
 
     // Intended to be used from unit tests for injecting mocks
@@ -130,7 +128,7 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
         try {
             questionId = questionnaireServiceFacade.createQuestion(questionDto);
         } catch (Exception e) {
-            mifosLogger.error(format("Unable to migrate a Custom Field with ID, %s to a Question", fieldId), e);
+            logger.error(format("Unable to migrate a Custom Field with ID, %s to a Question", fieldId), e);
         }
         return questionId;
     }

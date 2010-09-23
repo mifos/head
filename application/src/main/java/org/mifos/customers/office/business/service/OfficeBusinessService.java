@@ -22,12 +22,13 @@ package org.mifos.customers.office.business.service;
 
 import java.util.List;
 
+import org.mifos.application.master.MessageLookup;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -49,7 +50,12 @@ public class OfficeBusinessService implements BusinessService {
 
     public List<OfficeDetailsDto> getActiveParents(OfficeLevel level, Short localeId) throws ServiceException {
         try {
-            return officePersistence.getActiveParents(level, localeId);
+            List<OfficeDetailsDto> officeParents = officePersistence.getActiveParents(level, localeId);
+            for (OfficeDetailsDto officeDetailsDto : officeParents) {
+                String levelName = MessageLookup.getInstance().lookup(officeDetailsDto.getLevelNameKey());
+                officeDetailsDto.setLevelName(levelName);
+            }
+            return officeParents;
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -57,7 +63,12 @@ public class OfficeBusinessService implements BusinessService {
 
     public List<OfficeDetailsDto> getConfiguredLevels(Short localeId) throws ServiceException {
         try {
-            return officePersistence.getActiveLevels(localeId);
+            List<OfficeDetailsDto> officeLevels = officePersistence.getActiveLevels(localeId);
+            for (OfficeDetailsDto officeDetailsDto : officeLevels) {
+                String levelName = MessageLookup.getInstance().lookup(officeDetailsDto.getLevelNameKey());
+                officeDetailsDto.setLevelName(levelName);
+            }
+            return officeLevels;
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -72,9 +83,13 @@ public class OfficeBusinessService implements BusinessService {
         }
     }
 
-    public List<OfficeDetailsDto> getStatusList(Short localeId) throws ServiceException {
+    public List<OfficeDetailsDto> getStatusList() throws ServiceException {
         try {
-            return officePersistence.getStatusList(localeId);
+            List<OfficeDetailsDto> statusList = officePersistence.getStatusList();
+            for (OfficeDetailsDto officeDetailsDto : statusList) {
+                officeDetailsDto.setLevelName(MessageLookup.getInstance().lookup(officeDetailsDto.getLevelNameKey()));
+            }
+            return statusList;
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

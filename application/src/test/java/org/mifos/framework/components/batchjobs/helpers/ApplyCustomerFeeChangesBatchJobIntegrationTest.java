@@ -50,7 +50,6 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
@@ -116,8 +115,7 @@ public class ApplyCustomerFeeChangesBatchJobIntegrationTest extends MifosIntegra
                                     .build();
         IntegrationTestObjectMother.createCenter(center, weeklyMeeting, weeklyPeriodicFeeForCenterOnly);
 
-        MifosTask mifosTask = null;
-        applyCustomerFeeChanges = new ApplyCustomerFeeChangesHelper(mifosTask);
+        applyCustomerFeeChanges = new ApplyCustomerFeeChangesHelper();
     }
 
     @Test

@@ -31,12 +31,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.business.OfficeTemplate;
 import org.mifos.customers.office.business.OfficeTemplateImpl;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -132,58 +132,6 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testIsOfficeShortNameExist() throws Exception {
         Assert.assertTrue(getOfficePersistence().isOfficeShortNameExist("MIF2"));
-    }
-
-    @Test
-    public void testGetActiveParents() throws Exception {
-        List<OfficeDetailsDto> parents = getOfficePersistence().getActiveParents(OfficeLevel.BRANCHOFFICE,
-                Short.valueOf("1"));
-        Assert.assertEquals(2, parents.size());
-        for (OfficeDetailsDto view : parents) {
-
-            if (view.getLevelId().equals(OfficeLevel.HEADOFFICE.getValue())) {
-                Assert.assertEquals("Head Office", view.getLevelName());
-            } else if (view.getLevelId().equals(OfficeLevel.AREAOFFICE.getValue())) {
-                Assert.assertEquals("Area Office", view.getLevelName());
-            }
-        }
-
-    }
-
-    /*
-     * Check that we get the appropriate unordered list of levels back.
-     */
-    @Test
-    public void testGetActiveLevels() throws Exception {
-
-        List<OfficeDetailsDto> officeLevels = getOfficePersistence().getActiveLevels(
-                MasterDataEntity.CUSTOMIZATION_LOCALE_ID);
-        Assert.assertEquals(4, officeLevels.size());
-
-        Set<String> levels = new HashSet<String>();
-        levels.add("Regional Office");
-        levels.add("Divisional Office");
-        levels.add("Area Office");
-        levels.add("Branch Office");
-
-        for (OfficeDetailsDto level : officeLevels) {
-            Assert.assertTrue(levels.contains(level.getLevelName()));
-        }
-    }
-
-    @Test
-    public void testGetStatusList() throws Exception {
-        List<OfficeDetailsDto> officeLevels = getOfficePersistence().getStatusList(
-                MasterDataEntity.CUSTOMIZATION_LOCALE_ID);
-        Assert.assertEquals(2, officeLevels.size());
-
-        Set<String> levels = new HashSet<String>();
-        levels.add("Active");
-        levels.add("Inactive");
-
-        for (OfficeDetailsDto level : officeLevels) {
-            Assert.assertTrue(levels.contains(level.getLevelName()));
-        }
     }
 
     @Test

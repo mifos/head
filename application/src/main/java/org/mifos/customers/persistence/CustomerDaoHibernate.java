@@ -544,7 +544,11 @@ public class CustomerDaoHibernate implements CustomerDao {
         final String globalAccountNum = (String) queryResult.get(0)[0];
         // FIXME - johnw - currency
         final Short currency = (Short) queryResult.get(0)[1];
-        final BigDecimal totalChargesDue = (BigDecimal) queryResult.get(0)[2];
+        BigDecimal totalChargesDue = (BigDecimal) queryResult.get(0)[2];
+        if (totalChargesDue == null) {
+            totalChargesDue = BigDecimal.ZERO;
+        }
+
         BigDecimal totalFeesDue = (BigDecimal) queryResult.get(0)[3];
         if (totalFeesDue == null) {
             totalFeesDue = BigDecimal.ZERO;

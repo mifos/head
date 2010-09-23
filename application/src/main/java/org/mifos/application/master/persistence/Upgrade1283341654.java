@@ -20,10 +20,9 @@
 
 package org.mifos.application.master.persistence;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mifos.application.questionnaire.migration.QuestionnaireMigration;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.persistence.Upgrade;
 import org.springframework.context.ApplicationContext;
 
@@ -34,16 +33,15 @@ import java.util.List;
 
 public class Upgrade1283341654 extends Upgrade {
     private QuestionnaireMigration questionnaireMigration;
-    private MifosLogger mifosLogger;
+    private static final Logger logger = LoggerFactory.getLogger(Upgrade1283341654.class);
 
     public Upgrade1283341654() {
         super();
     }
 
     // Should only be used from tests to inject mocks
-    public Upgrade1283341654(QuestionnaireMigration questionnaireMigration, MifosLogger mifosLogger) {
+    public Upgrade1283341654(QuestionnaireMigration questionnaireMigration) {
         this.questionnaireMigration = questionnaireMigration;
-        this.mifosLogger = mifosLogger;
     }
 
     @Override
@@ -65,9 +63,6 @@ public class Upgrade1283341654 extends Upgrade {
     private void initializeDependencies() {
         if (questionnaireMigration == null) {
             questionnaireMigration = (QuestionnaireMigration) upgradeContext.getBean("questionnaireMigration");
-        }
-        if (mifosLogger == null) {
-            mifosLogger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
         }
     }
 

@@ -17,7 +17,7 @@
         p:checkoutTimeout="${${mifos.mode}.database.hibernate.c3p0.timeout}"
         p:maxStatements="${${mifos.mode}.database.hibernate.c3p0.max_statements}"
         p:testConnectionOnCheckout="false"
-        p:idleConnectionTestPeriod="${${mifos.mode}.database.hibernate.c3p0.idle_test_period}" />
+        p:idleConnectionTestPeriod="${${mifos.mode}.database.hibernate.c3p0.idle_test_period}" destroy-method="close" />
 
 
     <bean id="dbSpecificHibernateProperties"

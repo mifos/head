@@ -85,12 +85,12 @@
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="branches" id="317">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">DISPLAY_NAME</property>
+                    <property name="columnName">display_name</property>
                     <property name="alias">branch_name</property>
                     <text-property name="displayName">Branch Name</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">OFFICE_ID</property>
+                    <property name="columnName">office_id</property>
                     <property name="alias">branch_id</property>
                     <text-property name="displayName">Branch ID</text-property>
                 </structure>
@@ -131,7 +131,7 @@
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Get Branch Name" id="319">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">DISPLAY_NAME</property>
+                    <property name="columnName">display_name</property>
                     <property name="alias">branch_name</property>
                     <text-property name="displayName">Branch Name</text-property>
                 </structure>
@@ -199,7 +199,7 @@
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Get Head Office Name" id="334">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">DISPLAY_NAME</property>
+                    <property name="columnName">display_name</property>
                     <property name="alias">mfi_name</property>
                     <text-property name="displayName">MFI Name</text-property>
                 </structure>
@@ -257,11 +257,11 @@
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="General Ledger" id="365">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">POSTED_DATE</property>
+                    <property name="columnName">posted_date</property>
                     <text-property name="displayName">posted_date</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">GLCODE_VALUE</property>
+                    <property name="columnName">glcode_value</property>
                     <text-property name="displayName">glcode_value</text-property>
                 </structure>
                 <structure>

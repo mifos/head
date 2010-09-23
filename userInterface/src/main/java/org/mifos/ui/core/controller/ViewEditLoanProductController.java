@@ -24,11 +24,11 @@ import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.LoanProductRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/viewEditLoanProduct")
@@ -46,10 +46,14 @@ public class ViewEditLoanProductController {
         this.adminServiceFacade = adminServiceFacade;
     }
 
-    @ModelAttribute("loanProductDetails")
     @RequestMapping(method = RequestMethod.GET)
-    public LoanProductRequest showLoanProductDetails(@RequestParam("productId") Integer productId) {
+    public ModelAndView showLoanProductDetails(@RequestParam("productId") Integer productId) {
 
-        return adminServiceFacade.retrieveLoanProductDetails(productId);
+        LoanProductRequest loanProductDetails = adminServiceFacade.retrieveLoanProductDetails(productId);
+
+        ModelAndView mav = new ModelAndView("viewEditLoanProduct");
+        mav.addObject("loanProductDetails", loanProductDetails);
+
+        return mav;
     }
 }

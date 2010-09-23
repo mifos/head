@@ -23,6 +23,7 @@ package org.mifos.reports.business;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.mifos.dto.domain.ReportCategoryDto;
 import org.mifos.framework.business.AbstractEntity;
 
 public class ReportsCategoryBO extends AbstractEntity {
@@ -75,4 +76,7 @@ public class ReportsCategoryBO extends AbstractEntity {
         return activityId;
     }
 
+    public ReportCategoryDto toDto() {
+        return new ReportCategoryDto(this.reportCategoryId.intValue(), this.reportCategoryName);
+    }
 }

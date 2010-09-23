@@ -20,8 +20,8 @@
 
 package org.mifos.customers.office.business.service;
 
-import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.struts.OfficeUpdateRequest;
+import org.mifos.dto.domain.OfficeHierarchyDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.security.util.UserContext;
 

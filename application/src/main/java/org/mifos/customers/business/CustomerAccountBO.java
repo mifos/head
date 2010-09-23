@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -68,8 +70,6 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.util.DateTimeService;
@@ -86,6 +86,8 @@ import org.mifos.security.util.UserContext;
  * Clients, groups, and centers are stored in the db as customer accounts.
  */
 public class CustomerAccountBO extends AccountBO {
+
+    private static final Logger logger = LoggerFactory.getLogger(CustomerAccountBO.class);
 
     private List<CustomerActivityEntity> customerActivitDetails = new ArrayList<CustomerActivityEntity>();
 
@@ -383,11 +385,11 @@ public class CustomerAccountBO extends AccountBO {
     @Override
     public boolean isAdjustPossibleOnLastTrxn() {
         if (!getCustomer().isActive()) {
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+            logger.debug(
                     "State is not active hence adjustment is not possible");
             return false;
         }
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+        logger.debug(
                 "Total payments on this account is  " + getAccountPayments().size());
         if (null == getLastPmnt() && getLastPmntAmnt() == 0) {
 
@@ -400,7 +402,7 @@ public class CustomerAccountBO extends AccountBO {
             }
         }
 
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Adjustment is not possible ");
+        logger.debug("Adjustment is not possible ");
         return true;
     }
 
@@ -516,7 +518,8 @@ public class CustomerAccountBO extends AccountBO {
 
     boolean feeIsAppliedTo(CustomerScheduleEntity scheduleEntity, AccountFeesEntity accountFee) {
         for (AccountFeesActionDetailEntity feeActionDetail : scheduleEntity.getAccountFeesActionDetails()) {
-            if (feeActionDetail.getAccountFee().equals(accountFee)) {
+            if (feeActionDetail.getAccountFee().getAccountFeeId().equals(accountFee.getAccountFeeId())) {
+//            if (feeActionDetail.getAccountFee().equals(accountFee)) {
                 return true;
             }
         }
@@ -763,8 +766,9 @@ public class CustomerAccountBO extends AccountBO {
                                                                               accountFee,
                                                                               dueInstallments.size(),
                                                                               dueInstallments.get(0).getInstallmentId());
-        Money totalFeeAmountApplied = applyFeeToInstallments(feeInstallmentList, dueInstallments);
-        updateCustomerActivity(fee.getFeeId(), totalFeeAmountApplied, fee.getFeeName() + AccountConstants.APPLIED);
+        // MIFOS-3701: we want to display only fee charge, not the totalFeeAmountApplied
+        applyFeeToInstallments(feeInstallmentList, dueInstallments);
+        updateCustomerActivity(fee.getFeeId(), charge, fee.getFeeName() + AccountConstants.APPLIED);
         accountFee.setFeeStatus(FeeStatus.ACTIVE);
     }
 
@@ -900,7 +904,7 @@ public class CustomerAccountBO extends AccountBO {
         List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
         while (feeDatesIterator.hasNext()) {
             Date feeDate = feeDatesIterator.next();
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+            logger.debug(
                     "FeeInstallmentGenerator:handlePeriodic date considered after removal.." + feeDate);
             Short installmentId = getMatchingInstallmentId(installmentDates, feeDate);
             feeInstallmentList.add(buildFeeInstallment(installmentId, accountFeeAmount, accountFees));
@@ -920,7 +924,7 @@ public class CustomerAccountBO extends AccountBO {
         List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
         while (feeDatesIterator.hasNext()) {
             Date feeDate = feeDatesIterator.next();
-            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Handling periodic fee.." + feeDate);
+            logger.debug("Handling periodic fee.." + feeDate);
 
             Short installmentId = getMatchingInstallmentId(installmentDates, feeDate);
             feeInstallmentList.add(buildFeeInstallment(installmentId, accountFeeAmount, accountFees));
@@ -940,11 +944,11 @@ public class CustomerAccountBO extends AccountBO {
         // generate dates without adjusting for holidays
         List<InstallmentDate> nonAdjustedInstallmentDates = getInstallmentDates(getCustomer().getCustomerMeeting()
                 .getMeeting(), (short) 10, (short) 0, false, true);
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+        logger.debug(
                 "RepamentSchedular:getRepaymentSchedule , installment dates obtained ");
         List<FeeInstallment> feeInstallmentList = mergeFeeInstallments(getFeeInstallments(installmentDates,
                 nonAdjustedInstallmentDates));
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+        logger.debug(
                 "RepamentSchedular:getRepaymentSchedule , fee installment obtained ");
         for (InstallmentDate installmentDate : installmentDates) {
             CustomerScheduleEntity customerScheduleEntity = new CustomerScheduleEntity(this, getCustomer(),
@@ -960,7 +964,7 @@ public class CustomerAccountBO extends AccountBO {
                 }
             }
         }
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+        logger.debug(
                 "RepamentSchedular:getRepaymentSchedule , repayment schedule generated  ");
     }
 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="userFormBean" class="org.mifos.ui.core.controller.UserFormBean"/>
+
+	<action-state id="retrieveUserDetails">
+		<evaluate expression="systemUserController.createPopulatedUserFormBean(requestParameters.id, userFormBean)" result="flowScope.userFormBean" />
+		<transition to="editUserDetailsStep" />
+	</action-state>
+
+	<view-state id="editUserDetailsStep" view="editUserDetails" model="userFormBean">
+		<transition on="preview" to="prepareUserFormBeanForPreview" />
+		<transition on="cancel" to="cancel" validate="false"/>
+	</view-state>
+	
+	<action-state id="prepareUserFormBeanForPreview">
+        <evaluate expression="flowScope.userFormBean.prepareForPreview()" />
+        <transition to="reviewUserDetailsStep" />
+    </action-state>
+	
+	<view-state id="reviewUserDetailsStep" view="reviewUserDetails" model="userFormBean">
+		<transition on="reedit" to="editUserDetailsStep" validate="false">
+			<evaluate expression="userFormBean.prepateForReEdit()" />
+		</transition>
+		<transition on="submit" to="success">
+			<evaluate expression="systemUserController.updateUser(userFormBean)" result="flowScope.userDetails"/>
+		</transition>
+		<transition on="cancel" to="cancel" validate="false"/>
+	</view-state>
+	
+	<end-state id="success" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
+    <end-state id="cancel" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
+	
+</flow>

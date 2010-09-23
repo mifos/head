@@ -26,11 +26,8 @@ import org.apache.commons.lang.StringUtils;
 public class Name {
 
     private String firstName;
-
     private String middleName;
-
     private String lastName;
-
     private String secondLastName;
 
     public String getFirstName() {
@@ -91,5 +88,12 @@ public class Name {
             displayName.append(" ").append(lastName);
         }
         return displayName.toString();
+    }
+
+    public void updateDetails(String firstName, String middleName, String secondLastName, String lastName) {
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.secondLastName = secondLastName;
+        this.lastName = lastName;
     }
 }

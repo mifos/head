@@ -26,7 +26,6 @@ import java.util.List;
 import org.mifos.customers.group.BasicGroupInfo;
 import org.mifos.customers.group.persistence.GroupPersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
@@ -35,8 +34,8 @@ import org.mifos.framework.util.DateTimeService;
 
 public class PortfolioAtRiskHelper extends TaskHelper {
 
-    public PortfolioAtRiskHelper(MifosTask mifosTask) {
-        super(mifosTask);
+    public PortfolioAtRiskHelper() {
+        super();
     }
 
     @Override
@@ -103,11 +102,6 @@ public class PortfolioAtRiskHelper extends TaskHelper {
         if (errorList.size() > 0) {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
         }
-    }
-
-    @Override
-    public boolean isTaskAllowedToRun() {
-        return true;
     }
 
 }

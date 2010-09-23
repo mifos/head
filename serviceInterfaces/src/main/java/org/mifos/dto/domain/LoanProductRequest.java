@@ -25,6 +25,7 @@ import java.util.List;
 import org.mifos.dto.screen.AccountingDetailsDto;
 import org.mifos.dto.screen.LoanAmountDetailsDto;
 
+@SuppressWarnings("PMD")
 public class LoanProductRequest {
 
     private final ProductDetailsDto productDetails;
@@ -38,7 +39,15 @@ public class LoanProductRequest {
     private final List<Integer> applicableFees;
     private final AccountingDetailsDto accountDetails;
 
-    @SuppressWarnings("PMD")
+    // used for response details
+    private boolean multiCurrencyEnabled;
+    private String currencyCode;
+    private String interestRateTypeName;
+    private List<String> fees;
+    private List<String> funds;
+    private String interestGlCodeValue;
+    private String principalGlCodeValue;
+
     public LoanProductRequest(ProductDetailsDto loanProductDetails, final boolean includeInLoanCycleCounter, boolean waiverInterest, Integer currencyId, LoanAmountDetailsDto loanAmountDetails, Integer interestRateType,
             MinMaxDefaultDto interestRateRange, RepaymentDetailsDto repaymentDetails, List<Integer> applicableFees, AccountingDetailsDto accountDetails) {
         this.productDetails = loanProductDetails;
@@ -91,5 +100,61 @@ public class LoanProductRequest {
 
     public ProductDetailsDto getProductDetails() {
         return this.productDetails;
+    }
+
+    public boolean isMultiCurrencyEnabled() {
+        return this.multiCurrencyEnabled;
+    }
+
+    public void setMultiCurrencyEnabled(boolean multiCurrencyEnabled) {
+        this.multiCurrencyEnabled = multiCurrencyEnabled;
+    }
+
+    public String getCurrencyCode() {
+        return this.currencyCode;
+    }
+
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
+    }
+
+    public String getInterestRateTypeName() {
+        return this.interestRateTypeName;
+    }
+
+    public void setInterestRateTypeName(String interestRateTypeName) {
+        this.interestRateTypeName = interestRateTypeName;
+    }
+
+    public List<String> getFees() {
+        return this.fees;
+    }
+
+    public void setFees(List<String> fees) {
+        this.fees = fees;
+    }
+
+    public List<String> getFunds() {
+        return this.funds;
+    }
+
+    public void setFunds(List<String> funds) {
+        this.funds = funds;
+    }
+
+    public String getInterestGlCodeValue() {
+        return this.interestGlCodeValue;
+    }
+
+    public void setInterestGlCodeValue(String interestGlCodeValue) {
+        this.interestGlCodeValue = interestGlCodeValue;
+    }
+
+    public String getPrincipalGlCodeValue() {
+        return this.principalGlCodeValue;
+    }
+
+    public void setPrincipalGlCodeValue(String principalGlCodeValue) {
+        this.principalGlCodeValue = principalGlCodeValue;
     }
 }

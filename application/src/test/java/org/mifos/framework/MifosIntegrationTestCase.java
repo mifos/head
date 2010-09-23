@@ -29,6 +29,8 @@ import java.util.Date;
 
 import junit.framework.ComparisonFailure;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.FilteredDataSet;
@@ -49,13 +51,16 @@ import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.StandardTestingService;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.service.test.TestMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.Log4jConfigurer;
 
 /**
  *  All classes extending this class must be names as <b>*IntegrationTest.java</b> to support maven-surefire-plugin autofind
@@ -80,6 +85,8 @@ public class MifosIntegrationTestCase {
 
     @BeforeClass
     public static void init() throws Exception {
+        Log4jConfigurer.initLogging(new ConfigurationLocator().getFilePath(FilePaths.LOG_CONFIGURATION_FILE));
+
         verifyDatabaseState = false;
         excludeTables.excludeTable("config_key_value_integer");
         excludeTables.excludeTable("personnel");

@@ -149,6 +149,7 @@ public class PersonnelDetailsEntity extends AbstractEntity {
         return name.getDisplayName();
     }
 
+    @Deprecated
     public void updateDetails(Name name, Integer maritalStatus, Integer gender, Address address,
             Date dateOfJoiningBranch) {
         setName(name);
@@ -160,4 +161,16 @@ public class PersonnelDetailsEntity extends AbstractEntity {
         }
     }
 
+    public void updateNameDetails(String firstName, String middleName, String secondLastName, String lastName) {
+        this.name.updateDetails(firstName, middleName, secondLastName, lastName);
+    }
+
+    public void updateDetails(Integer maritalStatus, Integer gender) {
+        this.maritalStatus = maritalStatus;
+        this.gender = gender;
+    }
+
+    public void updateAddress(Address address) {
+        this.address = address;
+    }
 }
