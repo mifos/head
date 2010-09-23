@@ -43,7 +43,7 @@ import org.testng.annotations.Test;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui"})
+@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui","smoke"})
 public class EditLoanProductTest extends UiTestCaseBase {
 
     @Autowired
