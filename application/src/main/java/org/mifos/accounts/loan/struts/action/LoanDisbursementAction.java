@@ -207,13 +207,13 @@ public class LoanDisbursementAction extends BaseAction {
             throw new AccountException("errors.invalidTxndate");
         }
 
-        String modeOfPayment = actionForm.getPaymentModeOfPayment();
-        Short modeOfPaymentId = StringUtils.isEmpty(modeOfPayment) ? PaymentTypes.CASH.getValue() : Short
-                .valueOf(modeOfPayment);
+        String paymentTypeIdStringForDisbursement = actionForm.getPaymentTypeId();
+        Short paymentTypeIdForDisbursement = StringUtils.isEmpty(paymentTypeIdStringForDisbursement) ? PaymentTypes.CASH.getValue() : Short
+                .valueOf(paymentTypeIdStringForDisbursement);
         try {
             final List<AccountPaymentParametersDto> payment = new ArrayList<AccountPaymentParametersDto>();
             final org.mifos.accounts.api.PaymentTypeDto paymentType = getLoanDisbursementTypeDtoForId(Short
-                    .valueOf(modeOfPaymentId));
+                    .valueOf(paymentTypeIdForDisbursement));
             final String comment = "";
             payment.add(new AccountPaymentParametersDto(new UserReferenceDto(uc.getId()), new AccountReferenceDto(loan
                     .getAccountId()), loan.getLoanAmount().getAmount(), new LocalDate(trxnDate), paymentType, comment,
