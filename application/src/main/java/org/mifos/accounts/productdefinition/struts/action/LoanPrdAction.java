@@ -20,16 +20,7 @@
 
 package org.mifos.accounts.productdefinition.struts.action;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -56,6 +47,7 @@ import org.mifos.accounts.productdefinition.business.NoOfInstallFromLoanCycleBO;
 import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
@@ -76,11 +68,21 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @deprecated this entire class will soon be no longer used and will be deleted after localisation of messages.properties files is complete.
@@ -134,13 +136,18 @@ public class LoanPrdAction extends BaseAction {
         logger.debug("start Load method of loan Product Action");
         request.getSession().setAttribute(ProductDefinitionConstants.LOANPRODUCTACTIONFORM, null);
         loadMasterData(request);
-        SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
-                new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled() ? 1 : 0, request);
+        setRepaymentIndepOfMeetingEnabledFlag(request);
         loadSelectedFeesAndFunds(new ArrayList<FeeDto>(), new ArrayList<FundBO>(), request);
         logger.debug("Load method of loan Product Action called");
         request.getSession().setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
         request.getSession().setAttribute("currencies", AccountingRules.getCurrencies());
         return mapping.findForward(ActionForwards.load_success.toString());
+    }
+
+    private void setRepaymentIndepOfMeetingEnabledFlag(HttpServletRequest request) throws PageExpiredException {
+        boolean repaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+        SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
+                repaymentIndepOfMeetingEnabled ? 1 : 0, request);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -213,11 +220,34 @@ public class LoanPrdAction extends BaseAction {
                 loanPrdActionForm, loanPrdActionForm.shouldWaiverInterest());
 
         loanOffering.setCurrency(getCurrency(loanPrdActionForm.getCurrencyId()));
+        mapVariableInstallmentDetails(loanOffering, loanPrdActionForm);
         loanOffering.save();
         request.setAttribute(ProductDefinitionConstants.LOANPRODUCTID, loanOffering.getPrdOfferingId());
         request.setAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM, loanOffering.getGlobalPrdOfferingNum());
 
         return mapping.findForward(ActionForwards.create_success.toString());
+    }
+
+    private void mapVariableInstallmentDetails(LoanOfferingBO loanOffering, LoanPrdActionForm loanPrdActionForm) {
+        boolean variableInstallmentsAllowed = loanPrdActionForm.canConfigureVariableInstallments();
+        loanOffering.setVariableInstallmentsAllowed(variableInstallmentsAllowed);
+        if (variableInstallmentsAllowed) {
+            loanOffering.setVariableInstallmentDetails(mapToVariableInstallmentDetails(loanOffering, loanPrdActionForm));
+        } else {
+            loanOffering.setVariableInstallmentDetails(null);
+        }
+    }
+
+    private VariableInstallmentDetailsBO mapToVariableInstallmentDetails(LoanOfferingBO loanOffering, LoanPrdActionForm loanPrdActionForm) {
+        VariableInstallmentDetailsBO variableInstallmentDetails = new VariableInstallmentDetailsBO();
+        variableInstallmentDetails.setMinGapInDays(loanPrdActionForm.getMinimumGapBetweenInstallments());
+        variableInstallmentDetails.setMaxGapInDays(loanPrdActionForm.getMaximumGapBetweenInstallments());
+        String minInstallmentAmountStr = loanPrdActionForm.getMinimumInstallmentAmount();
+        if (StringUtils.isNotEmpty(minInstallmentAmountStr)) {
+            Money minInstallmentAmount = new Money(loanOffering.getCurrency(), minInstallmentAmountStr);
+            variableInstallmentDetails.setMinInstallmentAmount(minInstallmentAmount);
+        }
+        return variableInstallmentDetails;
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -247,6 +277,7 @@ public class LoanPrdAction extends BaseAction {
         if (AccountingRules.isMultiCurrencyEnabled()) {
             request.getSession().setAttribute("currencyCode", loanOffering.getCurrency().getCurrencyCode());
         }
+        setRepaymentIndepOfMeetingEnabledFlag(request);
         logger.debug("manage of Loan Product Action called" + prdOfferingId);
         return mapping.findForward(ActionForwards.manage_success.toString());
     }
@@ -285,6 +316,7 @@ public class LoanPrdAction extends BaseAction {
                 BusinessServiceName.LoanProduct)).getLoanOffering(loanPrdActionForm.getPrdOfferingIdValue());
         loanOffering.setUserContext(userContext);
         setInitialObjectForAuditLogging(loanOffering);
+        mapVariableInstallmentDetails(loanOffering, loanPrdActionForm);
         loanOffering.update(userContext.getId(), loanPrdActionForm.getPrdOfferingName(), loanPrdActionForm
                 .getPrdOfferingShortName(),
                 getProductCategory(((List<ProductCategoryBO>) SessionUtils.getAttribute(
@@ -507,12 +539,6 @@ public class LoanPrdAction extends BaseAction {
         loanPrdActionForm.setGracePeriodType(getStringValue(loanProduct.getGracePeriodType().getId()));
         loanPrdActionForm.setGracePeriodDuration(getStringValue(loanProduct.getGracePeriodDuration()));
         loanPrdActionForm.setInterestTypes(getStringValue(loanProduct.getInterestTypes().getId()));
-        // loanPrdActionForm.setMaxInterestRate(BigDecimal.valueOf(
-        // loanProduct.getMaxInterestRate()).toString());
-        // loanPrdActionForm.setMinInterestRate(BigDecimal.valueOf(
-        // loanProduct.getMinInterestRate()).toString());
-        // loanPrdActionForm.setDefInterestRate(BigDecimal.valueOf(
-        // loanProduct.getDefInterestRate()).toString());
         loanPrdActionForm.setMaxInterestRate(getDoubleStringForInterest(loanProduct.getMaxInterestRate()));
         loanPrdActionForm.setMinInterestRate(getDoubleStringForInterest(loanProduct.getMinInterestRate()));
         loanPrdActionForm.setDefInterestRate(getDoubleStringForInterest(loanProduct.getDefInterestRate()));
@@ -526,7 +552,7 @@ public class LoanPrdAction extends BaseAction {
                 .getMeetingDetails().getRecurrenceType().getRecurrenceId()));
         loanPrdActionForm.setPrincipalGLCode(getStringValue(loanProduct.getPrincipalGLcode().getGlcodeId()));
         loanPrdActionForm.setInterestGLCode(getStringValue(loanProduct.getInterestGLcode().getGlcodeId()));
-
+        setVariableInstallmentDetailsOnLoanProductForm(loanPrdActionForm, loanProduct);
         if (loanProduct.isLoanAmountTypeSameForAllLoan()) {
             loanPrdActionForm.setLoanAmtCalcType(getStringValue(ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN));
             Iterator<LoanAmountSameForAllLoanBO> loanAmountSameForAllItr = loanProduct.getLoanAmountSameForAllLoan()
@@ -783,5 +809,17 @@ public class LoanPrdAction extends BaseAction {
         SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE, loanProduct.getStartDate(), request);
         logger.debug("setDataIntoActionForm method of Loan Product Action called");
 
+    }
+
+    private void setVariableInstallmentDetailsOnLoanProductForm(LoanPrdActionForm loanPrdActionForm, LoanOfferingBO loanOfferingBO) {
+        boolean variableInstallmentsAllowed = loanOfferingBO.isVariableInstallmentsAllowed();
+        loanPrdActionForm.setCanConfigureVariableInstallments(variableInstallmentsAllowed);
+        if (variableInstallmentsAllowed) {
+            VariableInstallmentDetailsBO variableInstallmentDetails = loanOfferingBO.getVariableInstallmentDetails();
+            loanPrdActionForm.setMinimumGapBetweenInstallments(variableInstallmentDetails.getMinGapInDays());
+            loanPrdActionForm.setMaximumGapBetweenInstallments(variableInstallmentDetails.getMaxGapInDays());
+            double amount = variableInstallmentDetails.getMinInstallmentAmount().getAmountDoubleValue();
+            loanPrdActionForm.setMinimumInstallmentAmount(String.valueOf(amount));
+        }
     }
 }

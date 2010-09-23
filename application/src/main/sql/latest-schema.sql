@@ -1237,6 +1237,16 @@ create unique index prd_offering_short_name_idx on prd_offering (prd_offering_sh
 create index prd_offering_office_idx on prd_offering (office_id);
 create index prd_type_idx on prd_offering (prd_type_id);
 
+create table variable_installment_details (
+  id smallint auto_increment not null,
+  min_gap_in_days smallint,
+  max_gap_in_days smallint,
+  min_loan_amount decimal(21,4),
+  min_loan_amount_currency_id smallint,
+  primary key(id)
+)
+engine=innodb character set utf8;
+
 create table loan_offering (
   prd_offering_id smallint not null,
   interest_type_id smallint not null,
@@ -1265,6 +1275,8 @@ create table loan_offering (
   interest_glcode_id smallint not null,
   penalties_glcode_id smallint,
   interest_waiver_flag smallint default 0,
+  variable_installment_flag smallint default 0,
+  variable_installment_details_id smallint,
   primary key(prd_offering_id),
   foreign key(principal_glcode_id)
     references gl_code(glcode_id)
@@ -1308,6 +1320,10 @@ create table loan_offering (
       on update no action,
   foreign key(default_loan_amount_currency_id)
     references currency(currency_id)
+      on delete no action
+      on update no action,
+  foreign key(variable_installment_details_id)
+    references variable_installment_details(id)
       on delete no action
       on update no action
 )

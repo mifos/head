@@ -20,22 +20,7 @@
 
 package org.mifos.accounts.productdefinition.struts.action;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
@@ -46,6 +31,7 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
@@ -66,11 +52,26 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -685,6 +686,10 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("interestGLCode", TestGeneralLedgerCode.INTEREST.toString());
         addRequestParameter("loanAmtCalcType", "1");
         addRequestParameter("calcInstallmentType", "1");
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "10");
+        addRequestParameter("maximumGapBetweenInstallments", "15");
+        addRequestParameter("minimumInstallmentAmount", "1234");
         actionPerform();
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "create");
@@ -694,16 +699,31 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.create_success.toString());
 
-        Assert.assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID));
+        Object loanProductId = request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID);
+        Assert.assertNotNull(loanProductId);
         Assert.assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM));
         Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
-        TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class,
-                (Short) request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID)));
+        LoanOfferingBO loanOfferingBO = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, (Short) loanProductId);
+        assertVariableInstallmentDetails(loanOfferingBO, 10, 15, 1234.0);
+        TestObjectFactory.removeObject(loanOfferingBO);
         TestObjectFactory.cleanUp(fee);
     }
 
+    private void assertVariableInstallmentDetails(LoanOfferingBO loanOfferingBO, Integer minGap, Integer maxGap, Double minInstAmt) {
+        Assert.assertTrue(loanOfferingBO.isVariableInstallmentsAllowed());
+        VariableInstallmentDetailsBO variableInstallmentDetails = loanOfferingBO.getVariableInstallmentDetails();
+        Assert.assertNotNull(variableInstallmentDetails);
+        Assert.assertEquals(minGap, variableInstallmentDetails.getMinGapInDays());
+        Assert.assertEquals(maxGap, variableInstallmentDetails.getMaxGapInDays());
+        if (minInstAmt == null) {
+            Assert.assertNull(variableInstallmentDetails.getMinInstallmentAmount());
+        } else {
+            Assert.assertEquals(minInstAmt, variableInstallmentDetails.getMinInstallmentAmount().getAmountDoubleValue());
+        }
+    }
+
     public void testManage() throws Exception {
-        loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
+        loanOffering = createLoanOfferingBOWithVariableInstallments("Loan Offering", "LOAN", 10, 100, "1000");
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "manage");
         addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId().toString());
@@ -787,6 +807,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
        Assert.assertEquals(loanOffering.getLoanOfferingFees().size(), (selectedFees).size());
        Assert.assertEquals(loanOffering.getLoanOfferingFunds().size(), (selectedFunds).size());
+       assertVariableInstallmentDetails(loanOffering, 10, 100, 1000.0);
     }
 
     public void testEditPreviewWithOutData() throws Exception {
@@ -945,7 +966,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
     public void testUpdate() throws Exception {
         FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic", FeeCategory.LOAN, "100.0",
                 RecurrenceType.MONTHLY, (short) 1);
-        LoanOfferingBO product = createLoanOfferingBO("Loan Offering", "LOAN");
+        LoanOfferingBO product = createLoanOfferingBOWithVariableInstallments("Loan Offering", "LOAN", 10, 100, "1000");
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "manage");
         addRequestParameter("prdOfferingId", product.getPrdOfferingId().toString());
@@ -981,6 +1002,10 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("prdStatus", "2");
         addRequestParameter("loanAmtCalcType", "1");
         addRequestParameter("calcInstallmentType", "1");
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "20");
+        addRequestParameter("maximumGapBetweenInstallments", "200");
+        addRequestParameter("minimumInstallmentAmount", "2000");
         actionPerform();
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "update");
@@ -1007,12 +1032,85 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(1, product.getLoanOfferingFees().size());
 
         Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
+        assertVariableInstallmentDetails(product, 20, 200, 2000.0);
+        TestObjectFactory.removeObject(product);
+        TestObjectFactory.cleanUp(fee);
+    }
+
+    public void testUpdateForNoVariableInstallments() throws Exception {
+        FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic", FeeCategory.LOAN, "100.0",
+                RecurrenceType.MONTHLY, (short) 1);
+        LoanOfferingBO product = createLoanOfferingBOWithVariableInstallments("Loan Offering", "LOAN", 10, 100, "1000");
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "manage");
+        addRequestParameter("prdOfferingId", product.getPrdOfferingId().toString());
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
+
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "editPreview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+        addRequestParameter("prdOfferingName", "Loan Product");
+        addRequestParameter("prdOfferingShortName", "LOAP");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
+        addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "2000");
+        addRequestParameter("maxLoanAmount", "11000");
+        addRequestParameter("defaultLoanAmount", "5000");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+        addRequestParameter("prdOfferinFees", new String[] { fee.getFeeId().toString() });
+        addRequestParameter("loanOfferingFunds", new String[] { "1" });
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "14");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "11");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("prdStatus", "2");
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+        addRequestParameter("canConfigureVariableInstallments", "0");
+        actionPerform();
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.update_success.toString());
+
+        StaticHibernateUtil.closeSession();
+        product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
+       Assert.assertEquals("Loan Product", product.getPrdOfferingName());
+       Assert.assertEquals("LOAP", product.getPrdOfferingShortName());
+       Assert.assertEquals(PrdStatus.SAVINGS_ACTIVE, product.getStatus());
+        for (LoanAmountSameForAllLoanBO loanAmountSameForAllLoanBO : product.getLoanAmountSameForAllLoan()) {
+            Assert.assertEquals(new Double("11000"), loanAmountSameForAllLoanBO.getMaxLoanAmount());
+           Assert.assertEquals(new Double("2000"), loanAmountSameForAllLoanBO.getMinLoanAmount());
+           Assert.assertEquals(new Double("5000"), loanAmountSameForAllLoanBO.getDefaultLoanAmount());
+        }
+       Assert.assertEquals(Short.valueOf("1"), product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
+                .getRecurAfter());
+       Assert.assertEquals(Short.valueOf("2"), product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
+                .getRecurrenceType().getRecurrenceId());
+       Assert.assertEquals(1, product.getLoanOfferingFees().size());
+
+        Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
+        Assert.assertFalse(product.isVariableInstallmentsAllowed());
+        Assert.assertNull(product.getVariableInstallmentDetails());
         TestObjectFactory.removeObject(product);
         TestObjectFactory.cleanUp(fee);
     }
 
     public void testGet() throws PageExpiredException {
-        loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
+        loanOffering = createLoanOfferingBOWithVariableInstallments("Loan Offering", "LOAN", 10, 100, "1000");
         StaticHibernateUtil.closeSession();
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "get");
@@ -1071,6 +1169,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(loanOffering1.getInterestGLcode().getGlcode());
         Assert.assertNotNull(loanOffering1.getLoanOfferingFees());
         Assert.assertNotNull(loanOffering1.getLoanOfferingFunds());
+        assertVariableInstallmentDetails(loanOffering1, 10, 100, 1000.0);
         StaticHibernateUtil.closeSession();
     }
 
@@ -1323,10 +1422,672 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private LoanOfferingBO createLoanOfferingBO(String prdOfferingName, String shortName) {
-        Date startDate = new Date(System.currentTimeMillis());
         MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY, EVERY_WEEK,
                 LOAN_INSTALLMENT, MONDAY));
+        Date startDate = new Date(System.currentTimeMillis());
         return TestObjectFactory.createLoanOffering(prdOfferingName, shortName, ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, frequency, "1", "1",TestUtils.RUPEE);
+    }
+
+    private LoanOfferingBO createLoanOfferingBOWithVariableInstallments(String prdOfferingName, String shortName,
+                                                                        Integer minGap, Integer maxGap, String minInstAmount) {
+        MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
+        Date startDate = new Date(System.currentTimeMillis());
+        VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(minGap, maxGap, minInstAmount);
+        return TestObjectFactory.createLoanOffering(prdOfferingName, shortName, ApplicableTo.GROUPS, startDate,
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, frequency, "1", "1", TestUtils.RUPEE, variableInstallmentDetails);
+    }
+
+    private VariableInstallmentDetailsBO getVariableInstallmentDetails(Integer minGap, Integer maxGap, String minInstAmount) {
+        VariableInstallmentDetailsBO variableInstallmentDetails = new VariableInstallmentDetailsBO();
+        variableInstallmentDetails.setMinGapInDays(minGap);
+        variableInstallmentDetails.setMaxGapInDays(maxGap);
+        variableInstallmentDetails.setMinInstallmentAmount(new Money(getCurrency(), minInstAmount));
+        return variableInstallmentDetails;
+    }
+
+    public void testPreviewWithMinInstallmentGapMoreThanMaxInstallmentGap() throws Exception {
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+        addRequestParameter("prdOfferingName", "Loan Offering");
+        addRequestParameter("prdOfferingShortName", "LOAN");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", DateUtils.getCurrentDate(userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "1000");
+        addRequestParameter("maxLoanAmount", "2000");
+        addRequestParameter("defaultLoanAmount", "1500");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "10");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "4");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("principalGLCode", "7");
+        addRequestParameter("interestGLCode", "7");
+
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "10");
+        addRequestParameter("maximumGapBetweenInstallments", "1");
+
+        actionPerform();
+        verifyActionErrors(new String[] { ProductDefinitionConstants.MIN_GAP_MORE_THAN_MAX_GAP_FOR_VARIABLE_INSTALLMENT_PRODUCT});
+        verifyInputForward();
+    }
+
+    public void testPreviewWithMinInstallmentGapIsNegative() throws Exception {
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+        addRequestParameter("prdOfferingName", "Loan Offering");
+        addRequestParameter("prdOfferingShortName", "LOAN");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", DateUtils.getCurrentDate(userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "1000");
+        addRequestParameter("maxLoanAmount", "2000");
+        addRequestParameter("defaultLoanAmount", "1500");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "10");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "4");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("principalGLCode", "7");
+        addRequestParameter("interestGLCode", "7");
+
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "-10");
+
+        actionPerform();
+        verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_NEGATIVE_OR_ZERO});
+        verifyInputForward();
+    }
+
+    public void testPreviewWithMaxInstallmentGapIsNegative() throws Exception {
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+        addRequestParameter("prdOfferingName", "Loan Offering");
+        addRequestParameter("prdOfferingShortName", "LOAN");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", DateUtils.getCurrentDate(userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "1000");
+        addRequestParameter("maxLoanAmount", "2000");
+        addRequestParameter("defaultLoanAmount", "1500");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "10");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "4");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("principalGLCode", "7");
+        addRequestParameter("interestGLCode", "7");
+
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "1");
+        addRequestParameter("maximumGapBetweenInstallments", "-10");
+
+        actionPerform();
+        verifyActionErrors(new String[] { ProductDefinitionConstants.MIN_GAP_MORE_THAN_MAX_GAP_FOR_VARIABLE_INSTALLMENT_PRODUCT, ProductDefinitionConstants.VARIABLE_INSTALLMENT_MAX_GAP_NEGATIVE_OR_ZERO});
+        verifyInputForward();
+    }
+
+    public void testPreviewWithMinInstallmentGapNotProvided() throws Exception {
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+        addRequestParameter("prdOfferingName", "Loan Offering");
+        addRequestParameter("prdOfferingShortName", "LOAN");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", DateUtils.getCurrentDate(userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "1000");
+        addRequestParameter("maxLoanAmount", "2000");
+        addRequestParameter("defaultLoanAmount", "1500");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "10");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "4");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("principalGLCode", "7");
+        addRequestParameter("interestGLCode", "7");
+
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        
+        actionPerform();
+        verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_NOT_PROVIDED});
+        verifyInputForward();
+    }
+
+    public void testPreviewWithMinInstallmentGapMoreThanAllowed() throws Exception {
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+        addRequestParameter("prdOfferingName", "Loan Offering");
+        addRequestParameter("prdOfferingShortName", "LOAN");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", DateUtils.getCurrentDate(userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "1000");
+        addRequestParameter("maxLoanAmount", "2000");
+        addRequestParameter("defaultLoanAmount", "1500");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "10");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "4");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("principalGLCode", "7");
+        addRequestParameter("interestGLCode", "7");
+
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "1234");
+
+        actionPerform();
+        verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_MORE_THAN_ALLOWED});
+        verifyInputForward();
+    }
+
+    public void testPreviewWithMaxInstallmentGapMoreThanAllowed() throws Exception {
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+        addRequestParameter("prdOfferingName", "Loan Offering");
+        addRequestParameter("prdOfferingShortName", "LOAN");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", DateUtils.getCurrentDate(userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "1000");
+        addRequestParameter("maxLoanAmount", "2000");
+        addRequestParameter("defaultLoanAmount", "1500");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "10");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "4");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("principalGLCode", "7");
+        addRequestParameter("interestGLCode", "7");
+
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "1");
+        addRequestParameter("maximumGapBetweenInstallments", "1234");
+
+        actionPerform();
+        verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MAX_GAP_MORE_THAN_ALLOWED});
+        verifyInputForward();
+    }
+
+    public void testPreviewWithNonNumericMinInstallmentAmount() throws Exception {
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+        addRequestParameter("prdOfferingName", "Loan Offering");
+        addRequestParameter("prdOfferingShortName", "LOAN");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", DateUtils.getCurrentDate(userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "1000");
+        addRequestParameter("maxLoanAmount", "2000");
+        addRequestParameter("defaultLoanAmount", "1500");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "10");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "4");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("principalGLCode", "7");
+        addRequestParameter("interestGLCode", "7");
+
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumInstallmentAmount", "abcd");
+
+        actionPerform();
+        verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_NOT_PROVIDED, ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_AMOUNT_INVALID_FORMAT});
+        verifyInputForward();
+    }
+
+    public void testEditPreviewWithMinInstallmentGapMoreThanMaxInstallmentGap() throws Exception {
+        loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "editPreview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE, loanOffering.getStartDate(), request);
+
+        addRequestParameter("prdOfferingName", "Loan Offering");
+        addRequestParameter("prdOfferingShortName", "LOAN");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
+        addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "2000");
+        addRequestParameter("maxLoanAmount", "11000");
+        addRequestParameter("defaultLoanAmount", "5000");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+        addRequestParameter("prdStatus", "2");
+
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "14");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "11");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("principalGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
+        addRequestParameter("interestGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "10");
+        addRequestParameter("maximumGapBetweenInstallments", "1");
+        actionPerform();
+        verifyActionErrors(new String[] { ProductDefinitionConstants.MIN_GAP_MORE_THAN_MAX_GAP_FOR_VARIABLE_INSTALLMENT_PRODUCT});
+        verifyInputForward();
+    }
+
+    public void testEditPreviewWithMinInstallmentGapIsNegative() throws Exception {
+        loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "editPreview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE, loanOffering.getStartDate(), request);
+
+        addRequestParameter("prdOfferingName", "Loan Offering");
+        addRequestParameter("prdOfferingShortName", "LOAN");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
+        addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "2000");
+        addRequestParameter("maxLoanAmount", "11000");
+        addRequestParameter("defaultLoanAmount", "5000");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+        addRequestParameter("prdStatus", "2");
+
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "14");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "11");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("principalGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
+        addRequestParameter("interestGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "-10");
+        actionPerform();
+        verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_NEGATIVE_OR_ZERO});
+        verifyInputForward();
+    }
+
+    public void testEditPreviewWithMaxInstallmentGapIsNegative() throws Exception {
+        loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "editPreview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE, loanOffering.getStartDate(), request);
+
+        addRequestParameter("prdOfferingName", "Loan Offering");
+        addRequestParameter("prdOfferingShortName", "LOAN");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
+        addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "2000");
+        addRequestParameter("maxLoanAmount", "11000");
+        addRequestParameter("defaultLoanAmount", "5000");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+        addRequestParameter("prdStatus", "2");
+
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "14");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "11");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("principalGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
+        addRequestParameter("interestGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "1");
+        addRequestParameter("maximumGapBetweenInstallments", "-10");
+        actionPerform();
+        verifyActionErrors(new String[] { ProductDefinitionConstants.MIN_GAP_MORE_THAN_MAX_GAP_FOR_VARIABLE_INSTALLMENT_PRODUCT, ProductDefinitionConstants.VARIABLE_INSTALLMENT_MAX_GAP_NEGATIVE_OR_ZERO});
+        verifyInputForward();
+    }
+
+    public void testEditPreviewWithMinInstallmentGapMoreThanAllowed() throws Exception {
+        loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "editPreview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE, loanOffering.getStartDate(), request);
+
+        addRequestParameter("prdOfferingName", "Loan Offering");
+        addRequestParameter("prdOfferingShortName", "LOAN");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
+        addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "2000");
+        addRequestParameter("maxLoanAmount", "11000");
+        addRequestParameter("defaultLoanAmount", "5000");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+        addRequestParameter("prdStatus", "2");
+
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "14");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "11");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("principalGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
+        addRequestParameter("interestGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "1234");
+        actionPerform();
+        verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_MORE_THAN_ALLOWED});
+        verifyInputForward();
+    }
+
+    public void testEditPreviewWithMaxInstallmentGapMoreThanAllowed() throws Exception {
+        loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "editPreview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE, loanOffering.getStartDate(), request);
+
+        addRequestParameter("prdOfferingName", "Loan Offering");
+        addRequestParameter("prdOfferingShortName", "LOAN");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
+        addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "2000");
+        addRequestParameter("maxLoanAmount", "11000");
+        addRequestParameter("defaultLoanAmount", "5000");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+        addRequestParameter("prdStatus", "2");
+
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "14");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "11");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("principalGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
+        addRequestParameter("interestGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "1");
+        addRequestParameter("maximumGapBetweenInstallments", "1234");
+        actionPerform();
+        verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MAX_GAP_MORE_THAN_ALLOWED});
+        verifyInputForward();
+    }
+
+    public void testEditPreviewWithNonNumericMinInstallmentAmount() throws Exception {
+        loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "editPreview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE, loanOffering.getStartDate(), request);
+
+        addRequestParameter("prdOfferingName", "Loan Offering");
+        addRequestParameter("prdOfferingShortName", "LOAN");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
+        addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "2000");
+        addRequestParameter("maxLoanAmount", "11000");
+        addRequestParameter("defaultLoanAmount", "5000");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+        addRequestParameter("prdStatus", "2");
+
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "14");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "11");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("principalGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
+        addRequestParameter("interestGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumInstallmentAmount", "abcd");
+        actionPerform();
+        verifyActionErrors(new String[] { ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_NOT_PROVIDED, ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_AMOUNT_INVALID_FORMAT});
+        verifyInputForward();
+    }
+
+    public void testUpdateWithNoMinInstallmentAmount() throws Exception {
+        FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic", FeeCategory.LOAN, "100.0",
+                RecurrenceType.MONTHLY, (short) 1);
+        LoanOfferingBO product = createLoanOfferingBO("Loan Offering", "LOAN");
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "manage");
+        addRequestParameter("prdOfferingId", product.getPrdOfferingId().toString());
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
+
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "editPreview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+        addRequestParameter("prdOfferingName", "Loan Product");
+        addRequestParameter("prdOfferingShortName", "LOAP");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
+        addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("minLoanAmount", "2000");
+        addRequestParameter("maxLoanAmount", "11000");
+        addRequestParameter("defaultLoanAmount", "5000");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+        addRequestParameter("prdOfferinFees", new String[] { fee.getFeeId().toString() });
+        addRequestParameter("loanOfferingFunds", new String[] { "1" });
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "14");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "11");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("prdStatus", "2");
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "20");
+        addRequestParameter("maximumGapBetweenInstallments", "200");
+        actionPerform();
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.update_success.toString());
+
+        StaticHibernateUtil.closeSession();
+        product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
+       Assert.assertEquals("Loan Product", product.getPrdOfferingName());
+       Assert.assertEquals("LOAP", product.getPrdOfferingShortName());
+       Assert.assertEquals(PrdStatus.SAVINGS_ACTIVE, product.getStatus());
+        for (LoanAmountSameForAllLoanBO loanAmountSameForAllLoanBO : product.getLoanAmountSameForAllLoan()) {
+            Assert.assertEquals(new Double("11000"), loanAmountSameForAllLoanBO.getMaxLoanAmount());
+           Assert.assertEquals(new Double("2000"), loanAmountSameForAllLoanBO.getMinLoanAmount());
+           Assert.assertEquals(new Double("5000"), loanAmountSameForAllLoanBO.getDefaultLoanAmount());
+        }
+       Assert.assertEquals(Short.valueOf("1"), product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
+                .getRecurAfter());
+       Assert.assertEquals(Short.valueOf("2"), product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
+                .getRecurrenceType().getRecurrenceId());
+       Assert.assertEquals(1, product.getLoanOfferingFees().size());
+
+        Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
+        assertVariableInstallmentDetails(product, 20, 200, 0.0);
+        TestObjectFactory.removeObject(product);
+        TestObjectFactory.cleanUp(fee);
+    }
+
+    public void testCreateWithNoMinimumInstallmentAmount() throws Exception {
+        FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic", FeeCategory.LOAN, "100.0",
+                RecurrenceType.MONTHLY, (short) 1);
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "load");
+        actionPerform();
+
+        flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
+
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+        addRequestParameter("prdOfferingName", "Loan Offering");
+        addRequestParameter("prdOfferingShortName", "LOAN");
+        addRequestParameter("prdCategory", "1");
+        addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
+        addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
+        addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("currencyId", TestUtils.RUPEE.getCurrencyId().toString());
+        addRequestParameter("minLoanAmount", "2000");
+        addRequestParameter("maxLoanAmount", "11000");
+        addRequestParameter("defaultLoanAmount", "5000");
+        addRequestParameter("interestTypes", "1");
+        addRequestParameter("maxInterestRate", "12");
+        addRequestParameter("minInterestRate", "1");
+        addRequestParameter("defInterestRate", "4");
+        addRequestParameter("freqOfInstallments", "2");
+        addRequestParameter("prdOfferinFees", new String[] { fee.getFeeId().toString() });
+        addRequestParameter("loanOfferingFunds", new String[] { "1" });
+        addRequestParameter("recurAfter", "1");
+        addRequestParameter("maxNoInstallments", "14");
+        addRequestParameter("minNoInstallments", "2");
+        addRequestParameter("defNoInstallments", "11");
+        addRequestParameter("intDedDisbursementFlag", "1");
+        addRequestParameter("principalGLCode", TestGeneralLedgerCode.MANAGED_ICICI_SPLOAN.toString());
+        addRequestParameter("interestGLCode", TestGeneralLedgerCode.INTEREST.toString());
+        addRequestParameter("loanAmtCalcType", "1");
+        addRequestParameter("calcInstallmentType", "1");
+        addRequestParameter("canConfigureVariableInstallments", "1");
+        addRequestParameter("minimumGapBetweenInstallments", "10");
+        addRequestParameter("maximumGapBetweenInstallments", "15");
+        actionPerform();
+        setRequestPathInfo("/loanproductaction.do");
+        addRequestParameter("method", "create");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.create_success.toString());
+
+        Object loanProductId = request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID);
+        Assert.assertNotNull(loanProductId);
+        Assert.assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM));
+        Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
+        LoanOfferingBO loanOfferingBO = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, (Short) loanProductId);
+        assertVariableInstallmentDetails(loanOfferingBO, 10, 15, null);
+        TestObjectFactory.removeObject(loanOfferingBO);
+        TestObjectFactory.cleanUp(fee);
     }
 }
