@@ -127,7 +127,7 @@ function switchLoanInstallmentType()
 
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
    <!--  Main Content Begins-->
-  <div class="content marginAuto">
+  <div class="content marginAuto" style="margin-left: 5em;">
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-17 arrowIMG orangeheading">[@spring.message "manageLoanProducts.defineLoanProduct.loanproductinformation" /]</p>
@@ -376,8 +376,8 @@ function switchLoanInstallmentType()
           <div class="prepend-2  span-23 last">
           	<div class="span-23 ">
             	<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.frequencyofinstallments" /]&nbsp;:</span>
-                <div class="span-15 borders">
-                	<div class="borderbtm span-15">
+                <div class="span-12 borders">
+                	<div class="borderbtm span-12">
                 	[@spring.formRadioButtons "loanProduct.installmentFrequencyPeriod", loanProduct.installmentFrequencyPeriodOptions, "", "onClick='switchFrequencyMessage();'" /]
                     </div>
                     <div id="week" class="paddingLeft" id="weekDIV" >
@@ -585,8 +585,8 @@ function switchLoanInstallmentType()
           <div class="clear">&nbsp;</div>
           <hr />
 	        <div class="prepend-9">
-	        	<input class="buttn" type="submit" id="CreateLoanProduct.button.preview" name="preview" value="Preview" onclick="selectAllOptions(this.form.selectedFees);selectAllOptions(this.form.applicableFees);selectAllOptions(this.form.selectedFunds);selectAllOptions(this.form.applicableFunds);" />
-	        	<input class="buttn2" type="submit" id="CreateLoanProduct.button.cancel" name="CANCEL" value="Cancel" />
+	        	<input class="buttn" type="submit" id="CreateLoanProduct.button.preview" name="preview" value="[@spring.message "preview"/]" onclick="selectAllOptions(this.form.selectedFees);selectAllOptions(this.form.applicableFees);selectAllOptions(this.form.selectedFunds);selectAllOptions(this.form.applicableFunds);" />
+	        	<input class="buttn2" type="submit" id="CreateLoanProduct.button.cancel" name="CANCEL" value="[@spring.message "cancel"/]" />
 	      	</div>
           <div class="clear">&nbsp;</div>
         </form>

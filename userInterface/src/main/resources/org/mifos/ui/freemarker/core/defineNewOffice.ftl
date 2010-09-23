@@ -3,6 +3,15 @@
 [#import "blueprintmacros.ftl" as mifos]
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+  <script language="javascript">
+  function getData(){
+  alert("into function");
+  if(document.getElementById("levelId").value="1" || document.getElementById("levelId").value="2" || document.getElementById("levelId").value="3" || document.getElementById("levelId").value="4" || document.getElementById("levelId").value="5"){
+  alert("into if");
+  return editOfficeInformation.submit();
+  }
+  }
+  </script>
  <!--  Main Content Begins-->
   <div class="content marginAuto">
     <div class="borders span-23">
@@ -20,8 +29,8 @@
           <p class="fontBold">[@spring.message "offices.defineNewOffice.officedetails" /]</p>
         <div class="prepend-3  span-23 last">
         	<div class="span-24"><span class="span-3 rightAlign" id="CreateNewOffice.label.officeName"><span class="red">* </span>[@spring.message "offices.defineNewOffice.officeName" /]</span>&nbsp;        	        	
-			[#--[@spring.bind "officeFormBean.name"/]        	
-    				<span class="span-3"><input name="${spring.status.expression}" type="text" id="editoffice.input.officeName" value="${spring.status.value?default("")}"/>--]
+			[@spring.bind "officeFormBean.name"/]        	
+    				<span class="span-3"><input name="${spring.status.expression}" type="text" id="editoffice.input.officeName" value="${spring.status.value?default("")}"/>
   			</div>
             <div class="span-24"><span class="span-3 rightAlign" id="CreateNewOffice.label.shortName"><span class="red">* </span>[@spring.message "offices.defineNewOffice.officeshortname" /]</span>&nbsp;
              [@spring.bind "officeFormBean.officeShortName"/]
@@ -29,7 +38,7 @@
   			</div>
             <div class="span-24"><span class="span-3 rightAlign" id="CreateNewOffice.label.officeLevel"><span class="red">* </span>[@spring.message "offices.defineNewOffice.officetype" /]</span>&nbsp;
    						[@spring.bind "officeFormBean.levelId"/]
-   					<select id="${spring.status.expression}" name="${spring.status.expression}" onChange="editOfficeInformation.submit()">
+   					<select id="${spring.status.expression}" name="${spring.status.expression}" onChange="getData();">
 					        <option value="">${springMacroRequestContext.getMessage("--Select--")}</option>
 					        [#if officeTypes?is_hash]
 					            [#list officeTypes?keys as value]

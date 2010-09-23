@@ -24,9 +24,8 @@
 	<span id="page.id" title="View_AllSavingsProduct" />  
   	<div class=" content">
 	  	[@mifos.crumb url="admin.viewSavingsproducts" /]
-	  	<p>&nbsp;&nbsp;</p><br/>
+	  	<p>&nbsp;&nbsp;</p>
 	  	<p class="font15 orangeheading">[@spring.message "admin.viewSavingsproducts"/]</p>
-		
 		<p>[@spring.message "manageLoanProducts.viewSavingsProducts.clickonaSavingsproductbelowtoviewdetailsandmakechangesor"/] <a href="defineSavingsProduct.ftl">[@spring.message "admin.definenewSavingsproduct"/]</a></p>	    
 	    [#list products as product]
 	        <div>

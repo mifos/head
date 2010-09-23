@@ -5,7 +5,7 @@
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Main Content Begins-->
   <span id="page.id" title="SavingsProductPreview" />
-  <div class="content marginAuto">
+  <div class="content marginAuto" style="margin-left:5em;">
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-17 completeIMG silverheading">[@spring.message "manageSavngsProducts.previewSavingsProducts.savingsproductinformation" /]</p>

@@ -26,11 +26,11 @@
   	<form method="post" action="viewSystemUsers.ftl" name="searchSystemUsers">
   	[#assign breadcrumb = {"admin":"AdminAction.do?method=load", "systemUsers.viewSystemUsers":""}/]
     [@mifos.crumbpairs breadcrumb/]
-  	<div class="marginLeft30">
-    <div class="orangeheading">View system users</div>
+  	<div class="marginLeft30 marginTop15">
+    <div class="orangeheading">[@spring.message "admin.viewsystemusers"/]</div>
     <p class="paddingLeft">[@spring.message "systemUsers.viewSystemUsers.searchUsersByName"/]<br />
     	[@spring.formInput "searchResults.search" /]
-    	<input class="buttn" type="submit" name="searchbutton" value="Search"/>
+    	<input class="buttn" type="submit" name="searchbutton	" value="Search"/>
     </p>
     </div>
     <ul>

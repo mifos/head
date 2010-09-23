@@ -20,7 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout] <!--  Main Content Begins-->  
-  <div class=" content leftMargin180">
+  <div class="content">
  <div class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "organizationPreferences.editchecklist.viewEditChecklists"/]</span></div>
        <p>&nbsp;&nbsp;</p>
   	<form method="" action="" name="formname">

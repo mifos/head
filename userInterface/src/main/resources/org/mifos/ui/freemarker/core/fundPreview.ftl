@@ -23,7 +23,7 @@
 <div>
 
 <!--  Main Content Begins-->  
-  <div class=" content leftMargin180">
+  <div class="content">
   	<form method="POST" action="fundPreview.ftl" name="fundPreview">
     
     <div class="span-24">
@@ -36,7 +36,7 @@
         <div>[@spring.message "organizationPreferences.viewFunds.edit.previewTheFieldsBelowThenClickSubmitClickCancelToReturnToFundDetailsWithoutSubmittingInformation"/]</div>
         <div class="clear">&nbsp;</div>
         <div class="allErrorsDiv">
-		[@mifosMacros.showAllErrors "formBean.*"/]
+		[@mifos.showAllErrors "formBean.*"/]
     	</div>
         
         <div class="prepend-1 fontBold">[@spring.message "organizationPreferences.viewFunds.edit.funddetails"/]</div>
