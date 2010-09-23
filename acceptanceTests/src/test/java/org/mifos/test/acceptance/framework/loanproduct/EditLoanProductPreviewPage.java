@@ -41,10 +41,18 @@ public class EditLoanProductPreviewPage extends MifosPage {
     }
 
 
-    public void verifyVariableInstalmentOption(String maxGap, String minGap, String minInstalmentAmount) {
-        Assert.assertTrue(selenium.isTextPresent("Minimum gap between installments: " + minGap));
-        Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: " + maxGap));
-        Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: " + minInstalmentAmount)) ;
+    public void verifyVariableInstalmentOption(String maximumGap, String minGap, String minimumInstalmentAmount) {
+        Assert.assertTrue(selenium.isTextPresent("Minimum gap between installments: " + minGap + " days"));
+        if ("".equals(maximumGap)) {
+            Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: N/A"));
+        } else {
+            Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: " + maximumGap  + " days"));
+        }
+        if ("".equals(minimumInstalmentAmount)) {
+            Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: N/A")) ;
+        } else {
+            Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: " + minimumInstalmentAmount)) ;
+        }
         Assert.assertTrue(selenium.isTextPresent("Can configure variable installments: Yes"));
     }
 

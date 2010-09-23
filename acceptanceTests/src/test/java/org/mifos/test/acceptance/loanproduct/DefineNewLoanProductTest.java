@@ -33,7 +33,6 @@ import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -46,8 +45,6 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
 
-    @Autowired
-    private DriverManagerDataSource dataSource;
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
 
@@ -109,7 +106,7 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         productPreviewPage.verifyVariableInstalmentUnChecked();
         DefineNewLoanProductConfirmationPage loanProductConfirmationPage = productPreviewPage.submit();
         UserViewDetailsPage viewDetailsPage = loanProductConfirmationPage.navigateToViewLoanDetails();
-        viewDetailsPage.verifyVariableInstalmentUnChecked();
+        viewDetailsPage.verifyVariableInstalmentOptionsUnChecked();
     }
 
 
@@ -117,6 +114,11 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
     // one of the dependent methods throws Exception
     public void verifyVariableInstalment() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
+        createAndValidateWithVariableInstalment("60", "1", "100.5");
+        createAndValidateWithVariableInstalment("","1","");
+    }
+
+    private void createAndValidateWithVariableInstalment(String maxGap, String minGap, String minInstalmentAmount) {
         SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
@@ -124,14 +126,13 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         defineLoanProductPage.fillLoanParameters(formParameters);
         defineLoanProductPage.verifyVariableInstalmentOptionsDefaults();
         defineLoanProductPage.verifyVariableInstalmentOptionsFields();
-        defineLoanProductPage.fillVariableInstalmentOption("60", "1", "100.5");
+        defineLoanProductPage.fillVariableInstalmentOption(maxGap, minGap, minInstalmentAmount);
         DefineNewLoanProductPreviewPage productPreviewPage = defineLoanProductPage.submitAndGotoNewLoanProductPreviewPage();
-        productPreviewPage.verifyVariableInstalmentOption("60", "1", "100.5", "Yes");
+        productPreviewPage.verifyVariableInstalmentOption(maxGap, minGap, minInstalmentAmount, "Yes");
         DefineNewLoanProductConfirmationPage loanProductConfirmationPage = productPreviewPage.submit();
         UserViewDetailsPage viewDetailsPage = loanProductConfirmationPage.navigateToViewLoanDetails();
-        viewDetailsPage.verifyVariableInstalmentOption("60", "1", "100.5", "Yes");
+        viewDetailsPage.verifyVariableInstalmentOptions(maxGap, minGap, minInstalmentAmount, "Yes");
     }
-
 
     private AdminPage loginAndNavigateToAdminPage() {
         return appLauncher
