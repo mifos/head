@@ -283,7 +283,7 @@ explanation of the license and how it is applied.
                                                 <mifos:mifoslabel name="product.minimumInstallmentAmount" bundle="ProductDefUIResources" isColonRequired="yes" />
                                                 <span class="fontnormal">
                                                     <c:choose>
-		                                                <c:when test="${empty loanPrd.variableInstallmentDetails.minInstallmentAmount}">
+		                                                <c:when test="${loanPrd.variableInstallmentDetails.minInstallmentAmount.amountDoubleValue == 0.0}">
 		                                                    <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
 		                                                </c:when>
 		                                                <c:otherwise>

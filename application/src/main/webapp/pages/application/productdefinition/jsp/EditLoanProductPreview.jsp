@@ -497,17 +497,40 @@ explanation of the license and how it is applied.
                                 <td height="23" class="fontnormalbold">
                                     <mifos:mifoslabel name="product.minimumGapBetweenInstallments" bundle="ProductDefUIResources" isColonRequired="yes" />
                                     <span class="fontnormal">
-                                        <c:out value="${sessionScope.loanproductactionform.minimumGapBetweenInstallments}" />
+              	                     	<c:choose>
+          	                               <c:when test="${empty sessionScope.loanproductactionform.minimumGapBetweenInstallments}">
+                                                  <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
+                                              </c:when>
+                                              <c:otherwise>
+	                                        <c:out value="${sessionScope.loanproductactionform.minimumGapBetweenInstallments}" />
+	                                        <span id="days"> <mifos:mifoslabel name="product.days" bundle="ProductDefUIResources" /> </span>
+                                              </c:otherwise>
+                                          </c:choose>
                                     </span>
                                     <br/>
                                     <mifos:mifoslabel name="product.maximumGapBetweenInstallments" bundle="ProductDefUIResources" isColonRequired="yes" />
                                     <span class="fontnormal">
-                                        <c:out value="${sessionScope.loanproductactionform.maximumGapBetweenInstallments}" />
+                                         <c:choose>
+          	                                  <c:when test="${empty sessionScope.loanproductactionform.maximumGapBetweenInstallments}">
+                                                  <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
+                                              </c:when>
+                                              <c:otherwise>
+                                        		<c:out value="${sessionScope.loanproductactionform.maximumGapBetweenInstallments}" />
+	                                        	<span id="days"> <mifos:mifoslabel name="product.days" bundle="ProductDefUIResources" /> </span>
+                                              </c:otherwise>
+                                          </c:choose>
                                     </span>
                                     <br/>
                                     <mifos:mifoslabel name="product.minimumInstallmentAmount" bundle="ProductDefUIResources" isColonRequired="yes" />
                                     <span class="fontnormal">
-                                        <c:out value="${sessionScope.loanproductactionform.minimumInstallmentAmount}" />
+                                         <c:choose>
+          	                                  <c:when test="${empty sessionScope.loanproductactionform.minimumInstallmentAmount}">
+                                                  <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
+                                              </c:when>
+                                              <c:otherwise>
+		                                        <c:out value="${sessionScope.loanproductactionform.minimumInstallmentAmount}" />
+                                              </c:otherwise>
+                                          </c:choose>
                                     </span>
                                 </td>
                             </tr>
