@@ -51,6 +51,8 @@ public class QuestionGroupForm extends ScreenObject {
     private boolean addQuestionFlag;
     private List<SectionDetailForm> sections;
     private int initialCountOfSections;
+    private List<String> sectionsToAdd = new ArrayList<String>();
+    private List<Integer> questionsToAdd = new ArrayList<Integer>();
 
     public QuestionGroupForm() {
         this(new QuestionGroupDetail());
@@ -71,6 +73,22 @@ public class QuestionGroupForm extends ScreenObject {
 
     public void setTitle(String title) {
         this.questionGroupDetail.setTitle(trim(title));
+    }
+
+    public List<String> getSectionsToAdd() {
+        return this.sectionsToAdd;
+    }
+
+    public void setSectionsToAdd(List<String> sectionsToAdd) {
+        this.sectionsToAdd = sectionsToAdd;
+    }
+
+    public List<Integer> getQuestionsToAdd() {
+        return this.questionsToAdd;
+    }
+
+    public void setQuestionsToAdd(List<Integer> questionsToAdd) {
+        this.questionsToAdd = questionsToAdd;
     }
 
     public String getEventSourceId() {
@@ -134,8 +152,10 @@ public class QuestionGroupForm extends ScreenObject {
         List<SectionQuestionDetail> addedQuestions = new ArrayList<SectionQuestionDetail>();
         for (SectionQuestionDetail questionDetail : questionPool) {
             if (selectedQuestionIds.contains(String.valueOf(questionDetail.getQuestionId()))) {
+                questionDetail.setSequenceNumber(currentSection.getSectionQuestionDetails().size());
                 currentSection.addSectionQuestion(questionDetail);
                 addedQuestions.add(questionDetail);
+                questionsToAdd.add(questionDetail.getQuestionId());
             }
         }
         questionPool.removeAll(addedQuestions);
@@ -176,8 +196,16 @@ public class QuestionGroupForm extends ScreenObject {
                 return;
             }
         }
-        sections.add(currentSection);
-        questionGroupDetail.addSection(currentSection.getSectionDetail());
+        List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
+        for (SectionDetailForm sectionDetailForm : sections) {
+            SectionDetail sectionDetail = sectionDetailForm.getSectionDetail();
+            sectionDetail.setSequenceNumber(sectionDetail.getSequenceNumber() + 1);
+            sectionDetails.add(sectionDetail);
+        }
+        sectionDetails.add(0, currentSection.getSectionDetail());
+        sections.add(0, currentSection);
+        questionGroupDetail.setSectionDetails(sectionDetails);
+        sectionsToAdd.add(currentSection.getName());
     }
 
     public String getSectionName() {
@@ -203,8 +231,22 @@ public class QuestionGroupForm extends ScreenObject {
         }
 
         if (sectionToDelete != null) {
+            List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
+            int sequence = 0;
+            for (SectionDetailForm sectionDetailForm : sections) {
+                SectionDetail sectionDetail = sectionDetailForm.getSectionDetail();
+                sectionDetail.setSequenceNumber(sequence++);
+                sectionDetails.add(sectionDetail);
+            }
             markQuestionsOptionalAndReturnToPool(sectionToDelete);
-            questionGroupDetail.removeSection(sectionToDelete);
+            questionGroupDetail.setSectionDetails(sectionDetails);
+            for (int i = 0; i < sectionsToAdd.size(); i++) {
+                String name = sectionsToAdd.get(i);
+                if (name.equals(sectionName)) {
+                    sectionsToAdd.remove(i);
+                    break;
+                }
+            }
         }
     }
 
@@ -237,6 +279,13 @@ public class QuestionGroupForm extends ScreenObject {
         for (SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()) {
             if (StringUtils.equalsIgnoreCase(sectionName, sectionDetail.getName())) {
                 removeQuestionFromSection(questionId, sectionDetail);
+                for (int i = 0; i < questionsToAdd.size(); i++) {
+                    int name = questionsToAdd.get(i);
+                    if (name == Integer.parseInt(questionId)) {
+                        questionsToAdd.remove(i);
+                        break;
+                    }
+                }
                 if (sectionHasNoQuestions(sectionDetail)) {
                     removeSection(sectionName);
                 }
@@ -274,7 +323,7 @@ public class QuestionGroupForm extends ScreenObject {
                 for (SectionQuestionDetail question : questions) {
                     if (Integer.parseInt(questionId) == question.getQuestionId()) {
                         int actualSeqNumber = question.getSequenceNumber();
-                        if (actualSeqNumber < questions.size()) {
+                        if (actualSeqNumber < questions.size() - 1) {
                             SectionQuestionDetail questionToSwap = questions.get(actualSeqNumber + 1);
                             question.setSequenceNumber(questionToSwap.getSequenceNumber());
                             questionToSwap.setSequenceNumber(actualSeqNumber);
@@ -316,7 +365,7 @@ public class QuestionGroupForm extends ScreenObject {
             SectionDetail section = sectionForm.getSectionDetail();
             if (StringUtils.equalsIgnoreCase(sectionName, section.getName())) {
                 int actualSeqNumber = section.getSequenceNumber();
-                if (actualSeqNumber < sections.size()) {
+                if (actualSeqNumber < sections.size() - 1) {
                     SectionDetailForm sectionToSwap = sections.remove(actualSeqNumber + 1);
                     section.setSequenceNumber(sectionToSwap.getSectionDetail().getSequenceNumber());
                     sectionToSwap.getSectionDetail().setSequenceNumber(actualSeqNumber);
@@ -352,7 +401,12 @@ public class QuestionGroupForm extends ScreenObject {
         }
         if (questionToRemove != null) {
             questionToRemove.setMandatory(false);
+            questionToRemove.setSequenceNumber(0);
             questions.remove(questionToRemove);
+            int sequence = 0;
+            for (SectionQuestionDetail sectionQuestionDetail : questions) {
+                sectionQuestionDetail.setSequenceNumber(sequence++);
+            }
             questionPool.add(questionToRemove);
         }
     }

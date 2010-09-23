@@ -89,21 +89,27 @@
         
         <div style="width: 100%">
             <b>${section.name}:&nbsp;&nbsp;</b>
+            [#assign sectionRemovable = false]
+            [#list questionGroupForm.sectionsToAdd as sectionToAdd]
+                [#if section.name == sectionToAdd]
+                    [#assign sectionRemovable = true]
+                    [#break]
+                [/#if]
+            [/#list]
+            [#if sectionRemovable == true]
+                <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')">[@spring.message "questionnaire.remove.link"/]</a>
+            [#else]
+                <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
+            [/#if]
             <span style="float:right">
                 <a href="javascript:CreateQuestionGroup.moveSectionUp('${section.name}')">
                     <img src="pages/framework/images/smallarrowtop.gif" width="11" height="11">
                 </a>&nbsp
                 <a href="javascript:CreateQuestionGroup.moveSectionDown('${section.name}')">
                     <img src="pages/framework/images/smallarrowdown.gif" width="11" height="11">
-                </a>
+                </a>&nbsp
             </span>
         </div>
-        [#if section_index gte questionGroupForm.initialCountOfSections]
-            <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')">[@spring.message "questionnaire.remove.link"/]</a>
-        [#else]
-            <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
-        [/#if]
-        <br/>
         <table class="table_common" id="sections.table" name="sections.table">
             <thead>
             <tr>
@@ -121,7 +127,14 @@
                     [@mifosmacros.formCheckbox "questionGroupForm.sections[${section_index}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
                 </td>
                 <td class="remove">
-                    [#if sectionQuestion_index gte section.initialCountOfQuestions]
+                    [#assign questionRemovable = false]
+                    [#list questionGroupForm.questionsToAdd as questionToAdd]
+                        [#if sectionQuestion.questionId == questionToAdd]
+                            [#assign questionRemovable = true]
+                            [#break]
+                        [/#if]
+                    [/#list]
+                    [#if questionRemovable == true]
                         <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')">[@spring.message "questionnaire.remove.link"/]</a>
                     [#else]
                         <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
