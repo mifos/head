@@ -4,11 +4,14 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    					
     <import resource="classpath:org/mifos/config/resources/webflow-config.xml" />
 
     <context:annotation-config/>
-    	 
+    
+    <bean id="localeResolver" class="org.mifos.ui.core.localisation.MifosLocaleResolver">
+		<constructor-arg ref="adminServiceFacade" />
+	</bean>
+	    	 
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
         <property name="basenames">
             <list>

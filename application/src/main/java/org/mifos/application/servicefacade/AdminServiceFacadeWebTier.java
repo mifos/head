@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -90,6 +91,7 @@ import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
+import org.mifos.config.Localization;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.config.util.helpers.ConfigurationConstants;
@@ -1895,5 +1897,10 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
         ReportsCategoryBO reportsCategoryBO = new ReportsPersistence().getReportCategoryByCategoryId(reportCategoryId.shortValue());
         return reportsCategoryBO.toDto();
+    }
+
+    @Override
+    public Locale retreiveLocaleFromConfiguration() {
+        return Localization.getInstance().getMainLocale();
     }
 }

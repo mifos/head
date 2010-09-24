@@ -60,7 +60,19 @@ public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDa
 
         List<DateTime> scheduledDates = new ArrayList<DateTime>();
 
-        DateTime latestGeneratedDate = matchingDayOfWeekDate;
+       
+        // Prepare a list of dates scheduled without adjusting working days/holidays.
+        // It is used for computing next dates by 'ScheduledEvent' to omit problems
+        // when adjusting a date changes a month (MIFOS-3584).
+        List<DateTime> scheduledWithoutAdjustments = new ArrayList<DateTime>();
+        DateTime withoutAdjustment = new DateTime(matchingDayOfWeekDate);
+        scheduledWithoutAdjustments.add(withoutAdjustment);
+        for (int i = 0; i < occurences; i++) {
+        	withoutAdjustment = scheduledEvent.nextEventDateAfter(withoutAdjustment);
+        	scheduledWithoutAdjustments.add(withoutAdjustment);
+        }
+
+        DateTime latestGeneratedDate = scheduledWithoutAdjustments.get(0);
         for (int i = 0; i < occurences; i++) {
 
             DateAdjustmentStrategy workingDay = new BasicWorkingDayStrategy(workingDays);
@@ -71,8 +83,8 @@ public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDa
             DateTime adjustedForHolidays = holidayAdjustment.adjust(adjustedForWorkingDay);
 
             scheduledDates.add(adjustedForHolidays);
-
-            latestGeneratedDate = scheduledEvent.nextEventDateAfter(adjustedForWorkingDay);
+            
+            latestGeneratedDate = scheduledEvent.nextEventDateAfter(scheduledWithoutAdjustments.get(i));
         }
 
         return scheduledDates;
