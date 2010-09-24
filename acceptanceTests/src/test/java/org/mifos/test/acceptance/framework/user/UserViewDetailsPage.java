@@ -66,26 +66,4 @@ public class UserViewDetailsPage extends MifosPage {
         Assert.assertEquals(getEmail(), formParameters.getEmail());
     }
 
-    public void verifyVariableInstalmentOptions(String maximumGap, String minGap, String minimumInstalmentAmount, String variableInstalmentChoice) {
-        Assert.assertTrue(selenium.isTextPresent("Minimum gap between installments: " + minGap));
-        if ("".equals(maximumGap)) {
-            Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: N/A"));
-        } else {
-            Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: " + maximumGap  + " days"));
-        }
-        if ("".equals(minimumInstalmentAmount)) {
-            Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: N/A")) ;
-        } else {
-            Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: " + minimumInstalmentAmount)) ;
-        }
-        Assert.assertTrue(selenium.isTextPresent("Can configure variable installments: " + variableInstalmentChoice));
-    }
-
-    public void verifyVariableInstalmentOptionsUnChecked() {
-        Assert.assertTrue(!selenium.isTextPresent("Minimum gap between installments:"));
-        Assert.assertTrue(!selenium.isTextPresent("Maximum gap between installments:"));
-        Assert.assertTrue(!selenium.isTextPresent("Minimum installment amount:" )) ;
-        Assert.assertTrue(selenium.isTextPresent("Can configure variable installments: No"));
-    }
-
 }

@@ -21,9 +21,10 @@
 package org.mifos.test.acceptance.framework.loanproduct;
 
 
-import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
+
+import com.thoughtworks.selenium.Selenium;
 
 
 public class DefineNewLoanProductConfirmationPage extends MifosPage {
