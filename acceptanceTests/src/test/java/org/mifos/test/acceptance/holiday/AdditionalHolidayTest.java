@@ -488,18 +488,31 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         createHolidayOn("March Moratorium", CreateHolidaySubmitParameters.MORATORIUM, "18", "03", "2009");
 
         // Run batch jobs
-        List<String> jobsToRun = new ArrayList<String>();
-        jobsToRun.add("ApplyHolidayChangesTaskJob");
-        new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
+
+        new BatchJobHelper(selenium).runAllBatchJobs();
 
         // Move system date to moratorium holiday date
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(
                 selenium);
-        DateTime targetTime = new DateTime(2009, 3, 25, 0, 0, 0, 0);
+        DateTime targetTime = new DateTime(2009, 3, 18, 0, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
-        verifyFees("AdditionalHolidayTest_014_result_dbunit.xml.zip");
+        verifyFeesInPage("0.0");
 
+       // verifyFees("AdditionalHolidayTest_014_result_dbunit.xml.zip");
+
+    }
+
+    private void verifyFeesInPage(String amount) {
+        loginAndNavigatetoClientsAndAccountsHomepage();
+        ClientsAndAccountsHomepage clientsAndAccountsHomepage = new ClientsAndAccountsHomepage(selenium);
+        ClientSearchResultsPage resultsPage =  clientsAndAccountsHomepage.searchForClient("Stu1233171716380 Client1233171716380");
+
+        resultsPage.navigateToSearchResult("Stu1233171716380 Client1233171716380: ID 0003-000000006");
+        selenium.click("viewClientDetails.link.viewDetails");
+        selenium.waitForPageToLoad("30000");
+
+        Assert.assertEquals(selenium.isTextPresent("Amount Due: "+amount), true);
     }
 
     private void applyFeesToClient(String clientSearchString, String feeName) {
