@@ -67,14 +67,12 @@ function selectAllOptions(outSel)
         <p class="span-6 arrowIMG orangeheading ">[@spring.message "systemUsers.defineNewSystemUser.userInformation"/]</p>
         <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "review&Submit"/]</p>
       </div>
-      
       <div class="subcontent">
         <p class="font15"><span class="fontBold">[@spring.message "systemUsers.defineNewSystemUser.addanewuser"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "systemUsers.defineNewSystemUser.enterUserInformation"/]</span></p>
         <p>[@spring.message "systemUsers.defineNewSystemUser.infomessage"/]</p>
         <span>*</span><span>[@spring.message "manageProducts.defineProductmix.fieldsmarkedwithanasteriskarerequired"/]</span>
         
         <form name="enterUserDetails" method="post" action="user.ftl?execution=${flowExecutionKey}">
-        	<fieldset>
         	<div id="allErrorsDiv" class="allErrorsDiv">
             	[@mifosmacros.showAllErrors "userFormBean.*"/]
         	</div>
@@ -235,8 +233,6 @@ function selectAllOptions(outSel)
 	        	[/#switch]
 	        	[#assign fieldNumber = fieldNumber + 1]
 	        [/#list]
-        	</fieldset>
-        
 	        <div class="prepend-8">
 	        	<input class="buttn" type="submit" id="preview" name="_eventId_preview" value="Preview" onclick="selectAllOptions(this.form.selectedRoles);selectAllOptions(this.form.availableRoles);" />
 	        	<input class="buttn2" type="submit" id="cancel" name="_eventId_cancel" value="Cancel" />

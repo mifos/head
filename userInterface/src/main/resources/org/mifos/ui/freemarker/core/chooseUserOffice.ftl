@@ -5,12 +5,12 @@
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
 <!--  Main Content Begins--> 
-  <div class="content marginAuto">
+  <div class="content marginAuto" style="margin-left: 5em;">
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-6 arrowIMG orangeheading ">[@spring.message "systemUsers.defineNewSystemUser.chooseOffice"/]</p>
         <p class="span-6 arrowIMG1 orangeheading ">[@spring.message "systemUsers.defineNewSystemUser.userInformation"/]</p>
-        <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "review&Submit"/]</p>
+        <p class="span-5 arrowIMG1 orangeheading last">[@spring.message "review&Submit"/]</p>
       </div>
       
       <div class="subcontent">
