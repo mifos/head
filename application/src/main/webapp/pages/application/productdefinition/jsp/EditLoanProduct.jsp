@@ -34,14 +34,117 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 		<span id="page.id" title="EditLoanProduct" />
+		<script language="javascript">
+		<!--
+			function fnCancel(form) {
+				form.action="loanproductaction.do?method=editCancel";
+				form.submit();
+			}
+			function showMeetingFrequency(){
+				if (document.getElementsByName("freqOfInstallments")[1].checked == true){
+					document.getElementsByName("week")[0].style.display = "none";
+					document.getElementsByName("month")[0].style.display = "block";
+				}
+				else {
+					document.getElementsByName("week")[0].style.display = "block";
+					document.getElementsByName("freqOfInstallments")[0].checked = true;
+					document.getElementsByName("month")[0].style.display = "none";
+				}
+			}
+			function fnIntDesbr() {
+				if(document.getElementsByName("intDedDisbursementFlag")[0].checked==true) {
+					document.getElementsByName("gracePeriodType")[0].disabled=true;
+					document.getElementsByName("gracePeriodType")[0].selectedIndex=0;
+					document.getElementsByName("gracePeriodDuration")[0].value="";
+					document.getElementsByName("gracePeriodDuration")[0].disabled=true;
+				}
+				else {
+					document.getElementsByName("gracePeriodType")[0].disabled=false;
+					document.getElementsByName("gracePeriodDuration")[0].disabled=false;
+				}
+			}
+			function fnGracePeriod() {
+				if(document.getElementsByName("gracePeriodType")[0].selectedIndex==0 ||
+					document.getElementsByName("gracePeriodType")[0].value==1) {
+					document.getElementsByName("gracePeriodDuration")[0].value="";
+					document.getElementsByName("gracePeriodDuration")[0].disabled=true;
+				}else {
+					document.getElementsByName("gracePeriodDuration")[0].disabled=false;
+				}
+			}
+			function checkRow(){
+			if (document.loanproductactionform.loanAmtCalcType[0].checked == true){
+				document.getElementById("option0").style.display = "block";
+				document.getElementById("option1").style.display = "none";
+				document.getElementById("option2").style.display = "none";
+				}
+			else if (document.loanproductactionform.loanAmtCalcType[1].checked == true){
+				document.getElementById("option0").style.display = "none";
+				document.getElementById("option1").style.display = "block";
+				document.getElementById("option2").style.display = "none";
+				}
+				
+			else if (document.loanproductactionform.loanAmtCalcType[2].checked == true){
+				document.getElementById("option0").style.display = "none";
+				document.getElementById("option1").style.display = "none";
+				document.getElementById("option2").style.display = "block";		
+				}				
+			}
+			
+			function checkType(){
+			if (document.loanproductactionform.calcInstallmentType[0].checked == true){
+				document.getElementById("install0").style.display = "block";
+				document.getElementById("install1").style.display = "none";
+				document.getElementById("install2").style.display = "none";
+				}
+			else if (document.loanproductactionform.calcInstallmentType[1].checked == true){
+				document.getElementById("install0").style.display = "none";
+				document.getElementById("install1").style.display = "block";
+				document.getElementById("install2").style.display = "none";			
+				//if(document.getElementsByName("freqOfInstallments")[1].checked)
+				//		installments_as_month_value();
+				//else
+				//		installments_as_week_value();
+				}				
+			else if (document.loanproductactionform.calcInstallmentType[2].checked == true){
+				document.getElementById("install0").style.display = "none";
+				document.getElementById("install1").style.display = "none";
+				document.getElementById("install2").style.display = "block";		
+				}				
+			}
+		
+			function changeValue(event, editbox,endvalue, rownum)
+			{
+				if(!(endvalue=="")){
+				if (FnCheckNumber(event,'','',editbox) == false)
+					return false;
+				for(var i=rownum;i<rownum+1;i++)
+					{					
+						eval("document.loanproductactionform.startRangeLoanAmt"+(i+1)).value = parseFloat(endvalue) +1;	
+					
+					}	
+				}
+			}	
+		
+			function changeInstallmentValue(event, editbox, endvalue, rownum)
+			{
+				if(!(endvalue=="")){
+				if (FnCheckNumber(event,'','',editbox) == false)
+					return false;
+				for(var i=rownum;i<rownum+1;i++)
+					{					
+						eval("document.loanproductactionform.startInstallmentRange"+(i+1)).value = parseFloat(endvalue) +1;			
+						
+					}	
+					}						
+			}
+		//-->
+		</script>
 		<script src="pages/framework/js/date.js"></script>
-		<script type="text/javascript" src="pages/application/loan/js/EditLoanProduct.js"></script>
-        <html-el:form action="/loanproductaction"
+		<html-el:form action="/loanproductaction"
 			onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) &&
 				validateMyForm(endDate,endDateFormat,endDateYY))"
 			focus="prdOfferingName">
-            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}"
-                var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
 			<c:choose>
 				<c:when test="${param.prdOfferName == null}">
 					<c:set var="prdOfferName"
@@ -568,7 +671,7 @@ explanation of the license and how it is applied.
 								bundle="ProductDefUIResources" /></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><span class="mandatorytext"><font color="#FF0000">*</font></span> 
+							<td align="right"><span class="mandatorytext">*</span> 
 							<fmt:message key="product.defaultRate">
 								<fmt:param><mifos:mifoslabel
 								name="${ConfigurationConstants.SERVICE_CHARGE}"
@@ -588,55 +691,6 @@ explanation of the license and how it is applied.
 							<br>
 							</td>
 						</tr>
-                        <c:if test="${repaymentSchedulesIndependentOfMeetingIsEnabled == '1'}">
-                            <tr class="fontnormal">
-                                <td width="30%" align="right" valign="top"><mifos:mifoslabel
-                                    name="product.canConfigureVariableInstallments"
-                                    bundle="ProductDefUIResources" /> :
-                                </td>
-                                <td valign="top"><html-el:checkbox styleId="EditLoanProduct.checkbox.canConfigureVariableInstallments"
-                                    property="canConfigureVariableInstallments" onclick="showVariableInstallmentInputs();" value="1" />
-                                </td>
-                            </tr>
-                            <tr class="fontnormal">
-                                <td width="30%" align="right" valign="top">
-                                    <div id="minimumGapBetweenInstallmentsLabelDiv"  style="display: none;">
-                                        <mifos:mifoslabel name="product.minimumGapBetweenInstallments" mandatory="yes" bundle="ProductDefUIResources" /> :
-                                    </div>
-                                </td>
-                                <td valign="top">
-                                    <div id="minimumGapBetweenInstallmentsInputDiv" style="display: none;">
-                                            <mifos:mifosnumbertext property="minimumGapBetweenInstallments" />
-                                            <span id="days"> <mifos:mifoslabel name="product.days" bundle="ProductDefUIResources" /> </span>
-                                    </div>
-                                </td>
-                           </tr>
-                           <tr class="fontnormal">
-                                <td width="30%" align="right" valign="top">
-                                    <div id="maximumGapBetweenInstallmentsLabelDiv"  style="display: none;">
-                                        <mifos:mifoslabel name="product.maximumGapBetweenInstallments" bundle="ProductDefUIResources" /> :
-                                    </div>
-                                </td>
-                                <td valign="top">
-                                    <div id="maximumGapBetweenInstallmentsInputDiv" style="display: none;">
-                                            <mifos:mifosnumbertext property="maximumGapBetweenInstallments" />
-                                            <span id="days"> <mifos:mifoslabel name="product.days" bundle="ProductDefUIResources" /> </span>
-                                    </div>
-                                </td>
-                           </tr>
-                           <tr class="fontnormal">
-                                <td width="30%" align="right" valign="top">
-                                    <div id="minimumInstallmentAmountLabelDiv"  style="display: none;">
-                                        <mifos:mifoslabel name="product.minimumInstallmentAmount" bundle="ProductDefUIResources" /> :
-                                    </div>
-                                </td>
-                                 <td valign="top">
-                                     <div id="minimumInstallmentAmountInputDiv" style="display: none;">
-                                        <mifos:decimalinput styleId= "EditLoanProduct.input.minimumInstallmentAmount" property="minimumInstallmentAmount" />
-                                     </div>
-                                </td>
-                            </tr>
-                        </c:if>
 						<tr class="fontnormal">
 							<td width="30%" align="right" valign="top"><mifos:mifoslabel
 								name="product.freqofinst" bundle="ProductDefUIResources" isColonRequired="yes"/></td>
@@ -684,10 +738,9 @@ explanation of the license and how it is applied.
 									</td>
 								</tr>
 							</table>
-                            <script>
-                                showMeetingFrequency();
-                            </script>
-                          </td>
+							<script>
+										showMeetingFrequency();
+									</script></td>
 						</tr>
 						<!--<tr class="fontnormal">
 							<td align="right"><mifos:mifoslabel mandatory="yes"
@@ -1044,12 +1097,11 @@ explanation of the license and how it is applied.
 								property="gracePeriodDuration" /> <mifos:mifoslabel
 								name="product.installments" bundle="ProductDefUIResources" /></td>
 						</tr>
-						<script type="text/javascript">
+						<script>
 							fnIntDesbr();
 							fnGracePeriod();
 							checkRow();
-						    checkType();
-                            showVariableInstallmentInputs();
+						checkType();
 						</script>
 					</table>
 					<br>

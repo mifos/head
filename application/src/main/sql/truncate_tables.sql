@@ -236,4 +236,3 @@ truncate table BATCH_JOB_EXECUTION_CONTEXT;
 truncate table BATCH_STEP_EXECUTION_SEQ;
 truncate table BATCH_JOB_EXECUTION_SEQ;
 truncate table BATCH_JOB_SEQ;
-truncate table variable_installment_details;

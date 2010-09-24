@@ -38,7 +38,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui","smoke"})
+@Test(sequential = true, groups = {"loan","acceptance","ui"})
 public class WaiveLoanFeeTest extends UiTestCaseBase {
 
     @Autowired
@@ -55,7 +55,6 @@ public class WaiveLoanFeeTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
-
     }
 
     @AfterMethod
