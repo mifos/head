@@ -278,5 +278,6 @@ public interface CustomerConstants {
     String INTEREST_PAID_KEY = "Customer.History.InterestPaid";
     String TOTAL_AMOUNT_PAID_KEY = "label.totalamountpaidLabel";
     String QUESTION_GROUPS_LIST = "questionGroups";
+    String VARIABLE_INSTALLMENT = "variableInstallmentDetails";
 
 }

@@ -20,37 +20,7 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import org.mifos.accounts.loan.business.service.LoanInformationDto;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.Map.Entry;
-
-import javax.servlet.http.HttpServletRequest;
-
 import junit.framework.Assert;
-
 import org.joda.time.DateMidnight;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -66,9 +36,11 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.loan.util.helpers.VariableInstallmentDetailsDto;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
@@ -78,6 +50,7 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRang
 import org.mifos.accounts.productdefinition.business.LoanOfferingTestUtils;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
@@ -105,6 +78,7 @@ import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.TestUtils;
@@ -128,6 +102,33 @@ import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+
+import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 @SuppressWarnings("unchecked")
 public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
@@ -297,7 +298,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 loanOffering.getStartDate(), loanOffering.getEndDate(), loanOffering.getDescription(),
                 PrdStatus.LOAN_ACTIVE, loanOffering.getGracePeriodType(), loanOffering.getInterestTypes(), loanOffering
                         .getGracePeriodDuration(), loanOffering.getMaxInterestRate(),
-                loanOffering.getMinInterestRate(), loanOffering.getDefInterestRate(), loanOffering.isIncludeInLoanCounter(), 
+                loanOffering.getMinInterestRate(), loanOffering.getDefInterestRate(), loanOffering.isIncludeInLoanCounter(),
                 loanOffering.isIntDedDisbursement(), loanOffering.isPrinDueLastInst(),
                 new ArrayList<FundBO>(), new ArrayList<FeeBO>(), Short.valueOf("1"),
                 RecurrenceType.MONTHLY, loanPrdActionForm, loanOffering.isInterestWaived());
@@ -774,6 +775,68 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 //        Assert.assertNotNull(loan);
 
         group = TestObjectFactory.getGroup(group.getCustomerId());
+    }
+
+    public void testSchedulePreviewForVariableInstallments() throws Exception {
+        LoanOfferingBO loanOfferingWithVariableInstallments = getLoanOffering("VarInstLoanPrd", "VILP", ApplicableTo.GROUPS, WEEKLY,
+                                            EVERY_WEEK, getVariableInstallmentDetails(10, 100, 1000));
+
+        request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
+        MeetingBO meeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.MONDAY).build();
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+
+        initPageParams(loanOfferingWithVariableInstallments);
+        goToPrdOfferingPage();
+        actionPerform();
+        goToLoanAccountInputPage();
+        actionPerform();
+        setRequestPathInfo("/loanAccountAction.do");
+        addRequestParameter("loanAmount", loanOfferingWithVariableInstallments.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount()
+                .toString());
+        addRequestParameter("interestRate", loanOfferingWithVariableInstallments.getDefInterestRate().toString());
+        addRequestParameter("noOfInstallments", loanOfferingWithVariableInstallments.getEligibleInstallmentSameForAllLoan()
+                .getDefaultNoOfInstall().toString());
+        addRequestParameter("disbursementDate",
+                            DateUtils.getLocalDateString(CalendarUtils.nearestDayOfWeekTo(DayOfWeek.monday(),
+                                                                       new DateTimeService().getCurrentDateTime()),
+                            ((UserContext) request.getSession().getAttribute("UserContext")).getPreferredLocale()));
+        addRequestParameter("gracePeriodDuration", "1");
+        addRequestParameter("businessActivityId", "1");
+        addRequestParameter("loanOfferingFund", "1");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+                .getAttribute(LoanConstants.CUSTOM_FIELDS, request);
+        int i = 0;
+        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
+            addRequestParameter("customField[" + i + "].fieldValue", "11");
+            i++;
+        }
+        addRequestParameter("method", "schedulePreview");
+        performNoErrors();
+        verifyForward(ActionForwards.schedulePreview_success.toString());
+        VariableInstallmentDetailsDto variableInstallmentDetails = (VariableInstallmentDetailsDto) SessionUtils.getAttribute(CustomerConstants.VARIABLE_INSTALLMENT, request);
+        assertVariableInstallmentDetails(variableInstallmentDetails, 10, 100, 1000.0d);
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        TestObjectFactory.removeObject(loanOfferingWithVariableInstallments);
+    }
+
+    private VariableInstallmentDetailsBO getVariableInstallmentDetails(int minGapInDays, int maxGapInDays, int minInstAmount) {
+        VariableInstallmentDetailsBO variableInstallmentDetailsBO = new VariableInstallmentDetailsBO();
+        variableInstallmentDetailsBO.setMinGapInDays(minGapInDays);
+        variableInstallmentDetailsBO.setMaxGapInDays(maxGapInDays);
+        variableInstallmentDetailsBO.setMinInstallmentAmount(new Money(getCurrency(), String.valueOf(minInstAmount)));
+        return variableInstallmentDetailsBO;
+    }
+
+    private void assertVariableInstallmentDetails(VariableInstallmentDetailsDto variableInstallmentDetails, int minGap, int maxGap, double minInstAmt) {
+        Assert.assertNotNull(variableInstallmentDetails);
+        Assert.assertNotNull(variableInstallmentDetails.isVariableInstallmentsAllowed());
+        Assert.assertTrue(variableInstallmentDetails.isVariableInstallmentsAllowed());
+        Assert.assertEquals(minGap, variableInstallmentDetails.getMinGapInDays().intValue());
+        Assert.assertEquals(maxGap, variableInstallmentDetails.getMaxGapInDays().intValue());
+        Assert.assertEquals(minInstAmt, variableInstallmentDetails.getMinInstallmentAmount().getAmountDoubleValue());
     }
 
     public void testSchedulePreviewWithoutData() throws Exception {

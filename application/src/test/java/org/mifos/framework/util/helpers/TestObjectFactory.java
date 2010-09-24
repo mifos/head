@@ -20,16 +20,6 @@
 
 package org.mifos.framework.util.helpers;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Set;
-
 import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
@@ -184,6 +174,16 @@ import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Set;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 
 /**
  * This class assumes that you are connected to the model database, which has master data in it and also you have some
@@ -582,6 +582,16 @@ public class TestObjectFactory {
         return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
                 (short) defInstallments, interestType, false, false, meeting, GraceType.GRACEONALLREPAYMENTS,
                 (short) 1, "1", "1");
+    }
+
+    public static LoanOfferingBO createLoanOffering(final String name, final String shortName,
+                                                    final ApplicableTo applicableTo, final Date startDate, final PrdStatus offeringStatus,
+                                                    final Double defLnAmnt, final Double defIntRate, final int defInstallments,
+                                                    final InterestType interestType, final MeetingBO meeting,
+                                                    final VariableInstallmentDetailsBO variableInstallmentDetailsBO) {
+        return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
+                (short) defInstallments, interestType, false, false, meeting, GraceType.GRACEONALLREPAYMENTS,
+                (short) 1, "1", "1", Money.getDefaultCurrency(), variableInstallmentDetailsBO);
     }
 
     public static LoanOfferingBO createLoanOffering(final String name, final String shortName,

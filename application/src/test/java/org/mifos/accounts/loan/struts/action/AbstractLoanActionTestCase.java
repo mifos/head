@@ -20,20 +20,12 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
@@ -49,6 +41,15 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public abstract class AbstractLoanActionTestCase extends MifosMockStrutsTestCase {
     public AbstractLoanActionTestCase() throws Exception {
@@ -106,6 +107,19 @@ public abstract class AbstractLoanActionTestCase extends MifosMockStrutsTestCase
         return TestObjectFactory.createLoanOffering(name, shortName, applicableTo, currentDate, PrdStatus.LOAN_ACTIVE,
                 300.0, 1.2, 3, InterestType.FLAT, meeting);
     }
+
+    protected LoanOfferingBO getLoanOffering(String name, String shortName, ApplicableTo applicableTo,
+            RecurrenceType meetingFrequency, short recurAfter, VariableInstallmentDetailsBO variableInstallmentDetailsBO) {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(meetingFrequency,
+                recurAfter, CUSTOMER_MEETING, MONDAY));
+        Date currentDate = new Date(System.currentTimeMillis());
+        return TestObjectFactory.createLoanOffering(name, shortName, applicableTo, currentDate, PrdStatus.LOAN_ACTIVE,
+                300.0, 1.2, 3, InterestType.FLAT, meeting, variableInstallmentDetailsBO);
+    }
+
+
+
+
 
     @Override
     protected void tearDown() throws Exception {

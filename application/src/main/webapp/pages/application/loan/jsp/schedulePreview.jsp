@@ -261,6 +261,8 @@ explanation of the license and how it is applied.
                                                             <td width="5%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.total" /></b></td>
                                                             <td width="30%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.amount" /></b></td>
                                                         </tr>
+                                                        
+                                                        
                                                         <c:forEach var="paymentDataBeans" items="${loanAccountActionForm.paymentDataBeans}">
                                                         <tr>
                                                             <td class="drawtablerow" align="center">
@@ -290,6 +292,9 @@ explanation of the license and how it is applied.
                                                             </td>
                                                         </tr>
                                                         </c:forEach>
+                                                        
+                                                        
+                                                        
                                                         </table>
                                                     </td>
                                                     </c:if>

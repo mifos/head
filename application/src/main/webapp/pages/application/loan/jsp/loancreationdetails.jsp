@@ -288,9 +288,83 @@ explanation of the license and how it is applied.
 									<tiles:insert definition=".individualLoansForm" flush="false">
 									</tiles:insert>
 							    </c:if>
+							</c:if> 
+							
+							<c:if test="${LoanOffering.variableInstallmentsAllowed}">
+								<table width="93%" border="0" cellpadding="3" cellspacing="0">
+									<tr class="fontnormal">
+										<td width="30%" class="fontnormal" align="right" valign="top">
+										<mifos:mifoslabel
+											name="product.canConfigureVariableInstallments"
+											bundle="ProductDefUIResources" isColonRequired="yes" /></td>
+										<td width="70%"><c:choose>
+											<c:when test="${LoanOffering.variableInstallmentsAllowed}">
+												<mifos:mifoslabel name="product.yes"
+													bundle="ProductDefUIResources" />
+											</c:when>
+											<c:otherwise>
+												<mifos:mifoslabel name="product.no"
+													bundle="ProductDefUIResources" />
+											</c:otherwise>
+										</c:choose></td>
+									</tr>
+
+									<tr class="fontnormal">
+										<td width="30%" class="fontnormal" align="right" valign="top">
+										<mifos:mifoslabel name="product.minimumGapBetweenInstallments"
+											bundle="ProductDefUIResources" isColonRequired="yes" /></td>
+										<td width="70%"><c:choose>
+											<c:when
+												test="${empty LoanOffering.variableInstallmentDetails.minGapInDays}">
+												<mifos:mifoslabel name="product.notApplicable"
+													bundle="ProductDefUIResources" />
+											</c:when>
+											<c:otherwise>
+												<c:out
+													value="${LoanOffering.variableInstallmentDetails.minGapInDays}" />
+												<span id="days"> <mifos:mifoslabel
+													name="product.days" bundle="ProductDefUIResources" /> </span>
+											</c:otherwise>
+										</c:choose></td>
+									</tr>
+
+									<tr class="fontnormal">
+										<td width="30%" class="fontnormal" align="right" valign="top">
+										<mifos:mifoslabel name="product.maximumGapBetweenInstallments"
+											bundle="ProductDefUIResources" isColonRequired="yes" /></td>
+										<td width="70%"><c:choose>
+											<c:when
+												test="${empty LoanOffering.variableInstallmentDetails.maxGapInDays}">
+												<mifos:mifoslabel name="product.notApplicable"
+													bundle="ProductDefUIResources" />
+											</c:when>
+											<c:otherwise>
+												<c:out
+													value="${LoanOffering.variableInstallmentDetails.maxGapInDays}" />
+												<span id="days"> <mifos:mifoslabel
+													name="product.days" bundle="ProductDefUIResources" /> </span>
+											</c:otherwise>
+										</c:choose></td>
+									</tr>
+									<tr class="fontnormal">
+										<td width="30%" class="fontnormal" align="right" valign="top">
+										<mifos:mifoslabel name="product.minimumInstallmentAmount"
+											bundle="ProductDefUIResources" isColonRequired="yes" /></td>
+										<td width="70%"><c:choose>
+											<c:when
+												test="${LoanOffering.variableInstallmentDetails.minInstallmentAmount.amountDoubleValue == 0.0}">
+												<mifos:mifoslabel name="product.notApplicable"
+													bundle="ProductDefUIResources" />
+											</c:when>
+											<c:otherwise>
+												<c:out
+													value="${LoanOffering.variableInstallmentDetails.minInstallmentAmount}" />
+											</c:otherwise>
+										</c:choose></td>
+									</tr>
+								</table>
 							</c:if>
-<br>
-<br>
+
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<td colspan="2" class="fontnormalbold"><mifos:mifoslabel

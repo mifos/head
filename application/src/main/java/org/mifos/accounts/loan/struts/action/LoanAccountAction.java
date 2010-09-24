@@ -43,8 +43,10 @@ import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.loan.util.helpers.VariableInstallmentDetailsDto;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
@@ -446,6 +448,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
         UserContext userContext = getUserContext(request);
+
+        Short productId = loanActionForm.getPrdOfferingIdValue();
+        LoanOfferingBO loanOffering = getLoanOffering(productId, getUserContext(request).getLocaleId());
+        setVariableInstallmentDetailsInSession(loanOffering, request);
         CustomerDetailDto oldCustomer = (CustomerDetailDto) SessionUtils.getAttribute(LOANACCOUNTOWNER, request);
 
         DateTime disbursementDate = new DateTime(loanActionForm.getDisbursementDateValue(userContext
@@ -481,6 +487,22 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         return createLoanQuestionnaire.fetchAppliedQuestions(
                 mapping, loanActionForm, request, ActionForwards.schedulePreview_success);
+    }
+
+    private void setVariableInstallmentDetailsInSession(LoanOfferingBO loanOffering, HttpServletRequest request) throws Exception{
+        VariableInstallmentDetailsDto variableInstallmentDetails = new VariableInstallmentDetailsDto();
+
+        boolean variableInstallmentsAllowed = loanOffering.isVariableInstallmentsAllowed();
+        variableInstallmentDetails.setVariableInstallmentsAllowed(variableInstallmentsAllowed);
+
+        if(variableInstallmentsAllowed){
+            VariableInstallmentDetailsBO variableInstallmentDetailsBO = loanOffering.getVariableInstallmentDetails();
+            variableInstallmentDetails.setMaxGapInDays(variableInstallmentDetailsBO.getMaxGapInDays());
+            variableInstallmentDetails.setMinGapInDays(variableInstallmentDetailsBO.getMinGapInDays());
+            variableInstallmentDetails.setMinInstallmentAmount(variableInstallmentDetailsBO.getMinInstallmentAmount());
+        }
+
+        SessionUtils.setAttribute(CustomerConstants.VARIABLE_INSTALLMENT, variableInstallmentDetails, request);
     }
 
     @TransactionDemarcate(joinToken = true)
