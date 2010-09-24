@@ -186,14 +186,14 @@ public class SavingsBO extends AccountBO {
             final Money savingsBalanceAmount, final SavingsPaymentStrategy savingsPaymentStrategy,
             final SavingsTransactionActivityHelper savingsTransactionActivityHelper,
             final Set<AccountActionDateEntity> scheduledPayments, final Double interestRate,
-            final InterestCalcType interestCalcType, final AccountTypes accountType, final AccountState accountState,
+            final InterestCalcType interestCalcType, final AccountState accountState,
             final CustomerBO customer, final Integer offsettingAllowable,
             final MeetingBO scheduleForInterestCalculation, final RecommendedAmountUnit recommendedAmountUnit,
-            final Money recommendedAmount, final PersonnelBO savingsOfficer, final Date createdDate,
+            final Money recommendedAmount, final Date createdDate,
             final Short createdByUserId, List<Holiday> holidays) {
 
-        super(accountType, accountState, customer, offsettingAllowable, scheduledPayments,
-                new HashSet<AccountFeesEntity>(), customer.getOffice(), savingsOfficer, createdDate, createdByUserId);
+        super(AccountTypes.SAVINGS_ACCOUNT, accountState, customer, offsettingAllowable, scheduledPayments,
+                new HashSet<AccountFeesEntity>(), createdDate, createdByUserId);
         this.savingsOffering = savingsProduct;
         this.savingsPaymentStrategy = savingsPaymentStrategy;
         this.savingsTransactionActivityHelper = savingsTransactionActivityHelper;

@@ -98,9 +98,9 @@ public class AccountBO extends AbstractBusinessObject {
     private Integer accountId;
     protected String globalAccountNum;
     private String externalId;
-    protected final AccountTypeEntity accountType;
-    protected final CustomerBO customer;
-    protected final OfficeBO office;
+    protected AccountTypeEntity accountType;
+    protected CustomerBO customer;
+    protected OfficeBO office;
     protected PersonnelBO personnel;
     private AccountStateEntity accountState;
     private Date closedDate;
@@ -239,8 +239,7 @@ public class AccountBO extends AbstractBusinessObject {
      */
     public AccountBO(final AccountTypes accountType, final AccountState accountState, final CustomerBO customer,
             final Integer offsettingAllowable, final Set<AccountActionDateEntity> scheduledPayments,
-            final Set<AccountFeesEntity> accountFees, final OfficeBO office, final PersonnelBO accountOfficer,
-            final Date createdDate, final Short createdByUserId) {
+            final Set<AccountFeesEntity> accountFees, final Date createdDate, final Short createdByUserId) {
         this.accountId = null;
         this.accountType = new AccountTypeEntity(accountType.getValue());
         this.accountState = new AccountStateEntity(accountState);
@@ -250,8 +249,10 @@ public class AccountBO extends AbstractBusinessObject {
         this.createdBy = createdByUserId;
         this.accountActionDates = scheduledPayments;
         this.accountFees = accountFees;
-        this.office = office;
-        this.personnel = accountOfficer;
+        if (customer != null) {
+            this.office = customer.getOffice();
+            this.personnel = customer.getPersonnel();
+        }
         this.accountFlags = new HashSet<AccountFlagMapping>();
         this.accountCustomFields = new HashSet<AccountCustomFieldEntity>();
         this.accountPayments = new ArrayList<AccountPaymentEntity>();
@@ -288,8 +289,10 @@ public class AccountBO extends AbstractBusinessObject {
         this.accountId = null;
         this.customer = customer;
         this.accountType = new AccountTypeEntity(accountType.getValue());
-        this.office = customer.getOffice();
-        this.personnel = customer.getPersonnel();
+        if (customer != null) {
+            this.office = customer.getOffice();
+            this.personnel = customer.getPersonnel();
+        }
         this.setAccountState(new AccountStateEntity(accountState));
         this.offsettingAllowable = new Integer(1);
         this.setCreateDetails();
