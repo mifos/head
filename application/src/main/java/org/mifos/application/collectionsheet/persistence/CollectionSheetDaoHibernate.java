@@ -26,6 +26,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
@@ -131,7 +133,40 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
             }
         }
 
+        addInformationAboutActiveLoans(allLoanRepaymentsGroupedByCustomerId, queryParameters);
+
         return allLoanRepaymentsGroupedByCustomerId;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void addInformationAboutActiveLoans(Map<Integer, List<CollectionSheetCustomerLoanDto>> allLoanRepaymentsGroupedByCustomerId, Map<String, Object> queryParameters) {
+        final List<CollectionSheetCustomerLoanDto> activeLoans = executeNamedQueryWithResultTransformer(
+                "findActiveLoansforCustomerHierarchyAsDto", queryParameters, CollectionSheetCustomerLoanDto.class);
+
+        for (CollectionSheetCustomerLoanDto customerLoan : activeLoans) {
+
+            final Integer customerId = customerLoan.getCustomerId();
+
+            if (allLoanRepaymentsGroupedByCustomerId.containsKey(customerId)) {
+                final List<CollectionSheetCustomerLoanDto> loansForCustomer = allLoanRepaymentsGroupedByCustomerId
+                        .get(customerId);
+                Comparator<CollectionSheetCustomerLoanDto> comparator = new Comparator<CollectionSheetCustomerLoanDto>() {
+
+                    @Override
+                    public int compare(CollectionSheetCustomerLoanDto cseDto1, CollectionSheetCustomerLoanDto cseDto2) {
+                        return cseDto1.getAccountId().compareTo(cseDto2.getAccountId());
+                    }
+                };
+                Collections.sort(loansForCustomer, comparator);
+                if (Collections.binarySearch(loansForCustomer, customerLoan, comparator) < 0) {
+                    loansForCustomer.add(customerLoan);
+                }
+            } else {
+                final List<CollectionSheetCustomerLoanDto> customerLoansForCustomer = new ArrayList<CollectionSheetCustomerLoanDto>();
+                customerLoansForCustomer.add(customerLoan);
+                allLoanRepaymentsGroupedByCustomerId.put(customerId, customerLoansForCustomer);
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")

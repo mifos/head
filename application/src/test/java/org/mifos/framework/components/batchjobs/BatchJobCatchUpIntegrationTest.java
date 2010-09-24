@@ -147,7 +147,7 @@ public class BatchJobCatchUpIntegrationTest extends MifosIntegrationTestCase {
         }
 
         mifosScheduler.runIndividualTask(jobName);
-        Thread.sleep(1500);
+        Thread.sleep(5000);
 
         jobInstances = explorer.getJobInstances(jobName, 0, 10);
         Assert.assertEquals(4, jobInstances.size());

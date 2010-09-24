@@ -39,7 +39,6 @@ import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.savings.business.SavingsTransactionActivityHelper;
 import org.mifos.accounts.savings.business.SavingsTransactionActivityHelperImpl;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
@@ -59,7 +58,6 @@ public class SavingsAccountBuilder {
     private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
     private final Date createdDate = new DateTime().minusDays(14).toDate();
 
-    private final AccountTypes accountType = AccountTypes.SAVINGS_ACCOUNT;
     private AccountState accountState = AccountState.SAVINGS_ACTIVE;
     private CustomerBO customer;
     private final Integer offsettingAllowable = Integer.valueOf(1);
@@ -76,15 +74,14 @@ public class SavingsAccountBuilder {
     private SavingsPaymentStrategy savingsPaymentStrategy = new SavingsPaymentStrategyImpl(
             savingsTransactionActivityHelper);
     private Set<AccountActionDateEntity> scheduledPayments = new LinkedHashSet<AccountActionDateEntity>();
-    private PersonnelBO savingsOfficer;
     private List<Holiday> holidays = new ArrayList<Holiday>();
 
     public SavingsBO build() {
 
         final SavingsBO savingsBO = new SavingsBO(savingsProduct, savingsType, savingsBalanceAmount,
                 savingsPaymentStrategy, savingsTransactionActivityHelper, scheduledPayments, interestRate,
-                interestCalcType, accountType, accountState, customer, offsettingAllowable,
-                scheduleForInterestCalculation, recommendedAmountUnit, recommendedAmount, savingsOfficer, createdDate,
+                interestCalcType, accountState, customer, offsettingAllowable,
+                scheduleForInterestCalculation, recommendedAmountUnit, recommendedAmount, createdDate,
                 createdByUserId, holidays);
         savingsBO.setCustomerPersistence(customerDao);
 
@@ -158,7 +155,7 @@ public class SavingsAccountBuilder {
     }
 
     public SavingsAccountBuilder withSavingsOfficer(final PersonnelBO withSavingsOfficer) {
-        this.savingsOfficer = withSavingsOfficer;
+        customer.setPersonnel(withSavingsOfficer);
         return this;
     }
 

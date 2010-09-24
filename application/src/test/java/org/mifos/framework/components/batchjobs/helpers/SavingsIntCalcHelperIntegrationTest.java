@@ -89,13 +89,14 @@ public class SavingsIntCalcHelperIntegrationTest extends MifosIntegrationTestCas
 
     private SavingsTestHelper helper = new SavingsTestHelper();
 
-    private MifosCurrency currency = Configuration.getInstance().getSystemConfig().getCurrency();
+    private MifosCurrency currency;
 
     SavingsPersistence persistence = new SavingsPersistence();
 
     @Before
     public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
+        currency = Configuration.getInstance().getSystemConfig().getCurrency();
     }
 
     @After

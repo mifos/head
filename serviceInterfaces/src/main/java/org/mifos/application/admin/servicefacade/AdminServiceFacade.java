@@ -21,6 +21,7 @@
 package org.mifos.application.admin.servicefacade;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.mifos.dto.domain.AcceptedPaymentTypeDto;
 import org.mifos.dto.domain.AuditLogDto;
@@ -158,4 +159,6 @@ public interface AdminServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     ReportCategoryDto retrieveReportCategory(Integer reportCategoryId);
+
+    Locale retreiveLocaleFromConfiguration();
 }
