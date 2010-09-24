@@ -47,7 +47,6 @@ explanation of the license and how it is applied.
                 <script>
                 function fun_cancel(form)
                 {
-
                     form.action="custSearchAction.do";
                     form.method.value="loadMainSearch";
                     form.submit();
@@ -357,6 +356,10 @@ explanation of the license and how it is applied.
 									<br>
 										<tr>
 											<td align="center">
+												<html-el:submit styleId="schedulePreview.button.validate" property="validateBtn" styleClass="buttn" >
+													<mifos:mifoslabel name="loan.validate" />
+												</html-el:submit>
+												&nbsp;
 												<html-el:submit styleId="schedulePreview.button.preview" property="previewBtn" styleClass="buttn" >
 													<mifos:mifoslabel name="loan.preview" />
 												</html-el:submit>
