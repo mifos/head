@@ -57,6 +57,15 @@ public class SurveyUtils {
         survey.setQuestions(surveyQuestions);
         return survey;
     }
+    public static Survey getSurvey(String surveyName, String questionTitle, Date dateofCreation, SurveyType surveyType) {
+        Survey survey = new Survey(surveyName, SurveyState.ACTIVE, surveyType);
+        survey.setDateOfCreation(dateofCreation);
+        List<SurveyQuestion> surveyQuestions = new ArrayList<SurveyQuestion>();
+        surveyQuestions.add(getSurveyQuestion(questionTitle, survey));
+        survey.setQuestions(surveyQuestions);
+        return survey;
+    }
+
 
     private static SurveyQuestion getSurveyQuestion(String questionTitle, Survey survey) {
         SurveyQuestion surveyQuestion = new SurveyQuestion();
