@@ -101,32 +101,32 @@
             [#else]
                 <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
             [/#if]
-            <span style="float:right">
+            <span class="move orderCenter">
                 <a href="javascript:CreateQuestionGroup.moveSectionUp('${section.name}')">
                     <img src="pages/framework/images/smallarrowtop.gif" width="11" height="11">
                 </a>&nbsp
                 <a href="javascript:CreateQuestionGroup.moveSectionDown('${section.name}')">
                     <img src="pages/framework/images/smallarrowdown.gif" width="11" height="11">
-                </a>&nbsp
+                </a>
             </span>
         </div>
         <table class="table_common" id="sections.table" name="sections.table">
             <thead>
             <tr>
                 <th class="name" >[@spring.message "questionnaire.question.name"/]</th>
-                <th class="mandatory" style="text-align:center">[@spring.message "questionnaire.question.mandatory"/]</th>
-                <th class="remove">[@spring.message "questionnaire.question.delete"/]</th>
-                <th>[@spring.message "questionnaire.question.move"/]</th>
+                <th class="mandatory orderCenter">[@spring.message "questionnaire.question.mandatory"/]</th>
+                <th class="remove orderCenter">[@spring.message "questionnaire.question.delete"/]</th>
+                <th class="order orderCenter">[@spring.message "questionnaire.question.order"/]</th>
             </tr>
             </thead>
             <tbody>
             [#list section.sectionQuestions as sectionQuestion]
             <tr>
                 <td class="name">${sectionQuestion.title}</td>
-                <td align="center" valign="center" class="mandatory" style="text-align:center">
+                <td align="center" valign="center" class="mandatory orderCenter">
                     [@mifosmacros.formCheckbox "questionGroupForm.sections[${section_index}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
                 </td>
-                <td class="remove">
+                <td class="remove orderCenter">
                     [#assign questionRemovable = false]
                     [#list questionGroupForm.questionsToAdd as questionToAdd]
                         [#if sectionQuestion.questionId == questionToAdd]
@@ -140,7 +140,7 @@
                         <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
                     [/#if]
                 </td>
-                <td class="move">
+                <td class="order orderCenter">
                     <a href="javascript:CreateQuestionGroup.moveQuestionUp('${section.name}','${sectionQuestion.questionId}')">
                         <img src="pages/framework/images/smallarrowtop.gif" width="11" height="11">
                     </a>&nbsp
