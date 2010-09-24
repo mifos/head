@@ -30,9 +30,10 @@ import org.springframework.web.servlet.i18n.AbstractLocaleResolver;
 
 public class MifosLocaleResolver extends AbstractLocaleResolver {
 
-    private AdminServiceFacade adminServiceFacade;
+    private final AdminServiceFacade adminServiceFacade;
 
-    public MifosLocaleResolver(AdminServiceFacade adminServiceFacade) {
+    public MifosLocaleResolver(final AdminServiceFacade adminServiceFacade) {
+        super();
         this.adminServiceFacade = adminServiceFacade;
     }
 
