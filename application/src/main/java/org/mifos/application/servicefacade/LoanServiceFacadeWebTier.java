@@ -334,10 +334,10 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         LoanBO loan = assembleLoan(userContext, customer, disbursementDate, fund,
                 isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay, loanActionForm);
 
-        List<RepaymentScheduleInstallment> installments = loan.toRepaymentScheduleDto();
+        List<RepaymentScheduleInstallment> installments = loan.toRepaymentScheduleDto(userContext.getPreferredLocale());
 
         if (isRepaymentIndependentOfMeetingEnabled) {
-            Date firstRepaymentDate = installments.get(0).getDueDate();
+            Date firstRepaymentDate = installments.get(0).getDueDateValue();
 
             Integer minDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(
                     MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
@@ -423,10 +423,10 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                 isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay);
         loan.setExternalId(externalId);
 
-        List<RepaymentScheduleInstallment> installments = loan.toRepaymentScheduleDto();
+        List<RepaymentScheduleInstallment> installments = loan.toRepaymentScheduleDto(userContext.getPreferredLocale());
 
         if (isRepaymentIndependentOfMeetingEnabled) {
-            Date firstRepaymentDate = installments.get(0).getDueDate();
+            Date firstRepaymentDate = installments.get(0).getDueDateValue();
 
             Integer minDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(
                     MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();

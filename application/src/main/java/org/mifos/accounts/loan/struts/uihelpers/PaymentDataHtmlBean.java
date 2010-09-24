@@ -47,8 +47,8 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
         this.paymentTypeId = PaymentTypes.CASH.getValue();
 
         long currentTime = new DateTimeService().getCurrentJavaDateTime().getTime();
-        this.date = DateUtils.getUserLocaleDate(locale, installment.getDueDate().toString());
-        if (installment.getDueDate().getTime() <= currentTime) {
+        this.date = DateUtils.getUserLocaleDate(locale, installment.getDueDateValue().toString());
+        if (installment.getDueDateValue().getTime() <= currentTime) {
             this.amount = installment.getTotal().toString();
         }
 

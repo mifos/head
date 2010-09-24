@@ -28,6 +28,8 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@ taglib uri="/tags/date" prefix="date"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
@@ -53,8 +55,17 @@ explanation of the license and how it is applied.
                 </script>
             </c:otherwise>
         </c:choose>
-        <SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+		<SCRIPT type="text/javascript" SRC="pages/framework/js/date.js"></SCRIPT>
+		<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+		<STYLE TYPE="text/css"><!-- @import url(pages/css/datepicker/datepicker.css); --></STYLE>
+		<script type="text/javascript" src="pages/js/jquery/jquery.datePicker.min-2.1.2.js"></script>
+		<script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
+		<script type="text/javascript" src="pages/js/jquery/jquery.validate.min.js"></script>
+		<script type="text/javascript" src="pages/js/datejs/date.js"></script>
+		<script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
+		<!--[if IE]><script type="text/javascript" src="pages/js/jquery/jquery.bgiframe.js"></script><![endif]-->
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
+		<script type="text/javascript" src="pages/application/loan/js/schedulePreview.js"></script>
         <html-el:form action="/loanAccountAction.do">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountOwner')}" var="customer" />
@@ -235,12 +246,51 @@ explanation of the license and how it is applied.
                                                     </tr>
                                                     <tr>
                                                     <c:if test="${requestScope.perspective != 'redoLoan'}">
-                                                    <td valign="top" align="center">
-                                                        <mifoscustom:mifostabletag source="repaymentScheduleInstallments"
-                                                                scope="session" xmlFileName="ProposedRepaymentSchedule.xml"
-                                                                moduleName="org/mifos/accounts/loan/util/resources" passLocale="true"/>
-                                                    </td>
+                                                		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentScheduleInstallments')}" var="repaymentScheduleInstallments" />
+                                                        <td valign="top" align="center">
+                                                            <table width="100%" border="0" cellpadding="3" cellspacing="0">
+                                                            <tr  class="drawtablerowbold"  >
+                                                                <td width="10%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.installments" /></b></td>
+                                                                <td width="22%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.duedate" /></b></td>
+                                                                <td width="17%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.principal" /></b></td>
+                                                                <td width="17%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.interest" /></b></td>
+                                                                <td width="17%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.fees" /></b></td>
+                                                                <td width="17%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.total" /></b></td>
+                                                            </tr>
+                                                            <c:forEach var="installment" items="${repaymentScheduleInstallments}" varStatus="loopStatus">
+                                                            <tr>
+                                                                <td class="drawtablerow" align="center">
+                                                                    <c:out value="${installment.installment}" />
+                                                                </td>
+                                                                <td class="drawtablerow" align="center">
+                                                                    <mifos:mifosalphanumtext styleId="installment.input.dueDate" styleClass="date-pick" name="installment" property="dueDate" maxlength="10" />
+                                                                </td>
+                                                                <td class="drawtablerow" align="center">
+                                                                    <c:out value="${installment.principal}" />
+                                                                </td>
+                                                                <td class="drawtablerow" align="center">
+                                                                    <c:out value="${installment.interest}" />
+                                                                </td>
+                                                                <td class="drawtablerow" align="center">
+                                                                    <c:out value="${installment.fees}" />
+                                                                </td>
+                                                                <td class="drawtablerow" align="center">
+                                                                    <c:choose>
+                                                                        <c:when test="${loopStatus.index == (fn:length(repaymentScheduleInstallments) - 1)}">
+                                                                            <c:out value="${installment.total}" />
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <html-el:text styleId="schedulePreview.input.loanAmount" name="installment" indexed="true" property="total" size="10" />
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </td>
+                                                            </tr>
+                                                            </c:forEach>
+                                                        </table>
+                                                        </td>
                                                     </c:if>
+                                                   </tr>
+                                                    <tr>
                                                     <c:if test="${requestScope.perspective == 'redoLoan'}">
                                                     <td valign="top" align="center">
                                                         <table width="100%" border="0" cellpadding="3" cellspacing="0">
@@ -292,10 +342,7 @@ explanation of the license and how it is applied.
                                                             </td>
                                                         </tr>
                                                         </c:forEach>
-                                                        
-                                                        
-                                                        
-                                                        </table>
+                                                    </table>
                                                     </td>
                                                     </c:if>
 													</tr>

@@ -144,7 +144,11 @@ public class DateUtils {
         }
     }
 
-    public static java.util.Date getDate(String value) {
+    public static Date getDate(String value) {
+        return getDate(value, dateLocale);
+    }
+
+    public static Date getDate(String value, Locale dateLocale) {
         if (value != null && !value.equals("")) {
             try {
                 String formatStr = "dd" + dateSeparator + "MM" + dateSeparator + "yyyy";

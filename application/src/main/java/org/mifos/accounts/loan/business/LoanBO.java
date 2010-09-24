@@ -123,6 +123,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Locale;
 import java.util.Set;
 
 public class LoanBO extends AccountBO {
@@ -4168,13 +4169,13 @@ public class LoanBO extends AccountBO {
         return false;
     }
 
-    public List<RepaymentScheduleInstallment> toRepaymentScheduleDto() {
+    public List<RepaymentScheduleInstallment> toRepaymentScheduleDto(Locale userLocale) {
 
         List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
 
         for (AccountActionDateEntity actionDate : this.getAccountActionDates()) {
             LoanScheduleEntity loanSchedule = (LoanScheduleEntity) actionDate;
-            installments.add(loanSchedule.toDto());
+            installments.add(loanSchedule.toDto(userLocale));
         }
 
         Collections.sort(installments, new Comparator<RepaymentScheduleInstallment>() {

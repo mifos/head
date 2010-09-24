@@ -20,20 +20,7 @@
 
 package org.mifos.accounts.loan.struts.uihelpers;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
-
-import java.util.Date;
-import java.util.Locale;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.loan.struts.action.LoanAccountAction;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -46,6 +33,18 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.Date;
+import java.util.Locale;
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
 
 public class LoanUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
 
@@ -106,7 +105,7 @@ public class LoanUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         repaymentScheduleInstallment.setLocale(new Locale("1"));
 
         Money m = new Money(getCurrency(), "100");
-       Assert.assertEquals("Due date", new Date(l), repaymentScheduleInstallment.getDueDate());
+       Assert.assertEquals("Due date", new Date(l), repaymentScheduleInstallment.getDueDateValue());
        Assert.assertEquals("fees", m, repaymentScheduleInstallment.getFees());
        Assert.assertEquals("Installment","10", repaymentScheduleInstallment.getInstallment().toString());
        Assert.assertEquals("Interest", m, repaymentScheduleInstallment.getFees());

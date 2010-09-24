@@ -20,18 +20,18 @@
 
 package org.mifos.accounts.loan.util.helpers;
 
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
-
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
 
 public class RepaymentScheduleInstallment implements Serializable {
 
     private Integer installment;
 
-    private java.util.Date dueDate;
+    private java.util.Date dueDateValue;
 
     private Money principal;
 
@@ -45,10 +45,10 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     private Locale locale;
 
-    public RepaymentScheduleInstallment(int installment, Date dueDate, Money principal, Money interest, Money fees,
+    public RepaymentScheduleInstallment(int installment, Date dueDateValue, Money principal, Money interest, Money fees,
             Money miscFees, Money miscPenalty) {
         this.installment = installment;
-        this.dueDate = dueDate;
+        this.dueDateValue = dueDateValue;
         this.principal = principal;
         this.interest = interest;
         this.fees = fees;
@@ -60,8 +60,8 @@ public class RepaymentScheduleInstallment implements Serializable {
         this.installment = installment;
     }
 
-    public void setDueDate(java.util.Date dueDate) {
-        this.dueDate = dueDate;
+    public void setDueDateValue(java.util.Date dueDateValue) {
+        this.dueDateValue = dueDateValue;
     }
 
     public void setPrincipal(Money principal) {
@@ -80,8 +80,8 @@ public class RepaymentScheduleInstallment implements Serializable {
         return installment;
     }
 
-    public java.util.Date getDueDate() {
-        return dueDate;
+    public java.util.Date getDueDateValue() {
+        return dueDateValue;
     }
 
     public Money getPrincipal() {
@@ -101,7 +101,7 @@ public class RepaymentScheduleInstallment implements Serializable {
     }
 
     public String getDueDateInUserLocale() {
-        return DateUtils.getDBtoUserFormatString(getDueDate(), getLocale());
+        return DateUtils.getDBtoUserFormatString(getDueDateValue(), getLocale());
 
     }
 
@@ -129,4 +129,11 @@ public class RepaymentScheduleInstallment implements Serializable {
         this.miscPenalty = miscPenalty;
     }
 
+    public String getDueDate() {
+        return DateUtils.getUserLocaleDate(locale, dueDateValue);
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDateValue = DateUtils.getDate(dueDate, locale);
+    }
 }

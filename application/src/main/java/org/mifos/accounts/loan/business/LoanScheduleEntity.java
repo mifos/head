@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class LoanScheduleEntity extends AccountActionDateEntity {
@@ -453,7 +454,10 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return sortedList;
     }
 
-    public RepaymentScheduleInstallment toDto() {
-        return new RepaymentScheduleInstallment(this.installmentId, this.actionDate, this.principal, this.interest, this.getTotalFeeDue(), this.miscFee, this.miscPenalty);
+    public RepaymentScheduleInstallment toDto(Locale userLocale) {
+        RepaymentScheduleInstallment repaymentScheduleInstallment = new RepaymentScheduleInstallment(this.installmentId,
+                this.actionDate, this.principal, this.interest, this.getTotalFeeDue(), this.miscFee, this.miscPenalty);
+        repaymentScheduleInstallment.setLocale(userLocale);
+        return repaymentScheduleInstallment;
     }
 }
