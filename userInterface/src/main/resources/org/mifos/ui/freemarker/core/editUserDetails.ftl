@@ -60,7 +60,7 @@ function selectAllOptions(outSel)
 
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
  <!--  Main Content Begins-->
-  <div class="content marginAuto">
+  <div class="content definePageMargin">
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-6 arrowIMG1 orangeheading ">[@spring.message "systemUsers.defineNewSystemUser.chooseOffice"/]</p>
@@ -75,136 +75,285 @@ function selectAllOptions(outSel)
         <form name="enterUserDetails" method="post" action="user.ftl?execution=${flowExecutionKey}">
         	<div id="allErrorsDiv" class="allErrorsDiv">
             	[@mifosmacros.showAllErrors "userFormBean.*"/]
-        	</div>
-        	<div class="fontBold">[@spring.message "systemUsers.preview.office" /]</div>
+        	</div>	<div class="fontBold">[@spring.message "systemUsers.preview.office" /]</div>
 	        [@spring.formHiddenInput "userFormBean.officeId" /]
-	        <div><span>[@spring.message "systemUsers.defineNewSystemUser.form.office" /]:</span>
+	        <div class="marginTop15"><span class="fontBold">[@spring.message "systemUsers.defineNewSystemUser.form.office" /]&nbsp;:</span>
 	        <span>${userFormBean.officeName}</span></div>
 	        
-	        <div class="fontBold">[@spring.message "systemUsers.preview.userdetails" /]</div>
-	        <label for="firstName"><span class="red">*</span>[@spring.message "systemUsers.preview.firstName" /]:</label>
-	        [@spring.formInput "userFormBean.firstName" /]<br />
+	        <div class="marginTop15"><span class="fontBold">[@spring.message "systemUsers.preview.userdetails" /]</span></div>
+	        <div class="prepend-1  span-21 last marginTop15">
+	        	        
+			        <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="firstName"><span class="red">*</span>[@spring.message "systemUsers.preview.firstName" /]:</label>
+	        			</span>
+	        			<span>
+	        				[@spring.formInput "userFormBean.firstName" /]
+	        			</span>
+	        		</div>
 	        
-	        <label for="middleName">[@spring.message "systemUsers.preview.middleName" /]:</label>
-	        [@spring.formInput "userFormBean.middleName" /] <br />
+	                <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="middleName">[@spring.message "systemUsers.preview.middleName" /]:</label>
+	        			</span>
+	        			<span>
+	        				[@spring.formInput "userFormBean.middleName" /]
+	        			</span>
+	        		</div>
 	        
-	        <label for="secondLastName">[@spring.message "systemUsers.preview.secondLastName" /]:</label>
-	        [@spring.formInput "userFormBean.secondLastName" /]<br />
+	                <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="secondLastName">[@spring.message "systemUsers.preview.secondLastName" /]:</label>
+	        			</span>
+	        			<span>
+	        				[@spring.formInput "userFormBean.secondLastName" /]
+	        			</span>
+	        		</div>
 	        
-	        <label for="lastName"><span class="red">*</span>[@spring.message "systemUsers.preview.lastName" /]:</label>
-	        [@spring.formInput "userFormBean.lastName" /]<br />
+	                <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="lastName"><span class="red">*</span>[@spring.message "systemUsers.preview.lastName" /]:</label>
+	        			</span>
+	        			<span>
+	        				[@spring.formInput "userFormBean.lastName" /]
+	        			</span>
+	        		</div>
 	        
-	        <label for="governmentId">[@spring.message "systemUsers.preview.governmentID" /]:</label>
-	        <span>${userFormBean.governmentId}</span><br />
+	                <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="governmentId">[@spring.message "systemUsers.preview.governmentID" /]:</label>
+	        			</span>
+	        			<span>
+	        				<span>${userFormBean.governmentId}</span>
+	        			</span>
+	        		</div>
 	        
-	        <label for="email">[@spring.message "systemUsers.preview.email" /]:</label>
-	        [@spring.formInput "userFormBean.email" /]<br />
+	                <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="email">[@spring.message "systemUsers.preview.email" /]:</label>
+	        			</span>
+	        			<span>
+	        				[@spring.formInput "userFormBean.email" /]
+	        			</span>
+	        		</div>
 	        
-	        <div>
-	        	<span><span class="red">*</span>[@spring.message "systemUsers.preview.dateofBirth" /]:</span>
-	        	<span>${userFormBean.dateOfBirth}</span>
-	        </div>
+	                <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<span class="red">*</span>[@spring.message "systemUsers.preview.dateofBirth" /]:</span>
+	        				<span>${userFormBean.dateOfBirth}</span>
+	        			</span>
+	        		</div>
 	        
-	        <label for="selectedMaritalStatus">[@spring.message "systemUsers.preview.maritalStatus" /]:</label>
-	        [@mifos.formSingleSelectWithPrompt "userFormBean.selectedMaritalStatus", userFormBean.maritalStatusOptions, "--select one--" /]<br />
+	                <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="selectedMaritalStatus">[@spring.message "systemUsers.preview.maritalStatus" /]:</label>
+	        			</span>
+	        			<span>
+	        				[@mifos.formSingleSelectWithPrompt "userFormBean.selectedMaritalStatus", userFormBean.maritalStatusOptions, "--select one--" /]
+	        			</span>
+	        		</div>
 	        
-	        <label for="selectedGender"><span class="red">*</span>[@spring.message "systemUsers.preview.gender" /]:</label>
-	        [@mifos.formSingleSelectWithPrompt "userFormBean.selectedGender", userFormBean.genderOptions, "--select one--" /]<br />
+	                <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="selectedGender"><span class="red">*</span>[@spring.message "systemUsers.preview.gender" /]:</label>
+	        			</span>
+	        			<span>
+	        				[@mifos.formSingleSelectWithPrompt "userFormBean.selectedGender", userFormBean.genderOptions, "--select one--" /]
+	        			</span>
+	        		</div>
 	        
-	        <label for="selectedPreferredLanguage">[@spring.message "systemUsers.preview.languagePreferred" /]:</label>
-	        [@mifos.formSingleSelectWithPrompt "userFormBean.selectedPreferredLanguage", userFormBean.preferredLanguageOptions, "--select one--" /]<br />
+	                <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="selectedPreferredLanguage">[@spring.message "systemUsers.preview.languagePreferred" /]:</label>
+	        			</span>
+	        			<span>
+	        				[@mifos.formSingleSelectWithPrompt "userFormBean.selectedPreferredLanguage", userFormBean.preferredLanguageOptions, "--select one--" /]
+	        			</span>
+	        		</div>
 	        
-	         <div>
-	        	<span>[@spring.message "systemUsers.preview.mFIJoiningDate" /]:</span>
-	        	<span>${userFormBean.mfiJoiningDate}</span>
+	                 <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<span>[@spring.message "systemUsers.preview.mFIJoiningDate" /]:</span>
+	        			</span>
+	        			<span>
+	        				<span>${userFormBean.mfiJoiningDate}</span>
+	        			</span>
+	        		</div>
 	        </div>
 	        
 	        <div class="fontBold">[@spring.message "systemUsers.preview.address" /]</div>
 	        
-	        <label for="address.address1">[#if userFormBean.address.address1Mandatory]<span class="red">*</span>[/#if][@spring.message "systemUsers.preview.address1" /]:</label>
-	        [@spring.formInput "userFormBean.address.address1" /]<br />
+	        <div class="prepend-1  span-21 last marginTop15">
+	        	        
+			        <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="address.address1">[#if userFormBean.address.address1Mandatory]<span class="red">*</span>[/#if][@spring.message "systemUsers.preview.address1" /]:</label>
+	        			</span>
+	        			<span>
+	        				[@spring.formInput "userFormBean.address.address1" /]
+	        			</span>
+	        		</div>
 	        
 	        [#if userFormBean.address.address2Hidden]
 	        	[@spring.formHiddenInput "userFormBean.address.address2" /]
 	        [#else]
-	        	<label for="address.address2">[@spring.message "systemUsers.preview.address2" /]:</label>
-	        	[@spring.formInput "userFormBean.address.address2" /]<br />
+	        	   <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="address.address2">[@spring.message "systemUsers.preview.address2" /]:</label>
+	        			</span>
+	        			<span>
+	        				[@spring.formInput "userFormBean.address.address2" /]
+	        			</span>
+	        		</div>
 	        [/#if]
 
 	         [#if userFormBean.address.address3Hidden]
 	        	[@spring.formHiddenInput "userFormBean.address.address3" /]
 	        [#else]	        
-	        	<label for="address.address3">[@spring.message "systemUsers.preview.address3" /]:</label>
-	        	[@spring.formInput "userFormBean.address.address3" /]<br />
+	        	   <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="address.address3">[@spring.message "systemUsers.preview.address3" /]:</label>
+	        			</span>
+	        			<span>
+	        				[@spring.formInput "userFormBean.address.address3" /]
+	        			</span>
+	        		</div>
 	        [/#if]
 	        
 	        [#if userFormBean.address.cityDistrictHidden]
 	        	[@spring.formHiddenInput "userFormBean.address.cityDistrict" /]
 	        [#else]	        
-	        <label for="address.city">[@spring.message "systemUsers.preview.city" /]:</label>
-	        [@spring.formInput "userFormBean.address.cityDistrict" /]<br />
+	                <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="address.city">[@spring.message "systemUsers.preview.city" /]:</label>
+	        			</span>
+	        			<span>
+	        				[@spring.formInput "userFormBean.address.cityDistrict" /]
+	        			</span>
+	        		</div>
 	        [/#if]
 	        
 	        [#if userFormBean.address.stateHidden]
 	        	[@spring.formHiddenInput "userFormBean.address.state" /]
 	        [#else]
-	        <label for="address.state">[@spring.message "systemUsers.preview.state" /]:</label>
-	        [@spring.formInput "userFormBean.address.state" /]<br />
+	                <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="address.state">[@spring.message "systemUsers.preview.state" /]:</label>
+	        			</span>
+	        			<span>
+	        				[@spring.formInput "userFormBean.address.state" /]
+	        			</span>
+	        		</div>
 	        [/#if]
 	        
 	        [#if userFormBean.address.countryHidden]
 	        	[@spring.formHiddenInput "userFormBean.address.country" /]
 	        [#else]
-	        <label for="address.country">[@spring.message "systemUsers.preview.country" /]:</label>
-	        [@spring.formInput "userFormBean.address.country" /]<br />
+	                <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="address.country">[@spring.message "systemUsers.preview.country" /]:</label>
+	        			</span>
+	        			<span>
+	        				[@spring.formInput "userFormBean.address.country" /]
+	        			</span>
+	        		</div>
 	        [/#if]
 	        
 	        [#if userFormBean.address.postalCodeHidden]
 	        	[@spring.formHiddenInput "userFormBean.address.postalCode" /]
 	        [#else]
-	        <label for="address.postalcode">[@spring.message "systemUsers.preview.postalcode" /]:</label>
-	        [@spring.formInput "userFormBean.address.postalCode" /]<br />
+	                <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="address.postalcode">[@spring.message "systemUsers.preview.postalcode" /]:</label>
+	        			</span>
+	        			<span>
+	        				[@spring.formInput "userFormBean.address.postalCode" /]
+	        			</span>
+	        		</div>
 	        [/#if]
 	        
-	        <label for="address.telephone">[@spring.message "systemUsers.preview.telephone" /]:</label>
-	        [@spring.formInput "userFormBean.address.telephoneNumber" /]<br />
+	                <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+	        				<label for="address.telephone">[@spring.message "systemUsers.preview.telephone" /]:</label>
+	        			</span>
+	        			<span>
+	        				[@spring.formInput "userFormBean.address.telephoneNumber" /]
+	        			</span>
+	        		</div>
+	        	</div>
 	        
 	        <div class="fontBold">[@spring.message "systemUsers.preview.permissions" /]</div>
-	        <label for="userTitle">[@spring.message "systemUsers.preview.userTitle" /]:</label>
-	        [@mifos.formSingleSelectWithPrompt "userFormBean.selectedUserTitle", userFormBean.userTitleOptions, "--select one--" /]<br />
 	        
-	        <label for="userTitle"><span class="red">*</span>[@spring.message "systemUsers.preview.userHierarchy" /]:</label>
-	        [@mifos.formSingleSelectWithPrompt "userFormBean.selectedUserHierarchy", userFormBean.userHierarchyOptions, "--select one--" /]<br />
+	        <div class="prepend-1  span-21 last marginTop15">	        	        
+			        <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+			        		<label for="userTitle">[@spring.message "systemUsers.preview.userTitle" /]:</label>
+			        	</span>
+			        	<span>
+	        				[@mifos.formSingleSelectWithPrompt "userFormBean.selectedUserTitle", userFormBean.userTitleOptions, "--select one--" /]
+	        			</span>
+	        		</div>
 	        
-          	<div class="span-23">
-            	<span class="span-12 ">
-                	<span class="span-8">[@spring.message "systemUsers.preview.roles" /]</span>
-                    <span class="span-4">
-            			[@spring.formMultiSelect "userFormBean.availableRoles", userFormBean.availableRolesOptions, "class=listSize" /]
-					</span>
-                    <span class="span-3">
-                    	<br />
-                    	<input class="buttn2" name="add" type="button" id="roles.button.add"  value="Add >>" onclick="moveOptions(this.form.availableRoles, this.form.selectedRoles);" />
-                    	<br /><br />
-						<input class="buttn2" name="remove" type="button" value="<< Remove" onclick="moveOptions(this.form.selectedRoles, this.form.availableRoles);" />
-					</span>
-					<span class="span-4">
-						[@spring.formMultiSelect "userFormBean.selectedRoles", userFormBean.selectedRolesOptions, "class=listSize" /]
-					</span>
-               	</span>
-            </div>
+	               <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+			        		<label for="userTitle"><span class="red">*</span>[@spring.message "systemUsers.preview.userHierarchy" /]:</label>
+			        	</span>
+			        	<span>
+	        				[@mifos.formSingleSelectWithPrompt "userFormBean.selectedUserHierarchy", userFormBean.userHierarchyOptions, "--select one--" /]
+	        			</span>
+	        		</div>
+	        
+          			<div class="span-21 prepend-2 ">          			
+			        	<span class="span-2">[@spring.message "systemUsers.preview.roles" /]</span>
+                    	<span class="span-4">
+            				[@spring.formMultiSelect "userFormBean.availableRoles", userFormBean.availableRolesOptions, "class=listSize" /]
+						</span>
+                    	<span class="span-3">
+	                    	<br />
+                    		<input class="buttn2" name="add" type="button" id="roles.button.add"  value="Add >>" onclick="moveOptions(this.form.availableRoles, this.form.selectedRoles);" />
+                    		<br /><br />
+							<input class="buttn2" name="remove" type="button" value="<< Remove" onclick="moveOptions(this.form.selectedRoles, this.form.availableRoles);" />
+						</span>
+						<span class="span-4">
+							[@spring.formMultiSelect "userFormBean.selectedRoles", userFormBean.selectedRolesOptions, "class=listSize" /]
+						</span>
+               		</span>
+            	</div>
+	        </div>
 	        
 	        <div class="fontBold">[@spring.message "systemUsers.preview.logininfo" /]</div>
-	        <label for="username"><span class="red">*</span>[@spring.message "systemUsers.preview.userName" /]:</label>
-	        [@spring.formInput "userFormBean.username" /]<br />
 	        
-	        <label for="password"><span class="red">*</span>[@spring.message "systemUsers.preview.password" /]:</label>
-	        [@spring.formPasswordInput "userFormBean.password" /]<br />
+	        <div class="prepend-1  span-21 last marginTop15">	        	        
+			        <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+			        		<label for="username"><span class="red">*</span>[@spring.message "systemUsers.preview.userName" /]:</label>
+			        	</span>
+			        	<span>
+	        				[@spring.formInput "userFormBean.username" /]
+	        			</span>
+	        		</div>
 	        
-	        <label for="confirmedPassword"><span class="red">*</span>[@spring.message "systemUsers.preview.confirmedPassword" /]:</label>
-	        [@spring.formPasswordInput "userFormBean.confirmedPassword" /]<br />
+	                <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+			        		<label for="password"><span class="red">*</span>[@spring.message "systemUsers.preview.password" /]:</label>
+			        	</span>
+			        	<span>
+	        				[@spring.formPasswordInput "userFormBean.password" /]
+	        			</span>
+	        		</div>
 	        
-	        <div class="fontBold">[@spring.message "systemUsers.preview.additionalInformation" /]</div>
+	                <div class="span-21 prepend-2 ">
+			        	<span class="span-4 rightAlign">
+			        		<label for="confirmedPassword"><span class="red">*</span>[@spring.message "systemUsers.preview.confirmedPassword" /]:</label>
+			        	</span>
+			        	<span>
+	        				[@spring.formPasswordInput "userFormBean.confirmedPassword" /]
+	        			</span>
+	        		</div>
+	        
+	        <div class="prepend-1  span-21 last marginTop15">
+            	<div class="span-21 prepend-2 ">
+            		<span class="span-4 rightAlign">[@spring.message "systemUsers.preview.additionalInformation" /]</span>
 	        [#assign fieldNumber = 0]
 	        [#assign dateFieldNumber = 0]
 	        [#list userFormBean.customFields as additional]
@@ -233,6 +382,14 @@ function selectAllOptions(outSel)
 	        	[/#switch]
 	        	[#assign fieldNumber = fieldNumber + 1]
 	        [/#list]
+	        		</span>
+				 </div>
+			</div>
+			
+			<div class="clear">&nbsp;</div>
+				<hr />
+			<div class="clear">&nbsp;</div>
+			
 	        <div class="prepend-8">
 	        	<input class="buttn" type="submit" id="preview" name="_eventId_preview" value="Preview" onclick="selectAllOptions(this.form.selectedRoles);selectAllOptions(this.form.availableRoles);" />
 	        	<input class="buttn2" type="submit" id="cancel" name="_eventId_cancel" value="Cancel" />

@@ -4,7 +4,7 @@
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Main Content Begins-->
-  <div class="content marginAuto">
+  <div class="content definePageMargin">
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-15 arrowIMG orangeheading">[@spring.message "datadisplayandrules.defineAdditionalFields.additionalfieldinformation" /]</p>

@@ -821,13 +821,13 @@ div.colborder {
 	background:#E5ECF9;
 }
 hr {
-	background:#ddd;
-	color:#ddd;
+	background:#D7DEEE;
+	color:#D7DEEE;
 	clear:both;
 	float:none;
 	width:800px;
 	height:.1em;
-	margin:0 0 1.45em;
+	margin:0 0 0.7em;
 	border:none;
 }
 hr.space {

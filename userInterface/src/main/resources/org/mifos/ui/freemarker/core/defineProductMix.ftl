@@ -63,7 +63,7 @@ function selectAllOptions(outSel)
   <div class="container">&nbsp;
   <!--  Main Content Begins-->
   <span id="page.id" title="createProductsMix" />
-  <div class="content marginAuto">
+  <div class="content definePageMargin">
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-15 arrowIMG orangeheading">[@spring.message "manageProducts.defineProductmix.productmixinformation"/]</p>

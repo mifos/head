@@ -127,7 +127,7 @@ function switchLoanInstallmentType()
 
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
    <!--  Main Content Begins-->
-  <div class="content marginAuto" style="margin-left: 5em;">
+  <div class="content definePageMargin">
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-17 arrowIMG orangeheading">[@spring.message "manageLoanProducts.defineLoanProduct.loanproductinformation" /]</p>

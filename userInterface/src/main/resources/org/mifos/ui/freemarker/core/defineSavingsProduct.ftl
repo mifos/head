@@ -33,7 +33,7 @@
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Main Content Begins-->
   <span id="page.id" title="CreateSavingsProduct" />
-  <div class="content marginAuto" style="margin-left:5em;">
+  <div class="content definePageMargin">
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-15 arrowIMG orangeheading">[@spring.message "manageProducts.defineSavingsProducts.savingsproductinformation" /]</p>

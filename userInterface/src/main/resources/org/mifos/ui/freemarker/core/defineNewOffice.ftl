@@ -13,7 +13,7 @@
   }
   </script>
  <!--  Main Content Begins-->
-  <div class="content marginAuto">
+  <div class="content definePageMargin">
     <div class="borders span-23">
       <div class="borderbtm span-23">
         <p class="span-18 arrowIMG orangeheading">[@spring.message "offices.defineNewOffice.officeinformation" /]</p>
