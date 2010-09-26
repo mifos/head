@@ -249,8 +249,8 @@
     </div>
 
     <div class="span-22 prepend-9">
-    	<input type="submit" class="buttn" name="submit" value="Submit"  />
-        <input type="Submit" class="buttn2" name="cancel" value="Cancel" onclick="location.href='admin.ftl'" />
+    	<input type="submit" class="buttn" name="SUBMIT" value="[@spring.message "submit"/]"/>
+        <input type="Submit" class="buttn2" name="CANCEL" value="[@spring.message "cancel"/]"/>
     </div>
    	</form> 
   </div><!--Main Content Ends-->

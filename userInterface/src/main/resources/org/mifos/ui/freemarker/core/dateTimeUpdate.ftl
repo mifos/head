@@ -3,10 +3,10 @@
 [#import "macros.ftl" as mifos]
 <html>
   <head>
-    <title>Date Time Update</title>
+    <title>[@spring.message "dateTimeUpdate"/]</title>
   </head>
   <body>
       <span id="page.id" title="DateTimeUpdate" />
-      Updating to time: <div id="DateTimeUpdate.text.result">${model.updateResult}</div>
+      [@spring.message "updatingToTime"/]&nbsp;: <div id="DateTimeUpdate.text.result">${model.updateResult}</div>
   [@mifos.footer /]
 

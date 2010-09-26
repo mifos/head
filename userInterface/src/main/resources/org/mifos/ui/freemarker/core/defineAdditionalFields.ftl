@@ -22,14 +22,14 @@
         <div class="prepend-3  span-21 last">
         	<div class="span-20 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.defineAdditionalFields.category" /]</span><span class="span-4">&nbsp;
    					<select name="select">
-      					<option >--Select--</option>
-                        <option >personnel</option>
-                        <option >office</option>
-                        <option >client</option>
-                        <option >group</option>
-                        <option >center</option>
-                        <option >loan</option>
-                        <option >savings</option>
+      					<option >[@spring.message "--select--"/]</option>
+                        <option >[@spring.message "datadisplayandrules.viewadditionalfields.personnel"/]</option>
+                        <option >[@spring.message "datadisplayandrules.viewadditionalfields.office"/]</option>
+                        <option >[@spring.message "datadisplayandrules.viewadditionalfields.client"/]</option>
+                        <option >[@spring.message "datadisplayandrules.viewadditionalfields.group"/]</option>
+                        <option >[@spring.message "datadisplayandrules.viewadditionalfields.center"/]</option>
+                        <option >[@spring.message "datadisplayandrules.viewadditionalfields.loan"/]</option>
+                        <option >[@spring.message "datadisplayandrules.viewadditionalfields.savings"/]</option>
 				    </select></span>
 			</div>
         	<div class="span-20 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.defineAdditionalFields.label" /]</span><span class="span-5">&nbsp;
@@ -40,9 +40,9 @@
   			</div>
             <div class="span-20 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.defineAdditionalFields.dataType" /]</span><span class="span-5">&nbsp;
    					<select name="select">
-      					<option >--Select--</option>
-                        <option >datadisplayandrules.defineAdditionalFields.numeric</option>
-                        <option >datadisplayandrules.defineAdditionalFields.text</option>
+      					<option >[@spring.message "--select--"/]</option>
+                        <option >[@spring.message "datadisplayandrules.defineAdditionalFields.numeric"/]</option>
+                        <option >[@spring.message "datadisplayandrules.defineAdditionalFields.text"/]</option>
 				    </select></span>
 			</div>
             <div class="span-20 "><span class="span-3 rightAlign">[@spring.message "datadisplayandrules.defineAdditionalFields.defaultValue" /]</span><span class="span-5">&nbsp;
@@ -53,8 +53,8 @@
         <div class="clear">&nbsp;</div>
         <hr />
         <div class="prepend-9">
-          <input class="buttn" type="button" id="define_additional_fields.button.preview" name="preview" value="Preview" onclick="#"/>
-          <input class="buttn2" type="button" id="define_additional_fields.button.cancel" name="cancel" value="Cancel" onclick="window.location='admin.ftl'"/>
+          <input class="buttn" type="button" id="define_additional_fields.button.preview" name="preview" value="[@spring.message "preview"/]"/>
+          <input class="buttn2" type="button" id="define_additional_fields.button.cancel" name="cancel" value="[@spring.message "cancel"/]"/>
         </div>
         <div class="clear">&nbsp;</div>
         </form>

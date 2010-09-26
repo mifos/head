@@ -37,7 +37,7 @@
         <hr />
         <div class="prepend-8">
         	<form method="post" action="user.ftl?execution=${flowExecutionKey}">
-	        	<input class="buttn2" type="submit" name="_eventId_cancel" value="Cancel" />
+	        	<input class="buttn2" type="submit" name="_eventId_cancel" value="[@spring.message "cancel"/]" />
 	        </form>
         </div>
       </div>

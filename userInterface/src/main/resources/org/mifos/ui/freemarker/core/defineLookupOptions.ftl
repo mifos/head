@@ -30,138 +30,138 @@
         <div class="prepend-1 span-19 last">
         	<div class="span-19 marginBottom"><span class="span-4 rightAlign">[@spring.message "dataDisplayAndRules.defineLookupOptions.salutation" /]&nbsp;:</span>
     				<span class="span-5"><select name="salutation" size="5" style="width:140px;">
-                    		<option>Ms</option>
-                            <option>Sir</option>
-                            <option>Mrs</option>
-                            <option>Mr</option>
-                            <option>Sri</option>
-                            <option>Frank</option>
-                            <option>Rev.</option>
-                            <option>Madam</option>
-                            <option>Cdr.</option>
+                    		<option>[@spring.message "dataDisplayAndRules.defineLookupOptions.ms"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.sir"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.mrs"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.mr"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.sri"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.frank"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.rev"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.madam"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.cdr"/]</option>
                         </select></span>
                      <span class="span-3"><br /><input type="button" class="buttn2" value="[@spring.message "add"/]"/><br /><input type="button" class="buttn2" value="[@spring.message "edit"/]"/></span>
   			</div>
             <div class="clear">&nbsp;</div>	
             <div class="span-19 marginBottom"><span class="span-4 rightAlign">[@spring.message "dataDisplayAndRules.defineLookupOptions.userTitle"/]&nbsp;:</span>
     				<span class="span-5"><select name="userTitle" size="5" style="width:140px;">
-                    		<option>Officer</option>
-                            <option>Manager</option>
-                            <option>Director</option>
-                            <option>Loan officer</option>
+                    		<option>[@spring.message "dataDisplayAndRules.defineLookupOptions.officer"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.manager"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.director"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.loanOfficer"/]</option>
                         </select></span>
                      <span class="span-3"><br /><input type="button" class="buttn2" value="[@spring.message "add"/]" /><br /><input type="button" class="buttn2" value="[@spring.message "edit"/]"  /></span>
   			</div>
              <div class="clear">&nbsp;</div>
             <div class="span-19 marginBottom"><span class="span-4 rightAlign">[@spring.message "dataDisplayAndRules.defineLookupOptions.maritalStatus"/]&nbsp;:</span>
     				<span class="span-5"><select name="maritalstatus" size="5" style="width:140px;">
-                    		<option>Single</option>
-                            <option>Married</option>
-                            <option>Divorced</option>
-                            <option>Widowed</option>
-                            <option>Seperated</option>
-                            <option>Mrs</option>
+                    		<option>[@spring.message "dataDisplayAndRules.defineLookupOptions.single"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.married"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.divorced"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.widowed"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.seperated"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.mrs"/]</option>
                         </select></span>
                      <span class="span-3"><br /><input type="button" class="buttn2" value="[@spring.message "add"/]" /><br /><input type="button" class="buttn2" value="[@spring.message "edit"/]" /></span>
   			</div>
              <div class="clear">&nbsp;</div>
             <div class="span-19 marginBottom"><span class="span-4 rightAlign">[@spring.message "dataDisplayAndRules.defineLookupOptions.ethnicity"/]&nbsp;:</span>
     				<span class="span-5"><select name="ethnicity" size="5" style="width:140px;">
-                    		<option>Filipino</option>
-                            <option>Indian</option>
-                            <option>Tunisian</option>
-                            <option>Kenyan</option>
-                            <option>American</option>
-                            <option>Dinka</option>
-                            <option>Sudanese</option>
-                            <option>Ghanaian</option>
+                    		<option>[@spring.message "dataDisplayAndRules.defineLookupOptions.filipino"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.indian"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.tunisian"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.kenyan"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.american"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.dinka"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.sudanese"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.ghanaian"/]</option>
                         </select></span>
                      <span class="span-3"><br /><input type="button" class="buttn2" value="[@spring.message "add"/]"/><br /><input type="button" class="buttn2" value="[@spring.message "edit"/]"/></span>
   			</div>
              <div class="clear">&nbsp;</div>
             <div class="span-19 marginBottom"><span class="span-4 rightAlign">[@spring.message "dataDisplayAndRules.defineLookupOptions.educationlevel"/]&nbsp;:</span>
     				<span class="span-5"><select name="educationLevel" size="5" style="width:140px;">
-                    		<option>None</option>
-                            <option>Primary Education</option>
-                            <option>Secondary Education</option>
-                            <option>High School Graduate</option>
-                            <option>College Degree</option>
-                            <option>M.A</option>
-                            <option>PhD</option>
+                    		<option>[@spring.message "dataDisplayAndRules.defineLookupOptions.none"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.primaryEducation"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.secondaryEducation"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.highSchoolGraduate"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.collegeDegree"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.ma"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.phD"/]</option>
                         </select></span>
                      <span class="span-3"><br /><input type="button" class="buttn2" value="[@spring.message "add"/]"/><br /><input type="button" class="buttn2" value="[@spring.message "edit"/]"/></span>
   			</div>
              <div class="clear">&nbsp;</div>
             <div class="span-19 marginBottom"><span class="span-4 rightAlign">[@spring.message "dataDisplayAndRules.defineLookupOptions.citizenship"/]&nbsp;:</span>
     				<span class="span-5"><select name="citizenship" size="5" style="width:140px;">
-                    		<option>Natural Born Citizen</option>
-                            <option>Immigrant with Citizenship</option>
-                            <option>Non-Citizen</option>
+                    		<option>[@spring.message "dataDisplayAndRules.defineLookupOptions.naturalBornCitizen"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.immigrantWithCitizenship"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.nonCitizen"/]</option>
                         </select></span>
                      <span class="span-3"><br /><input type="button" class="buttn2" value="[@spring.message "add"/]"/><br /><input type="button" class="buttn2" value="[@spring.message "edit"/]"/></span>
   			</div>
              <div class="clear">&nbsp;</div>
             <div class="span-19 marginBottom"><span class="span-4 rightAlign">[@spring.message "dataDisplayAndRules.defineLookupOptions.businessActivity"/]&nbsp;:</span>
     				<span class="span-5"><select name="businessActivity" size="5" style="width:140px;">
-                    		<option>Daily Labor</option>
-                            <option>Agriculture</option>
-                            <option>Animal Husbandry</option>
-                            <option>Micro Enterprise</option>
-                            <option>Production</option>
-                            <option>Hawking</option>
-                            <option>Small shop</option>
+                    		<option>[@spring.message "dataDisplayAndRules.defineLookupOptions.dailyLabor"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.agriculture"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.animalHusbandry"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.microEnterprise"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.production"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.hawking"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.smallShop"/]</option>
                         </select></span>
                      <span class="span-3"><br /><input type="button" class="buttn2" value="[@spring.message "add"/]"/><br /><input type="button" class="buttn2" value="[@spring.message "edit"/]" /></span>
   			</div>
              <div class="clear">&nbsp;</div>
             <div class="span-19 marginBottom"><span class="span-4 rightAlign">[@spring.message "dataDisplayAndRules.defineLookupOptions.purposeofLoan"/]&nbsp;:</span>
     				<span class="span-5"><select name="purposeOfLoan" size="5" style="width:140px;">
-                    		<option>Animal Husbandry</option>
-                            <option>Animal Purchase</option>
-                            <option>Equipment Purchase</option>
-                            <option>Materials Purchase</option>
+                    		<option>[@spring.message "dataDisplayAndRules.defineLookupOptions.animalHusbandry"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.animalPurchase"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.equipmentPurchase"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.materialsPurchase"/]</option>
                         </select></span>
                      <span class="span-3"><br /><input type="button" class="buttn2" value="[@spring.message "add"/]"/><br /><input type="button" class="buttn2" value="[@spring.message "edit"/]" /></span>
   			</div>
              <div class="clear">&nbsp;</div>
             <div class="span-19 marginBottom"><span class="span-4 rightAlign">[@spring.message "dataDisplayAndRules.defineLookupOptions.handicapped" /]&nbsp;:</span>
     				<span class="span-5"><select name="handicapped" size="5" style="width:140px;">
-                    		<option>Yes</option>
-                            <option>No</option>
+                    		<option>[@spring.message "boolean.yes"/]</option>
+                            <option>[@spring.message "boolean.no"/]</option>
                         </select></span>
                      <span class="span-3"><br /><input type="button" class="buttn2" value="[@spring.message "add"/]"/><br /><input type="button" class="buttn2" value="[@spring.message "edit"/]"/></span>
   			</div>
              <div class="clear">&nbsp;</div>
             <div class="span-19 marginBottom"><span class="span-4 rightAlign">[@spring.message "dataDisplayAndRules.defineLookupOptions.collateralType"/]&nbsp;:</span>
     				<span class="span-5"><select name="collateralType" size="5" style="width:140px;">
-                    		<option>None</option>
-                            <option>Savings Fund</option>
-                            <option>Equipment</option>
-                            <option>sf</option>
+                    		<option>[@spring.message "dataDisplayAndRules.defineLookupOptions.none"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.savingsFund"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.equipment"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.sf"/]</option>
                         </select></span>
                      <span class="span-3"><br /><input type="button" class="buttn2" value="[@spring.message "add"/]"/><br /><input type="button" class="buttn2" value="[@spring.message "edit"/]"/></span>
   			</div>
              <div class="clear">&nbsp;</div>
             <div class="span-19 marginBottom"><span class="span-4 rightAlign">[@spring.message "dataDisplayAndRules.defineLookupOptions.officerTitle"/]&nbsp;:</span>
     				<span class="span-5"><select name="officerTitle" size="5" style="width:140px;">
-                    		<option>President</option>
-                            <option>Vice-President</option>
-                            <option>Secretary</option>
-                            <option>Treasurer</option>
-                            <option>tresure</option>
-                            <option>Co-secretary</option>
-                            <option>Co-President</option>
-                            <option>Credit officer</option>
-                            <option>Financial Treasurer</option>
+                    		<option>[@spring.message "dataDisplayAndRules.defineLookupOptions.president"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.vicePresident"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.secretary"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.treasurer"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.tresure"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.coSecretary"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.coPresident"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.creditOfficer"/]</option>
+                            <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.financialTreasurer"/]</option>
                         </select></span>
                      <span class="span-3"><br /><input type="button" class="buttn2" value="[@spring.message "add"/]"/><br /><input type="button" class="buttn2" value="[@spring.message "edit"/]"/></span>
   			</div>
              <div class="clear">&nbsp;</div>
             <div class="span-19 marginBottom"><span class="span-4 rightAlign">[@spring.message "dataDisplayAndRules.defineLookupOptions.paymentModes"/]&nbsp;:</span>
     				<span class="span-5"><select name="paymentMode" size="5" style="width:140px;">
-                    		<option>cash</option>
-                            <option>Voucher</option>
-                            <option>Cheque</option>
+                    		<option>[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.cash"/]</option>
+                            <option>[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.voucher"/]</option>
+                            <option>[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.cheque"/]</option>
                         </select></span>
                      <span class="span-3"><br /><input type="button" class="buttn2" value="[@spring.message "add"/]"/><br /><input type="button" class="buttn2" value="Edit"/></span>
   			</div>

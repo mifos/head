@@ -398,8 +398,8 @@ function selectAllOptions(outSel)
 			<div class="clear">&nbsp;</div>
 			
 	        <div class="prepend-8">
-	        	<input class="buttn" type="submit" id="preview" name="_eventId_preview" value="Preview" onclick="selectAllOptions(this.form.selectedRoles);selectAllOptions(this.form.availableRoles);" />
-	        	<input class="buttn2" type="submit" id="cancel" name="_eventId_cancel" value="Cancel" />
+	        	<input class="buttn" type="submit" id="preview" name="_eventId_preview" value="[@spring.message "preview"/]" onclick="selectAllOptions(this.form.selectedRoles);selectAllOptions(this.form.availableRoles);" />
+	        	<input class="buttn2" type="submit" id="cancel" name="_eventId_cancel" value="[@spring.message "cancel"/]" />
 	        </div>
         </form>
       </div>

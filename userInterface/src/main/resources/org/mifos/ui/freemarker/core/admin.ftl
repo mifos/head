@@ -30,7 +30,7 @@
       <p class="orangeheading">[@spring.message "admin.manageOrganization" /]</p>
       <p class="fontBold">[@spring.message "admin.systemusers"/]</p>
       <ul>
-        <li type="circle"><a id="admin.link.viewSysUsers" href="viewSystemUsers.ftl">[@spring.message "admin.viewsystemusers"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineNewUsers" href="defineNewSystemUser.ftl">[@spring.message "admin.definenewsystemuser" /]</a></li>       
+        <li type="circle"><a id="admin.link.viewSysUsers" href="viewSystemUsers.ftl">[@spring.message "admin.viewsystemusers"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineNewUsers" href="user.ftl">[@spring.message "admin.definenewsystemuser" /]</a></li>       
         <li type="circle"><a id="admin.link.manageRoles" href="manageRolesAndPermissions.ftl">[@spring.message "admin.managerolesandpermissions"/]</a></li>
       </ul>
       <p><span class="fontBold">[@spring.message "admin.offices"/]</span>

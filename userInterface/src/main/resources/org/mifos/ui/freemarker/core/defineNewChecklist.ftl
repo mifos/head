@@ -66,19 +66,19 @@ i=i+counter;numberOfItems=i;}
   			</div>
           	<div class="span-20"><span class="span-6 rightAlign"><span class="red">* </span>[@spring.message "organizationPreferences.defineNewCheckLists.type" /]</span><span class="span-5">&nbsp;
     				<select name="select">
-    				  <option>--Select--</option>
-                        <option>center</option>
-                        <option>group</option>
-                        <option>client</option>
-                        <option>loans</option>
-                        <option>savings</option>
+    				  <option>[@spring.message "--select--" /] </option>
+                        <option>[@spring.message "datadisplayandrules.defineAdditionalFields.center" /] </option>
+                        <option>[@spring.message "datadisplayandrules.defineAdditionalFields.group" /] </option>
+                        <option>[@spring.message "datadisplayandrules.defineAdditionalFields.client" /] </option>
+                        <option>[@spring.message "datadisplayandrules.defineAdditionalFields.loan" /] </option>
+                        <option>[@spring.message "datadisplayandrules.defineAdditionalFields.savings" /] </option>
 				    </select></span>
   			</div>
         	<div class="span-20"><span class="span-6 rightAlign"><span class="red">* </span>[@spring.message "organizationPreferences.defineNewCheckLists.displayedwhenmovingintoStatus" /]&nbsp;:</span><span class="span-5">&nbsp;
    					<select name="select">
-   					 <option>--Select--</option>
-                        <option>active</option>
-                        <option>inactive</option>
+   					 <option>[@spring.message "--select--" /] </option>
+                        <option>[@spring.message "active" /] </option>
+                        <option>[@spring.message "inactive" /] </option>
 				    </select></span>
 			</div>
             <div class="span-20"><span class="span-6 rightAlign"><span class="red">* </span>[@spring.message "organizationPreferences.defineNewCheckLists.items" /]</span><span class="span-10">[@spring.message "organizationPreferences.defineNewCheckLists.entertextforeachitemandclickAddtosavetheiteminthelistbelow" /]<br />
@@ -86,15 +86,15 @@ i=i+counter;numberOfItems=i;}
 			</div>
             <div class="span-20">
             	<div id="myDiv" class="span-18"></div>
-                <div id="removeButton" style="display: none; "><INPUT type="button" class="buttn2" name="removeSelected" value="Remove Selected" onClick="RemoveSelected(); isButtonRequired()"></div>
+                <div id="removeButton" style="display: none; "><INPUT type="button" class="buttn2" name="removeSelected" value="[@spring.message "organizationPreferences.defineNewCheckLists.removeSelected"/]" onClick="RemoveSelected(); isButtonRequired()"></div>
 			</div>
           </div>
           <p>&nbsp;&nbsp;</p>
           <div class="clear">&nbsp;</div>
           <hr />
           <div class="prepend-9">
-            	<input class="buttn" type="button" name="preview" value="Preview" onclick="#"/>
-            	<input class="buttn2" type="button" name="cancel" value="Cancel" onclick="window.location='admin.ftl'"/>
+            	<input class="buttn" type="button" name="PREVIEW" value="[@spring.message "preview"/]"/>
+            	<input class="buttn2" type="button" name="CANCEL" value="[@spring.message "cancel"/]"/>
           </div>
           <div class="clear">&nbsp;</div>
         </form>
