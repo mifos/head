@@ -54,14 +54,10 @@ explanation of the license and how it is applied.
                 </script>
             </c:otherwise>
         </c:choose>
-		<SCRIPT type="text/javascript" SRC="pages/framework/js/date.js"></SCRIPT>
-		<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
-		<STYLE TYPE="text/css"><!-- @import url(pages/css/datepicker/datepicker.css); --></STYLE>
-		<script type="text/javascript" src="pages/js/jquery/jquery.datePicker.min-2.1.2.js"></script>
-		<script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
-		<script type="text/javascript" src="pages/js/jquery/jquery.validate.min.js"></script>
-		<script type="text/javascript" src="pages/js/datejs/date.js"></script>
-		<script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
+        <STYLE TYPE="text/css"><!-- @import url(pages/css/jquery/jquery-ui.css); --></STYLE>
+        <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
 		<!--[if IE]><script type="text/javascript" src="pages/js/jquery/jquery.bgiframe.js"></script><![endif]-->
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script type="text/javascript" src="pages/application/loan/js/schedulePreview.js"></script>
@@ -262,7 +258,7 @@ explanation of the license and how it is applied.
                                                                     <c:out value="${installment.installment}" />
                                                                 </td>
                                                                 <td class="drawtablerow" align="center">
-                                                                    <mifos:mifosalphanumtext styleId="installment.input.dueDate" styleClass="date-pick" name="installment" property="dueDate" maxlength="10" />
+                                                                    <mifos:mifosalphanumtext styleId="dueDate.${loopStatus.index}" styleClass="date-pick" name="installment" property="dueDate" maxlength="10" />
                                                                 </td>
                                                                 <td class="drawtablerow" align="center">
                                                                     <c:out value="${installment.principal}" />

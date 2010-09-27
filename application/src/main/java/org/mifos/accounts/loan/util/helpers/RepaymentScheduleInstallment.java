@@ -101,7 +101,7 @@ public class RepaymentScheduleInstallment implements Serializable {
     }
 
     public String getDueDateInUserLocale() {
-        return DateUtils.getDBtoUserFormatString(getDueDateValue(), getLocale());
+        return DateUtils.getDBtoUserFormatString(dueDateValue, locale);
 
     }
 
@@ -130,7 +130,7 @@ public class RepaymentScheduleInstallment implements Serializable {
     }
 
     public String getDueDate() {
-        return DateUtils.getUserLocaleDate(locale, dueDateValue);
+        return getDueDateInUserLocale();
     }
 
     public void setDueDate(String dueDate) {
