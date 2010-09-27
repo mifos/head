@@ -43,7 +43,9 @@ public class DefineNewLoanProductPreviewPage extends AbstractPage {
     public DefineNewLoanProductConfirmationPage submit() {
         selenium.click("createLoanProductPreview.button.submit");
         waitForPageToLoad();
-        return new DefineNewLoanProductConfirmationPage(selenium);
+        DefineNewLoanProductConfirmationPage defineNewLoanProductConfirmationPage = new DefineNewLoanProductConfirmationPage(selenium);
+        defineNewLoanProductConfirmationPage.verifyPage();
+        return defineNewLoanProductConfirmationPage;
      }
 
     public void verifyErrorInForm(String error)
