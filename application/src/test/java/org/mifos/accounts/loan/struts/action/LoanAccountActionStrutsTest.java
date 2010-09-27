@@ -40,6 +40,7 @@ import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.VariableInstallmentDetailsDto;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
@@ -770,9 +771,9 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter("method", "schedulePreview");
         performNoErrors();
         verifyForward(ActionForwards.schedulePreview_success.toString());
-
-//        LoanBO loan = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-//        Assert.assertNotNull(loan);
+        LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) request.getSession().getAttribute("loanAccountActionForm");
+        List<RepaymentScheduleInstallment> repaymentSchedules = loanAccountActionForm.getInstallments();
+        Assert.assertEquals(3, repaymentSchedules.size());
 
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }

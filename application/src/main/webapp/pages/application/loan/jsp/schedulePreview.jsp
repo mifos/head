@@ -241,7 +241,7 @@ explanation of the license and how it is applied.
                                                     </tr>
                                                     <tr>
                                                     <c:if test="${requestScope.perspective != 'redoLoan'}">
-                                                		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentScheduleInstallments')}" var="repaymentScheduleInstallments" />
+                                                		<c:set value="${loanAccountActionForm.installments}" var="repaymentScheduleInstallments" />
                                                         <td valign="top" align="center">
                                                             <table width="100%" border="0" cellpadding="3" cellspacing="0">
                                                             <tr  class="drawtablerowbold"  >

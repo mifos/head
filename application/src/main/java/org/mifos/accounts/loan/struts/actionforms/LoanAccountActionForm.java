@@ -20,19 +20,6 @@
 
 package org.mifos.accounts.loan.struts.actionforms;
 
-import static org.apache.commons.lang.StringUtils.isBlank;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -47,6 +34,7 @@ import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.AmountRange;
 import org.mifos.accounts.productdefinition.business.InstallmentRange;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -54,8 +42,8 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
@@ -83,6 +71,18 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.util.UserContext;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import static org.apache.commons.lang.StringUtils.isBlank;
 
 public class LoanAccountActionForm extends BaseActionForm implements QuestionResponseCapturer {
 
@@ -195,6 +195,8 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     /*private List<QuestionGroupDto> questionGroupDtos;*/
 
     private List<QuestionGroupDetail> questionGroups;
+
+    private List<RepaymentScheduleInstallment> installments;
 
     public Date getOriginalDisbursementDate() {
         return this.originalDisbursementDate;
@@ -1458,6 +1460,10 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         clientDetails = new ArrayList<LoanAccountDetailsDto>(clientDetailsCopy);
     }
 
+    public void setInstallments(List<RepaymentScheduleInstallment> installments) {
+        this.installments = installments;
+    }
+
     private static class RemoveEmptyClientDetailsForUncheckedClients implements Predicate {
 
         private final List<String> clients2;
@@ -1491,4 +1497,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         return questionGroups;
     }
 
+    public List<RepaymentScheduleInstallment> getInstallments() {
+        return installments;
+    }
 }

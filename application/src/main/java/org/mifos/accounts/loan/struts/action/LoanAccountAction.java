@@ -143,7 +143,6 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VAL
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.PROPOSED_DISBURSAL_DATE;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECURRENCEID;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECURRENCENAME;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.REPAYMENTSCHEDULEINSTALLMENTS;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.STATUS_HISTORY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.TOTAL_AMOUNT_OVERDUE;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.VIEWINSTALLMENTDETAILS_SUCCESS;
@@ -478,8 +477,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             request.setAttribute(PERSPECTIVE, request.getParameter(PERSPECTIVE));
         }
 
-        SessionUtils.setCollectionAttribute(REPAYMENTSCHEDULEINSTALLMENTS, loanScheduleDetailsDto.getInstallments(),
-                request);
+        loanActionForm.setInstallments(loanScheduleDetailsDto.getInstallments());
+
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, loanScheduleDetailsDto
                 .isLoanPendingApprovalDefined(), request);
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, disbursementDate, request);
