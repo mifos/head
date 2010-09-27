@@ -174,20 +174,20 @@ function switchLoanInstallmentType()
             <div class="span-23 last">
             	<span class="pull-3 span-8 rightAlign"><span class="red"> * </span>[@spring.message "manageLoanProducts.defineLoanProduct.startdate" /]&nbsp;:</span>
             	[@spring.bind "loanProduct.generalDetails.startDateDay" /]
-            	<span class="span-2"><input type="text" size="1" maxlength="2" id="startDateDD" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />DD</span>
+            	<span class="span-2"><input type="text" size="1" maxlength="2" id="startDateDD" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.DD"/]</span>
             	[@spring.bind "loanProduct.generalDetails.startDateMonth" /]
-              	<span><input type="text" size="1" maxlength="2" id="startDateMM" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />MM</span>
+              	<span><input type="text" size="1" maxlength="2" id="startDateMM" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.MM"/]</span>
               	[@spring.bind "loanProduct.generalDetails.startDateYear" /]
-              	<span><input type="text" size="2" maxlength="4" id="startDateYY" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />YYYY</span>
+              	<span><input type="text" size="2" maxlength="4" id="startDateYY" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.YYYY"/]</span>
             </div>
             
             <div class="span-23 last"> <span class="pull-3 span-8 rightAlign">[@spring.message "manageLoanProducts.defineLoanProduct.enddate" /]&nbsp;:</span>
             	[@spring.bind "loanProduct.generalDetails.endDateDay" /]
-	            <span class="span-2"><input type="text" size="1" maxlength="2" id="endDateDD" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />DD</span>
+	            <span class="span-2"><input type="text" size="1" maxlength="2" id="endDateDD" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.DD"/]</span>
 	            [@spring.bind "loanProduct.generalDetails.endDateMonth" /]
-	            <span class="span-2"><input type="text" size="1" maxlength="2" id="endDateMM" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />MM</span>
+	            <span class="span-2"><input type="text" size="1" maxlength="2" id="endDateMM" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.MM"/]</span>
 	            [@spring.bind "loanProduct.generalDetails.endDateYear" /]
-	            <span class="span-3"><input type="text" size="2" maxlength="4" id="endDateYY" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />YYYY</span>
+	            <span class="span-3"><input type="text" size="2" maxlength="4" id="endDateYY" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.YYYY"/]</span>
             </div>
             
             <div class="span-23 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.applicablefor" /]&nbsp;:</span>
@@ -546,9 +546,9 @@ function switchLoanInstallmentType()
 					</span>
                     <span class="span-3">
                     	<br />
-                    	<input class="buttn2" name="add" type="button" id="LoanFeesList.button.add"  value="Add >>" onclick="moveOptions(this.form.applicableFees, this.form.selectedFees);" />
+                    	<input class="buttn2" name="add" type="button" id="LoanFeesList.button.add"  value="[@spring.message "add"/] >>" onclick="moveOptions(this.form.applicableFees, this.form.selectedFees);" />
                     	<br /><br />
-						<input class="buttn2" name="remove" type="button" value="<< Remove" onclick="moveOptions(this.form.selectedFees, this.form.applicableFees);" />
+						<input class="buttn2" name="remove" type="button" value="<< [@spring.message "remove"/]" onclick="moveOptions(this.form.selectedFees, this.form.applicableFees);" />
 					</span>
 					<span class="span-4">
 						[@spring.formMultiSelect "loanProduct.selectedFees", loanProduct.selectedFeeOptions, "class=listSize" /]
@@ -567,9 +567,9 @@ function switchLoanInstallmentType()
 					</span>
                     <span class="span-3">
                     	<br />
-                    	<input class="buttn2" name="add" type="button"  id="srcFundsList.button.add"  value="Add >>" onclick="moveOptions(this.form.applicableFunds, this.form.selectedFunds);" />
+                    	<input class="buttn2" name="add" type="button"  id="srcFundsList.button.add"  value="[@spring.message "add"/] >>" onclick="moveOptions(this.form.applicableFunds, this.form.selectedFunds);" />
                     	<br /><br />
-						<input class="buttn2" name="remove" type="button" value="<< Remove" id="srcFundsList.button.remove" onclick="moveOptions(this.form.selectedFunds, this.form.applicableFunds);" />
+						<input class="buttn2" name="remove" type="button" value="<< [@spring.message "remove"/]" id="srcFundsList.button.remove" onclick="moveOptions(this.form.selectedFunds, this.form.applicableFunds);" />
 					</span>
 					<span class="span-4">
 						[@spring.formMultiSelect "loanProduct.selectedFunds", loanProduct.selectedFundOptions, "class=listSize" /]
@@ -593,8 +593,8 @@ function switchLoanInstallmentType()
           <div class="clear">&nbsp;</div>
           <hr />
 	        <div class="prepend-9">
-	            <input class="buttn" type="submit" id="CreateLoanProduct.button.preview" name="preview" value="Preview" onclick="selectAllOptions(this.form.selectedFees);selectAllOptions(this.form.applicableFees);selectAllOptions(this.form.selectedFunds);selectAllOptions(this.form.applicableFunds);" />
-	        	<input class="buttn2" type="submit" id="CreateLoanProduct.button.cancel" name="CANCEL" value="Cancel" />
+	            <input class="buttn" type="submit" id="CreateLoanProduct.button.preview" name="preview" value="[@spring.message "preview"/]" onclick="selectAllOptions(this.form.selectedFees);selectAllOptions(this.form.applicableFees);selectAllOptions(this.form.selectedFunds);selectAllOptions(this.form.applicableFunds);" />
+	        	<input class="buttn2" type="submit" id="CreateLoanProduct.button.cancel" name="CANCEL" value="[@spring.message "cancel"/]" />
 	      	</div>
           <div class="clear">&nbsp;</div>
         </form>

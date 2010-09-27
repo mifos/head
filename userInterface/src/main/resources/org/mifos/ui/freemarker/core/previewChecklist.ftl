@@ -32,12 +32,12 @@
                 <li>[@spring.message "organizationPreferences.previewChecklist.items2"/]</li>
             </ul>
             <div class="clear">&nbsp;</div>
-            <div><input class="buttn2" type="button" name="edit" value="Edit Checklist Information" onclick="location.href='viewEditChecklists.ftl'"/></div>
+            <div><input class="buttn2" type="button" name="edit" value="[@spring.message "organizationPreferences.editchecklist.editChecklistInformation"/]" onclick="location.href='viewEditChecklists.ftl'"/></div>
           </p>
           <hr />
           <div class="prepend-9">
-            <input class="buttn" type="button" name="submit" value="Submit" onclick="window.location='admin.ftl'"/>
-            <input class="buttn2" type="button" name="cancel" value="Cancel" onclick="window.location='admin.ftl'"/>
+            <input class="buttn" type="button" name="submit" value="[@spring.message "submit"/]" onclick="window.location='admin.ftl'"/>
+            <input class="buttn2" type="button" name="cancel" value="[@spring.message "cancel"/]" onclick="window.location='admin.ftl'"/>
           </div>
           <div class="clear">&nbsp;</div>
         </form>

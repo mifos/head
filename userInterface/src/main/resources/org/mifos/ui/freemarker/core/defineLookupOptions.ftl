@@ -163,7 +163,7 @@
                             <option>[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.voucher"/]</option>
                             <option>[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.cheque"/]</option>
                         </select></span>
-                     <span class="span-3"><br /><input type="button" class="buttn2" value="[@spring.message "add"/]"/><br /><input type="button" class="buttn2" value="Edit"/></span>
+                     <span class="span-3"><br /><input type="button" class="buttn2" value="[@spring.message "add"/]"/><br /><input type="button" class="buttn2" value="[@spring.message "edit"/]"/></span>
   			</div>
         </div>
         <div class="clear">&nbsp;</div>

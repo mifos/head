@@ -338,7 +338,7 @@
             <div class="clear">&nbsp;</div>
             <div class="span-20">
             	<input type="hidden" name="editFormview" value="${editFormview}" />
-            	<input class="buttn2" type="submit" name="EDIT" value="Edit Loan product information" />
+            	<input class="buttn2" type="submit" name="EDIT" value="[@spring.message "manageLoanProducts.editloanproduct.editLoanproductinformation"/]" />
             </div>
           </div>
           <div class="clear">&nbsp;</div>

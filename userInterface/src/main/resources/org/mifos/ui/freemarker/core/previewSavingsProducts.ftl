@@ -105,14 +105,14 @@
             <div class="clear">&nbsp;</div>
             <div class="span-20">
                 <input type="hidden" name="editFormview" value="${editFormview}" />
-            	<input class="buttn2" type="submit" name="EDIT" value="Edit Savings product information"/>
+            	<input class="buttn2" type="submit" name="EDIT" value="[@spring.message "manageSavngsProducts.editsavingsproduct.editSavingsproductinformation"/]"/>
             </div>
           </div>
           <div class="clear">&nbsp;</div>
           <hr />
           <div class="prepend-9">
-            	<input class="buttn" type="submit" id="CreateSavingsProductPreview.button.submit" name="submit" value="Submit"/>
-            	<input class="buttn2" type="submit" name="CANCEL" value="Cancel"/>
+            	<input class="buttn" type="submit" id="CreateSavingsProductPreview.button.submit" name="submit" value="[@spring.message "submit"/]"/>
+            	<input class="buttn2" type="submit" name="CANCEL" value="[@spring.message "cancel"/]"/>
           </div>
           <div class="clear">&nbsp;</div>
         </form>

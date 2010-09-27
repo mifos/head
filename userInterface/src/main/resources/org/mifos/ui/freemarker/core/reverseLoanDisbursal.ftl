@@ -26,7 +26,7 @@
     <p class="orangeheading font15">[@spring.message "manageLoanAccounts.reverseLoansdisbursal"/]</p>
     <ul><li class="error" > </li></ul>
     <p class="paddingLeft">[@spring.message "manageLoanAccounts.reverseLoansdisbursal.searchLoansaccountbyID"/]<br />
-      <input type="text" id="txtid"/>&nbsp;&nbsp;<input class="buttn" type="button" name="search" value="Search" onclick="#" />
+      <input type="text" id="txtid"/>&nbsp;&nbsp;<input class="buttn" type="button" name="search" value="[@spring.message "admin.search"/]" onclick="#" />
     </p>
 	
    	</form> 

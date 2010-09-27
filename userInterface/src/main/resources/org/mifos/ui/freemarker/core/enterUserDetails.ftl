@@ -314,9 +314,9 @@ function selectAllOptions(outSel)
 								</span>
 			                    <span class="span-3">
 			                    	<br />
-			                    	<input class="buttn2" name="add" style="width:78px;" type="button" id="roles.button.add"  value="Add >>" onclick="moveOptions(this.form.availableRoles, this.form.selectedRoles);" />
+			                    	<input class="buttn2" name="add" style="width:78px;" type="button" id="roles.button.add"  value="[@spring.message "add"/] >>" onclick="moveOptions(this.form.availableRoles, this.form.selectedRoles);" />
 			                    	<br /><br />
-									<input class="buttn2" name="remove" type="button" value="<< Remove" onclick="moveOptions(this.form.selectedRoles, this.form.availableRoles);" />
+									<input class="buttn2" name="remove" type="button" value="<< [@spring.message "remove"/]" onclick="moveOptions(this.form.selectedRoles, this.form.availableRoles);" />
 								</span>
 								<span class="span-4">
 									[@spring.formMultiSelect "userFormBean.selectedRoles", userFormBean.selectedRolesOptions, "class=listSize" /]

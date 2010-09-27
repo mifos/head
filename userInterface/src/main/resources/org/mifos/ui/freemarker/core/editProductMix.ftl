@@ -144,7 +144,7 @@ function selectAllOptions(outSel)
         	
 			<hr />
 	        <div class="prepend-10">
-	            <input class="buttn" type="submit" id="holiday.button.preview" name="preview"  value="Preview" onclick="selectAllOptions(this.form.notAllowed);selectAllOptions(this.form.allowed);" />
+	            <input class="buttn" type="submit" id="holiday.button.preview" name="preview"  value="[@spring.message "preview"/]" onclick="selectAllOptions(this.form.notAllowed);selectAllOptions(this.form.allowed);" />
 	            <input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]"/>
 	        </div>
 		</form>

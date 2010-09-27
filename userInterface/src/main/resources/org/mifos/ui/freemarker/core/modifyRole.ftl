@@ -951,8 +951,8 @@ var index=0;
         </div>
         <div class="clear">&nbsp;</div>
         <div class="prepend-9">
-            <input class="buttn " type="submit" name="SUBMIT" value="Submit" id="managerole.button.submit"/>
-            <input class="buttn2" type="submit" name="CANCEL" value="Cancel" id="managerole.button.cancel"/>
+            <input class="buttn " type="submit" name="SUBMIT" value="[@spring.message "submit"/]" id="managerole.button.submit"/>
+            <input class="buttn2" type="submit" name="CANCEL" value="[@spring.message "cancel"/]" id="managerole.button.cancel"/>
         </div>
 		<!--End of All Tables-->
 	</div>

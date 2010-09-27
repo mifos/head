@@ -111,8 +111,8 @@
         <div class="clear">&nbsp;</div>
         <hr />
         <div class="prepend-9">
-          <input class="buttn" id="CreateNewOffice.button.preview" type="submit" name="preview" value="Preview"/>
-          <input class="buttn2" type="button" id="CreateNewOffice.button.cancel" name="submit" value="Cancel"/>
+          <input class="buttn" id="CreateNewOffice.button.preview" type="submit" name="preview" value="[@spring.message "preview"/]"/>
+          <input class="buttn2" type="button" id="CreateNewOffice.button.cancel" name="submit" value="[@spring.message "cancel"/]"/>
         </div>
         <div class="clear">&nbsp;</div>
         </form>

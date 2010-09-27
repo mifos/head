@@ -3,10 +3,10 @@
 
 [@mifos.header "title" /]
     <h1>[@spring.message "welcomeToMifos" /]</h1>
-    <p>Chinese text: [@spring.message "chineseText" /]</p>
-    <p>Arabic text: [@spring.message "arabicText" /] </p>
-    <p>Hindi text: [@spring.message "hindiText" /] </p>
-    <p>French text: [@spring.message "frenchText" /] </p>
+    <p>[@spring.message "englishChineseText"/]: [@spring.message "chineseText" /]</p>
+    <p>[@spring.message "englishArabicText"/]: [@spring.message "arabicText" /] </p>
+    <p>[@spring.message "englishHindiText"/]: [@spring.message "hindiText" /] </p>
+    <p>[@spring.message "englishFrenchText"/]: [@spring.message "frenchText" /] </p>
     [#include "footer.ftl"]    
 [@mifos.footer /]
 

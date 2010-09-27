@@ -19,7 +19,7 @@
       [@form.input path="searchString"/]
 	  <input type="submit" value="[@spring.message "search" /]" class="buttn" id="clientSearch.form.submit" tabindex="6" />
       <h4>[@spring.message "toViewAListOfGroups"/]</h4>
-      <a href="viewGroups.ftl" id="home.list.groups">See a list of groups</a>
+      <a href="viewGroups.ftl" id="home.list.groups">[@spring.message "seealistofgroups"/]</a>
       [/@form.form]
     </div>
   </div>

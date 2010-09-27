@@ -3,10 +3,10 @@
 [#import "macros.ftl" as mifos]
 <html>
   <head>
-    <title>Initializer Application</title>
+    <title>[@spring.message "initializerApplication"/]</title>
   </head>
   <body>
       <span id="page.id" title="InitializeApplication" />
-      <div id="initializeApplication.message">Application has been re-initialized.</div>
+      <div id="initializeApplication.message">[@spring.message "applicationHasBeenReInitialized"/]</div>
   [@mifos.footer /]
 

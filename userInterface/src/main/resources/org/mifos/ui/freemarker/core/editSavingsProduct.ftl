@@ -83,21 +83,21 @@
 			<div class="span-20 last">
             	<span class="pull-3 span-8 rightAlign"><span class="red"> * </span>[@spring.message "manageProducts.defineSavingsProducts.fromDate" /]&nbsp;:</span>
             	[@spring.bind "savingsProduct.generalDetails.startDateDay" /]
-            	<span class="span-2"><input type="text" size="1" maxlength="2" id="startDateDD" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />DD</span>
+            	<span class="span-2"><input type="text" size="1" maxlength="2" id="startDateDD" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.DD"/]</span>
             	[@spring.bind "savingsProduct.generalDetails.startDateMonth" /]
-              	<span class="span-2"><input type="text" size="1" maxlength="2" id="startDateMM" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />MM</span>
+              	<span class="span-2"><input type="text" size="1" maxlength="2" id="startDateMM" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.MM"/]</span>
               	[@spring.bind "savingsProduct.generalDetails.startDateYear" /]
-              	<span class="span-3"><input type="text" size="2" maxlength="4" id="startDateYY" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />YYYY</span>
+              	<span class="span-3"><input type="text" size="2" maxlength="4" id="startDateYY" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.YYYY"/]</span>
             </div>
             
             <div class="span-20 last">
             	<span class="pull-3 span-8 rightAlign">[@spring.message "manageProducts.defineSavingsProducts.endDate" /]&nbsp;:</span>
             	[@spring.bind "savingsProduct.generalDetails.endDateDay" /]
-            	<span class="span-2"><input type="text" size="1" maxlength="2" id="endDateDD" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />DD</span>
+            	<span class="span-2"><input type="text" size="1" maxlength="2" id="endDateDD" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.DD"/]</span>
             	[@spring.bind "savingsProduct.generalDetails.endDateMonth" /]
-              	<span class="span-2"><input type="text" size="1" maxlength="2" id="endDateMM" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />MM</span>
+              	<span class="span-2"><input type="text" size="1" maxlength="2" id="endDateMM" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.MM"/]</span>
               	[@spring.bind "savingsProduct.generalDetails.endDateYear" /]
-              	<span class="span-3"><input type="text" size="2" maxlength="4" id="endDateYY" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />YYYY</span>
+              	<span class="span-3"><input type="text" size="2" maxlength="4" id="endDateYY" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.YYYY"/]</span>
             </div>
 			
             <div class="span-20 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.applicablefor" /]&nbsp;</span>
@@ -186,8 +186,8 @@
           <div class="clear">&nbsp;</div>
           <hr />
           <div class="prepend-9">
-            	<input class="buttn" type="submit" id="createSavingsProduct.button.preview" class="buttn" name="preview" value="Preview" />
-            	<input class="buttn2" type="submit" name="CANCEL" value="Cancel"/>
+            	<input class="buttn" type="submit" id="createSavingsProduct.button.preview" class="buttn" name="preview" value="[@spring.message "preview"/]" />
+            	<input class="buttn2" type="submit" name="CANCEL" value="[@spring.message "cancel"/]"/>
           </div>
           <div class="clear">&nbsp;</div>
         </form>
