@@ -152,6 +152,30 @@ function showVariableInstallmentInputs() {
         document.getElementById("minimumGapBetweenInstallmentsInputDiv").style.display = "none";
         document.getElementById("maximumGapBetweenInstallmentsInputDiv").style.display = "none";
         document.getElementById("minimumInstallmentAmountInputDiv").style.display = "none";
+   }
+}
 
+/*
+$(document).ready(function() {
+	$("input[id=cashFlowValidation]").click(function (event) {
+		if ($('input[id=cashFlowValidation]').checked == true) {
+			$('input[id=cashFlowThresholdDiv]').css('display', 'block');
+			$('input[id=cashFlowThresholdInputDiv]').css('display', 'block');	
+		} else {
+			$('input[id=cashFlowThresholdDiv]').css('display', 'none');
+			$('input[id=cashFlowThresholdInputDiv]').css('display', 'none');
+		}
+	});
+});
+*/
+
+function showCashFlowInputs() {
+    var isVariableInstallmentType = document.getElementById("createLoanProduct.checkbox.cashFlowValidation");
+    if (isVariableInstallmentType.checked == true) {
+        document.getElementById("cashFlowThresholdDiv").style.display = "block";
+        document.getElementById("cashFlowThresholdInputDiv").style.display = "block";
+    } else {
+        document.getElementById("cashFlowThresholdDiv").style.display = "none";
+        document.getElementById("cashFlowThresholdInputDiv").style.display = "none";
    }
 }

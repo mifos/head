@@ -301,6 +301,11 @@ public class LoanPrdActionForm extends BaseActionForm {
     private String minimumInstallmentAmount;
     private Double minimumInstallmentAmountValue;
 
+    private String cashFlowValidation;
+    private Double cashFlowWarningThreshold;
+
+
+
     public Double getLastLoanDefaultLoanAmt1Value() {
         if (lastLoanDefaultLoanAmt1Value != null) {
             return lastLoanDefaultLoanAmt1Value;
@@ -1742,6 +1747,7 @@ public class LoanPrdActionForm extends BaseActionForm {
             gracePeriodType = null;
             gracePeriodDuration = null;
             canConfigureVariableInstallments = null;
+            cashFlowValidation = null;
         }
         logger.debug("reset method of Savings Product Action form method called ");
     }
@@ -2800,4 +2806,31 @@ public class LoanPrdActionForm extends BaseActionForm {
     public boolean canConfigureVariableInstallments() {
         return getBooleanValue(canConfigureVariableInstallments);
     }
+
+    public boolean isCashFlowValidation() {
+        return getBooleanValue(cashFlowValidation);
+    }
+
+    public String getCashFlowValidation() {
+        return cashFlowValidation;
+    }
+
+    public void setCashFlowValidation(boolean cashFlowValidation) {
+        this.setCashFlowValidation(getStringValue(cashFlowValidation));
+    }
+
+
+    private void setCashFlowValidation(String cashFlowValidation) {
+        this.cashFlowValidation = cashFlowValidation;
+
+    }
+
+    public void setCashFlowWarningThreshold(Double cashFlowWarningThreshold) {
+        this.cashFlowWarningThreshold = cashFlowWarningThreshold;
+    }
+
+    public Double getCashFlowWarningThreshold() {
+        return cashFlowWarningThreshold;
+    }
+
 }

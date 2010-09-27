@@ -35,10 +35,10 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-        <span id="page.id" title="CreateLoanProduct" />
+        <span id="page.id" title="CreateLoanProduct"/>
 		<script src="pages/framework/js/date.js"></script>
 		<script src="pages/framework/js/func.js"></script>
-		<script src="pages/framework/js/func.js"></script>
+		<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 		<script type="text/javascript" src="pages/application/loan/js/CreateLoanProduct.js"></script>
 		<html-el:form action="/loanproductaction"
 			onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) &&
@@ -516,7 +516,7 @@ explanation of the license and how it is applied.
 										</fmt:message>:</td>
 										<td valign="top"><mifos:decimalinput
 											styleId= "createLoanProduct.input.minInterestRate" property="minInterestRate" /> <mifos:mifoslabel
-											name="product.rate" bundle="ProductDefUIResources" /></td>
+												name="product.rate" bundle="ProductDefUIResources" /></td>
 									</tr>
 									<tr class="fontnormal">
 										<td align="right"><span class="mandatorytext"> <font
@@ -545,7 +545,7 @@ explanation of the license and how it is applied.
                                         <tr class="fontnormal">
                                             <td width="30%" align="right" valign="top"><mifos:mifoslabel
                                                 name="product.canConfigureVariableInstallments"
-                                                bundle="ProductDefUIResources" /> :
+                                                bundle="ProductDefUIResources" isColonRequired="yes" />
                                             </td>
                                             <td valign="top"><html-el:checkbox styleId="createLoanProduct.checkbox.canConfigureVariableInstallments"
                                                 property="canConfigureVariableInstallments" onclick="showVariableInstallmentInputs();" value="1" />
@@ -554,7 +554,7 @@ explanation of the license and how it is applied.
                                         <tr class="fontnormal">
                                             <td width="30%" align="right" valign="top">
                                                 <div id="minimumGapBetweenInstallmentsLabelDiv"  style="display: none;">
-                                                    <mifos:mifoslabel name="product.minimumGapBetweenInstallments" mandatory="yes" bundle="ProductDefUIResources"/> :
+                                                    <mifos:mifoslabel name="product.minimumGapBetweenInstallments" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes" />
                                                 </div>
                                             </td>
                                             <td valign="top">
@@ -567,7 +567,7 @@ explanation of the license and how it is applied.
                                        <tr class="fontnormal">
                                             <td width="30%" align="right" valign="top">
                                                 <div id="maximumGapBetweenInstallmentsLabelDiv"  style="display: none;">
-                                                    <mifos:mifoslabel name="product.maximumGapBetweenInstallments" bundle="ProductDefUIResources" /> :
+                                                    <mifos:mifoslabel name="product.maximumGapBetweenInstallments" bundle="ProductDefUIResources" isColonRequired="yes" />
                                                 </div>
                                             </td>
                                             <td valign="top">
@@ -580,7 +580,7 @@ explanation of the license and how it is applied.
                                        <tr class="fontnormal">
                                             <td width="30%" align="right" valign="top">
                                                 <div id="minimumInstallmentAmountLabelDiv"  style="display: none;">
-                                                    <mifos:mifoslabel name="product.minimumInstallmentAmount" bundle="ProductDefUIResources" /> :
+                                                    <mifos:mifoslabel name="product.minimumInstallmentAmount" bundle="ProductDefUIResources" isColonRequired="yes" />
                                                 </div>
                                             </td>
                                              <td valign="top">
@@ -590,6 +590,30 @@ explanation of the license and how it is applied.
                                             </td>
                                         </tr>
                                     </c:if>
+
+                                    <tr class="fontnormal">
+                                            <td width="30%" align="right" valign="top"><mifos:mifoslabel
+                                                name="product.cashFlowValidation"
+                                                bundle="ProductDefUIResources" isColonRequired="yes" />
+                                            </td>
+                                            <td valign="top"><html-el:checkbox styleId="createLoanProduct.checkbox.cashFlowValidation"
+                                                onclick="showCashFlowInputs();" property="cashFlowValidation" value="1" />
+                                            </td>
+                                        </tr>
+                                        <tr class="fontnormal">
+                                            <td width="30%" align="right" valign="top">
+                                                <div id="cashFlowThresholdDiv"  style="display: none;">
+                                                    <mifos:mifoslabel name="product.cashFlowWarningThreshold" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                                </div>
+                                            </td>
+                                            <td valign="top">
+                                                <div id="cashFlowThresholdInputDiv" style="display: none;">
+                                                        <mifos:mifosnumbertext property="cashFlowWarningThreshold" />
+                                                        <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" />
+                                                </div>
+                                            </td>
+                                       </tr>
+                                       
 									<tr class="fontnormal">
 										<td width="30%" align="right" valign="top"><mifos:mifoslabel
 											mandatory="yes" name="product.freqofinst"
