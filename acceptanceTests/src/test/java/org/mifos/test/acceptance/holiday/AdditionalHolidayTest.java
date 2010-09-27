@@ -467,10 +467,12 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         selenium.isTextPresent("MyOffice1232993831593");
     }
 
-    @Test
+
+    @Test(enabled=false) //disabled due to MIFOS-3785. Please enable once that issue is fixed.
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void testMoratoriumPushesFeesToFutureMeeting() throws Exception {
         // MIFOSTEST-281
+
 
         initRemote
                 .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
@@ -499,7 +501,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
         verifyFeesInPage("0.0");
 
-       // verifyFees("AdditionalHolidayTest_014_result_dbunit.xml.zip");
+        verifyFees("AdditionalHolidayTest_014_result_dbunit.xml.zip");
 
     }
 
