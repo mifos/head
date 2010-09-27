@@ -172,6 +172,7 @@ public class DataSetUpgradeUtil {
         Connection jdbcConnection = null;
 
         try {
+            // TODO use same db cxn info that Mifos uses! (local.properties)
             jdbcConnection = DriverManager.getConnection(
                     "jdbc:mysql://localhost/" + databaseName + "?sessionVariables=FOREIGN_KEY_CHECKS=0", user, password);
             jdbcConnection.setAutoCommit(false);
