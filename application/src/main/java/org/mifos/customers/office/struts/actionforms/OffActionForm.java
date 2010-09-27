@@ -33,6 +33,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.office.business.OfficeBO;
@@ -47,9 +48,10 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.util.UserContext;
 
-public class OffActionForm extends BaseActionForm {
+public class OffActionForm extends BaseActionForm implements QuestionResponseCapturer{
 
     private String globalOfficeNum;
 
@@ -73,10 +75,22 @@ public class OffActionForm extends BaseActionForm {
 
     private List<CustomFieldDto> customFields;
 
+    private List<QuestionGroupDetail> questionGroups;
+
     public OffActionForm() {
         this.customFields = new ArrayList<CustomFieldDto>();
         this.address = new Address();
 
+    }
+
+    @Override
+    public void setQuestionGroups(List<QuestionGroupDetail> questionGroups) {
+        this.questionGroups = questionGroups;
+    }
+
+    @Override
+    public List<QuestionGroupDetail> getQuestionGroups() {
+        return this.questionGroups;
     }
 
     public List<CustomFieldDto> getCustomFields() {
@@ -155,6 +169,7 @@ public class OffActionForm extends BaseActionForm {
         this.shortName = "";
         this.parentOfficeId = "";
         this.address = new Address();
+        this.setQuestionGroups(null);
 
     }
 

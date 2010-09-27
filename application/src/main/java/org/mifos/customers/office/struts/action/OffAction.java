@@ -20,6 +20,10 @@
 
 package org.mifos.customers.office.struts.action;
 
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -29,12 +33,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.struts.actionforms.SavingsActionForm;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.office.business.OfficeBO;
@@ -65,8 +74,10 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.MifosServiceFactory;
 
 public class OffAction extends BaseAction {
 
@@ -128,10 +139,10 @@ public class OffAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward preview(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+    public ActionForward preview(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-
-        return mapping.findForward(ActionForwards.preview_success.toString());
+        OffActionForm officeActionForm = (OffActionForm) form;
+        return createGroupQuestionnaire.fetchAppliedQuestions(mapping, officeActionForm, request, ActionForwards.preview_success);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -153,7 +164,7 @@ public class OffAction extends BaseAction {
         ListElement element = officeServiceFacade.createOffice(userContext.getId(), userContext.getPreferredLocale(), OperationMode.REMOTE_SERVER.getValue(), officeDto);
         offActionForm.setOfficeId(element.getId().toString());
         offActionForm.setGlobalOfficeNum(element.getName());
-
+        createGroupQuestionnaire.saveResponses(request, offActionForm, element.getId());
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 
@@ -192,8 +203,21 @@ public class OffAction extends BaseAction {
         loadCustomFieldDefinitions(request);
         actionForm.populate(officeDto);
         SessionUtils.setAttribute("officeDto", officeDto, request);
+        setCurrentPageUrl(request, officeDto);
         return mapping.findForward(ActionForwards.get_success.toString());
     }
+    private void setCurrentPageUrl(HttpServletRequest request, OfficeDto officeDto) throws PageExpiredException, UnsupportedEncodingException {
+        SessionUtils.removeThenSetAttribute("currentPageUrl", constructCurrentPageUrl(officeDto), request);
+    }
+
+    private String constructCurrentPageUrl(OfficeDto officeDto) throws UnsupportedEncodingException {
+        String url = String.format("offAction.do?officeId=%h",
+                officeDto.getId());
+        return URLEncoder.encode(url, "UTF-8");
+    }
+
+
+
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -368,4 +392,36 @@ public class OffAction extends BaseAction {
         SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESTATUSLIST, ((OfficeBusinessService) getService()).getStatusList(), request);
 
     }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward captureQuestionResponses(
+            final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "captureQuestionResponses");
+        ActionErrors errors = createGroupQuestionnaire.validateResponses(request, (OffActionForm) form);
+        if (errors != null && !errors.isEmpty()) {
+            addErrors(request, errors);
+            return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
+        }
+        return createGroupQuestionnaire.rejoinFlow(mapping);
+    }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward editQuestionResponses(
+            final ActionMapping mapping, final ActionForm form,
+            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "editQuestionResponses");
+        return createGroupQuestionnaire.editResponses(mapping, request, (OffActionForm) form);
+    }
+
+    private QuestionnaireFlowAdapter createGroupQuestionnaire =
+        new QuestionnaireFlowAdapter("Create", "Office",
+                ActionForwards.preview_success,
+                "custSearchAction.do?method=loadMainSearch",
+                new QuestionnaireServiceFacadeLocator() {
+                    @Override
+                    public QuestionnaireServiceFacade getService(HttpServletRequest request) {
+                        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
+                    }
+                });
 }

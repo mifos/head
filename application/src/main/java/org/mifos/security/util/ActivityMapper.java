@@ -286,6 +286,8 @@ public class ActivityMapper {
         activityMap.put("/offAction-update", SecurityConstants.OFFICE_EDIT_OFFICE);
         activityMap.put("/offAction-getAllOffices", SecurityConstants.VIEW);
         activityMap.put("/offAction-updateCache", SecurityConstants.VIEW);
+        activityMap.put("/offAction-captureQuestionResponses", SecurityConstants.VIEW);
+        activityMap.put("/offAction-editQuestionResponses", SecurityConstants.VIEW);
     }
 
     private void addSavingProductMappings() {
