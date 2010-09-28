@@ -43,7 +43,7 @@
         		<tr>
 	        		<td height="30" colspan="2" class="blueline">${adminDocument.name}</td>
 	        		<td width="45%" class="blueline"> 
-						<a href="birtAdminDocumentUploadAction.do?method=edit&admindocId=${adminDocument.id}">
+						<a href="editAdminDocs.ftl?id=${adminDocument.id}">
 						[@spring.message "manageReports.edit"/]</a>
 						|
 						<a href="birtAdminDocumentUploadAction.do?method=downloadAdminDocument&admindocId=${adminDocument.id}">
