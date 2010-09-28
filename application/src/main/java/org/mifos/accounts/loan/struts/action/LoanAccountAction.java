@@ -451,30 +451,16 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         Short productId = loanActionForm.getPrdOfferingIdValue();
         LoanOfferingBO loanOffering = getLoanOffering(productId, getUserContext(request).getLocaleId());
         setVariableInstallmentDetailsInSession(loanOffering, request);
-        CustomerDetailDto oldCustomer = (CustomerDetailDto) SessionUtils.getAttribute(LOANACCOUNTOWNER, request);
 
         DateTime disbursementDate = new DateTime(loanActionForm.getDisbursementDateValue(userContext
                 .getPreferredLocale()));
-        FundBO fund = getFund(request, loanActionForm.getLoanOfferingFundValue());
 
-        LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto = null;
-        if (isRedoOperation(request.getParameter(PERSPECTIVE))) {
-            loanScheduleDetailsDto = loanServiceFacade.retrieveScheduleDetailsForRedoLoan(userContext, oldCustomer
-                    .getCustomerId(), disbursementDate, fund, loanActionForm);
-            loanActionForm.initializeTransactionFields(loanScheduleDetailsDto.getPaymentDataBeans());
-        } else {
-            loanScheduleDetailsDto = loanServiceFacade.retrieveScheduleDetailsForLoanCreation(userContext, oldCustomer
-                    .getCustomerId(), disbursementDate, fund, loanActionForm);
-        }
+        LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto =
+                retrieveLoanSchedule(request, loanActionForm, userContext, disbursementDate);
 
         if (loanScheduleDetailsDto.isGlimApplicable()) {
             setGlimEnabledSessionAttributes(request, loanScheduleDetailsDto.isGroup());
             loanActionForm.setLoanAmount(Double.toString(loanScheduleDetailsDto.getGlimLoanAmount()));
-        }
-
-        String perspective = request.getParameter(PERSPECTIVE);
-        if (perspective != null) {
-            request.setAttribute(PERSPECTIVE, request.getParameter(PERSPECTIVE));
         }
 
         loanActionForm.setInstallments(loanScheduleDetailsDto.getInstallments());
@@ -486,6 +472,33 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         return createLoanQuestionnaire.fetchAppliedQuestions(
                 mapping, loanActionForm, request, ActionForwards.schedulePreview_success);
+    }
+
+    private LoanCreationLoanScheduleDetailsDto retrieveLoanSchedule(HttpServletRequest request, LoanAccountActionForm loanActionForm,
+                                 UserContext userContext, DateTime disbursementDate) throws ApplicationException {
+        CustomerDetailDto oldCustomer = (CustomerDetailDto) SessionUtils.getAttribute(LOANACCOUNTOWNER, request);
+        FundBO fund = getFund(request, loanActionForm.getLoanOfferingFundValue());
+        LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto;
+        try {
+            if (isRedoOperation(request.getParameter(PERSPECTIVE))) {
+                loanScheduleDetailsDto = loanServiceFacade.retrieveScheduleDetailsForRedoLoan(userContext, oldCustomer
+                        .getCustomerId(), disbursementDate, fund, loanActionForm);
+                loanActionForm.initializeTransactionFields(loanScheduleDetailsDto.getPaymentDataBeans());
+            } else {
+                loanScheduleDetailsDto = loanServiceFacade.retrieveScheduleDetailsForLoanCreation(userContext, oldCustomer
+                        .getCustomerId(), disbursementDate, fund, loanActionForm);
+            }
+        } finally {
+            setPerspectiveOnRequest(request);
+        }
+        return loanScheduleDetailsDto;
+    }
+
+    private void setPerspectiveOnRequest(HttpServletRequest request) {
+        String perspective = request.getParameter(PERSPECTIVE);
+        if (perspective != null) {
+            request.setAttribute(PERSPECTIVE, request.getParameter(PERSPECTIVE));
+        }
     }
 
     private void setVariableInstallmentDetailsInSession(LoanOfferingBO loanOffering, HttpServletRequest request) throws Exception{
