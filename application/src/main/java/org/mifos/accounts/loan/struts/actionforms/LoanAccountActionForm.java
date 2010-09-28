@@ -83,6 +83,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
 
 public class LoanAccountActionForm extends BaseActionForm implements QuestionResponseCapturer {
 
@@ -917,7 +918,9 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     private void checkValidationForPreview(ActionErrors errors, MifosCurrency currency, HttpServletRequest request) {
-        validateRedoLoanPayments(request, errors, currency);
+        if (isRedoOperation()) {
+            validateRedoLoanPayments(request, errors, currency);
+        }
     }
 
     private void checkValidationForManagePreview(ActionErrors errors, MifosCurrency currency, HttpServletRequest request)
@@ -1258,9 +1261,6 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     private void validateRedoLoanPayments(HttpServletRequest request, ActionErrors errors, MifosCurrency currency) {
         Locale locale = getUserContext(request).getPreferredLocale();
         try {
-            if (paymentDataBeans == null || paymentDataBeans.size() <= 0) {
-                return;
-            }
             CustomerBO customer = getCustomer(request);
             for (PaymentDataTemplate template : paymentDataBeans) {
                 // No data for amount and transaction date, validation not
@@ -1499,5 +1499,9 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
 
     public List<RepaymentScheduleInstallment> getInstallments() {
         return installments;
+    }
+
+    private boolean isRedoOperation() {
+        return PERSPECTIVE_VALUE_REDO_LOAN.equals(this.perspective) && CollectionUtils.isNotEmpty(paymentDataBeans);
     }
 }
