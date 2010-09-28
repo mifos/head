@@ -35,7 +35,7 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 		<span id="page.id" title="EditLoanProduct" />
 		<script src="pages/framework/js/date.js"></script>
-		<script type="text/javascript" src="pages/application/loan/js/EditLoanProduct.js"></script>
+		<script type="text/javascript" src="pages/application/loan/js/EditLoanProduct.js?<%=(new java.util.Date()).toString()%>"></script>
         <html-el:form action="/loanproductaction"
 			onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) &&
 				validateMyForm(endDate,endDateFormat,endDateYY))"
@@ -637,6 +637,31 @@ explanation of the license and how it is applied.
                                 </td>
                             </tr>
                         </c:if>
+
+						<tr class="fontnormal">
+							<td width="30%" align="right" valign="top"><mifos:mifoslabel
+								name="product.cashFlowValidation" bundle="ProductDefUIResources"
+								isColonRequired="yes" /></td>
+							<td valign="top"><html-el:checkbox
+								styleId="editLoanProduct.checkbox.cashFlowValidation"
+								onclick="showCashFlowInputs();" property="cashFlowValidation"
+								value="1" /></td>
+						</tr>
+						<tr class="fontnormal">
+							<td width="30%" align="right" valign="top">
+							<div id="cashFlowThresholdDiv" style="display: none;"><mifos:mifoslabel
+								name="product.cashFlowWarningThreshold"
+								bundle="ProductDefUIResources" isColonRequired="yes" /></div>
+							</td>
+							<td valign="top">
+							<div id="cashFlowThresholdInputDiv" style="display: none;">
+							<mifos:decimalinput
+								styleId="editLoanProduct.input.cashFlowWarningThreshold"
+								property="cashFlowWarningThreshold" /> <mifos:mifoslabel
+								name="product.perc" bundle="ProductDefUIResources" /></div>
+							</td>
+						</tr>
+
 						<tr class="fontnormal">
 							<td width="30%" align="right" valign="top"><mifos:mifoslabel
 								name="product.freqofinst" bundle="ProductDefUIResources" isColonRequired="yes"/></td>
@@ -1050,6 +1075,7 @@ explanation of the license and how it is applied.
 							checkRow();
 						    checkType();
                             showVariableInstallmentInputs();
+                            showCashFlowInputs(); 
 						</script>
 					</table>
 					<br>

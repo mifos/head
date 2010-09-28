@@ -120,6 +120,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
     private final Set<NoOfInstallFromLoanCycleBO> noOfInstallFromLoanCycle;
     private final Set<NoOfInstallSameForAllLoanBO> noOfInstallSameForAllLoan;
 
+    private Short cashFlowCheckEnabled;
+    private Double cashFlowCheckThreshold;
+
     public static LoanOfferingBO createNew(Integer userId, String globalProductId, String name, String shortName, String description, ProductCategoryBO productCategory,
             DateTime startDate, DateTime endDate, PrdApplicableMasterEntity applicableToEntity, MifosCurrency currency, InterestTypesEntity interestTypeEntity, Double minRate,
             Double maxRate, Double defaultRate, RecurrenceType recurrence, Integer recurEvery, GLCodeEntity interestGlCode, GLCodeEntity principalGlCode,
@@ -458,6 +461,32 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 new HashSet<NoOfInstallFromLoanCycleBO>(), new HashSet<LoanAmountSameForAllLoanBO>(),
                 new HashSet<NoOfInstallSameForAllLoanBO>());
     }
+
+
+    public void setCashFlowCheckEnabled(boolean enabled) {
+        this.cashFlowCheckEnabled = enabled ? YesNoFlag.YES.getValue() : YesNoFlag.NO.getValue();
+    }
+
+    public void setCashFlowCheckEnabled(Short cashFlowCheckEnabled) {
+        this.cashFlowCheckEnabled = cashFlowCheckEnabled;
+    }
+
+    public boolean isCashFlowCheckEnabled() {
+        return YesNoFlag.YES.getValue().equals(this.cashFlowCheckEnabled);
+    }
+
+    public Short getCashFlowCheckEnabled(){
+        return cashFlowCheckEnabled;
+    }
+
+    public void setCashFlowCheckThreshold (Double threshold) {
+        this.cashFlowCheckThreshold = threshold;
+    }
+
+    public Double getCashFlowCheckThreshold () {
+        return cashFlowCheckThreshold;
+    }
+
 
     public GracePeriodTypeEntity getGracePeriodType() {
         return gracePeriodType;
@@ -1494,4 +1523,5 @@ public class LoanOfferingBO extends PrdOfferingBO {
     public void setVariableInstallmentDetails(VariableInstallmentDetailsBO variableInstallmentDetails) {
         this.variableInstallmentDetails = variableInstallmentDetails;
     }
+
 }

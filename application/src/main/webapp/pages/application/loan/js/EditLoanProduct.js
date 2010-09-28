@@ -138,3 +138,18 @@ function showVariableInstallmentInputs() {
 
    }
 }
+
+
+function showCashFlowInputs() {
+    var isVariableInstallmentType = document.getElementById("editLoanProduct.checkbox.cashFlowValidation");
+    if (isVariableInstallmentType.checked == true) {
+        document.getElementById("cashFlowThresholdDiv").style.display = "block";
+        document.getElementById("cashFlowThresholdInputDiv").style.display = "block";
+    } else {
+        document.getElementById("cashFlowThresholdDiv").style.display = "none";
+        document.getElementById("cashFlowThresholdInputDiv").style.display = "none";
+   }
+}
+
+
+

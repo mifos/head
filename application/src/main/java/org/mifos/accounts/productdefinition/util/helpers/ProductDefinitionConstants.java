@@ -302,5 +302,7 @@ public interface ProductDefinitionConstants {
     String VARIABLE_INSTALLMENT_MIN_GAP_MORE_THAN_ALLOWED = "errors.variableInstallmentMinGapMoreThanAllowed";
     String VARIABLE_INSTALLMENT_MAX_GAP_MORE_THAN_ALLOWED = "errors.variableInstallmentMaxGapMoreThanAllowed";
     String VARIABLE_INSTALLMENT_MIN_AMOUNT_INVALID_FORMAT = "errors.minInstallmentAmountInvalidFormat";
+    String CASHFLOW_WARNING_THRESHOLD_INVALID = "errors.cashFlowWarningThresholdInvalid";
     int MAX_ALLOWED_INSTALLMENT_GAP = 999;
+    String CASHFLOW_WARNING_THRESHOLD_INVALID_FORMAT = "errors.cashflowwarninginvalidformat";
 }

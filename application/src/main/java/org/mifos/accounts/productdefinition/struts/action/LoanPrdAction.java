@@ -20,6 +20,14 @@
 
 package org.mifos.accounts.productdefinition.struts.action;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -76,13 +84,6 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * @deprecated this entire class will soon be no longer used and will be deleted after localisation of messages.properties files is complete.
@@ -220,13 +221,22 @@ public class LoanPrdAction extends BaseAction {
                 loanPrdActionForm, loanPrdActionForm.shouldWaiverInterest());
 
         loanOffering.setCurrency(getCurrency(loanPrdActionForm.getCurrencyId()));
+
+
+        loanOffering.setCashFlowCheckEnabled(loanPrdActionForm.getCashFlowValidation());
+        if(loanPrdActionForm.getCashFlowValidation()) {
+            loanOffering.setCashFlowCheckThreshold(loanPrdActionForm.getCashFlowWarningThresholdValue());
+        }
+
         mapVariableInstallmentDetails(loanOffering, loanPrdActionForm);
+
         loanOffering.save();
         request.setAttribute(ProductDefinitionConstants.LOANPRODUCTID, loanOffering.getPrdOfferingId());
         request.setAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM, loanOffering.getGlobalPrdOfferingNum());
 
         return mapping.findForward(ActionForwards.create_success.toString());
     }
+
 
     private void mapVariableInstallmentDetails(LoanOfferingBO loanOffering, LoanPrdActionForm loanPrdActionForm) {
         boolean variableInstallmentsAllowed = loanPrdActionForm.canConfigureVariableInstallments();
@@ -337,6 +347,12 @@ public class LoanPrdAction extends BaseAction {
                 getFeeList((List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE, request),
                         loanPrdActionForm.getPrdOfferinFees()), loanPrdActionForm.getRecurAfterValue(), RecurrenceType
                         .fromInt(loanPrdActionForm.getFreqOfInstallmentsValue()), loanPrdActionForm, loanPrdActionForm.shouldWaiverInterest());
+
+        loanOffering.setCashFlowCheckEnabled(loanPrdActionForm.getCashFlowValidation());
+        if(loanPrdActionForm.getCashFlowValidation() && (!StringUtils.isEmpty(loanPrdActionForm.getCashFlowWarningThreshold()))) {
+            loanOffering.setCashFlowCheckThreshold(Double.valueOf(loanPrdActionForm.getCashFlowWarningThreshold()));
+        }
+
         logger.debug("update method of Loan Product Action called" + loanPrdActionForm.getPrdOfferingId());
         return mapping.findForward(ActionForwards.update_success.toString());
     }
@@ -553,6 +569,12 @@ public class LoanPrdAction extends BaseAction {
         loanPrdActionForm.setPrincipalGLCode(getStringValue(loanProduct.getPrincipalGLcode().getGlcodeId()));
         loanPrdActionForm.setInterestGLCode(getStringValue(loanProduct.getInterestGLcode().getGlcodeId()));
         setVariableInstallmentDetailsOnLoanProductForm(loanPrdActionForm, loanProduct);
+
+        loanPrdActionForm.setCashFlowValidation(loanProduct.isCashFlowCheckEnabled());
+        if(loanProduct.getCashFlowCheckThreshold()!=null) {
+            loanPrdActionForm.setCashFlowWarningThreshold(String.valueOf(loanProduct.getCashFlowCheckThreshold()));
+        }
+
         if (loanProduct.isLoanAmountTypeSameForAllLoan()) {
             loanPrdActionForm.setLoanAmtCalcType(getStringValue(ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN));
             Iterator<LoanAmountSameForAllLoanBO> loanAmountSameForAllItr = loanProduct.getLoanAmountSameForAllLoan()

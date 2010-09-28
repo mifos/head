@@ -20,9 +20,15 @@
 
 package org.mifos.accounts.productdefinition.struts.actionforms;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -51,13 +57,8 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
-
-import javax.servlet.http.HttpServletRequest;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoanPrdActionForm extends BaseActionForm {
     private static final Logger logger = LoggerFactory.getLogger(LoanPrdActionForm.class);
@@ -302,7 +303,9 @@ public class LoanPrdActionForm extends BaseActionForm {
     private Double minimumInstallmentAmountValue;
 
     private String cashFlowValidation;
-    private Double cashFlowWarningThreshold;
+
+    private String cashFlowWarningThreshold;
+    private Double cashFlowWarningThresholdValue;
 
 
 
@@ -1851,6 +1854,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
         validateInterestGLCode(request, errors);
         validateVariableInstallmentPeriods(errors, locale);
+        validateCashFlow(errors, locale);
         logger.debug("validateForPreview method of Loan Product Action form method called :" + prdOfferingName);
     }
 
@@ -1883,6 +1887,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
         validateInterestGLCode(request, errors);
         validateVariableInstallmentPeriods(errors, locale);
+        validateCashFlow(errors, locale);
         logger.debug("validateForEditPreview method of Loan Product Action form method called :" + prdOfferingName);
     }
 
@@ -2378,6 +2383,38 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     }
 
+
+    private void validateCashFlow(ActionErrors actionErrors, Locale locale) {
+
+        DoubleConversionResult cashFlowWarningThresholdResult = null;
+        Double cashFlowThreshold = null;
+        List<ConversionError> errorList = null;
+
+        if(getCashFlowValidation()) {
+            if(cashFlowWarningThreshold != null && (!cashFlowWarningThreshold.trim().equals(""))){
+                cashFlowWarningThresholdResult = parseDoubleForInterest(cashFlowWarningThreshold);
+                errorList = cashFlowWarningThresholdResult.getErrors();
+                if (errorList.size() > 0) {
+                    for (int i = 0; i < errorList.size(); i++) {
+                        addError(actionErrors, ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID_FORMAT,
+                                ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID_FORMAT, getConversionErrorText(errorList
+                                        .get(i), locale));
+                    }
+                } else {
+                    cashFlowThreshold = cashFlowWarningThresholdResult.getDoubleValue();
+                }
+            }
+
+            if(cashFlowThreshold != null) {
+                if(cashFlowThreshold > 100) {
+                    addError(actionErrors,"cashFlowWarningThreshold",ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID);
+                }
+                cashFlowWarningThresholdValue = cashFlowThreshold;
+            }
+
+        }
+    }
+
     private void validateMinMaxDefLoanAmounts(ActionErrors errors, String maxLoanAmountStr, String minLoanAmountStr,
             String defLoanAmountStr, String error, String rownum, Locale locale) {
 
@@ -2721,6 +2758,9 @@ public class LoanPrdActionForm extends BaseActionForm {
         return getDoubleValueForMoney(minimumInstallmentAmount);
     }
 
+
+
+
     private void validateVariableInstallmentPeriods(ActionErrors actionErrors, Locale locale) {
         if (canConfigureVariableInstallments()) {
             validateMinimumGapForVariableInstallments(actionErrors);
@@ -2729,6 +2769,9 @@ public class LoanPrdActionForm extends BaseActionForm {
             validateMinimumInstallmentAmountForValriableInstallments(actionErrors, locale);
         }
     }
+
+
+
 
     private void validateMinimumInstallmentAmountForValriableInstallments(ActionErrors actionErrors, Locale locale) {
         if (StringUtils.isNotEmpty(minimumInstallmentAmount)) {
@@ -2807,30 +2850,34 @@ public class LoanPrdActionForm extends BaseActionForm {
         return getBooleanValue(canConfigureVariableInstallments);
     }
 
-    public boolean isCashFlowValidation() {
+    public boolean getCashFlowValidation() {
         return getBooleanValue(cashFlowValidation);
     }
 
-    public String getCashFlowValidation() {
-        return cashFlowValidation;
-    }
 
     public void setCashFlowValidation(boolean cashFlowValidation) {
         this.setCashFlowValidation(getStringValue(cashFlowValidation));
     }
-
 
     private void setCashFlowValidation(String cashFlowValidation) {
         this.cashFlowValidation = cashFlowValidation;
 
     }
 
-    public void setCashFlowWarningThreshold(Double cashFlowWarningThreshold) {
+
+    public void setCashFlowWarningThreshold(String cashFlowWarningThreshold) {
         this.cashFlowWarningThreshold = cashFlowWarningThreshold;
     }
 
-    public Double getCashFlowWarningThreshold() {
+    public String getCashFlowWarningThreshold() {
         return cashFlowWarningThreshold;
+    }
+
+    public Double getCashFlowWarningThresholdValue() {
+        if (StringUtils.isEmpty(cashFlowWarningThreshold)) {
+            return cashFlowWarningThresholdValue;
+        }
+        return getDoubleValue(cashFlowWarningThreshold);
     }
 
 }

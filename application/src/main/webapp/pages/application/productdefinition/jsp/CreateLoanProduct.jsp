@@ -39,7 +39,7 @@ explanation of the license and how it is applied.
 		<script src="pages/framework/js/date.js"></script>
 		<script src="pages/framework/js/func.js"></script>
 		<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
-		<script type="text/javascript" src="pages/application/loan/js/CreateLoanProduct.js"></script>
+		<script type="text/javascript" src="pages/application/loan/js/CreateLoanProduct.js?<%=(new java.util.Date()).toString()%>"></script>
 		<html-el:form action="/loanproductaction"
 			onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) &&
 				validateMyForm(endDate,endDateFormat,endDateYY))"
@@ -274,7 +274,6 @@ explanation of the license and how it is applied.
 												<td class="drawtablerow"><mifos:decimalinput size="10"
 													property="defaultLoanAmount" /></td>
 											</tr>
-
 										</table>
 										</td>
 									</tr>
@@ -608,7 +607,7 @@ explanation of the license and how it is applied.
                                             </td>
                                             <td valign="top">
                                                 <div id="cashFlowThresholdInputDiv" style="display: none;">
-                                                        <mifos:mifosnumbertext property="cashFlowWarningThreshold" />
+                                                        <mifos:decimalinput styleId= "createLoanProduct.input.cashFlowWarningThreshold" property="cashFlowWarningThreshold" />
                                                         <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" />
                                                 </div>
                                             </td>
@@ -948,6 +947,7 @@ explanation of the license and how it is applied.
 										showLoanAmountType();
 										showInstallType();
 										showVariableInstallmentInputs();
+										showCashFlowInputs();
 									</script>
 
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
