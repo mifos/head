@@ -20,17 +20,6 @@
 
 package org.mifos.framework.util.helpers;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
-import java.util.StringTokenizer;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -40,6 +29,16 @@ import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
+
+import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.StringTokenizer;
 
 public class DateUtils {
 
@@ -145,13 +144,12 @@ public class DateUtils {
     }
 
     public static Date getDate(String value) {
-        return getDate(value, dateLocale);
+        return getDate(value, dateLocale, "dd" + dateSeparator + "MM" + dateSeparator + "yyyy");
     }
 
-    public static Date getDate(String value, Locale dateLocale) {
+    public static Date getDate(String value, Locale dateLocale, String formatStr) {
         if (value != null && !value.equals("")) {
             try {
-                String formatStr = "dd" + dateSeparator + "MM" + dateSeparator + "yyyy";
                 SimpleDateFormat format = new SimpleDateFormat(formatStr, dateLocale);
                 format.setLenient(false);
                 return format.parse(value);
@@ -452,6 +450,10 @@ public class DateUtils {
             }
         }
         return age;
+    }
+
+    public static String getDateSeparatorByLocale(Locale dateLocale, int dateFormat) {
+        return new LocalizationConverter().getDateSeparator(dateLocale, dateFormat);
     }
 
     public static String getDBtoUserFormatString(java.util.Date dbDate, Locale userLocale) {

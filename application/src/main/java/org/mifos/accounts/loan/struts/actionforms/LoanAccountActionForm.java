@@ -197,7 +197,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
 
     private List<QuestionGroupDetail> questionGroups;
 
-    private List<RepaymentScheduleInstallment> installments;
+    private List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
 
     public Date getOriginalDisbursementDate() {
         return this.originalDisbursementDate;
@@ -1460,7 +1460,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         clientDetails = new ArrayList<LoanAccountDetailsDto>(clientDetailsCopy);
     }
 
-    public void setInstallments(List<RepaymentScheduleInstallment> installments) {
+    public void initializeInstallments(List<RepaymentScheduleInstallment> installments) {
         this.installments = installments;
     }
 

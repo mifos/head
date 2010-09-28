@@ -20,10 +20,12 @@
 
 package org.mifos.accounts.loan.util.helpers;
 
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -45,8 +47,14 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     private Locale locale;
 
+    private Money totalValue;
+
+    private String total;
+
+    private String formatStr;
+
     public RepaymentScheduleInstallment(int installment, Date dueDateValue, Money principal, Money interest, Money fees,
-            Money miscFees, Money miscPenalty) {
+                                        Money miscFees, Money miscPenalty, Locale locale) {
         this.installment = installment;
         this.dueDateValue = dueDateValue;
         this.principal = principal;
@@ -54,6 +62,11 @@ public class RepaymentScheduleInstallment implements Serializable {
         this.fees = fees;
         this.miscFees = miscFees;
         this.miscPenalty = miscPenalty;
+        this.totalValue = principal.add(interest).add(fees).add(miscFees).add(miscPenalty);
+        this.total = this.totalValue.toString();
+        this.locale = locale;
+        String dateSeparator = DateUtils.getDateSeparatorByLocale(this.locale, DateFormat.MEDIUM);
+        this.formatStr = String.format("dd%sMMM%syyyy", dateSeparator, dateSeparator);
     }
 
     public void setInstallment(Integer installment) {
@@ -96,8 +109,8 @@ public class RepaymentScheduleInstallment implements Serializable {
         return fees;
     }
 
-    public Money getTotal() {
-        return principal.add(interest).add(fees).add(miscFees).add(miscPenalty);
+    public Money getTotalValue() {
+        return totalValue;
     }
 
     public String getDueDateInUserLocale() {
@@ -107,10 +120,6 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     public Locale getLocale() {
         return locale;
-    }
-
-    public void setLocale(Locale locale) {
-        this.locale = locale;
     }
 
     public Money getMiscFees() {
@@ -130,10 +139,27 @@ public class RepaymentScheduleInstallment implements Serializable {
     }
 
     public String getDueDate() {
-        return getDueDateInUserLocale();
+        return DateUtils.getDBtoUserFormatString(dueDateValue, locale);
+
     }
 
     public void setDueDate(String dueDate) {
-        this.dueDateValue = DateUtils.getDate(dueDate, locale);
+        this.dueDateValue = DateUtils.getDate(dueDate, locale, formatStr);
+    }
+
+    public void setTotalValue(String totalValue) {
+        this.totalValue = new Money(getCurrency(), totalValue);
+    }
+
+    private MifosCurrency getCurrency() {
+        return principal.getCurrency();
+    }
+
+    public String getTotal() {
+        return total;
+    }
+
+    public void setTotal(String total) {
+        this.total = total;
     }
 }

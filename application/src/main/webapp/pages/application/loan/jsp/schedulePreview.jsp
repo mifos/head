@@ -241,7 +241,6 @@ explanation of the license and how it is applied.
                                                     </tr>
                                                     <tr>
                                                     <c:if test="${requestScope.perspective != 'redoLoan'}">
-                                                		<c:set value="${loanAccountActionForm.installments}" var="repaymentScheduleInstallments" />
                                                         <td valign="top" align="center">
                                                             <table width="100%" border="0" cellpadding="3" cellspacing="0">
                                                             <tr  class="drawtablerowbold"  >
@@ -252,30 +251,30 @@ explanation of the license and how it is applied.
                                                                 <td width="17%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.fees" /></b></td>
                                                                 <td width="17%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.total" /></b></td>
                                                             </tr>
-                                                            <c:forEach var="installment" items="${repaymentScheduleInstallments}" varStatus="loopStatus">
+                                                            <c:forEach var="installments" items="${loanAccountActionForm.installments}" varStatus="loopStatus">
                                                             <tr>
                                                                 <td class="drawtablerow" align="center">
-                                                                    <c:out value="${installment.installment}" />
+                                                                    <c:out value="${installments.installment}" />
                                                                 </td>
                                                                 <td class="drawtablerow" align="center">
-                                                                    <mifos:mifosalphanumtext styleId="dueDate.${loopStatus.index}" styleClass="date-pick" name="installment" property="dueDate" maxlength="10" />
+                                                                    <html-el:text styleId="installment.dueDate.${loopStatus.index}" styleClass="date-pick" indexed="true" name="installments" property="dueDate" size="10" />
                                                                 </td>
                                                                 <td class="drawtablerow" align="center">
-                                                                    <c:out value="${installment.principal}" />
+                                                                    <c:out value="${installments.principal}" />
                                                                 </td>
                                                                 <td class="drawtablerow" align="center">
-                                                                    <c:out value="${installment.interest}" />
+                                                                    <c:out value="${installments.interest}" />
                                                                 </td>
                                                                 <td class="drawtablerow" align="center">
-                                                                    <c:out value="${installment.fees}" />
+                                                                    <c:out value="${installments.fees}" />
                                                                 </td>
                                                                 <td class="drawtablerow" align="center">
                                                                     <c:choose>
-                                                                        <c:when test="${loopStatus.index == (fn:length(repaymentScheduleInstallments) - 1)}">
-                                                                            <c:out value="${installment.total}" />
+                                                                        <c:when test="${loopStatus.index == (fn:length(loanAccountActionForm.installments) - 1)}">
+                                                                            <c:out value="${installments.total}" />
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                            <html-el:text styleId="schedulePreview.input.loanAmount" name="installment" indexed="true" property="total" size="10" />
+                                                                            <html-el:text styleId="installments.total" name="installments" indexed="true" property="total" size="10" />
                                                                         </c:otherwise>
                                                                     </c:choose>
                                                                 </td>

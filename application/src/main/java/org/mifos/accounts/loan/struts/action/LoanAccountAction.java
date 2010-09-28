@@ -463,8 +463,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             loanActionForm.setLoanAmount(Double.toString(loanScheduleDetailsDto.getGlimLoanAmount()));
         }
 
-        loanActionForm.setInstallments(loanScheduleDetailsDto.getInstallments());
-
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, loanScheduleDetailsDto
                 .isLoanPendingApprovalDefined(), request);
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, disbursementDate, request);
@@ -487,6 +485,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             } else {
                 loanScheduleDetailsDto = loanServiceFacade.retrieveScheduleDetailsForLoanCreation(userContext, oldCustomer
                         .getCustomerId(), disbursementDate, fund, loanActionForm);
+                loanActionForm.initializeInstallments(loanScheduleDetailsDto.getInstallments());
             }
         } finally {
             setPerspectiveOnRequest(request);

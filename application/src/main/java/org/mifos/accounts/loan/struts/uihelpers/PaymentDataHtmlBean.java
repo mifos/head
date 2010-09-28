@@ -20,9 +20,6 @@
 
 package org.mifos.accounts.loan.struts.uihelpers;
 
-import java.util.Date;
-import java.util.Locale;
-
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
@@ -31,6 +28,9 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+
+import java.util.Date;
+import java.util.Locale;
 
 public class PaymentDataHtmlBean implements PaymentDataTemplate {
     private String amount;
@@ -49,7 +49,7 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
         long currentTime = new DateTimeService().getCurrentJavaDateTime().getTime();
         this.date = DateUtils.getUserLocaleDate(locale, installment.getDueDateValue().toString());
         if (installment.getDueDateValue().getTime() <= currentTime) {
-            this.amount = installment.getTotal().toString();
+            this.amount = installment.getTotalValue().toString();
         }
 
         this.installment = installment;

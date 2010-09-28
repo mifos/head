@@ -20,6 +20,12 @@
 
 package org.mifos.framework.util;
 
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
+import org.mifos.config.Localization;
+import org.mifos.framework.util.helpers.ConversionError;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
+
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -28,12 +34,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.config.AccountingRules;
-import org.mifos.config.Localization;
-import org.mifos.framework.util.helpers.ConversionError;
-import org.mifos.framework.util.helpers.DoubleConversionResult;
 
 public class LocalizationConverter {
     private DecimalFormat currentDecimalFormat;
@@ -314,8 +314,13 @@ public class LocalizationConverter {
                     + " and language code: " + dateLocale.getLanguage());
         }
 
+        return getDateSeparator(dateLocale, DateFormat.SHORT);
+
+    }
+
+    public String getDateSeparator(Locale dateLocale, int dateFormat) {
         String separator = "";
-        DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, dateLocale);
+        DateFormat format = DateFormat.getDateInstance(dateFormat, dateLocale);
         String now = format.format(new DateTimeService().getCurrentJavaDateTime());
         char chArray[] = now.toCharArray();
         for (char element : chArray) {
@@ -325,7 +330,6 @@ public class LocalizationConverter {
             }
         }
         return separator;
-
     }
 
     public DateFormat getDateFormat() {

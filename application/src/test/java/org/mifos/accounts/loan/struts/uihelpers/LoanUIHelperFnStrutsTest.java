@@ -101,8 +101,7 @@ public class LoanUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
                 new Money(getCurrency(), "100.0"),
                 new Money(getCurrency(), "100.0"),
                 new Money(getCurrency(), "100.0"),
-                new Money(getCurrency(), "100.0"));
-        repaymentScheduleInstallment.setLocale(new Locale("1"));
+                new Money(getCurrency(), "100.0"), new Locale("1"));
 
         Money m = new Money(getCurrency(), "100");
        Assert.assertEquals("Due date", new Date(l), repaymentScheduleInstallment.getDueDateValue());
