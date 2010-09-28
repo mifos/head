@@ -1277,6 +1277,8 @@ create table loan_offering (
   interest_waiver_flag smallint default 0,
   variable_installment_flag smallint default 0,
   variable_installment_details_id smallint,
+  cashflow_comparison_flag smallint default 0,
+  cashflow_threshold decimal(5, 2),
   primary key(prd_offering_id),
   foreign key(principal_glcode_id)
     references gl_code(glcode_id)
