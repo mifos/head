@@ -20,27 +20,53 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.BatchJobsPage;
 
 import com.thoughtworks.selenium.Selenium;
 
 public class BatchJobHelper {
-    private static final String SERVICE = "runBatchJobs.ftl";
 
-    private final Selenium selenium;
+    private final BatchJobsPage batchJobsPage;
 
     public BatchJobHelper(Selenium selenium) {
-        this.selenium = selenium;
+        AdminPage adminPage = new AdminPage(selenium);
+        batchJobsPage = adminPage.navigateToBatchJobsPage();
     }
 
     public void runAllBatchJobs() {
-        selenium.open(SERVICE + "?runAllBatchJobs=true");
+       //TODO Use more elegant means to select all jobs in the batch job page
+
+       List<String> jobs = new ArrayList<String>();
+       jobs.add("ApplyHolidayChangesTaskJob");
+       jobs.add("SavingsIntCalcTaskJob");
+       jobs.add("SavingsIntPostingTaskJob");
+       jobs.add("LoanArrearsAgingTaskJob");
+       jobs.add("ApplyCustomerFeeChangesTaskJob");
+       jobs.add("BranchReportTaskJob");
+       jobs.add("LoanArrearsAndPortfolioAtRiskTaskJob");
+       jobs.add("ProductStatusJob");
+       jobs.add("GenerateMeetingsForCustomerAndSavingsTaskJob");
+
+//       String[] fields = selenium.getAllFields();
+//       for (String field: fields){
+//           if (field.endsWith("TaskJob")){
+//               jobs.add(field);
+//           }
+//       }
+
+       runSomeBatchJobs(jobs);
+
     }
 
     public void runSomeBatchJobs(List<String> jobsToRun) {
-        selenium.open(SERVICE + "?" + StringUtils.join(jobsToRun, '&'));
+        for (String name : jobsToRun) {
+            batchJobsPage.selectBatchJob(name);
+        }
+        batchJobsPage.runSelectedBatchJobs();
     }
 
 }

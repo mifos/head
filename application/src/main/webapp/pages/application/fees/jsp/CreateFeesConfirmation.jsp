@@ -53,7 +53,7 @@ explanation of the license and how it is applied.
                     <br>
                     <br>
                     </span>
-					<html-el:link href="feeaction.do?method=get&feeId=${sessionScope.feeactionform.feeId}&randomNUm=${sessionScope.randomNUm}">
+					<html-el:link styleId="CreateFeesConfirmation.label.viewFeeDetail" href="feeaction.do?method=get&feeId=${sessionScope.feeactionform.feeId}&randomNUm=${sessionScope.randomNUm}">
 					<mifos:mifoslabel name="Fees.viewfeedetail" bundle="FeesUIResources"></mifos:mifoslabel>
 					</html-el:link>
                     

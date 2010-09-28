@@ -25,7 +25,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -193,7 +192,7 @@ public class SavingsBO extends AccountBO {
             final Short createdByUserId, List<Holiday> holidays) {
 
         super(AccountTypes.SAVINGS_ACCOUNT, accountState, customer, offsettingAllowable, scheduledPayments,
-                new HashSet<AccountFeesEntity>(), createdDate, createdByUserId);
+                new LinkedHashSet<AccountFeesEntity>(), createdDate, createdByUserId);
         this.savingsOffering = savingsProduct;
         this.savingsPaymentStrategy = savingsPaymentStrategy;
         this.savingsTransactionActivityHelper = savingsTransactionActivityHelper;
@@ -1413,7 +1412,7 @@ public class SavingsBO extends AccountBO {
             logger.debug("transaction count before adding reversal transactions: "
                     + lastPayment.getAccountTrxns().size());
             List<AccountTrxnEntity> newlyAddedTrxns = reversalAdjustment(adjustmentComment, lastPayment);
-            buildFinancialEntries(new HashSet<AccountTrxnEntity>(newlyAddedTrxns));
+            buildFinancialEntries(new LinkedHashSet<AccountTrxnEntity>(newlyAddedTrxns));
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
@@ -1476,7 +1475,7 @@ public class SavingsBO extends AccountBO {
 
     private Set<AccountTrxnEntity> createWithdrawalTrxnsAfterAdjust(final AccountPaymentEntity newAccountPayment,
             final AccountPaymentEntity lastAccountPayment, final Money newAmount) throws AccountException {
-        Set<AccountTrxnEntity> newTrxns = new HashSet<AccountTrxnEntity>();
+        Set<AccountTrxnEntity> newTrxns = new LinkedHashSet<AccountTrxnEntity>();
         SavingsTrxnDetailEntity accountTrxn = null;
         // create transaction for withdrawal
         SavingsTrxnDetailEntity oldSavingsAccntTrxn = null;
@@ -1502,7 +1501,7 @@ public class SavingsBO extends AccountBO {
     private Set<AccountTrxnEntity> createDepositTrxnsForMandatoryAccountsAfterAdjust(
             final AccountPaymentEntity newAccountPayment, final AccountPaymentEntity lastAccountPayment, Money newAmount)
             throws AccountException {
-        Set<AccountTrxnEntity> newTrxns = new HashSet<AccountTrxnEntity>();
+        Set<AccountTrxnEntity> newTrxns = new LinkedHashSet<AccountTrxnEntity>();
         SavingsTrxnDetailEntity accountTrxn = null;
         CustomerBO customer = null;
         Date oldTrxnDate = null;
@@ -1573,7 +1572,7 @@ public class SavingsBO extends AccountBO {
     private Set<AccountTrxnEntity> createDepositTrxnsForVolAccountsAfterAdjust(
             final AccountPaymentEntity newAccountPayment, final AccountPaymentEntity lastAccountPayment, Money newAmount)
             throws AccountException {
-        Set<AccountTrxnEntity> newTrxns = new HashSet<AccountTrxnEntity>();
+        Set<AccountTrxnEntity> newTrxns = new LinkedHashSet<AccountTrxnEntity>();
         SavingsTrxnDetailEntity accountTrxn = null;
         CustomerBO customer = null;
         Date oldTrxnDate = null;

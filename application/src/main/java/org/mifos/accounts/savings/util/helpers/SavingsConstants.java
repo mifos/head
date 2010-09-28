@@ -138,4 +138,8 @@ public class SavingsConstants {
 
     public static final String DAYS = "days";
 
+    public static final short SAVINGS_MANDATORY= 1;
+
+    public static final short SAVINGS_VOLUNTARY= 2;
+
 }

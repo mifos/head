@@ -105,6 +105,7 @@ public class DataSetUpgradeUtil {
         parseOptions(args);
         System.out.println("Using database: " + databaseName);
         System.out.println("Using schema file: " + schemaFileName);
+        ApplicationContext applicationContext = initializeSpring();
         if (dataSetDirectoryName != null) {
             File directory = new File(dataSetDirectoryName);
 
@@ -118,7 +119,7 @@ public class DataSetUpgradeUtil {
                     if (listOfFile.isFile() &&
                             currentFilename.endsWith("dbunit.xml.zip")) {
                         String dataFileName = dataSetDirectoryName + File.separator + currentFilename;
-                        upgrade(dataFileName);
+                        upgrade(dataFileName, applicationContext);
                         dump(dataFileName);
                         filesUpgraded++;
                         System.out.println("Finished " + filesUpgraded + "/" + totalFilesToUpgrade);
@@ -128,7 +129,7 @@ public class DataSetUpgradeUtil {
                 fail("No files found in data set directory: " + dataSetDirectoryName);
             }
         } else {
-            upgrade(dataSetName);
+            upgrade(dataSetName, applicationContext);
             dump(dataSetName);
         }
     }
@@ -156,7 +157,7 @@ public class DataSetUpgradeUtil {
         }
     }
 
-    private void upgrade(String fileName) throws ClassNotFoundException, SQLException, DatabaseUnitException, IOException, TaskSystemException, PersistenceException, ConfigurationException, FinancialException {
+    private void upgrade(String fileName, ApplicationContext applicationContext) throws ClassNotFoundException, SQLException, DatabaseUnitException, IOException, TaskSystemException, PersistenceException, ConfigurationException, FinancialException {
         System.out.println("Upgrading: " + fileName);
         dbUnitUtilities = new DbUnitUtilities();
         IDataSet dataSet = null;
@@ -171,6 +172,7 @@ public class DataSetUpgradeUtil {
         Connection jdbcConnection = null;
 
         try {
+            // TODO use same db cxn info that Mifos uses! (local.properties)
             jdbcConnection = DriverManager.getConnection(
                     "jdbc:mysql://localhost/" + databaseName + "?sessionVariables=FOREIGN_KEY_CHECKS=0", user, password);
             jdbcConnection.setAutoCommit(false);
@@ -190,7 +192,7 @@ public class DataSetUpgradeUtil {
 
         System.setProperty(TestingService.TEST_MODE_SYSTEM_PROPERTY,"acceptance");
         ApplicationInitializer applicationInitializer = new ApplicationInitializer();
-        applicationInitializer.dbUpgrade(initializeSpring());
+        applicationInitializer.dbUpgrade(applicationContext);
         applicationInitializer.setAttributesOnContext(null);
         StaticHibernateUtil.closeSession();
         System.out.println(" upgrade done!");
