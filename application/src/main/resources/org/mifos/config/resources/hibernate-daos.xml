@@ -45,6 +45,10 @@
     	<constructor-arg ref="genericDao" />
     </bean>
     
+    <bean id="savingsDao" class="org.mifos.accounts.savings.persistence.SavingsDaoHibernate" >
+        <constructor-arg ref="genericDao" />
+    </bean>
+    
     <bean id="generalLedgerDao" class="org.mifos.accounts.financial.business.service.GeneralLedgerDaoHibernate" >
         <constructor-arg ref="genericDao" />
     </bean>

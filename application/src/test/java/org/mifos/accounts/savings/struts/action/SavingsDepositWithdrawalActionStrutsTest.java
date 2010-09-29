@@ -46,6 +46,7 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
@@ -54,9 +55,16 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTestCase {
+
     public SavingsDepositWithdrawalActionStrutsTest() throws Exception {
         super();
     }
@@ -91,6 +99,12 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         flowKey = createFlow(request, SavingsDepositWithdrawalAction.class);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 
     private void reloadMembers() {
@@ -129,8 +143,8 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
             TestObjectFactory.cleanUp(client4);
             TestObjectFactory.cleanUp(group);
             TestObjectFactory.cleanUp(center);
+            SecurityContextHolder.setContext(null);
         } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
         }
         StaticHibernateUtil.closeSession();

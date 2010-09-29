@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
@@ -173,5 +174,19 @@ public class SavingsDaoHibernate implements SavingsDao {
         return (List<CollectionSheetCustomerSavingsAccountDto>) baseDao.executeNamedQueryWithResultTransformer(
                 "findAllSavingAccountsForCustomerHierarchy", topOfHierarchyParameters,
                 CollectionSheetCustomerSavingsAccountDto.class);
+    }
+
+    @Override
+    public SavingsBO findById(Long savingsId) {
+
+        final Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("ACCOUNT_ID", savingsId.intValue());
+
+        return (SavingsBO) this.baseDao.executeUniqueResultNamedQuery("savings.findById", queryParameters);
+    }
+
+    @Override
+    public void save(SavingsBO savingsAccount) {
+        this.baseDao.createOrUpdate(savingsAccount);
     }
 }

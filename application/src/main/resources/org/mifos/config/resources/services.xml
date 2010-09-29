@@ -58,6 +58,12 @@
     	<constructor-arg ref="loanDao" />
     </bean>
     
+    <bean id="savingsServiceFacade" class="org.mifos.application.servicefacade.SavingsServiceFacadeWebTier" >
+        <constructor-arg ref="savingsDao" />
+        <constructor-arg ref="personnelDao" />
+        <constructor-arg ref="customerDao" />
+    </bean>
+    
     <bean id="customerServiceFacade" class="org.mifos.application.servicefacade.CustomerServiceFacadeWebTier" >
     	<constructor-arg ref="customerService" />
     	<constructor-arg ref="officeDao" />

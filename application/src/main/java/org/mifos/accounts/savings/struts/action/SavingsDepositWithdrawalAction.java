@@ -23,17 +23,17 @@ package org.mifos.accounts.savings.struts.action;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
-import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
@@ -44,23 +44,17 @@ import org.mifos.accounts.savings.struts.actionforms.SavingsDepositWithdrawalAct
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
-import org.mifos.accounts.util.helpers.AccountPaymentData;
-import org.mifos.accounts.util.helpers.PaymentData;
-import org.mifos.accounts.util.helpers.SavingsPaymentData;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.AccountingRules;
-import org.mifos.customers.business.service.CustomerBusinessService;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.dto.domain.SavingsDepositDto;
+import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -70,6 +64,9 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SavingsDepositWithdrawalAction extends BaseAction {
 
@@ -81,11 +78,6 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
     @Override
     protected BusinessService getService() throws ServiceException {
         return getSavingsService();
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(final String method) {
-        return true;
     }
 
     public static ActionSecurity getSecurity() {
@@ -100,7 +92,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         logger.debug("In SavingsDepositWithdrawalAction::load(), accountId: " + savings.getAccountId());
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
@@ -136,7 +128,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward reLoad(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         SavingsBO savingsInSession = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         SavingsBO savings = getSavingsService().findById(savingsInSession.getAccountId());
         savings.setVersionNo(savingsInSession.getVersionNo());
@@ -167,20 +159,20 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward preview(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+    public ActionForward preview(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form, @SuppressWarnings("unused") final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previous(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+    public ActionForward previous(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form, @SuppressWarnings("unused") final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.previous_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancel(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+    public ActionForward cancel(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form, final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         doCleanUp(request);
         return mapping.findForward(ActionForwards.account_details_page.toString());
     }
@@ -188,7 +180,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
     public ActionForward makePayment(final ActionMapping mapping, final ActionForm form,
-            final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         SavingsBO savedAccount = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         SavingsBO savings = getSavingsService().findById(savedAccount.getAccountId());
         checkVersionMismatch(savedAccount.getVersionNo(), savings.getVersionNo());
@@ -202,12 +194,36 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
             throw new AccountException(AccountConstants.ERROR_INVALID_TRXN);
         }
 
-        Short trxnTypeId = Short.valueOf(actionForm.getTrxnTypeId());
-        if (trxnTypeId.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
-            savings.applyPaymentWithPersist(createPaymentDataForDeposit(actionForm, uc, savings));
-        } else if (trxnTypeId.equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())) {
-            boolean persist = true;
-            savings.withdraw(createPaymentData(actionForm, uc, savings.getCurrency()), persist);
+        Long savingsId = Long.valueOf(savings.getAccountId());
+        Long customerId = Long.valueOf(savings.getCustomer().getCustomerId());
+        Locale preferredLocale = uc.getPreferredLocale();
+        LocalDate dateOfDepositOrWithdrawalTransaction = new LocalDate(trxnDate);
+        Double amount = Double.valueOf(actionForm.getAmount());
+        Integer modeOfPayment = Integer.valueOf(actionForm.getPaymentTypeId());
+        String receiptId = actionForm.getReceiptId();
+        LocalDate dateOfReceipt = null;
+        if (StringUtils.isNotBlank(actionForm.getReceiptDate())) {
+             dateOfReceipt = new LocalDate(getDateFromString(actionForm.getReceiptDate(), preferredLocale));
+        }
+
+        try {
+            Short trxnTypeId = Short.valueOf(actionForm.getTrxnTypeId());
+            if (trxnTypeId.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
+
+                SavingsDepositDto savingsDeposit = new SavingsDepositDto(savingsId, customerId,
+                        dateOfDepositOrWithdrawalTransaction, amount, modeOfPayment, receiptId, dateOfReceipt,
+                        preferredLocale);
+                this.savingsServiceFacade.deposit(savingsDeposit);
+
+            } else if (trxnTypeId.equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())) {
+
+                SavingsWithdrawalDto savingsWithdrawal = new SavingsWithdrawalDto(savingsId, customerId,
+                        dateOfDepositOrWithdrawalTransaction, amount, modeOfPayment, receiptId, dateOfReceipt,
+                        preferredLocale);
+                this.savingsServiceFacade.withdraw(savingsWithdrawal);
+            }
+        } catch (BusinessRuleException e) {
+            throw new AccountException(e.getMessageKey(), e);
         }
 
         return mapping.findForward(ActionForwards.account_details_page.toString());
@@ -222,36 +238,9 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
         actionForm.setAmount(Constants.EMPTY_STRING);
     }
 
-    private PaymentData createPaymentData(final SavingsDepositWithdrawalActionForm actionForm, final UserContext uc,
-            final MifosCurrency currency) throws Exception {
-        Date trxnDate = getDateFromString(actionForm.getTrxnDate(), uc.getPreferredLocale());
-        Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc.getPreferredLocale());
-        PaymentData paymentData = PaymentData.createPaymentData(new Money(currency, actionForm.getAmount()),
-                new PersonnelPersistence().getPersonnel(uc.getId()), Short.valueOf(actionForm.getPaymentTypeId()),
-                trxnDate);
-        paymentData.setReceiptDate(receiptDate);
-        paymentData.setReceiptNum(actionForm.getReceiptId());
-        CustomerBusinessService customerService = (CustomerBusinessService) ServiceFactory.getInstance()
-                .getBusinessService(BusinessServiceName.Customer);
-        paymentData.setCustomer(customerService.getCustomer(Integer.valueOf(actionForm.getCustomerId())));
-        return paymentData;
-    }
-
-    private PaymentData createPaymentDataForDeposit(final SavingsDepositWithdrawalActionForm actionForm,
-            final UserContext uc, final SavingsBO savings) throws Exception {
-        PaymentData paymentData = createPaymentData(actionForm, uc, savings.getCurrency());
-        for (AccountActionDateEntity installment : savings.getTotalInstallmentsDue(Integer.valueOf(actionForm
-                .getCustomerId()))) {
-            AccountPaymentData accountPaymentData = new SavingsPaymentData(installment);
-            paymentData.addAccountPaymentData(accountPaymentData);
-        }
-        return paymentData;
-
-    }
-
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+    public ActionForward validate(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form, final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
         String forward = null;
         if (method != null) {
@@ -266,14 +255,14 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
         SessionUtils.removeAttribute(MasterConstants.PAYMENT_TYPE, request);
     }
 
-    private SavingsBusinessService getSavingsService() throws ServiceException {
+    private SavingsBusinessService getSavingsService() {
         if (savingsService == null) {
             savingsService = new SavingsBusinessService();
         }
         return savingsService;
     }
 
-    private AccountBusinessService getAccountsService() throws ServiceException {
+    private AccountBusinessService getAccountsService() {
         if (accountsService == null) {
             accountsService = new AccountBusinessService();
         }

@@ -277,6 +277,9 @@
 	<query name="loan.findById">
 		<![CDATA[from LoanBO loan where loan.accountId = :ACCOUNT_ID]]>
 	</query>
+    <query name="savings.findById">
+        <![CDATA[from SavingsBO s where s.accountId = :ACCOUNT_ID]]>
+    </query>
 	<query name="accounts.findLoanBySystemId">
 		<![CDATA[from org.mifos.accounts.loan.business.LoanBO account 
 			where account.globalAccountNum = :globalAccountNumber ]]>
