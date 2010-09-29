@@ -90,9 +90,9 @@ public class AverageBalanceInterestCalculator extends AbstractInterestCalculator
         return totalBalance;
     }
 
-    private BigDecimal getPrincipal(EndOfDayDetail[] deposits) {
-        LocalDate startDate = new LocalDate(2010, 9, 1).minusDays(1);
-        LocalDate endDate = new LocalDate(2010, 9, 30);
+    private BigDecimal getPrincipal(InterestCalculationRange interestCalculationRange, EndOfDayDetail[] deposits) {
+        LocalDate startDate = interestCalculationRange.getLowerDate();
+        LocalDate endDate = interestCalculationRange.getUpperDate();
         int duration = 0;
         BigDecimal totalBalance = BigDecimal.ZERO;
 
@@ -138,7 +138,7 @@ public class AverageBalanceInterestCalculator extends AbstractInterestCalculator
     @Override
     public BigDecimal calcInterest(InterestCalculationRange interestCalculationRange, EndOfDayDetail... depositDetail) {
 
-        BigDecimal principal = getPrincipal(depositDetail);
+        BigDecimal principal = getPrincipal(interestCalculationRange, depositDetail);
 
         // BigDecimal principal = new BigDecimal(totalBalance.floatValue() / (deposits.length));
 
