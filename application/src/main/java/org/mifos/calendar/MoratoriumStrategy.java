@@ -59,7 +59,7 @@ public class MoratoriumStrategy implements ListOfDatesAdjustmentStrategy {
         if (dates.isEmpty()) {
             adjustedDates = dates;
         } else {
-           DateTime firstDate = dates.get(0);
+           DateTime firstDate = new DateTime(dates.get(0)).toDateMidnight().toDateTime();
            if ( isEnclosedByAHolidayWithRepaymentRule(firstDate, RepaymentRuleTypes.REPAYMENT_MORATORIUM) ) {
                adjustedDates = adjust (shiftSchedulePastMoratorium(dates));
            } else if (isEnclosedByAHoliday(firstDate)) { //enclosed by a non-moratorium holiday
