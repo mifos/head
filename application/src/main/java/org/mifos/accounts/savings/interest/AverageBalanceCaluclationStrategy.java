@@ -24,7 +24,7 @@ import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.framework.util.helpers.Money;
 
-public class AverageBalancePrincipalCaluclationStrategy implements PrincipalCalculationStrategy {
+public class AverageBalanceCaluclationStrategy implements PrincipalCalculationStrategy {
 
     @Override
     public Money calculatePrincipal(InterestCalculationRange interestCalculationRange, EndOfDayDetail... deposits) {

@@ -29,8 +29,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -52,10 +50,8 @@ import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
-import org.mifos.accounts.savings.interest.AverageBalanceInterestCalculator;
-import org.mifos.accounts.savings.interest.EndOfDayBalance;
 import org.mifos.accounts.savings.interest.InterestCalculator;
-import org.mifos.accounts.savings.interest.MinimumBalanceInterestCalculator;
+import org.mifos.accounts.savings.interest.SavingsInterestCalculatorFactory;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
@@ -103,6 +99,8 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SavingsBO extends AccountBO {
 
@@ -596,6 +594,9 @@ public class SavingsBO extends AccountBO {
     }
 
     public void updateInterestAccrued2() throws AccountException {
+
+        InterestCalcType interestCalcType = InterestCalcType.fromInt(this.interestCalcType.getId());
+        InterestCalculator calculator = SavingsInterestCalculatorFactory.create(interestCalcType);
 
 //        InterestCalculator ic = null;
 //        Money interest = new Money(getCurrency());

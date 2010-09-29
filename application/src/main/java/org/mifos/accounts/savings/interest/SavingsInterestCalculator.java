@@ -22,21 +22,24 @@ package org.mifos.accounts.savings.interest;
 
 import org.mifos.framework.util.helpers.Money;
 
+public class SavingsInterestCalculator implements InterestCalculator {
 
-public class MinimumBalanceInterestCalculator implements InterestCalculator {
+    private final PrincipalCalculationStrategy principalCalculationStrategy;
+    private CompoundInterestCalculationStrategy compoundInterestCaluclation = new CompoundInterestCalculationStrategy();
 
-    // TODO - unit test me on my own
-    private PrincipalInterestCalculationPolicy interestCaluclationPolicy = new PrincipalInterestCalculationPolicy();
+    public SavingsInterestCalculator(PrincipalCalculationStrategy principalCalculationStrategy) {
+        this.principalCalculationStrategy = principalCalculationStrategy;
+    }
 
-    // TODO - unit test me on my own
-    private PrincipalCalculationStrategy principalCalculationStrategy = new MinimumBalanceCaluclationStrategy();
-
-    // TODO - can unit test me on my own through mocking
     @Override
     public Money calcInterest(InterestCalculationRange interestCalculationRange, EndOfDayDetail... depositDetail) {
 
         Money principal = principalCalculationStrategy.calculatePrincipal(interestCalculationRange, depositDetail);
 
-        return interestCaluclationPolicy.calculateInterest(principal);
+        return compoundInterestCaluclation.calculateInterest(principal);
+    }
+
+    public void setCompoundInterestCaluclation(CompoundInterestCalculationStrategy compoundInterestCaluclation) {
+        this.compoundInterestCaluclation = compoundInterestCaluclation;
     }
 }

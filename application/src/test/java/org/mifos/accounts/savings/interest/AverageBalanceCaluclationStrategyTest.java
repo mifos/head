@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 
-public class AverageBalancePrincipalCaluclationStrategyTest {
+public class AverageBalanceCaluclationStrategyTest {
 
     private PrincipalCalculationStrategy calculationStrategy;
 
@@ -44,7 +44,7 @@ public class AverageBalancePrincipalCaluclationStrategyTest {
 
     @Before
     public void setup() {
-        calculationStrategy = new AverageBalancePrincipalCaluclationStrategy();
+        calculationStrategy = new AverageBalanceCaluclationStrategy();
         interestCalculationRange = new InterestCalculationRange(sept1st, october1st);
     }
 

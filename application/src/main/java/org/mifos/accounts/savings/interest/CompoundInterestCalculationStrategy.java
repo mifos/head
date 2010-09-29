@@ -22,7 +22,7 @@ package org.mifos.accounts.savings.interest;
 
 import org.mifos.framework.util.helpers.Money;
 
-public class PrincipalInterestCalculationPolicy {
+public class CompoundInterestCalculationStrategy {
 
     public Money calculateInterest(Money principal) {
         double intRate = 10;
@@ -37,5 +37,4 @@ public class PrincipalInterestCalculationPolicy {
 
         return interestAmount;
     }
-
 }
