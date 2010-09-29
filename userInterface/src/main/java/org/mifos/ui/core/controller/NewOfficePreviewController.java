@@ -13,17 +13,17 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/officePreview")
-public class PreviewOfficeDetailsController {
+@RequestMapping("/previewOfficeDetails")
+public class NewOfficePreviewController {
 
     @Autowired
     OfficeServiceFacade officeServiceFacade;
 
-    protected PreviewOfficeDetailsController() {
+    protected NewOfficePreviewController() {
         // TODO Auto-generated constructor stub
     }
 
-    public PreviewOfficeDetailsController(final OfficeServiceFacade officeServiceFacade){
+    public NewOfficePreviewController(final OfficeServiceFacade officeServiceFacade){
         this.officeServiceFacade=officeServiceFacade;
     }
 
@@ -38,32 +38,32 @@ public class PreviewOfficeDetailsController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ModelAndView processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,@RequestParam(value = EDIT_PARAM, required = false) String edit,
+    public ModelAndView processSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,@RequestParam(value = EDIT_PARAM, required = false) String edit,
                                     @ModelAttribute("officeFormBean") OfficeFormBean formBean,
                                     BindingResult result,
                                     SessionStatus status) {
 
-        ModelAndView mav = new ModelAndView(REDIRECT_TO_ADMIN_SCREEN);
+        ModelAndView modelAndView = new ModelAndView(REDIRECT_TO_ADMIN_SCREEN);
 
         if (StringUtils.isNotBlank(cancel)) {
             status.setComplete();
         } else if (result.hasErrors()) {
-            mav = new ModelAndView("officePreview");
-            mav.addObject("officeFormBean", formBean);
+            modelAndView = new ModelAndView("previewOfficeDetails");
+            modelAndView.addObject("officeFormBean", formBean);
+            modelAndView.addObject("showError", "true");
         }
         else if (StringUtils.isNotBlank(edit)) {
             EditOfficeInformationController editOfficeInformationController = new EditOfficeInformationController(officeServiceFacade);
-            mav = new ModelAndView("editOfficeInformation");
-            mav.addObject("showError", "false");
+            modelAndView = new ModelAndView("defineNewOffice");
+            modelAndView.addObject("showError", "false");
             if(!formBean.getLevelId().equals("1")){
-            mav.addObject("parentOffices",editOfficeInformationController.getParentDetails(formBean.getLevelId()));
+            modelAndView.addObject("parentOffices",editOfficeInformationController.getParentDetails(formBean.getLevelId()));
             }
-            mav.addObject("officeTypes",editOfficeInformationController.getOfficeTypes(formBean.getLevelId()));
-            mav.addObject("officeFormBean", formBean);
-            mav.addObject("view", "enable");
+            modelAndView.addObject("officeTypes",editOfficeInformationController.getOfficeTypes(formBean.getLevelId()));
+            modelAndView.addObject("officeFormBean", formBean);
+            modelAndView.addObject("view", "enable");
             }
 /*Code for update office in else -vishnu*/
-
-        return mav;
+        return modelAndView;
     }
 }
