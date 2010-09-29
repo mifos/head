@@ -157,6 +157,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         MoneyCompositeUserType.setDefaultCurrency(AccountingRules
                 .getMifosCurrency(new ConfigurationPersistence()));
         AccountingRules.init(); // load the additional currencies
+        Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
         DatabaseMigrator migrator = new DatabaseMigrator(applicationContext);
         try {
             /*
@@ -195,8 +196,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         // file(s) for errors.
         ProcessFlowRules.init();
         initializeSecurity();
-
-        Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
 
         FinancialInitializer.initialize();
         EntityMasterData.getInstance().init();

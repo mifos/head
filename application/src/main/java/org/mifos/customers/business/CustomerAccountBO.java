@@ -835,8 +835,10 @@ public class CustomerAccountBO extends AccountBO {
                 }
             }
         }
-        accountFeesEntity.setLastAppliedDate(lastAppliedDate);
-        addAccountFees(accountFeesEntity);
+        if (accountFeesEntity != null) {
+            accountFeesEntity.setLastAppliedDate(lastAppliedDate);
+            addAccountFees(accountFeesEntity);
+        }
         return totalFeeAmountApplied;
     }
 
