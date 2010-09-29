@@ -88,6 +88,13 @@ public final class Money implements Serializable, Comparable<Money> {
         return this.amount;
     }
 
+    /**
+     * Don't use double with Money as floating point calculation can cause loss in precision
+     * <br />
+     * <b>Use</b> {@link #getAmount()}
+     * @return
+     */
+    @Deprecated
     public double getAmountDoubleValue() {
         return amount.doubleValue();
     }

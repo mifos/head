@@ -20,9 +20,6 @@
 
 package org.mifos.accounts.savings.interest;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.List;
 
 import org.joda.time.Days;
@@ -31,18 +28,13 @@ import org.mifos.framework.util.helpers.Money;
 
 public class AverageBalanceInterestCalculator extends AbstractInterestCalculator {
 
-    private static int internalPrecision = 5;
-
-    private static RoundingMode internalRoundingMode = RoundingMode.HALF_UP;
-
-    private static MathContext mc = new MathContext(internalPrecision, internalRoundingMode);
-
     @Override
-    public Money getPrincipal(List<EndOfDayBalance> balanceRecords, final LocalDate calculationStartDate, final LocalDate calculationEndDate) {
+    public Money getPrincipal(List<EndOfDayBalance> balanceRecords, final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate) {
 
-        validateData(balanceRecords,"balanceRecords list");
-        validateData(calculationStartDate,"calculationStartDate");
-        validateData(calculationEndDate,"calculationEndDate");
+        validateData(balanceRecords, "balanceRecords list");
+        validateData(calculationStartDate, "calculationStartDate");
+        validateData(calculationEndDate, "calculationEndDate");
 
         LocalDate startDate = calculationStartDate.minusDays(1);
         LocalDate endDate = calculationEndDate;
@@ -51,7 +43,8 @@ public class AverageBalanceInterestCalculator extends AbstractInterestCalculator
         Money principal = null;
 
         if (!balanceRecords.isEmpty()) {
-            if (balanceRecords.get(0).getDate().isBefore(startDate) || balanceRecords.get(balanceRecords.size()- 1).getDate().isAfter(endDate)) {
+            if (balanceRecords.get(0).getDate().isBefore(startDate)
+                    || balanceRecords.get(balanceRecords.size() - 1).getDate().isAfter(endDate)) {
                 throw new IllegalArgumentException("Tinvalid list of EndOfDayDetails");
             }
             startDate = balanceRecords.get(0).getDate();
@@ -90,11 +83,11 @@ public class AverageBalanceInterestCalculator extends AbstractInterestCalculator
         return totalBalance;
     }
 
-    private BigDecimal getPrincipal(InterestCalculationRange interestCalculationRange, EndOfDayDetail[] deposits) {
+    private Money getPrincipal(InterestCalculationRange interestCalculationRange, EndOfDayDetail[] deposits) {
         LocalDate startDate = interestCalculationRange.getLowerDate();
         LocalDate endDate = interestCalculationRange.getUpperDate();
         int duration = 0;
-        BigDecimal totalBalance = BigDecimal.ZERO;
+        Money totalBalance = null;
 
         if (deposits != null && deposits.length > 0) {
             if (deposits[0].getDate().isBefore(startDate) || deposits[deposits.length - 1].getDate().isAfter(endDate)) {
@@ -107,7 +100,7 @@ public class AverageBalanceInterestCalculator extends AbstractInterestCalculator
 
         LocalDate prevDate = startDate;
 
-        BigDecimal runningBalance = BigDecimal.ZERO;
+        Money runningBalance = null;
 
         for (int count = 0; count < deposits.length; count++) {
 
@@ -121,26 +114,31 @@ public class AverageBalanceInterestCalculator extends AbstractInterestCalculator
 
             int subDuration = Days.daysBetween(prevDate, nextDate).getDays();
 
-            runningBalance = runningBalance.add(deposits[count].getAmount());
+            if(runningBalance == null) {
+                runningBalance = deposits[count].getResultantAmountForDay();
+            } else {
+                runningBalance = runningBalance.add(deposits[count].getResultantAmountForDay());
+            }
 
-            totalBalance = totalBalance.add(runningBalance.multiply(new BigDecimal(subDuration)));
-
+            if (totalBalance == null) {
+                totalBalance = runningBalance.multiply(subDuration);
+            } else {
+                totalBalance = totalBalance.add(runningBalance.multiply(subDuration));
+            }
             prevDate = nextDate;
         }
 
-        if (duration != 0 && totalBalance.compareTo(BigDecimal.ZERO) != 0) {
-            return totalBalance.divide(BigDecimal.valueOf(duration), mc);
+        if (duration != 0 && totalBalance.isNonZero()) {
+            return totalBalance.divide(duration);
         }
 
-        return BigDecimal.ZERO;
+        return null;
     }
 
     @Override
     public Money calcInterest(InterestCalculationRange interestCalculationRange, EndOfDayDetail... depositDetail) {
 
-        BigDecimal principal = getPrincipal(interestCalculationRange, depositDetail);
-
-        // BigDecimal principal = new BigDecimal(totalBalance.floatValue() / (deposits.length));
+        Money principal = getPrincipal(interestCalculationRange, depositDetail);
 
         double intRate = 10;
 
@@ -150,8 +148,8 @@ public class AverageBalanceInterestCalculator extends AbstractInterestCalculator
 
         intRate = (intRate / accountingNumberOfInterestDaysInYear) * duration;
 
-        BigDecimal interestAmount = principal.multiply(new BigDecimal(1 + intRate / 100)).subtract(principal);
-        interestAmount = interestAmount.round(new MathContext(internalPrecision, internalRoundingMode));
+        Money interestAmount = principal.multiply(intRate / 100);
+
         return interestAmount;
     }
 

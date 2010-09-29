@@ -50,7 +50,7 @@ public class MinimumBalanceInterestCalculator extends AbstractInterestCalculator
     }
 
     @Override
-    public BigDecimal calcInterest(InterestCalculationRange interestCalculationRange, EndOfDayDetail... deposit) {
+    public Money calcInterest(InterestCalculationRange interestCalculationRange, EndOfDayDetail... deposit) {
         // TODO Auto-generated method stub
         return null;
     }

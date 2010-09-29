@@ -23,8 +23,6 @@ package org.mifos.accounts.savings.interest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -82,40 +80,40 @@ public class InterestCalculatorTest {
     @Test
     public void shouldCalculateInterestForSimpleDeposit() {
 
-        Money deposit1 = TestUtils.createMoney(Double.valueOf("1000.0"));
-        Money withdrawal1 = TestUtils.createMoney(Double.valueOf("0.0"));
-        Money interest1 = TestUtils.createMoney(Double.valueOf("0.0"));
+        Money deposit1 = TestUtils.createMoney(Double.valueOf("1000"));
+        Money withdrawal1 = TestUtils.createMoney(Double.valueOf("0"));
+        Money interest1 = TestUtils.createMoney(Double.valueOf("0"));
         EndOfDayDetail endOfDayDetail = new EndOfDayDetail(sept6th, deposit1, withdrawal1, interest1);
 
         Money interest = interestCalculator.calcInterest(interestCalculationRange, endOfDayDetail);
 
-        assertThat(interest.getAmountDoubleValue(), is(Double.valueOf("100.0")));
+        assertThat(interest, is(TestUtils.createMoney("100")));
     }
 
     @Test
     public void shouldCalculateInterestSingleEndOfDayDetails() {
 
-        Money deposit1 = TestUtils.createMoney(Double.valueOf("1000.0"));
-        Money withdrawal1 = TestUtils.createMoney(Double.valueOf("200.0"));
-        Money interest1 = TestUtils.createMoney(Double.valueOf("4.0"));
+        Money deposit1 = TestUtils.createMoney("1000");
+        Money withdrawal1 = TestUtils.createMoney("200");
+        Money interest1 = TestUtils.createMoney("4");
         EndOfDayDetail endOfDayDetail = new EndOfDayDetail(sept6th, deposit1, withdrawal1, interest1);
 
         Money interest = interestCalculator.calcInterest(interestCalculationRange, endOfDayDetail);
 
-        assertThat(interest.getAmountDoubleValue(), is(Double.valueOf("80.4")));
+        assertThat(interest.getAmount(), is(TestUtils.createMoney("80.4").getAmount()));
     }
 
     @Test
     public void shouldCalculateInterestForTwoSimpleDeposits() {
 
-        Money deposit1 = TestUtils.createMoney(Double.valueOf("1000.0"));
-        Money withdrawal1 = TestUtils.createMoney(Double.valueOf("0.0"));
-        Money interest1 = TestUtils.createMoney(Double.valueOf("0.0"));
+        Money deposit1 = TestUtils.createMoney("1000");
+        Money withdrawal1 = TestUtils.createMoney("0");
+        Money interest1 = TestUtils.createMoney("0");
         EndOfDayDetail endOfDayDetail = new EndOfDayDetail(sept6th, deposit1, withdrawal1, interest1);
 
-        Money deposit2 = TestUtils.createMoney(Double.valueOf("1000.0"));
-        Money withdrawal2 = TestUtils.createMoney(Double.valueOf("0.0"));
-        Money interest2 = TestUtils.createMoney(Double.valueOf("0.0"));
+        Money deposit2 = TestUtils.createMoney("1000");
+        Money withdrawal2 = TestUtils.createMoney("0");
+        Money interest2 = TestUtils.createMoney("0");
         EndOfDayDetail endOfDayDetail2 = new EndOfDayDetail(september13th, deposit2, withdrawal2, interest2);
 
         // exercise test
@@ -125,25 +123,25 @@ public class InterestCalculatorTest {
 //      avgbal = (1000 x7) + (2000 x 18)/ 25  =
         // 7 days from 6 september to 13th of september
         // 18 days from 13 september to 1st of october
-        assertThat(interest.getAmountDoubleValue(), is(Double.valueOf("172.00011123")));
+        assertThat(interest, is(TestUtils.createMoney("172")));
     }
 
     @Test
     public void shouldCalculateInterestForThreeSimpleDeposits() {
 
-        Money deposit1 = TestUtils.createMoney(Double.valueOf("1000.0"));
-        Money withdrawal1 = TestUtils.createMoney(Double.valueOf("0.0"));
-        Money interest1 = TestUtils.createMoney(Double.valueOf("0.0"));
+        Money deposit1 = TestUtils.createMoney("1000");
+        Money withdrawal1 = TestUtils.createMoney("0");
+        Money interest1 = TestUtils.createMoney("0");
         EndOfDayDetail endOfDayDetail = new EndOfDayDetail(sept6th, deposit1, withdrawal1, interest1);
 
-        Money deposit2 = TestUtils.createMoney(Double.valueOf("1000.0"));
-        Money withdrawal2 = TestUtils.createMoney(Double.valueOf("0.0"));
-        Money interest2 = TestUtils.createMoney(Double.valueOf("0.0"));
+        Money deposit2 = TestUtils.createMoney("1000");
+        Money withdrawal2 = TestUtils.createMoney("0");
+        Money interest2 = TestUtils.createMoney("0");
         EndOfDayDetail endOfDayDetail2 = new EndOfDayDetail(september13th, deposit2, withdrawal2, interest2);
 
-        Money deposit3 = TestUtils.createMoney(Double.valueOf("500.0"));
-        Money withdrawal3 = TestUtils.createMoney(Double.valueOf("0.0"));
-        Money interest3 = TestUtils.createMoney(Double.valueOf("0.0"));
+        Money deposit3 = TestUtils.createMoney("500");
+        Money withdrawal3 = TestUtils.createMoney("0");
+        Money interest3 = TestUtils.createMoney("0");
         EndOfDayDetail endOfDayDetail3 = new EndOfDayDetail(september20th, deposit3, withdrawal3, interest3);
 
         // exercise test
@@ -155,7 +153,7 @@ public class InterestCalculatorTest {
         // 7 days from 6 september to 13th of september
         // 7 days from 13 september to 20th of september
         // 11 days from 20 september to 1st of october
-        assertThat(interest.getAmountDoubleValue(), is(Double.valueOf("194.00011123")));
+        assertThat(interest, is(TestUtils.createMoney(("194"))));
     }
 
 
