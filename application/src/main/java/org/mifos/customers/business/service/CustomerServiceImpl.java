@@ -208,7 +208,8 @@ public class CustomerServiceImpl implements CustomerService {
                     if (client.getCustomerMeetingValue() != null) {
 
                         if (!(savings.getCustomer().getLevel() == CustomerLevel.GROUP && savings.getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.COMPLETE_GROUP.getValue()))) {
-                            savings.generateDepositAccountActions(client, client.getCustomerMeeting().getMeeting(), workingDays, holidays);
+                            DateTime today = new DateTime().toDateMidnight().toDateTime();
+                            savings.generateDepositAccountActions(client, client.getCustomerMeeting().getMeeting(), workingDays, holidays, today);
                         }
                     }
                 }
@@ -800,8 +801,9 @@ public class CustomerServiceImpl implements CustomerService {
                                         .getRecommendedAmntUnit().getId().equals(
                                                 RecommendedAmountUnit.COMPLETE_GROUP.getValue()))) {
 
+                                    DateTime today = new DateTime().toDateMidnight().toDateTime();
                                     savings.generateDepositAccountActions(client, client.getCustomerMeeting()
-                                            .getMeeting(), applicableCalendarEvents.getWorkingDays(), applicableCalendarEvents.getHolidays());
+                                            .getMeeting(), applicableCalendarEvents.getWorkingDays(), applicableCalendarEvents.getHolidays(), today);
 
                                     savings.update();
                                 }

@@ -26,6 +26,7 @@ import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -62,6 +63,8 @@ public class SavingsProductBuilder {
     private ProductCategoryBO category = new ProductCategoryBO(Short.valueOf("1"), "savtest");
     private final PrdStatus productStatus = PrdStatus.SAVINGS_ACTIVE;
     private PrdStatusEntity productStatusEntity;
+    private RecommendedAmountUnit mandatoryGroupTrackingType = null;
+    private Money mandatoryOrRecommendedAmount = TestUtils.createMoney("25.0");
 
     public SavingsOfferingBO buildForUnitTests() {
         return build();
@@ -91,6 +94,11 @@ public class SavingsProductBuilder {
 
         savingsProduct.setTimePerForInstcalc(scheduleForInstcalc);
         savingsProduct.setTimePerForInstcalc(scheduleForInterestPosting);
+
+        if (this.mandatoryGroupTrackingType != null) {
+            savingsProduct.setRecommendedAmntUnit(this.mandatoryGroupTrackingType);
+        }
+        savingsProduct.setRecommendedAmount(mandatoryOrRecommendedAmount);
         return savingsProduct;
     }
 
@@ -132,6 +140,21 @@ public class SavingsProductBuilder {
 
     public SavingsProductBuilder withMaxWithdrawalAmount(final Money withMaxWithdrawal) {
         this.maxAmountOfWithdrawal = withMaxWithdrawal;
+        return this;
+    }
+
+    public SavingsProductBuilder trackedOnCompleteGroup() {
+        this.mandatoryGroupTrackingType = RecommendedAmountUnit.COMPLETE_GROUP;
+        return this;
+    }
+
+    public SavingsProductBuilder trackedPerIndividual() {
+        this.mandatoryGroupTrackingType = RecommendedAmountUnit.PER_INDIVIDUAL;
+        return this;
+    }
+
+    public SavingsProductBuilder withMandatoryAmount(String mandatoryAmount) {
+        this.mandatoryOrRecommendedAmount = TestUtils.createMoney(mandatoryAmount);
         return this;
     }
 }
