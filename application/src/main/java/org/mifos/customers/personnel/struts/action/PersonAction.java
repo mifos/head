@@ -20,7 +20,12 @@
 
 package org.mifos.customers.personnel.struts.action;
 
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
+
 import org.mifos.framework.business.util.Name;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -44,12 +50,15 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.Localization;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
+import org.mifos.customers.office.struts.actionforms.OffActionForm;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
@@ -68,6 +77,7 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.screen.DefinePersonnelDto;
 import org.mifos.dto.screen.ListElement;
@@ -88,12 +98,14 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.mifos.service.MifosServiceFactory;
 
 public class PersonAction extends SearchAction {
 
@@ -134,6 +146,8 @@ public class PersonAction extends SearchAction {
         security.allow("unLockUserAccount", SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
         security.allow("loadChangeLog", SecurityConstants.VIEW);
         security.allow("cancelChangeLog", SecurityConstants.VIEW);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
         return security;
     }
 
@@ -174,7 +188,7 @@ public class PersonAction extends SearchAction {
         personActionForm.setDateOfJoiningBranch(DateUtils.getCurrentDate(userContext.getPreferredLocale()));
         updateRoleLists(request, (PersonActionForm) form);
 
-        return mapping.findForward(ActionForwards.preview_success.toString());
+        return createGroupQuestionnaire.fetchAppliedQuestions(mapping, personActionForm, request, ActionForwards.preview_success);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -200,6 +214,7 @@ public class PersonAction extends SearchAction {
 
             request.setAttribute("displayName", name.getDisplayName());
             request.setAttribute("globalPersonnelNum", globalPersonnelNum);
+            createGroupQuestionnaire.saveResponses(request, personActionForm, userDetails.getId());
             return mapping.findForward(ActionForwards.create_success.toString());
         } catch (BusinessRuleException e) {
             throw new PersonnelException(e.getMessageKey(), e);
@@ -386,9 +401,19 @@ public class PersonAction extends SearchAction {
         // John W - for other actions downstream (like edit) business_key set (until all actions refactored)
         PersonnelBO personnelBO = ((PersonnelBusinessService) getService()).getPersonnel(personnelInformationDto.getPersonnelId());
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, personnelBO, request);
-
+        setCurrentPageUrl(request, personnelBO);
         loadCreateMasterData(request, personActionForm);
         return mapping.findForward(ActionForwards.get_success.toString());
+    }
+
+    private void setCurrentPageUrl(HttpServletRequest request, PersonnelBO personnelBO) throws PageExpiredException, UnsupportedEncodingException {
+        SessionUtils.removeThenSetAttribute("currentPageUrl", constructCurrentPageUrl(personnelBO), request);
+    }
+
+    private String constructCurrentPageUrl(PersonnelBO personnelBO) throws UnsupportedEncodingException {
+        String url = String.format("PersonAction.do?globalPersonnelNum=%s",
+                personnelBO.getGlobalPersonnelNum());
+        return URLEncoder.encode(url, "UTF-8");
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -663,4 +688,37 @@ public class PersonAction extends SearchAction {
 
         return Localization.getInstance().getLocaleId();
     }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward captureQuestionResponses(
+            final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "captureQuestionResponses");
+        ActionErrors errors = createGroupQuestionnaire.validateResponses(request, (PersonActionForm) form);
+        if (errors != null && !errors.isEmpty()) {
+            addErrors(request, errors);
+            return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
+        }
+        return createGroupQuestionnaire.rejoinFlow(mapping);
+    }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward editQuestionResponses(
+            final ActionMapping mapping, final ActionForm form,
+            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "editQuestionResponses");
+        return createGroupQuestionnaire.editResponses(mapping, request, (PersonActionForm) form);
+    }
+
+    private QuestionnaireFlowAdapter createGroupQuestionnaire =
+        new QuestionnaireFlowAdapter("Create", "Personnel",
+                ActionForwards.preview_success,
+                "custSearchAction.do?method=loadMainSearch",
+                new QuestionnaireServiceFacadeLocator() {
+                    @Override
+                    public QuestionnaireServiceFacade getService(HttpServletRequest request) {
+                        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
+                    }
+                });
+
 }
