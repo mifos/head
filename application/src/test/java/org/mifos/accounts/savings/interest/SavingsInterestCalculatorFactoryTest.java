@@ -20,14 +20,37 @@
 
 package org.mifos.accounts.savings.interest;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.util.helpers.Money;
 
 public class SavingsInterestCalculatorFactoryTest {
 
     private SavingsInterestCalculatorFactory savingsInterestCalculatorFactory;
+
+    @Test
+    public void shouldReturnSavingsInterest() {
+
+        InterestCalcType interestCalcType = InterestCalcType.AVERAGE_BALANCE;
+        InterestCalculator interestCalculator = savingsInterestCalculatorFactory.create(interestCalcType);
+
+        InterestCalculationRange range = null;
+        List<EndOfDayDetail> dailyDetails = new ArrayList<EndOfDayDetail>();
+        InterestCalculationPeriodDetail interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(range, dailyDetails);
+
+        Money interestDueForPeriod = interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
+
+        // verification
+        assertThat(interestDueForPeriod, is(TestUtils.createMoney("54.0")));
+    }
 
     @Test
     public void shouldReturnSavingsInterestCalculatorWithAverageBalanceStrategy() {

@@ -50,6 +50,7 @@ import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.savings.interest.InterestCalculationPeriodDetail;
 import org.mifos.accounts.savings.interest.InterestCalculator;
 import org.mifos.accounts.savings.interest.SavingsInterestCalculatorFactory;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
@@ -598,18 +599,12 @@ public class SavingsBO extends AccountBO {
         InterestCalcType interestCalcType = InterestCalcType.fromInt(this.interestCalcType.getId());
         InterestCalculator calculator = SavingsInterestCalculatorFactory.create(interestCalcType);
 
-//        InterestCalculator ic = null;
-//        Money interest = new Money(getCurrency());
-//
-//        if (getInterestCalcType().getId().equals(InterestCalcType.AVERAGE_BALANCE.getValue())) {
-//            ic = new AverageBalanceInterestCalculator();
-//        } else if (getInterestCalcType().getId().equals(InterestCalcType.MINIMUM_BALANCE.getValue())) {
-//            ic = new MinimumBalanceInterestCalculator();
-//        }
-//
-//        LocalDate startDate = getCalculationStartDate();
-//        LocalDate endDate = new LocalDate(getNextIntCalcDate());
-//
+//        InterestCalculationPeriodDetail interestCalculationPeriodDetail;
+//        Money interestDueForPeriod =  calculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
+
+        LocalDate startDate = getCalculationStartDate();
+        LocalDate endDate = new LocalDate(getNextIntCalcDate());
+
 //        List<EndOfDayBalance> balanceRecords = ic.getEndOfDayBalanceDetails(startDate, endDate,
 //                getAccountTrxnsOrderByTrxnDate());
 //
