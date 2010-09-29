@@ -65,6 +65,8 @@ public class AccountingRules {
      */
     private static final Short DIGITS_BEFORE_DECIMAL_FOR_INTEREST = 10;
 
+    private static final Short DIGITS_BEFORE_DECIMAL_FOR_CASHFLOW_THRESHOLD = 10;
+
     // FIXME: we should use a standard caching mechanism rather than ad hoc caches like
     // this.  Also, we need to consider if this should be thread safe since this initial
     // implementation is not thread safe for initialization.  Re-initialization should
@@ -158,6 +160,11 @@ public class AccountingRules {
         return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_INTEREST);
     }
 
+    public static Double getCashFlowWarningThreshold() {
+        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.CASHFLOW_WARNING_THRESHOLD);
+    }
+
+
     public static Short getDigitsAfterDecimal() {
         return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL);
     }
@@ -184,6 +191,15 @@ public class AccountingRules {
 
     public static Short getDigitsAfterDecimalForInterest() {
         return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST);
+    }
+
+
+    public static Short getDigitsBeforeDecimalForCashFlowThreshold() {
+        return DIGITS_BEFORE_DECIMAL_FOR_CASHFLOW_THRESHOLD;
+    }
+
+    public static Short getDigitsAfterDecimalForCashFlowThreshold() {
+        return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_CASHFLOW_THRESHOLD);
     }
 
     // the defaultValue passed in should be the value from database

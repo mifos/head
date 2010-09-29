@@ -2392,11 +2392,13 @@ public class LoanPrdActionForm extends BaseActionForm {
 
         if(getCashFlowValidation()) {
             if(cashFlowWarningThreshold != null && (!cashFlowWarningThreshold.trim().equals(""))){
-                cashFlowWarningThresholdResult = parseDoubleForInterest(cashFlowWarningThreshold);
+
+                cashFlowWarningThresholdResult = parseDoubleForCashFlowThreshold(cashFlowWarningThreshold);
+
                 errorList = cashFlowWarningThresholdResult.getErrors();
                 if (errorList.size() > 0) {
                     for (int i = 0; i < errorList.size(); i++) {
-                        addError(actionErrors, ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID_FORMAT,
+                        addError(actionErrors, cashFlowWarningThreshold,
                                 ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID_FORMAT, getConversionErrorText(errorList
                                         .get(i), locale));
                     }
@@ -2405,12 +2407,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 }
             }
 
-            if(cashFlowThreshold != null) {
-                if(cashFlowThreshold > 100) {
-                    addError(actionErrors,"cashFlowWarningThreshold",ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID);
-                }
-                cashFlowWarningThresholdValue = cashFlowThreshold;
-            }
+        cashFlowWarningThresholdValue = cashFlowThreshold;
 
         }
     }

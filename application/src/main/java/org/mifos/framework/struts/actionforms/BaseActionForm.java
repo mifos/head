@@ -112,8 +112,17 @@ public class BaseActionForm extends ValidatorActionForm {
         case EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST:
             errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsAfterDecimalForInterest().toString());
             break;
+        case EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD:
+            errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsAfterDecimalForCashFlowThreshold().toString());
+            break;
         case EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST:
             errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsBeforeDecimalForInterest().toString());
+            break;
+        case EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD:
+            errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsBeforeDecimalForCashFlowThreshold().toString());
+            break;
+        case CASHFLOW_THRESHOLD_OUT_OF_RANGE:
+            errorText = errorText.replaceFirst("%s", AccountingRules.getCashFlowWarningThreshold().toString());
             break;
         case INTEREST_OUT_OF_RANGE:
             errorText = errorText.replaceFirst("%s1", AccountingRules.getMinInterest().toString());
@@ -132,6 +141,10 @@ public class BaseActionForm extends ValidatorActionForm {
     protected DoubleConversionResult parseDoubleForInterest(String doubleString) {
         return new LocalizationConverter().parseDoubleForInterest(doubleString);
 
+    }
+
+    protected DoubleConversionResult parseDoubleForCashFlowThreshold(String doubleString){
+        return new LocalizationConverter().parseDoubleForCashFlowThreshold(doubleString);
     }
 
     protected Short getShortValue(String str) {

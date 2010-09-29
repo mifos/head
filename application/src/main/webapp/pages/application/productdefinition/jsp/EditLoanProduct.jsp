@@ -35,7 +35,7 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 		<span id="page.id" title="EditLoanProduct" />
 		<script src="pages/framework/js/date.js"></script>
-		<script type="text/javascript" src="pages/application/loan/js/EditLoanProduct.js?<%=(new java.util.Date()).toString()%>"></script>
+		<script type="text/javascript" src="pages/application/loan/js/EditLoanProduct.js"></script>
         <html-el:form action="/loanproductaction"
 			onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) &&
 				validateMyForm(endDate,endDateFormat,endDateYY))"

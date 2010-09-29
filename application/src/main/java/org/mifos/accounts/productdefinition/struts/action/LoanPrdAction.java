@@ -226,6 +226,8 @@ public class LoanPrdAction extends BaseAction {
         loanOffering.setCashFlowCheckEnabled(loanPrdActionForm.getCashFlowValidation());
         if(loanPrdActionForm.getCashFlowValidation()) {
             loanOffering.setCashFlowCheckThreshold(loanPrdActionForm.getCashFlowWarningThresholdValue());
+        }else {
+            loanOffering.setCashFlowCheckThreshold(null);
         }
 
         mapVariableInstallmentDetails(loanOffering, loanPrdActionForm);
@@ -349,8 +351,15 @@ public class LoanPrdAction extends BaseAction {
                         .fromInt(loanPrdActionForm.getFreqOfInstallmentsValue()), loanPrdActionForm, loanPrdActionForm.shouldWaiverInterest());
 
         loanOffering.setCashFlowCheckEnabled(loanPrdActionForm.getCashFlowValidation());
-        if(loanPrdActionForm.getCashFlowValidation() && (!StringUtils.isEmpty(loanPrdActionForm.getCashFlowWarningThreshold()))) {
-            loanOffering.setCashFlowCheckThreshold(Double.valueOf(loanPrdActionForm.getCashFlowWarningThreshold()));
+        if(loanPrdActionForm.getCashFlowValidation()) {
+            if(StringUtils.isEmpty(loanPrdActionForm.getCashFlowWarningThreshold())) {
+                loanOffering.setCashFlowCheckThreshold(null);
+            }else {
+                loanOffering.setCashFlowCheckThreshold(Double.valueOf(loanPrdActionForm.getCashFlowWarningThreshold()));
+
+            }
+        }else {
+            loanOffering.setCashFlowCheckThreshold(null);
         }
 
         logger.debug("update method of Loan Product Action called" + loanPrdActionForm.getPrdOfferingId());

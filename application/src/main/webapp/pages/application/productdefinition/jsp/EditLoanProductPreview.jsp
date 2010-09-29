@@ -573,7 +573,7 @@ explanation of the license and how it is applied.
                         <c:if test="${sessionScope.loanproductactionform.cashFlowValidation}">
                             <tr>
                                 <td height="23" class="fontnormalbold">
-                                    <mifos:mifoslabel name="product.minimumGapBetweenInstallments" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                    <mifos:mifoslabel name="product.cashFlowWarningThreshold" bundle="ProductDefUIResources" isColonRequired="yes" />
                                     <span class="fontnormal">
               	                     	<c:choose>
           	                               <c:when test="${empty sessionScope.loanproductactionform.cashFlowWarningThreshold}">
