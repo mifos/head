@@ -22,16 +22,20 @@ package org.mifos.accounts.savings.interest;
 
 import org.mifos.framework.util.helpers.Money;
 
-public interface InterestCalculator {
+public class PrincipalInterestCalculationPolicy {
 
-//    Money calculateInterest(Money principal, Double interestRate, LocalDate startDate, LocalDate endDate);
+    public Money calculateInterest(Money principal) {
+        double intRate = 10;
 
-//    Money getPrincipal(List<EndOfDayBalance> balanceRecords, LocalDate fromDate, LocalDate toDate);
+        int duration = 365; // one year
 
-//    List<EndOfDayBalance> getEndOfDayBalanceDetails(LocalDate sDate, LocalDate endDate, List<AccountTrxnEntity> orderedList);
+        int accountingNumberOfInterestDaysInYear = 365; // one year
 
-    // -------------------------------------------------------------------------
+        intRate = (intRate / accountingNumberOfInterestDaysInYear) * duration;
 
-    Money calcInterest(InterestCalculationRange interestCalculationRange, EndOfDayDetail... depositDetail);
+        Money interestAmount = principal.multiply(intRate / 100);
+
+        return interestAmount;
+    }
 
 }

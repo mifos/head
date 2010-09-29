@@ -20,137 +20,77 @@
 
 package org.mifos.accounts.savings.interest;
 
-import java.util.List;
-
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
 import org.mifos.framework.util.helpers.Money;
 
-public class AverageBalanceInterestCalculator extends AbstractInterestCalculator {
+public class AverageBalanceInterestCalculator implements InterestCalculator {
 
-    @Override
-    public Money getPrincipal(List<EndOfDayBalance> balanceRecords, final LocalDate calculationStartDate,
-            final LocalDate calculationEndDate) {
+    // TODO - unit test me on my own
+    private PrincipalInterestCalculationPolicy interestCaluclationPolicy = new PrincipalInterestCalculationPolicy();
 
-        validateData(balanceRecords, "balanceRecords list");
-        validateData(calculationStartDate, "calculationStartDate");
-        validateData(calculationEndDate, "calculationEndDate");
+    // TODO - unit test me on my own
+    private PrincipalCalculationStrategy principalCalculationStrategy = new AveragePrincipalCaluclationStrategy();
 
-        LocalDate startDate = calculationStartDate.minusDays(1);
-        LocalDate endDate = calculationEndDate;
-        Money totalBalance = null;
-        int duration = 0;
-        Money principal = null;
-
-        if (!balanceRecords.isEmpty()) {
-            if (balanceRecords.get(0).getDate().isBefore(startDate)
-                    || balanceRecords.get(balanceRecords.size() - 1).getDate().isAfter(endDate)) {
-                throw new IllegalArgumentException("Tinvalid list of EndOfDayDetails");
-            }
-            startDate = balanceRecords.get(0).getDate();
-        }
-
-        duration = Days.daysBetween(startDate, endDate).getDays();
-        totalBalance = calculateTotalBalance(balanceRecords, startDate, endDate);
-
-        if (duration != 0 && totalBalance != null) {
-            principal = totalBalance.divide(duration);
-        }
-
-        return principal;
-    }
-
-    private Money calculateTotalBalance(List<EndOfDayBalance> balanceRecords, LocalDate startDate, LocalDate endDate) {
-        LocalDate prevDate = startDate;
-        Money totalBalance = null;
-        for (int count = 0; count < balanceRecords.size(); count++) {
-            LocalDate nextDate = null;
-            if (count < balanceRecords.size() - 1) {
-                nextDate = balanceRecords.get(count + 1).getDate();
-            } else {
-                nextDate = endDate;
-            }
-
-            int subDuration = Days.daysBetween(prevDate, nextDate).getDays();
-
-            if (totalBalance == null) {
-                totalBalance = balanceRecords.get(count).getBalance().multiply(subDuration);
-            } else {
-                totalBalance = totalBalance.add(balanceRecords.get(count).getBalance().multiply(subDuration));
-            }
-            prevDate = nextDate;
-        }
-        return totalBalance;
-    }
-
-    private Money getPrincipal(InterestCalculationRange interestCalculationRange, EndOfDayDetail[] deposits) {
-        LocalDate startDate = interestCalculationRange.getLowerDate();
-        LocalDate endDate = interestCalculationRange.getUpperDate();
-        int duration = 0;
-        Money totalBalance = null;
-
-        if (deposits != null && deposits.length > 0) {
-            if (deposits[0].getDate().isBefore(startDate) || deposits[deposits.length - 1].getDate().isAfter(endDate)) {
-                throw new IllegalArgumentException("invalid list of EndOfDayDetails");
-            }
-            startDate = deposits[0].getDate();
-        }
-
-        duration = Days.daysBetween(startDate, endDate).getDays();
-
-        LocalDate prevDate = startDate;
-
-        Money runningBalance = null;
-
-        for (int count = 0; count < deposits.length; count++) {
-
-            LocalDate nextDate = null;
-
-            if (count < deposits.length - 1) {
-                nextDate = deposits[count + 1].getDate();
-            } else {
-                nextDate = endDate;
-            }
-
-            int subDuration = Days.daysBetween(prevDate, nextDate).getDays();
-
-            if(runningBalance == null) {
-                runningBalance = deposits[count].getResultantAmountForDay();
-            } else {
-                runningBalance = runningBalance.add(deposits[count].getResultantAmountForDay());
-            }
-
-            if (totalBalance == null) {
-                totalBalance = runningBalance.multiply(subDuration);
-            } else {
-                totalBalance = totalBalance.add(runningBalance.multiply(subDuration));
-            }
-            prevDate = nextDate;
-        }
-
-        if (duration != 0 && totalBalance.isNonZero()) {
-            return totalBalance.divide(duration);
-        }
-
-        return null;
-    }
-
+    // TODO - can unit test me on my own through mocking
     @Override
     public Money calcInterest(InterestCalculationRange interestCalculationRange, EndOfDayDetail... depositDetail) {
 
-        Money principal = getPrincipal(interestCalculationRange, depositDetail);
+        Money principal = principalCalculationStrategy.calculatePrincipal(interestCalculationRange, depositDetail);
 
-        double intRate = 10;
-
-        int duration = 365; // one year
-
-        int accountingNumberOfInterestDaysInYear = 365; // one year
-
-        intRate = (intRate / accountingNumberOfInterestDaysInYear) * duration;
-
-        Money interestAmount = principal.multiply(intRate / 100);
-
-        return interestAmount;
+        return interestCaluclationPolicy.calculateInterest(principal);
     }
 
+//    @Override
+//    public Money getPrincipal(List<EndOfDayBalance> balanceRecords, final LocalDate calculationStartDate,
+//            final LocalDate calculationEndDate) {
+//
+////        validateData(balanceRecords, "balanceRecords list");
+////        validateData(calculationStartDate, "calculationStartDate");
+////        validateData(calculationEndDate, "calculationEndDate");
+//
+//        LocalDate startDate = calculationStartDate.minusDays(1);
+//        LocalDate endDate = calculationEndDate;
+//        Money totalBalance = null;
+//        int duration = 0;
+//        Money principal = null;
+//
+//        if (!balanceRecords.isEmpty()) {
+//            if (balanceRecords.get(0).getDate().isBefore(startDate)
+//                    || balanceRecords.get(balanceRecords.size() - 1).getDate().isAfter(endDate)) {
+//                throw new IllegalArgumentException("Tinvalid list of EndOfDayDetails");
+//            }
+//            startDate = balanceRecords.get(0).getDate();
+//        }
+//
+//        duration = Days.daysBetween(startDate, endDate).getDays();
+//        totalBalance = calculateTotalBalance(balanceRecords, startDate, endDate);
+//
+//        if (duration != 0 && totalBalance != null) {
+//            principal = totalBalance.divide(duration);
+//        }
+//
+//        return principal;
+//    }
+//
+//    private Money calculateTotalBalance(List<EndOfDayBalance> balanceRecords, LocalDate startDate, LocalDate endDate) {
+//        LocalDate prevDate = startDate;
+//        Money totalBalance = null;
+//        for (int count = 0; count < balanceRecords.size(); count++) {
+//            LocalDate nextDate = null;
+//            if (count < balanceRecords.size() - 1) {
+//                nextDate = balanceRecords.get(count + 1).getDate();
+//            } else {
+//                nextDate = endDate;
+//            }
+//
+//            int subDuration = Days.daysBetween(prevDate, nextDate).getDays();
+//
+//            if (totalBalance == null) {
+//                totalBalance = balanceRecords.get(count).getBalance().multiply(subDuration);
+//            } else {
+//                totalBalance = totalBalance.add(balanceRecords.get(count).getBalance().multiply(subDuration));
+//            }
+//            prevDate = nextDate;
+//        }
+//        return totalBalance;
+//    }
 }

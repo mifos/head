@@ -597,45 +597,45 @@ public class SavingsBO extends AccountBO {
 
     public void updateInterestAccrued2() throws AccountException {
 
-        InterestCalculator ic = null;
-        Money interest = new Money(getCurrency());
-
-        if (getInterestCalcType().getId().equals(InterestCalcType.AVERAGE_BALANCE.getValue())) {
-            ic = new AverageBalanceInterestCalculator();
-        } else if (getInterestCalcType().getId().equals(InterestCalcType.MINIMUM_BALANCE.getValue())) {
-            ic = new MinimumBalanceInterestCalculator();
-        }
-
-        LocalDate startDate = getCalculationStartDate();
-        LocalDate endDate = new LocalDate(getNextIntCalcDate());
-
-        List<EndOfDayBalance> balanceRecords = ic.getEndOfDayBalanceDetails(startDate, endDate,
-                getAccountTrxnsOrderByTrxnDate());
-
-        if (balanceRecords != null && !balanceRecords.isEmpty()) {
-            startDate = balanceRecords.get(0).getDate();
-        }
-
-        Money principal = ic.getPrincipal(balanceRecords, startDate, endDate);
-
-        if (principal != null && principal.isGreaterThanOrEqual(getMinAmntForInt())) {
-            interest = ic.calculateInterest(principal, getInterestRate(), startDate, endDate);
-        }
-
-        if (getInterestToBePosted() == null) {
-            setInterestToBePosted(new Money(getCurrency()));
-        }
-        setInterestToBePosted(getInterestToBePosted().add(interest));
-        setLastIntCalcDate(getNextIntCalcDate());
-        try {
-            setNextIntCalcDate(helper.getNextScheduleDate(getActivationDate(), getLastIntCalcDate(),
-                    getTimePerForInstcalc()));
-
-        } catch (MeetingException me) {
-            throw new AccountException(me);
-        }
-        logger.info("In SavingsBO::updateInterestAccrued(), accountId: " + getAccountId() + ", Interest Amount: "
-                + interest + " calculated.");
+//        InterestCalculator ic = null;
+//        Money interest = new Money(getCurrency());
+//
+//        if (getInterestCalcType().getId().equals(InterestCalcType.AVERAGE_BALANCE.getValue())) {
+//            ic = new AverageBalanceInterestCalculator();
+//        } else if (getInterestCalcType().getId().equals(InterestCalcType.MINIMUM_BALANCE.getValue())) {
+//            ic = new MinimumBalanceInterestCalculator();
+//        }
+//
+//        LocalDate startDate = getCalculationStartDate();
+//        LocalDate endDate = new LocalDate(getNextIntCalcDate());
+//
+//        List<EndOfDayBalance> balanceRecords = ic.getEndOfDayBalanceDetails(startDate, endDate,
+//                getAccountTrxnsOrderByTrxnDate());
+//
+//        if (balanceRecords != null && !balanceRecords.isEmpty()) {
+//            startDate = balanceRecords.get(0).getDate();
+//        }
+//
+//        Money principal = ic.getPrincipal(balanceRecords, startDate, endDate);
+//
+//        if (principal != null && principal.isGreaterThanOrEqual(getMinAmntForInt())) {
+//            interest = ic.calculateInterest(principal, getInterestRate(), startDate, endDate);
+//        }
+//
+//        if (getInterestToBePosted() == null) {
+//            setInterestToBePosted(new Money(getCurrency()));
+//        }
+//        setInterestToBePosted(getInterestToBePosted().add(interest));
+//        setLastIntCalcDate(getNextIntCalcDate());
+//        try {
+//            setNextIntCalcDate(helper.getNextScheduleDate(getActivationDate(), getLastIntCalcDate(),
+//                    getTimePerForInstcalc()));
+//
+//        } catch (MeetingException me) {
+//            throw new AccountException(me);
+//        }
+//        logger.info("In SavingsBO::updateInterestAccrued(), accountId: " + getAccountId() + ", Interest Amount: "
+//                + interest + " calculated.");
 
     }
 

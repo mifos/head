@@ -33,9 +33,8 @@ import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
 
-public abstract class AbstractInterestCalculator implements InterestCalculator {
+public abstract class AbstractInterestCalculator {
 
-    @Override
     public List<EndOfDayBalance> getEndOfDayBalanceDetails(LocalDate sDate, LocalDate endDate,
             List<AccountTrxnEntity> trxns) {
         LocalDate startDate = sDate;
@@ -109,7 +108,6 @@ public abstract class AbstractInterestCalculator implements InterestCalculator {
         return (trxn.getAccountAction() == AccountActionTypes.SAVINGS_ADJUSTMENT);
     }
 
-    @Override
     public Money calculateInterest(final Money principal, final Double interestRate,
             final LocalDate startDate, final LocalDate endDate) {
 

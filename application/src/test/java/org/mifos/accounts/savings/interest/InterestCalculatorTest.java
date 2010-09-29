@@ -31,7 +31,6 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -60,8 +59,6 @@ public class InterestCalculatorTest {
 
     private InterestCalculationRange interestCalculationRange;
 
-    private int totalDaysInRange = 0;
-    private int totalDaysFromFirstDeposit = 0;
     private LocalDate sept1st = new LocalDate(new DateTime().withDate(2010, 9, 1));
     private LocalDate sept6th = new LocalDate(new DateTime().withDate(2010, 9, 6));
     private LocalDate september13th = new LocalDate(new DateTime().withDate(2010, 9, 13));
@@ -72,17 +69,14 @@ public class InterestCalculatorTest {
     public void setup() {
         interestCalculator = new AverageBalanceInterestCalculator();
         interestCalculationRange = new InterestCalculationRange(sept1st, october1st);
-
-        totalDaysInRange = Days.daysBetween(interestCalculationRange.getLowerDate(), interestCalculationRange.getUpperDate()).getDays();
-        totalDaysFromFirstDeposit = Days.daysBetween(sept6th, interestCalculationRange.getUpperDate()).getDays();
     }
 
     @Test
     public void shouldCalculateInterestForSimpleDeposit() {
 
-        Money deposit1 = TestUtils.createMoney(Double.valueOf("1000"));
-        Money withdrawal1 = TestUtils.createMoney(Double.valueOf("0"));
-        Money interest1 = TestUtils.createMoney(Double.valueOf("0"));
+        Money deposit1 = TestUtils.createMoney("1000");
+        Money withdrawal1 = TestUtils.createMoney("0");
+        Money interest1 = TestUtils.createMoney("0");
         EndOfDayDetail endOfDayDetail = new EndOfDayDetail(sept6th, deposit1, withdrawal1, interest1);
 
         Money interest = interestCalculator.calcInterest(interestCalculationRange, endOfDayDetail);
@@ -100,7 +94,7 @@ public class InterestCalculatorTest {
 
         Money interest = interestCalculator.calcInterest(interestCalculationRange, endOfDayDetail);
 
-        assertThat(interest.getAmount(), is(TestUtils.createMoney("80.4").getAmount()));
+        assertThat(interest, is(TestUtils.createMoney("80.4")));
     }
 
     @Test
