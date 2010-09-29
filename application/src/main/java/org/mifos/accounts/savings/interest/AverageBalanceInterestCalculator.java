@@ -27,8 +27,7 @@ public class AverageBalanceInterestCalculator implements InterestCalculator {
     // TODO - unit test me on my own
     private PrincipalInterestCalculationPolicy interestCaluclationPolicy = new PrincipalInterestCalculationPolicy();
 
-    // TODO - unit test me on my own
-    private PrincipalCalculationStrategy principalCalculationStrategy = new AveragePrincipalCaluclationStrategy();
+    private PrincipalCalculationStrategy principalCalculationStrategy = new AverageBalancePrincipalCaluclationStrategy();
 
     // TODO - can unit test me on my own through mocking
     @Override

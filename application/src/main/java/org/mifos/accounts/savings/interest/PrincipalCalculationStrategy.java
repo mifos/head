@@ -24,6 +24,6 @@ import org.mifos.framework.util.helpers.Money;
 
 public interface PrincipalCalculationStrategy {
 
-    Money calculatePrincipal(InterestCalculationRange interestCalculationRange, EndOfDayDetail[] depositDetail);
+    Money calculatePrincipal(InterestCalculationRange interestCalculationRange, EndOfDayDetail... endOfDayDetails);
 
 }

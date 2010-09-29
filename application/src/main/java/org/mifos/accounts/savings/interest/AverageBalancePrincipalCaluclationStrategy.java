@@ -24,10 +24,10 @@ import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.framework.util.helpers.Money;
 
-public class AveragePrincipalCaluclationStrategy implements PrincipalCalculationStrategy {
+public class AverageBalancePrincipalCaluclationStrategy implements PrincipalCalculationStrategy {
 
     @Override
-    public Money calculatePrincipal(InterestCalculationRange interestCalculationRange, EndOfDayDetail[] deposits) {
+    public Money calculatePrincipal(InterestCalculationRange interestCalculationRange, EndOfDayDetail... deposits) {
         LocalDate startDate = interestCalculationRange.getLowerDate();
         LocalDate endDate = interestCalculationRange.getUpperDate();
         int duration = 0;
