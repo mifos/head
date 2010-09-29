@@ -20,10 +20,9 @@
 
 package org.mifos.accounts.savings.interest;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Date;
@@ -46,6 +45,7 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -60,8 +60,6 @@ public class InterestCalculatorTest {
     @Mock
     private SavingsBO account;
 
-    private MathContext mathContext;
-
     private InterestCalculationRange interestCalculationRange;
 
     private int totalDaysInRange = 0;
@@ -75,10 +73,6 @@ public class InterestCalculatorTest {
     @Before
     public void setup() {
         interestCalculator = new AverageBalanceInterestCalculator();
-        int internalPrecision = 5;
-        RoundingMode internalRoundingMode = RoundingMode.HALF_UP;
-        mathContext = new MathContext(internalPrecision, internalRoundingMode);
-
         interestCalculationRange = new InterestCalculationRange(sept1st, october1st);
 
         totalDaysInRange = Days.daysBetween(interestCalculationRange.getLowerDate(), interestCalculationRange.getUpperDate()).getDays();
@@ -88,51 +82,72 @@ public class InterestCalculatorTest {
     @Test
     public void shouldCalculateInterestForSimpleDeposit() {
 
-        BigDecimal deposit1 = BigDecimal.valueOf(Double.valueOf("1000.0"));
+        Money deposit1 = TestUtils.createMoney(Double.valueOf("1000.0"));
+        Money withdrawal1 = TestUtils.createMoney(Double.valueOf("0.0"));
+        Money interest1 = TestUtils.createMoney(Double.valueOf("0.0"));
+        EndOfDayDetail endOfDayDetail = new EndOfDayDetail(sept6th, deposit1, withdrawal1, interest1);
 
-        EndOfDayDetail endOfDayDetail = new EndOfDayDetail(sept6th, deposit1);
+        Money interest = interestCalculator.calcInterest(interestCalculationRange, endOfDayDetail);
 
-        BigDecimal interest = interestCalculator.calcInterest(interestCalculationRange, endOfDayDetail);
+        assertThat(interest.getAmountDoubleValue(), is(Double.valueOf("100.0")));
+    }
 
-        BigDecimal expectedInterest = new BigDecimal(Double.valueOf("100.00011123"), mathContext);
-        assertThat(interest, is(expectedInterest));
+    @Test
+    public void shouldCalculateInterestSingleEndOfDayDetails() {
+
+        Money deposit1 = TestUtils.createMoney(Double.valueOf("1000.0"));
+        Money withdrawal1 = TestUtils.createMoney(Double.valueOf("200.0"));
+        Money interest1 = TestUtils.createMoney(Double.valueOf("4.0"));
+        EndOfDayDetail endOfDayDetail = new EndOfDayDetail(sept6th, deposit1, withdrawal1, interest1);
+
+        Money interest = interestCalculator.calcInterest(interestCalculationRange, endOfDayDetail);
+
+        assertThat(interest.getAmountDoubleValue(), is(Double.valueOf("80.4")));
     }
 
     @Test
     public void shouldCalculateInterestForTwoSimpleDeposits() {
 
-        BigDecimal deposit1 = BigDecimal.valueOf(Double.valueOf("1000.0"));
-        EndOfDayDetail endOfDayDetail = new EndOfDayDetail(sept6th, deposit1);
+        Money deposit1 = TestUtils.createMoney(Double.valueOf("1000.0"));
+        Money withdrawal1 = TestUtils.createMoney(Double.valueOf("0.0"));
+        Money interest1 = TestUtils.createMoney(Double.valueOf("0.0"));
+        EndOfDayDetail endOfDayDetail = new EndOfDayDetail(sept6th, deposit1, withdrawal1, interest1);
 
-        BigDecimal deposit2 = BigDecimal.valueOf(Double.valueOf("1000.0"));
-        EndOfDayDetail endOfDayDetail2 = new EndOfDayDetail(september13th, deposit2);
+        Money deposit2 = TestUtils.createMoney(Double.valueOf("1000.0"));
+        Money withdrawal2 = TestUtils.createMoney(Double.valueOf("0.0"));
+        Money interest2 = TestUtils.createMoney(Double.valueOf("0.0"));
+        EndOfDayDetail endOfDayDetail2 = new EndOfDayDetail(september13th, deposit2, withdrawal2, interest2);
 
         // exercise test
-        BigDecimal interest = interestCalculator.calcInterest(interestCalculationRange, endOfDayDetail, endOfDayDetail2);
+        Money interest = interestCalculator.calcInterest(interestCalculationRange, endOfDayDetail, endOfDayDetail2);
 
         // verification
-
 //      avgbal = (1000 x7) + (2000 x 18)/ 25  =
         // 7 days from 6 september to 13th of september
         // 18 days from 13 september to 1st of october
-        BigDecimal expectedInterest = new BigDecimal(Double.valueOf("172.00011123"), mathContext);
-        assertThat(interest, is(expectedInterest));
+        assertThat(interest.getAmountDoubleValue(), is(Double.valueOf("172.00011123")));
     }
 
     @Test
     public void shouldCalculateInterestForThreeSimpleDeposits() {
 
-        BigDecimal deposit1 = BigDecimal.valueOf(Double.valueOf("1000.0"));
-        EndOfDayDetail endOfDayDetail = new EndOfDayDetail(sept6th, deposit1);
+        Money deposit1 = TestUtils.createMoney(Double.valueOf("1000.0"));
+        Money withdrawal1 = TestUtils.createMoney(Double.valueOf("0.0"));
+        Money interest1 = TestUtils.createMoney(Double.valueOf("0.0"));
+        EndOfDayDetail endOfDayDetail = new EndOfDayDetail(sept6th, deposit1, withdrawal1, interest1);
 
-        BigDecimal deposit2 = BigDecimal.valueOf(Double.valueOf("1000.0"));
-        EndOfDayDetail endOfDayDetail2 = new EndOfDayDetail(september13th, deposit2);
+        Money deposit2 = TestUtils.createMoney(Double.valueOf("1000.0"));
+        Money withdrawal2 = TestUtils.createMoney(Double.valueOf("0.0"));
+        Money interest2 = TestUtils.createMoney(Double.valueOf("0.0"));
+        EndOfDayDetail endOfDayDetail2 = new EndOfDayDetail(september13th, deposit2, withdrawal2, interest2);
 
-        BigDecimal deposit3 = BigDecimal.valueOf(Double.valueOf("500.0"));
-        EndOfDayDetail endOfDayDetail3 = new EndOfDayDetail(september20th, deposit3);
+        Money deposit3 = TestUtils.createMoney(Double.valueOf("500.0"));
+        Money withdrawal3 = TestUtils.createMoney(Double.valueOf("0.0"));
+        Money interest3 = TestUtils.createMoney(Double.valueOf("0.0"));
+        EndOfDayDetail endOfDayDetail3 = new EndOfDayDetail(september20th, deposit3, withdrawal3, interest3);
 
         // exercise test
-        BigDecimal interest = interestCalculator.calcInterest(interestCalculationRange, endOfDayDetail, endOfDayDetail2, endOfDayDetail3);
+        Money interest = interestCalculator.calcInterest(interestCalculationRange, endOfDayDetail, endOfDayDetail2, endOfDayDetail3);
 
         // verification
 
@@ -140,8 +155,7 @@ public class InterestCalculatorTest {
         // 7 days from 6 september to 13th of september
         // 7 days from 13 september to 20th of september
         // 11 days from 20 september to 1st of october
-        BigDecimal expectedInterest = new BigDecimal(Double.valueOf("194.00011123"), mathContext);
-        assertThat(interest, is(expectedInterest));
+        assertThat(interest.getAmountDoubleValue(), is(Double.valueOf("194.00011123")));
     }
 
 

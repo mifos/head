@@ -20,26 +20,28 @@
 
 package org.mifos.accounts.savings.interest;
 
-import java.math.BigDecimal;
-
 import org.joda.time.LocalDate;
+import org.mifos.framework.util.helpers.Money;
 
 public class EndOfDayDetail {
 
     private final LocalDate date;
-    private final BigDecimal amount;
+    private final Money deposits;
+    private final Money withdrawals;
+    private final Money interest;
 
-    public EndOfDayDetail(LocalDate date, BigDecimal amount) {
+    public EndOfDayDetail(LocalDate date, Money deposits, Money withdrawals, Money interest) {
         this.date = date;
-        this.amount = amount;
+        this.deposits = deposits;
+        this.withdrawals = withdrawals;
+        this.interest = interest;
     }
 
     public LocalDate getDate() {
         return this.date;
     }
 
-    public BigDecimal getAmount() {
-        return this.amount;
+    public Money getBalanceForDay() {
+        return this.deposits.subtract(this.withdrawals).add(this.interest);
     }
-
 }

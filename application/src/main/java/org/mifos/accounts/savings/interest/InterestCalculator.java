@@ -20,7 +20,6 @@
 
 package org.mifos.accounts.savings.interest;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -37,6 +36,6 @@ public interface InterestCalculator {
 
     // -------------------------------------------------------------------------
 
-    BigDecimal calcInterest(InterestCalculationRange interestCalculationRange, EndOfDayDetail... depositDetail);
+    Money calcInterest(InterestCalculationRange interestCalculationRange, EndOfDayDetail... depositDetail);
 
 }

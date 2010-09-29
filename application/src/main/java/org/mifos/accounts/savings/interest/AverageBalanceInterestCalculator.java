@@ -136,7 +136,7 @@ public class AverageBalanceInterestCalculator extends AbstractInterestCalculator
     }
 
     @Override
-    public BigDecimal calcInterest(InterestCalculationRange interestCalculationRange, EndOfDayDetail... depositDetail) {
+    public Money calcInterest(InterestCalculationRange interestCalculationRange, EndOfDayDetail... depositDetail) {
 
         BigDecimal principal = getPrincipal(interestCalculationRange, depositDetail);
 
