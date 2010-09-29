@@ -24,7 +24,7 @@ import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 
 public class SavingsInterestCalculatorFactory {
 
-    public static InterestCalculator create(InterestCalcType interestCalcType) {
+    public static InterestCalculator create(final InterestCalcType interestCalcType) {
 
         PrincipalCalculationStrategy principalCalculationStrategy = new AverageBalanceCaluclationStrategy();
         switch (interestCalcType) {
@@ -40,5 +40,4 @@ public class SavingsInterestCalculatorFactory {
 
         return new SavingsInterestCalculator(principalCalculationStrategy);
     }
-
 }

@@ -25,13 +25,12 @@ import org.mifos.framework.util.helpers.Money;
 public class MinimumBalanceCaluclationStrategy implements PrincipalCalculationStrategy {
 
     @Override
-    public Money calculatePrincipal(InterestCalculationRange interestCalculationRange,
-            EndOfDayDetail... endOfDayDetails) {
+    public Money calculatePrincipal(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
 
         Money minimumBalance = null;
         Money runningBalance = null;
 
-        for (EndOfDayDetail daily : endOfDayDetails) {
+        for (EndOfDayDetail daily : interestCalculationPeriodDetail.getDailyDetails()) {
             if (runningBalance == null) {
                 runningBalance = daily.getResultantAmountForDay();
             } else {

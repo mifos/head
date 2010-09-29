@@ -23,6 +23,8 @@ package org.mifos.accounts.savings.interest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.Arrays;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -34,6 +36,7 @@ public class AverageBalanceCaluclationStrategyTest {
 
     private PrincipalCalculationStrategy calculationStrategy;
 
+    private InterestCalculationPeriodDetail interestCalculationPeriodDetail;
     private InterestCalculationRange interestCalculationRange;
 
     private LocalDate sept1st = new LocalDate(new DateTime().withDate(2010, 9, 1));
@@ -56,7 +59,8 @@ public class AverageBalanceCaluclationStrategyTest {
         Money interest1 = TestUtils.createMoney("0");
         EndOfDayDetail endOfDayDetail = new EndOfDayDetail(sept6th, deposit1, withdrawal1, interest1);
 
-        Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationRange, endOfDayDetail);
+        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationRange, Arrays.asList(endOfDayDetail));
+        Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
 
         assertThat(averageBalancePrincipal, is(TestUtils.createMoney("1000")));
     }
@@ -74,8 +78,10 @@ public class AverageBalanceCaluclationStrategyTest {
         Money interest2 = TestUtils.createMoney("0");
         EndOfDayDetail endOfDayDetail2 = new EndOfDayDetail(september13th, deposit2, withdrawal2, interest2);
 
+        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationRange, Arrays.asList(endOfDayDetail, endOfDayDetail2));
+
         // exercise test
-        Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationRange, endOfDayDetail, endOfDayDetail2);
+        Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
 
         // verification
         assertThat(averageBalancePrincipal, is(TestUtils.createMoney("1720")));
@@ -99,8 +105,10 @@ public class AverageBalanceCaluclationStrategyTest {
         Money interest3 = TestUtils.createMoney("0");
         EndOfDayDetail endOfDayDetail3 = new EndOfDayDetail(september20th, deposit3, withdrawal3, interest3);
 
+        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationRange, Arrays.asList(endOfDayDetail, endOfDayDetail2, endOfDayDetail3));
+
         // exercise test
-        Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationRange, endOfDayDetail, endOfDayDetail2, endOfDayDetail3);
+        Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
 
         // verification
         assertThat(averageBalancePrincipal, is(TestUtils.createMoney(("1940"))));

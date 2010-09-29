@@ -20,10 +20,28 @@
 
 package org.mifos.accounts.savings.interest;
 
-import org.mifos.framework.util.helpers.Money;
+import java.util.List;
 
-public interface PrincipalCalculationStrategy {
+/**
+ * I represent a valid Interest Caluclation Period.
+ *
+ * In mifos, savings interest calculation is to occur every x days/months.
+ */
+public class InterestCalculationPeriodDetail {
 
-    Money calculatePrincipal(InterestCalculationPeriodDetail interestCalculationPeriodDetail);
+    private final InterestCalculationRange range;
+    private final List<EndOfDayDetail> dailyDetails;
 
+    public InterestCalculationPeriodDetail(InterestCalculationRange range, List<EndOfDayDetail> dailyDetails) {
+        this.range = range;
+        this.dailyDetails = dailyDetails;
+    }
+
+    public InterestCalculationRange getRange() {
+        return this.range;
+    }
+
+    public List<EndOfDayDetail> getDailyDetails() {
+        return this.dailyDetails;
+    }
 }

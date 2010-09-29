@@ -22,16 +22,11 @@ package org.mifos.accounts.savings.interest;
 
 import org.mifos.framework.util.helpers.Money;
 
+/**
+ * I calculate interest for a specified {@link InterestCalculationPeriodDetail}.
+ */
 public interface InterestCalculator {
 
-//    Money calculateInterest(Money principal, Double interestRate, LocalDate startDate, LocalDate endDate);
-
-//    Money getPrincipal(List<EndOfDayBalance> balanceRecords, LocalDate fromDate, LocalDate toDate);
-
-//    List<EndOfDayBalance> getEndOfDayBalanceDetails(LocalDate sDate, LocalDate endDate, List<AccountTrxnEntity> orderedList);
-
-    // -------------------------------------------------------------------------
-
-    Money calcInterest(InterestCalculationRange interestCalculationRange, EndOfDayDetail... depositDetail);
+    Money calculateInterestForPeriod(InterestCalculationPeriodDetail interestCalculationPeriodDetail);
 
 }

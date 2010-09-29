@@ -25,8 +25,9 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,10 +40,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class SavingsInterestCalculatorTest {
 
     private InterestCalculator interestCalculator;
-    private InterestCalculationRange interestCalculationRange;
 
-    private LocalDate sept1st = new LocalDate(new DateTime().withDate(2010, 9, 1));
-    private LocalDate october1st = new LocalDate(new DateTime().withDate(2010, 10, 1));
+    private InterestCalculationPeriodDetail interestCalculationPeriodDetail;
 
     @Mock
     private PrincipalCalculationStrategy principalCalculationStrategy;
@@ -55,19 +54,20 @@ public class SavingsInterestCalculatorTest {
         interestCalculator = new SavingsInterestCalculator(principalCalculationStrategy);
         ((SavingsInterestCalculator)interestCalculator).setCompoundInterestCaluclation(compoundInterestCalculationStrategy);
 
-        interestCalculationRange = new InterestCalculationRange(sept1st, october1st);
+        InterestCalculationRange calculationRange = null;
+        EndOfDayDetail endOfDayDetail = null;
+        List<EndOfDayDetail> dailyDetails = Arrays.asList(endOfDayDetail);
+        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(calculationRange, dailyDetails);
     }
 
     @Test
     public void shouldCalculatePrincipalUsingPrincipalCalculationStrategy() {
 
-        EndOfDayDetail endOfDayDetail = null;
-
         // exercise test
-        interestCalculator.calcInterest(interestCalculationRange, endOfDayDetail);
+        interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
 
         // verification
-        verify(principalCalculationStrategy).calculatePrincipal(interestCalculationRange, endOfDayDetail);
+        verify(principalCalculationStrategy).calculatePrincipal(interestCalculationPeriodDetail);
     }
 
     @Test
@@ -75,14 +75,13 @@ public class SavingsInterestCalculatorTest {
 
         Money expectedPrincipal = TestUtils.createMoney("1000");
         Money expectedInterest = TestUtils.createMoney("21");
-        EndOfDayDetail endOfDayDetail = null;
 
         // stubbing
-        when(principalCalculationStrategy.calculatePrincipal(interestCalculationRange, endOfDayDetail)).thenReturn(expectedPrincipal);
+        when(principalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail)).thenReturn(expectedPrincipal);
         when(compoundInterestCalculationStrategy.calculateInterest(expectedPrincipal)).thenReturn(expectedInterest);
 
         // exercise test
-        Money interest = interestCalculator.calcInterest(interestCalculationRange, endOfDayDetail);
+        Money interest = interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
 
         assertThat(interest, is(expectedInterest));
     }

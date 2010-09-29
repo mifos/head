@@ -20,6 +20,8 @@
 
 package org.mifos.accounts.savings.interest;
 
+import java.util.List;
+
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.framework.util.helpers.Money;
@@ -27,17 +29,19 @@ import org.mifos.framework.util.helpers.Money;
 public class AverageBalanceCaluclationStrategy implements PrincipalCalculationStrategy {
 
     @Override
-    public Money calculatePrincipal(InterestCalculationRange interestCalculationRange, EndOfDayDetail... deposits) {
+    public Money calculatePrincipal(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
+
+        InterestCalculationRange interestCalculationRange = interestCalculationPeriodDetail.getRange();
+
         LocalDate startDate = interestCalculationRange.getLowerDate();
         LocalDate endDate = interestCalculationRange.getUpperDate();
         int duration = 0;
         Money totalBalance = null;
 
-        if (deposits != null && deposits.length > 0) {
-            if (deposits[0].getDate().isBefore(startDate) || deposits[deposits.length - 1].getDate().isAfter(endDate)) {
-                throw new IllegalArgumentException("invalid list of EndOfDayDetails");
-            }
-            startDate = deposits[0].getDate();
+        List<EndOfDayDetail> deposits = interestCalculationPeriodDetail.getDailyDetails();
+
+        if (!deposits.isEmpty()) {
+            startDate = deposits.get(0).getDate();
         }
 
         duration = Days.daysBetween(startDate, endDate).getDays();
@@ -46,12 +50,12 @@ public class AverageBalanceCaluclationStrategy implements PrincipalCalculationSt
 
         Money runningBalance = null;
 
-        for (int count = 0; count < deposits.length; count++) {
+        for (int count = 0; count < deposits.size(); count++) {
 
             LocalDate nextDate = null;
 
-            if (count < deposits.length - 1) {
-                nextDate = deposits[count + 1].getDate();
+            if (count < deposits.size() - 1) {
+                nextDate = deposits.get(count + 1).getDate();
             } else {
                 nextDate = endDate;
             }
@@ -59,9 +63,9 @@ public class AverageBalanceCaluclationStrategy implements PrincipalCalculationSt
             int subDuration = Days.daysBetween(prevDate, nextDate).getDays();
 
             if (runningBalance == null) {
-                runningBalance = deposits[count].getResultantAmountForDay();
+                runningBalance = deposits.get(count).getResultantAmountForDay();
             } else {
-                runningBalance = runningBalance.add(deposits[count].getResultantAmountForDay());
+                runningBalance = runningBalance.add(deposits.get(count).getResultantAmountForDay());
             }
 
             if (totalBalance == null) {
@@ -78,5 +82,4 @@ public class AverageBalanceCaluclationStrategy implements PrincipalCalculationSt
 
         return null;
     }
-
 }
