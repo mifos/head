@@ -911,4 +911,9 @@ select coll.*,
 				order by s.survey_name
 		]]>
 	</sql-query>
+
+	<query name="findAccountPaymentsByReceiptNumber">
+        <![CDATA[from org.mifos.accounts.business.AccountPaymentEntity accountPayment
+        where accountPayment.receiptNumber = :RECEIPT_NUMBER ]]>
+	</query>
 </hibernate-mapping>

@@ -170,5 +170,10 @@ public interface AccountService {
      * @param accountRef is a reference to the account for which payment information is requested.
      */
     List<AccountPaymentParametersDto> lookupPayments(AccountReferenceDto accountRef) throws Exception;
+    
+    /**
+     * Checks if given receipt number already exists in account_payments table 
+     */
+    boolean receiptExists(String receiptNumber) throws Exception;
 
 }

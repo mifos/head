@@ -35,6 +35,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateFlagEntity;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -535,4 +536,13 @@ public class AccountPersistence extends Persistence {
 
         return executeNamedQuery("getCustomerSchedulesForAccountThatAreWithinDates", parameters);
     }
+    
+    @SuppressWarnings("unchecked")
+	public List<AccountPaymentEntity> findAccountPaymentsByReceiptNumber(String receiptNumber) throws PersistenceException {
+    	 Map<String, Object> parameters = new HashMap<String, Object>();
+         parameters.put("RECEIPT_NUMBER", receiptNumber);
+
+         return executeNamedQuery("findAccountPaymentsByReceiptNumber", parameters);
+    }
+    
 }

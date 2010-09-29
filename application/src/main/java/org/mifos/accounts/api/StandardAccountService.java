@@ -365,4 +365,10 @@ public class StandardAccountService implements AccountService {
         ConfigurationManager cfgMng = ConfigurationManager.getInstance();
         return cfgMng.getProperty(propertyKey);
     }
+
+	@Override
+	public boolean receiptExists(String receiptNumber) throws Exception {
+		List<AccountPaymentEntity> existentPaymentsWIthGivenReceiptNumber = getAccountPersistence().findAccountPaymentsByReceiptNumber(receiptNumber);
+		return existentPaymentsWIthGivenReceiptNumber != null && !existentPaymentsWIthGivenReceiptNumber.isEmpty();
+	}
 }
