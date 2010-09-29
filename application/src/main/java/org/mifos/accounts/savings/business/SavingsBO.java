@@ -52,6 +52,10 @@ import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.savings.interest.AverageBalanceInterestCalculator;
+import org.mifos.accounts.savings.interest.EndOfDayBalance;
+import org.mifos.accounts.savings.interest.InterestCalculator;
+import org.mifos.accounts.savings.interest.MinimumBalanceInterestCalculator;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
@@ -589,6 +593,58 @@ public class SavingsBO extends AccountBO {
         }
         logger.info("In SavingsBO::updateInterestAccrued(), accountId: " + getAccountId() + ", Interest Amount: "
                 + interestCalculated + " calculated.");
+    }
+
+    public void updateInterestAccrued2() throws AccountException {
+
+        InterestCalculator ic = null;
+        Money interest = new Money(getCurrency());
+
+        if (getInterestCalcType().getId().equals(InterestCalcType.AVERAGE_BALANCE.getValue())) {
+            ic = new AverageBalanceInterestCalculator();
+        } else if (getInterestCalcType().getId().equals(InterestCalcType.MINIMUM_BALANCE.getValue())) {
+            ic = new MinimumBalanceInterestCalculator();
+        }
+
+        LocalDate startDate = getCalculationStartDate();
+        LocalDate endDate = new LocalDate(getNextIntCalcDate());
+
+        List<EndOfDayBalance> balanceRecords = ic.getEndOfDayBalanceDetails(startDate, endDate,
+                getAccountTrxnsOrderByTrxnDate());
+
+        if (balanceRecords != null && !balanceRecords.isEmpty()) {
+            startDate = balanceRecords.get(0).getDate();
+        }
+
+        Money principal = ic.getPrincipal(balanceRecords, startDate, endDate);
+
+        if (principal != null && principal.isGreaterThanOrEqual(getMinAmntForInt())) {
+            interest = ic.calculateInterest(principal, getInterestRate(), startDate, endDate);
+        }
+
+        if (getInterestToBePosted() == null) {
+            setInterestToBePosted(new Money(getCurrency()));
+        }
+        setInterestToBePosted(getInterestToBePosted().add(interest));
+        setLastIntCalcDate(getNextIntCalcDate());
+        try {
+            setNextIntCalcDate(helper.getNextScheduleDate(getActivationDate(), getLastIntCalcDate(),
+                    getTimePerForInstcalc()));
+
+        } catch (MeetingException me) {
+            throw new AccountException(me);
+        }
+        logger.info("In SavingsBO::updateInterestAccrued(), accountId: " + getAccountId() + ", Interest Amount: "
+                + interest + " calculated.");
+
+    }
+
+    public LocalDate getCalculationStartDate() {
+        LocalDate fromDate = new LocalDate(getLastIntCalcDate());
+        if (getLastIntCalcDate() == null) {
+            fromDate = new LocalDate(getActivationDate());
+        }
+        return fromDate;
     }
 
     private Money calculateInterest(Date fromDate, final Date toDate, final double interestRate,
