@@ -185,4 +185,5 @@ public interface AccountConstants {
     String SELECTED_ACCOUNT_STATUS = "SelectedAccountStatus";
 
     String GL_CODE = "glCode";
+    String INSTALLMENT_DUEDATE_INVALID = "errors.installment.duedate.invalid"; 
 }

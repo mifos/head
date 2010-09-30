@@ -1087,4 +1087,10 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                 acceptedPaymentTypePersistence.getAcceptedPaymentTypesForATransaction(localeId, TrxnTypes.loan_repayment.getValue()),
                 loan.shouldWaiverInterest());
     }
+
+    @Override
+    public void validateVariableInstallmentSchedule(List<RepaymentScheduleInstallment> repaymentScheduleInstallments) throws ServiceException {
+        // TODO Implement this !!
+    }
+
 }

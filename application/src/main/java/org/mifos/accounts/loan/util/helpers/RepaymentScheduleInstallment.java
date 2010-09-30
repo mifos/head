@@ -33,7 +33,7 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     private Integer installment;
 
-    private java.util.Date dueDateValue;
+    private Date dueDateValue;
 
     private Money principal;
 
@@ -51,12 +51,13 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     private String total;
 
-    private String formatStr;
+    private String dueDate;
+
+    private String dateFormat;
 
     public RepaymentScheduleInstallment(int installment, Date dueDateValue, Money principal, Money interest, Money fees,
                                         Money miscFees, Money miscPenalty, Locale locale) {
         this.installment = installment;
-        this.dueDateValue = dueDateValue;
         this.principal = principal;
         this.interest = interest;
         this.fees = fees;
@@ -65,15 +66,27 @@ public class RepaymentScheduleInstallment implements Serializable {
         this.totalValue = principal.add(interest).add(fees).add(miscFees).add(miscPenalty);
         this.total = this.totalValue.toString();
         this.locale = locale;
-        String dateSeparator = DateUtils.getDateSeparatorByLocale(this.locale, DateFormat.MEDIUM);
-        this.formatStr = String.format("dd%sMMM%syyyy", dateSeparator, dateSeparator);
+        this.dateFormat = computeDateFormat(this.locale);
+        this.dueDateValue = dueDateValue;
+        this.dueDate = DateUtils.getDBtoUserFormatString(dueDateValue, locale);
+    }
+
+    @Deprecated
+    public RepaymentScheduleInstallment(Locale locale) {
+        this.locale = locale;
+        this.dateFormat = computeDateFormat(locale);
+    }
+
+    private String computeDateFormat(Locale locale) {
+        String dateSeparator = DateUtils.getDateSeparatorByLocale(locale, DateFormat.MEDIUM);
+        return String.format("dd%sMMM%syyyy", dateSeparator, dateSeparator);
     }
 
     public void setInstallment(Integer installment) {
         this.installment = installment;
     }
 
-    public void setDueDateValue(java.util.Date dueDateValue) {
+    public void setDueDateValue(Date dueDateValue) {
         this.dueDateValue = dueDateValue;
     }
 
@@ -86,14 +99,15 @@ public class RepaymentScheduleInstallment implements Serializable {
     }
 
     public void setFees(Money fees) {
-        this.fees = this.fees.add(fees);
+        if (this.fees == null) this.fees = fees;
+        else this.fees = this.fees.add(fees);
     }
 
     public Integer getInstallment() {
         return installment;
     }
 
-    public java.util.Date getDueDateValue() {
+    public Date getDueDateValue() {
         return dueDateValue;
     }
 
@@ -111,11 +125,6 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     public Money getTotalValue() {
         return totalValue;
-    }
-
-    public String getDueDateInUserLocale() {
-        return DateUtils.getDBtoUserFormatString(dueDateValue, locale);
-
     }
 
     public Locale getLocale() {
@@ -139,12 +148,12 @@ public class RepaymentScheduleInstallment implements Serializable {
     }
 
     public String getDueDate() {
-        return DateUtils.getDBtoUserFormatString(dueDateValue, locale);
-
+        return dueDate;
     }
 
     public void setDueDate(String dueDate) {
-        this.dueDateValue = DateUtils.getDate(dueDate, locale, formatStr);
+//        this.dueDateValue = DateUtils.getDate(dueDate, locale, dateFormat);
+        this.dueDate = dueDate;
     }
 
     public void setTotalValue(String totalValue) {
@@ -161,5 +170,9 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     public void setTotal(String total) {
         this.total = total;
+    }
+
+    public String getDateFormat() {
+        return dateFormat;
     }
 }

@@ -760,15 +760,16 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     private MifosCurrency getCurrencyFromLoanOffering(HttpServletRequest request){
+        LoanOfferingBO loanOfferingBO = getLoanOffering(request);
+        return loanOfferingBO != null ? loanOfferingBO.getCurrency() : null;
+    }
+
+    private LoanOfferingBO getLoanOffering(HttpServletRequest request) {
         try {
-            LoanOfferingBO loanOfferingBO = ((LoanOfferingBO) SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
-            if (loanOfferingBO != null) {
-                return loanOfferingBO.getCurrency();
-            }
+            return ((LoanOfferingBO) SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
         } catch (PageExpiredException e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     private void checkValidationForSchedulePreview(ActionErrors errors, MifosCurrency currency, HttpServletRequest request)
@@ -920,7 +921,18 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     private void checkValidationForPreview(ActionErrors errors, MifosCurrency currency, HttpServletRequest request) {
         if (isRedoOperation()) {
             validateRedoLoanPayments(request, errors, currency);
+        } else if (isVariableInstallmentsEnabled(request)) {
+            validateForVariableInstallments(request);
         }
+    }
+
+    private void validateForVariableInstallments(HttpServletRequest request) {
+        List<RepaymentScheduleInstallment> scheduleInstallments = this.getInstallments();
+    }
+
+    private boolean isVariableInstallmentsEnabled(HttpServletRequest request) {
+        LoanOfferingBO loanOfferingBO = getLoanOffering(request);
+        return loanOfferingBO != null && loanOfferingBO.isVariableInstallmentsAllowed();
     }
 
     private void checkValidationForManagePreview(ActionErrors errors, MifosCurrency currency, HttpServletRequest request)
