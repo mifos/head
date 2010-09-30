@@ -38,6 +38,7 @@ public class QuestionnaireConstants {
     public static final String PPI_SURVEY_FILE_NOT_FOUND = "questionnaire.error.PPISurveyFileNotFound";
     public static final String FETCH_PPI_XMLS_FAILED = "questionnaire.error.FetchPPIXmlsFailed";
     public static final String FETCH_PPI_COUNTRY_XML_FAILED = "questionnaire.error.FetchPPICountryXmlFailed";
+    public static final int MAX_LENGTH_FOR_QUESTION_TEXT = 1000;
     public static final int MAX_LENGTH_FOR_TITILE = 50;
     public static final int MAX_CHOICES_FOR_QUESTION = 2;
     public static final String PPI_SURVEY_FILE_PREFIX = "PPISurvey";

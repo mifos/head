@@ -69,6 +69,7 @@ public interface CollectionSheetEntryConstants {
     String CENTER = "Center";
 
     String BULKENTRYINVALIDAMOUNT = "errors.invalidamount";
+    String BULKENTRYINVALIDPREPAYAMOUNT = "errors.invalidprepayamount";
     String BULKENTRYINVALIDACCOLLECTIONS = "errors.invalidaccollections";
     String INVALID_RECEIPT_DATE = "errors.invaliddate";
     String ERRORINVALIDAMOUNT = "errors.invalidamountvalue";

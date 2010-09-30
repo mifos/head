@@ -102,6 +102,6 @@ public class SystemException extends RuntimeException {
      * parameters to the string in the resource bundle.
      */
     public Object[] getValues() {
-        return values.clone();
+        return values == null ? new Object[0] : values.clone();
     }
 }
