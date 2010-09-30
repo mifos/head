@@ -176,7 +176,7 @@ function selectAllOptions(outSel)
         				<label for="selectedMaritalStatus">[@spring.message "systemUsers.preview.maritalStatus" /]:</label>
         			</span>
 	        		<span>
-	        			[@mifos.formSingleSelectWithPrompt "userFormBean.selectedMaritalStatus", userFormBean.maritalStatusOptions, "--select one--" /]
+	        			[@mifos.formSingleSelectWithPrompt "userFormBean.selectedMaritalStatus", userFormBean.maritalStatusOptions, "--selectone--" /]
 	        		</span>
 	        	</div>
 	        
@@ -185,7 +185,7 @@ function selectAllOptions(outSel)
 	        			<label for="selectedGender"><span class="red">*</span>[@spring.message "systemUsers.preview.gender" /]:</label>
 	        		</span>
 	        		<span>
-	        			[@mifos.formSingleSelectWithPrompt "userFormBean.selectedGender", userFormBean.genderOptions, "--select one--" /]
+	        			[@mifos.formSingleSelectWithPrompt "userFormBean.selectedGender", userFormBean.genderOptions, "--selectone--" /]
 	        		</span>
 	        	</div>
 	        
@@ -194,7 +194,7 @@ function selectAllOptions(outSel)
 	        			<label for="selectedPreferredLanguage">[@spring.message "systemUsers.preview.languagePreferred" /]:</label>
 	        		</span>
 	        		<span>
-	        			[@mifos.formSingleSelectWithPrompt "userFormBean.selectedPreferredLanguage", userFormBean.preferredLanguageOptions, "--select one--" /]
+	        			[@mifos.formSingleSelectWithPrompt "userFormBean.selectedPreferredLanguage", userFormBean.preferredLanguageOptions, "--selectone--" /]
 	        		</span>
 	        	</div>
 	        
@@ -321,7 +321,7 @@ function selectAllOptions(outSel)
 			       		<label for="userTitle">[@spring.message "systemUsers.preview.userTitle" /]:</label>
 			       	</span>
 			       	<span>
-	        			[@mifos.formSingleSelectWithPrompt "userFormBean.selectedUserTitle", userFormBean.userTitleOptions, "--select one--" /]
+	        			[@mifos.formSingleSelectWithPrompt "userFormBean.selectedUserTitle", userFormBean.userTitleOptions, "--selectone--" /]
 	        		</span>
 	        	</div>
 	        
@@ -330,7 +330,7 @@ function selectAllOptions(outSel)
 			       		<label for="userTitle"><span class="red">*</span>[@spring.message "systemUsers.preview.userHierarchy" /]:</label>
 			       	</span>
 			       	<span>
-	        			[@mifos.formSingleSelectWithPrompt "userFormBean.selectedUserHierarchy", userFormBean.userHierarchyOptions, "--select one--" /]
+	        			[@mifos.formSingleSelectWithPrompt "userFormBean.selectedUserHierarchy", userFormBean.userHierarchyOptions, "--selectone--" /]
 	        		</span>
 	        	</div>
 	        

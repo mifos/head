@@ -72,30 +72,29 @@ public class DefineNewOfficeController {
                 }
 
             }else{
-                if(((!officeFormBean.getLevelId().equals("1") && StringUtils.isNotBlank(officeFormBean.getParentId())) || (officeFormBean.getLevelId().equals("1") && !StringUtils.isNotBlank(officeFormBean.getParentId())))){
-                    result.addError(new ObjectError("parentLevelId", "Please specify Parent Level name"));
-                    modelAndView = new ModelAndView("previewOfficeDetails");
-                }else{
-                    modelAndView = new ModelAndView("defineNewOffice");
+                if( !((!officeFormBean.getLevelId().equals("1") && StringUtils.isNotBlank(officeFormBean.getParentId())) || (officeFormBean.getLevelId().equals("1") && !StringUtils.isNotBlank(officeFormBean.getParentId())))){
                     result.addError(new ObjectError("parentLevelId", "Please specify Parent Level name"));
                     modelAndView.addObject("showError", "true");
-                }
-                switch(Integer.parseInt(officeFormBean.getLevelId())){
-                case 1:
-                    officeFormBean.setOfficeLevelName("Head Office");
-                    break;
-                case 2:
-                    officeFormBean.setOfficeLevelName("Regional Office");
-                    break;
-                case 3:
-                    officeFormBean.setOfficeLevelName("Divisional Office");
-                    break;
-                case 4:
-                    officeFormBean.setOfficeLevelName("Area Office");
-                    break;
-                default:
-                    officeFormBean.setOfficeLevelName("Branch Office");
-                    break;
+                    modelAndView.setViewName("defineNewOffice");
+                }else{
+                    modelAndView.setViewName("previewOfficeDetails");
+                    switch(Integer.parseInt(officeFormBean.getLevelId())){
+                    case 1:
+                        officeFormBean.setOfficeLevelName("Head Office");
+                        break;
+                    case 2:
+                        officeFormBean.setOfficeLevelName("Regional Office");
+                        break;
+                    case 3:
+                        officeFormBean.setOfficeLevelName("Divisional Office");
+                        break;
+                    case 4:
+                        officeFormBean.setOfficeLevelName("Area Office");
+                        break;
+                    default:
+                        officeFormBean.setOfficeLevelName("Branch Office");
+                        break;
+                    }
                 }
             /*modelAndView.addObject("officeTypes", editOfficeInformationController.getOfficeTypes("new"));
             if(!officeFormBean.getLevelId().equals("1")){
@@ -105,9 +104,11 @@ public class DefineNewOfficeController {
             modelAndView.addObject("officeFormBean", officeFormBean);*/
             }
             modelAndView.addObject("officeTypes", editOfficeInformationController.getOfficeTypes("new"));
-            if(!officeFormBean.getLevelId().equals("1") && StringUtils.isNotBlank(officeFormBean.getLevelId()) || StringUtils.isNotBlank(officeFormBean.getParentId())){
+            if((!officeFormBean.getLevelId().equals("1") && StringUtils.isNotBlank(officeFormBean.getLevelId()))){
                 modelAndView.addObject("parentOffices", editOfficeInformationController.getParentDetails(officeFormBean.getLevelId()));
+                if (StringUtils.isNotBlank(officeFormBean.getParentId())){
                 officeFormBean.setParentOfficeName(officeServiceFacade.retrieveOfficeById(Short.parseShort(officeFormBean.getParentId())).getName());
+                }
             }
             modelAndView.addObject("officeFormBean", officeFormBean);
         }else{

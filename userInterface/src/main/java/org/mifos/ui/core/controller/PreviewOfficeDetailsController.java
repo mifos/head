@@ -58,7 +58,7 @@ public class PreviewOfficeDetailsController {
             if(!formBean.getLevelId().equals("1")){
             mav.addObject("parentOffices",editOfficeInformationController.getParentDetails(formBean.getLevelId()));
             }
-            mav.addObject("officeTypes",editOfficeInformationController.getOfficeTypes(formBean.getLevelId()));
+            mav.addObject("officeTypes",editOfficeInformationController.getOfficeTypes("new"));
             mav.addObject("officeFormBean", formBean);
             mav.addObject("view", "enable");
             }
