@@ -45,4 +45,9 @@ public class InterestCalculationRange {
                 (date.isBefore(this.upperDate) || date.isEqual(this.upperDate)));
     }
 
+    @Override
+    public String toString() {
+        return new StringBuilder().append('[').append(lowerDate).append('-').append(upperDate).append(']').toString();
+    }
+
 }

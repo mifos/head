@@ -315,4 +315,12 @@ public final class Money implements Serializable, Comparable<Money> {
         checkCurrenciesDifferent(this, money);
         return this.getAmount().compareTo(money.amount);
     }
+
+    public static Money zero() {
+        return new Money(Money.getDefaultCurrency(), "0");
+    }
+
+    public static Money zero(MifosCurrency currency) {
+        return new Money(currency, "0");
+    }
 }

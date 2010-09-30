@@ -23,12 +23,16 @@ package org.mifos.accounts.savings.interest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -45,10 +49,34 @@ public class AverageBalanceCaluclationStrategyTest {
     private LocalDate september20th = new LocalDate(new DateTime().withDate(2010, 9, 20));
     private LocalDate october1st = new LocalDate(new DateTime().withDate(2010, 10, 1));
 
+    private static MifosCurrency oldCurrency;
+
+    @BeforeClass
+    public static void setCurrency() {
+        oldCurrency = Money.getDefaultCurrency();
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+    }
+
+    @AfterClass
+    public static void resetCurrency() {
+        Money.setDefaultCurrency(oldCurrency);
+    }
+
     @Before
     public void setup() {
         calculationStrategy = new AverageBalanceCaluclationStrategy();
         interestCalculationRange = new InterestCalculationRange(sept1st, october1st);
+    }
+
+    @Test
+    public void shouldRecieveZeroBalanceWithNoDailyRecords() {
+
+        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationRange, new ArrayList<EndOfDayDetail>());
+
+        // exercise test
+        Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
+
+        assertThat(averageBalancePrincipal, is(TestUtils.createMoney("0")));
     }
 
     @Test
@@ -60,6 +88,8 @@ public class AverageBalanceCaluclationStrategyTest {
         EndOfDayDetail endOfDayDetail = new EndOfDayDetail(sept6th, deposit1, withdrawal1, interest1);
 
         interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationRange, Arrays.asList(endOfDayDetail));
+
+        // exercise test
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
 
         assertThat(averageBalancePrincipal, is(TestUtils.createMoney("1000")));

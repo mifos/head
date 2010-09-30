@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
 
 public class AverageBalanceCaluclationStrategy implements PrincipalCalculationStrategy {
@@ -35,20 +36,20 @@ public class AverageBalanceCaluclationStrategy implements PrincipalCalculationSt
 
         LocalDate startDate = interestCalculationRange.getLowerDate();
         LocalDate endDate = interestCalculationRange.getUpperDate();
-        int duration = 0;
-        Money totalBalance = null;
 
         List<EndOfDayDetail> deposits = interestCalculationPeriodDetail.getDailyDetails();
 
+        MifosCurrency currencyInUse = Money.getDefaultCurrency();
         if (!deposits.isEmpty()) {
             startDate = deposits.get(0).getDate();
+            currencyInUse = deposits.get(0).getResultantAmountForDay().getCurrency();
         }
 
-        duration = Days.daysBetween(startDate, endDate).getDays();
-
+        int duration = Days.daysBetween(startDate, endDate).getDays();
         LocalDate prevDate = startDate;
 
-        Money runningBalance = null;
+        Money totalBalance = Money.zero(currencyInUse);
+        Money runningBalance = Money.zero(currencyInUse);
 
         for (int count = 0; count < deposits.size(); count++) {
 
@@ -62,13 +63,13 @@ public class AverageBalanceCaluclationStrategy implements PrincipalCalculationSt
 
             int subDuration = Days.daysBetween(prevDate, nextDate).getDays();
 
-            if (runningBalance == null) {
+            if (runningBalance.equals(Money.zero(currencyInUse))) {
                 runningBalance = deposits.get(count).getResultantAmountForDay();
             } else {
                 runningBalance = runningBalance.add(deposits.get(count).getResultantAmountForDay());
             }
 
-            if (totalBalance == null) {
+            if (totalBalance.equals(Money.zero(currencyInUse))) {
                 totalBalance = runningBalance.multiply(subDuration);
             } else {
                 totalBalance = totalBalance.add(runningBalance.multiply(subDuration));
@@ -77,9 +78,9 @@ public class AverageBalanceCaluclationStrategy implements PrincipalCalculationSt
         }
 
         if (duration != 0 && totalBalance.isNonZero()) {
-            return totalBalance.divide(duration);
+            totalBalance = totalBalance.divide(duration);
         }
 
-        return null;
+        return totalBalance;
     }
 }

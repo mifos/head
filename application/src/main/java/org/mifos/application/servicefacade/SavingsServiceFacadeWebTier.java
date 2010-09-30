@@ -32,6 +32,7 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
 import org.mifos.accounts.savings.interest.InterestCalculationPeriodDetail;
 import org.mifos.accounts.savings.interest.InterestCalculationRange;
+import org.mifos.accounts.savings.interest.InterestCalculationRangeHelper;
 import org.mifos.accounts.savings.interest.InterestCalculator;
 import org.mifos.accounts.savings.interest.SavingsInterestCalculatorFactory;
 import org.mifos.accounts.savings.persistence.SavingsDao;
@@ -61,6 +62,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     private final PersonnelDao personnelDao;
     private final CustomerDao customerDao;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+    private InterestCalculationRangeHelper interestCalculationRangeHelper = new InterestCalculationRangeHelper();
 
     public SavingsServiceFacadeWebTier(SavingsDao savingsDao, PersonnelDao personnelDao, CustomerDao customerDao) {
         this.savingsDao = savingsDao;
@@ -198,18 +200,16 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             ScheduledEvent interestCalculationEvent = ScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
 
             LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();
-            LocalDate firstCalculationDate = firstDepositDate.withDayOfMonth(1).plusMonths(interestCalculationEvent.getEvery()+1).minusDays(1);
 
-            if (firstCalculationDate.isBefore(new LocalDate())) {
-                InterestCalculationRange range = new InterestCalculationRange(firstDepositDate, firstCalculationDate);
+            List<InterestCalculationRange> allPossible = interestCalculationRangeHelper.determineAllPossibleInterestCalculationPeriods(firstDepositDate, interestCalculationEvent, new LocalDate());
+            for (InterestCalculationRange range : allPossible) {
                 InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(range, allEndOfDayDetailsForAccount);
 
                 Money calculatedInterest = interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
 
-                LocalDate nextCalculationDate = firstCalculationDate.withDayOfMonth(1).plusMonths(interestCalculationEvent.getEvery()+1).minusDays(1);
-                if (nextCalculationDate.isBefore(new LocalDate())) {
-                    // then do it all again.
-                }
+                // TODO - update fee calculation and do fee posting if applicable
+                // TODO - log interest information for checking on SECDEP
+                System.out.println("interest for range " + range + calculatedInterest);
             }
         }
     }
