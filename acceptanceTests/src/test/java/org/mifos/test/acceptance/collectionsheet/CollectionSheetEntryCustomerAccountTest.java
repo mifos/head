@@ -63,7 +63,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
 
 
     private static final double[] BASIC_CUSTOMER_ACCT_VALUES = new double[] {  51.0, 77.0, 123.0, 251.0, 44.0 };
-    private static final double[] FIRST_PARTIAL_CUSTOMER_ACCT_VALUES = new double[] { 17.0, 0.0, 123.0, 0.0, 44.0 };
+    private static final double[] FIRST_PARTIAL_CUSTOMER_ACCT_VALUES = new double[] { 51.0, 0.0, 123.0, 0.0, 44.0 };
 
 
     @Autowired
@@ -93,7 +93,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(enabled=false, sequential = true, groups = {"smoke"})
+    @Test(enabled=true, sequential = true, groups = {"smoke"})
     public void clientAccountFeesSavedToDatabase() throws Exception {
         try {
             SubmitFormParameters formParameters = getFormParametersForTestOffice();
@@ -128,7 +128,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void unpaidFeeDisplayedOnSecondCollectionSheetEntryAndSaved() throws Exception {
         SubmitFormParameters formParameters = getFormParametersForTestOffice();
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
@@ -143,7 +143,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
         enterDataPage.verifyCustomerAccountValue(0, 6, 0.0);
         enterDataPage.verifyCustomerAccountValue(1, 6, 77.0);
         enterDataPage.verifyCustomerAccountValue(2, 6, 0.0);
-        enterDataPage.verifyCustomerAccountValue(3, 6, 217.0);
+        enterDataPage.verifyCustomerAccountValue(3, 6, 251.0);
         enterDataPage.verifyCustomerAccountValue(4, 6, 0.0);
         enterDataPage.cancel();
 
