@@ -49,8 +49,8 @@ import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.schedule.ScheduledEvent;
-import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
@@ -197,10 +197,11 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
             // NOTE: for first interest calculation period, calculation starts from the first deposit date and not activation date
             // NOTE: interest calculation and posting date are always the last day of the month (no matter what!)
-            ScheduledEvent interestCalculationEvent = ScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
+            ScheduledEvent interestCalculationEvent = SavingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
 
             LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();
 
+            // TODO - this is hardcoded to monthly at end of month setting for interest calculation
             List<InterestCalculationRange> allPossible = interestCalculationRangeHelper.determineAllPossibleInterestCalculationPeriods(firstDepositDate, interestCalculationEvent, new LocalDate());
             for (InterestCalculationRange range : allPossible) {
                 InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(range, allEndOfDayDetailsForAccount);

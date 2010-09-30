@@ -39,6 +39,7 @@ public class InterestCalculationRangeHelper {
         LocalDate lowerRangeDate = firstDepositDate;
         LocalDate startFrom = startOfFiscalYearOfFirstDeposit;
         while (startFrom.isBefore(cutOffDateForRanges)) {
+            LocalDate checkItOut = new LocalDate(interestCalculationEvent.nextEventDateAfter(startFrom.toDateTimeAtCurrentTime()));
             LocalDate upperRange = calculateNextInterestCalculationDateStartingFrom(startFrom, interestCalculationEvent);
             if (upperRange.isAfter(lowerRangeDate)) {
                 validInterestCalculationRanges.add(new InterestCalculationRange(lowerRangeDate, upperRange));

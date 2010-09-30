@@ -21,27 +21,27 @@
 package org.mifos.schedule.internal;
 
 import org.joda.time.DateTime;
-import org.mifos.calendar.CalendarUtils;
 
-public class DailyScheduledEvent extends AbstractScheduledEvent {
+public class MonthlyAtEndOfMonthScheduledEvent extends AbstractScheduledEvent {
 
     private final int every;
 
-    public DailyScheduledEvent(final int every) {
+    public MonthlyAtEndOfMonthScheduledEvent(int every) {
         this.every = every;
-    }
-
-    public DateTime nextEventDateAfter(final DateTime startDate) {
-        return CalendarUtils.getNextDateForDay(startDate, every);
-    }
-
-    public DateTime nearestMatchingDateBeginningAt(final DateTime startDate) {
-
-        return CalendarUtils.getNextDateForDay(startDate, every);
     }
 
     @Override
     public int getEvery() {
-        return every;
+        return this.every;
+    }
+
+    @Override
+    public DateTime nearestMatchingDateBeginningAt(DateTime date) {
+        return nextEventDateAfter(date);
+    }
+
+    @Override
+    public DateTime nextEventDateAfter(DateTime date) {
+        return date.withDayOfMonth(1).plusMonths(every).minusDays(1);
     }
 }
