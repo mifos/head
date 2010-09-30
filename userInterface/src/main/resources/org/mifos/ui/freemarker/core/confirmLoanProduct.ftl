@@ -22,9 +22,9 @@
 [@adminLeftPaneLayout]
    <!--  Main Content Begins-->  
   <div class="content">
-    <p class="font15 orangeheading">[@spring.message "manageLoanProduct.youhavesuccessfullyaddedanewLoanproduct"/] </p>
-    <p><span class="fontBold">[@spring.message "manageLoanProduct.pleaseNoteLoanProducthasbeenassignedthesystemIDnumber"/]</span><span class="fontBold">${product.globalPrdOfferingNum}</span></p>
-    <p class="fontBold"><a href="viewEditLoanProduct.ftl?productId=${product.prdOfferingId}">[@spring.message "manageLoanProduct.viewLoanproductdetailsnow"/]</a></p>
+    <p class="orangeheading marginBottom" style="font-size:15px;">[@spring.message "manageLoanProduct.youhavesuccessfullyaddedanewLoanproduct"/] </p>
+    <p class="marginBottom"><span class="fontBold">[@spring.message "manageLoanProduct.pleaseNote"/]&nbsp;:</span><span>[@spring.message "manageLoanProduct.LoanProducthasbeenassignedthesystemIDnumber"/]&nbsp;:</span><span class="fontBold">${product.globalPrdOfferingNum}</span></p>
+    <p class="marginBottom fontBold"><a href="viewEditLoanProduct.ftl?productId=${product.prdOfferingId}">[@spring.message "manageLoanProduct.viewLoanproductdetailsnow"/]</a></p>
     <p><a href="defineLoanProducts.ftl">[@spring.message "manageLoanProduct.defineanewLoanproduct"/]</a></p>
   </div>
   <!--Main Content Ends-->

@@ -100,9 +100,9 @@ function selectAllOptions(outSel)
 	            </span>
 	            
 	            <span class="span-3"><br />
-	            <input class="buttn2" name="add" type="button" value="Add >> " onclick="moveOptions(this.form.chosenNonAcceptedFees, this.form.chosenAcceptedFees);" />
+	            <input class="buttn2" name="add" type="button" value="[@spring.message "add"/] >>" onclick="moveOptions(this.form.chosenNonAcceptedFees, this.form.chosenAcceptedFees);" />
 	            <br /><br />
-				<input class="buttn2" name="remove" type="button" value="<<Remove" onclick="moveOptions(this.form.chosenAcceptedFees, this.form.chosenNonAcceptedFees);" />
+				<input class="buttn2" name="remove" type="button" value="<<[@spring.message "remove"/]" onclick="moveOptions(this.form.chosenAcceptedFees, this.form.chosenNonAcceptedFees);" />
 				</span>
 				
 				<span class="span-4">
@@ -121,9 +121,9 @@ function selectAllOptions(outSel)
 	            </span>
 	            
 	            <span class="span-3"><br />
-	            <input class="buttn2" name="add" type="button" value="Add >> " onclick="moveOptions(this.form.chosenNonAcceptedLoanDisbursements, this.form.chosenAcceptedLoanDisbursements);" />
+	            <input class="buttn2" name="add" type="button" value="[@spring.message "add"/] >>" onclick="moveOptions(this.form.chosenNonAcceptedLoanDisbursements, this.form.chosenAcceptedLoanDisbursements);" />
 	            <br /><br />
-				<input class="buttn2" name="remove" type="button" value="<<Remove" onclick="moveOptions(this.form.chosenAcceptedLoanDisbursements, this.form.chosenNonAcceptedLoanDisbursements);" />
+				<input class="buttn2" name="remove" type="button" value="<<[@spring.message "remove"/]" onclick="moveOptions(this.form.chosenAcceptedLoanDisbursements, this.form.chosenNonAcceptedLoanDisbursements);" />
 				</span>
 				
 				<span class="span-4">
@@ -139,9 +139,9 @@ function selectAllOptions(outSel)
 	            </span>
 	            
 	            <span class="span-3"><br />
-	            <input class="buttn2" name="add" type="button" value="Add >> " onclick="moveOptions(this.form.chosenNonAcceptedLoanRepayments, this.form.chosenAcceptedLoanRepayments);" />
+	            <input class="buttn2" name="add" type="button" value="[@spring.message "add"/] >>" onclick="moveOptions(this.form.chosenNonAcceptedLoanRepayments, this.form.chosenAcceptedLoanRepayments);" />
 	            <br /><br />
-				<input class="buttn2" name="remove" type="button" value="<<Remove" onclick="moveOptions(this.form.chosenAcceptedLoanRepayments, this.form.chosenNonAcceptedLoanRepayments);" />
+				<input class="buttn2" name="remove" type="button" value="<<[@spring.message "remove"/]" onclick="moveOptions(this.form.chosenAcceptedLoanRepayments, this.form.chosenNonAcceptedLoanRepayments);" />
 				</span>
 				
 				<span class="span-4">
@@ -160,9 +160,9 @@ function selectAllOptions(outSel)
 	            </span>
 	            
 	            <span class="span-3"><br />
-	            <input class="buttn2" name="add" type="button" value="Add >> " onclick="moveOptions(this.form.chosenNonAcceptedSavingWithdrawals, this.form.chosenAcceptedSavingWithdrawals);" />
+	            <input class="buttn2" name="add" type="button" value="[@spring.message "add"/] >>" onclick="moveOptions(this.form.chosenNonAcceptedSavingWithdrawals, this.form.chosenAcceptedSavingWithdrawals);" />
 	            <br /><br />
-				<input class="buttn2" name="remove" type="button" value="<<Remove" onclick="moveOptions(this.form.chosenAcceptedSavingWithdrawals, this.form.chosenNonAcceptedSavingWithdrawals);" />
+				<input class="buttn2" name="remove" type="button" value="<<[@spring.message "remove"/]" onclick="moveOptions(this.form.chosenAcceptedSavingWithdrawals, this.form.chosenNonAcceptedSavingWithdrawals);" />
 				</span>
 				
 				<span class="span-4">
@@ -177,9 +177,9 @@ function selectAllOptions(outSel)
 	            </span>
 	            
 	            <span class="span-3"><br />
-	            <input class="buttn2" name="add" type="button" value="Add >> " onclick="moveOptions(this.form.chosenNonAcceptedSavingDeposits, this.form.chosenAcceptedSavingDeposits);" />
+	            <input class="buttn2" name="add" type="button" value="[@spring.message "add"/] >>" onclick="moveOptions(this.form.chosenNonAcceptedSavingDeposits, this.form.chosenAcceptedSavingDeposits);" />
 	            <br /><br />
-				<input class="buttn2" name="remove" type="button" value="<<Remove" onclick="moveOptions(this.form.chosenAcceptedSavingDeposits, this.form.chosenNonAcceptedSavingDeposits);" />
+				<input class="buttn2" name="remove" type="button" value="<<[@spring.message "remove"/]" onclick="moveOptions(this.form.chosenAcceptedSavingDeposits, this.form.chosenNonAcceptedSavingDeposits);" />
 				</span>
 				
 				<span class="span-4">

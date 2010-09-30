@@ -2,3 +2,4 @@ target
 *.log
 *.log.*
 test-output
+application/src/main/sql/latest-schema_last.sql

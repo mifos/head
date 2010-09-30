@@ -174,6 +174,24 @@ explanation of the license and how it is applied.
 										bundle="ProductDefUIResources" />
 								</c:otherwise>
 							</c:choose> </span> <br>
+	
+									<fmt:message key="product.include.interest.waiver">
+                                    <fmt:param><mifos:mifoslabel
+                                    name="${ConfigurationConstants.LOAN}"
+                                    bundle="ProductDefUIResources" /></fmt:param>
+                                    </fmt:message>:
+                                    <span class="fontnormal">
+                                    <c:choose>
+										<c:when
+											test="${sessionScope.loanproductactionform.waiverInterest==1}">
+											<mifos:mifoslabel name="product.yes"
+												bundle="ProductDefUIResources" />
+										</c:when>
+										<c:otherwise>
+											<mifos:mifoslabel name="product.no"
+												bundle="ProductDefUIResources" />
+										</c:otherwise>
+									</c:choose></span><br>
 							<!--<mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" />
@@ -477,64 +495,6 @@ explanation of the license and how it is applied.
 							<td width="100%" height="23" class="fontnormalbold"><mifos:mifoslabel
 								name="product.repaysch" bundle="ProductDefUIResources" /></td>
 						</tr>
-                        <tr>
-                            <td height="23" class="fontnormalbold">
-                                <mifos:mifoslabel name="product.canConfigureVariableInstallments" bundle="ProductDefUIResources" isColonRequired="yes" />
-                                <span class="fontnormal">
-                                    <c:choose>
-                                        <c:when test="${sessionScope.loanproductactionform.canConfigureVariableInstallments == '1'}">
-                                            <mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
-                                        </c:when>
-                                        <c:otherwise>
-                                            <mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
-                                        </c:otherwise>
-                                    </c:choose>
-                                </span>
-                            </td>
-                        </tr>
-                        <c:if test="${sessionScope.loanproductactionform.canConfigureVariableInstallments=='1'}">
-                            <tr>
-                                <td height="23" class="fontnormalbold">
-                                    <mifos:mifoslabel name="product.minimumGapBetweenInstallments" bundle="ProductDefUIResources" isColonRequired="yes" />
-                                    <span class="fontnormal">
-              	                     	<c:choose>
-          	                               <c:when test="${empty sessionScope.loanproductactionform.minimumGapBetweenInstallments}">
-                                                  <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
-                                              </c:when>
-                                              <c:otherwise>
-	                                        <c:out value="${sessionScope.loanproductactionform.minimumGapBetweenInstallments}" />
-	                                        <span id="days"> <mifos:mifoslabel name="product.days" bundle="ProductDefUIResources" /> </span>
-                                              </c:otherwise>
-                                          </c:choose>
-                                    </span>
-                                    <br/>
-                                    <mifos:mifoslabel name="product.maximumGapBetweenInstallments" bundle="ProductDefUIResources" isColonRequired="yes" />
-                                    <span class="fontnormal">
-                                         <c:choose>
-          	                                  <c:when test="${empty sessionScope.loanproductactionform.maximumGapBetweenInstallments}">
-                                                  <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
-                                              </c:when>
-                                              <c:otherwise>
-                                        		<c:out value="${sessionScope.loanproductactionform.maximumGapBetweenInstallments}" />
-	                                        	<span id="days"> <mifos:mifoslabel name="product.days" bundle="ProductDefUIResources" /> </span>
-                                              </c:otherwise>
-                                          </c:choose>
-                                    </span>
-                                    <br/>
-                                    <mifos:mifoslabel name="product.minimumInstallmentAmount" bundle="ProductDefUIResources" isColonRequired="yes" />
-                                    <span class="fontnormal">
-                                         <c:choose>
-          	                                  <c:when test="${empty sessionScope.loanproductactionform.minimumInstallmentAmount}">
-                                                  <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
-                                              </c:when>
-                                              <c:otherwise>
-		                                        <c:out value="${sessionScope.loanproductactionform.minimumInstallmentAmount}" />
-                                              </c:otherwise>
-                                          </c:choose>
-                                    </span>
-                                </td>
-                            </tr>
-                        </c:if>
 						<tr>
 							<td height="23" class="fontnormalbold"><mifos:mifoslabel
 								name="product.freqofinst" bundle="ProductDefUIResources" isColonRequired="yes"/> <span

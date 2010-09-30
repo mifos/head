@@ -68,6 +68,9 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 
     private String receiptDateYY;
 
+    /*
+     * Among other things, this field holds the PaymentTypes value for disbursements.
+     */
     private String paymentTypeId;
     
     private String waiverInterest;

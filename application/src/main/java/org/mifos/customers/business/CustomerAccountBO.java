@@ -245,8 +245,7 @@ public class CustomerAccountBO extends AccountBO {
             final PersonnelBO loanOfficer, final Date createdDate, final Short createdByUserId,
             final boolean buildForIntegrationTests) {
         super(AccountTypes.CUSTOMER_ACCOUNT, AccountState.CUSTOMER_ACCOUNT_ACTIVE, customer, Integer.valueOf(1),
-                new LinkedHashSet<AccountActionDateEntity>(), new HashSet<AccountFeesEntity>(), office, loanOfficer,
-                createdDate, createdByUserId);
+                new LinkedHashSet<AccountActionDateEntity>(), new HashSet<AccountFeesEntity>(), createdDate, createdByUserId);
         this.customer.addCustomerAccount(this);
 
         this.userContext = customer.getUserContext();
@@ -836,8 +835,10 @@ public class CustomerAccountBO extends AccountBO {
                 }
             }
         }
-        accountFeesEntity.setLastAppliedDate(lastAppliedDate);
-        addAccountFees(accountFeesEntity);
+        if (accountFeesEntity != null) {
+            accountFeesEntity.setLastAppliedDate(lastAppliedDate);
+            addAccountFees(accountFeesEntity);
+        }
         return totalFeeAmountApplied;
     }
 

@@ -5,7 +5,7 @@
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
    <!--  Main Content Begins-->
-  <div class="content marginAuto">
+  <div class="content definePageMargin">
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-17 arrowIMG orangeheading">[@spring.message "fundinformation"/]</p>
@@ -32,8 +32,8 @@
           <div class="clear">&nbsp;</div>
           <hr />
           <div class="prepend-9">
-            	<input class="buttn" type="submit" name="preview" value="Preview"/>
-            	<input class="buttn2" type="submit" name="CANCEL" value="Cancel" />
+            	<input class="buttn" type="submit" name="preview" value="[@spring.message "preview"/]"/>
+            	<input class="buttn2" type="submit" name="CANCEL" value="[@spring.message "cancel"/]" />
           </div>
           <div class="clear">&nbsp;</div>
         </form>

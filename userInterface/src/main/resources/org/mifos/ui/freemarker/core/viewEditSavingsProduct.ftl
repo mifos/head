@@ -21,7 +21,7 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
  <!--  Main Content Begins-->  
-  <div class=" content">
+  <div class=" content marginLeft30">
     <div class="span-24">
   		<div class="bluedivs paddingLeft">
   			<a href="AdminAction.do?method=load">[@spring.message "admin" /]</a>&nbsp;/&nbsp;<a href="viewSavingsProducts.ftl">[@spring.message "manageSavngsProducts.editsavingsproduct.viewSavingsproducts" /]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "manageSavngsProducts.editsavingsproduct.savingsProductName" /]</span>
@@ -38,8 +38,8 @@
             	[#break]
             [/#switch] 
            	<br />
-        </div>
-        <span class="span-5 rightAlign"><a href="editSavingsProduct.ftl?productId=${savingsProductDetails.productDetails.id}">[@spring.message "manageSavngsProducts.editsavingsproduct.editSavingsproductinformation" /]</a></span>       
+           	<span class="span-18 rightAlign"><a href="editSavingsProduct.ftl?productId=${savingsProductDetails.productDetails.id}">[@spring.message "manageSavngsProducts.editsavingsproduct.editSavingsproductinformation" /]</a></span>
+        </div>               
         <div class="clear">&nbsp;</div>
         <p class="span-24 ">
         	<div class="fontBold">[@spring.message "manageSavngsProducts.editsavingsproduct.savingsproductdetails" /]</div>

@@ -33,7 +33,7 @@
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Main Content Begins-->
   <span id="page.id" title="CreateSavingsProduct" />
-  <div class="content marginAuto">
+  <div class="content definePageMargin">
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-15 arrowIMG orangeheading">[@spring.message "manageProducts.defineSavingsProducts.savingsproductinformation" /]</p>
@@ -174,8 +174,8 @@
           <div class="clear">&nbsp;</div>
           <hr />
           <div class="prepend-9">
-            	<input class="buttn" type="submit" id="CreateSavingsProduct.button.preview" class="buttn" name="preview" value="Preview" />
-            	<input class="buttn2" type="submit" name="CANCEL" value="Cancel"/>
+            	<input class="buttn" type="submit" id="CreateSavingsProduct.button.preview" class="buttn" name="preview" value="[@spring.message "preview"/]" />
+            	<input class="buttn2" type="submit" name="CANCEL" value="[@spring.message "cancel"/]"/>
           </div>
           <div class="clear">&nbsp;</div>
         </form>

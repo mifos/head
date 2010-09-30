@@ -18,8 +18,11 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.framework.components.batchjobs.helpers;
+package org.mifos.application.master.persistence;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,25 +31,46 @@ import java.util.Map;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.config.GeneralConfig;
+import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerAccountBO;
-import org.mifos.framework.components.batchjobs.MifosBatchJob;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
-import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.Upgrade;
 import org.mifos.framework.util.DateTimeService;
 
-public class UpdateCustomerFeesHelper extends TaskHelper {
+/**
+ * Run the fix for MIFOS-3712 to ensure that fee schedules are caught up.
+ * This does a check to see if this fix was already run by Mifos 1.6.1
+ * and does not rerun the fix if it was already run.
+ *
+ */
+public class Upgrade1285177663 extends Upgrade {
 
     private final AccountPersistence accountPersistence = new AccountPersistence();
 
-    public UpdateCustomerFeesHelper() {
+    public Upgrade1285177663() {
         super();
     }
 
     @Override
-    public void execute(@SuppressWarnings("unused") final long timeInMillis) throws BatchJobException {
+    public void upgrade(Connection connection) throws IOException, SQLException {
+
+        String key = "Recurring fees cleanup done for MIFOS-3712";
+
+        ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+        if (configurationPersistence.getConfigurationKeyValueInteger(key) == null) {
+            try {
+                execute();
+            } catch (BatchJobException e) {
+                throw new MifosRuntimeException(e);
+            }
+        }
+    }
+
+    public void execute() throws BatchJobException {
 
         long taskStartTime = new DateTimeService().getCurrentDateTime().getMillis();
 
@@ -102,8 +126,8 @@ public class UpdateCustomerFeesHelper extends TaskHelper {
                 if (currentRecordNumber % outputIntervalForBatchJobs == 0) {
                     long time = System.currentTimeMillis();
                     String message = "" + currentRecordNumber + " processed, " + (accountCount - currentRecordNumber)
-                            + " remaining, " + updatedRecordCount + " updated, batch time: " + (time - startTime)
-                            + " ms";
+                    + " remaining, " + updatedRecordCount + " updated, batch time: " + (time - startTime)
+                    + " ms";
                     logMessage(message);
                     startTime = time;
                 }
@@ -111,7 +135,7 @@ public class UpdateCustomerFeesHelper extends TaskHelper {
             StaticHibernateUtil.commitTransaction();
             long time = System.currentTimeMillis();
             String message = "" + currentRecordNumber + " processed, " + (accountCount - currentRecordNumber)
-                    + " remaining, " + updatedRecordCount + " updated, batch time: " + (time - startTime) + " ms";
+            + " remaining, " + updatedRecordCount + " updated, batch time: " + (time - startTime) + " ms";
             logMessage(message);
 
         } catch (Exception e) {
@@ -120,14 +144,14 @@ public class UpdateCustomerFeesHelper extends TaskHelper {
             errorList.add(currentAccountId.toString());
             getLogger().error("Unable to generate schedules for account with ID " + currentAccountId, e);
         } finally {
-            StaticHibernateUtil.closeSession();
+            StaticHibernateUtil.flushAndClearSession();
         }
 
         if (errorList.size() > 0) {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
         }
 
-        logMessage("UpdateCustomerFeesHelper ran in "
+        logMessage("Upgrade1285177663 ran in "
                 + (new DateTimeService().getCurrentDateTime().getMillis() - taskStartTime));
 
     }
@@ -138,7 +162,7 @@ public class UpdateCustomerFeesHelper extends TaskHelper {
                 + "\n  BatchSizeForBatchJobs: " + batchSize + "\n  RecordCommittingSizeForBatchJobs: "
                 + recordCommittingSize);
         String initial_message = "" + accountCount + " accounts to process, results output every "
-                + outputIntervalForBatchJobs + " accounts";
+        + outputIntervalForBatchJobs + " accounts";
         logMessage(initial_message);
     }
 
@@ -167,8 +191,5 @@ public class UpdateCustomerFeesHelper extends TaskHelper {
         getLogger().info(finalMessage);
     }
 
-    @Override
-    public void requiresExclusiveAccess() {
-        MifosBatchJob.batchJobRequiresExclusiveAccess(false);
-    }
+
 }

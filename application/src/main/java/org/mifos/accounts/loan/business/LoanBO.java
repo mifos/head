@@ -199,7 +199,7 @@ public class LoanBO extends AccountBO {
             final AccountTypes accountType, final AccountState accountState, final CustomerBO customer,
             final Integer offsettingAllowable, Money loanAmount, Money loanBalance) {
         super(accountType, accountState, customer, offsettingAllowable, new LinkedHashSet<AccountActionDateEntity>(),
-                new HashSet<AccountFeesEntity>(), null, null, null, null);
+                new HashSet<AccountFeesEntity>(), null, null);
         this.loanOffering = loanProduct;
         this.noOfInstallments = numOfInstallments;
         this.gracePeriodType = new GracePeriodTypeEntity(gracePeriodType);

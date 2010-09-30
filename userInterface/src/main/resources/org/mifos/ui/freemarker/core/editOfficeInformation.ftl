@@ -178,8 +178,8 @@ return editOfficeInformation.submit();
         </div>
         <hr />
         <div class="prepend-9">
-          <input class="buttn" type="submit" name="PREVIEW" id="editoffice.button.preview" value="Preview"/>
-          <input class="buttn2" type="submit" name="CANCEL" id="editoffice.button.cancel" value="Cancel"/>
+          <input class="buttn" type="submit" name="PREVIEW" id="editoffice.button.preview" value="[@spring.message "preview"/]"/>
+          <input class="buttn2" type="submit" name="CANCEL" id="editoffice.button.cancel" value="[@spring.message "cancel"/]"/>
         </div>
 	</div>
    	</form> 

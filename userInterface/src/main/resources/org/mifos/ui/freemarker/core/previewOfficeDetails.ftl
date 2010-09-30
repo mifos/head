@@ -51,15 +51,15 @@
     				<span>&nbsp;</span>
   			</div>
             <div class="clear">&nbsp;</div>
-            <div> <input class="buttn2" type="button" name="edit" value="Edit office information" onclick="location.href='editOfficeInformation.ftl'"/>
+            <div> <input class="buttn2" type="button" name="edit" value="[@spring.message "offices.editOfficeInformation.editofficeinformation"/]" onclick="location.href='editOfficeInformation.ftl'"/>
             </div>
         </div>
         
         <div class="clear">&nbsp;</div>
         <hr />
         <div class="prepend-8">
-          <input class="buttn" type="button" name="submit" value="Submit" onclick="#"/>
-          <input class="buttn2" type="button" name="cancel" value="Cancel" onclick="window.location='admin.ftl'"/>
+          <input class="buttn" type="button" name="submit" value="[@spring.message "submit"/]" onclick="#"/>
+          <input class="buttn2" type="button" name="cancel" value="[@spring.message "cancel"/]" onclick="window.location='admin.ftl'"/>
         </div>
         <div class="clear">&nbsp;</div>
         </form>

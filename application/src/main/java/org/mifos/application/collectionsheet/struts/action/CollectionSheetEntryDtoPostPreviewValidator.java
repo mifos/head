@@ -27,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.loan.util.helpers.LoanAccountsProductDto;
+import org.mifos.accounts.loan.util.helpers.LoanAccountDto;
 import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
@@ -94,11 +95,17 @@ public class CollectionSheetEntryDtoPostPreviewValidator {
                                         .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
                     }
                 }
+                boolean moreThanTwoLoanAccountsToPrepaid = isThereMoreThanTwoLoanAccountsToPrepaid(accountView.getLoanAccountViews());
                 if (totalDisburtialAmount <= 0.0 && totalDueAmount <= 0.0) {
                     if (!accountView.isValidAmountEntered() || !accountView.isValidDisbursementAmount()
-                            || !enteredDisbursalAmount.equals(0.0) || !enteredAmount.equals(0.0)) {
+                            || !enteredDisbursalAmount.equals(0.0)
+                            || (!moreThanTwoLoanAccountsToPrepaid && !enteredAmount.equals(0.0))) {
                         errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
                                 CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
+                                        .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
+                    } else if (moreThanTwoLoanAccountsToPrepaid && !enteredAmount.equals(0.0)) {
+                        errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDPREPAYAMOUNT, new ActionMessage(
+                                CollectionSheetEntryConstants.BULKENTRYINVALIDPREPAYAMOUNT, accountView
                                         .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
                     }
                 }
@@ -125,6 +132,18 @@ public class CollectionSheetEntryDtoPostPreviewValidator {
                             .getCustomerDetail().getDisplayName()));
         }
         return errors;
+    }
+
+    private boolean isThereMoreThanTwoLoanAccountsToPrepaid(List<LoanAccountDto> loanAccountViews) {
+        int counter = 0;
+
+        for (LoanAccountDto loanAccount : loanAccountViews) {
+            if (loanAccount.getTotalAmountDue().equals(0.0) && loanAccount.getTotalDisburseAmount().equals(0.0)) {
+                counter++;
+            }
+        }
+
+        return counter >= 2;
     }
 
     public static Double getDoubleValue(final String str) {

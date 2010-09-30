@@ -117,10 +117,4 @@ public class MifosPage extends AbstractPage {
         }
         return true;
     }
-
-    public void refresh() {
-        selenium.refresh();
-        waitForPageToLoad();
-    }
-    
 }

@@ -52,7 +52,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.business.Configuration;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
-import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -76,8 +75,6 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
     private AccountPersistence accountPersistence;
 
-    private CustomerPersistence customerPersistence;
-
     private CustomerBO group;
 
     private CustomerBO center;
@@ -100,7 +97,6 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
     public void setUp() throws Exception {
         savingsPersistence = new SavingsPersistence();
         accountPersistence = new AccountPersistence();
-        customerPersistence = new CustomerPersistence();
         userContext = TestUtils.makeUser();
 
     }

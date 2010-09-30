@@ -286,4 +286,29 @@ public class AdminPage extends MifosPage {
         waitForPageToLoad();
         return new ViewAllQuestionGroupsPage(selenium);
     }
+
+    public FeesCreatePage navigateToFeesCreate() {
+        selenium.click("admin.link.defineNewFees");
+        waitForPageToLoad();
+        return new FeesCreatePage(selenium);
+    }
+
+    public void defineNewFees (FeesCreatePage.SubmitFormParameters formParameters) {
+        FeesCreatePage feesCreatePage = navigateToFeesCreate();
+        feesCreatePage.verifyPage();
+        feesCreatePage.fillFeesParameters(formParameters);
+        PreviewFeesCreatePage previewPage = feesCreatePage.submitPageAndGotoPreviewFeesCreatePage();
+        previewPage.verifyPage();
+        CreateFeesConfirmationPage confirmationPage = previewPage.submit();
+        confirmationPage.verifyPage();
+        FeeDetailsPage feesDetailPage = confirmationPage.navigateToViewDetailsNowPage();
+        feesDetailPage.verifyFeeDetails(formParameters);
+    }
+
+    public BatchJobsPage navigateToBatchJobsPage() {
+        selenium.click("admin.link.batchjobs");
+        waitForPageToLoad();
+
+        return new BatchJobsPage(selenium);
+    }
 }

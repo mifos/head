@@ -32,8 +32,8 @@
           <div class="clear">&nbsp;</div>
           <hr />
           <div class="prepend-9">
-            	<input class="buttn" id="import_transactions.button.review" type="button" name="preview" value="Preview" onclick="#"/>
-            	<input class="buttn2" id="import_transactions.button.cancel" type="button"  name="cancel" value="Cancel" onclick="window.location='admin.ftl'"/>
+            	<input class="buttn" id="import_transactions.button.review" type="button" name="preview" value="[@spring.message "preview"/]" onclick="#"/>
+            	<input class="buttn2" id="import_transactions.button.cancel" type="button"  name="cancel" value="[@spring.message "cancel"/]" onclick="window.location='admin.ftl'"/>
           </div>
           <div class="clear">&nbsp;</div>
         </form>

@@ -181,8 +181,8 @@ var index=0;
         <div class="clear">&nbsp;</div>
         <p class="font15"><span class=" orangeheading">[@spring.message "manageRoles.modifyRole"/]</span></p>
         <div>[@spring.message "manageRoles.Checktheboxesbelowtoallowpermissionsforthespecifiedrole."/]<br />[@spring.message "manageRoles.roles&Permissionswithoutsavingchanges"/]</div>
-        <div class="error"></div>
-        <div><span>[@spring.message "manageRoles.roleName"/] </span><span><input type="text" name="roleName" value="${user}" /></span></div>
+        <div class="error">${errorMessage?if_exists}</div>
+        <div><span>[@spring.message "manageRoles.roleName"/] </span><span><input type="text" name="roleName" value="${user}" /></span><span><input type="hidden" name="roleId" value="${roleId}" /></span></div>
         <div class="clear">&nbsp;</div>
         <div class="span-22 borders">
         	<div class="span-22 bluediv">
@@ -930,7 +930,7 @@ var index=0;
                 <span class="span-8">[@spring.message "manageRoles.candefinecustomfields"/]</span>
             </div>
             <div class="span-22 borderbtm">
-            	<span class="span-2 rightAlign"><input type="checkbox"  id="9_4"  onclick="doCheck(this)"/></span><span class="span-10 borderrt">[@spring.message "manageRoles.canvieworganizationsettings"/]</span>
+            	<span class="span-2 rightAlign"><input type="checkbox" name="activity(178)"  id="9_4"  onclick="doCheck(this)"/></span><span class="span-10 borderrt">[@spring.message "manageRoles.canvieworganizationsettings"/]</span>
                 <span class="span-8">[@spring.message "manageRoles.canvieworganizationsettings"/]</span>
             </div>
         </div>
@@ -938,21 +938,21 @@ var index=0;
 		<!--Eleventh Table Starts-->
         <div class="span-22 borders">
         	<div class="span-22 bluediv">
-            	<span><input type="checkbox" name="activity(178)" value="checkbox"   id="10" onclick="doCheck(this)"/></span><span>[@spring.message "manageRoles.systeminformation"/]</span>
+            	<span><input type="checkbox" value="checkbox" name="activity(179)" id="10" onclick="doCheck(this)"/></span><span>[@spring.message "manageRoles.systeminformation"/]</span>
             </div>
             <div class="span-22 borderbtm">
-            	<span class="span-2 rightAlign"><input type="checkbox"  name="activity(179)" value="228"  id="10_0" onclick="doCheck(this)"/></span><span class="span-10 borderrt">[@spring.message "manageRoles.canviewsysteminformation"/]</span>
+            	<span class="span-2 rightAlign"><input type="checkbox" name="activity(180)" value="228"  id="10_0" onclick="doCheck(this)"/></span><span class="span-10 borderrt">[@spring.message "manageRoles.canviewsysteminformation"/]</span>
                 <span class="span-8">[@spring.message "manageRoles.canviewsysteminformation"/]</span>
             </div>
             <div class="span-22 borderbtm">
-            	<span class="span-2 rightAlign"><input type="checkbox" name="activity(180)" value="239"  id="10_1" onclick="doCheck(this)"/></span><span class="span-10 borderrt">[@spring.message "manageRoles.canshutdownMifos"/]</span>
+            	<span class="span-2 rightAlign"><input type="checkbox"value="239"  id="10_1" name="activity(181)" onclick="doCheck(this)"/></span><span class="span-10 borderrt">[@spring.message "manageRoles.canshutdownMifos"/]</span>
                 <span class="span-8">[@spring.message "manageRoles.canshutdownMifos"/]</span>
             </div>
         </div>
         <div class="clear">&nbsp;</div>
         <div class="prepend-9">
-            <input class="buttn " type="submit" name="SUBMIT" value="Submit" id="managerole.button.submit"/>
-            <input class="buttn2" type="submit" name="CANCEL" value="Cancel" id="managerole.button.cancel"/>
+            <input class="buttn " type="submit" name="SUBMIT" value="[@spring.message "submit"/]" id="managerole.button.submit"/>
+            <input class="buttn2" type="submit" name="CANCEL" value="[@spring.message "cancel"/]" id="managerole.button.cancel"/>
         </div>
 		<!--End of All Tables-->
 	</div>

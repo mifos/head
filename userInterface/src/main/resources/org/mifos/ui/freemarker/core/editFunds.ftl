@@ -52,7 +52,7 @@
         <div class="clear">&nbsp;</div>
         <hr />
         <div class="prepend-10">
-            <input class="buttn" type="submit" name="preview" value="Preview"/>
+            <input class="buttn" type="submit" name="preview" value="[@spring.message "preview"/]"/>
             <input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]"/>
         </div>
 	</div>

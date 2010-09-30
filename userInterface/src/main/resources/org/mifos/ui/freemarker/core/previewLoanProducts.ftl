@@ -4,7 +4,7 @@
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Main Content Begins-->
-  <div class="content marginAuto">
+  <div class="content marginAuto" style="margin-left: 5em;">
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-17 completeIMG silverheading">[@spring.message "manageLoanProducts.previewLoanProduct.Loanproductinformation"/]</p>
@@ -338,14 +338,14 @@
             <div class="clear">&nbsp;</div>
             <div class="span-20">
             	<input type="hidden" name="editFormview" value="${editFormview}" />
-            	<input class="buttn2" type="submit" name="EDIT" value="Edit Loan product information" />
+            	<input class="buttn2" type="submit" name="EDIT" value="[@spring.message "manageLoanProducts.editloanproduct.editLoanproductinformation"/]" />
             </div>
           </div>
           <div class="clear">&nbsp;</div>
           <hr />
           <div class="prepend-9">
-            	<input class="buttn" type="submit" name="submit" value="Submit" />
-            	<input class="buttn2" type="submit" name="CANCEL" value="Cancel" />
+            	<input class="buttn" type="submit" name="submit" value="[@spring.message "submit"/]" />
+            	<input class="buttn2" type="submit" name="CANCEL" value="[@spring.message "cancel"/]" />
           </div>
           <div class="clear">&nbsp;</div>
         </form>

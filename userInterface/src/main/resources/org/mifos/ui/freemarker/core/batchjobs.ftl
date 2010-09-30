@@ -60,7 +60,7 @@
                     [#list model.batchjobs as batchjobs]
                         <div class="span-21 paddingLeft">
                             <span class="span-1">
-                                <input type="checkbox" name="ONDEMAND" value="${batchjobs.name}" />
+                                <input id="${batchjobs.name}" type="checkbox" name="ONDEMAND" value="${batchjobs.name}" />
                             </span>
                             <span class="span-1">${batchjobs_index + 1}.</span>
                             <span class="span-9"><strong>${batchjobs.name}</strong></span>

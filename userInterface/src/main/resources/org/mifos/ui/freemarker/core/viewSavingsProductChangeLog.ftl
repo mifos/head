@@ -23,30 +23,39 @@
 	<!--  Main Content Begins-->
 	<span id="page.id" title="viewSavingsPrdChangeLog" />  
   	<div class=" content">
-	  	<p class="font15 orangeheading">${auditLog.name}</p>
-	  	<div>
-	  		<span>Record creation date:</span><span>${auditLog.createdDate}</span>
+  	[#assign breadcrumb = {"admin":"AdminAction.do?method=load", "admin.viewSavingsproducts":"viewSavingsProducts.ftl",auditLog.name:"viewEditSavingsProduct.ftl?productId=${auditLog.id}"}/]
+    	[@mifos.editPageBreadcrumbs breadcrumb/]
+  		  	<p class="font15 fontBold marginTop15"><span class="">${auditLog.name}</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "changeLog"/]</span></p>
+	  	<div class="marginTop15">
+	  		<span>[@spring.message "recordCreationDate"/]&nbsp;:</span><span>${auditLog.createdDate}</span>
 	  	</div>
 	  	<div>
-	  		<span>Date</span>
-		    <span>Field</span>
-		    <span>Old Value</span>
-		    <span>New Value</span>
-		    <span>User</span>
-	  	</div>
-	    [#list auditLog.auditLogRecords as changeLog]
-	    <div>
-		    <span>${changeLog.date}</span>
-		    <span>${changeLog.field}</span>
-		    <span>${changeLog.oldValue}</span>
-		    <span>${changeLog.newValue}</span>
-		    <span>${changeLog.user}</span>
+		  	<div class="fontBold span-16 bluedivs marginTop15">
+		  		<span class="span-3">[@spring.message "date"/]</span>
+			    <span class="span-3">[@spring.message "field"/]</span>
+			    <span class="span-3">[@spring.message "oldValue"/]</span>
+			    <span class="span-3">[@spring.message "newValue"/]</span>
+			    <span class="span-3">[@spring.message "user"/]</span>
+		  	</div>
+		    [#list auditLog.auditLogRecords as changeLog]
+		    <div class="fontBold span-18">
+			    <span class="span-3">${changeLog.date}</span>
+			    <span class="span-3">${changeLog.field}</span>
+			    <span class="span-3">${changeLog.oldValue}</span>
+			    <span class="span-3">${changeLog.newValue}</span>
+			    <span class="span-3">${changeLog.user}</span>
+		    </div>
+		    <hr />
+		    [/#list]
 	    </div>
-	    [/#list]
-	    <form name="backform" method="get" action="viewEditSavingsProduct.ftl">
-		    <input type="hidden" name="productId" value="${auditLog.id}" />
-		    <input type="submit" name="submit" value="Back to details page" />
-	    </form>
+	    <br />
+	    <div class="clear"></div>
+	    <div align="center" class="span-16 marginTop15">
+		    <form name="backform" method="get" action="viewEditSavingsProduct.ftl">
+			    <input type="hidden" name="productId" value="${auditLog.id}" />
+			    <input class="buttn" type="submit" name="submit" value="[@spring.message "backToDetailsPage"/]" />
+		    </form>
+		</div>
   	</div>
   	<!--Main Content Ends-->
 [/@adminLeftPaneLayout]

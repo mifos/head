@@ -113,7 +113,7 @@ explanation of the license and how it is applied.
 												<mifos:mifoslabel name="Savings.totalAmountDue" isColonRequired="yes"/>
 											</c:when>
 											<c:otherwise>
-												<mifos:mifoslabel name="Savings.totalAmountDue.on"/>
+												<mifos:mifoslabel name="Savings.totalAmountDueOn"/>
 												<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.nextMeetingDate)}" />:
 											</c:otherwise>
 										</c:choose>										

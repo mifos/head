@@ -84,7 +84,6 @@ import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
-import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -591,18 +590,7 @@ public class TestObjectFactory {
                                                     final String calcInstallmentType, final MifosCurrency currency) {
         return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
                 (short) defInstallments, interestType, false, false, meeting, GraceType.GRACEONALLREPAYMENTS,
-                (short) 8, loanAmtCalcType, calcInstallmentType, currency, null);
-    }
-
-    public static LoanOfferingBO createLoanOffering(final String name, final String shortName,
-                                                    final ApplicableTo applicableTo, final Date startDate, final PrdStatus offeringStatus,
-                                                    final Double defLnAmnt, final Double defIntRate, final int defInstallments,
-                                                    final InterestType interestType, final MeetingBO meeting, final String loanAmtCalcType,
-                                                    final String calcInstallmentType, final MifosCurrency currency,
-                                                    final VariableInstallmentDetailsBO variableInstallmentDetails) {
-        return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
-                (short) defInstallments, interestType, false, false, meeting, GraceType.GRACEONALLREPAYMENTS,
-                (short) 8, loanAmtCalcType, calcInstallmentType, currency, variableInstallmentDetails);
+                (short) 8, loanAmtCalcType, calcInstallmentType, currency);
     }
 
     public static LoanOfferingBO createLoanOffering(final Date currentTime, final MeetingBO meeting) {
@@ -671,7 +659,7 @@ public class TestObjectFactory {
                                                     final short gracePeriodDuration, final String loanAmountCalcType, final String noOfInstallCalcType) {
         return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
                 defInstallments, interestType, interestDeductedAtDisbursement, principalDueInLastInstallment, meeting,
-                graceType, gracePeriodDuration, loanAmountCalcType, noOfInstallCalcType, TestUtils.RUPEE, null);
+                graceType, gracePeriodDuration, loanAmountCalcType, noOfInstallCalcType, TestUtils.RUPEE);
     }
 
     public static LoanOfferingBO createLoanOffering(final String name, final String shortName,
@@ -680,7 +668,7 @@ public class TestObjectFactory {
                                                     final InterestType interestType, final boolean interestDeductedAtDisbursement,
                                                     final boolean principalDueInLastInstallment, final MeetingBO meeting, final GraceType graceType,
                                                     final short gracePeriodDuration, final String loanAmountCalcType, final String noOfInstallCalcType,
-                                                    final MifosCurrency currency, VariableInstallmentDetailsBO variableInstallmentDetails) {
+                                                    final MifosCurrency currency) {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(applicableTo);
         ProductCategoryBO productCategory = TestObjectFactory.getLoanPrdCategory();
         GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(graceType);
@@ -710,10 +698,6 @@ public class TestObjectFactory {
         PrdStatusEntity prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatus);
         LoanOfferingTestUtils.setStatus(loanOffering, prdStatus);
         LoanOfferingTestUtils.setGracePeriodType(loanOffering, gracePeriodType, gracePeriodDuration);
-        if (variableInstallmentDetails != null) {
-            loanOffering.setVariableInstallmentsAllowed(true);
-            loanOffering.setVariableInstallmentDetails(variableInstallmentDetails);
-        }
         return (LoanOfferingBO) addObject(testObjectPersistence.persist(loanOffering));
     }
 

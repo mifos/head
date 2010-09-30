@@ -21,7 +21,7 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout] <!--  Main Content Begins-->
  <span id="page.id" title="Review_holidayCreation" />  
- <div class=" content leftMargin180">
+ <div class="content">
     <div class="span-24">
     	[@mifos.crumbs breadcrumbs /]
     	<p class="font15"><span class="orangeheading">[@spring.message "organizationPreferences.previewHoliday" /]</span></p>

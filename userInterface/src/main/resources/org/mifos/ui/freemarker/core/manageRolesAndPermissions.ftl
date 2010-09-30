@@ -32,7 +32,7 @@
         <div class="clear">&nbsp;</div>
         <div class="span-22">
                 [#list roles as roles]
-            <div class="borderbtm span-22 last"><span class="span-9 fontBold"><a href="modifyRole.ftl?user=${roles.name}" >${roles.name}</a></span><span class="span-4 last"><a href="#">[@spring.message "systemusers.managerolesandpermissions.deleterole"/]</a></span></div>
+            <div class="borderbtm span-22 last"><span class="span-9 fontBold"><a href="modifyRole.ftl?user=${roles.name}&roleId=${roles.id}" >${roles.name}</a></span><span class="span-4 last"><a href="#">[@spring.message "systemusers.managerolesandpermissions.deleterole"/]</a></span></div>
             [/#list]
         </div>
 	</div>

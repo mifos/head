@@ -26,8 +26,8 @@
           </p>
           <p>&nbsp;&nbsp;</p>
           <div class="prepend-1">
-            <input class="buttn " id="cust_search_account.button.search"  type="button" name="search" value="Search" onclick="#"/>
-            <input class="buttn2" id="cust_search_account.button.cancel" type="button" name="cancel" value="Cancel" onclick="#"/>
+            <input class="buttn " id="cust_search_account.button.search"  type="button" name="search" value="[@spring.message "admin.search"/]" onclick="#"/>
+            <input class="buttn2" id="cust_search_account.button.cancel" type="button" name="cancel" value="[@spring.message "cancel"/]" onclick="#"/>
           </div>
         </div>
         </form>

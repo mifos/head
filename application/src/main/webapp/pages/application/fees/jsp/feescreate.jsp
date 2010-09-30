@@ -100,18 +100,19 @@ explanation of the license and how it is applied.
 									</td>
 								</tr>
 								<tr class="fontnormal">
-									<td width="27%" align="right"><mifos:mifoslabel
-										name="Fees.feename" mandatory="yes" /></td>
+									<td width="27%" align="right"><mifos:mifosalphanumtext
+										styleId="feescreate.input.feeName" property="feeName" /></td>
 									<td width="73%" valign="top"><mifos:mifosalphanumtext
-										property="feeName" /></td>
+										styleId="feescreate.input.feeName" property="feeName" /></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
-										name="Fees.feeappliesto" mandatory="yes" /></td>
-									<td valign="top"><mifos:select property="categoryType"
-										onchange="onPageLoad();">
-										<c:forEach items="${FeeParameters.categories}"
-											var="category">
+										styleId="id=feescreate.label.feeName" name="Fees.feeappliesto"
+										mandatory="yes" /></td>
+									<td valign="top"><mifos:select
+										styleId="feescreate.label.categoryType"
+										property="categoryType" onchange="onPageLoad();">
+										<c:forEach items="${FeeParameters.categories}" var="category">
 											<html-el:option value="${category.key}">${category.value}</html-el:option>
 										</c:forEach>
 									</mifos:select></td>
@@ -126,21 +127,21 @@ explanation of the license and how it is applied.
 									<td align="right" valign="top"><mifos:mifoslabel
 										name="Fees.frequency" mandatory="yes" /></td>
 									<td valign="top"><html-el:radio
+										styleId="feescreate.button.feeFrequencyType"
 										property="feeFrequencyType"
 										value="${FeeFrequencyType.PERIODIC.value}"
 										onclick="onPageLoad();">
-										<c:forEach var="entity"
-											items="${FeeParameters.frequencies}">
+										<c:forEach var="entity" items="${FeeParameters.frequencies}">
 											<c:if test="${entity.key == FeeFrequencyType.PERIODIC.value}">
 												<c:out value="${entity.value}" />
 											</c:if>
 										</c:forEach>
 									</html-el:radio> <br>
-									<html-el:radio property="feeFrequencyType"
+									<html-el:radio styleId="feescreate.button.feeFrequencyType"
+										property="feeFrequencyType"
 										value="${FeeFrequencyType.ONETIME.value}"
 										onclick="onPageLoad();">
-										<c:forEach var="entity"
-											items="${FeeParameters.frequencies}">
+										<c:forEach var="entity" items="${FeeParameters.frequencies}">
 											<c:if test="${entity.key == FeeFrequencyType.ONETIME.value}">
 												<c:out value="${entity.value}" />
 											</c:if>
@@ -160,9 +161,9 @@ explanation of the license and how it is applied.
 										</c:forEach>
 									</mifos:select></div>
 									<div id="customerTimeOfChargeDiv"><mifos:select
+										styleId="feescreate.label.customerCharge"
 										property="customerCharge">
-										<c:forEach
-											items="${FeeParameters.timesOfChargingCustomers}"
+										<c:forEach items="${FeeParameters.timesOfChargingCustomers}"
 											var="customerTimeOfCharge">
 											<html-el:option value="${customerTimeOfCharge.key}">${customerTimeOfCharge.value}</html-el:option>
 										</c:forEach>
@@ -177,6 +178,7 @@ explanation of the license and how it is applied.
 												<tr class="fontnormal">
 
 													<td width="49%"><html-el:radio
+														styleId="feescreate.button.feeRecurrenceType"
 														property="feeRecurrenceType"
 														value="${RecurrenceType.WEEKLY.value}"
 														onclick="onPageLoad();">
@@ -184,10 +186,10 @@ explanation of the license and how it is applied.
 													</html-el:radio></td>
 
 													<td width="49%"><html-el:radio
+														styleId="feescreate.button.feeRecurrenceType"
 														property="feeRecurrenceType"
 														value="${RecurrenceType.MONTHLY.value}"
 														onclick="onPageLoad();">
-														<mifos:mifoslabel name="Fees.monthly" />
 													</html-el:radio></td>
 
 												</tr>
@@ -205,6 +207,7 @@ explanation of the license and how it is applied.
 												<tr class="fontnormal">
 													<td colspan="4"><mifos:mifoslabel
 														name="Fees.labelRecurEvery" /> <mifos:mifosnumbertext
+														styleId="feescreate.input.weekRecurAfter"
 														property="weekRecurAfter" size="3" maxlength="3" /> <mifos:mifoslabel
 														name="Fees.labelWeeks" /></td>
 												</tr>
@@ -215,8 +218,9 @@ explanation of the license and how it is applied.
 											<table border="0" cellspacing="0" cellpadding="2">
 												<tr class="fontnormal">
 													<td><mifos:mifoslabel name="Fees.labelRecurEvery" />
-													<mifos:mifosnumbertext property="monthRecurAfter" size="3"
-														maxlength="3" /> <mifos:mifoslabel
+													<mifos:mifosnumbertext
+														styleId="feescreate.input.monthRecurAfter"
+														property="monthRecurAfter" size="3" maxlength="3" /> <mifos:mifoslabel
 														name="Fees.labelMonths" /></td>
 												</tr>
 											</table>
@@ -239,7 +243,8 @@ explanation of the license and how it is applied.
 									<td align="left">
 									<table>
 										<tr>
-											<td><html-el:text property="amount" /></td>
+											<td><html-el:text styleId="feescreate.input.amount"
+												property="amount" /></td>
 											<c:if test='${sessionScope.isMultiCurrencyEnabled}'>
 												<td class="fontnormal">
 												<div id="currencyDivHeading"><mifos:mifoslabel
@@ -284,11 +289,11 @@ explanation of the license and how it is applied.
 											</td>
 										</tr>
 										<tr class="fontnormal">
-											<td width="16%"><html-el:text property="rate" /> <mifos:mifoslabel
+											<td width="16%"><html-el:text
+												styleId="feescreate.input.rate" property="rate" /> <mifos:mifoslabel
 												name="Fees.percentof" /> <mifos:select
-												property="feeFormula">
-												<c:forEach items="${FeeParameters.formulas}"
-													var="formula">
+												styleId="feescreate.label.feeFormula" property="feeFormula">
+												<c:forEach items="${FeeParameters.formulas}" var="formula">
 													<html-el:option value="${formula.key}">${formula.value}</html-el:option>
 												</c:forEach>
 											</mifos:select></td>
@@ -311,7 +316,8 @@ explanation of the license and how it is applied.
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="Fees.GLCode"
 										mandatory="yes" /></td>
-									<td valign="top"><mifos:select property="glCode"
+									<td valign="top"><mifos:select
+										styleId="feescreate.label.glCode" property="glCode"
 										style="width:136px;">
 										<c:forEach items="${FeeParameters.glCodes}" var="glCode">
 											<html-el:option value="${glCode.key}">${glCode.value}</html-el:option>
@@ -331,8 +337,8 @@ explanation of the license and how it is applied.
 							<br>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
-									<td align="center"><html-el:submit property="preview"
-										styleClass="buttn">
+									<td align="center">
+										<html-el:submit styleId="feescreate.button.preview" property="preview" styleClass="buttn">
 										<mifos:mifoslabel name="Fees.preview" />
 									</html-el:submit> &nbsp; <html-el:button property="cancel"
 										styleClass="cancelbuttn"

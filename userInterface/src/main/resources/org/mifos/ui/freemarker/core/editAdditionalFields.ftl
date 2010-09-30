@@ -62,8 +62,8 @@
             <div class="clear">&nbsp;</div>
             <hr />
             <div class="prepend-9">
-          		<input class="buttn" type="button" name="preview" id="edit_additional_fields.button.preview" value="Preview" onclick="#"/>
-          		<input class="buttn2" type="button" name="cancel" id="edit_additional_fields.button.cancel" value="Cancel" onclick="location.href='admin.ftl'"/>
+          		<input class="buttn" type="button" name="preview" id="edit_additional_fields.button.preview" value="[@spring.message "preview"/]" onclick="#"/>
+          		<input class="buttn2" type="button" name="cancel" id="edit_additional_fields.button.cancel" value="[@spring.message "cancel"/]" onclick="location.href='admin.ftl'"/>
     		</div>
             
     </div>

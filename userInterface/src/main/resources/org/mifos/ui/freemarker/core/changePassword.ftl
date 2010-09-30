@@ -54,8 +54,8 @@
 				</div>
 				<div class=" clear"></div>
 				<div class="prepend-5 marginTop15">
-					<input type="submit" class="buttn" id="changePassword.button.submit" name="submit" value="Submit" />
-					<input type="submit" id="CANCEL" class="buttn2" name="CANCEL" value="Cancel" />
+					<input type="submit" class="buttn" id="changePassword.button.submit" name="submit" value="[@spring.message "submit"/]" />
+					<input type="submit" id="CANCEL" class="buttn2" name="CANCEL" value="[@spring.message "cancel"/]" />
 				</div>
 			</form>		
 	</div> <!-- page-content -->
