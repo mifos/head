@@ -26,24 +26,31 @@ public class SavingsInterestCalculator implements InterestCalculator {
 
     private final PrincipalCalculationStrategy principalCalculationStrategy;
     private CompoundInterestCalculationStrategy compoundInterestCaluclation = new CompoundInterestCalculationStrategy();
+    private PrincipalCalculationStrategy totalPrincipalCalculationStrategy = new TotalBalanceCalculationStrategy();
 
     public SavingsInterestCalculator(PrincipalCalculationStrategy principalCalculationStrategy) {
         this.principalCalculationStrategy = principalCalculationStrategy;
     }
 
     @Override
-    public Money calculateInterestForPeriod(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
+    public InterestCalculationPeriodResult calculateSavingsDetailsForPeriod(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
 
         Money calculatedInterest = interestCalculationPeriodDetail.zeroAmount();
 
+        Money totalBalanceForPeriod = totalPrincipalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
         Money principal = principalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
         if (interestCalculationPeriodDetail.isMinimumBalanceReached(principal)) {
             calculatedInterest = compoundInterestCaluclation.calculateInterest(principal, interestCalculationPeriodDetail.getInterestRate(), interestCalculationPeriodDetail.getDuration());
         }
-        return calculatedInterest;
+
+        return new InterestCalculationPeriodResult(calculatedInterest, principal, totalBalanceForPeriod);
     }
 
     public void setCompoundInterestCaluclation(CompoundInterestCalculationStrategy compoundInterestCaluclation) {
         this.compoundInterestCaluclation = compoundInterestCaluclation;
+    }
+
+    public void setTotalPrincipalCalculationStrategy(PrincipalCalculationStrategy totalPrincipalCalculationStrategy) {
+        this.totalPrincipalCalculationStrategy = totalPrincipalCalculationStrategy;
     }
 }

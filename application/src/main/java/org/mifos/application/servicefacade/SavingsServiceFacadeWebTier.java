@@ -30,13 +30,12 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
-import org.mifos.accounts.savings.interest.InterestCalculationPeriodDetail;
 import org.mifos.accounts.savings.interest.InterestCalculationInterval;
 import org.mifos.accounts.savings.interest.InterestCalculationIntervalHelper;
+import org.mifos.accounts.savings.interest.InterestCalculationPeriodDetail;
+import org.mifos.accounts.savings.interest.InterestCalculationPeriodResult;
 import org.mifos.accounts.savings.interest.InterestCalculator;
-import org.mifos.accounts.savings.interest.PrincipalCalculationStrategy;
 import org.mifos.accounts.savings.interest.SavingsInterestCalculatorFactory;
-import org.mifos.accounts.savings.interest.TotalBalanceCalculationStrategy;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.util.helpers.AccountPaymentData;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -66,7 +65,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     private final CustomerDao customerDao;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
     private InterestCalculationIntervalHelper interestCalculationIntervalHelper = new InterestCalculationIntervalHelper();
-    private PrincipalCalculationStrategy totalPrincipalCalculationStrategy = new TotalBalanceCalculationStrategy();
 
     public SavingsServiceFacadeWebTier(SavingsDao savingsDao, PersonnelDao personnelDao, CustomerDao customerDao) {
         this.savingsDao = savingsDao;
@@ -91,14 +89,16 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         CustomerBO customer = this.customerDao.findCustomerById(savingsDeposit.getCustomerId().intValue());
 
         Money totalAmount = new Money(savingsAccount.getCurrency(), BigDecimal.valueOf(savingsDeposit.getAmount()));
-        PaymentData payment = PaymentData.createPaymentData(totalAmount, createdBy, savingsDeposit.getModeOfPayment().shortValue(), savingsDeposit.getDateOfDeposit().toDateMidnight().toDate());
+        PaymentData payment = PaymentData.createPaymentData(totalAmount, createdBy, savingsDeposit.getModeOfPayment()
+                .shortValue(), savingsDeposit.getDateOfDeposit().toDateMidnight().toDate());
         if (savingsDeposit.getDateOfReceipt() != null) {
             payment.setReceiptDate(savingsDeposit.getDateOfReceipt().toDateMidnight().toDate());
         }
         payment.setReceiptNum(savingsDeposit.getReceiptId());
         payment.setCustomer(customer);
 
-        for (AccountActionDateEntity installment : savingsAccount.getTotalInstallmentsDue(savingsDeposit.getCustomerId().intValue())) {
+        for (AccountActionDateEntity installment : savingsAccount.getTotalInstallmentsDue(savingsDeposit
+                .getCustomerId().intValue())) {
             AccountPaymentData accountPaymentData = new SavingsPaymentData(installment);
             payment.addAccountPaymentData(accountPaymentData);
         }
@@ -138,7 +138,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         CustomerBO customer = this.customerDao.findCustomerById(savingsWithdrawal.getCustomerId().intValue());
 
         Money totalAmount = new Money(savingsAccount.getCurrency(), BigDecimal.valueOf(savingsWithdrawal.getAmount()));
-        PaymentData payment = PaymentData.createPaymentData(totalAmount, createdBy, savingsWithdrawal.getModeOfPayment().shortValue(), savingsWithdrawal.getDateOfWithdrawal().toDateMidnight().toDate());
+        PaymentData payment = PaymentData.createPaymentData(totalAmount, createdBy, savingsWithdrawal
+                .getModeOfPayment().shortValue(), savingsWithdrawal.getDateOfWithdrawal().toDateMidnight().toDate());
         if (savingsWithdrawal.getDateOfReceipt() != null) {
             payment.setReceiptDate(savingsWithdrawal.getDateOfReceipt().toDateMidnight().toDate());
         }
@@ -172,7 +173,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         SavingsBO savingsAccount = this.savingsDao.findById(savingsAdjustment.getSavingsId());
         savingsAccount.updateDetails(userContext);
 
-        Money amountAdjustedTo = new Money(savingsAccount.getCurrency(), BigDecimal.valueOf(savingsAdjustment.getAdjustedAmount()));
+        Money amountAdjustedTo = new Money(savingsAccount.getCurrency(), BigDecimal.valueOf(savingsAdjustment
+                .getAdjustedAmount()));
 
         try {
             this.transactionHelper.startTransaction();
@@ -193,37 +195,42 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     public void handleInterestCalculationAndPosting(Long savingsId) {
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
 
-        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), savingsId);
+        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount
+                .getCurrency(), savingsId);
 
         if (!allEndOfDayDetailsForAccount.isEmpty()) {
             InterestCalcType interestCalcType = InterestCalcType.fromInt(savingsAccount.getInterestCalcType().getId());
             InterestCalculator interestCalculator = SavingsInterestCalculatorFactory.create(interestCalcType);
 
-            // NOTE: for first interest calculation period, calculation starts from the first deposit date and not activation date
+            // NOTE: for first interest calculation period, calculation starts from the first deposit date and not
+            // activation date
             // NOTE: interest calculation and posting date are always the last day of the month (no matter what!)
-            ScheduledEvent interestCalculationEvent = SavingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
+            ScheduledEvent interestCalculationEvent = SavingsInterestScheduledEventFactory
+                    .createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
 
             LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();
 
-            List<InterestCalculationInterval> allPossible = interestCalculationIntervalHelper.determineAllPossibleInterestCalculationPeriods(firstDepositDate, interestCalculationEvent, new LocalDate());
+            Money totalBalanceBeforePeriod = Money.zero(savingsAccount.getCurrency());
+
+            List<InterestCalculationInterval> allPossible = interestCalculationIntervalHelper.determineAllPossibleInterestCalculationPeriods(firstDepositDate, interestCalculationEvent,new LocalDate());
             for (InterestCalculationInterval interval : allPossible) {
 
                 InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(interval,
-                                                                                                                        allEndOfDayDetailsForAccount,
-                                                                                                                        savingsAccount.getMinAmntForInt(),
-                                                                                                                        savingsAccount.getCurrency(),
-                                                                                                                        savingsAccount.getInterestRate());
+                                                                                    allEndOfDayDetailsForAccount,
+                                                                                    savingsAccount.getMinAmntForInt(),
+                                                                                    savingsAccount.getCurrency(),
+                                                                                    savingsAccount.getInterestRate(), totalBalanceBeforePeriod);
 
-                    Money calculatedInterest = interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
+                InterestCalculationPeriodResult periodResults = interestCalculator.calculateSavingsDetailsForPeriod(interestCalculationPeriodDetail);
 
-                    // TODO - update fee calculation and do fee posting if applicable
-                    // TODO - log interest information for checking on SECDEP
-                    System.out.println("interest for interval " + interval + calculatedInterest);
+                totalBalanceBeforePeriod = totalBalanceBeforePeriod.add(periodResults.getTotalPrincipal());
+                // TODO - update fee calculation and do fee posting if applicable
+                // TODO - log interest information for checking on SECDEP
+                System.out.println("interest for interval " + interval + periodResults);
 
             }
         }
     }
-
 
     @Override
     public void calculateInterest(LocalDate startDate, LocalDate endDate, Long savingsId) {
@@ -231,7 +238,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         InterestCalculationInterval interval = new InterestCalculationInterval(startDate, endDate);
 
-        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), savingsId);
+        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount
+                .getCurrency(), savingsId);
 
         if (!allEndOfDayDetailsForAccount.isEmpty()) {
             InterestCalcType interestCalcType = InterestCalcType.fromInt(savingsAccount.getInterestCalcType().getId());
@@ -239,35 +247,36 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
             LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();
 
-            if (firstDepositDate.isAfter(interval.getStartDate())) {
+            if (interval.dateFallsWithin(firstDepositDate)) {
                 interval = new InterestCalculationInterval(firstDepositDate, interval.getEndDate());
             }
 
-            InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(interval,
-                                                                                                                    allEndOfDayDetailsForAccount,
-                                                                                                                    savingsAccount.getMinAmntForInt(),
-                                                                                                                    savingsAccount.getCurrency(),
-                                                                                                                    savingsAccount.getInterestRate());
+            Money balanceBeforeInterval = new Money(savingsAccount.getCurrency());
+            InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(
+                    interval, allEndOfDayDetailsForAccount, savingsAccount.getMinAmntForInt(), savingsAccount
+                            .getCurrency(), savingsAccount.getInterestRate(), balanceBeforeInterval);
 
-             savingsAccount.setInterestToBePosted(savingsAccount.getInterestToBePosted().add(interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail)));
-            }
+            InterestCalculationPeriodResult result = interestCalculator
+                    .calculateSavingsDetailsForPeriod(interestCalculationPeriodDetail);
+            savingsAccount.setInterestToBePosted(savingsAccount.getInterestToBePosted().add(result.getInterest()));
+        }
     }
 
     private InterestCalculationPeriodDetail createInterestCalculationPeriodDetail(InterestCalculationInterval interval,
-                                                                                  List<EndOfDayDetail> allEndOfDayDetailsForAccount,
-                                                                                  Money minBalanceRequired,
-                                                                                  MifosCurrency mifosCurrency,
-                                                                                  Double interestRate) {
+            List<EndOfDayDetail> allEndOfDayDetailsForAccount,
+            Money minBalanceRequired,
+            MifosCurrency mifosCurrency,
+            Double interestRate, Money balanceBeforeInterval) {
 
         List<EndOfDayDetail> applicableDailyDetailsForPeriod = new ArrayList<EndOfDayDetail>();
 
-        Money balanceBeforeInterval = new Money(mifosCurrency);
-
         for (EndOfDayDetail endOfDayDetail : allEndOfDayDetailsForAccount) {
-            if(endOfDayDetail.getDate().isBefore(interval.getStartDate())) {
-                balanceBeforeInterval = balanceBeforeInterval.add(endOfDayDetail.getResultantAmountForDay());
-                //System.out.println(balanceBeforeInterval+", "+endOfDayDetail.getResultantAmountForDay()+" ,"+endOfDayDetail.getDate()+", "+range.getLowerDate());
-            }
+
+//            NOTE - keithw - calculate total balance for period within calculator
+//            if (endOfDayDetail.getDate().isBefore(interval.getStartDate())) {
+//                balanceBeforeInterval = balanceBeforeInterval.add(endOfDayDetail.getResultantAmountForDay());
+//                // System.out.println(balanceBeforeInterval+", "+endOfDayDetail.getResultantAmountForDay()+" ,"+endOfDayDetail.getDate()+", "+range.getLowerDate());
+//            }
 
             if (interval.dateFallsWithin(endOfDayDetail.getDate())) {
                 applicableDailyDetailsForPeriod.add(endOfDayDetail);
@@ -276,9 +285,4 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         return new InterestCalculationPeriodDetail(interval, allEndOfDayDetailsForAccount, minBalanceRequired, balanceBeforeInterval, mifosCurrency, interestRate);
     }
-
-    public void setTotalPrincipalCalculationStrategy(PrincipalCalculationStrategy totalPrincipalCalculationStrategy) {
-        this.totalPrincipalCalculationStrategy = totalPrincipalCalculationStrategy;
-    }
-
 }

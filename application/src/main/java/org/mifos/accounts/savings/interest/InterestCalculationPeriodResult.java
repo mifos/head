@@ -20,12 +20,29 @@
 
 package org.mifos.accounts.savings.interest;
 
+import org.mifos.framework.util.helpers.Money;
 
-/**
- * I calculate interest for a specified {@link InterestCalculationPeriodDetail}.
- */
-public interface InterestCalculator {
+public class InterestCalculationPeriodResult {
 
-    InterestCalculationPeriodResult calculateSavingsDetailsForPeriod(InterestCalculationPeriodDetail interestCalculationPeriodDetail);
+    private final Money interest;
+    private final Money averagePrincipal;
+    private final Money totalPrincipal;
 
+    public InterestCalculationPeriodResult(Money interest, Money averagePrincipal, Money totalPrincipal) {
+        this.interest = interest;
+        this.averagePrincipal = averagePrincipal;
+        this.totalPrincipal = totalPrincipal;
+    }
+
+    public Money getInterest() {
+        return this.interest;
+    }
+
+    public Money getAveragePrincipal() {
+        return this.averagePrincipal;
+    }
+
+    public Money getTotalPrincipal() {
+        return this.totalPrincipal;
+    }
 }

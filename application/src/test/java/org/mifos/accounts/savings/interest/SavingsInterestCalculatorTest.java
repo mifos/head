@@ -50,12 +50,16 @@ public class SavingsInterestCalculatorTest {
     private PrincipalCalculationStrategy principalCalculationStrategy;
 
     @Mock
+    private PrincipalCalculationStrategy totalPrincipalCalculationStrategy;
+
+    @Mock
     private CompoundInterestCalculationStrategy compoundInterestCalculationStrategy;
 
     @Before
     public void setup() {
         interestCalculator = new SavingsInterestCalculator(principalCalculationStrategy);
         ((SavingsInterestCalculator)interestCalculator).setCompoundInterestCaluclation(compoundInterestCalculationStrategy);
+        ((SavingsInterestCalculator)interestCalculator).setTotalPrincipalCalculationStrategy(totalPrincipalCalculationStrategy);
 
         LocalDate startDate = new LocalDate();
         LocalDate endDate = new LocalDate();
@@ -72,9 +76,10 @@ public class SavingsInterestCalculatorTest {
 
         // stub
         when(principalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail)).thenReturn(TestUtils.createMoney("0"));
+        when(principalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail)).thenReturn(TestUtils.createMoney("0"));
 
         // exercise test
-        interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
+        interestCalculator.calculateSavingsDetailsForPeriod(interestCalculationPeriodDetail);
 
         // verification
         verify(principalCalculationStrategy).calculatePrincipal(interestCalculationPeriodDetail);
@@ -90,8 +95,8 @@ public class SavingsInterestCalculatorTest {
         when(compoundInterestCalculationStrategy.calculateInterest(minBalanceRequired, null, 0)).thenReturn(expectedInterest);
 
         // exercise test
-        Money interest = interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
+        InterestCalculationPeriodResult result = interestCalculator.calculateSavingsDetailsForPeriod(interestCalculationPeriodDetail);
 
-        assertThat(interest, is(expectedInterest));
+        assertThat(result.getInterest(), is(expectedInterest));
     }
 }
