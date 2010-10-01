@@ -49,7 +49,8 @@ public class AverageBalanceCaluclationStrategyTest {
     private LocalDate september20th = new LocalDate(new DateTime().withDate(2010, 9, 20));
     private LocalDate october1st = new LocalDate(new DateTime().withDate(2010, 10, 1));
 
-    private Money money = TestUtils.createMoney("0");
+    private Money minBalanceRequired = TestUtils.createMoney("20");
+    private Money balanceBeforeInterval;
     private static MifosCurrency oldCurrency;
 
     @BeforeClass
@@ -67,12 +68,13 @@ public class AverageBalanceCaluclationStrategyTest {
     public void setup() {
         calculationStrategy = new AverageBalanceCaluclationStrategy();
         interestCalculationInterval = new InterestCalculationInterval(september1st, october1st);
+        balanceBeforeInterval = TestUtils.createMoney("0");
     }
 
     @Test
     public void shouldRecieveZeroBalanceWithNoDailyRecords() {
 
-        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationInterval, new ArrayList<EndOfDayDetail>(), money, money, money.getCurrency(), 10.0);
+        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationInterval, new ArrayList<EndOfDayDetail>(), minBalanceRequired, balanceBeforeInterval, minBalanceRequired.getCurrency(), 10.0);
 
         // exercise test
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
@@ -88,7 +90,7 @@ public class AverageBalanceCaluclationStrategyTest {
         Money interest1 = TestUtils.createMoney("0");
         EndOfDayDetail endOfDayDetail = new EndOfDayDetail(september6th, deposit1, withdrawal1, interest1);
 
-        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationInterval, Arrays.asList(endOfDayDetail), money, money, money.getCurrency(), 10.0);
+        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationInterval, Arrays.asList(endOfDayDetail), minBalanceRequired, balanceBeforeInterval, minBalanceRequired.getCurrency(), 10.0);
 
         // exercise test
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
@@ -109,7 +111,7 @@ public class AverageBalanceCaluclationStrategyTest {
         Money interest2 = TestUtils.createMoney("0");
         EndOfDayDetail endOfDayDetail2 = new EndOfDayDetail(september13th, deposit2, withdrawal2, interest2);
 
-        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationInterval, Arrays.asList(endOfDayDetail, endOfDayDetail2), money, money, money.getCurrency(), 10.0);
+        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationInterval, Arrays.asList(endOfDayDetail, endOfDayDetail2), minBalanceRequired, balanceBeforeInterval, minBalanceRequired.getCurrency(), 10.0);
 
         // exercise test
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
@@ -136,7 +138,7 @@ public class AverageBalanceCaluclationStrategyTest {
         Money interest3 = TestUtils.createMoney("0");
         EndOfDayDetail endOfDayDetail3 = new EndOfDayDetail(september20th, deposit3, withdrawal3, interest3);
 
-        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationInterval, Arrays.asList(endOfDayDetail, endOfDayDetail2, endOfDayDetail3), money, money, money.getCurrency(), 10.0);
+        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationInterval, Arrays.asList(endOfDayDetail, endOfDayDetail2, endOfDayDetail3), minBalanceRequired, balanceBeforeInterval, minBalanceRequired.getCurrency(), 10.0);
 
         // exercise test
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);

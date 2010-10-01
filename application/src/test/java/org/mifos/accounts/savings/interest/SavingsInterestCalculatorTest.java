@@ -45,6 +45,7 @@ public class SavingsInterestCalculatorTest {
     private InterestCalculationPeriodDetail interestCalculationPeriodDetail;
 
     private Money minBalanceRequired;
+    private Money balanceBeforeInterval;
 
     @Mock
     private PrincipalCalculationStrategy principalCalculationStrategy;
@@ -68,7 +69,8 @@ public class SavingsInterestCalculatorTest {
         List<EndOfDayDetail> dailyDetails = Arrays.asList(endOfDayDetail);
 
         minBalanceRequired = TestUtils.createMoney("20");
-        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(calculationInterval, dailyDetails, minBalanceRequired, minBalanceRequired, minBalanceRequired.getCurrency(), null);
+        balanceBeforeInterval = TestUtils.createMoney("100");
+        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(calculationInterval, dailyDetails, minBalanceRequired, balanceBeforeInterval, minBalanceRequired.getCurrency(), null);
     }
 
     @Test
