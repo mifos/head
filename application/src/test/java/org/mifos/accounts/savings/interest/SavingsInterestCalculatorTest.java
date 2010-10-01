@@ -28,6 +28,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +44,7 @@ public class SavingsInterestCalculatorTest {
 
     private InterestCalculationPeriodDetail interestCalculationPeriodDetail;
 
-    private Money money;
+    private Money minBalanceRequired;
 
     @Mock
     private PrincipalCalculationStrategy principalCalculationStrategy;
@@ -56,16 +57,21 @@ public class SavingsInterestCalculatorTest {
         interestCalculator = new SavingsInterestCalculator(principalCalculationStrategy);
         ((SavingsInterestCalculator)interestCalculator).setCompoundInterestCaluclation(compoundInterestCalculationStrategy);
 
-        InterestCalculationInterval calculationInterval = null;
+        LocalDate startDate = new LocalDate();
+        LocalDate endDate = new LocalDate();
+        InterestCalculationInterval calculationInterval = new InterestCalculationInterval(startDate, endDate);
         EndOfDayDetail endOfDayDetail = null;
         List<EndOfDayDetail> dailyDetails = Arrays.asList(endOfDayDetail);
 
-        money = TestUtils.createMoney("0");
-        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(calculationInterval, dailyDetails, money, money, money.getCurrency(), null);
+        minBalanceRequired = TestUtils.createMoney("20");
+        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(calculationInterval, dailyDetails, minBalanceRequired, minBalanceRequired, minBalanceRequired.getCurrency(), null);
     }
 
     @Test
     public void shouldCalculatePrincipalUsingPrincipalCalculationStrategy() {
+
+        // stub
+        when(principalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail)).thenReturn(TestUtils.createMoney("0"));
 
         // exercise test
         interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
@@ -75,14 +81,13 @@ public class SavingsInterestCalculatorTest {
     }
 
     @Test
-    public void shouldCalculateInterestUsingReturnedPrincipal() {
+    public void shouldCalculateInterestWhenPrincipalReturnedSatisfiesMinBalanceRequired() {
 
-        Money expectedPrincipal = TestUtils.createMoney("1000");
         Money expectedInterest = TestUtils.createMoney("21");
 
         // stubbing
-        when(principalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail)).thenReturn(expectedPrincipal);
-        when(compoundInterestCalculationStrategy.calculateInterest(expectedPrincipal, null, 0)).thenReturn(expectedInterest);
+        when(principalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail)).thenReturn(minBalanceRequired);
+        when(compoundInterestCalculationStrategy.calculateInterest(minBalanceRequired, null, 0)).thenReturn(expectedInterest);
 
         // exercise test
         Money interest = interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
