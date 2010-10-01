@@ -20,6 +20,17 @@
 
 package org.mifos.dto.screen;
 
+import org.joda.time.LocalDate;
+
 public class SavingsAccountDepositDueDto {
 
+    private final LocalDate nextDueDate;
+
+    public SavingsAccountDepositDueDto(LocalDate nextDueDate) {
+        this.nextDueDate = nextDueDate;
+    }
+
+    public LocalDate getNextDueDate() {
+        return this.nextDueDate;
+    }
 }

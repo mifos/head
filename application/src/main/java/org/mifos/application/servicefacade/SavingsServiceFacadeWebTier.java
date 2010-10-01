@@ -798,6 +798,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         AccountStateEntity accountStateEntity = savingsAccount.getAccountState();
         accountStateEntity.setLocaleId(localeId);
 
-        return null;
+        LocalDate nextDueDate = new LocalDate();
+        return new SavingsAccountDepositDueDto(nextDueDate);
     }
 }
