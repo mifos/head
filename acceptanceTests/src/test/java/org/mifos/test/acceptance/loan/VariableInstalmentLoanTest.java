@@ -1,18 +1,9 @@
 package org.mifos.test.acceptance.loan;
 
+import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.admin.AdminPage;
-import org.mifos.test.acceptance.framework.center.MeetingParameters;
-import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
-import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
-import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
-import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
-import org.mifos.test.acceptance.framework.testhelpers.OfficeHelper;
-import org.mifos.test.acceptance.framework.testhelpers.UserHelper;
-import org.mifos.test.acceptance.framework.user.CreateUserParameters;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
-import org.mifos.test.acceptance.util.StringUtil;
 import org.mifos.test.acceptance.util.TestDataSetup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -61,7 +52,7 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
 
     @AfterMethod(alwaysRun = true)
     public void logOut() {
-//        (new MifosPage(selenium)).logout();
+        (new MifosPage(selenium)).logout();
     }
 
 

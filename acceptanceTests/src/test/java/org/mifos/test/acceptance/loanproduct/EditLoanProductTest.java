@@ -25,7 +25,6 @@ import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
-import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPage;
@@ -104,6 +103,72 @@ public class EditLoanProductTest extends UiTestCaseBase {
 
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
+    public void verifyLSIMDisabled() throws Exception {
+        applicationDatabaseOperation.updateLSIM(0);
+        createNewLoanProductAndNavigateToEditLoanPage().
+                verifyVariableInstalmentOptionDisabled();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
+    public void verifyVariableInstalmentUnchecked() throws Exception {
+        applicationDatabaseOperation.updateLSIM(1);
+        createNewLoanProductAndNavigateToEditLoanPage().
+                submitAndGotoProductPreviewPage().
+                verifyVariableInstalmentUnChecked().submit().
+                verifyVariableInstalmentOptionUnChecked();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
+    public void verifyVariableInstalment() throws Exception {
+        createNewLoanProductAndNavigateToEditLoanPage();
+        setAndValidateInstalmentOption("60", "1", "100");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyVariableInstalmentWithNullValues() throws Exception {
+        applicationDatabaseOperation.updateLSIM(1);
+        createNewLoanProductAndNavigateToEditLoanPage();
+        setAndValidateInstalmentOption("","1","");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyCashFlow() throws Exception {
+        createNewLoanProductAndNavigateToEditLoanPage();
+        setAndValidateCashFlow("99.9");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyCashFlowWithNullValue() throws Exception {
+        createNewLoanProductAndNavigateToEditLoanPage();
+        setAndValidateCashFlow("");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyCashFlowUnchecked() throws Exception {
+        createNewLoanProductAndNavigateToEditLoanPage().
+                submitAndGotoProductPreviewPage().
+                verifyCashFlowUncheckedInEditPreview().
+                submit().verifyCashFlowUncheckedInEditedProduct();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyCashFlowFields() throws Exception {
+        createNewLoanProductAndNavigateToEditLoanPage().
+                verifyCashFlowDefaultsInEditProduct();
+//                verifyCashFlowFields();
+    }
+
+
+
+    private void setAndValidateCashFlow(String warningThreshold) {
+        new EditLoanProductPage(selenium).
+                setCashFlowThreshold(warningThreshold).
+                submitAndGotoProductPreviewPage().
+                verifyCashflowThresholdInEditPreview(warningThreshold).
+                submit().verifyCashFlowOfEditedLoan(warningThreshold);
+    }
+
     private ViewLoanProductsPage loginAndNavigateToViewLoanProductsPage() {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
@@ -119,70 +184,28 @@ public class EditLoanProductTest extends UiTestCaseBase {
                 .navigateToAdminPage();
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // one of the dependent methods throws Exception
-    public void verifyVariableInstalment() throws Exception {
-        applicationDatabaseOperation.updateLSIM(0);
-        String loanName = createMonthlyLoanProduct();
-        AdminPage adminPage = loginAndNavigateToAdminPage();
-        ViewLoanProductsPage viewLoanProductsPage = adminPage.navigateToViewLoanProducts();
-        LoanProductDetailsPage detailsPage = viewLoanProductsPage.viewLoanProductDetails(loanName);
-        EditLoanProductPage editProductPage = detailsPage.editLoanProduct();
-        editProductPage.verifyVariableInstalmentOptionDisabled();
-
-        //validating variable instalment unchecked
-        applicationDatabaseOperation.updateLSIM(1);
-        editProductPage.refresh();
-        EditLoanProductPreviewPage editProductPreviewPage = editProductPage.submitAndGotoProductPreviewPage();
-        editProductPreviewPage.verifyVariableInstalmentUnChecked();
-        editProductPreviewPage.submit();
-        detailsPage.verifyVariableInstalmentOptionUnChecked();
-
-        //validating variable instalment checked
-        loginAndNavigateToViewLoanProductsPage();
-        viewLoanProductsPage.viewLoanProductDetails(loanName);
-        detailsPage.editLoanProduct();
-        editProductPage.verifyVariableInstalmentOptionDefaults();
-        editProductPage.verifyVariableInstalmentOptionFields();
-        setAndValidateInstalmentOption(editProductPage, "60", "1", "100");
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // one of the dependent methods throws Exception
-    public void verifyVariableInstalmentWithNullValues() throws Exception {
-        applicationDatabaseOperation.updateLSIM(1);
-        String loanName = createMonthlyLoanProduct();
-        ViewLoanProductsPage viewLoanProductsPage = loginAndNavigateToViewLoanProductsPage();
-        LoanProductDetailsPage detailsPage = viewLoanProductsPage.viewLoanProductDetails(loanName);
-        EditLoanProductPage editProductPage = detailsPage.editLoanProduct();
-        setAndValidateInstalmentOption(editProductPage,"","1","");
-    }
-
     private String createMonthlyLoanProduct() {
         SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
         String loanName = formParameters.getOfferingName();
-        AdminPage adminPage = loginAndNavigateToAdminPage();
-        DefineNewLoanProductPage productPage = adminPage.navigateToDefineLoanProduct();
-        productPage.fillLoanParameters(formParameters);
-        productPage.submitAndGotoNewLoanProductPreviewPage().submit();
+        loginAndNavigateToAdminPage().
+        navigateToDefineLoanProduct().
+        fillLoanParameters(formParameters).submitAndGotoNewLoanProductPreviewPage().submit();
         return loanName;
     }
 
-    private void setAndValidateInstalmentOption(EditLoanProductPage editProductPage, String maxGap, String minGap, String minInstalmentAmount) {
-        EditLoanProductPreviewPage editProductPreviewPage = editProductPage.submitVariableInstalmentChange(maxGap, minGap, minInstalmentAmount);
-        editProductPreviewPage.verifyVariableInstalmentOption(maxGap, minGap, minInstalmentAmount);
-        LoanProductDetailsPage detailsPage = editProductPreviewPage.submit();
-        detailsPage.verifyVariableInstalmentOption(maxGap, minGap, minInstalmentAmount);
+    private void setAndValidateInstalmentOption(String maxGap, String minGap, String minInstalmentAmount) {
+        new EditLoanProductPage(selenium).submitVariableInstalmentChange(maxGap, minGap, minInstalmentAmount)
+                .verifyVariableInstalmentOption(maxGap, minGap, minInstalmentAmount).
+                submit()
+                .verifyVariableInstalmentOption(maxGap, minGap, minInstalmentAmount);
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // one of the dependent methods throws Exception
-    public void verifyLSIMDisabled() throws Exception {
-        applicationDatabaseOperation.updateLSIM(0);
-        AdminPage adminPage = loginAndNavigateToAdminPage();
-        adminPage.verifyPage();
-        DefineNewLoanProductPage defineLoanProductPage = adminPage.navigateToDefineLoanProduct();
-        defineLoanProductPage.verifyVariableInstalmentNotAvailable();
+    private EditLoanProductPage createNewLoanProductAndNavigateToEditLoanPage() {
+        String loanName = createMonthlyLoanProduct();
+        return loginAndNavigateToAdminPage().
+                navigateToViewLoanProducts().
+                viewLoanProductDetails(loanName).
+                editLoanProduct();
     }
 
 }

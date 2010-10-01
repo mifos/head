@@ -15,8 +15,9 @@ import org.mifos.test.acceptance.framework.user.CreateUserParameters;
 import java.sql.SQLException;
 
 public class TestDataSetup {
-    private ApplicationDatabaseOperation applicationDatabaseOperation;
-    private Selenium selenium;
+
+    private final ApplicationDatabaseOperation applicationDatabaseOperation;
+    private final Selenium selenium;
 
     public TestDataSetup(Selenium selenium, ApplicationDatabaseOperation applicationDatabaseOperation) {
         this.selenium = selenium;

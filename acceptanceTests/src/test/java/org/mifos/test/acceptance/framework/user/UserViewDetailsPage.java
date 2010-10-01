@@ -88,4 +88,20 @@ public class UserViewDetailsPage extends MifosPage {
         Assert.assertTrue(selenium.isTextPresent("Can configure variable installments: No"));
     }
 
+    public UserViewDetailsPage verifyCashFlowInViewLoanProcutPage(String warningThreshold) {
+        Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: Yes"));
+        if ("".equals(warningThreshold)) {
+            Assert.assertTrue(selenium.isTextPresent("Warning Threshold: N/A"));
+        } else {
+            Assert.assertTrue(selenium.isTextPresent("Warning Threshold: " + warningThreshold + " %"));
+        }
+        return this;
+    }
+
+    public UserViewDetailsPage verifyCashFlowUnCheckedIn() {
+        Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: No"));
+        Assert.assertTrue(!selenium.isTextPresent("Warning Threshold:"));
+        return this;
+        
+    }
 }

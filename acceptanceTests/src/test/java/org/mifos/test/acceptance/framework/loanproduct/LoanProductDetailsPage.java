@@ -71,4 +71,20 @@ public class LoanProductDetailsPage  extends MifosPage {
         Assert.assertTrue(!selenium.isTextPresent("Minimum installment amount:")) ;
         Assert.assertTrue(selenium.isTextPresent("Can configure variable installments: No"));
     }
+
+    public LoanProductDetailsPage verifyCashFlowOfEditedLoan(String warningThreshold) {
+        Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: Yes"));
+        if ("".equals(warningThreshold)) {
+            Assert.assertTrue(selenium.isTextPresent("Warning Threshold: N/A"));
+        } else {
+            Assert.assertTrue(selenium.isTextPresent("Warning Threshold: " + warningThreshold + " %"));
+        }
+        return this;
+    }
+
+    public LoanProductDetailsPage verifyCashFlowUncheckedInEditedProduct() {
+        Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: No"));
+        Assert.assertTrue(!selenium.isTextPresent("Warning Threshold:"));
+        return this;
+    }
 }

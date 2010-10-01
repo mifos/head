@@ -32,6 +32,8 @@ public class EditLoanProductPage extends MifosPage {
     String minInstalmentGapTextBox = "minimumGapBetweenInstallments";
     String maxInstalmentGapTextBox = "maximumGapBetweenInstallments";
     String minInstalmentAmountTextBox = "minimumInstallmentAmount";
+    String cashFlowCheckbox = "cashFlowValidation";
+    String cashFlowThresholdTextBox = "cashFlowWarningThreshold";
 
     public EditLoanProductPage(Selenium selenium) {
         super(selenium);
@@ -151,4 +153,20 @@ public class EditLoanProductPage extends MifosPage {
         Assert.assertTrue(!selenium.isElementPresent(configureVariableInstalmentsCheckbox));
     }
 
+    public EditLoanProductPage setCashFlowThreshold(String warningThreshold) {
+        if (!selenium.isChecked(cashFlowCheckbox)) {
+            selenium.click(cashFlowCheckbox);
+        }
+        selenium.type(cashFlowThresholdTextBox, warningThreshold);
+        return this;
+    }
+
+    public EditLoanProductPage verifyCashFlowDefaultsInEditProduct() {
+        Assert.assertTrue(!selenium.isChecked(cashFlowCheckbox));
+        Assert.assertTrue(!selenium.isVisible(cashFlowThresholdTextBox));
+
+        selenium.click(cashFlowCheckbox);
+        Assert.assertTrue(selenium.isVisible(cashFlowThresholdTextBox));
+        return this;
+    }
 }

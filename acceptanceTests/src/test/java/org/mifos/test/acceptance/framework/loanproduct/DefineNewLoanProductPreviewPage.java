@@ -69,10 +69,27 @@ public class DefineNewLoanProductPreviewPage extends AbstractPage {
         return new DefineNewLoanProductPreviewPage(selenium);
     }
 
-    public void verifyVariableInstalmentUnChecked() {
+    public DefineNewLoanProductPreviewPage verifyVariableInstalmentUnChecked() {
         Assert.assertTrue(!selenium.isTextPresent("Minimum gap between installments:"));
         Assert.assertTrue(!selenium.isTextPresent("Maximum gap between installments:"));
         Assert.assertTrue(!selenium.isTextPresent("Minimum installment amount:" )) ;
         Assert.assertTrue(selenium.isTextPresent("Can configure variable installments: No"));
+        return this;
+    }
+
+    public DefineNewLoanProductPreviewPage verifyCashFlowInPreview(String warningThreshold) {
+        Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: Yes"));
+        if ("".equals(warningThreshold)) {
+            Assert.assertTrue(selenium.isTextPresent("Warning Threshold: N/A"));
+        } else {
+            Assert.assertTrue(selenium.isTextPresent("Warning Threshold: " + warningThreshold + " %"));
+        }
+        return this;
+    }
+
+    public DefineNewLoanProductPreviewPage verifyCashFlowUnCheckedInPreview() {
+        Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: No"));
+        Assert.assertTrue(!selenium.isTextPresent("Warning Threshold:"));
+        return this;
     }
 }

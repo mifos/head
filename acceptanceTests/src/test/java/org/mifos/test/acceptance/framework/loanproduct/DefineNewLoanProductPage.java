@@ -32,6 +32,8 @@ public class DefineNewLoanProductPage extends AbstractPage {
     String maxInstalmentGapTextBox = "maximumGapBetweenInstallments";
     String previewButton = "createLoanProduct.button.preview";
     String minInstalmentAmountTextBox = "minimumInstallmentAmount";
+    String cashFlowCheckbox = "cashFlowValidation";
+    String cashFlowThresholdTextBox = "cashFlowWarningThreshold";
 
     public DefineNewLoanProductPage() {
         super();
@@ -62,11 +64,12 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
         // applicable for
         public static final int CLIENTS = 1;
+
         public static final int GROUPS = 2;
+
         // freq of installments
         public static final int WEEKS = 1;
         public static final int MONTHS = 2;
-
         // grace period type
         public static final int NONE = 1;
         private String branch;
@@ -75,9 +78,10 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String offeringShortName;
 
         private String description;
-
         private String category;
+
         private int applicableFor;
+
         private String minLoanAmount;
         private String maxLoanAmount;
         private String defaultLoanAmount;
@@ -104,15 +108,13 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public void setOfferingName(String offeringName) {
             this.offeringName = offeringName;
         }
-
-
         public String getOfferingShortName() {
             return this.offeringShortName;
         }
-
         public void setOfferingShortName(String offeringShortName) {
             this.offeringShortName = offeringShortName;
         }
+
 
         public String getDescription() {
             return this.description;
@@ -349,5 +351,18 @@ public class DefineNewLoanProductPage extends AbstractPage {
         return this;
     }
 
+    public DefineNewLoanProductPage fillCashFlow(String warningThreshold) {
+        selenium.click(cashFlowCheckbox);
+        selenium.type(cashFlowThresholdTextBox,warningThreshold);
+        return this;
+    }
 
+    public DefineNewLoanProductPage verifyCashFlowFieldDefault() {
+        Assert.assertTrue(!selenium.isChecked(cashFlowCheckbox));
+        Assert.assertTrue(!selenium.isVisible(cashFlowThresholdTextBox));
+
+        selenium.click(cashFlowCheckbox);
+        Assert.assertTrue(selenium.isVisible(cashFlowThresholdTextBox));
+        return this;
+    }
 }
