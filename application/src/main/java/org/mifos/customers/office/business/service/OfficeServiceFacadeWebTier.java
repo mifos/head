@@ -28,6 +28,7 @@ import java.util.Locale;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.exceptions.OfficeException;
@@ -223,6 +224,11 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
         }
 
         List<OfficeDto> parents = this.officeDao.findActiveParents(officeLevel);
+
+        for (OfficeDto office : parents) {
+            String levelName = MessageLookup.getInstance().lookup(office.getLookupNameKey());
+            office.setLevelName(levelName);
+        }
 
         return new OfficeFormDto(customFields, parents);
     }
