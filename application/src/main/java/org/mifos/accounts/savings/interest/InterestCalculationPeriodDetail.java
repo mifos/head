@@ -22,8 +22,11 @@ package org.mifos.accounts.savings.interest;
 
 import java.util.List;
 
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.framework.util.helpers.Money;
+
 /**
- * I represent a valid Interest Caluclation Period.
+ * I represent a valid Interest Calculation Period.
  *
  * In mifos, savings interest calculation is to occur every x days/months.
  */
@@ -31,10 +34,14 @@ public class InterestCalculationPeriodDetail {
 
     private final InterestCalculationRange range;
     private final List<EndOfDayDetail> dailyDetails;
+    private final Money minBalanceRequired;
+    private final MifosCurrency currency;
 
-    public InterestCalculationPeriodDetail(InterestCalculationRange range, List<EndOfDayDetail> dailyDetails) {
+    public InterestCalculationPeriodDetail(InterestCalculationRange range, List<EndOfDayDetail> dailyDetails, Money minBalanceRequired, MifosCurrency currency) {
         this.range = range;
         this.dailyDetails = dailyDetails;
+        this.minBalanceRequired = minBalanceRequired;
+        this.currency = currency;
     }
 
     public InterestCalculationRange getRange() {
@@ -43,5 +50,13 @@ public class InterestCalculationPeriodDetail {
 
     public List<EndOfDayDetail> getDailyDetails() {
         return this.dailyDetails;
+    }
+
+    public boolean isMinimumBalanceReached(Money principal) {
+        return principal.isGreaterThanOrEqual(minBalanceRequired);
+    }
+
+    public Money zeroAmount() {
+        return new Money(currency, "0");
     }
 }

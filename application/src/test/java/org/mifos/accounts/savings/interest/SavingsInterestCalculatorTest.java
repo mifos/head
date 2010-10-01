@@ -43,6 +43,8 @@ public class SavingsInterestCalculatorTest {
 
     private InterestCalculationPeriodDetail interestCalculationPeriodDetail;
 
+    private Money money;
+
     @Mock
     private PrincipalCalculationStrategy principalCalculationStrategy;
 
@@ -57,7 +59,9 @@ public class SavingsInterestCalculatorTest {
         InterestCalculationRange calculationRange = null;
         EndOfDayDetail endOfDayDetail = null;
         List<EndOfDayDetail> dailyDetails = Arrays.asList(endOfDayDetail);
-        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(calculationRange, dailyDetails);
+
+        money = TestUtils.createMoney("0");
+        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(calculationRange, dailyDetails, money, money.getCurrency());
     }
 
     @Test

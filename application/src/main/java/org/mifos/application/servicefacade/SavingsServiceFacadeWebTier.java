@@ -34,11 +34,14 @@ import org.mifos.accounts.savings.interest.InterestCalculationPeriodDetail;
 import org.mifos.accounts.savings.interest.InterestCalculationRange;
 import org.mifos.accounts.savings.interest.InterestCalculationRangeHelper;
 import org.mifos.accounts.savings.interest.InterestCalculator;
+import org.mifos.accounts.savings.interest.PrincipalCalculationStrategy;
 import org.mifos.accounts.savings.interest.SavingsInterestCalculatorFactory;
+import org.mifos.accounts.savings.interest.TotalBalanceCalculationStrategy;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.util.helpers.AccountPaymentData;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.SavingsPaymentData;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -63,6 +66,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     private final CustomerDao customerDao;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
     private InterestCalculationRangeHelper interestCalculationRangeHelper = new InterestCalculationRangeHelper();
+    private PrincipalCalculationStrategy totalPrincipalCalculationStrategy = new TotalBalanceCalculationStrategy();
 
     public SavingsServiceFacadeWebTier(SavingsDao savingsDao, PersonnelDao personnelDao, CustomerDao customerDao) {
         this.savingsDao = savingsDao;
@@ -186,7 +190,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public void handleInterestCalculationAndPosting(Long savingsId) {
+    public void handleInterestCalculationAndPosting(final Long savingsId) {
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
 
         List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), savingsId);
@@ -201,21 +205,26 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
             LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();
 
-            // TODO - this is hardcoded to monthly at end of month setting for interest calculation
+            Money totalRunningPrincipal = new Money(savingsAccount.getCurrency(), "0");
             List<InterestCalculationRange> allPossible = interestCalculationRangeHelper.determineAllPossibleInterestCalculationPeriods(firstDepositDate, interestCalculationEvent, new LocalDate());
             for (InterestCalculationRange range : allPossible) {
-                InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(range, allEndOfDayDetailsForAccount);
 
-                Money calculatedInterest = interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
+                InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(range, allEndOfDayDetailsForAccount, savingsAccount.getMinAmntForInt(), savingsAccount.getCurrency());
 
-                // TODO - update fee calculation and do fee posting if applicable
-                // TODO - log interest information for checking on SECDEP
-                System.out.println("interest for range " + range + calculatedInterest);
+                totalRunningPrincipal = totalRunningPrincipal.add(totalPrincipalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail));
+
+                if (interestCalculationPeriodDetail.isMinimumBalanceReached(totalRunningPrincipal)) {
+                    Money calculatedInterest = interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
+
+                    // TODO - update fee calculation and do fee posting if applicable
+                    // TODO - log interest information for checking on SECDEP
+                    System.out.println("interest for range " + range + calculatedInterest);
+                }
             }
         }
     }
 
-    private InterestCalculationPeriodDetail createInterestCalculationPeriodDetail(InterestCalculationRange range, List<EndOfDayDetail> allEndOfDayDetailsForAccount) {
+    private InterestCalculationPeriodDetail createInterestCalculationPeriodDetail(InterestCalculationRange range, List<EndOfDayDetail> allEndOfDayDetailsForAccount, Money minBalanceRequired, MifosCurrency mifosCurrency) {
 
         List<EndOfDayDetail> applicableDailyDetailsForPeriod = new ArrayList<EndOfDayDetail>();
 
@@ -225,6 +234,10 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             }
         }
 
-        return new InterestCalculationPeriodDetail(range, applicableDailyDetailsForPeriod);
+        return new InterestCalculationPeriodDetail(range, applicableDailyDetailsForPeriod, minBalanceRequired, mifosCurrency);
+    }
+
+    public void setTotalPrincipalCalculationStrategy(PrincipalCalculationStrategy totalPrincipalCalculationStrategy) {
+        this.totalPrincipalCalculationStrategy = totalPrincipalCalculationStrategy;
     }
 }

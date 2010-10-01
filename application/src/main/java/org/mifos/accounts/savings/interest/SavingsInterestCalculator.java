@@ -33,8 +33,8 @@ public class SavingsInterestCalculator implements InterestCalculator {
 
     @Override
     public Money calculateInterestForPeriod(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
-        Money principal = principalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
 
+        Money principal = principalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
         return compoundInterestCaluclation.calculateInterest(principal);
     }
 
