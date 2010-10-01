@@ -186,4 +186,5 @@ public interface AccountConstants {
 
     String GL_CODE = "glCode";
     String INSTALLMENT_DUEDATE_INVALID = "errors.installment.duedate.invalid"; 
+    String INSTALLMENT_DUEDATE_DUPLICATE = "errors.installment.duedate.duplicate"; 
 }

@@ -22,10 +22,10 @@ package org.mifos.platform.questionnaire.ui.controller;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.platform.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
-import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
@@ -182,7 +182,7 @@ public class QuestionGroupController extends QuestionnaireController {
     }
 
     private void populateError(RequestContext requestContext, BadNumericResponseException exception) {
-        String title = exception.getQuestionTitle();
+        String title = exception.getIdentifier();
         String code, message;
         Integer allowedMinValue = exception.getAllowedMinValue();
         Integer allowedMaxValue = exception.getAllowedMaxValue();
@@ -206,7 +206,7 @@ public class QuestionGroupController extends QuestionnaireController {
     }
 
     private void populateError(RequestContext requestContext, MandatoryAnswerNotFoundException exception) {
-        String title = exception.getQuestionTitle();
+        String title = exception.getIdentifier();
         constructErrorMessage("questionnaire.noresponse", format("Please specify {0}", title), requestContext.getMessageContext(), title);
     }
 

@@ -20,6 +20,8 @@
 
 package org.mifos.platform.questionnaire.exceptions;
 
+import org.mifos.platform.exceptions.ValidationException;
+
 
 public class MandatoryAnswerNotFoundException extends ValidationException {
     private static final long serialVersionUID = -8598139621543208626L;

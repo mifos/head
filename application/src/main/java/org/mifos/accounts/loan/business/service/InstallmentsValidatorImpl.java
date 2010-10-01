@@ -7,7 +7,10 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class InstallmentsValidatorImpl implements InstallmentsValidator {
     @Override
@@ -16,6 +19,25 @@ public class InstallmentsValidatorImpl implements InstallmentsValidator {
     }
 
     private void validateDueDates(List<RepaymentScheduleInstallment> installments) throws ServiceException {
+        validateInvalidDueDates(installments);
+        validateDuplicateDueDates(installments);
+    }
+
+    private void validateDuplicateDueDates(List<RepaymentScheduleInstallment> installments) throws ServiceException {
+        List<Integer> invalidInstallments = new ArrayList<Integer>();
+        Set<Date> dueDates = new HashSet<Date>();
+        for (RepaymentScheduleInstallment installment : installments) {
+            Date dueDate = installment.getDueDateValue();
+            if (dueDates.contains(dueDate)) {
+                invalidInstallments.add(installment.getInstallment());
+            } else {
+                dueDates.add(dueDate);
+            }
+        }
+        throwServiceExceptionIfRequired(invalidInstallments);
+    }
+
+    private void validateInvalidDueDates(List<RepaymentScheduleInstallment> installments) throws ServiceException {
         List<Integer> invalidInstallments = new ArrayList<Integer>();
         for (RepaymentScheduleInstallment installment : installments) {
             if (StringUtils.isEmpty(installment.getDueDate())) {
@@ -24,6 +46,10 @@ public class InstallmentsValidatorImpl implements InstallmentsValidator {
                 setDueDateOnInstallment(installment, invalidInstallments);
             }
         }
+        throwServiceExceptionIfRequired(invalidInstallments);
+    }
+
+    private void throwServiceExceptionIfRequired(List<Integer> invalidInstallments) throws ServiceException {
         if (!invalidInstallments.isEmpty()) throw new ServiceException(AccountConstants.INSTALLMENT_DUEDATE_INVALID, null, invalidInstallments.toArray());
     }
 

@@ -21,6 +21,7 @@
 package org.mifos.platform.questionnaire.exceptions;
 
 import org.junit.Test;
+import org.mifos.platform.exceptions.ValidationException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
