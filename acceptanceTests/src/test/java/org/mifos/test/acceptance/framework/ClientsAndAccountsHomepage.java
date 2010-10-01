@@ -96,13 +96,17 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
     }
 
     // TODO belongs in a helper
-    public ClientViewDetailsPage createClient(String loanOfficer, String officeName) {
+    public ClientViewDetailsPage createClientAndVerify(String loanOfficer, String officeName) {
+        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = createClient(loanOfficer, officeName);
+        return navigateToClientViewDetails(formParameters);
+    }
+
+    public CreateClientEnterPersonalDataPage.SubmitFormParameters createClient(String loanOfficer, String officeName) {
         CreateClientEnterPersonalDataPage clientPersonalDataPage = navigateToPersonalDataPage(officeName);
         CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = FormParametersHelper.getClientEnterPersonalDataPageFormParameters();
         clientPersonalDataPage=clientPersonalDataPage.create(formParameters);
-        CreateClientEnterMfiDataPage clientMfiDataPage = clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
-        CreateClientConfirmationPage clientConfirmationPage = navigateToConfirmationPage(loanOfficer, clientMfiDataPage);
-        return navigateToClientViewDetails(formParameters, clientConfirmationPage);
+        navigateToConfirmationPage(loanOfficer);
+        return formParameters;
     }
 
     public ClientViewDetailsPage createClientWithQuestionGroups(String loanOfficer, String officeName, Map<String, String> choiceTags, String answer) {
@@ -113,11 +117,11 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         questionResponsePage.populateTextAnswer("name=questionGroups[0].sectionDetails[0].questions[0].value", answer);
         questionResponsePage.populateSmartSelect("txtListSearch", choiceTags);
         questionResponsePage.navigateToNextPage();
-        return navigateToClientViewDetails(formParameters, navigateToConfirmationPage(loanOfficer, new CreateClientEnterMfiDataPage(selenium)));
+        return navigateToClientViewDetails(formParameters);
     }
 
-    private ClientViewDetailsPage navigateToClientViewDetails(CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters, CreateClientConfirmationPage clientConfirmationPage) {
-        ClientViewDetailsPage clientViewDetailsPage = clientConfirmationPage.navigateToClientViewDetailsPage();
+    private ClientViewDetailsPage navigateToClientViewDetails(CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters) {
+        ClientViewDetailsPage clientViewDetailsPage = new CreateClientConfirmationPage(selenium).navigateToClientViewDetailsPage();
         clientViewDetailsPage.verifyName(formParameters.getFirstName() + " " + formParameters.getLastName());
         clientViewDetailsPage.verifyDateOfBirth(formParameters.getDateOfBirthDD(), formParameters.getDateOfBirthMM(), formParameters.getDateOfBirthYYYY());
         clientViewDetailsPage.verifySpouseFather(formParameters.getSpouseFirstName() + " " + formParameters.getSpouseLastName());
@@ -125,7 +129,7 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         return clientViewDetailsPage;
     }
 
-    private CreateClientConfirmationPage navigateToConfirmationPage(String loanOfficer, CreateClientEnterMfiDataPage clientMfiDataPage) {
+    private CreateClientConfirmationPage navigateToConfirmationPage(String loanOfficer) {
         CreateClientEnterMfiDataPage.SubmitFormParameters mfiFormParameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
         mfiFormParameters.setLoanOfficerId(loanOfficer);
 
@@ -136,7 +140,7 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
 
         mfiFormParameters.setMeeting(meetingFormParameters);
 
-        CreateClientPreviewDataPage clientPreviewDataPage = clientMfiDataPage.submitAndGotoCreateClientPreviewDataPage(mfiFormParameters);
+        CreateClientPreviewDataPage clientPreviewDataPage = new CreateClientEnterMfiDataPage(selenium).submitAndGotoCreateClientPreviewDataPage(mfiFormParameters);
         CreateClientConfirmationPage clientConfirmationPage = clientPreviewDataPage.submit();
         clientConfirmationPage.verifyPage();
         return clientConfirmationPage;

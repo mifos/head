@@ -30,6 +30,7 @@ import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,6 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         adminPage.defineLoanProduct(formParameters);
-
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -118,21 +118,35 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         createAndValidateWithVariableInstalment("","1","");
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void verifyCashFlow() throws Exception {
+        applicationDatabaseOperation.updateLSIM(1);
+        createAndValidateWithVariableInstalment("60", "1", "100.5");
+        createAndValidateWithVariableInstalment("","1","");
+    }
+
+
+
     private void createAndValidateWithVariableInstalment(String maxGap, String minGap, String minInstalmentAmount) {
         SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
-        AdminPage adminPage = loginAndNavigateToAdminPage();
-        adminPage.verifyPage();
-        DefineNewLoanProductPage defineLoanProductPage = adminPage.navigateToDefineLoanProduct();
-        defineLoanProductPage.fillLoanParameters(formParameters);
-        defineLoanProductPage.verifyVariableInstalmentOptionsDefaults();
-        defineLoanProductPage.verifyVariableInstalmentOptionsFields();
-        defineLoanProductPage.fillVariableInstalmentOption(maxGap, minGap, minInstalmentAmount);
-        DefineNewLoanProductPreviewPage productPreviewPage = defineLoanProductPage.submitAndGotoNewLoanProductPreviewPage();
-        productPreviewPage.verifyVariableInstalmentOption(maxGap, minGap, minInstalmentAmount, "Yes");
-        DefineNewLoanProductConfirmationPage loanProductConfirmationPage = productPreviewPage.submit();
-        UserViewDetailsPage viewDetailsPage = loanProductConfirmationPage.navigateToViewLoanDetails();
-        viewDetailsPage.verifyVariableInstalmentOptions(maxGap, minGap, minInstalmentAmount, "Yes");
+        navigateToDefineNewLoanProductPage().
+        fillLoanParameters(formParameters).
+        verifyVariableInstalmentOptionsDefaults().
+        verifyVariableInstalmentOptionsFields().
+
+        new DefineNewLoanProductPage(selenium).fillVariableInstalmentOption(maxGap, minGap, minInstalmentAmount).
+        submitAndGotoNewLoanProductPreviewPage().
+        verifyVariableInstalmentOption(maxGap, minGap, minInstalmentAmount, "Yes").
+        submit().
+        navigateToViewLoanDetails().
+        verifyVariableInstalmentOptions(maxGap, minGap, minInstalmentAmount, "Yes");
     }
+
+    private DefineNewLoanProductPage navigateToDefineNewLoanProductPage() {
+        return new NavigationHelper(selenium).navigateToAdminPage().navigateToDefineLoanProduct();
+    }
+
 
     private AdminPage loginAndNavigateToAdminPage() {
         return appLauncher

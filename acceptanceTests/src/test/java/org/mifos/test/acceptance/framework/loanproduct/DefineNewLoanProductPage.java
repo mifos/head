@@ -252,7 +252,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     }
 
-    public void fillLoanParameters(SubmitFormParameters parameters) {
+    public DefineNewLoanProductPage fillLoanParameters(SubmitFormParameters parameters) {
         selenium.type("createLoanProduct.input.prdOffering", parameters.getOfferingName());
         selenium.type("createLoanProduct.input.prdOfferingShortName", parameters.getOfferingShortName());
         selenium.type("createLoanProduct.input.description", parameters.getDescription());
@@ -271,6 +271,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.select("gracePeriodType", "value=" + parameters.getGracePeriodType());
         selenium.select("interestGLCode", "label=" + parameters.getInterestGLCode());
         selenium.select("principalGLCode", "label=" + parameters.getPrincipalGLCode());
+        return this;
     }
 
     public DefineNewLoanProductPreviewPage submitAndGotoNewLoanProductPreviewPage() {
@@ -279,7 +280,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         return new DefineNewLoanProductPreviewPage(selenium);
     }
 
-    public void verifyVariableInstalmentOptionsDefaults() {
+    public DefineNewLoanProductPage verifyVariableInstalmentOptionsDefaults() {
 
         Assert.assertTrue(!selenium.isChecked(configureVariableInstalmentsCheckbox)
                 & !selenium.isVisible(maxInstalmentGapTextBox)
@@ -292,9 +293,10 @@ public class DefineNewLoanProductPage extends AbstractPage {
         Assert.assertTrue(selenium.getValue(minInstalmentGapTextBox).equals("1"));
         Assert.assertTrue(selenium.getValue(maxInstalmentGapTextBox).equals(""));
         Assert.assertTrue(selenium.getValue(minInstalmentAmountTextBox).equals(""));
+        return this;
     }
 
-    public void verifyVariableInstalmentOptionsFields() {
+    public DefineNewLoanProductPage verifyVariableInstalmentOptionsFields() {
         fillInstalmentOptionsAndSubmit("text,", "text,", "text,");
         Assert.assertTrue(selenium.isTextPresent("The min installment amount for variable installments is invalid because only numbers or decimal separator are allowed"));
         Assert.assertTrue(!selenium.getValue(maxInstalmentGapTextBox).contains("text") & !selenium.getValue(maxInstalmentGapTextBox).contains(","));
@@ -318,6 +320,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
         fillVariableInstalmentOption("","","");
 //        Assert.assertTrue(selenium.isTextPresent("Minimum gap must be less than the maximum gap for loans with variable installments"));
+        return this;
     }
 
     private void fillInstalmentOptionsAndSubmit(String maxGap, String minGap, String minInstalmentAmount) {
@@ -325,22 +328,25 @@ public class DefineNewLoanProductPage extends AbstractPage {
         submitAndGotoNewLoanProductPreviewPage();
     }
 
-    public void fillVariableInstalmentOption(String maxGap, String minGap, String minInstalmentAmount) {
+    public DefineNewLoanProductPage fillVariableInstalmentOption(String maxGap, String minGap, String minInstalmentAmount) {
         if (!selenium.isChecked(configureVariableInstalmentsCheckbox)){
             selectVariableInstalmentAndWaitForLoad();
         }
         selenium.type(maxInstalmentGapTextBox, maxGap);
         selenium.type(minInstalmentGapTextBox, minGap);
         selenium.type(minInstalmentAmountTextBox, minInstalmentAmount);
+        return this;
     }
 
-    private void selectVariableInstalmentAndWaitForLoad() {
+    private DefineNewLoanProductPage selectVariableInstalmentAndWaitForLoad() {
         selenium.click(configureVariableInstalmentsCheckbox);
         waitForElementToPresent(minInstalmentAmountTextBox);
+        return this;
     }
 
-    public void verifyVariableInstalmentNotAvailable() {
+    public DefineNewLoanProductPage verifyVariableInstalmentNotAvailable() {
         Assert.assertTrue(!selenium.isElementPresent(configureVariableInstalmentsCheckbox));
+        return this;
     }
 
 

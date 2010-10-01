@@ -53,7 +53,7 @@ public class DefineNewLoanProductPreviewPage extends AbstractPage {
         Assert.assertTrue(selenium.isTextPresent(error));
     }
 
-    public void verifyVariableInstalmentOption(String maxGap, String minGap, String minInstalmentAmount, String variableInstalmentChoice) {
+    public DefineNewLoanProductPreviewPage verifyVariableInstalmentOption(String maxGap, String minGap, String minInstalmentAmount, String variableInstalmentChoice) {
         Assert.assertTrue(selenium.isTextPresent("Minimum gap between installments: " + minGap));
         if ("".equals(maxGap)) {
             Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: N/A"));
@@ -66,6 +66,7 @@ public class DefineNewLoanProductPreviewPage extends AbstractPage {
             Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: " + minInstalmentAmount)) ;
         }
         Assert.assertTrue(selenium.isTextPresent("Can configure variable installments: " + variableInstalmentChoice));
+        return new DefineNewLoanProductPreviewPage(selenium);
     }
 
     public void verifyVariableInstalmentUnChecked() {
