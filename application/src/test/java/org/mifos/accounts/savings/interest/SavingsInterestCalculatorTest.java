@@ -61,7 +61,7 @@ public class SavingsInterestCalculatorTest {
         List<EndOfDayDetail> dailyDetails = Arrays.asList(endOfDayDetail);
 
         money = TestUtils.createMoney("0");
-        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(calculationRange, dailyDetails, money, money.getCurrency());
+        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(calculationRange, dailyDetails, money, money, money.getCurrency(), null);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class SavingsInterestCalculatorTest {
 
         // stubbing
         when(principalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail)).thenReturn(expectedPrincipal);
-        when(compoundInterestCalculationStrategy.calculateInterest(expectedPrincipal)).thenReturn(expectedInterest);
+        when(compoundInterestCalculationStrategy.calculateInterest(expectedPrincipal, null, 0)).thenReturn(expectedInterest);
 
         // exercise test
         Money interest = interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);

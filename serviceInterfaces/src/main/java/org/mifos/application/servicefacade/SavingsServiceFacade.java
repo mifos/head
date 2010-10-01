@@ -20,6 +20,7 @@
 
 package org.mifos.application.servicefacade;
 
+import org.joda.time.LocalDate;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
@@ -38,4 +39,7 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void handleInterestCalculationAndPosting(Long savingsId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void calculateInterest(LocalDate startDate, LocalDate endDate, Long savingsId);
 }

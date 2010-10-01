@@ -50,7 +50,6 @@ import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
-import org.mifos.accounts.savings.interest.InterestCalculationPeriodDetail;
 import org.mifos.accounts.savings.interest.InterestCalculator;
 import org.mifos.accounts.savings.interest.SavingsInterestCalculatorFactory;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
@@ -323,7 +322,7 @@ public class SavingsBO extends AccountBO {
         return interestToBePosted;
     }
 
-    void setInterestToBePosted(final Money interestToBePosted) {
+    public void setInterestToBePosted(final Money interestToBePosted) {
         this.interestToBePosted = interestToBePosted;
     }
 
@@ -643,7 +642,7 @@ public class SavingsBO extends AccountBO {
         return fromDate;
     }
 
-    private Money calculateInterest(Date fromDate, final Date toDate, final double interestRate,
+    Money calculateInterest(Date fromDate, final Date toDate, final double interestRate,
             final SavingsTrxnDetailEntity adjustedTrxn) throws AccountException {
         boolean initialBalance = false;
 

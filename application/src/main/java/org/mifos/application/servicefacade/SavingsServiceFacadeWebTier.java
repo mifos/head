@@ -190,7 +190,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public void handleInterestCalculationAndPosting(final Long savingsId) {
+    public void handleInterestCalculationAndPosting(Long savingsId) {
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
 
         List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), savingsId);
@@ -205,39 +205,80 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
             LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();
 
-            Money totalRunningPrincipal = new Money(savingsAccount.getCurrency(), "0");
             List<InterestCalculationRange> allPossible = interestCalculationRangeHelper.determineAllPossibleInterestCalculationPeriods(firstDepositDate, interestCalculationEvent, new LocalDate());
             for (InterestCalculationRange range : allPossible) {
 
-                InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(range, allEndOfDayDetailsForAccount, savingsAccount.getMinAmntForInt(), savingsAccount.getCurrency());
+                InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(range,
+                                                                                                                        allEndOfDayDetailsForAccount,
+                                                                                                                        savingsAccount.getMinAmntForInt(),
+                                                                                                                        savingsAccount.getCurrency(),
+                                                                                                                        savingsAccount.getInterestRate());
 
-                totalRunningPrincipal = totalRunningPrincipal.add(totalPrincipalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail));
-
-                if (interestCalculationPeriodDetail.isMinimumBalanceReached(totalRunningPrincipal)) {
                     Money calculatedInterest = interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
 
                     // TODO - update fee calculation and do fee posting if applicable
                     // TODO - log interest information for checking on SECDEP
                     System.out.println("interest for range " + range + calculatedInterest);
-                }
+
             }
         }
     }
 
-    private InterestCalculationPeriodDetail createInterestCalculationPeriodDetail(InterestCalculationRange range, List<EndOfDayDetail> allEndOfDayDetailsForAccount, Money minBalanceRequired, MifosCurrency mifosCurrency) {
+
+    @Override
+    public void calculateInterest(LocalDate startDate, LocalDate endDate, Long savingsId) {
+        SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
+
+        InterestCalculationRange range = new InterestCalculationRange(startDate, endDate);
+
+        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), savingsId);
+
+        if (!allEndOfDayDetailsForAccount.isEmpty()) {
+            InterestCalcType interestCalcType = InterestCalcType.fromInt(savingsAccount.getInterestCalcType().getId());
+            InterestCalculator interestCalculator = SavingsInterestCalculatorFactory.create(interestCalcType);
+
+            LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();
+
+            if (firstDepositDate.isAfter(range.getLowerDate())) {
+                range = new InterestCalculationRange(firstDepositDate, range.getUpperDate());
+            }
+
+            InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(range,
+                                                                                                                    allEndOfDayDetailsForAccount,
+                                                                                                                    savingsAccount.getMinAmntForInt(),
+                                                                                                                    savingsAccount.getCurrency(),
+                                                                                                                    savingsAccount.getInterestRate());
+
+             savingsAccount.setInterestToBePosted(savingsAccount.getInterestToBePosted().add(interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail)));
+            }
+    }
+
+    private InterestCalculationPeriodDetail createInterestCalculationPeriodDetail(InterestCalculationRange range,
+                                                                                  List<EndOfDayDetail> allEndOfDayDetailsForAccount,
+                                                                                  Money minBalanceRequired,
+                                                                                  MifosCurrency mifosCurrency,
+                                                                                  Double interestRate) {
 
         List<EndOfDayDetail> applicableDailyDetailsForPeriod = new ArrayList<EndOfDayDetail>();
 
+        Money balanceBeforeInterval = new Money(mifosCurrency);
+
         for (EndOfDayDetail endOfDayDetail : allEndOfDayDetailsForAccount) {
+            if(endOfDayDetail.getDate().isBefore(range.getLowerDate())) {
+                balanceBeforeInterval = balanceBeforeInterval.add(endOfDayDetail.getResultantAmountForDay());
+                //System.out.println(balanceBeforeInterval+", "+endOfDayDetail.getResultantAmountForDay()+" ,"+endOfDayDetail.getDate()+", "+range.getLowerDate());
+            }
+
             if (range.dateFallsWithin(endOfDayDetail.getDate())) {
                 applicableDailyDetailsForPeriod.add(endOfDayDetail);
             }
         }
 
-        return new InterestCalculationPeriodDetail(range, applicableDailyDetailsForPeriod, minBalanceRequired, mifosCurrency);
+        return new InterestCalculationPeriodDetail(range, allEndOfDayDetailsForAccount, minBalanceRequired, balanceBeforeInterval, mifosCurrency, interestRate);
     }
 
     public void setTotalPrincipalCalculationStrategy(PrincipalCalculationStrategy totalPrincipalCalculationStrategy) {
         this.totalPrincipalCalculationStrategy = totalPrincipalCalculationStrategy;
     }
+
 }

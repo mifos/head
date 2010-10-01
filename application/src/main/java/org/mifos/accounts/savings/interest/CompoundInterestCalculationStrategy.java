@@ -20,20 +20,18 @@
 
 package org.mifos.accounts.savings.interest;
 
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.Money;
 
 public class CompoundInterestCalculationStrategy {
 
-    public Money calculateInterest(Money principal) {
-        double intRate = 10;
+    public Money calculateInterest(Money principal, Double intRate, int duration) {
 
-        int duration = 365; // one year
+        int accountingNumberOfInterestDaysInYear = AccountingRules.getNumberOfInterestDays();
 
-        int accountingNumberOfInterestDaysInYear = 365; // one year
+        Double effectiveInterestRate = (intRate / accountingNumberOfInterestDaysInYear) * duration;
 
-        intRate = (intRate / accountingNumberOfInterestDaysInYear) * duration;
-
-        Money interestAmount = principal.multiply(intRate / 100);
+        Money interestAmount = principal.multiply(effectiveInterestRate / 100);
 
         return interestAmount;
     }

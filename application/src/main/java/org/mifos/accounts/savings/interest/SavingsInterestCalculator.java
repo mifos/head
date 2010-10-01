@@ -35,7 +35,10 @@ public class SavingsInterestCalculator implements InterestCalculator {
     public Money calculateInterestForPeriod(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
 
         Money principal = principalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
-        return compoundInterestCaluclation.calculateInterest(principal);
+        if (interestCalculationPeriodDetail.isMinimumBalanceReached(principal)) {
+            return compoundInterestCaluclation.calculateInterest(principal, interestCalculationPeriodDetail.getInterestRate(), interestCalculationPeriodDetail.getDuration());
+        }
+        return interestCalculationPeriodDetail.zeroAmount();
     }
 
     public void setCompoundInterestCaluclation(CompoundInterestCalculationStrategy compoundInterestCaluclation) {

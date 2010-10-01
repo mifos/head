@@ -37,26 +37,26 @@ public class AverageBalanceCaluclationStrategy implements PrincipalCalculationSt
         LocalDate startDate = interestCalculationRange.getLowerDate();
         LocalDate endDate = interestCalculationRange.getUpperDate();
 
-        List<EndOfDayDetail> deposits = interestCalculationPeriodDetail.getDailyDetails();
+        List<EndOfDayDetail> endOfDayDetails = interestCalculationPeriodDetail.getDailyDetails();
 
         MifosCurrency currencyInUse = Money.getDefaultCurrency();
-        if (!deposits.isEmpty()) {
-            startDate = deposits.get(0).getDate();
-            currencyInUse = deposits.get(0).getResultantAmountForDay().getCurrency();
+        if (!endOfDayDetails.isEmpty()) {
+            startDate = endOfDayDetails.get(0).getDate();
+            currencyInUse = endOfDayDetails.get(0).getResultantAmountForDay().getCurrency();
         }
 
         int duration = Days.daysBetween(startDate, endDate).getDays();
         LocalDate prevDate = startDate;
 
         Money totalBalance = Money.zero(currencyInUse);
-        Money runningBalance = Money.zero(currencyInUse);
+        Money runningBalance = interestCalculationPeriodDetail.getBalanceBeforeInterval();
 
-        for (int count = 0; count < deposits.size(); count++) {
+        for (int count = 0; count < endOfDayDetails.size(); count++) {
 
             LocalDate nextDate = null;
 
-            if (count < deposits.size() - 1) {
-                nextDate = deposits.get(count + 1).getDate();
+            if (count < endOfDayDetails.size() - 1) {
+                nextDate = endOfDayDetails.get(count + 1).getDate();
             } else {
                 nextDate = endDate;
             }
@@ -64,9 +64,9 @@ public class AverageBalanceCaluclationStrategy implements PrincipalCalculationSt
             int subDuration = Days.daysBetween(prevDate, nextDate).getDays();
 
             if (runningBalance.equals(Money.zero(currencyInUse))) {
-                runningBalance = deposits.get(count).getResultantAmountForDay();
+                runningBalance = endOfDayDetails.get(count).getResultantAmountForDay();
             } else {
-                runningBalance = runningBalance.add(deposits.get(count).getResultantAmountForDay());
+                runningBalance = runningBalance.add(endOfDayDetails.get(count).getResultantAmountForDay());
             }
 
             if (totalBalance.equals(Money.zero(currencyInUse))) {

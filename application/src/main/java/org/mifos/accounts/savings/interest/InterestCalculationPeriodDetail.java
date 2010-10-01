@@ -22,6 +22,7 @@ package org.mifos.accounts.savings.interest;
 
 import java.util.List;
 
+import org.joda.time.Days;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
 
@@ -36,12 +37,16 @@ public class InterestCalculationPeriodDetail {
     private final List<EndOfDayDetail> dailyDetails;
     private final Money minBalanceRequired;
     private final MifosCurrency currency;
+    private final Double interestRate;
+    private final Money balanceBeforeInterval;
 
-    public InterestCalculationPeriodDetail(InterestCalculationRange range, List<EndOfDayDetail> dailyDetails, Money minBalanceRequired, MifosCurrency currency) {
+    public InterestCalculationPeriodDetail(InterestCalculationRange range, List<EndOfDayDetail> dailyDetails, Money minBalanceRequired, Money balanceBeforeInterval, MifosCurrency currency, Double interestRate) {
         this.range = range;
         this.dailyDetails = dailyDetails;
         this.minBalanceRequired = minBalanceRequired;
         this.currency = currency;
+        this.interestRate = interestRate;
+        this.balanceBeforeInterval = balanceBeforeInterval;
     }
 
     public InterestCalculationRange getRange() {
@@ -56,7 +61,19 @@ public class InterestCalculationPeriodDetail {
         return principal.isGreaterThanOrEqual(minBalanceRequired);
     }
 
+    public Double getInterestRate() {
+        return interestRate;
+    }
+
+    public int getDuration() {
+        return Days.daysBetween(range.getLowerDate(), range.getUpperDate()).getDays();
+    }
+
     public Money zeroAmount() {
         return new Money(currency, "0");
+    }
+
+    public Money getBalanceBeforeInterval() {
+        return balanceBeforeInterval;
     }
 }
