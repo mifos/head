@@ -105,6 +105,7 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         CreateClientEnterPersonalDataPage clientPersonalDataPage = navigateToPersonalDataPage(officeName);
         CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = FormParametersHelper.getClientEnterPersonalDataPageFormParameters();
         clientPersonalDataPage=clientPersonalDataPage.create(formParameters);
+        clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
         navigateToConfirmationPage(loanOfficer);
         return formParameters;
     }
@@ -117,6 +118,7 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         questionResponsePage.populateTextAnswer("name=questionGroups[0].sectionDetails[0].questions[0].value", answer);
         questionResponsePage.populateSmartSelect("txtListSearch", choiceTags);
         questionResponsePage.navigateToNextPage();
+        navigateToConfirmationPage(loanOfficer);
         return navigateToClientViewDetails(formParameters);
     }
 

@@ -33,6 +33,7 @@ import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -186,6 +187,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
 
     private String createMonthlyLoanProduct() {
         SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
+        formParameters.setOfferingShortName(StringUtil.getRandomString(4));
         String loanName = formParameters.getOfferingName();
         loginAndNavigateToAdminPage().
         navigateToDefineLoanProduct().

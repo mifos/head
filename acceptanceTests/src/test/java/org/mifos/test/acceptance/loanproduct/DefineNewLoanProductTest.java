@@ -30,6 +30,7 @@ import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -168,6 +169,7 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
     private DefineNewLoanProductPage fillLoanProductMandatoryFields() {
         SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
         DefineNewLoanProductPage productPage = new DefineNewLoanProductPage(selenium);
+        formParameters.setOfferingShortName(StringUtil.getRandomString(4));
         productPage.fillLoanParameters(formParameters);
         return productPage;
     }
