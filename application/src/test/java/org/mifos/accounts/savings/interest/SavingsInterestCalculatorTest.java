@@ -56,12 +56,12 @@ public class SavingsInterestCalculatorTest {
         interestCalculator = new SavingsInterestCalculator(principalCalculationStrategy);
         ((SavingsInterestCalculator)interestCalculator).setCompoundInterestCaluclation(compoundInterestCalculationStrategy);
 
-        InterestCalculationRange calculationRange = null;
+        InterestCalculationInterval calculationInterval = null;
         EndOfDayDetail endOfDayDetail = null;
         List<EndOfDayDetail> dailyDetails = Arrays.asList(endOfDayDetail);
 
         money = TestUtils.createMoney("0");
-        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(calculationRange, dailyDetails, money, money, money.getCurrency(), null);
+        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(calculationInterval, dailyDetails, money, money, money.getCurrency(), null);
     }
 
     @Test

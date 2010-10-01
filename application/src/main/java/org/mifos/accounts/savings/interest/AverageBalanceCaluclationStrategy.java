@@ -32,10 +32,10 @@ public class AverageBalanceCaluclationStrategy implements PrincipalCalculationSt
     @Override
     public Money calculatePrincipal(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
 
-        InterestCalculationRange interestCalculationRange = interestCalculationPeriodDetail.getRange();
+        InterestCalculationInterval interestCalculationInterval = interestCalculationPeriodDetail.getInterval();
 
-        LocalDate startDate = interestCalculationRange.getLowerDate();
-        LocalDate endDate = interestCalculationRange.getUpperDate();
+        LocalDate startDate = interestCalculationInterval.getStartDate();
+        LocalDate endDate = interestCalculationInterval.getEndDate();
 
         List<EndOfDayDetail> endOfDayDetails = interestCalculationPeriodDetail.getDailyDetails();
 

@@ -20,34 +20,37 @@
 
 package org.mifos.accounts.savings.interest;
 
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
-public class InterestCalculationRange {
+public class InterestCalculationInterval {
 
-    private final LocalDate lowerDate;
-    private final LocalDate upperDate;
+    private final Interval interval;
 
-    public InterestCalculationRange(LocalDate lowerDate, LocalDate upperDate) {
-        this.lowerDate = lowerDate;
-        this.upperDate = upperDate;
+    public InterestCalculationInterval(LocalDate startDate, LocalDate endDate) {
+        this.interval = new Interval(startDate.toDateTimeAtStartOfDay(), endDate.toDateTimeAtStartOfDay());
     }
 
-    public LocalDate getLowerDate() {
-        return this.lowerDate;
+    public LocalDate getStartDate() {
+        return interval.getStart().toLocalDate();
     }
 
-    public LocalDate getUpperDate() {
-        return this.upperDate;
+    public LocalDate getEndDate() {
+        return interval.getEnd().toLocalDate();
+    }
+
+    public int getNumberOfDays() {
+        return interval.toPeriod().getDays();
     }
 
     public boolean dateFallsWithin(LocalDate date) {
-        return ((date.isAfter(this.lowerDate) || date.isEqual(this.lowerDate)) &&
-                (date.isBefore(this.upperDate) || date.isEqual(this.upperDate)));
+        return interval.contains(date.toDateTimeAtStartOfDay());
     }
 
     @Override
     public String toString() {
-        return new StringBuilder().append('[').append(lowerDate).append('-').append(upperDate).append(']').toString();
+        return new StringBuilder().append('[').append(interval.getStart().toLocalDate()).append('-')
+                .append(interval.getEnd().toLocalDate()).append(']').toString();
     }
 
 }

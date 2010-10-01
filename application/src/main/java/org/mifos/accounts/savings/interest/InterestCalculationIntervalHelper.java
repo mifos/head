@@ -27,28 +27,28 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.schedule.ScheduledEvent;
 
-public class InterestCalculationRangeHelper {
+public class InterestCalculationIntervalHelper {
 
-    public List<InterestCalculationRange> determineAllPossibleInterestCalculationPeriods(LocalDate firstDepositDate, ScheduledEvent interestCalculationEvent, LocalDate cutOffDateForRanges) {
+    public List<InterestCalculationInterval> determineAllPossibleInterestCalculationPeriods(LocalDate firstDepositDate, ScheduledEvent interestCalculationEvent, LocalDate cutOffDateForRanges) {
 
-        List<InterestCalculationRange> validInterestCalculationRanges = new ArrayList<InterestCalculationRange>();
+        List<InterestCalculationInterval> validInterestCalculationIntervals = new ArrayList<InterestCalculationInterval>();
 
         // fiscal start of year is jan-01 so begin at jan-01 of first deposit.
         LocalDate startOfFiscalYearOfFirstDeposit = new LocalDate(new DateTime().withYearOfEra(firstDepositDate.getYear()).withMonthOfYear(1).withDayOfMonth(1));
 
-        LocalDate lowerRangeDate = firstDepositDate;
+        LocalDate startDate = firstDepositDate;
         LocalDate startFrom = startOfFiscalYearOfFirstDeposit;
         while (startFrom.isBefore(cutOffDateForRanges)) {
             LocalDate checkItOut = new LocalDate(interestCalculationEvent.nextEventDateAfter(startFrom.toDateTimeAtCurrentTime()));
-            LocalDate upperRange = calculateNextInterestCalculationDateStartingFrom(startFrom, interestCalculationEvent);
-            if (upperRange.isAfter(lowerRangeDate)) {
-                validInterestCalculationRanges.add(new InterestCalculationRange(lowerRangeDate, upperRange));
-                lowerRangeDate = upperRange.plusDays(1);
+            LocalDate endDate = calculateNextInterestCalculationDateStartingFrom(startFrom, interestCalculationEvent);
+            if (endDate.isAfter(startDate)) {
+                validInterestCalculationIntervals.add(new InterestCalculationInterval(startDate, endDate));
+                startDate = endDate.plusDays(1);
             }
-            startFrom = upperRange.plusDays(1);
+            startFrom = endDate.plusDays(1);
         }
 
-        return validInterestCalculationRanges;
+        return validInterestCalculationIntervals;
     }
 
     private LocalDate calculateNextInterestCalculationDateStartingFrom(LocalDate startingFrom, ScheduledEvent interestCalculationEvent) {
