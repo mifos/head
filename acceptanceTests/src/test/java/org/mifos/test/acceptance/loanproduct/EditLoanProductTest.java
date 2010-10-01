@@ -122,6 +122,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
     public void verifyVariableInstalment() throws Exception {
+        applicationDatabaseOperation.updateLSIM(1);
         createNewLoanProductAndNavigateToEditLoanPage();
         setAndValidateInstalmentOption("60", "1", "100");
     }
