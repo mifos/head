@@ -20,6 +20,10 @@
 
 package org.mifos.accounts.savings.struts.action;
 
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts.action.ActionErrors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
@@ -59,11 +64,11 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
+import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.surveys.business.SurveyInstance;
-import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
@@ -77,12 +82,15 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.MifosServiceFactory;
 
 public class SavingsAction extends AccountAppAction {
 
@@ -116,6 +124,8 @@ public class SavingsAction extends AccountAppAction {
         security.allow("waiveAmountOverDue", SecurityConstants.SAVINGS_CANWAIVE_OVERDUEAMOUNT);
         security.allow("loadChangeLog", SecurityConstants.VIEW);
         security.allow("cancelChangeLog", SecurityConstants.VIEW);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
         return security;
     }
 
@@ -222,12 +232,13 @@ public class SavingsAction extends AccountAppAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        SavingsActionForm savingActionForm = (SavingsActionForm) form;
         logger.debug("In SavingsAction::preview()");
         CustomerBO customer = (CustomerBO) SessionUtils.getAttribute(SavingsConstants.CLIENT, request);
         customer = getCustomer(customer.getCustomerId());
         SessionUtils.setAttribute(SavingsConstants.IS_PENDING_APPROVAL, ProcessFlowRules
                 .isSavingsPendingApprovalStateEnabled(), request.getSession());
-        return mapping.findForward("preview_success");
+        return createGroupQuestionnaire.fetchAppliedQuestions(mapping, savingActionForm, request, ActionForwards.preview_success);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -237,7 +248,6 @@ public class SavingsAction extends AccountAppAction {
         return mapping.findForward("previous_success");
     }
 
-    @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -265,6 +275,8 @@ public class SavingsAction extends AccountAppAction {
                 new Money(savingsOfferingBO.getCurrency(), savingsActionForm
                 .getRecommendedAmount()), customFields);
         saving.save();
+
+        createGroupQuestionnaire.saveResponses(request, savingsActionForm, saving.getAccountId());
 
         request.setAttribute(SavingsConstants.GLOBALACCOUNTNUM, saving.getGlobalAccountNum());
         request.setAttribute(SavingsConstants.RECORD_OFFICE_ID, saving.getOffice().getOfficeId());
@@ -306,13 +318,36 @@ public class SavingsAction extends AccountAppAction {
         SessionUtils.setCollectionAttribute(SavingsConstants.NOTES, savings.getRecentAccountNotes(), request);
         logger.info(" Savings object retrieved successfully");
 
-        SurveysPersistence surveysPersistence = new SurveysPersistence();
-        List<SurveyInstance> surveys = surveysPersistence.retrieveInstancesByAccount(savings);
-        boolean activeSurveys = surveysPersistence.isActiveSurveysForSurveyType(SurveyType.SAVINGS);
-        request.setAttribute(CustomerConstants.SURVEY_KEY, surveys);
-        request.setAttribute(CustomerConstants.SURVEY_COUNT, activeSurveys);
-        request.setAttribute(AccountConstants.SURVEY_KEY, surveys);
+        setCurrentPageUrl(request, savings);
+        setQuestionGroupInstances(request, savings);
+
         return mapping.findForward("get_success");
+    }
+    private void setQuestionGroupInstances(HttpServletRequest request, SavingsBO savingsBO) throws PageExpiredException {
+        QuestionnaireServiceFacade questionnaireServiceFacade = MifosServiceFactory.getQuestionnaireServiceFacade(request);
+        if (questionnaireServiceFacade == null) {
+            return;
+        }
+        setQuestionGroupInstances(questionnaireServiceFacade, request, savingsBO.getAccountId());
+    }
+
+    // Intentionally made public to aid testing !
+    public void setQuestionGroupInstances(QuestionnaireServiceFacade questionnaireServiceFacade, HttpServletRequest request, Integer savingsAccountId) throws PageExpiredException {
+        List<QuestionGroupInstanceDetail> instanceDetails = questionnaireServiceFacade.getQuestionGroupInstances(savingsAccountId, "View", "Savings");
+        SessionUtils.setCollectionAttribute("questionGroupInstances", instanceDetails, request);
+    }
+
+    private void setCurrentPageUrl(HttpServletRequest request, SavingsBO savingsBO) throws PageExpiredException, UnsupportedEncodingException {
+        SessionUtils.removeThenSetAttribute("currentPageUrl", constructCurrentPageUrl(request, savingsBO), request);
+    }
+
+    private String constructCurrentPageUrl(HttpServletRequest request, SavingsBO savingsBO) throws UnsupportedEncodingException {
+        String globalAccountNum = request.getParameter("globalAccountNum");
+        String officerId = request.getParameter("recordOfficeId");
+        String loanOfficerId = request.getParameter("recordLoanOfficerId");
+        String url = String.format("savingsAction.do?globalAccountNum=%s&customerId=%s&recordOfficeId=%s&recordLoanOfficerId=%s",
+                globalAccountNum, Integer.toString(savingsBO.getAccountId()), officerId, loanOfficerId);
+        return URLEncoder.encode(url, "UTF-8");
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -547,4 +582,38 @@ public class SavingsAction extends AccountAppAction {
                 new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newSate), officeId,
                         loanOfficerId));
     }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward captureQuestionResponses(
+            final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "captureQuestionResponses");
+        ActionErrors errors = createGroupQuestionnaire.validateResponses(request, (SavingsActionForm) form);
+        if (errors != null && !errors.isEmpty()) {
+            addErrors(request, errors);
+            return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
+        }
+        return createGroupQuestionnaire.rejoinFlow(mapping);
+    }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward editQuestionResponses(
+            final ActionMapping mapping, final ActionForm form,
+            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "editQuestionResponses");
+        return createGroupQuestionnaire.editResponses(mapping, request, (SavingsActionForm) form);
+    }
+
+    private QuestionnaireFlowAdapter createGroupQuestionnaire =
+        new QuestionnaireFlowAdapter("Create", "Savings",
+                ActionForwards.preview_success,
+                "custSearchAction.do?method=loadMainSearch",
+                new QuestionnaireServiceFacadeLocator() {
+                    @Override
+                    public QuestionnaireServiceFacade getService(HttpServletRequest request) {
+                        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
+                    }
+                });
+
+
 }

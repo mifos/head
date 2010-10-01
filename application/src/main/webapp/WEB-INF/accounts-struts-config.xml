@@ -90,6 +90,7 @@
             <forward name="previous_success" path="/pages/application/loan/jsp/DisburseLoan.jsp"/>
             <forward name="update_success" path="/loanAccountAction.do?method=get"/>
             <forward name="update_failure" path="/pages/application/loan/jsp/Review_loanDisbursement.jsp"/>
+            <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
         </action>
         <!-- End -->
         <!-- Repay Loan-->

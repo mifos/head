@@ -345,6 +345,15 @@ function goToEditPage(){
                   </td>
                 </tr>
 
+	            <tr>
+	               <td>
+	                    <c:set var="questionsHostForm" value="${centerCustActionForm}" scope="request" />
+	                    <c:import url="/pages/application/surveys/jsp/viewQuestionResponses.jsp">
+	                       <c:param name="editResponseURL" value="centerCustAction.do?method=editQuestionResponses&currentFlowKey=${requestScope.currentFlowKey}"/>
+	                       <c:param name="responseDivStyleClass" value="viewQuestionResponseDiv"/>
+	                    </c:import>
+	               </td>
+	            </tr>
               </table>
 
 

@@ -35,6 +35,7 @@ import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailFormMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailListMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailsMatcher;
+import org.mifos.platform.questionnaire.matchers.QuestionGroupsGroupByEventSourceMatcher;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
@@ -57,6 +58,7 @@ import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -273,15 +275,19 @@ public class QuestionGroupControllerTest {
         verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.duplicate.question.found.in.section")));
     }
 
+    //TODO Question Groups added to testing data should have different titles, otherwise QuestionGroupSectionMatcher will throw exceptions. Matchers shouldn't throw exception when matching fail but return 'false'
     @Test
     public void shouldGetAllQuestionGroups() {
         List<QuestionGroupDetail> questionGroupDetails = asList(
-                getQuestionGroupDetail(1, TITLE, "title1", "sectionName1"), getQuestionGroupDetail(1, TITLE, "title1", "sectionName1"));
+                getQuestionGroupDetail(1, TITLE + "1","View","Loan", true, true, "title1", "sectionName1"), getQuestionGroupDetail(2, TITLE +"2","View","Loan", true, true, "title2", "sectionName2"), getQuestionGroupDetail(3, TITLE + "3","Create","Loan", true, true, "title3", "sectionName3"));
+        Map <String,List <QuestionGroupDetail>> questionGroupsCategoriesSplit = new HashMap<String, List<QuestionGroupDetail>>();
+        questionGroupsCategoriesSplit.put("View Loan", asList(getQuestionGroupDetail(1, TITLE + "1","View","Loan", true, true, "title1", "sectionName1"), getQuestionGroupDetail(2, TITLE + "2","View","Loan", true, true, "title2", "sectionName2")));
+        questionGroupsCategoriesSplit.put("Create Loan", asList(getQuestionGroupDetail(3, TITLE + "3","Create","Loan", true, true, "title3", "sectionName3")));
         when(questionnaireServiceFacade.getAllQuestionGroups()).thenReturn(questionGroupDetails);
         String view = questionGroupController.getAllQuestionGroups(model, httpServletRequest);
         assertThat(view, Is.is("viewQuestionGroups"));
         verify(questionnaireServiceFacade).getAllQuestionGroups();
-        verify(model).addAttribute(Matchers.eq("questionGroups"), argThat(new QuestionGroupDetailListMatcher(questionGroupDetails)));
+        verify(model).addAttribute(Matchers.eq("questionGroups"), argThat(new QuestionGroupsGroupByEventSourceMatcher(questionGroupsCategoriesSplit)));
     }
 
     @Test
@@ -471,7 +477,7 @@ public class QuestionGroupControllerTest {
         assertThat(result, is("success"));
         verify(requestContext, times(1)).getMessageContext();
     }
-    
+
     @Test
     public void testAddQuestionForEmptyTitle() {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
@@ -560,6 +566,15 @@ public class QuestionGroupControllerTest {
             sectionDetails.add(sectionDetail);
         }
         return new QuestionGroupDetail(questionGroupId, title, sectionDetails);
+    }
+    private QuestionGroupDetail getQuestionGroupDetail(int questionGroupId, String title,String event, String source, boolean active, boolean editable, String... sectionNames) {
+        List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
+        for (String sectionName : sectionNames) {
+            SectionDetail sectionDetail = new SectionDetail();
+            sectionDetail.setName(sectionName);
+            sectionDetails.add(sectionDetail);
+        }
+        return new QuestionGroupDetail(questionGroupId, title, new EventSourceDto(event, source, null), sectionDetails,editable,active);
     }
 
     private QuestionGroupForm getQuestionGroupForm(String title, String eventSourceId, String... sectionNames) {

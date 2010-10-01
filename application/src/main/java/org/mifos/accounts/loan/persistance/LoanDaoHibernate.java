@@ -70,8 +70,7 @@ public class LoanDaoHibernate implements LoanDao {
     public final Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForLoan() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.LOAN.getValue());
-        return (Iterator<CustomFieldDefinitionEntity>) genericDao
-                .executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+        return (Iterator<CustomFieldDefinitionEntity>) genericDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
     }
 
     @Override

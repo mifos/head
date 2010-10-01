@@ -33,13 +33,19 @@
                 "questionnaire.create.question.group.link"/]</a>
         </p>
         <div id="questionGroupList">
-            <ul class="questions">
-                [#list questionGroups as questionGroup]
-                <li>
-                    <a href="viewAndEditQuestionGroup.ftl?questionGroupId=${questionGroup.id}" id="questionGroupId_${questionGroup.id}">${questionGroup.title}</a>
-                </li>
+            	[#assign eventSources = questionGroups?keys]
+                [#list eventSources as eventSource]
+	                	
+	                <span class="fontnormalbold">${eventSource}</span>
+	                <ul class="questions">
+	                [#list questionGroups[eventSource] as questionGroup]
+		                <li>
+		                    <a href="viewAndEditQuestionGroup.ftl?questionGroupId=${questionGroup.id}" id="questionGroupId_${questionGroup.id}">${questionGroup.title}</a>
+		                	[#if questionGroup.active == false]&nbsp;<img src="pages/framework/images/status_closedblack.gif" width="8" height="9">&nbsp;inactive[/#if]
+		                </li>
+	                [/#list]
+	                </ul>
                 [/#list]
-            </ul>
         </div>
     </div>
 [/@adminLeftPaneLayout]

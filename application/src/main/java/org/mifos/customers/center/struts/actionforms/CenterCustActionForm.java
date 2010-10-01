@@ -21,6 +21,7 @@
 package org.mifos.customers.center.struts.actionforms;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +30,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerPositionDto;
@@ -43,12 +45,14 @@ import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 
-public class CenterCustActionForm extends CustomerActionForm {
+public class CenterCustActionForm extends CustomerActionForm implements QuestionResponseCapturer{
 
     private String mfiJoiningDateDD;
     private String mfiJoiningDateMM;
     private String mfiJoiningDateYY;
+    private List<QuestionGroupDetail> questionGroups;
 
     @Override
     public String getMfiJoiningDate() {
@@ -159,5 +163,16 @@ public class CenterCustActionForm extends CustomerActionForm {
         setCustomerId(null);
         setExternalId(null);
         setLoanOfficerId(null);
+        setQuestionGroups(null);
+    }
+
+    @Override
+    public void setQuestionGroups(List<QuestionGroupDetail> questionGroups) {
+        this.questionGroups = questionGroups;
+    }
+
+    @Override
+    public List<QuestionGroupDetail> getQuestionGroups() {
+        return this.questionGroups;
     }
 }

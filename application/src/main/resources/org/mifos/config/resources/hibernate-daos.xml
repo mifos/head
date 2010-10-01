@@ -36,6 +36,10 @@
     <bean id="loanDao" class="org.mifos.accounts.loan.persistance.LoanDaoHibernate" >
     	<constructor-arg ref="genericDao" />
     </bean>
+    
+    <bean id="savingsDao" class="org.mifos.accounts.savings.persistence.SavingsDaoHibernate" >
+    	<constructor-arg ref="genericDao" />
+    </bean>
      
     <bean id="loanProductDao" class="org.mifos.accounts.productdefinition.persistence.LoanProductDaoHibernate" >
     	<constructor-arg ref="genericDao" />

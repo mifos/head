@@ -227,6 +227,9 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     private Section mapToSection(QuestionGroupDetail questionGroupDetail, SectionDetail sectionDetail) {
         Section section = getSection(questionGroupDetail, sectionDetail);
         section.setQuestions(mapToSectionQuestions(sectionDetail.getQuestions(), section));
+        if (sectionDetail.getSequenceNumber() != null) {
+            section.setSequenceNumber(sectionDetail.getSequenceNumber());
+        }
         return section;
     }
 
@@ -255,6 +258,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         QuestionDetail questionDetail = sectionQuestionDetail.getQuestionDetail();
         SectionQuestion sectionQuestion = getSectionQuestion(questionDetail, section);
         sectionQuestion.setRequired(sectionQuestionDetail.isMandatory());
+        sectionQuestion.setSequenceNumber(sectionQuestionDetail.getSequenceNumber());
         if (sectionQuestion.isNewSectionQuestion()) {
             sectionQuestion.setQuestion(mapToQuestion(questionDetail));
             sectionQuestion.setSequenceNumber(seqNum);
@@ -302,6 +306,9 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     private SectionDetail mapToSectionDetail(Section section) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(section.getName());
+        if (section.getSequenceNumber() != null) {
+            sectionDetail.setSequenceNumber(section.getSequenceNumber());
+        }
         for (SectionQuestion sectionQuestion : section.getQuestions()) {
             QuestionEntity question = sectionQuestion.getQuestion();
             QuestionType type = mapToQuestionType(question.getAnswerTypeAsEnum());
@@ -313,6 +320,9 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private SectionQuestionDetail mapToSectionQuestionDetail(SectionQuestion sectionQuestion, boolean required, QuestionDetail questionDetail) {
+        if (sectionQuestion.getSequenceNumber() != null) {
+            return new SectionQuestionDetail(sectionQuestion.getId(), questionDetail, required, sectionQuestion.getSequenceNumber());
+        }
         return new SectionQuestionDetail(sectionQuestion.getId(), questionDetail, required);
     }
 
@@ -335,7 +345,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     public List<QuestionGroupDetail> mapToQuestionGroupDetails(List<QuestionGroup> questionGroups) {
         List<QuestionGroupDetail> questionGroupDetails = new ArrayList<QuestionGroupDetail>();
         for (QuestionGroup questionGroup : questionGroups) {
-            questionGroupDetails.add(new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), mapToSectionDetails(questionGroup.getSections())));
+            questionGroupDetails.add(new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), mapToEventSource(questionGroup.getEventSources()), mapToSectionDetails(questionGroup.getSections()), questionGroup.isEditable(), questionGroup.getState().state()));
         }
         return questionGroupDetails;
     }

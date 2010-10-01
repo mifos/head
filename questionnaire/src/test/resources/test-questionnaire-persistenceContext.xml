@@ -69,4 +69,6 @@
             </list>
         </property>
     </bean>
+    
+    <bean name="auditLogService" class="org.mifos.platform.questionnaire.service.AuditLogServiceImpl"/>
 </beans>

@@ -202,6 +202,15 @@ function goToCancelPage(){
 										<mifos:mifoslabel name="Office.edit" />
 									</html-el:button></span></td>
 								</tr>
+								               <tr>
+               <td>
+                    <c:set var="questionsHostForm" value="${offActionForm}" scope="request" />
+                    <c:import url="/pages/application/surveys/jsp/viewQuestionResponses.jsp">
+                       <c:param name="editResponseURL" value="offAction.do?method=editQuestionResponses&currentFlowKey=${requestScope.currentFlowKey}"/>
+                       <c:param name="responseDivStyleClass" value="viewQuestionResponseDiv"/>
+                    </c:import>
+               </td>
+            </tr>
 							</table>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>

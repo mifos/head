@@ -58,7 +58,7 @@ import org.mifos.security.util.UserContext;
 
 public class OfficeBO extends AbstractBusinessObject implements Comparable<OfficeBO> {
 
-    private final Short officeId;
+    private Short officeId;
     private final Short operationMode;
     @SuppressWarnings("unused")
     // see .hbm.xml file
@@ -684,5 +684,10 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
     public boolean isDifferent(OfficeBO newOffice) {
         return !this.officeId.equals(newOffice.getOfficeId());
+    }
+
+    @Deprecated
+    public void setOfficeId(Short officeId) {
+        this.officeId = officeId;
     }
 }
