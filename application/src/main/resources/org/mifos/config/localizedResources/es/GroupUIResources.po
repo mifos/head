@@ -648,7 +648,6 @@ msgid "Trained:"
 msgstr "Capacitado\\:"
 
 #: Group.grouptrainedon
-#, fuzzy
 msgctxt "Group.grouptrainedon"
 msgid "Trained on:"
 msgstr "Capacitado en\\:"
@@ -673,7 +672,6 @@ msgid "{0} Cycle per Product"
 msgstr "Ciclo por Producto de {0}"
 
 #: Group.loanofficer
-#, fuzzy
 msgid "Loan officer:"
 msgstr "Oficial de Crédito\\:"
 
@@ -775,7 +773,6 @@ msgid "Official titles assigned"
 msgstr "Títulos oficiales asignados"
 
 #: Group.opennewaccount
-#, fuzzy
 msgid "Open new account:"
 msgstr "Abrir nueva cuenta\\:"
 
@@ -995,7 +992,6 @@ msgid "Total {0} portfolio."
 msgstr "Cartera total de {0}."
 
 #: Group.trainedon
-#, fuzzy
 msgctxt "Group.trainedon"
 msgid "Trained on:"
 msgstr "Capacitado en\\:"
