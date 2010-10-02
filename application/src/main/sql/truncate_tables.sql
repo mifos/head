@@ -237,3 +237,6 @@ truncate table BATCH_STEP_EXECUTION_SEQ;
 truncate table BATCH_JOB_EXECUTION_SEQ;
 truncate table BATCH_JOB_SEQ;
 truncate table variable_installment_details;
+truncate table loan_cash_flow;
+truncate table monthly_cash_flow_details;
+truncate table cash_flow;

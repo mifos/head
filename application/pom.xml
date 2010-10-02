@@ -249,8 +249,12 @@
             <artifactId>mifos-userInterface</artifactId>
         </dependency>
         <dependency>
-	    <groupId>org.mifos</groupId>
-	    <artifactId>mifos-questionnaire</artifactId>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-questionnaire</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-cashflow</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -944,11 +948,19 @@
                             <targetPath>pages</targetPath>
                         </resource>
                         <resource>
+                            <directory>${modules.root.dir}/cashflow/src/main/webapp/pages</directory>
+                            <targetPath>pages</targetPath>
+                        </resource>
+                        <resource>
                             <directory>${modules.root.dir}/userInterface/src/main/webapp/pages</directory>
                             <targetPath>pages</targetPath>
                         </resource>
                         <resource>
                             <directory>${modules.root.dir}/questionnaire/src/main/webapp/WEB-INF</directory>
+                            <targetPath>WEB-INF</targetPath>
+                        </resource>
+                        <resource>
+                            <directory>${modules.root.dir}/cashflow/src/main/webapp/WEB-INF</directory>
                             <targetPath>WEB-INF</targetPath>
                         </resource>
                     </webResources>
