@@ -32,7 +32,9 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.questionnaire.migration.mappers.QuestionnaireMigrationMapper;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
@@ -40,6 +42,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeCustomFieldEntity;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
@@ -107,6 +110,9 @@ public class QuestionnaireMigrationTest {
 
     @Mock
     private CustomerDao customerDao;
+
+    @Mock
+    private CustomerBO savingsAccountCustomer;
 
     @Mock
     private LoanDao loanDao;
@@ -389,7 +395,7 @@ public class QuestionnaireMigrationTest {
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto1);
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto2);
     }
-/*
+
     @Test
     public void shouldMigrateAdditionalFieldsForSavings() {
         QuestionGroupDto questionGroupDto = new QuestionGroupDto();
@@ -403,7 +409,8 @@ public class QuestionnaireMigrationTest {
         when(savingsDao.retrieveCustomFieldEntitiesForSavings()).thenReturn(customFieldIterator);
         when(questionnaireMigrationMapper.map(customFieldIterator, customFieldQuestionIdMap, EntityType.SAVINGS)).thenReturn(questionGroupDto);
         when(questionnaireServiceFacade.createQuestionGroup(questionGroupDto)).thenReturn(QUESTION_GROUP_ID);
-        SavingsBO savingsBO1 = getSavingsBO(11);
+        SavingsAccountBuilder builder = new SavingsAccountBuilder().withCustomer(savingsAccountCustomer);
+        SavingsBO savingsBO1 = getSavingsBO(builder, 11);
         AccountCustomFieldEntity customField1 = CustomFieldUtils.getLoanCustomField(1, "Ans1", savingsBO1);
         AccountCustomFieldEntity customField2 = CustomFieldUtils.getLoanCustomField(1, "Ans2", savingsBO1);
         AccountCustomFieldEntity customField3 = CustomFieldUtils.getLoanCustomField(1, "Ans3", savingsBO1);
@@ -411,8 +418,8 @@ public class QuestionnaireMigrationTest {
         when(savingsDao.getCustomFieldResponses(Short.valueOf("1"))).thenReturn(savingsResponses1.iterator());
         when(questionnaireMigrationMapper.mapForAccounts(QUESTION_GROUP_ID, savingsResponses1, customFieldQuestionIdMap)).thenReturn(questionGroupInstanceDto1);
         when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto1)).thenReturn(0);
-        SavingsBO savingsBO2 = getSavingsBO(22);
-       AccountCustomFieldEntity customField4 = CustomFieldUtils.getLoanCustomField(2, "Ans11", savingsBO2);
+        SavingsBO savingsBO2 = getSavingsBO(builder, 22);
+        AccountCustomFieldEntity customField4 = CustomFieldUtils.getLoanCustomField(2, "Ans11", savingsBO2);
         AccountCustomFieldEntity customField5 = CustomFieldUtils.getLoanCustomField(2, "Ans22", savingsBO2);
         AccountCustomFieldEntity customField6 = CustomFieldUtils.getLoanCustomField(2, "Ans33", savingsBO2);
         List<AccountCustomFieldEntity> customerResponses2 = asList(customField4, customField5, customField6);
@@ -429,7 +436,7 @@ public class QuestionnaireMigrationTest {
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto1);
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto2);
     }
-*/
+
     @Test
     public void shouldMigrateAdditionalFieldsForCenter() {
         QuestionGroupDto questionGroupDto = new QuestionGroupDto();

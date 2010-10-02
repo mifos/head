@@ -128,9 +128,9 @@ public class SurveyUtils {
         return loanBO;
     }
 
-    public static SavingsBO getSavingsBO(Integer savingsId) {
+    public static SavingsBO getSavingsBO(SavingsAccountBuilder builder, Integer savingsId) {
         Money.setDefaultCurrency(TestUtils.RUPEE);
-        SavingsBO savingsBO = new SavingsAccountBuilder().build();
+        SavingsBO savingsBO = builder.build();
         savingsBO.setAccountId(savingsId);
         return savingsBO;
     }
