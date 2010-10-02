@@ -42,7 +42,6 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeCustomFieldEntity;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
