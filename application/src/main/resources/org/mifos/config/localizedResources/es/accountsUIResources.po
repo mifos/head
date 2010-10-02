@@ -467,7 +467,6 @@ msgid "Amount "
 msgstr "Cantidad"
 
 #: accounts.amount_(Rs)
-#, fuzzy
 msgctxt "accounts.amount_(Rs)"
 msgid "Amount "
 msgstr "Cantidad"
@@ -1369,7 +1368,6 @@ msgid "See all notes"
 msgstr "Ver todas las notas"
 
 #: accounts.sel_charge_type
-#, fuzzy
 msgid "Select charge type:"
 msgstr "Seleccione el tipo de cargo\\:"
 
