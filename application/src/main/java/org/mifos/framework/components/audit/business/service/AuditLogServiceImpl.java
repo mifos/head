@@ -84,7 +84,7 @@ public class AuditLogServiceImpl implements AuditLogService {
                         }
                         else {
                             auditLogRecords.add(new AuditLogRecord(questionGroupName + "/" + sectionName + "/" + fieldName,
-                                    "—", fieldValue, auditLog));
+                                    "-", fieldValue, auditLog));
                         }
                     }
                 }
