@@ -274,7 +274,7 @@ public class SavingsAction extends AccountAppAction {
                 .fromShort(getShortValue(savingsActionForm.getStateSelected())),
                 new Money(savingsOfferingBO.getCurrency(), savingsActionForm
                 .getRecommendedAmount()), customFields);
-        saving.save();
+        this.savingsService.persistSavings(saving);
 
         createGroupQuestionnaire.saveResponses(request, savingsActionForm, saving.getAccountId());
 

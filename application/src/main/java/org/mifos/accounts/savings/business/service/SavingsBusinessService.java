@@ -27,6 +27,8 @@ import org.slf4j.LoggerFactory;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
+import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.office.business.OfficeBO;
@@ -35,6 +37,7 @@ import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.util.UserContext;
 
 public class SavingsBusinessService implements BusinessService {
@@ -105,5 +108,18 @@ public class SavingsBusinessService implements BusinessService {
 
     public void initialize(Object object) {
         savingsPersistence.initialize(object);
+    }
+
+    public void persistSavings(SavingsBO savingsBO) throws AccountException {
+        try {
+            savingsBO.save();
+            StaticHibernateUtil.commitTransaction();
+
+        } catch (AccountException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION, e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
     }
 }
