@@ -26,6 +26,7 @@ import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyUtils;
 
 public class AverageBalanceCaluclationStrategy implements PrincipalCalculationStrategy {
 
@@ -40,12 +41,12 @@ public class AverageBalanceCaluclationStrategy implements PrincipalCalculationSt
         List<EndOfDayDetail> endOfDayDetails = interestCalculationPeriodDetail.getDailyDetails();
 
         MifosCurrency currencyInUse = Money.getDefaultCurrency();
-        if (!endOfDayDetails.isEmpty()) {
-            startDate = endOfDayDetails.get(0).getDate();
-            currencyInUse = endOfDayDetails.get(0).getResultantAmountForDay().getCurrency();
+
+        if (endOfDayDetails.isEmpty()) {
+            return interestCalculationPeriodDetail.getBalanceBeforeInterval();
         }
 
-        int duration = Days.daysBetween(startDate, endDate).getDays();
+        int duration = interestCalculationPeriodDetail.getDuration();
         LocalDate prevDate = startDate;
 
         Money totalBalance = Money.zero(currencyInUse);
@@ -63,24 +64,19 @@ public class AverageBalanceCaluclationStrategy implements PrincipalCalculationSt
 
             int subDuration = Days.daysBetween(prevDate, nextDate).getDays();
 
-            if (runningBalance.equals(Money.zero(currencyInUse))) {
-                runningBalance = endOfDayDetails.get(count).getResultantAmountForDay();
-            } else {
-                runningBalance = runningBalance.add(endOfDayDetails.get(count).getResultantAmountForDay());
-            }
+            runningBalance = runningBalance.add(endOfDayDetails.get(count).getResultantAmountForDay());
 
-            if (totalBalance.equals(Money.zero(currencyInUse))) {
-                totalBalance = runningBalance.multiply(subDuration);
-            } else {
-                totalBalance = totalBalance.add(runningBalance.multiply(subDuration));
-            }
+            //System.out.print(runningBalance+"x"+subDuration+" + ");
+
+            totalBalance = totalBalance.add(runningBalance.multiply(subDuration));
+
             prevDate = nextDate;
         }
-
+            //System.out.println(" / "+duration);
         if (duration != 0 && totalBalance.isNonZero()) {
             totalBalance = totalBalance.divide(duration);
         }
 
-        return totalBalance;
+        return MoneyUtils.currencyRound(totalBalance);
     }
 }

@@ -22,6 +22,7 @@ package org.mifos.accounts.savings.interest;
 
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyUtils;
 
 public class CompoundInterestCalculationStrategy {
 
@@ -33,6 +34,6 @@ public class CompoundInterestCalculationStrategy {
 
         Money interestAmount = principal.multiply(effectiveInterestRate / 100);
 
-        return interestAmount;
+        return MoneyUtils.currencyRound(interestAmount);
     }
 }

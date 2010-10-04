@@ -25,7 +25,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -65,12 +65,11 @@ public class SavingsInterestCalculatorTest {
         LocalDate startDate = new LocalDate();
         LocalDate endDate = new LocalDate();
         InterestCalculationInterval calculationInterval = new InterestCalculationInterval(startDate, endDate);
-        EndOfDayDetail endOfDayDetail = null;
-        List<EndOfDayDetail> dailyDetails = Arrays.asList(endOfDayDetail);
+        List<EndOfDayDetail> dailyDetails = new ArrayList<EndOfDayDetail>();
 
         minBalanceRequired = TestUtils.createMoney("20");
         balanceBeforeInterval = TestUtils.createMoney("100");
-        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(calculationInterval, dailyDetails, minBalanceRequired, balanceBeforeInterval, minBalanceRequired.getCurrency(), null);
+        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(calculationInterval, dailyDetails, minBalanceRequired, balanceBeforeInterval, minBalanceRequired.getCurrency(), 10.0, Boolean.FALSE);
     }
 
     @Test

@@ -39,10 +39,6 @@ public class InterestCalculationInterval {
         return interval.getEnd().toLocalDate();
     }
 
-    public int getNumberOfDays() {
-        return interval.toPeriod().getDays();
-    }
-
     public boolean dateFallsWithin(LocalDate date) {
         return interval.contains(date.toDateTimeAtStartOfDay());
     }

@@ -268,21 +268,30 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             MifosCurrency mifosCurrency,
             Double interestRate, Money balanceBeforeInterval) {
 
+        Money balance = balanceBeforeInterval;
+
         List<EndOfDayDetail> applicableDailyDetailsForPeriod = new ArrayList<EndOfDayDetail>();
+        Boolean isFirstActivityBeforeInterval = Boolean.FALSE;
+
+        if(!applicableDailyDetailsForPeriod.isEmpty()) {
+            if(applicableDailyDetailsForPeriod.get(0).getDate().isBefore(interval.getStartDate())) {
+                isFirstActivityBeforeInterval = Boolean.TRUE;
+            }
+        }
 
         for (EndOfDayDetail endOfDayDetail : allEndOfDayDetailsForAccount) {
 
 //            NOTE - keithw - calculate total balance for period within calculator
-//            if (endOfDayDetail.getDate().isBefore(interval.getStartDate())) {
-//                balanceBeforeInterval = balanceBeforeInterval.add(endOfDayDetail.getResultantAmountForDay());
-//                // System.out.println(balanceBeforeInterval+", "+endOfDayDetail.getResultantAmountForDay()+" ,"+endOfDayDetail.getDate()+", "+range.getLowerDate());
-//            }
+            if (endOfDayDetail.getDate().isBefore(interval.getStartDate())) {
+                balance = balance.add(endOfDayDetail.getResultantAmountForDay());
+                // System.out.println(balanceBeforeInterval+", "+endOfDayDetail.getResultantAmountForDay()+" ,"+endOfDayDetail.getDate()+", "+range.getLowerDate());
+            }
 
             if (interval.dateFallsWithin(endOfDayDetail.getDate())) {
                 applicableDailyDetailsForPeriod.add(endOfDayDetail);
             }
         }
 
-        return new InterestCalculationPeriodDetail(interval, allEndOfDayDetailsForAccount, minBalanceRequired, balanceBeforeInterval, mifosCurrency, interestRate);
+        return new InterestCalculationPeriodDetail(interval, applicableDailyDetailsForPeriod, minBalanceRequired, balance, mifosCurrency, interestRate, isFirstActivityBeforeInterval);
     }
 }
