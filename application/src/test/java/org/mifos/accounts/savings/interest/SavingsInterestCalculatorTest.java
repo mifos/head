@@ -54,7 +54,7 @@ public class SavingsInterestCalculatorTest {
     private PrincipalCalculationStrategy totalPrincipalCalculationStrategy;
 
     @Mock
-    private CompoundInterestCalculationStrategy compoundInterestCalculationStrategy;
+    private SimpleInterestCalculationStrategy compoundInterestCalculationStrategy;
 
     @Before
     public void setup() {

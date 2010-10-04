@@ -25,7 +25,7 @@ import org.mifos.framework.util.helpers.Money;
 public class SavingsInterestCalculator implements InterestCalculator {
 
     private final PrincipalCalculationStrategy principalCalculationStrategy;
-    private CompoundInterestCalculationStrategy compoundInterestCaluclation = new CompoundInterestCalculationStrategy();
+    private SimpleInterestCalculationStrategy compoundInterestCaluclation = new SimpleInterestCalculationStrategy();
     private PrincipalCalculationStrategy totalPrincipalCalculationStrategy = new TotalBalanceCalculationStrategy();
 
     public SavingsInterestCalculator(PrincipalCalculationStrategy principalCalculationStrategy) {
@@ -46,7 +46,7 @@ public class SavingsInterestCalculator implements InterestCalculator {
         return new InterestCalculationPeriodResult(calculatedInterest, principal, totalBalanceForPeriod);
     }
 
-    public void setCompoundInterestCaluclation(CompoundInterestCalculationStrategy compoundInterestCaluclation) {
+    public void setCompoundInterestCaluclation(SimpleInterestCalculationStrategy compoundInterestCaluclation) {
         this.compoundInterestCaluclation = compoundInterestCaluclation;
     }
 

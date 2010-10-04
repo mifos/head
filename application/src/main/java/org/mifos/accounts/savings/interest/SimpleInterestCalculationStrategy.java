@@ -24,7 +24,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
 
-public class CompoundInterestCalculationStrategy {
+public class SimpleInterestCalculationStrategy {
 
     public Money calculateInterest(Money principal, Double intRate, int duration) {
 
