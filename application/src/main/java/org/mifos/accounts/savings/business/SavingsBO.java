@@ -593,55 +593,6 @@ public class SavingsBO extends AccountBO {
                 + interestCalculated + " calculated.");
     }
 
-    public void updateInterestAccrued2() throws AccountException {
-
-        InterestCalcType interestCalcType = InterestCalcType.fromInt(this.interestCalcType.getId());
-        InterestCalculator calculator = SavingsInterestCalculatorFactory.create(interestCalcType);
-
-//        InterestCalculationPeriodDetail interestCalculationPeriodDetail;
-//        Money interestDueForPeriod =  calculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
-
-        LocalDate startDate = getCalculationStartDate();
-        LocalDate endDate = new LocalDate(getNextIntCalcDate());
-
-//        List<EndOfDayBalance> balanceRecords = ic.getEndOfDayBalanceDetails(startDate, endDate,
-//                getAccountTrxnsOrderByTrxnDate());
-//
-//        if (balanceRecords != null && !balanceRecords.isEmpty()) {
-//            startDate = balanceRecords.get(0).getDate();
-//        }
-//
-//        Money principal = ic.getPrincipal(balanceRecords, startDate, endDate);
-//
-//        if (principal != null && principal.isGreaterThanOrEqual(getMinAmntForInt())) {
-//            interest = ic.calculateInterest(principal, getInterestRate(), startDate, endDate);
-//        }
-//
-//        if (getInterestToBePosted() == null) {
-//            setInterestToBePosted(new Money(getCurrency()));
-//        }
-//        setInterestToBePosted(getInterestToBePosted().add(interest));
-//        setLastIntCalcDate(getNextIntCalcDate());
-//        try {
-//            setNextIntCalcDate(helper.getNextScheduleDate(getActivationDate(), getLastIntCalcDate(),
-//                    getTimePerForInstcalc()));
-//
-//        } catch (MeetingException me) {
-//            throw new AccountException(me);
-//        }
-//        logger.info("In SavingsBO::updateInterestAccrued(), accountId: " + getAccountId() + ", Interest Amount: "
-//                + interest + " calculated.");
-
-    }
-
-    public LocalDate getCalculationStartDate() {
-        LocalDate fromDate = new LocalDate(getLastIntCalcDate());
-        if (getLastIntCalcDate() == null) {
-            fromDate = new LocalDate(getActivationDate());
-        }
-        return fromDate;
-    }
-
     Money calculateInterest(Date fromDate, final Date toDate, final double interestRate,
             final SavingsTrxnDetailEntity adjustedTrxn) throws AccountException {
         boolean initialBalance = false;
