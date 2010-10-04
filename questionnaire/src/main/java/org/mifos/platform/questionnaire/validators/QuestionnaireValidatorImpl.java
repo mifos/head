@@ -97,7 +97,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
             validateResponsesInQuestionGroup(questionGroupDetail, validationException);
         }
-        if (validationException.containsChildExceptions()) throw validationException;
+        if (validationException.hasChildExceptions()) throw validationException;
     }
 
     @Override
@@ -106,7 +106,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         validateQuestionGroupTitle(questionGroupDto, parentException);
         validateEventSource(questionGroupDto.getEventSourceDto(), parentException);
         validateSections(questionGroupDto.getSections(), parentException);
-        if (parentException.containsChildExceptions()) throw parentException;
+        if (parentException.hasChildExceptions()) throw parentException;
     }
 
     private void validateSections(List<SectionDto> sections, ValidationException parentException) {
@@ -149,7 +149,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     public void validateForDefineQuestion(QuestionDto questionDto) {
         ValidationException parentException = new ValidationException(GENERIC_VALIDATION);
         validateQuestion(questionDto, parentException, false);
-        if (parentException.containsChildExceptions()) {
+        if (parentException.hasChildExceptions()) {
             throw parentException;
         }
     }

@@ -167,7 +167,7 @@ public class QuestionGroupController extends QuestionnaireController {
             questionnaireServiceFacade.saveResponses(new QuestionGroupDetails(questionGroupDetails.getCreatorId(),
                     questionGroupDetails.getEntityId(), Arrays.asList(questionGroupDetail)));
         } catch (ValidationException e) {
-            if (e.containsChildExceptions()) {
+            if (e.hasChildExceptions()) {
                 for (ValidationException validationException : e.getChildExceptions()) {
                     if (validationException instanceof MandatoryAnswerNotFoundException) {
                         populateError(requestContext, (MandatoryAnswerNotFoundException) validationException);

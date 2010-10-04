@@ -41,7 +41,7 @@ public class ValidationException extends SystemException {
         this(key, null);
     }
 
-    protected ValidationException(String key, String identifier) {
+    public ValidationException(String key, String identifier) {
         super(key);
         this.identifier = identifier;
     }
@@ -55,7 +55,7 @@ public class ValidationException extends SystemException {
         return childExceptions;
     }
 
-    public boolean containsChildExceptions() {
+    public boolean hasChildExceptions() {
         return !isEmpty(childExceptions);
     }
 

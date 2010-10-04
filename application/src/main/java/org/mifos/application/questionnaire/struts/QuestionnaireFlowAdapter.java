@@ -71,7 +71,7 @@ public class QuestionnaireFlowAdapter {
         try {
             questionnaireServiceFacade.validateResponses(groups);
         } catch (ValidationException e) {
-            if (e.containsChildExceptions()) {
+            if (e.hasChildExceptions()) {
                 for (ValidationException ve : e.getChildExceptions()) {
                    if (ve instanceof MandatoryAnswerNotFoundException) {
                        errors.add(ClientConstants.ERROR_REQUIRED, new ActionMessage(ClientConstants.ERROR_REQUIRED, ve.getIdentifier()));

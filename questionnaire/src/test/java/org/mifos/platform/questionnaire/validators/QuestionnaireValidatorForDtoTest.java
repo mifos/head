@@ -96,7 +96,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -114,7 +114,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -132,7 +132,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -150,7 +150,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -169,7 +169,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -186,7 +186,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -204,7 +204,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -222,7 +222,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -241,7 +241,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -260,7 +260,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -278,7 +278,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -297,7 +297,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -315,7 +315,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -333,7 +333,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -352,7 +352,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -370,7 +370,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -389,7 +389,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -408,7 +408,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -441,7 +441,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -461,7 +461,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -493,7 +493,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -511,7 +511,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -529,7 +529,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -548,7 +548,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -566,7 +566,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -585,7 +585,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
@@ -604,7 +604,7 @@ public class QuestionnaireValidatorForDtoTest {
             fail("Should have thrown validationException");
         } catch (ValidationException e) {
             assertThat(e.getKey(), is(GENERIC_VALIDATION));
-            assertThat(e.containsChildExceptions(), is(true));
+            assertThat(e.hasChildExceptions(), is(true));
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));

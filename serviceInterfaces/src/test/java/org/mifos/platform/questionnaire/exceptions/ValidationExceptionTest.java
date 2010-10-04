@@ -37,7 +37,7 @@ public class ValidationExceptionTest {
     @Test
     public void shouldPrintStackTraceOfChildExceptions() {
         ValidationException validationException = generateValidationException();
-        assertThat(validationException.containsChildExceptions(), is(true));
+        assertThat(validationException.hasChildExceptions(), is(true));
         String stackTraceString = validationException.getStackTraceString();
         assertThat(stackTraceString, is(notNullValue()));
         assertThat(stackTraceString.contains(TOP_LEVEL_EXCEPTION), is(true));

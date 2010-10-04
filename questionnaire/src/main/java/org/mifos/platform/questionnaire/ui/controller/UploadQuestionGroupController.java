@@ -72,7 +72,7 @@ public class UploadQuestionGroupController extends QuestionnaireController {
     }
 
     private void handleValidationException(ValidationException validationException, RequestContext requestContext) {
-        if (validationException.containsChildExceptions()) {
+        if (validationException.hasChildExceptions()) {
             MessageContext messageContext = requestContext.getMessageContext();
             for (ValidationException childException : validationException.getChildExceptions()) {
                 constructErrorMessage(messageContext, childException.getKey(), "selectedCountry", childException.getKey());

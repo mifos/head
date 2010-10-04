@@ -260,7 +260,7 @@ public class QuestionnaireValidatorTest {
             fail("Should have thrown the validation exception");
         } catch (ValidationException e) {
             assertEquals(GENERIC_VALIDATION, e.getKey());
-            assertEquals(true, e.containsChildExceptions());
+            assertEquals(true, e.hasChildExceptions());
             assertEquals(1, e.getChildExceptions().size());
             ValidationException childException = e.getChildExceptions().get(0);
             assertTrue(childException instanceof MandatoryAnswerNotFoundException);
@@ -279,7 +279,7 @@ public class QuestionnaireValidatorTest {
             fail("Should have thrown the validation exception");
         } catch (ValidationException e) {
             assertEquals(GENERIC_VALIDATION, e.getKey());
-            assertEquals(true, e.containsChildExceptions());
+            assertEquals(true, e.hasChildExceptions());
             assertEquals(1, e.getChildExceptions().size());
             ValidationException childException = e.getChildExceptions().get(0);
             assertTrue(childException instanceof BadNumericResponseException);
@@ -300,7 +300,7 @@ public class QuestionnaireValidatorTest {
             fail("Should have thrown the validation exception");
         } catch (ValidationException e) {
             assertEquals(GENERIC_VALIDATION, e.getKey());
-            assertEquals(true, e.containsChildExceptions());
+            assertEquals(true, e.hasChildExceptions());
             assertEquals(1, e.getChildExceptions().size());
             ValidationException childException = e.getChildExceptions().get(0);
             assertTrue(childException instanceof BadNumericResponseException);
@@ -321,7 +321,7 @@ public class QuestionnaireValidatorTest {
             fail("Should have thrown the validation exception");
         } catch (ValidationException e) {
             assertEquals(GENERIC_VALIDATION, e.getKey());
-            assertEquals(true, e.containsChildExceptions());
+            assertEquals(true, e.hasChildExceptions());
             assertEquals(1, e.getChildExceptions().size());
             ValidationException childException = e.getChildExceptions().get(0);
             assertTrue(childException instanceof BadNumericResponseException);

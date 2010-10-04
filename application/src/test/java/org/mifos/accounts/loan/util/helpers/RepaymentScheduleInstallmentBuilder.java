@@ -1,7 +1,9 @@
 package org.mifos.accounts.loan.util.helpers;
 
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
+import java.util.Date;
 import java.util.Locale;
 
 public class RepaymentScheduleInstallmentBuilder {
@@ -50,4 +52,11 @@ public class RepaymentScheduleInstallmentBuilder {
         return this;
     }
 
+    public RepaymentScheduleInstallmentBuilder withDueDateValue(String dueDate) {
+        Locale dateLocale = repaymentScheduleInstallment.getLocale();
+        String dateFormat = repaymentScheduleInstallment.getDateFormat();
+        Date dateValue = DateUtils.getDate(dueDate, dateLocale, dateFormat);
+        this.repaymentScheduleInstallment.setDueDateValue(dateValue);
+        return this;
+    }
 }
