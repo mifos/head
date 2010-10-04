@@ -52,6 +52,11 @@ public class RepaymentScheduleInstallmentBuilder {
         return this;
     }
 
+    public RepaymentScheduleInstallmentBuilder withTotalValue(String totalValue) {
+        this.repaymentScheduleInstallment.setTotalValue(Double.valueOf(totalValue));
+        return this;
+    }
+
     public RepaymentScheduleInstallmentBuilder withDueDateValue(String dueDate) {
         Locale dateLocale = repaymentScheduleInstallment.getLocale();
         String dateFormat = repaymentScheduleInstallment.getDateFormat();

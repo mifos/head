@@ -23,23 +23,21 @@ import static org.junit.Assert.fail;
 public class InstallmentFormatValidatorTest {
     private RepaymentScheduleInstallmentBuilder installmentBuilder;
 
-    private MifosCurrency dollarCurrency;
+    private MifosCurrency rupeeCurrency;
     private InstallmentFormatValidator installmentFormatValidator;
-    private Locale locale;
 
     @Before
     public void setupAndInjectDependencies() {
-        locale = new Locale("en", "GB");
-        installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
-        dollarCurrency = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
+        installmentBuilder = new RepaymentScheduleInstallmentBuilder(new Locale("en", "GB"));
+        rupeeCurrency = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         installmentFormatValidator = new InstallmentFormatValidatorImpl();
     }
 
     @Test
     public void shouldValidateVariableInstallmentScheduleForMissingDueDate() {
         RepaymentScheduleInstallment installment = installmentBuilder.withInstallment(3)
-                .withPrincipal(new Money(dollarCurrency, "499.9")).withInterest(new Money(dollarCurrency, "22.1"))
-                .withFees(new Money(dollarCurrency, "0.0")).withTotal("522.0").build();
+                .withPrincipal(new Money(rupeeCurrency, "499.9")).withInterest(new Money(rupeeCurrency, "22.1"))
+                .withFees(new Money(rupeeCurrency, "0.0")).withTotal("522.0").build();
         try {
             installmentFormatValidator.validateDueDateFormat(installment);
             fail("Should have thrown validation error");
@@ -52,8 +50,8 @@ public class InstallmentFormatValidatorTest {
     @Test
     public void shouldValidateVariableInstallmentScheduleForInvalidDueDate() {
         RepaymentScheduleInstallment installment = installmentBuilder.withInstallment(3).withDueDate("abcd")
-                .withPrincipal(new Money(dollarCurrency, "499.9")).withInterest(new Money(dollarCurrency, "22.1"))
-                .withFees(new Money(dollarCurrency, "0.0")).withTotal("522.0").build();
+                .withPrincipal(new Money(rupeeCurrency, "499.9")).withInterest(new Money(rupeeCurrency, "22.1"))
+                .withFees(new Money(rupeeCurrency, "0.0")).withTotal("522.0").build();
         try {
             installmentFormatValidator.validateDueDateFormat(installment);
             fail("Should have thrown validation error");
@@ -66,8 +64,8 @@ public class InstallmentFormatValidatorTest {
     @Test
     public void shouldValidateVariableInstallmentScheduleForDueDateInvalidFormat() {
         RepaymentScheduleInstallment installment = installmentBuilder.withInstallment(3).withDueDate("12/12/1912")
-                .withPrincipal(new Money(dollarCurrency, "499.9")).withInterest(new Money(dollarCurrency, "22.1"))
-                .withFees(new Money(dollarCurrency, "0.0")).withTotal("522.0").build();
+                .withPrincipal(new Money(rupeeCurrency, "499.9")).withInterest(new Money(rupeeCurrency, "22.1"))
+                .withFees(new Money(rupeeCurrency, "0.0")).withTotal("522.0").build();
         try {
             installmentFormatValidator.validateDueDateFormat(installment);
             fail("Should have thrown validation error");
@@ -80,8 +78,8 @@ public class InstallmentFormatValidatorTest {
     @Test
     public void shouldValidateVariableInstallmentScheduleForDueDateInvalidContent() {
         RepaymentScheduleInstallment installment = installmentBuilder.withInstallment(3).withDueDate("31-Nov-2010")
-                .withPrincipal(new Money(dollarCurrency, "499.9")).withInterest(new Money(dollarCurrency, "22.1"))
-                .withFees(new Money(dollarCurrency, "0.0")).withTotal("522.0").build();
+                .withPrincipal(new Money(rupeeCurrency, "499.9")).withInterest(new Money(rupeeCurrency, "22.1"))
+                .withFees(new Money(rupeeCurrency, "0.0")).withTotal("522.0").build();
         try {
             installmentFormatValidator.validateDueDateFormat(installment);
             fail("Should have thrown validation error");
@@ -94,8 +92,8 @@ public class InstallmentFormatValidatorTest {
     @Test
     public void shouldValidateVariableInstallmentScheduleForValidDueDate() {
         RepaymentScheduleInstallment installment = installmentBuilder.withInstallment(3).withDueDate("30-Nov-2010")
-                .withPrincipal(new Money(dollarCurrency, "499.9")).withInterest(new Money(dollarCurrency, "22.1"))
-                .withFees(new Money(dollarCurrency, "0.0")).withTotal("522.0").build();
+                .withPrincipal(new Money(rupeeCurrency, "499.9")).withInterest(new Money(rupeeCurrency, "22.1"))
+                .withFees(new Money(rupeeCurrency, "0.0")).withTotal("522.0").build();
         try {
             installmentFormatValidator.validateDueDateFormat(installment);
         } catch (ValidationException e) {
@@ -106,8 +104,8 @@ public class InstallmentFormatValidatorTest {
     @Test
     public void shouldValidateInstallmentScheduleForMissingTotalAmount() {
         RepaymentScheduleInstallment installment = installmentBuilder.withInstallment(3).withDueDate("30-Nov-2010")
-                .withPrincipal(new Money(dollarCurrency, "499.9")).withInterest(new Money(dollarCurrency, "22.1"))
-                .withFees(new Money(dollarCurrency, "0.0")).withTotal("").build();
+                .withPrincipal(new Money(rupeeCurrency, "499.9")).withInterest(new Money(rupeeCurrency, "22.1"))
+                .withFees(new Money(rupeeCurrency, "0.0")).withTotal("").build();
         try {
             installmentFormatValidator.validateTotalAmountFormat(installment);
             fail("Should have thrown validation error");
@@ -120,8 +118,8 @@ public class InstallmentFormatValidatorTest {
     @Test
     public void shouldValidateInstallmentScheduleForInvalidTotalAmount() {
         RepaymentScheduleInstallment installment = installmentBuilder.withInstallment(3).withDueDate("30-Nov-2010")
-                .withPrincipal(new Money(dollarCurrency, "499.9")).withInterest(new Money(dollarCurrency, "22.1"))
-                .withFees(new Money(dollarCurrency, "0.0")).withTotal("abcd").build();
+                .withPrincipal(new Money(rupeeCurrency, "499.9")).withInterest(new Money(rupeeCurrency, "22.1"))
+                .withFees(new Money(rupeeCurrency, "0.0")).withTotal("abcd").build();
         try {
             installmentFormatValidator.validateTotalAmountFormat(installment);
             fail("Should have thrown validation error");
@@ -138,8 +136,8 @@ public class InstallmentFormatValidatorTest {
     @Test
     public void shouldValidateInstallmentScheduleForTotalAmountWithMoreThanOneDecimalPoint() {
         RepaymentScheduleInstallment installment = installmentBuilder.withInstallment(3).withDueDate("30-Nov-2010")
-                .withPrincipal(new Money(dollarCurrency, "499.9")).withInterest(new Money(dollarCurrency, "22.1"))
-                .withFees(new Money(dollarCurrency, "0.0")).withTotal("499.9.22.1").build();
+                .withPrincipal(new Money(rupeeCurrency, "499.9")).withInterest(new Money(rupeeCurrency, "22.1"))
+                .withFees(new Money(rupeeCurrency, "0.0")).withTotal("499.9.22.1").build();
         try {
             installmentFormatValidator.validateTotalAmountFormat(installment);
             fail("Should have thrown validation error");
@@ -156,8 +154,8 @@ public class InstallmentFormatValidatorTest {
     @Test
     public void shouldValidateInstallmentScheduleForTotalAmountWithLessThanZero() {
         RepaymentScheduleInstallment installment = installmentBuilder.withInstallment(3).withDueDate("30-Nov-2010")
-                .withPrincipal(new Money(dollarCurrency, "499.9")).withInterest(new Money(dollarCurrency, "22.1"))
-                .withFees(new Money(dollarCurrency, "0.0")).withTotal("-499.9").build();
+                .withPrincipal(new Money(rupeeCurrency, "499.9")).withInterest(new Money(rupeeCurrency, "22.1"))
+                .withFees(new Money(rupeeCurrency, "0.0")).withTotal("-499.9").build();
         try {
             installmentFormatValidator.validateTotalAmountFormat(installment);
             fail("Should have thrown validation error");
@@ -168,6 +166,18 @@ public class InstallmentFormatValidatorTest {
             ValidationException childException = childExceptions.get(0);
             assertThat(childException.getKey(), is(AccountConstants.INSTALLMENT_TOTAL_AMOUNT_INVALID));
             assertThat(childException.getIdentifier(), is("3"));
+        }
+    }
+
+    @Test
+    public void shouldNotValidateInstallmentScheduleForValidTotalAmount() {
+        RepaymentScheduleInstallment installment = installmentBuilder.withInstallment(3).withDueDate("30-Nov-2010")
+                .withPrincipal(new Money(rupeeCurrency, "499.9")).withInterest(new Money(rupeeCurrency, "22.1"))
+                .withFees(new Money(rupeeCurrency, "0.0")).withTotal("499.9").build();
+        try {
+            installmentFormatValidator.validateTotalAmountFormat(installment);
+        } catch (ValidationException e) {
+            fail("Should not have thrown validation error");
         }
     }
 }
