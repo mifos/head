@@ -1581,6 +1581,7 @@ create table customer_address_detail (
   zip varchar(20),
   address_status smallint,
   phone_number varchar(20),
+  phone_number_stripped varchar(20),
   primary key(customer_address_id),
   foreign key(customer_id)
     references customer(customer_id)

@@ -42,6 +42,8 @@ public class Address {
 
     private String phoneNumber;
 
+    private String phoneNumberStripped;
+
     public Address(String line1, String line2, String line3, String city, String state, String country, String zip,
             String phoneNumber) {
         super();
@@ -52,7 +54,7 @@ public class Address {
         this.state = state;
         this.country = country;
         this.zip = zip;
-        this.phoneNumber = phoneNumber;
+        setPhoneNumber(phoneNumber);
     }
 
     public Address() {
@@ -105,6 +107,27 @@ public class Address {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        this.phoneNumberStripped = computePhoneNumberStripped();
+    }
+
+    public String getPhoneNumberStripped() {
+        return this.phoneNumberStripped;
+    }
+
+    private String computePhoneNumberStripped() {
+        if (phoneNumber == null) {
+            return null;
+        }
+        StringBuilder buffer = new StringBuilder();
+        for (char c : phoneNumber.toCharArray()) {
+            if (Character.isDigit(c))
+                buffer.append(c);
+        }
+        return buffer.toString();
+    }
+
+    private void setPhoneNumberStripped(String phoneNumberStripped) {
+        // This field is computed from phoneNumber so we do nothing here
     }
 
     public String getState() {
