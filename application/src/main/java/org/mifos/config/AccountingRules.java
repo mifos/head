@@ -20,16 +20,16 @@
 
 package org.mifos.config;
 
+import org.apache.commons.lang.StringUtils;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.core.MifosRuntimeException;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.config.persistence.ConfigurationPersistence;
-import org.mifos.core.MifosRuntimeException;
 
 public class AccountingRules {
 
@@ -170,6 +170,7 @@ public class AccountingRules {
     }
 
     public static Short getDigitsAfterDecimal(final MifosCurrency currency) {
+        if (currency == null) return getDigitsAfterDecimal();
         final String code = currency.getCurrencyCode();
         if (getDefaultCurrencyCode().equals(code)) {
             return getDigitsAfterDecimal();

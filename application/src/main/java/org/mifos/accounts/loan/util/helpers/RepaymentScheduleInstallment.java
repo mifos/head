@@ -156,11 +156,11 @@ public class RepaymentScheduleInstallment implements Serializable {
         this.dueDate = dueDate;
     }
 
-    public void setTotalValue(String totalValue) {
+    public void setTotalValue(Double totalValue) {
         this.totalValue = new Money(getCurrency(), totalValue);
     }
 
-    private MifosCurrency getCurrency() {
+    public MifosCurrency getCurrency() {
         return principal.getCurrency();
     }
 
@@ -174,5 +174,9 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     public String getDateFormat() {
         return dateFormat;
+    }
+
+    public String getInstallmentNumberAsString() {
+        return String.valueOf(installment);
     }
 }

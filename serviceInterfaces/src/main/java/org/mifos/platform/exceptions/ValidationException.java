@@ -46,6 +46,11 @@ public class ValidationException extends SystemException {
         this.identifier = identifier;
     }
 
+    public ValidationException(String key, String identifier, String message) {
+        super(key, message);
+        this.identifier = identifier;
+    }
+
     public void addChildException(ValidationException validationException) {
         if (childExceptions == null) childExceptions = new ArrayList<ValidationException>();
         childExceptions.add(validationException);

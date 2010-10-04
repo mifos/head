@@ -189,4 +189,5 @@ public interface AccountConstants {
     String INSTALLMENT_DUEDATE_DUPLICATE = "errors.installment.duedate.duplicate";
     String INSTALLMENT_DUEDATE_INVALID_ORDER = "errors.installment.duedate.invalid.order";
     String GENERIC_VALIDATION_ERROR = "Generic Error";
+    String INSTALLMENT_TOTAL_AMOUNT_INVALID = "errors.installment.total.amount.invalid";
 }

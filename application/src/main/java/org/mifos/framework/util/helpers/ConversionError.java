@@ -20,7 +20,77 @@
 
 package org.mifos.framework.util.helpers;
 
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 public enum ConversionError {
-    EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY, EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY, EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST, EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST, INTEREST_OUT_OF_RANGE, NOT_ALL_NUMBER, CONVERSION_ERROR, NO_ERROR, CASHFLOW_THRESHOLD_OUT_OF_RANGE, EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD, EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD;
+
+    EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY {
+        @Override
+        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(locale, currency);
+            return errorText.replaceFirst("%s", AccountingRules.getDigitsBeforeDecimal().toString());
+        }},
+
+    EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY {
+        @Override
+        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(locale, currency);
+            return errorText.replaceFirst("%s", AccountingRules.getDigitsAfterDecimal(currency).toString());
+        }},
+
+    EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST {
+        @Override
+        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(locale, currency);
+            return errorText.replaceFirst("%s", AccountingRules.getDigitsBeforeDecimalForInterest().toString());
+        }},
+
+    EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST {
+        @Override
+        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(locale, currency);
+            return errorText.replaceFirst("%s", AccountingRules.getDigitsAfterDecimalForInterest().toString());
+        }},
+
+    INTEREST_OUT_OF_RANGE {
+        @Override
+        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(locale, currency);
+            errorText = errorText.replaceFirst("%s1", AccountingRules.getMinInterest().toString());
+            errorText = errorText.replaceFirst("%s2", AccountingRules.getMaxInterest().toString());
+            return errorText;
+        }},
+
+    CASHFLOW_THRESHOLD_OUT_OF_RANGE {
+        @Override
+        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(locale, currency);
+            return errorText.replaceFirst("%s", AccountingRules.getCashFlowWarningThreshold().toString());
+        }},
+
+    EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD {
+        @Override
+        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(locale, currency);
+            return errorText.replaceFirst("%s", AccountingRules.getDigitsBeforeDecimalForCashFlowThreshold().toString());
+        }},
+
+    EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD {
+        @Override
+        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(locale, currency);
+            return errorText.replaceFirst("%s", AccountingRules.getDigitsAfterDecimalForCashFlowThreshold().toString());
+        }},
+
+    NOT_ALL_NUMBER, CONVERSION_ERROR, NO_ERROR;
+
+    public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
+        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.UI_RESOURCE_PROPERTYFILE, locale);
+        return resources.getString(this.name());
+    }
 
 }
