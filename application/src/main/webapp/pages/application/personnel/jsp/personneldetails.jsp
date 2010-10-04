@@ -279,7 +279,13 @@ explanation of the license and how it is applied.
 							</c:forEach>
 						</c:forEach> <br>
 						</c:if>
-						<span class="fontnormal"> <html-el:link styleId="personneldetails.link.viewChangeLog"
+						<span class="fontnormal">
+						<c:set var="questionnaireFor" scope="session" value="${personnelInformationDto.displayName}"/>
+						<a id="personnelDetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${personnelInformationDto.personnelId}&event=Create&source=Personnel&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+                        	<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
+                        </a> 
+						<br/>
+						<html-el:link styleId="personneldetails.link.viewChangeLog"
 							href="PersonAction.do?method=loadChangeLog&entityType=Personnel&entityId=${personnelInformationDto.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
 
 							<mifos:mifoslabel name="Personnel.ViewChangeLog"

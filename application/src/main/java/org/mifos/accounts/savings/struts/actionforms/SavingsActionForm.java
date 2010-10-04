@@ -39,6 +39,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.AccountAppActionForm;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomFieldDto;
@@ -51,11 +52,13 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 
-public class SavingsActionForm extends AccountAppActionForm {
+public class SavingsActionForm extends AccountAppActionForm implements QuestionResponseCapturer{
     private String recommendedAmount;
+    private List<QuestionGroupDetail> questionGroups;
 
     public SavingsActionForm() {
         super();
@@ -67,6 +70,16 @@ public class SavingsActionForm extends AccountAppActionForm {
 
     public void setRecommendedAmount(String recommendedAmount) {
         this.recommendedAmount = recommendedAmount;
+    }
+
+    @Override
+    public void setQuestionGroups(List<QuestionGroupDetail> questionGroups) {
+        this.questionGroups = questionGroups;
+    }
+
+    @Override
+    public List<QuestionGroupDetail> getQuestionGroups() {
+        return this.questionGroups;
     }
 
     @Override
@@ -169,6 +182,7 @@ public class SavingsActionForm extends AccountAppActionForm {
         this.setAccountId(null);
         this.setSelectedPrdOfferingId(null);
         this.setAccountCustomFieldSet(new ArrayList<CustomFieldDto>());
+        this.setQuestionGroups(null);
     }
 
     private void validateCustomFields(HttpServletRequest request, ActionErrors errors) {

@@ -466,7 +466,6 @@ msgid "Set GL Code:"
 msgstr "Definir Código del Libro Mayor\\:"
 
 #: Fees.smalldefinenewfee
-#, fuzzy
 msgid "define a new fee "
 msgstr "definir una nueva cuota"
 

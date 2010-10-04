@@ -13,6 +13,32 @@ CreateQuestionGroup.removeQuestion = function (sectionName, questionId){
     questionToDeleteBtn.click();
 }
 
+CreateQuestionGroup.moveQuestionUp = function (sectionName, questionId){
+	var questionToMoveUpBtn = document.getElementById('_eventId_moveQuestionUp');
+	questionToMoveUpBtn.value = questionId;
+    document.getElementById('questionSection').value = sectionName;
+    questionToMoveUpBtn.click();
+}
+
+CreateQuestionGroup.moveQuestionDown = function (sectionName, questionId){
+	var questionToMoveDownBtn = document.getElementById('_eventId_moveQuestionDown');
+	questionToMoveDownBtn.value = questionId;
+    document.getElementById('questionSection').value = sectionName;
+    questionToMoveDownBtn.click();
+}
+
+CreateQuestionGroup.moveSectionUp = function (sectionName){
+    var sectionToMoveUpBtn = document.getElementById('_eventId_moveSectionUp');
+	sectionToMoveUpBtn.value = sectionName;
+    sectionToMoveUpBtn.click();
+}
+
+CreateQuestionGroup.moveSectionDown = function (sectionName){
+    var sectionToMoveDownBtn = document.getElementById('_eventId_moveSectionDown');
+	sectionToMoveDownBtn.value = sectionName;
+    sectionToMoveDownBtn.click();
+}
+
 $(document).ready(function () {
 	$('#txtListSearch').keyup(function(event) {
 		var search_text = $('#txtListSearch').val();

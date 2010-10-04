@@ -19,11 +19,14 @@
  */
 package org.mifos.accounts.savings.persistence;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.accounts.business.AccountCustomFieldEntity;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
@@ -52,5 +55,10 @@ public interface SavingsDao {
     List<CollectionSheetCustomerSavingsAccountDto> findAllSavingAccountsForCustomerHierarchy(
             CustomerHierarchyParams customerHierarchyParams);
 
+    Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForSavings();
+
+    Iterator<AccountCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
+
     List<EndOfDayDetail> retrieveAllEndOfDayDetailsFor(MifosCurrency currency, Long savingsId);
+
 }

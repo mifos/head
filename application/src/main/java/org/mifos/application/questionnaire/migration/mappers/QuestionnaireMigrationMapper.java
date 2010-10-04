@@ -24,6 +24,8 @@ import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.office.business.OfficeCustomFieldEntity;
+import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.customers.surveys.business.Survey;
 import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
@@ -46,4 +48,9 @@ public interface QuestionnaireMigrationMapper {
     QuestionGroupInstanceDto mapForCustomers(Integer questionGroupId, List<CustomerCustomFieldEntity> customerResponses, Map<Short, Integer> customFieldQuestionIdMap);
 
     QuestionGroupInstanceDto mapForAccounts(Integer questionGroupId, List<AccountCustomFieldEntity> accountResponses, Map<Short, Integer> customFieldQuestionIdMap);
+
+    QuestionGroupInstanceDto mapForOffice(Integer questionGroupId, List<OfficeCustomFieldEntity> officeResponses, Map<Short, Integer> customFieldQuestionIdMap);
+
+    QuestionGroupInstanceDto mapForPersonnel(Integer questionGroupId,
+            List<PersonnelCustomFieldEntity> personnelResponses, Map<Short, Integer> customFieldQuestionIdMap);
 }

@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +36,14 @@ import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.accounts.business.AccountCustomFieldEntity;
+import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
+import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
+import org.mifos.application.servicefacade.CustomerHierarchyParams;
+import org.mifos.application.util.helpers.EntityType;
 
 /**
  *
@@ -180,6 +189,20 @@ public class SavingsDaoHibernate implements SavingsDao {
         return (List<CollectionSheetCustomerSavingsAccountDto>) baseDao.executeNamedQueryWithResultTransformer(
                 "findAllSavingAccountsForCustomerHierarchy", topOfHierarchyParameters,
                 CollectionSheetCustomerSavingsAccountDto.class);
+    }
+
+    @Override
+    public final Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForSavings() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.SAVINGS.getValue());
+        return (Iterator<CustomFieldDefinitionEntity>) baseDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+    }
+
+    @Override
+    public Iterator<AccountCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
+        return (Iterator<AccountCustomFieldEntity>) baseDao.executeNamedQueryIterator("AccountCustomFieldEntity.getResponses", queryParameters);
     }
 
     @Override

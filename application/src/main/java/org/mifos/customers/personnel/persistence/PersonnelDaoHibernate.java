@@ -23,7 +23,9 @@ package org.mifos.customers.personnel.persistence;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -37,8 +39,12 @@ import org.hibernate.criterion.Restrictions;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.servicefacade.CenterCreation;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
@@ -158,6 +164,20 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         } catch (MissingResourceException e) {
             return "ROLE_UNDEFINED";
         }
+    }
+
+    @Override
+    public final Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForPersonnel() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.PERSONNEL.getValue());
+        return (Iterator<CustomFieldDefinitionEntity>) genericDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+    }
+
+    @Override
+    public Iterator<PersonnelCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
+        return (Iterator<PersonnelCustomFieldEntity>) genericDao.executeNamedQueryIterator("PersonnelCustomFieldEntity.getResponses", queryParameters);
     }
 
     @SuppressWarnings("unchecked")

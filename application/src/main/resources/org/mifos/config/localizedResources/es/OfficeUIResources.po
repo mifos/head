@@ -330,22 +330,18 @@ msgid "Office  information"
 msgstr "Información de la Oficina"
 
 #: Office.labelOfficeName
-#, fuzzy
 msgid "Office name:"
 msgstr "Nombre de Oficina\\:"
 
 #: Office.labelOfficeShortName
-#, fuzzy
 msgid "Office short name:"
 msgstr "Abrevación de la Oficina\\:"
 
 #: Office.labelOfficeType
-#, fuzzy
 msgid "Office type:"
 msgstr "Tipo de Oficina\\:"
 
 #: Office.labelParentOffice
-#, fuzzy
 msgid "Parent office:"
 msgstr "Oficina Matriz\\:"
 

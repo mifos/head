@@ -72,7 +72,7 @@ public class PersonnelBO extends AbstractBusinessObject {
         ALL_PERSONNEL.setDisplayName("ALL");
     }
 
-    private final Short personnelId;
+    private Short personnelId;
     private PersonnelLevelEntity level;
     private String globalPersonnelNum;
     private OfficeBO office;
@@ -901,5 +901,10 @@ public class PersonnelBO extends AbstractBusinessObject {
 
     public boolean isInActive() {
         return !isActive();
+    }
+
+    @Deprecated
+    public void setPersonnelId(Short personnelId) {
+        this.personnelId = personnelId;
     }
 }

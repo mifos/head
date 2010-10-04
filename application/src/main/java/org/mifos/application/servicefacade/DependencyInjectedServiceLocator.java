@@ -335,11 +335,11 @@ public class DependencyInjectedServiceLocator {
         return officeDao;
     }
 
-    public static FundDao locateFundDao() {
-        return fundDao;
-    }
-
     public static SavingsDao locateSavingsDao() {
         return savingsDao;
+    }
+
+    public static FundDao locateFundDao() {
+        return fundDao;
     }
 }

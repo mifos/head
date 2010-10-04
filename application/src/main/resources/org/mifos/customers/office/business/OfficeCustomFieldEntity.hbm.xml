@@ -15,4 +15,10 @@
 
 		<many-to-one name="office" column="office_id" class="org.mifos.customers.office.business.OfficeBO"  cascade="none" insert="true" update="true" unique="true" access="field"/>
 	</class>
+	
+	<query name="OfficeCustomFieldEntity.getResponses">
+        <![CDATA[
+        from OfficeCustomFieldEntity as ccfe
+        where ccfe.fieldId = :CUSTOM_FIELD_ID ]]>
+    </query>
 </hibernate-mapping>

@@ -39,6 +39,7 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -54,11 +55,12 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.UserContext;
 
-public class PersonActionForm extends BaseActionForm {
+public class PersonActionForm extends BaseActionForm implements QuestionResponseCapturer{
 
     private String input;
 
@@ -124,6 +126,8 @@ public class PersonActionForm extends BaseActionForm {
 
     private List<CustomFieldDto> customFields;
 
+    private List<QuestionGroupDetail> questionGroups;
+
     public PersonActionForm() {
         super();
 
@@ -131,6 +135,16 @@ public class PersonActionForm extends BaseActionForm {
         customFields = new ArrayList<CustomFieldDto>();
         personnelRoles = null;
 
+    }
+
+    @Override
+    public void setQuestionGroups(List<QuestionGroupDetail> questionGroups) {
+        this.questionGroups = questionGroups;
+    }
+
+    @Override
+    public List<QuestionGroupDetail> getQuestionGroups() {
+        return this.questionGroups;
     }
 
     public List<CustomFieldDto> getCustomFields() {
@@ -326,6 +340,7 @@ public class PersonActionForm extends BaseActionForm {
         this.searchString = null;
         address = new Address();
         customFields = new ArrayList<CustomFieldDto>();
+        this.setQuestionGroups(null);
     }
 
     public Address getAddress() {

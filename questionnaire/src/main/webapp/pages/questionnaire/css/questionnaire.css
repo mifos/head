@@ -85,6 +85,17 @@ fieldset.right_section label{
 .table_common .mandatory {
     width: 100px;
 }
+.table_common .order {
+    width: 70px;
+}
+.orderCenter {
+    text-align: center;
+}
+.move {
+    width: 70px;
+    float: right; 
+    padding: 5px
+}
 .table_common .status {
     width: 150px;
 }
