@@ -26,7 +26,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.customers.business.CustomerAddressDetailEntity;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.SqlUpgrade;
 import org.mifos.framework.persistence.Upgrade;
+import org.mifos.framework.util.SqlUpgradeScriptFinder;
 
 /**
  * Loads all customer_address_detail records and forces Hibernate to do update
@@ -36,6 +38,10 @@ public class Upgrade1286195484 extends Upgrade {
 
     @Override
     public void upgrade(Connection connection) throws IOException, SQLException {
+        SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(
+                "upgrade1286195484.sql");
+        upgrade.runScript(connection);
+
         Session session = StaticHibernateUtil.getSessionTL();
         Query query = session.createQuery("from CustomerAddressDetailEntity");
         Iterator it = query.iterate();
