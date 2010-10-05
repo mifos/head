@@ -65,7 +65,6 @@ msgid "Please choose a status."
 msgstr "Por favor, elija un estado."
 
 #: error.titleAlreadyExist
-#, fuzzy
 msgid "This title already exists,please choose another title. "
 msgstr "Este título ya existe, por favor, elija otro título."
 
@@ -368,7 +367,6 @@ msgid "Review & submit"
 msgstr "Revise y Envie"
 
 #: reports.reviewStatement
-#, fuzzy
 msgid "Review the information below. "
 msgstr "Revise la información de abajo."
 
@@ -377,7 +375,6 @@ msgid "To select, click on a report from the list below."
 msgstr "Para seleccionar, haga clic en un reporte de la lista de abajo."
 
 #: reports.statement
-#, fuzzy
 msgid ""
 "Complete the fields below. Click Cancel to return to Admin without "
 "submitting information. "
@@ -430,7 +427,6 @@ msgid "Upload Report"
 msgstr "Cargar reporte"
 
 #: reports.uploadanewadmindoc
-#, fuzzy
 msgid "upload a new administrative document "
 msgstr "Cargar un documento administrativo nuevo "
 

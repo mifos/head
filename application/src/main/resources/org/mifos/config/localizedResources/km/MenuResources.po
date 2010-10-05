@@ -73,7 +73,6 @@ msgid "client"
 msgstr "អតិថិជន"
 
 #: label.clients
-#, fuzzy
 msgid "Clients "
 msgstr "អតិថិជននានា"
 
@@ -193,7 +192,6 @@ msgid "Portfolio "
 msgstr ""
 
 #: label.print
-#, fuzzy
 msgid "Print "
 msgstr "បោះពុម្ព"
 

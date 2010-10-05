@@ -1,6 +1,5 @@
 # extracted from LoginUIResources.properties
 #. extracted from LoginUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

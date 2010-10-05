@@ -507,7 +507,6 @@ msgid "Default"
 msgstr "ទំរង់ដើម"
 
 #: LoanProduct.defNoInstallments
-#, fuzzy
 msgid "Default # Of Installments"
 msgstr "ទំរង់ដើម\\ លេខនៃការបញ្ចូល"
 
@@ -566,7 +565,6 @@ msgid "Max Loan Amount"
 msgstr "ចំនួនប្រាក់កម្ចីអតិបរមា"
 
 #: LoanProduct.maxNoInstallments
-#, fuzzy
 msgid "Max # Of Installments"
 msgstr "អតិបរមា\\ លេខនៃការបញ្ចូល"
 
@@ -583,7 +581,6 @@ msgid "Min Loan Amount"
 msgstr "ចំនួនប្រាក់កម្ចីអប្បបរមា"
 
 #: LoanProduct.minNoInstallments
-#, fuzzy
 msgid "Min # Of Installments"
 msgstr "អតិបរមា\\ លេខនៃការបញ្ចូល"
 

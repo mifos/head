@@ -21,17 +21,14 @@ msgid "CUSTOM FIELD"
 msgstr "CAMPO PERSONALIZADO"
 
 #: cf.lookUpEntity.entityId
-#, fuzzy
 msgid "Custom field:"
 msgstr "Campo personalizado\\:"
 
 #: cfdef.entityId
-#, fuzzy
 msgid "Custom field: "
 msgstr "Campo personalizado\\:"
 
 #: error.activity.not.allowed
-#, fuzzy
 msgid ""
 "You do not have permissions to perform this activity. Contact your system "
 "administrator to grant you required permissions and try again.<br><br>"
@@ -81,7 +78,6 @@ msgstr ""
 "La longitud mínima para la abreviacion de la oficina es de {2} caracteres."
 
 #: errors.office.updationhierarchyfailed
-#, fuzzy
 msgid ""
 "An unexpected error has occurred during the office hierarchy change. Please "
 "try again later or contact the system administrator."
@@ -212,7 +208,6 @@ msgstr ""
 "el administrador del sistema."
 
 #: office.error.updationHierarchyFailed
-#, fuzzy
 msgid ""
 "An unexpected error has occurred during the office hierarchy change. Please "
 "try again later or contact the system administrator. "
@@ -248,7 +243,6 @@ msgstr ""
 "especifique un nombre diferente."
 
 #: office.formParentOffice.requiredmsg
-#, fuzzy
 msgid "Please specify a Parent office. "
 msgstr "Por favor, especifique una oficina matriz."
 
@@ -257,7 +251,6 @@ msgid "Define new"
 msgstr "Defina nuevo"
 
 #: office.labelAddNewOffice
-#, fuzzy
 msgid "Add a new office - "
 msgstr "Añada una nueva oficina - "
 
@@ -274,17 +267,14 @@ msgid "Address"
 msgstr "Dirección"
 
 #: office.labelAddress1
-#, fuzzy
 msgid "Address 1:"
 msgstr "Dirección 1\\:"
 
 #: office.labelAddress2
-#, fuzzy
 msgid "Address 2:"
 msgstr "Dirección 2\\:"
 
 #: office.labelAddress3
-#, fuzzy
 msgid "Address 3:"
 msgstr "Dirección 3\\:"
 
@@ -297,7 +287,6 @@ msgid "Branch office"
 msgstr "Sucursal"
 
 #: office.labelChangeStatus
-#, fuzzy
 msgid "Change Status:"
 msgstr "Cambiar el estado\\:"
 
@@ -306,7 +295,6 @@ msgid "Check the levels to be included."
 msgstr "Marque los niveles que deben ser incluídos."
 
 #: office.labelCity
-#, fuzzy
 msgid "City:"
 msgstr "Ciudad\\:"
 
@@ -319,7 +307,6 @@ msgstr ""
 "en Cancelar para regresar al Administrador sin enviar la información."
 
 #: office.labelCountry
-#, fuzzy
 msgid "Country:"
 msgstr "País\\:"
 
@@ -354,7 +341,6 @@ msgid "View offices"
 msgstr "Ver las oficinas"
 
 #: office.labelMandatoryInstructions
-#, fuzzy
 msgid ""
 "Complete the fields below. Then click Preview. Click Cancel to return to "
 "Office Details Page without submitting information. "
@@ -373,7 +359,6 @@ msgid "No"
 msgstr "No"
 
 #: office.labelNote
-#, fuzzy
 msgid "Note:"
 msgstr "Nota\\:"
 
@@ -389,13 +374,11 @@ msgid "Office address"
 msgstr "Dirección de la Oficina"
 
 #: office.labelOfficeAssignedNumber
-#, fuzzy
 msgid "office has been assigned the system ID number:"
 msgstr ""
 "la oficina se le ha asignado el número de identificación en el sistema\\:"
 
 #: office.labelOfficeCode
-#, fuzzy
 msgid "Office code:"
 msgstr "Código de la Oficina\\:"
 
@@ -409,7 +392,6 @@ msgstr ""
 "cuenta del centro y los datos de rendimiento."
 
 #: office.labelOfficeDetails
-#, fuzzy
 msgid "Office details "
 msgstr "Detalles de la Oficina"
 
@@ -418,32 +400,26 @@ msgid "Office  information"
 msgstr "Información de la Oficina"
 
 #: office.labelOfficeName
-#, fuzzy
 msgid "Office name:"
 msgstr "Nombre de la Oficina\\:"
 
 #: office.labelOfficeShortName
-#, fuzzy
 msgid "Office short name:"
 msgstr "Abreviacion de la Oficina\\:"
 
 #: office.labelOfficeType
-#, fuzzy
 msgid "Office type:"
 msgstr "Tipo de Oficina\\:"
 
 #: office.labelParentOffice
-#, fuzzy
 msgid "Parent office:"
 msgstr "Oficina Matriz\\:"
 
 #: office.labelPleaseNote
-#, fuzzy
 msgid "Please note: "
 msgstr "Por favor, note\\:"
 
 #: office.labelPostalCode
-#, fuzzy
 msgid "Postal Code:"
 msgstr "Código Postal\\:"
 
@@ -464,7 +440,6 @@ msgid "Review &amp; submit"
 msgstr "Revise y envie"
 
 #: office.labelState
-#, fuzzy
 msgid "State:"
 msgstr "Estado\\:"
 
@@ -477,7 +452,6 @@ msgid "Sub Regional office"
 msgstr "Oficina Sub-regional"
 
 #: office.labelTelephone
-#, fuzzy
 msgid "Telephone:"
 msgstr "Número de teléfono\\:"
 
@@ -540,7 +514,6 @@ msgid "Parent office"
 msgstr "Oficina Padre"
 
 #: office.shortName.displayname
-#, fuzzy
 msgid "Please specify an Office short name. "
 msgstr "Por favor, especifique un nombre corto para la Oficina."
 

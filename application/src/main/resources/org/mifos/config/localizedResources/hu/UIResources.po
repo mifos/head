@@ -64,7 +64,6 @@ msgid "ID"
 msgstr "azonosító"
 
 #: INTEREST_OUT_OF_RANGE
-#, fuzzy
 msgid "it is not in between %s1 and %s2."
 msgstr "a kamat nem %s1 és %s2 között van."
 

@@ -1,5 +1,4 @@
 #. extracted from SavingsUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -30,7 +29,6 @@ msgid "Amount"
 msgstr "Montant"
 
 #: Balance
-#, fuzzy
 msgid "Balance"
 msgstr "Balance"
 
@@ -73,7 +71,6 @@ msgid "Old Status"
 msgstr "Ancien Statut"
 
 #: PaymentID
-#, fuzzy
 msgid "Payment ID#"
 msgstr "ID Paiment \\#"
 
@@ -98,7 +95,6 @@ msgid "Account details"
 msgstr "Détails de compte"
 
 #: Savings.Accountstatementasof
-#, fuzzy
 msgid "Account statement as of "
 msgstr "Bilan en date de"
 
@@ -108,7 +104,6 @@ msgid "Client name"
 msgstr "Nom de client"
 
 #: Savings.Create
-#, fuzzy
 msgid "Create "
 msgstr "Créer"
 
@@ -137,7 +132,6 @@ msgid "Savings"
 msgstr "Epargnes"
 
 #: Savings.Select
-#, fuzzy
 msgid "Select "
 msgstr "Sélectionner un"
 
@@ -146,7 +140,6 @@ msgid "Transaction history"
 msgstr "Historique de transaction"
 
 #: Savings.View
-#, fuzzy
 msgid "View "
 msgstr "Afficher"
 
@@ -155,7 +148,6 @@ msgid "account"
 msgstr "compte"
 
 #: Savings.accountAssigned
-#, fuzzy
 msgid "has been assigned account #"
 msgstr "a été assigné le compte \\#"
 
@@ -184,7 +176,6 @@ msgid "Add a note"
 msgstr "Ajouter une note"
 
 #: Savings.additionalInformation
-#, fuzzy
 msgid "Additional information  "
 msgstr "Information supplémentaire"
 
@@ -202,12 +193,10 @@ msgid "Apply transactions"
 msgstr "Appliquer transactions"
 
 #: Savings.balance
-#, fuzzy
 msgid "Balance "
 msgstr "Balance"
 
 #: Savings.balanceUsedFor
-#, fuzzy
 msgid "Balance used for "
 msgstr "Balance utilisé pour"
 
@@ -225,7 +214,6 @@ msgstr ""
 "l'information."
 
 #: Savings.clickCancelToReturn
-#, fuzzy
 msgid "Click Cancel to return to"
 msgstr "Cliquer sur Annuler pour retourner au"
 
@@ -235,7 +223,6 @@ msgid "Then click Continue."
 msgstr "Puis cliquer sur Continuer."
 
 #: Savings.clickContinueOrCancel
-#, fuzzy
 msgid ""
 "Then click Continue. Click Cancel to return to Clients &amp; Accounts "
 "without submitting information."
@@ -244,7 +231,6 @@ msgstr ""
 "l'information."
 
 #: Savings.clickPreview
-#, fuzzy
 msgid "Then click Preview. "
 msgstr "Puis cliquer sur Aperç."
 
@@ -277,7 +263,6 @@ msgid "Close account"
 msgstr "Compte clôturé"
 
 #: Savings.completeTheFieldsBelow
-#, fuzzy
 msgid "Complete the fields below. "
 msgstr "Compléter les champs ci-dessous."
 
@@ -313,7 +298,6 @@ msgid "details now"
 msgstr "détails maintenant"
 
 #: Savings.accountdetails
-#, fuzzy
 msgid "account details now"
 msgstr "détails de compte"
 
@@ -326,7 +310,6 @@ msgid "Edit account status"
 msgstr "Edite le statut du compte"
 
 #: Savings.editFields
-#, fuzzy
 msgid "Edit the fields below."
 msgstr "Editer les champs ci-dessous."
 
@@ -439,7 +422,6 @@ msgid "Open a new"
 msgstr "Ouvrir un nouveau"
 
 #: Savings.openAnotherAccount
-#, fuzzy
 msgid "Open another account for this "
 msgstr "Ouvrir un autre compte pour ceci"
 
@@ -533,7 +515,6 @@ msgid "Review the details below."
 msgstr "Réafficher les détails ci-dessous."
 
 #: Savings.reviewInformation
-#, fuzzy
 msgid "Review the information below. "
 msgstr "Réafficher l' information ci-dessous."
 
@@ -558,7 +539,6 @@ msgid "See all notes"
 msgstr "Afficher toute les notes"
 
 #: Savings.selectA
-#, fuzzy
 msgid "Select a "
 msgstr "Sélectionner un"
 
@@ -583,7 +563,6 @@ msgid "Suggested next steps"
 msgstr "Prochaines étapes suggérées"
 
 #: Savings.timePeriodFor
-#, fuzzy
 msgid "Time period for "
 msgstr "Période de temps pour"
 
@@ -596,7 +575,6 @@ msgid "Total amount due"
 msgstr "Total de montant prévu en"
 
 #: Savings.totalAmountDue.on
-#, fuzzy
 msgctxt "Savings.totalAmountDue.on"
 msgid "Total amount due on"
 msgstr "Montant total prévu en"
@@ -614,7 +592,6 @@ msgid "Total withdrawals"
 msgstr "Total de retraits"
 
 #: Savings.totalamountdue
-#, fuzzy
 msgctxt "Savings.totalamountdue"
 msgid "Total amount due on"
 msgstr "Montant total prévu en"
@@ -652,7 +629,6 @@ msgid "Waive"
 msgstr "Renoncer"
 
 #: TransactionID
-#, fuzzy
 msgid "Transaction ID#"
 msgstr "ID Transaction \\#"
 
@@ -697,7 +673,6 @@ msgstr ""
 "encore plus tard ou contacter l'administrateur système ."
 
 #: error.versionnodonotmatch
-#, fuzzy
 msgid ""
 "The record has already been modified by another user. Please navigate to the "
 "details page and start the activity again. "
@@ -832,12 +807,10 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #: savings.ChecklistMsg
-#, fuzzy
 msgid "Complete and check off the following tasks. "
 msgstr "Compléter et cosher les tâches suivantes."
 
 #: savings.ClickCancel1
-#, fuzzy
 msgid "Click Cancel to return to "
 msgstr "Cliquer sur Annuler pour retourner au"
 
@@ -859,7 +832,6 @@ msgid "Confirm status change"
 msgstr "Confirmer le changement de statut"
 
 #: savings.EditStatus
-#, fuzzy
 msgid "Edit status "
 msgstr "Editer statut"
 
@@ -884,7 +856,6 @@ msgid "Old status"
 msgstr "Ancien statut"
 
 #: savings.SelectExplaination1
-#, fuzzy
 msgid "When cancelling a "
 msgstr "A l'annulation de"
 
@@ -901,7 +872,6 @@ msgid "Submit"
 msgstr "Valider"
 
 #: savings.changestatus
-#, fuzzy
 msgid "Change status "
 msgstr "Changer le statut"
 
@@ -918,12 +888,10 @@ msgid "made"
 msgstr "faire"
 
 #: savings.note
-#, fuzzy
 msgid "Note:"
 msgstr "Note\\:"
 
 #: savings.status
-#, fuzzy
 msgid "Status:"
 msgstr "Statut\\:"
 

@@ -49,7 +49,6 @@ msgid ""
 msgstr "សូមធានាអះអាងថារាល់ពត៌មានលំអិតដែលកើតឡើងជារឿយៗនៃខែគឺបានបញ្ជាក់"
 
 #: errors.Meeting.specifyWeekDayAndRecurAfter
-#, fuzzy
 msgid ""
 "Please ensure that the recurrence pattern has both week and day specified."
 msgstr "សូមអះអាងថាជារឿយៗនៃគំរូដែលមានថ្ងៃនិងខែ គឺត្រូវបានបញ្ជាក់"
@@ -269,6 +268,5 @@ msgstr ""
 "{១}បន្ទាប់ពីបាច់នៃការងារត្រូវបានដំណើរការ"
 
 #: meeting.weekScheduleShort
-#, fuzzy
 msgid "Recur every {0} week(s)"
 msgstr "ជារឿយៗរៀងរាល់ {0}ខែ"

@@ -1,5 +1,4 @@
 #. extracted from RolesAndPermission.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -157,7 +156,6 @@ msgid "Delete role"
 msgstr "Supprimer un rôle"
 
 #: roleandpermission.labelDeleteRoleInstruction
-#, fuzzy
 msgid ""
 "Are you sure you want to delete this role?  <br><br>Click Submit to confirm. "
 "Click Cancel to return to Roles & Permissions without deleting the role. "
@@ -190,7 +188,6 @@ msgid "Roles and permissions"
 msgstr "Rôles et permissions"
 
 #: roleandpermission.labelRoleName
-#, fuzzy
 msgid "Role Name:"
 msgstr "Nom de Rôle \\:"
 

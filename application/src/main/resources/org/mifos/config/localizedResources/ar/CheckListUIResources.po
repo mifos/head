@@ -1,6 +1,5 @@
 # extracted from CheckListUIResources.properties
 #. extracted from CheckListUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

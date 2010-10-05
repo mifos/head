@@ -1,5 +1,4 @@
 #. extracted from LookupValueMessages.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -382,7 +381,6 @@ msgid "Time Of Disburstment"
 msgstr "Lors de déboursement"
 
 #: FeePayment-TimeOfFirstLoanRepayment
-#, fuzzy
 msgid "Time of First Loan Repayment "
 msgstr "Lors du premier paiement"
 
@@ -775,12 +773,10 @@ msgid "Can Administer Reports"
 msgstr "Peut administrer les rapports"
 
 #: Permissions-CanApplyChargesToLoans
-#, fuzzy
 msgid "Can apply charges to loans "
 msgstr "Peut appliquer des charges aux prêts"
 
 #: Permissions-CanApproveLoansInBulk
-#, fuzzy
 msgid "Can approve loans in bulk "
 msgstr "Peut approuver des prêt en bloc"
 
@@ -1112,7 +1108,6 @@ msgid "Can view Collection sheet"
 msgstr "Can view Collection sheet"
 
 #: Permissions-CanViewCollectionSheetReport
-#, fuzzy
 msgid "Can view Collection Sheet Report"
 msgstr "Can view Collection sheet"
 
@@ -1228,7 +1223,6 @@ msgid "Can apply charges to Center accounts"
 msgstr "Peut appliquer des charges à des comptes centres"
 
 #: Permissions-Centers-CanCreateNewCenter
-#, fuzzy
 msgid "Can create new Center "
 msgstr "Peut créer un nouveau centre"
 
@@ -1242,7 +1236,6 @@ msgid "Can edit fee amount attached to the account"
 msgstr "Peut modifier le montant des frais liés au compte"
 
 #: Permissions-Centers-CanEditMeetingSchedule
-#, fuzzy
 msgid "Can edit meeting schedule "
 msgstr "Peut modifier les échéances des réunions"
 
@@ -1255,7 +1248,6 @@ msgid "Can make payments to Center accounts"
 msgstr "Peut saisir des paiements à un compte centre"
 
 #: Permissions-Centers-CanModifyCenterInformation
-#, fuzzy
 msgid "Can modify Center information "
 msgstr "Peut modifier les informations du centre"
 

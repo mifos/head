@@ -59,7 +59,6 @@ msgstr "</ul><hr>"
 
 # Not sure what h3 or ul are and if this needs to be translated
 #: errors.header
-#, fuzzy
 msgid ""
 "<h3><font color=\"red\">Validation Error</font></h3>You must correct the "
 "following error(s) before proceeding:<ul>"
@@ -130,7 +129,6 @@ msgid "client"
 msgstr "cliente"
 
 #: label.clients
-#, fuzzy
 msgid "Clients "
 msgstr "Clientes"
 
@@ -195,12 +193,10 @@ msgid "Open new"
 msgstr "Abrir nuevo"
 
 #: label.portfolio
-#, fuzzy
 msgid "Portfolio "
 msgstr "Cartera"
 
 #: label.print
-#, fuzzy
 msgid "Print "
 msgstr "Imprimir"
 

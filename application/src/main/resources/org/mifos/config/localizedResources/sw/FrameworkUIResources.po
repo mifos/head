@@ -1,6 +1,5 @@
 # extracted from FrameworkUIResources.properties
 #. extracted from FrameworkUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

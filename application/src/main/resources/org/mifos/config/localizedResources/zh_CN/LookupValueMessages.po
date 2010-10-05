@@ -782,7 +782,6 @@ msgid "Can blacklist Savings account"
 msgstr "可以管理储蓄账户的黑名单"
 
 #: Permissions-CanChangeStateToPartialApplication
-#, fuzzy
 msgctxt "Permissions-CanChangeStateToPartialApplication"
 msgid "Can change state to partial application"
 msgstr "可以修改部分申请的状态"

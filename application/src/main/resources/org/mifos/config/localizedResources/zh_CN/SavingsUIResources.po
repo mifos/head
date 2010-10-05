@@ -220,7 +220,6 @@ msgid "Then click Continue."
 msgstr "然后点击“继续”按钮。"
 
 #: Savings.clickContinueOrCancel
-#, fuzzy
 msgid ""
 "Then click Continue. Click Cancel to return to Clients &amp; Accounts "
 "without submitting information."
@@ -289,7 +288,6 @@ msgid "details now"
 msgstr "详情"
 
 #: Savings.accountdetails
-#, fuzzy
 msgid "account details now"
 msgstr "账户详情"
 
@@ -302,7 +300,6 @@ msgid "Edit account status"
 msgstr "编辑账户状态"
 
 #: Savings.editFields
-#, fuzzy
 msgid "Edit the fields below."
 msgstr "编辑下面的栏位。"
 
@@ -563,7 +560,6 @@ msgid "Total amount due"
 msgstr "总计应缴款"
 
 #: Savings.totalAmountDue.on
-#, fuzzy
 msgctxt "Savings.totalAmountDue.on"
 msgid "Total amount due on"
 msgstr "总计应缴款"
@@ -581,7 +577,6 @@ msgid "Total withdrawals"
 msgstr "总计取兑"
 
 #: Savings.totalamountdue
-#, fuzzy
 msgctxt "Savings.totalamountdue"
 msgid "Total amount due on"
 msgstr "总计应缴款"

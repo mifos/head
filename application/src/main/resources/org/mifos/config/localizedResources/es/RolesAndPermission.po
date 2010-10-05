@@ -163,7 +163,6 @@ msgid "Delete role"
 msgstr "Borrar función"
 
 #: roleandpermission.labelDeleteRoleInstruction
-#, fuzzy
 msgid ""
 "Are you sure you want to delete this role?  <br><br>Click Submit to confirm. "
 "Click Cancel to return to Roles & Permissions without deleting the role. "
@@ -196,7 +195,6 @@ msgid "Roles and permissions"
 msgstr "Funciones y Permisos"
 
 #: roleandpermission.labelRoleName
-#, fuzzy
 msgid "Role Name:"
 msgstr "Nombre de la Función\\:"
 

@@ -128,7 +128,6 @@ msgid "<li>Please specify Trained Date.</li>"
 msgstr "<li>Por favor especifique la fecha de capacitación.</li>"
 
 #: Client.balance
-#, fuzzy
 msgid "Balance:"
 msgstr "Saldo\\:"
 
@@ -360,7 +359,6 @@ msgid "Edit personal information"
 msgstr "Editar información personal"
 
 #: button.previousFamilyInfo
-#, fuzzy
 msgid "Edit Family information"
 msgstr "Vista Previa de la información de la IMF."
 
@@ -393,12 +391,10 @@ msgid "Create an account for this {0}"
 msgstr "Crear una cuenta para este {0}"
 
 #: client.AccountsLink
-#, fuzzy
 msgid "Open new account:"
 msgstr "Abrir una nueva cuenta\\:"
 
 #: client.ActiveLoans
-#, fuzzy
 msgid "# of active loans:"
 msgstr ""
 "\n"
@@ -413,7 +409,6 @@ msgid "Add Group"
 msgstr "Añadir Grupo"
 
 #: client.AddGroupMemberShip
-#, fuzzy
 msgid "Click here to add group membership  "
 msgstr "Pulsar aquí para añadir pertenencia al grupo"
 
@@ -431,17 +426,14 @@ msgid "Address"
 msgstr "Dirección"
 
 #: client.Address1
-#, fuzzy
 msgid "Address 1:"
 msgstr "Dirección 1\\:"
 
 #: client.Address2
-#, fuzzy
 msgid "Address 2:"
 msgstr "Dirección 2\\:"
 
 #: client.Address3
-#, fuzzy
 msgid "Address 3:"
 msgstr "Dirección 3\\:"
 
@@ -455,12 +447,10 @@ msgid "Administrative set fees"
 msgstr "Comisiones administrativas fijas"
 
 #: client.Age
-#, fuzzy
 msgid "Age:"
 msgstr "Edad\\:"
 
 #: client.Amount
-#, fuzzy
 msgid "Amount:"
 msgstr "Cantidad\\:"
 
@@ -469,12 +459,10 @@ msgid "Apply charges"
 msgstr "Aplicar cargos"
 
 #: client.ApplyTransaction
-#, fuzzy
 msgid "Apply transactions:"
 msgstr "Aplicar operaciones\\:"
 
 #: client.AssignClients
-#, fuzzy
 msgid "Assign clients to center titles:"
 msgstr "Asignar clientes a títulos de centro\\:"
 
@@ -483,12 +471,10 @@ msgid "Select group/branch"
 msgstr "Seleccionar grupo/sucursal"
 
 #: client.BranchSelected
-#, fuzzy
 msgid "{0} selected:"
 msgstr "{0} seleccionado\\:"
 
 #: client.BusinessActivities
-#, fuzzy
 msgid "Activities:"
 msgstr "Actividades\\:"
 
@@ -497,7 +483,6 @@ msgid "Center Charges"
 msgstr "Cargos de Centro"
 
 #: client.Centers
-#, fuzzy
 msgid "{0} Assigned:"
 msgstr "{0} asignado\\:"
 
@@ -520,7 +505,6 @@ msgstr ""
 "Seleccione de entre las opciones de estatus de abajo. Luego pulse Continuar."
 
 #: client.ChargesApplied
-#, fuzzy
 msgid "Charges applied:"
 msgstr "Cargos aplicados\\:"
 
@@ -565,7 +549,6 @@ msgid "Details."
 msgstr "Detalles."
 
 #: client.Citizenship
-#, fuzzy
 msgid "Religion:"
 msgstr "Nacionalidad\\:"
 
@@ -574,7 +557,6 @@ msgid "Religion"
 msgstr "Nacionalidad"
 
 #: client.City
-#, fuzzy
 msgid "City:"
 msgstr "Ciudad\\:"
 
@@ -611,12 +593,10 @@ msgid ", select an explanation from the dropdown list below"
 msgstr ", seleccione una explicación del menú desplegable de abajo"
 
 #: client.CollectionSheet
-#, fuzzy
 msgid "Collection sheet type:"
 msgstr "Tipo de hoja de cobranza\\:"
 
 #: client.Confidential
-#, fuzzy
 msgid "Confidential:"
 msgstr "Confidencial\\:"
 
@@ -645,7 +625,6 @@ msgstr ""
 "comportamiento de {1}."
 
 #: client.Confirmation.NameSystemID
-#, fuzzy
 msgid "has been assigned the system ID number:"
 msgstr "Se le ha asignado el número de ID del sistema\\:"
 
@@ -654,7 +633,6 @@ msgid "Suggested next steps"
 msgstr "Próximos pasos sugeridos"
 
 #: client.Confirmation.Note
-#, fuzzy
 msgid "Please Note:"
 msgstr "Por favor tenga en cuenta\\:"
 
@@ -663,7 +641,6 @@ msgid "You have successfully created a new {0}"
 msgstr "Ha creado un nuevo {0} con éxito"
 
 #: client.Country
-#, fuzzy
 msgid "Country:"
 msgstr "País\\:"
 
@@ -736,17 +713,14 @@ msgid "Current Status"
 msgstr "Estatus actual"
 
 #: client.CycleNo
-#, fuzzy
 msgid "{0} Cycle #:"
 msgstr "Ciclo de {0} \\#\\:"
 
 #: client.DateCreated
-#, fuzzy
 msgid "Date Created:"
 msgstr "Fecha de creación\\:"
 
 #: client.DateOfBirth
-#, fuzzy
 msgid "Date Of Birth:"
 msgstr "Fecha de nacimiento\\:"
 
@@ -755,7 +729,6 @@ msgid "Date Of Birth"
 msgstr "Fecha de nacimiento"
 
 #: client.DeliquentPortfolio
-#, fuzzy
 msgid "Delinquent Portfolio:"
 msgstr "Cartera vencida\\:"
 
@@ -827,7 +800,6 @@ msgid "Review & Submit Personal Information"
 msgstr "Revisar y Enviar Información Personal"
 
 #: client.EditFamilyInformationLink
-#, fuzzy
 msgctxt "client.EditFamilyInformationLink"
 msgid "Edit family information"
 msgstr "Vista Previa de información de la IMF."
@@ -842,7 +814,6 @@ msgid "/"
 msgstr "/"
 
 #: client.EducationLevel
-#, fuzzy
 msgid "Education Level:"
 msgstr "Nivel de Estudios\\:"
 
@@ -851,12 +822,10 @@ msgid "Education Level"
 msgstr "Nivel de Estudios"
 
 #: client.Ethinicity
-#, fuzzy
 msgid "Caste:"
 msgstr "Casta\\:"
 
 #: client.ExternalId
-#, fuzzy
 msgid "External ID:"
 msgstr "ID externa\\:"
 
@@ -869,12 +838,10 @@ msgstr ""
 "sistema utilizado antes de Mifos"
 
 #: client.FatherLabel
-#, fuzzy
 msgid "Father name:"
 msgstr "Nombre del padre\\:"
 
 #: client.FeeType
-#, fuzzy
 msgid "Fee Type:"
 msgstr "Tipo de cuota\\:"
 
@@ -883,7 +850,6 @@ msgid "Fields marked with an asterisk are required."
 msgstr "Los campos marcados con un asterisco son obligatorios."
 
 #: client.FirstName
-#, fuzzy
 msgid "First Name:"
 msgstr "Nombre\\:"
 
@@ -893,12 +859,10 @@ msgid "First Name"
 msgstr "Nombre"
 
 #: client.FormedBy
-#, fuzzy
 msgid "Recruited By:"
 msgstr "Reclutado Por\\:"
 
 #: client.Gender
-#, fuzzy
 msgid "Gender:"
 msgstr "Sexo\\:"
 
@@ -908,7 +872,6 @@ msgid "Gender"
 msgstr "Sexo"
 
 #: client.GovernmentId
-#, fuzzy
 msgid "Government ID:"
 msgstr "ID Gubernamental\\:"
 
@@ -921,7 +884,6 @@ msgid "Group"
 msgstr "Grupo"
 
 #: client.GroupMembership
-#, fuzzy
 msgid "Group membership not mandatory:"
 msgstr "Pertenencia a grupo no obligatoria\\:"
 
@@ -942,23 +904,19 @@ msgid "Group Membership Style"
 msgstr "Estilo de pertenencia a grupo"
 
 #: client.GroupsAssigned
-#, fuzzy
 msgid "Group assigned:"
 msgstr "Grupo asignado\\:"
 
 #: family.EditFamilyInformationLink
-#, fuzzy
 msgctxt "family.EditFamilyInformationLink"
 msgid "Edit family information"
 msgstr "Vista Previa de información de la IMF."
 
 #: family.FamilyInformationHeading
-#, fuzzy
 msgid "Family information"
 msgstr "Vista Previa de información de la IMF."
 
 #: client.Handicapped
-#, fuzzy
 msgid "Handicapped:"
 msgstr "Minusválido\\:"
 
@@ -979,7 +937,6 @@ msgid "Amount of last {0}"
 msgstr "Importe del último {0}"
 
 #: client.LastName
-#, fuzzy
 msgid "Last Name:"
 msgstr "Apellidos\\:"
 
@@ -997,7 +954,6 @@ msgid "Create a new loan account"
 msgstr "Crear una nueva cuenta de préstamo"
 
 #: client.LoanCycle
-#, fuzzy
 msgid "Loan Cycle #:"
 msgstr "Ciclo del préstamo \\#\\:"
 
@@ -1006,17 +962,14 @@ msgid "Loan"
 msgstr "Préstamo"
 
 #: client.LoanOff
-#, fuzzy
 msgid "Loan officer:"
 msgstr "Oficial de préstamos\\:"
 
 #: client.LoanOfficer
-#, fuzzy
 msgid "Loan officer assigned:"
 msgstr "Oficial de préstamos asignado\\:"
 
 #: client.LocationOfMeeting
-#, fuzzy
 msgid "Location of meeting:"
 msgstr "Lugar de la reunión\\:"
 
@@ -1029,12 +982,10 @@ msgid "Manage"
 msgstr "Administrar"
 
 #: client.MaritalStatus
-#, fuzzy
 msgid "Marital Status:"
 msgstr "Estado Civil\\:"
 
 #: client.MeetingSchedule
-#, fuzzy
 msgid "Meeting schedule:"
 msgstr "Horarios de la reunión\\:"
 
@@ -1043,7 +994,6 @@ msgid "Schedule Meeting"
 msgstr "Horarios de la reunión"
 
 #: client.MeetingsAttended
-#, fuzzy
 msgid "Meetings Attended:"
 msgstr "Reuniones en las que ha atendido\\:"
 
@@ -1057,7 +1007,6 @@ msgid "Edit meeting schedule"
 msgstr "Editar horarios de la reunión"
 
 #: client.MeetingsMissed
-#, fuzzy
 msgid "Meetings Missed:"
 msgstr "Reuniones en las que no ha participado\\:"
 
@@ -1066,7 +1015,6 @@ msgid "membership"
 msgstr "pertenencia"
 
 #: client.MembershipStyle
-#, fuzzy
 msgid "Membership Style:"
 msgstr "Estilo de pertenencia\\:"
 
@@ -1075,23 +1023,19 @@ msgid "MFI related information"
 msgstr "Información relativa a la IMF"
 
 #: client.FamilyInformationLabel
-#, fuzzy
 msgid "Family Information"
 msgstr "Vista Previa de información de la IMF."
 
 # There is not a middle name in Spanish
 #: client.MiddleName
-#, fuzzy
 msgid "Middle Name:"
 msgstr "Segundo Nombre"
 
 #: client.Name
-#, fuzzy
 msgid "Name:"
 msgstr "Nombre\\:"
 
 #: client.NewStatusLabel
-#, fuzzy
 msgid "New status:"
 msgstr "Nuevo estatus\\:"
 
@@ -1100,7 +1044,6 @@ msgid "No"
 msgstr "No"
 
 #: client.NoOfActive
-#, fuzzy
 msgid "# of active {0}"
 msgstr ""
 "\n"
@@ -1115,7 +1058,6 @@ msgid "Add a note"
 msgstr "Añadir nota"
 
 #: client.NumberOfChildren
-#, fuzzy
 msgid "Number Of Children:"
 msgstr "Número de hijos\\:"
 
@@ -1128,7 +1070,6 @@ msgid "Performance History"
 msgstr "Comportamiento Histórico"
 
 #: client.Periodicity
-#, fuzzy
 msgid "Periodicity:"
 msgstr "Periodicidad\\:"
 
@@ -1137,17 +1078,14 @@ msgid "Personal information"
 msgstr "Información personal"
 
 #: client.Photograph
-#, fuzzy
 msgid "Photograph:"
 msgstr "Fotografía"
 
 #: client.PostalCode
-#, fuzzy
 msgid "Postal Code:"
 msgstr "Código Postal\\:"
 
 #: client.PovertyStatus
-#, fuzzy
 msgid "Poverty Status:"
 msgstr "Estatus de pobreza\\:"
 
@@ -1166,7 +1104,6 @@ msgid "Preview MFI information"
 msgstr "Vista Previa de información de la IMF."
 
 #: client.PreviewFamilyInformation
-#, fuzzy
 msgid "Preview Family information"
 msgstr "Vista Previa de información de la IMF."
 
@@ -1188,7 +1125,6 @@ msgid "Review & submit"
 msgstr "Revisar y enviar"
 
 #: client.Salutation
-#, fuzzy
 msgid "Salutation:"
 msgstr "Título\\:"
 
@@ -1225,7 +1161,6 @@ msgid "Select a Center"
 msgstr "Seleccione un Centro"
 
 #: client.SecondLastName
-#, fuzzy
 msgid "Second Last Name:"
 msgstr "Segundo Apellido\\:"
 
@@ -1255,7 +1190,6 @@ msgid "/"
 msgstr "/"
 
 #: client.SpouseFatherName
-#, fuzzy
 msgid "Spouse/Father Name:"
 msgstr "Nombre del Padre/Esposo\\:"
 
@@ -1269,7 +1203,6 @@ msgid "Spouse/Father First Name"
 msgstr "Nombre del Padre/Esposo"
 
 #: client.SpouseLabel
-#, fuzzy
 msgid "Spouse name:"
 msgstr "Nombre del Esposo\\:"
 
@@ -1284,7 +1217,6 @@ msgstr "Apellidos del Padre/Esposo"
 
 # There is no Middle name in Spanish
 #: client.SpouseMiddleName
-#, fuzzy
 msgctxt "client.SpouseMiddleName"
 msgid "Middle Name"
 msgstr "Segundo Nombre"
@@ -1323,7 +1255,6 @@ msgstr "Nombre"
 
 # There is no Middle name in Spanish
 #: client.FamilyMiddleName
-#, fuzzy
 msgctxt "client.FamilyMiddleName"
 msgid "Middle Name"
 msgstr "Segundo Nombre"
@@ -1334,7 +1265,6 @@ msgid "Last Name"
 msgstr "Apellidos"
 
 #: client.FamilyDateOfBirth
-#, fuzzy
 msgid "Date of Birth "
 msgstr "Fecha de nacimiento"
 
@@ -1368,12 +1298,10 @@ msgid "Sibling"
 msgstr "Hermano/a"
 
 #: client.FamilyDisplayName
-#, fuzzy
 msgid "Name"
 msgstr "Nombre\\:"
 
 #: client.State
-#, fuzzy
 msgid "State:"
 msgstr "Estado\\:"
 
@@ -1398,7 +1326,6 @@ msgid "System ID"
 msgstr "ID del sistema"
 
 #: client.Telephone
-#, fuzzy
 msgid "Telephone:"
 msgstr "Teléfono\\:"
 
@@ -1407,22 +1334,18 @@ msgid "Total {0}"
 msgstr "Total {0}"
 
 #: client.TotalSavings
-#, fuzzy
 msgid "Total Savings:"
 msgstr "Total de Ahorros\\:"
 
 #: client.Trained
-#, fuzzy
 msgid "Trained:"
 msgstr "Capacitado\\:"
 
 #: client.TrainedOn
-#, fuzzy
 msgid "Trained On:"
 msgstr "Capacitado el\\:"
 
 #: client.TrainedOnDate
-#, fuzzy
 msgid "Trained On Date:"
 msgstr "Fecha de capacitacion\\:"
 
@@ -1455,7 +1378,6 @@ msgid "Postal Code"
 msgstr "Código Postal"
 
 #: client.acc
-#, fuzzy
 msgid "Acct #"
 msgstr "Cuenta \\#"
 
@@ -1653,7 +1575,6 @@ msgstr ""
 "activas."
 
 #: error.Customer.ClientIsClosedOrCancelled
-#, fuzzy
 msgid "The client status should not be either closed or cancelled."
 msgstr "El estatus del cliente no debería ser ni cerrado ni cancelado."
 
@@ -1884,7 +1805,6 @@ msgid "<li>Please specify value for {0}.</li>"
 msgstr "<li>Por favor especifique el valor de {0}.</li>"
 
 #: warning.clientWithSameGovtIdExistInClosed
-#, fuzzy
 msgid ""
 "A record matching this client was found in \"closed\" status with same Govt. "
 "ID.  Please review that client record before continuing."
@@ -1893,7 +1813,6 @@ msgstr ""
 "cerrado. Por favor revise el registro de ese cliente antes de continuar."
 
 #: warning.clientWithSameNameDOBExistInClosed
-#, fuzzy
 msgid ""
 "A record matching this client was found in \"closed\" status with same name "
 "and date of birth.  Please review that client record before continuing."
@@ -1902,7 +1821,6 @@ msgstr ""
 "cerrado. Por favor revise el registro de ese cliente antes de continuar."
 
 #: warning.clientWithSameNameDOBExistInBlackListed
-#, fuzzy
 msgid ""
 "A record matching this client was found in \"blacklisted\" status with same "
 "name and date of birth.  Please review that client record before continuing."
@@ -1911,7 +1829,6 @@ msgstr ""
 "favor revise el registro de ese cliente antes de continuar."
 
 #: client.ViewQuestionGroupResponsesLink
-#, fuzzy
 msgid "View Additional Information"
 msgstr "Información adicional"
 
@@ -1932,6 +1849,5 @@ msgid "<li>Please specify a number lesser than {0} for {1}</li>"
 msgstr ""
 
 #: questionnaire.invalid.numeric.response
-#, fuzzy
 msgid "<li>Please specify a number for {0}</li>"
 msgstr "<li>Por favor especifique el valor de {0}.</li>"

@@ -142,7 +142,6 @@ msgid "No Flags Available"
 msgstr "Flag nem áll rendelkezésre"
 
 #: Customer.Note
-#, fuzzy
 msgctxt "Customer.Note"
 msgid "Note:"
 msgstr "Megjegyzés\\:"
@@ -299,7 +298,6 @@ msgid "No results found for"
 msgstr "Nincs találat:"
 
 #: Customer.note
-#, fuzzy
 msgctxt "Customer.note"
 msgid "Note:"
 msgstr "Megjegyzés\\:"
@@ -417,7 +415,6 @@ msgstr ""
 "forduljon a rendszergazdához."
 
 #: error.versionnodonotmatch
-#, fuzzy
 msgid ""
 "The record has already been modified by another user. Please navigate to the "
 "details page and start the activity again. "
@@ -527,7 +524,6 @@ msgid "This action is not permissible."
 msgstr "Ez a művelet nem megengedett."
 
 #: label.MFIjoiningdate
-#, fuzzy
 msgid "MFI joining date:"
 msgstr "MFI csatlakozási dátum\\:"
 
@@ -558,7 +554,6 @@ msgid "Amount of"
 msgstr "Összege"
 
 #: label.amountofloan
-#, fuzzy
 msgid "Amount of loan:"
 msgstr "Hitel összege\\:"
 
@@ -587,7 +582,6 @@ msgid "Historical data"
 msgstr "Múltbéli adatok"
 
 #: label.interestpaid
-#, fuzzy
 msgid "paid:"
 msgstr "fizetve\\:"
 
@@ -600,12 +594,10 @@ msgid "Cycle per Product"
 msgstr "Ciklus termékenként"
 
 #: label.loancyclenumber
-#, fuzzy
 msgid "cycle number:"
 msgstr "ciklus száma\\:"
 
 #: label.note
-#, fuzzy
 msgctxt "label.note"
 msgid "Note:"
 msgstr "Megjegyzés\\:"
@@ -653,7 +645,6 @@ msgid "Preview note"
 msgstr "Megjegyzés előnézete"
 
 #: label.productname
-#, fuzzy
 msgid "Product name:"
 msgstr "Termék megnevezése\\:"
 
@@ -662,7 +653,6 @@ msgid "Product name"
 msgstr "Termék megnevezése"
 
 #: label.totalamountpaid
-#, fuzzy
 msgid "Total amount paid:"
 msgstr "Összes fizetett összeg\\:"
 

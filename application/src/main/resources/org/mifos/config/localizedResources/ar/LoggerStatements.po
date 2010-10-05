@@ -1,6 +1,5 @@
 # extracted from LoggerStatements.properties
 #. extracted from LoggerStatements.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

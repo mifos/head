@@ -1,6 +1,5 @@
 # extracted from ConfigurationUIResources.properties
 #. extracted from ConfigurationUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

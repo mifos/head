@@ -1,5 +1,4 @@
 #. extracted from MenuResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -39,7 +38,6 @@ msgid "Accounts"
 msgstr "Comptes"
 
 #: label.accountsSmall
-#, fuzzy
 msgctxt "label.accountsSmall"
 msgid "accounts"
 msgstr "Compte"
@@ -74,7 +72,6 @@ msgid "client"
 msgstr "client"
 
 #: label.clients
-#, fuzzy
 msgid "Clients "
 msgstr "Clients"
 
@@ -106,7 +103,6 @@ msgid "Create multiple"
 msgstr "Créer des multiples comptes de"
 
 #: label.createMultipleLoanAccountsSuffix
-#, fuzzy
 msgctxt "label.createMultipleLoanAccountsSuffix"
 msgid "accounts"
 msgstr "Compte"
@@ -191,12 +187,10 @@ msgid "Open new"
 msgstr "Ouvrir un nouveau"
 
 #: label.portfolio
-#, fuzzy
 msgid "Portfolio "
 msgstr "Portefeuille"
 
 #: label.print
-#, fuzzy
 msgid "Print "
 msgstr "Imprimer"
 

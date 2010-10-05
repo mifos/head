@@ -32,12 +32,10 @@ msgid "Amount of last {0} {1}"
 msgstr "Utolsó {0} {1} értéke"
 
 #: Group.AssignedloanOfficer
-#, fuzzy
 msgid "Assigned loan officer:"
 msgstr "Kijelölt reménygazda\\:"
 
 #: Group.Avgindividual
-#, fuzzy
 msgid "Avg individual {0} size:"
 msgstr "Egyedi {0} átlagos mérete\\:"
 
@@ -46,7 +44,6 @@ msgid "Center"
 msgstr "Központ"
 
 #: Group.EditGroupInstructions
-#, fuzzy
 msgid ""
 "Click Submit to change the {0} or Cancel to return to {1} details page "
 "without changing the {0}"
@@ -56,7 +53,6 @@ msgstr ""
 "Mégsem gombra"
 
 #: Group.FormedBy
-#, fuzzy
 msgid "Recruited By:"
 msgstr "Toborozta\\:"
 
@@ -65,7 +61,6 @@ msgid "No"
 msgstr "Nem"
 
 #: Group.PortfolioAtRisk
-#, fuzzy
 msgid "Portfolio at risk:"
 msgstr "Kockáztatott állomány\\:"
 
@@ -74,7 +69,6 @@ msgid "s"
 msgstr "k"
 
 #: Group.Selected
-#, fuzzy
 msgid "{0} Selected:"
 msgstr "Kiválasztott {0}\\:"
 
@@ -87,7 +81,6 @@ msgid "Yes"
 msgstr "Igen"
 
 #: Group.acc
-#, fuzzy
 msgid "Acct #"
 msgstr "Számlaszám"
 
@@ -124,7 +117,6 @@ msgid "Address"
 msgstr "Cím"
 
 #: Group.address1
-#, fuzzy
 msgid "Address 1:"
 msgstr "Cím 1\\:"
 
@@ -133,7 +125,6 @@ msgid "Address 1"
 msgstr "Cím 1"
 
 #: Group.address2
-#, fuzzy
 msgid "Address 2:"
 msgstr "Cím 2\\:"
 
@@ -142,7 +133,6 @@ msgid "Address 2"
 msgstr "Cím 2"
 
 #: Group.address3
-#, fuzzy
 msgid "Address 3:"
 msgstr "Cím 3\\:"
 
@@ -155,12 +145,10 @@ msgid "Administrative set fees"
 msgstr "Rendszerben beállított díjak"
 
 #: Group.amount
-#, fuzzy
 msgid "Amount:"
 msgstr "Összeg\\:"
 
 #: Group.amountdue
-#, fuzzy
 msgid "Amount due:"
 msgstr "Esedékes összeg\\:"
 
@@ -181,12 +169,10 @@ msgid "Apply transactions"
 msgstr "Tranzakciók alkalmazása"
 
 #: Group.approvaldate
-#, fuzzy
 msgid "{0} approval date:"
 msgstr "{0} jóváhagyás dátuma\\:"
 
 #: Group.assignclientstogrouptitles
-#, fuzzy
 msgid "Assign {0}s to {1} titles:"
 msgstr "{0}k kijelölése {1} címekhez\\:"
 
@@ -199,12 +185,10 @@ msgid "s to"
 msgstr "k"
 
 #: Group.assignclientstogrouptitles3
-#, fuzzy
 msgid "titles:"
 msgstr "címekhez\\:"
 
 #: Group.assigned
-#, fuzzy
 msgid "assigned:"
 msgstr "kijelölt\\:"
 
@@ -221,7 +205,6 @@ msgid "Attach Survey"
 msgstr "Felmérés csatolása"
 
 #: Group.balance
-#, fuzzy
 msgid "Balance:"
 msgstr "Egyenleg\\:"
 
@@ -238,7 +221,6 @@ msgid "{0} assigned"
 msgstr "Kijelölt {0}"
 
 #: Group.centerassigned
-#, fuzzy
 msgid "Center assigned:"
 msgstr "Kijelölt központ\\:"
 
@@ -251,7 +233,6 @@ msgid "Change {0} membership"
 msgstr "{0} tagság módosítása"
 
 #: Group.changecentermembership
-#, fuzzy
 msgid "Change center membership:"
 msgstr "Központ tagság módosítása\\:"
 
@@ -284,7 +265,6 @@ msgid "group to that center."
 msgstr "csoportot sorolhat az adott központhoz."
 
 #: Group.city
-#, fuzzy
 msgid "City:"
 msgstr "Város\\:"
 
@@ -309,7 +289,6 @@ msgid "Clients assigned"
 msgstr "Besorolt ügyfelek"
 
 #: Group.collectionsheettype
-#, fuzzy
 msgid "Collection sheet type:"
 msgstr "Beszedési lap típusa\\:"
 
@@ -322,7 +301,6 @@ msgid "- Confirm"
 msgstr "- Megerősítés"
 
 #: Group.confirmcenterMsg1
-#, fuzzy
 msgid ""
 "Click Submit to change the {0} or Cancel to return to {1} details page "
 "without changing the {0} "
@@ -336,7 +314,6 @@ msgid "Confirm status change"
 msgstr "Státuszmódosítás megerősítése"
 
 #: Group.country
-#, fuzzy
 msgid "Country:"
 msgstr "Ország\\:"
 
@@ -366,7 +343,6 @@ msgid "Create an account for this {0}"
 msgstr "Számla létrehozása ezen {0} részére"
 
 #: Group.createanewgroup
-#, fuzzy
 msgid "Create a new Group"
 msgstr "Új csoport létrehozása"
 
@@ -379,7 +355,6 @@ msgstr ""
 "között a(z) {0} számla és teljesítési adatait - érheti el."
 
 #: Group.createconfirmhead1
-#, fuzzy
 msgid "has been assigned the system ID number:"
 msgstr "az alábbi rendszerazonosítót kapta\\:"
 
@@ -440,7 +415,6 @@ msgid "You have successfully created a new {0}"
 msgstr "Az új {0} létrehozása sikeresen megtörtént"
 
 #: Group.currentstatus
-#, fuzzy
 msgid "Current status:"
 msgstr "Aktuális státusz\\:"
 
@@ -449,7 +423,6 @@ msgid "Date"
 msgstr "Dátum"
 
 #: Group.dategroupstarted
-#, fuzzy
 msgid "Date group started:"
 msgstr "Csoport indítás dátuma\\:"
 
@@ -568,7 +541,6 @@ msgstr ""
 "ügyfélre kell hivatkozni"
 
 #: Group.externalid
-#, fuzzy
 msgid "External ID:"
 msgstr "Külső azonosító\\:"
 
@@ -577,7 +549,6 @@ msgid "External ID"
 msgstr "Külső azonosító"
 
 #: Group.feetype
-#, fuzzy
 msgid "Fee Type:"
 msgstr "Díj típusa\\:"
 
@@ -590,12 +561,10 @@ msgid "{0} details"
 msgstr "{0} adatok"
 
 #: Group.groupMembership
-#, fuzzy
 msgid "Group membership:"
 msgstr "Csoport tagság\\:"
 
 #: Group.groupapprovaldate
-#, fuzzy
 msgid "Group approval date:"
 msgstr "Csoport jóváhagyás dátuma\\:"
 
@@ -644,18 +613,15 @@ msgid "& Accounts without submitting information."
 msgstr "és számlák lapra az információk mentése nélkül."
 
 #: Group.grouptrained
-#, fuzzy
 msgid "Trained:"
 msgstr "Képzés\\:"
 
 #: Group.grouptrainedon
-#, fuzzy
 msgctxt "Group.grouptrainedon"
 msgid "Trained on:"
 msgstr "Képzés ideje\\:"
 
 #: Group.hashof
-#, fuzzy
 msgid "# of active {0}s"
 msgstr "Aktív {0}"
 
@@ -672,7 +638,6 @@ msgid "{0} Cycle per Product"
 msgstr "{0} ciklus termékenként"
 
 #: Group.loanofficer
-#, fuzzy
 msgid "Loan officer:"
 msgstr "Reménygazda\\:"
 
@@ -681,12 +646,10 @@ msgid "Loan officer"
 msgstr "Reménygazda"
 
 #: Group.loanofficerassigned
-#, fuzzy
 msgid "Loan officer assigned:"
 msgstr "Kijelölt reménygazda\\:"
 
 #: Group.locationofthemeeting
-#, fuzzy
 msgid "Location of meeting:"
 msgstr "Találkozó helyszíne\\:"
 
@@ -703,12 +666,10 @@ msgid "Meeting details"
 msgstr "Találkozó adatai"
 
 #: Group.meetings
-#, fuzzy
 msgid "Meetings:"
 msgstr "Találkozók\\:"
 
 #: Group.meetingschedule
-#, fuzzy
 msgid "Meeting schedule:"
 msgstr "Találkozó ütemterv\\:"
 
@@ -723,7 +684,6 @@ msgid "MFI information"
 msgstr "MFI információk"
 
 #: Group.name
-#, fuzzy
 msgid "Name:"
 msgstr "Név\\:"
 
@@ -740,7 +700,6 @@ msgid "new"
 msgstr "új"
 
 #: Group.newstatus
-#, fuzzy
 msgid "New status:"
 msgstr "Új státusz\\:"
 
@@ -757,7 +716,6 @@ msgid "No notes available."
 msgstr "Nem áll megjegyzés rendelkezésre."
 
 #: Group.note
-#, fuzzy
 msgid "Note:"
 msgstr "Megjegyzés\\:"
 
@@ -774,7 +732,6 @@ msgid "Official titles assigned"
 msgstr "Kiosztott hivatalos címek"
 
 #: Group.opennewaccount
-#, fuzzy
 msgid "Open new account:"
 msgstr "Új számla nyitása\\:"
 
@@ -783,7 +740,6 @@ msgid "Performance history"
 msgstr "Teljesítéstörténet"
 
 #: Group.periodicity
-#, fuzzy
 msgid "Periodicity:"
 msgstr "Gyakoriság\\:"
 
@@ -792,17 +748,14 @@ msgid "Personal  information"
 msgstr "Személyes információk"
 
 #: Group.pleasenote
-#, fuzzy
 msgid "Please Note:"
 msgstr "Megjegyzés\\:"
 
 #: Group.portfolio
-#, fuzzy
 msgid "portfolio:"
 msgstr "portfolió\\:"
 
 #: Group.postalcode
-#, fuzzy
 msgid "Postal code:"
 msgstr "Irányítószám\\:"
 
@@ -844,7 +797,6 @@ msgstr ""
 "kattintson a Hozzáadás gombra."
 
 #: Group.programs
-#, fuzzy
 msgid "Programs:"
 msgstr "Programok\\:"
 
@@ -893,7 +845,6 @@ msgid "Schedule meeting"
 msgstr "Találkozó tervezése"
 
 #: Group.searchmsg1
-#, fuzzy
 msgid "To select, click on a resulting {0}."
 msgstr "Kiválasztáshoz kattintson egy {0} találatra"
 
@@ -910,17 +861,14 @@ msgid "Select {0}/{1}"
 msgstr "{0}/{1} kiválasztása"
 
 #: Group.size
-#, fuzzy
 msgid "size:"
 msgstr "méret\\:"
 
 #: Group.started
-#, fuzzy
 msgid "started:"
 msgstr "kezdés\\:"
 
 #: Group.state
-#, fuzzy
 msgid "State:"
 msgstr "Státusz\\:"
 
@@ -929,7 +877,6 @@ msgid "State"
 msgstr "Státusz"
 
 #: Group.status
-#, fuzzy
 msgid "Status:"
 msgstr "Státusz\\:"
 
@@ -982,12 +929,10 @@ msgid "Surveys"
 msgstr "Felmérések"
 
 #: Group.systemId
-#, fuzzy
 msgid "System ID #:"
 msgstr "Rendszerazonosító szám\\:"
 
 #: Group.telephone
-#, fuzzy
 msgid "Telephone:"
 msgstr "Telefon\\:"
 
@@ -996,7 +941,6 @@ msgid "Total {0} portfolio."
 msgstr "Teljes {0} állomány."
 
 #: Group.trainedon
-#, fuzzy
 msgctxt "Group.trainedon"
 msgid "Trained on:"
 msgstr "Képzés ideje\\:"
@@ -1526,7 +1470,6 @@ msgid "Apply payment"
 msgstr "Fizetési tranzakció alkalmazása"
 
 #: warning.noclientsassigned1
-#, fuzzy
 msgid "Warning: The"
 msgstr "Figyelmeztetés\\: A(z)"
 

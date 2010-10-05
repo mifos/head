@@ -52,7 +52,6 @@ msgid "Enter a note in the field below."
 msgstr ""
 
 #: Account.Note
-#, fuzzy
 msgctxt "Account.Note"
 msgid "Note:"
 msgstr "Kidokezo:"
@@ -1031,7 +1030,6 @@ msgid "No. of installments:"
 msgstr ""
 
 #: accounts.note
-#, fuzzy
 msgctxt "accounts.note"
 msgid "Note:"
 msgstr "Kidokezo:"

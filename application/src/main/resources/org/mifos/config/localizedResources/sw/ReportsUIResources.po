@@ -1,6 +1,5 @@
 # extracted from ReportsUIResources.properties
 #. extracted from ReportsUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

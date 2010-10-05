@@ -382,7 +382,6 @@ msgid "Time Of Disburstment"
 msgstr "ពេលវេលាសងត្រឡប់"
 
 #: FeePayment-TimeOfFirstLoanRepayment
-#, fuzzy
 msgid "Time of First Loan Repayment "
 msgstr "ពេលវេលាសងរំលោះនៃកំចីយដំបូង"
 
@@ -503,17 +502,14 @@ msgid "Voluntory Deposit"
 msgstr ""
 
 #: FinancialAction-VoluntoryDepositAdjustment
-#, fuzzy
 msgid "Voluntory Deposit Adjustment"
 msgstr "កាដាក់ប្រាក់ដែលចាំបាច់ត្រូវបានធ្វើការកែតំរូវ"
 
 #: FinancialAction-VoluntoryWithdrawal
-#, fuzzy
 msgid "Voluntory Withdrawal"
 msgstr "កាដកប្រាក់ដែលចាំបាច់"
 
 #: FinancialAction-VoluntoryWithdrawalAdjustment
-#, fuzzy
 msgid "Voluntory Withdrawal Adjustment"
 msgstr "កាដកប្រាក់ដែលចាំបាច់ត្រូវបានធ្វើការកែតំរូវ"
 
@@ -776,12 +772,10 @@ msgid "Can Administer Reports"
 msgstr "អាចរៀបចំរបាយការណ៍"
 
 #: Permissions-CanApplyChargesToLoans
-#, fuzzy
 msgid "Can apply charges to loans "
 msgstr "អាចអនុវត្តិការយកសេវាទៅលើកំចី"
 
 #: Permissions-CanApproveLoansInBulk
-#, fuzzy
 msgid "Can approve loans in bulk "
 msgstr "អាចសំរេចកំចីនៅក្នុងលក្ខណះរួម"
 
@@ -879,7 +873,6 @@ msgid "Can define new report category"
 msgstr "អាចកំនត់ប្រភេទនៃរបាយការណ៍ថ្មី"
 
 #: Permissions-CanDefineNewSavingsProductInstance
-#, fuzzy
 msgid "Can define new Savings product instance"
 msgstr "អាចកំនត់ប្រភេទនៃផលិតផលកំចីរយះពេលខ្លីថ្មី"
 
@@ -912,7 +905,6 @@ msgid "Can edit Loan account information"
 msgstr "អាចកែពត៍មានគណនីកំចី"
 
 #: Permissions-CanEditLoanProductInstances
-#, fuzzy
 msgid "Can edit loan product instances"
 msgstr "អាចកំនត់ប្រភេទនៃផលិតផលកំចីរយះពេលខ្លីថ្មី"
 
@@ -929,7 +921,6 @@ msgid "Can edit report information"
 msgstr "អាចកែពត៍មាននៃរបាយការណ៍"
 
 #: Permissions-CanEditSavingsProductInstances
-#, fuzzy
 msgid "Can edit Savings product instances"
 msgstr "អាចកំនត់ប្រភេទនៃផលិតផលកំចីរយះពេលខ្លីថ្មី"
 
@@ -1058,7 +1049,6 @@ msgid "Can view admin documents"
 msgstr "អាចបើកមើលឯកសារដ្ឋបាល"
 
 #: Permissions-CanViewAreaPerformanceStatusReport
-#, fuzzy
 msgid "Can view Area Performance Status Report"
 msgstr "អាចបើកមើលរបាយការណ៍ស្ថានភាពស្នាដៃរបស់សាខា"
 
@@ -1144,7 +1134,6 @@ msgid "Can view Fund Requirement Report"
 msgstr "អាចបើកមើលរបាយការណ៍នៃថវិការដែលត្រូវការ"
 
 #: Permissions-CanViewGrameenKootaPerformanceStatusReport
-#, fuzzy
 msgid "Can view Grameen Koota Performance Status Report"
 msgstr "អាចបើកមើលរបាយការណ៍ស្ថានភាពស្នាដៃរបស់សាខា"
 
@@ -1225,7 +1214,6 @@ msgid "Can apply charges to Center accounts"
 msgstr "អាចអនុវត្តិការយកសេវាទៅលើគណនីរបស់មជ្ឈមណ្ឌល"
 
 #: Permissions-Centers-CanCreateNewCenter
-#, fuzzy
 msgid "Can create new Center "
 msgstr "អាចបង្កើតមជ្ឈមណ្ឌលថ្មី"
 
@@ -1239,7 +1227,6 @@ msgid "Can edit fee amount attached to the account"
 msgstr "អាចកែចំនួនថ្លៃសេវាដែលភ្ជាប់ទៅនឹងគណនី"
 
 #: Permissions-Centers-CanEditMeetingSchedule
-#, fuzzy
 msgid "Can edit meeting schedule "
 msgstr "អាចកែតំរូវកាលវិភាគនៃអង្គប្រជុំ"
 
@@ -1252,7 +1239,6 @@ msgid "Can make payments to Center accounts"
 msgstr "អាចធ្វើការសងទៅក្នុងគណនីរបស់ំជ្ឈមណ្ឌល"
 
 #: Permissions-Centers-CanModifyCenterInformation
-#, fuzzy
 msgid "Can modify Center information "
 msgstr "អាចកែតំរូវពត៍មានរបស់មជ្ឈមណ្ឌល"
 

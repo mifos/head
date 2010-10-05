@@ -79,7 +79,6 @@ msgstr ""
 "ឬទាក់ទងអ្នកគ្រប់គ្រងប្រព័ន្ធ"
 
 #: exception.framework.SystemException.HibernateConnectionException
-#, fuzzy
 msgid ""
 "A HibernateConnectionException has occurred. Please try again later or "
 "contact the system administrator."
@@ -88,7 +87,6 @@ msgstr ""
 "ឬទាក់ទងអ្នកគ្រប់គ្រងប្រព័ន្ធ"
 
 #: exception.framework.SystemException.ValueObjectConversionException
-#, fuzzy
 msgid ""
 "A ValueObjectConversionException has occurred. Please try again later or "
 "contact the system administrator."

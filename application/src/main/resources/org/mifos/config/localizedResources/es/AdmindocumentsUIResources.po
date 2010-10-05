@@ -54,7 +54,6 @@ msgid "Enter a note in the field below."
 msgstr "Escriba una nota en el campo de abajo"
 
 #: Account.Note
-#, fuzzy
 msgctxt "Account.Note"
 msgid "Note:"
 msgstr "Nota\\:"
@@ -157,7 +156,6 @@ msgid "Old Status"
 msgstr "Estado Anterior"
 
 #: PaymentID
-#, fuzzy
 msgctxt "PaymentID"
 msgid "Payment ID#"
 msgstr "Identificación del Pago"
@@ -172,7 +170,6 @@ msgid "Posted by"
 msgstr "Publicado por"
 
 #: TransactionID
-#, fuzzy
 msgctxt "TransactionID"
 msgid "Transaction ID#"
 msgstr "Identificación de la operación"
@@ -205,12 +202,10 @@ msgid "Account"
 msgstr "Cuenta"
 
 #: accounts.ChecklistMsg
-#, fuzzy
 msgid "Complete and check off the following tasks. "
 msgstr "Complete y verifique las siguientes tareas"
 
 #: accounts.ClickCancel1
-#, fuzzy
 msgid "Click Cancel to return to "
 msgstr "Presione Cancelar para volver a"
 
@@ -231,7 +226,6 @@ msgid "Confirm status change"
 msgstr "Confirme cambio de estado"
 
 #: accounts.EditStatus
-#, fuzzy
 msgid "Edit status "
 msgstr "Editar estado"
 
@@ -260,7 +254,6 @@ msgid "Select a Client/Group"
 msgstr "Seleccione un Cliente/Grupo"
 
 #: accounts.Select
-#, fuzzy
 msgid "Select "
 msgstr "Seleccionar"
 
@@ -274,7 +267,6 @@ msgstr "Seleccione cliente"
 
 # Depends on the word after a
 #: accounts.SelectExplaination1
-#, fuzzy
 msgid "When cancelling a "
 msgstr "Al cancelar un(a)"
 
@@ -295,7 +287,6 @@ msgid "account information"
 msgstr "Información de la cuenta"
 
 #: accounts.acc_owner
-#, fuzzy
 msgid "Account Owner: "
 msgstr "Propietario de la Cuenta\\:"
 
@@ -352,17 +343,14 @@ msgstr "Préstamo Agrícola"
 
 # It's a currency,  can leave as is
 #: accounts.allowed_amount
-#, fuzzy
 msgid "(Allowed Amount: INR "
 msgstr "(Cantidad permitido\\: INR"
 
 #: accounts.allowed_interest
-#, fuzzy
 msgid "(Allowed Interest Rate Amount "
 msgstr "(Tasa de interés permitido"
 
 #: accounts.allowed_no_of_inst
-#, fuzzy
 msgid "(Allowed Number of Installments "
 msgstr "(Número de pagos permitido"
 
@@ -376,13 +364,11 @@ msgid "Amount"
 msgstr "Cantidad"
 
 #: accounts.amount(USD)
-#, fuzzy
 msgctxt "accounts.amount(USD)"
 msgid "Amount "
 msgstr "Cantidad"
 
 #: accounts.amount_(Rs)
-#, fuzzy
 msgctxt "accounts.amount_(Rs)"
 msgid "Amount "
 msgstr "Cantidad"
@@ -401,7 +387,6 @@ msgid "Amount paid"
 msgstr "Cantidad pagado"
 
 #: accounts.anti_disburse_dd
-#, fuzzy
 msgid "Anticipated disbursement date:"
 msgstr "Fecha de desembolso prevista\\:"
 
@@ -414,7 +399,6 @@ msgid "Application fee amount"
 msgstr "Cantidad de la comisión por aplicación"
 
 #: accounts.appl_fees
-#, fuzzy
 msgid "Application fee:"
 msgstr "Comisión de aplicación\\:"
 
@@ -499,7 +483,6 @@ msgid "Change Log"
 msgstr "Cambiar Registro"
 
 #: accounts.changestatus
-#, fuzzy
 msgid "Change status "
 msgstr "Cambiar estado"
 
@@ -562,7 +545,6 @@ msgstr ""
 "Cuentas sin enviar la información"
 
 #: accounts.congo
-#, fuzzy
 msgid ""
 "A new loan account for John Anderson has been assigned account # 13354646. "
 "You can enter an account number into the search box to access account "
@@ -581,7 +563,6 @@ msgid "Continue"
 msgstr "Continuar"
 
 #: accounts.create
-#, fuzzy
 msgid "Create "
 msgstr "Crear"
 
@@ -635,7 +616,6 @@ msgid "Default amount"
 msgstr "Cantidad en mora"
 
 #: accounts.definst
-#, fuzzy
 msgid "Default # of installments"
 msgstr "Número de pagos en mora"
 
@@ -653,7 +633,6 @@ msgid "Description"
 msgstr "Descripción"
 
 #: accounts.description
-#, fuzzy
 msgid "Description:"
 msgstr "Descripción\\:"
 
@@ -663,7 +642,6 @@ msgstr "Fecha de desembolso propuesta/actual"
 
 # I assume Disb means disbursement, but not sure for Pr
 #: accounts.disb_pr
-#, fuzzy
 msgid "Disb Pr"
 msgstr "Desembolso"
 
@@ -689,7 +667,6 @@ msgid "Edit loan account information"
 msgstr "Editar Información de la Cuenta de Préstamo "
 
 #: accounts.edittrans
-#, fuzzy
 msgid ""
 "Review the transaction below. If satisfied click Submit. Click Cancel to "
 "return to account details without submitting information or to try again "
@@ -708,7 +685,6 @@ msgid "Educational Loan"
 msgstr "Préstamo para la educación"
 
 #: accounts.enter_client_details1
-#, fuzzy
 msgid "Enter a "
 msgstr "Introduzca un"
 
@@ -769,7 +745,6 @@ msgid "Fish ponds"
 msgstr "viveros de peces"
 
 #: accounts.freq_of_inst
-#, fuzzy
 msgid "Frequency of Installments:"
 msgstr "Frecuencia de los pagos\\:"
 
@@ -877,7 +852,6 @@ msgstr "Tipo de Tasa de Interés"
 
 # NOT TRANSLATED
 #: accounts.intr_rec
-#, fuzzy
 msgid "Intr Rec"
 msgstr "Recibido"
 
@@ -917,7 +891,6 @@ msgstr "Comisión de mantenimiento"
 
 # NOT TRANSLATED
 #: accounts.mariev
-#, fuzzy
 msgid "mariev"
 msgstr "mariev"
 
@@ -926,7 +899,6 @@ msgid "Loan maturity date"
 msgstr "Fecha de vencimiento del préstamo"
 
 #: accounts.maxinst
-#, fuzzy
 msgid "Max # of installments"
 msgstr "Máximo número de pagos"
 
@@ -951,7 +923,6 @@ msgid "Membership fee"
 msgstr "Cuota de inscripcion"
 
 #: accounts.mininst
-#, fuzzy
 msgid "Min # of installments"
 msgstr "Número mínimo de pagos"
 
@@ -964,7 +935,6 @@ msgid "Min loan amount"
 msgstr "Cantidad mínima del préstamo"
 
 #: accounts.missed_payments
-#, fuzzy
 msgid "# of missed payments"
 msgstr ""
 "\n"
@@ -1021,12 +991,10 @@ msgid "No."
 msgstr "Número"
 
 #: accounts.no_of_inst
-#, fuzzy
 msgid "No. of installments:"
 msgstr "Número de pagos\\:"
 
 #: accounts.note
-#, fuzzy
 msgctxt "accounts.note"
 msgid "Note:"
 msgstr "Nota\\:"
@@ -1037,7 +1005,6 @@ msgid "Notes"
 msgstr "Notas"
 
 #: accounts.of_payments
-#, fuzzy
 msgid "# of payments"
 msgstr ""
 "\n"
@@ -1093,7 +1060,6 @@ msgid "Payment"
 msgstr "Pago"
 
 #: accounts.payment_id
-#, fuzzy
 msgctxt "accounts.payment_id"
 msgid "Payment ID#"
 msgstr "Identificacion del Pago"
@@ -1103,12 +1069,10 @@ msgid "Penalty"
 msgstr "Recargo"
 
 #: accounts.penalty_01
-#, fuzzy
 msgid "Penalty for Installment #1"
 msgstr "Recargo por pago \\ 1"
 
 #: accounts.penalty_02
-#, fuzzy
 msgid "Penalty for Installment #2"
 msgstr "Recargo por el pago \\ 2"
 
@@ -1121,12 +1085,10 @@ msgid "Performance history"
 msgstr "Historial de actividad"
 
 #: accounts.periodicity_annual_fee
-#, fuzzy
 msgid "Periodicity: annual fee"
 msgstr "Periodicidad\\: comisión anual"
 
 #: accounts.periodicity_one_time_fee
-#, fuzzy
 msgid "Periodicity: one time fee"
 msgstr "Periodicidad\\: comisión unica"
 
@@ -1145,7 +1107,6 @@ msgstr "Granja avícola"
 
 # Not sure what this stands for
 #: accounts.pr_pd
-#, fuzzy
 msgid "Pr Pd"
 msgstr "Pr Pd"
 
@@ -1179,7 +1140,6 @@ msgid "Proposed/Actual disbursal date"
 msgstr "Fecha de desembolso prevista/actual"
 
 #: accounts.rec_creation_date
-#, fuzzy
 msgid "Record Creation Date:"
 msgstr "Fecha de creación del registro"
 
@@ -1292,7 +1252,6 @@ msgid "See all notes"
 msgstr "Ver todas las notas"
 
 #: accounts.sel_charge_type
-#, fuzzy
 msgid "Select charge type:"
 msgstr "Seleccionar tipo de cargo\\:"
 
@@ -1301,7 +1260,6 @@ msgid "select"
 msgstr "seleccionar"
 
 #: accounts.select_click1
-#, fuzzy
 msgid "To select, click on a resulting   "
 msgstr "Para seleccionar, haga click en un "
 
@@ -1334,7 +1292,6 @@ msgid "Source of fund"
 msgstr "Fuente de los fondos"
 
 #: accounts.status
-#, fuzzy
 msgid "Status:"
 msgstr "Estado\\:"
 
@@ -1379,7 +1336,6 @@ msgid "Training fee"
 msgstr "Comisión de entrenamiento"
 
 #: accounts.transaction_id
-#, fuzzy
 msgctxt "accounts.transaction_id"
 msgid "Transaction ID#"
 msgstr "Identificador de la operación"
@@ -1504,7 +1460,6 @@ msgstr ""
 "nuevo más tarde o contacte al administrador del sistema."
 
 #: error.versionnodonotmatch
-#, fuzzy
 msgid ""
 "The record has already been modified by another user. Please navigate to the "
 "details page and start the activity again. "
@@ -1629,7 +1584,6 @@ msgid "Please select the {0}."
 msgstr "Por favor seleccione un {0}."
 
 #: errors.suffix
-#, fuzzy
 msgid "</LI>"
 msgstr "</LI>"
 
@@ -1665,7 +1619,6 @@ msgid "Please specify required information."
 msgstr "Por favor especifique la información requerida."
 
 #: exception.accounts.create.customer.inactive
-#, fuzzy
 msgid "Cannot create a loan for inactive customer. "
 msgstr "No se puede crear un préstamo para un cliente inactivo."
 

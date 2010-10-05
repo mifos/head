@@ -336,7 +336,6 @@ msgid "Create an account for this {0}"
 msgstr "为该{0}新建账户"
 
 #: Group.createanewgroup
-#, fuzzy
 msgid "Create a new Group"
 msgstr "新建组"
 
@@ -821,7 +820,6 @@ msgid "Schedule meeting"
 msgstr "安排会议"
 
 #: Group.searchmsg1
-#, fuzzy
 msgid "To select, click on a resulting {0}."
 msgstr "如要选择，点击下方所列出的搜索{0}"
 
@@ -1085,7 +1083,6 @@ msgid ""
 msgstr "会议频率和循环费用不匹配。请选择有效的费用类型。"
 
 #: errors.Customer.hasActiveAccount
-#, fuzzy
 msgctxt "errors.Customer.hasActiveAccount"
 msgid ""
 "The membership cannot be changed since there are Active accounts present."

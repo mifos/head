@@ -1,5 +1,4 @@
 #. extracted from CustomerUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -143,7 +142,6 @@ msgid "No Flags Available"
 msgstr "Aucuns drapeaux disponibles"
 
 #: Customer.Note
-#, fuzzy
 msgctxt "Customer.Note"
 msgid "Note:"
 msgstr "Note\\:"
@@ -303,7 +301,6 @@ msgid "No results found for"
 msgstr "Pas de résultats trouvés pour"
 
 #: Customer.note
-#, fuzzy
 msgctxt "Customer.note"
 msgid "Note:"
 msgstr "Note\\:"
@@ -420,7 +417,6 @@ msgstr ""
 "plus tard ou contacter l'administrateur système."
 
 #: error.versionnodonotmatch
-#, fuzzy
 msgid ""
 "The record has already been modified by another user. Please navigate to the "
 "details page and start the activity again. "
@@ -531,7 +527,6 @@ msgid "This action is not permissible."
 msgstr "Cette action n'est pas autorisée."
 
 #: label.MFIjoiningdate
-#, fuzzy
 msgid "MFI joining date:"
 msgstr "date d'adhésion à l'IMF\\:"
 
@@ -561,7 +556,6 @@ msgid "Amount of"
 msgstr "Montant de"
 
 #: label.amountofloan
-#, fuzzy
 msgid "Amount of loan:"
 msgstr "Montant de prêt\\:"
 
@@ -590,7 +584,6 @@ msgid "Historical data"
 msgstr "données historiques"
 
 #: label.interestpaid
-#, fuzzy
 msgid "paid:"
 msgstr "payé\\:"
 
@@ -603,12 +596,10 @@ msgid "Cycle per Product"
 msgstr "Cycle par Produit"
 
 #: label.loancyclenumber
-#, fuzzy
 msgid "cycle number:"
 msgstr "numéro de cycle\\:"
 
 #: label.note
-#, fuzzy
 msgctxt "label.note"
 msgid "Note:"
 msgstr "Note\\:"
@@ -656,7 +647,6 @@ msgid "Preview note"
 msgstr "Aperçu note"
 
 #: label.productname
-#, fuzzy
 msgid "Product name:"
 msgstr "Nom de produit\\:"
 
@@ -665,7 +655,6 @@ msgid "Product name"
 msgstr "Nom de produit"
 
 #: label.totalamountpaid
-#, fuzzy
 msgid "Total amount paid:"
 msgstr "Total de montant payé\\:"
 

@@ -1,5 +1,4 @@
 #. extracted from FrameworkUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -85,7 +84,6 @@ msgid "Search"
 msgstr "Chercher"
 
 #: framework.searchCriteria
-#, fuzzy
 msgid "Search by name, system ID or account number "
 msgstr "Chercher par nom, ID système ou numéro de compte"
 

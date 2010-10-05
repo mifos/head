@@ -148,7 +148,6 @@ msgid "Welcome to mifos"
 msgstr "欢迎使用Mifos"
 
 #: AbstractUserDetailsAuthenticationProvider.badCredentials
-#, fuzzy
 msgctxt "AbstractUserDetailsAuthenticationProvider.badCredentials"
 msgid "Please specify valid username/password to access the application."
 msgstr "请填写正确的登录名和密码以便登录系统。"

@@ -1,6 +1,5 @@
 # extracted from ColumnMappingBundle.properties
 #. extracted from ColumnMappingBundle.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
