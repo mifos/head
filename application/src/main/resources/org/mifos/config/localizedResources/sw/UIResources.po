@@ -1,6 +1,5 @@
 # extracted from UIResources.properties
 #. extracted from UIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

@@ -65,8 +65,21 @@ public class QuestionGroupController extends QuestionnaireController {
 
     @RequestMapping("/viewQuestionGroups.ftl")
     public String getAllQuestionGroups(ModelMap model, HttpServletRequest request) {
-        model.addAttribute("questionGroups", questionnaireServiceFacade.getAllQuestionGroups());
+        List <QuestionGroupDetail> questionGroups = questionnaireServiceFacade.getAllQuestionGroups();
+        model.addAttribute("questionGroups", groupByEventSource(questionGroups));
         return "viewQuestionGroups";
+    }
+
+    private Map<String,List <QuestionGroupDetail>> groupByEventSource(List <QuestionGroupDetail> questionGroups){
+        Map <String,List <QuestionGroupDetail>> questionGroupsCategoriesSplit = new HashMap<String, List<QuestionGroupDetail>>();
+        for (QuestionGroupDetail questionGroup : questionGroups){
+            String eventSource = questionGroup.getEventSource().toString();
+            if(!questionGroupsCategoriesSplit.containsKey(eventSource)) {
+                questionGroupsCategoriesSplit.put(eventSource, new ArrayList<QuestionGroupDetail>());
+            }
+            questionGroupsCategoriesSplit.get(eventSource).add(questionGroup);
+        }
+        return questionGroupsCategoriesSplit;
     }
 
     @RequestMapping("/viewQuestionGroupDetail.ftl")
@@ -93,7 +106,9 @@ public class QuestionGroupController extends QuestionnaireController {
         String result = "success";
         if (!questionGroupHasErrors(questionGroupForm, requestContext)) {
             try {
-                if (createMode) questionGroupForm.setActive(true);
+                if (createMode) {
+                    questionGroupForm.setActive(true);
+                }
                 questionnaireServiceFacade.createQuestionGroup(questionGroupForm.getQuestionGroupDetail());
             } catch (SystemException e) {
                 constructAndLogSystemError(requestContext.getMessageContext(), e);
@@ -131,6 +146,26 @@ public class QuestionGroupController extends QuestionnaireController {
 
     public String deleteQuestion(QuestionGroupForm questionGroupForm, String sectionName, String questionId) {
         questionGroupForm.removeQuestion(sectionName, questionId);
+        return "success";
+    }
+
+    public String moveQuestionUp(QuestionGroupForm questionGroupForm, String sectionName, String questionId) {
+        questionGroupForm.moveQuestionUp(sectionName, questionId);
+        return "success";
+    }
+
+    public String moveQuestionDown(QuestionGroupForm questionGroupForm, String sectionName, String questionId) {
+        questionGroupForm.moveQuestionDown(sectionName, questionId);
+        return "success";
+    }
+
+    public String moveSectionUp(QuestionGroupForm questionGroupForm, String sectionName) {
+        questionGroupForm.moveSectionUp(sectionName);
+        return "success";
+    }
+
+    public String moveSectionDown(QuestionGroupForm questionGroupForm, String sectionName) {
+        questionGroupForm.moveSectionDown(sectionName);
         return "success";
     }
 
@@ -242,7 +277,9 @@ public class QuestionGroupController extends QuestionnaireController {
     public String addQuestion(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
         MessageContext context = requestContext.getMessageContext();
         boolean result = validateQuestion(questionGroupForm, context);
-        if (result) questionGroupForm.addCurrentSection();
+        if (result) {
+            questionGroupForm.addCurrentSection();
+        }
         return result? "success": "failure";
     }
 

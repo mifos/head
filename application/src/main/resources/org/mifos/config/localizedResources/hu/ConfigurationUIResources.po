@@ -276,7 +276,6 @@ msgid "Inactive"
 msgstr "Inaktív"
 
 #: configuration.instruction1
-#, fuzzy
 msgid ""
 "Complete the fields below. Then click Preview. Click Cancel to return to "
 "Admin without submitting information. "

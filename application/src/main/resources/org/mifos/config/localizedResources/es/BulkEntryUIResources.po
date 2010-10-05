@@ -38,7 +38,6 @@ msgstr "Asistencia"
 
 # Assuming it stands for attendance
 #: bulkEntry.attn
-#, fuzzy
 msgid "Attn"
 msgstr "Asis"
 
@@ -76,7 +75,6 @@ msgid "Due/Collections"
 msgstr "Vencido/Pagos"
 
 #: bulkEntry.dueCollections2
-#, fuzzy
 msgid "Due collections:"
 msgstr "Pagos vencidos"
 
@@ -120,7 +118,6 @@ msgid "Issues/Withdrawals"
 msgstr "Problemas/Retiros"
 
 #: bulkEntry.loanDisbursements
-#, fuzzy
 msgid "Loan disbursements:"
 msgstr "Desembolso del préstamo"
 
@@ -141,12 +138,10 @@ msgid "Meeting date"
 msgstr "Fecha de la reunión"
 
 #: bulkEntry.netCash
-#, fuzzy
 msgid "Net Cash:"
 msgstr "Efectivo Neto\\:"
 
 #: bulkEntry.otherCollections
-#, fuzzy
 msgid "Other collections:"
 msgstr "Otros pagos\\:"
 
@@ -175,7 +170,6 @@ msgid "Receipt ID"
 msgstr "Identificación del recibo"
 
 #: bulkEntry.revnsub
-#, fuzzy
 msgid "Review &amp; submit "
 msgstr "Revise &amp; enviar"
 
@@ -204,7 +198,6 @@ msgid "Submit"
 msgstr "Enviar"
 
 #: bulkEntry.total
-#, fuzzy
 msgid "Total:"
 msgstr "Total\\:"
 
@@ -225,7 +218,6 @@ msgid "Transaction date"
 msgstr "Fecha de la operación"
 
 #: bulkEntry.withdrawals
-#, fuzzy
 msgid "Withdrawals:"
 msgstr "Retiros\\:"
 
@@ -265,7 +257,6 @@ msgid ""
 msgstr ""
 
 #: errors.invalidaccollections
-#, fuzzy
 msgid ""
 "<li>The amount specified for {0} of customer {1} must be exact amount due or "
 "0. Please specify a valid amount.</li>"
@@ -305,7 +296,6 @@ msgstr ""
 "hoy.</li>"
 
 #: errors.update
-#, fuzzy
 msgid ""
 "The following accounts have not been updated due to simultaneous "
 "updates/insufficient balance/invalid disbursement date/invalid repayment: "

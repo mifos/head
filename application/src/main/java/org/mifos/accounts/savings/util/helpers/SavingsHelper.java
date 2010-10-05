@@ -152,11 +152,11 @@ public class SavingsHelper {
 
     public AccountTrxnEntity createAccountPaymentTrxn(AccountPaymentEntity payment, Money balance,
             AccountActionTypes accountActionType, CustomerBO customer, PersonnelBO createdBy, Persistence persistence,
-            Date postingDate) {
+            Date actionDate) {
 
         SavingsTrxnDetailEntity savingsTrxn = new SavingsTrxnDetailEntity(payment, customer, accountActionType, payment
-                .getAmount(), balance, createdBy, null, new DateTimeService().getCurrentDateMidnight().toDate(), null,
-                "", persistence, postingDate);
+                .getAmount(), balance, createdBy, null, actionDate, null,
+                "", persistence, new DateTimeService().getCurrentDateTime().toDate());
         return savingsTrxn;
     }
 

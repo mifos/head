@@ -1,5 +1,4 @@
 #. extracted from ./BulkEntryUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -74,7 +73,6 @@ msgid "Due/Collections"
 msgstr "Collections/Prévus"
 
 #: bulkEntry.dueCollections2
-#, fuzzy
 msgid "Due collections:"
 msgstr "Collections/Prévus"
 
@@ -142,7 +140,6 @@ msgid "Net Cash:"
 msgstr ""
 
 #: bulkEntry.otherCollections
-#, fuzzy
 msgid "Other collections:"
 msgstr "Collections/Prévus"
 
@@ -171,7 +168,6 @@ msgid "Receipt ID"
 msgstr "ID  reçu"
 
 #: bulkEntry.revnsub
-#, fuzzy
 msgid "Review &amp; submit "
 msgstr "Réafficher et amp; Valider"
 
@@ -210,7 +206,6 @@ msgid "%s Total"
 msgstr ""
 
 #: bulkEntry.totalIssuesWithdrawals
-#, fuzzy
 msgid "Total Issues/Withdrawals"
 msgstr "Emissions/Retraits"
 
@@ -257,7 +252,6 @@ msgid ""
 msgstr ""
 
 #: errors.invalidaccollections
-#, fuzzy
 msgid ""
 "<li>The amount specified for {0} of customer {1} must be exact amount due or "
 "0. Please specify a valid amount.</li>"
@@ -297,7 +291,6 @@ msgstr ""
 "d'aujourd'hui.</li>"
 
 #: errors.update
-#, fuzzy
 msgid ""
 "The following accounts have not been updated due to simultaneous "
 "updates/insufficient balance/invalid disbursement date/invalid repayment: "

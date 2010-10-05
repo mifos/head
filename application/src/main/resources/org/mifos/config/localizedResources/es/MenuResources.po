@@ -73,7 +73,6 @@ msgid "client"
 msgstr "cliente"
 
 #: label.clients
-#, fuzzy
 msgid "Clients "
 msgstr "Clientes"
 
@@ -189,12 +188,10 @@ msgid "Open new"
 msgstr "Abrir una nueva"
 
 #: label.portfolio
-#, fuzzy
 msgid "Portfolio "
 msgstr "Cartera"
 
 #: label.print
-#, fuzzy
 msgid "Print "
 msgstr "Imprimir"
 
@@ -233,7 +230,6 @@ msgstr "Vista"
 
 # I'm not sure of w/o
 #: label.w/ocenter
-#, fuzzy
 msgid "w/o center"
 msgstr "con/sin centro"
 

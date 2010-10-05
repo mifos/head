@@ -63,12 +63,10 @@ msgid "Collateral Notes"
 msgstr "Nota de Garantía"
 
 #: Loan.CollateralType
-#, fuzzy
 msgid "Collateral type "
 msgstr "Tipo de garantía"
 
 #: Loan.PurposeOfLoan
-#, fuzzy
 msgid "Purpose of "
 msgstr "Propósito del"
 
@@ -174,7 +172,6 @@ msgid "Please select at least one {0}."
 msgstr "Por favor, seleccione por lo menos uno."
 
 #: errors.cannotDisburseLoan.because.otherLoansAreActive
-#, fuzzy
 msgid ""
 "This loan cannot be disbursed because the customer has other active loans "
 "for the same product. "
@@ -228,7 +225,6 @@ msgid "EMI type is not supported."
 msgstr "El tipo EMI no es apoyado."
 
 #: errors.externalid
-#, fuzzy
 msgid "Please specify required external ID."
 msgstr "Por favor, especifique la información requerida."
 
@@ -260,7 +256,6 @@ msgstr ""
 
 # Need definition of Non Zero loan.
 #: errors.individualamountfield
-#, fuzzy
 msgid "Please specify a non-zero loan amount for all selected clients."
 msgstr ""
 "Por favor específique un préstamo superior a cero para todos los clientes "
@@ -275,7 +270,6 @@ msgstr ""
 
 # Can I use parenthesis? will this create problems for the developers?
 #: errors.individualsourceoffundfield
-#, fuzzy
 msgid "Please specify source of fund for the selected client(s)."
 msgstr ""
 "Por favor, especifique el próposito del préstamo para el cliente(s) "
@@ -287,7 +281,6 @@ msgid "Please specify valid {0}. Use numbers only."
 msgstr "Por favor, especifique el valor {0}. Solamente use números."
 
 #: errors.interestdedcuted_principallast
-#, fuzzy
 msgid ""
 "The Grace ALLREPAYMENTS/Principal is not applicable to Principal in last "
 "repayment, Interest Deducted at disbursement. "
@@ -296,7 +289,6 @@ msgstr ""
 "principal en el último repago, el interés se dedujó durante el desembolso."
 
 #: errors.interestdeducted_invalidgrace
-#, fuzzy
 msgid ""
 "The Grace AllRepayment/Principal is not applicable to Interest Deducted at "
 "disbursement."
@@ -337,7 +329,6 @@ msgstr ""
 "reunión con el cliente. "
 
 #: errors.invalidTxndateLessThanLastTransactionMade
-#, fuzzy
 msgid ""
 "Date of transaction is invalid. It can not be prior to the date of the last "
 "transaction made on the loan account. "
@@ -530,7 +521,6 @@ msgid "<LI>"
 msgstr "<LI>"
 
 #: errors.principallast_invalidgrace
-#, fuzzy
 msgid "The Grace Principal not applicable to Principal in last repayment."
 msgstr ""
 "El período de gracia del principal no se aplica al principal en el último "
@@ -587,7 +577,6 @@ msgid "Please specify required information."
 msgstr "Por favor, especifique la información requerida."
 
 #: exception.accounts.create.customer.inactive
-#, fuzzy
 msgid "Cannot create a loan for inactive customer. "
 msgstr "No se puede crear un préstamo para un cliente inactivo."
 
@@ -699,7 +688,6 @@ msgstr ""
 "intentarlo."
 
 #: exceptions.application.loan.noOfInstallmentsLessThanTwo
-#, fuzzy
 msgid ""
 "The No. of installments should be greater than 1 if {1} is deducted at "
 "disbursement. Please specify {0} "
@@ -712,7 +700,6 @@ msgid "Account"
 msgstr "Cuenta"
 
 #: loan.ChecklistMsg
-#, fuzzy
 msgid "Complete and check off the following tasks. "
 msgstr "Complete y marque las siguientes tareas."
 
@@ -739,7 +726,6 @@ msgid "Edit"
 msgstr "Editar"
 
 #: loan.EditStatus
-#, fuzzy
 msgid "Edit status"
 msgstr "Estatus de editaje"
 
@@ -749,7 +735,6 @@ msgid "Fields marked with an asterisk are required."
 msgstr "Los campos marcados con asterisco son requeridos."
 
 #: loan.NewStatus
-#, fuzzy
 msgid "New status:"
 msgstr "Estatus nuevo\\:"
 
@@ -758,7 +743,6 @@ msgid "No CheckList Available"
 msgstr "No hay Lista de Control disponible"
 
 #: loan.NoFlagsAvailable
-#, fuzzy
 msgid "No Flags Available"
 msgstr "No hay banderas disponibles"
 
@@ -824,12 +808,10 @@ msgid "account by ID  "
 msgstr ""
 
 #: loan.accountStatuschanged
-#, fuzzy
 msgid "account status will be changed to cancelled."
 msgstr "el Estatus será cambiado para cancelar."
 
 #: loan.accountAssigned
-#, fuzzy
 msgid ""
 "A new {0} account for {1} has been assigned account # {2}. You can enter an "
 "account number into the search box to access account details."
@@ -843,7 +825,6 @@ msgid "Account Number"
 msgstr "Número de cuenta"
 
 #: loan.accountNumber
-#, fuzzy
 msgid "Account #"
 msgstr "Cuenta \\#"
 
@@ -861,7 +842,6 @@ msgid "accounts"
 msgstr "cuentas"
 
 #: loan.accsWithFollowingIdCreated
-#, fuzzy
 msgid "accounts with the following IDs have been created"
 msgstr "con los siguientes IDs han sido creados"
 
@@ -906,17 +886,14 @@ msgid "(Allowed {0} rate amount"
 msgstr "({0} tasa permitida "
 
 #: loan.allowed_amount
-#, fuzzy
 msgid "(Allowed Amount:  "
 msgstr "(Cantidad permitida\\:"
 
 #: loan.allowed_amount1
-#, fuzzy
 msgid "Allowed Amount  "
 msgstr "Cantidad permitida"
 
 #: loan.allowed_interest1
-#, fuzzy
 msgid "(Allowed  "
 msgstr "(Permitida)"
 
@@ -925,12 +902,10 @@ msgid "Rate Amount"
 msgstr "Tasa"
 
 #: loan.allowed_no_of_inst
-#, fuzzy
 msgid "(Allowed Number of Installments:"
 msgstr "(Número de pagos permitidos\\:"
 
 #: loan.allpayments
-#, fuzzy
 msgid "and all payments made against this "
 msgstr "y todos los pagos hechos en contra de este "
 
@@ -977,7 +952,6 @@ msgid "Application Fee"
 msgstr "Cuota de Aplicación"
 
 #: loan.app_fee_amt
-#, fuzzy
 msgid "Application fee amount:"
 msgstr "Cantidad de la cuota de aplicación\\:"
 
@@ -1002,7 +976,6 @@ msgid "Apply payment"
 msgstr "Aplique pago"
 
 #: loan.apply_trans
-#, fuzzy
 msgid "Apply transactions:"
 msgstr "Aplique transacciones\\:"
 
@@ -1015,7 +988,6 @@ msgid "APR  "
 msgstr "CAT"
 
 #: loan.areyousure
-#, fuzzy
 msgid "Are you sure you want to adjust the "
 msgstr "Está seguro que quiere ajustar el  "
 
@@ -1049,7 +1021,6 @@ msgid "Branch 01"
 msgstr "Sucursal 01"
 
 #: loan.business_work_act
-#, fuzzy
 msgid "Purpose of"
 msgstr "Propósito del "
 
@@ -1102,12 +1073,10 @@ msgstr ""
 "ninguna modificación."
 
 #: loan.client/group_name
-#, fuzzy
 msgid "Client/Group Name:"
 msgstr "Cliente/Nombre del Grupo\\:"
 
 #: loan.coll_sheet_type
-#, fuzzy
 msgid "Collection sheet type:"
 msgstr "Tipo de hoja de cobranza\\:"
 
@@ -1121,7 +1090,6 @@ msgid "Collateral Notes"
 msgstr "Notas del colateral"
 
 #: loan.collateral_type
-#, fuzzy
 msgid "Collateral type"
 msgstr "Tipo de colateral"
 
@@ -1130,7 +1098,6 @@ msgid ": "
 msgstr ":"
 
 #: loan.complete_field
-#, fuzzy
 msgid ""
 "Complete the fields below. Then click Preview. Click Cancel to return to "
 "Clients & Accounts without submitting information. "
@@ -1148,7 +1115,6 @@ msgid "account for"
 msgstr "cuenta para"
 
 #: loan.congo2
-#, fuzzy
 msgid "has been assigned account # "
 msgstr "se le asignó la cuenta\\#"
 
@@ -1228,7 +1194,6 @@ msgid "Date of transaction"
 msgstr "Fecha de la transacción"
 
 #: loan.days_arrears
-#, fuzzy
 msgid "Days in arrears:"
 msgstr "Días de atraso\\:"
 
@@ -1249,7 +1214,6 @@ msgid "administrative fee"
 msgstr "cuota administrativa"
 
 #: loan.delinquency
-#, fuzzy
 msgid "Delinquency:"
 msgstr "Morosidad\\:"
 
@@ -1268,7 +1232,6 @@ msgid "Proposed/Actual disbursement date"
 msgstr "Fecha Propuesta/Actual de desembolso"
 
 #: loan.disb_pr
-#, fuzzy
 msgid "Disb Pr"
 msgstr "Disb Pr"
 
@@ -1285,7 +1248,6 @@ msgid "disbursal date"
 msgstr "Fecha de desembolso"
 
 #: loan.disburse
-#, fuzzy
 msgid "Disburse "
 msgstr "Desembolse"
 
@@ -1333,7 +1295,6 @@ msgid "Edit  account information"
 msgstr "Editar información de la cuenta"
 
 #: loan.edittrans
-#, fuzzy
 msgid ""
 "Review the transaction below. If satisfied click Submit. Click Cancel to "
 "return to account details without submitting information or to try again "
@@ -1344,7 +1305,6 @@ msgstr ""
 "la información o para intentarlo de nuevo con los cambios."
 
 #: loan.edu_loan
-#, fuzzy
 msgid "Educational "
 msgstr "Educacional"
 
@@ -1412,7 +1372,6 @@ msgid "Field"
 msgstr "Campo"
 
 #: loan.folldetails
-#, fuzzy
 msgid "Following are the account details for the "
 msgstr "A continuacion están los detalles de la cuenta para el "
 
@@ -1429,7 +1388,6 @@ msgid "Generate report"
 msgstr "Generar reporte"
 
 #: loan.gl_cod
-#, fuzzy
 msgid "GL Cod"
 msgstr "Código del Libro Mayor"
 
@@ -1454,7 +1412,6 @@ msgid "Hope & Effort Group"
 msgstr "Grupo de Esperanza y Esfuerzo"
 
 #: loan.ifyouclicksubmit
-#, fuzzy
 msgid ""
 "If you click submit all financial transactions made till this date will be "
 "reversed and the "
@@ -1467,12 +1424,10 @@ msgid "Ins # "
 msgstr "Inst #"
 
 #: loan.inst
-#, fuzzy
 msgid "Installments"
 msgstr "Pagos"
 
 #: loan.install_paid
-#, fuzzy
 msgid "Installments "
 msgstr "Pagos"
 
@@ -1522,7 +1477,6 @@ msgid "Interest"
 msgstr "Interés"
 
 #: loan.interestDisbursement
-#, fuzzy
 msgid "{0} deducted at disbursement "
 msgstr "{0} deducido durante el desembolso"
 
@@ -1547,7 +1501,6 @@ msgid "Interest Calculation Rule For Early/Late Payments"
 msgstr "Regla de cálculo del interés para pagos tempranos/tardes"
 
 #: loan.interest_disb
-#, fuzzy
 msgid "deducted at disbursement "
 msgstr "deducido durante el desembolso"
 
@@ -1561,7 +1514,6 @@ msgstr "Tipo de Tasa"
 
 # Need more information
 #: loan.intr_rec
-#, fuzzy
 msgid "Intr Rec"
 msgstr "Intr rec"
 
@@ -1600,7 +1552,6 @@ msgid "{0} Amount"
 msgstr "{0} Cantidad"
 
 #: loan.loanAmountFor
-#, fuzzy
 msgid "Loan Amount for "
 msgstr "La cantidad del préstamo para "
 
@@ -1643,12 +1594,10 @@ msgid "Maintenance fee"
 msgstr "Cuota de mantenimiento"
 
 #: loan.mariev
-#, fuzzy
 msgid "mariev"
 msgstr "mariev"
 
 #: loan.maturity_date
-#, fuzzy
 msgid "Loan maturity date:"
 msgstr "Fecha de vencimiento del préstamo\\:"
 
@@ -1669,7 +1618,6 @@ msgid "Meeting charges"
 msgstr "Cargos por reuniones"
 
 #: loan.member_fee_amt
-#, fuzzy
 msgid "Membership fee amount:"
 msgstr "Cantidad de la cuota de membresía\\:"
 
@@ -1690,7 +1638,6 @@ msgid "Min loan amount"
 msgstr "Cantidad mínima del préstamo"
 
 #: loan.missed_payments
-#, fuzzy
 msgid "# of missed payments:"
 msgstr "\\# de pagos no hechos\\:"
 
@@ -1751,7 +1698,6 @@ msgid "No. of installments"
 msgstr "Núm. de pagos"
 
 #: loan.nopaymentsmade
-#, fuzzy
 msgid "No. of payments made "
 msgstr "Núm. de pagos hechos"
 
@@ -1764,7 +1710,6 @@ msgid "notes"
 msgstr "notas"
 
 #: loan.of_payments
-#, fuzzy
 msgid "# of payments:"
 msgstr "\\# de pagos\\:"
 
@@ -1797,12 +1742,10 @@ msgid "Open a new {0} account."
 msgstr "Abrir una nueva cuenta de {0}."
 
 #: loan.open_new
-#, fuzzy
 msgid "Open a new "
 msgstr "Abrir una nueva"
 
 #: loan.open_new_acc
-#, fuzzy
 msgid "Open another account for  "
 msgstr "Abrir otra cuenta para"
 
@@ -1823,7 +1766,6 @@ msgid "Original {0}"
 msgstr "{0} original"
 
 #: loan.original_loan
-#, fuzzy
 msgid "Original "
 msgstr "Original"
 
@@ -1840,7 +1782,6 @@ msgid "paid"
 msgstr "pagado"
 
 #: loan.past_due
-#, fuzzy
 msgid "Past due:"
 msgstr "Pago vencido\\:"
 
@@ -1865,7 +1806,6 @@ msgid "Payment type"
 msgstr "Tipo de pago"
 
 #: loan.payment_id
-#, fuzzy
 msgid "Payment ID#"
 msgstr "ID de pago\\#"
 
@@ -1894,12 +1834,10 @@ msgid "Penalty"
 msgstr "Multa"
 
 #: loan.penalty_01
-#, fuzzy
 msgid "Penalty for Installment #1"
 msgstr "Multa por el pago \\#1"
 
 #: loan.penalty_02
-#, fuzzy
 msgid "Penalty for Installment #2"
 msgstr "Multa por el pago \\#2"
 
@@ -1924,22 +1862,18 @@ msgid "Recur every"
 msgstr "Ocurre cada"
 
 #: loan.periodicity_annual_fee
-#, fuzzy
 msgid "Periodicity: annual fee"
 msgstr "Periodicidad\\: cuota anual"
 
 #: loan.periodicity_one_time_fee
-#, fuzzy
 msgid "Periodicity: one time fee"
 msgstr "Periodicidad\\: cuota única"
 
 #: loan.phonenumber
-#, fuzzy
 msgid "Phone Number: "
 msgstr "Número de teléfono\\:"
 
 #: loan.plz_note
-#, fuzzy
 msgid "Please Note:"
 msgstr "Por favor note\\:"
 
@@ -1948,7 +1882,6 @@ msgid "Posted By"
 msgstr "Publicado por"
 
 #: loan.pr_pd
-#, fuzzy
 msgid "Pr Pd"
 msgstr "Pr Pd"
 
@@ -2019,7 +1952,6 @@ msgid "Redo {0} account"
 msgstr "Rehacer {0} de la cuenta"
 
 #: loan.redo_loan_note
-#, fuzzy
 msgid "Note: You are redoing a loan account."
 msgstr "Nota\\: Usted está rehaciendo una cuenta de préstamo."
 
@@ -2028,7 +1960,6 @@ msgid "Remove"
 msgstr "Remover"
 
 #: loan.repay
-#, fuzzy
 msgid "Repay "
 msgstr "Repagar"
 
@@ -2094,7 +2025,6 @@ msgstr ""
 "regresar a Clientes & Cuentas sin enviar su información."
 
 #: loan.reviewaccountinformation1
-#, fuzzy
 msgid ""
 "Review the information below. Click Submit if you are satisfied or click "
 "'Edit "
@@ -2103,7 +2033,6 @@ msgstr ""
 "o haga clic en 'Editar"
 
 #: loan.reviewaccountinformation2
-#, fuzzy
 msgid "account information' to make changes. Click Cancel to return to "
 msgstr ""
 "la información de la cuenta' para hacer cambios. Haga clic en Cancelar para "
@@ -2138,7 +2067,6 @@ msgid "See all notes"
 msgstr "Ver todas las notas"
 
 #: loan.sel_charge_type
-#, fuzzy
 msgid "Select charge type:"
 msgstr "Escoja el tipo de cargo\\:"
 
@@ -2179,7 +2107,6 @@ msgid "Source of fund"
 msgstr "Fuente de los fondos"
 
 #: loan.specifynote
-#, fuzzy
 msgid "Specify the note and click Preview if you want to reverse the "
 msgstr ""
 "Especifique la nota y haga clic en Vista Preliminar si usted quiere revertir "
@@ -2239,12 +2166,10 @@ msgid "Total"
 msgstr "Total"
 
 #: loan.totalAmtDue
-#, fuzzy
 msgid "Total amount due on "
 msgstr "Cantidad total adeudada en "
 
 #: loan.totalDueOn
-#, fuzzy
 msgid "Total amount due on"
 msgstr "Cantidad total adeudada en"
 
@@ -2257,12 +2182,10 @@ msgid "Total amount"
 msgstr "Cantidad total"
 
 #: loan.training_fee
-#, fuzzy
 msgid "Training fee:"
 msgstr "Cuota de entrenamiento\\:"
 
 #: loan.transaction_id
-#, fuzzy
 msgid "Transaction ID#"
 msgstr "ID de la transacción\\#"
 
@@ -2314,7 +2237,6 @@ msgid "View installment details"
 msgstr "Ver los detalles del pago"
 
 #: loan.view_loan_acc1
-#, fuzzy
 msgid "View "
 msgstr "Ver"
 

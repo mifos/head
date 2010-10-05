@@ -72,7 +72,6 @@ msgid "client"
 msgstr "ügyfél"
 
 #: label.clients
-#, fuzzy
 msgid "Clients "
 msgstr "Ügyfelek"
 
@@ -188,12 +187,10 @@ msgid "Open new"
 msgstr "Megnyitás: új"
 
 #: label.portfolio
-#, fuzzy
 msgid "Portfolio "
 msgstr "Portfolió"
 
 #: label.print
-#, fuzzy
 msgid "Print "
 msgstr "Nyomtatás"
 

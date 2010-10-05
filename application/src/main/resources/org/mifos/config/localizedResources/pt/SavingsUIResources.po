@@ -1,6 +1,5 @@
 # extracted from SavingsUIResources.properties
 #. extracted from SavingsUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

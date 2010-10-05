@@ -223,8 +223,9 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(finalCountOfQuestions - initialCountOfQuestions, is(2));
         List<QuestionDetail> actualQuestions = new ArrayList<QuestionDetail>();
         for (QuestionDetail questionDetail : questionDetails) {
-            if (expectedOrderIds.contains(questionDetail.getId()))
+            if (expectedOrderIds.contains(questionDetail.getId())) {
                 actualQuestions.add(questionDetail);
+            }
         }
         assertThat(actualQuestions.get(0).getShortName(), is(expectedOrderTitles.get(0)));
         assertThat(actualQuestions.get(1).getShortName(), is(expectedOrderTitles.get(1)));
@@ -245,8 +246,9 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(finalCountOfQuestions - initialCountOfQuestions, is(2));
         List<QuestionDetail> actualQuestions = new ArrayList<QuestionDetail>();
         for (QuestionDetail questionDetail : questionDetails) {
-            if (expectedOrderIds.contains(questionDetail.getId()))
+            if (expectedOrderIds.contains(questionDetail.getId())) {
                 actualQuestions.add(questionDetail);
+            }
         }
         assertThat(actualQuestions.get(0).getShortName(), is(expectedOrderTitles.get(0)));
         assertThat(actualQuestions.get(1).getShortName(), is(expectedOrderTitles.get(1)));
@@ -266,8 +268,9 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(finalCountOfQuestions - initialCountOfQuestions, is(3));
         List<QuestionDetail> actualQuestions = new ArrayList<QuestionDetail>();
         for (QuestionDetail questionDetail : questionDetails) {
-            if (expectedOrderIds.contains(questionDetail.getId()))
+            if (expectedOrderIds.contains(questionDetail.getId())) {
                 actualQuestions.add(questionDetail);
+            }
         }
         assertThat(actualQuestions.get(0).getShortName(), is(expectedOrderTitles.get(0)));
         assertThat(actualQuestions.get(1).getShortName(), is(expectedOrderTitles.get(1)));
@@ -287,8 +290,7 @@ public class QuestionnaireServiceIntegrationTest {
         List<QuestionGroupDetail> questionGroups = questionnaireService.getAllQuestionGroups();
         int finalCount = questionGroups.size();
         assertThat(finalCount - initialCount, is(2));
-        assertThat(questionGroups, Matchers.hasItems(getQuestionGroupDetailMatcher(questionGroupTitle1, sectionsForQG1),
-                getQuestionGroupDetailMatcher(questionGroupTitle2, sectionsForQG2)));
+        assertThat(questionGroups, Matchers.hasItems(getQuestionGroupDetailMatcher(questionGroupTitle1, "Create", "Client", sectionsForQG1, false), getQuestionGroupDetailMatcher(questionGroupTitle2, "Create", "Client", sectionsForQG2, false)));
     }
 
     @Test
@@ -453,7 +455,9 @@ public class QuestionnaireServiceIntegrationTest {
                         new EventSourceDto("View", "Center", "View Center"),
                         new EventSourceDto("Disburse", "Loan", "Disburse Loan"),
                         new EventSourceDto("Create", "Savings", "Create Savings"),
-                        new EventSourceDto("View", "Savings", "View Savings")
+                        new EventSourceDto("View", "Savings", "View Savings"),
+                        new EventSourceDto("Create", "Office", "Create Office"),
+                        new EventSourceDto("Create", "Personnel", "Create Personnel")
                         )));
     }
 
@@ -611,7 +615,7 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(questionGroupResponses.size(), is(1));
         assertThat(questionGroupResponses.get(0).getResponse(), is("1234"));
     }
-    
+
     private QuestionGroupInstanceDto getQuestionGroupInstanceDto(String response, Integer creatorId, Integer entityId, Integer questionGroupId, Integer sectionQuestionId) {
         QuestionGroupInstanceDtoBuilder instanceBuilder = new QuestionGroupInstanceDtoBuilder();
         QuestionGroupResponseDtoBuilder responseBuilder = new QuestionGroupResponseDtoBuilder();
@@ -700,8 +704,9 @@ public class QuestionnaireServiceIntegrationTest {
     private QuestionGroupInstance getMatchingQuestionGroupInstance(Integer questionGroupId, Integer entityId, List<QuestionGroupInstance> instances, int version) {
         for (QuestionGroupInstance questionGroupInstance : instances) {
             if (questionGroupInstance.getQuestionGroup().getId() == questionGroupId &&
-                    questionGroupInstance.getEntityId() == entityId && questionGroupInstance.getVersionNum() == version)
+                    questionGroupInstance.getEntityId() == entityId && questionGroupInstance.getVersionNum() == version) {
                 return questionGroupInstance;
+            }
         }
         return null;
     }
@@ -772,8 +777,8 @@ public class QuestionnaireServiceIntegrationTest {
         Assert.assertEquals("Create Client", eventSourceEntity.getDescription());
     }
 
-    private QuestionGroupDetailMatcher getQuestionGroupDetailMatcher(String questionGroupTitle, List<SectionDetail> sectionDetails) {
-        return new QuestionGroupDetailMatcher(new QuestionGroupDetail(0, questionGroupTitle, sectionDetails));
+    private QuestionGroupDetailMatcher getQuestionGroupDetailMatcher(String questionGroupTitle,  String event, String source, List<SectionDetail> sectionDetails, boolean editable) {
+        return new QuestionGroupDetailMatcher(new QuestionGroupDetail(0, questionGroupTitle, new EventSourceDto(event, source, null), sectionDetails, editable, true));
     }
 
     private QuestionGroupDetail getMatchingQGDetailById(Integer expectedId, List<QuestionGroupDetail> questionGroups) {

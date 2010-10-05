@@ -91,6 +91,7 @@
             <forward name="loadSearch_success" path="/pages/application/personnel/jsp/viewusers.jsp"/>
             <forward name="viewPersonnelChangeLog" path="/pages/application/personnel/jsp/viewchangelog.jsp"/>
             <forward name="cancelPersonnelChangeLog" path="/PersonAction.do?method=get"/>
+            <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
         </action>
 
         <!-- M2 Personnel Note action -->
@@ -234,6 +235,7 @@
             <forward name="update_cache_success" path="/offAction.do?method=updateCache"/>
             <forward name="update_failure" path="/pages/application/office/jsp/edit_preview_office.jsp"/>
             <forward name="search_success" path="/pages/application/office/jsp/viewOffices.jsp"/>
+            <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
         </action>
         <!-- offAction End-->
 

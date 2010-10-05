@@ -53,7 +53,6 @@ msgid "Enter a note in the field below."
 msgstr "Írjon megjegyzést az alábbi mezőbe."
 
 #: Account.Note
-#, fuzzy
 msgctxt "Account.Note"
 msgid "Note:"
 msgstr "Megjegyzés\\:"
@@ -154,7 +153,6 @@ msgid "Old Status"
 msgstr "Korábbi státusz"
 
 #: PaymentID
-#, fuzzy
 msgctxt "PaymentID"
 msgid "Payment ID#"
 msgstr "Fizetés azonosító szám"
@@ -169,7 +167,6 @@ msgid "Posted by"
 msgstr "Feladta"
 
 #: TransactionID
-#, fuzzy
 msgctxt "TransactionID"
 msgid "Transaction ID#"
 msgstr "Tranzakció azonosító szám"
@@ -220,12 +217,10 @@ msgstr ""
 "Takarékszámla adatokhoz, kattintson a Mégsem gombra."
 
 #: accounts.ChecklistMsg
-#, fuzzy
 msgid "Complete and check off the following tasks. "
 msgstr "Végezze el és pipálja ki az alábbi feladatokat."
 
 #: accounts.ClickCancel1
-#, fuzzy
 msgid "Click Cancel to return to "
 msgstr "Kattintson a Mégsem gombra, amennyiben szeretne visszatérni a(z)"
 
@@ -246,7 +241,6 @@ msgid "Confirm status change"
 msgstr "Státuszmódosítás megerősítése"
 
 #: accounts.EditStatus
-#, fuzzy
 msgid "Edit status "
 msgstr "Státusz szerkesztése"
 
@@ -315,7 +309,6 @@ msgid "Select a Client/Group"
 msgstr "Ügyfél/csoport választása"
 
 #: accounts.Select
-#, fuzzy
 msgid "Select "
 msgstr "Választás"
 
@@ -328,7 +321,6 @@ msgid "Select customer"
 msgstr "Ügyfél választása"
 
 #: accounts.SelectExplaination1
-#, fuzzy
 msgid "When cancelling a "
 msgstr "A(z)"
 
@@ -379,7 +371,6 @@ msgid "account information"
 msgstr "számlainformációk"
 
 #: accounts.acc_owner
-#, fuzzy
 msgid "Account Owner: "
 msgstr "Számlatulajdonos\\:"
 
@@ -435,17 +426,14 @@ msgid "Agricultural Loan"
 msgstr "Mezőgazdasági hitel"
 
 #: accounts.allowed_amount
-#, fuzzy
 msgid "(Allowed Amount: INR "
 msgstr "(Engedélyezett összeg\\: INR"
 
 #: accounts.allowed_interest
-#, fuzzy
 msgid "(Allowed Interest Rate Amount "
 msgstr "(Engedélyezett kamatláb"
 
 #: accounts.allowed_no_of_inst
-#, fuzzy
 msgid "(Allowed Number of Installments "
 msgstr "(Törlesztőrészletek engedélyezett száma"
 
@@ -459,13 +447,11 @@ msgid "Amount"
 msgstr "Összeg"
 
 #: accounts.amount(USD)
-#, fuzzy
 msgctxt "accounts.amount(USD)"
 msgid "Amount "
 msgstr "Összeg"
 
 #: accounts.amount_(Rs)
-#, fuzzy
 msgctxt "accounts.amount_(Rs)"
 msgid "Amount "
 msgstr "Összeg"
@@ -484,7 +470,6 @@ msgid "Amount paid"
 msgstr "Fizetett összeg"
 
 #: accounts.anti_disburse_dd
-#, fuzzy
 msgid "Anticipated disbursement date:"
 msgstr "Folyósítás várható dátuma\\:"
 
@@ -497,7 +482,6 @@ msgid "Application fee amount"
 msgstr "Igénylési díj összege"
 
 #: accounts.appl_fees
-#, fuzzy
 msgid "Application fee:"
 msgstr "Igénylési díj\\:"
 
@@ -582,7 +566,6 @@ msgid "Change Log"
 msgstr "Módosítások naplója"
 
 #: accounts.changestatus
-#, fuzzy
 msgid "Change status "
 msgstr "Státusz módosítása"
 
@@ -646,7 +629,6 @@ msgstr ""
 "kattintson a Mégsem gombra."
 
 #: accounts.congo
-#, fuzzy
 msgid ""
 "A new loan account for John Anderson has been assigned account # 13354646. "
 "You can enter an account number into the search box to access account "
@@ -664,7 +646,6 @@ msgid "Continue"
 msgstr "Folytatás"
 
 #: accounts.create
-#, fuzzy
 msgid "Create "
 msgstr "Létrehozás"
 
@@ -717,7 +698,6 @@ msgid "Default amount"
 msgstr "Alapértelmezés szerinti összeg"
 
 #: accounts.definst
-#, fuzzy
 msgid "Default # of installments"
 msgstr "Törlesztőrészletek alapértelmezés szerinti száma"
 
@@ -735,7 +715,6 @@ msgid "Description"
 msgstr "Leírás"
 
 #: accounts.description
-#, fuzzy
 msgid "Description:"
 msgstr "Leírás\\:"
 
@@ -769,7 +748,6 @@ msgid "Edit loan account information"
 msgstr "Hitelszámla információk szerkesztése"
 
 #: accounts.edittrans
-#, fuzzy
 msgid ""
 "Review the transaction below. If satisfied click Submit. Click Cancel to "
 "return to account details without submitting information or to try again "
@@ -789,7 +767,6 @@ msgid "Educational Loan"
 msgstr "Tanulmányi hitel"
 
 #: accounts.enter_client_details1
-#, fuzzy
 msgid "Enter a "
 msgstr "Adjon meg egy"
 
@@ -857,7 +834,6 @@ msgid "flag"
 msgstr "flag"
 
 #: accounts.freq_of_inst
-#, fuzzy
 msgid "Frequency of Installments:"
 msgstr "Törlesztés gyakorisága\\:"
 
@@ -1008,7 +984,6 @@ msgid "Loan maturity date"
 msgstr "Hitel lejárata"
 
 #: accounts.maxinst
-#, fuzzy
 msgid "Max # of installments"
 msgstr "Törlesztőrészletek maximális száma"
 
@@ -1033,7 +1008,6 @@ msgid "Membership fee"
 msgstr "Tagdíj"
 
 #: accounts.mininst
-#, fuzzy
 msgid "Min # of installments"
 msgstr "Törlesztőrészletek minimális száma"
 
@@ -1046,7 +1020,6 @@ msgid "Min loan amount"
 msgstr "Hitel minimális összege"
 
 #: accounts.missed_payments
-#, fuzzy
 msgid "# of missed payments"
 msgstr "Elmaradt törlesztések száma"
 
@@ -1101,12 +1074,10 @@ msgid "No."
 msgstr "Szám"
 
 #: accounts.no_of_inst
-#, fuzzy
 msgid "No. of installments:"
 msgstr "Törlesztőrészletek száma\\:"
 
 #: accounts.note
-#, fuzzy
 msgctxt "accounts.note"
 msgid "Note:"
 msgstr "Megjegyzés\\:"
@@ -1117,7 +1088,6 @@ msgid "Notes"
 msgstr "Megjegyzések"
 
 #: accounts.of_payments
-#, fuzzy
 msgid "# of payments"
 msgstr "Fizetési tranzakciók száma"
 
@@ -1171,7 +1141,6 @@ msgid "Payment"
 msgstr "Fizetési tranzakció"
 
 #: accounts.payment_id
-#, fuzzy
 msgctxt "accounts.payment_id"
 msgid "Payment ID#"
 msgstr "Fizetés azonosító szám"
@@ -1181,12 +1150,10 @@ msgid "Penalty"
 msgstr "Késedelmi kamat"
 
 #: accounts.penalty_01
-#, fuzzy
 msgid "Penalty for Installment #1"
 msgstr "1. sz. törlesztőrészlet késedelmi kamata"
 
 #: accounts.penalty_02
-#, fuzzy
 msgid "Penalty for Installment #2"
 msgstr "2. sz. törlesztőrészlet késedelmi kamata"
 
@@ -1199,12 +1166,10 @@ msgid "Performance history"
 msgstr "Teljesítéstörténet"
 
 #: accounts.periodicity_annual_fee
-#, fuzzy
 msgid "Periodicity: annual fee"
 msgstr "Gyakoriság\\: éves díj"
 
 #: accounts.periodicity_one_time_fee
-#, fuzzy
 msgid "Periodicity: one time fee"
 msgstr "Gyakoriság\\: egyszeri díj"
 
@@ -1255,7 +1220,6 @@ msgid "Proposed/Actual disbursal date"
 msgstr "Folyósítás előirányzott/tényleges napja"
 
 #: accounts.rec_creation_date
-#, fuzzy
 msgid "Record Creation Date:"
 msgstr "Rekord létrehozás dátuma\\:"
 
@@ -1370,7 +1334,6 @@ msgid "See all notes"
 msgstr "Összes megjegyzés megjelenítése"
 
 #: accounts.sel_charge_type
-#, fuzzy
 msgid "Select charge type:"
 msgstr "Költségtípus kiválasztása\\:"
 
@@ -1379,7 +1342,6 @@ msgid "select"
 msgstr "választás"
 
 #: accounts.select_click1
-#, fuzzy
 msgid "To select, click on a resulting   "
 msgstr "A választáshoz kattintson az egyik"
 
@@ -1413,7 +1375,6 @@ msgid "Source of fund"
 msgstr "Finanszírozás forrása"
 
 #: accounts.status
-#, fuzzy
 msgid "Status:"
 msgstr "Státusz\\:"
 
@@ -1458,7 +1419,6 @@ msgid "Training fee"
 msgstr "Képzési díj"
 
 #: accounts.transaction_id
-#, fuzzy
 msgctxt "accounts.transaction_id"
 msgid "Transaction ID#"
 msgstr "Tranzakció azonosító szám"
@@ -1566,7 +1526,6 @@ msgstr ""
 "forduljon a rendszergazdához."
 
 #: error.versionnodonotmatch
-#, fuzzy
 msgid ""
 "The record has already been modified by another user. Please navigate to the "
 "details page and start the activity again. "
@@ -1733,7 +1692,6 @@ msgid ""
 msgstr "A számla már korrigálásra került, több korrekció nem hajtható végre."
 
 #: exception.accounts.cantapplycharge
-#, fuzzy
 msgid ""
 "Applying this charge is currently not supported since it would require "
 "recalculating the loan schedule after payments have been made. "

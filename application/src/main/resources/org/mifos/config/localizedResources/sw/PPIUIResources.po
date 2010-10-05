@@ -1,6 +1,5 @@
 # extracted from PPIUIResources.properties
 #. extracted from PPIUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

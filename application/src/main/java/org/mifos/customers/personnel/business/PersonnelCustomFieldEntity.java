@@ -60,6 +60,10 @@ public class PersonnelCustomFieldEntity extends AbstractEntity {
         return fieldValue;
     }
 
+    public PersonnelBO getPersonnel() {
+        return this.personnel;
+    }
+
     public void setFieldValue(String fieldValue) {
         this.fieldValue = fieldValue;
     }

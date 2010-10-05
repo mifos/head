@@ -32,12 +32,10 @@ msgid "Amount of last {0} {1}"
 msgstr "ចំនួនសរុប នៃ {0} {1} ចុងក្រោយ "
 
 #: Group.AssignedloanOfficer
-#, fuzzy
 msgid "Assigned loan officer:"
 msgstr "កំនត់ដោយមន្ត្រីឥណទាន"
 
 #: Group.Avgindividual
-#, fuzzy
 msgid "Avg individual {0} size:"
 msgstr "ចំនួនមធ្យមនៃ{0} \\៖"
 
@@ -46,7 +44,6 @@ msgid "Center"
 msgstr "មជ្ឍមណ្ឌុល"
 
 #: Group.EditGroupInstructions
-#, fuzzy
 msgid ""
 "Click Submit to change the {0} or Cancel to return to {1} details page "
 "without changing the {0}"
@@ -71,7 +68,6 @@ msgid "s"
 msgstr "s"
 
 #: Group.Selected
-#, fuzzy
 msgid "{0} Selected:"
 msgstr "{0} ត្រូវបានជ្រើសរើស\\៖"
 
@@ -84,7 +80,6 @@ msgid "Yes"
 msgstr "បាទ ចាស"
 
 #: Group.acc
-#, fuzzy
 msgid "Acct #"
 msgstr "លេខគណនី"
 
@@ -121,7 +116,6 @@ msgid "Address"
 msgstr "អាស្រយដ្ឋាន"
 
 #: Group.address1
-#, fuzzy
 msgid "Address 1:"
 msgstr "អាស្រយដ្ឋាន ១\\៖"
 
@@ -130,7 +124,6 @@ msgid "Address 1"
 msgstr "អាស្រយដ្ឋាន ១"
 
 #: Group.address2
-#, fuzzy
 msgid "Address 2:"
 msgstr "អាស្រយដ្ឋាន 2\\៖"
 
@@ -139,7 +132,6 @@ msgid "Address 2"
 msgstr "អាស្រយដ្ឋាន 2"
 
 #: Group.address3
-#, fuzzy
 msgid "Address 3:"
 msgstr "អាស្រយដ្ឋាន 3\\៖"
 
@@ -152,12 +144,10 @@ msgid "Administrative set fees"
 msgstr "ការកំនត់ប្រាក់ឈ្នួលពីអ្នកគ្រប់គ្រង"
 
 #: Group.amount
-#, fuzzy
 msgid "Amount:"
 msgstr "ចំនួនសរុប\\៖"
 
 #: Group.amountdue
-#, fuzzy
 msgid "Amount due:"
 msgstr "ចំនួនសរុបប្រាក់ឈ្នូល\\៖"
 
@@ -178,12 +168,10 @@ msgid "Apply transactions"
 msgstr "ដាក់បញ្ចូលប្រតិបត្តិការ"
 
 #: Group.approvaldate
-#, fuzzy
 msgid "{0} approval date:"
 msgstr "កាលបរិច្ឆេទយល់ព្រមរបស់ {0} \\៖"
 
 #: Group.assignclientstogrouptitles
-#, fuzzy
 msgid "Assign {0}s to {1} titles:"
 msgstr "កំនត់ចំណង់ជើង {0}s ទៅ {1}\\៖"
 
@@ -196,12 +184,10 @@ msgid "s to"
 msgstr "s ទៅ"
 
 #: Group.assignclientstogrouptitles3
-#, fuzzy
 msgid "titles:"
 msgstr "ចំណង់ជើង\\៖"
 
 #: Group.assigned
-#, fuzzy
 msgid "assigned:"
 msgstr "បានកំនត់\\៖"
 
@@ -218,7 +204,6 @@ msgid "Attach Survey"
 msgstr "ភ្ជាប់ជាមួយការស្រង់មតិ"
 
 #: Group.balance
-#, fuzzy
 msgid "Balance:"
 msgstr "តុល្យការ\\៖"
 
@@ -235,7 +220,6 @@ msgid "{0} assigned"
 msgstr "{0}  ត្រូវបានកំនត់"
 
 #: Group.centerassigned
-#, fuzzy
 msgid "Center assigned:"
 msgstr "មជ្ឍមណ្ឌុលត្រូវបានកំនត់"
 
@@ -248,7 +232,6 @@ msgid "Change {0} membership"
 msgstr "ប្តូរសមាជិគភាពរបស់ {0}"
 
 #: Group.changecentermembership
-#, fuzzy
 msgid "Change center membership:"
 msgstr "ប្តូរមជ្ឍមណ្ឌុលសមាជិគភាព"
 
@@ -281,7 +264,6 @@ msgid "group to that center."
 msgstr "ធ្វើជាក្រុមលើមជ្ឍមណ្ឌុលនោះ"
 
 #: Group.city
-#, fuzzy
 msgid "City:"
 msgstr "ក្រុង\\៖"
 
@@ -318,7 +300,6 @@ msgid "- Confirm"
 msgstr "- អះអាង"
 
 #: Group.confirmcenterMsg1
-#, fuzzy
 msgid ""
 "Click Submit to change the {0} or Cancel to return to {1} details page "
 "without changing the {0} "
@@ -331,7 +312,6 @@ msgid "Confirm status change"
 msgstr "អះអាងប្រភេទដែលត្រូវផ្លាស់ប្តូរ"
 
 #: Group.country
-#, fuzzy
 msgid "Country:"
 msgstr "ប្រទេស\\៖"
 
@@ -361,7 +341,6 @@ msgid "Create an account for this {0}"
 msgstr "បង្កើតគណនេយ្យមួយសំរាប់{0}"
 
 #: Group.createanewgroup
-#, fuzzy
 msgid "Create a new Group"
 msgstr "បង្កើតក្រុមថ្មីមួយ"
 
@@ -374,7 +353,6 @@ msgstr ""
 "ដែលរួមទាំងគណនេយ្យរបស់ {0}និង​ទិន្នន័យដែលត្រូវការ។"
 
 #: Group.createconfirmhead1
-#, fuzzy
 msgid "has been assigned the system ID number:"
 msgstr "លេខសំគាល់ប្រព័ន្ធត្រូវបានកំនត់\\:"
 
@@ -434,7 +412,6 @@ msgid "You have successfully created a new {0}"
 msgstr "អ្នកបានបង្កើតគណនេយ្យថ្មី {0} រួចរាល់"
 
 #: Group.currentstatus
-#, fuzzy
 msgid "Current status:"
 msgstr "ប្រភេទកំពុងប្រើ\\៖"
 
@@ -443,7 +420,6 @@ msgid "Date"
 msgstr "កាលបរិច្ឆេទ"
 
 #: Group.dategroupstarted
-#, fuzzy
 msgid "Date group started:"
 msgstr "កាលបរិច្ឆេទដែលក្រុមបានចាប់ផ្តើម"
 
@@ -555,7 +531,6 @@ msgstr ""
 "មានប្រយោជន៍ប្រសិនបើចាំបាច់ត្រូវឆែកភស្តុតាងរបស់អ្នកប្រើប្រាស់​នៅក្នុងប្រព័ន្ធ"
 
 #: Group.externalid
-#, fuzzy
 msgid "External ID:"
 msgstr "លេខសំគាល់ខាងក្រោយ"
 
@@ -564,7 +539,6 @@ msgid "External ID"
 msgstr "លេខសំគាល់ខាងក្រោយ"
 
 #: Group.feetype
-#, fuzzy
 msgid "Fee Type:"
 msgstr "ប្រភេទប្រាក់ឈ្នូល"
 
@@ -577,12 +551,10 @@ msgid "{0} details"
 msgstr "ពិស្តារអំពី{0}"
 
 #: Group.groupMembership
-#, fuzzy
 msgid "Group membership:"
 msgstr "សមាជិគភាពក្រុម\\:"
 
 #: Group.groupapprovaldate
-#, fuzzy
 msgid "Group approval date:"
 msgstr "កាលបរិច្ឆេទយល់ព្រមរបស់ក្រុម\\:"
 
@@ -631,12 +603,10 @@ msgid "& Accounts without submitting information."
 msgstr "និងគណនេយ្យដោយមិនទទួលយកព័ត៌មានទាំងនេះ"
 
 #: Group.grouptrained
-#, fuzzy
 msgid "Trained:"
 msgstr "បានបណ្តុះបណ្តាលលើ\\:"
 
 #: Group.grouptrainedon
-#, fuzzy
 msgctxt "Group.grouptrainedon"
 msgid "Trained on:"
 msgstr "បានបណ្តុះបណ្តាលលើ\\:"
@@ -658,7 +628,6 @@ msgid "{0} Cycle per Product"
 msgstr "ចង្វាក់ផលិតផលរបស់{0} "
 
 #: Group.loanofficer
-#, fuzzy
 msgid "Loan officer:"
 msgstr "មន្ត្រីឥណទាន"
 
@@ -667,12 +636,10 @@ msgid "Loan officer"
 msgstr "មន្ត្រីឥណទាន"
 
 #: Group.loanofficerassigned
-#, fuzzy
 msgid "Loan officer assigned:"
 msgstr "មន្ត្រីឥណទានបានកំណត់\\:"
 
 #: Group.locationofthemeeting
-#, fuzzy
 msgid "Location of meeting:"
 msgstr "កន្លែងប្រជុំ"
 
@@ -689,12 +656,10 @@ msgid "Meeting details"
 msgstr "អង្គប្រជុំពិស្តារ"
 
 #: Group.meetings
-#, fuzzy
 msgid "Meetings:"
 msgstr "អង្គប្រជុំ"
 
 #: Group.meetingschedule
-#, fuzzy
 msgid "Meeting schedule:"
 msgstr "កាលវិភាគអង្គប្រជុំ\\:"
 
@@ -707,7 +672,6 @@ msgid "MFI information"
 msgstr "ព័ត៌មានរបស់MFI"
 
 #: Group.name
-#, fuzzy
 msgid "Name:"
 msgstr "ឈ្មោះ\\:"
 
@@ -724,7 +688,6 @@ msgid "new"
 msgstr "ថ្មី"
 
 #: Group.newstatus
-#, fuzzy
 msgid "New status:"
 msgstr "ប្រភេទថ្មី\\៖"
 
@@ -741,7 +704,6 @@ msgid "No notes available."
 msgstr "គ្មានកំនត់ត្រាដែលទំនេរ"
 
 #: Group.note
-#, fuzzy
 msgid "Note:"
 msgstr "កំនត់ត្រា\\:"
 
@@ -758,7 +720,6 @@ msgid "Official titles assigned"
 msgstr "ចំនង់ជើងមន្ត្រីត្រូវបានកំនត់"
 
 #: Group.opennewaccount
-#, fuzzy
 msgid "Open new account:"
 msgstr "បើកគណនេយ្យថ្មី\\:"
 
@@ -775,7 +736,6 @@ msgid "Personal  information"
 msgstr "ព័ត៌មានផ្ទាល់ខ្លួន"
 
 #: Group.pleasenote
-#, fuzzy
 msgid "Please Note:"
 msgstr "សូមកំនត់ចំណាំ"
 
@@ -784,7 +744,6 @@ msgid "portfolio:"
 msgstr ""
 
 #: Group.postalcode
-#, fuzzy
 msgid "Postal code:"
 msgstr "លេខកូដប្រៃសនីយ៍"
 
@@ -822,7 +781,6 @@ msgid "Click on a program in the left box to select. Then click Add."
 msgstr "ចុចលើកម្មវិធីក្នុងប្រអប់ខាងឆ្វេងដើម្បីជ្រើសរើស។ បន្ទាប់មកចុចបញ្ចូល"
 
 #: Group.programs
-#, fuzzy
 msgid "Programs:"
 msgstr "កម្មវិធី"
 
@@ -871,7 +829,6 @@ msgid "Schedule meeting"
 msgstr "កាលវិភាគអង្គប្រជុំ"
 
 #: Group.searchmsg1
-#, fuzzy
 msgid "To select, click on a resulting {0}."
 msgstr "ដើម្បីជ្រើសរើស ចុចលើលទ្ធផល{0}"
 
@@ -888,17 +845,14 @@ msgid "Select {0}/{1}"
 msgstr "ជ្រើសរើស{0} ក្នុង{1}"
 
 #: Group.size
-#, fuzzy
 msgid "size:"
 msgstr "ទំហំ\\:"
 
 #: Group.started
-#, fuzzy
 msgid "started:"
 msgstr "បានចាប់ផ្តើម\\:"
 
 #: Group.state
-#, fuzzy
 msgid "State:"
 msgstr "រដ្ឋ\\:"
 
@@ -907,7 +861,6 @@ msgid "State"
 msgstr "រដ្ឋ"
 
 #: Group.status
-#, fuzzy
 msgid "Status:"
 msgstr "ប្រភេទ\\:"
 
@@ -960,12 +913,10 @@ msgid "Surveys"
 msgstr "ស្រង់មតិ"
 
 #: Group.systemId
-#, fuzzy
 msgid "System ID #:"
 msgstr "លេខសំគាល់ប្រព័ន្ធ"
 
 #: Group.telephone
-#, fuzzy
 msgid "Telephone:"
 msgstr "ទូរស័ព្ទ"
 
@@ -974,7 +925,6 @@ msgid "Total {0} portfolio."
 msgstr ""
 
 #: Group.trainedon
-#, fuzzy
 msgctxt "Group.trainedon"
 msgid "Trained on:"
 msgstr "បានបណ្តុះបណ្តាលលើ\\:"
@@ -1497,7 +1447,6 @@ msgid "Apply payment"
 msgstr "អនុវត្តិការចំនាយ"
 
 #: warning.noclientsassigned1
-#, fuzzy
 msgid "Warning: The"
 msgstr "ការដាស់តឿន"
 

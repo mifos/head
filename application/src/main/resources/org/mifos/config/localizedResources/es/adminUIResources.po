@@ -46,7 +46,6 @@ msgid "accounts"
 msgstr "cuentas"
 
 #: admin.manage.accounts
-#, fuzzy
 msgid "Manage accounts"
 msgstr "Administra {0} cuentas"
 
@@ -299,12 +298,10 @@ msgid "products"
 msgstr "productos"
 
 #: admin.questions
-#, fuzzy
 msgid "Questions"
 msgstr "preguntas"
 
 #: admin.question
-#, fuzzy
 msgid "Question"
 msgstr "preguntas"
 
@@ -333,7 +330,6 @@ msgid "reports"
 msgstr "reportes"
 
 #: admin.manage.reports
-#, fuzzy
 msgid "Manage reports"
 msgstr "Administrar importaciones"
 
@@ -362,7 +358,6 @@ msgid "Manage surveys"
 msgstr ""
 
 #: admin.view.surveys
-#, fuzzy
 msgctxt "admin.view.surveys"
 msgid "View surveys"
 msgstr "Ver encuestas"
@@ -507,7 +502,6 @@ msgid "System Information"
 msgstr "Información de sistemas"
 
 #: admin.view.sysinfo.title
-#, fuzzy
 msgid "View System Information"
 msgstr "Información de sistemas"
 
@@ -626,7 +620,6 @@ msgid "View savings products"
 msgstr "Ver productos de ahorros"
 
 #: admin.viewsurvey
-#, fuzzy
 msgctxt "admin.viewsurvey"
 msgid "View surveys"
 msgstr "Ver encuestas"

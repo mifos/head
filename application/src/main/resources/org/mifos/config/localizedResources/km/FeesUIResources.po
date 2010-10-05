@@ -1,5 +1,4 @@
 #. extracted from FeesUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -37,7 +36,6 @@ msgid "Yes"
 msgstr "បាទ/ចាស"
 
 #: Fees.GLCode
-#, fuzzy
 msgid "GL Code:"
 msgstr "លេខសំងាត់ GL"
 
@@ -71,7 +69,6 @@ msgid "Select"
 msgstr "ជ្រើសរើស"
 
 #: Fees.accountDisplay
-#, fuzzy
 msgid "GL Code: 1001"
 msgstr "លេខសំងាត់ GL\\៖ ១០០១"
 
@@ -92,22 +89,18 @@ msgid "(All Products)"
 msgstr "ផលិតផលទាំងអស់"
 
 #: Fees.amount
-#, fuzzy
 msgid "Amount: "
 msgstr "ចំនួនសរុប"
 
 #: Fees.amountCalcComplete
-#, fuzzy
 msgid "Amount calculated as: {0}% of an {1}"
 msgstr "ចំនួនសរុបដែលបានគណនាគឺ\\៖ {0}% នៃ {1} មួយ"
 
 #: Fees.amountcalculatedas
-#, fuzzy
 msgid "Amount calculated as: "
 msgstr "ចំនួនសរុបដែលបានគណនាគឺ\\៖"
 
 #: Fees.calculatefeeas
-#, fuzzy
 msgid "Calculate Fee As:"
 msgstr "គណនាប្រាក់ត្រូវបង់គឺ\\៖"
 
@@ -142,7 +135,6 @@ msgid "Daily"
 msgstr "រាល់ថ្ងៃ"
 
 #: Fees.dailyinstruction
-#, fuzzy
 msgid "If daily, select between the following:"
 msgstr "ប្រសិនបើរាល់ថ្ងៃ ជ្រើសរើសនៅក្នុងចន្លោះខាងក្រោម"
 
@@ -156,13 +148,11 @@ msgid "Day"
 msgstr "ថ្ងៃ"
 
 #: Fees.defaultFees
-#, fuzzy
 msgctxt "Fees.defaultFees"
 msgid "Default fees:"
 msgstr "ប្រាក់ឈ្នួលដែលកំនត់ស្រេច"
 
 #: Fees.defaultfees
-#, fuzzy
 msgctxt "Fees.defaultfees"
 msgid "Default fees:"
 msgstr "ប្រាក់ឈ្នួលដែលកំនត់ស្រេច"
@@ -190,7 +180,6 @@ msgid "Edit fee information"
 msgstr "បន្ថែមព័ត៌មានប្រាក់ឈ្នួល"
 
 #: Fees.enteramount
-#, fuzzy
 msgid "Amount:"
 msgstr "ចំនួនសរុប\\៖"
 
@@ -207,7 +196,6 @@ msgid "fee category"
 msgstr "ប្រភេទប្រាក់ឈ្នួល"
 
 #: Fees.error.feename
-#, fuzzy
 msgid "fee name "
 msgstr "ឈ្មោះប្រាក់ឈ្នួល"
 
@@ -253,7 +241,6 @@ msgid "Fee 04"
 msgstr "ប្រាក់ឈ្នួល 04"
 
 #: Fees.feeappliesto
-#, fuzzy
 msgid "Fee Applies To:"
 msgstr "ប្រាក់ឈ្នួល ជំនួសដោយ\\៖"
 
@@ -270,7 +257,6 @@ msgid "Fee information"
 msgstr "ព័ត៌មានប្រាក់ឈ្នួល"
 
 #: Fees.feename
-#, fuzzy
 msgid "Fee Name:"
 msgstr "ឈ្មោះប្រាក់ឈ្នួល"
 
@@ -279,7 +265,6 @@ msgid "Fee successfully created."
 msgstr "ប្រាក់ឈ្នួលត្រូវបានបង្កើតរួចរាល់"
 
 #: Fees.frequency
-#, fuzzy
 msgctxt "Fees.frequency"
 msgid "Frequency:"
 msgstr "ញឹកញ៉ាប់"
@@ -312,19 +297,16 @@ msgid "of every"
 msgstr "រៀងរាល់"
 
 #: Fees.labelRecurEvery
-#, fuzzy
 msgctxt "Fees.labelRecurEvery"
 msgid "Recur every "
 msgstr "ធ្វើឡើងវិញរៀងរាល់"
 
 #: Fees.labelRecurMonths
-#, fuzzy
 msgctxt "Fees.labelRecurMonths"
 msgid "If months, specify the following:"
 msgstr "ប្រសិនបើជាខែ កំនត់ដូចតទៅ\\៖"
 
 #: Fees.labelRecurWeeks
-#, fuzzy
 msgctxt "Fees.labelRecurWeeks"
 msgid "If weeks, specify the following:"
 msgstr "ប្រសិនបើសប្តាហ៍ កំនត់ដូចតទៅ\\៖"
@@ -335,13 +317,11 @@ msgid "The"
 msgstr "មួយ"
 
 #: Fees.labelWeeks
-#, fuzzy
 msgctxt "Fees.labelWeeks"
 msgid "week(s) "
 msgstr "សប្តាហ៍ "
 
 #: Fees.mandatory_feename
-#, fuzzy
 msgid "Fee Name "
 msgstr "ឈ្មោះប្រាក់ឈ្នួល"
 
@@ -380,12 +360,10 @@ msgid "Monthly"
 msgstr "ខែ"
 
 #: Fees.monthlyinstruction
-#, fuzzy
 msgid "If monthly, select between the following:"
 msgstr "ប្រសិនបើខែ ចុចលើចន្លោះខាងក្រោម\\៖"
 
 #: Fees.ofa
-#, fuzzy
 msgid "% of a "
 msgstr "ភាគរយនៃ"
 
@@ -395,12 +373,10 @@ msgid "of every"
 msgstr "រៀងរាល់"
 
 #: Fees.oneTime
-#, fuzzy
 msgid "One time "
 msgstr "ពេលមួយ"
 
 #: Fees.onetime
-#, fuzzy
 msgid "One time"
 msgstr "ពេលមួយ"
 
@@ -421,7 +397,6 @@ msgid "Preview"
 msgstr "ពិនិត្យមើល"
 
 #: Fees.previewChangeAppliesTo
-#, fuzzy
 msgid "Change applies to: Existing and future accounts"
 msgstr "ប្តូរការទៅជា\\៖ មានរួចរាល់ និង គណនេយ្យពេលអនាគត"
 
@@ -438,7 +413,6 @@ msgid "Product Fees"
 msgstr "ប្រាក់ឈ្នួលរបស់ផលិតផល"
 
 #: Fees.recurevery
-#, fuzzy
 msgid "Recur every"
 msgstr "ធ្វើឡើងវិញរៀងរាល់"
 
@@ -455,22 +429,18 @@ msgid "(Savings)"
 msgstr "ការសន្សំ"
 
 #: Fees.selecttimeofcharge
-#, fuzzy
 msgid "Select time of charge for one time fees:"
 msgstr "ជ្រើសរើសពេលនៃការផ្លាស់ប្តូរសំរាប់ប្រាក់ឈ្នូលមួយពេល​\\៖"
 
 #: Fees.setglcode
-#, fuzzy
 msgid "Set GL Code:"
 msgstr "កំនត់លេខសំងាត់ GL\\៖"
 
 #: Fees.smalldefinenewfee
-#, fuzzy
 msgid "define a new fee "
 msgstr "កំនត់ប្រាក់ឈ្នួលថ្មី"
 
 #: Fees.status
-#, fuzzy
 msgid "Status:"
 msgstr "ប្រភេទ\\៖"
 
@@ -496,7 +466,6 @@ msgid "Thursday"
 msgstr "ថ្ងៃព្រហសត្តិ៍"
 
 #: Fees.timeToCharge
-#, fuzzy
 msgid "Time of charge:"
 msgstr "ចំនួនម៉ោងនៃការយកថ្លៃ\\៖"
 
@@ -521,7 +490,6 @@ msgid "Weekly"
 msgstr "នៃសប្តាហ៍"
 
 #: Fees.weeklyinstruction
-#, fuzzy
 msgid "If weekly, select between the following:"
 msgstr "ប្រសិនបើនៃសប្តាហ៍ ជ្រើសរើសលើចន្លោះដូ​ចតទៅ\\៖"
 
@@ -648,12 +616,10 @@ msgid "Please specify rate along with formula."
 msgstr "សូមជ្រើសរើសអត្រាក្នុងគំរូ"
 
 #: errors.rateGreaterThen999
-#, fuzzy
 msgid "{0} should lie between 0-999%"
 msgstr "{0} គួរតែនៅចន្លោះពី 0-999999999.99"
 
 #: errors.select
-#, fuzzy
 msgid "Please select a {0}."
 msgstr "សូមកំនត់{0}."
 
@@ -662,7 +628,6 @@ msgid "Please select a Status."
 msgstr ""
 
 #: errors.suffix
-#, fuzzy
 msgid "</LI>"
 msgstr "<LI>"
 
@@ -677,7 +642,6 @@ msgid "The action is not permissible."
 msgstr ""
 
 #: meeting.frequency
-#, fuzzy
 msgctxt "meeting.frequency"
 msgid "Frequency:"
 msgstr "ញឹកញ៉ាប់"
@@ -698,19 +662,16 @@ msgid "of every"
 msgstr "រៀងរាល់"
 
 #: meeting.labelRecurEvery
-#, fuzzy
 msgctxt "meeting.labelRecurEvery"
 msgid "Recur every "
 msgstr "ធ្វើឡើងវិញរៀងរាល់"
 
 #: meeting.labelRecurMonths
-#, fuzzy
 msgctxt "meeting.labelRecurMonths"
 msgid "If months, specify the following:"
 msgstr "ប្រសិនបើជាខែ កំនត់ដូចតទៅ\\៖"
 
 #: meeting.labelRecurWeeks
-#, fuzzy
 msgctxt "meeting.labelRecurWeeks"
 msgid "If weeks, specify the following:"
 msgstr "ប្រសិនបើសប្តាហ៍ កំនត់ដូចតទៅ\\៖"
@@ -721,7 +682,6 @@ msgid "The"
 msgstr "មួយ"
 
 #: meeting.labelWeeks
-#, fuzzy
 msgctxt "meeting.labelWeeks"
 msgid "week(s) "
 msgstr "សប្តាហ៍ "

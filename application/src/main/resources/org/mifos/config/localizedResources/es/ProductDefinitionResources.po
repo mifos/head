@@ -25,7 +25,6 @@ msgstr ""
 "del Sistema para obtener los permisos necesarios e inténtelo de nuevo."
 
 #: errors.calcinstallmenttype
-#, fuzzy
 msgid "Please Specify the Calculate # of Installments Type."
 msgstr "Por favor especifique el tipo de Calcular # de Pagos."
 
@@ -85,7 +84,6 @@ msgstr ""
 "{3} y {4}."
 
 #: errors.defaultinstallments
-#, fuzzy
 msgid ""
 "Please specify valid Default # of Installments. Default # of Installments "
 "should be between the Min and Max # of Installments, inclusive of the two "
@@ -105,7 +103,6 @@ msgstr ""
 "{2}."
 
 #: errors.definstallments
-#, fuzzy
 msgid "Please Specify the valid Default # of Installments {0} {1}."
 msgstr "Por favor especifique un número de pagos por default válido {0} {1}. "
 
@@ -162,7 +159,6 @@ msgid "The frequency of the product and the fee \"{0}\" does not match."
 msgstr "La frecuencia del producto y la comisión \"{0}\" no coinciden."
 
 #: errors.feeCurrencyMatch
-#, fuzzy
 msgid "The currency of the product and the fee \"{0}\" does not match."
 msgstr "La frecuencia del producto y la comisión \"{0}\" no coinciden."
 
@@ -248,7 +244,6 @@ msgid "The length of {0} can not be greater than {1} character(s)."
 msgstr "La longitud de {0} no puede ser superior a {1} caracter(es)."
 
 #: errors.maxinstallments
-#, fuzzy
 msgid "Please Specify the valid Max # of Installments {0} {1}."
 msgstr "Por favor especifique el número máximo de pagos válido {0} {1}."
 
@@ -311,7 +306,6 @@ msgid "The length of {0} can not be less than {1} character(s)."
 msgstr "La longitud de {0} no puede ser inferior a {1} caracter(es)."
 
 #: errors.mininstallments
-#, fuzzy
 msgid "Please Specify the valid Min # of Installments {0} {1}."
 msgstr "Por favor especifique el número mínimo de pagos válido {0} {1}."
 
@@ -375,7 +369,6 @@ msgstr ""
 
 # for \# of last loan Installments - not sure about what this means in English, translated literally.
 #: errors.startendinstallment
-#, fuzzy
 msgid ""
 "Please Specify the valid End Range Loan Amount. End Range Loan Amount must "
 "be greater than the Start Range Loan Amount for # of last loan Installments "
@@ -420,7 +413,6 @@ msgstr "Por favor especifique un importe mayor que cero para {0}."
 
 # Not sure about flat interest, I have assumed flat amount.
 #: exceptions.declineinterestdisbursementdeduction
-#, fuzzy
 msgid ""
 "You cannot deduct interest at disbursement for declining balance loans. "
 "Please unselect this option or change the interest calculation method to "
@@ -448,7 +440,6 @@ msgid "GL code for principal"
 msgstr "Código del Libro Mayor para el capital"
 
 #: product.Glcodefor
-#, fuzzy
 msgid "GL code for"
 msgstr "Código del Libro Mayor para "
 
@@ -761,7 +752,6 @@ msgid "Define new category"
 msgstr ""
 
 #: product.defineMixForNewProduct
-#, fuzzy
 msgid "define mix for a new product"
 msgstr "Definir mezcla para un nuevo producto"
 
@@ -910,7 +900,6 @@ msgid "Frequency of "
 msgstr ""
 
 #: product.glCodeFor
-#, fuzzy
 msgid "GL code for "
 msgstr "Código del Libro Mayor para "
 
@@ -919,7 +908,6 @@ msgid "GL code for deposits"
 msgstr ""
 
 #: product.glcodeint
-#, fuzzy
 msgctxt "product.glcodeint"
 msgid "GL code for interest"
 msgstr "Código del Libro Mayor para el interés"

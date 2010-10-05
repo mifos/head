@@ -75,6 +75,7 @@ public class SavingsAccountBuilder {
             savingsTransactionActivityHelper);
     private Set<AccountActionDateEntity> scheduledPayments = new LinkedHashSet<AccountActionDateEntity>();
     private List<Holiday> holidays = new ArrayList<Holiday>();
+    private DateTime activationDate = new DateTime();
 
     public SavingsBO build() {
 
@@ -82,7 +83,7 @@ public class SavingsAccountBuilder {
                 savingsPaymentStrategy, savingsTransactionActivityHelper, scheduledPayments, interestRate,
                 interestCalcType, accountState, customer, offsettingAllowable,
                 scheduleForInterestCalculation, recommendedAmountUnit, recommendedAmount, createdDate,
-                createdByUserId, holidays);
+                createdByUserId, holidays, activationDate);
         savingsBO.setCustomerPersistence(customerDao);
 
         return savingsBO;
@@ -90,6 +91,10 @@ public class SavingsAccountBuilder {
 
     public SavingsAccountBuilder withSavingsProduct(final SavingsOfferingBO withSavingsProduct) {
         this.savingsProduct = withSavingsProduct;
+        if (withSavingsProduct.getRecommendedAmntUnit() != null) {
+            this.recommendedAmountUnit = RecommendedAmountUnit.fromInt(withSavingsProduct.getRecommendedAmntUnit().getId());
+        }
+        this.recommendedAmount = withSavingsProduct.getRecommendedAmount();
         return this;
     }
 
@@ -173,6 +178,11 @@ public class SavingsAccountBuilder {
         for (Holiday holiday : holidays) {
             this.holidays.add(holiday);
         }
+        return this;
+    }
+
+    public SavingsAccountBuilder withActivationDate(DateTime withActivationDate) {
+        this.activationDate = withActivationDate;
         return this;
     }
 }

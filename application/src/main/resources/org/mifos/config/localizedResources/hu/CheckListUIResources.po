@@ -118,7 +118,6 @@ msgid "Displayed when moving into Status"
 msgstr "Lista megjelenítése a következő státusz előtt"
 
 #: checklist.displayed_status
-#, fuzzy
 msgid "Displayed when moving into Status:"
 msgstr "Lista megjelenítése a következő státusz előtt\\"
 
@@ -182,7 +181,6 @@ msgid "Loans"
 msgstr "Hitelek"
 
 #: checklist.name
-#, fuzzy
 msgid "Name:"
 msgstr "Név\\:"
 
@@ -222,7 +220,6 @@ msgid "Status"
 msgstr "Állapot"
 
 #: checklist.status_checklist
-#, fuzzy
 msgid "Status of checklist:"
 msgstr "Ellenőrző lista állapota\\:"
 
@@ -231,7 +228,6 @@ msgid "Submit for approval"
 msgstr "Elküldés jóváhagyásra"
 
 #: checklist.type
-#, fuzzy
 msgid "Type:"
 msgstr "Típus\\:"
 

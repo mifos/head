@@ -1,6 +1,5 @@
 # extracted from FeesUIResources.properties
 #. extracted from FeesUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

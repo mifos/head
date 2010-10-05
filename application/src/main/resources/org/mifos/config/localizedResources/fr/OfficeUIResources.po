@@ -1,5 +1,4 @@
 #. extracted from OfficeUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -21,7 +20,6 @@ msgid "CUSTOM FIELD"
 msgstr "CHAMP PERSONNALISE"
 
 #: Office.address.address1.requiredmsg
-#, fuzzy
 msgid "Please specify an Office address."
 msgstr "Veuiller indiquer un type de bureau."
 
@@ -55,7 +53,6 @@ msgid "Edit office information"
 msgstr "Editer les informations du bureau"
 
 #: Office.error.creationFailed
-#, fuzzy
 msgid ""
 "An unexpected error has occurred during office creation. Please try again "
 "later or contact the system administrator."
@@ -73,7 +70,6 @@ msgstr ""
 "encore plus tard ou contacter l'administrateur système."
 
 #: Office.error.getFailed
-#, fuzzy
 msgctxt "Office.error.getFailed"
 msgid ""
 "An unexpected error has occurred while retrieving the office details. Please "
@@ -108,7 +104,6 @@ msgstr ""
 "actif qui lui est associé."
 
 #: Office.error.loadFailed
-#, fuzzy
 msgctxt "Office.error.loadFailed"
 msgid ""
 "An unexpected error has occurred while retrieving the office details. Please "
@@ -119,7 +114,6 @@ msgstr ""
 "système."
 
 #: Office.error.updationFailed
-#, fuzzy
 msgid ""
 "An unexpected error has occurred while changing the office details. Please "
 "try again later or contact the system administrator."
@@ -209,7 +203,6 @@ msgid "Branch office"
 msgstr "Bureau d'antenne"
 
 #: Office.labelChangeStatus
-#, fuzzy
 msgid "Status:"
 msgstr "Statut\\:"
 
@@ -230,7 +223,6 @@ msgstr ""
 "pour retourner à Admin sans Valider l'information."
 
 #: Office.labelCountry
-#, fuzzy
 msgid "Country:"
 msgstr "Pays\\:"
 
@@ -286,7 +278,6 @@ msgid "No"
 msgstr "Non"
 
 #: Office.labelNote
-#, fuzzy
 msgid "Note:"
 msgstr "Note\\:"
 
@@ -302,12 +293,10 @@ msgid "Office address"
 msgstr "Addresse de bureau"
 
 #: Office.labelOfficeAssignedNumber
-#, fuzzy
 msgid "office has been assigned the system ID number:"
 msgstr "L'identifiant système suivant a été assigné au bureau"
 
 #: Office.labelOfficeCode
-#, fuzzy
 msgid "Office code:"
 msgstr "Nom de bureau\\:"
 
@@ -326,27 +315,22 @@ msgid "Office  information"
 msgstr "Informations de bureau"
 
 #: Office.labelOfficeName
-#, fuzzy
 msgid "Office name:"
 msgstr "Nom de bureau\\:"
 
 #: Office.labelOfficeShortName
-#, fuzzy
 msgid "Office short name:"
 msgstr "Petit nom de bureau\\:"
 
 #: Office.labelOfficeType
-#, fuzzy
 msgid "Office type:"
 msgstr "Type de bureau\\:"
 
 #: Office.labelParentOffice
-#, fuzzy
 msgid "Parent office:"
 msgstr "Bureau de parent\\:"
 
 #: Office.labelPleaseNote
-#, fuzzy
 msgid "Please note:"
 msgstr "Veuiller noter\\:"
 
@@ -371,7 +355,6 @@ msgid "Review &amp; submit"
 msgstr "Réafficher et amp; Valider"
 
 #: Office.labelState
-#, fuzzy
 msgid "State:"
 msgstr "Statut\\:"
 
@@ -384,7 +367,6 @@ msgid "Sub Regional office"
 msgstr ""
 
 #: Office.labelTelephone
-#, fuzzy
 msgid "Telephone:"
 msgstr "Téléphone\\:"
 
@@ -430,7 +412,6 @@ msgid "Office Name"
 msgstr "Nom du bureau"
 
 #: Office.officeName.displayname
-#, fuzzy
 msgid "Please specify an Office name."
 msgstr "Veuiller indiquer un type de bureau."
 
@@ -459,7 +440,6 @@ msgid "Preview"
 msgstr "Aperç"
 
 #: Office.shortName.displayname
-#, fuzzy
 msgid "Please specify an Office short name."
 msgstr "Veuiller indiquer un type de bureau."
 
@@ -472,13 +452,11 @@ msgid "Mifos"
 msgstr ""
 
 #: cf.lookUpEntity.entityId
-#, fuzzy
 msgctxt "cf.lookUpEntity.entityId"
 msgid "Custom field:"
 msgstr "Champ personnalisé\\:"
 
 #: cfdef.entityId
-#, fuzzy
 msgctxt "cfdef.entityId"
 msgid "Custom field:"
 msgstr "Champ personnalisé\\:"

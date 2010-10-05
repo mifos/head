@@ -74,7 +74,6 @@ msgid "Due/Collections"
 msgstr "បំណុល​និងការសង់ប្រាក់"
 
 #: bulkEntry.dueCollections2
-#, fuzzy
 msgid "Due collections:"
 msgstr "បំណុលដែលបានសង"
 
@@ -118,7 +117,6 @@ msgid "Issues/Withdrawals"
 msgstr "ការប្រកាស និងការដកប្រាក់"
 
 #: bulkEntry.loanDisbursements
-#, fuzzy
 msgid "Loan disbursements:"
 msgstr "ការបង់ប្រាក់បំណុល"
 
@@ -143,7 +141,6 @@ msgid "Net Cash:"
 msgstr ""
 
 #: bulkEntry.otherCollections
-#, fuzzy
 msgid "Other collections:"
 msgstr "ប្រាក់ដែលប្រមូលបានផ្សេងៗ"
 
@@ -198,7 +195,6 @@ msgid "Submit"
 msgstr "យល់ព្រម"
 
 #: bulkEntry.total
-#, fuzzy
 msgid "Total:"
 msgstr "សរុប"
 
@@ -219,7 +215,6 @@ msgid "Transaction date"
 msgstr "កាលបរិច្ចេកប្រតិបត្តិការ"
 
 #: bulkEntry.withdrawals
-#, fuzzy
 msgid "Withdrawals:"
 msgstr "ការដកប្រាក់"
 
@@ -257,7 +252,6 @@ msgid ""
 msgstr ""
 
 #: errors.invalidaccollections
-#, fuzzy
 msgid ""
 "<li>The amount specified for {0} of customer {1} must be exact amount due or "
 "0. Please specify a valid amount.</li>"
@@ -295,7 +289,6 @@ msgid "<li>Please specify a valid date-- {0} can only be today's date.</li>"
 msgstr "សូមកំណត់យកកាលបរិច្ជេទមួយដែលត្រឹមត្រូវ​ {0}អាចបានតែកាលបរិច្ជេទថ្ងៃនេះ។"
 
 #: errors.update
-#, fuzzy
 msgid ""
 "The following accounts have not been updated due to simultaneous "
 "updates/insufficient balance/invalid disbursement date/invalid repayment: "

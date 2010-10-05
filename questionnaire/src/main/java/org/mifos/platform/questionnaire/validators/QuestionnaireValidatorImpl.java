@@ -85,19 +85,24 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
 
     @Override
     public void validateForEventSource(EventSourceDto eventSourceDto) throws SystemException {
-        if (eventSourceDto == null || StringUtils.isEmpty(eventSourceDto.getSource()) || StringUtils.isEmpty(eventSourceDto.getEvent()))
+        if (eventSourceDto == null || StringUtils.isEmpty(eventSourceDto.getSource()) || StringUtils.isEmpty(eventSourceDto.getEvent())) {
             throw new SystemException(INVALID_EVENT_SOURCE);
+        }
         validateEventSource(eventSourceDto);
     }
 
     @Override
     public void validateForQuestionGroupResponses(List<QuestionGroupDetail> questionGroupDetails) {
-        if (isEmpty(questionGroupDetails)) throw new SystemException(NO_ANSWERS_PROVIDED);
+        if (isEmpty(questionGroupDetails)) {
+            throw new SystemException(NO_ANSWERS_PROVIDED);
+        }
         ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
         for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
             validateResponsesInQuestionGroup(questionGroupDetail, validationException);
         }
-        if (validationException.containsChildExceptions()) throw validationException;
+        if (validationException.containsChildExceptions()) {
+            throw validationException;
+        }
     }
 
     @Override
@@ -106,7 +111,9 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         validateQuestionGroupTitle(questionGroupDto, parentException);
         validateEventSource(questionGroupDto.getEventSourceDto(), parentException);
         validateSections(questionGroupDto.getSections(), parentException);
-        if (parentException.containsChildExceptions()) throw parentException;
+        if (parentException.containsChildExceptions()) {
+            throw parentException;
+        }
     }
 
     private void validateSections(List<SectionDto> sections, ValidationException parentException) {
@@ -157,7 +164,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     private void validateQuestion(QuestionDto question, ValidationException parentException, boolean withDuplicateQuestionTypeCheck) {
         if (StringUtils.isEmpty(question.getTitle())) {
             parentException.addChildException(new ValidationException(QUESTION_TITLE_NOT_PROVIDED));
-        } else if (question.getTitle().length() >= MAX_LENGTH_FOR_TITILE) {
+        } else if (question.getTitle().length() >= MAX_LENGTH_FOR_QUESTION_TEXT) {
             parentException.addChildException(new ValidationException(QUESTION_TITLE_TOO_BIG));
         } else if (questionHasDuplicateTitle(question, withDuplicateQuestionTypeCheck)) {
             parentException.addChildException(new ValidationException(QUESTION_TITILE_MATCHES_EXISTING_QUESTION));
@@ -552,20 +559,24 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     private void validateQuestionGroupTitle(QuestionGroupDetail questionGroupDetail) throws SystemException {
-        if (StringUtils.isEmpty(questionGroupDetail.getTitle()))
+        if (StringUtils.isEmpty(questionGroupDetail.getTitle())) {
             throw new SystemException(QUESTION_GROUP_TITLE_NOT_PROVIDED);
+        }
     }
 
     private void validateQuestionType(QuestionDetail questionDetail) throws SystemException {
-        if (QuestionType.INVALID == questionDetail.getType())
+        if (QuestionType.INVALID == questionDetail.getType()) {
             throw new SystemException(QUESTION_TYPE_NOT_PROVIDED);
-        if (QuestionType.NUMERIC == questionDetail.getType())
+        }
+        if (QuestionType.NUMERIC == questionDetail.getType()) {
             validateForNumericQuestionType(questionDetail.getNumericMin(), questionDetail.getNumericMax());
+        }
     }
 
     private void validateForNumericQuestionType(Integer min, Integer max) {
-        if (areInValidNumericBounds(min, max))
+        if (areInValidNumericBounds(min, max)) {
             throw new SystemException(INVALID_NUMERIC_BOUNDS);
+        }
     }
 
     private boolean areInValidNumericBounds(Integer min, Integer max) {
@@ -573,7 +584,8 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     private void validateQuestionTitle(QuestionDetail questionDefinition) throws SystemException {
-        if (StringUtils.isEmpty(questionDefinition.getTitle()))
+        if (StringUtils.isEmpty(questionDefinition.getTitle())) {
             throw new SystemException(QUESTION_TITLE_NOT_PROVIDED);
+        }
     }
 }

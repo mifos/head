@@ -193,7 +193,6 @@ msgstr "O valor deverá superior a 0.0"
 
 # "Charge" can mean in Portuguese, "Expense" or "Charge"...
 #: account.chargetype
-#, fuzzy
 msgid "charge type"
 msgstr "tipo de despesa"
 
@@ -267,7 +266,6 @@ msgstr "Seleccione o cliente"
 
 # Translation depends on gender. Ex: "cancelling a client" (cancelar UM cliente) is different from "cancelling a status" (cancelar UMA situação).
 #: accounts.SelectExplaination1
-#, fuzzy
 msgid "When cancelling a "
 msgstr "Quando cancelar um/uma"
 
@@ -332,7 +330,6 @@ msgstr ""
 "será actualizado."
 
 #: accounts.admin_set_fees
-#, fuzzy
 msgid "Administrative Set Fees"
 msgstr "Taxas Administrativas Fixadas"
 
@@ -437,7 +434,6 @@ msgstr "Aprovado"
 
 # Please clarify "APR"
 #: accounts.apr
-#, fuzzy
 msgid "APR"
 msgstr "APR"
 
@@ -455,7 +451,6 @@ msgid "Balance"
 msgstr "Saldo"
 
 #: accounts.balance_at_disburse
-#, fuzzy
 msgid "Balance at Disbursement"
 msgstr "Saldo em Desembolso"
 
@@ -482,7 +477,6 @@ msgstr "Empréstimo para Gado"
 
 # Pls clarify
 #: accounts.centercharges
-#, fuzzy
 msgid "Center charges"
 msgstr "Despesas centrais"
 
@@ -496,7 +490,6 @@ msgstr "Estado das Alterações"
 
 # This can be translated to singular or plural, and in both cases depend on gender. Pls clarify
 #: accounts.charged
-#, fuzzy
 msgid "charged"
 msgstr "cobrado"
 
@@ -634,7 +627,6 @@ msgstr "Taxa de juro por defeito"
 
 # Pls clarify. Translation doesn't make sense.
 #: accounts.delinquency
-#, fuzzy
 msgid "Delinquency"
 msgstr "Delinquência"
 
@@ -653,7 +645,6 @@ msgstr "Data de Liquidação Proposta/Actual"
 
 # Please clarify
 #: accounts.disb_pr
-#, fuzzy
 msgid "Disb Pr"
 msgstr "Disb Pr"
 
@@ -788,7 +779,6 @@ msgstr "Encargos de grupo"
 
 # Pls clarify
 #: accounts.hope&effort_group
-#, fuzzy
 msgid "Hope & Effort Group"
 msgstr "Hope & Effort Group"
 
@@ -900,7 +890,6 @@ msgstr "Taxa de manutenção"
 
 # Pls clarify.
 #: accounts.mariev
-#, fuzzy
 msgid "mariev"
 msgstr "mariev"
 
@@ -922,7 +911,6 @@ msgstr "Valor máximo de empréstimo"
 
 # Pls clarify meaning
 #: accounts.meeting_charges
-#, fuzzy
 msgid "Meeting charges"
 msgstr "Taxas de reunião"
 
@@ -1353,7 +1341,6 @@ msgstr "Histórico de transacções"
 
 # Pls clarify
 #: accounts.tsunami_fund
-#, fuzzy
 msgid "Tsunami fund"
 msgstr "Fundo para Tsunami"
 

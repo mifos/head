@@ -20,12 +20,10 @@ msgid "CUSTOM FIELD"
 msgstr "EGYEDI MEZŐ"
 
 #: cf.lookUpEntity.entityId
-#, fuzzy
 msgid "Custom field:"
 msgstr "Egyedi mező\\:"
 
 #: cfdef.entityId
-#, fuzzy
 msgid "Custom field: "
 msgstr "Egyedi mező\\:"
 
@@ -82,7 +80,6 @@ msgid "Minimum length for holiday short name is {2} characters."
 msgstr "A munkaszüneti nap rövid neve nem lehet {2} karakternél rövidebb."
 
 #: errors.holiday.updationhierarchyfailed
-#, fuzzy
 msgid ""
 "An unexpected error has occurred during the holiday hierarchy change. Please "
 "try again later or contact the system administrator."
@@ -244,7 +241,6 @@ msgstr ""
 "Próbálja újra később, vagy forduljon a rendszergazdához."
 
 #: holiday.error.updationHierarchyFailed
-#, fuzzy
 msgid ""
 "An unexpected error has occurred during the holiday hierarchy change. Please "
 "try again later or contact the system administrator. "
@@ -279,7 +275,6 @@ msgstr ""
 "meg másik elnevezést."
 
 #: holiday.formParentHoliday.requiredmsg
-#, fuzzy
 msgid "Please specify a Parent holiday. "
 msgstr "Adjon meg egy Anya munkaszüneti napot."
 
@@ -308,7 +303,6 @@ msgid "Define new"
 msgstr "Meghatározás: új"
 
 #: holiday.labelAddNewHoliday
-#, fuzzy
 msgid "Add a new holiday - "
 msgstr "Új munkaszüneti nap hozzáadása -"
 
@@ -325,17 +319,14 @@ msgid "Address"
 msgstr "Cím"
 
 #: holiday.labelAddress1
-#, fuzzy
 msgid "Address 1:"
 msgstr "Cím 1\\:"
 
 #: holiday.labelAddress2
-#, fuzzy
 msgid "Address 2:"
 msgstr "Cím 2\\:"
 
 #: holiday.labelAddress3
-#, fuzzy
 msgid "Address 3:"
 msgstr "Cím 3\\:"
 
@@ -348,7 +339,6 @@ msgid "Branch holiday"
 msgstr "Fiók munkaszüneti nap"
 
 #: holiday.labelChangeStatus
-#, fuzzy
 msgid "Change Status:"
 msgstr "Státusz módosítása\\:"
 
@@ -357,7 +347,6 @@ msgid "Check the levels to be included."
 msgstr "Jelölje be a kívánt szinteket."
 
 #: holiday.labelCity
-#, fuzzy
 msgid "City:"
 msgstr "Város\\:"
 
@@ -371,7 +360,6 @@ msgstr ""
 "felületre, kattintson a Mégsem gombra."
 
 #: holiday.labelCountry
-#, fuzzy
 msgid "Country:"
 msgstr "Ország\\:"
 
@@ -402,12 +390,10 @@ msgid "Holiday address"
 msgstr "Munkaszüneti napon érvényes cím"
 
 #: holiday.labelHolidayAssignedNumber
-#, fuzzy
 msgid "holiday has been assigned the system ID number:"
 msgstr "a munkaszüneti nap az alábbi rendszerazonosítót kapta\\:"
 
 #: holiday.labelHolidayCode
-#, fuzzy
 msgid "Holiday code:"
 msgstr "Munkaszüneti nap kód\\:"
 
@@ -420,7 +406,6 @@ msgstr ""
 "többek között <br> a központ számla és teljesítési adatait - érheti el."
 
 #: holiday.labelHolidayDetails
-#, fuzzy
 msgid "Holiday details "
 msgstr "Munkaszüneti nap adatai"
 
@@ -429,17 +414,14 @@ msgid "Holiday  information"
 msgstr "Munkaszüneti nap információk"
 
 #: holiday.labelHolidayName
-#, fuzzy
 msgid "Holiday Name:"
 msgstr "Munkaszüneti nap elnevezése\\:"
 
 #: holiday.labelHolidayShortName
-#, fuzzy
 msgid "Holiday short name:"
 msgstr "Munkaszüneti nap rövid elnevezése\\:"
 
 #: holiday.labelHolidayType
-#, fuzzy
 msgid "Holiday type:"
 msgstr "Munkaszüneti nap típusa\\:"
 
@@ -482,7 +464,6 @@ msgid "Organizational Wide Holidays"
 msgstr "Egész szervezetre érvényes munkaszüneti napok"
 
 #: holiday.labelMandatoryInstructions
-#, fuzzy
 msgid ""
 "Complete the fields below. Then click Preview. Click Cancel to return to "
 "Holiday Details Page without submitting information. "
@@ -502,7 +483,6 @@ msgid "No"
 msgstr "Nem"
 
 #: holiday.labelNote
-#, fuzzy
 msgid "Note:"
 msgstr "Megjegyzés\\:"
 
@@ -514,17 +494,14 @@ msgstr ""
 "rendszerből."
 
 #: holiday.labelParentHoliday
-#, fuzzy
 msgid "Parent holiday:"
 msgstr "Anya munkaszüneti nap\\:"
 
 #: holiday.labelPleaseNote
-#, fuzzy
 msgid "Please note: "
 msgstr "Megjegyzés\\:"
 
 #: holiday.labelPostalCode
-#, fuzzy
 msgid "Postal Code:"
 msgstr "Irányítószám\\:"
 
@@ -549,7 +526,6 @@ msgid "Review &amp; submit"
 msgstr "Ellenőrzés és érvényesítés"
 
 #: holiday.labelState
-#, fuzzy
 msgid "State:"
 msgstr "Állapot\\:"
 
@@ -562,7 +538,6 @@ msgid "Sub Regional holiday"
 msgstr "Kistérségi munkaszüneti nap"
 
 #: holiday.labelTelephone
-#, fuzzy
 msgid "Telephone:"
 msgstr "Telefon\\:"
 
@@ -606,7 +581,6 @@ msgid "Parent holiday"
 msgstr "Anya munkaszüneti nap"
 
 #: holiday.shortName.displayname
-#, fuzzy
 msgid "Please specify an Holiday short name. "
 msgstr "Adja meg a Munkaszüneti nap rövid elnevezését."
 

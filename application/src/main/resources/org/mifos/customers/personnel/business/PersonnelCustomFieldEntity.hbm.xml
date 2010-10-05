@@ -13,4 +13,9 @@
 		<property name="fieldValue" column="field_value" />
 		<many-to-one name="personnel" column="personnel_id" class="org.mifos.customers.personnel.business.PersonnelBO"  cascade="none" insert="true" update="true" unique="true" access="field"/>
 	</class>
+	<query name="PersonnelCustomFieldEntity.getResponses">
+        <![CDATA[
+        from PersonnelCustomFieldEntity as ccfe
+        where ccfe.fieldId = :CUSTOM_FIELD_ID ]]>
+    </query>
 </hibernate-mapping>

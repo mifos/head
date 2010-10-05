@@ -50,6 +50,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
+import org.mifos.framework.util.helpers.Money;
 
 /**
  * I test integration of {@link SavingsDaoHibernate}, hibernate mapping
@@ -123,6 +124,18 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         IntegrationTestObjectMother.cleanSavingsProductAndAssociatedSavingsAccounts(savingsAccount);
         IntegrationTestObjectMother.cleanSavingsProductAndAssociatedSavingsAccounts(secondSavingsAccount);
         IntegrationTestObjectMother.cleanCustomerHierarchyWithMeeting(client, group, center, weeklyMeeting);
+    }
+
+    @Test
+    public void shouldXX() {
+
+        // setup
+        savingsProduct = new SavingsProductBuilder().mandatory().appliesToClientsOnly().buildForIntegrationTests();
+        savingsAccount = new SavingsAccountBuilder().mandatory().withSavingsProduct(savingsProduct)
+                .withCustomer(client).build();
+        IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
+
+        this.savingsDao.retrieveAllEndOfDayDetailsFor(Money.getDefaultCurrency(), Long.valueOf(savingsAccount.getAccountId().toString()));
     }
 
     @Test

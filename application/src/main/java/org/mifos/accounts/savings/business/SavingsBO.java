@@ -29,8 +29,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -52,6 +50,8 @@ import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.savings.interest.InterestCalculator;
+import org.mifos.accounts.savings.interest.SavingsInterestCalculatorFactory;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
@@ -99,6 +99,8 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SavingsBO extends AccountBO {
 
@@ -189,7 +191,7 @@ public class SavingsBO extends AccountBO {
             final CustomerBO customer, final Integer offsettingAllowable,
             final MeetingBO scheduleForInterestCalculation, final RecommendedAmountUnit recommendedAmountUnit,
             final Money recommendedAmount, final Date createdDate,
-            final Short createdByUserId, List<Holiday> holidays) {
+            final Short createdByUserId, List<Holiday> holidays, DateTime activationDate) {
 
         super(AccountTypes.SAVINGS_ACCOUNT, accountState, customer, offsettingAllowable, scheduledPayments,
                 new LinkedHashSet<AccountFeesEntity>(), createdDate, createdByUserId);
@@ -209,7 +211,7 @@ public class SavingsBO extends AccountBO {
         setSavingsPerformance(createSavingsPerformance());
         try {
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-            setValuesForActiveState(workingDays, holidays);
+            setValuesForActiveState(workingDays, holidays, activationDate);
         } catch (AccountException e) {
             throw new IllegalStateException("Unable to create savings schedules", e);
         }
@@ -246,7 +248,7 @@ public class SavingsBO extends AccountBO {
         CalendarEvent futureCalendarEventsApplicableToOffice = holidayDao.findCalendarEventsForThisYearAndNext(customer
                 .getOfficeId());
         setValuesForActiveState(futureCalendarEventsApplicableToOffice.getWorkingDays(),
-                futureCalendarEventsApplicableToOffice.getHolidays());
+                futureCalendarEventsApplicableToOffice.getHolidays(), new DateTime(new DateTimeService().getCurrentJavaDateTime()));
     }
 
     public void populateInstanceForTest(final SavingsOfferingBO savingsOffering) {
@@ -320,7 +322,7 @@ public class SavingsBO extends AccountBO {
         return interestToBePosted;
     }
 
-    void setInterestToBePosted(final Money interestToBePosted) {
+    public void setInterestToBePosted(final Money interestToBePosted) {
         this.interestToBePosted = interestToBePosted;
     }
 
@@ -591,7 +593,7 @@ public class SavingsBO extends AccountBO {
                 + interestCalculated + " calculated.");
     }
 
-    private Money calculateInterest(Date fromDate, final Date toDate, final double interestRate,
+    Money calculateInterest(Date fromDate, final Date toDate, final double interestRate,
             final SavingsTrxnDetailEntity adjustedTrxn) throws AccountException {
         boolean initialBalance = false;
 
@@ -934,7 +936,8 @@ public class SavingsBO extends AccountBO {
         if (client.getCustomerMeeting().getMeeting() != null) {
             if (!(getCustomer().getLevel() == CustomerLevel.GROUP && getRecommendedAmntUnit().getId().equals(
                     RecommendedAmountUnit.COMPLETE_GROUP.getValue()))) {
-                generateDepositAccountActions(client, client.getCustomerMeeting().getMeeting(), workingDays, holidays);
+                DateTime today = new DateTime().toDateMidnight().toDateTime();
+                generateDepositAccountActions(client, client.getCustomerMeeting().getMeeting(), workingDays, holidays, today);
                 this.update();
             }
         }
@@ -951,7 +954,7 @@ public class SavingsBO extends AccountBO {
             if (getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
                     || getCustomer().getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())
                     && getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.COMPLETE_GROUP.getValue())) {
-                generateDepositAccountActions(getCustomer(), depositSchedule, workingDays, holidays);
+                generateDepositAccountActions(getCustomer(), depositSchedule, workingDays, holidays, new DateTime(this.activationDate));
             } else {
                 List<CustomerBO> children;
                 try {
@@ -960,7 +963,7 @@ public class SavingsBO extends AccountBO {
                     throw new AccountException(ce);
                 }
                 for (CustomerBO customer : children) {
-                    generateDepositAccountActions(customer, depositSchedule, workingDays, holidays);
+                    generateDepositAccountActions(customer, depositSchedule, workingDays, holidays, new DateTime(this.activationDate));
                 }
             }
         }
@@ -968,15 +971,13 @@ public class SavingsBO extends AccountBO {
 
     @Deprecated
     public void generateDepositAccountActions(final CustomerBO customer, final MeetingBO meeting,
-            final List<Days> workingDays, final List<Holiday> holidays) {
-
-        DateTime startingFromtoday = new DateTime().toDateMidnight().toDateTime();
+            final List<Days> workingDays, final List<Holiday> holidays, final DateTime startingFrom) {
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
         ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
                 workingDays, holidays);
 
-        List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, startingFromtoday, scheduledEvent);
+        List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, startingFrom, scheduledEvent);
 
         short installmentNumber = 1;
         for (DateTime date : depositDates) {
@@ -1224,9 +1225,9 @@ public class SavingsBO extends AccountBO {
         }
     }
 
-    private void setValuesForActiveState(final List<Days> workingDays, final List<Holiday> holidays)
+    private void setValuesForActiveState(final List<Days> workingDays, final List<Holiday> holidays, DateTime activationDate)
             throws AccountException {
-        this.setActivationDate(new DateTimeService().getCurrentJavaDateTime());
+        this.setActivationDate(activationDate.toDate());
         this.generateDepositAccountActions(workingDays, holidays);
         try {
             Date intCalcDate = helper.getNextScheduleDate(getActivationDate(), null, getTimePerForInstcalc());

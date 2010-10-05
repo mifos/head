@@ -21,9 +21,20 @@
 package org.mifos.platform.questionnaire.domain;
 
 public enum QuestionGroupState {
-    INACTIVE, ACTIVE;
+    INACTIVE (false), ACTIVE (true);
+
+    private final boolean state;
+
+    QuestionGroupState(boolean state)
+    {
+        this.state = state;
+    }
 
     public static QuestionGroupState getQuestionGroupStateAsEnum(boolean active) {
         return active? ACTIVE : INACTIVE;
+    }
+
+    public boolean state() {
+        return state;
     }
 }

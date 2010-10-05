@@ -90,7 +90,6 @@ msgid "Please specify {0}."
 msgstr ""
 
 #: office.address.address1.requiredmsg
-#, fuzzy
 msgid "Please specify an Office address."
 msgstr "សូមបញ្ជាក់ឈ្មោះទីស្នាក់ការ"
 
@@ -186,13 +185,11 @@ msgid ""
 msgstr ""
 
 #: office.formOfficeType.pleaseLelect
-#, fuzzy
 msgctxt "office.formOfficeType.pleaseLelect"
 msgid "Please specify an Office type."
 msgstr "សូមបញ្ជាក់ឈ្មោះទីស្នាក់ការ"
 
 #: office.formOfficeType.requiredmsg
-#, fuzzy
 msgctxt "office.formOfficeType.requiredmsg"
 msgid "Please specify an Office type."
 msgstr "សូមបញ្ជាក់ឈ្មោះទីស្នាក់ការ"
@@ -461,7 +458,6 @@ msgid "Parent office"
 msgstr ""
 
 #: office.shortName.displayname
-#, fuzzy
 msgid "Please specify an Office short name. "
 msgstr "សូមបញ្ជាក់ឈ្មោះទីស្នាក់ការ"
 

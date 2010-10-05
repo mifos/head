@@ -60,6 +60,7 @@ public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
                 if (trigger != null && jobDetail != null) {
                     Date nextFire = trigger.getNextFireTime() != null ? trigger.getNextFireTime() : new Date(0);
                     Date lastFire = mifosScheduler.getJobsPreviousRunTime(jobName);
+                    Date lastSuccessfulRun = mifosScheduler.getJobsLastSuccessfulRunTime(jobName);
                     int priority = trigger.getPriority();
                     String frequency = "";
                     String taskType = "";
@@ -73,7 +74,7 @@ public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
                     }
                     String previousRunStatus = mifosScheduler.getJobsPreviousRunStatus(jobName);
                     int triggerState = scheduler.getTriggerState(trigger.getName(), groupName);
-                    batchjobs.add(new BatchjobsDto(jobName, frequency, taskType, priority, previousRunStatus, lastFire, nextFire, triggerState));
+                    batchjobs.add(new BatchjobsDto(jobName, frequency, taskType, priority, previousRunStatus, lastFire, lastSuccessfulRun, nextFire, triggerState));
                 }
             }
         }

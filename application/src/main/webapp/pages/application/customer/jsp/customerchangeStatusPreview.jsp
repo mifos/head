@@ -141,6 +141,15 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="Customer.EditStatus"></mifos:mifoslabel>
 							</html-el:button></td>
 						</tr>
+                        <tr>
+                           <td>
+                                <c:set var="questionsHostForm" value="${editCustomerStatusActionForm}" scope="request" />
+                                <c:import url="/pages/application/surveys/jsp/viewQuestionResponses.jsp">
+                                   <c:param name="editResponseURL" value="editCustomerStatusAction.do?method=editQuestionResponses&currentFlowKey=${requestScope.currentFlowKey}"/>
+                                   <c:param name="responseDivStyleClass" value="viewQuestionResponseDiv"/>
+                                </c:import>
+                           </td>
+                        </tr>
 						<tr>
 							<td align="center" class="blueline">&nbsp;</td>
 						</tr>

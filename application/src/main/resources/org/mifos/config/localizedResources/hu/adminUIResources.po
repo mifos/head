@@ -45,7 +45,6 @@ msgid "accounts"
 msgstr "számlák"
 
 #: admin.manage.accounts
-#, fuzzy
 msgid "Manage accounts"
 msgstr "{0} számlák kezelése"
 
@@ -296,12 +295,10 @@ msgid "products"
 msgstr "termékek"
 
 #: admin.questions
-#, fuzzy
 msgid "Questions"
 msgstr "kérdések"
 
 #: admin.question
-#, fuzzy
 msgid "Question"
 msgstr "kérdések"
 
@@ -358,7 +355,6 @@ msgid "Manage surveys"
 msgstr ""
 
 #: admin.view.surveys
-#, fuzzy
 msgctxt "admin.view.surveys"
 msgid "View surveys"
 msgstr "Felmérések megtekintése"
@@ -500,7 +496,6 @@ msgid "System Information"
 msgstr "Rendszer információk"
 
 #: admin.view.sysinfo.title
-#, fuzzy
 msgid "View System Information"
 msgstr "Rendszer információk"
 
@@ -618,7 +613,6 @@ msgid "View savings products"
 msgstr "Megtakarítási termékek megtekintése"
 
 #: admin.viewsurvey
-#, fuzzy
 msgctxt "admin.viewsurvey"
 msgid "View surveys"
 msgstr "Felmérések megtekintése"

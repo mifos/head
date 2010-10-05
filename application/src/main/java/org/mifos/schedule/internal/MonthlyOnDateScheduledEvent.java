@@ -49,6 +49,4 @@ public class MonthlyOnDateScheduledEvent extends AbstractScheduledEvent {
     public int getEvery() {
         return every;
     }
-
-
 }

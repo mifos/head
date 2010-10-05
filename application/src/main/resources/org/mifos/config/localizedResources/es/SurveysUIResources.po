@@ -103,7 +103,6 @@ msgstr ""
 "Cancelar para Ver la página de preguntas sin enviar ninguna información."
 
 #: Surveys.EditNote
-#, fuzzy
 msgid "Note: Significant modifications of questions could affect reporting."
 msgstr ""
 "Nota\\: Modificaciones significativas de las preguntas pueden afectar el "
@@ -348,7 +347,6 @@ msgid "Define new survey"
 msgstr "Defina una nueva encuesta"
 
 #: Surveys.definequestion
-#, fuzzy
 msgid "define a new question "
 msgstr "Defina una nueva pregunta"
 
@@ -504,7 +502,6 @@ msgid "Select questions"
 msgstr "Seleccione las preguntas"
 
 #: Surveys.select_survey
-#, fuzzy
 msgid "Select survey "
 msgstr "Seleccione la encuesta"
 
@@ -521,13 +518,11 @@ msgid "Survey name"
 msgstr "Nombre de la Encuesta"
 
 #: Surveys.viewQuestions_instructions
-#, fuzzy
 msgid "Click on a question below to view details and make changes or "
 msgstr ""
 "Haga clic en la pregunta de abajo para ver los detalles y hacer cambios o "
 
 #: Surveys.viewQuestions_ppi_note
-#, fuzzy
 msgid "Note: questions flagged as PPI may not be attached to general surveys."
 msgstr ""
 "Nota\\: preguntas marcadas como PPI no pueden estar anexadas a las encuestas."
@@ -554,7 +549,6 @@ msgid "Please specify {0}"
 msgstr "Por especifique {0}"
 
 #: errors.DateValidator.DATE_FORMAT
-#, fuzzy
 msgid "Question {0}: response was not a valid date."
 msgstr "Pregunta {0}\\: la respuesta no tiene una fecha válida."
 
@@ -592,17 +586,14 @@ msgid "Please specify {0}"
 msgstr "Por favor especifique {0}"
 
 #: errors.NumberValidator.INVALID_NUMBER
-#, fuzzy
 msgid "Question {0}: response was not a number."
 msgstr "Pregunta {0}\\: la respuesta no fue un número."
 
 #: errors.OneOfValidator.NOT_A_CHOICE
-#, fuzzy
 msgid "Question {0}: choose one of the provided options."
 msgstr "Pregunta {0}\\: escoja una de las opciones provistas."
 
 #: errors.SurveyValidator.MISSING
-#, fuzzy
 msgid "Question {0}: provide a response."
 msgstr "Pregunta {0}\\: de una respuesta."
 

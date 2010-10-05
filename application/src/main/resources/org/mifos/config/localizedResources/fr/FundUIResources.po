@@ -1,5 +1,4 @@
 #. extracted from FundUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -115,7 +114,6 @@ msgid "Enter fund information"
 msgstr "Entrer l'information de fonds"
 
 #: funds.fundCode
-#, fuzzy
 msgid "fund Code"
 msgstr "Afficher code"
 

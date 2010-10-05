@@ -84,7 +84,6 @@ msgid "Search"
 msgstr "Keresés"
 
 #: framework.searchCriteria
-#, fuzzy
 msgid "Search by name, system ID or account number "
 msgstr "Keresés név, rendszerazonosító vagy számlaszám alapján"
 

@@ -119,7 +119,6 @@ msgid "Displayed when moving into Status"
 msgstr "Mostrado al cambiar a Estatus"
 
 #: checklist.displayed_status
-#, fuzzy
 msgid "Displayed when moving into Status:"
 msgstr "Mostrado al cambiar a Estatus\\:"
 
@@ -181,7 +180,6 @@ msgid "Loans"
 msgstr "Préstamos"
 
 #: checklist.name
-#, fuzzy
 msgid "Name:"
 msgstr "Nombre\\:"
 
@@ -220,7 +218,6 @@ msgid "Status"
 msgstr "Estatus"
 
 #: checklist.status_checklist
-#, fuzzy
 msgid "Status of checklist:"
 msgstr "Estatus de la lista de control\\:"
 
@@ -229,7 +226,6 @@ msgid "Submit for approval"
 msgstr "Enviar para aprobación"
 
 #: checklist.type
-#, fuzzy
 msgid "Type:"
 msgstr "Tipo\\:"
 

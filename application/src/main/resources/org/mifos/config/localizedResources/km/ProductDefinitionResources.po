@@ -26,7 +26,6 @@ msgstr ""
 "ហើយសូមព្យាយាមម្តងទៀត"
 
 #: errors.calcinstallmenttype
-#, fuzzy
 msgid "Please Specify the Calculate # of Installments Type."
 msgstr "សូមបញ្ជាក់កាគណនា\\# នៃប្រភេទសងរំលោះ"
 
@@ -75,7 +74,6 @@ msgid ""
 msgstr "សូមបញ្ជាក់តំលៃដែលមានសុពលភាពសំរាប់{0}. {0}គួតែជាតំលៃរវាង{១}និង {២}"
 
 #: errors.defMinMaxconfig
-#, fuzzy
 msgid ""
 "Please specify valid values for {0} {1} {2}. {0} {1} {2} should be a value "
 "between {3} and {4}, inclusive."
@@ -89,7 +87,6 @@ msgid ""
 msgstr ""
 
 #: errors.defaultloanamount
-#, fuzzy
 msgid "Please Specify the valid Default Loan Amount {0}."
 msgstr "សូមបញ្ជាក់កាគណនា\\# នៃប្រភេទសងរំលោះ"
 
@@ -98,7 +95,6 @@ msgid "The default loan amount format {0} {1} is invalid because {2}"
 msgstr ""
 
 #: errors.definstallments
-#, fuzzy
 msgid "Please Specify the valid Default # of Installments {0} {1}."
 msgstr "សូមបញ្ជាក់កាគណនា\\# នៃប្រភេទសងរំលោះ"
 
@@ -139,7 +135,6 @@ msgid "Please Specify the valid End Installment Range Number {0} {1}."
 msgstr ""
 
 #: errors.endloanamount
-#, fuzzy
 msgid "Please Specify the valid End Range Loan Amount {0} {1}."
 msgstr "សូមបញ្ជាក់កាគណនា\\# នៃប្រភេទសងរំលោះ"
 
@@ -179,7 +174,6 @@ msgid "Please specify valid interest rate."
 msgstr ""
 
 #: errors.intRateValue
-#, fuzzy
 msgid "Please specify valid {0}."
 msgstr "សូមជ្រើសរើស{0}."
 
@@ -201,7 +195,6 @@ msgid ""
 msgstr ""
 
 #: errors.mandatory
-#, fuzzy
 msgid "Please specify the {0}."
 msgstr "សូមជ្រើសរើស{0}."
 
@@ -226,7 +219,6 @@ msgid "The length of {0} can not be greater than {1} character(s)."
 msgstr ""
 
 #: errors.maxinstallments
-#, fuzzy
 msgid "Please Specify the valid Max # of Installments {0} {1}."
 msgstr "សូមបញ្ជាក់កាគណនា\\# នៃប្រភេទសងរំលោះ"
 
@@ -235,7 +227,6 @@ msgid "The max interest is invalid because {0}"
 msgstr ""
 
 #: errors.maxloanamount
-#, fuzzy
 msgid "Please Specify the valid Max Loan Amount {0} {1}."
 msgstr "សូមបញ្ជាក់កាគណនា\\# នៃប្រភេទសងរំលោះ"
 
@@ -278,7 +269,6 @@ msgid "The length of {0} can not be less than {1} character(s)."
 msgstr ""
 
 #: errors.mininstallments
-#, fuzzy
 msgid "Please Specify the valid Min # of Installments {0} {1}."
 msgstr "សូមបញ្ជាក់កាគណនា\\# នៃប្រភេទសងរំលោះ"
 
@@ -287,7 +277,6 @@ msgid "The min interest is invalid because {0}"
 msgstr ""
 
 #: errors.minloanamount
-#, fuzzy
 msgid "Please Specify the valid Min Loan Amount {0} {1}."
 msgstr "សូមបញ្ជាក់កាគណនា\\# នៃប្រភេទសងរំលោះ"
 
@@ -315,7 +304,6 @@ msgid "Please select the {0}."
 msgstr "សូមជ្រើសរើស{0}."
 
 #: errors.selectconfig
-#, fuzzy
 msgid "Please select the {0} {1}."
 msgstr "សូមជ្រើសរើស{0}."
 
@@ -353,7 +341,6 @@ msgid "Please Specify the valid Start Installment Range Number {0} {1}."
 msgstr ""
 
 #: errors.startloanamount
-#, fuzzy
 msgid "Please Specify the valid Start Range Loan Amount {0} {1}."
 msgstr "សូមបញ្ជាក់កាគណនា\\# នៃប្រភេទសងរំលោះ"
 

@@ -187,6 +187,7 @@
             <forward name="updateStatus_failure"
                      path="/pages/application/customer/jsp/customerchangeStatusPreview.jsp"/>
             <forward name="previewStatus_failure" path="/pages/application/customer/jsp/customerchangeStatus.jsp"/>
+            <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
         </action>
 
         <!-- CustomerNotes action -->

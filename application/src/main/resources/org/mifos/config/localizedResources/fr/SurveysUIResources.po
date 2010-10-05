@@ -1,5 +1,4 @@
 #. extracted from SurveysUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -102,7 +101,6 @@ msgstr ""
 "retourner à afficher la page de question sans valider les informations."
 
 #: Surveys.EditNote
-#, fuzzy
 msgid "Note: Significant modifications of questions could affect reporting."
 msgstr ""
 "Note\\: les modifications majeures des questions peuvent affecter les "
@@ -347,7 +345,6 @@ msgid "Define new survey"
 msgstr "Définir une nouvelle étude"
 
 #: Surveys.definequestion
-#, fuzzy
 msgid "define a new question "
 msgstr "définir une nouvelle question"
 
@@ -504,7 +501,6 @@ msgid "Select questions"
 msgstr "Sélectionner questions"
 
 #: Surveys.select_survey
-#, fuzzy
 msgid "Select survey "
 msgstr "Sélectionner étude"
 
@@ -521,14 +517,12 @@ msgid "Survey name"
 msgstr "Nom de létude"
 
 #: Surveys.viewQuestions_instructions
-#, fuzzy
 msgid "Click on a question below to view details and make changes or "
 msgstr ""
 "Cliquer sur une question ci-dessous pour afficher les détails et faire des "
 "changements ou"
 
 #: Surveys.viewQuestions_ppi_note
-#, fuzzy
 msgid "Note: questions flagged as PPI may not be attached to general surveys."
 msgstr ""
 "Note\\: questions marqués pour PPI ne peuvent pas être attachés aux études "

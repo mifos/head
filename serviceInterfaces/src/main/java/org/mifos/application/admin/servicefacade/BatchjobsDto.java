@@ -29,18 +29,20 @@ public class BatchjobsDto {
     private final int priority;
     private final String lastRunStatus;
     private final long lastStartTime;
+    private final long lastSuccessfulRun;
     private final long nextStartTime;
     private final int state;
 
 
     public BatchjobsDto(String name, String frequency, String taskType, int priority, String lastRunStatus, Date lastStartTime,
-            Date nextStartTime, int state) {
+            Date lastSuccessfulRun, Date nextStartTime, int state) {
         this.name = name;
         this.frequency = frequency;
         this.taskType = taskType;
         this.priority = priority;
         this.lastRunStatus = lastRunStatus;
         this.lastStartTime = lastStartTime.getTime();
+        this.lastSuccessfulRun = lastSuccessfulRun.getTime();
         this.nextStartTime = nextStartTime.getTime();
         this.state = state;
     }
@@ -67,6 +69,10 @@ public class BatchjobsDto {
 
     public Date getLastStartTime() {
         return new Date(this.lastStartTime);
+    }
+
+    public Date getLastSuccessfulRun() {
+        return new Date(lastSuccessfulRun);
     }
 
     public Date getNextStartTime() {

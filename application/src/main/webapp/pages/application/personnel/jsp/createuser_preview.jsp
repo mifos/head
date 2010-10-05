@@ -427,6 +427,15 @@ explanation of the license and how it is applied.
 											bundle="PersonnelUIResources"></mifos:mifoslabel>
 									</html-el:button></td>
 								</tr>
+								               <tr>
+               <td>
+                    <c:set var="questionsHostForm" value="${personActionForm}" scope="request" />
+                    <c:import url="/pages/application/surveys/jsp/viewQuestionResponses.jsp">
+                       <c:param name="editResponseURL" value="PersonAction.do?method=editQuestionResponses&currentFlowKey=${requestScope.currentFlowKey}"/>
+                       <c:param name="responseDivStyleClass" value="viewQuestionResponseDiv"/>
+                    </c:import>
+               </td>
+            </tr>
 							</table>
 							<br>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">

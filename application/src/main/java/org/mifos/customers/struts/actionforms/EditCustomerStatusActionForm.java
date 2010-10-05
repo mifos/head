@@ -20,6 +20,7 @@
 
 package org.mifos.customers.struts.actionforms;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -30,15 +31,17 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 
-public class EditCustomerStatusActionForm extends BaseActionForm {
+public class EditCustomerStatusActionForm extends BaseActionForm implements QuestionResponseCapturer {
 
     public EditCustomerStatusActionForm() {
         selectedItems = new String[50];
@@ -65,6 +68,8 @@ public class EditCustomerStatusActionForm extends BaseActionForm {
     private String input;
 
     private String commentDate;
+
+    private List<QuestionGroupDetail> questionGroups;
 
     public String getCommentDate() {
         return commentDate;
@@ -256,6 +261,16 @@ public class EditCustomerStatusActionForm extends BaseActionForm {
                 || (Short.valueOf(newStatusId).equals(CustomerStatus.CLIENT_CLOSED.getValue()))
                 || (Short.valueOf(newStatusId).equals(CustomerStatus.GROUP_CLOSED.getValue()))
                 || (Short.valueOf(newStatusId).equals(CustomerStatus.GROUP_CANCELLED.getValue()));
+    }
+
+    @Override
+    public void setQuestionGroups(List<QuestionGroupDetail> questionGroups) {
+        this.questionGroups = questionGroups;
+    }
+
+    @Override
+    public List<QuestionGroupDetail> getQuestionGroups() {
+        return this.questionGroups;
     }
 
 }

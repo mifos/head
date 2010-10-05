@@ -44,7 +44,6 @@ msgid "<li>The date of birth specified was invalid.</li>"
 msgstr "ថ្ងៃខែឆ្នាំកំនើតដែលបានបញ្ជាក់គឺពុំត្រឹមត្រូវ"
 
 #: Family.InvalidDOB
-#, fuzzy
 msgid "<li>The date of birth specified was invalid in the row {0}.</li>"
 msgstr "ថ្ងៃខែឆ្នាំកំនើតដែលបានបញ្ជាក់គឺពុំត្រឹមត្រូវ"
 
@@ -113,7 +112,6 @@ msgid "<li>Please specify Trained Date.</li>"
 msgstr "សូមបញ្ជាក់ការបរិច្ឆេទដែលបានរៀន"
 
 #: Client.balance
-#, fuzzy
 msgid "Balance:"
 msgstr "តុល្យការ"
 
@@ -325,7 +323,6 @@ msgid "Edit personal information"
 msgstr "កែប្រែពត័មានផ្ទាល់ខ្លួន"
 
 #: button.previousFamilyInfo
-#, fuzzy
 msgid "Edit Family information"
 msgstr "ត្រួតពិនិត្យព័តមានMFI"
 
@@ -358,12 +355,10 @@ msgid "Create an account for this {0}"
 msgstr "បង្កើតគណនីមួយសំរាប់{0}"
 
 #: client.AccountsLink
-#, fuzzy
 msgid "Open new account:"
 msgstr "បើកគណនីថ្មី"
 
 #: client.ActiveLoans
-#, fuzzy
 msgid "# of active loans:"
 msgstr "នៃកំចីយមានសកម្មភាព"
 
@@ -376,7 +371,6 @@ msgid "Add Group"
 msgstr "បន្តែមក្រុម"
 
 #: client.AddGroupMemberShip
-#, fuzzy
 msgid "Click here to add group membership  "
 msgstr "សុមចុចទីនេះដើម្បីបន្តែមក្រុមសមាជិក"
 
@@ -394,17 +388,14 @@ msgid "Address"
 msgstr "អស័យដ្ថាន"
 
 #: client.Address1
-#, fuzzy
 msgid "Address 1:"
 msgstr "អស័យដ្ថាន​១"
 
 #: client.Address2
-#, fuzzy
 msgid "Address 2:"
 msgstr "អស័យដ្ថាន២"
 
 #: client.Address3
-#, fuzzy
 msgid "Address 3:"
 msgstr "អស័យដ្ថាន៣"
 
@@ -418,12 +409,10 @@ msgid "Administrative set fees"
 msgstr "កំនត់ថ្លៃសេវាររដ្ថបាល"
 
 #: client.Age
-#, fuzzy
 msgid "Age:"
 msgstr "អាយុ"
 
 #: client.Amount
-#, fuzzy
 msgid "Amount:"
 msgstr "ចំនួន"
 
@@ -432,12 +421,10 @@ msgid "Apply charges"
 msgstr "អនុវត្តិការយកសេវាកម្ម"
 
 #: client.ApplyTransaction
-#, fuzzy
 msgid "Apply transactions:"
 msgstr "ចាប់ផ្តើមប្រត្តិបត្តិការ"
 
 #: client.AssignClients
-#, fuzzy
 msgid "Assign clients to center titles:"
 msgstr "ចាត់តាំងអតិថិជនទៅតាមនាមក្រុម"
 
@@ -446,12 +433,10 @@ msgid "Select group/branch"
 msgstr "ជ្រើសរើសក្រុមឬសាខា"
 
 #: client.BranchSelected
-#, fuzzy
 msgid "{0} selected:"
 msgstr "ជ្រើសរើស{0}"
 
 #: client.BusinessActivities
-#, fuzzy
 msgid "Activities:"
 msgstr "សកម្មភាព"
 
@@ -460,7 +445,6 @@ msgid "Center Charges"
 msgstr "មជ្ឈមណ្ឌលផ្នែកយកសេវារ"
 
 #: client.Centers
-#, fuzzy
 msgid "{0} Assigned:"
 msgstr "ចាត់តាំង{0}"
 
@@ -482,7 +466,6 @@ msgid "Select from the status options below. Then click Continue."
 msgstr "សូមយកជំរើសនៃលក្ខ័ណខាងក្រោមរួចហើយសូមចុចបន្ត"
 
 #: client.ChargesApplied
-#, fuzzy
 msgid "Charges applied:"
 msgstr "បានយកតំលៃសេវា"
 
@@ -527,7 +510,6 @@ msgid "Details."
 msgstr "ពត័មានលំអិត"
 
 #: client.Citizenship
-#, fuzzy
 msgid "Religion:"
 msgstr "សាសនា"
 
@@ -536,7 +518,6 @@ msgid "Religion"
 msgstr "សាសនា"
 
 #: client.City
-#, fuzzy
 msgid "City:"
 msgstr "ទីក្រុង"
 
@@ -573,12 +554,10 @@ msgid ", select an explanation from the dropdown list below"
 msgstr "ជ្រើសរើសការពន្យល់មួយពីតារាងខាងក្រោម"
 
 #: client.CollectionSheet
-#, fuzzy
 msgid "Collection sheet type:"
 msgstr "ប្រមូលគ្រប់ប្រភេទអត្ដបទ"
 
 #: client.Confidential
-#, fuzzy
 msgid "Confidential:"
 msgstr "ការសំងាត់"
 
@@ -604,7 +583,6 @@ msgstr ""
 "0}ដែលមានបញ្ចូល{1}នៃគណនីនិងការបង្ហាញទិន្ន័យ"
 
 #: client.Confirmation.NameSystemID
-#, fuzzy
 msgid "has been assigned the system ID number:"
 msgstr "ដែលបានចាត់តាំងលេខកូដរបស់ប្រព័ន្ថ"
 
@@ -613,7 +591,6 @@ msgid "Suggested next steps"
 msgstr "មតិយោបល់និងបល់ពេលក្រោយ"
 
 #: client.Confirmation.Note
-#, fuzzy
 msgid "Please Note:"
 msgstr "សូមកត់ចំនាំ"
 
@@ -622,7 +599,6 @@ msgid "You have successfully created a new {0}"
 msgstr "{0}ថ្មីដែលអ្នកបង្កើតគឺបានសំរេចហើយ"
 
 #: client.Country
-#, fuzzy
 msgid "Country:"
 msgstr "ប្រទេស"
 
@@ -694,17 +670,14 @@ msgid "Current Status"
 msgstr "លក្ខ័នបច្ចុប្បន"
 
 #: client.CycleNo
-#, fuzzy
 msgid "{0} Cycle #:"
 msgstr "រង្វិល"
 
 #: client.DateCreated
-#, fuzzy
 msgid "Date Created:"
 msgstr "កាលបរិច្ជេទដែលបង្កើត"
 
 #: client.DateOfBirth
-#, fuzzy
 msgid "Date Of Birth:"
 msgstr "ថ្ងៃខែឆ្នាំកំណើត"
 
@@ -783,7 +756,6 @@ msgid "Review & Submit Personal Information"
 msgstr "ពិនិត្យឡើងវិញ​និងបញ្ជូនពត័មានផ្ទាល់ខ្លួន"
 
 #: client.EditFamilyInformationLink
-#, fuzzy
 msgctxt "client.EditFamilyInformationLink"
 msgid "Edit family information"
 msgstr "ត្រួតពិនិត្យព័តមានMFI"
@@ -798,7 +770,6 @@ msgid "/"
 msgstr "/"
 
 #: client.EducationLevel
-#, fuzzy
 msgid "Education Level:"
 msgstr "កំរិតនៃការសិក្សា\\:"
 
@@ -807,12 +778,10 @@ msgid "Education Level"
 msgstr "កំរិតនៃការសិក្សា"
 
 #: client.Ethinicity
-#, fuzzy
 msgid "Caste:"
 msgstr "វណ្ណះ"
 
 #: client.ExternalId
-#, fuzzy
 msgid "External ID:"
 msgstr "លេខកូដខាងក្រៅ"
 
@@ -825,12 +794,10 @@ msgstr ""
 "្វូស"
 
 #: client.FatherLabel
-#, fuzzy
 msgid "Father name:"
 msgstr "ឈ្មោះឪពុក"
 
 #: client.FeeType
-#, fuzzy
 msgid "Fee Type:"
 msgstr "ប្រភេទនៃសេវា"
 
@@ -839,7 +806,6 @@ msgid "Fields marked with an asterisk are required."
 msgstr "ប្រលោះដែលមានសញ្ញាផ្កាយគឺតំរូវអោយមានព័តមាន"
 
 #: client.FirstName
-#, fuzzy
 msgid "First Name:"
 msgstr "ឈ្មោះឪពុក"
 
@@ -849,12 +815,10 @@ msgid "First Name"
 msgstr "នាមខ្លួន"
 
 #: client.FormedBy
-#, fuzzy
 msgid "Recruited By:"
 msgstr "ជ្រើសរើសដោយ"
 
 #: client.Gender
-#, fuzzy
 msgid "Gender:"
 msgstr "ភេទ"
 
@@ -864,7 +828,6 @@ msgid "Gender"
 msgstr "ភេទ"
 
 #: client.GovernmentId
-#, fuzzy
 msgid "Government ID:"
 msgstr "លេខកូដរដ្ថាភិបាល"
 
@@ -877,7 +840,6 @@ msgid "Group"
 msgstr "ក្រុម"
 
 #: client.GroupMembership
-#, fuzzy
 msgid "Group membership not mandatory:"
 msgstr "ក្រុមនៃសមាជិកគឺពុំមានអណត្តិ"
 
@@ -898,23 +860,19 @@ msgid "Group Membership Style"
 msgstr "ភាពដោយឡែកនៃក្រុមសមាជិក"
 
 #: client.GroupsAssigned
-#, fuzzy
 msgid "Group assigned:"
 msgstr "ការចាត់តាំងក្រុម"
 
 #: family.EditFamilyInformationLink
-#, fuzzy
 msgctxt "family.EditFamilyInformationLink"
 msgid "Edit family information"
 msgstr "ត្រួតពិនិត្យព័តមានMFI"
 
 #: family.FamilyInformationHeading
-#, fuzzy
 msgid "Family information"
 msgstr "ត្រួតពិនិត្យព័តមានMFI"
 
 #: client.Handicapped
-#, fuzzy
 msgid "Handicapped:"
 msgstr "ពិការភាព"
 
@@ -935,7 +893,6 @@ msgid "Amount of last {0}"
 msgstr "ចុងក្រោយនៃចំនូន{0}"
 
 #: client.LastName
-#, fuzzy
 msgid "Last Name:"
 msgstr "នាមត្រកូល"
 
@@ -953,7 +910,6 @@ msgid "Create a new loan account"
 msgstr "បង្កើតគណនីកំចីយថ្មី"
 
 #: client.LoanCycle
-#, fuzzy
 msgid "Loan Cycle #:"
 msgstr "រង្វិលនៃកំចីយ"
 
@@ -962,17 +918,14 @@ msgid "Loan"
 msgstr "កំចីយ"
 
 #: client.LoanOff
-#, fuzzy
 msgid "Loan officer:"
 msgstr "មន្ត្រីផ្នែកកំចីយ"
 
 #: client.LoanOfficer
-#, fuzzy
 msgid "Loan officer assigned:"
 msgstr "ការចាត់តាំងមន្ត្រីផ្នែកកំចីយ"
 
 #: client.LocationOfMeeting
-#, fuzzy
 msgid "Location of meeting:"
 msgstr "ទីតាំងនៃអង្គប្រជុំ"
 
@@ -985,12 +938,10 @@ msgid "Manage"
 msgstr "គ្រប់គ្រង"
 
 #: client.MaritalStatus
-#, fuzzy
 msgid "Marital Status:"
 msgstr "ស្ធានភាពគ្រួសារ"
 
 #: client.MeetingSchedule
-#, fuzzy
 msgid "Meeting schedule:"
 msgstr "កម្មវិធីនៃអង្គប្រជុំ"
 
@@ -999,7 +950,6 @@ msgid "Schedule Meeting"
 msgstr "កម្មវិធីនៃអង្គប្រជុំ"
 
 #: client.MeetingsAttended
-#, fuzzy
 msgid "Meetings Attended:"
 msgstr "អ្នកចូលរួមអង្គប្រជុំ"
 
@@ -1013,7 +963,6 @@ msgid "Edit meeting schedule"
 msgstr "កែតំរូកម្មវិធីនៃអង្គប្រជុំ"
 
 #: client.MeetingsMissed
-#, fuzzy
 msgid "Meetings Missed:"
 msgstr "បំភ្លេចកម្មវិធីនៃអង្គប្រជុំ"
 
@@ -1022,7 +971,6 @@ msgid "membership"
 msgstr "ភាពជាសមាជិក"
 
 #: client.MembershipStyle
-#, fuzzy
 msgid "Membership Style:"
 msgstr "បែបនៃសមាជិក"
 
@@ -1031,22 +979,18 @@ msgid "MFI related information"
 msgstr "ពត័មានដែលទាក់ទងនឹងMFI"
 
 #: client.FamilyInformationLabel
-#, fuzzy
 msgid "Family Information"
 msgstr "ត្រួតពិនិត្យព័តមានMFI"
 
 #: client.MiddleName
-#, fuzzy
 msgid "Middle Name:"
 msgstr "នាមកណ្តាល"
 
 #: client.Name
-#, fuzzy
 msgid "Name:"
 msgstr "នាម"
 
 #: client.NewStatusLabel
-#, fuzzy
 msgid "New status:"
 msgstr "លក្ខណ័ថ្មី"
 
@@ -1055,7 +999,6 @@ msgid "No"
 msgstr "ទេ"
 
 #: client.NoOfActive
-#, fuzzy
 msgid "# of active {0}"
 msgstr "\\# នៃសកម្មភាព{0}"
 
@@ -1068,7 +1011,6 @@ msgid "Add a note"
 msgstr "បន្ថែមកំនត់ចំនាំ"
 
 #: client.NumberOfChildren
-#, fuzzy
 msgid "Number Of Children:"
 msgstr "ចំនួនបុត្រ"
 
@@ -1081,7 +1023,6 @@ msgid "Performance History"
 msgstr "ប្រវត្តិស្នាដៃពីមុន"
 
 #: client.Periodicity
-#, fuzzy
 msgid "Periodicity:"
 msgstr "ដំនាក់កាល"
 
@@ -1090,17 +1031,14 @@ msgid "Personal information"
 msgstr "ព័តមានផ្ទាល់ខ្លួន"
 
 #: client.Photograph
-#, fuzzy
 msgid "Photograph:"
 msgstr "រូបថត"
 
 #: client.PostalCode
-#, fuzzy
 msgid "Postal Code:"
 msgstr "លេខកូដប្រៃសណីយ"
 
 #: client.PovertyStatus
-#, fuzzy
 msgid "Poverty Status:"
 msgstr "ស្ថានភាពក្រលំបាក"
 
@@ -1117,7 +1055,6 @@ msgid "Preview MFI information"
 msgstr "ត្រួតពិនិត្យព័តមានMFI"
 
 #: client.PreviewFamilyInformation
-#, fuzzy
 msgid "Preview Family information"
 msgstr "ត្រួតពិនិត្យព័តមានMFI"
 
@@ -1139,7 +1076,6 @@ msgid "Review & submit"
 msgstr "ពិនិត្យឡើងវិញនិងដាក់បញ្ជូន"
 
 #: client.Salutation
-#, fuzzy
 msgid "Salutation:"
 msgstr "ការគំនាប់"
 
@@ -1176,7 +1112,6 @@ msgid "Select a Center"
 msgstr "ជ្រើសរើសមណ្ឌល"
 
 #: client.SecondLastName
-#, fuzzy
 msgid "Second Last Name:"
 msgstr "ត្រកូលទីពីរ"
 
@@ -1206,7 +1141,6 @@ msgid "/"
 msgstr "/"
 
 #: client.SpouseFatherName
-#, fuzzy
 msgid "Spouse/Father Name:"
 msgstr "ប្តីប្រពន្ធ/ត្រកូល"
 
@@ -1220,7 +1154,6 @@ msgid "Spouse/Father First Name"
 msgstr "ប្តីប្រពន្ធ/ឈ្មោះរបស់ឪពុក"
 
 #: client.SpouseLabel
-#, fuzzy
 msgid "Spouse name:"
 msgstr "ឈ្មោះរបស់ប្តីប្រពន្ធ"
 
@@ -1281,7 +1214,6 @@ msgid "Last Name"
 msgstr "នាមត្រកូល"
 
 #: client.FamilyDateOfBirth
-#, fuzzy
 msgid "Date of Birth "
 msgstr "ថ្ងៃខែឆ្នាំកំណើត"
 
@@ -1315,12 +1247,10 @@ msgid "Sibling"
 msgstr ""
 
 #: client.FamilyDisplayName
-#, fuzzy
 msgid "Name"
 msgstr "នាម"
 
 #: client.State
-#, fuzzy
 msgid "State:"
 msgstr "រដ្ថ"
 
@@ -1345,7 +1275,6 @@ msgid "System ID"
 msgstr "លេខកូដប្រព័ន្ធ"
 
 #: client.Telephone
-#, fuzzy
 msgid "Telephone:"
 msgstr "ទូរស័ព្ទ"
 
@@ -1354,22 +1283,18 @@ msgid "Total {0}"
 msgstr "សរុប {0}"
 
 #: client.TotalSavings
-#, fuzzy
 msgid "Total Savings:"
 msgstr "សរុបការសន្សំ"
 
 #: client.Trained
-#, fuzzy
 msgid "Trained:"
 msgstr "ហ្វឹកហ្វឺន"
 
 #: client.TrainedOn
-#, fuzzy
 msgid "Trained On:"
 msgstr "ហ្វឹកហ្វឺនលើ"
 
 #: client.TrainedOnDate
-#, fuzzy
 msgid "Trained On Date:"
 msgstr "ហ្វឹកហ្វឺននៅថ្ងៃ"
 
@@ -1402,7 +1327,6 @@ msgid "Postal Code"
 msgstr "លេខកូដប្រៃសណីយ"
 
 #: client.acc
-#, fuzzy
 msgid "Acct #"
 msgstr "លេខគណនី"
 
@@ -1598,7 +1522,6 @@ msgid "Client cannot be added to group, as Active accounts exist."
 msgstr "ដោយសាគណនីនៅមានសកម្មភាពនៅឡើយដូច្នេះមិនអាចថែមអតិថិជនទៅក្នុងក្រុមបានទេ"
 
 #: error.Customer.ClientIsClosedOrCancelled
-#, fuzzy
 msgid "The client status should not be either closed or cancelled."
 msgstr "លក្ខ័ណរបស់អតិថិជនគួតែបានបិទឬបោះបង់"
 
@@ -1817,7 +1740,6 @@ msgid "<li>Please specify value for {0}.</li>"
 msgstr "សូមបញ្ជាក់ពីតំលៃសំរាប់{0}"
 
 #: warning.clientWithSameGovtIdExistInClosed
-#, fuzzy
 msgid ""
 "A record matching this client was found in \"closed\" status with same Govt. "
 "ID.  Please review that client record before continuing."
@@ -1826,7 +1748,6 @@ msgstr ""
 "លកំណត់ត្រារបស់អតិថិជនម្តងទៀតមុននឹងបន្ត"
 
 #: warning.clientWithSameNameDOBExistInClosed
-#, fuzzy
 msgid ""
 "A record matching this client was found in \"closed\" status with same name "
 "and date of birth.  Please review that client record before continuing."
@@ -1835,7 +1756,6 @@ msgstr ""
 "លកំណត់ត្រារបស់អតិថិជនម្តងទៀតមុននឹងបន្ត"
 
 #: warning.clientWithSameNameDOBExistInBlackListed
-#, fuzzy
 msgid ""
 "A record matching this client was found in \"blacklisted\" status with same "
 "name and date of birth.  Please review that client record before continuing."
@@ -1844,7 +1764,6 @@ msgstr ""
 "លកំណត់ត្រារបស់អតិថិជនម្តងទៀតមុននឹងបន្ត"
 
 #: client.ViewQuestionGroupResponsesLink
-#, fuzzy
 msgid "View Additional Information"
 msgstr "ព៌តមានបន្ថែម"
 
@@ -1865,6 +1784,5 @@ msgid "<li>Please specify a number lesser than {0} for {1}</li>"
 msgstr ""
 
 #: questionnaire.invalid.numeric.response
-#, fuzzy
 msgid "<li>Please specify a number for {0}</li>"
 msgstr "សូមបញ្ជាក់ពីតំលៃសំរាប់{0}"
