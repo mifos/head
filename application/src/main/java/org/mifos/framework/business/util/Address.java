@@ -22,6 +22,7 @@ package org.mifos.framework.business.util;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.dto.domain.AddressDto;
+import org.mifos.framework.util.helpers.MifosStringUtils;
 
 
 public class Address {
@@ -115,15 +116,7 @@ public class Address {
     }
 
     private String computePhoneNumberStripped() {
-        if (phoneNumber == null) {
-            return null;
-        }
-        StringBuilder buffer = new StringBuilder();
-        for (char c : phoneNumber.toCharArray()) {
-            if (Character.isDigit(c))
-                buffer.append(c);
-        }
-        return buffer.toString();
+        return MifosStringUtils.removeNondigits(phoneNumber);
     }
 
     private void setPhoneNumberStripped(String phoneNumberStripped) {

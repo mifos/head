@@ -235,4 +235,10 @@ public interface CustomerDao {
     Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForClientIterator();
 
     Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForGroupIterator();
+
+    /**
+     * <code>phoneNumber</code> is stripped to contain numeric characters only
+     */
+    List<CustomerDto> findCustomersWithGivenPhoneNumber(String phoneNumber);
+
 }

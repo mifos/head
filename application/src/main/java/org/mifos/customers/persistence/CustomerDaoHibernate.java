@@ -115,10 +115,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import org.mifos.framework.util.helpers.MifosStringUtils;
 
-/**
- *
- */
 public class CustomerDaoHibernate implements CustomerDao {
 
     private final GenericDao genericDao;
@@ -1684,5 +1682,21 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.GROUP.getValue());
         return (Iterator<CustomFieldDefinitionEntity>) genericDao
                 .executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+    }
+
+    @Override
+    public List<CustomerDto> findCustomersWithGivenPhoneNumber(String phoneNumber) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("phoneNumberStripped", MifosStringUtils.removeNondigits(phoneNumber));
+        List<CustomerBO> queryResult = (List<CustomerBO>) genericDao
+                .executeNamedQuery("Customer.findCustomersWithGivenPhoneNumber", queryParameters);
+        List<CustomerDto> customerDtos = new ArrayList<CustomerDto>();
+        for (CustomerBO customerBO : queryResult) {
+            CustomerDto customerDto = new CustomerDto(customerBO.getCustomerId(), customerBO.getDisplayName(),
+                    customerBO.getCustomerLevel().getId(), customerBO.getSearchId());
+
+            customerDtos.add(customerDto);
+        }
+        return customerDtos;
     }
 }

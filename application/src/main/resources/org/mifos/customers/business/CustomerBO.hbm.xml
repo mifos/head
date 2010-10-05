@@ -1762,5 +1762,9 @@
 		 from org.mifos.customers.business.CustomerBO as customer where customer.customerLevel.id =2 and customer.customerStatus in (9, 10) order by customer.customerId]]>
 	</query>
 
+        <query name="Customer.findCustomersWithGivenPhoneNumber">
+            from org.mifos.customers.business.CustomerBO customer 
+            where customer.customerAddressDetail.phoneNumberStripped=:phoneNumberStripped
+        </query>
 
 </hibernate-mapping>
