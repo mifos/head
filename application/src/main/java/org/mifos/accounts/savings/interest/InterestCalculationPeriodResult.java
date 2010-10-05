@@ -45,4 +45,9 @@ public class InterestCalculationPeriodResult {
     public Money getTotalPrincipal() {
         return this.totalPrincipal;
     }
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append("total principal gain/loss for period: ").append(totalPrincipal).append(" interest: ").append(interest).append(" avg principal: ").append(averagePrincipal).toString();
+    }
 }
