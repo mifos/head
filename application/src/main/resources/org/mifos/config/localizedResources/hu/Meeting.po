@@ -145,12 +145,10 @@ msgid "of every"
 msgstr "minden"
 
 #: meeting.labelPlaceOfMeeting
-#, fuzzy
 msgid "Location of meeting:"
 msgstr "Találkozó helyszíne\\:"
 
 #: meeting.labelRecurDays
-#, fuzzy
 msgid "If days, specify the recurrence:"
 msgstr "Napi viszonylat esetén határozza meg a gyakoriságot\\:"
 
@@ -159,17 +157,14 @@ msgid "Recur every"
 msgstr "Minden"
 
 #: meeting.labelRecurMonths
-#, fuzzy
 msgid "If months, select between the following:"
 msgstr "Havi viszonylat esetén válasszon az alábbiak közül\\:"
 
 #: meeting.labelRecurWeeks
-#, fuzzy
 msgid "If weeks, specify the following:"
 msgstr "Heti viszonylat esetén határozza meg az alábbiakat\\:"
 
 #: meeting.labelRepaymentDay
-#, fuzzy
 msgid "Repayment day:"
 msgstr "Törlesztési nap\\:"
 
@@ -182,7 +177,6 @@ msgid "week(s) on"
 msgstr "héten"
 
 #: meeting.labelmeetingschedule&groupMembership
-#, fuzzy
 msgid "Meeting schedule & Group Membership:"
 msgstr "Találkozó ütemterv és csoport tagság\\:"
 

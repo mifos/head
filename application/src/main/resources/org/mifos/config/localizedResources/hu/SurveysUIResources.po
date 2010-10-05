@@ -102,7 +102,6 @@ msgstr ""
 "megtekintése laphoz, kattintson a Mégsem gombra."
 
 #: Surveys.EditNote
-#, fuzzy
 msgid "Note: Significant modifications of questions could affect reporting."
 msgstr ""
 "Megjegyzés\\: A kérdések jelentős módosítása befolyásolhatja a jelentést."
@@ -346,7 +345,6 @@ msgid "Define new survey"
 msgstr "Új felmérés meghatározása"
 
 #: Surveys.definequestion
-#, fuzzy
 msgid "define a new question "
 msgstr "új kérdés meghatározása"
 
@@ -505,7 +503,6 @@ msgid "Select questions"
 msgstr "Kérdések kiválasztása"
 
 #: Surveys.select_survey
-#, fuzzy
 msgid "Select survey "
 msgstr "Felmérés kiválasztása"
 
@@ -522,14 +519,12 @@ msgid "Survey name"
 msgstr "Felmérés megnevezése"
 
 #: Surveys.viewQuestions_instructions
-#, fuzzy
 msgid "Click on a question below to view details and make changes or "
 msgstr ""
 "Kattintson egy alábbi kérdésre az adatok megtekintéséhez és módosítások "
 "végzéséhez, vagy"
 
 #: Surveys.viewQuestions_ppi_note
-#, fuzzy
 msgid "Note: questions flagged as PPI may not be attached to general surveys."
 msgstr ""
 "Megjegyzés\\: A PPI flaggel ellátott kérdések nem csatolhatóak általános "
@@ -557,7 +552,6 @@ msgid "Please specify {0}"
 msgstr "Adja meg a(z) {0}t"
 
 #: errors.DateValidator.DATE_FORMAT
-#, fuzzy
 msgid "Question {0}: response was not a valid date."
 msgstr "Kérdés {0}\\: a válasz érvénytelen dátum volt."
 
@@ -593,17 +587,14 @@ msgid "Please specify {0}"
 msgstr "Adja meg a(z) {0}t"
 
 #: errors.NumberValidator.INVALID_NUMBER
-#, fuzzy
 msgid "Question {0}: response was not a number."
 msgstr "Kérdés {0}\\: a válasz nem szám volt."
 
 #: errors.OneOfValidator.NOT_A_CHOICE
-#, fuzzy
 msgid "Question {0}: choose one of the provided options."
 msgstr "Kérdés {0}\\: a megadott lehetőségekből válasszon."
 
 #: errors.SurveyValidator.MISSING
-#, fuzzy
 msgid "Question {0}: provide a response."
 msgstr "Kérdés {0}\\: adjon meg egy választ."
 

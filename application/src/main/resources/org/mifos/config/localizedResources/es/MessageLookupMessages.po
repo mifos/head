@@ -147,13 +147,11 @@ msgstr "Descripción"
 
 # What is a BO?
 #: DistanceFromBoToCenter.Label
-#, fuzzy
 msgid "Distance from BO to Center"
 msgstr "Distancia desde la sucursal al Centro"
 
 # What is a HO?
 #: DistanceFromHoToBO.Label
-#, fuzzy
 msgid "Distance from HO to BO for office"
 msgstr "Distancia del corporativo al sucursal para la oficina"
 
@@ -356,7 +354,6 @@ msgstr "Estado de Pobreza"
 
 # Need better definition
 #: PrdApplicableMaster.Label
-#, fuzzy
 msgid "PrdApplicableMaster"
 msgstr "PrdApplicableMaster"
 
@@ -394,7 +391,6 @@ msgstr "Ultimo"
 
 # Need better context
 #: RecommendedAmtUnit.Label
-#, fuzzy
 msgid "REC AMNT UNIT"
 msgstr "Unidades de Cantidad Recomendadas"
 

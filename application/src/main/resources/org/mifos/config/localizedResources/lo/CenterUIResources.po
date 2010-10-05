@@ -1,6 +1,5 @@
 # extracted from CenterUIResources.properties
 #. extracted from CenterUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

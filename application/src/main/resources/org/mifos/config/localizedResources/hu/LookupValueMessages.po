@@ -381,7 +381,6 @@ msgid "Time Of Disburstment"
 msgstr "Folyósítás ideje"
 
 #: FeePayment-TimeOfFirstLoanRepayment
-#, fuzzy
 msgid "Time of First Loan Repayment "
 msgstr "Első törlesztés ideje"
 
@@ -774,12 +773,10 @@ msgid "Can Administer Reports"
 msgstr "Jelentések kezelésére jogosult"
 
 #: Permissions-CanApplyChargesToLoans
-#, fuzzy
 msgid "Can apply charges to loans "
 msgstr "Hitel esetén költségek alkalmazására jogosult"
 
 #: Permissions-CanApproveLoansInBulk
-#, fuzzy
 msgid "Can approve loans in bulk "
 msgstr "Hitelek tömeges jóváhagyására jogosult"
 
@@ -1228,7 +1225,6 @@ msgid "Can apply charges to Center accounts"
 msgstr "Központi számlákra költségek alkalmazására jogosult"
 
 #: Permissions-Centers-CanCreateNewCenter
-#, fuzzy
 msgid "Can create new Center "
 msgstr "Új Központ létrehozására jogosult"
 
@@ -1242,7 +1238,6 @@ msgid "Can edit fee amount attached to the account"
 msgstr "A számlához tartozó díjösszeg szerkesztésére jogosult"
 
 #: Permissions-Centers-CanEditMeetingSchedule
-#, fuzzy
 msgid "Can edit meeting schedule "
 msgstr "Találkozó ütemterv szerkesztésére jogosult"
 
@@ -1255,7 +1250,6 @@ msgid "Can make payments to Center accounts"
 msgstr "Központ számlákra fizetési tranzakció rögzítésére jogosult"
 
 #: Permissions-Centers-CanModifyCenterInformation
-#, fuzzy
 msgid "Can modify Center information "
 msgstr "Központ információk módosítására jogosult"
 

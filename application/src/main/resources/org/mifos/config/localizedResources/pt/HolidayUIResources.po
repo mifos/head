@@ -1,6 +1,5 @@
 # extracted from HolidayUIResources.properties
 #. extracted from HolidayUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

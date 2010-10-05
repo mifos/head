@@ -1,5 +1,4 @@
 #. extracted from CheckListUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -119,7 +118,6 @@ msgid "Displayed when moving into Status"
 msgstr "Affiché lors du changement de le statut"
 
 #: checklist.displayed_status
-#, fuzzy
 msgid "Displayed when moving into Status:"
 msgstr "Affiché lors du changement de le statut\\:"
 
@@ -183,7 +181,6 @@ msgid "Loans"
 msgstr "Prêts"
 
 #: checklist.name
-#, fuzzy
 msgid "Name:"
 msgstr "Nom\\:"
 
@@ -223,7 +220,6 @@ msgid "Status"
 msgstr "Statut"
 
 #: checklist.status_checklist
-#, fuzzy
 msgid "Status of checklist:"
 msgstr "Statut de la checklist\\:"
 
@@ -232,7 +228,6 @@ msgid "Submit for approval"
 msgstr "Valider pour approbation"
 
 #: checklist.type
-#, fuzzy
 msgid "Type:"
 msgstr "Type\\:"
 

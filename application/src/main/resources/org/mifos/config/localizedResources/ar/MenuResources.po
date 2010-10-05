@@ -1,6 +1,5 @@
 # extracted from MenuResources.properties
 #. extracted from MenuResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

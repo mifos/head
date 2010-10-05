@@ -1687,28 +1687,24 @@ msgid "<li>Please specify value for {0}.</li>"
 msgstr "<li>请为{0}指定值。</li>"
 
 #: warning.clientWithSameGovtIdExistInClosed
-#, fuzzy
 msgid ""
 "A record matching this client was found in \"closed\" status with same Govt. "
 "ID.  Please review that client record before continuing."
 msgstr "搜索到一条处于“已关闭”状态的客户记录。请在继续之前先查看该客户记录。"
 
 #: warning.clientWithSameNameDOBExistInClosed
-#, fuzzy
 msgid ""
 "A record matching this client was found in \"closed\" status with same name "
 "and date of birth.  Please review that client record before continuing."
 msgstr "搜索到一条处于“已关闭”状态的客户记录。请在继续之前先查看该客户记录。"
 
 #: warning.clientWithSameNameDOBExistInBlackListed
-#, fuzzy
 msgid ""
 "A record matching this client was found in \"blacklisted\" status with same "
 "name and date of birth.  Please review that client record before continuing."
 msgstr "搜索到一条处于“已关闭”状态的客户记录。请在继续之前先查看该客户记录。"
 
 #: client.ViewQuestionGroupResponsesLink
-#, fuzzy
 msgid "View Additional Information"
 msgstr "附加信息"
 
@@ -1729,6 +1725,5 @@ msgid "<li>Please specify a number lesser than {0} for {1}</li>"
 msgstr ""
 
 #: questionnaire.invalid.numeric.response
-#, fuzzy
 msgid "<li>Please specify a number for {0}</li>"
 msgstr "<li>请为{0}指定值。</li>"

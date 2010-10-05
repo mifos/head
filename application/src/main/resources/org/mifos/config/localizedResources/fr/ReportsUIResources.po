@@ -1,5 +1,4 @@
 #. extracted from ReportsUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -64,7 +63,6 @@ msgid "Please choose a status."
 msgstr "Veuiller choisir un statut."
 
 #: error.titleAlreadyExist
-#, fuzzy
 msgid "This title already exists,please choose another title. "
 msgstr "Ce titre existe déjà ,veuiller choisir un autre titre."
 
@@ -365,7 +363,6 @@ msgid "Review & submit"
 msgstr "Réafficher et Valider"
 
 #: reports.reviewStatement
-#, fuzzy
 msgid "Review the information below. "
 msgstr "Aperç l' information ci-dessous."
 
@@ -375,7 +372,6 @@ msgstr ""
 "[TODO TRANSLATE TO FRENCH] To select, click on a report from the list below."
 
 #: reports.statement
-#, fuzzy
 msgid ""
 "Complete the fields below. Click Cancel to return to Admin without "
 "submitting information. "
@@ -428,7 +424,6 @@ msgid "Upload Report"
 msgstr "Ajouter un Rapport"
 
 #: reports.uploadanewadmindoc
-#, fuzzy
 msgid "upload a new administrative document "
 msgstr "Ajouter un nouveau rapport d'éditique"
 

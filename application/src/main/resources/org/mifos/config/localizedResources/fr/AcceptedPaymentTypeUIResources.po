@@ -1,5 +1,4 @@
 #. extracted from AcceptedPaymentTypeUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

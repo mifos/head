@@ -1,6 +1,5 @@
 # extracted from ExceptionResources.properties
 #. extracted from ExceptionResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

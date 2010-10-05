@@ -46,7 +46,6 @@ msgid "accounts"
 msgstr "គណនី"
 
 #: admin.manage.accounts
-#, fuzzy
 msgid "Manage accounts"
 msgstr "គ្រប់គ្រងគណនី{0}"
 
@@ -297,12 +296,10 @@ msgid "products"
 msgstr "ផលិតផល"
 
 #: admin.questions
-#, fuzzy
 msgid "Questions"
 msgstr "សំនួរ"
 
 #: admin.question
-#, fuzzy
 msgid "Question"
 msgstr "សំនួរ"
 
@@ -359,7 +356,6 @@ msgid "Manage surveys"
 msgstr ""
 
 #: admin.view.surveys
-#, fuzzy
 msgctxt "admin.view.surveys"
 msgid "View surveys"
 msgstr "ពិនិត្យមើលការស្ទង់មតិមហាជន"
@@ -618,7 +614,6 @@ msgid "View savings products"
 msgstr "ពិនិត្យមើលផលិតផលសន្សំ"
 
 #: admin.viewsurvey
-#, fuzzy
 msgctxt "admin.viewsurvey"
 msgid "View surveys"
 msgstr "ពិនិត្យមើលការស្ទង់មតិមហាជន"

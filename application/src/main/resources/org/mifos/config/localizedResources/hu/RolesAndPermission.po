@@ -150,7 +150,6 @@ msgid "Delete role"
 msgstr "Szerep törlése"
 
 #: roleandpermission.labelDeleteRoleInstruction
-#, fuzzy
 msgid ""
 "Are you sure you want to delete this role?  <br><br>Click Submit to confirm. "
 "Click Cancel to return to Roles & Permissions without deleting the role. "
@@ -183,7 +182,6 @@ msgid "Roles and permissions"
 msgstr "Szerepek és jogosultságok"
 
 #: roleandpermission.labelRoleName
-#, fuzzy
 msgid "Role Name:"
 msgstr "Szerep neve\\:"
 

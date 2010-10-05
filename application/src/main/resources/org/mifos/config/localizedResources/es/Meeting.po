@@ -150,12 +150,10 @@ msgid "of every"
 msgstr "de cada"
 
 #: meeting.labelPlaceOfMeeting
-#, fuzzy
 msgid "Location of meeting:"
 msgstr "Lugar de la reunión\\:"
 
 #: meeting.labelRecurDays
-#, fuzzy
 msgid "If days, specify the recurrence:"
 msgstr "Si son días, específique la recurrencia\\:"
 
@@ -164,23 +162,19 @@ msgid "Recur every"
 msgstr "Ocurre cada"
 
 #: meeting.labelRecurMonths
-#, fuzzy
 msgid "If months, select between the following:"
 msgstr "si son meses, seleccione entre lo siguiente\\:"
 
 #: meeting.labelRecurWeeks
-#, fuzzy
 msgid "If weeks, specify the following:"
 msgstr "Si son semanas, específique lo siguiente\\:"
 
 #: meeting.labelRepaymentDay
-#, fuzzy
 msgid "Repayment day:"
 msgstr "Día de pago\\:"
 
 # it could be: el, la, los or las
 #: meeting.labelThe
-#, fuzzy
 msgid "The"
 msgstr "El"
 
@@ -189,7 +183,6 @@ msgid "week(s) on"
 msgstr "semana(s) en "
 
 #: meeting.labelmeetingschedule&groupMembership
-#, fuzzy
 msgid "Meeting schedule & Group Membership:"
 msgstr "Horario de reuniones y afiliacion al grupo\\:"
 

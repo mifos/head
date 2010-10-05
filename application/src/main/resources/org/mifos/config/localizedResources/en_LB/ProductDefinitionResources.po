@@ -1,6 +1,5 @@
 # extracted from ProductDefinitionResources.properties
 #. extracted from ProductDefinitionResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

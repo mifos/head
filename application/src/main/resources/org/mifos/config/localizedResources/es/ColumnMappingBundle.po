@@ -184,7 +184,6 @@ msgstr "Apellidos"
 
 # There is no middle name in Spanish
 #: Client.customerNameDetailSet.middleName
-#, fuzzy
 msgctxt "Client.customerNameDetailSet.middleName"
 msgid "Middle Name"
 msgstr "Segundo Nombre"
@@ -352,7 +351,6 @@ msgstr "País"
 
 # Not sure what GRT stands for
 #: Group.customField.feildValue
-#, fuzzy
 msgid "GRT Staff Id"
 msgstr "Id de Personal de GRT"
 
@@ -511,7 +509,6 @@ msgid "Default"
 msgstr "Por omisión"
 
 #: LoanProduct.defNoInstallments
-#, fuzzy
 msgid "Default # Of Installments"
 msgstr "Número de cuotas por defecto"
 
@@ -570,7 +567,6 @@ msgid "Max Loan Amount"
 msgstr "Importe máximo del préstamo "
 
 #: LoanProduct.maxNoInstallments
-#, fuzzy
 msgid "Max # Of Installments"
 msgstr "Número máximo de pagos"
 
@@ -587,7 +583,6 @@ msgid "Min Loan Amount"
 msgstr "Importe mínimo del préstamo"
 
 #: LoanProduct.minNoInstallments
-#, fuzzy
 msgid "Min # Of Installments"
 msgstr "Número mínimo de pagos"
 
@@ -764,7 +759,6 @@ msgstr "Idioma preferido"
 
 # There is no middle name in Spanish
 #: Personnel.middleName
-#, fuzzy
 msgctxt "Personnel.middleName"
 msgid "Middle Name"
 msgstr "Segundo Nombre"

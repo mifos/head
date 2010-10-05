@@ -1,6 +1,5 @@
 # extracted from reporterrors.properties
 #. extracted from reporterrors.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -38,7 +37,6 @@ msgid "Select a valid Meeting Date"
 msgstr "Seleccione una Fecha para la Reunión válida"
 
 #: runDate.invalid
-#, fuzzy
 msgid "Please enter date as DD/MM/YYYY "
 msgstr "Por favor introduzca la fecha con el siguiente formato DD/MM/YYYY"
 

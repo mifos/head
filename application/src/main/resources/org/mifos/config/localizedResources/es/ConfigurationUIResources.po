@@ -277,7 +277,6 @@ msgid "Inactive"
 msgstr "Inactivo"
 
 #: configuration.instruction1
-#, fuzzy
 msgid ""
 "Complete the fields below. Then click Preview. Click Cancel to return to "
 "Admin without submitting information. "
@@ -339,7 +338,6 @@ msgstr "Estado Civil"
 
 # There is no middle name in Spanish
 #: configuration.middlename
-#, fuzzy
 msgid "Middle name"
 msgstr "Segundo Nombre"
 
@@ -597,7 +595,6 @@ msgid "Please specify a value of {0} characters or less."
 msgstr "Por favor especifique un valor con {0} caracteres o menos."
 
 # There is no middle name in Spanish
-#, fuzzy
 #~ msgid "Spouse/father middle name"
 #~ msgstr "Segundo Nombre de esposo/padre"
 

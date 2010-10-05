@@ -1,5 +1,4 @@
 #. extracted from ColumnMappingBundle.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -507,7 +506,6 @@ msgid "Default"
 msgstr "Défaut"
 
 #: LoanProduct.defNoInstallments
-#, fuzzy
 msgid "Default # Of Installments"
 msgstr "Nombre des paiements par défaut"
 
@@ -566,7 +564,6 @@ msgid "Max Loan Amount"
 msgstr "Montant maximum de prêt"
 
 #: LoanProduct.maxNoInstallments
-#, fuzzy
 msgid "Max # Of Installments"
 msgstr "Nombre Max des paiements"
 
@@ -583,7 +580,6 @@ msgid "Min Loan Amount"
 msgstr "Montant minimum de prêt"
 
 #: LoanProduct.minNoInstallments
-#, fuzzy
 msgid "Min # Of Installments"
 msgstr "Nombre Min des paiements"
 

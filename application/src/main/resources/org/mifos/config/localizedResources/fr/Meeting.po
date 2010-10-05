@@ -1,5 +1,4 @@
 #. extracted from Meeting.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -151,12 +150,10 @@ msgid "of every"
 msgstr "du chaque"
 
 #: meeting.labelPlaceOfMeeting
-#, fuzzy
 msgid "Location of meeting:"
 msgstr "Endroit de la réunion\\:"
 
 #: meeting.labelRecurDays
-#, fuzzy
 msgid "If days, specify the recurrence:"
 msgstr "Si quotidien, indiquer la répétition \\:"
 
@@ -165,17 +162,14 @@ msgid "Recur every"
 msgstr "Se reproduit chaque"
 
 #: meeting.labelRecurMonths
-#, fuzzy
 msgid "If months, select between the following:"
 msgstr "Si mensuel, sélectionner le suivan\\:"
 
 #: meeting.labelRecurWeeks
-#, fuzzy
 msgid "If weeks, specify the following:"
 msgstr "Si hebdomadaire, indiquer le suivant\\:"
 
 #: meeting.labelRepaymentDay
-#, fuzzy
 msgid "Repayment day:"
 msgstr "Jour de remboursement\\:"
 
@@ -188,7 +182,6 @@ msgid "week(s) on"
 msgstr "Semaine"
 
 #: meeting.labelmeetingschedule&groupMembership
-#, fuzzy
 msgid "Meeting schedule & Group Membership:"
 msgstr "Programme de réunion et appartenance au groupe"
 

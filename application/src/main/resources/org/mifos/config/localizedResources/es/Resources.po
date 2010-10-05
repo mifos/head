@@ -23,7 +23,6 @@ msgid "Previous"
 msgstr "Anterior"
 
 #: Results
-#, fuzzy
 msgid "Results %s1-%s2 of %s3"
 msgstr "Resultados %s1-%s2 de %s3"
 
@@ -167,7 +166,6 @@ msgstr "AplicacionParcial"
 
 # Need to know context
 #: value_10
-#, fuzzy
 msgctxt "value_10"
 msgid "Hold"
 msgstr "Mantener"

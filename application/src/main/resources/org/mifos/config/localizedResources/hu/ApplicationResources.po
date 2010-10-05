@@ -56,7 +56,6 @@ msgid "</ul><hr>"
 msgstr "</ul><hr>"
 
 #: errors.header
-#, fuzzy
 msgid ""
 "<h3><font color=\"red\">Validation Error</font></h3>You must correct the "
 "following error(s) before proceeding:<ul>"
@@ -126,7 +125,6 @@ msgid "client"
 msgstr "ügyfél"
 
 #: label.clients
-#, fuzzy
 msgid "Clients "
 msgstr "Ügyfelek"
 
@@ -191,12 +189,10 @@ msgid "Open new"
 msgstr "Nyitás: új"
 
 #: label.portfolio
-#, fuzzy
 msgid "Portfolio "
 msgstr "Portfolió"
 
 #: label.print
-#, fuzzy
 msgid "Print "
 msgstr "Nyomtatás"
 

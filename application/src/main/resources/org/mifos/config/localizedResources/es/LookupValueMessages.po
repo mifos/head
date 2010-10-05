@@ -93,7 +93,6 @@ msgid "Savings Adjustment"
 msgstr "Ajuste de ahorros"
 
 #: AccountAction-WaiveOffDue
-#, fuzzy
 msgid "Waive Off Due"
 msgstr "Prescindir lo que se debe"
 
@@ -312,12 +311,10 @@ msgid "A"
 msgstr "Un "
 
 #: CustomerAttendance-Al
-#, fuzzy
 msgid "AA"
 msgstr "AA"
 
 #: CustomerAttendance-L
-#, fuzzy
 msgid "L"
 msgstr "L"
 
@@ -387,7 +384,6 @@ msgid "Time Of Disburstment"
 msgstr "Tiempo de desembolso"
 
 #: FeePayment-TimeOfFirstLoanRepayment
-#, fuzzy
 msgid "Time of First Loan Repayment "
 msgstr "Tiempo del primer pago del préstamo"
 
@@ -1131,7 +1127,6 @@ msgid "Can view Daily Cash Flow Report - Branch"
 msgstr "Puede ver el reporte de Flujo de Caja Diario - Sucursal "
 
 #: Permissions-CanViewDailyPortfolioQualityDataReportAgingAnalysis
-#, fuzzy
 msgid "Can view Daily Portfolio quality data report - Aging analysis"
 msgstr ""
 "Puede ver el reporte Diario de Datos de Calidad de la Cartera - Análisis de "

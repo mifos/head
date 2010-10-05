@@ -131,12 +131,10 @@ msgstr "Clientes"
 
 # Not sure about the translation
 #: label.collectionsheet
-#, fuzzy
 msgid "Collection Sheet"
 msgstr "Folha de Lançamentos"
 
 #: label.collectionsheets
-#, fuzzy
 msgid "Collection Sheets"
 msgstr "Folhas de Lançamentos"
 

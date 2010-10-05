@@ -506,7 +506,6 @@ msgid "Default"
 msgstr "Alapértelmezés"
 
 #: LoanProduct.defNoInstallments
-#, fuzzy
 msgid "Default # Of Installments"
 msgstr "Törlesztőrészletek alapértelmezés szerinti száma"
 
@@ -565,7 +564,6 @@ msgid "Max Loan Amount"
 msgstr "Hitel maximális összege"
 
 #: LoanProduct.maxNoInstallments
-#, fuzzy
 msgid "Max # Of Installments"
 msgstr "Törlesztőrészletek maximális száma"
 
@@ -582,7 +580,6 @@ msgid "Min Loan Amount"
 msgstr "Hitel minimális összege"
 
 #: LoanProduct.minNoInstallments
-#, fuzzy
 msgid "Min # Of Installments"
 msgstr "Törlesztőrészletek minimális száma"
 

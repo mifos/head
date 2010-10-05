@@ -44,7 +44,6 @@ msgid "accounts"
 msgstr "账户"
 
 #: admin.manage.accounts
-#, fuzzy
 msgid "Manage accounts"
 msgstr "管理{0}账户"
 
@@ -295,12 +294,10 @@ msgid "products"
 msgstr "产品"
 
 #: admin.questions
-#, fuzzy
 msgid "Questions"
 msgstr "问题"
 
 #: admin.question
-#, fuzzy
 msgid "Question"
 msgstr "问题"
 
@@ -329,7 +326,6 @@ msgid "reports"
 msgstr "报表"
 
 #: admin.manage.reports
-#, fuzzy
 msgid "Manage reports"
 msgstr "管理导入"
 
@@ -358,7 +354,6 @@ msgid "Manage surveys"
 msgstr ""
 
 #: admin.view.surveys
-#, fuzzy
 msgctxt "admin.view.surveys"
 msgid "View surveys"
 msgstr "查看调查"
@@ -500,7 +495,6 @@ msgid "System Information"
 msgstr "系统信息"
 
 #: admin.view.sysinfo.title
-#, fuzzy
 msgid "View System Information"
 msgstr "系统信息"
 
@@ -618,7 +612,6 @@ msgid "View savings products"
 msgstr "查看储蓄产品"
 
 #: admin.viewsurvey
-#, fuzzy
 msgctxt "admin.viewsurvey"
 msgid "View surveys"
 msgstr "查看调查"

@@ -178,17 +178,14 @@ msgid "Address"
 msgstr "អាស័យដ្ឋាន"
 
 #: Office.labelAddress1
-#, fuzzy
 msgid "Address 1:"
 msgstr "អាស័យដ្ឋាន១"
 
 #: Office.labelAddress2
-#, fuzzy
 msgid "Address 2:"
 msgstr "អាស័យដ្ឋាន២"
 
 #: Office.labelAddress3
-#, fuzzy
 msgid "Address 3:"
 msgstr "អាស័យដ្ឋាន៣"
 
@@ -201,7 +198,6 @@ msgid "Branch office"
 msgstr "សាខារបស់ទីស្នាក់ការ"
 
 #: Office.labelChangeStatus
-#, fuzzy
 msgid "Status:"
 msgstr "លក្ខណ័"
 
@@ -210,7 +206,6 @@ msgid "Check the levels to be included."
 msgstr "ពិនិត្យមើលកំរិតសំរាប់ដាក់បញ្ចូល"
 
 #: Office.labelCity
-#, fuzzy
 msgid "City:"
 msgstr "ទីក្រុង"
 
@@ -223,7 +218,6 @@ msgstr ""
 "្ឋបាលដោយមិនចាំបាច់ដាក់បញ្ជូនពត៍មាន"
 
 #: Office.labelCountry
-#, fuzzy
 msgid "Country:"
 msgstr "ប្រទេស"
 
@@ -277,7 +271,6 @@ msgid "No"
 msgstr "ទេ"
 
 #: Office.labelNote
-#, fuzzy
 msgid "Note:"
 msgstr "កំនត់ចំនាំ"
 
@@ -291,12 +284,10 @@ msgid "Office address"
 msgstr "អស័យដ្ឋាននៃទីស្នាក់កាធំ"
 
 #: Office.labelOfficeAssignedNumber
-#, fuzzy
 msgid "office has been assigned the system ID number:"
 msgstr "ផ្នែកទីស្នាក់កាបានចាត់តាំងលេខកូដប្រព័ន្ធ"
 
 #: Office.labelOfficeCode
-#, fuzzy
 msgid "Office code:"
 msgstr "លេខកូដរបស់ទីស្នាក់កា"
 
@@ -317,32 +308,26 @@ msgid "Office  information"
 msgstr "ពត៍មានការិយាល័យ"
 
 #: Office.labelOfficeName
-#, fuzzy
 msgid "Office name:"
 msgstr "ឈ្មោះការិយាល័យ"
 
 #: Office.labelOfficeShortName
-#, fuzzy
 msgid "Office short name:"
 msgstr "ឈ្មោះកាត់របស់ការិយាល័យ"
 
 #: Office.labelOfficeType
-#, fuzzy
 msgid "Office type:"
 msgstr "ប្រភេទនៃការិយាល័យ"
 
 #: Office.labelParentOffice
-#, fuzzy
 msgid "Parent office:"
 msgstr "ការិយាល័យអានាព្យាបាល"
 
 #: Office.labelPleaseNote
-#, fuzzy
 msgid "Please note:"
 msgstr "សុមចំនាំ"
 
 #: Office.labelPostalCode
-#, fuzzy
 msgid "Postal Code:"
 msgstr "លេខកូដប្រៃសណីយ"
 
@@ -363,7 +348,6 @@ msgid "Review &amp; submit"
 msgstr "ពិនិត្យមើល​  បញ្ជូន"
 
 #: Office.labelState
-#, fuzzy
 msgid "State:"
 msgstr "រដ្ឋ"
 
@@ -376,7 +360,6 @@ msgid "Sub Regional office"
 msgstr "ទីស្នាក់ការតំបន់រង"
 
 #: Office.labelTelephone
-#, fuzzy
 msgid "Telephone:"
 msgstr "ទូរស័ព្ទ"
 

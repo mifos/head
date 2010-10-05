@@ -41,7 +41,6 @@ msgid "{0} is not a date."
 msgstr "{0}  ليس تاريخ"
 
 #: errors.double
-#, fuzzy
 msgid "{0} must be a double."
 msgstr "{0} يجب أن يكون صنو"
 
@@ -90,7 +89,6 @@ msgid "<li>{0} does not match {1}</li>"
 msgstr "<li>{0} لا يطابق {1}</li>"
 
 #: errors.range
-#, fuzzy
 msgid "<li>{0} is not in the range {1} through {2}.</li>"
 msgstr "<li/> {0} ليس من ضمن المجال {1} إلى {2}</li>"
 

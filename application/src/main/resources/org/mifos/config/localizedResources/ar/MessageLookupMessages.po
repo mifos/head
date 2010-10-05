@@ -1,6 +1,5 @@
 # extracted from MessageLookupMessages.properties
 #. extracted from MessageLookupMessages.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

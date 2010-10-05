@@ -137,13 +137,11 @@ msgid "Cancel"
 msgstr "取消"
 
 #: savings_stateid_16
-#, fuzzy
 msgctxt "savings_stateid_16"
 msgid "Active"
 msgstr "活动的"
 
 #: savings_stateid_17
-#, fuzzy
 msgctxt "savings_stateid_17"
 msgid "Closed"
 msgstr "已关闭"

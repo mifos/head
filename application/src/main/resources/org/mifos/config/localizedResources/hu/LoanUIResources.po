@@ -60,12 +60,10 @@ msgid "Collateral Notes"
 msgstr "Biztosítékra vonatkozó megjegyzések"
 
 #: Loan.CollateralType
-#, fuzzy
 msgid "Collateral type "
 msgstr "Biztosítéktípus"
 
 #: Loan.PurposeOfLoan
-#, fuzzy
 msgid "Purpose of "
 msgstr "Célja"
 
@@ -165,7 +163,6 @@ msgid "Please select at least one {0}."
 msgstr "Válasszon ki legalább egy {0}t."
 
 #: errors.cannotDisburseLoan.because.otherLoansAreActive
-#, fuzzy
 msgid ""
 "This loan cannot be disbursed because the customer has other active loans "
 "for the same product. "
@@ -215,7 +212,6 @@ msgid "EMI type is not supported."
 msgstr "Ez az EMI típus nem támogatott."
 
 #: errors.externalid
-#, fuzzy
 msgid "Please specify required external ID."
 msgstr "Adja meg a szükséges információ(ka)t."
 
@@ -255,7 +251,6 @@ msgid "Please specify loan purpose for the selected client(s)."
 msgstr "Adja meg a hitel célját a kiválasztott ügyfélre/ügyfelekre."
 
 #: errors.individualsourceoffundfield
-#, fuzzy
 msgid "Please specify source of fund for the selected client(s)."
 msgstr "Adja meg a hitel célját a kiválasztott ügyfélre/ügyfelekre."
 
@@ -265,7 +260,6 @@ msgid "Please specify valid {0}. Use numbers only."
 msgstr "Érvényes {0} értéket adjon meg. Csak számokat használjon."
 
 #: errors.interestdedcuted_principallast
-#, fuzzy
 msgid ""
 "The Grace ALLREPAYMENTS/Principal is not applicable to Principal in last "
 "repayment, Interest Deducted at disbursement. "
@@ -315,7 +309,6 @@ msgstr ""
 "találkozójának a napjánál."
 
 #: errors.invalidTxndateLessThanLastTransactionMade
-#, fuzzy
 msgid ""
 "Date of transaction is invalid. It can not be prior to the date of the last "
 "transaction made on the loan account. "
@@ -550,7 +543,6 @@ msgid "Please specify required information."
 msgstr "Adja meg a szükséges információ(ka)t."
 
 #: exception.accounts.create.customer.inactive
-#, fuzzy
 msgid "Cannot create a loan for inactive customer. "
 msgstr "Inaktív ügyfél részére nem lehet hitelt létrehozni."
 
@@ -657,7 +649,6 @@ msgid "There was some problem updating the account, please try again."
 msgstr "A számla frissítésekor probléma lépett fel, próbálja újból."
 
 #: exceptions.application.loan.noOfInstallmentsLessThanTwo
-#, fuzzy
 msgid ""
 "The No. of installments should be greater than 1 if {1} is deducted at "
 "disbursement. Please specify {0} "
@@ -670,7 +661,6 @@ msgid "Account"
 msgstr "Számla"
 
 #: loan.ChecklistMsg
-#, fuzzy
 msgid "Complete and check off the following tasks. "
 msgstr "Végezze el és pipálja ki az alábbi feladatokat."
 
@@ -697,7 +687,6 @@ msgid "Edit"
 msgstr "Szerkesztés"
 
 #: loan.EditStatus
-#, fuzzy
 msgid "Edit status"
 msgstr "Státusz szerkesztése"
 
@@ -707,7 +696,6 @@ msgid "Fields marked with an asterisk are required."
 msgstr "A csillaggal jelölt mezők kitöltése kötelező."
 
 #: loan.NewStatus
-#, fuzzy
 msgid "New status:"
 msgstr "Új státusz\\:"
 
@@ -779,12 +767,10 @@ msgid "account by ID  "
 msgstr ""
 
 #: loan.accountStatuschanged
-#, fuzzy
 msgid "account status will be changed to cancelled."
 msgstr "a státusz töröltre módosul."
 
 #: loan.accountAssigned
-#, fuzzy
 msgid ""
 "A new {0} account for {1} has been assigned account # {2}. You can enter an "
 "account number into the search box to access account details."
@@ -797,7 +783,6 @@ msgid "Account Number"
 msgstr "Számlaszám"
 
 #: loan.accountNumber
-#, fuzzy
 msgid "Account #"
 msgstr "Számlaszám"
 
@@ -815,7 +800,6 @@ msgid "accounts"
 msgstr "számlák"
 
 #: loan.accsWithFollowingIdCreated
-#, fuzzy
 msgid "accounts with the following IDs have been created"
 msgstr "az alábbi azonosítókkal létrehozásra kerültek"
 
@@ -860,17 +844,14 @@ msgid "(Allowed {0} rate amount"
 msgstr "(Megengedett {0} kamatösszeg"
 
 #: loan.allowed_amount
-#, fuzzy
 msgid "(Allowed Amount:  "
 msgstr "(Megengedett összeg\\:"
 
 #: loan.allowed_amount1
-#, fuzzy
 msgid "Allowed Amount  "
 msgstr "Megengedett összeg"
 
 #: loan.allowed_interest1
-#, fuzzy
 msgid "(Allowed  "
 msgstr "(Megengedett"
 
@@ -879,12 +860,10 @@ msgid "Rate Amount"
 msgstr "Kamatösszeg"
 
 #: loan.allowed_no_of_inst
-#, fuzzy
 msgid "(Allowed Number of Installments:"
 msgstr "(Törlesztőrészletek megengedett száma\\:"
 
 #: loan.allpayments
-#, fuzzy
 msgid "and all payments made against this "
 msgstr "és valamennyi fizetési tranzakció, amelyre sor került szemben a"
 
@@ -931,7 +910,6 @@ msgid "Application Fee"
 msgstr "Igénylési díj"
 
 #: loan.app_fee_amt
-#, fuzzy
 msgid "Application fee amount:"
 msgstr "Igénylési díj összege\\:"
 
@@ -956,7 +934,6 @@ msgid "Apply payment"
 msgstr "Fizetési tranzakció alkalmazása"
 
 #: loan.apply_trans
-#, fuzzy
 msgid "Apply transactions:"
 msgstr "Tranzakciók alkalmazása\\:"
 
@@ -969,7 +946,6 @@ msgid "APR  "
 msgstr ""
 
 #: loan.areyousure
-#, fuzzy
 msgid "Are you sure you want to adjust the "
 msgstr "Biztos benne, hogy korrigálni kívánja a(z)"
 
@@ -1003,7 +979,6 @@ msgid "Branch 01"
 msgstr "Fiók 01"
 
 #: loan.business_work_act
-#, fuzzy
 msgid "Purpose of"
 msgstr "Célja"
 
@@ -1056,12 +1031,10 @@ msgstr ""
 "kattintson a Mégsem gombra."
 
 #: loan.client/group_name
-#, fuzzy
 msgid "Client/Group Name:"
 msgstr "Ügyfél/csoport neve\\:"
 
 #: loan.coll_sheet_type
-#, fuzzy
 msgid "Collection sheet type:"
 msgstr "Beszedési lap típusa\\:"
 
@@ -1075,7 +1048,6 @@ msgid "Collateral Notes"
 msgstr "Biztosítékra vonatkozó megjegyzések"
 
 #: loan.collateral_type
-#, fuzzy
 msgid "Collateral type"
 msgstr "Biztosítéktípus"
 
@@ -1084,7 +1056,6 @@ msgid ": "
 msgstr ""
 
 #: loan.complete_field
-#, fuzzy
 msgid ""
 "Complete the fields below. Then click Preview. Click Cancel to return to "
 "Clients & Accounts without submitting information. "
@@ -1102,7 +1073,6 @@ msgid "account for"
 msgstr "számla"
 
 #: loan.congo2
-#, fuzzy
 msgid "has been assigned account # "
 msgstr "részére az alábbi számlaszámot kapta\\:"
 
@@ -1180,7 +1150,6 @@ msgid "Date of transaction"
 msgstr "Tranzakció napja"
 
 #: loan.days_arrears
-#, fuzzy
 msgid "Days in arrears:"
 msgstr "Késedelmes napok száma\\:"
 
@@ -1201,7 +1170,6 @@ msgid "administrative fee"
 msgstr ""
 
 #: loan.delinquency
-#, fuzzy
 msgid "Delinquency:"
 msgstr "Késedelem\\:"
 
@@ -1236,7 +1204,6 @@ msgid "disbursal date"
 msgstr "folyósítás napja"
 
 #: loan.disburse
-#, fuzzy
 msgid "Disburse "
 msgstr "Folyósítás"
 
@@ -1284,7 +1251,6 @@ msgid "Edit  account information"
 msgstr "Számlainformációk szerkesztése"
 
 #: loan.edittrans
-#, fuzzy
 msgid ""
 "Review the transaction below. If satisfied click Submit. Click Cancel to "
 "return to account details without submitting information or to try again "
@@ -1296,7 +1262,6 @@ msgstr ""
 "kattintson a Mégsem gombra."
 
 #: loan.edu_loan
-#, fuzzy
 msgid "Educational "
 msgstr "Tanulmányi"
 
@@ -1365,7 +1330,6 @@ msgid "Field"
 msgstr "Mező"
 
 #: loan.folldetails
-#, fuzzy
 msgid "Following are the account details for the "
 msgstr "Az alábbi számlaadatok vonatkoznak a(z)"
 
@@ -1406,7 +1370,6 @@ msgid "Hope & Effort Group"
 msgstr "Hope & Effort csoport"
 
 #: loan.ifyouclicksubmit
-#, fuzzy
 msgid ""
 "If you click submit all financial transactions made till this date will be "
 "reversed and the "
@@ -1419,12 +1382,10 @@ msgid "Ins # "
 msgstr ""
 
 #: loan.inst
-#, fuzzy
 msgid "Installments"
 msgstr "Törlesztőrészletek"
 
 #: loan.install_paid
-#, fuzzy
 msgid "Installments "
 msgstr "Törlesztőrészletek"
 
@@ -1473,7 +1434,6 @@ msgid "Interest"
 msgstr "Kamat"
 
 #: loan.interestDisbursement
-#, fuzzy
 msgid "{0} deducted at disbursement "
 msgstr "{0} levonása folyósításkor"
 
@@ -1498,7 +1458,6 @@ msgid "Interest Calculation Rule For Early/Late Payments"
 msgstr "Kamatszámítási szabályok előtörlesztés/késedelmes törlesztés esetén"
 
 #: loan.interest_disb
-#, fuzzy
 msgid "deducted at disbursement "
 msgstr "levonása folyósításkor"
 
@@ -1548,7 +1507,6 @@ msgid "{0} Amount"
 msgstr "{0} összeg"
 
 #: loan.loanAmountFor
-#, fuzzy
 msgid "Loan Amount for "
 msgstr "Hitelösszeg"
 
@@ -1595,7 +1553,6 @@ msgid "mariev"
 msgstr "mariev"
 
 #: loan.maturity_date
-#, fuzzy
 msgid "Loan maturity date:"
 msgstr "Hitel lejárata\\:"
 
@@ -1616,7 +1573,6 @@ msgid "Meeting charges"
 msgstr "Találkozó költségek"
 
 #: loan.member_fee_amt
-#, fuzzy
 msgid "Membership fee amount:"
 msgstr "Tagdíj összege\\:"
 
@@ -1637,7 +1593,6 @@ msgid "Min loan amount"
 msgstr "Hitel minimális összege"
 
 #: loan.missed_payments
-#, fuzzy
 msgid "# of missed payments:"
 msgstr "Elmaradt törlesztések száma\\:"
 
@@ -1698,7 +1653,6 @@ msgid "No. of installments"
 msgstr "Törlesztőrészletek száma"
 
 #: loan.nopaymentsmade
-#, fuzzy
 msgid "No. of payments made "
 msgstr "Teljesített fizetési tranzakciók száma"
 
@@ -1711,7 +1665,6 @@ msgid "notes"
 msgstr "megjegyzések"
 
 #: loan.of_payments
-#, fuzzy
 msgid "# of payments:"
 msgstr "Fizetési tranzakciók száma\\:"
 
@@ -1744,12 +1697,10 @@ msgid "Open a new {0} account."
 msgstr "Új {0} számla nyitása."
 
 #: loan.open_new
-#, fuzzy
 msgid "Open a new "
 msgstr "Nyitás: új"
 
 #: loan.open_new_acc
-#, fuzzy
 msgid "Open another account for  "
 msgstr "Újabb számla nyitása"
 
@@ -1770,7 +1721,6 @@ msgid "Original {0}"
 msgstr "Eredeti {0}"
 
 #: loan.original_loan
-#, fuzzy
 msgid "Original "
 msgstr "Eredeti"
 
@@ -1787,7 +1737,6 @@ msgid "paid"
 msgstr "fizetve"
 
 #: loan.past_due
-#, fuzzy
 msgid "Past due:"
 msgstr "Késedelmes összeg\\:"
 
@@ -1812,7 +1761,6 @@ msgid "Payment type"
 msgstr "Fizetési tranzakció típusa"
 
 #: loan.payment_id
-#, fuzzy
 msgid "Payment ID#"
 msgstr "Fizetési tranzakció azonosító száma"
 
@@ -1841,12 +1789,10 @@ msgid "Penalty"
 msgstr "Késedelmi kamat"
 
 #: loan.penalty_01
-#, fuzzy
 msgid "Penalty for Installment #1"
 msgstr "1. sz. törlesztőrészlet késedelmi kamata"
 
 #: loan.penalty_02
-#, fuzzy
 msgid "Penalty for Installment #2"
 msgstr "2. sz. törlesztőrészlet késedelmi kamata"
 
@@ -1871,22 +1817,18 @@ msgid "Recur every"
 msgstr "Minden"
 
 #: loan.periodicity_annual_fee
-#, fuzzy
 msgid "Periodicity: annual fee"
 msgstr "Gyakoriság\\: éves díj"
 
 #: loan.periodicity_one_time_fee
-#, fuzzy
 msgid "Periodicity: one time fee"
 msgstr "Gyakoriság\\: egyszeri díj"
 
 #: loan.phonenumber
-#, fuzzy
 msgid "Phone Number: "
 msgstr "Telefonszám\\:"
 
 #: loan.plz_note
-#, fuzzy
 msgid "Please Note:"
 msgstr "Megjegyzés\\:"
 
@@ -1965,7 +1907,6 @@ msgid "Redo {0} account"
 msgstr "{0} számla visszaállítása"
 
 #: loan.redo_loan_note
-#, fuzzy
 msgid "Note: You are redoing a loan account."
 msgstr "Megjegyzés\\: Ön most visszaállítja a hitelszámlát."
 
@@ -1974,7 +1915,6 @@ msgid "Remove"
 msgstr "Törlés"
 
 #: loan.repay
-#, fuzzy
 msgid "Repay "
 msgstr "Törlesztés"
 
@@ -2041,7 +1981,6 @@ msgstr ""
 "kattintson a Mégsem gombra."
 
 #: loan.reviewaccountinformation1
-#, fuzzy
 msgid ""
 "Review the information below. Click Submit if you are satisfied or click "
 "'Edit "
@@ -2050,7 +1989,6 @@ msgstr ""
 "Érvényesítés gombra, módosításhoz a(z) '"
 
 #: loan.reviewaccountinformation2
-#, fuzzy
 msgid "account information' to make changes. Click Cancel to return to "
 msgstr ""
 "számla információk szerkesztése' gombra. Kattintson a Mégsem gombra, "
@@ -2085,7 +2023,6 @@ msgid "See all notes"
 msgstr "Összes megjegyzés megjelenítése"
 
 #: loan.sel_charge_type
-#, fuzzy
 msgid "Select charge type:"
 msgstr "Költségtípus kiválasztása\\:"
 
@@ -2128,7 +2065,6 @@ msgid "Source of fund"
 msgstr "Finanszírozás forrása"
 
 #: loan.specifynote
-#, fuzzy
 msgid "Specify the note and click Preview if you want to reverse the "
 msgstr ""
 "Írjon megjegyzést, majd kattintson az Előnézet gombra, amennyiben vissza "
@@ -2188,12 +2124,10 @@ msgid "Total"
 msgstr "Összesen"
 
 #: loan.totalAmtDue
-#, fuzzy
 msgid "Total amount due on "
 msgstr "Teljes esedékes összeg"
 
 #: loan.totalDueOn
-#, fuzzy
 msgid "Total amount due on"
 msgstr "Teljes esedékes összeg"
 
@@ -2206,12 +2140,10 @@ msgid "Total amount"
 msgstr "Teljes összeg"
 
 #: loan.training_fee
-#, fuzzy
 msgid "Training fee:"
 msgstr "Képzési díj\\:"
 
 #: loan.transaction_id
-#, fuzzy
 msgid "Transaction ID#"
 msgstr "Tranzakció azonosító szám"
 
@@ -2263,7 +2195,6 @@ msgid "View installment details"
 msgstr "Törlesztőrészlet adatainak megtekintése"
 
 #: loan.view_loan_acc1
-#, fuzzy
 msgid "View "
 msgstr "Megtekint"
 

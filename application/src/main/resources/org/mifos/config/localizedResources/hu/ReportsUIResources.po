@@ -64,7 +64,6 @@ msgid "Please choose a status."
 msgstr "Válasszon státuszt."
 
 #: error.titleAlreadyExist
-#, fuzzy
 msgid "This title already exists,please choose another title. "
 msgstr "Ez a cím már létezik, válasszon másik címet."
 
@@ -367,7 +366,6 @@ msgid "Review & submit"
 msgstr "Ellenőrzés és érvényesítés"
 
 #: reports.reviewStatement
-#, fuzzy
 msgid "Review the information below. "
 msgstr "Ellenőrizze az alábbi információkat."
 
@@ -376,7 +374,6 @@ msgid "To select, click on a report from the list below."
 msgstr "Kiválasztáshoz kattintson egy jelentésre az alábbi listán."
 
 #: reports.statement
-#, fuzzy
 msgid ""
 "Complete the fields below. Click Cancel to return to Admin without "
 "submitting information. "
@@ -429,7 +426,6 @@ msgid "Upload Report"
 msgstr "Jelentés feltöltése"
 
 #: reports.uploadanewadmindoc
-#, fuzzy
 msgid "upload a new administrative document "
 msgstr "új adminisztratív dokumentum feltöltése"
 

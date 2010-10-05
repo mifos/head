@@ -1,5 +1,4 @@
 #. extracted from LoginUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -170,7 +169,6 @@ msgid "Welcome to mifos"
 msgstr "Bienvenue dans mifos"
 
 #: AbstractUserDetailsAuthenticationProvider.badCredentials
-#, fuzzy
 msgctxt "AbstractUserDetailsAuthenticationProvider.badCredentials"
 msgid "Please specify valid username/password to access the application."
 msgstr "Veuiller indiquer un mot de passe valide pour accéder à l'application."

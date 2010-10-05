@@ -30,7 +30,6 @@ msgid "Amount"
 msgstr "ចំនួន"
 
 #: Balance
-#, fuzzy
 msgid "Balance"
 msgstr "សមតុល្យ"
 
@@ -73,7 +72,6 @@ msgid "Old Status"
 msgstr "លក្ខ័ណចាស់"
 
 #: PaymentID
-#, fuzzy
 msgid "Payment ID#"
 msgstr "លេខកូដចំនាយ"
 
@@ -98,7 +96,6 @@ msgid "Account details"
 msgstr "ពត៍មានលំអិតនៃគណនី"
 
 #: Savings.Accountstatementasof
-#, fuzzy
 msgid "Account statement as of "
 msgstr "របាយការណ៍គណនីត្រឹមថ្ងៃ"
 
@@ -108,7 +105,6 @@ msgid "Client name"
 msgstr "ឈ្មោះអតិថិជន"
 
 #: Savings.Create
-#, fuzzy
 msgid "Create "
 msgstr "បង្កើត"
 
@@ -137,7 +133,6 @@ msgid "Savings"
 msgstr "សន្សំ"
 
 #: Savings.Select
-#, fuzzy
 msgid "Select "
 msgstr "ជ្រើសរើស"
 
@@ -146,7 +141,6 @@ msgid "Transaction history"
 msgstr "ប្រវត្តិនៃសកម្មភាពពីមុន"
 
 #: Savings.View
-#, fuzzy
 msgid "View "
 msgstr "បើកមើល"
 
@@ -155,7 +149,6 @@ msgid "account"
 msgstr "គណនី"
 
 #: Savings.accountAssigned
-#, fuzzy
 msgid "has been assigned account #"
 msgstr "គណនីដែលបានចាត់តាំងគឺ"
 
@@ -184,7 +177,6 @@ msgid "Add a note"
 msgstr "បន្ថែមកំនត់ចំនាំថ្មី"
 
 #: Savings.additionalInformation
-#, fuzzy
 msgid "Additional information  "
 msgstr "ពត៍មានបន្ងែម"
 
@@ -202,12 +194,10 @@ msgid "Apply transactions"
 msgstr "អនុវត្តិប្រតិបត្តិការ"
 
 #: Savings.balance
-#, fuzzy
 msgid "Balance "
 msgstr "សមតុល្យ"
 
 #: Savings.balanceUsedFor
-#, fuzzy
 msgid "Balance used for "
 msgstr "សមតុល្យប្រើប្រាស់សំរាប់"
 
@@ -223,7 +213,6 @@ msgid ""
 msgstr "ចុចបោះបង់ដើម្បីត្រលប់ទៅអតិថិជន និងគណនីដោយមិនចាំបាច់បញ្ជូនពត៍មាន"
 
 #: Savings.clickCancelToReturn
-#, fuzzy
 msgid "Click Cancel to return to"
 msgstr "ចុចបោះបង់ដើម្បីត្រលប់ទៅ"
 
@@ -233,14 +222,12 @@ msgid "Then click Continue."
 msgstr "រូចចុចបន្ត"
 
 #: Savings.clickContinueOrCancel
-#, fuzzy
 msgid ""
 "Then click Continue. Click Cancel to return to Clients &amp; Accounts "
 "without submitting information."
 msgstr "ចុចបោះបង់ដើម្បីត្រលប់ទៅអតិថិជន និងគណនីដោយមិនចាំបាច់បញ្ជូនពត៍មាន"
 
 #: Savings.clickPreview
-#, fuzzy
 msgid "Then click Preview. "
 msgstr "រួចចុចពិនិត្យមើល"
 
@@ -271,7 +258,6 @@ msgid "Close account"
 msgstr "បិទគណនី"
 
 #: Savings.completeTheFieldsBelow
-#, fuzzy
 msgid "Complete the fields below. "
 msgstr "បំពេញប្រឡោះខាងក្រោម"
 
@@ -306,7 +292,6 @@ msgid "details now"
 msgstr "លំអិតឥឡូវ"
 
 #: Savings.accountdetails
-#, fuzzy
 msgid "account details now"
 msgstr "ពត៍មានលំអិតនៃគណនី"
 
@@ -319,7 +304,6 @@ msgid "Edit account status"
 msgstr "កែប្រែលក្ខ័ណគណនី"
 
 #: Savings.editFields
-#, fuzzy
 msgid "Edit the fields below."
 msgstr "កែប្រែប្រឡោះខាងក្រោម"
 
@@ -432,7 +416,6 @@ msgid "Open a new"
 msgstr "បើកថ្មី"
 
 #: Savings.openAnotherAccount
-#, fuzzy
 msgid "Open another account for this "
 msgstr "បើកគណនីផ្សេងទៀតសំរាប់នេះ"
 
@@ -526,7 +509,6 @@ msgid "Review the details below."
 msgstr "ពិនិត្យមើល​ឡើងវិញពត៍មានលំអិតខាងក្រោម"
 
 #: Savings.reviewInformation
-#, fuzzy
 msgid "Review the information below. "
 msgstr "ពិនិត្យមើលពត៍មានខាងក្រោម"
 
@@ -551,7 +533,6 @@ msgid "See all notes"
 msgstr "មើលរាល់កំនត់ត្រាទាំងអស់"
 
 #: Savings.selectA
-#, fuzzy
 msgid "Select a "
 msgstr "ជ្រើសរើស"
 
@@ -576,7 +557,6 @@ msgid "Suggested next steps"
 msgstr "បានអោយយោបល់ទៅដំនាក់កាលបន្ទាប់"
 
 #: Savings.timePeriodFor
-#, fuzzy
 msgid "Time period for "
 msgstr "ដំនាក់កាលសំរាប់"
 
@@ -589,7 +569,6 @@ msgid "Total amount due"
 msgstr "ចំនួនសរុបដែលជំពាក់"
 
 #: Savings.totalAmountDue.on
-#, fuzzy
 msgctxt "Savings.totalAmountDue.on"
 msgid "Total amount due on"
 msgstr "ចំនួនសរុបដែលបានជំពាក់សរុប"
@@ -607,7 +586,6 @@ msgid "Total withdrawals"
 msgstr "ប្រាក់ដែលបានដកសរុប"
 
 #: Savings.totalamountdue
-#, fuzzy
 msgctxt "Savings.totalamountdue"
 msgid "Total amount due on"
 msgstr "ចំនួនសរុបដែលបានជំពាក់សរុប"
@@ -645,7 +623,6 @@ msgid "Waive"
 msgstr "លើកលែង"
 
 #: TransactionID
-#, fuzzy
 msgid "Transaction ID#"
 msgstr "លេខកូដនៃប្រតិបត្តិការ"
 
@@ -686,7 +663,6 @@ msgstr ""
 "ឬ​ទាក់ទងអ្នកគ្រប់គ្រងប្រព័ន្ធ"
 
 #: error.versionnodonotmatch
-#, fuzzy
 msgid ""
 "The record has already been modified by another user. Please navigate to the "
 "details page and start the activity again. "
@@ -816,12 +792,10 @@ msgid "Cancel"
 msgstr "បោះបង់"
 
 #: savings.ChecklistMsg
-#, fuzzy
 msgid "Complete and check off the following tasks. "
 msgstr "បំពេញ និងពិនិត្យរាល់មុខងារទាំងនេះ"
 
 #: savings.ClickCancel1
-#, fuzzy
 msgid "Click Cancel to return to "
 msgstr "ចុចបោះបង់ដើម្បីត្រលប់ទៅ"
 
@@ -843,7 +817,6 @@ msgid "Confirm status change"
 msgstr "បញ្ជាក់លក្ខ័នដែលបានប្រែ"
 
 #: savings.EditStatus
-#, fuzzy
 msgid "Edit status "
 msgstr "កែប្រែលក្ខ័ន"
 
@@ -868,7 +841,6 @@ msgid "Old status"
 msgstr "លក្ខ័ណចាស់"
 
 #: savings.SelectExplaination1
-#, fuzzy
 msgid "When cancelling a "
 msgstr "នៅពេលដែលបោះបង់"
 
@@ -885,7 +857,6 @@ msgid "Submit"
 msgstr "បញ្ជូន"
 
 #: savings.changestatus
-#, fuzzy
 msgid "Change status "
 msgstr "ប្តូលក្ខ័ណ"
 
@@ -902,12 +873,10 @@ msgid "made"
 msgstr "បានធ្វើ"
 
 #: savings.note
-#, fuzzy
 msgid "Note:"
 msgstr "កំនត់ចំនាំ"
 
 #: savings.status
-#, fuzzy
 msgid "Status:"
 msgstr "លក្ខ័ណ"
 

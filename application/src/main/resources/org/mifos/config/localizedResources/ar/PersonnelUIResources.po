@@ -1,6 +1,5 @@
 # extracted from PersonnelUIResources.properties
 #. extracted from PersonnelUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

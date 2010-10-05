@@ -33,12 +33,10 @@ msgid "Amount of last {0} {1}"
 msgstr "Importe del último {0} {1}"
 
 #: Group.AssignedloanOfficer
-#, fuzzy
 msgid "Assigned loan officer:"
 msgstr "Oficial de Crédito asignado\\:"
 
 #: Group.Avgindividual
-#, fuzzy
 msgid "Avg individual {0} size:"
 msgstr "Tamaño promedio de {0} individual\\:"
 
@@ -47,7 +45,6 @@ msgid "Center"
 msgstr "Centro"
 
 #: Group.EditGroupInstructions
-#, fuzzy
 msgid ""
 "Click Submit to change the {0} or Cancel to return to {1} details page "
 "without changing the {0}"
@@ -56,7 +53,6 @@ msgstr ""
 "detalles de {1} sin cambiar el {0}"
 
 #: Group.FormedBy
-#, fuzzy
 msgid "Recruited By:"
 msgstr "Reclutado Por\\:"
 
@@ -65,7 +61,6 @@ msgid "No"
 msgstr "No"
 
 #: Group.PortfolioAtRisk
-#, fuzzy
 msgid "Portfolio at risk:"
 msgstr "Cartera en riesgo\\:"
 
@@ -74,7 +69,6 @@ msgid "s"
 msgstr "s"
 
 #: Group.Selected
-#, fuzzy
 msgid "{0} Selected:"
 msgstr "{0} Seleccionados\\:"
 
@@ -87,7 +81,6 @@ msgid "Yes"
 msgstr "Sí "
 
 #: Group.acc
-#, fuzzy
 msgid "Acct #"
 msgstr "No. de cuenta\\#"
 
@@ -124,7 +117,6 @@ msgid "Address"
 msgstr "Dirección"
 
 #: Group.address1
-#, fuzzy
 msgid "Address 1:"
 msgstr "Dirección 1\\:"
 
@@ -133,7 +125,6 @@ msgid "Address 1"
 msgstr "Dirección 1"
 
 #: Group.address2
-#, fuzzy
 msgid "Address 2:"
 msgstr "Dirección 2\\:"
 
@@ -142,7 +133,6 @@ msgid "Address 2"
 msgstr "Dirección 2"
 
 #: Group.address3
-#, fuzzy
 msgid "Address 3:"
 msgstr "Dirección 3\\:"
 
@@ -155,12 +145,10 @@ msgid "Administrative set fees"
 msgstr "Fijar comisiones administrativas"
 
 #: Group.amount
-#, fuzzy
 msgid "Amount:"
 msgstr "Importe\\:"
 
 #: Group.amountdue
-#, fuzzy
 msgid "Amount due:"
 msgstr "Importe pagadero\\:"
 
@@ -181,12 +169,10 @@ msgid "Apply transactions"
 msgstr "Aplicar operaciones"
 
 #: Group.approvaldate
-#, fuzzy
 msgid "{0} approval date:"
 msgstr "fecha de aprobación de {0}\\:"
 
 #: Group.assignclientstogrouptitles
-#, fuzzy
 msgid "Assign {0}s to {1} titles:"
 msgstr "Asignar {0}s a los títulos de {1}\\:"
 
@@ -199,12 +185,10 @@ msgid "s to"
 msgstr "s a"
 
 #: Group.assignclientstogrouptitles3
-#, fuzzy
 msgid "titles:"
 msgstr "títulos\\:"
 
 #: Group.assigned
-#, fuzzy
 msgid "assigned:"
 msgstr "asignados\\:"
 
@@ -221,7 +205,6 @@ msgid "Attach Survey"
 msgstr "Adjuntar Encuesta"
 
 #: Group.balance
-#, fuzzy
 msgid "Balance:"
 msgstr "Saldo\\:"
 
@@ -238,7 +221,6 @@ msgid "{0} assigned"
 msgstr "{0} asignados"
 
 #: Group.centerassigned
-#, fuzzy
 msgid "Center assigned:"
 msgstr "Centro asignado\\:"
 
@@ -251,7 +233,6 @@ msgid "Change {0} membership"
 msgstr "Cambiar afiliación de {0}"
 
 #: Group.changecentermembership
-#, fuzzy
 msgid "Change center membership:"
 msgstr "Cambiar centro de afiliación\\:"
 
@@ -284,7 +265,6 @@ msgid "group to that center."
 msgstr "grupo a ese centro."
 
 #: Group.city
-#, fuzzy
 msgid "City:"
 msgstr "Ciudad\\:"
 
@@ -309,7 +289,6 @@ msgid "Clients assigned"
 msgstr "Clientes asignados"
 
 #: Group.collectionsheettype
-#, fuzzy
 msgid "Collection sheet type:"
 msgstr "Tipo de hoja de cobranza\\:"
 
@@ -322,7 +301,6 @@ msgid "- Confirm"
 msgstr "- Confirmar"
 
 #: Group.confirmcenterMsg1
-#, fuzzy
 msgid ""
 "Click Submit to change the {0} or Cancel to return to {1} details page "
 "without changing the {0} "
@@ -335,7 +313,6 @@ msgid "Confirm status change"
 msgstr "Confirmar cambio de estatus"
 
 #: Group.country
-#, fuzzy
 msgid "Country:"
 msgstr "País\\:"
 
@@ -365,7 +342,6 @@ msgid "Create an account for this {0}"
 msgstr "Crear una cuenta para este {0}"
 
 #: Group.createanewgroup
-#, fuzzy
 msgid "Create a new Group"
 msgstr "Crear un nuevo grupo"
 
@@ -379,7 +355,6 @@ msgstr ""
 "comportamiento de {0}."
 
 #: Group.createconfirmhead1
-#, fuzzy
 msgid "has been assigned the system ID number:"
 msgstr "se le ha asignado el número de ID del sistema\\:"
 
@@ -442,7 +417,6 @@ msgid "You have successfully created a new {0}"
 msgstr "Ha creado un nuevo {0} con éxito"
 
 #: Group.currentstatus
-#, fuzzy
 msgid "Current status:"
 msgstr "Estatus actual\\:"
 
@@ -451,7 +425,6 @@ msgid "Date"
 msgstr "Fecha"
 
 #: Group.dategroupstarted
-#, fuzzy
 msgid "Date group started:"
 msgstr "Fecha de comienzo del grupo\\:"
 
@@ -567,7 +540,6 @@ msgstr ""
 "sistema utilizado antes de Mifos."
 
 #: Group.externalid
-#, fuzzy
 msgid "External ID:"
 msgstr "ID externa\\:"
 
@@ -576,7 +548,6 @@ msgid "External ID"
 msgstr "ID externa"
 
 #: Group.feetype
-#, fuzzy
 msgid "Fee Type:"
 msgstr "Tipo de cuota"
 
@@ -589,12 +560,10 @@ msgid "{0} details"
 msgstr "detalles de {0}"
 
 #: Group.groupMembership
-#, fuzzy
 msgid "Group membership:"
 msgstr "afiliación a grupo\\:"
 
 #: Group.groupapprovaldate
-#, fuzzy
 msgid "Group approval date:"
 msgstr "Fecha de aprobación del grupo\\:"
 
@@ -643,7 +612,6 @@ msgid "& Accounts without submitting information."
 msgstr "y Cuentas sin enviar la incapacitación."
 
 #: Group.grouptrained
-#, fuzzy
 msgid "Trained:"
 msgstr "Capacitado\\:"
 
@@ -653,7 +621,6 @@ msgid "Trained on:"
 msgstr "Capacitado en\\:"
 
 #: Group.hashof
-#, fuzzy
 msgid "# of active {0}s"
 msgstr ""
 "\n"
@@ -680,12 +647,10 @@ msgid "Loan officer"
 msgstr "Oficial de Crédito"
 
 #: Group.loanofficerassigned
-#, fuzzy
 msgid "Loan officer assigned:"
 msgstr "Oficial de Crédito asignado\\:"
 
 #: Group.locationofthemeeting
-#, fuzzy
 msgid "Location of meeting:"
 msgstr "Lugar de la reunión\\:"
 
@@ -702,12 +667,10 @@ msgid "Meeting details"
 msgstr "Detalles de la Reunión"
 
 #: Group.meetings
-#, fuzzy
 msgid "Meetings:"
 msgstr "Reuniones\\:"
 
 #: Group.meetingschedule
-#, fuzzy
 msgid "Meeting schedule:"
 msgstr "Horario de la reunión\\:"
 
@@ -722,7 +685,6 @@ msgid "MFI information"
 msgstr "Incapacitación de la IMF"
 
 #: Group.name
-#, fuzzy
 msgid "Name:"
 msgstr "Nombre\\:"
 
@@ -739,7 +701,6 @@ msgid "new"
 msgstr "nuevo"
 
 #: Group.newstatus
-#, fuzzy
 msgid "New status:"
 msgstr "Nuevo estatus\\:"
 
@@ -756,7 +717,6 @@ msgid "No notes available."
 msgstr "No hay notas disponibles."
 
 #: Group.note
-#, fuzzy
 msgid "Note:"
 msgstr "Nota\\:"
 
@@ -781,7 +741,6 @@ msgid "Performance history"
 msgstr "Historial de desempeño"
 
 #: Group.periodicity
-#, fuzzy
 msgid "Periodicity:"
 msgstr "Periodicidad\\:"
 
@@ -790,17 +749,14 @@ msgid "Personal  information"
 msgstr "Incapacitación personal"
 
 #: Group.pleasenote
-#, fuzzy
 msgid "Please Note:"
 msgstr "Por favor tenga en cuenta\\:"
 
 #: Group.portfolio
-#, fuzzy
 msgid "portfolio:"
 msgstr "cartera\\:"
 
 #: Group.postalcode
-#, fuzzy
 msgid "Postal code:"
 msgstr "Código Postal\\:"
 
@@ -840,7 +796,6 @@ msgstr ""
 "Después pulse Añadir."
 
 #: Group.programs
-#, fuzzy
 msgid "Programs:"
 msgstr "Programas\\:"
 
@@ -889,7 +844,6 @@ msgid "Schedule meeting"
 msgstr "Agendar reunión"
 
 #: Group.searchmsg1
-#, fuzzy
 msgid "To select, click on a resulting {0}."
 msgstr "Para seleccionar, pulse en un resultado de {0}"
 
@@ -906,17 +860,14 @@ msgid "Select {0}/{1}"
 msgstr "Seleccione {0}/{1}"
 
 #: Group.size
-#, fuzzy
 msgid "size:"
 msgstr "tamaño\\:"
 
 #: Group.started
-#, fuzzy
 msgid "started:"
 msgstr "comenzado\\:"
 
 #: Group.state
-#, fuzzy
 msgid "State:"
 msgstr "Estado\\:"
 
@@ -925,7 +876,6 @@ msgid "State"
 msgstr "Estado"
 
 #: Group.status
-#, fuzzy
 msgid "Status:"
 msgstr "Estatus\\:"
 
@@ -978,12 +928,10 @@ msgid "Surveys"
 msgstr "Encuestas"
 
 #: Group.systemId
-#, fuzzy
 msgid "System ID #:"
 msgstr "ID del Sistema \\#\\:"
 
 #: Group.telephone
-#, fuzzy
 msgid "Telephone:"
 msgstr "Teléfono\\:"
 
@@ -1543,7 +1491,6 @@ msgid "Apply payment"
 msgstr "Aplicar pago"
 
 #: warning.noclientsassigned1
-#, fuzzy
 msgid "Warning: The"
 msgstr "Atención\\: El"
 
@@ -1553,6 +1500,5 @@ msgstr "no tiene"
 
 # In Spanish, the adjective goes after the noun. I left a blank in the translation ( ___ ) for whatever noun comes after empty.
 #: warning.noclientsassigned3
-#, fuzzy
 msgid "s assigned to it. Click Submit to approve the empty"
 msgstr "s asignados. Pulse Enviar para aprobar la ___ vacía."

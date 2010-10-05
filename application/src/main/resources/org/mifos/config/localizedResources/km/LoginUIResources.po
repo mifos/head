@@ -168,7 +168,6 @@ msgid "Welcome to mifos"
 msgstr "ស្វាគមន៍ការមកប្រើប្រាស់ម៉ាយហ្វូស"
 
 #: AbstractUserDetailsAuthenticationProvider.badCredentials
-#, fuzzy
 msgctxt "AbstractUserDetailsAuthenticationProvider.badCredentials"
 msgid "Please specify valid username/password to access the application."
 msgstr ""

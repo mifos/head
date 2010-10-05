@@ -142,7 +142,6 @@ msgid "No Flags Available"
 msgstr "No hay banderas disponibles"
 
 #: Customer.Note
-#, fuzzy
 msgctxt "Customer.Note"
 msgid "Note:"
 msgstr "Nota\\:"
@@ -300,7 +299,6 @@ msgid "No results found for"
 msgstr "No se encontraron resultados para"
 
 #: Customer.note
-#, fuzzy
 msgctxt "Customer.note"
 msgid "Note:"
 msgstr "Nota\\:"
@@ -416,7 +414,6 @@ msgstr ""
 "de nuevo más tarde o contacte con el Administrador del Sistema."
 
 #: error.versionnodonotmatch
-#, fuzzy
 msgid ""
 "The record has already been modified by another user. Please navigate to the "
 "details page and start the activity again. "
@@ -526,7 +523,6 @@ msgid "This action is not permissible."
 msgstr "Esta acción no está permitida."
 
 #: label.MFIjoiningdate
-#, fuzzy
 msgid "MFI joining date:"
 msgstr "Fecha de afiliación a la IMF\\:"
 
@@ -556,7 +552,6 @@ msgid "Amount of"
 msgstr "Importe de"
 
 #: label.amountofloan
-#, fuzzy
 msgid "Amount of loan:"
 msgstr "Importe del préstamo\\:"
 
@@ -585,7 +580,6 @@ msgid "Historical data"
 msgstr "Datos históricos"
 
 #: label.interestpaid
-#, fuzzy
 msgid "paid:"
 msgstr "pagado\\:"
 
@@ -598,12 +592,10 @@ msgid "Cycle per Product"
 msgstr "Ciclo por Producto"
 
 #: label.loancyclenumber
-#, fuzzy
 msgid "cycle number:"
 msgstr "Número de ciclo\\:"
 
 #: label.note
-#, fuzzy
 msgctxt "label.note"
 msgid "Note:"
 msgstr "Nota\\:"
@@ -650,7 +642,6 @@ msgid "Preview note"
 msgstr "Vista Previa de Nota"
 
 #: label.productname
-#, fuzzy
 msgid "Product name:"
 msgstr "Nombre del producto\\:"
 
@@ -659,7 +650,6 @@ msgid "Product name"
 msgstr "Nombre del producto"
 
 #: label.totalamountpaid
-#, fuzzy
 msgid "Total amount paid:"
 msgstr "Importe pagado total\\:"
 

@@ -1,6 +1,5 @@
 # extracted from CustomerSearchUIResources.properties
 #. extracted from CustomerSearchUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
