@@ -206,6 +206,8 @@ public interface CustomerDao {
 
     String getAvgLoanAmountForMemberInGoodOrBadStanding(String searchId, Short branchId);
 
+    String getTotalLoanAmountForGroup(String groupSearchId, Short groupOfficeId);
+
     String getTotalOutstandingLoanAmountForGroupAndClientsOfGroups(String searchId, Short branchId);
 
     String getTotalSavingsAmountForGroupandClientsOfGroup(String searchId, Short branchId);
