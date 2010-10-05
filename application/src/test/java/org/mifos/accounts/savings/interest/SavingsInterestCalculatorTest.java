@@ -93,7 +93,7 @@ public class SavingsInterestCalculatorTest {
 
         // stubbing
         when(principalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail)).thenReturn(minBalanceRequired);
-        when(compoundInterestCalculationStrategy.calculateInterest(minBalanceRequired, null, 0)).thenReturn(expectedInterest);
+        when(compoundInterestCalculationStrategy.calculateInterest(minBalanceRequired, Double.valueOf("10"), 0)).thenReturn(expectedInterest);
 
         // exercise test
         InterestCalculationPeriodResult result = interestCalculator.calculateSavingsDetailsForPeriod(interestCalculationPeriodDetail);

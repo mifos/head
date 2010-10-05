@@ -204,7 +204,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
             // NOTE: for first interest calculation period, calculation starts from the first deposit date and not
             // activation date
-            // NOTE: interest calculation and posting date are always the last day of the month (no matter what!)
+            // NOTE: interest posting date are always the last day of the month (no matter what!)
+            // NOTE: interest calculation date is always last day of month when using monthly period.
             ScheduledEvent interestCalculationEvent = SavingsInterestScheduledEventFactory
                     .createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
 

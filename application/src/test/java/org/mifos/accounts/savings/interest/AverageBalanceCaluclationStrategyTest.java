@@ -140,7 +140,7 @@ public class AverageBalanceCaluclationStrategyTest {
 
         // (1000 x 7 + 2000 x 17)/24 = 1708.333333..
         // verification
-        assertThat(averageBalancePrincipal, is(TestUtils.createMoney("1708.4")));
+        assertThat(averageBalancePrincipal, is(TestUtils.createMoney("1708.3")));
     }
 
     @Test
@@ -181,6 +181,6 @@ public class AverageBalanceCaluclationStrategyTest {
 
         // (1000 x 6 + 2000 x 7 + 3000 x 7 + 3500 x 10)/30 = 2533.33333...
         // verification
-        assertThat(averageBalancePrincipal, is(TestUtils.createMoney(("2533.4"))));
+        assertThat(averageBalancePrincipal, is(TestUtils.createMoney(("2533.3"))));
     }
 }
