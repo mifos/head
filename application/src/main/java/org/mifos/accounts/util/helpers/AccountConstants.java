@@ -187,7 +187,8 @@ public interface AccountConstants {
     String GL_CODE = "glCode";
     String INSTALLMENT_DUEDATE_INVALID = "errors.installment.duedate.invalid"; 
     String INSTALLMENT_DUEDATE_SAME_AS_DISBURSE_DATE = "errors.installment.duedate.same.as.disburse.date"; 
-    String INSTALLMENT_DUEDATE_BEFORE_DISBURSE_DATE = "errors.installment.duedate.before.disburse.date"; 
+    String INSTALLMENT_DUEDATE_IS_HOLIDAY = "errors.installment.duedate.is.holiday"; 
+    String INSTALLMENT_DUEDATE_BEFORE_DISBURSE_DATE = "errors.installment.duedate.before.disburse.date";
     String INSTALLMENT_DUEDATE_DUPLICATE = "errors.installment.duedate.duplicate";
     String INSTALLMENT_DUEDATE_INVALID_ORDER = "errors.installment.duedate.invalid.order";
     String INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP = "errors.installment.duedate.within.min.gap";

@@ -4,10 +4,12 @@ import org.apache.commons.collections.CollectionUtils;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.VariableInstallmentDetailsDto;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.exceptions.ValidationException;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +21,7 @@ import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDA
 
 public class InstallmentRulesValidatorImpl implements InstallmentRulesValidator {
     @Override
-    public void validate(List<RepaymentScheduleInstallment> installments, Date disbursementDate) throws ValidationException {
+    public void validateForDisbursementDate(List<RepaymentScheduleInstallment> installments, Date disbursementDate) throws ValidationException {
         ValidationException parentException = new ValidationException(AccountConstants.GENERIC_VALIDATION_ERROR);
         for (RepaymentScheduleInstallment installment : installments) {
             validateInstallmentForDisburseDate(installment, disbursementDate, parentException);
@@ -28,10 +30,23 @@ public class InstallmentRulesValidatorImpl implements InstallmentRulesValidator 
     }
 
     @Override
-    public void validate(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsDto variableInstallmentDetailsDto)
+    public void validateForVariableInstallments(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsDto variableInstallmentDetailsDto)
                                                                                     throws ValidationException {
         ValidationException parentException = new ValidationException(AccountConstants.GENERIC_VALIDATION_ERROR);
         validateForVariableInstallmentDetails(installments, variableInstallmentDetailsDto, parentException);
+        if (parentException.hasChildExceptions()) throw parentException;
+    }
+
+    @Override
+    public void validateForHolidays(List<RepaymentScheduleInstallment> installments, FiscalCalendarRules fiscalCalendarRules) throws ValidationException {
+        ValidationException parentException = new ValidationException(AccountConstants.GENERIC_VALIDATION_ERROR);
+        for (RepaymentScheduleInstallment installment : installments) {
+            Calendar dueDate = installment.getDueDateValueAsCalendar();
+            if (dueDate != null && !fiscalCalendarRules.isWorkingDay(dueDate)) {
+                String identifier = installment.getInstallmentNumberAsString();
+                parentException.addChildException(new ValidationException(AccountConstants.INSTALLMENT_DUEDATE_IS_HOLIDAY, identifier));
+            }
+        }
         if (parentException.hasChildExceptions()) throw parentException;
     }
 

@@ -26,6 +26,7 @@ import org.mifos.framework.util.helpers.Money;
 
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -178,5 +179,12 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     public String getInstallmentNumberAsString() {
         return String.valueOf(installment);
+    }
+
+    public Calendar getDueDateValueAsCalendar() {
+        if (dueDateValue == null) return null;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dueDateValue);
+        return calendar;
     }
 }

@@ -8,12 +8,15 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.loan.util.helpers.VariableInstallmentDetailsDto;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.exceptions.ValidationException;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -22,6 +25,9 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InstallmentRulesValidatorTest {
@@ -30,6 +36,9 @@ public class InstallmentRulesValidatorTest {
     private MifosCurrency rupeeCurrency;
     private InstallmentRulesValidator installmentRulesValidator;
     private Locale locale;
+
+    @Mock
+    private FiscalCalendarRules fiscalCalendarRules;
 
     @Before
     public void setupAndInjectDependencies() {
@@ -46,7 +55,7 @@ public class InstallmentRulesValidatorTest {
                 .withFees(new Money(rupeeCurrency, "0.0")).withTotal("522.0").build();
         try {
             Date dateValue = getDate(installment, "30-Nov-2010");
-            installmentRulesValidator.validate(asList(installment), dateValue);
+            installmentRulesValidator.validateForDisbursementDate(asList(installment), dateValue);
             fail("Should have thrown validation error");
         } catch (ValidationException validationException) {
             assertThat(validationException.getKey(), is(AccountConstants.GENERIC_VALIDATION_ERROR));
@@ -63,7 +72,7 @@ public class InstallmentRulesValidatorTest {
                 .withFees(new Money(rupeeCurrency, "0.0")).withTotal("522.0").build();
         try {
             Date dateValue = getDate(installment, "30-Sep-2010");
-            installmentRulesValidator.validate(asList(installment), dateValue);
+            installmentRulesValidator.validateForDisbursementDate(asList(installment), dateValue);
         } catch (ValidationException e) {
             fail("Should not have thrown validation error");
         }
@@ -76,7 +85,7 @@ public class InstallmentRulesValidatorTest {
                 .withFees(new Money(rupeeCurrency, "0.0")).withTotal("522.0").build();
         try {
             Date dateValue = getDate(installment, "30-Dec-2010");
-            installmentRulesValidator.validate(asList(installment), dateValue);
+            installmentRulesValidator.validateForDisbursementDate(asList(installment), dateValue);
             fail("Should have thrown validation error");
         } catch (ValidationException validationException) {
             assertThat(validationException.getKey(), is(AccountConstants.GENERIC_VALIDATION_ERROR));
@@ -98,7 +107,7 @@ public class InstallmentRulesValidatorTest {
         try {
             VariableInstallmentDetailsDto variableInstallmentDetails = getVariableInstallmentDetails(5, null, 100, rupeeCurrency);
             List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4, installment5, installment6, installment7);
-            installmentRulesValidator.validate(installments, variableInstallmentDetails);
+            installmentRulesValidator.validateForVariableInstallments(installments, variableInstallmentDetails);
             fail("Should have thrown validation error");
         } catch (ValidationException validationException) {
             assertThat(validationException.getKey(), is(AccountConstants.GENERIC_VALIDATION_ERROR));
@@ -122,7 +131,7 @@ public class InstallmentRulesValidatorTest {
         try {
             VariableInstallmentDetailsDto variableInstallmentDetails = getVariableInstallmentDetails(null, 5, 100, rupeeCurrency);
             List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4, installment5, installment6, installment7);
-            installmentRulesValidator.validate(installments, variableInstallmentDetails);
+            installmentRulesValidator.validateForVariableInstallments(installments, variableInstallmentDetails);
             fail("Should have thrown validation error");
         } catch (ValidationException validationException) {
             assertThat(validationException.getKey(), is(AccountConstants.GENERIC_VALIDATION_ERROR));
@@ -141,7 +150,7 @@ public class InstallmentRulesValidatorTest {
                         withPrincipal(new Money(rupeeCurrency, "49")).withTotalValue("50").build();
         try {
             VariableInstallmentDetailsDto variableInstallmentDetails = getVariableInstallmentDetails(null, null, 100, rupeeCurrency);
-            installmentRulesValidator.validate(asList(installment), variableInstallmentDetails);
+            installmentRulesValidator.validateForVariableInstallments(asList(installment), variableInstallmentDetails);
             fail("Should have thrown validation error");
         } catch (ValidationException validationException) {
             assertThat(validationException.getKey(), is(AccountConstants.GENERIC_VALIDATION_ERROR));
@@ -150,6 +159,41 @@ public class InstallmentRulesValidatorTest {
             assertThat(childExceptions.size(), is(1));
             assertValidationException(childExceptions.get(0), AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT, "1");
         }
+    }
+    
+    @Test
+    public void shouldNotValidateForValidVariableInstallments() {
+        RepaymentScheduleInstallment installment1 = installmentBuilder.reset(locale).withInstallment(1).
+                withPrincipal(new Money(rupeeCurrency, "49")).withTotalValue("50").withDueDateValue("01-Nov-2010").build();
+        RepaymentScheduleInstallment installment2 = installmentBuilder.reset(locale).withInstallment(2).
+                withPrincipal(new Money(rupeeCurrency, "49")).withTotalValue("50").withDueDateValue("03-Nov-2010").build();
+        RepaymentScheduleInstallment installment3 = installmentBuilder.reset(locale).withInstallment(3).
+                withPrincipal(new Money(rupeeCurrency, "49")).withTotalValue("50").withDueDateValue("06-Nov-2010").build();
+        try {
+            VariableInstallmentDetailsDto variableInstallmentDetails = getVariableInstallmentDetails(2, 5, 50, rupeeCurrency);
+            List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
+            installmentRulesValidator.validateForVariableInstallments(installments, variableInstallmentDetails);
+        } catch (ValidationException validationException) {
+            fail("Should not have thrown validation error");
+        }
+    }
+
+    @Test
+    public void shouldValidateForDueDateFallingOnHoliday() {
+        RepaymentScheduleInstallment installment1 = installmentBuilder.reset(locale).withInstallment(1).withDueDateValue("01-Nov-2010").build();
+        RepaymentScheduleInstallment installment2 = installmentBuilder.reset(locale).withInstallment(2).build();
+        Calendar holiday = installment1.getDueDateValueAsCalendar();
+        when(fiscalCalendarRules.isWorkingDay(holiday)).thenReturn(false);
+        try {
+            installmentRulesValidator.validateForHolidays(asList(installment1, installment2), fiscalCalendarRules);
+            fail("Should have thrown validation error");
+        } catch (ValidationException validationException) {
+            assertThat(validationException.getKey(), is(AccountConstants.GENERIC_VALIDATION_ERROR));
+            assertThat(validationException.hasChildExceptions(), is(true));
+            ValidationException childException = validationException.getChildExceptions().get(0);
+            assertValidationException(childException, AccountConstants.INSTALLMENT_DUEDATE_IS_HOLIDAY, "1");
+        }
+        verify(fiscalCalendarRules, times(1)).isWorkingDay(holiday);
     }
 
     private void assertValidationException(ValidationException validationException, String key, String identifier) {
