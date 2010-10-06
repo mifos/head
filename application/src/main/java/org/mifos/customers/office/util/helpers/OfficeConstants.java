@@ -43,6 +43,7 @@ public interface OfficeConstants {
     String OFFICESTILLBRANCHOFFICESLIST = "OfficesTillBranchOffices";
     String OFFICESBRANCHOFFICESLIST = "OfficesBranchOffices";
     String CUSTOM_FIELDS = "customFields";
+    String OFFICE_DTO = "officeDto";
 
     // custom methods
     String LOADPARENT = "loadParent";

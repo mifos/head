@@ -103,7 +103,7 @@ public class OffAction extends BaseAction {
         if (StringUtils.isNotBlank(officeLevel)) {
             actionForm.setOfficeLevel(officeLevel);
 
-            OfficeBO office = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+            OfficeDto office = (OfficeDto) SessionUtils.getAttribute(OfficeConstants.OFFICE_DTO, request);
 
             List<OfficeDto> validParentOffices = new ArrayList<OfficeDto>();
             if (actionForm.getInput() != null && actionForm.getInput().equals("edit") && office != null) {
@@ -202,7 +202,7 @@ public class OffAction extends BaseAction {
         actionForm.clear();
         loadCustomFieldDefinitions(request);
         actionForm.populate(officeDto);
-        SessionUtils.setAttribute("officeDto", officeDto, request);
+        SessionUtils.setAttribute(OfficeConstants.OFFICE_DTO, officeDto, request);
         setCurrentPageUrl(request, officeDto);
         return mapping.findForward(ActionForwards.get_success.toString());
     }
@@ -225,15 +225,11 @@ public class OffAction extends BaseAction {
 
         OffActionForm offActionForm = (OffActionForm) form;
 
-        OfficeBO sessionOffice = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        OfficeDto sessionOffice = (OfficeDto) SessionUtils.getAttribute(OfficeConstants.OFFICE_DTO, request);
 
         OfficeBO office = ((OfficeBusinessService) getService()).getOffice(sessionOffice.getOfficeId());
 
-        checkVersionMismatch(sessionOffice.getVersionNo(), office.getVersionNo());
-        office.setVersionNo(sessionOffice.getVersionNo());
-        office.setUserContext(getUserContext(request));
-
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, office, request);
+        checkVersionMismatch(sessionOffice.getVersionNum(), office.getVersionNo());
 
         loadCustomFieldDefinitions(request);
         loadofficeLevels(request);
@@ -262,11 +258,11 @@ public class OffAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         OffActionForm offActionForm = (OffActionForm) form;
         ActionForward forward = null;
-        OfficeBO sessionOffice = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        OfficeDto sessionOffice = (OfficeDto) SessionUtils.getAttribute(OfficeConstants.OFFICE_DTO, request);
 
         UserContext userContext = getUserContext(request);
         Short officeId = sessionOffice.getOfficeId();
-        Integer versionNum = sessionOffice.getVersionNo();
+        Integer versionNum = sessionOffice.getVersionNum();
         OfficeUpdateRequest officeUpdateRequest = officeUpdateRequestFrom(offActionForm);
 
         boolean isParentOfficeChanged = this.legacyOfficeServiceFacade.updateOffice(userContext, officeId, versionNum, officeUpdateRequest);
@@ -357,7 +353,7 @@ public class OffAction extends BaseAction {
 
             List<OfficeDetailsDto> parents = ((OfficeBusinessService) getService()).getActiveParents(Level, getUserContext(
                     request).getLocaleId());
-            OfficeBO office = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+            OfficeDto office = (OfficeDto) SessionUtils.getAttribute(OfficeConstants.OFFICE_DTO, request);
 
             if (form.getInput() != null && form.getInput().equals("edit") && office != null) {
                 for (int i = 0; i < parents.size(); i++) {

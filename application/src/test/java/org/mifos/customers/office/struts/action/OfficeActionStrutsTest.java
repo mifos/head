@@ -267,7 +267,10 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         officeBO.save();
         TestObjectFactory.flushandCloseSession();
         officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, officeBO, request);
+        OfficeDto officeDto = new OfficeDto(officeBO.getOfficeId(), officeBO.getOfficeName(), officeBO.getSearchId(),
+                officeBO.getShortName(), officeBO.getGlobalOfficeNum(), officeBO.getParentOffice().getOfficeId(),
+                officeBO.getStatus().getId(), officeBO.getLevel().getId());
+        SessionUtils.setAttribute(OfficeConstants.OFFICE_DTO, officeDto, request);
         return officeBO;
     }
 
