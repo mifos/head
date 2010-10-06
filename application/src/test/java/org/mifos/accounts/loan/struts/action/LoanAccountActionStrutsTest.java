@@ -810,8 +810,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 .toString());
         addRequestParameter("interestRate", loanOfferingWithVariableInstallments.getDefInterestRate().toString());
         addRequestParameter("noOfInstallments", loanOfferingWithVariableInstallments.getDefaultNumOfEligibleInstallmentsSameForAllLoan().toString());
-        addRequestParameter("disbursementDate",
-                getDisbursementDate());
+        addRequestParameter("disbursementDate", getDisbursementDate());
         addRequestParameter("gracePeriodDuration", "1");
         addRequestParameter("businessActivityId", "1");
         addRequestParameter("loanOfferingFund", "1");

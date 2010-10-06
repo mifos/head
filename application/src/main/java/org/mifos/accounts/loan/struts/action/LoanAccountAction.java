@@ -451,8 +451,15 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             throws Exception {
 
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-        UserContext userContext = getUserContext(request);
+        ActionForwards forward = validateInstallments(request, loanActionForm) ?
+                                    ActionForwards.validateInstallments_success :
+                                    ActionForwards.validateInstallments_failure;
+        return mapping.findForward(forward.name());
+    }
 
+    private boolean validateInstallments(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
+        boolean result = true;
+        UserContext userContext = getUserContext(request);
         LoanOfferingBO loanOffering = getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId());
         if (loanOffering.isVariableInstallmentsAllowed()) {
             ActionErrors actionErrors = validateInstallmentSchedule(
@@ -460,10 +467,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                                         loanOffering.getVariableInstallmentDetails(), loanActionForm.getInstallments());
             if (!actionErrors.isEmpty()) {
                 addErrors(request, actionErrors);
-                return mapping.findForward(ActionForwards.validateInstallments_failure.toString());
+                result = false;
             }
         }
-        return mapping.findForward(ActionForwards.validateInstallments_success.toString());
+        return result;
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -493,7 +500,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 .isLoanPendingApprovalDefined(), request);
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, disbursementDate, request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, loanActionForm.getLoanAmount(), request);
-        // TODO need to figure out a way to avoid putting 'installments' onto session- doesn't work otherwise in mifostabletag in schedulePreview.jsp 
+        // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp 
         setInstallmentsOnSession(request, loanActionForm);
 
         return createLoanQuestionnaire.fetchAppliedQuestions(
@@ -535,51 +542,60 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+                                 @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
         LoanAccountActionForm loanAccountForm = (LoanAccountActionForm) form;
-
         String perspective = loanAccountForm.getPerspective();
         if (perspective != null) {
-
-            List<LoanAccountDetailsDto> accountDetails = loanAccountForm.getClientDetails();
-            List<String> selectedClientIds = loanAccountForm.getClients();
             Integer customerId = loanAccountForm.getCustomerIdValue();
-            List<BusinessActivityEntity> businessActEntity = retrieveLoanPurposesFromSession(request);
-
-            LoanCreationPreviewDto loanPreviewDto;
-            if (perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN)) {
-
-                UserContext userContext = getUserContext(request);
-                DateTime disbursementDate = new DateTime(loanAccountForm.getDisbursementDateValue(userContext
-                        .getPreferredLocale()));
-                LoanBO loan = this.loanServiceFacade.previewLoanRedoDetails(customerId, loanAccountForm,
-                        disbursementDate, userContext);
-
-                String loanDisbursementDate = DateUtils.getUserLocaleDate(null, disbursementDate.toDate());
-                SessionUtils.setAttribute("loanDisbursementDate", loanDisbursementDate, request);
-                SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
-            }
-
+            setRedoLoanAttributesOnSession(request, loanAccountForm, perspective, customerId);
+            setGLIMAttributesOnSession(request, loanAccountForm, customerId);
             request.setAttribute(PERSPECTIVE, perspective);
+        }
+        // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in createloanpreview.jsp
+        setInstallmentsOnSession(request, loanAccountForm);
+        ActionForwards forward = validateInstallments(request, loanAccountForm) ?
+                                                    ActionForwards.preview_success :
+                                                    ActionForwards.preview_failure;
+        return mapping.findForward(forward.name());
+    }
 
-            loanPreviewDto = this.loanServiceFacade.previewLoanCreationDetails(customerId, accountDetails,
-                    selectedClientIds, businessActEntity);
+    private void setRedoLoanAttributesOnSession(HttpServletRequest request, LoanAccountActionForm loanAccountForm, String perspective, Integer customerId) throws InvalidDateException, ApplicationException {
+        if (perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN)) {
+            UserContext userContext = getUserContext(request);
+            DateTime disbursementDate = new DateTime(loanAccountForm.getDisbursementDateValue(userContext
+            .getPreferredLocale()));
+            LoanBO loan = loanServiceFacade.previewLoanRedoDetails(customerId, loanAccountForm,
+                                            disbursementDate, userContext);
 
-            if (loanPreviewDto.isGlimEnabled()) {
-                SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, 1, request);
+            String loanDisbursementDate = DateUtils.getUserLocaleDate(null, disbursementDate.toDate());
+            SessionUtils.setAttribute("loanDisbursementDate", loanDisbursementDate, request);
+            SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+        }
+    }
 
-                if (loanPreviewDto.isGroup()) {
-                    SessionUtils.setAttribute(LOAN_ACCOUNT_OWNER_IS_A_GROUP,
-                            LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES, request);
-                    SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanPreviewDto
-                            .getLoanAccountDetailsView(), request);
-                }
+    private void setGLIMAttributesOnSession(HttpServletRequest request, LoanAccountActionForm loanAccountForm,
+                                                            Integer customerId) throws PageExpiredException {
+        LoanCreationPreviewDto loanPreviewDto = getloanPreviewDto(request, loanAccountForm, customerId);
+        if (loanPreviewDto.isGlimEnabled()) {
+            SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, 1, request);
+
+            if (loanPreviewDto.isGroup()) {
+                SessionUtils.setAttribute(LOAN_ACCOUNT_OWNER_IS_A_GROUP,
+                        LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES, request);
+                SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanPreviewDto
+                        .getLoanAccountDetailsView(), request);
             }
         }
-        // TODO need to figure out a way to avoid putting 'installments' onto session- doesn't work otherwise in mifostabletag in createloanpreview.jsp
-        setInstallmentsOnSession(request, loanAccountForm);
-        return mapping.findForward(ActionForwards.preview_success.toString());
+    }
+
+    private LoanCreationPreviewDto getloanPreviewDto(HttpServletRequest request, LoanAccountActionForm loanAccountForm, Integer customerId) throws PageExpiredException {
+        List<LoanAccountDetailsDto> accountDetails = loanAccountForm.getClientDetails();
+        List<String> selectedClientIds = loanAccountForm.getClients();
+        List<BusinessActivityEntity> businessActEntity = retrieveLoanPurposesFromSession(request);
+
+        return loanServiceFacade.previewLoanCreationDetails(customerId,
+                                        accountDetails, selectedClientIds, businessActEntity);
     }
 
     private void setInstallmentsOnSession(HttpServletRequest request, LoanAccountActionForm loanAccountForm) throws PageExpiredException {
@@ -927,11 +943,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         handleRepaymentsIndependentOfMeetingIfConfigured(request, loanActionForm, recurMonth);
         LoanBO loanBO = new LoanDaoHibernate(new GenericDaoHibernate()).findByGlobalAccountNum(globalAccountNum);
 
-        loanBO.setUserContext(getUserContext(request));
+        UserContext userContext = getUserContext(request);
+        loanBO.setUserContext(userContext);
         SessionUtils.setAttribute(PROPOSED_DISBURSAL_DATE, loanBO.getDisbursementDate(), request);
         SessionUtils.removeAttribute(LOANOFFERING, request);
-        LoanOfferingBO loanOffering = getLoanOffering(loanBO.getLoanOffering().getPrdOfferingId(), getUserContext(
-                request).getLocaleId());
+        LoanOfferingBO loanOffering = getLoanOffering(loanBO.getLoanOffering().getPrdOfferingId(), userContext.getLocaleId());
         loanActionForm.setInstallmentRange(loanBO.getMaxMinNoOfInstall());
         loanActionForm.setLoanAmountRange(loanBO.getMaxMinLoanAmount());
         MaxMinInterestRate interestRateRange = loanBO.getMaxMinInterestRate();
@@ -1294,7 +1310,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return newMeetingForRepaymentDay;
     }
 
-    private LoanOfferingBO getLoanOffering(final Short loanOfferingId, final short localeId) throws Exception {
+    private LoanOfferingBO getLoanOffering(Short loanOfferingId, short localeId) throws Exception {
         return loanPrdBusinessService.getLoanOffering(loanOfferingId, localeId);
     }
 
