@@ -15,5 +15,14 @@ $(document).ready(function() {
             form.submit();
         });
     }
+
+    if ($("input[id=schedulePreview.button.preview]") != null) {
+        $("input[id=schedulePreview.button.preview]").click(function(event) {
+            $("input[name=method]").val("preview");
+            form = $("form[name=loanAccountActionForm]");
+            form.action="loanAccountAction.do";
+            form.submit();
+        });
+    }
   }
 );

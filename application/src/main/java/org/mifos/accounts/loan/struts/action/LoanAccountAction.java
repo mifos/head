@@ -493,8 +493,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 .isLoanPendingApprovalDefined(), request);
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, disbursementDate, request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, loanActionForm.getLoanAmount(), request);
-        // TODO need to figure out a way to avoid putting 'installments' onto session 
-        SessionUtils.setCollectionAttribute("installments", loanActionForm.getInstallments(), request);
+        // TODO need to figure out a way to avoid putting 'installments' onto session- doesn't work otherwise in mifostabletag in schedulePreview.jsp 
+        setInstallmentsOnSession(request, loanActionForm);
 
         return createLoanQuestionnaire.fetchAppliedQuestions(
                 mapping, loanActionForm, request, ActionForwards.schedulePreview_success);
@@ -577,8 +577,13 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 }
             }
         }
-
+        // TODO need to figure out a way to avoid putting 'installments' onto session- doesn't work otherwise in mifostabletag in createloanpreview.jsp
+        setInstallmentsOnSession(request, loanAccountForm);
         return mapping.findForward(ActionForwards.preview_success.toString());
+    }
+
+    private void setInstallmentsOnSession(HttpServletRequest request, LoanAccountActionForm loanAccountForm) throws PageExpiredException {
+        SessionUtils.setCollectionAttribute(LoanConstants.INSTALLMENTS, loanAccountForm.getInstallments(), request);
     }
 
     @SuppressWarnings("unchecked")

@@ -1524,4 +1524,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
         this.variableInstallmentDetails = variableInstallmentDetails;
     }
 
+    public Short getDefaultNumOfEligibleInstallmentsSameForAllLoan() {
+        return getEligibleInstallmentSameForAllLoan().getDefaultNoOfInstall();
+    }
 }

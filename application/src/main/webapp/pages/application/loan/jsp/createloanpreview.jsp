@@ -446,7 +446,8 @@ explanation of the license and how it is applied.
                                                                     <loanfn:getLoanRepaymentTable />
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    <mifoscustom:mifostabletag source="repaymentScheduleInstallments" scope="session" xmlFileName="ProposedRepaymentSchedule.xml" moduleName="org/mifos/accounts/loan/util/resources" passLocale="true" />
+                                                                    <mifoscustom:mifostabletag source="installments" scope="session" 
+                                                                    xmlFileName="ProposedRepaymentSchedule.xml" moduleName="org/mifos/accounts/loan/util/resources" passLocale="true" />
                                                                 </c:otherwise>
                                                             </c:choose>
 														</td>
