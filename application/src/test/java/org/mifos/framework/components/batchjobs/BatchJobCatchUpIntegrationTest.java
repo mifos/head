@@ -165,7 +165,7 @@ public class BatchJobCatchUpIntegrationTest extends MifosIntegrationTestCase {
 
         for(int i = 0; i < 3; i++) {
             jobLauncher.run(jobLocator.getJob(jobName), MifosBatchJob.createJobParameters(new Date().getTime()));
-            Thread.sleep(1500);
+            Thread.sleep(5000);
         }
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
         List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 10);
@@ -177,7 +177,7 @@ public class BatchJobCatchUpIntegrationTest extends MifosIntegrationTestCase {
         }
 
         mifosScheduler.runIndividualTask(jobName);
-        Thread.sleep(1500);
+        Thread.sleep(5000);
 
         explorer = mifosScheduler.getBatchJobExplorer();
         jobInstances = explorer.getJobInstances(jobName, 0, 10);
