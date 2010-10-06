@@ -813,11 +813,17 @@ public class AccountBO extends AbstractBusinessObject {
 
     public AccountPaymentEntity getLastPmntToBeAdjusted() {
         AccountPaymentEntity accntPmnt = null;
+        int i = 0;
         for (AccountPaymentEntity accntPayment : accountPayments) {
+            i = i + 1;
+            if (i == accountPayments.size()) {
+                break;
+            }
             if (accntPayment.getAmount().isNonZero()) {
                 accntPmnt = accntPayment;
                 break;
             }
+
         }
         return accntPmnt;
     }
