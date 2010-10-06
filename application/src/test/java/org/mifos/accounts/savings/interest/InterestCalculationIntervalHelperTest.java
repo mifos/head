@@ -30,9 +30,9 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.schedule.ScheduledEvent;
-import org.mifos.schedule.internal.DailyScheduledEvent;
-import org.mifos.schedule.internal.MonthlyAtEndOfMonthScheduledEvent;
+import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
+import org.mifos.accounts.savings.interest.schedule.internal.DailyInterestScheduledEvent;
+import org.mifos.accounts.savings.interest.schedule.internal.MonthlyOnLastDayOfMonthInterestScheduledEvent;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -53,7 +53,7 @@ public class InterestCalculationIntervalHelperTest {
 
         // setup
         LocalDate firstDepositDate = new LocalDate().withYear(2010).withMonthOfYear(9).withDayOfMonth(1);
-        ScheduledEvent every14Days = new DailyScheduledEvent(14);
+        InterestScheduledEvent every14Days = new DailyInterestScheduledEvent(14);
 
         // exercise test
         List<InterestCalculationInterval> validIntervals = this.interestCalculationIntervalHelper.determineAllPossibleInterestCalculationPeriods(firstDepositDate, every14Days, october5th);
@@ -61,13 +61,10 @@ public class InterestCalculationIntervalHelperTest {
         // verification
         assertFalse(validIntervals.isEmpty());
         assertThat(validIntervals.get(0).getStartDate(), is(new LocalDate().withYear(2010).withMonthOfYear(9).withDayOfMonth(1)));
-        assertThat(validIntervals.get(0).getEndDate(), is(new LocalDate().withYear(2010).withMonthOfYear(9).withDayOfMonth(10)));
+        assertThat(validIntervals.get(0).getEndDate(), is(new LocalDate().withYear(2010).withMonthOfYear(9).withDayOfMonth(9)));
 
-        assertThat(validIntervals.get(1).getStartDate(), is(new LocalDate().withYear(2010).withMonthOfYear(9).withDayOfMonth(11)));
-        assertThat(validIntervals.get(1).getEndDate(), is(new LocalDate().withYear(2010).withMonthOfYear(9).withDayOfMonth(24)));
-
-//        assertThat(validIntervals.get(2).getStartDate(), is(new LocalDate().withYear(2010).withMonthOfYear(9).withDayOfMonth(25)));
-//        assertThat(validIntervals.get(2).getEndDate(), is(new LocalDate().withYear(2010).withMonthOfYear(10).withDayOfMonth(8)));
+        assertThat(validIntervals.get(1).getStartDate(), is(new LocalDate().withYear(2010).withMonthOfYear(9).withDayOfMonth(10)));
+        assertThat(validIntervals.get(1).getEndDate(), is(new LocalDate().withYear(2010).withMonthOfYear(9).withDayOfMonth(23)));
     }
 
     @Test
@@ -75,7 +72,7 @@ public class InterestCalculationIntervalHelperTest {
 
         // setup
         LocalDate firstDepositDate = new LocalDate().withYear(2010).withMonthOfYear(1).withDayOfMonth(7);
-        ScheduledEvent endOfMonthEveryThreeMonths = new MonthlyAtEndOfMonthScheduledEvent(3);
+        InterestScheduledEvent endOfMonthEveryThreeMonths = new MonthlyOnLastDayOfMonthInterestScheduledEvent(3);
 
         // exercise test
         List<InterestCalculationInterval> validIntervals = this.interestCalculationIntervalHelper.determineAllPossibleInterestCalculationPeriods(firstDepositDate, endOfMonthEveryThreeMonths, september30th);
@@ -97,7 +94,7 @@ public class InterestCalculationIntervalHelperTest {
 
         // setup
         LocalDate firstDepositDate = new LocalDate().withYear(2010).withMonthOfYear(5).withDayOfMonth(21);
-        ScheduledEvent endOfMonthEveryThreeMonths = new MonthlyAtEndOfMonthScheduledEvent(3);
+        InterestScheduledEvent endOfMonthEveryThreeMonths = new MonthlyOnLastDayOfMonthInterestScheduledEvent(3);
 
         // exercise test
         List<InterestCalculationInterval> validIntervals = this.interestCalculationIntervalHelper.determineAllPossibleInterestCalculationPeriods(firstDepositDate, endOfMonthEveryThreeMonths, september30th);
@@ -116,7 +113,7 @@ public class InterestCalculationIntervalHelperTest {
 
         // setup
         LocalDate firstDepositDate = new LocalDate().withYear(2009).withMonthOfYear(8).withDayOfMonth(21);
-        ScheduledEvent endOfMonthEveryThreeMonths = new MonthlyAtEndOfMonthScheduledEvent(3);
+        InterestScheduledEvent endOfMonthEveryThreeMonths = new MonthlyOnLastDayOfMonthInterestScheduledEvent(3);
 
         // exercise test
         List<InterestCalculationInterval> validIntervals = this.interestCalculationIntervalHelper.determineAllPossibleInterestCalculationPeriods(firstDepositDate, endOfMonthEveryThreeMonths, september30th);
@@ -138,5 +135,4 @@ public class InterestCalculationIntervalHelperTest {
         assertThat(validIntervals.get(4).getStartDate(), is(new LocalDate().withYear(2010).withMonthOfYear(7).withDayOfMonth(1)));
         assertThat(validIntervals.get(4).getEndDate(), is(new LocalDate().withYear(2010).withMonthOfYear(9).withDayOfMonth(30)));
     }
-
 }

@@ -18,25 +18,25 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.schedule;
+package org.mifos.accounts.savings.interest.schedule;
 
+import org.mifos.accounts.savings.interest.schedule.internal.DailyInterestScheduledEvent;
+import org.mifos.accounts.savings.interest.schedule.internal.MonthlyOnLastDayOfMonthInterestScheduledEvent;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.schedule.internal.DailyScheduledEvent;
-import org.mifos.schedule.internal.MonthlyAtEndOfMonthScheduledEvent;
 
 public class SavingsInterestScheduledEventFactory {
 
-    public static ScheduledEvent createScheduledEventFrom(final MeetingBO meeting) {
+    public static InterestScheduledEvent createScheduledEventFrom(final MeetingBO meeting) {
 
-        ScheduledEvent scheduledEvent = new DailyScheduledEvent(meeting.getRecurAfter());
+        InterestScheduledEvent scheduledEvent = new DailyInterestScheduledEvent(meeting.getRecurAfter());
         switch (meeting.getMeetingTypeEnum()) {
         case SAVINGS_INTEREST_CALCULATION_TIME_PERIOD:
             if (meeting.isMonthly()) {
-                scheduledEvent = new MonthlyAtEndOfMonthScheduledEvent(meeting.getRecurAfter());
+                scheduledEvent = new MonthlyOnLastDayOfMonthInterestScheduledEvent(meeting.getRecurAfter());
             }
             break;
         case SAVINGS_INTEREST_POSTING:
-            scheduledEvent = new MonthlyAtEndOfMonthScheduledEvent(meeting.getRecurAfter());
+            scheduledEvent = new MonthlyOnLastDayOfMonthInterestScheduledEvent(meeting.getRecurAfter());
             break;
         default:
             break;

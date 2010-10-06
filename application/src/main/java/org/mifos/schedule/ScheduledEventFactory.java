@@ -24,7 +24,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.schedule.internal.DailyScheduledEvent;
-import org.mifos.schedule.internal.MonthlyAtEndOfMonthScheduledEvent;
 import org.mifos.schedule.internal.MonthlyOnDateScheduledEvent;
 import org.mifos.schedule.internal.MonthlyOnWeekAndWeekDayScheduledEvent;
 import org.mifos.schedule.internal.WeeklyScheduledEvent;
@@ -88,17 +87,6 @@ public class ScheduledEventFactory {
         }
 
         return createScheduledEvent(period, every, dayOfWeek, dayOfMonth, weekOfMonth);
-    }
-
-    private static ScheduledEvent createSavingsInterestCalculationScheduledEvent(MeetingBO meeting) {
-
-        ScheduledEvent scheduledEvent = new DailyScheduledEvent(meeting.getRecurAfter());
-
-        if (meeting.isMonthly()) {
-            scheduledEvent = new MonthlyAtEndOfMonthScheduledEvent(meeting.getRecurAfter());
-        }
-
-        return scheduledEvent;
     }
 
     /**

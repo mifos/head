@@ -25,41 +25,28 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.mifos.schedule.ScheduledEvent;
-import org.mifos.schedule.internal.MonthlyAtEndOfMonthScheduledEvent;
+import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 
 public class InterestCalculationIntervalHelper {
 
-    public List<InterestCalculationInterval> determineAllPossibleInterestCalculationPeriods(LocalDate firstDepositDate, ScheduledEvent interestCalculationEvent, LocalDate cutOffDateForValidCalculationPeriods) {
+    public List<InterestCalculationInterval> determineAllPossibleInterestCalculationPeriods(LocalDate firstDepositDate, InterestScheduledEvent interestCalculationEvent, LocalDate cutOffDateForValidCalculationPeriods) {
 
         List<InterestCalculationInterval> validInterestCalculationIntervals = new ArrayList<InterestCalculationInterval>();
 
         // fiscal start of year is jan-01 so begin at jan-01 of first deposit.
         LocalDate startOfFiscalYearOfFirstDeposit = new LocalDate(new DateTime().withYearOfEra(firstDepositDate.getYear()).withMonthOfYear(1).withDayOfMonth(1));
 
-        LocalDate startFrom = startOfFiscalYearOfFirstDeposit;
-        while (startFrom.isBefore(cutOffDateForValidCalculationPeriods)) {
-            LocalDate endDate = new LocalDate(interestCalculationEvent.nextEventDateAfter(startFrom.toDateTimeAtCurrentTime()));
+        LocalDate cutOffDate = new LocalDate();
+        List<LocalDate> allMatchingDates = interestCalculationEvent.findAllMatchingDatesFromBaseDateToCutOffDate(startOfFiscalYearOfFirstDeposit, cutOffDate);
+        for (LocalDate matchingDate : allMatchingDates) {
+            LocalDate firstDayofInterval = interestCalculationEvent.findFirstDateOfPeriodForMatchingDate(matchingDate);
 
-            LocalDate firstDayofInterval = startFrom;
-            if (interestCalculationEvent instanceof MonthlyAtEndOfMonthScheduledEvent) {
-                firstDayofInterval = startFrom;
-            } else {
-                firstDayofInterval = startFrom.plusDays(1);
-            }
-
-            InterestCalculationInterval interval = new InterestCalculationInterval(firstDayofInterval, endDate);
+            InterestCalculationInterval interval = new InterestCalculationInterval(firstDayofInterval, matchingDate);
             if (interval.dateFallsWithin(firstDepositDate)) {
-                interval = new InterestCalculationInterval(firstDepositDate, endDate);
+                interval = new InterestCalculationInterval(firstDepositDate, matchingDate);
                 validInterestCalculationIntervals.add(interval);
-            } else if (endDate.isAfter(firstDepositDate) && endDate.isBefore(cutOffDateForValidCalculationPeriods) || endDate.isEqual(cutOffDateForValidCalculationPeriods)) {
+            } else if (matchingDate.isAfter(firstDepositDate) && matchingDate.isBefore(cutOffDateForValidCalculationPeriods) || matchingDate.isEqual(cutOffDateForValidCalculationPeriods)) {
                 validInterestCalculationIntervals.add(interval);
-            }
-
-            if (interestCalculationEvent instanceof MonthlyAtEndOfMonthScheduledEvent) {
-                startFrom = endDate.plusDays(1);
-            } else {
-                startFrom = endDate;
             }
         }
 

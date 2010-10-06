@@ -36,6 +36,8 @@ import org.mifos.accounts.savings.interest.InterestCalculationPeriodDetail;
 import org.mifos.accounts.savings.interest.InterestCalculationPeriodResult;
 import org.mifos.accounts.savings.interest.InterestCalculator;
 import org.mifos.accounts.savings.interest.SavingsInterestCalculatorFactory;
+import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
+import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.util.helpers.AccountPaymentData;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -51,7 +53,6 @@ import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
@@ -206,8 +207,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             // activation date
             // NOTE: interest posting date are always the last day of the month (no matter what!)
             // NOTE: interest calculation date is always last day of month when using monthly period.
-            ScheduledEvent interestCalculationEvent = SavingsInterestScheduledEventFactory
-                    .createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
+            InterestScheduledEvent interestCalculationEvent = SavingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
 
             LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();
 
