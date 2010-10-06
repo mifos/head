@@ -109,6 +109,9 @@
                                 [#else]
                                     [@spring.message "systemAdministration.batchjobs.unknown" /]
                                 [/#if]
+                                [#if batchjobs.failDescription??]
+                                    &nbsp;(<a href="batchjobsdetails.ftl?jobFailName=${batchjobs.name}">[@spring.message "systemAdministration.batchjobs.showDetails" /]</a>)
+                                [/#if]
                             </span>
                         </div>
                         [#if batchjobs.lastSuccessfulRun?datetime != batchjobs.lastStartTime?datetime]

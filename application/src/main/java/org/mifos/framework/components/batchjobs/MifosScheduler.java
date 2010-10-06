@@ -488,15 +488,26 @@ public class MifosScheduler {
         String runStatus = jobExecutions.get(0).getStatus().toString();
         runStatus = runStatus.substring(0, 1) + runStatus.substring(1).toLowerCase();
 
-        Collection<StepExecution> steps = jobExecutions.get(0).getStepExecutions();
-        if (steps.size() > 0) {
-            StepExecution step = steps.iterator().next();
-            if (!step.getExitStatus().getExitDescription().isEmpty()) {
-                runStatus += " (" + step.getExitStatus().getExitDescription() + ")";
+        return runStatus;
+    }
+
+    public String getJobFailDescription(String jobName) {
+        String failDescription = null;
+        JobExplorer explorer = getBatchJobExplorer();
+        List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 1);
+        if (jobInstances.size() > 0) {
+            List<JobExecution> jobExecutions = explorer.getJobExecutions(jobInstances.get(0));
+            if (jobExecutions.size() > 0) {
+                Collection<StepExecution> steps = jobExecutions.get(0).getStepExecutions();
+                if (steps.size() > 0) {
+                    StepExecution step = steps.iterator().next();
+                    if (!step.getExitStatus().getExitDescription().isEmpty()) {
+                        failDescription = step.getExitStatus().getExitDescription();
+                    }
+                }
             }
         }
-
-        return runStatus;
+        return failDescription;
     }
 
     @SuppressWarnings("unchecked")

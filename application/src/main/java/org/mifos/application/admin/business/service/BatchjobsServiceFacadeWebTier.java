@@ -74,7 +74,8 @@ public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
                     }
                     String previousRunStatus = mifosScheduler.getJobsPreviousRunStatus(jobName);
                     int triggerState = scheduler.getTriggerState(trigger.getName(), groupName);
-                    batchjobs.add(new BatchjobsDto(jobName, frequency, taskType, priority, previousRunStatus, lastFire, lastSuccessfulRun, nextFire, triggerState));
+                    String failDescription = mifosScheduler.getJobFailDescription(jobName);
+                    batchjobs.add(new BatchjobsDto(jobName, frequency, taskType, priority, previousRunStatus, lastFire, lastSuccessfulRun, nextFire, triggerState, failDescription));
                 }
             }
         }
