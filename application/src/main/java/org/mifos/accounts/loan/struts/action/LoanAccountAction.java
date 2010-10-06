@@ -401,20 +401,17 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         }
 
         loanActionForm.setLoanAmountRange(loanCreationDetailsDto.getEligibleLoanAmount());
+        LoanOfferingBO loanOfferingBO = loanCreationDetailsDto.getLoanOffering();
         loanActionForm.setLoanAmount(getDoubleStringForMoney(loanCreationDetailsDto.getEligibleLoanAmount()
-                .getDefaultLoanAmount(), loanCreationDetailsDto.getLoanOffering().getCurrency()));
-        loanActionForm.setMaxInterestRate(loanCreationDetailsDto.getLoanOffering().getMaxInterestRate());
-        loanActionForm.setMinInterestRate(loanCreationDetailsDto.getLoanOffering().getMinInterestRate());
+                .getDefaultLoanAmount(), loanOfferingBO.getCurrency()));
+        loanActionForm.setMaxInterestRate(loanOfferingBO.getMaxInterestRate());
+        loanActionForm.setMinInterestRate(loanOfferingBO.getMinInterestRate());
 
         loanActionForm.setInstallmentRange(loanCreationDetailsDto.getEligibleNoOfInstall());
-        loanActionForm.setNoOfInstallments(getStringValue(loanCreationDetailsDto.getEligibleNoOfInstall()
-                .getDefaultNoOfInstall()));
-        loanActionForm.setInterestRate(getDoubleStringForInterest(loanCreationDetailsDto.getLoanOffering()
-                .getDefInterestRate()));
-        loanActionForm.setIntDedDisbursement(getStringValue(loanCreationDetailsDto.getLoanOffering()
-                .isIntDedDisbursement()));
-        loanActionForm.setGracePeriodDuration(getStringValue(loanCreationDetailsDto.getLoanOffering()
-                .getGracePeriodDuration()));
+        loanActionForm.setNoOfInstallments(getStringValue(loanCreationDetailsDto.getEligibleNoOfInstall().getDefaultNoOfInstall()));
+        loanActionForm.setInterestRate(getDoubleStringForInterest(loanOfferingBO.getDefInterestRate()));
+        loanActionForm.setIntDedDisbursement(getStringValue(loanOfferingBO.isIntDedDisbursement()));
+        loanActionForm.setGracePeriodDuration(getStringValue(loanOfferingBO.getGracePeriodDuration()));
         loanActionForm.setDisbursementDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(),
                 SessionUtils.getAttribute(PROPOSED_DISBURSAL_DATE, request).toString()));
 
@@ -432,15 +429,16 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 .getCollateralTypes(), request);
         SessionUtils.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES, loanCreationDetailsDto
                 .getLoanPurposes(), request);
-        SessionUtils.setAttribute(RECURRENCEID, loanCreationDetailsDto.getLoanProductRecurrenceType().getValue(),
-                request);
-        request.setAttribute(RECURRENCEID, loanCreationDetailsDto.getLoanProductRecurrenceType().getValue());
+        Short recurrenceType = loanCreationDetailsDto.getLoanProductRecurrenceType().getValue();
+        SessionUtils.setAttribute(RECURRENCEID, recurrenceType, request);
+        request.setAttribute(RECURRENCEID, recurrenceType);
 
         SessionUtils.removeAttribute(LOANOFFERING, request);
-        SessionUtils.setAttribute(LOANOFFERING, loanCreationDetailsDto.getLoanOffering(), request);
+        SessionUtils.setAttribute(LOANOFFERING, loanOfferingBO, request);
         SessionUtils.setCollectionAttribute(LOANFUNDS, loanCreationDetailsDto.getFunds(), request);
 
         storeRedoLoanSettingOnRequestForUseInJspIfPerspectiveParamaterOnQueryString(request);
+        setVariableInstallmentDetailsOnForm(loanOfferingBO, loanActionForm);
 
         return mapping.findForward(ActionForwards.load_success.toString());
     }
@@ -483,7 +481,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         Short productId = loanActionForm.getPrdOfferingIdValue();
         LoanOfferingBO loanOffering = getLoanOffering(productId, userContext.getLocaleId());
-        setVariableInstallmentDetailsInSession(loanOffering, request);
+        setVariableInstallmentDetailsOnForm(loanOffering, loanActionForm);
 
         DateTime disbursementDate = new DateTime(loanActionForm.getDisbursementDateValue(userContext
                 .getPreferredLocale()));
@@ -535,9 +533,15 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         }
     }
 
-    private void setVariableInstallmentDetailsInSession(LoanOfferingBO loanOffering, HttpServletRequest request) throws Exception{
+    private void setVariableInstallmentDetailsOnForm(LoanOfferingBO loanOffering, LoanAccountActionForm loanActionForm) {
         boolean variableInstallmentsAllowed = loanOffering.isVariableInstallmentsAllowed();
-        SessionUtils.setAttribute(CustomerConstants.VARIABLE_INSTALLMENT_ENABLED, variableInstallmentsAllowed, request);
+        loanActionForm.setVariableInstallmentsAllowed(variableInstallmentsAllowed);
+        if (variableInstallmentsAllowed) {
+            VariableInstallmentDetailsBO variableInstallmentDetails = loanOffering.getVariableInstallmentDetails();
+            loanActionForm.setMinimumGapInDays(variableInstallmentDetails.getMinGapInDays());
+            loanActionForm.setMaximumGapInDays(variableInstallmentDetails.getMaxGapInDays());
+            loanActionForm.setMinInstallmentAmount(variableInstallmentDetails.getMinInstallmentAmount());
+        }
     }
 
     @TransactionDemarcate(joinToken = true)

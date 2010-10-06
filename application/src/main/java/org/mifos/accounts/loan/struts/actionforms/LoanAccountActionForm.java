@@ -68,6 +68,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.util.UserContext;
@@ -198,6 +199,14 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     private List<QuestionGroupDetail> questionGroups;
 
     private List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
+
+    private boolean variableInstallmentsAllowed;
+
+    private Integer minimumGapInDays;
+
+    private Integer maximumGapInDays;
+
+    private Money minInstallmentAmount;
 
     public Date getOriginalDisbursementDate() {
         return this.originalDisbursementDate;
@@ -1503,5 +1512,37 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
 
     private boolean isRedoOperation() {
         return PERSPECTIVE_VALUE_REDO_LOAN.equals(this.perspective) && CollectionUtils.isNotEmpty(paymentDataBeans);
+    }
+
+    public boolean isVariableInstallmentsAllowed() {
+        return variableInstallmentsAllowed;
+    }
+
+    public void setVariableInstallmentsAllowed(boolean variableInstallmentsAllowed) {
+        this.variableInstallmentsAllowed = variableInstallmentsAllowed;
+    }
+
+    public void setMinimumGapInDays(Integer minimumGapInDays) {
+        this.minimumGapInDays = minimumGapInDays;
+    }
+
+    public Integer getMinimumGapInDays() {
+        return minimumGapInDays;
+    }
+
+    public Integer getMaximumGapInDays() {
+        return maximumGapInDays;
+    }
+
+    public void setMaximumGapInDays(Integer maximumGapInDays) {
+        this.maximumGapInDays = maximumGapInDays;
+    }
+
+    public Money getMinInstallmentAmount() {
+        return minInstallmentAmount;
+    }
+    
+    public void setMinInstallmentAmount(Money minInstallmentAmount) {
+        this.minInstallmentAmount = minInstallmentAmount;
     }
 }

@@ -78,7 +78,6 @@ import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.TestUtils;
@@ -382,7 +381,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter("method", "preview");
         performNoErrors();
         verifyForward("preview_success");
-        verifyInstallmentsOnSessionAndForm();
+        verifyInstallmentsOnSessionAndForm((LoanAccountActionForm) request.getSession().getAttribute("loanAccountActionForm"));
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -778,13 +777,12 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter("method", "schedulePreview");
         performNoErrors();
         verifyForward(ActionForwards.schedulePreview_success.toString());
-        verifyInstallmentsOnSessionAndForm();
+        verifyInstallmentsOnSessionAndForm((LoanAccountActionForm) request.getSession().getAttribute("loanAccountActionForm"));
 
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
 
-    private void verifyInstallmentsOnSessionAndForm() throws PageExpiredException {
-        LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) request.getSession().getAttribute("loanAccountActionForm");
+    private void verifyInstallmentsOnSessionAndForm(LoanAccountActionForm loanAccountActionForm) throws PageExpiredException {
         List<RepaymentScheduleInstallment> repaymentSchedules = loanAccountActionForm.getInstallments();
         Assert.assertEquals(3, repaymentSchedules.size());
         List<RepaymentScheduleInstallment> installmentsFromSession = (List) SessionUtils.getAttribute(LoanConstants.INSTALLMENTS, request);
@@ -917,8 +915,12 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter("method", "schedulePreview");
         performNoErrors();
         verifyForward(ActionForwards.schedulePreview_success.toString());
-        assertTrue((Boolean) SessionUtils.getAttribute(CustomerConstants.VARIABLE_INSTALLMENT_ENABLED, request));
-        verifyInstallmentsOnSessionAndForm();
+        LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) request.getSession().getAttribute("loanAccountActionForm");
+        Assert.assertTrue(loanAccountActionForm.isVariableInstallmentsAllowed());
+        Assert.assertEquals(10, loanAccountActionForm.getMinimumGapInDays().intValue());
+        Assert.assertEquals(100, loanAccountActionForm.getMaximumGapInDays().intValue());
+        Assert.assertEquals("1000.0", loanAccountActionForm.getMinInstallmentAmount().toString());
+        verifyInstallmentsOnSessionAndForm(loanAccountActionForm);
         group = TestObjectFactory.getGroup(group.getCustomerId());
         TestObjectFactory.removeObject(loanOfferingWithVariableInstallments);
     }

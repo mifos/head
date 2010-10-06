@@ -213,6 +213,73 @@ explanation of the license and how it is applied.
 												<span class="fontnormal"> <br> </span>
                                             </td>
                                         </tr>
+                                        <c:if test="${loanAccountActionForm.variableInstallmentsAllowed}">
+                                        <tr class="fontnormal">
+                                            <td width="100%" height="23" class="fontnormalbold">
+                                                <mifos:mifoslabel
+                                                    name="product.canConfigureVariableInstallments"
+                                                    bundle="ProductDefUIResources" isColonRequired="yes" />&nbsp;
+                                                <span class="fontnormal">
+                                                    <c:choose>
+                                                        <c:when test="${loanAccountActionForm.variableInstallmentsAllowed}">
+                                                            <mifos:mifoslabel name="product.yes"
+                                                                bundle="ProductDefUIResources" />
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <mifos:mifoslabel name="product.no"
+                                                                bundle="ProductDefUIResources" />
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </span><br>
+                                                <mifos:mifoslabel name="product.minimumGapBetweenInstallments"
+                                                    bundle="ProductDefUIResources" isColonRequired="yes" />&nbsp;
+                                                <span class="fontnormal">
+                                                    <c:choose>
+                                                        <c:when
+                                                            test="${empty loanAccountActionForm.minimumGapInDays}">
+                                                            <mifos:mifoslabel name="product.notApplicable"
+                                                                bundle="ProductDefUIResources" />
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <c:out value="${loanAccountActionForm.minimumGapInDays}" />
+                                                            <span id="days"> <mifos:mifoslabel
+                                                                name="product.days" bundle="ProductDefUIResources" /> </span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </span><br>
+                                                <mifos:mifoslabel name="product.maximumGapBetweenInstallments"
+                                                    bundle="ProductDefUIResources" isColonRequired="yes" />&nbsp;
+                                                <span class="fontnormal">
+                                                    <c:choose>
+                                                        <c:when
+                                                            test="${empty loanAccountActionForm.maximumGapInDays}">
+                                                            <mifos:mifoslabel name="product.notApplicable"
+                                                                bundle="ProductDefUIResources" />
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <c:out value="${loanAccountActionForm.maximumGapInDays}" />
+                                                            <span id="days"> <mifos:mifoslabel
+                                                                name="product.days" bundle="ProductDefUIResources" /> </span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </span><br>
+                                                <mifos:mifoslabel name="product.minimumInstallmentAmount"
+                                                    bundle="ProductDefUIResources" isColonRequired="yes" />&nbsp;
+                                                <span class="fontnormal">
+                                                    <c:choose>
+                                                        <c:when
+                                                            test="${loanAccountActionForm.minInstallmentAmount.amountDoubleValue == 0.0}">
+                                                            <mifos:mifoslabel name="product.notApplicable"
+                                                                bundle="ProductDefUIResources" />
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <c:out value="${loanAccountActionForm.minInstallmentAmount}" />
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </span><br><br>
+                                            </td>
+                                        </tr>
+                                        </c:if>
                                         <tr>
                                             <td>
                                                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -243,7 +310,7 @@ explanation of the license and how it is applied.
                                                     <tr>
                                                     <c:if test="${requestScope.perspective != 'redoLoan'}">
                                                         <c:choose>
-                                                            <c:when test="${variableInstallmentsEnabled}">
+                                                            <c:when test="${loanAccountActionForm.variableInstallmentsAllowed}">
                                                                 <td valign="top" align="center">
                                                                     <table width="100%" border="0" cellpadding="3" cellspacing="0">
                                                                     <tr  class="drawtablerowbold"  >

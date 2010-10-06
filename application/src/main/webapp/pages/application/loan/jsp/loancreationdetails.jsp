@@ -290,7 +290,7 @@ explanation of the license and how it is applied.
 							    </c:if>
 							</c:if> 
 							
-							<c:if test="${LoanOffering.variableInstallmentsAllowed}">
+							<c:if test="${loanAccountActionForm.variableInstallmentsAllowed}">
 								<table width="93%" border="0" cellpadding="3" cellspacing="0">
 									<tr class="fontnormal">
 										<td width="30%" class="fontnormal" align="right" valign="top">
@@ -298,7 +298,7 @@ explanation of the license and how it is applied.
 											name="product.canConfigureVariableInstallments"
 											bundle="ProductDefUIResources" isColonRequired="yes" /></td>
 										<td width="70%"><c:choose>
-											<c:when test="${LoanOffering.variableInstallmentsAllowed}">
+											<c:when test="${loanAccountActionForm.variableInstallmentsAllowed}">
 												<mifos:mifoslabel name="product.yes"
 													bundle="ProductDefUIResources" />
 											</c:when>
@@ -315,13 +315,13 @@ explanation of the license and how it is applied.
 											bundle="ProductDefUIResources" isColonRequired="yes" /></td>
 										<td width="70%"><c:choose>
 											<c:when
-												test="${empty LoanOffering.variableInstallmentDetails.minGapInDays}">
+												test="${empty loanAccountActionForm.minimumGapInDays}">
 												<mifos:mifoslabel name="product.notApplicable"
 													bundle="ProductDefUIResources" />
 											</c:when>
 											<c:otherwise>
 												<c:out
-													value="${LoanOffering.variableInstallmentDetails.minGapInDays}" />
+													value="${loanAccountActionForm.minimumGapInDays}" />
 												<span id="days"> <mifos:mifoslabel
 													name="product.days" bundle="ProductDefUIResources" /> </span>
 											</c:otherwise>
@@ -334,13 +334,13 @@ explanation of the license and how it is applied.
 											bundle="ProductDefUIResources" isColonRequired="yes" /></td>
 										<td width="70%"><c:choose>
 											<c:when
-												test="${empty LoanOffering.variableInstallmentDetails.maxGapInDays}">
+												test="${empty loanAccountActionForm.maximumGapInDays}">
 												<mifos:mifoslabel name="product.notApplicable"
 													bundle="ProductDefUIResources" />
 											</c:when>
 											<c:otherwise>
 												<c:out
-													value="${LoanOffering.variableInstallmentDetails.maxGapInDays}" />
+													value="${loanAccountActionForm.maximumGapInDays}" />
 												<span id="days"> <mifos:mifoslabel
 													name="product.days" bundle="ProductDefUIResources" /> </span>
 											</c:otherwise>
@@ -352,13 +352,13 @@ explanation of the license and how it is applied.
 											bundle="ProductDefUIResources" isColonRequired="yes" /></td>
 										<td width="70%"><c:choose>
 											<c:when
-												test="${LoanOffering.variableInstallmentDetails.minInstallmentAmount.amountDoubleValue == 0.0}">
+												test="${loanAccountActionForm.minInstallmentAmount.amountDoubleValue == 0.0}">
 												<mifos:mifoslabel name="product.notApplicable"
 													bundle="ProductDefUIResources" />
 											</c:when>
 											<c:otherwise>
 												<c:out
-													value="${LoanOffering.variableInstallmentDetails.minInstallmentAmount}" />
+													value="${loanAccountActionForm.minInstallmentAmount}" />
 											</c:otherwise>
 										</c:choose></td>
 									</tr>
