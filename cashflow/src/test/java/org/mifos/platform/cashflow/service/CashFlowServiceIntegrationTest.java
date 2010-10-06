@@ -21,44 +21,31 @@ package org.mifos.platform.cashflow.service;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.platform.cashflow.CashFlowService;
 import org.mifos.platform.cashflow.builder.CashFlowDetailsBuilder;
-import org.mifos.platform.cashflow.builder.CashFlowEntityBuilder;
-import org.mifos.platform.cashflow.domain.CashFlow;
-import org.mifos.platform.cashflow.domain.MonthlyCashFlow;
-import org.mifos.platform.cashflow.matchers.CashFlowMatcher;
-import org.mifos.platform.cashflow.persistence.CashFlowDao;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CashFlowServiceTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"/test-cashflow-dbContext.xml", "/test-cashflow-persistenceContext.xml", "/META-INF/spring/CashFlowContext.xml"})
+@TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
+public class CashFlowServiceIntegrationTest {
 
+    @Autowired
     private CashFlowService cashFlowService;
     private double revenue = 100.21d;
     private double expense = 50.37d;
 
-    @Mock
-    CashFlowDao cashFlowDao;
-
-    @Before
-    public void setUp() {
-        cashFlowService = new CashFlowServiceImpl(cashFlowDao);
-    }
-
     @Test
+    @Transactional
     public void shouldSaveCashFlow() {
-        Mockito.when(cashFlowDao.create(Mockito.<CashFlow>any())).thenReturn(new Integer(10));
         Integer cashFlowId = cashFlowService.save(getCashFlowDetails());
-        Mockito.verify(cashFlowDao, Mockito.times(1)).create(
-                Mockito.argThat(new CashFlowMatcher(getCashFlowEntity()))
-        );
         Assert.assertNotNull(cashFlowId);
-        Assert.assertEquals(cashFlowId, new Integer(10));
     }
 
     private CashFlowDetail getCashFlowDetails() {
@@ -66,14 +53,6 @@ public class CashFlowServiceTest {
         return new CashFlowDetailsBuilder().
                 withMonthlyCashFlow(new MonthlyCashFlowDetail(dateTime, revenue, expense, "my notes")).
                 withMonthlyCashFlow(new MonthlyCashFlowDetail(dateTime.plusMonths(1), revenue + 20.01, expense + 10.22, "my other notes")).
-                build();
-    }
-
-    public CashFlow getCashFlowEntity() {
-        DateTime dateTime = new DateTime(2010, 10, 1, 2, 3, 4, 5);
-        return new CashFlowEntityBuilder().
-                withMonthlyCashFlow(new MonthlyCashFlow(dateTime.plusMonths(1), revenue + 20.01, expense + 10.22, "my other notes")).
-                withMonthlyCashFlow(new MonthlyCashFlow(dateTime, revenue, expense, "my notes")).
                 build();
     }
 }

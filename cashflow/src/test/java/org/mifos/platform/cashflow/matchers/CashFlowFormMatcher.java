@@ -19,27 +19,33 @@
  */
 package org.mifos.platform.cashflow.matchers;
 
-import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Description;
+import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
-import org.mifos.platform.cashflow.persistence.MonthlyCashFlowEntity;
+import org.junit.Assert;
+import org.mifos.platform.cashflow.ui.model.CashFlowForm;
+import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 
-public class MonthlyCashFlowEntityMatcher extends TypeSafeMatcher<MonthlyCashFlowEntity> {
-    private MonthlyCashFlowEntity monthlyCashFlowEntity;
+public class CashFlowFormMatcher extends TypeSafeMatcher<CashFlowForm> {
+    private CashFlowForm cashFlowForm;
 
-    public MonthlyCashFlowEntityMatcher(MonthlyCashFlowEntity monthlyCashFlowEntity) {
-        this.monthlyCashFlowEntity = monthlyCashFlowEntity;
+    public CashFlowFormMatcher(CashFlowForm cashFlowForm) {
+        this.cashFlowForm = cashFlowForm;
     }
 
     @Override
-    public boolean matchesSafely(MonthlyCashFlowEntity monthlyCashFlowEntity) {
-        return (monthlyCashFlowEntity.getRevenue().equals(this.monthlyCashFlowEntity.getRevenue()))
-                && (monthlyCashFlowEntity.getExpense().equals(this.monthlyCashFlowEntity.getExpense()))
-                && (StringUtils.equals(monthlyCashFlowEntity.getNotes(), this.monthlyCashFlowEntity.getNotes()));
+    public boolean matchesSafely(CashFlowForm cashFlowForm) {
+        if (cashFlowForm.getMonthlyCashFlows().size() == this.cashFlowForm.getMonthlyCashFlows().size()) {
+            for(MonthlyCashFlowForm monthlyCashFlowForm: this.cashFlowForm.getMonthlyCashFlows()){
+                Assert.assertThat(cashFlowForm.getMonthlyCashFlows(), Matchers.hasItem(new MonthlyCashFlowFormMatcher(monthlyCashFlowForm)));
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("Monthly cash flow entity did not match");
+        description.appendText("Cash flow form did not match");
     }
 }

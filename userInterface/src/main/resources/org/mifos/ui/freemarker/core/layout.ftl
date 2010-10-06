@@ -47,3 +47,20 @@
     </div>
     [@mifos.footer/]
 [/#macro]
+
+[#macro headerOnlyLayout]
+    [@mifos.header "title" /]
+    [@mifos.topNavigationNoSecurity currentTab="ClientsAndAccounts" /]
+    <div class="colmask leftmenu">
+        <div class="leftmenu noleftcol">
+            <div class="col1wrap">
+                <div class="col1">
+                <div class="main_content">
+                    [#nested]
+                </div>
+             </div>
+            </div>
+        </div>
+    </div>
+    [@mifos.footer/]
+[/#macro]

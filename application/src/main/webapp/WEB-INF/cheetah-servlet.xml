@@ -15,6 +15,7 @@
                 <value>org.mifos.ui.localizedProperties.messages</value>
                 <value>org.mifos.ui.localizedProperties.LookupValueMessages</value>
                 <value>org.mifos.platform.questionnaire.ui.localizedProperties.questionnaire_messages</value>                
+                <value>org.mifos.platform.cashflow.ui.localizedProperties.cashflow_messages</value>                
             </list>
         </property>
     </bean>
@@ -36,6 +37,7 @@
                 <value>classpath:org/mifos/ui/freemarker/core</value>
                 <value>classpath:org/mifos/ui/freemarker/css</value>
                 <value>classpath:org/mifos/platform/questionnaire/ui/views</value>
+                <value>classpath:org/mifos/platform/cashflow/ui/views</value>
             </list>
         </property>
         <property name="preferFileSystemAccess" value="false"/>

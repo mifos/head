@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+
+    <var name="cashFlow" class="org.mifos.platform.cashflow.ui.model.CashFlowForm" />
+
+
+    <on-start>
+        <evaluate expression="cashFlowController.prepareCashFlowForm(requestParameters.startMonth, requestParameters.startYear, requestParameters.noOfMonths)"
+                result="cashFlow"/>
+        <set name="flowScope.joinUrl" value="requestParameters.joinUrl" type="string"></set>
+        <set name="flowScope.cancelUrl" value="requestParameters.cancelUrl" type="string"></set>
+    </on-start>
+
+    <view-state id="captureCashFlow" model="cashFlow">
+        <transition on="capture" to="capture" />
+        <transition on="cancel" to="cancel"/>
+    </view-state>
+
+    <action-state id="capture">
+        <evaluate expression="cashFlowController.capture(cashFlow, flowRequestContext, externalContext)"/>
+        <transition on="success" to="captureSuccess"/>
+        <transition on="failure" to="captureCashFlow"/>
+    </action-state>
+
+    <end-state id="captureSuccess" view="externalRedirect:contextRelative:/${flowScope.joinUrl}" />
+    <end-state id="cancel" view="externalRedirect:contextRelative:/${flowScope.cancelUrl}" />
+
+</flow>

@@ -23,22 +23,22 @@ import org.hamcrest.Description;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Assert;
-import org.mifos.platform.cashflow.persistence.MonthlyCashFlowEntity;
+import org.mifos.platform.cashflow.domain.MonthlyCashFlow;
 
 import java.util.List;
 
-public class MonthlyCashFlowEntitiesMatcher extends TypeSafeMatcher<List<MonthlyCashFlowEntity>> {
-    private List<MonthlyCashFlowEntity> monthlyCashFlowEntities;
+public class MonthlyCashFlowsMatcher extends TypeSafeMatcher<List<MonthlyCashFlow>> {
+    private List<MonthlyCashFlow> monthlyCashFlows;
 
-    public MonthlyCashFlowEntitiesMatcher(List<MonthlyCashFlowEntity> monthlyCashFlowEntities) {
-        this.monthlyCashFlowEntities = monthlyCashFlowEntities;
+    public MonthlyCashFlowsMatcher(List<MonthlyCashFlow> monthlyCashFlows) {
+        this.monthlyCashFlows = monthlyCashFlows;
     }
 
     @Override
-    public boolean matchesSafely(List<MonthlyCashFlowEntity> monthlyCashFlowEntities) {
-        if (monthlyCashFlowEntities.size() == this.monthlyCashFlowEntities.size()) {
-            for (MonthlyCashFlowEntity monthlyCashFlowEntity : this.monthlyCashFlowEntities) {
-                Assert.assertThat(monthlyCashFlowEntities, Matchers.hasItem(new MonthlyCashFlowEntityMatcher(monthlyCashFlowEntity)));
+    public boolean matchesSafely(List<MonthlyCashFlow> monthlyCashFlows) {
+        if (monthlyCashFlows.size() == this.monthlyCashFlows.size()) {
+            for (MonthlyCashFlow monthlyCashFlowEntity : this.monthlyCashFlows) {
+                Assert.assertThat(monthlyCashFlows, Matchers.hasItem(new MonthlyCashFlowMatcher(monthlyCashFlowEntity)));
             }
             return true;
         }

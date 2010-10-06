@@ -22,18 +22,19 @@ package org.mifos.platform.cashflow.matchers;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Assert;
-import org.mifos.platform.cashflow.persistence.CashFlowEntity;
+import org.mifos.platform.cashflow.domain.CashFlow;
 
-public class CashFlowEntityMatcher extends TypeSafeMatcher<CashFlowEntity> {
-    private CashFlowEntity cashFlowEntity;
+public class CashFlowMatcher extends TypeSafeMatcher<CashFlow> {
+    private CashFlow cashFlow;
 
-    public CashFlowEntityMatcher(CashFlowEntity cashFlowEntity) {
-        this.cashFlowEntity = cashFlowEntity;
+    public CashFlowMatcher(CashFlow cashFlow) {
+        this.cashFlow = cashFlow;
     }
 
     @Override
-    public boolean matchesSafely(CashFlowEntity cashFlowEntity) {
-        Assert.assertThat(this.cashFlowEntity.getMonthlyCashFlows(), new MonthlyCashFlowEntitiesMatcher(cashFlowEntity.getMonthlyCashFlows()));
+    public boolean matchesSafely(CashFlow cashFlowEntity) {
+        Assert.assertEquals(this.cashFlow.getId(), cashFlowEntity.getId());
+        Assert.assertThat(this.cashFlow.getMonthlyCashFlows(), new MonthlyCashFlowsMatcher(cashFlowEntity.getMonthlyCashFlows()));
         return true;
     }
 

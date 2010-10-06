@@ -19,26 +19,8 @@
  */
 package org.mifos.platform.cashflow.persistence;
 
-public class MonthlyCashFlowEntity {
-    private String notes;
-    private Double expense;
-    private Double revenue;
+import org.mifos.platform.cashflow.domain.CashFlow;
+import org.mifos.platform.persistence.GenericDao;
 
-    public MonthlyCashFlowEntity(double revenue, double expense, String notes) {
-        this.revenue = revenue;
-        this.expense = expense;
-        this.notes = notes;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public Double getExpense() {
-        return expense;
-    }
-
-    public Double getRevenue() {
-        return revenue;
-    }
+public interface CashFlowDao extends GenericDao<CashFlow, Integer> {
 }

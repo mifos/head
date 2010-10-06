@@ -17,19 +17,28 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.platform.cashflow.persistence;
+package org.mifos.platform.cashflow.builder;
 
-import java.util.List;
+import org.joda.time.DateTime;
+import org.mifos.platform.cashflow.service.CashFlowDetail;
+import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 
-public class CashFlowEntity {
-    private List<MonthlyCashFlowEntity> monthlyCashFlows;
+import java.util.ArrayList;
 
-    public CashFlowEntity(List<MonthlyCashFlowEntity> monthlyCashFlowEntities) {
-        this.monthlyCashFlows = monthlyCashFlowEntities;
+public class CashFlowDetailsBuilder {
+    private CashFlowDetail cashFlowDetail;
+
+    public CashFlowDetailsBuilder() {
+        cashFlowDetail = new CashFlowDetail(new ArrayList<MonthlyCashFlowDetail>());
     }
 
-
-    public List<MonthlyCashFlowEntity> getMonthlyCashFlows() {
-        return monthlyCashFlows;
+    public CashFlowDetailsBuilder withMonthlyCashFlow(MonthlyCashFlowDetail monthlyCashFlowDetail) {
+        cashFlowDetail.getMonthlyCashFlowDetails().add(monthlyCashFlowDetail);
+        return this;
     }
+
+    public CashFlowDetail build() {
+        return cashFlowDetail;
+    }
+
 }

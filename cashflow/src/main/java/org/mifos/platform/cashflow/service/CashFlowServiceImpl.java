@@ -20,43 +20,38 @@
 package org.mifos.platform.cashflow.service;
 
 import org.mifos.platform.cashflow.CashFlowService;
+import org.mifos.platform.cashflow.domain.CashFlow;
+import org.mifos.platform.cashflow.domain.MonthlyCashFlow;
 import org.mifos.platform.cashflow.persistence.CashFlowDao;
-import org.mifos.platform.cashflow.persistence.CashFlowEntity;
-import org.mifos.platform.cashflow.persistence.MonthlyCashFlowEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CashFlowServiceImpl implements CashFlowService {
     @Autowired
     CashFlowDao cashFlowDao;
 
-
+    @SuppressWarnings({"UnusedDeclaration", "PMD.UnnecessaryConstructor", "PMD.UncommentedEmptyConstructor"})
     public CashFlowServiceImpl() {
     }
 
     public CashFlowServiceImpl(CashFlowDao cashFlowDao) {
         this.cashFlowDao = cashFlowDao;
-
     }
 
     @Override
     public Integer save(CashFlowDetail cashFlowDetail) {
-        return cashFlowDao.create(mapToCashFlowEntity(cashFlowDetail));
+        return cashFlowDao.create(mapToCashFlow(cashFlowDetail));
     }
 
-    private CashFlowEntity mapToCashFlowEntity(CashFlowDetail cashFlowDetail) {
-        List<MonthlyCashFlowEntity> monthlyCashFlowEntities = new ArrayList<MonthlyCashFlowEntity>();
+    private CashFlow mapToCashFlow(CashFlowDetail cashFlowDetail) {
+        CashFlow cashFlow = new CashFlow();
         for (MonthlyCashFlowDetail monthlyCashFlowDetail : cashFlowDetail.getMonthlyCashFlowDetails()) {
-            monthlyCashFlowEntities.add(mapToMonthlyCashFlowEntity(monthlyCashFlowDetail));
+            cashFlow.add(mapToMonthlyCashFlow(monthlyCashFlowDetail));
         }
-        return new CashFlowEntity(monthlyCashFlowEntities);
+        return cashFlow;
     }
 
-    private MonthlyCashFlowEntity mapToMonthlyCashFlowEntity(MonthlyCashFlowDetail monthlyCashFlowDetail) {
-        return new MonthlyCashFlowEntity(monthlyCashFlowDetail.getRevenue(), monthlyCashFlowDetail.getExpense(), monthlyCashFlowDetail.getNotes());
+    private MonthlyCashFlow mapToMonthlyCashFlow(MonthlyCashFlowDetail monthlyCashFlowDetail) {
+        return new MonthlyCashFlow(monthlyCashFlowDetail.getDateTime(), monthlyCashFlowDetail.getRevenue(),
+                monthlyCashFlowDetail.getExpense(), monthlyCashFlowDetail.getNotes());
     }
-
-
 }

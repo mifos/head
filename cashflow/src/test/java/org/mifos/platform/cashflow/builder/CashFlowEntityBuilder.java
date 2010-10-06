@@ -17,21 +17,27 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.platform.cashflow.service;
+package org.mifos.platform.cashflow.builder;
 
-import java.io.Serializable;
-import java.util.List;
+import org.mifos.platform.cashflow.domain.CashFlow;
+import org.mifos.platform.cashflow.domain.MonthlyCashFlow;
 
-public class CashFlowDetail implements Serializable {
-    private static final long serialVersionUID = -6731316163493318834L;
-    List<MonthlyCashFlowDetail> monthlyCashFlowDetails;
+import java.util.ArrayList;
 
-    public CashFlowDetail(List<MonthlyCashFlowDetail> monthlyCashFlows) {
-        this.monthlyCashFlowDetails = monthlyCashFlows;
+public class CashFlowEntityBuilder {
+    private CashFlow cashFlowEntity;
+
+    public CashFlowEntityBuilder() {
+        cashFlowEntity = new CashFlow();
     }
 
-
-    public List<MonthlyCashFlowDetail> getMonthlyCashFlowDetails() {
-        return monthlyCashFlowDetails;
+    public CashFlowEntityBuilder withMonthlyCashFlow(MonthlyCashFlow monthlyCashFlow){
+        cashFlowEntity.add(monthlyCashFlow);
+        return this;
     }
+
+    public CashFlow build(){
+        return cashFlowEntity;
+    }
+
 }

@@ -17,10 +17,10 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.platform.cashflow.persistence;
-
-import org.mifos.platform.persistence.GenericDao;
-
-public interface CashFlowDao extends GenericDao<CashFlowEntity, Integer> {
-    
+package org.mifos.platform.cashflow;
+@SuppressWarnings("PMD.AtLeastOneConstructor")
+public class CashFlowConstants {
+    public static final String EMPTY_EXPENSE = "CashFlowForm.monthlyCashFlows.expense";
+    public static final String EMPTY_REVENUE = "CashFlowForm.monthlyCashFlows.revenue";
+    public static final String EMPTY_NOTES = "CashFlowForm.monthlyCashFlows.notes";
 }

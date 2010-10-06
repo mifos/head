@@ -19,26 +19,50 @@
  */
 package org.mifos.platform.cashflow.service;
 
-public class MonthlyCashFlowDetail {
-    private double revenue;
-    private double expense;
-    private String notes;
+import org.joda.time.DateTime;
 
-    public MonthlyCashFlowDetail(double revenue, double expense, String notes) {
+import java.io.Serializable;
+
+public class MonthlyCashFlowDetail implements Serializable {
+    private static final long serialVersionUID = 8951437837952219469L;
+
+    private final DateTime dateTime;
+    private Double expense;
+    private String notes;
+    private Double revenue;
+
+    public MonthlyCashFlowDetail(DateTime dateTime, Double revenue, Double expense, String notes) {
+        this.dateTime = dateTime;
         this.revenue = revenue;
         this.expense = expense;
         this.notes = notes;
     }
 
-    public double getRevenue() {
+    public Double getRevenue() {
         return revenue;
     }
 
-    public double getExpense() {
+    public void setRevenue(Double revenue) {
+        this.revenue = revenue;
+    }
+
+    public Double getExpense() {
         return expense;
+    }
+
+    public void setExpense(Double expense) {
+        this.expense = expense;
     }
 
     public String getNotes() {
         return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public DateTime getDateTime() {
+        return dateTime;
     }
 }

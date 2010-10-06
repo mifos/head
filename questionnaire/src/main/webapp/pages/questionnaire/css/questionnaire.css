@@ -119,17 +119,6 @@ fieldset.right_section label{
 li.question_list_table {
     margin-top: 1em;
 }
-.button_footer {
-   /* background: #EEEEEE;
-    border-top: 1px solid #CCCCCC;
-    padding: 10px 0;*/
-    clear: both;
-}
-.button_container {
-    clear: both;
-    margin: 5px auto;
-    text-align: center;
-}
 .add_question .button_container{
     margin-left: 220px;
     text-align: left;
