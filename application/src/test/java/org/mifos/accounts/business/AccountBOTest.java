@@ -71,7 +71,7 @@ public class AccountBOTest {
     }
     
     @Test
-    public void testGetLastPmntToBeAdjustedReturnsNullForAListWithOnePayment(){
+    public void testGetLastPmntToBeAdjustedForAListWithOnePayment(){
         AccountBO account = new AccountBO(1);
         AccountPaymentEntity accountPaymentEntity = Mockito.mock(AccountPaymentEntity.class);
 
@@ -79,9 +79,9 @@ public class AccountBOTest {
         accountPayments.add(accountPaymentEntity);
 
         account.setAccountPayments(accountPayments);
-        Mockito.when(accountPaymentEntity.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"1"));
+        Mockito.when(accountPaymentEntity.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"100"));
 
-        Assert.assertNull(account.getLastPmntToBeAdjusted());
+        Assert.assertEquals(accountPaymentEntity,account.getLastPmntToBeAdjusted());
     }
 
 
