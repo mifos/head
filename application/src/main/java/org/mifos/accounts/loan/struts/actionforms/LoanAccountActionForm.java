@@ -850,8 +850,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
                 return ((String) object).startsWith("clients");
             }
         });
-        List<String> indices = extractClientIdsFromRequest(request, paramsStartingWithClients);
-        return indices;
+        return extractClientIdsFromRequest(request, paramsStartingWithClients);
     }
 
     private List<String> extractClientIdsFromRequest(HttpServletRequest request, Collection<?> paramsStartingWithClients) {
@@ -921,18 +920,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     private void checkValidationForPreview(ActionErrors errors, MifosCurrency currency, HttpServletRequest request) {
         if (isRedoOperation()) {
             validateRedoLoanPayments(request, errors, currency);
-        } else if (isVariableInstallmentsEnabled(request)) {
-            validateForVariableInstallments(request);
         }
-    }
-
-    private void validateForVariableInstallments(HttpServletRequest request) {
-        List<RepaymentScheduleInstallment> scheduleInstallments = this.getInstallments();
-    }
-
-    private boolean isVariableInstallmentsEnabled(HttpServletRequest request) {
-        LoanOfferingBO loanOfferingBO = getLoanOffering(request);
-        return loanOfferingBO != null && loanOfferingBO.isVariableInstallmentsAllowed();
     }
 
     private void checkValidationForManagePreview(ActionErrors errors, MifosCurrency currency, HttpServletRequest request)

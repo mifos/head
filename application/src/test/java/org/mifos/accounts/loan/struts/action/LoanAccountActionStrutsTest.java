@@ -41,7 +41,6 @@ import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.loan.util.helpers.VariableInstallmentDetailsDto;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
@@ -817,8 +816,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter("method", "schedulePreview");
         performNoErrors();
         verifyForward(ActionForwards.schedulePreview_success.toString());
-        VariableInstallmentDetailsDto variableInstallmentDetails = (VariableInstallmentDetailsDto) SessionUtils.getAttribute(CustomerConstants.VARIABLE_INSTALLMENT, request);
-        assertVariableInstallmentDetails(variableInstallmentDetails, 10, 100, 1000.0d);
+        assertTrue((Boolean) SessionUtils.getAttribute(CustomerConstants.VARIABLE_INSTALLMENT_ENABLED, request));
         group = TestObjectFactory.getGroup(group.getCustomerId());
         TestObjectFactory.removeObject(loanOfferingWithVariableInstallments);
     }
@@ -829,15 +827,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         variableInstallmentDetailsBO.setMaxGapInDays(maxGapInDays);
         variableInstallmentDetailsBO.setMinInstallmentAmount(new Money(getCurrency(), String.valueOf(minInstAmount)));
         return variableInstallmentDetailsBO;
-    }
-
-    private void assertVariableInstallmentDetails(VariableInstallmentDetailsDto variableInstallmentDetails, int minGap, int maxGap, double minInstAmt) {
-        Assert.assertNotNull(variableInstallmentDetails);
-        Assert.assertNotNull(variableInstallmentDetails.isVariableInstallmentsAllowed());
-        Assert.assertTrue(variableInstallmentDetails.isVariableInstallmentsAllowed());
-        Assert.assertEquals(minGap, variableInstallmentDetails.getMinGapInDays().intValue());
-        Assert.assertEquals(maxGap, variableInstallmentDetails.getMaxGapInDays().intValue());
-        Assert.assertEquals(minInstAmt, variableInstallmentDetails.getMinInstallmentAmount().getAmountDoubleValue());
     }
 
     public void testSchedulePreviewWithoutData() throws Exception {

@@ -23,6 +23,8 @@ package org.mifos.platform.questionnaire.exceptions;
 import org.junit.Test;
 import org.mifos.platform.exceptions.ValidationException;
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -44,6 +46,26 @@ public class ValidationExceptionTest {
         assertThat(stackTraceString.contains(INSIDE_VALIDATION_METHOD1), is(true));
         assertThat(stackTraceString.contains(INSIDE_VALIDATION_METHOD2), is(true));
         assertThat(stackTraceString.contains(INSIDE_VALIDATION_METHOD3), is(true));
+    }
+
+    @Test
+    public void shouldCopyChildExceptionsWithChildExceptions() {
+        ValidationException validationException1 = generateValidationException();
+        ValidationException validationException2 = generateValidationException();
+        validationException1.copyChildExceptions(validationException2);
+        assertThat(validationException1.hasChildExceptions(), is(true));
+        List<ValidationException> childExceptions = validationException1.getChildExceptions();
+        assertThat(childExceptions.size(), is(6));
+    }
+
+    @Test
+    public void shouldCopyChildExceptionsWithNoChildExceptions() {
+        ValidationException validationException1 = generateValidationException();
+        ValidationException validationException2 = new ValidationException(TOP_LEVEL_EXCEPTION);
+        validationException1.copyChildExceptions(validationException2);
+        assertThat(validationException1.hasChildExceptions(), is(true));
+        List<ValidationException> childExceptions = validationException1.getChildExceptions();
+        assertThat(childExceptions.size(), is(4));
     }
 
     private ValidationException generateValidationException() {

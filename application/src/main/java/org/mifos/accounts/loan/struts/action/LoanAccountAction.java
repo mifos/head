@@ -27,6 +27,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
@@ -39,11 +40,13 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.MaxMinInterestRate;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
+import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
+import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.accounts.loan.util.helpers.VariableInstallmentDetailsDto;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
@@ -102,6 +105,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.reports.admindocuments.persistence.AdminDocAccStateMixPersistence;
 import org.mifos.reports.admindocuments.persistence.AdminDocumentPersistence;
@@ -231,6 +235,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private final ConfigurationBusinessService configService;
     private final GlimLoanUpdater glimLoanUpdater;
     private final LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
+    private final InstallmentsValidator installmentsValidator = DependencyInjectedServiceLocator.locateInstallmentsValidator();
 
     public static final String CUSTOMER_ID = "customerId";
     public static final String ACCOUNT_ID = "accountId";
@@ -321,6 +326,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         security.allow("redoLoanBegin", SecurityConstants.CAN_REDO_LOAN_DISPURSAL);
         security.allow("captureQuestionResponses", SecurityConstants.VIEW);
         security.allow("editQuestionResponses", SecurityConstants.VIEW);
+        security.allow("validateInstallments", SecurityConstants.VIEW);
         return security;
     }
 
@@ -439,6 +445,26 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward validateInstallments(final ActionMapping mapping, final ActionForm form,
+            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
+            throws Exception {
+
+        LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
+        UserContext userContext = getUserContext(request);
+
+        LoanOfferingBO loanOffering = getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId());
+        if (loanOffering.isVariableInstallmentsAllowed()) {
+            ActionErrors actionErrors = validateInstallmentSchedule(
+                                        loanActionForm.getDisbursementDateValue(userContext.getPreferredLocale()),
+                                        loanOffering.getVariableInstallmentDetails(), loanActionForm.getInstallments());
+            if (!actionErrors.isEmpty()) {
+                addErrors(request, actionErrors);
+                return mapping.findForward(ActionForwards.validateInstallments_failure.toString());
+            }
+        }
+        return mapping.findForward(ActionForwards.validateInstallments_success.toString());
+    }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward schedulePreview(final ActionMapping mapping, final ActionForm form,
@@ -449,7 +475,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         UserContext userContext = getUserContext(request);
 
         Short productId = loanActionForm.getPrdOfferingIdValue();
-        LoanOfferingBO loanOffering = getLoanOffering(productId, getUserContext(request).getLocaleId());
+        LoanOfferingBO loanOffering = getLoanOffering(productId, userContext.getLocaleId());
         setVariableInstallmentDetailsInSession(loanOffering, request);
 
         DateTime disbursementDate = new DateTime(loanActionForm.getDisbursementDateValue(userContext
@@ -467,6 +493,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 .isLoanPendingApprovalDefined(), request);
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, disbursementDate, request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, loanActionForm.getLoanAmount(), request);
+        // TODO need to figure out a way to avoid putting 'installments' onto session 
+        SessionUtils.setCollectionAttribute("installments", loanActionForm.getInstallments(), request);
 
         return createLoanQuestionnaire.fetchAppliedQuestions(
                 mapping, loanActionForm, request, ActionForwards.schedulePreview_success);
@@ -501,19 +529,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private void setVariableInstallmentDetailsInSession(LoanOfferingBO loanOffering, HttpServletRequest request) throws Exception{
-        VariableInstallmentDetailsDto variableInstallmentDetails = new VariableInstallmentDetailsDto();
-
         boolean variableInstallmentsAllowed = loanOffering.isVariableInstallmentsAllowed();
-        variableInstallmentDetails.setVariableInstallmentsAllowed(variableInstallmentsAllowed);
-
-        if(variableInstallmentsAllowed){
-            VariableInstallmentDetailsBO variableInstallmentDetailsBO = loanOffering.getVariableInstallmentDetails();
-            variableInstallmentDetails.setMaxGapInDays(variableInstallmentDetailsBO.getMaxGapInDays());
-            variableInstallmentDetails.setMinGapInDays(variableInstallmentDetailsBO.getMinGapInDays());
-            variableInstallmentDetails.setMinInstallmentAmount(variableInstallmentDetailsBO.getMinInstallmentAmount());
-        }
-
-        SessionUtils.setAttribute(CustomerConstants.VARIABLE_INSTALLMENT, variableInstallmentDetails, request);
+        SessionUtils.setAttribute(CustomerConstants.VARIABLE_INSTALLMENT_ENABLED, variableInstallmentsAllowed, request);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -1547,6 +1564,25 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return createLoanQuestionnaire.editResponses(mapping, request, (LoanAccountActionForm) form);
     }
 
+    private ActionErrors validateInstallmentSchedule(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails,
+                                                     List<RepaymentScheduleInstallment> installments) {
+        ActionErrors actionErrors = new ActionErrors();
+        try {
+            FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
+            InstallmentValidationContext installmentValidationContext = new InstallmentValidationContext(disbursementDate, variableInstallmentDetails, fiscalCalendarRules);
+            installmentsValidator.validate(installments, installmentValidationContext);
+        } catch (ValidationException e) {
+            populateActionErrors(actionErrors, e);
+        }
+        return actionErrors;
+    }
 
+    private void populateActionErrors(ActionErrors actionErrors, ValidationException parentException) {
+        if (parentException.hasChildExceptions()) {
+            for (ValidationException childException : parentException.getChildExceptions()) {
+                actionErrors.add(childException.getKey(), new ActionMessage(childException.getKey(), childException.getIdentifier()));
+            }
+        }
+    }
 
 }

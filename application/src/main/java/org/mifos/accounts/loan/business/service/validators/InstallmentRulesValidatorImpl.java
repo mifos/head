@@ -2,7 +2,7 @@ package org.mifos.accounts.loan.business.service.validators;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.loan.util.helpers.VariableInstallmentDetailsDto;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -15,9 +15,9 @@ import java.util.List;
 
 import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT;
 import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_BEFORE_DISBURSE_DATE;
+import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP;
 import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP;
 import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_SAME_AS_DISBURSE_DATE;
-import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP;
 
 public class InstallmentRulesValidatorImpl implements InstallmentRulesValidator {
     @Override
@@ -30,10 +30,10 @@ public class InstallmentRulesValidatorImpl implements InstallmentRulesValidator 
     }
 
     @Override
-    public void validateForVariableInstallments(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsDto variableInstallmentDetailsDto)
+    public void validateForVariableInstallments(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO)
                                                                                     throws ValidationException {
         ValidationException parentException = new ValidationException(AccountConstants.GENERIC_VALIDATION_ERROR);
-        validateForVariableInstallmentDetails(installments, variableInstallmentDetailsDto, parentException);
+        validateForVariableInstallmentDetails(installments, variableInstallmentDetailsBO, parentException);
         if (parentException.hasChildExceptions()) throw parentException;
     }
 
@@ -51,15 +51,15 @@ public class InstallmentRulesValidatorImpl implements InstallmentRulesValidator 
     }
 
     private void validateForVariableInstallmentDetails(List<RepaymentScheduleInstallment> installments,
-                                                       VariableInstallmentDetailsDto variableInstallmentDetailsDto,
+                                                       VariableInstallmentDetailsBO variableInstallmentDetailsBO,
                                                        ValidationException parentException) {
         if (CollectionUtils.isNotEmpty(installments)) {
-            Money minInstallmentAmount = variableInstallmentDetailsDto.getMinInstallmentAmount();
+            Money minInstallmentAmount = variableInstallmentDetailsBO.getMinInstallmentAmount();
             validateForMinInstallmentAmount(parentException, minInstallmentAmount, installments.get(0));
             for (int i = 1, installmentsSize = installments.size(); i < installmentsSize; i++) {
                 Date previousDueDate = installments.get(i - 1).getDueDateValue();
                 RepaymentScheduleInstallment installment = installments.get(i);
-                validateForDifferenceInDays(installment, previousDueDate, variableInstallmentDetailsDto, parentException);
+                validateForDifferenceInDays(installment, previousDueDate, variableInstallmentDetailsBO, parentException);
                 validateForMinInstallmentAmount(parentException, minInstallmentAmount, installment);
             }
         }
@@ -73,16 +73,17 @@ public class InstallmentRulesValidatorImpl implements InstallmentRulesValidator 
         }
     }
 
-    private void validateForDifferenceInDays(RepaymentScheduleInstallment installment, Date previousDueDate, VariableInstallmentDetailsDto variableInstallmentDetailsDto, ValidationException parentException) {
+    private void validateForDifferenceInDays(RepaymentScheduleInstallment installment, Date previousDueDate,
+                                             VariableInstallmentDetailsBO variableInstallmentDetailsBO, ValidationException parentException) {
         Date dueDateValue = installment.getDueDateValue();
         if (previousDueDate != null && dueDateValue != null) {
             String identifier = installment.getInstallmentNumberAsString();
             long diffInDays = DateUtils.getNumberOfDaysBetweenTwoDates(dueDateValue, previousDueDate);
-            Integer minGapInDays = variableInstallmentDetailsDto.getMinGapInDays();
+            Integer minGapInDays = variableInstallmentDetailsBO.getMinGapInDays();
             if (minGapInDays != null && diffInDays < minGapInDays) {
                 parentException.addChildException(new ValidationException(INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP, identifier));
             } else {
-                Integer maxGapInDays = variableInstallmentDetailsDto.getMaxGapInDays();
+                Integer maxGapInDays = variableInstallmentDetailsBO.getMaxGapInDays();
                 if (maxGapInDays != null && diffInDays > maxGapInDays) {
                     parentException.addChildException(new ValidationException(INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP, identifier));
                 }

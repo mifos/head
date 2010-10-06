@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
-import org.mifos.accounts.loan.util.helpers.VariableInstallmentDetailsDto;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.FiscalCalendarRules;
@@ -64,7 +64,7 @@ public class InstallmentRulesValidatorTest {
             assertValidationException(childException, AccountConstants.INSTALLMENT_DUEDATE_SAME_AS_DISBURSE_DATE, "3");
         }
     }
-    
+
     @Test
     public void shouldNotValidateInstallmentForDueDateAfterDisburseDate() {
         RepaymentScheduleInstallment installment = installmentBuilder.withInstallment(3).withDueDateValue("30-Nov-2010")
@@ -94,7 +94,7 @@ public class InstallmentRulesValidatorTest {
             assertValidationException(childException, AccountConstants.INSTALLMENT_DUEDATE_BEFORE_DISBURSE_DATE, "3");
         }
     }
-    
+
     @Test
     public void shouldValidateMinimumGapOfFiveDaysForVariableInstallments() {
         RepaymentScheduleInstallment installment1 = installmentBuilder.reset(locale).withInstallment(1).withDueDateValue("01-Nov-2010").build();
@@ -105,7 +105,7 @@ public class InstallmentRulesValidatorTest {
         RepaymentScheduleInstallment installment6 = installmentBuilder.reset(locale).withInstallment(6).withDueDateValue("30-Nov-2010").build();
         RepaymentScheduleInstallment installment7 = installmentBuilder.reset(locale).withInstallment(7).withDueDateValue("01-Dec-2010").build();
         try {
-            VariableInstallmentDetailsDto variableInstallmentDetails = getVariableInstallmentDetails(5, null, 100, rupeeCurrency);
+            VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(5, null, 100, rupeeCurrency);
             List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4, installment5, installment6, installment7);
             installmentRulesValidator.validateForVariableInstallments(installments, variableInstallmentDetails);
             fail("Should have thrown validation error");
@@ -129,7 +129,7 @@ public class InstallmentRulesValidatorTest {
         RepaymentScheduleInstallment installment6 = installmentBuilder.reset(locale).withInstallment(6).withDueDateValue("30-Nov-2010").build();
         RepaymentScheduleInstallment installment7 = installmentBuilder.reset(locale).withInstallment(7).withDueDateValue("01-Dec-2010").build();
         try {
-            VariableInstallmentDetailsDto variableInstallmentDetails = getVariableInstallmentDetails(null, 5, 100, rupeeCurrency);
+            VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(null, 5, 100, rupeeCurrency);
             List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4, installment5, installment6, installment7);
             installmentRulesValidator.validateForVariableInstallments(installments, variableInstallmentDetails);
             fail("Should have thrown validation error");
@@ -147,9 +147,9 @@ public class InstallmentRulesValidatorTest {
     @Test
     public void shouldValidateMinInstallmentForVariableInstallments() {
         RepaymentScheduleInstallment installment = installmentBuilder.reset(locale).withInstallment(1).
-                        withPrincipal(new Money(rupeeCurrency, "49")).withTotalValue("50").build();
+                withPrincipal(new Money(rupeeCurrency, "49")).withTotalValue("50").build();
         try {
-            VariableInstallmentDetailsDto variableInstallmentDetails = getVariableInstallmentDetails(null, null, 100, rupeeCurrency);
+            VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(null, null, 100, rupeeCurrency);
             installmentRulesValidator.validateForVariableInstallments(asList(installment), variableInstallmentDetails);
             fail("Should have thrown validation error");
         } catch (ValidationException validationException) {
@@ -160,7 +160,7 @@ public class InstallmentRulesValidatorTest {
             assertValidationException(childExceptions.get(0), AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT, "1");
         }
     }
-    
+
     @Test
     public void shouldNotValidateForValidVariableInstallments() {
         RepaymentScheduleInstallment installment1 = installmentBuilder.reset(locale).withInstallment(1).
@@ -170,7 +170,7 @@ public class InstallmentRulesValidatorTest {
         RepaymentScheduleInstallment installment3 = installmentBuilder.reset(locale).withInstallment(3).
                 withPrincipal(new Money(rupeeCurrency, "49")).withTotalValue("50").withDueDateValue("06-Nov-2010").build();
         try {
-            VariableInstallmentDetailsDto variableInstallmentDetails = getVariableInstallmentDetails(2, 5, 50, rupeeCurrency);
+            VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(2, 5, 50, rupeeCurrency);
             List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
             installmentRulesValidator.validateForVariableInstallments(installments, variableInstallmentDetails);
         } catch (ValidationException validationException) {
@@ -207,8 +207,8 @@ public class InstallmentRulesValidatorTest {
         return DateUtils.getDate(dateValue, dateLocale, dateFormat);
     }
 
-    private VariableInstallmentDetailsDto getVariableInstallmentDetails(Integer minGapInDays, Integer maxGapInDays, Integer minInstAmount, MifosCurrency currency) {
-        VariableInstallmentDetailsDto variableInstallmentDetails = new VariableInstallmentDetailsDto();
+    private VariableInstallmentDetailsBO getVariableInstallmentDetails(Integer minGapInDays, Integer maxGapInDays, Integer minInstAmount, MifosCurrency currency) {
+        VariableInstallmentDetailsBO variableInstallmentDetails = new VariableInstallmentDetailsBO();
         variableInstallmentDetails.setMinGapInDays(minGapInDays);
         variableInstallmentDetails.setMaxGapInDays(maxGapInDays);
         Money installmentAmount = new Money(currency, String.valueOf(minInstAmount));

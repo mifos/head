@@ -194,6 +194,6 @@ public interface AccountConstants {
     String INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP = "errors.installment.duedate.within.min.gap";
     String INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP = "errors.installment.duedate.beyond.max.gap";
     String INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT = "errors.installment.amount.less.than.min.amount";
-    String GENERIC_VALIDATION_ERROR = "Generic Error";
     String INSTALLMENT_TOTAL_AMOUNT_INVALID = "errors.installment.total.amount.invalid";
+    String GENERIC_VALIDATION_ERROR = "Generic Error";
 }

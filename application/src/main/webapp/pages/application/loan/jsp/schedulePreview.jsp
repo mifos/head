@@ -66,6 +66,7 @@ explanation of the license and how it is applied.
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountOwner')}" var="customer" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAmount')}" var="loanAmount" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'disbursementDate')}" var="disbursementDate" />
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'variableInstallmentsEnabled')}" var="variableInstallmentsEnabled" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="470" align="left" valign="top" bgcolor="#FFFFFF">
@@ -241,47 +242,58 @@ explanation of the license and how it is applied.
                                                     </tr>
                                                     <tr>
                                                     <c:if test="${requestScope.perspective != 'redoLoan'}">
-                                                        <td valign="top" align="center">
-                                                            <table width="100%" border="0" cellpadding="3" cellspacing="0">
-                                                            <tr  class="drawtablerowbold"  >
-                                                                <td width="10%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.installments" /></b></td>
-                                                                <td width="22%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.duedate" /></b></td>
-                                                                <td width="17%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.principal" /></b></td>
-                                                                <td width="17%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.interest" /></b></td>
-                                                                <td width="17%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.fees" /></b></td>
-                                                                <td width="17%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.total" /></b></td>
-                                                            </tr>
-                                                            <c:forEach var="installments" items="${loanAccountActionForm.installments}" varStatus="loopStatus">
-                                                            <tr>
-                                                                <td class="drawtablerow" align="center">
-                                                                    <c:out value="${installments.installment}" />
+                                                        <c:choose>
+                                                            <c:when test="${variableInstallmentsEnabled}">
+                                                                <td valign="top" align="center">
+                                                                    <table width="100%" border="0" cellpadding="3" cellspacing="0">
+                                                                    <tr  class="drawtablerowbold"  >
+                                                                        <td width="10%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.installments" /></b></td>
+                                                                        <td width="22%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.duedate" /></b></td>
+                                                                        <td width="17%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.principal" /></b></td>
+                                                                        <td width="17%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.interest" /></b></td>
+                                                                        <td width="17%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.fees" /></b></td>
+                                                                        <td width="17%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.total" /></b></td>
+                                                                    </tr>
+                                                                    <c:forEach var="installments" items="${loanAccountActionForm.installments}" varStatus="loopStatus">
+                                                                    <tr>
+                                                                        <td class="drawtablerow" align="center">
+                                                                            <c:out value="${installments.installment}" />
+                                                                        </td>
+                                                                        <td class="drawtablerow" align="center">
+                                                                            <html-el:text styleId="installment.dueDate.${loopStatus.index}" styleClass="date-pick" indexed="true" name="installments" property="dueDate" size="10" />
+                                                                        </td>
+                                                                        <td class="drawtablerow" align="center">
+                                                                            <c:out value="${installments.principal}" />
+                                                                        </td>
+                                                                        <td class="drawtablerow" align="center">
+                                                                            <c:out value="${installments.interest}" />
+                                                                        </td>
+                                                                        <td class="drawtablerow" align="center">
+                                                                            <c:out value="${installments.fees}" />
+                                                                        </td>
+                                                                        <td class="drawtablerow" align="center">
+                                                                            <c:choose>
+                                                                                <c:when test="${loopStatus.index == (fn:length(loanAccountActionForm.installments) - 1)}">
+                                                                                    <c:out value="${installments.total}" />
+                                                                                </c:when>
+                                                                                <c:otherwise>
+                                                                                    <html-el:text styleId="installments.total" name="installments" indexed="true" property="total" size="10" />
+                                                                                </c:otherwise>
+                                                                            </c:choose>
+                                                                        </td>
+                                                                    </tr>
+                                                                    </c:forEach>
+                                                                </table>
                                                                 </td>
-                                                                <td class="drawtablerow" align="center">
-                                                                    <html-el:text styleId="installment.dueDate.${loopStatus.index}" styleClass="date-pick" indexed="true" name="installments" property="dueDate" size="10" />
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <td valign="top" align="center">
+                                                                    <mifoscustom:mifostabletag source="installments" scope="session"
+                                                                            xmlFileName="ProposedRepaymentSchedule.xml"
+                                                                            moduleName="org/mifos/accounts/loan/util/resources" passLocale="true"/>
                                                                 </td>
-                                                                <td class="drawtablerow" align="center">
-                                                                    <c:out value="${installments.principal}" />
-                                                                </td>
-                                                                <td class="drawtablerow" align="center">
-                                                                    <c:out value="${installments.interest}" />
-                                                                </td>
-                                                                <td class="drawtablerow" align="center">
-                                                                    <c:out value="${installments.fees}" />
-                                                                </td>
-                                                                <td class="drawtablerow" align="center">
-                                                                    <c:choose>
-                                                                        <c:when test="${loopStatus.index == (fn:length(loanAccountActionForm.installments) - 1)}">
-                                                                            <c:out value="${installments.total}" />
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                            <html-el:text styleId="installments.total" name="installments" indexed="true" property="total" size="10" />
-                                                                        </c:otherwise>
-                                                                    </c:choose>
-                                                                </td>
-                                                            </tr>
-                                                            </c:forEach>
-                                                        </table>
-                                                        </td>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </c:if>
                                                    </tr>
                                                     <tr>
@@ -351,10 +363,12 @@ explanation of the license and how it is applied.
 									<br>
 										<tr>
 											<td align="center">
-												<html-el:submit styleId="schedulePreview.button.validate" property="validateBtn" styleClass="buttn" >
-													<mifos:mifoslabel name="loan.validate" />
-												</html-el:submit>
-												&nbsp;
+											    <c:if test="${variableInstallmentsEnabled}">
+                                                    <html-el:submit styleId="schedulePreview.button.validate" property="validateBtn" styleClass="buttn" >
+                                                        <mifos:mifoslabel name="loan.validate" />
+                                                    </html-el:submit>
+                                                    &nbsp;
+                                                </c:if>
 												<html-el:submit styleId="schedulePreview.button.preview" property="previewBtn" styleClass="buttn" >
 													<mifos:mifoslabel name="loan.preview" />
 												</html-el:submit>

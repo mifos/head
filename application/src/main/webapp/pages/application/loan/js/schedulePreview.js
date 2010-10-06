@@ -7,11 +7,13 @@ $(document).ready(function() {
 		buttonImageOnly: true
     });
 
-    $("input[id=schedulePreview.button.validate]").click(function(event) {
-        $("input[name=method]").val("validate");
-        form = $("form[name=loanAccountActionForm]");
-        form.action="loanAccountAction.do";
-        form.submit();
-    });
+    if ($("input[id=schedulePreview.button.validate]") != null) {
+        $("input[id=schedulePreview.button.validate]").click(function(event) {
+            $("input[name=method]").val("validateInstallments");
+            form = $("form[name=loanAccountActionForm]");
+            form.action="loanAccountAction.do";
+            form.submit();
+        });
+    }
   }
 );

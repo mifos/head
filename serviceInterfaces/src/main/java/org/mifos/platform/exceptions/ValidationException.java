@@ -110,4 +110,13 @@ public class ValidationException extends SystemException {
         buffer.append("\n");
     }
 
+    public void copyChildExceptions(ValidationException otherException) {
+        if (otherException.hasChildExceptions()) {
+            for (ValidationException validationException : otherException.getChildExceptions()) {
+                addChildException(validationException);
+            }
+        } else {
+            addChildException(otherException);
+        }
+    }
 }
