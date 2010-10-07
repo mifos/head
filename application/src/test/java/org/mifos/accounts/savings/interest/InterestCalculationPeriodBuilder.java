@@ -36,13 +36,12 @@ public class InterestCalculationPeriodBuilder {
     private Money balanceBeforeInterval = TestUtils.createMoney("10");
     private Money minBalanceRequired  = TestUtils.createMoney("25");
     private Double interestRate = Double.valueOf("10");
-    private Boolean isFirstActivityBeforeInterval = Boolean.FALSE;
     private LocalDate intervalStartDate = new LocalDate(2010, 1, 1);
     private LocalDate intervalEndDate = new LocalDate(2010, 12, 31);
 
     public InterestCalculationPeriodDetail build() {
         interval = new InterestCalculationInterval(intervalStartDate, intervalEndDate);
-        return new InterestCalculationPeriodDetail(interval, dailyDetails, minBalanceRequired, balanceBeforeInterval, currency, interestRate, isFirstActivityBeforeInterval);
+        return new InterestCalculationPeriodDetail(interval, dailyDetails, minBalanceRequired, balanceBeforeInterval, currency, interestRate);
     }
 
     public InterestCalculationPeriodBuilder from(LocalDate intervalStartDate) {

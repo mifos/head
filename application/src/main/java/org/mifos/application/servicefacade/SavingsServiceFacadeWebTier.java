@@ -53,7 +53,6 @@ import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.schedule.ScheduledEvent;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
@@ -216,7 +215,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             List<InterestCalculationInterval> allPossible = interestCalculationIntervalHelper.determineAllPossibleInterestCalculationPeriods(firstDepositDate, interestCalculationEvent,new LocalDate());
             for (InterestCalculationInterval interval : allPossible) {
 
-                InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail2(interval,
+                InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(interval,
                                                                                     allEndOfDayDetailsForAccount,
                                                                                     savingsAccount.getMinAmntForInt(),
                                                                                     savingsAccount.getCurrency(),
@@ -233,36 +232,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         }
     }
 
-    @Override
-    public void calculateInterest(LocalDate startDate, LocalDate endDate, Long savingsId) {
-        SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
-
-        InterestCalculationInterval interval = new InterestCalculationInterval(startDate, endDate);
-
-        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount
-                .getCurrency(), savingsId);
-
-        if (!allEndOfDayDetailsForAccount.isEmpty()) {
-            InterestCalcType interestCalcType = InterestCalcType.fromInt(savingsAccount.getInterestCalcType().getId());
-            InterestCalculator interestCalculator = SavingsInterestCalculatorFactory.create(interestCalcType);
-
-            LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();
-
-            if (interval.dateFallsWithin(firstDepositDate)) {
-                interval = new InterestCalculationInterval(firstDepositDate, interval.getEndDate());
-            }
-
-            Money balanceBeforeInterval = new Money(savingsAccount.getCurrency());
-            InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(
-                    interval, allEndOfDayDetailsForAccount, savingsAccount.getMinAmntForInt(), savingsAccount
-                            .getCurrency(), savingsAccount.getInterestRate(), balanceBeforeInterval);
-
-            InterestCalculationPeriodResult result = interestCalculator
-                    .calculateSavingsDetailsForPeriod(interestCalculationPeriodDetail);
-            savingsAccount.setInterestToBePosted(savingsAccount.getInterestToBePosted().add(result.getInterest()));
-        }
-    }
-
     private InterestCalculationPeriodDetail createInterestCalculationPeriodDetail(InterestCalculationInterval interval,
             List<EndOfDayDetail> allEndOfDayDetailsForAccount,
             Money minBalanceRequired,
@@ -273,42 +242,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         List<EndOfDayDetail> applicableDailyDetailsForPeriod = new ArrayList<EndOfDayDetail>();
 
-//        NOTE - keithw - whats this for?
-        Boolean isFirstActivityBeforeInterval = Boolean.FALSE;
-
-        if(!applicableDailyDetailsForPeriod.isEmpty()) {
-            if(applicableDailyDetailsForPeriod.get(0).getDate().isBefore(interval.getStartDate())) {
-                isFirstActivityBeforeInterval = Boolean.TRUE;
-            }
-        }
-
-        for (EndOfDayDetail endOfDayDetail : allEndOfDayDetailsForAccount) {
-
-            if (endOfDayDetail.getDate().isBefore(interval.getStartDate())) {
-                balance = balance.add(endOfDayDetail.getResultantAmountForDay());
-                // System.out.println(balanceBeforeInterval+", "+endOfDayDetail.getResultantAmountForDay()+" ,"+endOfDayDetail.getDate()+", "+range.getLowerDate());
-            }
-
-            if (interval.dateFallsWithin(endOfDayDetail.getDate())) {
-                applicableDailyDetailsForPeriod.add(endOfDayDetail);
-            }
-        }
-
-        return new InterestCalculationPeriodDetail(interval, applicableDailyDetailsForPeriod, minBalanceRequired, balance, mifosCurrency, interestRate, isFirstActivityBeforeInterval);
-    }
-
-    private InterestCalculationPeriodDetail createInterestCalculationPeriodDetail2(InterestCalculationInterval interval,
-            List<EndOfDayDetail> allEndOfDayDetailsForAccount,
-            Money minBalanceRequired,
-            MifosCurrency mifosCurrency,
-            Double interestRate, Money balanceBeforeInterval) {
-
-        Money balance = balanceBeforeInterval;
-
-        List<EndOfDayDetail> applicableDailyDetailsForPeriod = new ArrayList<EndOfDayDetail>();
-
-        Boolean isFirstActivityBeforeInterval = Boolean.TRUE;
-
         for (EndOfDayDetail endOfDayDetail : allEndOfDayDetailsForAccount) {
 
             if (interval.dateFallsWithin(endOfDayDetail.getDate())) {
@@ -316,6 +249,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             }
         }
 
-        return new InterestCalculationPeriodDetail(interval, applicableDailyDetailsForPeriod, minBalanceRequired, balance, mifosCurrency, interestRate, isFirstActivityBeforeInterval);
+        return new InterestCalculationPeriodDetail(interval, applicableDailyDetailsForPeriod, minBalanceRequired, balance, mifosCurrency, interestRate);
     }
 }
