@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.LocalDate;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -32,16 +31,13 @@ public class InterestCalculationPeriodBuilder {
 
     private InterestCalculationInterval interval;
     private List<EndOfDayDetail> dailyDetails = new ArrayList<EndOfDayDetail>();
-    private MifosCurrency currency = TestUtils.RUPEE;
     private Money balanceBeforeInterval = TestUtils.createMoney("10");
-    private Money minBalanceRequired  = TestUtils.createMoney("25");
-    private Double interestRate = Double.valueOf("10");
     private LocalDate intervalStartDate = new LocalDate(2010, 1, 1);
     private LocalDate intervalEndDate = new LocalDate(2010, 12, 31);
 
     public InterestCalculationPeriodDetail build() {
         interval = new InterestCalculationInterval(intervalStartDate, intervalEndDate);
-        return new InterestCalculationPeriodDetail(interval, dailyDetails, minBalanceRequired, balanceBeforeInterval, currency, interestRate);
+        return new InterestCalculationPeriodDetail(interval, dailyDetails, balanceBeforeInterval);
     }
 
     public InterestCalculationPeriodBuilder from(LocalDate intervalStartDate) {
@@ -56,11 +52,6 @@ public class InterestCalculationPeriodBuilder {
 
     public InterestCalculationPeriodBuilder withStartingBalance(String startingBalance) {
         this.balanceBeforeInterval = TestUtils.createMoney(startingBalance);
-        return this;
-    }
-
-    public InterestCalculationPeriodBuilder withMinRequiredBalance(String minimumRequiredBalance) {
-        this.minBalanceRequired = TestUtils.createMoney(minimumRequiredBalance);
         return this;
     }
 

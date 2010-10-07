@@ -28,6 +28,7 @@ public class TotalBalanceCalculationStrategy implements PrincipalCalculationStra
 
     @Override
     public Money calculatePrincipal(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
+
         Money totalPrincipal = interestCalculationPeriodDetail.zeroAmount();
 
         List<EndOfDayDetail> dailyDetails = interestCalculationPeriodDetail.getDailyDetails();

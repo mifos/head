@@ -23,7 +23,6 @@ package org.mifos.accounts.savings.interest;
 import java.util.List;
 
 import org.joda.time.Days;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
 
 /**
@@ -35,16 +34,10 @@ public class InterestCalculationPeriodDetail {
 
     private final InterestCalculationInterval interval;
     private final List<EndOfDayDetail> dailyDetails;
-    private final Money minBalanceRequired;
-    private final MifosCurrency currency;
-    private final Double interestRate;
     private final Money balanceBeforeInterval;
 
-    public InterestCalculationPeriodDetail(InterestCalculationInterval interval, List<EndOfDayDetail> dailyDetails, Money minBalanceRequired, Money balanceBeforeInterval, MifosCurrency currency, Double interestRate) {
+    public InterestCalculationPeriodDetail(InterestCalculationInterval interval, List<EndOfDayDetail> dailyDetails, Money balanceBeforeInterval) {
         this.dailyDetails = dailyDetails;
-        this.minBalanceRequired = minBalanceRequired;
-        this.currency = currency;
-        this.interestRate = interestRate;
         this.balanceBeforeInterval = balanceBeforeInterval;
         this.interval = interval;
     }
@@ -57,23 +50,15 @@ public class InterestCalculationPeriodDetail {
         return this.dailyDetails;
     }
 
-    public boolean isMinimumBalanceReached(Money principal) {
-        return principal.isGreaterThanOrEqual(minBalanceRequired);
-    }
-
-    public Double getInterestRate() {
-        return interestRate;
-    }
-
     public int getDuration() {
         return Days.daysBetween(interval.getStartDate(), interval.getEndDate()).getDays();
     }
 
-    public Money zeroAmount() {
-        return new Money(currency, "0");
-    }
-
     public Money getBalanceBeforeInterval() {
         return balanceBeforeInterval;
+    }
+
+    public Money zeroAmount() {
+        return Money.zero(this.balanceBeforeInterval.getCurrency());
     }
 }

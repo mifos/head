@@ -25,11 +25,14 @@ import org.mifos.framework.util.helpers.Money;
 public class SavingsInterestCalculator implements InterestCalculator {
 
     private final PrincipalCalculationStrategy principalCalculationStrategy;
-    private SimpleInterestCalculationStrategy compoundInterestCaluclation = new SimpleInterestCalculationStrategy();
+    private final SimpleInterestCalculationStrategy principalBasedInterestCalculation;
+    private final InterestCalucationRule minimumBalanceRule;
     private PrincipalCalculationStrategy totalPrincipalCalculationStrategy = new TotalBalanceCalculationStrategy();
 
-    public SavingsInterestCalculator(PrincipalCalculationStrategy principalCalculationStrategy) {
+    public SavingsInterestCalculator(PrincipalCalculationStrategy principalCalculationStrategy, SimpleInterestCalculationStrategy principalBasedInterestCalculation, InterestCalucationRule minimumBalanceRule) {
         this.principalCalculationStrategy = principalCalculationStrategy;
+        this.principalBasedInterestCalculation = principalBasedInterestCalculation;
+        this.minimumBalanceRule = minimumBalanceRule;
     }
 
     @Override
@@ -39,15 +42,11 @@ public class SavingsInterestCalculator implements InterestCalculator {
 
         Money totalBalanceForPeriod = totalPrincipalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
         Money principal = principalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
-        if (interestCalculationPeriodDetail.isMinimumBalanceReached(principal)) {
-            calculatedInterest = compoundInterestCaluclation.calculateInterest(principal, interestCalculationPeriodDetail.getInterestRate(), interestCalculationPeriodDetail.getDuration());
+        if (minimumBalanceRule.isCalculationAllowed(principal)) {
+            calculatedInterest = principalBasedInterestCalculation.calculateInterest(principal, interestCalculationPeriodDetail.getDuration());
         }
 
         return new InterestCalculationPeriodResult(calculatedInterest, principal, totalBalanceForPeriod);
-    }
-
-    public void setCompoundInterestCaluclation(SimpleInterestCalculationStrategy compoundInterestCaluclation) {
-        this.compoundInterestCaluclation = compoundInterestCaluclation;
     }
 
     public void setTotalPrincipalCalculationStrategy(PrincipalCalculationStrategy totalPrincipalCalculationStrategy) {

@@ -21,24 +21,18 @@
 package org.mifos.accounts.savings.interest;
 
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.MoneyUtils;
 
-public class SimpleInterestCalculationStrategy {
+public class MinimumBalanceInterestCalculationRule implements InterestCalucationRule {
 
-    private final Double interestRate;
-    private final int accountingNumberOfInterestDaysInYear;
+    private final Money minimumBalanceRequired;
 
-    public SimpleInterestCalculationStrategy(Double interestRate, int numberOfDaysInYear) {
-        this.interestRate = interestRate;
-        this.accountingNumberOfInterestDaysInYear = numberOfDaysInYear;
+    public MinimumBalanceInterestCalculationRule(Money minimumBalanceRequired) {
+        this.minimumBalanceRequired = minimumBalanceRequired;
     }
 
-    public Money calculateInterest(Money principal, int duration) {
-
-        Double effectiveInterestRate = (interestRate / accountingNumberOfInterestDaysInYear) * duration;
-
-        Money interestAmount = principal.multiply(effectiveInterestRate / 100);
-
-        return MoneyUtils.currencyRound(interestAmount);
+    @Override
+    public boolean isCalculationAllowed(Money principal) {
+        return principal.isGreaterThanOrEqual(minimumBalanceRequired);
     }
+
 }

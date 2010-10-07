@@ -21,6 +21,7 @@
 package org.mifos.accounts.savings.interest;
 
 
+
 /**
  * I calculate interest for a specified {@link InterestCalculationPeriodDetail}.
  */

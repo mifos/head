@@ -20,15 +20,11 @@
 
 package org.mifos.accounts.savings.interest;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +41,6 @@ public class SavingsInterestCalculatorTest {
     private InterestCalculationPeriodDetail interestCalculationPeriodDetail;
 
     private Money minBalanceRequired;
-    private Money balanceBeforeInterval;
 
     @Mock
     private PrincipalCalculationStrategy principalCalculationStrategy;
@@ -56,20 +51,15 @@ public class SavingsInterestCalculatorTest {
     @Mock
     private SimpleInterestCalculationStrategy compoundInterestCalculationStrategy;
 
+    @Mock
+    private InterestCalucationRule minimumBalanceRule;
+
     @Before
     public void setup() {
-        interestCalculator = new SavingsInterestCalculator(principalCalculationStrategy);
-        ((SavingsInterestCalculator)interestCalculator).setCompoundInterestCaluclation(compoundInterestCalculationStrategy);
+        interestCalculator = new SavingsInterestCalculator(principalCalculationStrategy, compoundInterestCalculationStrategy, minimumBalanceRule);
         ((SavingsInterestCalculator)interestCalculator).setTotalPrincipalCalculationStrategy(totalPrincipalCalculationStrategy);
 
-        LocalDate startDate = new LocalDate();
-        LocalDate endDate = new LocalDate();
-        InterestCalculationInterval calculationInterval = new InterestCalculationInterval(startDate, endDate);
-        List<EndOfDayDetail> dailyDetails = new ArrayList<EndOfDayDetail>();
-
-        minBalanceRequired = TestUtils.createMoney("20");
-        balanceBeforeInterval = TestUtils.createMoney("100");
-        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(calculationInterval, dailyDetails, minBalanceRequired, balanceBeforeInterval, minBalanceRequired.getCurrency(), 10.0);
+        interestCalculationPeriodDetail = new InterestCalculationPeriodBuilder().build();
     }
 
     @Test
@@ -93,7 +83,8 @@ public class SavingsInterestCalculatorTest {
 
         // stubbing
         when(principalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail)).thenReturn(minBalanceRequired);
-        when(compoundInterestCalculationStrategy.calculateInterest(minBalanceRequired, Double.valueOf("10"), 0)).thenReturn(expectedInterest);
+        when(minimumBalanceRule.isCalculationAllowed(minBalanceRequired)).thenReturn(true);
+        when(compoundInterestCalculationStrategy.calculateInterest((Money)anyObject(), anyInt())).thenReturn(expectedInterest);
 
         // exercise test
         InterestCalculationPeriodResult result = interestCalculator.calculateSavingsDetailsForPeriod(interestCalculationPeriodDetail);

@@ -20,17 +20,9 @@
 
 package org.mifos.accounts.savings.interest;
 
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Test;
-import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
-import org.mifos.framework.TestUtils;
-import org.mifos.framework.util.helpers.Money;
 
 public class SavingsInterestCalculatorFactoryTest {
 
@@ -39,10 +31,10 @@ public class SavingsInterestCalculatorFactoryTest {
     @Test
     public void shouldReturnSavingsInterestCalculatorWithAverageBalanceStrategy() {
 
-        InterestCalcType interestCalcType = InterestCalcType.AVERAGE_BALANCE;
+        SavingsInterestDetail interestDetail = new SavingsInterestDetailBuilder().averageBalance().build();
 
         // exercise test
-        InterestCalculator interestCalculator = savingsInterestCalculatorFactory.create(interestCalcType);
+        InterestCalculator interestCalculator = savingsInterestCalculatorFactory.create(interestDetail);
 
         // verification
         assertNotNull(interestCalculator);
@@ -51,10 +43,10 @@ public class SavingsInterestCalculatorFactoryTest {
     @Test
     public void shouldReturnSavingsInterestCalculatorWithMinimumBalanceStrategy() {
 
-        InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
+        SavingsInterestDetail interestDetail = new SavingsInterestDetailBuilder().mimimumBalance().build();
 
         // exercise test
-        InterestCalculator interestCalculator = savingsInterestCalculatorFactory.create(interestCalcType);
+        InterestCalculator interestCalculator = savingsInterestCalculatorFactory.create(interestDetail);
 
         // verification
         assertNotNull(interestCalculator);
