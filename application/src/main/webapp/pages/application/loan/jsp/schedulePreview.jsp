@@ -66,7 +66,6 @@ explanation of the license and how it is applied.
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountOwner')}" var="customer" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAmount')}" var="loanAmount" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'disbursementDate')}" var="disbursementDate" />
-		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'variableInstallmentsEnabled')}" var="variableInstallmentsEnabled" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="470" align="left" valign="top" bgcolor="#FFFFFF">
@@ -430,7 +429,7 @@ explanation of the license and how it is applied.
 									<br>
 										<tr>
 											<td align="center">
-											    <c:if test="${variableInstallmentsEnabled}">
+											    <c:if test="${loanAccountActionForm.variableInstallmentsAllowed}">
                                                     <html-el:submit styleId="schedulePreview.button.validate" property="validateBtn" styleClass="buttn" >
                                                         <mifos:mifoslabel name="loan.validate" />
                                                     </html-el:submit>
