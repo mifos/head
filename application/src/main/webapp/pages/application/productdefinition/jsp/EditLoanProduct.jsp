@@ -1069,14 +1069,6 @@ explanation of the license and how it is applied.
 								property="gracePeriodDuration" /> <mifos:mifoslabel
 								name="product.installments" bundle="ProductDefUIResources" /></td>
 						</tr>
-						<script type="text/javascript">
-							fnIntDesbr();
-							fnGracePeriod();
-							checkRow();
-						    checkType();
-                            showVariableInstallmentInputs();
-                            showCashFlowInputs(); 
-						</script>
 					</table>
 					<br>
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
@@ -1203,6 +1195,15 @@ explanation of the license and how it is applied.
 					</td>
 				</tr>
 			</table>
+						<script type="text/javascript">
+						    showCashFlowInputs();
+							fnIntDesbr();
+							fnGracePeriod();
+							checkRow();
+						    checkType();
+                            showVariableInstallmentInputs();
+						</script>
+			
 			<html-el:hidden property="method" value="editPreview" />
 			<html-el:hidden property="prdOfferName" value="${prdOfferName}" />
 			<html-el:hidden property="currentFlowKey"

@@ -171,7 +171,7 @@ $(document).ready(function() {
 
 function showCashFlowInputs() {
     var isVariableInstallmentType = document.getElementById("createLoanProduct.checkbox.cashFlowValidation");
-    if (isVariableInstallmentType.checked == true) {
+    if (isVariableInstallmentType.checked == true || isVariableInstallmentType.checked == "checked") {
         document.getElementById("cashFlowThresholdDiv").style.display = "block";
         document.getElementById("cashFlowThresholdInputDiv").style.display = "block";
     } else {

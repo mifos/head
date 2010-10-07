@@ -576,7 +576,7 @@ explanation of the license and how it is applied.
                                     <mifos:mifoslabel name="product.cashFlowWarningThreshold" bundle="ProductDefUIResources" isColonRequired="yes" />
                                     <span class="fontnormal">
               	                     	<c:choose>
-          	                               <c:when test="${empty sessionScope.loanproductactionform.cashFlowWarningThreshold}">
+          	                               <c:when test="${(empty sessionScope.loanproductactionform.cashFlowWarningThreshold) or (sessionScope.loanproductactionform.cashFlowWarningThreshold == 0)}">
                                                   <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
                                               </c:when>
                                               <c:otherwise>

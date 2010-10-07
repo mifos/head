@@ -17,6 +17,21 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
+
+function showCashFlowInputs() {
+    var isVariableInstallmentType = document.getElementById("editLoanProduct.checkbox.cashFlowValidation");
+    if (isVariableInstallmentType.checked == true || isVariableInstallmentType.checked == "checked") {
+        document.getElementById("cashFlowThresholdDiv").style.display = "block";
+        document.getElementById("cashFlowThresholdInputDiv").style.display = "block";
+    } else {
+        document.getElementById("cashFlowThresholdDiv").style.display = "none";
+        document.getElementById("cashFlowThresholdInputDiv").style.display = "none";
+   }
+}
+
+
+
 function fnCancel(form) {
     form.action="loanproductaction.do?method=editCancel";
     form.submit();
@@ -139,17 +154,6 @@ function showVariableInstallmentInputs() {
    }
 }
 
-
-function showCashFlowInputs() {
-    var isVariableInstallmentType = document.getElementById("editLoanProduct.checkbox.cashFlowValidation");
-    if (isVariableInstallmentType.checked == true) {
-        document.getElementById("cashFlowThresholdDiv").style.display = "block";
-        document.getElementById("cashFlowThresholdInputDiv").style.display = "block";
-    } else {
-        document.getElementById("cashFlowThresholdDiv").style.display = "none";
-        document.getElementById("cashFlowThresholdInputDiv").style.display = "none";
-   }
-}
 
 
 

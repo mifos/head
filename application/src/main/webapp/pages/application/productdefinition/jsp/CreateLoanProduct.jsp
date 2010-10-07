@@ -939,7 +939,8 @@ explanation of the license and how it is applied.
 
 									</table>
 									<br>
-									<script type="text/javascript">
+									<script>
+									    showCashFlowInputs();
 										fnIntDesbr();
 										fnGracePeriod();
 										checkRow();
@@ -947,7 +948,6 @@ explanation of the license and how it is applied.
 										showLoanAmountType();
 										showInstallType();
 										showVariableInstallmentInputs();
-										showCashFlowInputs();
 									</script>
 
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
