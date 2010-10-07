@@ -34,6 +34,7 @@ public class AbstractPage {
 
     private static final String MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS = "30000";
     protected Selenium selenium;
+    private String tabKey = "\t";
 
     public AbstractPage() {
         // do nothing
@@ -64,6 +65,11 @@ public class AbstractPage {
         Assert.assertEquals(selenium.getAttribute("page.id@title"), pageName);
     }
 
+    public void typeText(String locator, String text) {
+        selenium.focus(locator);
+        selenium.type(locator,text);
+        selenium.keyDown(locator, tabKey);
+    }
     public void waitForElementToPresent(String locator){
         selenium.waitForCondition("selenium.isElementPresent(\"" + locator + "\")",MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS);
     }

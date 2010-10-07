@@ -5,6 +5,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -18,26 +19,44 @@ public class ApplicationDatabaseOperation {
 
     public void  updateLSIM(int lsimValue) throws SQLException {
         getStatement().executeUpdate("update config_key_value_integer set configuration_value=" + lsimValue + " where configuration_key='repaymentSchedulesIndependentOfMeetingIsEnabled'");
-    }
-
-    public boolean isUserAlreadyExist() {
-        return false;
+        closeConnection();
     }
 
     public boolean doesBranchOfficeExist(String officeName, int officeType, String shortName) throws SQLException {
-        boolean officeExist = getStatement().execute("select * from office where " +
+        return doesEntityExist("select count(*) from office where " +
                 "office_level_id='" + officeType + "' and " +
                 "office_short_name='" + shortName + "' and " +
                 "display_name='" + officeName + "';");
-        closeConnection();
-        return officeExist;
     }
 
+    public boolean doesClientExist(String clientName, String officeName) throws SQLException {
+        return doesEntityExist("select * from customer where display_name='" + clientName + "';");
+    }
 
     public boolean doesSystemUserExist(String userLoginName, String userName, String officeName) throws SQLException {
-        boolean userExist = getStatement().execute("select * from personnel where display_name = '" + userName + "' and login_name = '" + userLoginName + "';");
-        closeConnection();
-        return userExist;
+        return doesEntityExist("select * from personnel where "+
+                "display_name = '" + userName + "' and " +
+                "login_name = '" + userLoginName + "';");
+    }
+
+    private boolean doesEntityExist(String entityCountQuery) throws SQLException {
+        ResultSet resultSet = null;
+        try{
+            int noOfOffices = 0;
+            resultSet = getStatement().executeQuery(entityCountQuery);
+            if (resultSet.next()) {
+                noOfOffices = resultSet.getInt(1);
+            }
+            resultSet.close();
+            closeConnection();
+            return (noOfOffices > 0);
+        }
+        finally {
+            resultSet.close();
+            closeConnection();
+        }
+
+
     }
 
     private void closeConnection() throws SQLException {
@@ -51,11 +70,5 @@ public class ApplicationDatabaseOperation {
     private Connection getConnection() throws SQLException {
         connection = dataSource.getConnection();
         return connection;
-    }
-
-    public boolean doesClientExist(String clientName, String officeName) throws SQLException {
-        boolean clientExist = getStatement().execute("select * from customer where display_name='" + clientName + "';");
-        closeConnection();
-        return clientExist;
     }
 }

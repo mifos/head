@@ -348,8 +348,8 @@ public class LoanTestHelper {
         return navigateToLoanAccountEntryPage(searchParameters);
     }
 
-    public CreateLoanAccountEntryPage navigateToCreateLoanAccountEntryPageWithoutLogout(HomePage homePage, CreateLoanAccountSearchParameters searchParameters) {
-        ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
+    public CreateLoanAccountEntryPage navigateToCreateLoanAccountEntryPageWithoutLogout(CreateLoanAccountSearchParameters searchParameters) {
+        ClientsAndAccountsHomepage clientsAndAccountsPage = new HomePage(selenium).navigateToClientsAndAccountsUsingHeaderTab();
         clientsAndAccountsPage.verifyPage();
         CreateLoanAccountSearchPage createLoanAccountSearchPage = clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
         createLoanAccountSearchPage.verifyPage();

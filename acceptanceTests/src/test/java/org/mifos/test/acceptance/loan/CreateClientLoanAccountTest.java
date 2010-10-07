@@ -214,7 +214,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
         HomePage homePage = loanAccountEntryPage.navigateToHomePage();
         homePage.verifyPage();
-        loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPageWithoutLogout(homePage, searchParameters);
+        loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPageWithoutLogout(searchParameters);
         loanAccountEntryPage.verifyAdditionalFeesAreEmpty();
     }
 
