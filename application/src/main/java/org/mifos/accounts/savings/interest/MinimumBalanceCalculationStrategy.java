@@ -22,30 +22,40 @@ package org.mifos.accounts.savings.interest;
 
 import org.mifos.framework.util.helpers.Money;
 
-public class MinimumBalanceCaluclationStrategy implements PrincipalCalculationStrategy {
+public class MinimumBalanceCalculationStrategy implements PrincipalCalculationStrategy {
 
     @Override
     public Money calculatePrincipal(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
 
-        Money minimumBalance = null;
-        Money runningBalance = null;
+        validateInterestCalculationPeriodDetail(interestCalculationPeriodDetail);
+
+        Money minimumBalance = interestCalculationPeriodDetail.getBalanceBeforeInterval();
+        Money runningBalance = interestCalculationPeriodDetail.getBalanceBeforeInterval();
 
         for (EndOfDayDetail daily : interestCalculationPeriodDetail.getDailyDetails()) {
-            if (runningBalance == null) {
-                runningBalance = daily.getResultantAmountForDay();
-            } else {
+
                 runningBalance = runningBalance.add(daily.getResultantAmountForDay());
-            }
-            if (minimumBalance == null) {
-                // initial minimum balance
+
+            if (minimumBalance.isGreaterThan(runningBalance)) {
                 minimumBalance = runningBalance;
-            } else {
-                if (minimumBalance.isGreaterThan(runningBalance)) {
-                    minimumBalance = runningBalance;
-                }
             }
+
         }
 
         return minimumBalance;
+    }
+
+    private void validateInterestCalculationPeriodDetail(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
+        if(interestCalculationPeriodDetail == null) {
+            throw new IllegalArgumentException("interestCalculationPeriodDetail should not be null");
+        }
+
+        if(interestCalculationPeriodDetail.getDailyDetails() == null) {
+            throw new IllegalArgumentException("dailyDetail list should not be null");
+        }
+
+        if(interestCalculationPeriodDetail.getBalanceBeforeInterval() == null) {
+            throw new IllegalArgumentException("balanceBeforeInterval list should not be null");
+        }
     }
 }

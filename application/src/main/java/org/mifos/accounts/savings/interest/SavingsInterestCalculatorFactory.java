@@ -32,7 +32,7 @@ public class SavingsInterestCalculatorFactory {
             principalCalculationStrategy = new AverageBalanceCaluclationStrategy();
             break;
         case MINIMUM_BALANCE:
-            principalCalculationStrategy = new MinimumBalanceCaluclationStrategy();
+            principalCalculationStrategy = new MinimumBalanceCalculationStrategy();
             break;
         default:
             break;

@@ -55,6 +55,11 @@ public class InterestCalculationPeriodBuilder {
         return this;
     }
 
+    public InterestCalculationPeriodBuilder withBalanceBeforeInterval(Money startingBalance) {
+        this.balanceBeforeInterval = startingBalance;
+        return this;
+    }
+
     public InterestCalculationPeriodBuilder containing(EndOfDayDetail... endOfDayDetails) {
         for (EndOfDayDetail dailyDetail : endOfDayDetails) {
             this.dailyDetails.add(dailyDetail);
