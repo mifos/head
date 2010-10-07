@@ -96,7 +96,7 @@ public class AverageBalanceCaluclationStrategyTest {
         Money interest1 = TestUtils.createMoney("0");
         EndOfDayDetail endOfDayDetail = new EndOfDayDetail(september6th, deposit1, withdrawal1, interest1);
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().withMinRequiredBalance("20")
+        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
                                                                                               .containing(endOfDayDetail)
                                                                                               .build();
 
@@ -119,7 +119,7 @@ public class AverageBalanceCaluclationStrategyTest {
         Money interest2 = TestUtils.createMoney("0");
         EndOfDayDetail september13thDetails = new EndOfDayDetail(september13th, deposit2, withdrawal2, interest2);
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().withMinRequiredBalance("20")
+        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
                                                                                               .containing(september6thDetails, september13thDetails)
                                                                                               .from(september6th)
                                                                                               .build();
@@ -155,7 +155,7 @@ public class AverageBalanceCaluclationStrategyTest {
         Money interest4 = TestUtils.createMoney("0");
         EndOfDayDetail september20thDetails = new EndOfDayDetail(september20th, deposit4, withdrawal4, interest4);
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().withMinRequiredBalance("20")
+        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
                                                                                               .withStartingBalance("1000")
                                                 .containing(september1stDetails, september6thDetails, september13thDetails, september20thDetails)
                                                 .build();

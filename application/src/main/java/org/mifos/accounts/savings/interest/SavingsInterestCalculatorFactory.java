@@ -20,14 +20,14 @@
 
 package org.mifos.accounts.savings.interest;
 
-import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
-
 public class SavingsInterestCalculatorFactory {
 
-    public static InterestCalculator create(final InterestCalcType interestCalcType) {
+    public static InterestCalculator create(SavingsInterestDetail interestDetail) {
 
+        SimpleInterestCalculationStrategy principalBasedInterestCalculation = new SimpleInterestCalculationStrategy(interestDetail.getInterestRate(), interestDetail.getAccountingNumberOfDaysInYear());
+        InterestCalucationRule minimumBalanceForInterestCalculation = new MinimumBalanceInterestCalculationRule(interestDetail.getMinimumBalanceRequired());
         PrincipalCalculationStrategy principalCalculationStrategy = new AverageBalanceCaluclationStrategy();
-        switch (interestCalcType) {
+        switch (interestDetail.getInterestCalcType()) {
         case AVERAGE_BALANCE:
             principalCalculationStrategy = new AverageBalanceCaluclationStrategy();
             break;
@@ -38,6 +38,6 @@ public class SavingsInterestCalculatorFactory {
             break;
         }
 
-        return new SavingsInterestCalculator(principalCalculationStrategy);
+        return new SavingsInterestCalculator(principalCalculationStrategy, principalBasedInterestCalculation, minimumBalanceForInterestCalculation);
     }
 }

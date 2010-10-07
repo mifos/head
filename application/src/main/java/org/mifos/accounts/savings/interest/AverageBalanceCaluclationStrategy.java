@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
 
@@ -40,8 +39,6 @@ public class AverageBalanceCaluclationStrategy implements PrincipalCalculationSt
 
         List<EndOfDayDetail> endOfDayDetails = interestCalculationPeriodDetail.getDailyDetails();
 
-        MifosCurrency currencyInUse = Money.getDefaultCurrency();
-
         if (endOfDayDetails.isEmpty()) {
             return interestCalculationPeriodDetail.getBalanceBeforeInterval();
         }
@@ -49,7 +46,7 @@ public class AverageBalanceCaluclationStrategy implements PrincipalCalculationSt
         int duration = interestCalculationPeriodDetail.getDuration();
         LocalDate prevDate = startDate;
 
-        Money totalBalance = Money.zero(currencyInUse);
+        Money totalBalance = interestCalculationPeriodDetail.zeroAmount();
         Money runningBalance = interestCalculationPeriodDetail.getBalanceBeforeInterval();
 
         for (int count = 0; count < endOfDayDetails.size(); count++) {
@@ -66,13 +63,11 @@ public class AverageBalanceCaluclationStrategy implements PrincipalCalculationSt
 
             runningBalance = runningBalance.add(endOfDayDetails.get(count).getResultantAmountForDay());
 
-            //System.out.print(runningBalance+"x"+subDuration+" + ");
-
             totalBalance = totalBalance.add(runningBalance.multiply(subDuration));
 
             prevDate = nextDate;
         }
-            //System.out.println(" / "+duration);
+
         if (duration != 0 && totalBalance.isNonZero()) {
             totalBalance = totalBalance.divide(duration);
         }

@@ -36,13 +36,14 @@ import org.mifos.accounts.savings.interest.InterestCalculationPeriodDetail;
 import org.mifos.accounts.savings.interest.InterestCalculationPeriodResult;
 import org.mifos.accounts.savings.interest.InterestCalculator;
 import org.mifos.accounts.savings.interest.SavingsInterestCalculatorFactory;
+import org.mifos.accounts.savings.interest.SavingsInterestDetail;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.util.helpers.AccountPaymentData;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.SavingsPaymentData;
-import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -200,7 +201,10 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         if (!allEndOfDayDetailsForAccount.isEmpty()) {
             InterestCalcType interestCalcType = InterestCalcType.fromInt(savingsAccount.getInterestCalcType().getId());
-            InterestCalculator interestCalculator = SavingsInterestCalculatorFactory.create(interestCalcType);
+
+            int accountingNumberOfInterestDaysInYear = AccountingRules.getNumberOfInterestDays();
+            SavingsInterestDetail interestDetail = new SavingsInterestDetail(interestCalcType, savingsAccount.getInterestRate(), accountingNumberOfInterestDaysInYear, savingsAccount.getMinAmntForInt());
+            InterestCalculator interestCalculator = SavingsInterestCalculatorFactory.create(interestDetail);
 
             // NOTE: for first interest calculation period, calculation starts from the first deposit date and not
             // activation date
@@ -215,11 +219,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             List<InterestCalculationInterval> allPossible = interestCalculationIntervalHelper.determineAllPossibleInterestCalculationPeriods(firstDepositDate, interestCalculationEvent,new LocalDate());
             for (InterestCalculationInterval interval : allPossible) {
 
-                InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(interval,
-                                                                                    allEndOfDayDetailsForAccount,
-                                                                                    savingsAccount.getMinAmntForInt(),
-                                                                                    savingsAccount.getCurrency(),
-                                                                                    savingsAccount.getInterestRate(), totalBalanceBeforePeriod);
+                InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(interval, allEndOfDayDetailsForAccount, totalBalanceBeforePeriod);
 
                 InterestCalculationPeriodResult periodResults = interestCalculator.calculateSavingsDetailsForPeriod(interestCalculationPeriodDetail);
 
@@ -233,10 +233,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     private InterestCalculationPeriodDetail createInterestCalculationPeriodDetail(InterestCalculationInterval interval,
-            List<EndOfDayDetail> allEndOfDayDetailsForAccount,
-            Money minBalanceRequired,
-            MifosCurrency mifosCurrency,
-            Double interestRate, Money balanceBeforeInterval) {
+            List<EndOfDayDetail> allEndOfDayDetailsForAccount, Money balanceBeforeInterval) {
 
         Money balance = balanceBeforeInterval;
 
@@ -249,6 +246,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             }
         }
 
-        return new InterestCalculationPeriodDetail(interval, applicableDailyDetailsForPeriod, minBalanceRequired, balance, mifosCurrency, interestRate);
+        return new InterestCalculationPeriodDetail(interval, applicableDailyDetailsForPeriod, balance);
     }
 }
