@@ -45,8 +45,7 @@ public class InterestCalculationInterval {
 
     @Override
     public String toString() {
-        return new StringBuilder().append('[').append(interval.getStart().toLocalDate()).append('-')
+        return new StringBuilder().append('[').append(interval.getStart().toLocalDate()).append(" - ")
                 .append(interval.getEnd().toLocalDate()).append(']').toString();
     }
-
 }

@@ -69,7 +69,7 @@ public class SavingsInterestCalculatorTest {
 
         minBalanceRequired = TestUtils.createMoney("20");
         balanceBeforeInterval = TestUtils.createMoney("100");
-        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(calculationInterval, dailyDetails, minBalanceRequired, balanceBeforeInterval, minBalanceRequired.getCurrency(), 10.0, Boolean.FALSE);
+        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(calculationInterval, dailyDetails, minBalanceRequired, balanceBeforeInterval, minBalanceRequired.getCurrency(), 10.0);
     }
 
     @Test

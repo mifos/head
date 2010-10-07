@@ -40,17 +40,13 @@ public class InterestCalculationPeriodDetail {
     private final Double interestRate;
     private final Money balanceBeforeInterval;
 
-    public InterestCalculationPeriodDetail(InterestCalculationInterval interval, List<EndOfDayDetail> dailyDetails, Money minBalanceRequired, Money balanceBeforeInterval, MifosCurrency currency, Double interestRate, Boolean isFirstActivityBeforeInterval) {
+    public InterestCalculationPeriodDetail(InterestCalculationInterval interval, List<EndOfDayDetail> dailyDetails, Money minBalanceRequired, Money balanceBeforeInterval, MifosCurrency currency, Double interestRate) {
         this.dailyDetails = dailyDetails;
         this.minBalanceRequired = minBalanceRequired;
         this.currency = currency;
         this.interestRate = interestRate;
         this.balanceBeforeInterval = balanceBeforeInterval;
-        if(!isFirstActivityBeforeInterval && dailyDetails != null && !dailyDetails.isEmpty()) {
-            this.interval = new InterestCalculationInterval(dailyDetails.get(0).getDate(),interval.getEndDate());
-        } else {
-            this.interval = interval;
-        }
+        this.interval = interval;
     }
 
     public InterestCalculationInterval getInterval() {

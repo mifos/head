@@ -23,8 +23,7 @@ package org.mifos.accounts.savings.interest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.math.RoundingMode;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -34,6 +33,8 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRulesConstants;
+import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -42,50 +43,44 @@ public class AverageBalanceCaluclationStrategyTest {
     private PrincipalCalculationStrategy calculationStrategy;
 
     private InterestCalculationPeriodDetail interestCalculationPeriodDetail;
-    private InterestCalculationInterval interestCalculationInterval;
 
-    private LocalDate august10th = new LocalDate(new DateTime().withDate(2010, 8, 10));
-    private LocalDate august20th = new LocalDate(new DateTime().withDate(2010, 8, 20));
     private LocalDate august31st = new LocalDate(new DateTime().withDate(2010, 8, 31));
     private LocalDate september1st = new LocalDate(new DateTime().withDate(2010, 9, 1));
     private LocalDate september6th = new LocalDate(new DateTime().withDate(2010, 9, 6));
     private LocalDate september13th = new LocalDate(new DateTime().withDate(2010, 9, 13));
     private LocalDate september20th = new LocalDate(new DateTime().withDate(2010, 9, 20));
     private LocalDate september30th = new LocalDate(new DateTime().withDate(2010, 9, 30));
-    private LocalDate october1st = new LocalDate(new DateTime().withDate(2010, 10, 1));
 
-    private Money minBalanceRequired = TestUtils.createMoney("20");
-    private Money balanceBeforeInterval;
     private static MifosCurrency oldCurrency;
+    private static String oldRoundingMode;
 
     @BeforeClass
     public static void setCurrency() {
         oldCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
+        oldRoundingMode =  (String) ConfigurationManager.getInstance().getProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE);
+        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, RoundingMode.HALF_UP.toString());
     }
 
     @AfterClass
     public static void resetCurrency() {
+        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, oldRoundingMode);
         Money.setDefaultCurrency(oldCurrency);
+    }
+
+    private InterestCalculationPeriodBuilder zeroBalanceAug31stToSeptember30thCalculationPeriod() {
+        return new InterestCalculationPeriodBuilder().from(august31st).to(september30th).withStartingBalance("0");
     }
 
     @Before
     public void setup() {
         calculationStrategy = new AverageBalanceCaluclationStrategy();
-        interestCalculationInterval = new InterestCalculationInterval(august31st, september30th);
-        balanceBeforeInterval = TestUtils.createMoney("0");
     }
 
     @Test
     public void shouldRecieveZeroBalanceWithNoDailyRecords() {
 
-        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationInterval,
-                                                                              new ArrayList<EndOfDayDetail>(),
-                                                                              minBalanceRequired,
-                                                                              balanceBeforeInterval,
-                                                                              minBalanceRequired.getCurrency(),
-                                                                              10.0,
-                                                                              Boolean.FALSE);
+        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().build();
 
         // exercise test
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
@@ -101,13 +96,9 @@ public class AverageBalanceCaluclationStrategyTest {
         Money interest1 = TestUtils.createMoney("0");
         EndOfDayDetail endOfDayDetail = new EndOfDayDetail(september6th, deposit1, withdrawal1, interest1);
 
-        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationInterval,
-                                                                              Arrays.asList(endOfDayDetail),
-                                                                              minBalanceRequired,
-                                                                              balanceBeforeInterval,
-                                                                              minBalanceRequired.getCurrency(),
-                                                                              10.0,
-                                                                              Boolean.FALSE);
+        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().withMinRequiredBalance("20")
+                                                                                              .containing(endOfDayDetail)
+                                                                                              .build();
 
         // exercise test
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
@@ -115,31 +106,23 @@ public class AverageBalanceCaluclationStrategyTest {
         assertThat(averageBalancePrincipal, is(TestUtils.createMoney("1000")));
     }
 
-    /**
-     * test passes fine locally on windows but is failing on hudson ci server. It seems the decimal value is
-     * getting rounded up on hudson so we get 1708.4 instead of 1708.3
-     */
-    @Ignore
     @Test
     public void shouldCalculateAverageBalanceGivenTwoDailyBalancesExistWithinRange() {
 
         Money deposit1 = TestUtils.createMoney("1000");
         Money withdrawal1 = TestUtils.createMoney("0");
         Money interest1 = TestUtils.createMoney("0");
-        EndOfDayDetail endOfDayDetail = new EndOfDayDetail(september6th, deposit1, withdrawal1, interest1);
+        EndOfDayDetail september6thDetails = new EndOfDayDetail(september6th, deposit1, withdrawal1, interest1);
 
         Money deposit2 = TestUtils.createMoney("1000");
         Money withdrawal2 = TestUtils.createMoney("0");
         Money interest2 = TestUtils.createMoney("0");
-        EndOfDayDetail endOfDayDetail2 = new EndOfDayDetail(september13th, deposit2, withdrawal2, interest2);
+        EndOfDayDetail september13thDetails = new EndOfDayDetail(september13th, deposit2, withdrawal2, interest2);
 
-        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationInterval,
-                                                                              Arrays.asList(endOfDayDetail, endOfDayDetail2),
-                                                                              minBalanceRequired,
-                                                                              balanceBeforeInterval,
-                                                                              minBalanceRequired.getCurrency(),
-                                                                              10.0,
-                                                                              Boolean.FALSE);
+        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().withMinRequiredBalance("20")
+                                                                                              .containing(september6thDetails, september13thDetails)
+                                                                                              .from(september6th)
+                                                                                              .build();
 
         // exercise test
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
@@ -149,48 +132,37 @@ public class AverageBalanceCaluclationStrategyTest {
         assertThat(averageBalancePrincipal, is(TestUtils.createMoney("1708.3")));
     }
 
-    /**
-     * test passes fine locally on windows but is failing on hudson ci server. It seems the decimal value is
-     * getting rounded up on hudson so we get 2533.4 instead of 2533.3
-     */
-    @Ignore
     @Test
     public void shouldCalculateAverageBalanceGivenOneDepositExistBeforeRange() {
-
-        balanceBeforeInterval = TestUtils.createMoney("1000");
 
         Money deposit1 = TestUtils.createMoney("0");
         Money withdrawal1 = TestUtils.createMoney("0");
         Money interest1 = TestUtils.createMoney("0");
-        EndOfDayDetail endOfDayDetail = new EndOfDayDetail(september1st, deposit1, withdrawal1, interest1);
+        EndOfDayDetail september1stDetails = new EndOfDayDetail(september1st, deposit1, withdrawal1, interest1);
 
         Money deposit2 = TestUtils.createMoney("1000");
         Money withdrawal2 = TestUtils.createMoney("0");
         Money interest2 = TestUtils.createMoney("0");
-        EndOfDayDetail endOfDayDetail2 = new EndOfDayDetail(september6th, deposit2, withdrawal2, interest2);
+        EndOfDayDetail september6thDetails = new EndOfDayDetail(september6th, deposit2, withdrawal2, interest2);
 
         Money deposit3 = TestUtils.createMoney("1000");
         Money withdrawal3 = TestUtils.createMoney("0");
         Money interest3 = TestUtils.createMoney("0");
-        EndOfDayDetail endOfDayDetail3 = new EndOfDayDetail(september13th, deposit3, withdrawal3, interest3);
+        EndOfDayDetail september13thDetails = new EndOfDayDetail(september13th, deposit3, withdrawal3, interest3);
 
         Money deposit4 = TestUtils.createMoney("500");
         Money withdrawal4 = TestUtils.createMoney("0");
         Money interest4 = TestUtils.createMoney("0");
-        EndOfDayDetail endOfDayDetail4 = new EndOfDayDetail(september20th, deposit4, withdrawal4, interest4);
+        EndOfDayDetail september20thDetails = new EndOfDayDetail(september20th, deposit4, withdrawal4, interest4);
 
-        interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(interestCalculationInterval,
-                                                                              Arrays.asList(endOfDayDetail, endOfDayDetail2, endOfDayDetail3, endOfDayDetail4),
-                                                                              minBalanceRequired,
-                                                                              balanceBeforeInterval,
-                                                                              minBalanceRequired.getCurrency(),
-                                                                              10.0,
-                                                                              Boolean.TRUE);
+        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().withMinRequiredBalance("20")
+                                                                                              .withStartingBalance("1000")
+                                                .containing(september1stDetails, september6thDetails, september13thDetails, september20thDetails)
+                                                .build();
 
         // exercise test
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
 
-        // (1000 x 6 + 2000 x 7 + 3000 x 7 + 3500 x 10)/30 = 2533.33333...
         // verification
         assertThat(averageBalancePrincipal, is(TestUtils.createMoney(("2533.3"))));
     }

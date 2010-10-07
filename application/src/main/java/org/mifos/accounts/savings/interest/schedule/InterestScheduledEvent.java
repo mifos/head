@@ -18,30 +18,24 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.schedule.internal;
+package org.mifos.accounts.savings.interest.schedule;
 
-import org.joda.time.DateTime;
+import java.util.List;
 
-public class MonthlyAtEndOfMonthScheduledEvent extends AbstractScheduledEvent {
+import org.joda.time.LocalDate;
 
-    private final int every;
+/**
+ * When calculating interest for savings we care about certain scheduling certain events.
+ * These include interest calculation and posting which occur on day and month time periods.
+ *
+ * The dates for these events are typically calculated from a base date like the start of the fiscal year.
+ */
+public interface InterestScheduledEvent {
 
-    public MonthlyAtEndOfMonthScheduledEvent(int every) {
-        this.every = every;
-    }
+    LocalDate nextMatchingDateFromAlreadyMatchingDate(LocalDate validMatchingDate);
 
-    @Override
-    public int getEvery() {
-        return this.every;
-    }
+    List<LocalDate> findAllMatchingDatesFromBaseDateToCutOffDate(LocalDate baseDate, LocalDate cutOffDate);
 
-    @Override
-    public DateTime nearestMatchingDateBeginningAt(DateTime date) {
-        return nextEventDateAfter(date);
-    }
+    LocalDate findFirstDateOfPeriodForMatchingDate(LocalDate matchingDate);
 
-    @Override
-    public DateTime nextEventDateAfter(DateTime date) {
-        return date.withDayOfMonth(1).plusMonths(every).minusDays(1);
-    }
 }

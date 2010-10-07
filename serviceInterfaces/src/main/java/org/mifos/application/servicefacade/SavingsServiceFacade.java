@@ -40,6 +40,4 @@ public interface SavingsServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     void handleInterestCalculationAndPosting(Long savingsId);
 
-    @PreAuthorize("isFullyAuthenticated()")
-    void calculateInterest(LocalDate startDate, LocalDate endDate, Long savingsId);
 }
