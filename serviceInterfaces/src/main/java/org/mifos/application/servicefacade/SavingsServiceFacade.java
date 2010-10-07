@@ -20,7 +20,6 @@
 
 package org.mifos.application.servicefacade;
 
-import org.joda.time.LocalDate;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;

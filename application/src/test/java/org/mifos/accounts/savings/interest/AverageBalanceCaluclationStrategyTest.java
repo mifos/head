@@ -30,7 +30,6 @@ import org.joda.time.LocalDate;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRulesConstants;
