@@ -23,6 +23,8 @@ package org.mifos.accounts.savings.interest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.math.RoundingMode;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.AfterClass;
@@ -31,6 +33,8 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRulesConstants;
+import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -48,15 +52,19 @@ public class AverageBalanceCaluclationStrategyTest {
     private LocalDate september30th = new LocalDate(new DateTime().withDate(2010, 9, 30));
 
     private static MifosCurrency oldCurrency;
+    private static String oldRoundingMode;
 
     @BeforeClass
     public static void setCurrency() {
         oldCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
+        oldRoundingMode =  (String) ConfigurationManager.getInstance().getProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE);
+        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, RoundingMode.HALF_UP.toString());
     }
 
     @AfterClass
     public static void resetCurrency() {
+        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, oldRoundingMode);
         Money.setDefaultCurrency(oldCurrency);
     }
 
@@ -98,11 +106,6 @@ public class AverageBalanceCaluclationStrategyTest {
         assertThat(averageBalancePrincipal, is(TestUtils.createMoney("1000")));
     }
 
-    /**
-     * test passes fine locally on windows but is failing on hudson ci server. It seems the decimal value is
-     * getting rounded up on hudson so we get 1708.4 instead of 1708.3
-     */
-    @Ignore
     @Test
     public void shouldCalculateAverageBalanceGivenTwoDailyBalancesExistWithinRange() {
 
@@ -118,6 +121,7 @@ public class AverageBalanceCaluclationStrategyTest {
 
         interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().withMinRequiredBalance("20")
                                                                                               .containing(september6thDetails, september13thDetails)
+                                                                                              .from(september6th)
                                                                                               .build();
 
         // exercise test
@@ -128,11 +132,6 @@ public class AverageBalanceCaluclationStrategyTest {
         assertThat(averageBalancePrincipal, is(TestUtils.createMoney("1708.3")));
     }
 
-    /**
-     * test passes fine locally on windows but is failing on hudson ci server. It seems the decimal value is
-     * getting rounded up on hudson.
-     */
-    @Ignore
     @Test
     public void shouldCalculateAverageBalanceGivenOneDepositExistBeforeRange() {
 
@@ -165,6 +164,6 @@ public class AverageBalanceCaluclationStrategyTest {
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
 
         // verification
-        assertThat(averageBalancePrincipal, is(TestUtils.createMoney(("2586.2"))));
+        assertThat(averageBalancePrincipal, is(TestUtils.createMoney(("2533.3"))));
     }
 }
