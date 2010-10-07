@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.mifos.framework.util.helpers.Money;
 
-public class TotalBalanceCalculationStrategy implements PrincipalCalculationStrategy {
+public class TotalPrincipalForPeriodCalculationStrategy implements PrincipalCalculationStrategy {
 
     @Override
     public Money calculatePrincipal(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {

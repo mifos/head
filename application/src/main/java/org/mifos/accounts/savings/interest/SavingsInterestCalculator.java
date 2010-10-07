@@ -27,7 +27,7 @@ public class SavingsInterestCalculator implements InterestCalculator {
     private final PrincipalCalculationStrategy principalCalculationStrategy;
     private final SimpleInterestCalculationStrategy principalBasedInterestCalculation;
     private final InterestCalucationRule minimumBalanceRule;
-    private PrincipalCalculationStrategy totalPrincipalCalculationStrategy = new TotalBalanceCalculationStrategy();
+    private PrincipalCalculationStrategy totalPrincipalCalculationStrategy = new TotalPrincipalForPeriodCalculationStrategy();
 
     public SavingsInterestCalculator(PrincipalCalculationStrategy principalCalculationStrategy, SimpleInterestCalculationStrategy principalBasedInterestCalculation, InterestCalucationRule minimumBalanceRule) {
         this.principalCalculationStrategy = principalCalculationStrategy;
