@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.loan;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.ViewInstallmentDetailsPage;
@@ -76,9 +77,10 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
 
     @AfterMethod
     public void logOut() {
-//        (new MifosPage(selenium)).logout();
+        (new MifosPage(selenium)).logout();
     }
-
+    
+     @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyRepaymentScheduleField() throws Exception {
         int noOfInstallments = 5;
@@ -91,7 +93,7 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
         int minGap = 1;
         int minInstalmentAmount = 100;
         DateTime disbursalDate = getSystemCurrentDate();
-//        createLoanProductWithVariableInstalment(maxGap, minGap, minInstalmentAmount, formParameters);
+        createLoanProductWithVariableInstalment(maxGap, minGap, minInstalmentAmount, formParameters);
         createNewLoanAccountAndNavigateToRepaymentSchedule(disbursalDate).
         validateRepaymentScheduleFieldDefault(noOfInstallments).
                 validateDateField(disbursalDate,minGap,maxGap,noOfInstallments).
@@ -137,8 +139,7 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
     private CreateLoanAccountSearchParameters setLoanSearchParameters() {
         CreateLoanAccountSearchParameters accountSearchParameters = new CreateLoanAccountSearchParameters();
         accountSearchParameters.setSearchString(clientName);
-        accountSearchParameters.setLoanProduct("productWeekly2895");
-//        accountSearchParameters.setLoanProduct(loanProductName);
+        accountSearchParameters.setLoanProduct(loanProductName);
         return accountSearchParameters;
     }
 }

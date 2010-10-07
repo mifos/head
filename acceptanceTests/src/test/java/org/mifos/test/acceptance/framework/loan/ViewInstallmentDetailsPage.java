@@ -28,13 +28,9 @@ import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.testng.Assert;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 public class ViewInstallmentDetailsPage extends AbstractPage {
-    private String validateButton = "validateBtn";
-    private DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd-MMM-yyyy");
+    String validateButton = "validateBtn";
+    DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd-MMM-yyyy");
 
     public ViewInstallmentDetailsPage(Selenium selenium) {
         super(selenium);
@@ -96,7 +92,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
 
     public ViewInstallmentDetailsPage validateDateField(DateTime disbursalDate, int minGap, int maxGap, int noOfInstallments) {
         validateBlankDate(noOfInstallments);
-        validateInvalidDateFormat(minGap, noOfInstallments,disbursalDate,"dd-MM-");
+        validateInvalidDateFormat(noOfInstallments,disbursalDate,"dd-MM-");
 //        validateDateOrder(disbursalDate,minGap, noOfInstallments);
         validateGapForFirstDateAndDisbursalDate(disbursalDate);
         validateErrorForInstallmentGapsLessThanMinGap(minGap, noOfInstallments, disbursalDate);
@@ -112,7 +108,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         }
         clickValidateAndWaitForPAgeToLoad();
         for (int installment = 1; installment < noOfInstallments-1; installment++) {
-            Assert.assertTrue(selenium.isTextPresent("Gap between the due dates of installment "+String.valueOf(installment+1)+" and the previous installment is more than allowed"));
+            Assert.assertTrue(selenium.isTextPresent("Gap between the due dates of installment "+(installment+1)+" and the previous installment is more than allowed"));
         }
     }
 
@@ -133,11 +129,11 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         }
         clickValidateAndWaitForPAgeToLoad();
         for (int installment = 0; installment < noOfInstallment ; installment++) {
-            Assert.assertTrue(selenium.isTextPresent("Installment " + String.valueOf(installment+1) +" has an invalid due date. An example due date is 01-Apr-2010"));
+            Assert.assertTrue(selenium.isTextPresent("Installment " + (installment+1) +" has an invalid due date. An example due date is 01-Apr-2010"));
         }
     }
 
-    private void validateInvalidDateFormat(int minGap, int noOfInstallments, DateTime disbursalDate, String dateFormat) {
+    private void validateInvalidDateFormat(int noOfInstallments, DateTime disbursalDate, String dateFormat) {
         DateTime nextInstallment = disbursalDate;
         for (int installment = 0; installment < noOfInstallments; installment++) {
             nextInstallment = nextInstallment.plusDays(1);
@@ -145,7 +141,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         }
         clickValidateAndWaitForPAgeToLoad();
         for (int installment = 0; installment < noOfInstallments; installment++) {
-            Assert.assertTrue(selenium.isTextPresent("Installment " + String.valueOf(installment+1) +" has an invalid due date. An example due date is 01-Apr-2010"));
+            Assert.assertTrue(selenium.isTextPresent("Installment " + (installment+1) +" has an invalid due date. An example due date is 01-Apr-2010"));
         }
     }
 
@@ -157,7 +153,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
             }
         clickValidateAndWaitForPAgeToLoad();
         for (int installment = 1; installment < noOfInstallments-1; installment++) {
-            Assert.assertTrue(selenium.isTextPresent("Gap between the due dates of installment "+ String.valueOf(installment+1)+" and the previous installment is less than allowed"));
+            Assert.assertTrue(selenium.isTextPresent("Gap between the due dates of installment "+ (installment+1)+" and the previous installment is less than allowed"));
         }
 //        Assert.assertTrue(selenium.isTextPresent("Gap between disbursal date and due date of first installment is less than the allowable minimum gap"));
     }
@@ -185,11 +181,6 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         selenium.waitForPageToLoad("3000");
     }
 
-    private String getFormattedDate(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
-        return dateFormat.format(date);
-    }
-
     public void verifyInstallmentTotal(int noOfInstallments, int minInstalmentAmount) {
         verifyBlankTotalField(noOfInstallments);
         verifyErrorForTotalLessThanMinAmount(minInstalmentAmount,noOfInstallments);
@@ -202,7 +193,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         }
         clickValidateAndWaitForPAgeToLoad();
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
-            Assert.assertTrue(selenium.isTextPresent("Installment "+String.valueOf(installment+1)+" has invalid total amount"));
+            Assert.assertTrue(selenium.isTextPresent("Installment "+(installment+1)+" has invalid total amount"));
         }
     }
 
@@ -212,7 +203,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         }
         clickValidateAndWaitForPAgeToLoad();
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
-            Assert.assertTrue(selenium.isTextPresent("Installment "+String.valueOf(installment+1)+" has total amount less than the allowed value"));
+            Assert.assertTrue(selenium.isTextPresent("Installment "+(installment+1)+" has total amount less than the allowed value"));
         }
     }
 
@@ -222,7 +213,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         }
         clickValidateAndWaitForPAgeToLoad();
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
-            Assert.assertTrue(selenium.isTextPresent("Installment "+String.valueOf(installment+1)+" has invalid total amount"));
+            Assert.assertTrue(selenium.isTextPresent("Installment "+(installment+1)+" has invalid total amount"));
         }
 
     }
