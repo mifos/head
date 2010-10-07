@@ -46,10 +46,10 @@ public class InterestCalculationPeriodDetail {
         this.currency = currency;
         this.interestRate = interestRate;
         this.balanceBeforeInterval = balanceBeforeInterval;
-        if(!isFirstActivityBeforeInterval && dailyDetails != null && !dailyDetails.isEmpty()) {
-            this.interval = new InterestCalculationInterval(dailyDetails.get(0).getDate(),interval.getEndDate());
-        } else {
+        if(isFirstActivityBeforeInterval || dailyDetails == null || dailyDetails.isEmpty()) {
             this.interval = interval;
+        } else {
+            this.interval = new InterestCalculationInterval(dailyDetails.get(0).getDate(),interval.getEndDate());
         }
     }
 
