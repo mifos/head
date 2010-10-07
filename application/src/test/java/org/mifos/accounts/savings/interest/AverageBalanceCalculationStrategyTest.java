@@ -37,7 +37,7 @@ import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 
-public class AverageBalanceCaluclationStrategyTest {
+public class AverageBalanceCalculationStrategyTest {
 
     private PrincipalCalculationStrategy calculationStrategy;
 
@@ -73,7 +73,7 @@ public class AverageBalanceCaluclationStrategyTest {
 
     @Before
     public void setup() {
-        calculationStrategy = new AverageBalanceCaluclationStrategy();
+        calculationStrategy = new AverageBalanceCalculationStrategy();
     }
 
     @Test
