@@ -52,7 +52,7 @@ public class SavingsIntCalcHelper extends TaskHelper {
         }
         for (Integer accountId : accountList) {
             try {
-                savingsServiceFacade.handleInterestCalculation(accountId.longValue());
+                savingsServiceFacade.calculateInterest(accountId.longValue());
                 StaticHibernateUtil.commitTransaction();
             } catch (Exception e) {
                 StaticHibernateUtil.rollbackTransaction();

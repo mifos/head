@@ -32,6 +32,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.joda.time.LocalDate;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,6 +44,7 @@ import org.mifos.accounts.savings.interest.schedule.internal.MonthlyOnLastDayOfM
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
@@ -73,12 +75,20 @@ public class SavingsServiceFacadeWebTierTest {
     @Mock
     private HibernateTransactionHelper transactionHelper;
 
+    private MifosCurrency oldCurrency;
+
     @Before
     public void setupAndInjectDependencies() {
+        oldCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
         savingsServiceFacade = new SavingsServiceFacadeWebTier(savingsDao, personnelDao, customerDao);
         ((SavingsServiceFacadeWebTier)savingsServiceFacade).setSavingsInterestScheduledEventFactory(savingsInterestScheduledEventFactory);
         ((SavingsServiceFacadeWebTier)savingsServiceFacade).setTransactionHelper(transactionHelper);
+    }
+
+    @After
+    public void afterClass() {
+        Money.setDefaultCurrency(oldCurrency);
     }
 
     @Test
