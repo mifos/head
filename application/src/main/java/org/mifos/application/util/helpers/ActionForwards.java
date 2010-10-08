@@ -197,5 +197,6 @@ public enum ActionForwards {
     migrate_success,
     migrate_failure,
     validateInstallments_success,
-    validateInstallments_failure
+    validateInstallments_failure,
+    capture_cash_flow
 }

@@ -41,6 +41,7 @@ public class QuestionnaireFlowAdapter {
     public ActionForward fetchAppliedQuestions(
             ActionMapping mapping, QuestionResponseCapturer form,
             HttpServletRequest request, ActionForwards defaultForward) {
+        joinFlowAt = defaultForward;
         if (CollectionUtils.isEmpty(form.getQuestionGroups())) {
             List<QuestionGroupDetail> questionGroups = getQuestionGroups(request);
             if (CollectionUtils.isEmpty(questionGroups)) {
@@ -61,7 +62,7 @@ public class QuestionnaireFlowAdapter {
         return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
     }
 
-    public ActionErrors validateResponses(HttpServletRequest request, QuestionResponseCapturer form) {
+   public ActionErrors validateResponses(HttpServletRequest request, QuestionResponseCapturer form) {
         List<QuestionGroupDetail> groups = form.getQuestionGroups();
         QuestionnaireServiceFacade questionnaireServiceFacade = serviceLocator.getService(request);
         if ((groups == null) || (questionnaireServiceFacade == null)) {

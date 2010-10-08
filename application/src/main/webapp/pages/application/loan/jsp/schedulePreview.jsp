@@ -444,6 +444,42 @@ explanation of the license and how it is applied.
 												</html-el:button>
 											</td>
 										</tr>
+									<br/>
+										<tr>
+                                            <td>
+                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+													<tr>
+                                                        <td class="headingorange">
+															<mifos:mifoslabel name="loan.heading" />
+														</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td valign="top" align="center">
+                                                            <table width="100%" border="0" cellpadding="3" cellspacing="0">
+                                                            <tr  class="drawtablerowbold"  >
+                                                                <td width="10%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.months" /></b></td>
+                                                                <td width="22%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.cumulativecashflow" /></b></td>
+                                                                <td width="17%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.cashflownotes" /></b></td>
+                                                            </tr>
+                                                            <c:forEach var="monthlyCashflowForm" items="${loanAccountActionForm.cashFlowForm.monthlyCashFlows}" varStatus="loopStatus">
+                                                            <tr>
+                                                                <td class="drawtablerow" align="center">
+                                                                    <c:out value="${monthlyCashflowForm.dateTimeAsString}" />
+                                                                </td>
+                                                                <td class="drawtablerow" align="center">
+                                                                    <c:out value="${monthlyCashflowForm.cumulativeCashFlow}" />
+                                                                </td>
+                                                                <td class="drawtablerow" align="center">
+                                                                    <c:out value="${monthlyCashflowForm.notes}" />
+                                                                </td>
+                                                            </tr>
+                                                            </c:forEach>
+                                                        </table>
+                                                        </td>
+                                                   </tr>
+												</table>
+											</td>
+										</tr>
 									</table>
 									<br>
 								</td>

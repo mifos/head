@@ -30,6 +30,7 @@ public class MonthlyCashFlowDetail implements Serializable {
     private Double expense;
     private String notes;
     private Double revenue;
+    private CashFlowDetail cashFlowDetail;
 
     public MonthlyCashFlowDetail(DateTime dateTime, Double revenue, Double expense, String notes) {
         this.dateTime = dateTime;
@@ -64,5 +65,13 @@ public class MonthlyCashFlowDetail implements Serializable {
 
     public DateTime getDateTime() {
         return dateTime;
+    }
+
+    public Double getCumulativeCashFlow() {
+        return cashFlowDetail.getCumulativeCashFlowForMonth(dateTime);
+    }
+
+    public void setCashFlowDetail(CashFlowDetail cashFlowDetail) {
+        this.cashFlowDetail = cashFlowDetail;
     }
 }

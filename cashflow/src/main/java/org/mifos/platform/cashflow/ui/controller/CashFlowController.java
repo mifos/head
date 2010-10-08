@@ -24,7 +24,6 @@ import org.joda.time.DateTime;
 import org.mifos.platform.cashflow.CashFlowConstants;
 import org.mifos.platform.cashflow.service.CashFlowDetail;
 import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
-import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
@@ -43,7 +42,7 @@ import static java.text.MessageFormat.format;
 @SessionAttributes(value = {"cashFlow", "joinUrl", "cancelUrl"})
 public class CashFlowController {
 
-    public String capture(CashFlowForm cashFlowForm, RequestContext requestContext, ExternalContext externalContext) {
+    public String capture(org.mifos.platform.cashflow.ui.model.CashFlowForm cashFlowForm, RequestContext requestContext, ExternalContext externalContext) {
         String result = "failure";
         if (validate(cashFlowForm, requestContext.getMessageContext())) {
             externalContext.getGlobalSessionMap().put("cashFlow", cashFlowForm);
@@ -53,17 +52,17 @@ public class CashFlowController {
     }
     
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public CashFlowForm prepareCashFlowForm(int startMonth, int startYear, int noOfMonths) {
+    public org.mifos.platform.cashflow.ui.model.CashFlowForm prepareCashFlowForm(int startMonth, int startYear, int noOfMonths) {
         DateTime startMonthYear = new DateTime(startYear, startMonth, 1, 1, 1, 1, 1);
         List<MonthlyCashFlowDetail> monthlyCashFlowDetails = new ArrayList<MonthlyCashFlowDetail>();
         for (int i = 0; i < noOfMonths; i++) {
             monthlyCashFlowDetails.add(new MonthlyCashFlowDetail(startMonthYear, null, null, null));
             startMonthYear = startMonthYear.plusMonths(1);
         }
-        return new CashFlowForm(new CashFlowDetail(monthlyCashFlowDetails));
+        return new org.mifos.platform.cashflow.ui.model.CashFlowForm(new CashFlowDetail(monthlyCashFlowDetails));
     }
 
-    public boolean validate(CashFlowForm cashFlowForm, MessageContext messageContext) {
+    public boolean validate(org.mifos.platform.cashflow.ui.model.CashFlowForm cashFlowForm, MessageContext messageContext) {
         List<MonthlyCashFlowForm> monthlyCashFlows = cashFlowForm.getMonthlyCashFlows();
         for (MonthlyCashFlowForm monthlyCashFlowForm : monthlyCashFlows) {
             validateExpense(messageContext, monthlyCashFlowForm);

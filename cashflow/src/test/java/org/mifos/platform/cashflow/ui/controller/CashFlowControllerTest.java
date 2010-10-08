@@ -29,7 +29,6 @@ import org.mifos.platform.cashflow.builder.CashFlowDetailsBuilder;
 import org.mifos.platform.cashflow.matchers.CashFlowFormMatcher;
 import org.mifos.platform.cashflow.service.CashFlowDetail;
 import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
-import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.matchers.MessageMatcher;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -108,24 +107,24 @@ public class CashFlowControllerTest {
         Mockito.verify(messageContext).addMessage(argThat(new MessageMatcher(CashFlowConstants.EMPTY_NOTES)));
     }
 
-    private CashFlowForm getInvalidCashFlowForm(MonthlyCashFlowDetail monthlyCashFlowDetail) {
+    private org.mifos.platform.cashflow.ui.model.CashFlowForm getInvalidCashFlowForm(MonthlyCashFlowDetail monthlyCashFlowDetail) {
         CashFlowDetail cashFlowDetail = new CashFlowDetailsBuilder().
                 withMonthlyCashFlow(new MonthlyCashFlowDetail(new DateTime(2010, 9, 1, 1, 1, 1, 1), 1d, 2d, "testNotes")).
                 withMonthlyCashFlow(monthlyCashFlowDetail).
                 withMonthlyCashFlow(new MonthlyCashFlowDetail(new DateTime(2010, 11, 1, 1, 1, 1, 1), 1d, 2d, "testNotes")).
                 build();
-        return new CashFlowForm(cashFlowDetail);
+        return new org.mifos.platform.cashflow.ui.model.CashFlowForm(cashFlowDetail);
     }
 
-    private CashFlowForm getValidCashFlowForm() {
+    private org.mifos.platform.cashflow.ui.model.CashFlowForm getValidCashFlowForm() {
         CashFlowDetail cashFlowDetail = new CashFlowDetailsBuilder().
                 withMonthlyCashFlow(new MonthlyCashFlowDetail(new DateTime(2010, 9, 1, 1, 1, 1, 1), 1d, 2d, "testNotes")).
                 withMonthlyCashFlow(new MonthlyCashFlowDetail(new DateTime(2010, 9, 1, 1, 1, 1, 1), 1.1d, 2.2d, "testNotes")).
                 build();
-        return new CashFlowForm(cashFlowDetail);
+        return new org.mifos.platform.cashflow.ui.model.CashFlowForm(cashFlowDetail);
     }
 
-    private CashFlowForm getCashFlowForm() {
+    private org.mifos.platform.cashflow.ui.model.CashFlowForm getCashFlowForm() {
         CashFlowDetail cashFlowDetail = new CashFlowDetailsBuilder().
                 withMonthlyCashFlow(new MonthlyCashFlowDetail(new DateTime(2010, 9, 1, 1, 1, 1, 1), null, null, null)).
                 withMonthlyCashFlow(new MonthlyCashFlowDetail(new DateTime(2010, 10, 2, 2, 2, 2, 2), null, null, null)).
@@ -134,7 +133,7 @@ public class CashFlowControllerTest {
                 withMonthlyCashFlow(new MonthlyCashFlowDetail(new DateTime(2011, 1, 5, 5, 6, 7, 8), null, null, null)).
                 withMonthlyCashFlow(new MonthlyCashFlowDetail(new DateTime(2011, 2, 1, 2, 3, 4, 5), null, null, null)).
                 build();
-        return new CashFlowForm(cashFlowDetail);
+        return new org.mifos.platform.cashflow.ui.model.CashFlowForm(cashFlowDetail);
     }
 }
 

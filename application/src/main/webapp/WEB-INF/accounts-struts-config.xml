@@ -225,7 +225,18 @@
             <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
             <forward name="validateInstallments_success" path="/pages/application/loan/jsp/schedulePreview.jsp"/>
             <forward name="validateInstallments_failure" path="/pages/application/loan/jsp/schedulePreview.jsp"/>
+            <forward name="capture_cash_flow" path="/captureCashFlow.ftl"/>
         </action>
+
+        <!--  
+		<action path="/cashFlowForward" type="org.apache.struts.actions.ForwardAction"
+			parameter="/pages/application/loan/jsp/schedulePreview.jsp" input="/loanAccountAction.do?method=schedulePreview" scope="request"
+			validate="false">
+		</action>
+        -->
+        
+        
+        
         <action path="/savingsDepositWithdrawalAction"
                 type="org.mifos.accounts.savings.struts.action.SavingsDepositWithdrawalAction"
                 name="savingsDepositWithdrawalForm" parameter="method"

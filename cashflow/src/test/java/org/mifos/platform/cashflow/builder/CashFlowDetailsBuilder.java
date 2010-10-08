@@ -19,11 +19,10 @@
  */
 package org.mifos.platform.cashflow.builder;
 
-import org.joda.time.DateTime;
+import java.util.ArrayList;
+
 import org.mifos.platform.cashflow.service.CashFlowDetail;
 import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
-
-import java.util.ArrayList;
 
 public class CashFlowDetailsBuilder {
     private CashFlowDetail cashFlowDetail;

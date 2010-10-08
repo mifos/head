@@ -105,6 +105,8 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.cashflow.CashFlowHelper;
+import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.reports.admindocuments.persistence.AdminDocAccStateMixPersistence;
@@ -117,6 +119,7 @@ import org.mifos.service.MifosServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -227,6 +230,7 @@ import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
  */
 public class LoanAccountAction extends AccountAppAction implements QuestionnaireAction {
 
+
     private final LoanBusinessService loanBusinessService;
     private final LoanPrdBusinessService loanPrdBusinessService;
     private final ClientBusinessService clientBusinessService;
@@ -327,6 +331,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         security.allow("captureQuestionResponses", SecurityConstants.VIEW);
         security.allow("editQuestionResponses", SecurityConstants.VIEW);
         security.allow("validateInstallments", SecurityConstants.VIEW);
+        security.allow("showPreview", SecurityConstants.VIEW);
         return security;
     }
 
@@ -472,6 +477,17 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     @TransactionDemarcate(joinToken = true)
+    public ActionForward showPreview(final ActionMapping mapping, final ActionForm form,
+            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
+            throws Exception {
+        LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
+        request.setAttribute(METHODCALLED, "showPreview");
+        loanActionForm.setCashFlowForm((CashFlowForm) request.getSession().getAttribute("cashFlow"));
+        return mapping.findForward(ActionForwards.schedulePreview_success.toString());
+    }
+
+
+    @TransactionDemarcate(joinToken = true)
     public ActionForward schedulePreview(final ActionMapping mapping, final ActionForm form,
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
             throws Exception {
@@ -498,11 +514,20 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 .isLoanPendingApprovalDefined(), request);
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, disbursementDate, request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, loanActionForm.getLoanAmount(), request);
-        // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp 
+        // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
         setInstallmentsOnSession(request, loanActionForm);
 
-        return createLoanQuestionnaire.fetchAppliedQuestions(
-                mapping, loanActionForm, request, ActionForwards.schedulePreview_success);
+        ActionForwards nextView = ActionForwards.schedulePreview_success;
+
+        if (loanOffering.isCashFlowCheckEnabled()) {
+            DateTime lastInstallmentDueDate = getLastInstallmentDueDate(retrieveLoanSchedule(request, loanActionForm,
+                    userContext, disbursementDate));
+            new CashFlowHelper().prepareCashFlowContext("loanAccountAction.do?method=showPreview", "custSearchAction.do?method=loadMainSearch",
+                    disbursementDate, lastInstallmentDueDate, request.getSession());
+            nextView = ActionForwards.capture_cash_flow;
+        }
+
+        return createLoanQuestionnaire.fetchAppliedQuestions(mapping, loanActionForm, request, nextView);
     }
 
     private LoanCreationLoanScheduleDetailsDto retrieveLoanSchedule(HttpServletRequest request, LoanAccountActionForm loanActionForm,
@@ -1608,6 +1633,12 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 actionErrors.add(childException.getKey(), new ActionMessage(childException.getKey(), childException.getIdentifier()));
             }
         }
+    }
+
+    private DateTime getLastInstallmentDueDate(LoanCreationLoanScheduleDetailsDto loanCreationLoanScheduleDetailsDto) {
+        int indexOfLastInstallment = loanCreationLoanScheduleDetailsDto.getInstallments().size() - 1;
+        return new DateTime(loanCreationLoanScheduleDetailsDto.getInstallments().get(indexOfLastInstallment)
+                .getDueDateValue());
     }
 
 }

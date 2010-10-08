@@ -19,19 +19,40 @@
  */
 package org.mifos.platform.cashflow.service;
 
+import org.joda.time.DateTime;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CashFlowDetail implements Serializable {
     private static final long serialVersionUID = -6731316163493318834L;
     List<MonthlyCashFlowDetail> monthlyCashFlowDetails;
 
-    public CashFlowDetail(List<MonthlyCashFlowDetail> monthlyCashFlows) {
-        this.monthlyCashFlowDetails = monthlyCashFlows;
+    public CashFlowDetail() {
+        monthlyCashFlowDetails = new ArrayList<MonthlyCashFlowDetail>();
     }
 
+    public CashFlowDetail(List<MonthlyCashFlowDetail> monthlyCashFlows) {
+        monthlyCashFlowDetails = new ArrayList<MonthlyCashFlowDetail>(monthlyCashFlows);
+        for (MonthlyCashFlowDetail monthlyCashFlowDetail : monthlyCashFlowDetails) {
+            monthlyCashFlowDetail.setCashFlowDetail(this);
+        }
+    }
 
     public List<MonthlyCashFlowDetail> getMonthlyCashFlowDetails() {
         return monthlyCashFlowDetails;
     }
+
+    public Double getCumulativeCashFlowForMonth(DateTime dateTime) {
+        Double cumulative = 0.0d;
+        for (MonthlyCashFlowDetail monthlyCashFlowDetail : getMonthlyCashFlowDetails()) {
+            if (monthlyCashFlowDetail.getDateTime().compareTo(dateTime) <= 0) {
+                cumulative += (monthlyCashFlowDetail.getRevenue() - monthlyCashFlowDetail.getExpense());
+            }
+        }
+        return cumulative;
+    }
+
+
 }

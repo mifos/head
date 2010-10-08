@@ -55,6 +55,10 @@
                 <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "cashflow.cancel"/]" class="cancelbuttn"/>
             </div>
         </div>
+    [#if flowKey??]
+        <input type="hidden" id="currentFlowKey" name="currentFlowKey" value="${flowKey}"/>
+    [/#if]
+
     </form>
 </div>
 [/@headerOnlyLayout]

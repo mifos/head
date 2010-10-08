@@ -23,4 +23,9 @@ public class CashFlowConstants {
     public static final String EMPTY_EXPENSE = "CashFlowForm.monthlyCashFlows.expense";
     public static final String EMPTY_REVENUE = "CashFlowForm.monthlyCashFlows.revenue";
     public static final String EMPTY_NOTES = "CashFlowForm.monthlyCashFlows.notes";
+    public static final String CANCEL_URL = "cancelUrl";
+    public static final String JOIN_URL = "joinUrl";
+    public static final String NO_OF_MONTHS = "noOfMonths";
+    public static final String START_YEAR = "startYear";
+    public static final String START_MONTH = "startMonth";
 }

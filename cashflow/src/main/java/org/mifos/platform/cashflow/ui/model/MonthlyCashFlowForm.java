@@ -19,6 +19,8 @@
  */
 package org.mifos.platform.cashflow.ui.model;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 
 import java.io.Serializable;
@@ -70,6 +72,11 @@ public class MonthlyCashFlowForm implements Serializable {
         monthlyCashFlowDetail.setNotes(notes);
     }
 
+    public String getDateTimeAsString() {
+        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("MMM-yyyy");
+        return monthlyCashFlowDetail.getDateTime().toString(timeFormatter);
+    }
+
     @Override
     public String toString() {
         return "MonthlyCashFlowForm{" +
@@ -79,5 +86,9 @@ public class MonthlyCashFlowForm implements Serializable {
                 "Month=" + getMonth() +
                 "Year=" + getYear() +
                 '}';
+    }
+
+    public Double getCumulativeCashFlow() {
+        return monthlyCashFlowDetail.getCumulativeCashFlow();
     }
 }

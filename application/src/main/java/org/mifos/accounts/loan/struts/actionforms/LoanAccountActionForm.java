@@ -70,6 +70,8 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.platform.cashflow.service.CashFlowDetail;
+import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.util.UserContext;
 
@@ -207,6 +209,8 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     private Integer maximumGapInDays;
 
     private Money minInstallmentAmount;
+
+    private CashFlowForm cashFlowForm;
 
     public Date getOriginalDisbursementDate() {
         return this.originalDisbursementDate;
@@ -1544,5 +1548,13 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     
     public void setMinInstallmentAmount(Money minInstallmentAmount) {
         this.minInstallmentAmount = minInstallmentAmount;
+    }
+
+    public CashFlowForm getCashFlowForm() {
+        return cashFlowForm;
+    }
+
+    public void setCashFlowForm(CashFlowForm cashFlowForm) {
+        this.cashFlowForm = cashFlowForm;
     }
 }
