@@ -100,8 +100,8 @@ explanation of the license and how it is applied.
 									</td>
 								</tr>
 								<tr class="fontnormal">
-									<td width="27%" align="right"><mifos:mifosalphanumtext
-										styleId="feescreate.input.feeName" property="feeName" /></td>
+									<td width="27%" align="right"><mifos:mifoslabel
+										name="Fees.feename" mandatory="yes" /></td>
 									<td width="73%" valign="top"><mifos:mifosalphanumtext
 										styleId="feescreate.input.feeName" property="feeName" /></td>
 								</tr>
