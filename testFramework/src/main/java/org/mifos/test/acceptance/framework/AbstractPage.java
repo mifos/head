@@ -21,12 +21,14 @@
 package org.mifos.test.acceptance.framework;
 
 import com.thoughtworks.selenium.Selenium;
+import org.testng.Assert;
 
 /**
- * Base class for all Page objects - There should be a Page object for each page referenced in an Selenium-based
- * acceptance test. Page objects should be the place that all verification and navigation is done, to keep this activity
- * in one place. If the web page changes, then only one class needs to change to make all the tests that reference it
- * work.
+ * Base class for all Page objects -
+ * There should be a Page object for each page referenced in an Selenium-based acceptance test.
+ * Page objects should be the place that all verification and navigation is done,
+ * to keep this activity in one place. If the web page changes, then only one class
+ * needs to change to make all the tests that reference it work.
  */
 public class AbstractPage {
 
@@ -59,11 +61,7 @@ public class AbstractPage {
     }
 
     public void verifyPage(String pageName) {
-        if (!selenium.getAttribute("page.id@title").equals(pageName)) {
-            System.err.println("We are on " + selenium.getAttribute("page.id@title") + " instead!");
-            throw new AssertionError("page id not found");
-        }
-
+        Assert.assertEquals(selenium.getAttribute("page.id@title"), pageName);
     }
 
 }
