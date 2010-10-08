@@ -42,4 +42,5 @@ public interface SavingsServiceFacade {
 
     void batchPostInterestToSavingsAccount(LocalDate dateOfBatchJob);
 
+    void calculateInterest(Long savingsId);
 }

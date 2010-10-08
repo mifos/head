@@ -259,6 +259,58 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         }
     }
 
+    @Override
+    public void calculateInterest(Long savingsId) {
+
+        SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
+
+        Money interestCalculatedTillDate = savingsAccount.getInterestToBePosted();
+
+        if(interestCalculatedTillDate == null) {
+            interestCalculatedTillDate = Money.zero(savingsAccount.getCurrency());
+        }
+
+        if(savingsAccount.getNextIntCalcDate() == null) {
+            throw new IllegalArgumentException("Next Interest calculation date was " + savingsAccount.getNextIntCalcDate());
+        }
+
+        LocalDate startDate = new LocalDate(savingsAccount.getNextIntCalcDate());
+
+        InterestScheduledEvent interestCalculationEvent = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
+        LocalDate endDate = interestCalculationEvent.nextMatchingDateFromAlreadyMatchingDate(startDate);
+
+        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), savingsId);
+
+        if (!allEndOfDayDetailsForAccount.isEmpty()) {
+
+            InterestCalcType interestCalcType = InterestCalcType.fromInt(savingsAccount.getInterestCalcType().getId());
+
+            int accountingNumberOfInterestDaysInYear = AccountingRules.getNumberOfInterestDays();
+
+            SavingsInterestDetail interestDetail = new SavingsInterestDetail(interestCalcType, savingsAccount.getInterestRate(), accountingNumberOfInterestDaysInYear, savingsAccount.getMinAmntForInt());
+
+            InterestCalculator interestCalculator = SavingsInterestCalculatorFactory.create(interestDetail);
+
+            LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();
+
+            if(firstDepositDate.isAfter(startDate)) {
+                startDate = firstDepositDate;
+            }
+
+            InterestCalculationInterval interval = new InterestCalculationInterval(startDate, endDate);
+            Money totalBalanceBeforePeriod = Money.zero(savingsAccount.getCurrency());
+            InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(interval, allEndOfDayDetailsForAccount, totalBalanceBeforePeriod);
+
+            InterestCalculationPeriodResult periodResults = interestCalculator.calculateSavingsDetailsForPeriod(interestCalculationPeriodDetail);
+
+            interestCalculatedTillDate = interestCalculatedTillDate.add(periodResults.getInterest());
+        }
+
+        savingsAccount.setInterestToBePosted(interestCalculatedTillDate);
+        savingsAccount.setNextIntCalcDate(endDate.toDateMidnight().toDate());
+
+    }
+
     private InterestCalculationPeriodDetail createInterestCalculationPeriodDetail(InterestCalculationInterval interval,
             List<EndOfDayDetail> allEndOfDayDetailsForAccount, Money balanceBeforeInterval) {
 
@@ -267,7 +319,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         List<EndOfDayDetail> applicableDailyDetailsForPeriod = new ArrayList<EndOfDayDetail>();
 
         for (EndOfDayDetail endOfDayDetail : allEndOfDayDetailsForAccount) {
-
+            if (interval.getStartDate().isAfter(endOfDayDetail.getDate())) {
+                balance = balance.add(endOfDayDetail.getResultantAmountForDay());
+            }
             if (interval.dateFallsWithin(endOfDayDetail.getDate())) {
                 applicableDailyDetailsForPeriod.add(endOfDayDetail);
             }

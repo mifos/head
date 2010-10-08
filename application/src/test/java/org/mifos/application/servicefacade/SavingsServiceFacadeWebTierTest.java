@@ -29,19 +29,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.interest.EndOfDayDetail;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.savings.interest.schedule.internal.MonthlyOnLastDayOfMonthInterestScheduledEvent;
 import org.mifos.accounts.savings.persistence.SavingsDao;
+import org.mifos.application.collectionsheet.persistence.GroupBuilder;
+import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -67,6 +75,7 @@ public class SavingsServiceFacadeWebTierTest {
 
     @Before
     public void setupAndInjectDependencies() {
+        Money.setDefaultCurrency(TestUtils.RUPEE);
         savingsServiceFacade = new SavingsServiceFacadeWebTier(savingsDao, personnelDao, customerDao);
         ((SavingsServiceFacadeWebTier)savingsServiceFacade).setSavingsInterestScheduledEventFactory(savingsInterestScheduledEventFactory);
         ((SavingsServiceFacadeWebTier)savingsServiceFacade).setTransactionHelper(transactionHelper);
@@ -125,6 +134,56 @@ public class SavingsServiceFacadeWebTierTest {
         verify(this.savingsAccount).postInterest(postingSchedule);
         verify(this.savingsDao).save(savingsAccount);
         verify(this.transactionHelper).commitTransaction();
+    }
+
+    @Test
+    public void calculateInterestMinimumBalanceForNoActivitiesInCalculationInterval() {
+        Long savingsId = 10394L;
+        ((SavingsServiceFacadeWebTier)savingsServiceFacade).setSavingsInterestScheduledEventFactory(new SavingsInterestScheduledEventFactory());
+        CustomerBO customer = new GroupBuilder().build();
+        SavingsBO savingsAccount = new SavingsAccountBuilder().withCustomer(customer).build();
+        savingsAccount.setNextIntCalcDate(new LocalDate(2010,9,30).toDateTimeAtStartOfDay().toDate());
+        savingsAccount.setMinAmntForInt(TestUtils.createMoney("100"));
+
+        when(savingsDao.findById(savingsId)).thenReturn(savingsAccount);
+
+        List<EndOfDayDetail> daily = new ArrayList<EndOfDayDetail>();
+
+        daily.add(new EndOfDayDetail(new LocalDate(2010,7,30), TestUtils.createMoney(1000), TestUtils.createMoney(), TestUtils.createMoney()));
+        daily.add(new EndOfDayDetail(new LocalDate(2010,8,15), TestUtils.createMoney(500), TestUtils.createMoney(), TestUtils.createMoney()));
+        daily.add(new EndOfDayDetail(new LocalDate(2010,8,20), TestUtils.createMoney(), TestUtils.createMoney(1000), TestUtils.createMoney()));
+
+        when(savingsDao.retrieveAllEndOfDayDetailsFor(TestUtils.RUPEE, savingsId)).thenReturn(daily);
+
+        savingsServiceFacade.calculateInterest(savingsId);
+
+        Assert.assertEquals(TestUtils.createMoney("1.7"), savingsAccount.getInterestToBePosted());
+        Assert.assertEquals(new LocalDate(2010,10,31), new LocalDate(savingsAccount.getNextIntCalcDate()));
+    }
+
+    @Test
+    public void calculateInterestMinimumBalanceForActivitiesInCalculationInterval() {
+        Long savingsId = 10394L;
+        ((SavingsServiceFacadeWebTier)savingsServiceFacade).setSavingsInterestScheduledEventFactory(new SavingsInterestScheduledEventFactory());
+        CustomerBO customer = new GroupBuilder().build();
+        SavingsBO savingsAccount = new SavingsAccountBuilder().withCustomer(customer).build();
+        savingsAccount.setNextIntCalcDate(new LocalDate(2010,9,30).toDateTimeAtStartOfDay().toDate());
+        savingsAccount.setMinAmntForInt(TestUtils.createMoney("100"));
+
+        when(savingsDao.findById(savingsId)).thenReturn(savingsAccount);
+
+        List<EndOfDayDetail> daily = new ArrayList<EndOfDayDetail>();
+
+        daily.add(new EndOfDayDetail(new LocalDate(2010,8,30), TestUtils.createMoney(1000), TestUtils.createMoney(), TestUtils.createMoney()));
+        daily.add(new EndOfDayDetail(new LocalDate(2010,9,15), TestUtils.createMoney(500), TestUtils.createMoney(), TestUtils.createMoney()));
+        daily.add(new EndOfDayDetail(new LocalDate(2010,9,20), TestUtils.createMoney(), TestUtils.createMoney(1000), TestUtils.createMoney()));
+
+        when(savingsDao.retrieveAllEndOfDayDetailsFor(TestUtils.RUPEE, savingsId)).thenReturn(daily);
+
+        savingsServiceFacade.calculateInterest(savingsId);
+
+        Assert.assertEquals(TestUtils.createMoney("1.7"), savingsAccount.getInterestToBePosted());
+        Assert.assertEquals(new LocalDate(2010,10,31), new LocalDate(savingsAccount.getNextIntCalcDate()));
     }
 
 }

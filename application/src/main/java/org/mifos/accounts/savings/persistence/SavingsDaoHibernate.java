@@ -53,6 +53,7 @@ public class SavingsDaoHibernate implements SavingsDao {
         this.baseDao = baseDao;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<CollectionSheetCustomerSavingDto> findAllMandatorySavingAccountsForClientsOrGroupsWithCompleteGroupStatusForCustomerHierarchy(
             final CustomerHierarchyParams customerHierarchyParams) {
@@ -79,6 +80,7 @@ public class SavingsDaoHibernate implements SavingsDao {
         return nullSafeSavingsHierarchy(mandatorySavingsOnRootCustomer, mandatorySavingsOnRestOfHierarchy);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<CollectionSheetCustomerSavingDto> findAllVoluntarySavingAccountsForClientsAndGroupsWithCompleteGroupStatusForCustomerHierarchy(
             final CustomerHierarchyParams customerHierarchyParams) {
@@ -105,6 +107,7 @@ public class SavingsDaoHibernate implements SavingsDao {
         return nullSafeSavingsHierarchy(voluntarySavingsOnRootCustomer, voluntarySavingsOnRestOfHierarchy);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<CollectionSheetCustomerSavingDto> findAllMandatorySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(
             final CustomerHierarchyParams customerHierarchyParams) {
@@ -132,6 +135,7 @@ public class SavingsDaoHibernate implements SavingsDao {
                 perIndividualGroupSavingsOnRestOfHierarchy);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<CollectionSheetCustomerSavingDto> findAllVoluntarySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(
             final CustomerHierarchyParams customerHierarchyParams) {
@@ -173,6 +177,7 @@ public class SavingsDaoHibernate implements SavingsDao {
         return nullSafeSavings;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<CollectionSheetCustomerSavingsAccountDto> findAllSavingAccountsForCustomerHierarchy(
             CustomerHierarchyParams customerHierarchyParams) {
@@ -257,5 +262,14 @@ public class SavingsDaoHibernate implements SavingsDao {
         }
 
         return postingPendingAccounts;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Integer> retreiveAccountsPendingForInterestCalculation(LocalDate currentDate) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("currentDate", currentDate);
+        List<Integer> queryResult = (List<Integer>) this.baseDao.executeNamedQuery("accounts.retrieveSavingsAccountsIntCalc", queryParameters);
+        return queryResult;
     }
 }

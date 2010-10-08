@@ -357,7 +357,7 @@ public class SavingsBO extends AccountBO {
         return nextIntCalcDate;
     }
 
-    void setNextIntCalcDate(final Date nextIntCalcDate) {
+    public void setNextIntCalcDate(final Date nextIntCalcDate) {
         this.nextIntCalcDate = nextIntCalcDate;
     }
 
@@ -393,7 +393,7 @@ public class SavingsBO extends AccountBO {
         this.interestRate = interestRate;
     }
 
-    private void setMinAmntForInt(final Money minAmntForInt) {
+    public void setMinAmntForInt(final Money minAmntForInt) {
         this.minAmntForInt = minAmntForInt;
     }
 

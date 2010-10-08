@@ -21,12 +21,12 @@
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.config.business.Configuration;
+import org.joda.time.LocalDate;
+import org.mifos.accounts.savings.persistence.SavingsDao;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
@@ -34,26 +34,25 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class SavingsIntCalcHelper extends TaskHelper {
 
+    protected SavingsServiceFacade savingsServiceFacade = DependencyInjectedServiceLocator.locateSavingsServiceFacade();
+    protected SavingsDao savingsDao = DependencyInjectedServiceLocator.locateSavingsDao();
+
     public SavingsIntCalcHelper() {
         super();
     }
 
     @Override
-    public void execute(long timeInMillis) throws BatchJobException {
-        Calendar cal = Calendar.getInstance(Configuration.getInstance().getSystemConfig().getMifosTimeZone());
-        cal.setTimeInMillis(timeInMillis);
+    public void execute(@SuppressWarnings("unused") long timeInMillis) throws BatchJobException {
         List<String> errorList = new ArrayList<String>();
-        SavingsPersistence persistence = new SavingsPersistence();
         List<Integer> accountList;
         try {
-            accountList = persistence.retreiveAccountsPendingForIntCalc(cal.getTime());
+            accountList = savingsDao.retreiveAccountsPendingForInterestCalculation(new LocalDate());
         } catch (Exception e) {
             throw new BatchJobException(e);
         }
         for (Integer accountId : accountList) {
             try {
-                SavingsBO savings = persistence.findById(accountId);
-                savings.updateInterestAccrued();
+                savingsServiceFacade.handleInterestCalculation(accountId.longValue());
                 StaticHibernateUtil.commitTransaction();
             } catch (Exception e) {
                 StaticHibernateUtil.rollbackTransaction();
