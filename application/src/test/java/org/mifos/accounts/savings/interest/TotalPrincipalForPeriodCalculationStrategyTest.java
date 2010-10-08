@@ -37,7 +37,7 @@ import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 
-public class AverageBalanceCaluclationStrategyTest {
+public class TotalPrincipalForPeriodCalculationStrategyTest {
 
     private PrincipalCalculationStrategy calculationStrategy;
 
@@ -73,7 +73,7 @@ public class AverageBalanceCaluclationStrategyTest {
 
     @Before
     public void setup() {
-        calculationStrategy = new AverageBalanceCaluclationStrategy();
+        calculationStrategy = new TotalPrincipalForPeriodCalculationStrategy();
     }
 
     @Test
@@ -82,13 +82,13 @@ public class AverageBalanceCaluclationStrategyTest {
         interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().build();
 
         // exercise test
-        Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
+        Money totalBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
 
-        assertThat(averageBalancePrincipal, is(TestUtils.createMoney("0")));
+        assertThat(totalBalancePrincipal, is(TestUtils.createMoney("0")));
     }
 
     @Test
-    public void shouldCalculateAverageBalanceGivenOnlyOneDailyBalanceExistsWithinRange() {
+    public void shouldCalculateTotalBalanceGivenOnlyOneDailyBalanceExistsWithinRange() {
 
         Money deposit1 = TestUtils.createMoney("1000");
         Money withdrawal1 = TestUtils.createMoney("0");
@@ -106,7 +106,7 @@ public class AverageBalanceCaluclationStrategyTest {
     }
 
     @Test
-    public void shouldCalculateAverageBalanceGivenTwoDailyBalancesExistWithinRange() {
+    public void shouldCalculateTotalBalanceGivenTwoDailyBalancesExistWithinRange() {
 
         Money deposit1 = TestUtils.createMoney("1000");
         Money withdrawal1 = TestUtils.createMoney("0");
@@ -126,13 +126,12 @@ public class AverageBalanceCaluclationStrategyTest {
         // exercise test
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
 
-        // (1000 x 7 + 2000 x 17)/24 = 1708.333333..
         // verification
-        assertThat(averageBalancePrincipal, is(TestUtils.createMoney("1708.3")));
+        assertThat(averageBalancePrincipal, is(TestUtils.createMoney("2000")));
     }
 
     @Test
-    public void shouldCalculateAverageBalanceGivenOneDepositExistBeforeRange() {
+    public void shouldCalculateTotalBalanceGivenOneDepositExistBeforeRange() {
 
         Money deposit1 = TestUtils.createMoney("0");
         Money withdrawal1 = TestUtils.createMoney("0");
@@ -155,14 +154,13 @@ public class AverageBalanceCaluclationStrategyTest {
         EndOfDayDetail september20thDetails = new EndOfDayDetail(september20th, deposit4, withdrawal4, interest4);
 
         interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
-                                                                                              .withStartingBalance("1000")
                                                 .containing(september1stDetails, september6thDetails, september13thDetails, september20thDetails)
                                                 .build();
 
-        // exercise test
+        // exercise testt
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
 
         // verification
-        assertThat(averageBalancePrincipal, is(TestUtils.createMoney(("2533.3"))));
+        assertThat(averageBalancePrincipal, is(TestUtils.createMoney(("2500"))));
     }
 }

@@ -26,13 +26,13 @@ public class SavingsInterestCalculatorFactory {
 
         SimpleInterestCalculationStrategy principalBasedInterestCalculation = new SimpleInterestCalculationStrategy(interestDetail.getInterestRate(), interestDetail.getAccountingNumberOfDaysInYear());
         InterestCalucationRule minimumBalanceForInterestCalculation = new MinimumBalanceInterestCalculationRule(interestDetail.getMinimumBalanceRequired());
-        PrincipalCalculationStrategy principalCalculationStrategy = new AverageBalanceCaluclationStrategy();
+        PrincipalCalculationStrategy principalCalculationStrategy = new AverageBalanceCalculationStrategy();
         switch (interestDetail.getInterestCalcType()) {
         case AVERAGE_BALANCE:
-            principalCalculationStrategy = new AverageBalanceCaluclationStrategy();
+            principalCalculationStrategy = new AverageBalanceCalculationStrategy();
             break;
         case MINIMUM_BALANCE:
-            principalCalculationStrategy = new MinimumBalanceCaluclationStrategy();
+            principalCalculationStrategy = new MinimumBalanceCalculationStrategy();
             break;
         default:
             break;

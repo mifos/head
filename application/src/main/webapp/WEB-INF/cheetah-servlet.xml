@@ -12,14 +12,16 @@
 		<constructor-arg ref="adminServiceFacade" />
 	</bean>
 	    	 
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basenames">
             <list>
-                <value>org.mifos.ui.localizedProperties.messages</value>
-                <value>org.mifos.ui.localizedProperties.LookupValueMessages</value>
-                <value>org.mifos.platform.questionnaire.ui.localizedProperties.questionnaire_messages</value>                
+                <value>classpath:org/mifos/ui/localizedProperties/messages</value>
+                <value>classpath:org/mifos/ui/localizedProperties/LookupValueMessages</value>
+                <value>classpath:org/mifos/platform/questionnaire/ui/localizedProperties/questionnaire_messages</value>                
             </list>
         </property>
+        <property name="fileEncodings" value="UTF-8" />
+        <property name="defaultEncoding" value="UTF-8" />
     </bean>
 
     <bean id="webExceptionResolverHandler" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">

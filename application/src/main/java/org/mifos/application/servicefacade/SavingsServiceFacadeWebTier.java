@@ -206,10 +206,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             SavingsInterestDetail interestDetail = new SavingsInterestDetail(interestCalcType, savingsAccount.getInterestRate(), accountingNumberOfInterestDaysInYear, savingsAccount.getMinAmntForInt());
             InterestCalculator interestCalculator = SavingsInterestCalculatorFactory.create(interestDetail);
 
-            // NOTE: for first interest calculation period, calculation starts from the first deposit date and not
-            // activation date
-            // NOTE: interest posting date are always the last day of the month (no matter what!)
-            // NOTE: interest calculation date is always last day of month when using monthly period.
             InterestScheduledEvent interestCalculationEvent = SavingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
 
             LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();

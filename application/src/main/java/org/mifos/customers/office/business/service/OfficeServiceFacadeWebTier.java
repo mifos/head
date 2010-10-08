@@ -282,13 +282,19 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
             //Shahid - this is hackish solution to return officeId and globalOfficeNum via ListElement, it should be fixed, at least
             //a proper data storage class can be created
             ListElement element = new ListElement(new Integer(officeBO.getOfficeId()), officeBO.getGlobalOfficeNum());
+            StaticHibernateUtil.commitTransaction();
             return element;
         } catch (OfficeValidationException e) {
+            StaticHibernateUtil.rollbackTransaction();
             throw new BusinessRuleException(e.getMessage());
         } catch (PersistenceException e) {
+            StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } catch (OfficeException e) {
+            StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
         }
     }
 
