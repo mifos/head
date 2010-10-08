@@ -40,10 +40,10 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class SavingsProductBuilder {
 
-    private final MeetingBO scheduleForInterestCalculationMeeting = new MeetingBuilder()
+    private MeetingBO scheduleForInterestCalculationMeeting = new MeetingBuilder()
             .savingsInterestCalulationSchedule()
             .monthly().every(1).build();
-    private final MeetingBO scheduleForInterestPostingMeeting = new MeetingBuilder().savingsInterestPostingSchedule()
+    private MeetingBO scheduleForInterestPostingMeeting = new MeetingBuilder().savingsInterestPostingSchedule()
             .monthly().every(1).build();
     private Money maxAmountOfWithdrawal = new Money(Money.getDefaultCurrency(), "50.0");
     private final Double interestRate = Double.valueOf("2.0");
@@ -155,6 +155,11 @@ public class SavingsProductBuilder {
 
     public SavingsProductBuilder withMandatoryAmount(String mandatoryAmount) {
         this.mandatoryOrRecommendedAmount = TestUtils.createMoney(mandatoryAmount);
+        return this;
+    }
+
+    public SavingsProductBuilder withInterestPostingSchedule(MeetingBO interestPostingMeeting) {
+        this.scheduleForInterestPostingMeeting = interestPostingMeeting;
         return this;
     }
 }

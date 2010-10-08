@@ -58,7 +58,7 @@ public class FinancialActionTypeEntity extends MasterDataEntity {
         return id;
     }
 
-    protected void setId(Short id) {
+    public void setId(Short id) {
         this.id = id;
     }
 

@@ -76,6 +76,7 @@ public class SavingsAccountBuilder {
     private Set<AccountActionDateEntity> scheduledPayments = new LinkedHashSet<AccountActionDateEntity>();
     private List<Holiday> holidays = new ArrayList<Holiday>();
     private DateTime activationDate = new DateTime();
+    private Money interestToBePosted = TestUtils.createMoney("0");
 
     public SavingsBO build() {
 
@@ -85,6 +86,7 @@ public class SavingsAccountBuilder {
                 scheduleForInterestCalculation, recommendedAmountUnit, recommendedAmount, createdDate,
                 createdByUserId, holidays, activationDate);
         savingsBO.setCustomerPersistence(customerDao);
+        savingsBO.setInterestToBePosted(interestToBePosted);
 
         return savingsBO;
     }
@@ -183,6 +185,11 @@ public class SavingsAccountBuilder {
 
     public SavingsAccountBuilder withActivationDate(DateTime withActivationDate) {
         this.activationDate = withActivationDate;
+        return this;
+    }
+
+    public SavingsAccountBuilder withInterestToBePostedAmount(Money interestToBePosted) {
+        this.interestToBePosted = interestToBePosted;
         return this;
     }
 }
