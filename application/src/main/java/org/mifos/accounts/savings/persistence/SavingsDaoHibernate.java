@@ -29,21 +29,18 @@ import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.joda.time.LocalDate;
+import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
-import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
-import org.mifos.application.servicefacade.CustomerHierarchyParams;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.framework.util.helpers.Money;
 
 /**
  *
@@ -191,6 +188,7 @@ public class SavingsDaoHibernate implements SavingsDao {
                 CollectionSheetCustomerSavingsAccountDto.class);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public final Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForSavings() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -198,6 +196,7 @@ public class SavingsDaoHibernate implements SavingsDao {
         return (Iterator<CustomFieldDefinitionEntity>) baseDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Iterator<AccountCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -219,6 +218,7 @@ public class SavingsDaoHibernate implements SavingsDao {
         this.baseDao.createOrUpdate(savingsAccount);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<EndOfDayDetail> retrieveAllEndOfDayDetailsFor(MifosCurrency currency, Long savingsId) {
 
@@ -241,5 +241,21 @@ public class SavingsDaoHibernate implements SavingsDao {
         }
 
         return allEndOfDayDetailsForAccount;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Integer> retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(LocalDate interestPostingDate) {
+
+        List<Integer> postingPendingAccounts = new ArrayList<Integer>();
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("currentDate", interestPostingDate.toDateMidnight().toDate());
+        List<Integer> queryResult = (List<Integer>) this.baseDao.executeNamedQuery("accounts.retrieveSavingsAccountsIntPost", queryParameters);
+        if (queryResult != null) {
+            postingPendingAccounts = new ArrayList<Integer>(queryResult);
+        }
+
+        return postingPendingAccounts;
     }
 }

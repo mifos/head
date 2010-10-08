@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.savings.business;
 
+import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
@@ -36,11 +37,8 @@ import org.mifos.framework.util.helpers.Money;
 public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 
     private final Money depositAmount;
-
     private final Money withdrawlAmount;
-
     private final Money interestAmount;
-
     private final Money balance;
 
     protected SavingsTrxnDetailEntity() {
@@ -67,6 +65,35 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
             persistence, new DateTimeService().getCurrentJavaDateTime());
     }
 
+    public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity, CustomerBO customer,
+            AccountActionEntity accountActionType, Money amount, Money balance, PersonnelBO createdBy,
+            java.util.Date dueDate, java.util.Date actionDate, Short installmentId, String comment, java.util.Date postingDate) {
+        super(accountPaymentEntity, accountActionType, installmentId, dueDate, createdBy, customer, actionDate, amount, comment, null, postingDate);
+        this.balance = balance;
+        MifosCurrency currency = accountPaymentEntity.getAccount().getCurrency();
+        if (accountActionType.equals(AccountActionTypes.SAVINGS_WITHDRAWAL)) {
+            this.depositAmount = new Money(currency);
+            this.withdrawlAmount = amount;
+            this.interestAmount = new Money(currency);
+        } else if (accountActionType.equals(AccountActionTypes.SAVINGS_DEPOSIT)) {
+            this.depositAmount = amount;
+            this.withdrawlAmount = new Money(currency);
+            this.interestAmount = new Money(currency);
+        } else if (accountActionType.equals(AccountActionTypes.SAVINGS_INTEREST_POSTING)) {
+            this.depositAmount = new Money(currency);
+            this.withdrawlAmount = new Money(currency);
+            this.interestAmount = amount;
+        } else {
+            this.depositAmount = new Money(currency);
+            this.withdrawlAmount = new Money(currency);
+            this.interestAmount = new Money(currency);
+        }
+    }
+
+    /**
+     * use constructor that does not require persistence for super class
+     */
+    @Deprecated
     public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity, CustomerBO customer,
             AccountActionTypes accountActionType, Money amount, Money balance, PersonnelBO createdBy,
             java.util.Date dueDate, java.util.Date actionDate, Short installmentId, String comment,

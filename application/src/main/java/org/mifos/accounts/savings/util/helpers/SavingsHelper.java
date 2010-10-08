@@ -32,6 +32,8 @@ import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
+import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
+import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -47,13 +49,13 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsHelper {
-    // TODO: pick from configuration
     /**
      * I assume the hardcoding of 1 Jan 2006 is trying to say that the default fiscal year is January 1 to December 31.
      * Do we use the year? What does this control, versus {@link SavingsConstants#POSTING_DAY}?
      *
      * Force a locale that works with pattern parsing.
      */
+    @Deprecated
     public Date getFiscalStartDate() {
         try {
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", new Locale("en", "GB"));
@@ -84,6 +86,10 @@ public class SavingsHelper {
      * set the day number as end of month for interest calculation and interest posting date and get the meeting date
      * according to the rules set for meeting
      */
+    /**
+     * don't use this approach any more. See {@link InterestScheduledEvent} and its implementations and {@link SavingsInterestScheduledEventFactory}.
+     */
+    @Deprecated
     public Date getNextScheduleDate(Date accountActivationDate, Date currentScheduleDate, MeetingBO meeting)
             throws MeetingException {
         Date oldMeetingStartDate = meeting.getStartDate();
@@ -97,6 +103,10 @@ public class SavingsHelper {
         return scheduleDate;
     }
 
+    /**
+     * don't use this approach any more. See {@link InterestScheduledEvent} and its implementations and {@link SavingsInterestScheduledEventFactory}.
+     */
+    @Deprecated
     public Date getPrevScheduleDate(Date accountActivationDate, Date currentScheduleDate, MeetingBO meeting)
             throws MeetingException {
         Date oldMeetingStartDate = meeting.getStartDate();
@@ -130,6 +140,10 @@ public class SavingsHelper {
         }
     }
 
+    /**
+     * don't use this approach any more. use jodatime library
+     */
+    @Deprecated
     public int calculateDays(Date fromDate, Date toDate) {
         long oneDay = 1000 * 60 * 60 * 24;
         long days = (getMFITime(toDate) / oneDay) - (getMFITime(fromDate) / oneDay);
@@ -162,8 +176,7 @@ public class SavingsHelper {
 
     public AccountPaymentEntity createAccountPayment(AccountBO account, Money amount,
             PaymentTypeEntity paymentTypeEntity, PersonnelBO createdBy, Date transactionDate) {
-        AccountPaymentEntity payment = new AccountPaymentEntity(account, amount, null, null, paymentTypeEntity,
-                transactionDate);
+        AccountPaymentEntity payment = new AccountPaymentEntity(account, amount, null, null, paymentTypeEntity, transactionDate);
         payment.setAmount(amount);
         return payment;
     }

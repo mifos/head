@@ -49,7 +49,6 @@ public abstract class TaskHelper implements Tasklet {
     public abstract void execute(long timeInMillis) throws BatchJobException;
 
     @Override
-    @SuppressWarnings("unused")
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
         Date scheduledFireTime = new Date(chunkContext.getStepContext().getStepExecution().getJobParameters().getLong(MifosBatchJob.JOB_EXECUTION_TIME_KEY));
         try {

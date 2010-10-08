@@ -43,6 +43,9 @@ import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.financial.business.service.activity.BaseFinancialActivity;
+import org.mifos.accounts.financial.business.service.activity.SavingsInterestPostingFinancialActivity;
+import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -50,8 +53,7 @@ import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
-import org.mifos.accounts.savings.interest.InterestCalculator;
-import org.mifos.accounts.savings.interest.SavingsInterestCalculatorFactory;
+import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
@@ -78,6 +80,7 @@ import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.ProcessFlowRules;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
@@ -538,6 +541,52 @@ public class SavingsBO extends AccountBO {
         return getInterestToBePosted() == null ? interestCalculated : getInterestToBePosted().add(interestCalculated);
     }
 
+    public boolean postInterest(InterestScheduledEvent postingSchedule) {
+        boolean eligibleForInterestPosing = accountRequiresInterestPosting();
+        if (eligibleForInterestPosing) {
+            this.savingsBalance = this.savingsBalance.add(this.interestToBePosted);
+            this.savingsPerformance.setTotalInterestDetails(this.interestToBePosted);
+
+            PaymentTypeEntity paymentType = new PaymentTypeEntity(SavingsConstants.DEFAULT_PAYMENT_TYPE.shortValue());
+            AccountActionEntity accountAction = new AccountActionEntity(AccountActionTypes.SAVINGS_INTEREST_POSTING);
+
+            SavingsActivityEntity savingsActivity = new SavingsActivityEntity(personnel, accountAction,
+                    this.interestToBePosted, this.savingsBalance, this.nextIntPostDate, this);
+            savingsActivityDetails.add(savingsActivity);
+
+            AccountPaymentEntity interestPayment = new AccountPaymentEntity(this, this.interestToBePosted, null, null, paymentType, this.nextIntPostDate);
+
+            SavingsTrxnDetailEntity interestPostingTransaction = new SavingsTrxnDetailEntity(interestPayment,
+                    this.customer, accountAction, interestPayment.getAmount(), this.savingsBalance, null, null,
+                    this.nextIntPostDate, null, "", new DateTimeService().getCurrentDateTime().toDate());
+
+            interestPayment.addAccountTrxn(interestPostingTransaction);
+            this.addAccountPayment(interestPayment);
+
+            this.lastIntPostDate = this.nextIntPostDate;
+            this.nextIntPostDate = postingSchedule.nextMatchingDateFromAlreadyMatchingDate(new LocalDate(this.lastIntPostDate)).toDateMidnight().toDate();
+            this.interestToBePosted = Money.zero(this.getCurrency());
+
+            // NOTE: financial Transaction Processing should be decoupled from application domain model.
+            try {
+                BaseFinancialActivity baseFinancialActivity = new SavingsInterestPostingFinancialActivity(interestPostingTransaction);
+                baseFinancialActivity.buildAccountEntries();
+            } catch (FinancialException e) {
+                throw new MifosRuntimeException(e);
+            }
+        }
+
+        return eligibleForInterestPosing;
+    }
+
+    private boolean accountRequiresInterestPosting() {
+        return this.interestToBePosted != null && this.interestToBePosted.isGreaterThanOrEqualZero();
+    }
+
+    /**
+     * was only called from batch and is test with integration tests.
+     */
+    @Deprecated
     public void postInterest() throws AccountException {
         if (getInterestToBePosted() != null && getInterestToBePosted().isGreaterThanOrEqualZero()) {
             Money interestPosted = getInterestToBePosted();
@@ -712,6 +761,7 @@ public class SavingsBO extends AccountBO {
         }
     }
 
+    // TODO - keithw - break apart financial transactions and account trxns
     private void makeEntriesForInterestPosting(final Money interestAmt, final PaymentTypeEntity paymentType,
             final CustomerBO customer, final Date postingDate, final PersonnelBO loggedInUser) throws AccountException {
         AccountPaymentEntity interestPayment = helper.createAccountPayment(this, interestAmt, paymentType,
@@ -1880,6 +1930,10 @@ public class SavingsBO extends AccountBO {
 
     }
 
+    /**
+     * using persistence within pojo. Build savings activity like {@link SavingsBO#postInterest(InterestScheduledEvent)}
+     */
+    @Deprecated
     private SavingsActivityEntity buildSavingsActivity(final Money amount, final Money balanceAmount,
             final short acccountActionId, final Date trxnDate, final PersonnelBO personnel) throws AccountException {
         AccountActionEntity accountAction;
@@ -2141,5 +2195,9 @@ public class SavingsBO extends AccountBO {
                 }
             }
         }
+    }
+
+    public MeetingBO getInterestPostingMeeting() {
+        return this.savingsOffering.getFreqOfPostIntcalc().getMeeting();
     }
 }

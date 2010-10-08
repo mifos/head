@@ -26,7 +26,11 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.financial.business.service.activity.BaseFinancialActivity;
+import org.mifos.accounts.financial.business.service.activity.SavingsInterestPostingFinancialActivity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
@@ -66,6 +70,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     private final CustomerDao customerDao;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
     private InterestCalculationIntervalHelper interestCalculationIntervalHelper = new InterestCalculationIntervalHelper();
+    private SavingsInterestScheduledEventFactory savingsInterestScheduledEventFactory = new SavingsInterestScheduledEventFactory();
+    private FinancialTransactionBuilder financialTransactionBuilder = new FinancialTransactionBuilder();
 
     public SavingsServiceFacadeWebTier(SavingsDao savingsDao, PersonnelDao personnelDao, CustomerDao customerDao) {
         this.savingsDao = savingsDao;
@@ -193,7 +199,37 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public void handleInterestCalculationAndPosting(Long savingsId) {
+    public void batchPostInterestToSavingsAccount(LocalDate interestPostingDate) {
+
+        List<Integer> accountIds = this.savingsDao.retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(interestPostingDate);
+        for (Integer savingsId : accountIds) {
+
+            SavingsBO savingsAccount = this.savingsDao.findById(Long.valueOf(savingsId));
+
+            InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
+
+            try {
+                this.transactionHelper.startTransaction();
+
+                boolean interestPosted = savingsAccount.postInterest(postingSchedule);
+
+                if (interestPosted) {
+                    this.savingsDao.save(savingsAccount);
+                }
+                this.transactionHelper.commitTransaction();
+            } catch (Exception e) {
+                this.transactionHelper.rollbackTransaction();
+                throw new BusinessRuleException(savingsId.toString(), e);
+            } finally {
+                this.transactionHelper.closeSession();
+            }
+
+//            handleInterestCalculationAndPosting(Long.valueOf(savingsId));
+        }
+    }
+
+    @Override
+    public void handleInterestCalculation(Long savingsId) {
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
 
         List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount
@@ -206,7 +242,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             SavingsInterestDetail interestDetail = new SavingsInterestDetail(interestCalcType, savingsAccount.getInterestRate(), accountingNumberOfInterestDaysInYear, savingsAccount.getMinAmntForInt());
             InterestCalculator interestCalculator = SavingsInterestCalculatorFactory.create(interestDetail);
 
-            InterestScheduledEvent interestCalculationEvent = SavingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
+            InterestScheduledEvent interestCalculationEvent = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
 
             LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();
 
@@ -243,5 +279,18 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         }
 
         return new InterestCalculationPeriodDetail(interval, applicableDailyDetailsForPeriod, balance);
+    }
+
+    public void setInterestCalculationIntervalHelper(InterestCalculationIntervalHelper interestCalculationIntervalHelper) {
+        this.interestCalculationIntervalHelper = interestCalculationIntervalHelper;
+    }
+
+    public void setSavingsInterestScheduledEventFactory(
+            SavingsInterestScheduledEventFactory savingsInterestScheduledEventFactory) {
+        this.savingsInterestScheduledEventFactory = savingsInterestScheduledEventFactory;
+    }
+
+    public void setFinancialTransactionBuilder(FinancialTransactionBuilder financialTransactionBuilder) {
+        this.financialTransactionBuilder = financialTransactionBuilder;
     }
 }

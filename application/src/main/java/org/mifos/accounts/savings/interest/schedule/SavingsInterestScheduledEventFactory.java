@@ -26,7 +26,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 
 public class SavingsInterestScheduledEventFactory {
 
-    public static InterestScheduledEvent createScheduledEventFrom(final MeetingBO meeting) {
+    public InterestScheduledEvent createScheduledEventFrom(final MeetingBO meeting) {
 
         InterestScheduledEvent scheduledEvent = new DailyInterestScheduledEvent(meeting.getRecurAfter());
         switch (meeting.getMeetingTypeEnum()) {

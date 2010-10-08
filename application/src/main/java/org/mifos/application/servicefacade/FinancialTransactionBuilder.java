@@ -20,26 +20,21 @@
 
 package org.mifos.application.servicefacade;
 
-import org.joda.time.LocalDate;
-import org.mifos.dto.domain.SavingsAdjustmentDto;
-import org.mifos.dto.domain.SavingsDepositDto;
-import org.mifos.dto.domain.SavingsWithdrawalDto;
-import org.springframework.security.access.prepost.PreAuthorize;
+import java.util.Set;
 
-public interface SavingsServiceFacade {
+import org.mifos.accounts.business.AccountTrxnEntity;
+import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.financial.business.service.FinancialBusinessService;
+import org.mifos.service.BusinessRuleException;
 
-    @PreAuthorize("isFullyAuthenticated()")
-    void deposit(SavingsDepositDto savingsDeposit);
+public class FinancialTransactionBuilder {
 
-    @PreAuthorize("isFullyAuthenticated()")
-    void withdraw(SavingsWithdrawalDto savingsWithdrawal);
-
-    @PreAuthorize("isFullyAuthenticated()")
-    void adjustTransaction(SavingsAdjustmentDto savingsAdjustment);
-
-    @PreAuthorize("isFullyAuthenticated()")
-    void handleInterestCalculation(Long savingsId);
-
-    void batchPostInterestToSavingsAccount(LocalDate dateOfBatchJob);
+    public void buildFinancialEntries(Set<AccountTrxnEntity> accountTrxns) {
+        try {
+            new FinancialBusinessService().buildFinancialEntries(accountTrxns);
+        } catch (AccountException e) {
+            throw new BusinessRuleException("Unable to build financial transactions", e);
+        }
+    }
 
 }
