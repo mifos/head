@@ -33,6 +33,7 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTestUtils;
@@ -111,6 +112,7 @@ public class SavingsIntCalcHelperIntegrationTest extends MifosIntegrationTestCas
     }
 
     @Test
+    @Ignore
     public void testIntCalculation() throws Exception {
         Short savedDigits = AccountingRules.getDigitsAfterDecimal();
         AccountingRules.setDigitsAfterDecimal(new Short("3"));
