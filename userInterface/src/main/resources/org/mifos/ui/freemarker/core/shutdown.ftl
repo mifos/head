@@ -20,7 +20,6 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]<!--Container Begins-->
-<div>
 
 <!--  Main Content Begins-->  
 <div class="content">
