@@ -26,11 +26,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.financial.business.service.activity.BaseFinancialActivity;
-import org.mifos.accounts.financial.business.service.activity.SavingsInterestPostingFinancialActivity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
@@ -71,7 +67,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
     private InterestCalculationIntervalHelper interestCalculationIntervalHelper = new InterestCalculationIntervalHelper();
     private SavingsInterestScheduledEventFactory savingsInterestScheduledEventFactory = new SavingsInterestScheduledEventFactory();
-    private FinancialTransactionBuilder financialTransactionBuilder = new FinancialTransactionBuilder();
 
     public SavingsServiceFacadeWebTier(SavingsDao savingsDao, PersonnelDao personnelDao, CustomerDao customerDao) {
         this.savingsDao = savingsDao;
@@ -288,9 +283,5 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     public void setSavingsInterestScheduledEventFactory(
             SavingsInterestScheduledEventFactory savingsInterestScheduledEventFactory) {
         this.savingsInterestScheduledEventFactory = savingsInterestScheduledEventFactory;
-    }
-
-    public void setFinancialTransactionBuilder(FinancialTransactionBuilder financialTransactionBuilder) {
-        this.financialTransactionBuilder = financialTransactionBuilder;
     }
 }

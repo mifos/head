@@ -19,61 +19,31 @@
  */
 package org.mifos.application.servicefacade;
 
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
-import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.business.AccountPaymentEntityBuilder;
-import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fund.persistence.FundDao;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.accounts.loan.persistance.LoanDao;
-import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.savings.interest.schedule.internal.MonthlyOnLastDayOfMonthInterestScheduledEvent;
 import org.mifos.accounts.savings.persistence.SavingsDao;
-import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.master.business.BusinessActivityEntity;
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.util.helpers.TrxnTypes;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerLevelEntity;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.dto.domain.PrdOfferingDto;
-import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.hasItem;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SavingsServiceFacadeWebTierTest {

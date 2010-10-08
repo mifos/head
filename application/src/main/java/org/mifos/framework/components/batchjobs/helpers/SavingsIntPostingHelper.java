@@ -48,41 +48,11 @@ public class SavingsIntPostingHelper extends TaskHelper {
         try {
             this.savingsServiceFacade.batchPostInterestToSavingsAccount(dateOfBatchJob);
         } catch (BusinessRuleException e) {
-//          TODO - log root exception
-            System.out.println(e.getMessage());
-            e.printStackTrace(System.out);
             errorList.add(e.getMessageKey());
         }
 
         if (errorList.size() > 0) {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
         }
-
-//        Calendar cal = Calendar.getInstance(Configuration.getInstance().getSystemConfig().getMifosTimeZone());
-//        cal.setTimeInMillis(scheduledFireTime);
-//
-//        SavingsPersistence persistence = new SavingsPersistence();
-//
-//        List<Integer> accountList;
-//        try {
-//            accountList = persistence.retreiveAccountsPendingForIntPosting(cal.getTime());
-//        } catch (Exception e) {
-//            throw new BatchJobException(e);
-//        }
-//        for (Integer accountId : accountList) {
-//            try {
-//                SavingsBO savings = persistence.findById(accountId);
-//                savings.postInterest();
-//                StaticHibernateUtil.commitTransaction();
-//            } catch (Exception e) {
-//                StaticHibernateUtil.rollbackTransaction();
-//                errorList.add(accountId.toString());
-//            } finally {
-//                StaticHibernateUtil.closeSession();
-//            }
-//        }
-//        if (errorList.size() > 0) {
-//            throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
-//        }
     }
 }
