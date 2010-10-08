@@ -547,18 +547,13 @@ public class SavingsBO extends AccountBO {
             this.savingsBalance = this.savingsBalance.add(this.interestToBePosted);
             this.savingsPerformance.setTotalInterestDetails(this.interestToBePosted);
 
-            PaymentTypeEntity paymentType = new PaymentTypeEntity(SavingsConstants.DEFAULT_PAYMENT_TYPE.shortValue());
-            AccountActionEntity accountAction = new AccountActionEntity(AccountActionTypes.SAVINGS_INTEREST_POSTING);
-
-            SavingsActivityEntity savingsActivity = new SavingsActivityEntity(personnel, accountAction,
-                    this.interestToBePosted, this.savingsBalance, this.nextIntPostDate, this);
+            SavingsActivityEntity savingsActivity = SavingsActivityEntity.savingsInterestPosting(this, personnel, this.savingsBalance, this.interestToBePosted, this.nextIntPostDate);
             savingsActivityDetails.add(savingsActivity);
 
-            AccountPaymentEntity interestPayment = new AccountPaymentEntity(this, this.interestToBePosted, null, null, paymentType, this.nextIntPostDate);
+            AccountPaymentEntity interestPayment = AccountPaymentEntity.savingsInterestPosting(this, this.interestToBePosted, this.nextIntPostDate);
 
-            SavingsTrxnDetailEntity interestPostingTransaction = new SavingsTrxnDetailEntity(interestPayment,
-                    this.customer, accountAction, interestPayment.getAmount(), this.savingsBalance, null, null,
-                    this.nextIntPostDate, null, "", new DateTimeService().getCurrentDateTime().toDate());
+            DateTime dueDate = new DateTime();
+            SavingsTrxnDetailEntity interestPostingTransaction = SavingsTrxnDetailEntity.savingsInterestPosting(interestPayment, this.customer, this.savingsBalance, this.nextIntPostDate, dueDate);
 
             interestPayment.addAccountTrxn(interestPostingTransaction);
             this.addAccountPayment(interestPayment);
@@ -584,7 +579,10 @@ public class SavingsBO extends AccountBO {
     }
 
     /**
-     * was only called from batch and is test with integration tests.
+     * delete and all tests after deleting the following methods and update interest after adjustment and closure methods are done!
+     *
+     * {@link SavingsBO#postInterest()}
+     * {@link SavingsBO#updateInterestAccrued()}
      */
     @Deprecated
     public void postInterest() throws AccountException {

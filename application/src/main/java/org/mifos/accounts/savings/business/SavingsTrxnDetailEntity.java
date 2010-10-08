@@ -20,6 +20,9 @@
 
 package org.mifos.accounts.savings.business;
 
+import java.util.Date;
+
+import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
@@ -40,6 +43,14 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
     private final Money withdrawlAmount;
     private final Money interestAmount;
     private final Money balance;
+
+    public static SavingsTrxnDetailEntity savingsInterestPosting(AccountPaymentEntity interestPayment,
+            CustomerBO customer, Money savingsBalance, Date nextIntPostDate, DateTime dueDate) {
+        AccountActionEntity accountAction = new AccountActionEntity(AccountActionTypes.SAVINGS_INTEREST_POSTING);
+        return new SavingsTrxnDetailEntity(interestPayment,
+                customer, accountAction, interestPayment.getAmount(), savingsBalance, null, null,
+                nextIntPostDate, null, "", dueDate.toDate());
+    }
 
     protected SavingsTrxnDetailEntity() {
         depositAmount = null;
@@ -71,15 +82,15 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
         super(accountPaymentEntity, accountActionType, installmentId, dueDate, createdBy, customer, actionDate, amount, comment, null, postingDate);
         this.balance = balance;
         MifosCurrency currency = accountPaymentEntity.getAccount().getCurrency();
-        if (accountActionType.equals(AccountActionTypes.SAVINGS_WITHDRAWAL)) {
+        if (AccountActionTypes.SAVINGS_WITHDRAWAL.equals(accountActionType.asEnum())) {
             this.depositAmount = new Money(currency);
             this.withdrawlAmount = amount;
             this.interestAmount = new Money(currency);
-        } else if (accountActionType.equals(AccountActionTypes.SAVINGS_DEPOSIT)) {
+        } else if (AccountActionTypes.SAVINGS_DEPOSIT.equals(accountActionType.asEnum())) {
             this.depositAmount = amount;
             this.withdrawlAmount = new Money(currency);
             this.interestAmount = new Money(currency);
-        } else if (accountActionType.equals(AccountActionTypes.SAVINGS_INTEREST_POSTING)) {
+        } else if (AccountActionTypes.SAVINGS_INTEREST_POSTING.equals(accountActionType.asEnum())) {
             this.depositAmount = new Money(currency);
             this.withdrawlAmount = new Money(currency);
             this.interestAmount = amount;

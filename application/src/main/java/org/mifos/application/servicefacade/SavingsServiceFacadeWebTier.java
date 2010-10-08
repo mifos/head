@@ -194,17 +194,25 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public void batchPostInterestToSavingsAccount(LocalDate interestPostingDate) {
+    public void batchPostInterestToSavingsAccount(LocalDate dateBatchJobIsScheduled) {
 
-        List<Integer> accountIds = this.savingsDao.retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(interestPostingDate);
+        List<Integer> accountIds = this.savingsDao.retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(dateBatchJobIsScheduled);
         for (Integer savingsId : accountIds) {
 
             SavingsBO savingsAccount = this.savingsDao.findById(Long.valueOf(savingsId));
+            LocalDate interestPostingDate = new LocalDate(savingsAccount.getNextIntPostDate());
 
             InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
 
+            // FIXME - keithw - some integration tests setup account with 'incorrect' next posting date
+            // should I cater for this possibility here and in savingsAccount.postInterest?
+            // is it possible customer could have this problem.
             try {
                 this.transactionHelper.startTransaction();
+
+                LocalDate startDate = postingSchedule.findFirstDateOfPeriodForMatchingDate(interestPostingDate);
+                InterestCalculationInterval postingInterval = new InterestCalculationInterval(startDate, interestPostingDate);
+//                calculateInterestForPostingPeriod(Long.valueOf(savingsId), postingInterval);
 
                 boolean interestPosted = savingsAccount.postInterest(postingSchedule);
 
