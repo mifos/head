@@ -20,8 +20,6 @@
 
 package org.mifos.test.acceptance.framework;
 
-import org.slf4j.LoggerFactory;
-
 import com.thoughtworks.selenium.Selenium;
 
 /**
@@ -62,8 +60,7 @@ public class AbstractPage {
 
     public void verifyPage(String pageName) {
         if (!selenium.getAttribute("page.id@title").equals(pageName)) {
-            LoggerFactory.getLogger(AbstractPage.class).info(
-                    "We are on " + selenium.getAttribute("page.id@title") + " instead!");
+            System.err.println("We are on " + selenium.getAttribute("page.id@title") + " instead!");
             throw new AssertionError("page id not found");
         }
 
