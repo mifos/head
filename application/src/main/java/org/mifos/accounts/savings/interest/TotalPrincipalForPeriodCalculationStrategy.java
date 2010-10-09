@@ -29,7 +29,7 @@ public class TotalPrincipalForPeriodCalculationStrategy implements PrincipalCalc
     @Override
     public Money calculatePrincipal(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
 
-        Money totalPrincipal = interestCalculationPeriodDetail.zeroAmount();
+        Money totalPrincipal = interestCalculationPeriodDetail.getBalanceBeforeInterval();
 
         List<EndOfDayDetail> dailyDetails = interestCalculationPeriodDetail.getDailyDetails();
         for (EndOfDayDetail endOfDayDetail : dailyDetails) {

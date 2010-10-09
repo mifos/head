@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.exceptions.AccountException;
@@ -211,8 +212,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                 this.transactionHelper.startTransaction();
 
                 LocalDate startDate = postingSchedule.findFirstDateOfPeriodForMatchingDate(interestPostingDate);
-                InterestCalculationInterval postingInterval = new InterestCalculationInterval(startDate, interestPostingDate);
-//                calculateInterestForPostingPeriod(Long.valueOf(savingsId), postingInterval);
+                Interval postingInterval = new InterestCalculationInterval(startDate, interestPostingDate).getInterval();
+                calculateInterestForPostingInterval(Long.valueOf(savingsId), postingInterval);
 
                 boolean interestPosted = savingsAccount.postInterest(postingSchedule);
 
@@ -268,24 +269,11 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public void calculateInterest(Long savingsId) {
+    public void calculateInterestForPostingInterval(Long savingsId, Interval postingInterval) {
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
 
-        Money interestCalculatedTillDate = savingsAccount.getInterestToBePosted();
-
-        if(interestCalculatedTillDate == null) {
-            interestCalculatedTillDate = Money.zero(savingsAccount.getCurrency());
-        }
-
-        if(savingsAccount.getNextIntCalcDate() == null) {
-            throw new IllegalArgumentException("Next Interest calculation date was " + savingsAccount.getNextIntCalcDate());
-        }
-
-        LocalDate startDate = new LocalDate(savingsAccount.getNextIntCalcDate());
-
-        InterestScheduledEvent interestCalculationEvent = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
-        LocalDate endDate = interestCalculationEvent.nextMatchingDateFromAlreadyMatchingDate(startDate);
+        Money interestCalculatedTillDate = new Money(savingsAccount.getCurrency());
 
         List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), savingsId);
 
@@ -299,24 +287,42 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
             InterestCalculator interestCalculator = SavingsInterestCalculatorFactory.create(interestDetail);
 
+            InterestScheduledEvent interestCalculationEvent = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
+
             LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();
 
-            if(firstDepositDate.isAfter(startDate)) {
-                startDate = firstDepositDate;
+            List<InterestCalculationInterval> calculationIntervals;
+
+            if (postingInterval == null) {
+                // FIXME This condition is just for Interest Calculation Batch Job, this should be removed later when we
+                // get rid of Interest calculation batch job
+                calculationIntervals = new ArrayList<InterestCalculationInterval>();
+                if (savingsAccount.getLastIntCalcDate() == null) {
+                    savingsAccount.setLastIntCalcDate(savingsAccount.getActivationDate());
+                }
+                LocalDate startDate = new LocalDate(savingsAccount.getLastIntCalcDate());
+                LocalDate endDate = interestCalculationEvent.nextMatchingDateFromAlreadyMatchingDate(startDate);
+                calculationIntervals.add(new InterestCalculationInterval(startDate, endDate));
+            } else {
+                calculationIntervals = interestCalculationIntervalHelper.determineInterestCalculationPeriods(postingInterval, firstDepositDate, interestCalculationEvent);
             }
 
-            InterestCalculationInterval interval = new InterestCalculationInterval(startDate, endDate);
+            for (InterestCalculationInterval interval : calculationIntervals) {
+
             Money totalBalanceBeforePeriod = Money.zero(savingsAccount.getCurrency());
             InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(interval, allEndOfDayDetailsForAccount, totalBalanceBeforePeriod);
 
             InterestCalculationPeriodResult periodResults = interestCalculator.calculateSavingsDetailsForPeriod(interestCalculationPeriodDetail);
 
             interestCalculatedTillDate = interestCalculatedTillDate.add(periodResults.getInterest());
+                if (postingInterval == null) {
+                    // FIXME This condition is just for Interest Calculation Batch Job, this should be removed later
+                    // when we get rid of Interest calculation batch job
+                    savingsAccount.setLastIntCalcDate(interval.getEndDate().toDateMidnight().toDate());
+                }
+            }
         }
-
         savingsAccount.setInterestToBePosted(interestCalculatedTillDate);
-        savingsAccount.setNextIntCalcDate(endDate.toDateMidnight().toDate());
-
     }
 
     private InterestCalculationPeriodDetail createInterestCalculationPeriodDetail(InterestCalculationInterval interval,
@@ -324,13 +330,15 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         Money balance = balanceBeforeInterval;
 
+        InterestCalculationInterval intervalExcludingLastDayOfLastMonth = new InterestCalculationInterval(interval.getStartDate().plusDays(1),interval.getEndDate());
+
         List<EndOfDayDetail> applicableDailyDetailsForPeriod = new ArrayList<EndOfDayDetail>();
 
         for (EndOfDayDetail endOfDayDetail : allEndOfDayDetailsForAccount) {
-            if (interval.getStartDate().isAfter(endOfDayDetail.getDate())) {
+            if (intervalExcludingLastDayOfLastMonth.getStartDate().isAfter(endOfDayDetail.getDate())) {
                 balance = balance.add(endOfDayDetail.getResultantAmountForDay());
             }
-            if (interval.dateFallsWithin(endOfDayDetail.getDate())) {
+            if (intervalExcludingLastDayOfLastMonth.dateFallsWithin(endOfDayDetail.getDate())) {
                 applicableDailyDetailsForPeriod.add(endOfDayDetail);
             }
         }

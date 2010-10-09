@@ -31,12 +31,20 @@ public class InterestCalculationInterval {
         this.interval = new Interval(startDate.toDateTimeAtStartOfDay(), endDate.toDateTimeAtStartOfDay());
     }
 
+    public InterestCalculationInterval(Interval interval) {
+        this.interval = interval;
+    }
+
     public LocalDate getStartDate() {
         return interval.getStart().toLocalDate();
     }
 
     public LocalDate getEndDate() {
         return interval.getEnd().toLocalDate();
+    }
+
+    public Interval getInterval() {
+        return interval;
     }
 
     public boolean dateFallsWithin(LocalDate date) {

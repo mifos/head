@@ -29,6 +29,7 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
+import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.framework.TestUtils;
@@ -48,7 +49,7 @@ public class SavingsProductBuilder {
     private Money maxAmountOfWithdrawal = new Money(Money.getDefaultCurrency(), "50.0");
     private final Double interestRate = Double.valueOf("2.0");
     private SavingsType savingsType = SavingsType.VOLUNTARY;
-    private final InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
+    private InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
 
     // PRD_OFFERING FIELDS
     private String globalProductNumber = "XXXXX-1111";
@@ -105,6 +106,12 @@ public class SavingsProductBuilder {
     public SavingsProductBuilder withName(final String withName) {
         this.name = withName;
         this.globalProductNumber = "XXX-" + withName;
+        return this;
+    }
+
+
+    public SavingsProductBuilder withInterestCalcType(final InterestCalcType interestCalcType) {
+        this.interestCalcType = interestCalcType;
         return this;
     }
 

@@ -45,13 +45,15 @@ public class AverageBalanceCalculationStrategy implements PrincipalCalculationSt
 
         int duration = interestCalculationPeriodDetail.getDuration();
         LocalDate prevDate = startDate;
-
-        Money totalBalance = interestCalculationPeriodDetail.zeroAmount();
+        LocalDate nextDate = endOfDayDetails.get(0).getDate();
         Money runningBalance = interestCalculationPeriodDetail.getBalanceBeforeInterval();
 
-        for (int count = 0; count < endOfDayDetails.size(); count++) {
+        //Calculation of effect of previous balance till the first activity in the calculation interval
+        int subDuration = Days.daysBetween(prevDate, nextDate).getDays();
+        Money totalBalance = runningBalance.multiply(subDuration);
+        prevDate = nextDate;
 
-            LocalDate nextDate = null;
+        for (int count = 0; count < endOfDayDetails.size(); count++) {
 
             if (count < endOfDayDetails.size() - 1) {
                 nextDate = endOfDayDetails.get(count + 1).getDate();
@@ -59,7 +61,7 @@ public class AverageBalanceCalculationStrategy implements PrincipalCalculationSt
                 nextDate = endDate;
             }
 
-            int subDuration = Days.daysBetween(prevDate, nextDate).getDays();
+            subDuration = Days.daysBetween(prevDate, nextDate).getDays();
 
             runningBalance = runningBalance.add(endOfDayDetails.get(count).getResultantAmountForDay());
 
@@ -68,7 +70,7 @@ public class AverageBalanceCalculationStrategy implements PrincipalCalculationSt
             prevDate = nextDate;
         }
 
-        if (duration != 0 && totalBalance.isNonZero()) {
+        if (duration != 0) {
             totalBalance = totalBalance.divide(duration);
         }
 

@@ -341,7 +341,7 @@ public class SavingsBO extends AccountBO {
         return lastIntCalcDate;
     }
 
-    void setLastIntCalcDate(final Date lastIntCalcDate) {
+    public void setLastIntCalcDate(final Date lastIntCalcDate) {
         this.lastIntCalcDate = lastIntCalcDate;
     }
 
@@ -353,11 +353,11 @@ public class SavingsBO extends AccountBO {
         this.lastIntPostDate = lastIntPostDate;
     }
 
-    public Date getNextIntCalcDate() {
+    Date getNextIntCalcDate() {
         return nextIntCalcDate;
     }
 
-    public void setNextIntCalcDate(final Date nextIntCalcDate) {
+    void setNextIntCalcDate(final Date nextIntCalcDate) {
         this.nextIntCalcDate = nextIntCalcDate;
     }
 

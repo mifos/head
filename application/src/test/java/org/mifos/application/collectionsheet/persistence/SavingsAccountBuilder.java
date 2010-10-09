@@ -54,7 +54,7 @@ public class SavingsAccountBuilder {
 
     private final MeetingBO scheduleForInterestCalculation = new MeetingBuilder().savingsInterestCalulationSchedule()
             .monthly().every(1).build();
-    private SavingsOfferingBO savingsProduct = new SavingsProductBuilder().buildForUnitTests();
+    private SavingsOfferingBO savingsProduct;
     private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
     private final Date createdDate = new DateTime().minusDays(14).toDate();
 
@@ -63,7 +63,7 @@ public class SavingsAccountBuilder {
     private final Integer offsettingAllowable = Integer.valueOf(1);
 
     private final Double interestRate = Double.valueOf("4.0");
-    private final InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
+    private InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
 
     private SavingsType savingsType = SavingsType.VOLUNTARY;
     private RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
@@ -79,6 +79,7 @@ public class SavingsAccountBuilder {
     private Money interestToBePosted = TestUtils.createMoney("0");
 
     public SavingsBO build() {
+        savingsProduct = new SavingsProductBuilder().withInterestCalcType(interestCalcType).buildForUnitTests();
 
         final SavingsBO savingsBO = new SavingsBO(savingsProduct, savingsType, savingsBalanceAmount,
                 savingsPaymentStrategy, savingsTransactionActivityHelper, scheduledPayments, interestRate,
@@ -97,6 +98,11 @@ public class SavingsAccountBuilder {
             this.recommendedAmountUnit = RecommendedAmountUnit.fromInt(withSavingsProduct.getRecommendedAmntUnit().getId());
         }
         this.recommendedAmount = withSavingsProduct.getRecommendedAmount();
+        return this;
+    }
+
+    public SavingsAccountBuilder withInterestCalcType(final InterestCalcType interestCalcType) {
+        this.interestCalcType = interestCalcType;
         return this;
     }
 
