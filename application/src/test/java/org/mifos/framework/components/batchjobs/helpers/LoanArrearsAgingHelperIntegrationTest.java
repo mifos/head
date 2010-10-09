@@ -40,6 +40,8 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.config.AccountingRulesConstants;
+import org.mifos.config.ConfigurationManager;
 import org.mifos.config.business.Configuration;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -55,6 +57,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -86,10 +89,14 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     private final int interestForOneInstallment = totalInterest / numInstallments;
     private final int onePayment = principalForOneInstallment + interestForOneInstallment;
     private final int repaymentInterval = 7; // 7 days for weekly loan repayment
+    private static String oldRoundingMode;
 
     @Before
     public void setUp() throws Exception {
         StaticHibernateUtil.getSessionTL().clear();
+        oldRoundingMode =  (String) ConfigurationManager.getInstance().getProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE);
+        //FIXME this test was using CELLING ROUNDING MODE due to MIFOS-2659
+        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, RoundingMode.CEILING.toString());
         /*
          * Takes lateness days out of the equation so that the LoanArrearsTask will set all overdue account into bad
          * standing.
@@ -112,6 +119,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
         loanArrearsAgingHelper = null;
         loanArrearHelper = null;
+        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, oldRoundingMode);
         StaticHibernateUtil.closeSession();
     }
 

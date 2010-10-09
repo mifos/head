@@ -303,8 +303,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 30/09 - 31/10 = 1502.2
-        // Interest 1502.2*.8*31/365 = 10.3
-        Assert.assertEquals(TestUtils.createMoney(10.3), savings.getInterestToBePosted());
+        // Interest 1502.2*.8*31/365 = 10.2
+        Assert.assertEquals(TestUtils.createMoney(10.2), savings.getInterestToBePosted());
         savings.postInterest();
 
 
@@ -315,7 +315,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 31/10 - 30/11 = 1512.5
         // Interest 1512.5*.8*30/365 = 10.0
-        Assert.assertEquals(TestUtils.createMoney(10.0), savings.getInterestToBePosted());
+        Assert.assertEquals(TestUtils.createMoney(9.9), savings.getInterestToBePosted());
         savings.postInterest();
 
 
@@ -325,7 +325,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 30/11 - 31/12 = 1522.5
         // Interest1522.5*.8*31/365 = 10.4
-        Assert.assertEquals(TestUtils.createMoney(10.4), savings.getInterestToBePosted());
+        Assert.assertEquals(TestUtils.createMoney(10.3), savings.getInterestToBePosted());
         savings.postInterest();
 
 
@@ -427,7 +427,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 30/09 - 31/10 = 2000
         // Interest 2002.2*.8*31/365 = 13.6
-        Assert.assertEquals(TestUtils.createMoney(13.7), savings.getInterestToBePosted());
+        Assert.assertEquals(TestUtils.createMoney(13.6), savings.getInterestToBePosted());
         savings.postInterest();
 
 
@@ -438,7 +438,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 31/10 - 30/11 = 2360.79
         // Interest 2360.79*.8*30/365 = 15.6
-        Assert.assertEquals(TestUtils.createMoney(15.6), savings.getInterestToBePosted());
+        Assert.assertEquals(TestUtils.createMoney(15.5), savings.getInterestToBePosted());
         savings.postInterest();
 
 
@@ -449,7 +449,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 30/11 - 31/12 = 2392.46
         // Interest 2392.469*.8*31/365 = 16.2
-        Assert.assertEquals(TestUtils.createMoney(16.2), savings.getInterestToBePosted());
+        Assert.assertEquals(TestUtils.createMoney(16.1), savings.getInterestToBePosted());
         savings.postInterest();
 
 
@@ -528,7 +528,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 25/02 - 01/3 = 2000
         // Interest 2000*.12*4/365 = 2.6
-        Assert.assertEquals(TestUtils.createMoney(2.7), savings.getInterestToBePosted());
+        Assert.assertEquals(TestUtils.createMoney(2.6), savings.getInterestToBePosted());
         savings.postInterest();
 
 
@@ -550,7 +550,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 31/03 - 30/4 = 2022.5
         // Interest 2022.5*.12*30/365 = 20.0
-        Assert.assertEquals(TestUtils.createMoney(20.0), savings.getInterestToBePosted());
+        Assert.assertEquals(TestUtils.createMoney(19.9), savings.getInterestToBePosted());
         savings.postInterest();
 
 
@@ -559,7 +559,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
 
         savings = savingsPersistence.findById(savings.getAccountId());
-        Assert.assertEquals(TestUtils.createMoney(20.9), savings.getInterestToBePosted());
+        Assert.assertEquals(TestUtils.createMoney(20.8), savings.getInterestToBePosted());
         group = savings.getCustomer();
         center = group.getParentCustomer();
     }
@@ -874,7 +874,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(2.6,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(TestUtils.createMoney(2.7), savings.getInterestToBePosted());
+        Assert.assertEquals(TestUtils.createMoney(2.6), savings.getInterestToBePosted());
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.flushAndClearSession();
@@ -886,12 +886,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("15/03/2006"), null);
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(71.3, oldInterest);
-        Assert.assertEquals(getRoundedMoney(71.4), oldInterest);
+        Assert.assertEquals(getRoundedMoney(71.3), oldInterest);
         // 71.3 + 2.6 = 73.9
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(73.9,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(71.8), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(71.6), savings.getInterestToBePosted());
 
         savings.setUserContext(userContext);
         // Nullifying last payment
@@ -910,7 +910,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(73.9,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(71.8), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(71.6), savings.getInterestToBePosted());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -1002,7 +1002,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(73.9,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(73.4), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(73.3), savings.getInterestToBePosted());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -1082,7 +1082,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(5.9,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(3.7), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(3.6), savings.getInterestToBePosted());
 
         savings.updateInterestAccrued();
 
@@ -1096,7 +1096,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(83.9,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(81.4), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(81.3), savings.getInterestToBePosted());
 
         savings.setUserContext(userContext);
         Money amountAdjustedTo = new Money(currency, "2000");
@@ -1117,7 +1117,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(88.4,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(85.6), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(85.5), savings.getInterestToBePosted());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -1210,7 +1210,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(5.9,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(3.7), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(3.6), savings.getInterestToBePosted());
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.flushAndClearSession();
@@ -1227,7 +1227,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(83.9,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(81.4), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(81.3), savings.getInterestToBePosted());
 
         savings.setUserContext(userContext);
         Money amountAdjustedTo = new Money(currency, "2000");
@@ -1247,7 +1247,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(88.4,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(85.6), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(85.5), savings.getInterestToBePosted());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -1338,7 +1338,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(5.9,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(3.7), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(3.6), savings.getInterestToBePosted());
 
         savings.updateInterestAccrued();
 
@@ -1355,7 +1355,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(83.9,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(81.4), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(81.3), savings.getInterestToBePosted());
 
         savings.setUserContext(userContext);
         // Nullifying last payment
@@ -1377,7 +1377,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(77.2,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(75.1), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(74.9), savings.getInterestToBePosted());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -1439,8 +1439,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Assert.assertEquals(73.9, oldInterest);
         // Assert.assertEquals(73.9, savings.getInterestToBePosted()
         // );
-        Assert.assertEquals(getRoundedMoney(73.4), oldInterest);
-        Assert.assertEquals(getRoundedMoney(73.4), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(73.3), oldInterest);
+        Assert.assertEquals(getRoundedMoney(73.3), savings.getInterestToBePosted());
 
         savings.setUserContext(userContext);
         Money amountAdjustedTo = new Money(currency, "4000");
@@ -1714,11 +1714,11 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Interest = (21500 * .12 / 365 * 8) = 6.2
 
         // * TODO: financial_calculation_rounding
-        Assert.assertEquals(getRoundedMoney(6.3), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(6.2), savings.getInterestToBePosted());
 
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("25/02/2006"), null);
         // * TODO: financial_calculation_rounding
-        Assert.assertEquals(getRoundedMoney(6.3), oldInterest);
+        Assert.assertEquals(getRoundedMoney(6.2), oldInterest);
 
 
         savings = savingsPersistence.findById(savings.getAccountId());
@@ -1785,12 +1785,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(5.9,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(3.7), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(3.6), savings.getInterestToBePosted());
 
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("25/02/2006"), null);
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(5.9, oldInterest);
-        Assert.assertEquals(getRoundedMoney(3.7), oldInterest);
+        Assert.assertEquals(getRoundedMoney(3.6), oldInterest);
 
 
 
@@ -2146,7 +2146,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         Money roundedInterestForClosure = MoneyUtils.currencyRound(savings.calculateInterestForClosure(helper
                 .getDate("10/04/2006")));
-        Assert.assertEquals(getRoundedMoney(78.3), roundedInterestForClosure);
+        Assert.assertEquals(getRoundedMoney(78.2), roundedInterestForClosure);
     }
 
     @Test
@@ -3616,7 +3616,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(1.6,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(1.7), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(1.6), savings.getInterestToBePosted());
         Assert.assertEquals(helper.getDate("01/04/2006"), savings.getNextIntCalcDate());
     }
 
@@ -3664,7 +3664,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(4.6,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(4.7), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(4.6), savings.getInterestToBePosted());
         Assert.assertEquals(helper.getDate("01/04/2006"), savings.getNextIntCalcDate());
     }
 
@@ -3744,12 +3744,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(4.4,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(4.0), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(3.9), savings.getInterestToBePosted());
 
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("25/02/2006"), null);
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(4.4, oldInterest);
-        Assert.assertEquals(getRoundedMoney(4.0), oldInterest);
+        Assert.assertEquals(getRoundedMoney(3.9), oldInterest);
 
 
         savings = savingsPersistence.findById(savings.getAccountId());
@@ -3767,7 +3767,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // MinBal from 20/02 - 28/02 = 1000
         // Interest 1000*.12*8/365 = 3.0
         // * TODO: financial_calculation_rounding
-        Assert.assertEquals(getRoundedMoney(2.7), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(2.6), savings.getInterestToBePosted());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -3814,12 +3814,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(5.9,
         // savings.getInterestToBePosted());
-        Assert.assertEquals(getRoundedMoney(3.7), savings.getInterestToBePosted());
+        Assert.assertEquals(getRoundedMoney(3.6), savings.getInterestToBePosted());
 
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("27/02/2006"), null);
         // * TODO: financial_calculation_rounding
         // Assert.assertEquals(5.9, oldInterest);
-        Assert.assertEquals(getRoundedMoney(3.7), oldInterest);
+        Assert.assertEquals(getRoundedMoney(3.6), oldInterest);
 
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);

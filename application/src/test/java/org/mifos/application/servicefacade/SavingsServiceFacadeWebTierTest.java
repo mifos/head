@@ -219,7 +219,7 @@ public class SavingsServiceFacadeWebTierTest {
 
         savingsServiceFacade.calculateInterestForPostingInterval(savingsId, null);
 
-        // ((1000 x 15 + 1500 x 5 + 500 x 11) / 31) * 4/100 * 31/365 = 3.07 (CELLING_ROUNDING) = 3.1
+        // ((1000 x 15 + 1500 x 5 + 500 x 11) / 31) * 4/100 * 31/365 = 3.067 (Rounding) = 3.1
         Assert.assertEquals(TestUtils.createMoney("3.1"), savingsAccount.getInterestToBePosted());
         Assert.assertEquals(new LocalDate(2010,10,31), new LocalDate(savingsAccount.getLastIntCalcDate()));
     }
