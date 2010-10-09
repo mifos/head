@@ -54,7 +54,7 @@ public class SavingsAccountBuilder {
 
     private final MeetingBO scheduleForInterestCalculation = new MeetingBuilder().savingsInterestCalulationSchedule()
             .monthly().every(1).build();
-    private SavingsOfferingBO savingsProduct;
+    private SavingsOfferingBO savingsProduct = new SavingsProductBuilder().buildForUnitTests();
     private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
     private final Date createdDate = new DateTime().minusDays(14).toDate();
 
@@ -79,7 +79,6 @@ public class SavingsAccountBuilder {
     private Money interestToBePosted = TestUtils.createMoney("0");
 
     public SavingsBO build() {
-        savingsProduct = new SavingsProductBuilder().withInterestCalcType(interestCalcType).buildForUnitTests();
 
         final SavingsBO savingsBO = new SavingsBO(savingsProduct, savingsType, savingsBalanceAmount,
                 savingsPaymentStrategy, savingsTransactionActivityHelper, scheduledPayments, interestRate,
