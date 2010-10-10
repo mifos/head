@@ -30,17 +30,20 @@ public class QuestionGroupDetails implements Serializable {
 
     private int entityId;
 
+    private int eventSourceId;
+
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<QuestionGroupDetail> details;
 
     public QuestionGroupDetails() {
-        this(0, 0, new LinkedList<QuestionGroupDetail>());
+        this(0, 0, 0, new LinkedList<QuestionGroupDetail>());
     }
 
-    public QuestionGroupDetails(int creatorId, int entityId, List<QuestionGroupDetail> details) {
+    public QuestionGroupDetails(int creatorId, int entityId, int eventSourceId, List<QuestionGroupDetail> details) {
         this.creatorId = creatorId;
         this.entityId = entityId;
         this.details = details;
+        this.eventSourceId = eventSourceId;
     }
 
     public List<QuestionGroupDetail> getDetails() {
@@ -59,11 +62,19 @@ public class QuestionGroupDetails implements Serializable {
         return entityId;
     }
 
+    public int getEventSourceId() {
+        return eventSourceId;
+    }
+
     public void setEntityId(int entityId) {
         this.entityId = entityId;
     }
 
     public void setCreatorId(int creatorId) {
         this.creatorId = creatorId;
+    }
+
+    public void setEventSourceId(int eventSourceId) {
+        this.eventSourceId = eventSourceId;
     }
 }

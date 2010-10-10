@@ -31,6 +31,7 @@ public class QuestionGroupInstanceDto implements Serializable {
     private Integer questionGroupId;
     private Integer entityId;
     private Integer creatorId;
+    private Integer eventSourceId;
     private Integer version;
     private boolean completed;
     private Date dateConducted;
@@ -75,6 +76,14 @@ public class QuestionGroupInstanceDto implements Serializable {
 
     public void setCreatorId(Integer creatorId) {
         this.creatorId = creatorId;
+    }
+
+    public Integer getEventSourceId() {
+        return eventSourceId;
+    }
+
+    public void setEventSourceId(Integer eventSourceId) {
+        this.eventSourceId = eventSourceId;
     }
 
     public Integer getVersion() {

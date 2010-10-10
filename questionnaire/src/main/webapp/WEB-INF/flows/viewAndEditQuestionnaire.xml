@@ -7,10 +7,12 @@
 
     <decision-state id="viewAndEditQuestionnaire">
         <on-entry>
-            <set name="flowScope.backPageUrl" value="requestParameters.backPageUrl" type="string"></set>
-            <set name="flowScope.selectedQuestionnaireIndex" value="0" type="int"></set>
-            <set name="flowScope.questionGroupDetails.entityId" value="requestParameters.entityId" type="int"></set>
-            <set name="flowScope.questionGroupDetails.creatorId" value="requestParameters.creatorId" type="int"></set>
+            <evaluate expression="questionnaireServiceFacade.getEventSourceId(requestParameters.event, requestParameters.source)"
+                result="flowScope.questionGroupDetails.eventSourceId"/>
+            <set name="flowScope.backPageUrl" value="requestParameters.backPageUrl" type="string"/>
+            <set name="flowScope.selectedQuestionnaireIndex" value="0" type="int"/>
+            <set name="flowScope.questionGroupDetails.entityId" value="requestParameters.entityId" type="int"/>
+            <set name="flowScope.questionGroupDetails.creatorId" value="requestParameters.creatorId" type="int"/>
         </on-entry>
         <if test="requestParameters.instanceId == null" then="displayResponses" else="displayResponse"/>
     </decision-state>

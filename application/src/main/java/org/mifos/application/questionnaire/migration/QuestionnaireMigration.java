@@ -42,6 +42,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -136,6 +137,7 @@ public class QuestionnaireMigration {
     public List<Integer> migrateSurveys() {
         List<Integer> questionGroupIds = new ArrayList<Integer>();
         for (SurveyType surveyType : SurveyType.values()){
+            // TODO JS add support for 'All' surveys
             if(surveyType!=SurveyType.ALL) {
                 questionGroupIds.addAll(migrateSurveys(surveyType));
             }
@@ -151,7 +153,8 @@ public class QuestionnaireMigration {
             Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
             questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.GROUP);
             customFields = getCustomFieldsForGroup();
-            migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, customFieldQuestionIdMap);
+            Integer eventSourceId = questionnaireServiceFacade.getEventSourceId("Create", "Group");
+            migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, eventSourceId, customFieldQuestionIdMap);
         }
         return questionGroupId;
     }
@@ -164,7 +167,8 @@ public class QuestionnaireMigration {
             Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
             questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.CLIENT);
             customFields = getCustomFieldsForClient();
-            migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, customFieldQuestionIdMap);
+            Integer eventSourceId = questionnaireServiceFacade.getEventSourceId("Create", "Client");
+            migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, eventSourceId, customFieldQuestionIdMap);
         }
         return questionGroupId;
     }
@@ -216,7 +220,8 @@ public class QuestionnaireMigration {
             Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
             questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.CENTER);
             customFields = getCustomFieldsForCenter();
-            migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, customFieldQuestionIdMap);
+            Integer eventSourceId = questionnaireServiceFacade.getEventSourceId("Create", "Center");
+            migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, eventSourceId, customFieldQuestionIdMap);
         }
         return questionGroupId;
     }
@@ -336,12 +341,12 @@ public class QuestionnaireMigration {
     }
 
     private void migrateAdditionalFieldsResponsesForCustomer(Iterator<CustomFieldDefinitionEntity> customFields, Integer questionGroupId,
-                                                             Map<Short, Integer> customFieldQuestionIdMap) {
+                                                             Integer eventSourceId, Map<Short, Integer> customFieldQuestionIdMap) {
         if (questionGroupId != null) {
             Map<Integer, List<CustomerCustomFieldEntity>> customFieldResponses = getCustomFieldResponsesForCustomer(customFields);
             for (Integer entityId : customFieldResponses.keySet()) {
                 List<CustomerCustomFieldEntity> customerResponses = customFieldResponses.get(entityId);
-                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForCustomer(questionGroupId, customFieldQuestionIdMap, customerResponses);
+                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForCustomer(questionGroupId, eventSourceId, customFieldQuestionIdMap, customerResponses);
                 saveQuestionGroupInstance(questionGroupInstanceDto);
             }
         }
@@ -353,7 +358,8 @@ public class QuestionnaireMigration {
             Map<Integer, List<AccountCustomFieldEntity>> customFieldResponses = getCustomFieldResponsesForLoan(customFields);
             for (Integer entityId : customFieldResponses.keySet()) {
                 List<AccountCustomFieldEntity> accountResponses = customFieldResponses.get(entityId);
-                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForAccount(questionGroupId, customFieldQuestionIdMap, accountResponses);
+                Integer eventSourceId = questionnaireServiceFacade.getEventSourceId("Create", "Loan");
+                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForAccount(questionGroupId, eventSourceId, customFieldQuestionIdMap, accountResponses);
                 saveQuestionGroupInstance(questionGroupInstanceDto);
             }
         }
@@ -365,7 +371,8 @@ public class QuestionnaireMigration {
             Map<Integer, List<PersonnelCustomFieldEntity>> customFieldResponses = getCustomFieldResponsesForPersonnel(customFields);
             for (Integer entityId : customFieldResponses.keySet()) {
                 List<PersonnelCustomFieldEntity> accountResponses = customFieldResponses.get(entityId);
-                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForPersonnel(questionGroupId, customFieldQuestionIdMap, accountResponses);
+                Integer eventSourceId = questionnaireServiceFacade.getEventSourceId("Create", "Personnel");
+                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForPersonnel(questionGroupId, eventSourceId, customFieldQuestionIdMap, accountResponses);
                 saveQuestionGroupInstance(questionGroupInstanceDto);
             }
         }
@@ -377,7 +384,8 @@ public class QuestionnaireMigration {
             Map<Integer, List<OfficeCustomFieldEntity>> customFieldResponses = getCustomFieldResponsesForOffice(customFields);
             for (Integer entityId : customFieldResponses.keySet()) {
                 List<OfficeCustomFieldEntity> accountResponses = customFieldResponses.get(entityId);
-                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForOffice(questionGroupId, customFieldQuestionIdMap, accountResponses);
+                Integer eventSourceId = questionnaireServiceFacade.getEventSourceId("Create", "Office");
+                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForOffice(questionGroupId, eventSourceId, customFieldQuestionIdMap, accountResponses);
                 saveQuestionGroupInstance(questionGroupInstanceDto);
             }
         }
@@ -389,8 +397,9 @@ public class QuestionnaireMigration {
             Map<Integer, List<AccountCustomFieldEntity>> customFieldResponses = getCustomFieldResponsesForSavings(customFields);
             for (Integer entityId : customFieldResponses.keySet()) {
                 List<AccountCustomFieldEntity> accountResponses = customFieldResponses.get(entityId);
+                Integer eventSourceId = questionnaireServiceFacade.getEventSourceId("Create", "Savings");
                 QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForAccount(questionGroupId,
-                        customFieldQuestionIdMap, accountResponses);
+                        eventSourceId, customFieldQuestionIdMap, accountResponses);
                 saveQuestionGroupInstance(questionGroupInstanceDto);
             }
         }
@@ -457,10 +466,10 @@ public class QuestionnaireMigration {
     }
 
     private QuestionGroupInstanceDto mapToQuestionGroupInstanceForOffice(Integer questionGroupId,
-            Map<Short, Integer> customFieldQuestionIdMap, List<OfficeCustomFieldEntity> officeResponses) {
+                                                                         Integer eventSourceId, Map<Short, Integer> customFieldQuestionIdMap, List<OfficeCustomFieldEntity> officeResponses) {
         QuestionGroupInstanceDto questionGroupInstanceDto = null;
         try {
-            questionGroupInstanceDto = questionnaireMigrationMapper.mapForOffice(questionGroupId, officeResponses,
+            questionGroupInstanceDto = questionnaireMigrationMapper.mapForOffice(questionGroupId, eventSourceId, officeResponses,
                     customFieldQuestionIdMap);
         } catch (Exception e) {
             logger
@@ -507,10 +516,10 @@ public class QuestionnaireMigration {
     }
 
     private QuestionGroupInstanceDto mapToQuestionGroupInstanceForPersonnel(Integer questionGroupId,
-            Map<Short, Integer> customFieldQuestionIdMap, List<PersonnelCustomFieldEntity> personnelResponses) {
+                                                                            Integer eventSourceId, Map<Short, Integer> customFieldQuestionIdMap, List<PersonnelCustomFieldEntity> personnelResponses) {
         QuestionGroupInstanceDto questionGroupInstanceDto = null;
         try {
-            questionGroupInstanceDto = questionnaireMigrationMapper.mapForPersonnel(questionGroupId, personnelResponses,
+            questionGroupInstanceDto = questionnaireMigrationMapper.mapForPersonnel(questionGroupId, eventSourceId, personnelResponses,
                     customFieldQuestionIdMap);
         } catch (Exception e) {
             logger
@@ -521,11 +530,11 @@ public class QuestionnaireMigration {
         return questionGroupInstanceDto;
     }
 
-    private QuestionGroupInstanceDto mapToQuestionGroupInstanceForAccount(Integer questionGroupId, Map<Short, Integer> customFieldQuestionIdMap,
-                                                                List<AccountCustomFieldEntity> accountResponses) {
+    private QuestionGroupInstanceDto mapToQuestionGroupInstanceForAccount(Integer questionGroupId, Integer eventSourceId, Map<Short, Integer> customFieldQuestionIdMap,
+                                                                          List<AccountCustomFieldEntity> accountResponses) {
         QuestionGroupInstanceDto questionGroupInstanceDto = null;
         try {
-            questionGroupInstanceDto = questionnaireMigrationMapper.mapForAccounts(questionGroupId, accountResponses, customFieldQuestionIdMap);
+            questionGroupInstanceDto = questionnaireMigrationMapper.mapForAccounts(questionGroupId, eventSourceId, accountResponses, customFieldQuestionIdMap);
         } catch (Exception e) {
             logger.error(format("Unable to convert responses given for account with ID, %d for custom fields, to Question Group responses", accountResponses.get(0).getAccountId()), e);
         }
@@ -577,11 +586,11 @@ public class QuestionnaireMigration {
         }
     }
 
-    private QuestionGroupInstanceDto mapToQuestionGroupInstanceForCustomer(Integer questionGroupId, Map<Short, Integer> customFieldQuestionIdMap,
-                                                                List<CustomerCustomFieldEntity> customerResponses) {
+    private QuestionGroupInstanceDto mapToQuestionGroupInstanceForCustomer(Integer questionGroupId, Integer eventSourceId, Map<Short, Integer> customFieldQuestionIdMap,
+                                                                           List<CustomerCustomFieldEntity> customerResponses) {
         QuestionGroupInstanceDto questionGroupInstanceDto = null;
         try {
-            questionGroupInstanceDto = questionnaireMigrationMapper.mapForCustomers(questionGroupId, customerResponses, customFieldQuestionIdMap);
+            questionGroupInstanceDto = questionnaireMigrationMapper.mapForCustomers(questionGroupId, eventSourceId, customerResponses, customFieldQuestionIdMap);
         } catch (Exception e) {
             logger.error(format("Unable to convert responses from customer with ID, %d for custom fields, to Question Group responses", customerResponses.get(0).getCustomerId()), e);
         }
@@ -654,7 +663,10 @@ public class QuestionnaireMigration {
     private Integer migrateSurvey(Survey survey) {
         QuestionGroupDto questionGroupDto = questionnaireMigrationMapper.map(survey);
         Integer questionGroupId = createQuestionGroup(questionGroupDto, survey);
-        migrateSurveyResponses(survey, questionGroupId);
+        // TODO JS use Survey type instead first event source dto
+        EventSourceDto eventSourceDto = questionGroupDto.getEventSourceDtos().get(0);
+        Integer eventSourceId = questionnaireServiceFacade.getEventSourceId(eventSourceDto.getEvent(), eventSourceDto.getSource());
+        migrateSurveyResponses(survey, questionGroupId, eventSourceId);
         return questionGroupId;
     }
 
@@ -668,13 +680,13 @@ public class QuestionnaireMigration {
         return questionGroupId;
     }
 
-    private void migrateSurveyResponses(Survey survey, Integer questionGroupId) {
+    private void migrateSurveyResponses(Survey survey, Integer questionGroupId, Integer eventSourceId) {
         if (questionGroupId != null) {
             Iterator<SurveyInstance> surveyInstanceIterator = getSurveyInstances(survey);
             if (surveyInstanceIterator != null) {
                 while (surveyInstanceIterator.hasNext()) {
                     SurveyInstance surveyInstance = surveyInstanceIterator.next();
-                    QuestionGroupInstanceDto questionGroupInstanceDto = questionnaireMigrationMapper.map(surveyInstance, questionGroupId);
+                    QuestionGroupInstanceDto questionGroupInstanceDto = questionnaireMigrationMapper.map(surveyInstance, questionGroupId, eventSourceId);
                     saveQuestionGroupInstance(questionGroupInstanceDto, surveyInstance);
                 }
             }

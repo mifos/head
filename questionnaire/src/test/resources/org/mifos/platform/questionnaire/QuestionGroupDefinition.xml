@@ -5,7 +5,7 @@
     <ppi>true</ppi>
     <title>PPI India</title>
     <editable>false</editable>
-    <eventSource>
+    <eventSource order="1">
         <event>Create</event>
         <source>Loan</source>
     </eventSource>

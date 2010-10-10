@@ -43,14 +43,14 @@ public interface QuestionnaireMigrationMapper {
 
     QuestionGroupDto map(Survey survey);
 
-    QuestionGroupInstanceDto map(SurveyInstance surveyInstance, Integer questionGroupId);
+    QuestionGroupInstanceDto map(SurveyInstance surveyInstance, Integer questionGroupId, Integer eventSourceId);
 
-    QuestionGroupInstanceDto mapForCustomers(Integer questionGroupId, List<CustomerCustomFieldEntity> customerResponses, Map<Short, Integer> customFieldQuestionIdMap);
+    QuestionGroupInstanceDto mapForCustomers(Integer questionGroupId, Integer eventSourceId, List<CustomerCustomFieldEntity> customerResponses, Map<Short, Integer> customFieldQuestionIdMap);
 
-    QuestionGroupInstanceDto mapForAccounts(Integer questionGroupId, List<AccountCustomFieldEntity> accountResponses, Map<Short, Integer> customFieldQuestionIdMap);
+    QuestionGroupInstanceDto mapForAccounts(Integer questionGroupId, Integer eventSourceId, List<AccountCustomFieldEntity> accountResponses, Map<Short, Integer> customFieldQuestionIdMap);
 
-    QuestionGroupInstanceDto mapForOffice(Integer questionGroupId, List<OfficeCustomFieldEntity> officeResponses, Map<Short, Integer> customFieldQuestionIdMap);
+    QuestionGroupInstanceDto mapForOffice(Integer questionGroupId, Integer eventSourceId, List<OfficeCustomFieldEntity> officeResponses, Map<Short, Integer> customFieldQuestionIdMap);
 
     QuestionGroupInstanceDto mapForPersonnel(Integer questionGroupId,
-            List<PersonnelCustomFieldEntity> personnelResponses, Map<Short, Integer> customFieldQuestionIdMap);
+                                             Integer eventSourceId, List<PersonnelCustomFieldEntity> personnelResponses, Map<Short, Integer> customFieldQuestionIdMap);
 }

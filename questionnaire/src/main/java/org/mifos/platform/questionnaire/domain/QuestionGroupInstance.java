@@ -34,6 +34,7 @@ public class QuestionGroupInstance implements Serializable {
     private Date dateConducted;
     private int completedStatus;
     private int creatorId;
+    private int eventSourceId;
     private int versionNum;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<QuestionGroupResponse> questionGroupResponses;
@@ -98,6 +99,14 @@ public class QuestionGroupInstance implements Serializable {
 
     public int getVersionNum() {
         return versionNum;
+    }
+
+    public int getEventSourceId() {
+        return eventSourceId;
+    }
+
+    public void setEventSourceId(int eventSourceId) {
+        this.eventSourceId = eventSourceId;
     }
 
     public void setVersionNum(int versionNum) {
