@@ -29,6 +29,7 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
+import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.framework.TestUtils;
@@ -40,15 +41,15 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class SavingsProductBuilder {
 
-    private final MeetingBO scheduleForInterestCalculationMeeting = new MeetingBuilder()
+    private MeetingBO scheduleForInterestCalculationMeeting = new MeetingBuilder()
             .savingsInterestCalulationSchedule()
             .monthly().every(1).build();
-    private final MeetingBO scheduleForInterestPostingMeeting = new MeetingBuilder().savingsInterestPostingSchedule()
+    private MeetingBO scheduleForInterestPostingMeeting = new MeetingBuilder().savingsInterestPostingSchedule()
             .monthly().every(1).build();
     private Money maxAmountOfWithdrawal = new Money(Money.getDefaultCurrency(), "50.0");
     private final Double interestRate = Double.valueOf("2.0");
     private SavingsType savingsType = SavingsType.VOLUNTARY;
-    private final InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
+    private InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
 
     // PRD_OFFERING FIELDS
     private String globalProductNumber = "XXXXX-1111";
@@ -108,6 +109,12 @@ public class SavingsProductBuilder {
         return this;
     }
 
+
+    public SavingsProductBuilder withInterestCalcType(final InterestCalcType interestCalcType) {
+        this.interestCalcType = interestCalcType;
+        return this;
+    }
+
     public SavingsProductBuilder withShortName(final String withShortName) {
         this.shortName = withShortName;
         return this;
@@ -155,6 +162,11 @@ public class SavingsProductBuilder {
 
     public SavingsProductBuilder withMandatoryAmount(String mandatoryAmount) {
         this.mandatoryOrRecommendedAmount = TestUtils.createMoney(mandatoryAmount);
+        return this;
+    }
+
+    public SavingsProductBuilder withInterestPostingSchedule(MeetingBO interestPostingMeeting) {
+        this.scheduleForInterestPostingMeeting = interestPostingMeeting;
         return this;
     }
 }

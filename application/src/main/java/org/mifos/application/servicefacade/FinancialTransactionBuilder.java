@@ -18,25 +18,23 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.savings.interest;
+package org.mifos.application.servicefacade;
 
-import java.util.List;
+import java.util.Set;
 
-import org.mifos.framework.util.helpers.Money;
+import org.mifos.accounts.business.AccountTrxnEntity;
+import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.financial.business.service.FinancialBusinessService;
+import org.mifos.service.BusinessRuleException;
 
-public class TotalPrincipalForPeriodCalculationStrategy implements PrincipalCalculationStrategy {
+public class FinancialTransactionBuilder {
 
-    @Override
-    public Money calculatePrincipal(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
-
-        Money totalPrincipal = interestCalculationPeriodDetail.getBalanceBeforeInterval();
-
-        List<EndOfDayDetail> dailyDetails = interestCalculationPeriodDetail.getDailyDetails();
-        for (EndOfDayDetail endOfDayDetail : dailyDetails) {
-            totalPrincipal = totalPrincipal.add(endOfDayDetail.getResultantAmountForDay());
+    public void buildFinancialEntries(Set<AccountTrxnEntity> accountTrxns) {
+        try {
+            new FinancialBusinessService().buildFinancialEntries(accountTrxns);
+        } catch (AccountException e) {
+            throw new BusinessRuleException("Unable to build financial transactions", e);
         }
-
-        return totalPrincipal;
     }
 
 }

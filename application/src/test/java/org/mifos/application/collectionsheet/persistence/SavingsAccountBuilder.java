@@ -63,7 +63,7 @@ public class SavingsAccountBuilder {
     private final Integer offsettingAllowable = Integer.valueOf(1);
 
     private final Double interestRate = Double.valueOf("4.0");
-    private final InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
+    private InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
 
     private SavingsType savingsType = SavingsType.VOLUNTARY;
     private RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
@@ -76,6 +76,7 @@ public class SavingsAccountBuilder {
     private Set<AccountActionDateEntity> scheduledPayments = new LinkedHashSet<AccountActionDateEntity>();
     private List<Holiday> holidays = new ArrayList<Holiday>();
     private DateTime activationDate = new DateTime();
+    private Money interestToBePosted = TestUtils.createMoney("0");
 
     public SavingsBO build() {
 
@@ -85,6 +86,7 @@ public class SavingsAccountBuilder {
                 scheduleForInterestCalculation, recommendedAmountUnit, recommendedAmount, createdDate,
                 createdByUserId, holidays, activationDate);
         savingsBO.setCustomerPersistence(customerDao);
+        savingsBO.setInterestToBePosted(interestToBePosted);
 
         return savingsBO;
     }
@@ -95,6 +97,11 @@ public class SavingsAccountBuilder {
             this.recommendedAmountUnit = RecommendedAmountUnit.fromInt(withSavingsProduct.getRecommendedAmntUnit().getId());
         }
         this.recommendedAmount = withSavingsProduct.getRecommendedAmount();
+        return this;
+    }
+
+    public SavingsAccountBuilder withInterestCalcType(final InterestCalcType interestCalcType) {
+        this.interestCalcType = interestCalcType;
         return this;
     }
 
@@ -183,6 +190,11 @@ public class SavingsAccountBuilder {
 
     public SavingsAccountBuilder withActivationDate(DateTime withActivationDate) {
         this.activationDate = withActivationDate;
+        return this;
+    }
+
+    public SavingsAccountBuilder withInterestToBePostedAmount(Money interestToBePosted) {
+        this.interestToBePosted = interestToBePosted;
         return this;
     }
 }

@@ -22,6 +22,7 @@ package org.mifos.accounts.savings.persistence;
 import java.util.Iterator;
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
 import org.mifos.application.master.business.MifosCurrency;
@@ -60,5 +61,9 @@ public interface SavingsDao {
     Iterator<AccountCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
 
     List<EndOfDayDetail> retrieveAllEndOfDayDetailsFor(MifosCurrency currency, Long savingsId);
+
+    List<Integer> retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(LocalDate interestPostingDate);
+
+    List<Integer> retreiveAccountsPendingForInterestCalculation(LocalDate currentDate);
 
 }

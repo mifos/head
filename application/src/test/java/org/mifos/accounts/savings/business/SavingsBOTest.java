@@ -25,6 +25,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +37,7 @@ import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -71,6 +73,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class SavingsBOTest {
 
     private static MifosCurrency defaultCurrency;
+    private static String savedFiscalCalendarRulesWorkingDays;
 
     // class under test
     private SavingsBO savingsAccount;
@@ -97,8 +100,15 @@ public class SavingsBOTest {
 
     @BeforeClass
     public static void setupMifosLoggerDueToUseOfStaticClientRules() {
+        savedFiscalCalendarRulesWorkingDays = new FiscalCalendarRules().getWorkingDaysAsString();
+        new FiscalCalendarRules().setWorkingDays("MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY");
         defaultCurrency = TestUtils.RUPEE;
         Money.setDefaultCurrency(defaultCurrency);
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        new FiscalCalendarRules().setWorkingDays(savedFiscalCalendarRulesWorkingDays);
     }
 
     @Before

@@ -92,6 +92,28 @@ public abstract class AccountTrxnEntity extends AbstractEntity {
                 new Timestamp(new DateTimeService().getCurrentDateTime().getMillis()));
     }
 
+    public AccountTrxnEntity(final AccountPaymentEntity accountPayment, final AccountActionEntity accountActionEntity,
+            final Short installmentId, final Date dueDate, final PersonnelBO personnel, final CustomerBO customer, final Date actionDate,
+            final Money amount, final String comments, final AccountTrxnEntity relatedTrxn, final Date transactionCreatedDate) {
+        this.trxnCreatedDate = new Timestamp(transactionCreatedDate.getTime());
+        this.financialTransactions = new HashSet<FinancialTransactionBO>();
+        this.account = accountPayment.getAccount();
+        this.accountActionEntity = accountActionEntity;
+        this.installmentId = installmentId;
+        this.dueDate = dueDate;
+        this.customer = customer;
+        this.personnel = personnel;
+        this.actionDate = actionDate;
+        this.amount = amount;
+        this.relatedTrxn = relatedTrxn;
+        this.accountPayment = accountPayment;
+        this.comments = comments;
+    }
+
+    /**
+     * use constructor that does not need to use persistence
+     */
+    @Deprecated
     public AccountTrxnEntity(final AccountPaymentEntity accountPayment, final AccountActionTypes accountActionType,
             final Short installmentId, final Date dueDate, final PersonnelBO personnel, final CustomerBO customer, final Date actionDate,
             final Money amount, final String comments, final AccountTrxnEntity relatedTrxn, final Persistence persistence,

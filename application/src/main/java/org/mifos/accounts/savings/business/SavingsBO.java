@@ -43,6 +43,9 @@ import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.financial.business.service.activity.BaseFinancialActivity;
+import org.mifos.accounts.financial.business.service.activity.SavingsInterestPostingFinancialActivity;
+import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -50,8 +53,7 @@ import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
-import org.mifos.accounts.savings.interest.InterestCalculator;
-import org.mifos.accounts.savings.interest.SavingsInterestCalculatorFactory;
+import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
@@ -78,6 +80,7 @@ import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.ProcessFlowRules;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
@@ -338,7 +341,7 @@ public class SavingsBO extends AccountBO {
         return lastIntCalcDate;
     }
 
-    void setLastIntCalcDate(final Date lastIntCalcDate) {
+    public void setLastIntCalcDate(final Date lastIntCalcDate) {
         this.lastIntCalcDate = lastIntCalcDate;
     }
 
@@ -350,7 +353,7 @@ public class SavingsBO extends AccountBO {
         this.lastIntPostDate = lastIntPostDate;
     }
 
-    public Date getNextIntCalcDate() {
+    Date getNextIntCalcDate() {
         return nextIntCalcDate;
     }
 
@@ -390,7 +393,7 @@ public class SavingsBO extends AccountBO {
         this.interestRate = interestRate;
     }
 
-    private void setMinAmntForInt(final Money minAmntForInt) {
+    public void setMinAmntForInt(final Money minAmntForInt) {
         this.minAmntForInt = minAmntForInt;
     }
 
@@ -538,6 +541,50 @@ public class SavingsBO extends AccountBO {
         return getInterestToBePosted() == null ? interestCalculated : getInterestToBePosted().add(interestCalculated);
     }
 
+    public boolean postInterest(InterestScheduledEvent postingSchedule) {
+        boolean eligibleForInterestPosing = accountRequiresInterestPosting();
+        if (eligibleForInterestPosing) {
+            this.savingsBalance = this.savingsBalance.add(this.interestToBePosted);
+            this.savingsPerformance.setTotalInterestDetails(this.interestToBePosted);
+
+            SavingsActivityEntity savingsActivity = SavingsActivityEntity.savingsInterestPosting(this, personnel, this.savingsBalance, this.interestToBePosted, this.nextIntPostDate);
+            savingsActivityDetails.add(savingsActivity);
+
+            AccountPaymentEntity interestPayment = AccountPaymentEntity.savingsInterestPosting(this, this.interestToBePosted, this.nextIntPostDate);
+
+            DateTime dueDate = new DateTime();
+            SavingsTrxnDetailEntity interestPostingTransaction = SavingsTrxnDetailEntity.savingsInterestPosting(interestPayment, this.customer, this.savingsBalance, this.nextIntPostDate, dueDate);
+
+            interestPayment.addAccountTrxn(interestPostingTransaction);
+            this.addAccountPayment(interestPayment);
+
+            this.lastIntPostDate = this.nextIntPostDate;
+            this.nextIntPostDate = postingSchedule.nextMatchingDateFromAlreadyMatchingDate(new LocalDate(this.lastIntPostDate)).toDateMidnight().toDate();
+            this.interestToBePosted = Money.zero(this.getCurrency());
+
+            // NOTE: financial Transaction Processing should be decoupled from application domain model.
+            try {
+                BaseFinancialActivity baseFinancialActivity = new SavingsInterestPostingFinancialActivity(interestPostingTransaction);
+                baseFinancialActivity.buildAccountEntries();
+            } catch (FinancialException e) {
+                throw new MifosRuntimeException(e);
+            }
+        }
+
+        return eligibleForInterestPosing;
+    }
+
+    private boolean accountRequiresInterestPosting() {
+        return this.interestToBePosted != null && this.interestToBePosted.isGreaterThanOrEqualZero();
+    }
+
+    /**
+     * delete and all tests after deleting the following methods and update interest after adjustment and closure methods are done!
+     *
+     * {@link SavingsBO#postInterest()}
+     * {@link SavingsBO#updateInterestAccrued()}
+     */
+    @Deprecated
     public void postInterest() throws AccountException {
         if (getInterestToBePosted() != null && getInterestToBePosted().isGreaterThanOrEqualZero()) {
             Money interestPosted = getInterestToBePosted();
@@ -712,6 +759,7 @@ public class SavingsBO extends AccountBO {
         }
     }
 
+    // TODO - keithw - break apart financial transactions and account trxns
     private void makeEntriesForInterestPosting(final Money interestAmt, final PaymentTypeEntity paymentType,
             final CustomerBO customer, final Date postingDate, final PersonnelBO loggedInUser) throws AccountException {
         AccountPaymentEntity interestPayment = helper.createAccountPayment(this, interestAmt, paymentType,
@@ -1880,6 +1928,10 @@ public class SavingsBO extends AccountBO {
 
     }
 
+    /**
+     * using persistence within pojo. Build savings activity like {@link SavingsBO#postInterest(InterestScheduledEvent)}
+     */
+    @Deprecated
     private SavingsActivityEntity buildSavingsActivity(final Money amount, final Money balanceAmount,
             final short acccountActionId, final Date trxnDate, final PersonnelBO personnel) throws AccountException {
         AccountActionEntity accountAction;
@@ -2141,5 +2193,9 @@ public class SavingsBO extends AccountBO {
                 }
             }
         }
+    }
+
+    public MeetingBO getInterestPostingMeeting() {
+        return this.savingsOffering.getFreqOfPostIntcalc().getMeeting();
     }
 }

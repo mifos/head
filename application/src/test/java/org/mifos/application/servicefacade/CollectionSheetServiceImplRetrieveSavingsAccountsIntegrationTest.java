@@ -62,6 +62,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
 
     @Before
     public void setUp() throws Exception {
+        enableCustomWorkingDays();
         collectionSheetRetrieveSavingsAccountsUtils = new TestCollectionSheetRetrieveSavingsAccountsUtils();
     }
 

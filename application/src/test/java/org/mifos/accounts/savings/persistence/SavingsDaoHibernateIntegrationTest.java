@@ -81,7 +81,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
 
     @Before
     public void setUp() throws Exception {
-
+        enableCustomWorkingDays();
         weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
         IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 

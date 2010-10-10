@@ -18,25 +18,26 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.savings.interest;
+package org.mifos.accounts.business;
 
-import java.util.List;
+import java.util.Date;
 
+import org.joda.time.DateTime;
+import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 
-public class TotalPrincipalForPeriodCalculationStrategy implements PrincipalCalculationStrategy {
+public class AccountPaymentEntityBuilder {
 
-    @Override
-    public Money calculatePrincipal(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
+    private AccountBO account;
+    private Money amount = TestUtils.createMoney("2");
+    private String receiptNumber = "xxx-123456";
+    private Date receiptDate = new DateTime().toDate();
+    private PaymentTypeEntity paymentType;
+    private Date paymentDate = new DateTime().toDate();
 
-        Money totalPrincipal = interestCalculationPeriodDetail.getBalanceBeforeInterval();
-
-        List<EndOfDayDetail> dailyDetails = interestCalculationPeriodDetail.getDailyDetails();
-        for (EndOfDayDetail endOfDayDetail : dailyDetails) {
-            totalPrincipal = totalPrincipal.add(endOfDayDetail.getResultantAmountForDay());
-        }
-
-        return totalPrincipal;
+    public AccountPaymentEntity build() {
+        return new AccountPaymentEntity(account, amount, receiptNumber, receiptDate, paymentType, paymentDate);
     }
 
 }

@@ -95,7 +95,7 @@ public class AverageBalanceCalculationStrategyTest {
         Money interest1 = TestUtils.createMoney("0");
         EndOfDayDetail endOfDayDetail = new EndOfDayDetail(september6th, deposit1, withdrawal1, interest1);
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
+        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().from(september6th)
                                                                                               .containing(endOfDayDetail)
                                                                                               .build();
 

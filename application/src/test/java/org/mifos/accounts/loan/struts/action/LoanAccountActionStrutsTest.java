@@ -153,6 +153,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        enableCustomWorkingDays();
         prdOfferingPageParams = new HashMap<String, String>();
         initPageParams();
         addRequestParameter("recordLoanOfficerId", "1");
@@ -161,8 +162,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        super.tearDown();
         TestDatabase.resetMySQLDatabase();
+        super.tearDown();
     }
 
     public void testLoadWithFeeForToday() throws Exception {
@@ -297,7 +298,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 loanOffering.getStartDate(), loanOffering.getEndDate(), loanOffering.getDescription(),
                 PrdStatus.LOAN_ACTIVE, loanOffering.getGracePeriodType(), loanOffering.getInterestTypes(), loanOffering
                         .getGracePeriodDuration(), loanOffering.getMaxInterestRate(),
-                loanOffering.getMinInterestRate(), loanOffering.getDefInterestRate(), loanOffering.isIncludeInLoanCounter(), 
+                loanOffering.getMinInterestRate(), loanOffering.getDefInterestRate(), loanOffering.isIncludeInLoanCounter(),
                 loanOffering.isIntDedDisbursement(), loanOffering.isPrinDueLastInst(),
                 new ArrayList<FundBO>(), new ArrayList<FeeBO>(), Short.valueOf("1"),
                 RecurrenceType.MONTHLY, loanPrdActionForm, loanOffering.isInterestWaived());
