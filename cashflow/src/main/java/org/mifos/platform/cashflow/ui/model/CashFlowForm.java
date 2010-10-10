@@ -21,12 +21,12 @@ package org.mifos.platform.cashflow.ui.model;
 
 import org.mifos.platform.cashflow.service.CashFlowDetail;
 import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
-import org.mifos.platform.validation.ScreenObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CashFlowForm extends ScreenObject {
+public class CashFlowForm implements Serializable {
     private static final long serialVersionUID = -3806820293757764245L;
 
     private CashFlowDetail cashFlowDetail;
@@ -42,7 +42,6 @@ public class CashFlowForm extends ScreenObject {
     }
 
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    @javax.validation.Valid
     public List<MonthlyCashFlowForm> getMonthlyCashFlows() {
         List<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         for (MonthlyCashFlowDetail monthlyCashFlowDetail : cashFlowDetail.getMonthlyCashFlowDetails()) {

@@ -28,4 +28,7 @@ public class CashFlowConstants {
     public static final String NO_OF_MONTHS = "noOfMonths";
     public static final String START_YEAR = "startYear";
     public static final String START_MONTH = "startMonth";
+    public static final String CASH_FLOW_FORM = "cashFlow";
+    public static final int FIRST_DAY = 1;
+    public static final int EXTRA_DURATION_FOR_CASH_FLOW_SCHEDULE = 1;
 }

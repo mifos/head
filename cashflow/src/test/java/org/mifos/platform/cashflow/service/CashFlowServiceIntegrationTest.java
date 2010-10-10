@@ -31,6 +31,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/test-cashflow-dbContext.xml", "/test-cashflow-persistenceContext.xml", "/META-INF/spring/CashFlowContext.xml"})
 @TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
@@ -38,8 +40,8 @@ public class CashFlowServiceIntegrationTest {
 
     @Autowired
     private CashFlowService cashFlowService;
-    private double revenue = 100.21d;
-    private double expense = 50.37d;
+    private BigDecimal revenue = new BigDecimal(100.21d);
+    private BigDecimal expense = new BigDecimal(50.37d);
 
     @Test
     @Transactional
@@ -52,7 +54,7 @@ public class CashFlowServiceIntegrationTest {
         DateTime dateTime = new DateTime(2010, 10, 11, 12, 13, 14, 15);
         return new CashFlowDetailsBuilder().
                 withMonthlyCashFlow(new MonthlyCashFlowDetail(dateTime, revenue, expense, "my notes")).
-                withMonthlyCashFlow(new MonthlyCashFlowDetail(dateTime.plusMonths(1), revenue + 20.01, expense + 10.22, "my other notes")).
+                withMonthlyCashFlow(new MonthlyCashFlowDetail(dateTime.plusMonths(1), revenue.add(new BigDecimal(20.01)), expense.add(new BigDecimal(10.22)), "my other notes")).
                 build();
     }
 }

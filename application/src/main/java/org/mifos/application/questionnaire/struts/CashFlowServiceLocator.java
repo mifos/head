@@ -17,29 +17,12 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.platform.cashflow.ui.controller;
+package org.mifos.application.questionnaire.struts;
 
 import org.mifos.platform.cashflow.CashFlowService;
-import org.mifos.platform.cashflow.ui.model.CashFlowForm;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 
-@Controller
-public class CashFlowController {
-    @Autowired
-    private CashFlowService cashFlowService;
+import javax.servlet.http.HttpServletRequest;
 
-    public CashFlowController() {
-        this(null);
-    }
-
-    public CashFlowController(CashFlowService cashFlowService) {
-        this.cashFlowService = cashFlowService;
-    }
-
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public CashFlowForm prepareCashFlowForm(int startYear, int startMonth, int noOfMonths) {
-        return new CashFlowForm(cashFlowService.cashFlowFor(startYear, startMonth, noOfMonths));
-    }
-
+public interface CashFlowServiceLocator {
+    CashFlowService getService(HttpServletRequest request);
 }

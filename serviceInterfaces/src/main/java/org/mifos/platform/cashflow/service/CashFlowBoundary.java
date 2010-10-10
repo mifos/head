@@ -17,16 +17,31 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.platform.cashflow;
+package org.mifos.platform.cashflow.service;
 
-import org.joda.time.DateTime;
-import org.mifos.platform.cashflow.service.CashFlowBoundary;
-import org.mifos.platform.cashflow.service.CashFlowDetail;
+import java.io.Serializable;
 
-public interface CashFlowService {
-    CashFlowBoundary getCashFlowBoundary(DateTime firstInstallmentDueDate, DateTime lastInstallmentDueDate);
+public class CashFlowBoundary implements Serializable {
+    private static final long serialVersionUID = 5780910966337994597L;
+    private final int startYear;
+    private final int startMonth;
+    private final int numberOfMonths;
 
-    Integer save(CashFlowDetail cashFlowDetail);
+    public CashFlowBoundary(int startMonth, int startYear, int numberOfMonths) {
+        this.startMonth = startMonth;
+        this.startYear = startYear;
+        this.numberOfMonths = numberOfMonths;
+    }
 
-    CashFlowDetail cashFlowFor(int startYear, int startMonth, double numberOfMonths);
+    public int getStartYear() {
+        return startYear;
+    }
+
+    public int getStartMonth() {
+        return startMonth;
+    }
+
+    public int getNumberOfMonths() {
+        return numberOfMonths;
+    }
 }

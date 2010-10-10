@@ -27,5 +27,6 @@
     </bean>
 
     <bean name="cashFlowService" class="org.mifos.platform.cashflow.service.CashFlowServiceImpl"/>
+    <bean name="cashFlowValidator" class="org.mifos.platform.cashflow.ui.model.CashFlowValidator"/>
 
 </beans>

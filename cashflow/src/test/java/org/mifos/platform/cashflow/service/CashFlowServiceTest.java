@@ -35,12 +35,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.math.BigDecimal;
+
 @RunWith(MockitoJUnitRunner.class)
 public class CashFlowServiceTest {
 
     private CashFlowService cashFlowService;
-    private double revenue = 100.21d;
-    private double expense = 50.37d;
+    private BigDecimal revenue = new BigDecimal(100.21d);
+    private BigDecimal expense = new BigDecimal(50.37d);
 
     @Mock
     CashFlowDao cashFlowDao;
@@ -61,18 +63,63 @@ public class CashFlowServiceTest {
         Assert.assertEquals(cashFlowId, new Integer(10));
     }
 
+    @Test
+    public void cashFlowBoundariesWithSameStartAndEndDates() {
+        CashFlowBoundary cashFlowBoundary = cashFlowService.getCashFlowBoundary(new DateTime(2009, 12, 31, 1, 1,
+                1, 1), new DateTime(2009, 12, 31, 1, 1, 1, 1));
+        Assert.assertEquals(cashFlowBoundary.getStartMonth(), 11);
+        Assert.assertEquals(cashFlowBoundary.getStartYear(), 2009);
+        Assert.assertEquals(cashFlowBoundary.getNumberOfMonths(), 3);
+    }
+
+    @Test
+    public void cashFlowBoundariesWithExtremeDaysOfMonths() {
+        CashFlowBoundary cashFlowBoundary = cashFlowService.getCashFlowBoundary(new DateTime(2009, 12, 1, 1, 1,
+                1, 1), new DateTime(2009, 12, 31, 1, 1, 1, 1));
+        Assert.assertEquals(cashFlowBoundary.getStartMonth(), 11);
+        Assert.assertEquals(cashFlowBoundary.getStartYear(), 2009);
+        Assert.assertEquals(cashFlowBoundary.getNumberOfMonths(), 3);
+    }
+
+    @Test
+    public void cashFlowBoundariesForDatesSpanningMultipleYears() {
+        CashFlowBoundary cashFlowBoundary = cashFlowService.getCashFlowBoundary(new DateTime(2009, 12, 1, 1, 1,
+                1, 1), new DateTime(2010, 1, 1, 1, 1, 1, 1));
+        Assert.assertEquals(cashFlowBoundary.getStartMonth(), 11);
+        Assert.assertEquals(cashFlowBoundary.getStartYear(), 2009);
+        Assert.assertEquals(cashFlowBoundary.getNumberOfMonths(), 4);
+    }
+
+    @Test
+    public void cashFlowBoundariesForDatesSpanningMultipleYearsAndExtremeDaysOfMonths() {
+        CashFlowBoundary cashFlowBoundary = cashFlowService.getCashFlowBoundary(new DateTime(2009, 12, 1, 1, 1,
+                1, 1), new DateTime(2010, 1, 31, 1, 1, 1, 1));
+        Assert.assertEquals(cashFlowBoundary.getStartMonth(), 11);
+        Assert.assertEquals(cashFlowBoundary.getStartYear(), 2009);
+        Assert.assertEquals(cashFlowBoundary.getNumberOfMonths(), 4);
+    }
+
+    @Test
+    public void cashFlowBoundariesForDaysInMiddle() {
+        CashFlowBoundary cashFlowBoundary = cashFlowService.getCashFlowBoundary(new DateTime(2009, 12, 31, 1, 1,
+                1, 1), new DateTime(2010, 1, 7, 1, 1, 1, 1));
+        Assert.assertEquals(cashFlowBoundary.getStartMonth(), 11);
+        Assert.assertEquals(cashFlowBoundary.getStartYear(), 2009);
+        Assert.assertEquals(cashFlowBoundary.getNumberOfMonths(), 4);
+    }
+
     private CashFlowDetail getCashFlowDetails() {
         DateTime dateTime = new DateTime(2010, 10, 11, 12, 13, 14, 15);
         return new CashFlowDetailsBuilder().
                 withMonthlyCashFlow(new MonthlyCashFlowDetail(dateTime, revenue, expense, "my notes")).
-                withMonthlyCashFlow(new MonthlyCashFlowDetail(dateTime.plusMonths(1), revenue + 20.01, expense + 10.22, "my other notes")).
+                withMonthlyCashFlow(new MonthlyCashFlowDetail(dateTime.plusMonths(1), revenue.add(new BigDecimal(20.01)), expense.add(new BigDecimal(10.22)), "my other notes")).
                 build();
     }
 
-    public CashFlow getCashFlowEntity() {
+    private CashFlow getCashFlowEntity() {
         DateTime dateTime = new DateTime(2010, 10, 1, 2, 3, 4, 5);
         return new CashFlowEntityBuilder().
-                withMonthlyCashFlow(new MonthlyCashFlow(dateTime.plusMonths(1), revenue + 20.01, expense + 10.22, "my other notes")).
+                withMonthlyCashFlow(new MonthlyCashFlow(dateTime.plusMonths(1), revenue.add(new BigDecimal(20.01)), expense.add(new BigDecimal(10.22)), "my other notes")).
                 withMonthlyCashFlow(new MonthlyCashFlow(dateTime, revenue, expense, "my notes")).
                 build();
     }

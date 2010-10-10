@@ -19,11 +19,11 @@
  */
 package org.mifos.platform.cashflow.ui.model;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.DateTime;
 import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class MonthlyCashFlowForm implements Serializable {
     private static final long serialVersionUID = 6876855921528555322L;
@@ -45,36 +45,36 @@ public class MonthlyCashFlowForm implements Serializable {
         return monthlyCashFlowDetail.getDateTime().getYear();
     }
 
-    @javax.validation.constraints.NotNull()
-    public Double getRevenue() {
+    public BigDecimal getRevenue() {
         return monthlyCashFlowDetail.getRevenue();
     }
 
-    @javax.validation.constraints.NotNull
-    public Double getExpense() {
+    public BigDecimal getExpense() {
         return monthlyCashFlowDetail.getExpense();
     }
 
-    @javax.validation.constraints.Size(min = 1, max = 300)
     public String getNotes() {
         return monthlyCashFlowDetail.getNotes();
     }
 
-    public void setRevenue(Double revenue) {
+    public BigDecimal getCumulativeCashFlow() {
+        return monthlyCashFlowDetail.getCumulativeCashFlow();
+    }
+
+    public DateTime getDateTime() {
+        return monthlyCashFlowDetail.getDateTime();
+    }
+
+    public void setRevenue(BigDecimal revenue) {
         monthlyCashFlowDetail.setRevenue(revenue);
     }
 
-    public void setExpense(Double expense) {
+    public void setExpense(BigDecimal expense) {
         monthlyCashFlowDetail.setExpense(expense);
     }
 
     public void setNotes(String notes) {
         monthlyCashFlowDetail.setNotes(notes);
-    }
-
-    public String getDateTimeAsString() {
-        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("MMM-yyyy");
-        return monthlyCashFlowDetail.getDateTime().toString(timeFormatter);
     }
 
     @Override
@@ -86,9 +86,5 @@ public class MonthlyCashFlowForm implements Serializable {
                 "Month=" + getMonth() +
                 "Year=" + getYear() +
                 '}';
-    }
-
-    public Double getCumulativeCashFlow() {
-        return monthlyCashFlowDetail.getCumulativeCashFlow();
     }
 }

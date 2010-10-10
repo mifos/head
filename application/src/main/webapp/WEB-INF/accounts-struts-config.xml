@@ -310,6 +310,9 @@
         </action>
     </action-mappings>
 
+    <message-resources key="cashflow_messages"
+                       parameter="org.mifos.platform.cashflow.ui.localizedProperties.cashflow_messages"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <message-resources key="loanUIResources"
                        parameter="org.mifos.config.localizedResources.LoanUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>

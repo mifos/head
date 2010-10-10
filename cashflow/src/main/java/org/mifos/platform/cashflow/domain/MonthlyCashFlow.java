@@ -22,12 +22,13 @@ package org.mifos.platform.cashflow.domain;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class MonthlyCashFlow implements Serializable {
     private Integer id;
-    private Double expenses;
+    private BigDecimal expenses;
     private java.sql.Date monthYear;
-    private Double revenue;
+    private BigDecimal revenue;
     private String notes;
     private static final long serialVersionUID = -6682346815568286708L;
 
@@ -35,7 +36,7 @@ public class MonthlyCashFlow implements Serializable {
     public MonthlyCashFlow() {
     }
 
-    public MonthlyCashFlow(DateTime monthYear, double revenue, double expenses, String notes) {
+    public MonthlyCashFlow(DateTime monthYear, BigDecimal revenue, BigDecimal expenses, String notes) {
         this.monthYear = new java.sql.Date(monthYear.getMillis());
         this.revenue = revenue;
         this.expenses = expenses;
@@ -46,11 +47,11 @@ public class MonthlyCashFlow implements Serializable {
         return notes;
     }
 
-    public Double getExpenses() {
+    public BigDecimal getExpenses() {
         return expenses;
     }
 
-    public Double getRevenue() {
+    public BigDecimal getRevenue() {
         return revenue;
     }
 

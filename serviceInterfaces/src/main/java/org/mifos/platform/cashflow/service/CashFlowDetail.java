@@ -22,6 +22,7 @@ package org.mifos.platform.cashflow.service;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,15 +45,13 @@ public class CashFlowDetail implements Serializable {
         return monthlyCashFlowDetails;
     }
 
-    public Double getCumulativeCashFlowForMonth(DateTime dateTime) {
-        Double cumulative = 0.0d;
+    public BigDecimal getCumulativeCashFlowForMonth(DateTime dateTime) {
+        BigDecimal cumulative = BigDecimal.ZERO;
         for (MonthlyCashFlowDetail monthlyCashFlowDetail : getMonthlyCashFlowDetails()) {
             if (monthlyCashFlowDetail.getDateTime().compareTo(dateTime) <= 0) {
-                cumulative += (monthlyCashFlowDetail.getRevenue() - monthlyCashFlowDetail.getExpense());
+                cumulative = cumulative.add(monthlyCashFlowDetail.getRevenue().subtract(monthlyCashFlowDetail.getExpense()));
             }
         }
         return cumulative;
     }
-
-
 }

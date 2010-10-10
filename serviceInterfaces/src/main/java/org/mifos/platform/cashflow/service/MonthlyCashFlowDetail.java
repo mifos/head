@@ -22,36 +22,37 @@ package org.mifos.platform.cashflow.service;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class MonthlyCashFlowDetail implements Serializable {
     private static final long serialVersionUID = 8951437837952219469L;
 
     private final DateTime dateTime;
-    private Double expense;
+    private BigDecimal expense;
     private String notes;
-    private Double revenue;
+    private BigDecimal revenue;
     private CashFlowDetail cashFlowDetail;
 
-    public MonthlyCashFlowDetail(DateTime dateTime, Double revenue, Double expense, String notes) {
+    public MonthlyCashFlowDetail(DateTime dateTime, BigDecimal revenue, BigDecimal expense, String notes) {
         this.dateTime = dateTime;
         this.revenue = revenue;
         this.expense = expense;
         this.notes = notes;
     }
 
-    public Double getRevenue() {
+    public BigDecimal getRevenue() {
         return revenue;
     }
 
-    public void setRevenue(Double revenue) {
+    public void setRevenue(BigDecimal revenue) {
         this.revenue = revenue;
     }
 
-    public Double getExpense() {
+    public BigDecimal getExpense() {
         return expense;
     }
 
-    public void setExpense(Double expense) {
+    public void setExpense(BigDecimal expense) {
         this.expense = expense;
     }
 
@@ -67,7 +68,7 @@ public class MonthlyCashFlowDetail implements Serializable {
         return dateTime;
     }
 
-    public Double getCumulativeCashFlow() {
+    public BigDecimal getCumulativeCashFlow() {
         return cashFlowDetail.getCumulativeCashFlowForMonth(dateTime);
     }
 
