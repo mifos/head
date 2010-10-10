@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
@@ -165,7 +166,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         try {
             this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
 
-            this.savingsServiceFacade.handleInterestCalculation(savingsId);
+            this.savingsServiceFacade.batchPostInterestToSavingsAccount(new LocalDate());
         } catch (BusinessRuleException e) {
             throw new AccountException(e.getMessageKey(), e);
         } finally {

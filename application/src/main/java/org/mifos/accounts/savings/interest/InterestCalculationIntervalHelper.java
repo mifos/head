@@ -30,15 +30,17 @@ import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 
 public class InterestCalculationIntervalHelper {
 
-    public List<InterestCalculationInterval> determineAllPossibleInterestCalculationPeriods(LocalDate firstDepositDate, InterestScheduledEvent interestCalculationEvent, LocalDate cutOffDateForValidCalculationPeriods) {
+    public List<InterestCalculationInterval> determineAllPossibleInterestCalculationPeriods(LocalDate firstDepositDate,
+            InterestScheduledEvent interestCalculationEvent, LocalDate cutOffDateForValidCalculationPeriods) {
 
         List<InterestCalculationInterval> validInterestCalculationIntervals = new ArrayList<InterestCalculationInterval>();
 
         // fiscal start of year is jan-01 so begin at jan-01 of first deposit.
-        LocalDate startOfFiscalYearOfFirstDeposit = new LocalDate(new DateTime().withYearOfEra(firstDepositDate.getYear()).withMonthOfYear(1).withDayOfMonth(1));
+        LocalDate startOfFiscalYearOfFirstDeposit = new LocalDate(new DateTime().withYearOfEra(
+                firstDepositDate.getYear()).withMonthOfYear(1).withDayOfMonth(1));
 
-        LocalDate cutOffDate = new LocalDate();
-        List<LocalDate> allMatchingDates = interestCalculationEvent.findAllMatchingDatesFromBaseDateToCutOffDate(startOfFiscalYearOfFirstDeposit, cutOffDate);
+        List<LocalDate> allMatchingDates = interestCalculationEvent.findAllMatchingDatesFromBaseDateToCutOffDate(
+                startOfFiscalYearOfFirstDeposit, cutOffDateForValidCalculationPeriods);
         for (LocalDate matchingDate : allMatchingDates) {
             LocalDate firstDayofInterval = interestCalculationEvent.findFirstDateOfPeriodForMatchingDate(matchingDate);
 
@@ -46,7 +48,9 @@ public class InterestCalculationIntervalHelper {
             if (interval.dateFallsWithin(firstDepositDate)) {
                 interval = new InterestCalculationInterval(firstDepositDate, matchingDate);
                 validInterestCalculationIntervals.add(interval);
-            } else if (matchingDate.isAfter(firstDepositDate) && matchingDate.isBefore(cutOffDateForValidCalculationPeriods) || matchingDate.isEqual(cutOffDateForValidCalculationPeriods)) {
+            } else if (matchingDate.isAfter(firstDepositDate)
+                    && matchingDate.isBefore(cutOffDateForValidCalculationPeriods)
+                    || matchingDate.isEqual(cutOffDateForValidCalculationPeriods)) {
                 validInterestCalculationIntervals.add(interval);
             }
         }
@@ -58,7 +62,8 @@ public class InterestCalculationIntervalHelper {
             LocalDate firstDepositDate, InterestScheduledEvent interestCalculationEvent) {
         List<InterestCalculationInterval> validInterestCalculationIntervals = new ArrayList<InterestCalculationInterval>();
 
-        List<LocalDate> allMatchingDates = interestCalculationEvent.findAllMatchingDatesFromBaseDateToCutOffDate(postingInterval.getStart().toLocalDate(), postingInterval.getEnd().toLocalDate());
+        List<LocalDate> allMatchingDates = interestCalculationEvent.findAllMatchingDatesFromBaseDateToCutOffDate(
+                postingInterval.getStart().toLocalDate(), postingInterval.getEnd().toLocalDate());
         for (LocalDate matchingDate : allMatchingDates) {
             LocalDate firstDayofInterval = interestCalculationEvent.findFirstDateOfPeriodForMatchingDate(matchingDate);
 
@@ -70,5 +75,28 @@ public class InterestCalculationIntervalHelper {
         }
 
         return validInterestCalculationIntervals;
+    }
+
+    public List<InterestCalculationInterval> determineAllPossibleInterestPostingPeriods(
+            InterestScheduledEvent postingEvent, LocalDate firstAccountActivityDate, LocalDate currentPostingDate) {
+        List<InterestCalculationInterval> validInterestPostingIntervals = new ArrayList<InterestCalculationInterval>();
+
+        // fiscal start of year is jan-01 so begin at jan-01 of first deposit.
+        LocalDate startOfFiscalYearOfFirstDeposit = new LocalDate(new DateTime().withYearOfEra(
+                firstAccountActivityDate.getYear()).withMonthOfYear(1).withDayOfMonth(1));
+
+        List<LocalDate> allMatchingDates = postingEvent.findAllMatchingDatesFromBaseDateToCutOffDate(
+                startOfFiscalYearOfFirstDeposit, currentPostingDate);
+        for (LocalDate matchingDate : allMatchingDates) {
+            LocalDate firstDayofInterval = postingEvent.findFirstDateOfPeriodForMatchingDate(matchingDate);
+
+            InterestCalculationInterval interval = new InterestCalculationInterval(firstDayofInterval, matchingDate);
+            if (matchingDate.isAfter(firstAccountActivityDate) && matchingDate.isBefore(currentPostingDate)
+                    || matchingDate.isEqual(currentPostingDate)) {
+                validInterestPostingIntervals.add(interval);
+            }
+        }
+
+        return validInterestPostingIntervals;
     }
 }
