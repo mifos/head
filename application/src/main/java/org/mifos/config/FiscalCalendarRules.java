@@ -181,8 +181,13 @@ public class FiscalCalendarRules {
         setWorkingDays(workingDaysString);
     }
 
+    @SuppressWarnings("unchecked")
     public String  getWorkingDaysAsString() {
-        return (String) ConfigurationManager.getInstance().getProperty(FiscalCalendarRulesWorkingDays);
+        String property = "";
+        for(String day: (ArrayList<String>) ConfigurationManager.getInstance().getProperty(FiscalCalendarRulesWorkingDays)) {
+            property += ","+day;
+        }
+        return property.replaceFirst(",", "");
     }
 
     public void setScheduleTypeForMeetingIfNonWorkingDay(final String ScheduleMeetingIfNonWorkingDay) {
