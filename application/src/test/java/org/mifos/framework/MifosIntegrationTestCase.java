@@ -29,8 +29,6 @@ import java.util.Date;
 
 import junit.framework.ComparisonFailure;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.FilteredDataSet;
@@ -44,6 +42,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -82,6 +81,8 @@ public class MifosIntegrationTestCase {
     protected static boolean verifyDatabaseState;
 
     protected static ExcludeTableFilter excludeTables = new ExcludeTableFilter();
+
+    private static String savedFiscalCalendarRulesWorkingDays;
 
     @BeforeClass
     public static void init() throws Exception {
@@ -131,6 +132,7 @@ public class MifosIntegrationTestCase {
 
             Assertion.assertEquals(latestDataDump, upgradeDataDump);
         }
+        diableCustomWorkingDays();
     }
 
     private Statistics statisticsService;
@@ -202,6 +204,26 @@ public class MifosIntegrationTestCase {
         } catch (PersistenceException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * see MIFOS-2659 <br><br>
+     * This will be disabled automatically at the end of a test case
+     *
+     */
+    protected static void enableCustomWorkingDays() {
+        savedFiscalCalendarRulesWorkingDays = new FiscalCalendarRules().getWorkingDaysAsString();
+        new FiscalCalendarRules().setWorkingDays("MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY");
+    }
+
+    /**
+     * see MIFOS-2659
+     */
+    private static void diableCustomWorkingDays() {
+        if(savedFiscalCalendarRulesWorkingDays != null) {
+        new FiscalCalendarRules().setWorkingDays(savedFiscalCalendarRulesWorkingDays);
+        }
+        savedFiscalCalendarRulesWorkingDays = null;
     }
 
     public MifosCurrency getCurrency() {

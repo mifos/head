@@ -143,6 +143,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     @Before
     public void setUp() throws Exception {
+        enableCustomWorkingDays();
         StaticHibernateUtil.disableCommits();
         userContext = TestUtils.makeUser();
         createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
