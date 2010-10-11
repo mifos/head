@@ -35,8 +35,8 @@ explanation of the license and how it is applied.
 
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr>
-			<td width="188" rowspan="2"><IMG height=74 alt=""
-				src="pages/framework/images/logo.gif" width=188></td>
+			<td width="200" rowspan="2"><IMG height=70 alt=""
+				src="pages/framework/images/logo.jpg" width=200></td>
 
 			<td align="right" bgcolor="#ffffff" class="fontnormal">&nbsp;</td>
 		</tr>

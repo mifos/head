@@ -234,12 +234,12 @@ table#login-table td#login-submit {
 
 #login-page-header {
    background-attachment: scroll;
-   background-image: url(../framework/images/logo.gif);
+   background-image: url(../framework/images/logo.jpg);
    background-repeat: no-repeat;
    background-position: left top;
    background-color: white;
-   height: 75px;
-   width: 100%;
+   height: 70px;
+   width: 200px;
    border-bottom: 6px orange solid;
 }
 
