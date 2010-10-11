@@ -28,12 +28,10 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountCashFlowPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountReviewInstallmentPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
-import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
-import org.mifos.test.acceptance.util.TestDataSetup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -42,15 +40,12 @@ import org.testng.annotations.Test;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups = { "loanproduct", "acceptance","no_db_unit"})
+@Test(singleThreaded = true, groups = {"loanproduct", "acceptance", "no_db_unit"})
 public class CashFlowTest extends UiTestCaseBase {
 
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
-    String userName="test user";
-    String userLoginName = "test_user";
-    String clientName = "test client";
-    String officeName = "test_office";
+    String clientName = "WeeklyOld Tuesday";
     LoanTestHelper loanTestHelper;
     LoanProductTestHelper loanProductTestHelper;
     DateTime systemDateTime;
@@ -64,10 +59,6 @@ public class CashFlowTest extends UiTestCaseBase {
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
         loanTestHelper.setApplicationTime(systemDateTime);
-        TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
-        dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
-        dataSetup.createUser(userLoginName, userName, officeName);
-        dataSetup.createClient(clientName, officeName, userName);
     }
 
     @AfterMethod
@@ -102,19 +93,18 @@ public class CashFlowTest extends UiTestCaseBase {
                 verifyCashFlowUnCheckedIn();
         new NavigationHelper(selenium).navigateToHomePage();
         loanTestHelper.
-                navigateToCreateLoanAccountEntryPageWithoutLogout(clientName,loanProductName).
+                navigateToCreateLoanAccountEntryPageWithoutLogout(clientName, loanProductName).
                 clickContinue().
                 verifyPage("SchedulePreview");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled = true)
     public void verifyCashFlowForNonVariableInstallmentLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(0);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         String minRc = "999.0";
         String warningThreshold = "89.99";
-        createAndValidateLoanProductWithCashFlow(warningThreshold,formParameters, "49.99", minRc, false);
+        createAndValidateLoanProductWithCashFlow(warningThreshold, formParameters, "49.99", minRc, false);
         validateCashFlowForLoanAccount(formParameters, minRc, "998.1");
     }
 
@@ -125,13 +115,13 @@ public class CashFlowTest extends UiTestCaseBase {
         formParameters.setDefaultInterestRate("20");
         formParameters.setDefaultLoanAmount("1000");
         String warningThreshold = "89.99";
-        createAndValidateLoanProductWithCashFlow(warningThreshold,formParameters, "", "", false);
+        createAndValidateLoanProductWithCashFlow(warningThreshold, formParameters, "", "", false);
         DateTime disbursalDate = systemDateTime.plusDays(1);
         int installment = 3;
         createLoanAccountAndNavigateToCashFlowPage(formParameters, disbursalDate, installment).
                 enterValidData("1000", 100, 1, null, null).clickContinue().
                 clickPreviewAndGoToReviewLoanAccountPage();
-                //verifyWarningForThreshold(warningThreshold);
+        //verifyWarningForThreshold(warningThreshold);
         verifyNegativeAndZeroCashFlow(formParameters, warningThreshold, disbursalDate, installment);
 
     }
@@ -143,7 +133,7 @@ public class CashFlowTest extends UiTestCaseBase {
         formParameters.setDefaultInterestRate("20");
         formParameters.setDefaultLoanAmount("1000");
         String warningThreshold = "89.99";
-        createAndValidateLoanProductWithCashFlow(warningThreshold,formParameters, "", "", true);
+        createAndValidateLoanProductWithCashFlow(warningThreshold, formParameters, "", "", true);
         DateTime disbursalDate = systemDateTime.plusDays(1);
         int installment = 3;
         verifyNegativeAndZeroCashFlow(formParameters, warningThreshold, disbursalDate, installment);
@@ -154,7 +144,7 @@ public class CashFlowTest extends UiTestCaseBase {
         String minRC = "999.99";
         applicationDatabaseOperation.updateLSIM(1);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
-        createAndValidateLoanProductWithCashFlow("89.99",formParameters, "49.99", minRC, true);
+        createAndValidateLoanProductWithCashFlow("89.99", formParameters, "49.99", minRC, true);
         validateCashFlowForLoanAccount(formParameters, minRC, "998.34");
         verifyRepaymentCapacityOnValidate(formParameters, minRC, "998.34");
     }
@@ -162,6 +152,7 @@ public class CashFlowTest extends UiTestCaseBase {
     /**
      * Verify Cash Flow Page in Loan Account creation flow
      * http://mifosforge.jira.com/browse/MIFOSTEST-672
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -228,22 +219,22 @@ public class CashFlowTest extends UiTestCaseBase {
         int cashFlowIncremental = 5685;
         new NavigationHelper(selenium).navigateToHomePage();
         loanTestHelper.
-                navigateToCreateLoanAccountEntryPageWithoutLogout(clientName,formParameters.getOfferingName()).
+                navigateToCreateLoanAccountEntryPageWithoutLogout(clientName, formParameters.getOfferingName()).
                 setDisbursalDate(disbursalDate).
                 setInstallments(installment).
                 clickContinueToNavigateToCashFlowPage().
-                enterValidData("100", cashFlowIncremental-2, 100, "7003", "1000").
+                enterValidData("100", cashFlowIncremental - 2, 100, "7003", "1000").
                 clickContinue().verifyRepaymentCapacityOnValidate(expectedRc, minRc);
     }
 
     private void verifyRepaymentCapacityOnPreview(DateTime disbursalDate, int installment, double cashFlowIncremental, String loanProductName, String expectedRc, String minRc) {
         new NavigationHelper(selenium).navigateToHomePage();
         loanTestHelper.
-                navigateToCreateLoanAccountEntryPageWithoutLogout(clientName,loanProductName).
+                navigateToCreateLoanAccountEntryPageWithoutLogout(clientName, loanProductName).
                 setDisbursalDate(disbursalDate).
                 setInstallments(installment).
                 clickContinueToNavigateToCashFlowPage().
-                enterValidData("100", cashFlowIncremental-2, 100, "7003", "1000").
+                enterValidData("100", cashFlowIncremental - 2, 100, "7003", "1000").
                 clickContinue().verifyRepaymentCapacityOnPreview(expectedRc, minRc);
 
     }
@@ -255,11 +246,11 @@ public class CashFlowTest extends UiTestCaseBase {
 
         new NavigationHelper(selenium).navigateToHomePage();
         loanTestHelper.
-                navigateToCreateLoanAccountEntryPageWithoutLogout(clientName,loanProductName).
+                navigateToCreateLoanAccountEntryPageWithoutLogout(clientName, loanProductName).
                 setDisbursalDate(disbursalDate).
                 setInstallments(installment).
                 clickContinueToNavigateToCashFlowPage().
-                validateCashFlowMonths(disbursalDate,installment,frequency).
+                validateCashFlowMonths(disbursalDate, installment, frequency).
                 verifyCashFlowFields().
                 verifyInvalidIndebentRate("49.99", "7001", "1000").
                 enterValidData("100", cashFlowIncremental, 100, "7003", "1000").
@@ -273,13 +264,13 @@ public class CashFlowTest extends UiTestCaseBase {
     private void createAndValidateLoanProductWithCashFlow(String warningThreshold, DefineNewLoanProductPage.SubmitFormParameters formParameters, String indebtentValue, String repaymentValue, boolean isVariableLoan) {
         DefineNewLoanProductPage loanProductPage = loanProductTestHelper.navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters);
         if (isVariableLoan) {
-            loanProductPage.fillVariableInstalmentOption("","1","");
+            loanProductPage.fillVariableInstalmentOption("", "1", "");
         }
-        loanProductPage.fillCashFlow(warningThreshold, indebtentValue,repaymentValue).
+        loanProductPage.fillCashFlow(warningThreshold, indebtentValue, repaymentValue).
                 submitAndGotoNewLoanProductPreviewPage().
-                verifyCashFlowInPreview(warningThreshold,indebtentValue,repaymentValue).
+                verifyCashFlowInPreview(warningThreshold, indebtentValue, repaymentValue).
                 submit().navigateToViewLoanDetails().
-                verifyCashFlowInViewLoanProductPage(warningThreshold,indebtentValue,repaymentValue);
+                verifyCashFlowInViewLoanProductPage(warningThreshold, indebtentValue, repaymentValue);
     }
 
 

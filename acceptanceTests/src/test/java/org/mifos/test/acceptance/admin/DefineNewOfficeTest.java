@@ -20,40 +20,28 @@
 
 package org.mifos.test.acceptance.admin;
 
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.testng.annotations.Test;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.AfterMethod;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.DefineNewOfficePage;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.mifos.framework.util.DbUnitUtilities;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.springframework.test.context.ContextConfiguration;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(singleThreaded = true, groups = {"admin","acceptance","ui"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(singleThreaded = true, groups = {"admin", "acceptance", "ui", "no_db_unit"})
 public class DefineNewOfficeTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         navigationHelper = new NavigationHelper(selenium);
     }
 
@@ -66,15 +54,12 @@ public class DefineNewOfficeTest extends UiTestCaseBase {
     public void defineNewOfficeWithExistingName() {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         DefineNewOfficePage defineNewOfficePage = adminPage.navigateToDefineANewOfficePage();
-
-        defineNewOfficePage.setOfficeName("MyOffice1232993831593");
-        defineNewOfficePage.setOfficeShortName("AAA");
+        defineNewOfficePage.setOfficeName("MyOfficeDHMFT");
+        defineNewOfficePage.setOfficeShortName("DHM");
         defineNewOfficePage.setOfficeType("Branch Office");
         defineNewOfficePage.setParentOffice("Head Office(Mifos HO )");
-
         defineNewOfficePage.preview();
         defineNewOfficePage.submit();
-
         assertTextFoundOnPage("This office name already exist");
     }
 }

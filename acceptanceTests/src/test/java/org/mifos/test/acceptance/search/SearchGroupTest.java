@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.search;
 
+import org.junit.Assert;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
@@ -51,7 +52,7 @@ public class SearchGroupTest extends SearchTestBase {
     public void searchGroupListTest() throws Exception {
         String searchPhrase = "group";
         SearchResultsPage page = searchFor(appLauncher, searchPhrase);
-        page.verifySearchResults(8);
+        Assert.assertTrue(page.countSearchResults() >= 8);
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-475

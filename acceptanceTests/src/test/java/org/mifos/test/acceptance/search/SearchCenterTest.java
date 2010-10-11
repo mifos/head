@@ -19,6 +19,7 @@
  */
 package org.mifos.test.acceptance.search;
 
+import org.junit.Assert;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
@@ -51,7 +52,7 @@ public class SearchCenterTest extends SearchTestBase {
     public void searchCentersTest() throws Exception {
         String searchPhrase = "center";
         SearchResultsPage page = searchFor(appLauncher, searchPhrase);
-        page.verifySearchResults(5);
+        Assert.assertTrue(page.countSearchResults() >= 5);
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-473

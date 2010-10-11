@@ -27,7 +27,6 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
-import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
@@ -46,16 +45,12 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
 
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
-    String officeName = "test_office";
-    String userLoginName = "test_user";
-    String userName="test user";
-    String clientName = "test client";
+    String clientName = "WeeklyOld Monday";
     String loanProductName;
     LoanProductTestHelper loanProductTestHelper;
     LoanTestHelper loanTestHelper;
     DateTime systemDateTime;
     private FeeTestHelper feeTestHelper;
-    // ---
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -67,9 +62,6 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
         loanTestHelper.setApplicationTime(systemDateTime);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
-        dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
-        dataSetup.createUser(userLoginName, userName, officeName);
-        dataSetup.createClient(clientName, officeName, userName);
         dataSetup.addDecliningPrincipalBalance();
         feeTestHelper = new FeeTestHelper(dataSetup);
     }
