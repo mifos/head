@@ -20,11 +20,15 @@
 --]
 [#include "layout.ftl"]
 [@headerOnlyLayout]
+<script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
+<script type="text/javascript" src="pages/js/jquery/jquery.validate.min.js"></script>
+<script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
+<script type="text/javascript" src="pages/cashflow/js/captureCashFlow.js"></script>
 <div class="content_panel">
     <div id="allErrorsDiv" class="allErrorsDiv">
         [@mifosmacros.showAllErrors "cashFlow.*"/]
     </div>
-    <form name="captureCashFlowForm" action="captureCashFlow.ftl?execution=${flowExecutionKey}" method="POST">
+    <form name="captureCashFlowForm" action="captureCashFlow.ftl?execution=${flowExecutionKey}" method="POST" id="captureCashFlowForm">
         <center>
 	        <fieldset id="cashFlows" style="width:85%;">
 	          <legend style="font-size:1em;">[@spring.message "cashflow.heading"/]</legend>
@@ -41,8 +45,8 @@
 	                [#list cashFlow.monthlyCashFlows as monthlyCashFlow]
 	                <tr>
 	                    <td width="25%">[@spring.message monthlyCashFlow.month/] ${monthlyCashFlow.year?c}</td>
-	                    <td width="15%">[@spring.formInput "cashFlow.monthlyCashFlows[${monthlyCashFlow_index}].expense", 'maxlength="30" style="width:100%;"' /]</td>
-	                    <td width="15%">[@spring.formInput "cashFlow.monthlyCashFlows[${monthlyCashFlow_index}].revenue", 'maxlength="30" style="width:100%;"' /]</td>
+	                    <td width="15%">[@spring.formInput "cashFlow.monthlyCashFlows[${monthlyCashFlow_index}].expense", 'maxlength="30" style="width:100%;" class="amount"' /]</td>
+	                    <td width="15%">[@spring.formInput "cashFlow.monthlyCashFlows[${monthlyCashFlow_index}].revenue", 'maxlength="30" style="width:100%;" class="amount"' /]</td>
 	                    <td width="45%">[@spring.formInput "cashFlow.monthlyCashFlows[${monthlyCashFlow_index}].notes", 'maxlength="300" style="width:100%;"' /]</td>
 	                </tr>
 	                [/#list]
@@ -54,7 +58,7 @@
             <div class="button_container">
                 <input type="submit" id="_eventId_capture" name="_eventId_capture" value="[@spring.message "cashflow.submit"/]" class="buttn"/>
                 &nbsp;
-                <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "cashflow.cancel"/]" class="cancelbuttn"/>
+                <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "cashflow.cancel"/]"  class="cancel cancelbuttn"/>
             </div>
         </div>
     [#if flowKey??]
