@@ -150,15 +150,18 @@ public class QuestionnaireMigrationTest {
         Survey surveyLoan2 = getSurvey("Sur2", "Ques2", calendar.getTime(), SurveyType.LOAN);
         Survey surveySavings1 = getSurvey("Sur1", "Ques1", calendar.getTime(), SurveyType.SAVINGS);
         Survey surveySavings2 = getSurvey("Sur2", "Ques2", calendar.getTime(), SurveyType.SAVINGS);
-        // TODO JS 'All' surveys are not supported yet
-        // Survey surveyAll = getSurvey("Sur1", "Ques1", calendar.getTime(), SurveyType.ALL);
+        Survey surveyAll1 = getSurvey("Sur1", "Ques1", calendar.getTime(), SurveyType.ALL);
+        Survey surveyAll2 = getSurvey("Sur1", "Ques1", calendar.getTime(), SurveyType.ALL);
+        Survey surveyAll3 = getSurvey("Sur1", "Ques1", calendar.getTime(), SurveyType.ALL);
+        Survey surveyAll4 = getSurvey("Sur1", "Ques1", calendar.getTime(), SurveyType.ALL);
+        Survey surveyAll5 = getSurvey("Sur1", "Ques1", calendar.getTime(), SurveyType.ALL);
 
 
-        List<Survey> surveys = asList(survey1, survey2/*, surveyAll*/);
-        List<Survey> surveysCenter = asList(surveyCenter1, surveyCenter2/*, surveyAll*/);
-        List<Survey> surveysGroup = asList(surveyGroup1, surveyGroup2/*, surveyAll*/);
-        List<Survey> surveysLoan = asList(surveyLoan1, surveyLoan2/*, surveyAll*/);
-        List<Survey> surveysSavings = asList(surveySavings1, surveySavings2/*, surveyAll*/);
+        List<Survey> surveys = asList(survey1, survey2, surveyAll1);
+        List<Survey> surveysCenter = asList(surveyCenter1, surveyCenter2, surveyAll2);
+        List<Survey> surveysGroup = asList(surveyGroup1, surveyGroup2, surveyAll3);
+        List<Survey> surveysLoan = asList(surveyLoan1, surveyLoan2, surveyAll4);
+        List<Survey> surveysSavings = asList(surveySavings1, surveySavings2, surveyAll5);
 
 
         when(surveysPersistence.retrieveSurveysByTypeIterator(SurveyType.CLIENT)).thenReturn(surveys.iterator());
@@ -178,8 +181,11 @@ public class QuestionnaireMigrationTest {
         QuestionGroupDto questionGroupDtoLoan2 = getQuestionGroupDto("Sur2", "Ques2", "View", "Loan");
         QuestionGroupDto questionGroupDtoSavings1 = getQuestionGroupDto("Sur1", "Ques1", "View", "Savings");
         QuestionGroupDto questionGroupDtoSavings2 = getQuestionGroupDto("Sur2", "Ques2", "View", "Savings");
-        // TODO JS there is no such source like 'All'
-        //QuestionGroupDto questionGroupDtoAll1 = getQuestionGroupDto("Sur1", "Ques1", "View", "All");
+        QuestionGroupDto questionGroupDtoAll1 = getQuestionGroupDto("Sur1", "Ques1", "View", "Client");
+        QuestionGroupDto questionGroupDtoAll2 = getQuestionGroupDto("Sur1", "Ques1", "View", "Center");
+        QuestionGroupDto questionGroupDtoAll3 = getQuestionGroupDto("Sur1", "Ques1", "View", "Group");
+        QuestionGroupDto questionGroupDtoAll4 = getQuestionGroupDto("Sur1", "Ques1", "View", "Loan");
+        QuestionGroupDto questionGroupDtoAll5 = getQuestionGroupDto("Sur1", "Ques1", "View", "Savings");
 
 
         SurveyInstance surveyInstance1 = getSurveyInstance(survey1, 12, 101, "Answer1");
@@ -198,8 +204,16 @@ public class QuestionnaireMigrationTest {
         QuestionGroupInstanceDto questionGroupInstanceDtoLoan = getQuestionGroupInstanceDto("LoanAnswer", 12, 101);
         SurveyInstance surveyInstanceSavings = getSurveyInstance(surveySavings1, 13, 102, "SavingsAnswer");
         QuestionGroupInstanceDto questionGroupInstanceDtoSavings = getQuestionGroupInstanceDto("SavingsAnswer", 13, 102);
-        //SurveyInstance surveyInstanceAll = getSurveyInstance(surveyAll, 13, 102, "AnswerAll");
-        //QuestionGroupInstanceDto questionGroupInstanceDtoAll = getQuestionGroupInstanceDto("AnswerAll", 13, 102);
+        SurveyInstance surveyInstanceAll1 = getSurveyInstance(surveyAll1, 13, 102, "AnswerAll1");
+        QuestionGroupInstanceDto questionGroupInstanceDtoAll1 = getQuestionGroupInstanceDto("AnswerAll1", 13, 102);
+        SurveyInstance surveyInstanceAll2 = getSurveyInstance(surveyAll1, 13, 102, "AnswerAll2");
+        QuestionGroupInstanceDto questionGroupInstanceDtoAll2 = getQuestionGroupInstanceDto("AnswerAll2", 13, 102);
+        SurveyInstance surveyInstanceAll3 = getSurveyInstance(surveyAll1, 13, 102, "AnswerAll3");
+        QuestionGroupInstanceDto questionGroupInstanceDtoAll3 = getQuestionGroupInstanceDto("AnswerAll3", 13, 102);
+        SurveyInstance surveyInstanceAll4 = getSurveyInstance(surveyAll1, 13, 102, "AnswerAll4");
+        QuestionGroupInstanceDto questionGroupInstanceDtoAll4 = getQuestionGroupInstanceDto("AnswerAll4", 13, 102);
+        SurveyInstance surveyInstanceAll5 = getSurveyInstance(surveyAll1, 13, 102, "AnswerAll5");
+        QuestionGroupInstanceDto questionGroupInstanceDtoAll5 = getQuestionGroupInstanceDto("AnswerAll5", 13, 102);
 
 
         when(questionnaireMigrationMapper.map(survey1)).thenReturn(questionGroupDto1);
@@ -212,7 +226,11 @@ public class QuestionnaireMigrationTest {
         when(questionnaireMigrationMapper.map(surveyLoan2)).thenReturn(questionGroupDtoLoan2);
         when(questionnaireMigrationMapper.map(surveySavings1)).thenReturn(questionGroupDtoSavings1);
         when(questionnaireMigrationMapper.map(surveySavings2)).thenReturn(questionGroupDtoSavings2);
-        //when(questionnaireMigrationMapper.map(surveyAll)).thenReturn(questionGroupDtoAll1);
+        when(questionnaireMigrationMapper.map(surveyAll1)).thenReturn(questionGroupDtoAll1);
+        when(questionnaireMigrationMapper.map(surveyAll2)).thenReturn(questionGroupDtoAll2);
+        when(questionnaireMigrationMapper.map(surveyAll3)).thenReturn(questionGroupDtoAll3);
+        when(questionnaireMigrationMapper.map(surveyAll4)).thenReturn(questionGroupDtoAll4);
+        when(questionnaireMigrationMapper.map(surveyAll5)).thenReturn(questionGroupDtoAll5);
 
 
         when(questionnaireMigrationMapper.map(eq(surveyInstance1), anyInt(), anyInt())).thenReturn(questionGroupInstanceDto1);
@@ -223,7 +241,11 @@ public class QuestionnaireMigrationTest {
         when(questionnaireMigrationMapper.map(eq(surveyInstanceGroup), anyInt(), anyInt())).thenReturn(questionGroupInstanceDtoGroup);
         when(questionnaireMigrationMapper.map(eq(surveyInstanceLoan), anyInt(), anyInt())).thenReturn(questionGroupInstanceDtoLoan);
         when(questionnaireMigrationMapper.map(eq(surveyInstanceSavings), anyInt(), anyInt())).thenReturn(questionGroupInstanceDtoSavings);
-        //when(questionnaireMigrationMapper.map(eq(surveyInstanceAll), anyInt(), anyInt())).thenReturn(questionGroupInstanceDtoAll);
+        when(questionnaireMigrationMapper.map(eq(surveyInstanceAll1), anyInt(), anyInt())).thenReturn(questionGroupInstanceDtoAll1);
+        when(questionnaireMigrationMapper.map(eq(surveyInstanceAll2), anyInt(), anyInt())).thenReturn(questionGroupInstanceDtoAll2);
+        when(questionnaireMigrationMapper.map(eq(surveyInstanceAll3), anyInt(), anyInt())).thenReturn(questionGroupInstanceDtoAll3);
+        when(questionnaireMigrationMapper.map(eq(surveyInstanceAll4), anyInt(), anyInt())).thenReturn(questionGroupInstanceDtoAll4);
+        when(questionnaireMigrationMapper.map(eq(surveyInstanceAll5), anyInt(), anyInt())).thenReturn(questionGroupInstanceDtoAll5);
 
 
         when(questionnaireServiceFacade.createQuestionGroup(questionGroupDto1)).thenReturn(121);
@@ -251,7 +273,11 @@ public class QuestionnaireMigrationTest {
         when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDtoGroup)).thenReturn(6666);
         when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDtoLoan)).thenReturn(7777);
         when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDtoSavings)).thenReturn(8888);
-        //when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDtoAll)).thenReturn(9999);
+        when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDtoAll1)).thenReturn(9991);
+        when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDtoAll2)).thenReturn(9992);
+        when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDtoAll3)).thenReturn(9993);
+        when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDtoAll4)).thenReturn(9994);
+        when(questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDtoAll5)).thenReturn(9995);
 
 
         List<SurveyInstance> surveyInstances1 = asList(surveyInstance1, surveyInstance2);
@@ -266,21 +292,29 @@ public class QuestionnaireMigrationTest {
         when(surveysPersistence.retrieveInstancesBySurveyIterator(surveyLoan1)).thenReturn(surveyInstancesLoan.iterator());
         List<SurveyInstance> surveyInstancesSavings = asList(surveyInstanceSavings);
         when(surveysPersistence.retrieveInstancesBySurveyIterator(surveySavings1)).thenReturn(surveyInstancesSavings.iterator());
-        //List<SurveyInstance> surveyInstancesAll = asList(surveyInstanceAll);
-        //when(surveysPersistence.retrieveInstancesBySurveyIterator(surveyAll)).thenReturn(surveyInstancesAll.iterator());
+        List<SurveyInstance> surveyInstancesAll1 = asList(surveyInstanceAll1);
+        when(surveysPersistence.retrieveInstancesBySurveyIterator(surveyAll1)).thenReturn(surveyInstancesAll1.iterator());
+        List<SurveyInstance> surveyInstancesAll2 = asList(surveyInstanceAll2);
+        when(surveysPersistence.retrieveInstancesBySurveyIterator(surveyAll2)).thenReturn(surveyInstancesAll2.iterator());
+        List<SurveyInstance> surveyInstancesAll3 = asList(surveyInstanceAll3);
+        when(surveysPersistence.retrieveInstancesBySurveyIterator(surveyAll3)).thenReturn(surveyInstancesAll3.iterator());
+        List<SurveyInstance> surveyInstancesAll4 = asList(surveyInstanceAll4);
+        when(surveysPersistence.retrieveInstancesBySurveyIterator(surveyAll4)).thenReturn(surveyInstancesAll4.iterator());
+        List<SurveyInstance> surveyInstancesAll5 = asList(surveyInstanceAll5);
+        when(surveysPersistence.retrieveInstancesBySurveyIterator(surveyAll5)).thenReturn(surveyInstancesAll5.iterator());
 
 
         List<Integer> questionGroupIds = questionnaireMigration.migrateSurveys();
         assertThat(questionGroupIds, is(notNullValue()));
-        assertThat(questionGroupIds.size(), is(10));
+        assertThat(questionGroupIds.size(), is(15));
         assertThat(questionGroupIds.get(0), is(121));
         assertThat(questionGroupIds.get(1), is(122));
-        verify(questionnaireMigrationMapper, times(10)).map(any(Survey.class));
-        verify(questionnaireMigrationMapper, times(8)).map(any(SurveyInstance.class), anyInt(), anyInt());
-        verify(questionnaireServiceFacade, times(10)).createQuestionGroup(any(QuestionGroupDto.class));
-        verify(questionnaireServiceFacade, times(8)).saveQuestionGroupInstance(any(QuestionGroupInstanceDto.class));
+        verify(questionnaireMigrationMapper, times(15)).map(any(Survey.class));
+        verify(questionnaireMigrationMapper, times(13)).map(any(SurveyInstance.class), anyInt(), anyInt());
+        verify(questionnaireServiceFacade, times(15)).createQuestionGroup(any(QuestionGroupDto.class));
+        verify(questionnaireServiceFacade, times(13)).saveQuestionGroupInstance(any(QuestionGroupInstanceDto.class));
         verify(surveysPersistence, times(1)).retrieveSurveysByTypeIterator(SurveyType.CLIENT);
-        verify(surveysPersistence, times(10)).retrieveInstancesBySurveyIterator(any(Survey.class));
+        verify(surveysPersistence, times(15)).retrieveInstancesBySurveyIterator(any(Survey.class));
     }
 
     @Test

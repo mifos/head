@@ -137,7 +137,6 @@ public class QuestionnaireMigration {
     public List<Integer> migrateSurveys() {
         List<Integer> questionGroupIds = new ArrayList<Integer>();
         for (SurveyType surveyType : SurveyType.values()){
-            // TODO JS add support for 'All' surveys
             if(surveyType!=SurveyType.ALL) {
                 questionGroupIds.addAll(migrateSurveys(surveyType));
             }
@@ -663,7 +662,6 @@ public class QuestionnaireMigration {
     private Integer migrateSurvey(Survey survey) {
         QuestionGroupDto questionGroupDto = questionnaireMigrationMapper.map(survey);
         Integer questionGroupId = createQuestionGroup(questionGroupDto, survey);
-        // TODO JS use Survey type instead first event source dto
         EventSourceDto eventSourceDto = questionGroupDto.getEventSourceDtos().get(0);
         Integer eventSourceId = questionnaireServiceFacade.getEventSourceId(eventSourceDto.getEvent(), eventSourceDto.getSource());
         migrateSurveyResponses(survey, questionGroupId, eventSourceId);
