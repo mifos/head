@@ -61,8 +61,8 @@ public class CreateLoanAccountsEntryPage extends AbstractPage {
         return selenium.getTable("SearchClients."+row+".4");
     }
 
-    public void verifyNoOfInstallments(Integer row, String noOfInstallments){
-        Assert.assertEquals(getNoOfInstallments(row), noOfInstallments);
+    public void verifyNoOfInstallments(Integer row){
+        Assert.assertEquals(getNoOfInstallments(row), "10");
     }
 
 }
