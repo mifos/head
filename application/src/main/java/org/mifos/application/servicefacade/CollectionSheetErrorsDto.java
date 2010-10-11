@@ -21,7 +21,7 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 /**
  * I am a DTO for tracking problems with loan/savings/customer accounts and

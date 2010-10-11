@@ -24,7 +24,7 @@ import java.util.List;
 import org.mifos.accounts.loan.util.helpers.LoanAccountsProductDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 /**
  *

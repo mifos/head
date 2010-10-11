@@ -20,6 +20,7 @@
 
 package org.mifos.customers.business;
 
+import org.mifos.accounts.api.CustomerDto;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 

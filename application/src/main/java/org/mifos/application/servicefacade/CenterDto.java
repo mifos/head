@@ -25,7 +25,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerPositionDto;
-import org.mifos.customers.business.CustomerDto;
+import org.mifos.accounts.api.CustomerDto;
 import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.AbstractBusinessObject;

@@ -20,7 +20,7 @@
 
 package org.mifos.customers.personnel.util.helpers;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 /**
  * This object denotes instance of search result, that will be obtained after

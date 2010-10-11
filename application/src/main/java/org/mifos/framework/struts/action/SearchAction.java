@@ -29,7 +29,7 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.tabletag.TableTagConstants;
 import org.mifos.framework.exceptions.ApplicationException;

@@ -20,7 +20,7 @@
 
 package org.mifos.customers.center.util.helpers;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 public class CenterSearchResultsDto implements DataTransferObject {
 

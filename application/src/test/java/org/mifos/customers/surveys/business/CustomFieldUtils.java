@@ -28,7 +28,7 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 
 public class CustomFieldUtils {
     public static CustomFieldDefinitionEntity getCustomerCustomField(String label, CustomFieldType customFieldType) {

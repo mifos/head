@@ -19,6 +19,7 @@
  */
 package org.mifos.customers.business;
 
+import org.mifos.accounts.api.CustomerDto;
 import org.mifos.framework.business.util.Address;
 import org.junit.After;
 import org.junit.AfterClass;

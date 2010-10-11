@@ -21,7 +21,7 @@
 package org.mifos.accounts.loan.business.service;
 
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 /**
  * Loan Data Transfer Object (DTO)

@@ -33,7 +33,7 @@ import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 /**
  * Initial data transfer object to hold data for display on the viewClientDetails page.

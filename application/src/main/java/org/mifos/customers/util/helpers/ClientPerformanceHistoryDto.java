@@ -21,7 +21,7 @@ package org.mifos.customers.util.helpers;
 
 import java.util.List;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 import org.mifos.framework.util.helpers.Money;
 
 /**

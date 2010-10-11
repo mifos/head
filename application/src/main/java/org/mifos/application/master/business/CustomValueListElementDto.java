@@ -21,7 +21,7 @@
 package org.mifos.application.master.business;
 
 import org.mifos.application.master.MessageLookup;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 /**
  * It is unclear why this class extends View. Note that the class

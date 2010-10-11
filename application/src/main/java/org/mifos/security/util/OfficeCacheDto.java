@@ -20,7 +20,7 @@
 
 package org.mifos.security.util;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 public class OfficeCacheDto implements DataTransferObject {
 

@@ -23,7 +23,7 @@ package org.mifos.accounts.loan.util.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 public class LoanAccountsProductDto implements DataTransferObject {
 

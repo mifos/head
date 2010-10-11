@@ -37,7 +37,7 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntrySaving
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.customers.business.CustomerDto;
+import org.mifos.accounts.api.CustomerDto;
 import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.dto.domain.OfficeDetailsDto;

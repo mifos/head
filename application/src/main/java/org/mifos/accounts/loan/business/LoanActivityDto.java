@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 

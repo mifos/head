@@ -18,31 +18,10 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.util.helpers;
+package org.mifos.customers.api;
 
-/**
- *
- */
-public enum CustomerLevel {
+import java.io.Serializable;
 
-    CLIENT(Short.valueOf("1")), GROUP(Short.valueOf("2")), CENTER(Short.valueOf("3"));
+public interface DataTransferObject extends Serializable {
 
-    private final Short value;
-
-    private CustomerLevel(final Short value) {
-        this.value = value;
-    }
-
-    public Short getValue() {
-        return value;
-    }
-
-    public static CustomerLevel getLevel(Short value) {
-        for (CustomerLevel level : CustomerLevel.values()) {
-            if (level.getValue().equals(value)) {
-                return level;
-            }
-        }
-        return null;
-    }
 }

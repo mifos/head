@@ -22,7 +22,7 @@ package org.mifos.accounts.loan.util.helpers;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 import org.mifos.framework.util.LocalizationConverter;
 
 public class LoanAccountDetailsDto implements DataTransferObject {

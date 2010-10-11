@@ -2,7 +2,7 @@ package org.mifos.accounts.loan.business.service;
 
 import java.sql.Date;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 public class LoanPerformanceHistoryDto implements DataTransferObject {
 

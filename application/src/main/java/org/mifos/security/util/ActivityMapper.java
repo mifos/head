@@ -74,7 +74,7 @@ import org.mifos.customers.surveys.struts.action.QuestionsAction;
 import org.mifos.customers.surveys.struts.action.SurveyInstanceAction;
 import org.mifos.customers.surveys.struts.action.SurveysAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.reports.admindocuments.struts.action.BirtAdminDocumentUploadAction;
 import org.mifos.reports.struts.action.BirtReportsUploadAction;
 import org.mifos.reports.struts.action.ReportsAction;

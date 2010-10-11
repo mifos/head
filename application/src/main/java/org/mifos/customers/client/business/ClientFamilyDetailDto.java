@@ -22,7 +22,7 @@ package org.mifos.customers.client.business;
 
 import java.sql.Date;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class ClientFamilyDetailDto implements DataTransferObject  {
