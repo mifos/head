@@ -135,14 +135,4 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         return savingsAccountPage;
     }
 
-    private SavingsProductParameters getVoluntaryGroupsMonthCalculactionProductParameters() {
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.GROUPS);
-        params.setMandatoryAmount("2000");
-        params.setInterestRate("5");
-        params.setDaysOrMonthsForInterestCalculation(params.MONTHS);
-        params.setFrequencyOfInterestPostings("1");
-        params.setNumberOfDaysOrMonthsForInterestCalculation("1");
-        params.setAmountAppliesTo(SavingsProductParameters.WHOLE_GROUP);
-        return params;
-    }
 }
