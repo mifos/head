@@ -55,7 +55,7 @@
                 </fieldset>
                 [/#list]
             <div class="buttonWidth">
-                <input id="_eventId_cancel" name="_eventId_cancel" type="submit" class="buttn" value="[@spring.message "questionnaire.back.to.details"/]"/>
+                <input id="_eventId_cancel" name="_eventId_cancel" type="submit" class="buttn" value="[@spring.message "questionnaire.back.to.previous"/]"/>
             </div>
         </form>
     </div>
