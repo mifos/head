@@ -22,15 +22,12 @@ package org.mifos.test.acceptance.loan;
 
 
 import org.joda.time.DateTime;
-import org.mifos.test.acceptance.admin.FeeTestHelper;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
-import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
@@ -47,15 +44,12 @@ import java.sql.SQLException;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui","no_db_unit"})
+@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui", "no_db_unit"})
 public class DecliningPrincipleLoanTest extends UiTestCaseBase {
 
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
-    private final static String userLoginName = "test_user";
-    private final static String officeName = "test_office";
-    private final static String clientName = "test client";
-    private final static String userName = "test user";
+    private final static String clientName = "Client WeeklyTue";
     LoanProductTestHelper loanProductTestHelper;
     LoanTestHelper loanTestHelper;
     DateTime systemDateTime;
@@ -63,7 +57,6 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     String interestTypeName = "Declining Balance-Interest Recalculation";
     int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
     boolean isLoanProductCreatedAndVerified = false;
-    private TestDataSetup dataSetup;
     String feeName = "loanWeeklyFee";
     private final static String LOAN_CLOSED = "Closed- Obligation met";
     private final static String LOAN_ACTIVE_GOOD = "Active in Good Standing";
@@ -73,6 +66,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     @AfterMethod
     public void logOut() throws SQLException {
         (new MifosPage(selenium)).logout();
+        applicationDatabaseOperation.updateLSIM(0);
         applicationDatabaseOperation.updateGapBetweenDisbursementAndFirstMeetingDate(1);
     }
 
@@ -85,15 +79,12 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         loanTestHelper = new LoanTestHelper(selenium);
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
-        dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
+        TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
         loanTestHelper.setApplicationTime(systemDateTime);
-        dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
-        dataSetup.createUser(userLoginName, userName, officeName);
-        dataSetup.createClient(clientName, officeName, userName);
         dataSetup.addDecliningPrincipalBalance();
     }
 
-//    @Test(enabled=false, groups={"loan"})
+    //    @Test(enabled=false, groups={"loan"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyDecliningPrincipleLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
@@ -107,20 +98,16 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         verifyDecliningPrincipalLoanAccount(3, interestTypeName, systemDateTime.plusDays(1), formParameters.getOfferingName());
     }
 
-//    @Test(enabled=false, groups={"loan"})
+    //    @Test(enabled=false, groups={"loan"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyLoanPaymentAndAdjustment() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
         applicationDatabaseOperation.updateGapBetweenDisbursementAndFirstMeetingDate(2);
-        new FeeTestHelper(dataSetup).createPeriodicFee(feeName, FeesCreatePage.SubmitFormParameters.LOAN, FeesCreatePage.SubmitFormParameters.WEEKLY_FEE_RECURRENCE, 1, 100);
-        int noOfInstallments = 4;
-        DefineNewLoanProductPage.SubmitFormParameters formParameters = loanProductTestHelper.defineLoanProductParameters(noOfInstallments, 1000, 24, interestType);
-        createLoanProduct(formParameters);
-        verifyEarlyExcessPayment(noOfInstallments, formParameters.getOfferingName());
-        verifyEarlyLessPayment(noOfInstallments, formParameters.getOfferingName());
-        verifyLateExcessPayment(noOfInstallments, formParameters.getOfferingName());
-        verifyLateLessPayment(noOfInstallments, formParameters.getOfferingName());
-        verifyMultipleDue(5, formParameters.getOfferingName());
+        verifyEarlyExcessPayment("000100000000025");
+        verifyEarlyLessPayment("000100000000026");
+        verifyLateExcessPayment("000100000000027");
+        verifyLateLessPayment("000100000000028");
+        verifyMultipleDue("000100000000029");
     }
 
 //    @Test(enabled = true)
@@ -134,8 +121,8 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
 //    }
 
 
-    private void verifyMultipleDue(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
-        String accountId = createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName).getAccountId();
+    private void verifyMultipleDue(String accountId) throws UnsupportedEncodingException {
+        navigationHelper.navigateToLoanAccountPage(accountId);
         verifyPayment(accountId);
         verifyAdjustment();
     }
@@ -197,26 +184,26 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
                 verifyScheduleTable(adjustedSchedule).navigateToLoanAccountPage();
     }
 
-    private void verifyLateLessPayment(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
+    private void verifyLateLessPayment(String accountId) throws UnsupportedEncodingException {
         DateTime paymentDate = systemDateTime.plusDays(12);
-        String accountId = createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName).getAccountId();
+        navigationHelper.navigateToLoanAccountPage(accountId);
         makePaymentAndVerifyPayment(accountId, paymentDate, "100", RepaymentScheduleData.LATE_LESS_FIRST_PAYMENT);//verify first the due fee is knocked
         makePaymentAndVerifyPayment(accountId, paymentDate, "5.3", RepaymentScheduleData.LATE_LESS_SECOND_PAYMENT);//verify due interest is knocked next
         makePaymentAndVerifyPayment(accountId, paymentDate, "100", RepaymentScheduleData.LATE_LESS_THIRD_PAYMENT);//verify the due principle is knocked next
-        new LoanAccountPage(selenium).navigateToApplyPayment().verifyPaymentPriorLastPaymentDate(loanTestHelper.setPaymentParams("10",paymentDate));
+        new LoanAccountPage(selenium).navigateToApplyPayment().verifyPaymentPriorLastPaymentDate(loanTestHelper.setPaymentParams("10", paymentDate));
     }
 
-    private void verifyLateExcessPayment(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
+    private void verifyLateExcessPayment(String accountId) throws UnsupportedEncodingException {
         DateTime paymentDate = systemDateTime.plusDays(12);
-        String accountId = createAndDisburseLoanAccount(noOfInstallments,systemDateTime.plusDays(1),loanProductName).getAccountId();
+        navigationHelper.navigateToLoanAccountPage(accountId);
         makePaymentAndVerifyPayment(accountId, paymentDate, "354", RepaymentScheduleData.LATE_EXCESS_PAYMENT);
         makePaymentAndVerifyPayment(accountId, paymentDate, "2.5", RepaymentScheduleData.LATE_EXCESS_SECOND_PAYMENT);//verifying only overdue interest in knocked
         makePaymentAndVerifyPayment(accountId, paymentDate, "100", RepaymentScheduleData.LATE_EXCESS_THIRD_PAYMENT);//verify if future interest in reduced as the future principle is paid
     }
 
-    private void verifyEarlyLessPayment(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
+    private void verifyEarlyLessPayment(String accountId) throws UnsupportedEncodingException {
         DateTime paymentDate = systemDateTime.plusDays(1);
-        String accountId = createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName).getAccountId();
+        navigationHelper.navigateToLoanAccountPage(accountId);
         makePaymentAndVerifyPayment(accountId, paymentDate, "100", RepaymentScheduleData.EARLY_LESS_FIRST_PAYMENT); //verifying interest till date
     }
 
@@ -226,9 +213,9 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         createAndDisburseLoanAccount(4, systemDateTime.plusDays(1), "productWeekly7466");
     }
 
-    private void verifyEarlyExcessPayment(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
+    private void verifyEarlyExcessPayment(String accountID) throws UnsupportedEncodingException {
         DateTime paymentDate = systemDateTime.plusDays(1);
-        String accountID = createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName).getAccountId();
+        navigationHelper.navigateToLoanAccountPage(accountID);
         makePaymentAndVerifyPayment(accountID, paymentDate, "280", RepaymentScheduleData.EARLY_EXCESS_FIRST_PAYMENT);
     }
 
@@ -262,17 +249,6 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         ChargeParameters chargeParameters = new ChargeParameters();
         chargeParameters.setType(feeName);
         return chargeParameters;
-    }
-
-    private void createLoanProduct(DefineNewLoanProductPage.SubmitFormParameters formParameters) {
-        if (isLoanProductCreatedAndVerified) {
-            return;
-        }
-        loanProductTestHelper.
-                navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
-                submitAndGotoNewLoanProductPreviewPage().
-                submit();
-        isLoanProductCreatedAndVerified = true;
     }
 
     private void verifyDecliningPrincipalLoanAccount(int noOfInstallments, String interestTypeName, DateTime disbursalDate, String loanProductName) {
