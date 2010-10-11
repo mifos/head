@@ -24,12 +24,18 @@ import java.util.List;
 
 import org.mifos.framework.util.helpers.Money;
 
+/**
+ * I am responsible for returning the total principal for a given {@link InterestCalculationPeriodDetail}.
+ */
 public class TotalPrincipalForPeriodCalculationStrategy implements PrincipalCalculationStrategy {
 
     @Override
     public Money calculatePrincipal(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
 
-        Money totalPrincipal = interestCalculationPeriodDetail.getBalanceBeforeInterval();
+        Money totalPrincipal = Money.zero(interestCalculationPeriodDetail.getBalanceBeforeInterval().getCurrency());
+        // FIXME - keithw - this class is only supposed to return principal for a given period.
+        // implement a different implementation class if you need running principal behaviour at this level.
+//        Money totalPrincipal = interestCalculationPeriodDetail.getBalanceBeforeInterval();
 
         List<EndOfDayDetail> dailyDetails = interestCalculationPeriodDetail.getDailyDetails();
         for (EndOfDayDetail endOfDayDetail : dailyDetails) {

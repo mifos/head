@@ -215,8 +215,12 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                 this.transactionHelper.startTransaction();
 
                 LocalDate startDate = postingSchedule.findFirstDateOfPeriodForMatchingDate(interestPostingDate);
+
+                // FIXME - keithw - the more I look at the use of Interval within InterestCalculationInterval it seems redundant as contains
+                // method of interval is not 'inclusive' of end datetime and we really want to use LocalDate anyway.
                 Interval postingInterval = new InterestCalculationInterval(startDate, interestPostingDate).getInterval();
-                calculateInterestForPostingInterval(Long.valueOf(savingsId), postingInterval);
+                // FIXME - keithw - comment out for now to spike a entire account approach to interest posting (and as such interest calaculation).
+//                calculateInterestForPostingInterval(Long.valueOf(savingsId), postingInterval);
                 List<InterestPostingPeriodResult> postingResults = recalculateInterestAndPosting(savingsAccount, interestPostingDate, postingSchedule);
 
                 boolean interestPosted = savingsAccount.postInterest(postingSchedule);
@@ -240,7 +244,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), Long.valueOf(savingsAccount.getAccountId()));
         if (!allEndOfDayDetailsForAccount.isEmpty()) {
             LocalDate firstAccountActivityDate = allEndOfDayDetailsForAccount.get(0).getDate();
-            List<InterestCalculationInterval> allPossiblePostingPeriods = interestCalculationIntervalHelper.determineAllPossibleInterestPostingPeriods(postingSchedule, firstAccountActivityDate, interestPostingDate);
+            List<InterestCalculationInterval> allPossiblePostingPeriods = interestCalculationIntervalHelper.determineAllPossiblePeriods(firstAccountActivityDate, postingSchedule, interestPostingDate);
 
             Money zero = Money.zero(savingsAccount.getCurrency());
             Money periodAccountBalance = zero;
@@ -268,13 +272,11 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
             InterestScheduledEvent interestCalculationEvent = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
 
-            LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();
-
             Money totalBalanceBeforeInterestCalculation = periodAccountBalace;
-            List<InterestCalculationInterval> allPossible = interestCalculationIntervalHelper.determineAllPossibleInterestCalculationPeriods(firstDepositDate, interestCalculationEvent, postingPeriod.getEndDate());
+            List<InterestCalculationInterval> allPossible = interestCalculationIntervalHelper.determineAllPossiblePeriods(postingPeriod.getStartDate(), interestCalculationEvent, postingPeriod.getEndDate());
             for (InterestCalculationInterval interval : allPossible) {
 
-                InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(interval, allEndOfDayDetailsForAccount, totalBalanceBeforeInterestCalculation);
+                InterestCalculationPeriodDetail interestCalculationPeriodDetail = InterestCalculationPeriodDetail.populatePeriodDetailBasedOnInterestCalculationInterval(interval, allEndOfDayDetailsForAccount, totalBalanceBeforeInterestCalculation);
 
                 InterestCalculationPeriodResult calculationPeriodResult = interestCalculator.calculateSavingsDetailsForPeriod(interestCalculationPeriodDetail);
 

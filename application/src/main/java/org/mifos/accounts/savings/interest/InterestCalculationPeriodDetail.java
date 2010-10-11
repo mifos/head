@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.savings.interest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.Days;
@@ -35,6 +36,28 @@ public class InterestCalculationPeriodDetail {
     private final InterestCalculationInterval interval;
     private final List<EndOfDayDetail> dailyDetails;
     private final Money balanceBeforeInterval;
+
+    /**
+     * I am responsible for ensuring a {@link InterestCalculationPeriodDetail} is populated with correct
+     * {@link EndOfDayDetail}'s applicable to given period and with the running balance of the account before this
+     * period.
+     */
+    public static InterestCalculationPeriodDetail populatePeriodDetailBasedOnInterestCalculationInterval(
+            InterestCalculationInterval interval, List<EndOfDayDetail> allEndOfDayDetailsForAccount,
+            Money balanceBeforeInterval) {
+
+        Money balance = balanceBeforeInterval;
+
+        List<EndOfDayDetail> applicableDailyDetailsForPeriod = new ArrayList<EndOfDayDetail>();
+
+        for (EndOfDayDetail endOfDayDetail : allEndOfDayDetailsForAccount) {
+            if (interval.dateFallsWithin(endOfDayDetail.getDate())) {
+                applicableDailyDetailsForPeriod.add(endOfDayDetail);
+            }
+        }
+
+        return new InterestCalculationPeriodDetail(interval, applicableDailyDetailsForPeriod, balance);
+    }
 
     public InterestCalculationPeriodDetail(InterestCalculationInterval interval, List<EndOfDayDetail> dailyDetails, Money balanceBeforeInterval) {
         this.dailyDetails = dailyDetails;

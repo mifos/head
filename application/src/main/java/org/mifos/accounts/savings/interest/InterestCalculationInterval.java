@@ -48,7 +48,7 @@ public class InterestCalculationInterval {
     }
 
     public boolean dateFallsWithin(LocalDate date) {
-        return interval.contains(date.toDateTimeAtStartOfDay());
+        return interval.contains(date.toDateTimeAtStartOfDay()) || interval.getEnd().isEqual(date.toDateTimeAtStartOfDay());
     }
 
     @Override
