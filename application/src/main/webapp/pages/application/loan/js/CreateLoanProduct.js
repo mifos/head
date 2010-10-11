@@ -155,20 +155,6 @@ function showVariableInstallmentInputs() {
    }
 }
 
-/*
-$(document).ready(function() {
-	$("input[id=cashFlowValidation]").click(function (event) {
-		if ($('input[id=cashFlowValidation]').checked == true) {
-			$('input[id=cashFlowThresholdDiv]').css('display', 'block');
-			$('input[id=cashFlowThresholdInputDiv]').css('display', 'block');	
-		} else {
-			$('input[id=cashFlowThresholdDiv]').css('display', 'none');
-			$('input[id=cashFlowThresholdInputDiv]').css('display', 'none');
-		}
-	});
-});
-*/
-
 function showCashFlowInputs() {
     var isVariableInstallmentType = document.getElementById("createLoanProduct.checkbox.cashFlowValidation");
     if (isVariableInstallmentType.checked == true || isVariableInstallmentType.checked == "checked") {

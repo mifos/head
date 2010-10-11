@@ -20,43 +20,41 @@
 --]
 [#include "layout.ftl"]
 [@headerOnlyLayout]
-<script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
-<script type="text/javascript" src="pages/js/jquery/jquery.validate.min.js"></script>
-<script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
-<script type="text/javascript" src="pages/cashflow/js/captureCashFlow.js"></script>
 <div class="content_panel">
     <div id="allErrorsDiv" class="allErrorsDiv">
         [@mifosmacros.showAllErrors "cashFlow.*"/]
     </div>
-    <form name="captureCashFlowForm" action="captureCashFlow.ftl?execution=${flowExecutionKey}" method="POST" id="captureCashFlowForm">
-        <fieldset id="cashFlows" style="width:93%;">
-          <legend style="font-size:1em;">[@spring.message "cashflow.heading"/]</legend>
-          <table class="table_common" border="0">
-            <thead>
-              <tr>
-                    <th width="15%">[@spring.message "cashflow.months"/]</th>
-                    <th width="20%">[@spring.message "cashflow.expense"/]</th>
-                    <th width="20%">[@spring.message "cashflow.revenue"/]</th>
-                    <th width="45%">[@spring.message "cashflow.notes"/]</th>
-              </tr>
-            </thead>
-            <tbody>
-                [#list cashFlow.monthlyCashFlows as monthlyCashFlow]
-                <tr>
-                    <td width="15%">[@spring.message monthlyCashFlow.month/] ${monthlyCashFlow.year?c}</td>
-                    <td width="20%">[@spring.formInput "cashFlow.monthlyCashFlows[${monthlyCashFlow_index}].expense", 'maxlength="30" size="30" class="amount"' /]</td>
-                    <td width="20%">[@spring.formInput "cashFlow.monthlyCashFlows[${monthlyCashFlow_index}].revenue", 'maxlength="30" size="30" class="amount"' /]</td>
-                    <td width="45%">[@spring.formInput "cashFlow.monthlyCashFlows[${monthlyCashFlow_index}].notes", 'maxlength="300" size="75"'/]</td>
-                </tr>
-                [/#list]
-            </tbody>
-          </table>
-        </fieldset>
+    <form name="captureCashFlowForm" action="captureCashFlow.ftl?execution=${flowExecutionKey}" method="POST">
+        <center>
+	        <fieldset id="cashFlows" style="width:85%;">
+	          <legend style="font-size:1em;">[@spring.message "cashflow.heading"/]</legend>
+	          <table class="table_common" border="0">
+	            <thead>
+	              <tr>
+	                    <th width="25%">[@spring.message "cashflow.months"/]</th>
+	                    <th width="15%"><span class="red">*</span>[@spring.message "cashflow.expense"/]</th>
+	                    <th width="15%"><span class="red">*</span>[@spring.message "cashflow.revenue"/]</th>
+	                    <th width="45%">[@spring.message "cashflow.notes"/]</th>
+	              </tr>
+	            </thead>
+	            <tbody>
+	                [#list cashFlow.monthlyCashFlows as monthlyCashFlow]
+	                <tr>
+	                    <td width="25%">[@spring.message monthlyCashFlow.month/] ${monthlyCashFlow.year?c}</td>
+	                    <td width="15%">[@spring.formInput "cashFlow.monthlyCashFlows[${monthlyCashFlow_index}].expense", 'maxlength="30" style="width:100%;"' /]</td>
+	                    <td width="15%">[@spring.formInput "cashFlow.monthlyCashFlows[${monthlyCashFlow_index}].revenue", 'maxlength="30" style="width:100%;"' /]</td>
+	                    <td width="45%">[@spring.formInput "cashFlow.monthlyCashFlows[${monthlyCashFlow_index}].notes", 'maxlength="300" style="width:100%;"' /]</td>
+	                </tr>
+	                [/#list]
+	            </tbody>
+	          </table>
+	        </fieldset>
+        <center>
         <div class="button_footer">
             <div class="button_container">
                 <input type="submit" id="_eventId_capture" name="_eventId_capture" value="[@spring.message "cashflow.submit"/]" class="buttn"/>
                 &nbsp;
-                <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "cashflow.cancel"/]" class="cancel cancelbuttn"/>
+                <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "cashflow.cancel"/]" class="cancelbuttn"/>
             </div>
         </div>
     [#if flowKey??]

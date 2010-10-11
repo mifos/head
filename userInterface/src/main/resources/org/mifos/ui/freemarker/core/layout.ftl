@@ -54,7 +54,7 @@
     <div class="colmask leftmenu">
         <div class="leftmenu noleftcol">
             <div class="col1wrap">
-                <div class="col1">
+                <div class="col1nomargin">
                 <div class="main_content">
                     [#nested]
                 </div>

@@ -66,6 +66,7 @@ html, body { height: 100% }
     position:relative;
     width:240%;
 }
+
 .leftmenu .col1wrap {
     float:right;
     padding-bottom:1em;
@@ -75,6 +76,12 @@ html, body { height: 100% }
 }
 .leftmenu .col1 {
 	margin:0 0 0 200px;
+    overflow:hidden;
+    position:relative;
+    right:100%;
+}
+.leftmenu .col1nomargin {
+	margin:0 0 0 120px;
     overflow:hidden;
     position:relative;
     right:100%;
@@ -158,3 +165,4 @@ html, body { height: 100% }
     margin: 5px auto;
     text-align: center;
 }
+
