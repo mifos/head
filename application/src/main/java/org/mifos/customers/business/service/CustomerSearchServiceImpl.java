@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010 Mifos.
+ *  Copyright 2010 artur.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,12 +15,24 @@
  *  under the License.
  */
 
-package org.mifos.accounts.api;
+package org.mifos.customers.business.service;
 
 import java.util.List;
+import org.mifos.accounts.api.CustomerDto;
+import org.mifos.accounts.api.CustomerSearchService;
+import org.mifos.customers.persistence.CustomerDao;
 
-public interface CustomerSearchService {
+public class CustomerSearchServiceImpl implements CustomerSearchService {
 
-    List<CustomerDto> findCustomersWithGivenPhoneNumber(String phoneNumber);
+	private CustomerDao customerDao;
+
+	public CustomerSearchServiceImpl(CustomerDao customerDao) {
+		this.customerDao = customerDao;
+	}
+
+	@Override
+	public List<CustomerDto> findCustomersWithGivenPhoneNumber(String phoneNumber) {
+		return customerDao.findCustomersWithGivenPhoneNumber(phoneNumber);
+	}
 
 }

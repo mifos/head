@@ -23,6 +23,7 @@ package org.mifos.spi;
 import java.io.InputStream;
 
 import org.mifos.accounts.api.AccountService;
+import org.mifos.accounts.api.CustomerSearchService;
 import org.mifos.accounts.api.UserReferenceDto;
 
 /**
@@ -30,6 +31,7 @@ import org.mifos.accounts.api.UserReferenceDto;
  */
 public abstract class TransactionImport {
     private AccountService accountService;
+	private CustomerSearchService customerSearchService;
     private UserReferenceDto userReferenceDto;
 
     /**
@@ -65,6 +67,17 @@ public abstract class TransactionImport {
     protected AccountService getAccountService() {
         return accountService;
     }
+
+	/**
+	 * Injected by Mifos.
+	 */
+    public void setCustomerSearchService(final CustomerSearchService customerSearchService) {
+		this.customerSearchService = customerSearchService;
+    }
+
+	protected CustomerSearchService getCustomerSearchService() {
+		return customerSearchService;
+	}
 
     /**
      * Mifos will call this method to provide a {@link UserReferenceDto} for use

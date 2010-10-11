@@ -35,6 +35,8 @@ import org.mifos.accounts.api.StandardAccountService;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
+import org.mifos.customers.business.service.CustomerSearchServiceImpl;
+import org.mifos.customers.persistence.CustomerDaoHibernate;
 import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.spi.TransactionImport;
@@ -67,6 +69,7 @@ public class PluginManager {
         for (TransactionImport ti : loader) {
             ti.setAccountService(new StandardAccountService(new AccountPersistence(), new LoanPersistence(),
                     new AcceptedPaymentTypePersistence(), new PersonnelDaoHibernate(new GenericDaoHibernate())));
+	    ti.setCustomerSearchService(new CustomerSearchServiceImpl(new CustomerDaoHibernate(new GenericDaoHibernate())));
             plugins.add(ti);
         }
         return plugins;
