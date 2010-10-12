@@ -21,7 +21,7 @@
 package org.mifos.accounts.savings.interest;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 
 import java.util.List;
@@ -158,6 +158,71 @@ public class MonthlyOnLastDayOfMonthInterestScheduledEventTest {
         LocalDate nextValidMatchingDate = monthlyEvent.findFirstDateOfPeriodForMatchingDate(mar31st);
 
         assertThat(nextValidMatchingDate, is(jan1st));
+    }
+
+    @Test
+    public void shouldReturnFalseForInvalidMatch() {
+
+        // setup
+        int every = 2;
+        monthlyEvent = new MonthlyOnLastDayOfMonthInterestScheduledEvent(every);
+
+        // exercise test
+        boolean isMatch = monthlyEvent.isAMatchingDate(jan1st, jan31st);
+
+        assertFalse(isMatch);
+    }
+
+    @Test
+    public void shouldReturnTrueForMatchingDateInSameMonth() {
+
+        // setup
+        int every = 1;
+        monthlyEvent = new MonthlyOnLastDayOfMonthInterestScheduledEvent(every);
+
+        // exercise test
+        boolean isMatch = monthlyEvent.isAMatchingDate(jan1st, jan31st);
+
+        assertTrue(isMatch);
+    }
+
+    @Test
+    public void shouldReturnTrueForAnyMatchingDate() {
+
+        // setup
+        int every = 2;
+        monthlyEvent = new MonthlyOnLastDayOfMonthInterestScheduledEvent(every);
+
+        // exercise test
+        boolean isMatch = monthlyEvent.isAMatchingDate(jan1st, apr30);
+
+        assertTrue(isMatch);
+    }
+
+    @Test
+    public void shouldFindNearestMatchingDateAfterALegalEndOfMonthDate() {
+
+        // setup
+        int every = 1;
+        monthlyEvent = new MonthlyOnLastDayOfMonthInterestScheduledEvent(every);
+
+        // exercise test
+        LocalDate nextMatchingDate = monthlyEvent.nextMatchingDateAfter(jan1st, jan31st);
+
+        assertThat(nextMatchingDate, is(feb28th));
+    }
+
+    @Test
+    public void shouldFindNearestMatchingDateAfterAnyGivenDate() {
+
+        // setup
+        int every = 1;
+        monthlyEvent = new MonthlyOnLastDayOfMonthInterestScheduledEvent(every);
+
+        // exercise test
+        LocalDate nextMatchingDate = monthlyEvent.nextMatchingDateAfter(jan1st, jun1st);
+
+        assertThat(nextMatchingDate, is(jun30th));
     }
 
 }
