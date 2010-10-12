@@ -355,6 +355,30 @@ public class StandardAccountService implements AccountService {
     }
 
     @Override
+    public AccountReferenceDto lookupLoanAccountReferenceFromClientPhoneNumberAndLoanProductShortName(
+            String phoneNumber, String loanProductShortName) throws Exception {
+        AccountBO accountBo = getAccountPersistence().findLoanByClientGovernmentIdAndProductShortName(
+                phoneNumber, loanProductShortName);
+        if (null == accountBo) {
+            throw new PersistenceException("loan not found for client phone number " + phoneNumber
+                    + " and loan product short name " + loanProductShortName);
+        }
+        return new AccountReferenceDto(accountBo.getAccountId());
+    }
+
+    @Override
+    public AccountReferenceDto lookupSavingsAccountReferenceFromClientPhoneNumberAndSavingsProductShortName(
+            String phoneNumber, String savingsProductShortName) throws Exception {
+        AccountBO accountBo = getAccountPersistence().findSavingsByClientGovernmentIdAndProductShortName(
+                phoneNumber, savingsProductShortName);
+        if (null == accountBo) {
+            throw new PersistenceException("savings not found for client phone number " + phoneNumber
+                    + " and savings product short name " + savingsProductShortName);
+        }
+        return new AccountReferenceDto(accountBo.getAccountId());
+    }
+
+    @Override
     public BigDecimal getTotalPaymentDueAmount(AccountReferenceDto account) throws Exception {
         AccountBO accountBo = getAccountPersistence().getAccount(account.getAccountId());
         return accountBo.getTotalAmountDue().getAmount();

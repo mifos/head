@@ -173,6 +173,8 @@ public interface NamedQueryConstants {
     String FIND_LOAN_ACCOUNT_BY_EXTERNAL_ID = "accounts.findLoanByExternalId";
     String FIND_LOAN_ACCOUNT_BY_CLIENT_GOVERNMENT_ID_AND_PRODUCT_SHORT_NAME = "accounts.findLoanByClientGovernmentIdAndProductShortName";
     String FIND_SAVINGS_ACCOUNT_BY_CLIENT_GOVERNMENT_ID_AND_PRODUCT_SHORT_NAME = "accounts.findSavingsByClientGovernmentIdAndProductShortName";
+	String FIND_LOAN_ACCOUNT_BY_CLIENT_PHONE_NUMBER_AND_PRODUCT_SHORT_NAME = "accounts.findLoanByClientPhoneNumberAndProductShortName";
+    String FIND_SAVINGS_ACCOUNT_BY_CLIENT_PHONE_NUMBER_AND_PRODUCT_SHORT_NAME = "accounts.findSavingsByClientPhoneNumberAndProductShortName";
     String FIND_INDIVIDUAL_LOANS = "accounts.findIndividualLoans";
     String RETRIEVE_LAST_TRXN = "accounts.retrieveLastTrxn";
     String RETRIEVE_FIRST_TRXN = "accounts.retrieveFirstTrxn";
