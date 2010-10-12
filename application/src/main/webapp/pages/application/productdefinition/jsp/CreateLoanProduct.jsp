@@ -1152,7 +1152,7 @@ explanation of the license and how it is applied.
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center"><html-el:submit styleId="createLoanProduct.button.preview" styleClass="buttn"
-												onclick="transferData(this.form.loanOfferingFunds);transferData(this.form.prdOfferinFees);">
+												onclick="transferData(this.form.loanOfferingQGs);transferData(this.form.loanOfferingFunds);transferData(this.form.prdOfferinFees);">
 												<mifos:mifoslabel name="product.preview"
 													bundle="ProductDefUIResources" />
 											</html-el:submit> &nbsp; <html-el:button styleId="createLoanProduct.button.cancel" property="cancel"

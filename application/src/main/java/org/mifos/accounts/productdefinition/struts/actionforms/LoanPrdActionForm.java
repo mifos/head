@@ -47,6 +47,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
@@ -1735,6 +1736,7 @@ public class LoanPrdActionForm extends BaseActionForm {
             loanOfferingFunds = null;
             gracePeriodType = null;
             gracePeriodDuration = null;
+            loanOfferingQGs = null;
         }
         logger.debug("reset method of Savings Product Action form method called ");
     }
@@ -1809,6 +1811,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         this.principalGLCode = null;
         this.interestGLCode = null;
         this.prdStatus = null;
+        this.loanOfferingQGs = null;
         logger.debug("clear method of Loan Product Action form method called :" + prdOfferingId);
     }
 
@@ -1836,8 +1839,29 @@ public class LoanPrdActionForm extends BaseActionForm {
         vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors, request);
         validatePrincDueOnLastInstAndPrincGraceType(errors);
         setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
+        setSelectedQuestionGroups(request);
         validateInterestGLCode(request, errors);
         logger.debug("validateForPreview method of Loan Product Action form method called :" + prdOfferingName);
+    }
+
+    private void setSelectedQuestionGroups(HttpServletRequest request) {
+        if (loanOfferingQGs != null && loanOfferingQGs.length > 0) {
+            try {
+                List<QuestionGroupDetail> questionGroupDetails = (List<QuestionGroupDetail>) SessionUtils.getAttribute(ProductDefinitionConstants.SRCQGLIST, request);
+                List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
+                for (String loanOfferingQG : loanOfferingQGs) {
+                    for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
+                        if (String.valueOf(questionGroupDetail.getId()).equals(loanOfferingQG)) {
+                            questionGroups.add(questionGroupDetail);
+                            break;
+                        }
+                    }
+                }
+                SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDQGLIST, questionGroups, request);
+            } catch (PageExpiredException e) {
+                logger.error("An error occured while setting selected question groups on session", e);
+            }
+        }
     }
 
     private void validateForEditPreview(HttpServletRequest request, ActionErrors errors, Locale locale) {
@@ -1867,6 +1891,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors, request);
         validatePrincDueOnLastInstAndPrincGraceType(errors);
         setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
+        setSelectedQuestionGroups(request);
         validateInterestGLCode(request, errors);
         logger.debug("validateForEditPreview method of Loan Product Action form method called :" + prdOfferingName);
     }
@@ -1950,8 +1975,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         try {
             if (getPrdOfferinFees() != null && getPrdOfferinFees().length > 0) {
 
-                List<FeeBO> fees = (List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE,
-                        request);
+                List<FeeBO> fees = (List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE, request);
                 for (String selectedFee : getPrdOfferinFees()) {
                     FeeBO fee = getFeeFromList(fees, selectedFee);
                     if (fee != null) {
@@ -1970,8 +1994,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         try {
             if (getLoanOfferingFunds() != null && getLoanOfferingFunds().length > 0) {
 
-                List<FundBO> funds = (List<FundBO>) SessionUtils.getAttribute(ProductDefinitionConstants.SRCFUNDSLIST,
-                        request);
+                List<FundBO> funds = (List<FundBO>) SessionUtils.getAttribute(ProductDefinitionConstants.SRCFUNDSLIST, request);
                 for (String selectedFund : getLoanOfferingFunds()) {
                     FundBO fund = getFundFromList(funds, selectedFund);
                     if (fund != null) {

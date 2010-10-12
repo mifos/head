@@ -20,16 +20,6 @@
 
 package org.mifos.accounts.productdefinition.struts.action;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -78,9 +68,21 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.MifosServiceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @deprecated this entire class will soon be no longer used and will be deleted after localisation of messages.properties files is complete.
@@ -364,7 +366,16 @@ public class LoanPrdAction extends BaseAction {
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANINTERESTGLCODELIST, getGLCodes(
                 FinancialActionConstants.INTERESTPOSTING, FinancialConstants.CREDIT), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFEE, fees, request);
+        loadQuestionGroups(request);
         logger.debug("Load master data method of Loan Product Action called");
+    }
+
+    private void loadQuestionGroups(HttpServletRequest request) throws PageExpiredException {
+        QuestionnaireServiceFacade questionnaireServiceFacade = getQuestionnaireServiceFacade(request);
+        if (questionnaireServiceFacade != null) {
+            List<QuestionGroupDetail> questionGroups = questionnaireServiceFacade.getQuestionGroups("Create", "Loan");
+            SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SRCQGLIST, questionGroups, request);
+        }
     }
 
     private void loadSelectedFeesAndFunds(List<FeeDto> feesSelected, List<FundBO> fundsSelected,
@@ -783,5 +794,9 @@ public class LoanPrdAction extends BaseAction {
         SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE, loanProduct.getStartDate(), request);
         logger.debug("setDataIntoActionForm method of Loan Product Action called");
 
+    }
+
+    private QuestionnaireServiceFacade getQuestionnaireServiceFacade(HttpServletRequest request) {
+        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
     }
 }
