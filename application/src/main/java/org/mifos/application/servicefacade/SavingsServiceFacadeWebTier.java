@@ -233,7 +233,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
                 LocalDate startDate = postingSchedule.findFirstDateOfPeriodForMatchingDate(interestPostingDate);
 
-                InterestCalculationInterval postingInterval = new InterestCalculationInterval(startDate, interestPostingDate);
+                Interval postingInterval = new Interval(startDate.toDateMidnight().toDateTime(), interestPostingDate.toDateMidnight().toDateTime());
                 calculateInterestForPostingInterval(Long.valueOf(savingsId), postingInterval);
 
                 boolean interestPosted = savingsAccount.postInterest(postingSchedule);
@@ -252,7 +252,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public void calculateInterestForPostingInterval(Long savingsId, InterestCalculationInterval postingInterval) {
+    public void calculateInterestForPostingInterval(Long savingsId, Interval postingInterval) {
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
 
@@ -290,8 +290,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                 LocalDate endDate = interestCalculationEvent.nextMatchingDateFromAlreadyMatchingDate(startDate);
                 calculationIntervals.add(new InterestCalculationInterval(startDate, endDate));
             } else {
-                calculationIntervals = interestCalculationIntervalHelper.determineInterestCalculationPeriods(
-                        postingInterval, firstDepositDate, interestCalculationEvent);
+                InterestCalculationInterval postingCalculationInterval = new InterestCalculationInterval(postingInterval.getStart().toLocalDate(), postingInterval.getEnd().toLocalDate());
+                calculationIntervals = interestCalculationIntervalHelper.determineInterestCalculationPeriods(postingCalculationInterval, firstDepositDate, interestCalculationEvent);
             }
 
             for (InterestCalculationInterval interval : calculationIntervals) {

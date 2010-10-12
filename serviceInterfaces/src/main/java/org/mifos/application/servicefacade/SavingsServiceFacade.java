@@ -20,8 +20,8 @@
 
 package org.mifos.application.servicefacade;
 
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
-import org.mifos.accounts.savings.interest.InterestCalculationInterval;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
@@ -43,5 +43,5 @@ public interface SavingsServiceFacade {
 
     void batchPostInterestToSavingsAccount(LocalDate dateOfBatchJob);
 
-    void calculateInterestForPostingInterval(Long savingsId, InterestCalculationInterval postingInterval);
+    void calculateInterestForPostingInterval(Long savingsId, Interval postingInterval);
 }
