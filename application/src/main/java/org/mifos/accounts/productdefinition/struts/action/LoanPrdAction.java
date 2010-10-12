@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.productdefinition.struts.action;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -46,6 +47,7 @@ import org.mifos.accounts.productdefinition.business.NoOfInstallFromLoanCycleBO;
 import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
+import org.mifos.accounts.productdefinition.business.QuestionGroupReference;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
@@ -80,9 +82,11 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * @deprecated this entire class will soon be no longer used and will be deleted after localisation of messages.properties files is complete.
@@ -214,12 +218,27 @@ public class LoanPrdAction extends BaseAction {
                 findGLCodeEntity(request, ProductDefinitionConstants.LOANINTERESTGLCODELIST, loanPrdActionForm.getInterestGLCode()),
                 loanPrdActionForm, loanPrdActionForm.shouldWaiverInterest());
 
+        loanOffering.setQuestionGroups(getQuestionGroups(request));
         loanOffering.setCurrency(getCurrency(loanPrdActionForm.getCurrencyId()));
         loanOffering.save();
         request.setAttribute(ProductDefinitionConstants.LOANPRODUCTID, loanOffering.getPrdOfferingId());
         request.setAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM, loanOffering.getGlobalPrdOfferingNum());
 
         return mapping.findForward(ActionForwards.create_success.toString());
+    }
+
+    private Set<QuestionGroupReference> getQuestionGroups(HttpServletRequest request) throws PageExpiredException {
+        Set<QuestionGroupReference> questionGroupReferences = null;
+        List<QuestionGroupDetail> questionGroups = (List<QuestionGroupDetail>) SessionUtils.getAttribute(ProductDefinitionConstants.SELECTEDQGLIST, request);
+        if (CollectionUtils.isNotEmpty(questionGroups)) {
+            questionGroupReferences = new HashSet<QuestionGroupReference>(questionGroups.size());
+            for (QuestionGroupDetail questionGroupDetail : questionGroups) {
+                QuestionGroupReference questionGroupReference = new QuestionGroupReference();
+                questionGroupReference.setQuestionGroupId(questionGroupDetail.getId());
+                questionGroupReferences.add(questionGroupReference);
+            }
+        }
+        return questionGroupReferences;
     }
 
     @TransactionDemarcate(joinToken = true)

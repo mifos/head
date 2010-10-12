@@ -54,6 +54,11 @@
 			<one-to-many class="org.mifos.accounts.productsmix.business.ProductMixBO" />
 		</set>
 
+        <set name="questionGroups" table="prd_offering_question_group" cascade="all">
+            <key column="prd_offering_id" />
+            <many-to-many column="question_group_id" class="org.mifos.accounts.productdefinition.business.QuestionGroupReference" />
+        </set>
+
 		<joined-subclass
 			name="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
 			table="loan_offering">
