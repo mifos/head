@@ -233,11 +233,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
                 LocalDate startDate = postingSchedule.findFirstDateOfPeriodForMatchingDate(interestPostingDate);
 
-                // FIXME - keithw - the more I look at the use of Interval within InterestCalculationInterval it seems
-                // redundant as contains
-                // method of interval is not 'inclusive' of end datetime and we really want to use LocalDate anyway.
-                Interval postingInterval = new InterestCalculationInterval(startDate, interestPostingDate)
-                        .getInterval();
+                InterestCalculationInterval postingInterval = new InterestCalculationInterval(startDate, interestPostingDate);
                 calculateInterestForPostingInterval(Long.valueOf(savingsId), postingInterval);
 
                 boolean interestPosted = savingsAccount.postInterest(postingSchedule);
@@ -256,7 +252,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public void calculateInterestForPostingInterval(Long savingsId, Interval postingInterval) {
+    public void calculateInterestForPostingInterval(Long savingsId, InterestCalculationInterval postingInterval) {
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
 
@@ -332,7 +328,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             if (intervalExcludingLastDayOfLastMonth.getStartDate().isAfter(endOfDayDetail.getDate())) {
                 balance = balance.add(endOfDayDetail.getResultantAmountForDay());
             }
-            if (intervalExcludingLastDayOfLastMonth.dateFallsWithin(endOfDayDetail.getDate())) {
+            if (intervalExcludingLastDayOfLastMonth.contains(endOfDayDetail.getDate())) {
                 applicableDailyDetailsForPeriod.add(endOfDayDetail);
             }
         }

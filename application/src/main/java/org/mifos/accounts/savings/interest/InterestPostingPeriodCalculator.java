@@ -29,8 +29,9 @@ import org.mifos.framework.util.helpers.Money;
 /**
  * I am responsible for implementing interest compounding for savings.
  *
- * This occurs when posting interest to savings account. This calculator handles this 'posting' inline so it may calculate posting periods
- * that occur after it.
+ * This occurs when posting interest to savings account.
+ *
+ * This calculator handles this 'posting' inline so it may calculate posting period that occur after it.
  */
 public class InterestPostingPeriodCalculator implements CompoundingInterestCalculator {
 
@@ -55,9 +56,6 @@ public class InterestPostingPeriodCalculator implements CompoundingInterestCalcu
             allInterestPostings.add(postingPeriodResult);
             periodAccountBalance = postingPeriodResult.getPeriodBalance();
 
-            // NOTE - here we are checking if current interest calculation for period differs from the sum of previous interest posted for period.
-            // so inline we add it to the balance (i.e. take it that the correct interest is posted) and continue to check all other posting periods.
-            // NOTE - The interest can differ due to back-date transactions, adjustments, previous incorrect interest postings etc.
             if (postingPeriodResult.isTotalCalculatedInterestIsDifferent()) {
                 periodAccountBalance = periodAccountBalance.add(postingPeriodResult.getDifferenceInInterest());
             }
@@ -80,7 +78,6 @@ public class InterestPostingPeriodCalculator implements CompoundingInterestCalcu
             interestCalculationRunningBalance = interestCalculationRunningBalance.add(interestCalculationPeriodResult.getTotalPrincipal());
         }
 
-        // NOTE - end of period balance is always set in result.
         interestPostingPeriodResult.setPeriodBalance(interestCalculationRunningBalance);
 
         return interestPostingPeriodResult;
