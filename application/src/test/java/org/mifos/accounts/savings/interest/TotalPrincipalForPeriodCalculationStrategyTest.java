@@ -68,7 +68,7 @@ public class TotalPrincipalForPeriodCalculationStrategyTest {
     }
 
     private InterestCalculationPeriodBuilder zeroBalanceAug31stToSeptember30thCalculationPeriod() {
-        return new InterestCalculationPeriodBuilder().from(august31st).to(september30th).withStartingBalance("0");
+        return new InterestCalculationPeriodBuilder().from(august31st).to(september30th).withStartingBalance("90");
     }
 
     @Before
@@ -77,7 +77,7 @@ public class TotalPrincipalForPeriodCalculationStrategyTest {
     }
 
     @Test
-    public void shouldRecieveZeroBalanceWithNoDailyRecords() {
+    public void shouldNotTakeBalanceAtStartOfPeriodIntoAccountWhenCalculatingTotalPrincipalForGivenPeriod() {
 
         interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().build();
 

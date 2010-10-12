@@ -46,9 +46,6 @@ public class SavingsInterestCalculatorTest {
     private PrincipalCalculationStrategy principalCalculationStrategy;
 
     @Mock
-    private PrincipalCalculationStrategy totalPrincipalCalculationStrategy;
-
-    @Mock
     private SimpleInterestCalculationStrategy compoundInterestCalculationStrategy;
 
     @Mock
@@ -57,8 +54,6 @@ public class SavingsInterestCalculatorTest {
     @Before
     public void setup() {
         interestCalculator = new SavingsInterestCalculator(principalCalculationStrategy, compoundInterestCalculationStrategy, minimumBalanceRule);
-        ((SavingsInterestCalculator)interestCalculator).setTotalPrincipalCalculationStrategy(totalPrincipalCalculationStrategy);
-
         interestCalculationPeriodDetail = new InterestCalculationPeriodBuilder().build();
     }
 

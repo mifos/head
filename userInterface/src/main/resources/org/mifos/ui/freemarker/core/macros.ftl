@@ -11,8 +11,8 @@
 [#-- usage   [@mifos.topNavigation currentTab="Home" /] --]
 [#macro topNavigation currentTab]
 <div id = "homePageHeader">
-	<IMG id="logo" height=74 alt=""
-					src="pages/framework/images/logo.gif" width=188></td>
+	<IMG id="logo" height=70 alt=""
+					src="pages/framework/images/logo.jpg" width=200></td>
 
 	<div id="top-right-links">
       <a id="settings" href="#">[@spring.message "yourSettings"/]</a> |
@@ -33,8 +33,8 @@
 
 [#macro topNavigationNoSecurity currentTab]
 <div id = "homePageHeader">
-	<IMG id="logo" height=74 alt=""
-					src="images/logo.gif" width=188></td>
+	<IMG id="logo" height=70 alt=""
+					src="images/logo.jpg" width=200></td>
 
 	<div id="top-right-links">
       <a id="settings" href="#">[@spring.message "yourSettings"/]</a> |

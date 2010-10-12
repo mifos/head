@@ -25,6 +25,7 @@ import org.apache.struts.action.ActionErrors;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.Constants;
@@ -54,6 +55,8 @@ import java.util.List;
 public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 
     private static Boolean isTestingModeSet = false;
+
+    private static String savedFiscalCalendarRulesWorkingDays;
 
     protected MifosMockStrutsTestCase() throws Exception {
         super();
@@ -125,8 +128,8 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
         doCleanUp(request);
         doCleanUp(request.getSession());
         TestObjectFactory.cleanUpTestObjects();
+        diableCustomWorkingDays();
         super.tearDown();
-
     }
 
     protected void doCleanUp(HttpSession session) {
@@ -184,6 +187,26 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyNoActionMessages();
+    }
+
+    /**
+     * see MIFOS-2659 <br><br>
+     * This will be disabled automatically at the end of a test case
+     *
+     */
+    protected static void enableCustomWorkingDays() {
+        savedFiscalCalendarRulesWorkingDays = new FiscalCalendarRules().getWorkingDaysAsString();
+        new FiscalCalendarRules().setWorkingDays("MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY");
+    }
+
+    /**
+     * see MIFOS-2659
+     */
+    private static void diableCustomWorkingDays() {
+        if(savedFiscalCalendarRulesWorkingDays != null) {
+        new FiscalCalendarRules().setWorkingDays(savedFiscalCalendarRulesWorkingDays);
+        }
+        savedFiscalCalendarRulesWorkingDays = null;
     }
 
     public MifosCurrency getCurrency() {

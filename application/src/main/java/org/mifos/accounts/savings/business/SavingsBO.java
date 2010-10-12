@@ -53,6 +53,7 @@ import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.savings.interest.InterestPostingPeriodResult;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
@@ -541,37 +542,56 @@ public class SavingsBO extends AccountBO {
         return getInterestToBePosted() == null ? interestCalculated : getInterestToBePosted().add(interestCalculated);
     }
 
+    public void postInterest(InterestScheduledEvent postingSchedule, InterestPostingPeriodResult interestPostingPeriodResult) {
+
+        Money actualInterestToBePosted = interestPostingPeriodResult.getDifferenceInInterest();
+        if (actualInterestToBePosted.isGreaterThanZero()) {
+            LocalDate currentPostingDate = interestPostingPeriodResult.getPostingPeriod().getEndDate();
+            LocalDate nextPostingDate = postingSchedule.nextMatchingDateFromAlreadyMatchingDate(currentPostingDate);
+
+            doPostInterest(currentPostingDate, nextPostingDate, actualInterestToBePosted);
+        }
+    }
+
     public boolean postInterest(InterestScheduledEvent postingSchedule) {
         boolean eligibleForInterestPosing = accountRequiresInterestPosting();
+
         if (eligibleForInterestPosing) {
-            this.savingsBalance = this.savingsBalance.add(this.interestToBePosted);
-            this.savingsPerformance.setTotalInterestDetails(this.interestToBePosted);
-
-            SavingsActivityEntity savingsActivity = SavingsActivityEntity.savingsInterestPosting(this, personnel, this.savingsBalance, this.interestToBePosted, this.nextIntPostDate);
-            savingsActivityDetails.add(savingsActivity);
-
-            AccountPaymentEntity interestPayment = AccountPaymentEntity.savingsInterestPosting(this, this.interestToBePosted, this.nextIntPostDate);
-
-            DateTime dueDate = new DateTime();
-            SavingsTrxnDetailEntity interestPostingTransaction = SavingsTrxnDetailEntity.savingsInterestPosting(interestPayment, this.customer, this.savingsBalance, this.nextIntPostDate, dueDate);
-
-            interestPayment.addAccountTrxn(interestPostingTransaction);
-            this.addAccountPayment(interestPayment);
-
-            this.lastIntPostDate = this.nextIntPostDate;
-            this.nextIntPostDate = postingSchedule.nextMatchingDateFromAlreadyMatchingDate(new LocalDate(this.lastIntPostDate)).toDateMidnight().toDate();
-            this.interestToBePosted = Money.zero(this.getCurrency());
-
-            // NOTE: financial Transaction Processing should be decoupled from application domain model.
-            try {
-                BaseFinancialActivity baseFinancialActivity = new SavingsInterestPostingFinancialActivity(interestPostingTransaction);
-                baseFinancialActivity.buildAccountEntries();
-            } catch (FinancialException e) {
-                throw new MifosRuntimeException(e);
-            }
+            LocalDate currentPostingDate = new LocalDate(this.nextIntPostDate);
+            LocalDate nextPostingDate = postingSchedule.nextMatchingDateFromAlreadyMatchingDate(new LocalDate(this.nextIntPostDate));
+            Money actualInterestToBePosted = this.interestToBePosted;
+            doPostInterest(currentPostingDate, nextPostingDate, actualInterestToBePosted);
         }
 
         return eligibleForInterestPosing;
+    }
+
+    private void doPostInterest(LocalDate currentPostingDate, LocalDate nextPostingDate, Money actualInterestToBePosted) {
+        this.savingsBalance = this.savingsBalance.add(actualInterestToBePosted);
+        this.savingsPerformance.setTotalInterestDetails(actualInterestToBePosted);
+
+        SavingsActivityEntity savingsActivity = SavingsActivityEntity.savingsInterestPosting(this, personnel, this.savingsBalance, actualInterestToBePosted, currentPostingDate.toDateMidnight().toDate());
+        savingsActivityDetails.add(savingsActivity);
+
+        AccountPaymentEntity interestPayment = AccountPaymentEntity.savingsInterestPosting(this, actualInterestToBePosted, currentPostingDate.toDateMidnight().toDate());
+
+        DateTime dueDate = new DateTime();
+        SavingsTrxnDetailEntity interestPostingTransaction = SavingsTrxnDetailEntity.savingsInterestPosting(interestPayment, this.customer, this.savingsBalance, currentPostingDate.toDateMidnight().toDate(), dueDate);
+
+        interestPayment.addAccountTrxn(interestPostingTransaction);
+        this.addAccountPayment(interestPayment);
+
+        this.lastIntPostDate = this.nextIntPostDate;
+        this.nextIntPostDate = nextPostingDate.toDateMidnight().toDate();
+        this.interestToBePosted = Money.zero(this.getCurrency());
+
+        // NOTE: financial Transaction Processing should be decoupled from application domain model.
+        try {
+            BaseFinancialActivity baseFinancialActivity = new SavingsInterestPostingFinancialActivity(interestPostingTransaction);
+            baseFinancialActivity.buildAccountEntries();
+        } catch (FinancialException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 
     private boolean accountRequiresInterestPosting() {

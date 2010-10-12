@@ -65,6 +65,7 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
 
     @Before
     public void setUp() throws Exception {
+        enableCustomWorkingDays();
         createInitialCustomerAccounts();
         groupLoan = createGroupLoanAccount();
         clientLoan = createClientLoanAccount();

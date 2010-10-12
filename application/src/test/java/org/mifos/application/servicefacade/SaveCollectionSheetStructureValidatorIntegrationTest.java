@@ -56,6 +56,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     @Before
     public void setUp() throws Exception {
+        enableCustomWorkingDays();
         saveCollectionSheetUtils = new TestSaveCollectionSheetUtils();
         savecollectionSheetStructureValidator = new SaveCollectionSheetStructureValidator();
         collectionSheetRetrieveSavingsAccountsUtils = new TestCollectionSheetRetrieveSavingsAccountsUtils();

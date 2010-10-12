@@ -94,9 +94,9 @@ a:hover {
 }
 .logo {
 	float:left;
-	background:url(../images/logo.gif) left top no-repeat;
-	width:188px;
-	height:74px;
+	background:url(../images/logo.jpg) left top no-repeat;
+	width:200px;
+	height:70px;
 	position:absolute;	
 	left:0;
 	clear:right;
