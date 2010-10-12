@@ -175,6 +175,15 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="loan.editTrxn" />
 							</html-el:button></td>
 						</tr>
+						               <tr>
+               <td>
+                    <c:set var="questionsHostForm" value="${loanDisbursementActionForm}" scope="request" />
+                    <c:import url="/pages/application/surveys/jsp/viewQuestionResponses.jsp">
+                       <c:param name="editResponseURL" value="loanDisbursementAction.do?method=editQuestionResponses&currentFlowKey=${requestScope.currentFlowKey}"/>
+                       <c:param name="responseDivStyleClass" value="viewQuestionResponseDiv"/>
+                    </c:import>
+               </td>
+            </tr>
 						<tr align="center">
 							<td width="100%" height="3" colspan="2" align="center"
 								class="blueline">&nbsp;</td>

@@ -13,6 +13,7 @@ import org.mifos.dto.domain.OfficeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -79,6 +80,7 @@ public class EditOfficeInformationController {
         modelAndView.addObject("parentOffices", getParentDetails(officeId.toString()));
         modelAndView.addObject("view", "disable");
         modelAndView.addObject("officeTypes", getOfficeTypes(officeDto.getLevelId().toString()));
+        modelAndView.addObject("showError", "false");
         return  modelAndView;
     }
 
@@ -149,60 +151,61 @@ public class EditOfficeInformationController {
 
         if (StringUtils.isNotBlank(cancel)) {
             status.setComplete();
-        } else if (result.hasErrors()) {
-            mav = new ModelAndView("editOfficeInformation");
-            mav.addObject("officeTypes", getOfficeTypes(formBean.getLevelId()));
-            if(!formBean.getLevelId().equals("1")){
-            mav.addObject("parentOffices", getParentDetails(officeServiceFacade.retrieveOfficeById(formBean.getId()).getLevelId().toString()));
-            formBean.setParentId(officeServiceFacade.retrieveOfficeById(formBean.getId()).getParentId().toString());
-            }
-            mav.addObject("officeTypes", getOfficeTypes(formBean.getLevelId()));
-            mav.addObject("officeFormBean", formBean);
-            mav.addObject("view", "enable");
         }
-        else{
-            if(StringUtils.isNotBlank(formBean.getOfficeShortName()) && StringUtils.isNotBlank(formBean.getName()) && StringUtils.isNotBlank(formBean.getLevelId()) && StringUtils.isNotBlank(preview)){
-                if((!formBean.getLevelId().equals("1") && StringUtils.isNotBlank(formBean.getParentId())) || (formBean.getLevelId().equals("1") && !StringUtils.isNotBlank(formBean.getParentId()))){
-                mav = new ModelAndView("officePreview");
-                }else{
+        else if(StringUtils.isNotBlank(preview)){
+            if (result.hasErrors()) {
                 mav = new ModelAndView("editOfficeInformation");
-                }
-                switch(Integer.parseInt(formBean.getLevelId())){
-                case 1:
-                    formBean.setOfficeLevelName("Head Office");
-                    break;
-                case 2:
-                    formBean.setOfficeLevelName("Regional Office");
-                    break;
-                case 3:
-                    formBean.setOfficeLevelName("Divisional Office");
-                    break;
-                case 4:
-                    formBean.setOfficeLevelName("Area Office");
-                    break;
-                default:
-                    formBean.setOfficeLevelName("Branch Office");
-                    break;
-                }
+                mav.addObject("officeTypes", getOfficeTypes(formBean.getLevelId()));
                 if(!formBean.getLevelId().equals("1")){
-                formBean.setParentOfficeName(officeServiceFacade.retrieveOfficeById(Short.parseShort(formBean.getParentId())).getName());
+                    mav.addObject("parentOffices", getParentDetails(officeServiceFacade.retrieveOfficeById(formBean.getId()).getLevelId().toString()));
+                    formBean.setParentId(officeServiceFacade.retrieveOfficeById(formBean.getId()).getParentId().toString());
                 }
-                if(!formBean.getLevelId().equals("1")){
-                    mav.addObject("parentOffices", getParentDetails(formBean.getLevelId()));
+                mav.addObject("showError", "true");
+                mav.addObject("officeTypes", getOfficeTypes(formBean.getLevelId()));
+                mav.addObject("officeFormBean", formBean);
+                mav.addObject("view", "enable");
+           }else {
+                   if((!formBean.getLevelId().equals("1") && StringUtils.isNotBlank(formBean.getParentId())) || (formBean.getLevelId().equals("1") && !StringUtils.isNotBlank(formBean.getParentId()))){
+                            mav = new ModelAndView("officePreview");
+                   }else{
+                       mav = new ModelAndView("editOfficeInformation");
+                       result.addError(new ObjectError("parentLevelId", "Please specify Parent Level name"));
+                       mav.addObject("showError", "true");
+                   }
+                   switch(Integer.parseInt(formBean.getLevelId())){
+                   case 1:
+                       formBean.setOfficeLevelName("Head Office");
+                       break;
+                   case 2:
+                       formBean.setOfficeLevelName("Regional Office");
+                       break;
+                   case 3:
+                       formBean.setOfficeLevelName("Divisional Office");
+                       break;
+                   case 4:
+                       formBean.setOfficeLevelName("Area Office");
+                       break;
+                   default:
+                       formBean.setOfficeLevelName("Branch Office");
+                       break;
+                   }
+                   if(!formBean.getLevelId().equals("1")){
+                       formBean.setParentOfficeName(officeServiceFacade.retrieveOfficeById(Short.parseShort(formBean.getParentId())).getName());
+                       mav.addObject("parentOffices", getParentDetails(formBean.getLevelId()));
                     }
-                    mav.addObject("officeTypes", getOfficeTypes(formBean.getLevelId()));
-                mav.addObject("officeFormBean",formBean);
-            }
-            else{
-            mav = new ModelAndView("editOfficeInformation");
-            if(!formBean.getLevelId().equals("1")){
-            mav.addObject("parentOffices", getParentDetails(formBean.getLevelId()));
-            }
-            mav.addObject("officeTypes", getOfficeTypes(formBean.getLevelId()));
-            mav.addObject("officeFormBean", formBean);
-            mav.addObject("view", "enable");
-            }
-        }
-        return mav;
+                   mav.addObject("officeTypes", getOfficeTypes(formBean.getLevelId()));
+                   mav.addObject("officeFormBean",formBean);
+          }
+       }else{
+           mav = new ModelAndView("editOfficeInformation");
+           if(!formBean.getLevelId().equals("1")){
+           mav.addObject("parentOffices", getParentDetails(formBean.getLevelId()));
+           }
+           mav.addObject("officeTypes", getOfficeTypes(formBean.getLevelId()));
+           mav.addObject("officeFormBean", formBean);
+           mav.addObject("view", "enable");
+           mav.addObject("showError", "false");
+       }
+       return mav;
     }
 }

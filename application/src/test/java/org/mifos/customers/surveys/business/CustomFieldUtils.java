@@ -20,6 +20,7 @@
 
 package org.mifos.customers.surveys.business;
 
+import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -29,6 +30,10 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.api.CustomerLevel;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.business.OfficeCustomFieldEntity;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
 
 public class CustomFieldUtils {
     public static CustomFieldDefinitionEntity getCustomerCustomField(String label, CustomFieldType customFieldType) {
@@ -46,8 +51,15 @@ public class CustomFieldUtils {
         return new CustomerCustomFieldEntity(Short.valueOf(fieldId.toString()), fieldValue, null, clientBO);
     }
 
-    public static AccountCustomFieldEntity getLoanCustomField(Integer fieldId, String fieldValue, LoanBO loanBO) {
-        return new AccountCustomFieldEntity(loanBO, Short.valueOf(fieldId.toString()), fieldValue);
+    public static AccountCustomFieldEntity getLoanCustomField(Integer fieldId, String fieldValue, AccountBO accountBO) {
+        return new AccountCustomFieldEntity(accountBO, Short.valueOf(fieldId.toString()), fieldValue);
     }
 
+    public static OfficeCustomFieldEntity getOfficeCustomField(Integer fieldId, String fieldValue, OfficeBO officeBO) {
+        return new OfficeCustomFieldEntity(fieldValue, Short.valueOf(fieldId.toString()), officeBO);
+    }
+
+    public static PersonnelCustomFieldEntity getPersonnelCustomField(Integer fieldId, String fieldValue, PersonnelBO personnelBO) {
+        return new PersonnelCustomFieldEntity(fieldValue, Short.valueOf(fieldId.toString()), personnelBO);
+    }
 }

@@ -29,7 +29,6 @@ msgid "Amount"
 msgstr "Összeg"
 
 #: Balance
-#, fuzzy
 msgid "Balance"
 msgstr "Egyenleg"
 
@@ -72,7 +71,6 @@ msgid "Old Status"
 msgstr "Előző státusz"
 
 #: PaymentID
-#, fuzzy
 msgid "Payment ID#"
 msgstr "Fizetési tranzakció azonosító szám"
 
@@ -97,7 +95,6 @@ msgid "Account details"
 msgstr "Számla adatai"
 
 #: Savings.Accountstatementasof
-#, fuzzy
 msgid "Account statement as of "
 msgstr "Számlakivonat"
 
@@ -107,7 +104,6 @@ msgid "Client name"
 msgstr "Ügyfél neve"
 
 #: Savings.Create
-#, fuzzy
 msgid "Create "
 msgstr "Létrehozás"
 
@@ -136,7 +132,6 @@ msgid "Savings"
 msgstr "Megtakarítások"
 
 #: Savings.Select
-#, fuzzy
 msgid "Select "
 msgstr "Választás"
 
@@ -145,7 +140,6 @@ msgid "Transaction history"
 msgstr "Tranzakciótörténet"
 
 #: Savings.View
-#, fuzzy
 msgid "View "
 msgstr "Megtekintés"
 
@@ -154,7 +148,6 @@ msgid "account"
 msgstr "számla"
 
 #: Savings.accountAssigned
-#, fuzzy
 msgid "has been assigned account #"
 msgstr "alábbi számlaszámot kapta:"
 
@@ -183,7 +176,6 @@ msgid "Add a note"
 msgstr "Megjegyzés hozzáadása"
 
 #: Savings.additionalInformation
-#, fuzzy
 msgid "Additional information  "
 msgstr "Kiegészítő információk"
 
@@ -201,12 +193,10 @@ msgid "Apply transactions"
 msgstr "Tranzakciók alkalmazása"
 
 #: Savings.balance
-#, fuzzy
 msgid "Balance "
 msgstr "Egyenleg"
 
 #: Savings.balanceUsedFor
-#, fuzzy
 msgid "Balance used for "
 msgstr "Egyenleg felhasználása"
 
@@ -224,7 +214,6 @@ msgstr ""
 "számlák laphoz, kattintson a Mégsem gombra."
 
 #: Savings.clickCancelToReturn
-#, fuzzy
 msgid "Click Cancel to return to"
 msgstr "A Mégsem gombra való kattintással visszatérhet a(z)"
 
@@ -234,7 +223,6 @@ msgid "Then click Continue."
 msgstr "Majd kattintson a Folytatás gombra."
 
 #: Savings.clickContinueOrCancel
-#, fuzzy
 msgid ""
 "Then click Continue. Click Cancel to return to Clients &amp; Accounts "
 "without submitting information."
@@ -243,7 +231,6 @@ msgstr ""
 "számlák laphoz, kattintson a Mégsem gombra."
 
 #: Savings.clickPreview
-#, fuzzy
 msgid "Then click Preview. "
 msgstr "Majd kattintson az Előnézet gombra."
 
@@ -276,7 +263,6 @@ msgid "Close account"
 msgstr "Számla lezárása"
 
 #: Savings.completeTheFieldsBelow
-#, fuzzy
 msgid "Complete the fields below. "
 msgstr "Töltse ki az alábbi mezőket."
 
@@ -312,7 +298,6 @@ msgid "details now"
 msgstr "adatok most"
 
 #: Savings.accountdetails
-#, fuzzy
 msgid "account details now"
 msgstr "számla adatai"
 
@@ -325,7 +310,6 @@ msgid "Edit account status"
 msgstr "Számla státusz szerkesztése"
 
 #: Savings.editFields
-#, fuzzy
 msgid "Edit the fields below."
 msgstr "Szerkessze meg az alábbi mezőket."
 
@@ -437,7 +421,6 @@ msgid "Open a new"
 msgstr "Nyitás: új"
 
 #: Savings.openAnotherAccount
-#, fuzzy
 msgid "Open another account for this "
 msgstr "Másik számla nyitása a(z)"
 
@@ -531,7 +514,6 @@ msgid "Review the details below."
 msgstr "Ellenőrizze az alábbi adatokat."
 
 #: Savings.reviewInformation
-#, fuzzy
 msgid "Review the information below. "
 msgstr "Ellenőrizze az alábbi információkat."
 
@@ -554,7 +536,6 @@ msgid "See all notes"
 msgstr "Összes megjegyzés megtekintése"
 
 #: Savings.selectA
-#, fuzzy
 msgid "Select a "
 msgstr "Választás"
 
@@ -579,7 +560,6 @@ msgid "Suggested next steps"
 msgstr "Javasolt következő lépések"
 
 #: Savings.timePeriodFor
-#, fuzzy
 msgid "Time period for "
 msgstr "Időszak a(z)"
 
@@ -592,7 +572,6 @@ msgid "Total amount due"
 msgstr "Teljes esedékes összeg"
 
 #: Savings.totalAmountDue.on
-#, fuzzy
 msgctxt "Savings.totalAmountDue.on"
 msgid "Total amount due on"
 msgstr "Összes esedékes összeg"
@@ -610,7 +589,6 @@ msgid "Total withdrawals"
 msgstr "Összes készpénzfelvétel"
 
 #: Savings.totalamountdue
-#, fuzzy
 msgctxt "Savings.totalamountdue"
 msgid "Total amount due on"
 msgstr "Összes esedékes összeg"
@@ -648,7 +626,6 @@ msgid "Waive"
 msgstr "Elvetés"
 
 #: TransactionID
-#, fuzzy
 msgid "Transaction ID#"
 msgstr "Tranzakció azonosító szám"
 
@@ -691,7 +668,6 @@ msgstr ""
 "forduljon a rendszergazdához."
 
 #: error.versionnodonotmatch
-#, fuzzy
 msgid ""
 "The record has already been modified by another user. Please navigate to the "
 "details page and start the activity again. "
@@ -825,12 +801,10 @@ msgid "Cancel"
 msgstr "Mégsem"
 
 #: savings.ChecklistMsg
-#, fuzzy
 msgid "Complete and check off the following tasks. "
 msgstr "Végezze el és pipálja ki az alábbi feladatokat."
 
 #: savings.ClickCancel1
-#, fuzzy
 msgid "Click Cancel to return to "
 msgstr "A Mégsem gombra való kattintással visszatérhet a(z)"
 
@@ -852,7 +826,6 @@ msgid "Confirm status change"
 msgstr "Státusz módosítás megerősítése"
 
 #: savings.EditStatus
-#, fuzzy
 msgid "Edit status "
 msgstr "Státusz szerkesztése"
 
@@ -877,7 +850,6 @@ msgid "Old status"
 msgstr "Korábbi státusz"
 
 #: savings.SelectExplaination1
-#, fuzzy
 msgid "When cancelling a "
 msgstr "A(z)"
 
@@ -894,7 +866,6 @@ msgid "Submit"
 msgstr "Érvényesítés"
 
 #: savings.changestatus
-#, fuzzy
 msgid "Change status "
 msgstr "Státusz módosítása"
 
@@ -911,12 +882,10 @@ msgid "made"
 msgstr "megtörtént"
 
 #: savings.note
-#, fuzzy
 msgid "Note:"
 msgstr "Megjegyzés\\:"
 
 #: savings.status
-#, fuzzy
 msgid "Status:"
 msgstr "Státusz\\:"
 

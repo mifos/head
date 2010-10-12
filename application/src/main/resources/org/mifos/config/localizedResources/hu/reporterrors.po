@@ -36,7 +36,6 @@ msgid "Select a valid Meeting Date"
 msgstr "Érvényes Találkozó dátumot válasszon"
 
 #: runDate.invalid
-#, fuzzy
 msgid "Please enter date as DD/MM/YYYY "
 msgstr "DD/MM/YYYY formátumban adja meg a dátumot"
 

@@ -37,7 +37,6 @@ msgid "Yes"
 msgstr "Sí "
 
 #: Fees.GLCode
-#, fuzzy
 msgid "GL Code:"
 msgstr "Código del Libro Mayor\\:"
 
@@ -70,7 +69,6 @@ msgid "Select"
 msgstr "Seleccionar"
 
 #: Fees.accountDisplay
-#, fuzzy
 msgid "GL Code: 1001"
 msgstr "Código del Libro Mayor\\: 1001"
 
@@ -91,22 +89,18 @@ msgid "(All Products)"
 msgstr "(Todos los productos)"
 
 #: Fees.amount
-#, fuzzy
 msgid "Amount: "
 msgstr "Importe"
 
 #: Fees.amountCalcComplete
-#, fuzzy
 msgid "Amount calculated as: {0}% of an {1}"
 msgstr "Importe calculado como\\: {0}% de un {1}"
 
 #: Fees.amountcalculatedas
-#, fuzzy
 msgid "Amount calculated as: "
 msgstr "Importe calculado como\\: "
 
 #: Fees.calculatefeeas
-#, fuzzy
 msgid "Calculate Fee As:"
 msgstr "Calcular cuota como\\:"
 
@@ -142,7 +136,6 @@ msgid "Daily"
 msgstr "Diariamente"
 
 #: Fees.dailyinstruction
-#, fuzzy
 msgid "If daily, select between the following:"
 msgstr "En caso de ser diariamente, seleccione entre los siguientes\\:"
 
@@ -156,13 +149,11 @@ msgid "Day"
 msgstr "Día"
 
 #: Fees.defaultFees
-#, fuzzy
 msgctxt "Fees.defaultFees"
 msgid "Default fees:"
 msgstr "Cuotas por default\\:"
 
 #: Fees.defaultfees
-#, fuzzy
 msgctxt "Fees.defaultfees"
 msgid "Default fees:"
 msgstr "Cuotas por default\\:"
@@ -190,7 +181,6 @@ msgid "Edit fee information"
 msgstr "Editar información de la cuota"
 
 #: Fees.enteramount
-#, fuzzy
 msgid "Amount:"
 msgstr "Importe\\:"
 
@@ -207,7 +197,6 @@ msgid "fee category"
 msgstr "categoría de la cuota"
 
 #: Fees.error.feename
-#, fuzzy
 msgid "fee name "
 msgstr "nombre de la cuota"
 
@@ -253,7 +242,6 @@ msgid "Fee 04"
 msgstr "Cuota 04 "
 
 #: Fees.feeappliesto
-#, fuzzy
 msgid "Fee Applies To:"
 msgstr "La cuota se aplica a\\: "
 
@@ -270,7 +258,6 @@ msgid "Fee information"
 msgstr "Información de la cuota"
 
 #: Fees.feename
-#, fuzzy
 msgid "Fee Name:"
 msgstr "Nombre de la cuota\\:"
 
@@ -279,7 +266,6 @@ msgid "Fee successfully created."
 msgstr "Cuota creada con éxito."
 
 #: Fees.frequency
-#, fuzzy
 msgctxt "Fees.frequency"
 msgid "Frequency:"
 msgstr "Frecuencia\\:"
@@ -312,19 +298,16 @@ msgid "of every"
 msgstr "de cada"
 
 #: Fees.labelRecurEvery
-#, fuzzy
 msgctxt "Fees.labelRecurEvery"
 msgid "Recur every "
 msgstr "Repetir cada"
 
 #: Fees.labelRecurMonths
-#, fuzzy
 msgctxt "Fees.labelRecurMonths"
 msgid "If months, specify the following:"
 msgstr "Si se tratara de meses, especifique lo siguiente\\:"
 
 #: Fees.labelRecurWeeks
-#, fuzzy
 msgctxt "Fees.labelRecurWeeks"
 msgid "If weeks, specify the following:"
 msgstr "Si se tratara de semanas, especifique lo siguiente\\:"
@@ -335,13 +318,11 @@ msgid "The"
 msgstr "El"
 
 #: Fees.labelWeeks
-#, fuzzy
 msgctxt "Fees.labelWeeks"
 msgid "week(s) "
 msgstr "semana(s)"
 
 #: Fees.mandatory_feename
-#, fuzzy
 msgid "Fee Name "
 msgstr "Nombre de la cuota"
 
@@ -380,12 +361,10 @@ msgid "Monthly"
 msgstr "Mensualmente"
 
 #: Fees.monthlyinstruction
-#, fuzzy
 msgid "If monthly, select between the following:"
 msgstr "En caso de ser mensualmente, seleccione de entre los siguientes\\:"
 
 #: Fees.ofa
-#, fuzzy
 msgid "% of a "
 msgstr "% de un"
 
@@ -395,12 +374,10 @@ msgid "of every"
 msgstr "de cada"
 
 #: Fees.oneTime
-#, fuzzy
 msgid "One time "
 msgstr "Una vez"
 
 #: Fees.onetime
-#, fuzzy
 msgid "One time"
 msgstr "Una vez"
 
@@ -421,7 +398,6 @@ msgid "Preview"
 msgstr "Vista Previa"
 
 #: Fees.previewChangeAppliesTo
-#, fuzzy
 msgid "Change applies to: Existing and future accounts"
 msgstr "El cambio se aplica a\\: Cuentas existentes y futuras"
 
@@ -438,7 +414,6 @@ msgid "Product Fees"
 msgstr "Cuotas del Producto"
 
 #: Fees.recurevery
-#, fuzzy
 msgid "Recur every"
 msgstr "Repetir cada"
 
@@ -455,23 +430,19 @@ msgid "(Savings)"
 msgstr "(Ahorros)"
 
 #: Fees.selecttimeofcharge
-#, fuzzy
 msgid "Select time of charge for one time fees:"
 msgstr ""
 "Seleccionar el momento del cargo para cuotas que se aplican una sola vez\\:"
 
 #: Fees.setglcode
-#, fuzzy
 msgid "Set GL Code:"
 msgstr "Definir Código del Libro Mayor\\:"
 
 #: Fees.smalldefinenewfee
-#, fuzzy
 msgid "define a new fee "
 msgstr "definir una nueva cuota"
 
 #: Fees.status
-#, fuzzy
 msgid "Status:"
 msgstr "Estatus\\:"
 
@@ -497,7 +468,6 @@ msgid "Thursday"
 msgstr "Jueves"
 
 #: Fees.timeToCharge
-#, fuzzy
 msgid "Time of charge:"
 msgstr "Momento del cargo\\:"
 
@@ -522,7 +492,6 @@ msgid "Weekly"
 msgstr "Semanalmente"
 
 #: Fees.weeklyinstruction
-#, fuzzy
 msgid "If weekly, select between the following:"
 msgstr "Si fuera semanalmente, seleccione de entre los siguientes\\:"
 
@@ -680,7 +649,6 @@ msgid "The action is not permissible."
 msgstr "Esta acción no está permitida."
 
 #: meeting.frequency
-#, fuzzy
 msgctxt "meeting.frequency"
 msgid "Frequency:"
 msgstr "Frecuencia\\:"
@@ -701,19 +669,16 @@ msgid "of every"
 msgstr "de cada"
 
 #: meeting.labelRecurEvery
-#, fuzzy
 msgctxt "meeting.labelRecurEvery"
 msgid "Recur every "
 msgstr "Repetir cada"
 
 #: meeting.labelRecurMonths
-#, fuzzy
 msgctxt "meeting.labelRecurMonths"
 msgid "If months, specify the following:"
 msgstr "Si se tratara de meses, especifique lo siguiente\\:"
 
 #: meeting.labelRecurWeeks
-#, fuzzy
 msgctxt "meeting.labelRecurWeeks"
 msgid "If weeks, specify the following:"
 msgstr "Si se tratara de semanas, especifique lo siguiente\\:"
@@ -724,7 +689,6 @@ msgid "The"
 msgstr "La"
 
 #: meeting.labelWeeks
-#, fuzzy
 msgctxt "meeting.labelWeeks"
 msgid "week(s) "
 msgstr "semana(s)"

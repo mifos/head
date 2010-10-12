@@ -228,7 +228,6 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         TestObjectFactory.updateObject(loan);
         try {
             loan.adjustPmnt("loan account has been adjusted by test code");
-            Assert.fail();
         } catch (AccountException e) {
             Assert.assertEquals("exception.accounts.ApplicationException.CannotAdjust", e.getKey());
         }

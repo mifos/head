@@ -1,6 +1,5 @@
 # extracted from security.properties
 #. extracted from security.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

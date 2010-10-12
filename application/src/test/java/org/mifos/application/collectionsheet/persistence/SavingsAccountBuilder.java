@@ -63,7 +63,7 @@ public class SavingsAccountBuilder {
     private final Integer offsettingAllowable = Integer.valueOf(1);
 
     private final Double interestRate = Double.valueOf("4.0");
-    private final InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
+    private InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
 
     private SavingsType savingsType = SavingsType.VOLUNTARY;
     private RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
@@ -75,6 +75,8 @@ public class SavingsAccountBuilder {
             savingsTransactionActivityHelper);
     private Set<AccountActionDateEntity> scheduledPayments = new LinkedHashSet<AccountActionDateEntity>();
     private List<Holiday> holidays = new ArrayList<Holiday>();
+    private DateTime activationDate = new DateTime();
+    private Money interestToBePosted = TestUtils.createMoney("0");
 
     public SavingsBO build() {
 
@@ -82,14 +84,24 @@ public class SavingsAccountBuilder {
                 savingsPaymentStrategy, savingsTransactionActivityHelper, scheduledPayments, interestRate,
                 interestCalcType, accountState, customer, offsettingAllowable,
                 scheduleForInterestCalculation, recommendedAmountUnit, recommendedAmount, createdDate,
-                createdByUserId, holidays);
+                createdByUserId, holidays, activationDate);
         savingsBO.setCustomerPersistence(customerDao);
+        savingsBO.setInterestToBePosted(interestToBePosted);
 
         return savingsBO;
     }
 
     public SavingsAccountBuilder withSavingsProduct(final SavingsOfferingBO withSavingsProduct) {
         this.savingsProduct = withSavingsProduct;
+        if (withSavingsProduct.getRecommendedAmntUnit() != null) {
+            this.recommendedAmountUnit = RecommendedAmountUnit.fromInt(withSavingsProduct.getRecommendedAmntUnit().getId());
+        }
+        this.recommendedAmount = withSavingsProduct.getRecommendedAmount();
+        return this;
+    }
+
+    public SavingsAccountBuilder withInterestCalcType(final InterestCalcType interestCalcType) {
+        this.interestCalcType = interestCalcType;
         return this;
     }
 
@@ -173,6 +185,16 @@ public class SavingsAccountBuilder {
         for (Holiday holiday : holidays) {
             this.holidays.add(holiday);
         }
+        return this;
+    }
+
+    public SavingsAccountBuilder withActivationDate(DateTime withActivationDate) {
+        this.activationDate = withActivationDate;
+        return this;
+    }
+
+    public SavingsAccountBuilder withInterestToBePostedAmount(Money interestToBePosted) {
+        this.interestToBePosted = interestToBePosted;
         return this;
     }
 }

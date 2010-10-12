@@ -28,6 +28,7 @@ import java.util.Locale;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.exceptions.OfficeException;
@@ -224,6 +225,11 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
 
         List<OfficeDto> parents = this.officeDao.findActiveParents(officeLevel);
 
+        for (OfficeDto office : parents) {
+            String levelName = MessageLookup.getInstance().lookup(office.getLookupNameKey());
+            office.setLevelName(levelName);
+        }
+
         return new OfficeFormDto(customFields, parents);
     }
 
@@ -276,13 +282,19 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
             //Shahid - this is hackish solution to return officeId and globalOfficeNum via ListElement, it should be fixed, at least
             //a proper data storage class can be created
             ListElement element = new ListElement(new Integer(officeBO.getOfficeId()), officeBO.getGlobalOfficeNum());
+            StaticHibernateUtil.commitTransaction();
             return element;
         } catch (OfficeValidationException e) {
+            StaticHibernateUtil.rollbackTransaction();
             throw new BusinessRuleException(e.getMessage());
         } catch (PersistenceException e) {
+            StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } catch (OfficeException e) {
+            StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
         }
     }
 

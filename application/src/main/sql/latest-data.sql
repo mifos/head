@@ -69,8 +69,10 @@ insert into applied_upgrades(upgrade_id) values(1283320210);
 insert into applied_upgrades(upgrade_id) values(1283416834);
 insert into applied_upgrades(upgrade_id) values(1283765911);
 insert into applied_upgrades(upgrade_id) values(1284365506);
+insert into applied_upgrades(upgrade_id) values(1284986654);
 insert into applied_upgrades(upgrade_id) values(1285177663);
 insert into applied_upgrades(upgrade_id) values(1286195484);
+insert into applied_upgrades(upgrade_id) values(1286780611);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -3293,4 +3295,11 @@ insert into event_sources (id, entity_type_id, event_id, description) values
     (12, (select entity_type_id from entity_master where entity_type = 'Savings'), 1, 'Create Savings');
 insert into event_sources (id, entity_type_id, event_id, description) values
     (13, (select entity_type_id from entity_master where entity_type = 'Savings'), 2, 'View Savings');
-/* Upgrade - 1283416834 */
+/* Upgrade - 1283416834*/
+
+/* Upgrade - 1284986654 Additional event sources for Data migration*/
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (14, (select entity_type_id from entity_master where entity_type = 'Office'), 1, 'Create Office');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (15, (select entity_type_id from entity_master where entity_type = 'Personnel'), 1, 'Create Personnel');
+/* Upgrade - 1284986654 */

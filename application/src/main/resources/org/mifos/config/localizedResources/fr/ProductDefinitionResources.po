@@ -1,5 +1,4 @@
 #. extracted from ProductDefinitionResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -26,7 +25,6 @@ msgstr ""
 "essayer de nouveau."
 
 #: errors.calcinstallmenttype
-#, fuzzy
 msgid "Please Specify the Calculate # of Installments Type."
 msgstr "Veuiller indiquer un type de calcul de montant du prêt."
 
@@ -87,7 +85,6 @@ msgstr ""
 "doivent être une valeur comprise entre {3} et {4}, en incluant les deux."
 
 #: errors.defaultinstallments
-#, fuzzy
 msgid ""
 "Please specify valid Default # of Installments. Default # of Installments "
 "should be between the Min and Max # of Installments, inclusive of the two "
@@ -106,7 +103,6 @@ msgid "The default loan amount format {0} {1} is invalid because {2}"
 msgstr "Le format {0} {1} du montant par défaut du prêt est invalide car {2}"
 
 #: errors.definstallments
-#, fuzzy
 msgid "Please Specify the valid Default # of Installments {0} {1}."
 msgstr ""
 "Veuiller indiquer un nombre de remboursements par défaut valide {0} {1}."
@@ -166,7 +162,6 @@ msgid "The frequency of the product and the fee \"{0}\" does not match."
 msgstr "La fréquence de produit et le frais \"{0}\" ne coincident pas."
 
 #: errors.feeCurrencyMatch
-#, fuzzy
 msgid "The currency of the product and the fee \"{0}\" does not match."
 msgstr "La fréquence de produit et le frais \"{0}\" ne coincident pas."
 
@@ -252,7 +247,6 @@ msgid "The length of {0} can not be greater than {1} character(s)."
 msgstr "La longueur de {0} ne peut pas être plus de {1} charactère(s)."
 
 #: errors.maxinstallments
-#, fuzzy
 msgid "Please Specify the valid Max # of Installments {0} {1}."
 msgstr "Veuiller indiquer un nombre Max de remboursements valide {0} {1}."
 
@@ -314,7 +308,6 @@ msgid "The length of {0} can not be less than {1} character(s)."
 msgstr "La longueur de {0} ne peut pas être moins de {1} charactère(s)."
 
 #: errors.mininstallments
-#, fuzzy
 msgid "Please Specify the valid Min # of Installments {0} {1}."
 msgstr "Veuiller indiquer un nombre Min de remboursements valide {0} {1}."
 
@@ -376,7 +369,6 @@ msgstr ""
 "la date spécifiée est invalide."
 
 #: errors.startendinstallment
-#, fuzzy
 msgid ""
 "Please Specify the valid End Range Loan Amount. End Range Loan Amount must "
 "be greater than the Start Range Loan Amount for # of last loan Installments "
@@ -444,7 +436,6 @@ msgid "GL code for principal"
 msgstr "Code GL du principal"
 
 #: product.Glcodefor
-#, fuzzy
 msgid "GL code for"
 msgstr "Code GL code de"
 
@@ -525,12 +516,10 @@ msgid "Balance used for {0} calculation."
 msgstr "Balance utilisée pour {0} calcul."
 
 #: product.balanceInterest
-#, fuzzy
 msgid "Balance used for "
 msgstr "Balance utilisée pour"
 
 #: product.balusedfor
-#, fuzzy
 msgid "Balance used for"
 msgstr "Balance utilisée pour"
 
@@ -637,7 +626,6 @@ msgid "Click Cancel to return to"
 msgstr "Cliquer sur annuler pour revenir aux"
 
 #: product.clickcancelprdmixinfo
-#, fuzzy
 msgid ""
 "Click Cancel to return to product mix deatils without submitting "
 "information."
@@ -734,7 +722,6 @@ msgid "Complete the fields below."
 msgstr "Compléter le champ ci-dessous."
 
 #: product.completeFieldsInstructional
-#, fuzzy
 msgid ""
 "Complete the fields below. Then click Preview. Click Cancel to return to "
 "Admin without submitting information."
@@ -792,7 +779,6 @@ msgid "Define new category"
 msgstr "Définir une nouvelle catégorie"
 
 #: product.defineMixForNewProduct
-#, fuzzy
 msgid "define mix for a new product"
 msgstr "Définir une combinaison pour le nouveau produit"
 
@@ -801,7 +787,6 @@ msgid "Define a new {0} product."
 msgstr "Définir un nouveau {0} produit."
 
 #: product.definst
-#, fuzzy
 msgid "Default # of installments"
 msgstr "Nbre des paiements par défaut"
 
@@ -834,7 +819,6 @@ msgid "dormancy days"
 msgstr ""
 
 #: product.editCancelCat
-#, fuzzy
 msgid ""
 "Edit the fields below. Then click Preview. Click Cancel to return to "
 "category details without submitting information."
@@ -932,7 +916,6 @@ msgid "for # of last loan Installments at row"
 msgstr ""
 
 #: product.freq
-#, fuzzy
 msgid "Frequency of"
 msgstr "Fréquence de"
 
@@ -949,12 +932,10 @@ msgid "Frequency of installments"
 msgstr "Fréquence des paiements"
 
 #: product.frequency
-#, fuzzy
 msgid "Frequency of "
 msgstr "Fréquence de"
 
 #: product.glCodeFor
-#, fuzzy
 msgid "GL code for "
 msgstr "Code GL code de"
 
@@ -1045,7 +1026,6 @@ msgid "Interest rate type"
 msgstr "Type de taux d'intérêt"
 
 #: product.lastloanamount
-#, fuzzy
 msgid "Last loan amount"
 msgstr "Montant max du prêt"
 
@@ -1158,7 +1138,6 @@ msgid "Max amount per withdrawal"
 msgstr "Montant Max par retrait"
 
 #: product.maxinst
-#, fuzzy
 msgid "Max # of installments"
 msgstr "Nbre max des paiements"
 
@@ -1179,7 +1158,6 @@ msgid "Min {0} amount"
 msgstr "Min {0} montant"
 
 #: product.minBalForCalc
-#, fuzzy
 msgid "Minimum balance required for {0} calculation"
 msgstr "Balance minimale requise pour {0} calcul."
 
@@ -1196,7 +1174,6 @@ msgid "Min balance required for"
 msgstr "Balance minimale requise pour"
 
 #: product.mininst
-#, fuzzy
 msgid "Min # of installments"
 msgstr "Nbre max des paiements"
 
@@ -1387,7 +1364,6 @@ msgid "Product"
 msgstr "Produit"
 
 #: product.productAssignedId
-#, fuzzy
 msgid "{0} product has been assigned the system ID number."
 msgstr "{0} a été attribué le ID système suivant"
 
@@ -1504,7 +1480,6 @@ msgid "Review &amp; submit"
 msgstr "Réafficher et amp; Valider"
 
 #: product.sameforallinstallment
-#, fuzzy
 msgid "Same for all Loans"
 msgstr "Le même pour tous les prêts"
 
@@ -1681,12 +1656,10 @@ msgid "Time period for {0} calculation."
 msgstr "Période pour {0} calcul."
 
 #: product.timePeriod
-#, fuzzy
 msgid "Time period for "
 msgstr "Période pour"
 
 #: product.timeper
-#, fuzzy
 msgid "Time period for"
 msgstr "Période pour"
 

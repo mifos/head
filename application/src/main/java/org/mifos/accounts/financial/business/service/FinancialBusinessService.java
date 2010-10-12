@@ -57,9 +57,6 @@ import org.mifos.security.util.UserContext;
 
 public class FinancialBusinessService implements BusinessService {
 
-    /**
-     * Added by Keith for testing
-     */
     public COABO getGlAccount(String glcode) throws FinancialException {
         return ChartOfAccountsCache.get(glcode);
     }
@@ -82,8 +79,7 @@ public class FinancialBusinessService implements BusinessService {
         BaseFinancialActivity baseFinancialActivity = null;
         if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.LOAN_REPAYMENT.getValue()) {
             baseFinancialActivity = new LoanRepaymentFinancialActivity(accounttrxn);
-        } else if (accounttrxn.getAccountActionEntity().getId().shortValue() == (AccountActionTypes.SAVINGS_INTEREST_POSTING
-                .getValue())) {
+        } else if (accounttrxn.getAccountActionEntity().getId().shortValue() == (AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue())) {
             baseFinancialActivity = new SavingsInterestPostingFinancialActivity(accounttrxn);
         } else if (accounttrxn.getAccountActionEntity().getId().shortValue() == (AccountActionTypes.SAVINGS_WITHDRAWAL
                 .getValue())) {

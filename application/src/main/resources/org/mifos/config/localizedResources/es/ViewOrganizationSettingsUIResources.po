@@ -123,13 +123,11 @@ msgstr "Modo final de redondeo"
 
 # Need context
 #: VOS.finalRoundOffMultiple
-#, fuzzy
 msgid "Final Round Off Multiple"
 msgstr "Final Round Off Multiple"
 
 # Need context
 #: VOS.initialRoundOffMultiple
-#, fuzzy
 msgid "Initial Round Off Multiple"
 msgstr "Multiplo de Redondeo Inicial"
 

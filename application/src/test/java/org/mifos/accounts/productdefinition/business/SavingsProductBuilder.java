@@ -26,8 +26,10 @@ import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
+import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.framework.TestUtils;
@@ -39,15 +41,15 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class SavingsProductBuilder {
 
-    private final MeetingBO scheduleForInterestCalculationMeeting = new MeetingBuilder()
+    private MeetingBO scheduleForInterestCalculationMeeting = new MeetingBuilder()
             .savingsInterestCalulationSchedule()
             .monthly().every(1).build();
-    private final MeetingBO scheduleForInterestPostingMeeting = new MeetingBuilder().savingsInterestPostingSchedule()
+    private MeetingBO scheduleForInterestPostingMeeting = new MeetingBuilder().savingsInterestPostingSchedule()
             .monthly().every(1).build();
     private Money maxAmountOfWithdrawal = new Money(Money.getDefaultCurrency(), "50.0");
     private final Double interestRate = Double.valueOf("2.0");
     private SavingsType savingsType = SavingsType.VOLUNTARY;
-    private final InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
+    private InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
 
     // PRD_OFFERING FIELDS
     private String globalProductNumber = "XXXXX-1111";
@@ -62,6 +64,8 @@ public class SavingsProductBuilder {
     private ProductCategoryBO category = new ProductCategoryBO(Short.valueOf("1"), "savtest");
     private final PrdStatus productStatus = PrdStatus.SAVINGS_ACTIVE;
     private PrdStatusEntity productStatusEntity;
+    private RecommendedAmountUnit mandatoryGroupTrackingType = null;
+    private Money mandatoryOrRecommendedAmount = TestUtils.createMoney("25.0");
 
     public SavingsOfferingBO buildForUnitTests() {
         return build();
@@ -91,12 +95,23 @@ public class SavingsProductBuilder {
 
         savingsProduct.setTimePerForInstcalc(scheduleForInstcalc);
         savingsProduct.setTimePerForInstcalc(scheduleForInterestPosting);
+
+        if (this.mandatoryGroupTrackingType != null) {
+            savingsProduct.setRecommendedAmntUnit(this.mandatoryGroupTrackingType);
+        }
+        savingsProduct.setRecommendedAmount(mandatoryOrRecommendedAmount);
         return savingsProduct;
     }
 
     public SavingsProductBuilder withName(final String withName) {
         this.name = withName;
         this.globalProductNumber = "XXX-" + withName;
+        return this;
+    }
+
+
+    public SavingsProductBuilder withInterestCalcType(final InterestCalcType interestCalcType) {
+        this.interestCalcType = interestCalcType;
         return this;
     }
 
@@ -132,6 +147,26 @@ public class SavingsProductBuilder {
 
     public SavingsProductBuilder withMaxWithdrawalAmount(final Money withMaxWithdrawal) {
         this.maxAmountOfWithdrawal = withMaxWithdrawal;
+        return this;
+    }
+
+    public SavingsProductBuilder trackedOnCompleteGroup() {
+        this.mandatoryGroupTrackingType = RecommendedAmountUnit.COMPLETE_GROUP;
+        return this;
+    }
+
+    public SavingsProductBuilder trackedPerIndividual() {
+        this.mandatoryGroupTrackingType = RecommendedAmountUnit.PER_INDIVIDUAL;
+        return this;
+    }
+
+    public SavingsProductBuilder withMandatoryAmount(String mandatoryAmount) {
+        this.mandatoryOrRecommendedAmount = TestUtils.createMoney(mandatoryAmount);
+        return this;
+    }
+
+    public SavingsProductBuilder withInterestPostingSchedule(MeetingBO interestPostingMeeting) {
+        this.scheduleForInterestPostingMeeting = interestPostingMeeting;
         return this;
     }
 }

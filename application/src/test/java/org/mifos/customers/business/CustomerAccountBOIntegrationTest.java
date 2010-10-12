@@ -92,6 +92,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
     @Before
     public void setUp() throws Exception {
+        enableCustomWorkingDays();
         TestDatabase.resetMySQLDatabase();
         userContext = TestObjectFactory.getContext();
     }

@@ -60,6 +60,16 @@ public class ScheduledEventFactory {
 
     public static ScheduledEvent createScheduledEventFrom(final MeetingBO meeting) {
 
+//        switch (meeting.getMeetingTypeEnum()) {
+//            case SAVINGS_INTEREST_CALCULATION_TIME_PERIOD:
+//                return createSavingsInterestCalculationScheduledEvent(meeting);
+//            case SAVINGS_INTEREST_POSTING:
+//
+//                break;
+//            default:
+//                break;
+//        }
+
         RecurrenceType period = meeting.getRecurrenceType();
         int every = meeting.getRecurAfter();
         int dayOfWeek = 0;

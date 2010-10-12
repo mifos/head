@@ -71,6 +71,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -388,8 +389,8 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldGetAllQuestionGroups() {
-        QuestionGroup questionGroup1 = getQuestionGroup(0, "QG0", getSections("S0_0"));
-        QuestionGroup questionGroup2 = getQuestionGroup(1, "QG1", getSections("S1_0", "S1_1"));
+        QuestionGroup questionGroup1 = getQuestionGroup(0, "QG0","View","Loan", QuestionGroupState.ACTIVE, true, getSections("S0_0"));
+        QuestionGroup questionGroup2 = getQuestionGroup(1, "QG1","View","Loan", QuestionGroupState.ACTIVE, true, getSections("S1_0", "S1_1"));
         when(questionGroupDao.getDetailsAll()).thenReturn(asList(questionGroup1, questionGroup2));
         List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getAllQuestionGroups();
         Assert.assertNotNull("getAllQuestionGroups should not return null", questionGroupDetails);
@@ -588,7 +589,7 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldGetAllQuestionGroupsByEventSource() throws SystemException {
-        List<QuestionGroup> questionGroups = asList(getQuestionGroup(1, "Title1", getSections("Section1")), getQuestionGroup(2, "Title2", getSections("Section2")));
+        List<QuestionGroup> questionGroups = asList(getQuestionGroup(1, "Title1","View","Loan", QuestionGroupState.ACTIVE, true, getSections("Section1")), getQuestionGroup(2, "Title2","View","Loan", QuestionGroupState.ACTIVE, true, getSections("Section2")));
         when(questionGroupDao.retrieveQuestionGroupsByEventSource("Create", "Client")).thenReturn(questionGroups);
         List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(new EventSourceDto("Create", "Client", "Create.Client"));
         assertThat(questionGroupDetails, is(notNullValue()));
@@ -601,10 +602,10 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldGetAllQuestionGroupsByEventSourceAndEntityId() {
-        QuestionGroup questionGroup1 = getQuestionGroup(1, "Title1", asList(getSectionWithQuestions(222, "Section1", "Question1", "Question2")));
-        QuestionGroup questionGroup2 = getQuestionGroup(2, "Title2", asList(getSectionWithQuestions(222, "Section2", "Question2"),
+        QuestionGroup questionGroup1 = getQuestionGroup(1, "Title1","View","Loan", QuestionGroupState.ACTIVE, true, asList(getSectionWithQuestions(222, "Section1", "Question1", "Question2")));
+        QuestionGroup questionGroup2 = getQuestionGroup(2, "Title2","View","Loan", QuestionGroupState.ACTIVE, true, asList(getSectionWithQuestions(222, "Section2", "Question2"),
                 getSectionWithQuestions(222, "SectionN", "q1", "q2", "q3", "q4")));
-        QuestionGroup questionGroup3 = getQuestionGroup(3, "Title3", asList(getSectionWithOneMultiSelectQuestion(222, "Section3", "Question3", "Choice1", "Choice2", "Choice3", "Choice4")));
+        QuestionGroup questionGroup3 = getQuestionGroup(3, "Title3","View","Loan", QuestionGroupState.ACTIVE, true, asList(getSectionWithOneMultiSelectQuestion(222, "Section3", "Question3", "Choice1", "Choice2", "Choice3", "Choice4")));
         List<QuestionGroup> questionGroups = asList(questionGroup1, questionGroup2, questionGroup3);
         when(questionGroupDao.retrieveQuestionGroupsByEventSource("Create", "Client")).thenReturn(questionGroups);
         List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getQuestionGroups(new EventSourceDto("Create", "Client", "Create.Client"));
@@ -852,7 +853,7 @@ public class QuestionnaireServiceTest {
         assertThat(qgInstanceId, is(789));
         verify(questionGroupInstanceDao).create(any(QuestionGroupInstance.class));
     }
-    
+
     @Test
     public void shouldSaveQuestionDto() {
         QuestionDtoBuilder questionDtoBuilder = new QuestionDtoBuilder();
@@ -863,6 +864,7 @@ public class QuestionnaireServiceTest {
         verify(questionnaireValidator).validateForDefineQuestion(questionDto);
         verify(questionDao).create(any(QuestionEntity.class));
     }
+
 
     private EventSourceEntity getEventSourceEntity(int id) {
         EventSourceEntity eventSource = new EventSourceEntity();
@@ -886,12 +888,37 @@ public class QuestionnaireServiceTest {
         assertThat(calendar.get(Calendar.DATE), is(day));
     }
 
-    private QuestionGroup getQuestionGroup(int questionGroupId, String title, List<Section> sections) {
+    private QuestionGroup getQuestionGroup(int id, String title, List<Section> sections) {
+        QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setId(id);
+        questionGroup.setTitle(title);
+        questionGroup.setSections(sections);
+        return questionGroup;
+    }
+
+    private QuestionGroup getQuestionGroup(int questionGroupId, String title, String event, String source, QuestionGroupState state, boolean editable, List<Section> sections) {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setId(questionGroupId);
         questionGroup.setTitle(title);
         questionGroup.setSections(sections);
+        questionGroup.setState(state);
+        questionGroup.setEditable(editable);
+        questionGroup.setEventSources(getEventSources(event, source));
         return questionGroup;
+    }
+
+    private HashSet<EventSourceEntity> getEventSources(String event, String source) {
+        EventSourceEntity eventSourceEntity = new EventSourceEntity();
+        EventEntity eventEntity = new EventEntity();
+        eventEntity.setName(event);
+        eventSourceEntity.setEvent(eventEntity);
+        EntityMaster entityMaster = new EntityMaster();
+        entityMaster.setEntityType(source);
+        eventSourceEntity.setSource(entityMaster);
+
+        HashSet<EventSourceEntity> eventSources = new HashSet<EventSourceEntity>();
+        eventSources.add(eventSourceEntity);
+        return eventSources;
     }
 
     private SectionDetail getSectionDetailWithQuestions(String name, List<QuestionDetail> questionDetails, String value, boolean mandatory) {

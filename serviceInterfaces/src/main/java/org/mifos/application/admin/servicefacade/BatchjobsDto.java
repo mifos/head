@@ -22,6 +22,7 @@ package org.mifos.application.admin.servicefacade;
 
 import java.util.Date;
 
+@SuppressWarnings("PMD.ExcessiveParameterList")
 public class BatchjobsDto {
     private final String name;
     private final String frequency;
@@ -29,20 +30,24 @@ public class BatchjobsDto {
     private final int priority;
     private final String lastRunStatus;
     private final long lastStartTime;
+    private final long lastSuccessfulRun;
     private final long nextStartTime;
     private final int state;
+    private final String failDescription;
 
 
     public BatchjobsDto(String name, String frequency, String taskType, int priority, String lastRunStatus, Date lastStartTime,
-            Date nextStartTime, int state) {
+            Date lastSuccessfulRun, Date nextStartTime, int state, String failDescription) {
         this.name = name;
         this.frequency = frequency;
         this.taskType = taskType;
         this.priority = priority;
         this.lastRunStatus = lastRunStatus;
         this.lastStartTime = lastStartTime.getTime();
+        this.lastSuccessfulRun = lastSuccessfulRun.getTime();
         this.nextStartTime = nextStartTime.getTime();
         this.state = state;
+        this.failDescription = failDescription;
     }
 
     public String getName() {
@@ -69,12 +74,20 @@ public class BatchjobsDto {
         return new Date(this.lastStartTime);
     }
 
+    public Date getLastSuccessfulRun() {
+        return new Date(lastSuccessfulRun);
+    }
+
     public Date getNextStartTime() {
         return new Date(this.nextStartTime);
     }
 
     public int getState() {
         return this.state;
+    }
+
+    public String getFailDescription() {
+        return this.failDescription;
     }
 
 }

@@ -1,5 +1,4 @@
 #. extracted from adminUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -46,7 +45,6 @@ msgid "accounts"
 msgstr "comptes"
 
 #: admin.manage.accounts
-#, fuzzy
 msgid "Manage accounts"
 msgstr "Gérer {0} comptes"
 
@@ -297,12 +295,10 @@ msgid "products"
 msgstr "Produits"
 
 #: admin.questions
-#, fuzzy
 msgid "Questions"
 msgstr "questions"
 
 #: admin.question
-#, fuzzy
 msgid "Question"
 msgstr "questions"
 
@@ -343,7 +339,6 @@ msgid "Reverse {0} Disbursal"
 msgstr "Redresser le déboursement du {0}"
 
 #: admin.shortname
-#, fuzzy
 msgid "Admin"
 msgstr "éditique"
 
@@ -360,7 +355,6 @@ msgid "Manage surveys"
 msgstr ""
 
 #: admin.view.surveys
-#, fuzzy
 msgctxt "admin.view.surveys"
 msgid "View surveys"
 msgstr "Afficher études"
@@ -502,7 +496,6 @@ msgid "System Information"
 msgstr "Informations système"
 
 #: admin.view.sysinfo.title
-#, fuzzy
 msgid "View System Information"
 msgstr "Informations système"
 
@@ -620,7 +613,6 @@ msgid "View savings products"
 msgstr "View savings products"
 
 #: admin.viewsurvey
-#, fuzzy
 msgctxt "admin.viewsurvey"
 msgid "View surveys"
 msgstr "Afficher études"

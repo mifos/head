@@ -42,7 +42,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
      	
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="LoanAccountDetail" />
+	<span id="page.id" title="LoanAccountDetail" ></span>
 	
 		<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
@@ -640,6 +640,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								height="8"></td>
 						</tr>
 					</table>
+					
 					<table width="100%" border="0" cellpadding="2" cellspacing="0"
 						class="bluetableborder">
 						<tr>
@@ -668,13 +669,14 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</span></td>
 						</tr>
 					</table>
+					<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'questionGroupInstances')}"
+			   				var="questionGroupInstances" />
 					<table width="95%" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><img src="pages/framework/images/trans.gif" width="7"
 								height="8"></td>
 						</tr>
 					</table>
-					<c:if test="${surveyCount}">
 						<table width="100%" border="0" cellpadding="2" cellspacing="0"
 							class="bluetableborder">
 							<tr>
@@ -686,27 +688,33 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								<td colspan="2" class="paddingL10"><img
 									src="pages/framework/images/trans.gif" width="10" height="2"></td>
 							</tr>
-							<c:forEach items="${requestScope.customerSurveys}"
-								var="surveyInstance">
-								<tr>
-									<td width="70%" class="paddingL10"><span
-										class="fontnormal8pt"> <a id="loanaccountdetail.link.survey"
-										href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=loan">
-									<c:out value="${surveyInstance.surveyName}" /> </a> </span></td>
-									<td width="30%" align="left" class="paddingL10"><span
-										class="fontnormal8pt"> <c:out
-										value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,surveyInstance.dateConducted)}" />
-									</span></td>
-								</tr>
-							</c:forEach>
+								<c:if test="${!empty questionGroupInstances}">
+						            <c:forEach items="${questionGroupInstances}" var="questionGroupInstance">
+						              <tr>
+						                <td width="70%" class="paddingL10">
+						                  <span class="fontnormal8pt">
+						                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${loanInformationDto.accountId}&instanceId=${questionGroupInstance.id}&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+						                      <c:out value="${questionGroupInstance.questionGroupTitle}"/>
+						                    </a>
+						                  </span>
+						                </td>
+						                <td width="30%" align="left" class="paddingL10">
+						                  <span class="fontnormal8pt">
+						                    <label id="label.${questionGroupInstance.id}">
+						                        <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale, questionGroupInstance.dateCompleted)}" />
+						                    </label>
+						                  </span>
+						                </td>
+						              </tr>
+						            </c:forEach>
+								</c:if>
 							<tr>
-								<td colspan="2" align="right" class="paddingleft05"><span
-									class="fontnormal8pt"> <a id="loanaccountdetail.link.attachSurvey"
-									href="surveyInstanceAction.do?method=choosesurvey&globalNum=${loanInformationDto.globalAccountNum}&surveyType=loan">
-								<mifos:mifoslabel name="Surveys.attachasurvey"
-									bundle="SurveysUIResources" /> </a> <br>
-								<a id="loanaccountdetail.link.viewAllSurveys" href="surveysAction.do?method=mainpage"> <mifos:mifoslabel
-									name="Surveys.viewallsurveys" bundle="SurveysUIResources" /> </a>
+								<td colspan="2" align="right" class="paddingleft05">
+								<span class="fontnormal8pt">
+									<a id="loanaccountdetail.link.attachSurvey" href="questionnaire.ftl?source=Loan&event=View&entityId=${loanInformationDto.accountId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+										<mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources" />
+									</a><br>
+								</span>
 						</table>
 						<table width="95%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
@@ -714,7 +722,6 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 									height="8"></td>
 							</tr>
 						</table>
-					</c:if>
 					<table width="100%" border="0" cellpadding="2" cellspacing="0"
 						class="bluetableborder">
 						<tr>

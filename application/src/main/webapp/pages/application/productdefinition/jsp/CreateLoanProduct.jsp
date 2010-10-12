@@ -354,6 +354,41 @@ explanation of the license and how it is applied.
 								<table width="93%" border="0" cellpadding="3" cellspacing="0">
 									<tr>
 										<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
+											name="product.questiongroups" bundle="ProductDefUIResources" />
+											<br>
+											<br>
+										</td>
+									</tr>
+                                    <tr class="fontnormal">
+                                        <td width="30%" align="right" valign="top"><mifos:mifoslabel
+                                            name="product.assocquestiongroups" bundle="ProductDefUIResources"
+                                            isColonRequired="yes" /></td>
+                                        <td width="70%" valign="top">
+                                        <table width="80%" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td class="fontnormal"><mifos:mifoslabel
+                                                    name="product.clickquestiongroups" bundle="ProductDefUIResources" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><img src="pages/framework/images/trans.gif"
+                                                    width="1" height="1"></td>
+                                            </tr>
+                                        </table>
+                                        <c:set var="SrcQGList" scope="request"
+                                            value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SrcQGList')}" />
+                                        <c:set var="SelectedQGList" scope="request"
+                                            value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SelectedQGList')}" />
+                                        <mifos:MifosSelect property="loanOfferingQGs"
+                                            input="SrcQGList" output="SelectedQGList"
+                                            property1="id" property2="title" multiple="true">
+                                        </mifos:MifosSelect></td>
+                                    </tr>
+
+								</table>
+								<table width="93%" border="0" cellpadding="3" cellspacing="0">
+									<tr>
+										<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
 											name="product.loanamount" bundle="ProductDefUIResources" /><br>
 										<br>
 										</td>
@@ -1117,7 +1152,7 @@ explanation of the license and how it is applied.
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center"><html-el:submit styleId="createLoanProduct.button.preview" styleClass="buttn"
-												onclick="transferData(this.form.loanOfferingFunds);transferData(this.form.prdOfferinFees);">
+												onclick="transferData(this.form.loanOfferingQGs);transferData(this.form.loanOfferingFunds);transferData(this.form.prdOfferinFees);">
 												<mifos:mifoslabel name="product.preview"
 													bundle="ProductDefUIResources" />
 											</html-el:submit> &nbsp; <html-el:button styleId="createLoanProduct.button.cancel" property="cancel"

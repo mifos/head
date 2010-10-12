@@ -201,7 +201,6 @@ msgid "EMI type is not supported."
 msgstr "不支持的EMI类型。"
 
 #: errors.externalid
-#, fuzzy
 msgid "Please specify required external ID."
 msgstr "请填写必要的信息。"
 
@@ -238,7 +237,6 @@ msgid "Please specify loan purpose for the selected client(s)."
 msgstr "请为选中的客户指定贷款用途。"
 
 #: errors.individualsourceoffundfield
-#, fuzzy
 msgid "Please specify source of fund for the selected client(s)."
 msgstr "请为选中的客户指定贷款用途。"
 
@@ -615,7 +613,6 @@ msgid "Edit"
 msgstr "编辑"
 
 #: loan.EditStatus
-#, fuzzy
 msgid "Edit status"
 msgstr "编辑状态"
 
@@ -659,7 +656,6 @@ msgid "/"
 msgstr "/"
 
 #: loan.TimeOfDisbursementFees
-#, fuzzy
 msgid "Fee deducted at disbursement"
 msgstr "付款时扣除利息{0}"
 
@@ -697,7 +693,6 @@ msgid "account by ID  "
 msgstr ""
 
 #: loan.accountStatuschanged
-#, fuzzy
 msgid "account status will be changed to cancelled."
 msgstr "状态将被改为已取消。"
 
@@ -729,7 +724,6 @@ msgid "accounts"
 msgstr "账户"
 
 #: loan.accsWithFollowingIdCreated
-#, fuzzy
 msgid "accounts with the following IDs have been created"
 msgstr "下列ID已创建"
 

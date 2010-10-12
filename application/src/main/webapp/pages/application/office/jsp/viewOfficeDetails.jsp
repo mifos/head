@@ -182,7 +182,13 @@ explanation of the license and how it is applied.
 											</c:if>
 										</c:forEach>
 									</c:forEach>
-									</c:if>								</td>
+									</c:if>
+									<br/>
+									<c:set var="questionnaireFor" scope="session" value="${officeDto.name}"/>
+									<a id="officeDetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${officeDto.id}&event=Create&source=Office&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+                                		<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
+                            		</a>                        		
+									</td>
 								</tr>
 							</table>
 							<br>

@@ -428,7 +428,6 @@ msgid "Postal Code"
 msgstr ""
 
 #: Loan.BusinessActivity
-#, fuzzy
 msgid "Business Work Activities"
 msgstr "نشاط تجارية"
 
@@ -791,7 +790,6 @@ msgid "State"
 msgstr "ولاية"
 
 #: Personnel.telephone
-#, fuzzy
 msgid "Telephone No"
 msgstr "رقم تلفوني"
 
@@ -919,7 +917,6 @@ msgid "Number of missed payments"
 msgstr ""
 
 #: historicalData.notes
-#, fuzzy
 msgid "Notes"
 msgstr "هاشية"
 

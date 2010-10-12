@@ -21,6 +21,7 @@
 package org.mifos.platform.questionnaire.service;
 
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.platform.questionnaire.AuditLogService;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
@@ -35,8 +36,16 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     @Autowired
     private QuestionnaireService questionnaireService;
 
+    @Autowired
+    private AuditLogService auditLogService;
+
     public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService) {
         this.questionnaireService = questionnaireService;
+    }
+
+    public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService, AuditLogService auditLogService) {
+        this.questionnaireService = questionnaireService;
+        this.auditLogService = auditLogService;
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
@@ -99,6 +108,33 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     @Override
     public void saveResponses(QuestionGroupDetails questionGroupDetails) {
         questionnaireService.saveResponses(questionGroupDetails);
+        if (auditLogService != null) {
+            int creatorId = questionGroupDetails.getCreatorId();
+            int entityId = questionGroupDetails.getEntityId();
+            for (QuestionGroupDetail questionGroupDetail : questionGroupDetails.getDetails()) {
+                EventSourceDto eventSourceDto = questionGroupDetail.getEventSource();
+                String source = eventSourceDto.getSource();
+                String event = eventSourceDto.getEvent();
+
+                QuestionGroupDetail secondLastQuestionGroupDetail = null;
+                int max = 0;
+                int secondMax = 0;
+                List<QuestionGroupInstanceDetail> oldQuestionGroupDetails = questionnaireService.getQuestionGroupInstances(entityId, eventSourceDto, false, false);
+                for (QuestionGroupInstanceDetail oldQuestionGroupDetail : oldQuestionGroupDetails) {
+                    if (oldQuestionGroupDetail.getId() >= max) {
+                        secondMax = max;
+                        max = oldQuestionGroupDetail.getId();
+                    }
+                    else if (oldQuestionGroupDetail.getId() > secondMax) {
+                            secondMax = oldQuestionGroupDetail.getId();
+                        }
+                }
+                if (secondMax != 0) {
+                    secondLastQuestionGroupDetail = questionnaireService.getQuestionGroupInstance(secondMax).getQuestionGroupDetail();
+                }
+                auditLogService.addAuditLogRegistry(questionGroupDetail, secondLastQuestionGroupDetail, creatorId, entityId, source, event);
+            }
+        }
     }
 
     @Override

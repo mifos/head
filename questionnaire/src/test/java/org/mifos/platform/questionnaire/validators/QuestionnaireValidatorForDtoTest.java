@@ -144,7 +144,28 @@ public class QuestionnaireValidatorForDtoTest {
     public void shouldValidateForInvalidQuestionGroupDto_QuestionTitleExceedsMaxChars() {
         when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
         QuestionGroupDto questionGroupDto = getQuestionGroupDto();
-        questionGroupDto.getSections().get(0).getQuestions().get(0).setTitle("this is more than fifty characters string for question group title");
+        questionGroupDto.getSections().get(0).getQuestions().get(0).setTitle(
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "too much");
         try {
             questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
             fail("Should have thrown validationException");
@@ -163,7 +184,28 @@ public class QuestionnaireValidatorForDtoTest {
         when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
         QuestionGroupDto questionGroupDto = getQuestionGroupDto();
         QuestionDto questionDto = questionGroupDto.getSections().get(0).getQuestions().get(0);
-        questionDto.setTitle("this is more than fifty characters string for question group title");
+        questionDto.setTitle(
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "there are exactly fifty characters in this string " +
+                "too much");
         try {
             questionnaireValidator.validateForDefineQuestion(questionDto);
             fail("Should have thrown validationException");

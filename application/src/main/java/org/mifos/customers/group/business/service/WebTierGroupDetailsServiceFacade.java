@@ -116,7 +116,7 @@ public class WebTierGroupDetailsServiceFacade implements GroupDetailsServiceFaca
         }
 
         String avgLoanAmountForMember = this.customerDao.getAvgLoanAmountForMemberInGoodOrBadStanding(searchId, branchId);
-        String totalOutStandingLoanAmount = this.customerDao.getTotalOutstandingLoanAmountForGroupAndClientsOfGroups(searchId, branchId);
+        String totalLoanAmountForGroup = this.customerDao.getTotalLoanAmountForGroup(searchId, branchId);
 
         String portfolioAtRisk;
         String totalSavingsAmount;
@@ -136,7 +136,7 @@ public class WebTierGroupDetailsServiceFacade implements GroupDetailsServiceFaca
         List<LoanCycleCounter> loanCycleCounters = this.customerDao.fetchLoanCycleCounter(groupId, CustomerLevel.GROUP.getValue());
 
         return new GroupPerformanceHistoryDto(activeClientCount.toString(), lastGroupLoanAmount,
-                avgLoanAmountForMember, totalOutStandingLoanAmount, portfolioAtRisk, totalSavingsAmount,
+                avgLoanAmountForMember, totalLoanAmountForGroup, portfolioAtRisk, totalSavingsAmount,
                 loanCycleCounters);
     }
 

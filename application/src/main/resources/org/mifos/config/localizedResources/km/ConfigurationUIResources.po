@@ -1,5 +1,4 @@
 #. extracted from ConfigurationUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -277,7 +276,6 @@ msgid "Inactive"
 msgstr "មិនដំណើរការ"
 
 #: configuration.instruction1
-#, fuzzy
 msgid ""
 "Complete the fields below. Then click Preview. Click Cancel to return to "
 "Admin without submitting information. "

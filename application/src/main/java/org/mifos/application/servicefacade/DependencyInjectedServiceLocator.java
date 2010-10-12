@@ -93,6 +93,7 @@ public class DependencyInjectedServiceLocator {
     // service facade
     private static CollectionSheetServiceFacade collectionSheetServiceFacade;
     private static LoanServiceFacade loanServiceFacade;
+    private static SavingsServiceFacade savingsServiceFacade;
     private static CustomerServiceFacade customerServiceFacade;
     private static CenterDetailsServiceFacade centerDetailsServiceFacade;
     private static GroupDetailsServiceFacade groupDetailsServiceFacade;
@@ -144,6 +145,7 @@ public class DependencyInjectedServiceLocator {
 
     // helpers
     private static HibernateTransactionHelper hibernateTransactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+
 
     public static CollectionSheetService locateCollectionSheetService() {
 
@@ -306,6 +308,13 @@ public class DependencyInjectedServiceLocator {
         return fundServiceFacade;
     }
 
+    public static SavingsServiceFacade locateSavingsServiceFacade() {
+        if (savingsServiceFacade == null) {
+            savingsServiceFacade = new SavingsServiceFacadeWebTier(savingsDao, personnelDao, customerDao);
+        }
+        return savingsServiceFacade;
+    }
+
     public static CustomerDao locateCustomerDao() {
         return customerDao;
     }
@@ -324,6 +333,10 @@ public class DependencyInjectedServiceLocator {
 
     public static OfficeDao locateOfficeDao() {
         return officeDao;
+    }
+
+    public static SavingsDao locateSavingsDao() {
+        return savingsDao;
     }
 
     public static FundDao locateFundDao() {

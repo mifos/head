@@ -38,6 +38,7 @@ public class SectionQuestionDetail implements Serializable {
     private boolean mandatory;
     private QuestionDetail questionDetail;
     private String value;
+    private Integer sequenceNumber;
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_BAD_FIELD")
     private List<SelectionDetail> selections = new ArrayList<SelectionDetail>();
@@ -54,6 +55,11 @@ public class SectionQuestionDetail implements Serializable {
 
     public SectionQuestionDetail(QuestionDetail questionDetail, boolean mandatory, String value) {
         this(0, questionDetail, mandatory, value);
+    }
+
+    public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean required, int sequenceNumber) {
+        this(id, questionDetail, required, null);
+        this.sequenceNumber = sequenceNumber;
     }
 
     public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean required) {
@@ -173,7 +179,7 @@ public class SectionQuestionDetail implements Serializable {
     public boolean isActive() {
         return questionDetail.isActive();
     }
-    
+
     public boolean isInactive() {
         return !isActive();
     }
@@ -218,7 +224,7 @@ public class SectionQuestionDetail implements Serializable {
         The work around introduces a hidden value which is always selected,
         which ensures the binding always happen
     */
-    @Deprecated    
+    @Deprecated
     private void removeDefaultSelection() {
         if (CollectionUtils.isNotEmpty(selections)) {
             selections.remove(0);
@@ -239,5 +245,13 @@ public class SectionQuestionDetail implements Serializable {
 
     public String getAnswer() {
         return isMultiSelectQuestion()? getMultiSelectValue(): (isEmpty(this.value)? EMPTY: this.value);
+    }
+
+    public Integer getSequenceNumber() {
+        return this.sequenceNumber;
+    }
+
+    public void setSequenceNumber(Integer sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
     }
 }

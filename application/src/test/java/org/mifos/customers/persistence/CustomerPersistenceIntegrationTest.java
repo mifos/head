@@ -30,6 +30,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
@@ -109,6 +110,11 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
     private SavingsOfferingBO savingsOffering;
 
     private final CustomerPersistence customerPersistence = new CustomerPersistence();
+
+    @Before
+    public void setUp() {
+        enableCustomWorkingDays();
+    }
 
 
     @After

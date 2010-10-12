@@ -167,7 +167,7 @@ function switchLoanInstallmentType()
             <div class="span-23">
             	<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.productcategory" /]&nbsp;:</span>
             	<span class="span-4">
-            		[@mifos.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedCategory", loanProduct.generalDetails.categoryOptions, "--select one--" /]
+            		[@mifos.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedCategory", loanProduct.generalDetails.categoryOptions, "--selectone--" /]
               	</span>
             </div>
             
@@ -192,7 +192,7 @@ function switchLoanInstallmentType()
             
             <div class="span-23 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.applicablefor" /]&nbsp;:</span>
             	<span class="span-4">
-            	[@mifos.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedApplicableFor", loanProduct.generalDetails.applicableForOptions, "--select one--" /]
+            	[@mifos.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedApplicableFor", loanProduct.generalDetails.applicableForOptions, "--selectone--" /]
               	</span>
             </div>
             
@@ -358,7 +358,7 @@ function switchLoanInstallmentType()
           <div class="prepend-2  span-21 last">
             <div class="span-23 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.interestratetype" /]&nbsp;:</span>
             	<span class="span-6">
-            	[@mifos.formSingleSelectWithPrompt "loanProduct.selectedInterestRateCalculationType", loanProduct.interestRateCalculationTypeOptions, "--select one--" /]
+            	[@mifos.formSingleSelectWithPrompt "loanProduct.selectedInterestRateCalculationType", loanProduct.interestRateCalculationTypeOptions, "--selectone--" /]
             	</span> 
             </div>
             <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.maxInterestrate" /]&nbsp;:</span>
@@ -376,7 +376,7 @@ function switchLoanInstallmentType()
           <div class="prepend-3  span-23 last">
           	<div class="span-23">
 	      		<span class="pull-3 span-8 rightAlign"><span class="red">* </span>Status&nbsp;</span>
-		      	<span class="span-6">[@mifos.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedStatus", loanProduct.generalDetails.statusOptions, "--select one--" /]</span>
+		      	<span class="span-6">[@mifos.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedStatus", loanProduct.generalDetails.statusOptions, "--selectone--" /]</span>
             </div>
           </div>
           
@@ -580,11 +580,11 @@ function switchLoanInstallmentType()
             	<span class="span-6 ">
             		<span class="span-2">[@spring.message "manageLoanProducts.defineLoanProduct.interest" /]&nbsp;:</span>
             		<span class="span-3">
-						[@mifos.formSingleSelectWithPrompt "loanProduct.selectedInterest", loanProduct.interestGeneralLedgerOptions, "--select one--", "disabled=disabled" /]            	
+						[@mifos.formSingleSelectWithPrompt "loanProduct.selectedInterest", loanProduct.interestGeneralLedgerOptions, "--selectone--", "disabled=disabled" /]            	
               		</span>
                 
                 	<span class="span-2">[@spring.message "manageLoanProducts.defineLoanProduct.principal" /]&nbsp;:</span>
-                		[@mifos.formSingleSelectWithPrompt "loanProduct.selectedPrincipal", loanProduct.principalGeneralLedgerOptions, "--select one--", "disabled=disabled" /]	
+                		[@mifos.formSingleSelectWithPrompt "loanProduct.selectedPrincipal", loanProduct.principalGeneralLedgerOptions, "--selectone--", "disabled=disabled" /]	
                 	<span class="span-3">
               		</span> 
                	</span>

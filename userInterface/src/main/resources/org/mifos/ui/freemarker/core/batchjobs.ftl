@@ -109,8 +109,24 @@
                                 [#else]
                                     [@spring.message "systemAdministration.batchjobs.unknown" /]
                                 [/#if]
+                                [#if batchjobs.failDescription??]
+                                    &nbsp;(<a href="batchjobsdetails.ftl?jobFailName=${batchjobs.name}">[@spring.message "systemAdministration.batchjobs.showDetails" /]</a>)
+                                [/#if]
                             </span>
                         </div>
+                        [#if batchjobs.lastSuccessfulRun?datetime != batchjobs.lastStartTime?datetime]
+                            <div class="span-21">
+                                <span class="span-2">&nbsp;</span>
+                                <span class="span-8">
+                                    [@spring.message "systemAdministration.batchjobs.mostRecentSuccessfulRun" /]:&nbsp;
+                                    [#if batchjobs.lastSuccessfulRun?datetime != model.date0?datetime]
+                                        ${batchjobs.lastSuccessfulRun?datetime}
+                                    [#else]
+                                        [@spring.message "systemAdministration.batchjobs.none" /]
+                                    [/#if]
+                                </span>
+                            </div>
+                        [/#if]
                         <div class="span-21">
                             <span class="span-2">&nbsp;</span>
                             <span class="span-8">

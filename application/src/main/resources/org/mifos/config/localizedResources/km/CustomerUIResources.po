@@ -142,7 +142,6 @@ msgid "No Flags Available"
 msgstr "គ្មានទង់ជាតិដែលទំនេរ"
 
 #: Customer.Note
-#, fuzzy
 msgctxt "Customer.Note"
 msgid "Note:"
 msgstr "កំនត់ត្រា\\៖"
@@ -300,7 +299,6 @@ msgid "No results found for"
 msgstr "គ្មានលទ្ធផលស្វែងរកសំរាប់"
 
 #: Customer.note
-#, fuzzy
 msgctxt "Customer.note"
 msgid "Note:"
 msgstr "កំនត់ត្រា\\៖"
@@ -413,7 +411,6 @@ msgstr ""
 "ឬទាក់ទងអ្នកគ្រប់គ្រង"
 
 #: error.versionnodonotmatch
-#, fuzzy
 msgid ""
 "The record has already been modified by another user. Please navigate to the "
 "details page and start the activity again. "
@@ -519,7 +516,6 @@ msgid "This action is not permissible."
 msgstr "សកម្មភាពនេះគឺមិនអនុញ្ញាត"
 
 #: label.MFIjoiningdate
-#, fuzzy
 msgid "MFI joining date:"
 msgstr "កាលបរិច្ឆេទចូលរួម​ របស់MFI"
 
@@ -549,7 +545,6 @@ msgid "Amount of"
 msgstr "ចំនួននៃ"
 
 #: label.amountofloan
-#, fuzzy
 msgid "Amount of loan:"
 msgstr "ចំនួននៃកំចីយ"
 
@@ -578,7 +573,6 @@ msgid "Historical data"
 msgstr "ប្រវត្តិនៃទិន្នយ័"
 
 #: label.interestpaid
-#, fuzzy
 msgid "paid:"
 msgstr "បង់"
 
@@ -591,12 +585,10 @@ msgid "Cycle per Product"
 msgstr "ឃួបនៃផលិតផល"
 
 #: label.loancyclenumber
-#, fuzzy
 msgid "cycle number:"
 msgstr "ឃួបនៃលេខ"
 
 #: label.note
-#, fuzzy
 msgctxt "label.note"
 msgid "Note:"
 msgstr "កំនត់ត្រា\\៖"
@@ -642,7 +634,6 @@ msgid "Preview note"
 msgstr "ពិនិត្យជាមុននូវកំនត់ចំនាំ"
 
 #: label.productname
-#, fuzzy
 msgid "Product name:"
 msgstr "ឈ្មោះផលិតផល"
 
@@ -651,7 +642,6 @@ msgid "Product name"
 msgstr "ឈ្មោះផលិតផល"
 
 #: label.totalamountpaid
-#, fuzzy
 msgid "Total amount paid:"
 msgstr "ចំនួនសងសរុប"
 

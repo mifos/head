@@ -57,7 +57,6 @@ msgid "ID"
 msgstr "លេខកូដ"
 
 #: INTEREST_OUT_OF_RANGE
-#, fuzzy
 msgid "it is not in between %s1 and %s2."
 msgstr "ការប្រាក់គឺមិនអាចស្តិតនៅចន្លោះរវាង%១ និង%២"
 

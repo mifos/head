@@ -20,19 +20,6 @@
 
 package org.mifos.accounts.loan.struts.actionforms;
 
-import static org.apache.commons.lang.StringUtils.isBlank;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -54,8 +41,8 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
@@ -83,6 +70,19 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.util.UserContext;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
 
 public class LoanAccountActionForm extends BaseActionForm implements QuestionResponseCapturer {
 
@@ -786,9 +786,6 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         validateCollateralNotes(errors, locale);
         validateDefaultFee(errors, locale, currency);
         validateAdditionalFee(errors, locale, currency, request);
-        if (configService.isGlimEnabled() && getCustomer(request).isGroup()) {
-
-        }
     }
 
     private void validateCollateralNotes(ActionErrors errors, Locale userLocale) {
@@ -915,7 +912,9 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     private void checkValidationForPreview(ActionErrors errors, MifosCurrency currency, HttpServletRequest request) {
-        validateRedoLoanPayments(request, errors, currency);
+        if (isRedoOperation()) {
+            validateRedoLoanPayments(request, errors, currency);
+        }
     }
 
     private void checkValidationForManagePreview(ActionErrors errors, MifosCurrency currency, HttpServletRequest request)
@@ -1256,9 +1255,6 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     private void validateRedoLoanPayments(HttpServletRequest request, ActionErrors errors, MifosCurrency currency) {
         Locale locale = getUserContext(request).getPreferredLocale();
         try {
-            if (paymentDataBeans == null || paymentDataBeans.size() <= 0) {
-                return;
-            }
             CustomerBO customer = getCustomer(request);
             for (PaymentDataTemplate template : paymentDataBeans) {
                 // No data for amount and transaction date, validation not
@@ -1491,4 +1487,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         return questionGroups;
     }
 
+    private boolean isRedoOperation() {
+        return PERSPECTIVE_VALUE_REDO_LOAN.equals(perspective) && CollectionUtils.isNotEmpty(paymentDataBeans);
+    }
 }

@@ -44,7 +44,7 @@
         </div>
         <div class="clear">&nbsp;</div>
         <div class="prepend-1  span-21 last">
-        	<div class="span-20 "><span class="span-3 fontBold">Address &nbsp;:</span><br />
+        	<div class="span-20 "><span class="span-3 fontBold">[@spring.message "offices.viewOfficeDetails.address"/] &nbsp;:</span><br />
     				<span>${officeFormBean.line1?default("")}<input type="hidden" name="line1" value="${officeFormBean.line1?default("")}"/></span>,&nbsp;<span>${officeFormBean.line2?default("")}<input type="hidden" name="line2" value="${officeFormBean.line2?default("")}"/></span>,&nbsp;<span>${officeFormBean.line3?default("")}<input type="hidden" name="line3" value="${officeFormBean.line3?default("")}"/></span>
   			</div>
 

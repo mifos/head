@@ -37,7 +37,6 @@ msgstr ""
 "categoría único."
 
 #: error.categoryNameNotEdit
-#, fuzzy
 msgid ""
 "You have not edited the category name.  Please edit the name or click Cancel "
 "to return to the View Categories page. "
@@ -76,7 +75,6 @@ msgstr ""
 "información."
 
 #: reportsCategory.clickSubmit
-#, fuzzy
 msgid "Then click Submit. "
 msgstr "Entonces haga clic en Enviar."
 
@@ -93,7 +91,6 @@ msgid "Delete Report Category"
 msgstr "Borre la Categoría del reporte"
 
 #: reportsCategory.deleteCategoryConfirm
-#, fuzzy
 msgid "Are you sure you want to delete this category. "
 msgstr "¿Está seguro que quiere borrar  esta categoría?"
 

@@ -76,7 +76,7 @@
         	<div class="span-20 ">
         		<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.productcategory" /]&nbsp;</span>
         		<span class="span-4">
-        			[@mifos.formSingleSelectWithPrompt "savingsProduct.generalDetails.selectedCategory", savingsProduct.generalDetails.categoryOptions, "--select one--" /]
+        			[@mifos.formSingleSelectWithPrompt "savingsProduct.generalDetails.selectedCategory", savingsProduct.generalDetails.categoryOptions, "--selectone--" /]
 				</span>
 			</div>
 			
@@ -102,7 +102,7 @@
 			
             <div class="span-20 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.applicablefor" /]&nbsp;</span>
 	            <span class="span-4">
-	            	[@mifos.formSingleSelectWithPrompt "savingsProduct.generalDetails.selectedApplicableFor", savingsProduct.generalDetails.applicableForOptions, "--select one--", "onchange='fnCheckAppliesTo()'" /]
+	            	[@mifos.formSingleSelectWithPrompt "savingsProduct.generalDetails.selectedApplicableFor", savingsProduct.generalDetails.applicableForOptions, "--selectone--", "onchange='fnCheckAppliesTo()'" /]
 				</span>
 			</div>
           </div>
@@ -111,7 +111,7 @@
           <div class="prepend-3  span-21 last">
           	<div class="span-20 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.typeofdeposits" /]&nbsp;:</span>
           		<span class="span-4">
-          		[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedDepositType", savingsProduct.depositTypeOptions, "--select one--", "onchange='fnCheckRecMand()'" /]
+          		[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedDepositType", savingsProduct.depositTypeOptions, "--selectone--", "onchange='fnCheckRecMand()'" /]
 				</span>
 			</div>
 			<script>fnCheckRecMand();</script>
@@ -122,7 +122,7 @@
   			</div>
             <div class="span-20 "><span class="pull-3 span-8 rightAlign" id="appliesto"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.amountAppliesto" /]&nbsp;</span>
             	<span class="span-4">
-   				[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedGroupSavingsApproach", savingsProduct.groupSavingsApproachOptions, "--select one--", "disabled=disabled" /]
+   				[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedGroupSavingsApproach", savingsProduct.groupSavingsApproachOptions, "--selectone--", "disabled=disabled" /]
 				</span>
 			</div>
             <div class="span-20 "><span class="pull-3 span-8 rightAlign">[@spring.message "manageProducts.defineSavingsProducts.maxamountperwithdrawal" /]&nbsp;</span>
@@ -130,24 +130,24 @@
   			</div>
           </div>
           <div class="clear">&nbsp;</div>
-          <p class="fontBold">Status</p>
+          <p class="fontBold">[@spring.message "loanProduct.status.description"/]</p>
           <div class="prepend-3  span-21 last">
           	<div class="span-20">
-	      		<span class="pull-3 span-8 rightAlign"><span class="red">* </span>Status&nbsp;</span>
-		      	<span class="span-6">[@mifos.formSingleSelectWithPrompt "savingsProduct.generalDetails.selectedStatus", savingsProduct.generalDetails.statusOptions, "--select one--" /]</span>
+	      		<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "loanProduct.status.description"/]&nbsp;</span>
+		      	<span class="span-6">[@mifos.formSingleSelectWithPrompt "savingsProduct.generalDetails.selectedStatus", savingsProduct.generalDetails.statusOptions, "--selectone--" /]</span>
             </div>
           </div>
           
           <div class="clear">&nbsp;</div>
-          <p class="fontBold">Interest rate</p>
+          <p class="fontBold">[@spring.message "manageProducts.defineSavingsProducts.interestRate" /]</p>
           <div class="prepend-3  span-21 last">
 	      	<div class="span-20">
-	      		<span class="pull-3 span-8 rightAlign"><span class="red">* </span>Interest rate&nbsp;</span>
+	      		<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.interestRate" /]&nbsp;</span>
 		      	<span class="span-6">[@spring.formInput "savingsProduct.interestRate" /]&nbsp;(0 - 100)%</span>
             </div>
             <div class="span-20 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.balanceusedforInterestcalculation" /]&nbsp;</span>
             	<span class="span-4">
-   				[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedInterestCalculation", savingsProduct.interestCaluclationOptions, "--select one--" /]
+   				[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedInterestCalculation", savingsProduct.interestCaluclationOptions, "--selectone--" /]
 				</span>
 			</div>
             <div class="span-20 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.timeperiodforInterestcalculation" /]&nbsp;</span>
@@ -174,12 +174,12 @@
           <div class="prepend-3  span-21 last">
             <div class="span-20 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.gLcodefordeposits" /]&nbsp;</span>
             	<span class="span-4">
-            	[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedPrincipalGlCode", savingsProduct.principalGeneralLedgerOptions, "--select one--", "disabled=disabled" /]
+            	[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedPrincipalGlCode", savingsProduct.principalGeneralLedgerOptions, "--selectone--", "disabled=disabled" /]
 				 </span>
 			</div>
             <div class="span-20 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.gLcodeforinterest" /]&nbsp;</span>
 	            <span class="span-4">
-	            	[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedInterestGlCode", savingsProduct.interestGeneralLedgerOptions, "--select one--", "disabled=disabled" /]
+	            	[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedInterestGlCode", savingsProduct.interestGeneralLedgerOptions, "--selectone--", "disabled=disabled" /]
 				 </span>
 			</div>
           </div>

@@ -37,7 +37,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.service.test.TestMode;
-import org.springframework.core.io.ClassPathResource;
 
 /**
  * This is a quick initial sketch of a class for managing configuration values
@@ -105,13 +104,11 @@ public class ConfigurationManager implements Configuration {
         try {
             if (TestMode.MAIN == currentTestMode) {
                 customConfigFile = configurationLocator.getFile(CUSTOM_CONFIG_PROPS_FILENAME);
+                props.load(new BufferedInputStream(new FileInputStream(customConfigFile)));
             } else if (TestMode.ACCEPTANCE == currentTestMode) {
                 customConfigFile = configurationLocator.getFile(ACCEPTANCE_CONFIG_PROPS_FILENAME);
-            } else if (TestMode.INTEGRATION == currentTestMode) {
-                customConfigFile = new ClassPathResource("org/mifos/config/resources/" + CUSTOM_CONFIG_PROPS_FILENAME)
-                        .getFile();
+                props.load(new BufferedInputStream(new FileInputStream(customConfigFile)));
             }
-            props.load(new BufferedInputStream(new FileInputStream(customConfigFile)));
         } catch (FileNotFoundException e) {
             /*
              * An FileNotFoundException will be thrown if a file is not found by
@@ -134,162 +131,202 @@ public class ConfigurationManager implements Configuration {
         return configuration;
     }
 
+    @Override
     public Short getShort(String key, Short defaultValue) {
         return configuration.getShort(key, defaultValue);
     }
 
+    @Override
     public short getShort(String key, short defaultValue) {
         return configuration.getShort(key, defaultValue);
     }
 
+    @Override
     public short getShort(String key) {
         return configuration.getShort(key);
     }
 
+    @Override
     public float getFloat(String key) {
         return configuration.getFloat(key);
     }
 
+    @Override
     public String getString(String key, String defaultValue) {
         return configuration.getString(key, defaultValue);
     }
 
+    @Override
     public int getInt(String key, int defaultValue) {
         return configuration.getInt(key, defaultValue);
     }
 
+    @Override
     public int getInt(String key) {
         return configuration.getInt(key);
     }
 
+    @Override
     public double getDouble(String key, double defaultValue) {
         return configuration.getDouble(key, defaultValue);
     }
 
+    @Override
     public double getDouble(String key) {
         return configuration.getDouble(key);
     }
 
+    @Override
     public boolean containsKey(String key) {
         return configuration.containsKey(key);
     }
 
+    @Override
     public void addProperty(String propertyName, Object propertyValue) {
         configuration.addProperty(propertyName, propertyValue);
     }
 
+    @Override
     public void clearProperty(String propertyName) {
         configuration.clearProperty(propertyName);
     }
 
+    @Override
     public void clear() {
         configuration.clear();
     }
 
+    @Override
     public BigDecimal getBigDecimal(String key) {
         return configuration.getBigDecimal(key);
     }
 
+    @Override
     public BigDecimal getBigDecimal(String key, BigDecimal defaultValue) {
         return configuration.getBigDecimal(key, defaultValue);
     }
 
+    @Override
     public BigInteger getBigInteger(String key) {
         return configuration.getBigInteger(key);
     }
 
+    @Override
     public BigInteger getBigInteger(String key, BigInteger defaultValue) {
         return configuration.getBigInteger(key, defaultValue);
     }
 
+    @Override
     public boolean getBoolean(String key) {
         return configuration.getBoolean(key);
     }
 
+    @Override
     public boolean getBoolean(String key, boolean defaultValue) {
         return configuration.getBoolean(key, defaultValue);
     }
 
+    @Override
     public Boolean getBoolean(String key, Boolean defaultValue) {
         return configuration.getBoolean(key, defaultValue);
     }
 
+    @Override
     public byte getByte(String key) {
         return configuration.getByte(key);
     }
 
+    @Override
     public byte getByte(String key, byte defaultValue) {
         return configuration.getByte(key, defaultValue);
     }
 
+    @Override
     public Byte getByte(String key, Byte defaultValue) {
         return configuration.getByte(key, defaultValue);
     }
 
+    @Override
     public Double getDouble(String key, Double defaultValue) {
         return configuration.getDouble(key, defaultValue);
     }
 
+    @Override
     public float getFloat(String key, float defaultValue) {
         return configuration.getFloat(key, defaultValue);
     }
 
+    @Override
     public Float getFloat(String key, Float defaultValue) {
         return configuration.getFloat(key, defaultValue);
     }
 
+    @Override
     public Integer getInteger(String key, Integer defaultValue) {
         return configuration.getInteger(key, defaultValue);
     }
 
+    @Override
     public Iterator getKeys() {
         return configuration.getKeys();
     }
 
+    @Override
     public Iterator getKeys(String key) {
         return configuration.getKeys(key);
     }
 
+    @Override
     public List getList(String key) {
         return configuration.getList(key);
     }
 
+    @Override
     public List getList(String key, List defaultValue) {
         return configuration.getList(key, defaultValue);
     }
 
+    @Override
     public long getLong(String key) {
         return configuration.getLong(key);
     }
 
+    @Override
     public long getLong(String key, long defaultValue) {
         return configuration.getLong(key, defaultValue);
     }
 
+    @Override
     public Long getLong(String key, Long defaultValue) {
         return configuration.getLong(key, defaultValue);
     }
 
+    @Override
     public Properties getProperties(String key) {
         return configuration.getProperties(key);
     }
 
+    @Override
     public Object getProperty(String key) {
         return configuration.getProperty(key);
     }
 
+    @Override
     public String getString(String key) {
         return configuration.getString(key);
     }
 
+    @Override
     public String[] getStringArray(String key) {
         return configuration.getStringArray(key);
     }
 
+    @Override
     public boolean isEmpty() {
         return configuration.isEmpty();
     }
 
+    @Override
     public void setProperty(String propertyName, Object propertyValue) {
         configuration.setProperty(propertyName, propertyValue);
     }
@@ -297,6 +334,7 @@ public class ConfigurationManager implements Configuration {
     // Return a decorator Configuration containing every key from the current
     // Configuration
     // that starts with the specified prefix
+    @Override
     public Configuration subset(String prefix) {
         return configuration.subset(prefix);
     }

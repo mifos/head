@@ -132,7 +132,6 @@ msgid "The frequency of the product and the fee \"{0}\" does not match."
 msgstr "产品和费用“{0}”的频率不匹配。"
 
 #: errors.feeCurrencyMatch
-#, fuzzy
 msgid "The currency of the product and the fee \"{0}\" does not match."
 msgstr "产品和费用“{0}”的频率不匹配。"
 
@@ -480,13 +479,11 @@ msgid "Submit"
 msgstr "提交"
 
 #: product.bylastloanamount
-#, fuzzy
 msgctxt "product.bylastloanamount"
 msgid "By last loan amount"
 msgstr "最后贷款金额"
 
 #: product.byloancycle
-#, fuzzy
 msgid "By loan cycle"
 msgstr "贷款周期"
 
@@ -887,13 +884,11 @@ msgid "product information"
 msgstr "产品信息"
 
 #: product.installbylastloanamount
-#, fuzzy
 msgctxt "product.installbylastloanamount"
 msgid "By last loan amount"
 msgstr "最后贷款金额"
 
 #: product.installbyloancycle
-#, fuzzy
 msgid "By loan Cycle"
 msgstr "贷款周期"
 
@@ -926,7 +921,6 @@ msgid "Interest rate type"
 msgstr "利率类型"
 
 #: product.lastloanamount
-#, fuzzy
 msgid "Last loan amount"
 msgstr "最后贷款金额"
 
@@ -965,7 +959,6 @@ msgid "Calculate loan amount as "
 msgstr "计算贷款金额"
 
 #: product.loancycleno
-#, fuzzy
 msgid "Loan cycle no."
 msgstr "贷款周期次数"
 

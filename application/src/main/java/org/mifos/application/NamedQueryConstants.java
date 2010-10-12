@@ -162,7 +162,6 @@ public interface NamedQueryConstants {
     String GET_APPLICABLE_SAVINGS_PRODUCT_OFFERINGS = "accounts.getApplicableSavingsProductOfferings";
     String RETRIEVE_SAVINGS_ACCCOUNT = "accounts.retrieveSavingsAccounts";
     String RETRIEVE_ACCCOUNTS_FOR_INT_CALC = "accounts.retrieveSavingsAccountsIntCalc";
-    String RETRIEVE_ACCCOUNTS_FOR_INT_POST = "accounts.retrieveSavingsAccountsIntPost";
     String RETRIEVE_SAVINGS_ACCCOUNT_FOR_CUSTOMER = "accounts.retrieveSavingsAccountsForCustomer";
     String RETRIEVE_ACCCOUNTS_FOR_CUSTOMER = "accounts.retrieveAccountsForCustomer";
     String GET_MISSED_DEPOSITS_COUNT = "accounts.countOfMissedDeposits";

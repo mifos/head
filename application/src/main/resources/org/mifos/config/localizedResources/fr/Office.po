@@ -1,5 +1,4 @@
 #. extracted from Office.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -21,12 +20,10 @@ msgid "CUSTOM FIELD"
 msgstr "CHAMP PERSONNALISE"
 
 #: cf.lookUpEntity.entityId
-#, fuzzy
 msgid "Custom field:"
 msgstr "Champ personnalisé\\:"
 
 #: cfdef.entityId
-#, fuzzy
 msgid "Custom field: "
 msgstr "Champ personnalisé\\:"
 
@@ -79,7 +76,6 @@ msgid "Minimum length for office short name is {2} characters."
 msgstr "La longeur minimum de nom court de bureau est  {2} caractères."
 
 #: errors.office.updationhierarchyfailed
-#, fuzzy
 msgid ""
 "An unexpected error has occurred during the office hierarchy change. Please "
 "try again later or contact the system administrator."
@@ -208,7 +204,6 @@ msgstr ""
 "système."
 
 #: office.error.updationHierarchyFailed
-#, fuzzy
 msgid ""
 "An unexpected error has occurred during the office hierarchy change. Please "
 "try again later or contact the system administrator. "
@@ -244,7 +239,6 @@ msgstr ""
 "nom différent ."
 
 #: office.formParentOffice.requiredmsg
-#, fuzzy
 msgid "Please specify a Parent office. "
 msgstr "Veuiller indiquer un bureau de parent ."
 
@@ -253,7 +247,6 @@ msgid "Define new"
 msgstr "Définir un nouveau"
 
 #: office.labelAddNewOffice
-#, fuzzy
 msgid "Add a new office - "
 msgstr "Ajouter un nouveau bureau -"
 
@@ -270,17 +263,14 @@ msgid "Address"
 msgstr "Addresse"
 
 #: office.labelAddress1
-#, fuzzy
 msgid "Address 1:"
 msgstr "Addresse 1\\:"
 
 #: office.labelAddress2
-#, fuzzy
 msgid "Address 2:"
 msgstr "Addresse 2\\:"
 
 #: office.labelAddress3
-#, fuzzy
 msgid "Address 3:"
 msgstr "Addresse 3\\:"
 
@@ -293,7 +283,6 @@ msgid "Branch office"
 msgstr "Bureau d'antenne"
 
 #: office.labelChangeStatus
-#, fuzzy
 msgid "Change Status:"
 msgstr "Changer Statut\\:"
 
@@ -302,7 +291,6 @@ msgid "Check the levels to be included."
 msgstr "Vérifier les niveaux à inclure."
 
 #: office.labelCity
-#, fuzzy
 msgid "City:"
 msgstr "Ville\\:"
 
@@ -315,7 +303,6 @@ msgstr ""
 "pour retourner à Admin sans Valider l'information."
 
 #: office.labelCountry
-#, fuzzy
 msgid "Country:"
 msgstr "Pays\\:"
 
@@ -349,7 +336,6 @@ msgid "View offices"
 msgstr "Afficher bureaux"
 
 #: office.labelMandatoryInstructions
-#, fuzzy
 msgid ""
 "Complete the fields below. Then click Preview. Click Cancel to return to "
 "Office Details Page without submitting information. "
@@ -368,7 +354,6 @@ msgid "No"
 msgstr "Non"
 
 #: office.labelNote
-#, fuzzy
 msgid "Note:"
 msgstr "Note\\:"
 
@@ -384,12 +369,10 @@ msgid "Office address"
 msgstr "Addresse de bureau"
 
 #: office.labelOfficeAssignedNumber
-#, fuzzy
 msgid "office has been assigned the system ID number:"
 msgstr "bureau a été assigné le numéro de ID système \\:"
 
 #: office.labelOfficeCode
-#, fuzzy
 msgid "Office code:"
 msgstr "Code de bureau\\:"
 
@@ -403,7 +386,6 @@ msgstr ""
 "centre et les données d'exécution."
 
 #: office.labelOfficeDetails
-#, fuzzy
 msgid "Office details "
 msgstr "Détails de bureau"
 
@@ -412,32 +394,26 @@ msgid "Office  information"
 msgstr "L'information de bureau"
 
 #: office.labelOfficeName
-#, fuzzy
 msgid "Office name:"
 msgstr "Nom de bureau\\:"
 
 #: office.labelOfficeShortName
-#, fuzzy
 msgid "Office short name:"
 msgstr "Petit nom de bureau\\:"
 
 #: office.labelOfficeType
-#, fuzzy
 msgid "Office type:"
 msgstr "Type de bureau\\:"
 
 #: office.labelParentOffice
-#, fuzzy
 msgid "Parent office:"
 msgstr "Bureau de parent\\:"
 
 #: office.labelPleaseNote
-#, fuzzy
 msgid "Please note: "
 msgstr "SVP note\\:"
 
 #: office.labelPostalCode
-#, fuzzy
 msgid "Postal Code:"
 msgstr "Code Postal\\:"
 
@@ -458,7 +434,6 @@ msgid "Review &amp; submit"
 msgstr "Revoir et amp; Valider"
 
 #: office.labelState
-#, fuzzy
 msgid "State:"
 msgstr "Statut\\:"
 
@@ -471,7 +446,6 @@ msgid "Sub Regional office"
 msgstr "Bureau régional secondaire"
 
 #: office.labelTelephone
-#, fuzzy
 msgid "Telephone:"
 msgstr "Téléphone\\:"
 
@@ -535,7 +509,6 @@ msgid "Parent office"
 msgstr "Bureau  parent"
 
 #: office.shortName.displayname
-#, fuzzy
 msgid "Please specify an Office short name. "
 msgstr "Veuiller indiquer un acronyme de bureau."
 

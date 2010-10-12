@@ -185,17 +185,14 @@ msgid "Address"
 msgstr "Dirección"
 
 #: Office.labelAddress1
-#, fuzzy
 msgid "Address 1:"
 msgstr "Dirección 1\\:"
 
 #: Office.labelAddress2
-#, fuzzy
 msgid "Address 2:"
 msgstr "Dirección 2\\:"
 
 #: Office.labelAddress3
-#, fuzzy
 msgid "Address 3:"
 msgstr "Dirección 3\\:"
 
@@ -208,7 +205,6 @@ msgid "Branch office"
 msgstr "Sucursal"
 
 #: Office.labelChangeStatus
-#, fuzzy
 msgid "Status:"
 msgstr "Estado\\:"
 
@@ -217,7 +213,6 @@ msgid "Check the levels to be included."
 msgstr "Compruebe los niveles que deben incluirse."
 
 #: Office.labelCity
-#, fuzzy
 msgid "City:"
 msgstr "Ciudad\\:"
 
@@ -231,7 +226,6 @@ msgstr ""
 "información."
 
 #: Office.labelCountry
-#, fuzzy
 msgid "Country:"
 msgstr "País\\:"
 
@@ -287,7 +281,6 @@ msgid "No"
 msgstr "No"
 
 #: Office.labelNote
-#, fuzzy
 msgid "Note:"
 msgstr "Nota\\:"
 
@@ -303,12 +296,10 @@ msgid "Office address"
 msgstr "La dirección de la oficina"
 
 #: Office.labelOfficeAssignedNumber
-#, fuzzy
 msgid "office has been assigned the system ID number:"
 msgstr "a la oficina se le ha asignado un número de identificación de sistema\\:"
 
 #: Office.labelOfficeCode
-#, fuzzy
 msgid "Office code:"
 msgstr "Código de Oficina\\:"
 
@@ -330,32 +321,26 @@ msgid "Office  information"
 msgstr "Información de la Oficina"
 
 #: Office.labelOfficeName
-#, fuzzy
 msgid "Office name:"
 msgstr "Nombre de Oficina\\:"
 
 #: Office.labelOfficeShortName
-#, fuzzy
 msgid "Office short name:"
 msgstr "Abrevación de la Oficina\\:"
 
 #: Office.labelOfficeType
-#, fuzzy
 msgid "Office type:"
 msgstr "Tipo de Oficina\\:"
 
 #: Office.labelParentOffice
-#, fuzzy
 msgid "Parent office:"
 msgstr "Oficina Matriz\\:"
 
 #: Office.labelPleaseNote
-#, fuzzy
 msgid "Please note:"
 msgstr "Por favor, note\\:"
 
 #: Office.labelPostalCode
-#, fuzzy
 msgid "Postal Code:"
 msgstr "Código Postal\\:"
 
@@ -376,7 +361,6 @@ msgid "Review &amp; submit"
 msgstr "Revisar y Enviar"
 
 #: Office.labelState
-#, fuzzy
 msgid "State:"
 msgstr "Estado\\:"
 
@@ -389,7 +373,6 @@ msgid "Sub Regional office"
 msgstr "Oficina Sub Regional"
 
 #: Office.labelTelephone
-#, fuzzy
 msgid "Telephone:"
 msgstr "Teléfono\\:"
 
@@ -476,13 +459,11 @@ msgid "Mifos"
 msgstr "Mifos"
 
 #: cf.lookUpEntity.entityId
-#, fuzzy
 msgctxt "cf.lookUpEntity.entityId"
 msgid "Custom field:"
 msgstr "Campo personalizado\\:"
 
 #: cfdef.entityId
-#, fuzzy
 msgctxt "cfdef.entityId"
 msgid "Custom field:"
 msgstr "Campo personalizado\\:"

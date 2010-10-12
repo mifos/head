@@ -156,6 +156,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     @Before
     public void setUp() throws Exception {
+        enableCustomWorkingDays();
         userContext = TestObjectFactory.getContext();
 
         savedInitialRoundOffMultiple = AccountingRules.getInitialRoundOffMultiple();

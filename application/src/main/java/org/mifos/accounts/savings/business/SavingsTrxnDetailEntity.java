@@ -20,6 +20,10 @@
 
 package org.mifos.accounts.savings.business;
 
+import java.util.Date;
+
+import org.joda.time.DateTime;
+import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
@@ -36,12 +40,17 @@ import org.mifos.framework.util.helpers.Money;
 public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 
     private final Money depositAmount;
-
     private final Money withdrawlAmount;
-
     private final Money interestAmount;
-
     private final Money balance;
+
+    public static SavingsTrxnDetailEntity savingsInterestPosting(AccountPaymentEntity interestPayment,
+            CustomerBO customer, Money savingsBalance, Date nextIntPostDate, DateTime dueDate) {
+        AccountActionEntity accountAction = new AccountActionEntity(AccountActionTypes.SAVINGS_INTEREST_POSTING);
+        return new SavingsTrxnDetailEntity(interestPayment,
+                customer, accountAction, interestPayment.getAmount(), savingsBalance, null, null,
+                nextIntPostDate, null, "", dueDate.toDate());
+    }
 
     protected SavingsTrxnDetailEntity() {
         depositAmount = null;
@@ -67,6 +76,35 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
             persistence, new DateTimeService().getCurrentJavaDateTime());
     }
 
+    public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity, CustomerBO customer,
+            AccountActionEntity accountActionType, Money amount, Money balance, PersonnelBO createdBy,
+            java.util.Date dueDate, java.util.Date actionDate, Short installmentId, String comment, java.util.Date postingDate) {
+        super(accountPaymentEntity, accountActionType, installmentId, dueDate, createdBy, customer, actionDate, amount, comment, null, postingDate);
+        this.balance = balance;
+        MifosCurrency currency = accountPaymentEntity.getAccount().getCurrency();
+        if (AccountActionTypes.SAVINGS_WITHDRAWAL.equals(accountActionType.asEnum())) {
+            this.depositAmount = new Money(currency);
+            this.withdrawlAmount = amount;
+            this.interestAmount = new Money(currency);
+        } else if (AccountActionTypes.SAVINGS_DEPOSIT.equals(accountActionType.asEnum())) {
+            this.depositAmount = amount;
+            this.withdrawlAmount = new Money(currency);
+            this.interestAmount = new Money(currency);
+        } else if (AccountActionTypes.SAVINGS_INTEREST_POSTING.equals(accountActionType.asEnum())) {
+            this.depositAmount = new Money(currency);
+            this.withdrawlAmount = new Money(currency);
+            this.interestAmount = amount;
+        } else {
+            this.depositAmount = new Money(currency);
+            this.withdrawlAmount = new Money(currency);
+            this.interestAmount = new Money(currency);
+        }
+    }
+
+    /**
+     * use constructor that does not require persistence for super class
+     */
+    @Deprecated
     public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity, CustomerBO customer,
             AccountActionTypes accountActionType, Money amount, Money balance, PersonnelBO createdBy,
             java.util.Date dueDate, java.util.Date actionDate, Short installmentId, String comment,

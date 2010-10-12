@@ -27,49 +27,46 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/*
- * Seems to be used to record information about a payment.
- *
- * Has some duplicate information that is contained in {@link AccountTrxnEntity}
+/**
+ * Records information about a payment from client to teller/field officer.
  */
 public class AccountPaymentEntity extends AbstractEntity {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountPaymentEntity.class);
 
     private final Integer paymentId = null;
-
     private final AccountBO account;
-
     private final PaymentTypeEntity paymentType;
-
     private final String receiptNumber;
-
     private final String voucherNumber;
-
     private final String checkNumber;
-
     private final Date receiptDate;
-
     private final String bankName;
-
     private final Date paymentDate;
-
     private Money amount;
+    private PersonnelBO createdByUser;
+    private String comment;
 
     private Set<AccountTrxnEntity> accountTrxns = new LinkedHashSet<AccountTrxnEntity>();
 
-    private PersonnelBO createdByUser;
+    public static AccountPaymentEntity savingsInterestPosting(SavingsBO account, Money amount, Date paymentDate) {
 
-    private String comment;
+        String theReceiptNumber = null;
+        Date theReceiptDate = null;
+        PaymentTypeEntity paymentType = new PaymentTypeEntity(SavingsConstants.DEFAULT_PAYMENT_TYPE.shortValue());
+        return new AccountPaymentEntity(account, amount, theReceiptNumber, theReceiptDate, paymentType, paymentDate);
+    }
 
     protected AccountPaymentEntity() {
         this(null, null, null, null, null, new DateTime().toDate());

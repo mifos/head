@@ -74,7 +74,6 @@ msgid "Due/Collections"
 msgstr "Esedékes/beszedések"
 
 #: bulkEntry.dueCollections2
-#, fuzzy
 msgid "Due collections:"
 msgstr "Esedékes beszedések\\:"
 
@@ -118,7 +117,6 @@ msgid "Issues/Withdrawals"
 msgstr "Kibocsátások/bevonások"
 
 #: bulkEntry.loanDisbursements
-#, fuzzy
 msgid "Loan disbursements:"
 msgstr "Hitel folyósítások\\:"
 
@@ -139,12 +137,10 @@ msgid "Meeting date"
 msgstr "Találkozó napja"
 
 #: bulkEntry.netCash
-#, fuzzy
 msgid "Net Cash:"
 msgstr "Nettó készpénz\\:"
 
 #: bulkEntry.otherCollections
-#, fuzzy
 msgid "Other collections:"
 msgstr "Egyéb beszedések\\:"
 
@@ -173,7 +169,6 @@ msgid "Receipt ID"
 msgstr "Beérkezés azonosító"
 
 #: bulkEntry.revnsub
-#, fuzzy
 msgid "Review &amp; submit "
 msgstr "Ellenőrzés és érvényesítés"
 
@@ -202,7 +197,6 @@ msgid "Submit"
 msgstr "Érvényesítés"
 
 #: bulkEntry.total
-#, fuzzy
 msgid "Total:"
 msgstr "Összesen\\:"
 
@@ -223,7 +217,6 @@ msgid "Transaction date"
 msgstr "Tranzakció napja"
 
 #: bulkEntry.withdrawals
-#, fuzzy
 msgid "Withdrawals:"
 msgstr "Bevonások\\:"
 
@@ -261,7 +254,6 @@ msgid ""
 msgstr ""
 
 #: errors.invalidaccollections
-#, fuzzy
 msgid ""
 "<li>The amount specified for {0} of customer {1} must be exact amount due or "
 "0. Please specify a valid amount.</li>"
@@ -299,7 +291,6 @@ msgid "<li>Please specify a valid date-- {0} can only be today's date.</li>"
 msgstr "<li>Érvényes dátumot adjon meg - a(z) {0} csak a mai nap lehet.</li>"
 
 #: errors.update
-#, fuzzy
 msgid ""
 "The following accounts have not been updated due to simultaneous "
 "updates/insufficient balance/invalid disbursement date/invalid repayment: "

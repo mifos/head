@@ -25,7 +25,7 @@
     				</span>
   			</div>
         	<div class="span-20 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "organizationPreferences.definenewfund.fundCode"/]</span><span class="span-5">&nbsp;       				    
-				    [@mifos.formSingleSelectWithPrompt "formBean.codeId", code,"--select one--" /]
+				    [@mifos.formSingleSelectWithPrompt "formBean.codeId", code,"--selectone--" /]
 				    </span>
 			</div>
           </div>

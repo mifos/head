@@ -1,6 +1,5 @@
 # extracted from FrameworkUIResources.properties
 #. extracted from FrameworkUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -25,7 +24,6 @@ msgstr "Cuentas"
 #
 # need to confirm
 #: framework.admin
-#, fuzzy
 msgid "Admin"
 msgstr "Administración"
 
@@ -90,7 +88,6 @@ msgid "Search"
 msgstr "Buscar"
 
 #: framework.searchCriteria
-#, fuzzy
 msgid "Search by name, system ID or account number "
 msgstr "Buscar por nombre, ID del sistema, o número de cuenta"
 

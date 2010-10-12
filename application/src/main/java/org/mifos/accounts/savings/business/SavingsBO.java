@@ -29,8 +29,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -45,6 +43,9 @@ import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.financial.business.service.activity.BaseFinancialActivity;
+import org.mifos.accounts.financial.business.service.activity.SavingsInterestPostingFinancialActivity;
+import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -52,6 +53,8 @@ import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.savings.interest.InterestPostingPeriodResult;
+import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
@@ -78,6 +81,7 @@ import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.ProcessFlowRules;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
@@ -99,6 +103,8 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SavingsBO extends AccountBO {
 
@@ -189,7 +195,7 @@ public class SavingsBO extends AccountBO {
             final CustomerBO customer, final Integer offsettingAllowable,
             final MeetingBO scheduleForInterestCalculation, final RecommendedAmountUnit recommendedAmountUnit,
             final Money recommendedAmount, final Date createdDate,
-            final Short createdByUserId, List<Holiday> holidays) {
+            final Short createdByUserId, List<Holiday> holidays, DateTime activationDate) {
 
         super(AccountTypes.SAVINGS_ACCOUNT, accountState, customer, offsettingAllowable, scheduledPayments,
                 new LinkedHashSet<AccountFeesEntity>(), createdDate, createdByUserId);
@@ -209,7 +215,7 @@ public class SavingsBO extends AccountBO {
         setSavingsPerformance(createSavingsPerformance());
         try {
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-            setValuesForActiveState(workingDays, holidays);
+            setValuesForActiveState(workingDays, holidays, activationDate);
         } catch (AccountException e) {
             throw new IllegalStateException("Unable to create savings schedules", e);
         }
@@ -246,7 +252,7 @@ public class SavingsBO extends AccountBO {
         CalendarEvent futureCalendarEventsApplicableToOffice = holidayDao.findCalendarEventsForThisYearAndNext(customer
                 .getOfficeId());
         setValuesForActiveState(futureCalendarEventsApplicableToOffice.getWorkingDays(),
-                futureCalendarEventsApplicableToOffice.getHolidays());
+                futureCalendarEventsApplicableToOffice.getHolidays(), new DateTime(new DateTimeService().getCurrentJavaDateTime()));
     }
 
     public void populateInstanceForTest(final SavingsOfferingBO savingsOffering) {
@@ -320,7 +326,7 @@ public class SavingsBO extends AccountBO {
         return interestToBePosted;
     }
 
-    void setInterestToBePosted(final Money interestToBePosted) {
+    public void setInterestToBePosted(final Money interestToBePosted) {
         this.interestToBePosted = interestToBePosted;
     }
 
@@ -336,7 +342,7 @@ public class SavingsBO extends AccountBO {
         return lastIntCalcDate;
     }
 
-    void setLastIntCalcDate(final Date lastIntCalcDate) {
+    public void setLastIntCalcDate(final Date lastIntCalcDate) {
         this.lastIntCalcDate = lastIntCalcDate;
     }
 
@@ -348,7 +354,7 @@ public class SavingsBO extends AccountBO {
         this.lastIntPostDate = lastIntPostDate;
     }
 
-    public Date getNextIntCalcDate() {
+    Date getNextIntCalcDate() {
         return nextIntCalcDate;
     }
 
@@ -388,7 +394,7 @@ public class SavingsBO extends AccountBO {
         this.interestRate = interestRate;
     }
 
-    private void setMinAmntForInt(final Money minAmntForInt) {
+    public void setMinAmntForInt(final Money minAmntForInt) {
         this.minAmntForInt = minAmntForInt;
     }
 
@@ -536,6 +542,69 @@ public class SavingsBO extends AccountBO {
         return getInterestToBePosted() == null ? interestCalculated : getInterestToBePosted().add(interestCalculated);
     }
 
+    public void postInterest(InterestScheduledEvent postingSchedule, InterestPostingPeriodResult interestPostingPeriodResult) {
+
+        Money actualInterestToBePosted = interestPostingPeriodResult.getDifferenceInInterest();
+        if (actualInterestToBePosted.isGreaterThanZero()) {
+            LocalDate currentPostingDate = interestPostingPeriodResult.getPostingPeriod().getEndDate();
+            LocalDate nextPostingDate = postingSchedule.nextMatchingDateFromAlreadyMatchingDate(currentPostingDate);
+
+            doPostInterest(currentPostingDate, nextPostingDate, actualInterestToBePosted);
+        }
+    }
+
+    public boolean postInterest(InterestScheduledEvent postingSchedule) {
+        boolean eligibleForInterestPosing = accountRequiresInterestPosting();
+
+        if (eligibleForInterestPosing) {
+            LocalDate currentPostingDate = new LocalDate(this.nextIntPostDate);
+            LocalDate nextPostingDate = postingSchedule.nextMatchingDateFromAlreadyMatchingDate(new LocalDate(this.nextIntPostDate));
+            Money actualInterestToBePosted = this.interestToBePosted;
+            doPostInterest(currentPostingDate, nextPostingDate, actualInterestToBePosted);
+        }
+
+        return eligibleForInterestPosing;
+    }
+
+    private void doPostInterest(LocalDate currentPostingDate, LocalDate nextPostingDate, Money actualInterestToBePosted) {
+        this.savingsBalance = this.savingsBalance.add(actualInterestToBePosted);
+        this.savingsPerformance.setTotalInterestDetails(actualInterestToBePosted);
+
+        SavingsActivityEntity savingsActivity = SavingsActivityEntity.savingsInterestPosting(this, personnel, this.savingsBalance, actualInterestToBePosted, currentPostingDate.toDateMidnight().toDate());
+        savingsActivityDetails.add(savingsActivity);
+
+        AccountPaymentEntity interestPayment = AccountPaymentEntity.savingsInterestPosting(this, actualInterestToBePosted, currentPostingDate.toDateMidnight().toDate());
+
+        DateTime dueDate = new DateTime();
+        SavingsTrxnDetailEntity interestPostingTransaction = SavingsTrxnDetailEntity.savingsInterestPosting(interestPayment, this.customer, this.savingsBalance, currentPostingDate.toDateMidnight().toDate(), dueDate);
+
+        interestPayment.addAccountTrxn(interestPostingTransaction);
+        this.addAccountPayment(interestPayment);
+
+        this.lastIntPostDate = this.nextIntPostDate;
+        this.nextIntPostDate = nextPostingDate.toDateMidnight().toDate();
+        this.interestToBePosted = Money.zero(this.getCurrency());
+
+        // NOTE: financial Transaction Processing should be decoupled from application domain model.
+        try {
+            BaseFinancialActivity baseFinancialActivity = new SavingsInterestPostingFinancialActivity(interestPostingTransaction);
+            baseFinancialActivity.buildAccountEntries();
+        } catch (FinancialException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    private boolean accountRequiresInterestPosting() {
+        return this.interestToBePosted != null && this.interestToBePosted.isGreaterThanOrEqualZero();
+    }
+
+    /**
+     * delete and all tests after deleting the following methods and update interest after adjustment and closure methods are done!
+     *
+     * {@link SavingsBO#postInterest()}
+     * {@link SavingsBO#updateInterestAccrued()}
+     */
+    @Deprecated
     public void postInterest() throws AccountException {
         if (getInterestToBePosted() != null && getInterestToBePosted().isGreaterThanOrEqualZero()) {
             Money interestPosted = getInterestToBePosted();
@@ -591,7 +660,7 @@ public class SavingsBO extends AccountBO {
                 + interestCalculated + " calculated.");
     }
 
-    private Money calculateInterest(Date fromDate, final Date toDate, final double interestRate,
+    Money calculateInterest(Date fromDate, final Date toDate, final double interestRate,
             final SavingsTrxnDetailEntity adjustedTrxn) throws AccountException {
         boolean initialBalance = false;
 
@@ -710,6 +779,7 @@ public class SavingsBO extends AccountBO {
         }
     }
 
+    // TODO - keithw - break apart financial transactions and account trxns
     private void makeEntriesForInterestPosting(final Money interestAmt, final PaymentTypeEntity paymentType,
             final CustomerBO customer, final Date postingDate, final PersonnelBO loggedInUser) throws AccountException {
         AccountPaymentEntity interestPayment = helper.createAccountPayment(this, interestAmt, paymentType,
@@ -934,7 +1004,8 @@ public class SavingsBO extends AccountBO {
         if (client.getCustomerMeeting().getMeeting() != null) {
             if (!(getCustomer().getLevel() == CustomerLevel.GROUP && getRecommendedAmntUnit().getId().equals(
                     RecommendedAmountUnit.COMPLETE_GROUP.getValue()))) {
-                generateDepositAccountActions(client, client.getCustomerMeeting().getMeeting(), workingDays, holidays);
+                DateTime today = new DateTime().toDateMidnight().toDateTime();
+                generateDepositAccountActions(client, client.getCustomerMeeting().getMeeting(), workingDays, holidays, today);
                 this.update();
             }
         }
@@ -951,7 +1022,7 @@ public class SavingsBO extends AccountBO {
             if (getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
                     || getCustomer().getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())
                     && getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.COMPLETE_GROUP.getValue())) {
-                generateDepositAccountActions(getCustomer(), depositSchedule, workingDays, holidays);
+                generateDepositAccountActions(getCustomer(), depositSchedule, workingDays, holidays, new DateTime(this.activationDate));
             } else {
                 List<CustomerBO> children;
                 try {
@@ -960,7 +1031,7 @@ public class SavingsBO extends AccountBO {
                     throw new AccountException(ce);
                 }
                 for (CustomerBO customer : children) {
-                    generateDepositAccountActions(customer, depositSchedule, workingDays, holidays);
+                    generateDepositAccountActions(customer, depositSchedule, workingDays, holidays, new DateTime(this.activationDate));
                 }
             }
         }
@@ -968,15 +1039,13 @@ public class SavingsBO extends AccountBO {
 
     @Deprecated
     public void generateDepositAccountActions(final CustomerBO customer, final MeetingBO meeting,
-            final List<Days> workingDays, final List<Holiday> holidays) {
-
-        DateTime startingFromtoday = new DateTime().toDateMidnight().toDateTime();
+            final List<Days> workingDays, final List<Holiday> holidays, final DateTime startingFrom) {
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
         ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
                 workingDays, holidays);
 
-        List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, startingFromtoday, scheduledEvent);
+        List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, startingFrom, scheduledEvent);
 
         short installmentNumber = 1;
         for (DateTime date : depositDates) {
@@ -1224,9 +1293,9 @@ public class SavingsBO extends AccountBO {
         }
     }
 
-    private void setValuesForActiveState(final List<Days> workingDays, final List<Holiday> holidays)
+    private void setValuesForActiveState(final List<Days> workingDays, final List<Holiday> holidays, DateTime activationDate)
             throws AccountException {
-        this.setActivationDate(new DateTimeService().getCurrentJavaDateTime());
+        this.setActivationDate(activationDate.toDate());
         this.generateDepositAccountActions(workingDays, holidays);
         try {
             Date intCalcDate = helper.getNextScheduleDate(getActivationDate(), null, getTimePerForInstcalc());
@@ -1879,6 +1948,10 @@ public class SavingsBO extends AccountBO {
 
     }
 
+    /**
+     * using persistence within pojo. Build savings activity like {@link SavingsBO#postInterest(InterestScheduledEvent)}
+     */
+    @Deprecated
     private SavingsActivityEntity buildSavingsActivity(final Money amount, final Money balanceAmount,
             final short acccountActionId, final Date trxnDate, final PersonnelBO personnel) throws AccountException {
         AccountActionEntity accountAction;
@@ -2140,5 +2213,9 @@ public class SavingsBO extends AccountBO {
                 }
             }
         }
+    }
+
+    public MeetingBO getInterestPostingMeeting() {
+        return this.savingsOffering.getFreqOfPostIntcalc().getMeeting();
     }
 }

@@ -813,17 +813,11 @@ public class AccountBO extends AbstractBusinessObject {
 
     public AccountPaymentEntity getLastPmntToBeAdjusted() {
         AccountPaymentEntity accntPmnt = null;
-        int i = 0;
         for (AccountPaymentEntity accntPayment : accountPayments) {
-            i = i + 1;
-            if (i == accountPayments.size()) {
-                break;
-            }
             if (accntPayment.getAmount().isNonZero()) {
                 accntPmnt = accntPayment;
                 break;
             }
-
         }
         return accntPmnt;
     }
@@ -1471,6 +1465,7 @@ public class AccountBO extends AbstractBusinessObject {
         }
 
         Collections.sort(accountTrxnList, new Comparator<AccountTrxnEntity>() {
+            @Override
             public int compare(final AccountTrxnEntity trx1, final AccountTrxnEntity trx2) {
                 if (trx1.getTrxnCreatedDate().equals(trx2.getTrxnCreatedDate())) {
                     return trx1.getAccountTrxnId().compareTo(trx2.getAccountTrxnId());
@@ -1488,8 +1483,9 @@ public class AccountBO extends AbstractBusinessObject {
         }
 
         Collections.sort(accountTrxnList, new Comparator<AccountTrxnEntity>() {
+            @Override
             public int compare(final AccountTrxnEntity trx1, final AccountTrxnEntity trx2) {
-                if (trx1.getActionDate().equals(trx2.getActionDate())) {
+                if (trx1.getAccountTrxnId() != null && trx2.getAccountTrxnId() != null && trx1.getActionDate().equals(trx2.getActionDate())) {
                     return trx1.getAccountTrxnId().compareTo(trx2.getAccountTrxnId());
                 }
                 return trx1.getActionDate().compareTo(trx2.getActionDate());

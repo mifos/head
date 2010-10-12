@@ -175,6 +175,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     @Before
     public void setUp() throws Exception {
+        enableCustomWorkingDays();
         userContext = TestObjectFactory.getContext();
         accountPersistence = new AccountPersistence();
 

@@ -41,7 +41,7 @@ public class OfficeDto implements Serializable {
     private final String lookupNameKey;
 
     private final String officeStatusName;
-    private final String officeLevelName;
+    private String officeLevelName;
     private final AddressDto address;
     private final List<CustomFieldDto> customFields;
 
@@ -198,5 +198,18 @@ public class OfficeDto implements Serializable {
 
     public List<CustomFieldDto> getCustomFields() {
         return this.customFields;
+    }
+
+    // MIFOS-3780: added necessary setters/getters needed for UI
+    public Short getOfficeId() {
+        return id;
+    }
+
+    public String getDisplayName() {
+        return getOfficeLevelName() + "(" + name + ")";
+    }
+
+    public void setLevelName(String levelName) {
+        this.officeLevelName = levelName;
     }
 }

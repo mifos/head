@@ -1,6 +1,5 @@
 # extracted from ApplicationResources.properties
 #. extracted from ApplicationResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -58,7 +57,6 @@ msgid "</ul><hr>"
 msgstr "hr"
 
 #: errors.header
-#, fuzzy
 msgid ""
 "<h3><font color=\"red\">Validation Error</font></h3>You must correct the "
 "following error(s) before proceeding:<ul>"
@@ -126,7 +124,6 @@ msgid "client"
 msgstr "អ្នកប្រើប្រាស់"
 
 #: label.clients
-#, fuzzy
 msgid "Clients "
 msgstr "ពួកអ្នកប្រើប្រាស់"
 

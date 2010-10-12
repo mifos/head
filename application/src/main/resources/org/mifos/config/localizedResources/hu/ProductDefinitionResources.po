@@ -24,7 +24,6 @@ msgstr ""
 "rendszergazdához, majd próbálja újra."
 
 #: errors.calcinstallmenttype
-#, fuzzy
 msgid "Please Specify the Calculate # of Installments Type."
 msgstr "Adja meg a Törlesztőrészletek számának kiszámítása típusát."
 
@@ -85,7 +84,6 @@ msgstr ""
 "{3} és {4} közé kell esnie, vagy az egyikkel meg kell egyeznie."
 
 #: errors.defaultinstallments
-#, fuzzy
 msgid ""
 "Please specify valid Default # of Installments. Default # of Installments "
 "should be between the Min and Max # of Installments, inclusive of the two "
@@ -107,7 +105,6 @@ msgstr ""
 "{2}"
 
 #: errors.definstallments
-#, fuzzy
 msgid "Please Specify the valid Default # of Installments {0} {1}."
 msgstr ""
 "Érvényes értéket adjon meg a Törlesztőrészletek alapértelmezés szerinti "
@@ -164,7 +161,6 @@ msgid "The frequency of the product and the fee \"{0}\" does not match."
 msgstr "A termék gyakorisága nem felel meg a(z) \"{0}\" díjnak."
 
 #: errors.feeCurrencyMatch
-#, fuzzy
 msgid "The currency of the product and the fee \"{0}\" does not match."
 msgstr "A termék gyakorisága nem felel meg a(z) \"{0}\" díjnak."
 
@@ -251,7 +247,6 @@ msgid "The length of {0} can not be greater than {1} character(s)."
 msgstr "A(z) {0} hossza legfeljebb {1} karakter lehet."
 
 #: errors.maxinstallments
-#, fuzzy
 msgid "Please Specify the valid Max # of Installments {0} {1}."
 msgstr "Érvényes Törlesztőrészletek maximális száma {0} {1} értéket adjon meg."
 
@@ -315,7 +310,6 @@ msgid "The length of {0} can not be less than {1} character(s)."
 msgstr "A(z) {0} hossza nem lehet rövidebb {1} karakternél."
 
 #: errors.mininstallments
-#, fuzzy
 msgid "Please Specify the valid Min # of Installments {0} {1}."
 msgstr "Érvényes Törlesztőrészletek minimális száma {0} {1} értéket adjon meg."
 
@@ -377,7 +371,6 @@ msgstr ""
 "meghatározott dátum érvénytelen."
 
 #: errors.startendinstallment
-#, fuzzy
 msgid ""
 "Please Specify the valid End Range Loan Amount. End Range Loan Amount must "
 "be greater than the Start Range Loan Amount for # of last loan Installments "
@@ -446,7 +439,6 @@ msgid "GL code for principal"
 msgstr "Tőke főkönyvi kódja"
 
 #: product.Glcodefor
-#, fuzzy
 msgid "GL code for"
 msgstr "Főkönyvi kód:"
 
@@ -527,12 +519,10 @@ msgid "Balance used for {0} calculation."
 msgstr "{0} számításhoz felhasznált egyenleg."
 
 #: product.balanceInterest
-#, fuzzy
 msgid "Balance used for "
 msgstr "Felhasznált egyenleg"
 
 #: product.balusedfor
-#, fuzzy
 msgid "Balance used for"
 msgstr "Felhasznált egyenleg"
 
@@ -557,13 +547,11 @@ msgid "Submit"
 msgstr "Érvényesítés"
 
 #: product.bylastloanamount
-#, fuzzy
 msgctxt "product.bylastloanamount"
 msgid "By last loan amount"
 msgstr "Utolsó hitel összeg szerint"
 
 #: product.byloancycle
-#, fuzzy
 msgid "By loan cycle"
 msgstr "Hitel ciklus szerint"
 
@@ -572,7 +560,6 @@ msgid "calculation"
 msgstr "számítás"
 
 #: product.calcInstallment
-#, fuzzy
 msgid "Calculate # of Installments as"
 msgstr "Törlesztőrészletek számának a kiszámítása"
 
@@ -804,7 +791,6 @@ msgid "Define a new {0} product."
 msgstr "Új {0} termék meghatározása."
 
 #: product.definst
-#, fuzzy
 msgid "Default # of installments"
 msgstr "Törlesztőrészletek alapértelmezés szerinti száma"
 
@@ -930,12 +916,10 @@ msgid "for by loan cycle at row"
 msgstr "a sorban lévő utolsó hitelciklusra"
 
 #: product.fornumberoflastloaninstallmentatrow
-#, fuzzy
 msgid "for # of last loan Installments at row"
 msgstr "a sorban lévő utolsó hitel Törlesztőrészletek számára"
 
 #: product.freq
-#, fuzzy
 msgid "Frequency of"
 msgstr "Gyakoriság"
 
@@ -952,12 +936,10 @@ msgid "Frequency of installments"
 msgstr "Törlesztés gyakorisága"
 
 #: product.frequency
-#, fuzzy
 msgid "Frequency of "
 msgstr "Gyakoriság"
 
 #: product.glCodeFor
-#, fuzzy
 msgid "GL code for "
 msgstr "Főkönyvi kód:"
 
@@ -1011,13 +993,11 @@ msgid "product information"
 msgstr "termékinformációk"
 
 #: product.installbylastloanamount
-#, fuzzy
 msgctxt "product.installbylastloanamount"
 msgid "By last loan amount"
 msgstr "Utolsó hitel összeg szerint"
 
 #: product.installbyloancycle
-#, fuzzy
 msgid "By loan Cycle"
 msgstr "Hitel ciklus szerint"
 
@@ -1050,7 +1030,6 @@ msgid "Interest rate type"
 msgstr "Kamatláb típusa"
 
 #: product.lastloanamount
-#, fuzzy
 msgid "Last loan amount"
 msgstr "Utolsó hitel összeg"
 
@@ -1085,12 +1064,10 @@ msgid "Loan Amount"
 msgstr "Hitelösszeg"
 
 #: product.loanamountas
-#, fuzzy
 msgid "Calculate loan amount as "
 msgstr "Hitelösszeg kiszámítása"
 
 #: product.loancycleno
-#, fuzzy
 msgid "Loan cycle no."
 msgstr "Hitelciklus száma"
 
@@ -1165,7 +1142,6 @@ msgid "Max amount per withdrawal"
 msgstr "Pénzfelvétel maximális összege"
 
 #: product.maxinst
-#, fuzzy
 msgid "Max # of installments"
 msgstr "Törlesztőrészletek maximális száma"
 
@@ -1186,7 +1162,6 @@ msgid "Min {0} amount"
 msgstr "Min {0} összeg"
 
 #: product.minBalForCalc
-#, fuzzy
 msgid "Minimum balance required for {0} calculation"
 msgstr "{0} számításhoz minimálisan szükséges egyenleg."
 
@@ -1203,7 +1178,6 @@ msgid "Min balance required for"
 msgstr "Szükséges minimális egyenleg"
 
 #: product.mininst
-#, fuzzy
 msgid "Min # of installments"
 msgstr "Törlesztőrészletek minimális száma"
 
@@ -1682,12 +1656,10 @@ msgid "Time period for {0} calculation."
 msgstr "{0} számítás időszaka."
 
 #: product.timePeriod
-#, fuzzy
 msgid "Time period for "
 msgstr "Időszaka"
 
 #: product.timeper
-#, fuzzy
 msgid "Time period for"
 msgstr "Időszaka"
 

@@ -65,7 +65,6 @@ msgid "ID"
 msgstr "ID"
 
 #: INTEREST_OUT_OF_RANGE
-#, fuzzy
 msgid "it is not in between %s1 and %s2."
 msgstr "no está entre %s1 y %s2."
 
@@ -111,7 +110,6 @@ msgstr "cancelar"
 
 # Is this a variable I see camelCasing?
 #: chooseOffice
-#, fuzzy
 msgid "chooseOffice"
 msgstr "elegirOficina"
 

@@ -1,6 +1,5 @@
 # extracted from AccountStatusUIResources.properties
 #. extracted from AccountStatusUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

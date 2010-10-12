@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Collection;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -66,6 +67,8 @@ import org.springframework.batch.core.repository.dao.JdbcExecutionContextDao;
 import org.springframework.batch.core.repository.support.SimpleJobRepository;
 import org.springframework.batch.core.job.SimpleJob;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.BatchStatus;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.step.tasklet.TaskletStep;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
@@ -456,6 +459,22 @@ public class MifosScheduler {
         return new Date(executionTimeInMillis);
     }
 
+    public Date getJobsLastSuccessfulRunTime(String jobName) {
+        JobExplorer explorer = getBatchJobExplorer();
+        List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 100);
+
+        for (JobInstance job : jobInstances) {
+            for (JobExecution execution : explorer.getJobExecutions(job)) {
+                if (BatchStatus.COMPLETED.equals(execution.getStatus())) {
+                    long executionTimeInMillis = job.getJobParameters().getLong(MifosBatchJob.JOB_EXECUTION_TIME_KEY);
+                    return new Date(executionTimeInMillis);
+                }
+            }
+        }
+
+        return new Date(0);
+    }
+
     public String getJobsPreviousRunStatus(String jobName) {
         JobExplorer explorer = getBatchJobExplorer();
         List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 1);
@@ -468,7 +487,27 @@ public class MifosScheduler {
         }
         String runStatus = jobExecutions.get(0).getStatus().toString();
         runStatus = runStatus.substring(0, 1) + runStatus.substring(1).toLowerCase();
+
         return runStatus;
+    }
+
+    public String getJobFailDescription(String jobName) {
+        String failDescription = null;
+        JobExplorer explorer = getBatchJobExplorer();
+        List<JobInstance> jobInstances = explorer.getJobInstances(jobName, 0, 1);
+        if (jobInstances.size() > 0) {
+            List<JobExecution> jobExecutions = explorer.getJobExecutions(jobInstances.get(0));
+            if (jobExecutions.size() > 0) {
+                Collection<StepExecution> steps = jobExecutions.get(0).getStepExecutions();
+                if (steps.size() > 0) {
+                    StepExecution step = steps.iterator().next();
+                    if (!step.getExitStatus().getExitDescription().isEmpty()) {
+                        failDescription = step.getExitStatus().getExitDescription();
+                    }
+                }
+            }
+        }
+        return failDescription;
     }
 
     @SuppressWarnings("unchecked")

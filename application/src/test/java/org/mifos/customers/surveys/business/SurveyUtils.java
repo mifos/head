@@ -21,16 +21,23 @@
 package org.mifos.customers.surveys.business;
 
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.LoanAccountBuilder;
+import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
+import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.InstanceStatus;
 import org.mifos.customers.surveys.helpers.SurveyState;
 import org.mifos.customers.surveys.helpers.SurveyType;
+import org.mifos.domain.builders.PersonnelBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.Money;
@@ -57,6 +64,15 @@ public class SurveyUtils {
         survey.setQuestions(surveyQuestions);
         return survey;
     }
+    public static Survey getSurvey(String surveyName, String questionTitle, Date dateofCreation, SurveyType surveyType) {
+        Survey survey = new Survey(surveyName, SurveyState.ACTIVE, surveyType);
+        survey.setDateOfCreation(dateofCreation);
+        List<SurveyQuestion> surveyQuestions = new ArrayList<SurveyQuestion>();
+        surveyQuestions.add(getSurveyQuestion(questionTitle, survey));
+        survey.setQuestions(surveyQuestions);
+        return survey;
+    }
+
 
     private static SurveyQuestion getSurveyQuestion(String questionTitle, Survey survey) {
         SurveyQuestion surveyQuestion = new SurveyQuestion();
@@ -98,11 +114,39 @@ public class SurveyUtils {
         return groupBO;
     }
 
+    public static CenterBO getCenterBO(Integer centerId) {
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+        CenterBO centerBO = new CenterBuilder().build();
+        centerBO.setCustomerId(centerId);
+        return centerBO;
+    }
+
     public static LoanBO getLoanBO(Integer loanId) {
         Money.setDefaultCurrency(TestUtils.RUPEE);
         LoanBO loanBO = new LoanAccountBuilder().build();
         loanBO.setAccountId(loanId);
         return loanBO;
+    }
+
+    public static SavingsBO getSavingsBO(SavingsAccountBuilder builder, Integer savingsId) {
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+        SavingsBO savingsBO = builder.build();
+        savingsBO.setAccountId(savingsId);
+        return savingsBO;
+    }
+
+    public static PersonnelBO getPersonnelBO(Integer personnelId) {
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+        PersonnelBO personnelBO = new PersonnelBuilder().build();
+        personnelBO.setPersonnelId(personnelId.shortValue());
+        return personnelBO;
+    }
+
+    public static OfficeBO getOfficeBO(Integer officeId) {
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+        OfficeBO officeBO = new OfficeBuilder().build();
+        officeBO.setOfficeId(officeId.shortValue());
+        return officeBO;
     }
 
     private static SurveyResponse getSurveyResponse(Survey survey, String response, SurveyInstance surveyInstance) throws ApplicationException {

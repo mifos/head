@@ -18,16 +18,12 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.framework.components.batchjobs.helpers;
+package org.mifos.accounts.savings.interest;
 
-import org.mifos.framework.components.batchjobs.MifosBatchJob;
-import org.mifos.framework.components.batchjobs.TaskHelper;
+import java.util.List;
 
-public class UpdateCustomerFeesTask extends MifosBatchJob {
+public interface CompoundingInterestCalculator {
 
-    @Override
-    public TaskHelper getTaskHelper() {
-        return new UpdateCustomerFeesHelper();
-    }
+    List<InterestPostingPeriodResult> calculatePostingPeriodDetails(List<EndOfDayDetail> endOfDayDetailsForPeriods, List<InterestCalculationInterval> postingPeriods);
 
 }

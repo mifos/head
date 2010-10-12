@@ -110,7 +110,7 @@ padding-top:5px;
 }
 .logo {
 	float:left;
-	background:url(../framework/images/new_logo.jpg) left top no-repeat;
+	background:url(../framework/images/logo.jpg) left top no-repeat;
 	width:200px;
 	height:70px;
 	position:absolute;	
@@ -393,7 +393,7 @@ padding-top:5px;
 	padding-left: 8px;
 	padding-top: 2px;
 	padding-bottom: 5px;
-	width:185px;
+	width:189px;
 	background-color:#FF9600;
 	text-decoration: none;
 	color:#FFFFFF;

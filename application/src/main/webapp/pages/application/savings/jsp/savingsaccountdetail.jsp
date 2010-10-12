@@ -40,6 +40,7 @@ explanation of the license and how it is applied.
 				</tr>
 			</table>
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+			<c:set var="questionnaireFor" scope="session" value="${BusinessKey.savingsOffering.prdOfferingName}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td width="70%" align="left" valign="top" class="paddingL15T15">
@@ -250,6 +251,13 @@ explanation of the license and how it is applied.
 							</tr>
 							<tr>
 								<td class="fontnormal">
+                            		<a id="savingsaccountdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${BusinessKey.accountId}&event=Create&source=Savings&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+                                		<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
+                            		</a>
+                            		
+                            		<br/>
+								
+								
 									<html-el:link styleId="savingsaccountdetail.link.viewTransactionHistory" 
 										href="savingsAction.do?method=getTransactionHistory&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 										<mifos:mifoslabel name="Savings.viewTransactionHistory" />
@@ -354,8 +362,11 @@ explanation of the license and how it is applied.
 									<img src="pages/framework/images/trans.gif" width="7" height="8">
 								</td>
 							</tr>
-						</table>
-			<c:if test="${surveyCount}">			
+						</table>		
+			
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'questionGroupInstances')}"
+			   	var="questionGroupInstances" />
+			
 			<table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
             <tr>
               <td colspan="2" class="bluetablehead05">
@@ -367,31 +378,33 @@ explanation of the license and how it is applied.
             <tr>
               <td colspan="2" class="paddingL10"><img src="pages/framework/images/trans.gif" width="10" height="2"></td>
             </tr>
-            <c:forEach items="${requestScope.customerSurveys}" var="surveyInstance">
-              <tr>
-                <td width="70%" class="paddingL10">
-                  <span class="fontnormal8pt">
-                    <a href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=savings">
-                      <c:out value="${surveyInstance.survey.name}"/>
-                    </a>
-                  </span>
-                </td>
-                <td width="30%" align="left" class="paddingL10">
-                  <span class="fontnormal8pt">
-                    <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,surveyInstance.dateConducted)}" />
-                  </span>
-                </td>
-              </tr>
-            </c:forEach>
+								<c:if test="${!empty questionGroupInstances}">
+						            <c:forEach items="${questionGroupInstances}" var="questionGroupInstance">
+						              <tr>
+						                <td width="70%" class="paddingL10">
+						                  <span class="fontnormal8pt">
+						                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${BusinessKey.accountId}&instanceId=${questionGroupInstance.id}&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+						                      <c:out value="${questionGroupInstance.questionGroupTitle}"/>
+						                    </a>
+						                  </span>
+						                </td>
+						                <td width="30%" align="left" class="paddingL10">
+						                  <span class="fontnormal8pt">
+						                    <label id="label.${questionGroupInstance.id}">
+						                        <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale, questionGroupInstance.dateCompleted)}" />
+						                    </label>
+						                  </span>
+						                </td>
+						              </tr>
+						            </c:forEach>
+								</c:if>            
             <tr>
               <td colspan="2" align="right" class="paddingleft05">
                 <span class="fontnormal8pt">
-                  <a href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalAccountNum}&surveyType=savings">
+                  <a href="questionnaire.ftl?source=Savings&event=View&entityId=${BusinessKey.accountId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
-                  </a> <br>
-                  <a href="surveysAction.do?method=mainpage">
-                    <mifos:mifoslabel name="Surveys.viewallsurveys" bundle="SurveysUIResources"/>
-                  </a>
+                  </a><br>
+				</span>
           </table>
 					<table width="95%" border="0" cellspacing="0" cellpadding="0">
 						<tr>
@@ -399,7 +412,6 @@ explanation of the license and how it is applied.
 								height="8"></td>
 						</tr>
 					</table>
-			</c:if>
 						<table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
 							<tr>
 								<td class="bluetablehead05">

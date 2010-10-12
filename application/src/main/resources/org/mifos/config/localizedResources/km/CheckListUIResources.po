@@ -118,7 +118,6 @@ msgid "Displayed when moving into Status"
 msgstr "ត្រូវបានបង្ហាញនៅពេលប្តូរទៅក្នុងប្រភេទថ្មី"
 
 #: checklist.displayed_status
-#, fuzzy
 msgid "Displayed when moving into Status:"
 msgstr "ត្រូវបានបង្ហាញនៅពេលប្តូរទៅក្នុងប្រភេទថ្មី\\៖"
 
@@ -180,7 +179,6 @@ msgid "Loans"
 msgstr "ប្រាក់កម្ចី"
 
 #: checklist.name
-#, fuzzy
 msgid "Name:"
 msgstr "ឈោះ\\៖"
 
@@ -219,7 +217,6 @@ msgid "Status"
 msgstr "ប្រភេទ"
 
 #: checklist.status_checklist
-#, fuzzy
 msgid "Status of checklist:"
 msgstr "ប្រភេទនៃបញ្ចីត្រួតពិនិត្យ"
 
@@ -228,7 +225,6 @@ msgid "Submit for approval"
 msgstr "យល់ព្រមការស្នើរសុំ"
 
 #: checklist.type
-#, fuzzy
 msgid "Type:"
 msgstr "ប្រភេទ\\៖"
 

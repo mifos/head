@@ -98,7 +98,7 @@
 [#macro formSingleSelectWithPrompt path options selectPrompt attributes=""]
     [@spring.bind path/]
     <select id="${spring.status.expression}" name="${spring.status.expression}" ${attributes}>
-        <option value="" [@spring.checkSelected ""/]>${selectPrompt}</option>
+        <option value="" [@spring.checkSelected ""/]>[@spring.message "${selectPrompt}"/]</option>
         [#if options?is_hash]
             [#list options?keys as value]
             <option value="${value?html}"[@spring.checkSelected value/]>${options[value]?html}</option>

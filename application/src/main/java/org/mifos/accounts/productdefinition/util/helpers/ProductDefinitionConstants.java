@@ -295,4 +295,6 @@ public interface ProductDefinitionConstants {
     String MAX_AMOUNT_WITHDRAWL_KEY = "product.maxamtwid";
     String MIN_BALANCE_FOR_CALC_KEY = "product.minBalForCalc";
     String ERROR_MUST_NOT_BE_NEGATIVE = "errors.mustNotBeNegative";
+    String SRCQGLIST = "SrcQGList";
+    String SELECTEDQGLIST = "SelectedQGList";
 }

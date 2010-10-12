@@ -25,6 +25,7 @@ import java.util.Date;
 
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
@@ -38,6 +39,12 @@ public class SavingsActivityEntity extends AbstractEntity {
     private final AccountActionEntity activity;
     private final Money amount;
     private final Money balanceAmount;
+
+    public static SavingsActivityEntity savingsInterestPosting(SavingsBO savings, PersonnelBO personnel,
+            Money savingsBalance, Money interestToBePosted, Date nextIntPostDate) {
+        AccountActionEntity accountAction = new AccountActionEntity(AccountActionTypes.SAVINGS_INTEREST_POSTING);
+        return new SavingsActivityEntity(personnel, accountAction, interestToBePosted, savingsBalance, nextIntPostDate, savings);
+    }
 
     protected SavingsActivityEntity() {
         this.id = null;

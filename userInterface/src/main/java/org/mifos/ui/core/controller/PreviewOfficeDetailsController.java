@@ -33,10 +33,8 @@ public class PreviewOfficeDetailsController {
 
 
     @RequestMapping(method=RequestMethod.GET)
-    public ModelAndView populateForm(OfficeFormBean officeFormBean){
-        ModelAndView modelAndView=new ModelAndView("officePreview");
-        modelAndView.addObject("formBean", officeFormBean);
-        return  modelAndView;
+    public ModelAndView populateForm(){
+        return  new ModelAndView(REDIRECT_TO_ADMIN_SCREEN);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -56,10 +54,11 @@ public class PreviewOfficeDetailsController {
         else if (StringUtils.isNotBlank(edit)) {
             EditOfficeInformationController editOfficeInformationController = new EditOfficeInformationController(officeServiceFacade);
             mav = new ModelAndView("editOfficeInformation");
+            mav.addObject("showError", "false");
             if(!formBean.getLevelId().equals("1")){
             mav.addObject("parentOffices",editOfficeInformationController.getParentDetails(formBean.getLevelId()));
             }
-            mav.addObject("officeTypes",editOfficeInformationController.getOfficeTypes(formBean.getLevelId()));
+            mav.addObject("officeTypes",editOfficeInformationController.getOfficeTypes("new"));
             mav.addObject("officeFormBean", formBean);
             mav.addObject("view", "enable");
             }

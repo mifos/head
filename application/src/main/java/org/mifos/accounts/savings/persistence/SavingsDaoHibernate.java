@@ -19,15 +19,28 @@
  */
 package org.mifos.accounts.savings.persistence;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.joda.time.LocalDate;
+import org.mifos.accounts.business.AccountCustomFieldEntity;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.interest.EndOfDayDetail;
+import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
+import org.mifos.application.util.helpers.EntityType;
+import org.mifos.framework.util.helpers.Money;
 
 /**
  *
@@ -40,6 +53,7 @@ public class SavingsDaoHibernate implements SavingsDao {
         this.baseDao = baseDao;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<CollectionSheetCustomerSavingDto> findAllMandatorySavingAccountsForClientsOrGroupsWithCompleteGroupStatusForCustomerHierarchy(
             final CustomerHierarchyParams customerHierarchyParams) {
@@ -66,6 +80,7 @@ public class SavingsDaoHibernate implements SavingsDao {
         return nullSafeSavingsHierarchy(mandatorySavingsOnRootCustomer, mandatorySavingsOnRestOfHierarchy);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<CollectionSheetCustomerSavingDto> findAllVoluntarySavingAccountsForClientsAndGroupsWithCompleteGroupStatusForCustomerHierarchy(
             final CustomerHierarchyParams customerHierarchyParams) {
@@ -92,6 +107,7 @@ public class SavingsDaoHibernate implements SavingsDao {
         return nullSafeSavingsHierarchy(voluntarySavingsOnRootCustomer, voluntarySavingsOnRestOfHierarchy);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<CollectionSheetCustomerSavingDto> findAllMandatorySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(
             final CustomerHierarchyParams customerHierarchyParams) {
@@ -119,6 +135,7 @@ public class SavingsDaoHibernate implements SavingsDao {
                 perIndividualGroupSavingsOnRestOfHierarchy);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<CollectionSheetCustomerSavingDto> findAllVoluntarySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(
             final CustomerHierarchyParams customerHierarchyParams) {
@@ -160,6 +177,7 @@ public class SavingsDaoHibernate implements SavingsDao {
         return nullSafeSavings;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<CollectionSheetCustomerSavingsAccountDto> findAllSavingAccountsForCustomerHierarchy(
             CustomerHierarchyParams customerHierarchyParams) {
@@ -173,5 +191,85 @@ public class SavingsDaoHibernate implements SavingsDao {
         return (List<CollectionSheetCustomerSavingsAccountDto>) baseDao.executeNamedQueryWithResultTransformer(
                 "findAllSavingAccountsForCustomerHierarchy", topOfHierarchyParameters,
                 CollectionSheetCustomerSavingsAccountDto.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public final Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForSavings() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.SAVINGS.getValue());
+        return (Iterator<CustomFieldDefinitionEntity>) baseDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Iterator<AccountCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
+        return (Iterator<AccountCustomFieldEntity>) baseDao.executeNamedQueryIterator("AccountCustomFieldEntity.getResponses", queryParameters);
+    }
+
+    @Override
+    public SavingsBO findById(Long savingsId) {
+
+        final Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("ACCOUNT_ID", savingsId.intValue());
+
+        return (SavingsBO) this.baseDao.executeUniqueResultNamedQuery("savings.findById", queryParameters);
+    }
+
+    @Override
+    public void save(SavingsBO savingsAccount) {
+        this.baseDao.createOrUpdate(savingsAccount);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<EndOfDayDetail> retrieveAllEndOfDayDetailsFor(MifosCurrency currency, Long savingsId) {
+
+        List<EndOfDayDetail> allEndOfDayDetailsForAccount = new ArrayList<EndOfDayDetail>();
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("ACCOUNT_ID", savingsId.intValue());
+        List<Object[]> queryResult = (List<Object[]>) this.baseDao.executeNamedQuery("savings.retrieveAllEndOfDayTransactionDetails", queryParameters);
+
+        if (queryResult != null) {
+            for (Object[] dailyRecord : queryResult) {
+                Date dayOfYear = (Date)dailyRecord[0];
+                BigDecimal totalDeposits = (BigDecimal)dailyRecord[1];
+                BigDecimal totalWithdrawals = (BigDecimal)dailyRecord[2];
+                BigDecimal totalInterest = (BigDecimal)dailyRecord[3];
+
+                EndOfDayDetail endOfDayDetail = new EndOfDayDetail(new LocalDate(dayOfYear), new Money(currency, totalDeposits), new Money(currency, totalWithdrawals), new Money(currency, totalInterest));
+                allEndOfDayDetailsForAccount.add(endOfDayDetail);
+            }
+        }
+
+        return allEndOfDayDetailsForAccount;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Integer> retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(LocalDate interestPostingDate) {
+
+        List<Integer> postingPendingAccounts = new ArrayList<Integer>();
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("currentDate", interestPostingDate.toDateMidnight().toDate());
+        List<Integer> queryResult = (List<Integer>) this.baseDao.executeNamedQuery("accounts.retrieveSavingsAccountsIntPost", queryParameters);
+        if (queryResult != null) {
+            postingPendingAccounts = new ArrayList<Integer>(queryResult);
+        }
+
+        return postingPendingAccounts;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Integer> retreiveAccountsPendingForInterestCalculation(LocalDate currentDate) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("currentDate", currentDate);
+        List<Integer> queryResult = (List<Integer>) this.baseDao.executeNamedQuery("accounts.retrieveSavingsAccountsIntCalc", queryParameters);
+        return queryResult;
     }
 }

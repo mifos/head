@@ -47,7 +47,7 @@ function goToCancelPage(id){
   }
 </script>
 		<html-el:form action="/offAction.do?method=update">
-			<c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"></c:set>
+			<c:set var="officeDto" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'officeDto')}"></c:set>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link styleId="edit_preview_office.link.admin"
@@ -60,8 +60,8 @@ function goToCancelPage(id){
 							bundle="OfficeResources"></mifos:mifoslabel>
 
 					</html-el:link> / <html-el:link styleId="edit_preview_office.link.viewOffice"
-						href="offAction.do?method=get&officeId=${BusinessKey.officeId}&randomNUm=${sessionScope.randomNUm}">
-						<c:out value="${BusinessKey.officeName}"></c:out>
+						href="offAction.do?method=get&officeId=${officeDto.officeId}&randomNUm=${sessionScope.randomNUm}">
+						<c:out value="${officeDto.name}"></c:out>
 					</html-el:link> </span></td>
 				</tr>
 			</table>
@@ -72,7 +72,7 @@ function goToCancelPage(id){
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange"><span class="heading"> <c:out
-								value="${BusinessKey.officeName}"></c:out> </span> - <mifos:mifoslabel
+								value="${officeDto.name}"></c:out> </span> - <mifos:mifoslabel
 								name="Office.labelPreviewOfficeInformation" /></td>
 						</tr>
 						<tr>
@@ -198,7 +198,7 @@ function goToCancelPage(id){
 
 							<html-el:submit styleId="edit_preview_office.button.submit" styleClass="buttn"><mifos:mifoslabel name="Office.submit" /></html-el:submit>
 							&nbsp; <html-el:button styleId="edit_preview_office.button.cancel"
-								onclick="goToCancelPage(${BusinessKey.officeId});"
+								onclick="goToCancelPage(${officeDto.officeId});"
 								property="cancelButton"  styleClass="cancelbuttn">
 								<mifos:mifoslabel name="Office.cancel" />
 							</html-el:button></td>

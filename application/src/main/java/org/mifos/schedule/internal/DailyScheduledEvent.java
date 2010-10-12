@@ -44,7 +44,4 @@ public class DailyScheduledEvent extends AbstractScheduledEvent {
     public int getEvery() {
         return every;
     }
-
-
-
 }

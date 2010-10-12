@@ -38,7 +38,6 @@ msgid "Yes"
 msgstr "Igen"
 
 #: Fees.GLCode
-#, fuzzy
 msgid "GL Code:"
 msgstr "Főkönyvi kód\\:"
 
@@ -73,7 +72,6 @@ msgid "Select"
 msgstr "Választás"
 
 #: Fees.accountDisplay
-#, fuzzy
 msgid "GL Code: 1001"
 msgstr "Főkönyvi kód\\: 1001"
 
@@ -94,22 +92,18 @@ msgid "(All Products)"
 msgstr "(Összes termék)"
 
 #: Fees.amount
-#, fuzzy
 msgid "Amount: "
 msgstr "Összeg"
 
 #: Fees.amountCalcComplete
-#, fuzzy
 msgid "Amount calculated as: {0}% of an {1}"
 msgstr "Összeg kiszámításának módja\\: {1} {0}%-a"
 
 #: Fees.amountcalculatedas
-#, fuzzy
 msgid "Amount calculated as: "
 msgstr "Összeg kiszámításának módja\\:"
 
 #: Fees.calculatefeeas
-#, fuzzy
 msgid "Calculate Fee As:"
 msgstr "Díj kiszámításának módja\\:"
 
@@ -145,7 +139,6 @@ msgid "Daily"
 msgstr "Napi"
 
 #: Fees.dailyinstruction
-#, fuzzy
 msgid "If daily, select between the following:"
 msgstr "Napi gyakoriság esetén válasszon az alábbiak közül\\:"
 
@@ -159,13 +152,11 @@ msgid "Day"
 msgstr "Nap"
 
 #: Fees.defaultFees
-#, fuzzy
 msgctxt "Fees.defaultFees"
 msgid "Default fees:"
 msgstr "Alapértelmezett díjak\\:"
 
 #: Fees.defaultfees
-#, fuzzy
 msgctxt "Fees.defaultfees"
 msgid "Default fees:"
 msgstr "Alapértelmezett díjak\\:"
@@ -194,7 +185,6 @@ msgid "Edit fee information"
 msgstr "Díj információk szerkesztése"
 
 #: Fees.enteramount
-#, fuzzy
 msgid "Amount:"
 msgstr "Összeg\\:"
 
@@ -211,7 +201,6 @@ msgid "fee category"
 msgstr "díj kategória"
 
 #: Fees.error.feename
-#, fuzzy
 msgid "fee name "
 msgstr "díj megnevezése"
 
@@ -257,7 +246,6 @@ msgid "Fee 04"
 msgstr "Díj 04"
 
 #: Fees.feeappliesto
-#, fuzzy
 msgid "Fee Applies To:"
 msgstr "Díj érvényes\\:"
 
@@ -274,7 +262,6 @@ msgid "Fee information"
 msgstr "Díj információk"
 
 #: Fees.feename
-#, fuzzy
 msgid "Fee Name:"
 msgstr "Díj megnevezése\\:"
 
@@ -283,7 +270,6 @@ msgid "Fee successfully created."
 msgstr "A díj létrehozása sikeresen megtörtént."
 
 #: Fees.frequency
-#, fuzzy
 msgctxt "Fees.frequency"
 msgid "Frequency:"
 msgstr "Gyakoriság\\:"
@@ -316,19 +302,16 @@ msgid "of every"
 msgstr "minden"
 
 #: Fees.labelRecurEvery
-#, fuzzy
 msgctxt "Fees.labelRecurEvery"
 msgid "Recur every "
 msgstr "Felszámítandó minden"
 
 #: Fees.labelRecurMonths
-#, fuzzy
 msgctxt "Fees.labelRecurMonths"
 msgid "If months, specify the following:"
 msgstr "Havi gyakoriság esetén megadandó\\:"
 
 #: Fees.labelRecurWeeks
-#, fuzzy
 msgctxt "Fees.labelRecurWeeks"
 msgid "If weeks, specify the following:"
 msgstr "Heti gyakoriság esetén megadandó\\:"
@@ -339,13 +322,11 @@ msgid "The"
 msgstr "A(z)"
 
 #: Fees.labelWeeks
-#, fuzzy
 msgctxt "Fees.labelWeeks"
 msgid "week(s) "
 msgstr "hét"
 
 #: Fees.mandatory_feename
-#, fuzzy
 msgid "Fee Name "
 msgstr "Díj megnevezése"
 
@@ -385,12 +366,10 @@ msgid "Monthly"
 msgstr "Havi"
 
 #: Fees.monthlyinstruction
-#, fuzzy
 msgid "If monthly, select between the following:"
 msgstr "Havi gyakoriság esetén válasszon az alábbiak közül\\:"
 
 #: Fees.ofa
-#, fuzzy
 msgid "% of a "
 msgstr "%-a"
 
@@ -400,12 +379,10 @@ msgid "of every"
 msgstr "minden"
 
 #: Fees.oneTime
-#, fuzzy
 msgid "One time "
 msgstr "Egyszeri"
 
 #: Fees.onetime
-#, fuzzy
 msgid "One time"
 msgstr "Egyszeri"
 
@@ -426,7 +403,6 @@ msgid "Preview"
 msgstr "Előnézet"
 
 #: Fees.previewChangeAppliesTo
-#, fuzzy
 msgid "Change applies to: Existing and future accounts"
 msgstr "Módosítás érvényes\\: Összes jelenlegi és később megnyitandó számlára"
 
@@ -443,7 +419,6 @@ msgid "Product Fees"
 msgstr "Termék díjak"
 
 #: Fees.recurevery
-#, fuzzy
 msgid "Recur every"
 msgstr "Felszámítandó minden"
 
@@ -460,22 +435,18 @@ msgid "(Savings)"
 msgstr "(Megtakarítások)"
 
 #: Fees.selecttimeofcharge
-#, fuzzy
 msgid "Select time of charge for one time fees:"
 msgstr "Egyszeri díj felszámítási időpontjának a kiválasztása\\:"
 
 #: Fees.setglcode
-#, fuzzy
 msgid "Set GL Code:"
 msgstr "Főkönyvi kód beállítása\\:"
 
 #: Fees.smalldefinenewfee
-#, fuzzy
 msgid "define a new fee "
 msgstr "új díj meghatározása"
 
 #: Fees.status
-#, fuzzy
 msgid "Status:"
 msgstr "Státusz\\:"
 
@@ -501,7 +472,6 @@ msgid "Thursday"
 msgstr "Csütörtök"
 
 #: Fees.timeToCharge
-#, fuzzy
 msgid "Time of charge:"
 msgstr "Felszámítás időpontja\\:"
 
@@ -526,7 +496,6 @@ msgid "Weekly"
 msgstr "Heti"
 
 #: Fees.weeklyinstruction
-#, fuzzy
 msgid "If weekly, select between the following:"
 msgstr "Heti gyakoriság esetén válasszon az alábbiak közül\\:"
 
@@ -680,7 +649,6 @@ msgid "The action is not permissible."
 msgstr "Ez a művelet nem megengedett."
 
 #: meeting.frequency
-#, fuzzy
 msgctxt "meeting.frequency"
 msgid "Frequency:"
 msgstr "Gyakoriság\\:"
@@ -701,19 +669,16 @@ msgid "of every"
 msgstr "minden"
 
 #: meeting.labelRecurEvery
-#, fuzzy
 msgctxt "meeting.labelRecurEvery"
 msgid "Recur every "
 msgstr "Felszámítandó minden"
 
 #: meeting.labelRecurMonths
-#, fuzzy
 msgctxt "meeting.labelRecurMonths"
 msgid "If months, specify the following:"
 msgstr "Havi gyakoriság esetén megadandó\\:"
 
 #: meeting.labelRecurWeeks
-#, fuzzy
 msgctxt "meeting.labelRecurWeeks"
 msgid "If weeks, specify the following:"
 msgstr "Heti gyakoriság esetén megadandó\\:"
@@ -724,7 +689,6 @@ msgid "The"
 msgstr "A(z)"
 
 #: meeting.labelWeeks
-#, fuzzy
 msgctxt "meeting.labelWeeks"
 msgid "week(s) "
 msgstr "hét"

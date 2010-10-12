@@ -61,7 +61,6 @@ msgid "Address"
 msgstr "អាស័យដ្ឋាន"
 
 #: Personnel.Address1
-#, fuzzy
 msgid "Address 1:"
 msgstr "អាស័យដ្ឋាន១"
 
@@ -70,7 +69,6 @@ msgid "Address 1"
 msgstr "អាស័យដ្ឋាន២"
 
 #: Personnel.Address2
-#, fuzzy
 msgid "Address 2:"
 msgstr "អាស័យដ្ឋាន២"
 
@@ -79,7 +77,6 @@ msgid "Address 2"
 msgstr "អាស័យដ្ឋាន២"
 
 #: Personnel.Address3
-#, fuzzy
 msgid "Address 3:"
 msgstr "អាស័យដ្ឋាន៣"
 
@@ -92,7 +89,6 @@ msgid "Admin"
 msgstr "រដ្ឋបាល"
 
 #: Personnel.Age
-#, fuzzy
 msgid "Age:"
 msgstr "អាយុ"
 
@@ -118,7 +114,6 @@ msgid "Change password"
 msgstr "ប្តូពាក្យសំងាត់"
 
 #: Personnel.ChangeStatus
-#, fuzzy
 msgid "Change status:"
 msgstr "ប្តូលក្ខ័ណ"
 
@@ -127,7 +122,6 @@ msgid "Choose office"
 msgstr "រើសទីស្នាក់កា"
 
 #: Personnel.City
-#, fuzzy
 msgid "City:"
 msgstr "ទីក្រុង"
 
@@ -163,12 +157,10 @@ msgid "Complete the fields below."
 msgstr "បំពេញក្នុងប្រអប់ខាងក្រោម"
 
 #: Personnel.ConfirmPassword
-#, fuzzy
 msgid "Confirm Password:"
 msgstr "បញ្ជាក់ពាក្យសំងាត់"
 
 #: Personnel.Country
-#, fuzzy
 msgid "Country:"
 msgstr "ប្រទេស"
 
@@ -177,7 +169,6 @@ msgid "Country"
 msgstr "ប្រទេស"
 
 #: Personnel.DOB
-#, fuzzy
 msgid "Date of Birth:"
 msgstr "ថ្ងៃ ខៃ​ ឆ្នាំកំនើត"
 
@@ -186,12 +177,10 @@ msgid "Date of Birth"
 msgstr "ថ្ងៃ ខៃ​ ឆ្នាំកំនើត"
 
 #: Personnel.DOJBranch
-#, fuzzy
 msgid "Date of Joining Branch:"
 msgstr "កាលបរិច្ឆេទចូលរួមសាខា"
 
 #: Personnel.DOJMFI
-#, fuzzy
 msgid "MFI Joining Date:"
 msgstr "កាលបរិច្ឆេទចូលរួមរបស់MFI"
 
@@ -221,7 +210,6 @@ msgid "Edit your settings"
 msgstr "កែប្រែការបង្កើតរបស់អ្នក"
 
 #: Personnel.Email
-#, fuzzy
 msgid "Email:"
 msgstr "អ៊ីមែល"
 
@@ -246,7 +234,6 @@ msgid "Fields marked with an asterisk are required."
 msgstr "ប្រឡោះដែលមានសញ្ញាផ្កាយគឺតំរូវអោយមានពត៍មាន"
 
 #: Personnel.FirstName
-#, fuzzy
 msgid "First Name:"
 msgstr "នាមខ្លួន"
 
@@ -255,7 +242,6 @@ msgid "First Name"
 msgstr "នាមខ្លួន"
 
 #: Personnel.Gender
-#, fuzzy
 msgid "Gender:"
 msgstr "ភេទ"
 
@@ -264,7 +250,6 @@ msgid "Gender"
 msgstr "ភេទ"
 
 #: Personnel.GovtIdNum
-#, fuzzy
 msgid "Government ID:"
 msgstr "លេខកូដរបស់រដ្ឋាភិបាល"
 
@@ -273,12 +258,10 @@ msgid "Government ID"
 msgstr "លេខកូដរបស់រដ្ឋាភិបាល"
 
 #: Personnel.LanguagePreferred
-#, fuzzy
 msgid "Language Preferred:"
 msgstr "ភាសាដែលចូលចិត្ត"
 
 #: Personnel.LastName
-#, fuzzy
 msgid "Last Name:"
 msgstr "នាមត្រកូល"
 
@@ -299,12 +282,10 @@ msgid "Login information"
 msgstr "ពត៍មានដែលបានបើកចូល"
 
 #: Personnel.MaritalStatus
-#, fuzzy
 msgid "Marital Status:"
 msgstr "ស្ថានភាពគ្រួសារ"
 
 #: Personnel.MiddleName
-#, fuzzy
 msgid "Middle Name:"
 msgstr "នាមកណ្តាល"
 
@@ -321,7 +302,6 @@ msgid "No notes available."
 msgstr "គ្មានកំនត់ចំនាំទេ"
 
 #: Personnel.Note
-#, fuzzy
 msgid "Note:"
 msgstr "កំនត់ចំនាំ"
 
@@ -334,7 +314,6 @@ msgid "Notes"
 msgstr "កំនត់ចំនាំ"
 
 #: Personnel.Office
-#, fuzzy
 msgid "Office:"
 msgstr "ការិយាល័យ"
 
@@ -347,7 +326,6 @@ msgid "Office & Permissions"
 msgstr "ការិយាល័យ និងការផ្តល់សិទ្ធិ"
 
 #: Personnel.Password
-#, fuzzy
 msgid "Password:"
 msgstr "ពាក្យសំងាត់"
 
@@ -360,12 +338,10 @@ msgid "Permissions"
 msgstr "អាទិភាព"
 
 #: Personnel.PleaseNote
-#, fuzzy
 msgid "Please note:"
 msgstr "សូមចំនាំ"
 
 #: Personnel.PostalCode
-#, fuzzy
 msgid "Postal Code:"
 msgstr "លេខកូដប្រៃសណីយ"
 
@@ -390,7 +366,6 @@ msgid "Recent notes"
 msgstr "កំនត់ចំនាំថ្មីៗ"
 
 #: Personnel.RecordCreationDate
-#, fuzzy
 msgid "Record Creation Date:"
 msgstr "កត់ត្រាថ្ងៃបង្កើត"
 
@@ -407,7 +382,6 @@ msgid "Review the text below."
 msgstr "ពិនិត្យមើលអត្ថបទខាងក្រោម"
 
 #: Personnel.Roles
-#, fuzzy
 msgid "Roles:"
 msgstr "តួនាទី"
 
@@ -416,7 +390,6 @@ msgid "Search users by Name"
 msgstr "ស្វែងរកអ្នកប្រើប្រាស់តាមរយះឈ្មោះ"
 
 #: Personnel.SecondLastName
-#, fuzzy
 msgid "Second Last Name:"
 msgstr "ត្រកូលទីពីរ"
 
@@ -429,7 +402,6 @@ msgid "See all notes"
 msgstr "មើលរាល់កំនត់ចំណាំ"
 
 #: Personnel.State
-#, fuzzy
 msgid "State:"
 msgstr "រដ្ឋ"
 
@@ -458,12 +430,10 @@ msgstr ""
 "មិនចាំបាច់បើកសិទ្ធីអ្នកប្រើប្រាស់"
 
 #: Personnel.SystemIdAssigned
-#, fuzzy
 msgid "has been assigned the system ID number:"
 msgstr "បានចាត់តាំងលេខកូដអ្នកប្រើប្រាស់ប្រពន័្ធ"
 
 #: Personnel.Telephone
-#, fuzzy
 msgid "Telephone:"
 msgstr "ទូរស័ព្វ"
 
@@ -488,7 +458,6 @@ msgid "User details"
 msgstr "លំអិតនៃអ្នកប្រើប្រាស់"
 
 #: Personnel.UserHierarchy
-#, fuzzy
 msgid "User Hierarchy:"
 msgstr "ឋានានុក្រមនៃអ្នកប្រើប្រាស់"
 
@@ -501,7 +470,6 @@ msgid "User information"
 msgstr "ពត៍មានអ្នកប្រើប្រាស់"
 
 #: Personnel.UserName
-#, fuzzy
 msgid "User Name:"
 msgstr "ឈ្មោះអ្នកប្រើប្រាស់"
 
@@ -514,7 +482,6 @@ msgid "The user record was locked by the system due to"
 msgstr "កំនត់ត្រារបស់អ្នកប្រើប្រាស់បានបិតទុកដោប្រព័ន្ធដោយសាតែ"
 
 #: Personnel.UserTitle
-#, fuzzy
 msgid "User Title:"
 msgstr "គោរម្យងារបស់អ្នកប្រើប្រាស់"
 

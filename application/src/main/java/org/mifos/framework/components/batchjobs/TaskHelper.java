@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.springframework.batch.core.StepContribution;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
@@ -48,10 +49,14 @@ public abstract class TaskHelper implements Tasklet {
     public abstract void execute(long timeInMillis) throws BatchJobException;
 
     @Override
-    @SuppressWarnings("unused")
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
         Date scheduledFireTime = new Date(chunkContext.getStepContext().getStepExecution().getJobParameters().getLong(MifosBatchJob.JOB_EXECUTION_TIME_KEY));
-        execute(scheduledFireTime.getTime());
+        try {
+            execute(scheduledFireTime.getTime());
+        }
+        catch (BatchJobException ex) {
+            contribution.setExitStatus(ExitStatus.FAILED.addExitDescription(ex.getErrorMessage()));
+        }
         return RepeatStatus.FINISHED;
     }
 

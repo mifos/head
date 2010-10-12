@@ -1,6 +1,5 @@
 # extracted from Meeting.properties
 #. extracted from Meeting.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

@@ -52,6 +52,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
 
     @Before
     public void setUp() throws Exception {
+        enableCustomWorkingDays();
         saveCollectionSheetUtils = new TestSaveCollectionSheetUtils();
     }
 

@@ -103,6 +103,7 @@
                      path="/pages/application/center/jsp/center_search_transfer_group.jsp"/>
             <forward name="viewCenterChangeLog" path="/pages/application/center/jsp/viewChangeLog.jsp"/>
             <forward name="cancelCenterChangeLog" path="/centerCustAction.do?method=get"/>
+            <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
         </action>
 
                 <!-- Group action M2 style-->
@@ -277,6 +278,9 @@
                      path="/pages/application/savings/jsp/savingsaccountdepositduedetails.jsp"/>
             <forward name="waiveAmount_success" path="/savingsAction.do?method=getDepositDueDetails"/>
             <forward name="getStatusHistory_success" path="/pages/application/savings/jsp/viewstatuschangehistory.jsp"/>
+            
+            <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
+            
             <!--  Audit Log -->
             <forward name="viewSavingsChangeLog" path="/pages/application/savings/jsp/viewChangeLog.jsp"/>
             <forward name="cancelSavingsChangeLog" path="/savingsAction.do?method=get"/>

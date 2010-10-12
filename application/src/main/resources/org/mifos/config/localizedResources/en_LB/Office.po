@@ -1,6 +1,5 @@
 # extracted from Office.properties
 #. extracted from Office.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

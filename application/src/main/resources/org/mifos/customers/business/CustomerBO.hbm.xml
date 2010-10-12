@@ -448,6 +448,22 @@
 		group by ls.orig_principal_currency_id
 		]]>
 	</sql-query>
+    <sql-query name="Customer.getTotalLoanAmountForGroup">
+        <return-scalar column="currency" type="short"/>
+        <return-scalar column="totalLoanAmount" type="big_decimal"/>
+        <![CDATA[select ls.orig_principal_currency_id as currency,
+		sum(ls.orig_principal) as totalLoanAmount
+		from loan_summary ls
+		inner join loan_account la on la.account_id = ls.account_id
+		inner join account a on a.account_id = la.account_id
+		inner join customer c on c.customer_id = a.customer_id
+		where (c.search_id = :SEARCH_STRING or c.search_id like :SEARCH_STRING2)
+    	and c.branch_id = :OFFICE_ID
+		and c.status_id in (3, 4, 9, 10)
+		and a.account_state_id in (5, 9)
+		group by ls.orig_principal_currency_id
+		]]>
+    </sql-query>
 	<sql-query
 		name="Customer.getTotalOutstandingLoanAmountForGroupAndClientsOfGroups">
 		<return-scalar column="currency" type="short" />

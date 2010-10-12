@@ -19,8 +19,15 @@
  */
 package org.mifos.accounts.savings.persistence;
 
+import java.util.Iterator;
 import java.util.List;
 
+import org.joda.time.LocalDate;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.interest.EndOfDayDetail;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.accounts.business.AccountCustomFieldEntity;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
@@ -29,6 +36,10 @@ import org.mifos.application.servicefacade.CustomerHierarchyParams;
  *
  */
 public interface SavingsDao {
+
+    SavingsBO findById(Long savingsId);
+
+    void save(SavingsBO savingsAccount);
 
     List<CollectionSheetCustomerSavingDto> findAllMandatorySavingAccountsForClientsOrGroupsWithCompleteGroupStatusForCustomerHierarchy(
             CustomerHierarchyParams customerHierarchyParams);
@@ -44,5 +55,15 @@ public interface SavingsDao {
 
     List<CollectionSheetCustomerSavingsAccountDto> findAllSavingAccountsForCustomerHierarchy(
             CustomerHierarchyParams customerHierarchyParams);
+
+    Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForSavings();
+
+    Iterator<AccountCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
+
+    List<EndOfDayDetail> retrieveAllEndOfDayDetailsFor(MifosCurrency currency, Long savingsId);
+
+    List<Integer> retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(LocalDate interestPostingDate);
+
+    List<Integer> retreiveAccountsPendingForInterestCalculation(LocalDate currentDate);
 
 }

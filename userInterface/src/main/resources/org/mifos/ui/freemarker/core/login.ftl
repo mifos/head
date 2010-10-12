@@ -31,7 +31,7 @@
             <span><input type="password" name="j_password" id="login.input.password"></span>
         </div>
           <div>&nbsp;</div>
-          <div> <input type="submit" value="[@spring.message "login.login" /]" class="buttn" id="login.button.login" />
+          <div> <input type="submit" value="[@spring.message "login.login" /]" class="buttn" style="margin-right: 16px;" id="login.button.login" />
         </div>
         </div>
         <!--End of Right side div-->

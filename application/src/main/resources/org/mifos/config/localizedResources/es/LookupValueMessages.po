@@ -93,7 +93,6 @@ msgid "Savings Adjustment"
 msgstr "Ajuste de ahorros"
 
 #: AccountAction-WaiveOffDue
-#, fuzzy
 msgid "Waive Off Due"
 msgstr "Prescindir lo que se debe"
 
@@ -312,12 +311,10 @@ msgid "A"
 msgstr "Un "
 
 #: CustomerAttendance-Al
-#, fuzzy
 msgid "AA"
 msgstr "AA"
 
 #: CustomerAttendance-L
-#, fuzzy
 msgid "L"
 msgstr "L"
 
@@ -387,7 +384,6 @@ msgid "Time Of Disburstment"
 msgstr "Tiempo de desembolso"
 
 #: FeePayment-TimeOfFirstLoanRepayment
-#, fuzzy
 msgid "Time of First Loan Repayment "
 msgstr "Tiempo del primer pago del préstamo"
 
@@ -782,17 +778,14 @@ msgid "Can Administer Reports"
 msgstr "Puede administrar los reportes"
 
 #: Permissions-CanApplyChargesToLoans
-#, fuzzy
 msgid "Can apply charges to loans "
 msgstr "Puede aplicar cargos a los préstamos"
 
 #: Permissions-CanApproveLoansInBulk
-#, fuzzy
 msgid "Can approve loans in bulk "
 msgstr "Puede aprobar multiple préstamos "
 
 #: Permissions-CanBlacklistSavingsAccount
-#, fuzzy
 msgid "Can blacklist Savings account"
 msgstr "Puede poner en la lista negra la cuenta de ahorros"
 
@@ -1134,7 +1127,6 @@ msgid "Can view Daily Cash Flow Report - Branch"
 msgstr "Puede ver el reporte de Flujo de Caja Diario - Sucursal "
 
 #: Permissions-CanViewDailyPortfolioQualityDataReportAgingAnalysis
-#, fuzzy
 msgid "Can view Daily Portfolio quality data report - Aging analysis"
 msgstr ""
 "Puede ver el reporte Diario de Datos de Calidad de la Cartera - Análisis de "
@@ -1145,7 +1137,6 @@ msgid "Can view Daily Transaction Summary report"
 msgstr "Puede ver el reporte del Resumen diario de transacciones"
 
 #: Permissions-CanViewDetailedAgingOfPortfolioAtRisk
-#, fuzzy
 msgid "Can view Detailed Aging of Portfolio at Risk"
 msgstr "Puede ver el detalle de la Cartera de Madurez en riesgo"
 
@@ -1240,7 +1231,6 @@ msgid "Can apply charges to Center accounts"
 msgstr "Pueden aplicar cargos a las cuentas del Centro "
 
 #: Permissions-Centers-CanCreateNewCenter
-#, fuzzy
 msgid "Can create new Center "
 msgstr "Puede crear un nuevo Centro"
 
@@ -1254,7 +1244,6 @@ msgid "Can edit fee amount attached to the account"
 msgstr "Puede editar la cuota adjunta a la cuenta"
 
 #: Permissions-Centers-CanEditMeetingSchedule
-#, fuzzy
 msgid "Can edit meeting schedule "
 msgstr "Puede editar el horario de reuniones"
 
@@ -1267,7 +1256,6 @@ msgid "Can make payments to Center accounts"
 msgstr "Puede hacer pagos a las cuentas del Centro"
 
 #: Permissions-Centers-CanModifyCenterInformation
-#, fuzzy
 msgid "Can modify Center information "
 msgstr "Puede modificar la información del Centro"
 
@@ -1559,7 +1547,6 @@ msgstr "Puede cambiar a estado Cerrado -  Pérdidas "
 
 # LO=Loan Officer??
 #: Permissions-LoanProcessing-CanChangeStateToDisbursedToLo
-#, fuzzy
 msgid "Can change state to Disbursed to LO"
 msgstr "Puede cambiar el estado a  Desembolsado al Oficial de Crédito"
 

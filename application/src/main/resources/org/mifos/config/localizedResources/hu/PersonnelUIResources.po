@@ -60,7 +60,6 @@ msgid "Address"
 msgstr "Cím"
 
 #: Personnel.Address1
-#, fuzzy
 msgid "Address 1:"
 msgstr "Cím 1\\:"
 
@@ -69,7 +68,6 @@ msgid "Address 1"
 msgstr "Cím 1"
 
 #: Personnel.Address2
-#, fuzzy
 msgid "Address 2:"
 msgstr "Cím 2\\:"
 
@@ -78,7 +76,6 @@ msgid "Address 2"
 msgstr "Cím 2"
 
 #: Personnel.Address3
-#, fuzzy
 msgid "Address 3:"
 msgstr "Cím 3\\:"
 
@@ -91,7 +88,6 @@ msgid "Admin"
 msgstr "Adminisztráció"
 
 #: Personnel.Age
-#, fuzzy
 msgid "Age:"
 msgstr "Életkor\\:"
 
@@ -119,7 +115,6 @@ msgid "Change password"
 msgstr "Jelszó módosítása"
 
 #: Personnel.ChangeStatus
-#, fuzzy
 msgid "Change status:"
 msgstr "Státusz módosítása\\:"
 
@@ -128,7 +123,6 @@ msgid "Choose office"
 msgstr "Válasszon irodát"
 
 #: Personnel.City
-#, fuzzy
 msgid "City:"
 msgstr "Város\\:"
 
@@ -168,12 +162,10 @@ msgid "Complete the fields below."
 msgstr "Töltse ki az alábbi mezőket."
 
 #: Personnel.ConfirmPassword
-#, fuzzy
 msgid "Confirm Password:"
 msgstr "Jelszó megerősítése\\:"
 
 #: Personnel.Country
-#, fuzzy
 msgid "Country:"
 msgstr "Ország\\:"
 
@@ -182,7 +174,6 @@ msgid "Country"
 msgstr "Ország"
 
 #: Personnel.DOB
-#, fuzzy
 msgid "Date of Birth:"
 msgstr "Születési idő\\:"
 
@@ -191,12 +182,10 @@ msgid "Date of Birth"
 msgstr "Születési idő"
 
 #: Personnel.DOJBranch
-#, fuzzy
 msgid "Date of Joining Branch:"
 msgstr "Fiókhoz csatlakozás napja\\:"
 
 #: Personnel.DOJMFI
-#, fuzzy
 msgid "MFI Joining Date:"
 msgstr "MFI-hez csatlakozás napja\\:"
 
@@ -226,7 +215,6 @@ msgid "Edit your settings"
 msgstr "Saját beállítások szerkesztése"
 
 #: Personnel.Email
-#, fuzzy
 msgid "Email:"
 msgstr "E-mail\\:"
 
@@ -251,7 +239,6 @@ msgid "Fields marked with an asterisk are required."
 msgstr "A csillaggal jelölt mezők kitöltése kötelező."
 
 #: Personnel.FirstName
-#, fuzzy
 msgid "First Name:"
 msgstr "Keresztnév\\:"
 
@@ -260,7 +247,6 @@ msgid "First Name"
 msgstr "Keresztnév"
 
 #: Personnel.Gender
-#, fuzzy
 msgid "Gender:"
 msgstr "Neme\\:"
 
@@ -269,7 +255,6 @@ msgid "Gender"
 msgstr "Neme"
 
 #: Personnel.GovtIdNum
-#, fuzzy
 msgid "Government ID:"
 msgstr "Azonosító okmány száma\\:"
 
@@ -278,12 +263,10 @@ msgid "Government ID"
 msgstr "Azonosító okmány száma"
 
 #: Personnel.LanguagePreferred
-#, fuzzy
 msgid "Language Preferred:"
 msgstr "Preferált nyelv\\:"
 
 #: Personnel.LastName
-#, fuzzy
 msgid "Last Name:"
 msgstr "Vezetéknév\\:"
 
@@ -304,12 +287,10 @@ msgid "Login information"
 msgstr "Bejelentkezés információk"
 
 #: Personnel.MaritalStatus
-#, fuzzy
 msgid "Marital Status:"
 msgstr "Családi állapot\\:"
 
 #: Personnel.MiddleName
-#, fuzzy
 msgid "Middle Name:"
 msgstr "Második keresztnév\\:"
 
@@ -326,7 +307,6 @@ msgid "No notes available."
 msgstr "Nem áll megjegyzés rendelkezésre."
 
 #: Personnel.Note
-#, fuzzy
 msgid "Note:"
 msgstr "Megjegyzés\\:"
 
@@ -339,7 +319,6 @@ msgid "Notes"
 msgstr "Megjegyzések"
 
 #: Personnel.Office
-#, fuzzy
 msgid "Office:"
 msgstr "Iroda\\:"
 
@@ -352,7 +331,6 @@ msgid "Office & Permissions"
 msgstr "Iroda és jogosultságok"
 
 #: Personnel.Password
-#, fuzzy
 msgid "Password:"
 msgstr "Jelszó\\:"
 
@@ -365,12 +343,10 @@ msgid "Permissions"
 msgstr "Jogosultságok"
 
 #: Personnel.PleaseNote
-#, fuzzy
 msgid "Please note:"
 msgstr "Megjegyzés\\:"
 
 #: Personnel.PostalCode
-#, fuzzy
 msgid "Postal Code:"
 msgstr "Irányítószám\\:"
 
@@ -395,7 +371,6 @@ msgid "Recent notes"
 msgstr "Friss megjegyzések"
 
 #: Personnel.RecordCreationDate
-#, fuzzy
 msgid "Record Creation Date:"
 msgstr "Rekord létrehozás dátuma\\:"
 
@@ -412,7 +387,6 @@ msgid "Review the text below."
 msgstr "Ellenőrizze az alábbbi szöveget."
 
 #: Personnel.Roles
-#, fuzzy
 msgid "Roles:"
 msgstr "Szerepek\\:"
 
@@ -421,7 +395,6 @@ msgid "Search users by Name"
 msgstr "Felhasználók keresése név alapján"
 
 #: Personnel.SecondLastName
-#, fuzzy
 msgid "Second Last Name:"
 msgstr "Második vezetéknév\\:"
 
@@ -434,7 +407,6 @@ msgid "See all notes"
 msgstr "Összes megjegyzés megtekintése"
 
 #: Personnel.State
-#, fuzzy
 msgid "State:"
 msgstr "Státusz\\:"
 
@@ -466,12 +438,10 @@ msgstr ""
 "lapra, kattintson a Mégsem gombra."
 
 #: Personnel.SystemIdAssigned
-#, fuzzy
 msgid "has been assigned the system ID number:"
 msgstr "az alábbi rendszerazonosítót kapta\\:"
 
 #: Personnel.Telephone
-#, fuzzy
 msgid "Telephone:"
 msgstr "Telefon\\:"
 
@@ -496,7 +466,6 @@ msgid "User details"
 msgstr "Felhasználó adatai"
 
 #: Personnel.UserHierarchy
-#, fuzzy
 msgid "User Hierarchy:"
 msgstr "Felhasználói hierarchia\\:"
 
@@ -509,7 +478,6 @@ msgid "User information"
 msgstr "Felhasználó információk"
 
 #: Personnel.UserName
-#, fuzzy
 msgid "User Name:"
 msgstr "Felhasználónév\\:"
 
@@ -522,7 +490,6 @@ msgid "The user record was locked by the system due to"
 msgstr "A felhasználó rekordot a rendszer zárolta, mert"
 
 #: Personnel.UserTitle
-#, fuzzy
 msgid "User Title:"
 msgstr "Felhasználó címe\\:"
 

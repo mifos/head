@@ -37,7 +37,6 @@ msgid "Select a valid Meeting Date"
 msgstr "ជ្រើសរើសកាលវិភាគប្រជុំដែលមានសុពលភាព"
 
 #: runDate.invalid
-#, fuzzy
 msgid "Please enter date as DD/MM/YYYY "
 msgstr "សូមបដាក់កាលបរិច្ជេទក្នុងទំរង់ថ្ងៃ/ខែ/ឆ្នាំ"
 

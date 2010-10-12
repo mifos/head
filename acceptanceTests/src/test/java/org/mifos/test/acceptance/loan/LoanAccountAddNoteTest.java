@@ -84,6 +84,7 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    @Test(enabled=false)
     public void addNoteToLoanAccountAndVerifyAllNotes() throws Exception {
         initData();
 

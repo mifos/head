@@ -1,6 +1,5 @@
 # extracted from GroupUIResources.properties
 #. extracted from GroupUIResources.properties
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"

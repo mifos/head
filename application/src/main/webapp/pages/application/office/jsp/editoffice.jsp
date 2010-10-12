@@ -47,7 +47,7 @@ explanation of the license and how it is applied.
     <SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<html-el:form action="/offAction.do?method=editpreview">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
-			<c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"></c:set>
+			<c:set var="officeDto" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'officeDto')}"></c:set>
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link styleId="editoffice.link.admin"
 						href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
@@ -57,7 +57,7 @@ explanation of the license and how it is applied.
 						<mifos:mifoslabel name="Office.labelLinkViewOffices" />
 					</html-el:link> / <html-el:link styleId="editoffice.link.viewOffice"
 						href="offAction.do?method=get&officeId=${offActionForm.officeId}&randomNUm=${sessionScope.randomNUm}">
-						<c:out value="${BusinessKey.officeName}"></c:out>
+						<c:out value="${officeDto.name}"></c:out>
 					</html-el:link> </span></td>
 				</tr>
 			</table>
@@ -67,7 +67,7 @@ explanation of the license and how it is applied.
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange"><span class="heading"><c:out
-								value="${BusinessKey.officeName}"></c:out> - </span><mifos:mifoslabel
+								value="${officeDto.name}"></c:out> - </span><mifos:mifoslabel
 								name="Office.labelEditOfficeInfo" /></td>
 						</tr>
 						<tr>
@@ -116,10 +116,10 @@ explanation of the license and how it is applied.
 							<td>
 
 							<c:choose>
-							<c:when test="${offActionForm.officeLevel eq OfficeLevel.HEADOFFICE.value or BusinessKey.level.id eq OfficeLevel.BRANCHOFFICE.value}">
+							<c:when test="${offActionForm.officeLevel eq OfficeLevel.HEADOFFICE.value or officeDto.levelId eq OfficeLevel.BRANCHOFFICE.value}">
 							  <mifos:select name="offActionForm" property="officeLevel" disabled="true"
 								size="1" >
-									<html-el:option value="${BusinessKey.level.id}">${BusinessKey.level.name}</html-el:option>
+									<html-el:option value="${officeDto.levelId}">${officeDto.officeLevelName}</html-el:option>
 							  </mifos:select>
 
 							</c:when>
@@ -329,7 +329,7 @@ explanation of the license and how it is applied.
 			</table>
 			<br>
 			<br>
-			<html-el:hidden property="officeId" value="${BusinessKey.officeId}" />
+			<html-el:hidden property="officeId" value="${officeDto.officeId}" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 

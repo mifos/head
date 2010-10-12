@@ -55,6 +55,7 @@ import org.mifos.application.servicefacade.CustomerServiceFacade;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.application.servicefacade.MeetingServiceFacade;
+import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.AccountingRules;
@@ -108,6 +109,7 @@ public abstract class BaseAction extends DispatchAction {
     protected GroupDetailsServiceFacade groupDetailsServiceFacade = DependencyInjectedServiceLocator.locateGroupDetailsServiceFacade();
     protected ClientDetailsServiceFacade clientDetailsServiceFacade = DependencyInjectedServiceLocator.locateClientDetailsServiceFacade();
     protected LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
+    protected SavingsServiceFacade savingsServiceFacade = DependencyInjectedServiceLocator.locateSavingsServiceFacade();
     protected HolidayServiceFacade holidayServiceFacade = DependencyInjectedServiceLocator.locateHolidayServiceFacade();
     protected LegacyOfficeServiceFacade legacyOfficeServiceFacade = DependencyInjectedServiceLocator.locateLegacyOfficeServiceFacade();
     protected OfficeServiceFacade officeServiceFacade = DependencyInjectedServiceLocator.locateOfficeServiceFacade();
@@ -136,6 +138,7 @@ public abstract class BaseAction extends DispatchAction {
             this.officeServiceFacade = springAppContext.getBean(OfficeServiceFacade.class);
             this.feeServiceFacade = springAppContext.getBean(FeeServiceFacade.class);
             this.fundServiceFacade = springAppContext.getBean(FundServiceFacade.class);
+            this.savingsServiceFacade = springAppContext.getBean(SavingsServiceFacade.class);
 
             this.fundDao = springAppContext.getBean(FundDao.class);
         }

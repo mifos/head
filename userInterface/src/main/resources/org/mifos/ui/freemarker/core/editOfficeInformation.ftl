@@ -39,8 +39,10 @@ return editOfficeInformation.submit();
         <div class="fontBold"><span>${spring.status.value?default("")}</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "offices.editOfficeInformation.editofficeinformation" /]</span></div>
         <div><span>[@spring.message "offices.editOfficeInformation.previewthefieldsbelow.ThenclickConfirm.ClickCanceltoreturntoOfficeDetailswithoutsubmittinginformation" /]</span></div>
         <div><span class="red"> * </span>[@spring.message "fieldsmarkedwithanasteriskarerequired." /]</div>
-        <p class="error" id="editoffice.error.message">        
+        <p class="error" id="editoffice.error.message">
+        [#if showError == "true"]
         [@mifos.showAllErrors "officeFormBean.*"/]
+        [/#if]
         </p>
 		<p class="fontBold">[@spring.message "offices.editOfficeInformation.officedetails" /]</p>
 		<p>&nbsp;&nbsp;</p>
