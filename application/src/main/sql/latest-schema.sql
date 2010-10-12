@@ -4487,7 +4487,7 @@ create table QRTZ_CALENDARS(
 create table QRTZ_PAUSED_TRIGGER_GRPS(
     trigger_group  varchar(200) not null,
     primary key (trigger_group)
-);
+) engine=innodb character set utf8;
 
 create table QRTZ_FIRED_TRIGGERS(
     entry_id varchar(95) not null,
