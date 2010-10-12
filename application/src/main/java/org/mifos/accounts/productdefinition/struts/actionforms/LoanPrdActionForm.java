@@ -2407,7 +2407,12 @@ public class LoanPrdActionForm extends BaseActionForm {
                 }
             }
 
-        cashFlowWarningThresholdValue = cashFlowThreshold;
+            if(cashFlowThreshold != null) {
+                if(cashFlowThreshold >= AccountingRules.getCashFlowWarningThreshold()) {
+                    addError(actionErrors,"cashFlowWarningThreshold",ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID, String.valueOf(AccountingRules.getCashFlowWarningThreshold()));
+                }
+                cashFlowWarningThresholdValue = cashFlowThreshold;
+            }
 
         }
     }

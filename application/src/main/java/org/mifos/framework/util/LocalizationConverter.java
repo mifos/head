@@ -242,7 +242,7 @@ public class LocalizationConverter {
 
         try {
             Double cashFlowThreshold = getDoubleValueForInterest(doubleStr);
-            if (cashFlowThreshold < 0 || cashFlowThreshold >= AccountingRules.getCashFlowWarningThreshold()) {
+            if (cashFlowThreshold < 0 ) {
                 errors.add(ConversionError.CASHFLOW_THRESHOLD_OUT_OF_RANGE);
             } else {
                 result.setDoubleValue(cashFlowThreshold);
