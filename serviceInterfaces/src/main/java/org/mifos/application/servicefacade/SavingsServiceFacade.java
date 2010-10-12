@@ -38,6 +38,7 @@ public interface SavingsServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     void adjustTransaction(SavingsAdjustmentDto savingsAdjustment);
 
+    @PreAuthorize("isFullyAuthenticated()")
     void batchRecalculateInterestToBePostedForSavingsAccount(LocalDate dateBatchJobIsScheduled);
 
     void batchPostInterestToSavingsAccount(LocalDate dateOfBatchJob);

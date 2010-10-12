@@ -21,6 +21,7 @@
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -29,7 +30,14 @@ import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
+import org.mifos.security.MifosUser;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 public class SavingsIntPostingHelper extends TaskHelper {
 
@@ -42,11 +50,24 @@ public class SavingsIntPostingHelper extends TaskHelper {
     @Override
     public void execute(final long scheduledFireTime) throws BatchJobException {
 
+        // FIXME - keithw - batch jobs should authenticate before being triggered/invoked.
+        MifosUser principal = createMifosAdminUser();
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        if (securityContext == null) {
+            securityContext = new SecurityContextImpl();
+            SecurityContextHolder.setContext(securityContext);
+        }
+        if (securityContext.getAuthentication() == null || !securityContext.getAuthentication().isAuthenticated()) {
+            Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal, principal.getAuthorities());
+            securityContext.setAuthentication(authentication);
+        }
+
         LocalDate dateOfBatchJob = new LocalDate(scheduledFireTime);
 
         List<String> errorList = new ArrayList<String>();
         try {
-            this.savingsServiceFacade.batchPostInterestToSavingsAccount(dateOfBatchJob);
+            this.savingsServiceFacade.batchRecalculateInterestToBePostedForSavingsAccount(dateOfBatchJob);
         } catch (BusinessRuleException e) {
             errorList.add(e.getMessageKey());
         }
@@ -54,5 +75,19 @@ public class SavingsIntPostingHelper extends TaskHelper {
         if (errorList.size() > 0) {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
         }
+    }
+
+    private MifosUser createMifosAdminUser() {
+        Integer userId = Integer.valueOf(1);
+        Short branchId = Short.valueOf("1");
+        String username = "mifos";
+        byte[] password = "testmifos".getBytes();
+        boolean enabled  = true;
+        boolean accountNonExpired = true;
+        boolean credentialsNonExpired = true;
+        boolean accountNonLocked = true;
+        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+
+       return new MifosUser(userId, branchId, username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
 }

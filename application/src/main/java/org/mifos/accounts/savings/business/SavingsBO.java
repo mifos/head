@@ -581,9 +581,7 @@ public class SavingsBO extends AccountBO {
         interestPayment.addAccountTrxn(interestPostingTransaction);
         this.addAccountPayment(interestPayment);
 
-        this.lastIntPostDate = this.nextIntPostDate;
-        this.nextIntPostDate = nextPostingDate.toDateMidnight().toDate();
-        this.interestToBePosted = Money.zero(this.getCurrency());
+        updatePostingDetails(nextPostingDate);
 
         // NOTE: financial Transaction Processing should be decoupled from application domain model.
         try {
@@ -592,6 +590,12 @@ public class SavingsBO extends AccountBO {
         } catch (FinancialException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    public void updatePostingDetails(LocalDate nextPostingDate) {
+        this.lastIntPostDate = this.nextIntPostDate;
+        this.nextIntPostDate = nextPostingDate.toDateMidnight().toDate();
+        this.interestToBePosted = Money.zero(this.getCurrency());
     }
 
     private boolean accountRequiresInterestPosting() {
