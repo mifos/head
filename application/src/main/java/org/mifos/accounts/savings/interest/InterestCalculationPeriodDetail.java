@@ -50,7 +50,7 @@ public class InterestCalculationPeriodDetail {
         List<EndOfDayDetail> applicableDailyDetailsForPeriod = new ArrayList<EndOfDayDetail>();
 
         for (EndOfDayDetail endOfDayDetail : allEndOfDayDetailsForAccount) {
-            if (interval.dateFallsWithin(endOfDayDetail.getDate())) {
+            if (interval.contains(endOfDayDetail.getDate())) {
                 applicableDailyDetailsForPeriod.add(endOfDayDetail);
             }
         }

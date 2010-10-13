@@ -68,4 +68,24 @@ public class DailyInterestScheduledEvent implements InterestScheduledEvent {
 
         return previousMatchingDate;
     }
+
+    @Override
+    public boolean isAMatchingDate(LocalDate baseDate, LocalDate date) {
+        List<LocalDate> allMatchingDates = findAllMatchingDatesFromBaseDateToCutOffDate(baseDate, date);
+        return allMatchingDates.contains(date);
+    }
+
+    @Override
+    public LocalDate nextMatchingDateAfter(LocalDate baseDate, LocalDate after) {
+        LocalDate nextMatchingDate = after;
+        LocalDate cutOff = after.plusMonths(every+1);
+        List<LocalDate> allMatchingDates = findAllMatchingDatesFromBaseDateToCutOffDate(baseDate, cutOff);
+        for (LocalDate matchingDate : allMatchingDates) {
+            if (matchingDate.isAfter(after)) {
+                nextMatchingDate = matchingDate;
+                return nextMatchingDate;
+            }
+        }
+        return nextMatchingDate;
+    }
 }
