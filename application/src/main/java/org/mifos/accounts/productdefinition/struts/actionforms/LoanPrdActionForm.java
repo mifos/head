@@ -1844,7 +1844,8 @@ public class LoanPrdActionForm extends BaseActionForm {
         logger.debug("validateForPreview method of Loan Product Action form method called :" + prdOfferingName);
     }
 
-    private void setSelectedQuestionGroups(HttpServletRequest request) {
+    // Intentionally made public to aid testing !!!
+    public void setSelectedQuestionGroups(HttpServletRequest request) {
         try {
             List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
             if (loanOfferingQGs != null && loanOfferingQGs.length > 0) {
