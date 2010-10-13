@@ -22,12 +22,17 @@ package org.mifos.application.servicefacade;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountNotesEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -47,21 +52,30 @@ import org.mifos.accounts.savings.interest.SavingsInterestDetail;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.savings.persistence.SavingsDao;
+import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountPaymentData;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.util.helpers.ChildrenStateType;
+import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
@@ -444,5 +458,64 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         NonCompoundingInterestCalculator interestCalculationPeriodCalculator = new InterestCalculationPeriodCalculator(
                 interestCalculator, interestCalculationEvent, interestCalculationIntervalHelper);
         return interestCalculationPeriodCalculator;
+    }
+
+    @Override
+    public SavingsAccountClosureDto retrieveClosingDetails(Long savingsId) {
+
+        SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
+
+        Date transactionDate = new LocalDate().toDateMidnight().toDate();
+
+        try {
+            Money interestAmount = savingsAccount.calculateInterestForClosure(transactionDate);
+
+            return savingsAccount.toClosureDto(interestAmount.toString());
+        } catch (AccountException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    @Override
+    public void closeSavingsAccount(Long savingsId, String notes, SavingsWithdrawalDto closeAccountDto) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        UserContext userContext = new UserContext();
+        userContext.setBranchId(user.getBranchId());
+        userContext.setId(Short.valueOf((short) user.getUserId()));
+        userContext.setName(user.getUsername());
+
+        SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
+
+        PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
+        AccountNotesEntity notesEntity = new AccountNotesEntity(new DateTimeService().getCurrentJavaSqlDate(), notes, createdBy, savingsAccount);
+
+        try {
+            CustomerBO customer = savingsAccount.getCustomer();
+            if (closeAccountDto.getCustomerId() != null) {
+                List<CustomerBO> clientList = savingsAccount.getCustomer().getChildren(CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD);
+                for (CustomerBO client : clientList) {
+                    if (closeAccountDto.getCustomerId().intValue() == client.getCustomerId().intValue()) {
+                        customer = client;
+                        break;
+                    }
+                }
+            }
+
+            Money amount = new Money(savingsAccount.getCurrency(), closeAccountDto.getAmount().toString());
+            PaymentTypeEntity paymentType = new PaymentTypeEntity(closeAccountDto.getModeOfPayment().shortValue());
+            Date receiptDate = null;
+            if (closeAccountDto.getDateOfReceipt() != null) {
+                receiptDate = closeAccountDto.getDateOfReceipt().toDateMidnight().toDate();
+            }
+            AccountPaymentEntity closeAccount = new AccountPaymentEntity(savingsAccount, amount, closeAccountDto.getReceiptId(), receiptDate, paymentType, closeAccountDto.getDateOfWithdrawal().toDateMidnight().toDate());
+
+            savingsAccount.closeAccount(closeAccount, notesEntity, customer);
+        } catch (AccountException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        } catch (CustomerException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
     }
 }

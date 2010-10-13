@@ -85,4 +85,8 @@ public class RecommendedAmntUnitEntity extends MasterDataEntity {
     protected void setName(String name) {
         MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
     }
+
+    public boolean isPerIndividual() {
+        return RecommendedAmountUnit.PER_INDIVIDUAL.getValue().equals(this.id);
+    }
 }
