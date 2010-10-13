@@ -124,7 +124,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, 12.0, 2.0, 12.0, false,
                 false, true, null, fees, (short) 2, RecurrenceType.MONTHLY, populateLoanPrdActionForm("1", "1",
-                        new Double("3000"), new Double("1000"), new Double("1000"), "12", "1", "2"), waiverInterest);
+                        new Double("3000"), new Double("1000"), new Double("1000"), "12", "1", "2"), waiverInterest, null);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
@@ -138,7 +138,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, 12.0, 2.0, 12.0, false,
                 true, false, null, fees, (short) 2, RecurrenceType.MONTHLY, populateLoanPrdActionForm("1", "1",
-                        new Double("3000"), new Double("1000"), new Double("1000"), "12", "1", "2"), waiverInterest);
+                        new Double("3000"), new Double("1000"), new Double("1000"), "12", "1", "2"), waiverInterest, null);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
@@ -182,7 +182,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, 12.0, 2.0, 12.0, false,
                 true, true, null, fees, (short) 2, RecurrenceType.MONTHLY, populateLoanPrdActionForm("1", "1",
-                        new Double("3000"), new Double("1000"), new Double("1000"), "12", "1", "2"), waiverInterest);
+                        new Double("3000"), new Double("1000"), new Double("1000"), "12", "1", "2"), waiverInterest, null);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());

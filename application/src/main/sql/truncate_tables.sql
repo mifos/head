@@ -106,6 +106,7 @@ truncate table  no_of_install_from_last_loan ;
 truncate table  loan_amount_from_last_loan ;
 truncate table  loan_offering;
 truncate table  client_initial_savings_offering;
+truncate table  prd_offering_question_group;
 truncate table  prd_offering;
 truncate table  customer_detail;
 truncate table  cust_perf_history;

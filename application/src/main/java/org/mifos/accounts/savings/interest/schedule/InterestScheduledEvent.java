@@ -38,4 +38,8 @@ public interface InterestScheduledEvent {
 
     LocalDate findFirstDateOfPeriodForMatchingDate(LocalDate matchingDate);
 
+    boolean isAMatchingDate(LocalDate baseDate, LocalDate date);
+
+    LocalDate nextMatchingDateAfter(LocalDate baseDate, LocalDate after);
+
 }

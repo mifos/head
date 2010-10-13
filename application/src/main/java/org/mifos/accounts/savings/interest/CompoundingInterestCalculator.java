@@ -22,21 +22,8 @@ package org.mifos.accounts.savings.interest;
 
 import java.util.List;
 
-import org.mifos.framework.util.helpers.Money;
+public interface CompoundingInterestCalculator {
 
-public class TotalPrincipalForPeriodCalculationStrategy implements PrincipalCalculationStrategy {
-
-    @Override
-    public Money calculatePrincipal(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
-
-        Money totalPrincipal = interestCalculationPeriodDetail.getBalanceBeforeInterval();
-
-        List<EndOfDayDetail> dailyDetails = interestCalculationPeriodDetail.getDailyDetails();
-        for (EndOfDayDetail endOfDayDetail : dailyDetails) {
-            totalPrincipal = totalPrincipal.add(endOfDayDetail.getResultantAmountForDay());
-        }
-
-        return totalPrincipal;
-    }
+    List<InterestPostingPeriodResult> calculatePostingPeriodDetails(List<EndOfDayDetail> endOfDayDetailsForPeriods, List<InterestCalculationInterval> postingPeriods);
 
 }

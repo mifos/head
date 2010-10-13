@@ -156,6 +156,7 @@ public class CreateHolidayEntryPage extends MifosPage {
         selenium.fireEvent("holidayThruDateYY", "blur");
 
         new Wait("Wait for ajax component, jsTree has timed out") {
+            @Override
             public boolean until() {
                 //id 1 is the for the root/head office of the jsTree
                 return selenium.isElementPresent("id=1");

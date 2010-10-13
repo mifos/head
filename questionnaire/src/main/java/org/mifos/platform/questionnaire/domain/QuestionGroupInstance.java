@@ -66,14 +66,12 @@ public class QuestionGroupInstance implements Serializable {
         this.entityId = entityId;
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="Date is mutable, but can't help method returning date.")
     public Date getDateConducted() {
-        return dateConducted;
+        return (Date) dateConducted.clone();
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="Date is mutable, but can't help method returning date.")
     public void setDateConducted(Date dateConducted) {
-        this.dateConducted = dateConducted;
+        this.dateConducted = (Date) dateConducted.clone();
     }
 
     public int getCompletedStatus() {

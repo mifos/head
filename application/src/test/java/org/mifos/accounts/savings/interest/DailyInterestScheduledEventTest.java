@@ -22,7 +22,9 @@ package org.mifos.accounts.savings.interest;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 
 import java.util.List;
@@ -140,5 +142,70 @@ public class DailyInterestScheduledEventTest {
         LocalDate nextValidMatchingDate = dailyEvent.findFirstDateOfPeriodForMatchingDate(jan3rd);
 
         assertThat(nextValidMatchingDate, is(jan1st));
+    }
+
+    @Test
+    public void shouldReturnFalseForInvalidMatch() {
+
+        // setup
+        int every = 2;
+        dailyEvent = new DailyInterestScheduledEvent(every);
+
+        // exercise test
+        boolean isMatch = dailyEvent.isAMatchingDate(jan1st, jan1st);
+
+        assertFalse(isMatch);
+    }
+
+    @Test
+    public void shouldReturnTrueForMatchingDate() {
+
+        // setup
+        int every = 1;
+        dailyEvent = new DailyInterestScheduledEvent(every);
+
+        // exercise test
+        boolean isMatch = dailyEvent.isAMatchingDate(jan1st, jan2nd);
+
+        assertTrue(isMatch);
+    }
+
+    @Test
+    public void shouldReturnTrueForAnyMatchingDate() {
+
+        // setup
+        int every = 2;
+        dailyEvent = new DailyInterestScheduledEvent(every);
+
+        // exercise test
+        boolean isMatch = dailyEvent.isAMatchingDate(jan1st, jan2nd);
+
+        assertTrue(isMatch);
+    }
+
+    @Test
+    public void shouldFindNearestMatchingDateAfterALegalDailyDate() {
+
+        // setup
+        int every = 1;
+        dailyEvent = new DailyInterestScheduledEvent(every);
+
+        // exercise test
+        LocalDate nextMatchingDate = dailyEvent.nextMatchingDateAfter(jan1st, jan2nd);
+
+        assertThat(nextMatchingDate, is(jan3rd));
+    }
+
+    @Test
+    public void shouldFindNearestMatchingDateAfterAnyGivenDate() {
+
+        // setup
+        int every = 1;
+        dailyEvent = new DailyInterestScheduledEvent(every);
+
+        // exercise test
+        LocalDate nextMatchingDate = dailyEvent.nextMatchingDateAfter(jan1st, jan3rd);
+
+        assertThat(nextMatchingDate, is(jan4th));
     }
 }

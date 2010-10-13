@@ -58,6 +58,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
     private List<PaymentTypeDto> paymentTypeDtos;
     private PaymentTypeDto defaultPaymentType;
 
+    @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();
@@ -68,6 +69,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         defaultPaymentType = paymentTypeDtos.get(0);
     }
 
+    @Override
     @After
     public void tearDown() throws Exception {
         super.tearDown();

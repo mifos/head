@@ -27,7 +27,6 @@ public class SavingsInterestCalculator implements InterestCalculator {
     private final PrincipalCalculationStrategy principalCalculationStrategy;
     private final SimpleInterestCalculationStrategy principalBasedInterestCalculation;
     private final InterestCalucationRule minimumBalanceRule;
-    private PrincipalCalculationStrategy totalPrincipalCalculationStrategy = new TotalPrincipalForPeriodCalculationStrategy();
 
     public SavingsInterestCalculator(PrincipalCalculationStrategy principalCalculationStrategy, SimpleInterestCalculationStrategy principalBasedInterestCalculation, InterestCalucationRule minimumBalanceRule) {
         this.principalCalculationStrategy = principalCalculationStrategy;
@@ -40,16 +39,13 @@ public class SavingsInterestCalculator implements InterestCalculator {
 
         Money calculatedInterest = interestCalculationPeriodDetail.zeroAmount();
 
-        Money totalBalanceForPeriod = totalPrincipalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
+        Money totalBalanceForPeriod = interestCalculationPeriodDetail.sumOfPrincipal();
+        Money totalInterestForPeriod = interestCalculationPeriodDetail.sumOfInterest();
         Money principal = principalCalculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
         if (minimumBalanceRule.isCalculationAllowed(principal)) {
             calculatedInterest = principalBasedInterestCalculation.calculateInterest(principal, interestCalculationPeriodDetail.getDuration());
         }
 
-        return new InterestCalculationPeriodResult(calculatedInterest, principal, totalBalanceForPeriod);
-    }
-
-    public void setTotalPrincipalCalculationStrategy(PrincipalCalculationStrategy totalPrincipalCalculationStrategy) {
-        this.totalPrincipalCalculationStrategy = totalPrincipalCalculationStrategy;
+        return new InterestCalculationPeriodResult(interestCalculationPeriodDetail.getInterval(), calculatedInterest, principal, totalBalanceForPeriod, totalInterestForPeriod);
     }
 }

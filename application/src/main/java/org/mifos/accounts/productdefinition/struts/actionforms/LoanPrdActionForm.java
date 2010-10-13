@@ -20,17 +20,7 @@
 
 package org.mifos.accounts.productdefinition.struts.actionforms;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -39,7 +29,6 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
@@ -58,8 +47,18 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class LoanPrdActionForm extends BaseActionForm {
     private static final Logger logger = LoggerFactory.getLogger(LoanPrdActionForm.class);
@@ -295,6 +294,8 @@ public class LoanPrdActionForm extends BaseActionForm {
     private Double maxInterestRateValue;
     private Double minInterestRateValue;
     private Double defInterestRateValue;
+
+    private String[] loanOfferingQGs;
 
     public Double getLastLoanDefaultLoanAmt1Value() {
         if (lastLoanDefaultLoanAmt1Value != null) {
@@ -1735,6 +1736,7 @@ public class LoanPrdActionForm extends BaseActionForm {
             loanOfferingFunds = null;
             gracePeriodType = null;
             gracePeriodDuration = null;
+            loanOfferingQGs = null;
         }
         logger.debug("reset method of Savings Product Action form method called ");
     }
@@ -1809,6 +1811,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         this.principalGLCode = null;
         this.interestGLCode = null;
         this.prdStatus = null;
+        this.loanOfferingQGs = null;
         logger.debug("clear method of Loan Product Action form method called :" + prdOfferingId);
     }
 
@@ -1836,8 +1839,30 @@ public class LoanPrdActionForm extends BaseActionForm {
         vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors, request);
         validatePrincDueOnLastInstAndPrincGraceType(errors);
         setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
+        setSelectedQuestionGroups(request);
         validateInterestGLCode(request, errors);
         logger.debug("validateForPreview method of Loan Product Action form method called :" + prdOfferingName);
+    }
+
+    // Intentionally made public to aid testing !!!
+    public void setSelectedQuestionGroups(HttpServletRequest request) {
+        try {
+            List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
+            if (loanOfferingQGs != null && loanOfferingQGs.length > 0) {
+                List<QuestionGroupDetail> srcQGDetails = (List<QuestionGroupDetail>) SessionUtils.getAttribute(ProductDefinitionConstants.SRCQGLIST, request);
+                for (String loanOfferingQG : loanOfferingQGs) {
+                    for (QuestionGroupDetail questionGroupDetail : srcQGDetails) {
+                        if (String.valueOf(questionGroupDetail.getId()).equals(loanOfferingQG)) {
+                            questionGroups.add(questionGroupDetail);
+                            break;
+                        }
+                    }
+                }
+            }
+            SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDQGLIST, questionGroups, request);
+        } catch (PageExpiredException e) {
+            logger.error("An error occured while setting selected question groups on session", e);
+        }
     }
 
     private void validateForEditPreview(HttpServletRequest request, ActionErrors errors, Locale locale) {
@@ -1867,6 +1892,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors, request);
         validatePrincDueOnLastInstAndPrincGraceType(errors);
         setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
+        setSelectedQuestionGroups(request);
         validateInterestGLCode(request, errors);
         logger.debug("validateForEditPreview method of Loan Product Action form method called :" + prdOfferingName);
     }
@@ -1950,8 +1976,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         try {
             if (getPrdOfferinFees() != null && getPrdOfferinFees().length > 0) {
 
-                List<FeeBO> fees = (List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE,
-                        request);
+                List<FeeBO> fees = (List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE, request);
                 for (String selectedFee : getPrdOfferinFees()) {
                     FeeBO fee = getFeeFromList(fees, selectedFee);
                     if (fee != null) {
@@ -1970,8 +1995,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         try {
             if (getLoanOfferingFunds() != null && getLoanOfferingFunds().length > 0) {
 
-                List<FundBO> funds = (List<FundBO>) SessionUtils.getAttribute(ProductDefinitionConstants.SRCFUNDSLIST,
-                        request);
+                List<FundBO> funds = (List<FundBO>) SessionUtils.getAttribute(ProductDefinitionConstants.SRCFUNDSLIST, request);
                 for (String selectedFund : getLoanOfferingFunds()) {
                     FundBO fund = getFundFromList(funds, selectedFund);
                     if (fund != null) {
@@ -2681,5 +2705,13 @@ public class LoanPrdActionForm extends BaseActionForm {
                         ProductDefinitionConstants.ERRORSTARTENDINSTALLMENT, error, rownum);
             }
         }
+    }
+
+    public String[] getLoanOfferingQGs() {
+        return loanOfferingQGs;
+    }
+
+    public void setLoanOfferingQGs(String[] loanOfferingQGs) {
+        this.loanOfferingQGs = loanOfferingQGs;
     }
 }
