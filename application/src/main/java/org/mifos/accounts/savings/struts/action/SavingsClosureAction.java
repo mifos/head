@@ -84,7 +84,7 @@ public class SavingsClosureAction extends BaseAction {
         logger.debug("In SavingsClosureAction::load(), accountId: " + savings.getAccountId());
 
         Long savingsId = Long.valueOf(savings.getAccountId());
-        SavingsAccountClosureDto closureDetails = this.savingsServiceFacade.retrieveClosingDetails(savingsId);
+        SavingsAccountClosureDto closureDetails = this.savingsServiceFacade.retrieveClosingDetails(savingsId, new LocalDate());
 
         savings = this.savingsDao.findById(savingsId);
         savings.setUserContext(uc);
@@ -184,7 +184,6 @@ public class SavingsClosureAction extends BaseAction {
         SavingsWithdrawalDto closeAccount = new SavingsWithdrawalDto(savingsId, customerId, dateOfWithdrawal, amount, modeOfPayment, receiptId, dateOfReceipt, preferredLocale);
         this.savingsServiceFacade.closeSavingsAccount(savingsId, actionForm.getNotes(), closeAccount);
 
-//        SessionUtils.removeAttribute(SavingsConstants.CLIENT_LIST, request);
         SessionUtils.removeAttribute(SavingsConstants.ACCOUNT_PAYMENT, request);
 
         StaticHibernateUtil.commitTransaction();
