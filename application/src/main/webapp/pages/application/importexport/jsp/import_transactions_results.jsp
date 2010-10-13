@@ -170,6 +170,14 @@ explanation of the license and how it is applied.
                                         <c:out value="${error}" />
                                     </c:forEach></td>
                                 </tr>
+								<c:if test="${requestScope.isExtraInformationFilled}">
+									<tr class="fontnormal">
+										<td>
+											<p><a href="manageImportAction.do?method=downloadLog" target="_blank"><fmt:message key="admin.importexport.downloadLog"/>
+												</a></p>
+										</td>
+									</tr>	
+								</c:if>
                                 <tr class="fontnormal">
                                     <td><html-el:submit property="edit"
                                         onclick="this.form.action='manageImportAction.do?method=load'">
