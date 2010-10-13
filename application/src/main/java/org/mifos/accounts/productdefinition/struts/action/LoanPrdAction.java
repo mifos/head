@@ -83,8 +83,8 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -228,11 +228,12 @@ public class LoanPrdAction extends BaseAction {
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 
-    private Set<QuestionGroupReference> getQuestionGroups(HttpServletRequest request) throws PageExpiredException {
+    // Intentionally made public to aid testing !!!
+    public Set<QuestionGroupReference> getQuestionGroups(HttpServletRequest request) throws PageExpiredException {
         Set<QuestionGroupReference> questionGroupReferences = null;
         List<QuestionGroupDetail> questionGroups = (List<QuestionGroupDetail>) SessionUtils.getAttribute(ProductDefinitionConstants.SELECTEDQGLIST, request);
         if (CollectionUtils.isNotEmpty(questionGroups)) {
-            questionGroupReferences = new HashSet<QuestionGroupReference>(questionGroups.size());
+            questionGroupReferences = new LinkedHashSet<QuestionGroupReference>(questionGroups.size());
             for (QuestionGroupDetail questionGroupDetail : questionGroups) {
                 QuestionGroupReference questionGroupReference = new QuestionGroupReference();
                 questionGroupReference.setQuestionGroupId(questionGroupDetail.getId());
@@ -254,7 +255,7 @@ public class LoanPrdAction extends BaseAction {
         loadSelectedFeesAndFunds(getFeesSelected(request, loanOffering), getFundsSelected(loanOffering), request);
         loadStatusList(request);
         setDataIntoActionForm(loanOffering, loanPrdActionForm, request);
-        setSelectedQuestionGroupsOnSession(request, loanOffering);
+        setSelectedQuestionGroupsOnSession(request, loanOffering, getQuestionnaireServiceFacade(request));
         setCurrencyOnSession(request, loanOffering);
         logger.debug("manage of Loan Product Action called" + prdOfferingId);
         return mapping.findForward(ActionForwards.manage_success.toString());
@@ -361,14 +362,15 @@ public class LoanPrdAction extends BaseAction {
         loanPrdActionForm.clear();
         loanPrdActionForm.setPrdOfferingId(getStringValue(loanOffering.getPrdOfferingId()));
         request.getSession().setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
-        setSelectedQuestionGroupsOnSession(request, loanOffering);
+        setSelectedQuestionGroupsOnSession(request, loanOffering, getQuestionnaireServiceFacade(request));
         logger.debug("get method of Loan Product Action called" + loanOffering.getPrdOfferingId());
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 
-    private void setSelectedQuestionGroupsOnSession(HttpServletRequest request, LoanOfferingBO loanOffering) throws PageExpiredException {
+    // Intentionally made public to aid testing !!!
+    public void setSelectedQuestionGroupsOnSession(HttpServletRequest request, LoanOfferingBO loanOffering,
+                                    QuestionnaireServiceFacade questionnaireServiceFacade) throws PageExpiredException {
         Set<QuestionGroupReference> questionGroupReferences = loanOffering.getQuestionGroups();
-        QuestionnaireServiceFacade questionnaireServiceFacade = getQuestionnaireServiceFacade(request);
         if (questionnaireServiceFacade != null && CollectionUtils.isNotEmpty(questionGroupReferences)) {
             List<QuestionGroupDetail> questionGroupDetails = new ArrayList<QuestionGroupDetail>();
             for (QuestionGroupReference questionGroupReference : questionGroupReferences) {
@@ -416,12 +418,12 @@ public class LoanPrdAction extends BaseAction {
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANINTERESTGLCODELIST, getGLCodes(
                 FinancialActionConstants.INTERESTPOSTING, FinancialConstants.CREDIT), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFEE, fees, request);
-        setQuestionGroupsOnSession(request);
+        setQuestionGroupsOnSession(request, getQuestionnaireServiceFacade(request));
         logger.debug("Load master data method of Loan Product Action called");
     }
 
-    private void setQuestionGroupsOnSession(HttpServletRequest request) throws PageExpiredException {
-        QuestionnaireServiceFacade questionnaireServiceFacade = getQuestionnaireServiceFacade(request);
+    // Intentionally made public to aid testing !!!
+    public void setQuestionGroupsOnSession(HttpServletRequest request, QuestionnaireServiceFacade questionnaireServiceFacade) throws PageExpiredException {
         if (questionnaireServiceFacade != null) {
             List<QuestionGroupDetail> questionGroups = questionnaireServiceFacade.getQuestionGroups("Create", "Loan");
             SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SRCQGLIST, questionGroups, request);
