@@ -119,6 +119,17 @@ public class ImportTransactionsAction extends BaseAction {
             submitButtonDisabled = true;
         }
 
+		if (importResult.isAmountInformationFilled() && importResult.isExtraRowInformationFilled()) {
+			request.setAttribute("isExtraInformationFilled", true);
+			request.setAttribute("numberOfErrorRows", importResult.getNumberOfErrorRows());
+			request.setAttribute("numberOfIgnoredRows", importResult.getNumberOfIgnoredRows());
+			request.setAttribute("numberOfReadRows", importResult.getNumberOfReadRows());
+			request.setAttribute("totalAmountOfTransactionsImported", importResult.getTotalAmountOfTransactionsImported());
+			request.setAttribute("totalAmountOfTransactionsWithError", importResult.getTotalAmountOfTransactionsWithError());
+		} else {
+			request.setAttribute("isExtraInformationFilled", false);
+		}
+
         request.setAttribute("importTransactionsErrors", errorsForDisplay);
         request.setAttribute("numSuccessfulRows", numberRowSuccessfullyParsed);
         request.setAttribute("submitButtonDisabled", submitButtonDisabled);
