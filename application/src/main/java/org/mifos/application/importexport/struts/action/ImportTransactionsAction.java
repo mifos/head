@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -211,7 +212,7 @@ public class ImportTransactionsAction extends BaseAction {
 		byte[] fileContents = (byte[]) request.getSession().getAttribute(ImportTransactionsAction.SESSION_ATTRIBUTE_LOG);
 		String fileName = (String) request.getSession().getAttribute(ImportTransactionsAction.SESSION_ATTRIBUTE_LOG_FILENAME);
 		response.setHeader("Content-disposition",
-				"attachment; filename=" + fileName);
+				"attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
 		response.setContentType("text/plain");
 		IOUtils.copy(new ByteArrayInputStream(fileContents), response.getOutputStream());
 		return null;
