@@ -421,7 +421,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                             interestPosted = true;
                             savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult);
 
-                            StringBuilder postingInfoMessage = new StringBuilder().append("posting interest: ").append(interestPostingPeriodResult);
+                            StringBuilder postingInfoMessage = new StringBuilder().append("account id: ").append(savingsId)
+                                                                                  .append("posting interest: ").append(interestPostingPeriodResult);
 
                             logger.info(postingInfoMessage.toString());
                         }
