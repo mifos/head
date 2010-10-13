@@ -72,6 +72,7 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Arrays;
 
 import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
@@ -308,7 +309,7 @@ public class QuestionnaireServiceIntegrationTest {
         List<SectionDetail> sectionDetailList = retrievedQuestionGroupDetail.getSectionDetails();
         assertThat(sectionDetailList.get(0).getName(), is("S1"));
         assertThat(sectionDetailList.get(1).getName(), is("S2"));
-        EventSourceDto eventSourceDto = retrievedQuestionGroupDetail.getEventSource();
+        EventSourceDto eventSourceDto = retrievedQuestionGroupDetail.getEventSources().get(0);
         assertThat(eventSourceDto, is(notNullValue()));
         assertThat(eventSourceDto.getEvent(), is("Create"));
         assertThat(eventSourceDto.getSource(), is("Client"));
@@ -484,7 +485,7 @@ public class QuestionnaireServiceIntegrationTest {
         SelectionDetail selectionDetail1 = getSelectionDetail("Ch1", "Tag2");
         SelectionDetail selectionDetail2 = getSelectionDetail("Ch3", "Tag1");
         questionGroupDetail.getSectionDetail(1).getQuestionDetail(0).setSelections(asList(selectionDetail1, selectionDetail2));
-        questionnaireService.saveResponses(new QuestionGroupDetails(1, 1, asList(questionGroupDetail)));
+        questionnaireService.saveResponses(new QuestionGroupDetails(1, 1, 1, asList(questionGroupDetail)));
         List<QuestionGroupInstance> instances = questionGroupInstanceDao.getDetailsAll();
         assertThat(instances.size(), is(1));
         QuestionGroupInstance instance = getMatchingQuestionGroupInstance(questionGroupDetail.getId(), 1, instances, 0);
@@ -498,7 +499,7 @@ public class QuestionnaireServiceIntegrationTest {
         Assert.assertEquals(groupResponses.get(2).getTag(), "Tag1");
 
         questionGroupDetail.getSectionDetail(0).getQuestionDetail(0).setValue("3");
-        questionnaireService.saveResponses(new QuestionGroupDetails(1, 1, asList(questionGroupDetail)));
+        questionnaireService.saveResponses(new QuestionGroupDetails(1, 1, 1, asList(questionGroupDetail)));
         instances = questionGroupInstanceDao.getDetailsAll();
         assertThat(instances.size(), is(2));
         instance = getMatchingQuestionGroupInstance(questionGroupDetail.getId(), 1, instances, 1);
@@ -621,7 +622,7 @@ public class QuestionnaireServiceIntegrationTest {
         QuestionGroupResponseDtoBuilder responseBuilder = new QuestionGroupResponseDtoBuilder();
         responseBuilder.withResponse(response).withSectionQuestion(sectionQuestionId);
         QuestionGroupResponseDto questionGroupResponseDto = responseBuilder.build();
-        instanceBuilder.withQuestionGroup(questionGroupId).withCompleted(true).withCreator(creatorId).withEntity(entityId).withVersion(1).addResponses(questionGroupResponseDto);
+        instanceBuilder.withQuestionGroup(questionGroupId).withCompleted(true).withCreator(creatorId).withEventSource(1).withEntity(entityId).withVersion(1).addResponses(questionGroupResponseDto);
         return instanceBuilder.build();
     }
 
@@ -739,7 +740,7 @@ public class QuestionnaireServiceIntegrationTest {
     }
 
     private QuestionGroupDetail defineQuestionGroup(String title, String event, String source, List<SectionDetail> sectionDetails, boolean editable) throws SystemException {
-        return questionnaireService.defineQuestionGroup(new QuestionGroupDetail(0, title, new EventSourceDto(event, source, null), sectionDetails, editable, true));
+        return questionnaireService.defineQuestionGroup(new QuestionGroupDetail(0, title, Arrays.asList(new EventSourceDto(event, source, null)), sectionDetails, editable, true));
     }
 
     private SectionDetail getSection(String name) throws SystemException {
@@ -778,7 +779,7 @@ public class QuestionnaireServiceIntegrationTest {
     }
 
     private QuestionGroupDetailMatcher getQuestionGroupDetailMatcher(String questionGroupTitle,  String event, String source, List<SectionDetail> sectionDetails, boolean editable) {
-        return new QuestionGroupDetailMatcher(new QuestionGroupDetail(0, questionGroupTitle, new EventSourceDto(event, source, null), sectionDetails, editable, true));
+        return new QuestionGroupDetailMatcher(new QuestionGroupDetail(0, questionGroupTitle, Arrays.asList(new EventSourceDto(event, source, null)), sectionDetails, editable, true));
     }
 
     private QuestionGroupDetail getMatchingQGDetailById(Integer expectedId, List<QuestionGroupDetail> questionGroups) {

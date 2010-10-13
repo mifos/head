@@ -115,7 +115,7 @@ public class QuestionnaireFlowAdapter {
         if (questionnaireServiceFacade != null) {
             UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
             questionnaireServiceFacade.saveResponses(
-                    new QuestionGroupDetails(userContext.getId(), associateWithId, questionResponses));
+                    new QuestionGroupDetails(userContext.getId(), associateWithId, questionnaireServiceFacade.getEventSourceId(event, source), questionResponses));
         }
     }
 

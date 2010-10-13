@@ -25,6 +25,7 @@ import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 
 import java.util.List;
+import java.util.Arrays;
 
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang.StringUtils.EMPTY;
@@ -47,7 +48,7 @@ public class QuestionGroupDtoBuilder {
     }
 
     public QuestionGroupDtoBuilder withEventSource(String event, String source) {
-        questionGroupDto.setEventSourceDto(new EventSourceDto(event, source, EMPTY));
+        questionGroupDto.setEventSourceDtos(Arrays.asList(new EventSourceDto(event, source, EMPTY)));
         return this;
     }
 

@@ -74,4 +74,8 @@ public interface QuestionnaireService {
 
     // Added for data migration. Shouldn't be used outside.
     Integer defineQuestion(QuestionDto questionDto);
+
+    EventSourceDto getEventSource(int eventSourceId);
+
+    Integer getEventSourceId(String event, String source);
 }

@@ -109,12 +109,21 @@
 
 [#macro formCheckboxes path options separator attributes=""]
 	[@spring.bind path /]
-    [#list options as value]
-    [#assign id="${spring.status.expression}${value_index}"]
-    [#assign isSelected = spring.contains(spring.status.value?default([""]), value)]
-    <input type="checkbox" id="${id}" name="${spring.status.expression}" value="${value?html}"[#if isSelected] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
-    <label for="${id}" tags="${value.commaSeparatedTags}" style="float:none;">${value?html}</label>${separator}
-    [/#list]
+    [#if options?is_hash]
+        [#list options?keys as value]
+        [#assign id="${spring.status.expression}${value_index}"]
+        [#assign isSelected = spring.contains(spring.status.value?default([""]), value)]
+        <input type="checkbox" id="${id}" name="${spring.status.expression}" value="${value?html}"[#if isSelected] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
+        <label for="${id}" style="float:none;">${options[value]?html}</label>${separator}
+        [/#list]
+    [#else]
+        [#list options as value]
+        [#assign id="${spring.status.expression}${value_index}"]
+        [#assign isSelected = spring.contains(spring.status.value?default([""]), value)]
+        <input type="checkbox" id="${id}" name="${spring.status.expression}" value="${value?html}"[#if isSelected] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
+        <label for="${id}" style="float:none;">${value?html}</label>${separator}
+        [/#list]
+    [/#if]
     <input type="hidden" name="_${spring.status.expression}" value="on"/>
 [/#macro]
 

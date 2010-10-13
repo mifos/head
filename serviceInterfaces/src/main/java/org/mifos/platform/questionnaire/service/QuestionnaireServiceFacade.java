@@ -50,6 +50,8 @@ public interface QuestionnaireServiceFacade {
 
     List<EventSourceDto> getAllEventSources();
 
+    Integer getEventSourceId(String event, String source);
+
     List<QuestionGroupDetail> getQuestionGroups(String event, String source) throws SystemException;
 
     void saveResponses(QuestionGroupDetails questionGroupDetails);

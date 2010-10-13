@@ -36,6 +36,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -51,9 +52,9 @@ public class QuestionGroupFormTest {
     @Test
     public void shouldGetEventSourceId() {
         EventSourceDto eventSourceDto = new EventSourceDto("Create", "Client", "Create Client");
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, "Title", eventSourceDto, new ArrayList<SectionDetail>(), false);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, "Title", Arrays.asList(eventSourceDto), new ArrayList<SectionDetail>(), false);
         QuestionGroupForm questionGroupForm = new QuestionGroupForm(questionGroupDetail);
-        assertThat(questionGroupForm.getEventSourceId(), is("Create.Client"));
+        assertThat(questionGroupForm.getEventSourceIds().get(0), is("Create.Client"));
     }
 
     @Test
@@ -75,20 +76,16 @@ public class QuestionGroupFormTest {
         QuestionGroupForm questionGroupForm;
 
         questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setEventSourceId("event.source");
-        assertEventSource(questionGroupForm.getEventSource(), "event", "source");
+        questionGroupForm.setEventSourceIds(Arrays.asList("event.source"));
+        assertEventSource(questionGroupForm.getEventSources().get(0), "event", "source");
 
         questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setEventSourceId(null);
-        assertThat(questionGroupForm.getEventSource().getDescription(), is(nullValue()));
-        assertThat(questionGroupForm.getEventSource().getSource(), is(nullValue()));
-        assertThat(questionGroupForm.getEventSource().getEvent(), is(nullValue()));
+        questionGroupForm.setEventSourceIds(null);
+        assertThat(questionGroupForm.getEventSources().size(), is(0));
 
         questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setEventSourceId("");
-        assertThat(questionGroupForm.getEventSource().getDescription(), is(nullValue()));
-        assertThat(questionGroupForm.getEventSource().getSource(), is(nullValue()));
-        assertThat(questionGroupForm.getEventSource().getEvent(), is(nullValue()));
+        questionGroupForm.setEventSourceIds(Arrays.asList(""));
+        assertThat(questionGroupForm.getEventSources().size(), is(0));
     }
 
     @Test
@@ -96,16 +93,16 @@ public class QuestionGroupFormTest {
         QuestionGroupForm questionGroupForm;
 
         questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setEventSource(new EventSourceDto("Create", "Client", null));
-        assertThat(questionGroupForm.getEventSourceId(), is("Create.Client"));
+        questionGroupForm.setEventSources(Arrays.asList(new EventSourceDto("Create", "Client", null)));
+        assertThat(questionGroupForm.getEventSourceIds().get(0), is("Create.Client"));
 
         questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setEventSource(null);
-        assertThat(questionGroupForm.getEventSourceId(), is(nullValue()));
+        questionGroupForm.setEventSources(null);
+        assertThat(questionGroupForm.getEventSourceIds().size(), is(0));
 
         questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setEventSource(new EventSourceDto("", null, null));
-        assertThat(questionGroupForm.getEventSourceId(), is(nullValue()));
+        questionGroupForm.setEventSources(Arrays.asList(new EventSourceDto("", null, null)));
+        assertThat(questionGroupForm.getEventSourceIds().size(), is(0));
     }
 
     @Test

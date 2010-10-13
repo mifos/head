@@ -73,11 +73,13 @@ public class QuestionGroupController extends QuestionnaireController {
     private Map<String,List <QuestionGroupDetail>> groupByEventSource(List <QuestionGroupDetail> questionGroups){
         Map <String,List <QuestionGroupDetail>> questionGroupsCategoriesSplit = new HashMap<String, List<QuestionGroupDetail>>();
         for (QuestionGroupDetail questionGroup : questionGroups){
-            String eventSource = questionGroup.getEventSource().toString();
-            if(!questionGroupsCategoriesSplit.containsKey(eventSource)) {
-                questionGroupsCategoriesSplit.put(eventSource, new ArrayList<QuestionGroupDetail>());
+            for (EventSourceDto eventSourceDto : questionGroup.getEventSources()) {
+                String eventSource = eventSourceDto.toString();
+                if(!questionGroupsCategoriesSplit.containsKey(eventSource)) {
+                    questionGroupsCategoriesSplit.put(eventSource, new ArrayList<QuestionGroupDetail>());
+                }
+                questionGroupsCategoriesSplit.get(eventSource).add(questionGroup);
             }
-            questionGroupsCategoriesSplit.get(eventSource).add(questionGroup);
         }
         return questionGroupsCategoriesSplit;
     }
@@ -200,7 +202,7 @@ public class QuestionGroupController extends QuestionnaireController {
         QuestionGroupDetail questionGroupDetail = questionGroupDetails.getDetails().get(questionGroupIndex);
         try {
             questionnaireServiceFacade.saveResponses(new QuestionGroupDetails(questionGroupDetails.getCreatorId(),
-                    questionGroupDetails.getEntityId(), Arrays.asList(questionGroupDetail)));
+                    questionGroupDetails.getEntityId(), questionGroupDetails.getEventSourceId(), Arrays.asList(questionGroupDetail)));
         } catch (ValidationException e) {
             if (e.containsChildExceptions()) {
                 for (ValidationException validationException : e.getChildExceptions()) {
@@ -255,15 +257,15 @@ public class QuestionGroupController extends QuestionnaireController {
             constructErrorMessage(requestContext.getMessageContext(), "questionnaire.error.section.atLeastOne", "sectionName", "Please specify at least one section or question");
             result = true;
         }
-        if (appliesToNotPresent(questionGroup.getEventSourceId())) {
+        if (appliesToNotPresent(questionGroup.getEventSourceIds())) {
             constructErrorMessage(requestContext.getMessageContext(), "questionnaire.error.appliesTo.mandatory", "eventSourceId", "Please choose a valid 'Applies To' value");
             result = true;
         }
         return result;
     }
 
-    private boolean appliesToNotPresent(String eventSourceId) {
-        return StringUtils.isEmpty(eventSourceId) || QuestionnaireConstants.SELECT_ONE.equals(eventSourceId);
+    private boolean appliesToNotPresent(List<String> eventSourceIds) {
+        return eventSourceIds == null || eventSourceIds.size() == 0;
     }
 
     private boolean sectionsNotPresent(List<SectionDetailForm> sections) {
