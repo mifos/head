@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 
@@ -564,5 +565,20 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
 
     public void setQuestionGroups(Set<QuestionGroupReference> questionGroups) {
         this.questionGroups = questionGroups;
+    }
+
+    public void mergeQuestionGroups(Set<QuestionGroupReference> questionGroups) {
+        if (this.questionGroups == null || questionGroups == null) setQuestionGroups(questionGroups);
+        else {
+            for (Iterator<QuestionGroupReference> iterator = this.questionGroups.iterator(); iterator.hasNext();) {
+                QuestionGroupReference questionGroup = iterator.next();
+                if (questionGroups.contains(questionGroup)) {
+                    questionGroups.remove(questionGroup);
+                } else {
+                    iterator.remove();
+                }
+            }
+            this.questionGroups.addAll(questionGroups);
+        }
     }
 }

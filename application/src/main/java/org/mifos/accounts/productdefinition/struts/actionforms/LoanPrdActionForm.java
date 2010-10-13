@@ -1845,22 +1845,22 @@ public class LoanPrdActionForm extends BaseActionForm {
     }
 
     private void setSelectedQuestionGroups(HttpServletRequest request) {
-        if (loanOfferingQGs != null && loanOfferingQGs.length > 0) {
-            try {
-                List<QuestionGroupDetail> questionGroupDetails = (List<QuestionGroupDetail>) SessionUtils.getAttribute(ProductDefinitionConstants.SRCQGLIST, request);
-                List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
+        try {
+            List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
+            if (loanOfferingQGs != null && loanOfferingQGs.length > 0) {
+                List<QuestionGroupDetail> srcQGDetails = (List<QuestionGroupDetail>) SessionUtils.getAttribute(ProductDefinitionConstants.SRCQGLIST, request);
                 for (String loanOfferingQG : loanOfferingQGs) {
-                    for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
+                    for (QuestionGroupDetail questionGroupDetail : srcQGDetails) {
                         if (String.valueOf(questionGroupDetail.getId()).equals(loanOfferingQG)) {
                             questionGroups.add(questionGroupDetail);
                             break;
                         }
                     }
                 }
-                SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDQGLIST, questionGroups, request);
-            } catch (PageExpiredException e) {
-                logger.error("An error occured while setting selected question groups on session", e);
             }
+            SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDQGLIST, questionGroups, request);
+        } catch (PageExpiredException e) {
+            logger.error("An error occured while setting selected question groups on session", e);
         }
     }
 

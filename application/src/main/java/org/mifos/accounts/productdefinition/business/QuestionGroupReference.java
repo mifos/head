@@ -13,4 +13,22 @@ public class QuestionGroupReference extends AbstractEntity {
     public void setQuestionGroupId(Integer questionGroupId) {
         this.questionGroupId = questionGroupId;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        QuestionGroupReference that = (QuestionGroupReference) o;
+
+        if (questionGroupId != null ? !questionGroupId.equals(that.questionGroupId) : that.questionGroupId != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return questionGroupId != null ? questionGroupId.hashCode() : 0;
+    }
 }
