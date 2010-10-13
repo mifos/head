@@ -103,6 +103,7 @@ public class PaymentTypeEntity extends MasterDataEntity {
         return getName();
     }
 
+    @Override
     public void update(String name) {
         setName(name);
     }

@@ -27,6 +27,7 @@ public class EditQuestionPage extends CreateQuestionPage {
         super(selenium);
     }
 
+    @Override
     public EditQuestionPage verifyPage() {
         verifyPage("editQuestion");
         return this;

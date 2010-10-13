@@ -180,6 +180,7 @@ public class BranchReportHelperIntegrationTest extends BranchReportIntegrationTe
         transaction.rollback();
     }
 
+    @Override
     @Before
     public void setUp() throws Exception {
 

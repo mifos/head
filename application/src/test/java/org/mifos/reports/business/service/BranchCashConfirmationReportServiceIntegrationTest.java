@@ -77,6 +77,7 @@ public class BranchCashConfirmationReportServiceIntegrationTest extends BranchRe
         verify(persistenceMock);
     }
 
+    @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();
