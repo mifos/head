@@ -85,7 +85,7 @@ public class InterestCalculationPeriodCalculatorTest {
         List<InterestCalculationInterval> noValidCalculationIntervalsInPeriod = new ArrayList<InterestCalculationInterval>();
 
         // stubbing
-        when(interestCalculationIntervalHelper.determineAllPossiblePeriods(calculationPeriod.getStartDate(), interestCalculationSchedule, calculationPeriod.getEndDate())).thenReturn(noValidCalculationIntervalsInPeriod);
+        when(interestCalculationIntervalHelper.determineAllPossiblePeriods(calculationPeriod.getStartDate(), interestCalculationSchedule, calculationPeriod.getEndDate(), calculationPeriod.getEndDate())).thenReturn(noValidCalculationIntervalsInPeriod);
 
         // exercise test
         List<InterestCalculationPeriodResult> results = this.interestCalculationPeriodCalculator.calculateDetails(calculationPeriod, totalBalanceBeforeCalculationPeriod, endOfDayDetailsForCalculationPeriod);
@@ -109,7 +109,7 @@ public class InterestCalculationPeriodCalculatorTest {
         InterestCalculationPeriodResult interstResultsForPeriod = new InterestCalculationPeriodResultBuilder().build();
 
         // stubbing
-        when(interestCalculationIntervalHelper.determineAllPossiblePeriods(calculationPeriod.getStartDate(), interestCalculationSchedule, calculationPeriod.getEndDate())).thenReturn(validCalculationIntervalsInPeriods);
+        when(interestCalculationIntervalHelper.determineAllPossiblePeriods(calculationPeriod.getStartDate(), interestCalculationSchedule, calculationPeriod.getEndDate(), calculationPeriod.getEndDate())).thenReturn(validCalculationIntervalsInPeriods);
         when(interestCalculator.calculateSavingsDetailsForPeriod((InterestCalculationPeriodDetail)anyObject())).thenReturn(interstResultsForPeriod);
 
         // exercise test

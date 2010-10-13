@@ -47,7 +47,7 @@ public interface SavingsServiceFacade {
     void calculateInterestForPostingInterval(Long savingsId, Interval postingInterval);
 
     @PreAuthorize("isFullyAuthenticated()")
-    SavingsAccountClosureDto retrieveClosingDetails(Long valueOf);
+    SavingsAccountClosureDto retrieveClosingDetails(Long savingsId, LocalDate closureDate);
 
     @PreAuthorize("isFullyAuthenticated()")
     void closeSavingsAccount(Long savingsId, String notes, SavingsWithdrawalDto closeAccount);
