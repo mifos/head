@@ -35,7 +35,7 @@ public class InterestCalculationPeriodResultBuilder {
     private Money previousTotalInterestForPeriod = TestUtils.createMoney("0");
 
     public InterestCalculationPeriodResult build() {
-        interval = new InterestCalculationInterval(intervalStartDate, intervalEndDate);
+        interval = new InterestCalculationIntervalBuilder().from(intervalStartDate).to(intervalEndDate).build();
         return new InterestCalculationPeriodResult(interval, calculatedInterest, averagePrincipal, totalPrincipal, previousTotalInterestForPeriod);
     }
 

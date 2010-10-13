@@ -110,13 +110,9 @@ public class MinimumBalanceCalculationStrategyTest {
     @Test
     public void oneDepositWithExistingBalanceBeforeInterval() {
 
-        Money deposit1 = TestUtils.createMoney("500");
-        Money withdrawal1 = TestUtils.createMoney("0");
-        Money interest1 = TestUtils.createMoney("0");
-        EndOfDayDetail endOfDayDetail = new EndOfDayDetail(september6th, deposit1, withdrawal1, interest1);
+        EndOfDayDetail september6thDetails = new EndOfDayBuilder().on(september6th).withDespoitsOf("500").build();
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().containing(
-                endOfDayDetail).build();
+        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().containing(september6thDetails).build();
 
         // exercise test
         Money minimumBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
@@ -127,13 +123,9 @@ public class MinimumBalanceCalculationStrategyTest {
     @Test
     public void oneWithdrawalWithExistingBalanceBeforeInterval() {
 
-        Money deposit1 = TestUtils.createMoney("0");
-        Money withdrawal1 = TestUtils.createMoney("500");
-        Money interest1 = TestUtils.createMoney("0");
-        EndOfDayDetail endOfDayDetail = new EndOfDayDetail(september6th, deposit1, withdrawal1, interest1);
+        EndOfDayDetail september6thDetails = new EndOfDayBuilder().on(september6th).withWithdrawalsOf("500").build();
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().containing(
-                endOfDayDetail).build();
+        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().containing(september6thDetails).build();
 
         // exercise test
         Money minimumBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
@@ -144,15 +136,8 @@ public class MinimumBalanceCalculationStrategyTest {
     @Test
     public void oneWithdrawalThenOneDepositWithExistingBalanceBeforeInterval() {
 
-        Money deposit1 = TestUtils.createMoney("0");
-        Money withdrawal1 = TestUtils.createMoney("500");
-        Money interest1 = TestUtils.createMoney("0");
-        EndOfDayDetail september6thDetails = new EndOfDayDetail(september6th, deposit1, withdrawal1, interest1);
-
-        Money deposit2 = TestUtils.createMoney("550");
-        Money withdrawal2 = TestUtils.createMoney("0");
-        Money interest2 = TestUtils.createMoney("0");
-        EndOfDayDetail september13thDetails = new EndOfDayDetail(september13th, deposit2, withdrawal2, interest2);
+        EndOfDayDetail september6thDetails = new EndOfDayBuilder().on(september6th).withWithdrawalsOf("500").build();
+        EndOfDayDetail september13thDetails = new EndOfDayBuilder().on(september13th).withDespoitsOf("550").build();
 
         interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
                 .containing(september6thDetails, september13thDetails).build();
@@ -166,15 +151,8 @@ public class MinimumBalanceCalculationStrategyTest {
     @Test
     public void oneDepositThenOneWithdrawalWithExistingBalanceBeforeInterval() {
 
-        Money deposit1 = TestUtils.createMoney("550");
-        Money withdrawal1 = TestUtils.createMoney("0");
-        Money interest1 = TestUtils.createMoney("0");
-        EndOfDayDetail september6thDetails = new EndOfDayDetail(september6th, deposit1, withdrawal1, interest1);
-
-        Money deposit2 = TestUtils.createMoney("0");
-        Money withdrawal2 = TestUtils.createMoney("500");
-        Money interest2 = TestUtils.createMoney("0");
-        EndOfDayDetail september13thDetails = new EndOfDayDetail(september13th, deposit2, withdrawal2, interest2);
+        EndOfDayDetail september6thDetails = new EndOfDayBuilder().on(september6th).withDespoitsOf("550").build();
+        EndOfDayDetail september13thDetails = new EndOfDayBuilder().on(september13th).withWithdrawalsOf("500").build();
 
         interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
                 .containing(september6thDetails, september13thDetails).build();
@@ -188,28 +166,13 @@ public class MinimumBalanceCalculationStrategyTest {
     @Test
     public void twoWithdrawalThenTwoDepositWithExistingBalanceBeforeInterval() {
 
-        Money deposit1 = TestUtils.createMoney("0");
-        Money withdrawal1 = TestUtils.createMoney("100");
-        Money interest1 = TestUtils.createMoney("0");
-        EndOfDayDetail september1thDetails = new EndOfDayDetail(september1st, deposit1, withdrawal1, interest1);
-
-        Money deposit2 = TestUtils.createMoney("0");
-        Money withdrawal2 = TestUtils.createMoney("100");
-        Money interest2 = TestUtils.createMoney("0");
-        EndOfDayDetail september6thDetails = new EndOfDayDetail(september6th, deposit2, withdrawal2, interest2);
-
-        Money deposit3 = TestUtils.createMoney("100");
-        Money withdrawal3 = TestUtils.createMoney("0");
-        Money interest3 = TestUtils.createMoney("0");
-        EndOfDayDetail september13thDetails = new EndOfDayDetail(september13th, deposit3, withdrawal3, interest3);
-
-        Money deposit4 = TestUtils.createMoney("100");
-        Money withdrawal4 = TestUtils.createMoney("0");
-        Money interest4 = TestUtils.createMoney("0");
-        EndOfDayDetail september20thDetails = new EndOfDayDetail(september20th, deposit4, withdrawal4, interest4);
+        EndOfDayDetail september1stDetails = new EndOfDayBuilder().on(september1st).withWithdrawalsOf("100").build();
+        EndOfDayDetail september6thDetails = new EndOfDayBuilder().on(september6th).withWithdrawalsOf("100").build();
+        EndOfDayDetail september13thDetails = new EndOfDayBuilder().on(september13th).withDespoitsOf("100").build();
+        EndOfDayDetail september20thDetails = new EndOfDayBuilder().on(september20th).withDespoitsOf("1000").build();
 
         interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
-                .containing(september1thDetails, september6thDetails, september13thDetails, september20thDetails).build();
+                .containing(september1stDetails, september6thDetails, september13thDetails, september20thDetails).build();
 
         // exercise test
         Money minimumBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
@@ -221,28 +184,13 @@ public class MinimumBalanceCalculationStrategyTest {
     @Test
     public void twoDepositThenTwoWithdrawalWithExistingBalanceBeforeInterval() {
 
-        Money deposit1 = TestUtils.createMoney("100");
-        Money withdrawal1 = TestUtils.createMoney("0");
-        Money interest1 = TestUtils.createMoney("0");
-        EndOfDayDetail september1thDetails = new EndOfDayDetail(september1st, deposit1, withdrawal1, interest1);
-
-        Money deposit2 = TestUtils.createMoney("100");
-        Money withdrawal2 = TestUtils.createMoney("0");
-        Money interest2 = TestUtils.createMoney("0");
-        EndOfDayDetail september6thDetails = new EndOfDayDetail(september6th, deposit2, withdrawal2, interest2);
-
-        Money deposit3 = TestUtils.createMoney("0");
-        Money withdrawal3 = TestUtils.createMoney("100");
-        Money interest3 = TestUtils.createMoney("0");
-        EndOfDayDetail september13thDetails = new EndOfDayDetail(september13th, deposit3, withdrawal3, interest3);
-
-        Money deposit4 = TestUtils.createMoney("0");
-        Money withdrawal4 = TestUtils.createMoney("1000");
-        Money interest4 = TestUtils.createMoney("0");
-        EndOfDayDetail september20thDetails = new EndOfDayDetail(september20th, deposit4, withdrawal4, interest4);
+        EndOfDayDetail september1stDetails = new EndOfDayBuilder().on(september1st).withDespoitsOf("100").build();
+        EndOfDayDetail september6thDetails = new EndOfDayBuilder().on(september6th).withDespoitsOf("100").build();
+        EndOfDayDetail september13thDetails = new EndOfDayBuilder().on(september13th).withWithdrawalsOf("100").build();
+        EndOfDayDetail september20thDetails = new EndOfDayBuilder().on(september20th).withWithdrawalsOf("1000").build();
 
         interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
-                .containing(september1thDetails, september6thDetails, september13thDetails, september20thDetails).build();
+                .containing(september1stDetails, september6thDetails, september13thDetails, september20thDetails).build();
 
         // exercise test
         Money minimumBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
@@ -253,28 +201,13 @@ public class MinimumBalanceCalculationStrategyTest {
     @Test
     public void fourEntriesWithExistingBalanceBeforeInterval() {
 
-        Money deposit1 = TestUtils.createMoney("1100"); // Balance 2100
-        Money withdrawal1 = TestUtils.createMoney("0");
-        Money interest1 = TestUtils.createMoney("0");
-        EndOfDayDetail september1thDetails = new EndOfDayDetail(september1st, deposit1, withdrawal1, interest1);
-
-        Money deposit2 = TestUtils.createMoney("0");
-        Money withdrawal2 = TestUtils.createMoney("900"); // Balance 1200
-        Money interest2 = TestUtils.createMoney("0");
-        EndOfDayDetail september6thDetails = new EndOfDayDetail(september6th, deposit2, withdrawal2, interest2);
-
-        Money deposit3 = TestUtils.createMoney("0");
-        Money withdrawal3 = TestUtils.createMoney("1000"); // Balance 200 * Minimum
-        Money interest3 = TestUtils.createMoney("0");
-        EndOfDayDetail september13thDetails = new EndOfDayDetail(september13th, deposit3, withdrawal3, interest3);
-
-        Money deposit4 = TestUtils.createMoney("2000");   // Balance 2200
-        Money withdrawal4 = TestUtils.createMoney("0");
-        Money interest4 = TestUtils.createMoney("0");
-        EndOfDayDetail september20thDetails = new EndOfDayDetail(september20th, deposit4, withdrawal4, interest4);
+        EndOfDayDetail september1stDetails = new EndOfDayBuilder().on(september1st).withDespoitsOf("1100").build(); // Balance 2100
+        EndOfDayDetail september6thDetails = new EndOfDayBuilder().on(september6th).withWithdrawalsOf("900").build(); // Balance 1200
+        EndOfDayDetail september13thDetails = new EndOfDayBuilder().on(september13th).withWithdrawalsOf("1000").build(); // Balance 200 * Minimum
+        EndOfDayDetail september20thDetails = new EndOfDayBuilder().on(september20th).withDespoitsOf("2000").build(); // Balance 2200
 
         interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
-                .containing(september1thDetails, september6thDetails, september13thDetails, september20thDetails).build();
+                .containing(september1stDetails, september6thDetails, september13thDetails, september20thDetails).build();
 
         // exercise test
         Money minimumBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);

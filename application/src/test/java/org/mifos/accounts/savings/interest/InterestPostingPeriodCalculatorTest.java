@@ -29,7 +29,6 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.LocalDate;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -89,9 +88,8 @@ public class InterestPostingPeriodCalculatorTest {
 
         // setup
         List<EndOfDayDetail> endOfDayDetailsForPeriods =  new ArrayList<EndOfDayDetail>();
-        LocalDate startDate = new LocalDate();
-        LocalDate endDate = new LocalDate();
-        InterestCalculationInterval today = new InterestCalculationInterval(startDate, endDate);
+
+        InterestCalculationInterval today = new InterestCalculationIntervalBuilder().build();
         List<InterestCalculationInterval> postingPeriods = Arrays.asList(new InterestCalculationInterval[] {today});
 
         List<InterestCalculationPeriodResult> noInterestCalculationResults = new ArrayList<InterestCalculationPeriodResult>();
@@ -110,9 +108,7 @@ public class InterestPostingPeriodCalculatorTest {
 
         // setup
         List<EndOfDayDetail> endOfDayDetailsForPeriods =  new ArrayList<EndOfDayDetail>();
-        LocalDate startDate = new LocalDate();
-        LocalDate endDate = new LocalDate();
-        InterestCalculationInterval today = new InterestCalculationInterval(startDate, endDate);
+        InterestCalculationInterval today = new InterestCalculationIntervalBuilder().build();
         List<InterestCalculationInterval> postingPeriods = Arrays.asList(new InterestCalculationInterval[] {today});
 
         InterestCalculationPeriodResult periodResult = new InterestCalculationPeriodResultBuilder().withTotalPrincipal("25").build();
@@ -135,9 +131,7 @@ public class InterestPostingPeriodCalculatorTest {
 
         // setup
         List<EndOfDayDetail> endOfDayDetailsForPeriods =  new ArrayList<EndOfDayDetail>();
-        LocalDate startDate = new LocalDate();
-        LocalDate endDate = new LocalDate();
-        InterestCalculationInterval today = new InterestCalculationInterval(startDate, endDate);
+        InterestCalculationInterval today = new InterestCalculationIntervalBuilder().build();
         List<InterestCalculationInterval> postingPeriods = Arrays.asList(new InterestCalculationInterval[] {today});
 
         InterestCalculationPeriodResult periodResult = new InterestCalculationPeriodResultBuilder().withPreviousInterest("0")
@@ -158,14 +152,12 @@ public class InterestPostingPeriodCalculatorTest {
     }
 
     @Test
-    public void shouldSetPostingPeriodBalanceAsSumInterestCalculationResultsAndAnyDifferentInInterestCalculatedForPeriod() {
+    public void shouldCompoundAnyInterestFromPreviousPeriodWithBalance() {
 
         // setup
         List<EndOfDayDetail> endOfDayDetailsForPeriods =  new ArrayList<EndOfDayDetail>();
-        LocalDate startDate = new LocalDate();
-        LocalDate endDate = new LocalDate();
-        InterestCalculationInterval postingPeriod1 = new InterestCalculationInterval(startDate, endDate);
-        InterestCalculationInterval postingPeriod2 = new InterestCalculationInterval(startDate, endDate);
+        InterestCalculationInterval postingPeriod1 = new InterestCalculationIntervalBuilder().build();
+        InterestCalculationInterval postingPeriod2 = new InterestCalculationIntervalBuilder().build();
         List<InterestCalculationInterval> postingPeriods = Arrays.asList(new InterestCalculationInterval[] {postingPeriod1, postingPeriod2});
 
         InterestCalculationPeriodResult periodResult = new InterestCalculationPeriodResultBuilder().withTotalPrincipal("25")

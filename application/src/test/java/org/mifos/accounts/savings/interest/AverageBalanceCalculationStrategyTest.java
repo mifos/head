@@ -90,10 +90,7 @@ public class AverageBalanceCalculationStrategyTest {
     @Test
     public void shouldCalculateAverageBalanceGivenOnlyOneDailyBalanceExistsWithinRange() {
 
-        Money deposit1 = TestUtils.createMoney("1000");
-        Money withdrawal1 = TestUtils.createMoney("0");
-        Money interest1 = TestUtils.createMoney("0");
-        EndOfDayDetail endOfDayDetail = new EndOfDayDetail(september6th, deposit1, withdrawal1, interest1);
+        EndOfDayDetail endOfDayDetail = new EndOfDayBuilder().on(september6th).withDespoitsOf("1000").build();
 
         interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().from(september6th)
                                                                                               .containing(endOfDayDetail)
@@ -108,15 +105,8 @@ public class AverageBalanceCalculationStrategyTest {
     @Test
     public void shouldCalculateAverageBalanceGivenTwoDailyBalancesExistWithinRange() {
 
-        Money deposit1 = TestUtils.createMoney("1000");
-        Money withdrawal1 = TestUtils.createMoney("0");
-        Money interest1 = TestUtils.createMoney("0");
-        EndOfDayDetail september6thDetails = new EndOfDayDetail(september6th, deposit1, withdrawal1, interest1);
-
-        Money deposit2 = TestUtils.createMoney("1000");
-        Money withdrawal2 = TestUtils.createMoney("0");
-        Money interest2 = TestUtils.createMoney("0");
-        EndOfDayDetail september13thDetails = new EndOfDayDetail(september13th, deposit2, withdrawal2, interest2);
+        EndOfDayDetail september6thDetails = new EndOfDayBuilder().on(september6th).withDespoitsOf("1000").build();
+        EndOfDayDetail september13thDetails = new EndOfDayBuilder().on(september13th).withDespoitsOf("1000").build();
 
         interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
                                                                                               .containing(september6thDetails, september13thDetails)
@@ -134,25 +124,10 @@ public class AverageBalanceCalculationStrategyTest {
     @Test
     public void shouldCalculateAverageBalanceGivenOneDepositExistBeforeRange() {
 
-        Money deposit1 = TestUtils.createMoney("0");
-        Money withdrawal1 = TestUtils.createMoney("0");
-        Money interest1 = TestUtils.createMoney("0");
-        EndOfDayDetail september1stDetails = new EndOfDayDetail(september1st, deposit1, withdrawal1, interest1);
-
-        Money deposit2 = TestUtils.createMoney("1000");
-        Money withdrawal2 = TestUtils.createMoney("0");
-        Money interest2 = TestUtils.createMoney("0");
-        EndOfDayDetail september6thDetails = new EndOfDayDetail(september6th, deposit2, withdrawal2, interest2);
-
-        Money deposit3 = TestUtils.createMoney("1000");
-        Money withdrawal3 = TestUtils.createMoney("0");
-        Money interest3 = TestUtils.createMoney("0");
-        EndOfDayDetail september13thDetails = new EndOfDayDetail(september13th, deposit3, withdrawal3, interest3);
-
-        Money deposit4 = TestUtils.createMoney("500");
-        Money withdrawal4 = TestUtils.createMoney("0");
-        Money interest4 = TestUtils.createMoney("0");
-        EndOfDayDetail september20thDetails = new EndOfDayDetail(september20th, deposit4, withdrawal4, interest4);
+        EndOfDayDetail september1stDetails = new EndOfDayBuilder().on(september1st).build();
+        EndOfDayDetail september6thDetails = new EndOfDayBuilder().on(september6th).withDespoitsOf("1000").build();
+        EndOfDayDetail september13thDetails = new EndOfDayBuilder().on(september13th).withDespoitsOf("1000").build();
+        EndOfDayDetail september20thDetails = new EndOfDayBuilder().on(september20th).withDespoitsOf("500").build();
 
         interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
                                                                                               .withStartingBalance("1000")
