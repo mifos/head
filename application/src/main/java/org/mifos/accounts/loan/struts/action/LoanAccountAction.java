@@ -67,6 +67,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
@@ -108,7 +109,6 @@ import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.service.MifosServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -237,19 +237,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     public static final String CUSTOMER_ID = "customerId";
     public static final String ACCOUNT_ID = "accountId";
     public static final String GLOBAL_ACCOUNT_NUM = "globalAccountNum";
+    private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
 
-    private QuestionnaireFlowAdapter createLoanQuestionnaire =
-        new QuestionnaireFlowAdapter("Create","Loan",
-                ActionForwards.schedulePreview_success,
-                "custSearchAction.do?method=loadMainSearch",
-                new QuestionnaireServiceFacadeLocator() {
-                    @Override
-                    public QuestionnaireServiceFacade getService(HttpServletRequest request) {
-                        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
-                    }
-                });
-
-
+    private QuestionnaireFlowAdapter createLoanQuestionnaire = new QuestionnaireFlowAdapter("Create", "Loan",
+            ActionForwards.schedulePreview_success, "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator);
 
     public LoanAccountAction() throws Exception {
         this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
@@ -664,7 +655,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private void setQuestionGroupInstances(HttpServletRequest request, LoanBO loanBO) throws PageExpiredException {
-        QuestionnaireServiceFacade questionnaireServiceFacade = MifosServiceFactory.getQuestionnaireServiceFacade(request);
+        QuestionnaireServiceFacade questionnaireServiceFacade = questionnaireServiceFacadeLocator.getService(request);
         if (questionnaireServiceFacade == null) {
             return;
         }

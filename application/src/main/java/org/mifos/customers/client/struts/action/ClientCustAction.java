@@ -26,6 +26,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
@@ -85,16 +86,10 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 public class ClientCustAction extends CustAction implements QuestionnaireAction {
 
-    private final QuestionnaireFlowAdapter createClientQuestionnaire =
-        new QuestionnaireFlowAdapter("Create","Client",
-                ActionForwards.next_success,
-                "clientCustAction.do?method=cancel",
-                new QuestionnaireServiceFacadeLocator() {
-                    @Override
-                    public QuestionnaireServiceFacade getService(HttpServletRequest request) {
-                        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
-                    }
-                });
+    private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
+
+    private final QuestionnaireFlowAdapter createClientQuestionnaire = new QuestionnaireFlowAdapter("Create", "Client",
+            ActionForwards.next_success, "clientCustAction.do?method=cancel", questionnaireServiceFacadeLocator);
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("clientCustAction");
@@ -503,9 +498,10 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
     }
 
     private void setQuestionGroupInstances(HttpServletRequest request, ClientBO clientBO) throws PageExpiredException {
-        QuestionnaireServiceFacade questionnaireServiceFacade = MifosServiceFactory.getQuestionnaireServiceFacade(request);
-        if (questionnaireServiceFacade == null) return;
-        setQuestionGroupInstances(questionnaireServiceFacade, request, clientBO.getCustomerId());
+        QuestionnaireServiceFacade questionnaireServiceFacade = questionnaireServiceFacadeLocator.getService(request);
+        if (questionnaireServiceFacade != null) {
+            setQuestionGroupInstances(questionnaireServiceFacade, request, clientBO.getCustomerId());
+        }
     }
 
     // Intentionally made public to aid testing !

@@ -20,13 +20,12 @@
 
 package org.mifos.customers.group.struts.action;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.servicefacade.CenterDto;
@@ -49,8 +48,8 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -62,11 +61,11 @@ import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.service.MifosServiceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
@@ -76,6 +75,11 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 public class GroupCustAction extends CustAction {
 
     private static final Logger logger = LoggerFactory.getLogger(GroupCustAction.class);
+
+    private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
+
+    private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Group",
+            ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator);
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("groupCustAction");
@@ -173,18 +177,6 @@ public class GroupCustAction extends CustAction {
         return mapping.findForward(ActionForwards.loadMeeting_success.toString());
     }
 
-    private QuestionnaireFlowAdapter createGroupQuestionnaire =
-            new QuestionnaireFlowAdapter("Create", "Group",
-                    ActionForwards.preview_success,
-                    "custSearchAction.do?method=loadMainSearch",
-                    new QuestionnaireServiceFacadeLocator() {
-                        @Override
-                        public QuestionnaireServiceFacade getService(HttpServletRequest request) {
-                            return MifosServiceFactory.getQuestionnaireServiceFacade(request);
-                        }
-                    });
-
-
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
                                  @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
@@ -255,11 +247,10 @@ public class GroupCustAction extends CustAction {
     }
 
     private void setQuestionGroupInstances(HttpServletRequest request, GroupBO groupBO) throws PageExpiredException {
-        QuestionnaireServiceFacade questionnaireServiceFacade = MifosServiceFactory.getQuestionnaireServiceFacade(request);
-        if (questionnaireServiceFacade == null) {
-            return;
+        QuestionnaireServiceFacade questionnaireServiceFacade = questionnaireServiceFacadeLocator.getService(request);
+        if (questionnaireServiceFacade != null) {
+            setQuestionGroupInstances(questionnaireServiceFacade, request, groupBO.getCustomerId());
         }
-        setQuestionGroupInstances(questionnaireServiceFacade, request, groupBO.getCustomerId());
     }
 
     // Intentionally made public to aid testing !

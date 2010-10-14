@@ -1,6 +1,5 @@
 package org.mifos.application.questionnaire.struts;
 
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -21,7 +20,6 @@ import org.mifos.security.util.UserContext;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-
 public class QuestionnaireFlowAdapter {
 
     private ActionForwards joinFlowAt;
@@ -38,9 +36,8 @@ public class QuestionnaireFlowAdapter {
        this.serviceLocator = serviceLocator;
     }
 
-    public ActionForward fetchAppliedQuestions(
-            ActionMapping mapping, QuestionResponseCapturer form,
-            HttpServletRequest request, ActionForwards defaultForward) {
+    public ActionForward fetchAppliedQuestions(ActionMapping mapping, QuestionResponseCapturer form, HttpServletRequest request,
+                                               ActionForwards defaultForward) {
         if (CollectionUtils.isEmpty(form.getQuestionGroups())) {
             List<QuestionGroupDetail> questionGroups = getQuestionGroups(request);
             if (CollectionUtils.isEmpty(questionGroups)) {
@@ -107,15 +104,14 @@ public class QuestionnaireFlowAdapter {
 
     public void saveResponses(HttpServletRequest request, QuestionResponseCapturer form, int associateWithId) {
         List<QuestionGroupDetail> questionResponses = form.getQuestionGroups();
-        if (CollectionUtils.isEmpty(questionResponses)) {
-            return;
-        }
-        QuestionnaireServiceFacade questionnaireServiceFacade = serviceLocator.getService(request);
-        //MifosUser loggedinUser = ((MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        if (questionnaireServiceFacade != null) {
-            UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-            questionnaireServiceFacade.saveResponses(
-                    new QuestionGroupDetails(userContext.getId(), associateWithId, questionResponses));
+        if (CollectionUtils.isNotEmpty(questionResponses)) {
+            QuestionnaireServiceFacade questionnaireServiceFacade = serviceLocator.getService(request);
+            //MifosUser loggedinUser = ((MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+            if (questionnaireServiceFacade != null) {
+                UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+                questionnaireServiceFacade.saveResponses(
+                        new QuestionGroupDetails(userContext.getId(), associateWithId, questionResponses));
+            }
         }
     }
 
@@ -129,10 +125,7 @@ public class QuestionnaireFlowAdapter {
 
     private List<QuestionGroupDetail> getQuestionGroups(HttpServletRequest request) {
         QuestionnaireServiceFacade questionnaireServiceFacade = serviceLocator.getService(request);
-        if (questionnaireServiceFacade == null) {
-            return null;
-        }
-        return questionnaireServiceFacade.getQuestionGroups(event, source);
+        return questionnaireServiceFacade != null ? questionnaireServiceFacade.getQuestionGroups(event, source) : null;
     }
 
     private void setQuestionnaireAttributesToRequest(HttpServletRequest request, QuestionResponseCapturer form) {
