@@ -117,8 +117,9 @@ public class QuestionnaireFlowAdapter {
             //MifosUser loggedinUser = ((MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
             if (questionnaireServiceFacade != null) {
                 UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-                questionnaireServiceFacade.saveResponses(
-                        new QuestionGroupDetails(userContext.getId(), associateWithId, questionResponses));
+                Integer eventSourceId = questionnaireServiceFacade.getEventSourceId(event, source);
+                QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(userContext.getId(), associateWithId, eventSourceId, questionResponses);
+                questionnaireServiceFacade.saveResponses(questionGroupDetails);
             }
         }
     }

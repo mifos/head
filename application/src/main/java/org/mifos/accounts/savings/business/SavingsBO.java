@@ -92,6 +92,7 @@ import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
@@ -1331,10 +1332,11 @@ public class SavingsBO extends AccountBO {
 
     public void adjustLastUserAction(final Money amountAdjustedTo, final String adjustmentComment)
             throws AccountException {
-        logger.debug("In SavingsBO::generateDepositAccountActions(), accountId: " + getAccountId());
+
         if (!isAdjustPossibleOnLastTrxn(amountAdjustedTo)) {
             throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
         }
+
         Date trxnDate = getTrxnDate(getLastPmnt());
         Money oldInterest = calculateInterestForAdjustment(trxnDate, null);
         adjustExistingPayment(amountAdjustedTo, adjustmentComment);
@@ -2221,5 +2223,14 @@ public class SavingsBO extends AccountBO {
 
     public MeetingBO getInterestPostingMeeting() {
         return this.savingsOffering.getFreqOfPostIntcalc().getMeeting();
+    }
+
+    public SavingsAccountClosureDto toClosureDto(String interestAmountAtClosure) {
+        return new SavingsAccountClosureDto(new LocalDate(), this.savingsBalance.toString(), interestAmountAtClosure);
+    }
+
+    public boolean isGroupModelWithIndividualAccountability() {
+
+        return this.customer.isCenter() || (this.customer.isGroup() && this.recommendedAmntUnit.isPerIndividual());
     }
 }

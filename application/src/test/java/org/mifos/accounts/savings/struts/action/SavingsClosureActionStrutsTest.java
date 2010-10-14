@@ -21,7 +21,6 @@
 package org.mifos.accounts.savings.struts.action;
 
 import java.util.Date;
-import java.util.List;
 
 import junit.framework.Assert;
 
@@ -49,6 +48,7 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -57,7 +57,13 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
     public SavingsClosureActionStrutsTest() throws Exception {
@@ -105,10 +111,18 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         flowKey = createFlow(request, SavingsClosureAction.class);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @Override
     public void tearDown() throws Exception {
+        SecurityContext securityContext = new SecurityContextImpl();
+        SecurityContextHolder.setContext(securityContext);
         TestObjectFactory.cleanUp(savings);
         TestObjectFactory.cleanUp(newSavings);
         TestObjectFactory.cleanUp(client1);
@@ -140,9 +154,6 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         Hibernate.initialize(savings.getAccountFees());
         Hibernate.initialize(savings.getAccountActionDates());
         Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
-        List<CustomerBO> clientList = (List<CustomerBO>) SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,
-                request);
-        Assert.assertNull(clientList);
 
         group = new CustomerPersistence().getCustomer(group.getCustomerId());
         center = new CustomerPersistence().getCustomer(center.getCustomerId());
@@ -169,10 +180,6 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         Hibernate.initialize(savings.getAccountFees());
         Hibernate.initialize(savings.getAccountActionDates());
         Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
-        List<CustomerBO> clientList = (List<CustomerBO>) SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,
-                request);
-        Assert.assertNotNull(clientList);
-       Assert.assertEquals(2, clientList.size());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();

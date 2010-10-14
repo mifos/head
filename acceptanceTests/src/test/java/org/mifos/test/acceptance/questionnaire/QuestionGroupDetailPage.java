@@ -44,7 +44,8 @@ public class QuestionGroupDetailPage extends MifosPage {
 
     public String getAppliesTo() {
         String appliesToStr = selenium.getEval("window.document.getElementById('questionGroup.appliesTo').innerHTML");
-        return appliesToStr.substring(appliesToStr.indexOf(':') + 1).trim();
+        String appliesToTrimmed = appliesToStr.substring(appliesToStr.indexOf(':') + 1).trim();
+        return appliesToTrimmed.substring(0, appliesToTrimmed.length()-1);
     }
 
     public List<String> getSections() {

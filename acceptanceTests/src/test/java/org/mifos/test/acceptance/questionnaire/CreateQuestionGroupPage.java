@@ -24,6 +24,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
@@ -50,9 +51,21 @@ public class CreateQuestionGroupPage extends MifosPage {
         if (createQuestionGroupParameters.isAnswerEditable()) {
            selenium.click("id=editable");
         }
-        selenium.select("id=eventSourceId", createQuestionGroupParameters.getAppliesTo());
+        selectAppliesTo(createQuestionGroupParameters.getAppliesTo());
         selenium.click("id=_eventId_defineQuestionGroup");
         waitForPageToLoad();
+    }
+
+    private void selectAppliesTo(String appliesTo) {
+        if ("--select one--".equals(appliesTo)) {
+            return;
+        }
+        
+        String[] appliesToArray = {"View Loan", "Approve Loan", "Create Office", "View Client", "Close Client",
+        "Disburse Loan", "Create Center", "Create Client", "View Savings", "Create Loan",
+        "Create Savings", "Create Group", "View Group", "View Center", "Create Personnel"};
+
+        selenium.click("id=eventSourceIds" + Arrays.asList(appliesToArray).indexOf(appliesTo));
     }
 
     public void addSection(CreateQuestionGroupParameters createQuestionGroupParameters) {

@@ -71,6 +71,7 @@ insert into applied_upgrades(upgrade_id) values(1283765911);
 insert into applied_upgrades(upgrade_id) values(1284365506);
 insert into applied_upgrades(upgrade_id) values(1284986654);
 insert into applied_upgrades(upgrade_id) values(1285177663);
+insert into applied_upgrades(upgrade_id) values(1286529235);
 insert into applied_upgrades(upgrade_id) values(1286780611);
 
 /* The table Currency holds configuration related items for a currency like

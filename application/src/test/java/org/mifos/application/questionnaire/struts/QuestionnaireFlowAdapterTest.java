@@ -99,7 +99,7 @@ public class QuestionnaireFlowAdapterTest {
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, List<SectionDetail> sections) {
-        return new QuestionGroupDetail(1, title, new EventSourceDto(event, source, null), sections, true);
+        return new QuestionGroupDetail(1, title, Arrays.asList(new EventSourceDto(event, source, null)), sections, true);
     }
 
     private SectionDetail getSectionDetailWithQuestions(String sectionName, List<QuestionDetail> questionDetails,

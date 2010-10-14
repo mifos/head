@@ -113,7 +113,7 @@ public class QuestionnaireMigrationMapperTest {
         QuestionGroupDto questionGroupDto = mapper.map(customFields.iterator(), customFieldQuestionIdMap, EntityType.CLIENT);
         assertThat(questionGroupDto, is(notNullValue()));
         assertThat(questionGroupDto.getTitle(), is("Additional_Fields_Create Client"));
-        EventSourceDto eventSourceDto = questionGroupDto.getEventSourceDto();
+        EventSourceDto eventSourceDto = questionGroupDto.getEventSourceDtos().get(0);
         assertThat(eventSourceDto, is(notNullValue()));
         assertThat(eventSourceDto.getEvent(), is("Create"));
         assertThat(eventSourceDto.getSource(), is("Client"));
@@ -141,7 +141,7 @@ public class QuestionnaireMigrationMapperTest {
         QuestionGroupDto questionGroupDto = mapper.map(survey);
         assertThat(questionGroupDto, is(notNullValue()));
         assertThat(questionGroupDto.getTitle(), is("Sur1"));
-        assertEventSource(questionGroupDto.getEventSourceDto());
+        assertEventSource(questionGroupDto.getEventSourceDtos().get(0));
         List<SectionDto> sections = questionGroupDto.getSections();
         assertThat(sections, is(notNullValue()));
         assertThat(sections.size(), is(1));
@@ -155,9 +155,10 @@ public class QuestionnaireMigrationMapperTest {
         Integer questionGroupId = 11, sectionQuestionId = 112233;
         Integer questionId = survey.getQuestions().get(0).getQuestion().getQuestionId();
         when(questionnaireServiceFacade.getSectionQuestionId("Misc", questionId, questionGroupId)).thenReturn(sectionQuestionId);
-        QuestionGroupInstanceDto questionGroupInstanceDto = mapper.map(surveyInstance, questionGroupId);
+        QuestionGroupInstanceDto questionGroupInstanceDto = mapper.map(surveyInstance, questionGroupId, 3);
         assertThat(questionGroupInstanceDto, is(notNullValue()));
         assertThat(questionGroupInstanceDto.getCreatorId(), is(12));
+        assertThat(questionGroupInstanceDto.getEventSourceId(), is(3));
         assertThat(questionGroupInstanceDto.getEntityId(), is(101));
         assertThat(questionGroupInstanceDto.getQuestionGroupId(), is(questionGroupId));
         assertThat(questionGroupInstanceDto.getDateConducted(), is(surveyInstance.getDateConducted()));
@@ -177,9 +178,10 @@ public class QuestionnaireMigrationMapperTest {
         Integer questionGroupId = 11, sectionQuestionId = 112233;
         Integer questionId = survey.getQuestions().get(0).getQuestion().getQuestionId();
         when(questionnaireServiceFacade.getSectionQuestionId("Misc", questionId, questionGroupId)).thenReturn(sectionQuestionId);
-        QuestionGroupInstanceDto questionGroupInstanceDto = mapper.map(surveyInstance, questionGroupId);
+        QuestionGroupInstanceDto questionGroupInstanceDto = mapper.map(surveyInstance, questionGroupId, 3);
         assertThat(questionGroupInstanceDto, is(notNullValue()));
         assertThat(questionGroupInstanceDto.getCreatorId(), is(12));
+        assertThat(questionGroupInstanceDto.getEventSourceId(), is(3));
         assertThat(questionGroupInstanceDto.getEntityId(), is(101));
         assertThat(questionGroupInstanceDto.getQuestionGroupId(), is(questionGroupId));
         assertThat(questionGroupInstanceDto.getDateConducted(), is(surveyInstance.getDateConducted()));
@@ -209,9 +211,10 @@ public class QuestionnaireMigrationMapperTest {
         when(questionnaireServiceFacade.getSectionQuestionId("Misc", 11, questionGroupId)).thenReturn(111);
         when(questionnaireServiceFacade.getSectionQuestionId("Misc", 22, questionGroupId)).thenReturn(222);
         when(questionnaireServiceFacade.getSectionQuestionId("Misc", 33, questionGroupId)).thenReturn(333);
-        QuestionGroupInstanceDto questionGroupInstanceDto = mapper.mapForCustomers(questionGroupId, asList(customField1, customField2, customField3), customFieldQuestionIdMap);
+        QuestionGroupInstanceDto questionGroupInstanceDto = mapper.mapForCustomers(questionGroupId, 1, asList(customField1, customField2, customField3), customFieldQuestionIdMap);
         assertThat(questionGroupInstanceDto, is(notNullValue()));
         assertThat(questionGroupInstanceDto.getCreatorId(), is(Integer.valueOf(clientBO.getCreatedBy())));
+        assertThat(questionGroupInstanceDto.getEventSourceId(), is(1));
         assertThat(questionGroupInstanceDto.getQuestionGroupId(), is(questionGroupId));
         assertThat(questionGroupInstanceDto.getDateConducted(), is(clientBO.getCreatedDate()));
         assertThat(questionGroupInstanceDto.getEntityId(), is(clientBO.getCustomerId()));
@@ -245,9 +248,10 @@ public class QuestionnaireMigrationMapperTest {
         when(questionnaireServiceFacade.getSectionQuestionId("Misc", 11, questionGroupId)).thenReturn(111);
         when(questionnaireServiceFacade.getSectionQuestionId("Misc", 22, questionGroupId)).thenReturn(222);
         when(questionnaireServiceFacade.getSectionQuestionId("Misc", 33, questionGroupId)).thenReturn(333);
-        QuestionGroupInstanceDto questionGroupInstanceDto = mapper.mapForAccounts(questionGroupId, asList(customField1, customField2, customField3), customFieldQuestionIdMap);
+        QuestionGroupInstanceDto questionGroupInstanceDto = mapper.mapForAccounts(questionGroupId, 2, asList(customField1, customField2, customField3), customFieldQuestionIdMap);
         assertThat(questionGroupInstanceDto, is(notNullValue()));
         assertThat(questionGroupInstanceDto.getCreatorId(), is(Integer.valueOf(clientBO.getCreatedBy())));
+        assertThat(questionGroupInstanceDto.getEventSourceId(), is(2));
         assertThat(questionGroupInstanceDto.getQuestionGroupId(), is(questionGroupId));
         assertThat(questionGroupInstanceDto.getDateConducted(), is(clientBO.getCreatedDate()));
         assertThat(questionGroupInstanceDto.getEntityId(), is(clientBO.getAccountId()));

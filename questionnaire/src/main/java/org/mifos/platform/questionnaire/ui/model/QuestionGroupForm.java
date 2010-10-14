@@ -91,33 +91,44 @@ public class QuestionGroupForm extends ScreenObject {
         this.questionsToAdd = questionsToAdd;
     }
 
-    public String getEventSourceId() {
-        EventSourceDto eventSourceDto = this.questionGroupDetail.getEventSource();
-        if (eventSourceDto == null || isEmpty(eventSourceDto.getEvent()) || isEmpty(eventSourceDto.getSource())) {
-            return null;
+    public List<String> getEventSourceIds() {
+        List<String> eventSources = new ArrayList<String>();
+        List<EventSourceDto> eventSourcesDtos = this.questionGroupDetail.getEventSources();
+        if (eventSourcesDtos == null) {
+            return eventSources;
         }
-        return format("%s.%s", eventSourceDto.getEvent(), eventSourceDto.getSource());
+        for (EventSourceDto eventSourceDto : eventSourcesDtos) {
+            if (eventSourceDto == null || isEmpty(eventSourceDto.getEvent()) || isEmpty(eventSourceDto.getSource())) {
+                continue;
+            }
+            eventSources.add(format("%s.%s", eventSourceDto.getEvent(), eventSourceDto.getSource()));
+        }
+        return eventSources;
     }
 
     public String getId() {
         return questionGroupDetail.getId().toString();
     }
 
-    public void setEventSourceId(String eventSourceId) {
-        if (StringUtils.isNotEmpty(eventSourceId) && !StringUtils.equals(DEFAULT_APPLIES_TO_OPTION, eventSourceId)) {
-            String[] parts = eventSourceId.split("\\.");
-            this.questionGroupDetail.setEventSource(new EventSourceDto(parts[0], parts[1], eventSourceId));
-        }else{
-            this.questionGroupDetail.setEventSource(new EventSourceDto(null, null, null));
+    public void setEventSourceIds(List<String> eventSourceIds) {
+        List<EventSourceDto> eventSourceDtos = new ArrayList<EventSourceDto>();
+        if (eventSourceIds != null) {
+            for (String eventSourceId : eventSourceIds) {
+                if (StringUtils.isNotEmpty(eventSourceId) && !StringUtils.equals(DEFAULT_APPLIES_TO_OPTION, eventSourceId)) {
+                    String[] parts = eventSourceId.split("\\.");
+                    eventSourceDtos.add(new EventSourceDto(parts[0], parts[1], eventSourceId));
+                }
+            }
         }
+        this.questionGroupDetail.setEventSources(eventSourceDtos);
     }
 
-    public EventSourceDto getEventSource() {
-        return questionGroupDetail.getEventSource();
+    public List<EventSourceDto> getEventSources() {
+        return questionGroupDetail.getEventSources();
     }
 
-    public void setEventSource(EventSourceDto eventSourceDto) {
-        questionGroupDetail.setEventSource(eventSourceDto);
+    public void setEventSources(List<EventSourceDto> eventSourceDtos) {
+        questionGroupDetail.setEventSources(eventSourceDtos);
     }
 
     public List<SectionDetailForm> getSections() {

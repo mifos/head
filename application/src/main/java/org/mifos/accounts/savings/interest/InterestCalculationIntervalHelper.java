@@ -33,7 +33,7 @@ public class InterestCalculationIntervalHelper {
      * determines all possible periods from the start of the fiscal year of the accounts first activity date.
      */
     public List<InterestCalculationInterval> determineAllPossiblePeriods(LocalDate firstActivityDate,
-            InterestScheduledEvent interestCalculationEvent, LocalDate cutOffDateForValidPeriods) {
+            InterestScheduledEvent interestCalculationEvent, LocalDate currentInterestPostingDate, LocalDate endDateOfLastPeriod) {
 
         List<InterestCalculationInterval> validIntervals = new ArrayList<InterestCalculationInterval>();
 
@@ -41,8 +41,7 @@ public class InterestCalculationIntervalHelper {
         LocalDate startOfFiscalYearOfFirstDeposit = new LocalDate(new DateTime().withYearOfEra(
                 firstActivityDate.getYear()).withMonthOfYear(1).withDayOfMonth(1));
 
-        List<LocalDate> allMatchingDates = interestCalculationEvent.findAllMatchingDatesFromBaseDateToCutOffDate(
-                startOfFiscalYearOfFirstDeposit, cutOffDateForValidPeriods);
+        List<LocalDate> allMatchingDates = interestCalculationEvent.findAllMatchingDatesFromBaseDateToCutOffDate(startOfFiscalYearOfFirstDeposit, currentInterestPostingDate);
         for (LocalDate matchingDate : allMatchingDates) {
             LocalDate firstDayofInterval = interestCalculationEvent.findFirstDateOfPeriodForMatchingDate(matchingDate);
 
@@ -50,8 +49,11 @@ public class InterestCalculationIntervalHelper {
             if (interval.contains(firstActivityDate)) {
                 interval = new InterestCalculationInterval(firstActivityDate, matchingDate);
                 validIntervals.add(interval);
-            } else if (matchingDate.isAfter(firstActivityDate) && matchingDate.isBefore(cutOffDateForValidPeriods)
-                    || matchingDate.isEqual(cutOffDateForValidPeriods)) {
+            } else if (matchingDate.isAfter(firstActivityDate) && matchingDate.isBefore(endDateOfLastPeriod)
+                    || matchingDate.isEqual(endDateOfLastPeriod)) {
+                validIntervals.add(interval);
+            } else if (matchingDate.isAfter(endDateOfLastPeriod) && (firstDayofInterval.isBefore(endDateOfLastPeriod) || firstDayofInterval.isEqual(endDateOfLastPeriod))) {
+                interval = new InterestCalculationInterval(firstDayofInterval, endDateOfLastPeriod);
                 validIntervals.add(interval);
             }
         }

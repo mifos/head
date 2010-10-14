@@ -8,9 +8,11 @@
     <on-start>
         <evaluate expression="questionnaireServiceFacade.getQuestionGroups(requestParameters.event, requestParameters.source)"
                 result="questionGroupDetails.details"/>
-        <set name="flowScope.questionGroupDetails.creatorId" value="requestParameters.creatorId" type="int"></set>
-        <set name="flowScope.questionGroupDetails.entityId" value="requestParameters.entityId" type="int"></set>
-        <set name="flowScope.backPageUrl" value="requestParameters.backPageUrl" type="string"></set>
+        <evaluate expression="questionnaireServiceFacade.getEventSourceId(requestParameters.event, requestParameters.source)"
+                result="flowScope.questionGroupDetails.eventSourceId"/>
+        <set name="flowScope.questionGroupDetails.creatorId" value="requestParameters.creatorId" type="int"/>
+        <set name="flowScope.questionGroupDetails.entityId" value="requestParameters.entityId" type="int"/>
+        <set name="flowScope.backPageUrl" value="requestParameters.backPageUrl" type="string"/>
     </on-start>
 
     <view-state id="selectQuestionnaire">
