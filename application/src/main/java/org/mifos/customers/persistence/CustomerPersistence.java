@@ -89,6 +89,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.MifosStringUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
@@ -118,6 +119,73 @@ public class CustomerPersistence extends Persistence {
             });
         }
     };
+
+	private class SearchTemplate {
+
+		String searchString;
+		Short officeId;
+		Short userId;
+
+		// queries must be set before calling "doSeach"
+		String queryNoOffice;
+		String queryNoOfficeCount;
+
+		String queryNormal;
+		String queryNormalCount;
+
+		String queryNonOfficer;
+		String queryNonOfficerCount;
+
+		SearchTemplate(final String searchString, final Short officeId, final Short userId) {
+			this.searchString = searchString;
+			this.officeId = officeId;
+			this.userId = userId;
+		}
+
+		QueryResult doSearch()
+				throws HibernateSearchException, SystemException, PersistenceException {
+			
+			String[] namedQuery = new String[2];
+			List<Param> paramList = new ArrayList<Param>();
+			QueryInputs queryInputs = new QueryInputs();
+			String[] Names = {"customerId", "centerName", "centerGlobalCustNum", "customerType", "branchGlobalNum",
+				"branchName", "loanOfficerName", "loanOffcerGlobalNum", "customerStatus", "groupName",
+				"groupGlobalCustNum", "clientName", "clientGlobalCustNum", "loanGlobalAccountNumber"};
+			QueryResult queryResult = QueryFactory.getQueryResult(CustomerSearchConstants.CUSTOMERSEARCHRESULTS);
+			queryInputs.setPath("org.mifos.customers.business.CustomerSearchDto");
+			queryInputs.setAliasNames(Names);
+			queryResult.setQueryInputs(queryInputs);
+			queryInputs.setQueryStrings(namedQuery);
+			queryInputs.setParamList(paramList);
+			PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
+
+			if (officeId != null && officeId.shortValue() == 0) {
+				namedQuery[0] = queryNoOfficeCount;
+				namedQuery[1] = queryNoOffice;
+				if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
+					paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()));
+				} else {
+					paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId() + "%"));
+				}
+			} else {
+				paramList.add(typeNameValue("Short", "OFFICEID", officeId));
+				if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
+					paramList.add(typeNameValue("String", "ID", personnel.getPersonnelId()));
+					namedQuery[0] = queryNormalCount;
+					namedQuery[1] = queryNormal;
+				} else {
+					paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId() + "%"));
+					namedQuery[0] = queryNonOfficerCount;
+					namedQuery[1] = queryNonOfficer;
+				}
+			}
+
+			paramList.add(typeNameValue("String", "SEARCH_STRING", searchString));
+
+			return queryResult;
+
+		}
+	}
 
     public void saveCustomer(final CustomerBO customer) throws CustomerException {
         try {
@@ -225,15 +293,18 @@ public class CustomerPersistence extends Persistence {
 
         try {
 
-            queryResult = new AccountPersistence().search(searchString, officeId);
-            if (queryResult == null) {
-                queryResult = idSearch(searchString, officeId, userId);
-                if (queryResult == null) {
-                    queryResult = governmentIdSearch(searchString, officeId, userId);
-                    if (queryResult == null) {
-                        queryResult = mainSearch(searchString, officeId, userId, userOfficeId);
-                    }
-                }
+           queryResult = new AccountPersistence().search(searchString, officeId);
+			if (queryResult == null) {
+				queryResult = idSearch(searchString, officeId, userId);
+				if (queryResult == null) {
+					queryResult = governmentIdSearch(searchString, officeId, userId);
+					if (queryResult == null) {
+						queryResult = phoneNumberSearch(searchString, officeId, userId);
+						if (queryResult == null) {
+							queryResult = mainSearch(searchString, officeId, userId, userOfficeId);
+						}
+					}
+				}
             }
 
         } catch (HibernateSearchException e) {
@@ -421,52 +492,46 @@ public class CustomerPersistence extends Persistence {
 
     }
 
-    private QueryResult governmentIdSearch(final String searchString, final Short officeId, final Short userId)
+	private QueryResult governmentIdSearch(final String searchString, final Short officeId, final Short userId)
             throws HibernateSearchException, SystemException, PersistenceException {
-        if (!isCustomerExistWithGovernmentId(searchString)) {
-            return null;
-        }
-        String[] namedQuery = new String[2];
-        List<Param> paramList = new ArrayList<Param>();
-        QueryInputs queryInputs = new QueryInputs();
-        String[] Names = { "customerId", "centerName", "centerGlobalCustNum", "customerType", "branchGlobalNum",
-                "branchName", "loanOfficerName", "loanOffcerGlobalNum", "customerStatus", "groupName",
-                "groupGlobalCustNum", "clientName", "clientGlobalCustNum", "loanGlobalAccountNumber" };
-        QueryResult queryResult = QueryFactory.getQueryResult(CustomerSearchConstants.CUSTOMERSEARCHRESULTS);
-        queryInputs.setPath("org.mifos.customers.business.CustomerSearchDto");
-        queryInputs.setAliasNames(Names);
-        queryResult.setQueryInputs(queryInputs);
-        queryInputs.setQueryStrings(namedQuery);
-        queryInputs.setParamList(paramList);
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
 
-        if (officeId != null && officeId.shortValue() == 0) {
-            namedQuery[0] = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_NOOFFICEID_COUNT;
-            namedQuery[1] = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_NOOFFICEID;
-            if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
-                paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()));
-            } else {
-                paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId() + "%"));
-            }
-        } else {
-            paramList.add(typeNameValue("Short", "OFFICEID", officeId));
-            if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
-                paramList.add(typeNameValue("String", "ID", personnel.getPersonnelId()));
-                namedQuery[0] = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_COUNT;
-                namedQuery[1] = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH;
-            } else {
-                paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId() + "%"));
-                namedQuery[0] = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_COUNT_NONLO;
-                namedQuery[1] = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_NONLO;
-            }
+		if (!isCustomerExistWithGovernmentId(searchString)) {
+			return null;
+		}
 
-        }
+		SearchTemplate template = new SearchTemplate(searchString, officeId, userId);
 
-        paramList.add(typeNameValue("String", "SEARCH_STRING", searchString));
+        template.queryNoOfficeCount = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_NOOFFICEID_COUNT;
+        template.queryNoOffice = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_NOOFFICEID;
 
-        return queryResult;
+        template.queryNormalCount = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_COUNT;
+        template.queryNormal = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH;
 
+		template.queryNonOfficerCount = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_COUNT_NONLO;
+        template.queryNonOfficer = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_NONLO;
+
+		return template.doSearch();
     }
+
+   private QueryResult phoneNumberSearch(final String searchString, final Short officeId, final Short userId)
+			throws HibernateSearchException, SystemException, PersistenceException {
+
+		String phoneNumberWithStrippedNonnumerics = MifosStringUtils.removeNondigits(searchString);
+		if (phoneNumberWithStrippedNonnumerics.isEmpty())
+			return null;
+		SearchTemplate template = new SearchTemplate(phoneNumberWithStrippedNonnumerics, officeId, userId);
+
+        template.queryNoOfficeCount = NamedQueryConstants.CUSTOMER_PHONE_SEARCH_NOOFFICEID_COUNT;
+        template.queryNoOffice = NamedQueryConstants.CUSTOMER_PHONE_SEARCH_NOOFFICEID;
+
+        template.queryNormalCount = NamedQueryConstants.CUSTOMER_PHONE_SEARCH_COUNT;
+        template.queryNormal = NamedQueryConstants.CUSTOMER_PHONE_SEARCH;
+
+		template.queryNonOfficerCount = NamedQueryConstants.CUSTOMER_PHONE_SEARCH_COUNT_NONLO;
+        template.queryNonOfficer = NamedQueryConstants.CUSTOMER_PHONE_SEARCH_NONLO;
+
+		return template.doSearch();
+   }
 
     private boolean isCustomerExist(final String globalCustNum) throws PersistenceException {
 
