@@ -20,28 +20,37 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-   <!--  Main Content Begins-->  
-  <div class=" content">
-    <span id="page.id" title="viewFunds" />
-    [@mifos.crumb "organizationPreferences.viewfunds"/]
-    
-    <p class="font15 orangeheading">[@spring.message "organizationPreferences.viewfunds"/]</p>
-    <p>&nbsp;&nbsp;</p> 
-    <div class="span-15" id="fundDetailsList">
-    
-    	<div class="span-15 fontBold borderbtm paddingLeft">
-     		<span class="span-5 ">[@spring.message "organizationPreferences.viewfunds.name"/]</span>
-           	<span class="span-8">[@spring.message "organizationPreferences.viewfunds.fundCode"/]</span>
-           	<span class="span-1 ">&nbsp;</span>
+<!--  Main Content Begins-->
+<div class=" content">
+    <span id="page.id" title="viewFunds"/>
+[@mifos.crumb "organizationPreferences.viewfunds"/]
+    <div class="margin20lefttop">
+        <p class="font15 orangeheading margin5top10bottom">[@spring.message "organizationPreferences.viewfunds"/]</p>
+        <div class="span-15 width80prc" id="fundDetailsList">
+            <table class="standardTableLayout" cellspacing="0" cellpadding="3" border="0" width="80%" id="fundDisplayTable">
+                <tbody>
+                <tr>
+                    <td width="33%" class="drawtablerowboldnoline">
+                    [@spring.message "organizationPreferences.viewfunds.name"/]
+                    </td>
+                    <td width="44%" class="drawtablerowboldnoline">
+                    [@spring.message "organizationPreferences.viewfunds.fundCode"/]
+                    </td>
+                    <td width="23%" class="drawtablerowboldnoline">&nbsp;</td>
+                </tr>
+                    [#list fundsList as fund]
+                    <tr>
+                        <td width="33%" class="drawtablerow">${fund.name}</td>
+                        <td width="44%" class="drawtablerow">${fund.code.value}</td>
+                        <td align="right" width="23%" class="drawtablerow">
+                            <a class="floatRT"
+                               href="editFunds.ftl?fundId=${fund.id}">[@spring.message "organizationPreferences.viewfunds.edit"/]</a>
+                        </td>
+                    </tr>
+                    [/#list]
+                </tbody>
+            </table>
         </div>
-
-    	[#list fundsList as fund]
-		<div class="span-15 borderbtm paddingLeft">
-        	<span class="span-5 ">${fund.name}</span>
-           	<span class="span-8">${fund.code.value}</span>
-           	<span class="span-1 "><a class="floatRT" href="editFunds.ftl?fundId=${fund.id}">[@spring.message "organizationPreferences.viewfunds.edit"/]</a></span>
-        </div>    		
-        [/#list] 
     </div>
- </div><!--Main Content Ends-->  
+</div><!--Main Content Ends-->
 [/@adminLeftPaneLayout]
