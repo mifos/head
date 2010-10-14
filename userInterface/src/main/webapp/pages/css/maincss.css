@@ -56,13 +56,16 @@ a:hover {
 	margin-left:15em;
 }
 
+.marginLeft15{
+	margin-left:15px;
+}
+
 .marginLeft12em{
 	margin-left:12em;
 }
 .content {
-	padding-top: 10px;
-	/*margin-left:180px;*/
-	padding-left:4px;	
+    padding-left:10px;
+    padding-top: 5px;;
 	text-decoration:none;
 	color:#000000;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
@@ -96,7 +99,7 @@ padding-top:5px;
 	color:#CC6601;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-weight: bold;
-	font-size:9pt;	
+	font-size:11pt;	
 }
 .silverheading {
 	text-decoration:none;
@@ -142,7 +145,7 @@ padding-top:5px;
 	/*color:#666666;*/
 	width:95%;
 	padding-top:2px;
-	padding-bottom:2px;
+    padding-bottom:0;
 	color:#000000;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 }
@@ -188,9 +191,9 @@ padding-top:5px;
 /*	padding:10px;
 */}
 .borderbtm {
-	border-bottom:#d7deee 1px solid;
-	margin-bottom:2px;
-	margin-top:2px;
+    border-bottom:1px solid #D7DEEE;
+    margin-bottom:0;
+    margin-top:2px;
 }
 .rightTble {
 	width:55%;
@@ -347,8 +350,8 @@ padding-top:5px;
 	width:650px;
 }
 .sidebar {
-	margin-top:2px;
-	width:185px;
+    margin-top:0;
+    width:174px;
 	background-color:#F2D1A6;
 	float:left;
 }
@@ -389,11 +392,10 @@ padding-top:5px;
 	height:5000px;
 }
 .orangetab {
-	margin-top:0px;
-	padding-left: 8px;
-	padding-top: 2px;
-	padding-bottom: 5px;
-	width:189px;
+	padding-left: 9px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	width:166px;
 	background-color:#FF9600;
 	text-decoration: none;
 	color:#FFFFFF;

@@ -51,8 +51,8 @@
   [@mifos.crumbs breadcrumbs /]
   <p>&nbsp;&nbsp;</p>
   	
-  	<form method="post" action="defineMandatoryHiddenFields.ftl" name="defineMandatoryHiddenFields">
-  	 <p class="orangeheading">[@spring.message "manadatoryHiddenFields.definemandatory/hiddenfields"/]</p>
+  	<form method="post" action="defineMandatoryHiddenFields.ftl" name="defineMandatoryHiddenFields" >
+  	 <p class="orangeheading" style="margin-left:20px; margin-bottom:15px;">[@spring.message "manadatoryHiddenFields.definemandatory/hiddenfields"/]</p>
      <div class="span-22 last">
     	<div class="bluedivs span-22 fontBold">
         	<span class="span-8 paddingLeft">[@spring.message "systemwidefields"/]</span><span class="span-7 paddingLeft">[@spring.message "manadatoryHiddenFields.hide"/]</span><span class="span-5 paddingLeft">[@spring.message "manadatoryHiddenFields.mandatory"/]</span>
@@ -205,7 +205,7 @@
         <div class="span-22 borderbtm">
         	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.trainedon"/] </span><span class="span-7 paddingLeft ">&nbsp;</span><span class="span-5 paddingLeft"><input type="checkbox" name="mandatoryClientTrainedOn" [#if fields.mandatoryClientTrainedOn=true]  checked="checked" [/#if]  value="1" onclick="disableFields(this)"></span>
         </div>
-        <div class="span-22 last">
+        <div class="span-22 borderbtm">
         	<span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.business/workactivities"/] </span>
         	<span class="span-7 paddingLeft "><input type="checkbox" name="hideClientBusinessWorkActivities" [#if fields.hideClientBusinessWorkActivities=true]  checked="checked" [/#if]  value="1" onclick="disableFields(this)"></span>
         	<span class="span-5 paddingLeft">&nbsp;</span>

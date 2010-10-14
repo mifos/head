@@ -17,7 +17,7 @@
              </div>
             </div>
             <div class="col2">
-                <div class="side_bar">
+                <div>
                     [#include "adminLeftPane.ftl" /]
                 </div>
             </div>
