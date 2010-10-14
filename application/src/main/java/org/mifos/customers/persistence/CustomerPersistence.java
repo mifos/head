@@ -57,6 +57,7 @@ import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.accounts.api.CustomerDto;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
@@ -519,6 +520,11 @@ public class CustomerPersistence extends Persistence {
 		String phoneNumberWithStrippedNonnumerics = MifosStringUtils.removeNondigits(searchString);
 		if (phoneNumberWithStrippedNonnumerics.isEmpty())
 			return null;
+		List<CustomerDto> customersWithThisPhoneNumber = new CustomerDaoHibernate((new GenericDaoHibernate())).
+				findCustomersWithGivenPhoneNumber(phoneNumberWithStrippedNonnumerics);
+		if (customersWithThisPhoneNumber == null || customersWithThisPhoneNumber.isEmpty()) {
+			return null;
+		}
 		SearchTemplate template = new SearchTemplate(phoneNumberWithStrippedNonnumerics, officeId, userId);
 
         template.queryNoOfficeCount = NamedQueryConstants.CUSTOMER_PHONE_SEARCH_NOOFFICEID_COUNT;
