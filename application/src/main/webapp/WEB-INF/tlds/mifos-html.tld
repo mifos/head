@@ -688,6 +688,11 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
+            <name>name</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>property</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>

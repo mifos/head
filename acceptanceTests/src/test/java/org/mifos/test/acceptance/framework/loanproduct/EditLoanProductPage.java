@@ -20,11 +20,14 @@
 
 package org.mifos.test.acceptance.framework.loanproduct;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
+
+import java.util.List;
 
 public class EditLoanProductPage extends MifosPage {
 
@@ -42,9 +45,7 @@ public class EditLoanProductPage extends MifosPage {
         selenium.type("EditLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
         selenium.type("EditLoanProduct.input.minInterestRate", parameters.getMinInterestRate() );
         selenium.type("EditLoanProduct.input.defaultInterestRate", parameters.getDefaultInterestRate());
-        selenium.click("EditLoanProduct.button.preview");
-        waitForPageToLoad();
-        return new EditLoanProductPreviewPage(selenium);
+        return editSubmit();
     }
 
     public void verifyModifiedDescriptionAndInterest(SubmitFormParameters formParameters) {
@@ -76,6 +77,21 @@ public class EditLoanProductPage extends MifosPage {
         } else {
             selenium.uncheck("EditLoanProduct.input.includeInterestWaiver");
         }
+        return editSubmit();
+    }
+
+    public EditLoanProductPreviewPage submitQuestionGroupChanges(SubmitFormParameters formParameters) {
+        List<String> questionGroups = formParameters.getQuestionGroups();
+        if (CollectionUtils.isNotEmpty(questionGroups)) {
+            for (String questionGroup : questionGroups) {
+                selenium.addSelection("name=id", questionGroup);
+            }
+            selenium.click("SrcQGList.button.add");
+        }
+        return editSubmit();
+    }
+
+    private EditLoanProductPreviewPage editSubmit() {
         selenium.click("EditLoanProduct.button.preview");
         waitForPageToLoad();
         return new EditLoanProductPreviewPage(selenium);

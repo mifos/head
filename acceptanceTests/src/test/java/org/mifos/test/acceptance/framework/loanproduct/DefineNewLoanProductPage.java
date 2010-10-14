@@ -24,6 +24,8 @@ import org.mifos.test.acceptance.framework.AbstractPage;
 
 import com.thoughtworks.selenium.Selenium;
 
+import java.util.List;
+
 public class DefineNewLoanProductPage extends AbstractPage {
 
     public DefineNewLoanProductPage() {
@@ -81,7 +83,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String interestGLCode;
         private String principalGLCode;
         private boolean interestWaiver;
-
+        private List<String> questionGroups;
 
        public String getBranch() {
             return this.branch;
@@ -241,6 +243,14 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
        public boolean isInterestWaiver() {
            return interestWaiver;
+       }
+
+       public List<String> getQuestionGroups() {
+           return questionGroups;
+       }
+
+       public void setQuestionGroups(List<String> questionGroups) {
+           this.questionGroups = questionGroups;
        }
    }
 
