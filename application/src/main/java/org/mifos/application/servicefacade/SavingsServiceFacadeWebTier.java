@@ -56,6 +56,7 @@ import org.mifos.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.config.AccountingRules;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.persistence.CustomerDao;
@@ -193,6 +194,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         userContext.setId(Short.valueOf((short) user.getUserId()));
         userContext.setName(user.getUsername());
 
+        PersonnelBO updatedBy = this.personnelDao.findPersonnelById(userContext.getId());
         SavingsBO savingsAccount = this.savingsDao.findById(savingsAdjustment.getSavingsId());
         savingsAccount.updateDetails(userContext);
 
@@ -202,13 +204,16 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         try {
             this.transactionHelper.startTransaction();
 
-            savingsAccount.adjustLastUserAction(amountAdjustedTo, savingsAdjustment.getNote());
+            savingsAccount.adjustLastUserAction(amountAdjustedTo, savingsAdjustment.getNote(), updatedBy);
 
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.commitTransaction();
-        } catch (AccountException e) {
+        } catch (BusinessRuleException e) {
             this.transactionHelper.rollbackTransaction();
-            throw new BusinessRuleException(e.getKey(), e);
+            throw new BusinessRuleException(e.getMessageKey(), e);
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e.getMessage(), e);
         } finally {
             this.transactionHelper.closeSession();
         }
