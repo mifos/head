@@ -237,10 +237,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     public static final String CUSTOMER_ID = "customerId";
     public static final String ACCOUNT_ID = "accountId";
     public static final String GLOBAL_ACCOUNT_NUM = "globalAccountNum";
-    private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
 
-    private QuestionnaireFlowAdapter createLoanQuestionnaire = new QuestionnaireFlowAdapter("Create", "Loan",
-            ActionForwards.schedulePreview_success, "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator);
+    private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator;
+    private QuestionGroupFilterForLoan questionGroupFilter;
+    private QuestionnaireFlowAdapter createLoanQuestionnaire;
 
     public LoanAccountAction() throws Exception {
         this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
@@ -262,6 +262,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         this.clientBusinessService = clientBusinessService;
         this.masterDataService = masterDataService;
         this.configurationPersistence = configurationPersistence;
+        this.questionGroupFilter = new QuestionGroupFilterForLoan();
+        this.questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
+        this.createLoanQuestionnaire = new QuestionnaireFlowAdapter("Create", "Loan", ActionForwards.schedulePreview_success,
+                "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator, questionGroupFilter);
     }
 
     /**
@@ -452,6 +456,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, disbursementDate, request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, loanActionForm.getLoanAmount(), request);
 
+        questionGroupFilter.setLoanOfferingBO(getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId()));
         return createLoanQuestionnaire.fetchAppliedQuestions(mapping, loanActionForm, request, ActionForwards.schedulePreview_success);
     }
 
@@ -1545,7 +1550,5 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         request.setAttribute(METHODCALLED, "editQuestionResponses");
         return createLoanQuestionnaire.editResponses(mapping, request, (LoanAccountActionForm) form);
     }
-
-
 
 }

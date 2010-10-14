@@ -27,13 +27,21 @@ public class QuestionnaireFlowAdapter {
     private String source;
     private String cancelToURL;
     private QuestionnaireServiceFacadeLocator serviceLocator;
+    private QuestionGroupFilter questionGroupFilter;
 
-    public QuestionnaireFlowAdapter(String event, String source, ActionForwards joinFlowAt, String cancelToURL, QuestionnaireServiceFacadeLocator serviceLocator) {
-       this.event = event;
-       this.source = source;
-       this.joinFlowAt = joinFlowAt;
-       this.cancelToURL = cancelToURL;
-       this.serviceLocator = serviceLocator;
+    public QuestionnaireFlowAdapter(String event, String source, ActionForwards joinFlowAt, String cancelToURL,
+                                    QuestionnaireServiceFacadeLocator serviceLocator) {
+        this(event, source, joinFlowAt, cancelToURL, serviceLocator, getDefaultQuestionGroupFilter());
+    }
+
+    public QuestionnaireFlowAdapter(String event, String source, ActionForwards joinFlowAt, String cancelToURL,
+                                    QuestionnaireServiceFacadeLocator serviceLocator, QuestionGroupFilter questionGroupFilter) {
+        this.event = event;
+        this.source = source;
+        this.joinFlowAt = joinFlowAt;
+        this.cancelToURL = cancelToURL;
+        this.serviceLocator = serviceLocator;
+        this.questionGroupFilter = questionGroupFilter;
     }
 
     public ActionForward fetchAppliedQuestions(ActionMapping mapping, QuestionResponseCapturer form, HttpServletRequest request,
@@ -125,7 +133,7 @@ public class QuestionnaireFlowAdapter {
 
     private List<QuestionGroupDetail> getQuestionGroups(HttpServletRequest request) {
         QuestionnaireServiceFacade questionnaireServiceFacade = serviceLocator.getService(request);
-        return questionnaireServiceFacade != null ? questionnaireServiceFacade.getQuestionGroups(event, source) : null;
+        return questionnaireServiceFacade != null ? questionGroupFilter.doFilter(questionnaireServiceFacade.getQuestionGroups(event, source)) : null;
     }
 
     private void setQuestionnaireAttributesToRequest(HttpServletRequest request, QuestionResponseCapturer form) {
@@ -139,4 +147,12 @@ public class QuestionnaireFlowAdapter {
         return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
     }
 
+    private static QuestionGroupFilter getDefaultQuestionGroupFilter() {
+        return new QuestionGroupFilter() {
+            @Override
+            public List<QuestionGroupDetail> doFilter(List<QuestionGroupDetail> questionGroupDetails) {
+                return questionGroupDetails; // no filtering by default
+            }
+        };
+    }
 }
