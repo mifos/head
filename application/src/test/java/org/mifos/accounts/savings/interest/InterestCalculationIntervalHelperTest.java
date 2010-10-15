@@ -60,7 +60,7 @@ public class InterestCalculationIntervalHelperTest {
 
         // verification
         assertFalse(validIntervals.isEmpty());
-        assertThat(validIntervals.get(0).getStartDate(), is(new LocalDate().withYear(2010).withMonthOfYear(9).withDayOfMonth(1)));
+        assertThat(validIntervals.get(0).getStartDate(), is(new LocalDate().withYear(2010).withMonthOfYear(9).withDayOfMonth(2)));
         assertThat(validIntervals.get(0).getEndDate(), is(new LocalDate().withYear(2010).withMonthOfYear(9).withDayOfMonth(9)));
 
         assertThat(validIntervals.get(1).getStartDate(), is(new LocalDate().withYear(2010).withMonthOfYear(9).withDayOfMonth(10)));
@@ -79,7 +79,7 @@ public class InterestCalculationIntervalHelperTest {
 
         // verification
         assertFalse(validIntervals.isEmpty());
-        assertThat(validIntervals.get(0).getStartDate(), is(firstDepositDate));
+        assertThat(validIntervals.get(0).getStartDate(), is(firstDepositDate.plusDays(1)));
         assertThat(validIntervals.get(0).getEndDate(), is(new LocalDate().withYear(2010).withMonthOfYear(3).withDayOfMonth(31)));
 
         assertThat(validIntervals.get(1).getStartDate(), is(new LocalDate().withYear(2010).withMonthOfYear(4).withDayOfMonth(1)));
@@ -101,7 +101,7 @@ public class InterestCalculationIntervalHelperTest {
 
         // verification
         assertFalse(validIntervals.isEmpty());
-        assertThat(validIntervals.get(0).getStartDate(), is(firstDepositDate));
+        assertThat(validIntervals.get(0).getStartDate(), is(firstDepositDate.plusDays(1)));
         assertThat(validIntervals.get(0).getEndDate(), is(new LocalDate().withYear(2010).withMonthOfYear(6).withDayOfMonth(30)));
 
         assertThat(validIntervals.get(1).getStartDate(), is(new LocalDate().withYear(2010).withMonthOfYear(7).withDayOfMonth(1)));
@@ -120,7 +120,7 @@ public class InterestCalculationIntervalHelperTest {
 
         // verification
         assertFalse(validIntervals.isEmpty());
-        assertThat(validIntervals.get(0).getStartDate(), is(firstDepositDate));
+        assertThat(validIntervals.get(0).getStartDate(), is(firstDepositDate.plusDays(1)));
         assertThat(validIntervals.get(0).getEndDate(), is(new LocalDate().withYear(2009).withMonthOfYear(9).withDayOfMonth(30)));
 
         assertThat(validIntervals.get(1).getStartDate(), is(new LocalDate().withYear(2009).withMonthOfYear(10).withDayOfMonth(1)));
@@ -149,7 +149,7 @@ public class InterestCalculationIntervalHelperTest {
 
         // verification
         assertFalse(validIntervals.isEmpty());
-        assertThat(validIntervals.get(0).getStartDate(), is(march1st));
+        assertThat(validIntervals.get(0).getStartDate(), is(march1st.plusDays(1)));
         assertThat(validIntervals.get(0).getEndDate(), is(new LocalDate().withYear(2010).withMonthOfYear(6).withDayOfMonth(30)));
 
         assertThat(validIntervals.get(1).getStartDate(), is(new LocalDate().withYear(2010).withMonthOfYear(7).withDayOfMonth(1)));

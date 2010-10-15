@@ -47,7 +47,8 @@ public class InterestCalculationIntervalHelper {
 
             InterestCalculationInterval interval = new InterestCalculationInterval(firstDayofInterval, matchingDate);
             if (interval.contains(firstActivityDate)) {
-                interval = new InterestCalculationInterval(firstActivityDate, matchingDate);
+                LocalDate nextDayOfActivity = firstActivityDate.plusDays(1);
+                interval = new InterestCalculationInterval(nextDayOfActivity, matchingDate);
                 validIntervals.add(interval);
             } else if (matchingDate.isAfter(firstActivityDate) && matchingDate.isBefore(endDateOfLastPeriod)
                     || matchingDate.isEqual(endDateOfLastPeriod)) {
