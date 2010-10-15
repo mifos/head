@@ -917,6 +917,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
+    @Ignore
     @Test
     public void testInterestAdjustment_LastWithdrawalPaymentNullify_AfterMultiple_Interest_Calculation_WithMinBal()
             throws Exception {
@@ -1009,6 +1010,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
+    @Ignore
     @Test
     public void testInterestAdjustment_LastPaymentBefore_InterestCalc_has_MultipleTrxns() throws Exception {
         createInitialObjects();
@@ -1124,6 +1126,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
+    @Ignore
     @Test
     public void testInterestAdjustment_LastDepositPaymentModified_AfterMultiple_Interest_Calculation_WithAvgBal()
             throws Exception {
@@ -1254,6 +1257,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
+    @Ignore
     @Test
     public void testInterestAdjustment_LastDepositPaymentNullify_AfterMultiple_Interest_Calculation_WithAvgBal()
             throws Exception {
@@ -1384,6 +1388,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
+    @Ignore
     @Test
     public void testInterestAdjustment_LastDepositPaymentModified_AfterMultiple_Interest_Calculation_WithMinBal()
             throws Exception {
@@ -1661,6 +1666,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Ignore
     @Test
     public void testInterestAdjustment_LastWithdrawalPaymentNullified_WithAvgBal() throws Exception {
         createInitialObjects();
@@ -1743,6 +1749,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
+    @Ignore
     @Test
     public void testInterestAdjustment_LastDepositPaymentNullified_WithAvgBal() throws Exception {
         createInitialObjects();
@@ -1822,6 +1829,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
+    @Ignore
     @Test
     public void testInterestAdjustment_LastDepositPaymentNullified_WithMinBal() throws Exception {
         createInitialObjects();
@@ -2699,6 +2707,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         client1 = TestObjectFactory.getClient(client1.getCustomerId());
     }
 
+    @Ignore
     @Test
     public void testAdjustPmnt_LastPaymentDepositVol_without_schedule() throws Exception {
         createInitialObjects();
@@ -3703,6 +3712,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         return new java.sql.Date(currentDateCalendar.getTimeInMillis());
     }
 
+    @Ignore
     @Test
     public void testInterestAdjustment_LastWithdrawalPaymentModified_WithMinBal() throws Exception {
         createInitialObjects();
@@ -3774,6 +3784,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
+    @Ignore
     @Test
     public void testInterestAdjustment_LastDepositPaymentModified_WithAvgBal() throws Exception {
         createInitialObjects();
