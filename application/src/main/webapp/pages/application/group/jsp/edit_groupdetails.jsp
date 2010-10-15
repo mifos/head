@@ -158,7 +158,7 @@ explanation of the license and how it is applied.
 						<table width="95%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td colspan="2" class="fontnormalbold">
-									<mifos:mifoslabel name="Group.trainingstatus" bundle="GroupUIResources"></mifos:mifoslabel>
+									<mifos:mifoslabel keyhm="Group.Trained" name="Group.trainingstatus" bundle="GroupUIResources"></mifos:mifoslabel>
 									<br>
 									<br>
 								</td>
@@ -199,10 +199,10 @@ explanation of the license and how it is applied.
 									</tr>
 									<tr class="fontnormal">
 										<td align="right" class="fontnormal">
-											<mifos:mifoslabel keyhm="Group.TrainedDate" name="Group.grouptrainedon" bundle="GroupUIResources"></mifos:mifoslabel>
+											<mifos:mifoslabel keyhm="Group.Trained" name="Group.grouptrainedon" bundle="GroupUIResources"></mifos:mifoslabel>
 										</td>
 										<td>
-											<date:datetag keyhm="Group.TrainedDate" property="trainedDate"/>
+											<date:datetag keyhm="Group.Trained" property="trainedDate"/>
 										</td>
 									</tr>
 								</c:otherwise>

@@ -138,7 +138,7 @@ function meetingpopup(){
 									</span>
 								</c:otherwise>
 						</c:choose> 
-	                    <mifos:mifoslabel name="Group.grouptrainedon" bundle="GroupUIResources" keyhm="Group.TrainedDate" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
+	                    <mifos:mifoslabel name="Group.grouptrainedon" bundle="GroupUIResources" keyhm="Group.Trained" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
 	              		<span class="fontnormal"><c:out value="${sessionScope.groupCustActionForm.trainedDate}" /></span>
 	              <br>      
       			<span class="fontnormal"></span><span class="fontnormal"> </span>

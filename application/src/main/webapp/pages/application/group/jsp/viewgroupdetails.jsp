@@ -432,10 +432,11 @@ explanation of the license and how it is applied.
 						<tr id="Group.TrainedDate">
 							<td class="fontnormalbold"><mifos:mifoslabel
 								name="Group.trainingstatus" bundle="GroupUIResources"
+                                keyhm="Group.Trained"
 								isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <br>
 							<span class="fontnormal"> <mifos:mifoslabel
 								name="Group.trainedon" bundle="GroupUIResources"
-								keyhm="Group.TrainedDate"
+								keyhm="Group.Trained"
 								isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <c:if
 								test="${groupInformationDto.groupDisplay.trained}">
 								<c:out
