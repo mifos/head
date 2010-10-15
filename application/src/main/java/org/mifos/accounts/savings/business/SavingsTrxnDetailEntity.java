@@ -52,6 +52,26 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
                 nextIntPostDate, null, "", dueDate.toDate());
     }
 
+    public static SavingsTrxnDetailEntity savingsDeposit(AccountPaymentEntity newAccountPayment, CustomerBO customer,
+            Money savingsBalance, Money depositAmount, PersonnelBO createdBy,
+            Date dueDate, Date oldTrxnDate, Date transactionCreatedDate, Short installmentId) {
+
+        AccountActionEntity accountAction = new AccountActionEntity(AccountActionTypes.SAVINGS_DEPOSIT);
+        return new SavingsTrxnDetailEntity(newAccountPayment, customer, accountAction, depositAmount, savingsBalance,
+                createdBy, dueDate, oldTrxnDate, installmentId, "", transactionCreatedDate);
+    }
+
+    public static SavingsTrxnDetailEntity savingsWithdrawal(AccountPaymentEntity newAccountPayment, CustomerBO customer,
+            Money savingsBalance, Money withdrawalAmount, PersonnelBO createdBy,
+            Date dueDate, Date oldTrxnDate, Date transactionCreatedDate) {
+
+        AccountActionEntity accountAction = new AccountActionEntity(AccountActionTypes.SAVINGS_WITHDRAWAL);
+        Short installmentIdNotNeeded = null;
+        return new SavingsTrxnDetailEntity(newAccountPayment, customer, accountAction, withdrawalAmount, savingsBalance,
+                createdBy, dueDate, oldTrxnDate, installmentIdNotNeeded, "", transactionCreatedDate);
+    }
+
+
     protected SavingsTrxnDetailEntity() {
         depositAmount = null;
         withdrawlAmount = null;
@@ -78,8 +98,8 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 
     public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity, CustomerBO customer,
             AccountActionEntity accountActionType, Money amount, Money balance, PersonnelBO createdBy,
-            java.util.Date dueDate, java.util.Date actionDate, Short installmentId, String comment, java.util.Date postingDate) {
-        super(accountPaymentEntity, accountActionType, installmentId, dueDate, createdBy, customer, actionDate, amount, comment, null, postingDate);
+            java.util.Date dueDate, java.util.Date actionDate, Short installmentId, String comment, java.util.Date transactionDate) {
+        super(accountPaymentEntity, accountActionType, installmentId, dueDate, createdBy, customer, actionDate, amount, comment, null, transactionDate);
         this.balance = balance;
         MifosCurrency currency = accountPaymentEntity.getAccount().getCurrency();
         if (AccountActionTypes.SAVINGS_WITHDRAWAL.equals(accountActionType.asEnum())) {

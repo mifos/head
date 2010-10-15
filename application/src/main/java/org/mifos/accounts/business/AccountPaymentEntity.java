@@ -156,11 +156,10 @@ public class AccountPaymentEntity extends AbstractEntity {
     public List<AccountTrxnEntity> reversalAdjustment(final PersonnelBO personnel, final String adjustmentComment) throws AccountException {
         List<AccountTrxnEntity> newlyAddedTrxns = null;
         this.setAmount(getAmount().subtract(getAmount()));
-        logger.debug("The amount in account payment is " + getAmount());
 
         if (null != getAccountTrxns() && getAccountTrxns().size() > 0) {
             newlyAddedTrxns = new ArrayList<AccountTrxnEntity>();
-            logger.debug("The number of transactions before adjustment are " + getAccountTrxns().size());
+
             Set<AccountTrxnEntity> reverseAccntTrxns = generateReverseAccountTransactions(personnel, adjustmentComment);
 
             for (AccountTrxnEntity reverseAccntTrxn : reverseAccntTrxns) {
@@ -170,8 +169,6 @@ public class AccountPaymentEntity extends AbstractEntity {
             newlyAddedTrxns.addAll(reverseAccntTrxns);
         }
 
-        logger.debug("After adding adjustment transactions the total no of transactions are "
-                + getAccountTrxns().size());
         return newlyAddedTrxns;
     }
 
