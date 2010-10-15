@@ -32,7 +32,7 @@
                 <p class="padding5topbottom"><span>[@spring.message "viewOfficeHierarchy.checkthelevelstobeincluded"/]. </span></p>
 
                 <div><span
-                        class="fontBold">[@spring.message "note"/] </span><span>[@spring.message "viewOfficeHierarchy.thehighestandlowesthierarchylevelscannotberemovedfromthesystem"/]</span>
+                        class="fontBold">[@spring.message "viewOfficeHierarchy.note"/] </span><span>[@spring.message "viewOfficeHierarchy.thehighestandlowesthierarchylevelscannotberemovedfromthesystem"/]</span>
                 </div>
                 <div class="margin10topbottom">
                     <div class="prepend-2">

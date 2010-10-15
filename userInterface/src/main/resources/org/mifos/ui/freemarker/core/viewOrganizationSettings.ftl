@@ -23,7 +23,7 @@
   <div class="content ">
   [@mifos.crumbs breadcrumbs/]
   	<form method="" action="" name="formname">
-    <div class="span-24">  		
+    <div class="span-24 marginLeft20px lineheight1p2">  		
         <div class="clear">&nbsp;</div>
         <p class="font15"><span class=" orangeheading">[@spring.message "organizationSettings.viewOrganizationSettings.organizationalSettings"/] </span></p>
         <p class="span-24">
