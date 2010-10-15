@@ -1428,10 +1428,7 @@ public class SavingsBO extends AccountBO {
         AccountPaymentEntity newPayment = createAdjustmentPayment(amountAdjustedTo, adjustmentComment);
 
 //        adjustInterest(oldInterest, trxnDate, newPayment);
-        if (this.isActive()) {
-            AccountStateEntity newAccountState = new AccountStateEntity(AccountState.SAVINGS_INACTIVE);
-            this.setAccountState(newAccountState);
-        } else if (!this.isActive()) {
+        if (!this.isActive()) {
             AccountStateEntity newAccountState = new AccountStateEntity(AccountState.SAVINGS_ACTIVE);
             this.setAccountState(newAccountState);
         }
