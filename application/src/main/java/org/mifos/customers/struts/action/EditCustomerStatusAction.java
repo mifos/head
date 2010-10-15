@@ -20,19 +20,15 @@
 
 package org.mifos.customers.struts.action;
 
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
-import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
@@ -48,15 +44,17 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.service.MifosServiceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 public class EditCustomerStatusAction extends BaseAction {
 
@@ -123,17 +121,8 @@ public class EditCustomerStatusAction extends BaseAction {
         return mapping.findForward(ActionForwards.previewStatus_success.toString());
     }
 
-    private QuestionnaireFlowAdapter createClientQuestionnaire =
-        new QuestionnaireFlowAdapter("Close", "Client",
-                ActionForwards.previewStatus_success,
-                "clientCustAction.do?method=get",
-                new QuestionnaireServiceFacadeLocator() {
-                    @Override
-                    public QuestionnaireServiceFacade getService(HttpServletRequest request) {
-                        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
-                    }
-                }
-        );
+    private QuestionnaireFlowAdapter createClientQuestionnaire = new QuestionnaireFlowAdapter("Close", "Client",
+            ActionForwards.previewStatus_success, "clientCustAction.do?method=get", new DefaultQuestionnaireServiceFacadeLocator());
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward previousStatus(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,

@@ -104,6 +104,7 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1330,6 +1331,68 @@ public class SavingsBO extends AccountBO {
         }
     }
 
+    public void adjustLastUserAction(Money amountAdjustedTo, String adjustmentNote, PersonnelBO updatedBy) {
+
+        if (!isAdjustPossibleOnLastTrxn(amountAdjustedTo)) {
+            throw new BusinessRuleException(AccountExceptionConstants.CANNOTADJUST);
+        }
+
+        try {
+            // adjust existing transaction
+            AccountPaymentEntity lastPayment = getLastPmnt();
+            AccountActionTypes savingsTransactionType = findFirstDepositOrWithdrawalTransaction(lastPayment);
+
+            for (AccountTrxnEntity accntTrxn : lastPayment.getAccountTrxns()) {
+                if (AccountActionTypes.SAVINGS_DEPOSIT.equals(savingsTransactionType)) {
+                    adjustForDeposit(accntTrxn);
+                } else if (AccountActionTypes.SAVINGS_WITHDRAWAL.equals(savingsTransactionType)) {
+                    adjustForWithdrawal(accntTrxn);
+                }
+            }
+
+            Date adjustedOn = new DateTimeService().getCurrentJavaDateTime();
+            SavingsActivityEntity adjustment = SavingsActivityEntity.savingsAdjustment(this, updatedBy, this.savingsBalance, lastPayment.getAmount(), adjustedOn);
+            savingsActivityDetails.add(adjustment);
+
+            logger.debug("transaction count before adding reversal transactions: " + lastPayment.getAccountTrxns().size());
+
+            List<AccountTrxnEntity> newlyAddedTrxns = lastPayment.reversalAdjustment(updatedBy, adjustmentNote);
+
+            // FIXME - financial transactions should be decoupled from domain model.
+            buildFinancialEntries(new LinkedHashSet<AccountTrxnEntity>(newlyAddedTrxns));
+            // end of adjustExistingTransaction
+
+            AccountPaymentEntity newPayment = createAdjustmentPayment(amountAdjustedTo, adjustmentNote);
+        } catch (AccountException e) {
+            throw new BusinessRuleException(e.getKey());
+        }
+
+        if (this.isActive()) {
+            AccountStateEntity newAccountState = new AccountStateEntity(AccountState.SAVINGS_INACTIVE);
+            this.setAccountState(newAccountState);
+        } else if (!this.isActive()) {
+            AccountStateEntity newAccountState = new AccountStateEntity(AccountState.SAVINGS_ACTIVE);
+            this.setAccountState(newAccountState);
+        }
+    }
+
+    @Deprecated
+    private List<AccountTrxnEntity> reversalAdjustment(PersonnelBO updatedBy, final String adjustmentComment, final AccountPaymentEntity lastPayment) throws AccountException {
+        return lastPayment.reversalAdjustment(updatedBy, adjustmentComment);
+    }
+
+
+    private AccountActionTypes findFirstDepositOrWithdrawalTransaction(AccountPaymentEntity lastPayment) {
+        AccountActionTypes accountActionTypes = AccountActionTypes.SAVINGS_INTEREST_POSTING;
+        for (AccountTrxnEntity accntTrxn : lastPayment.getAccountTrxns()) {
+            if (!accntTrxn.getAccountActionEntity().isSavingsAdjustment()) {
+                accountActionTypes = AccountActionTypes.fromInt(accntTrxn.getAccountActionEntity().getId());
+            }
+        }
+        return accountActionTypes;
+    }
+
+    @Deprecated
     public void adjustLastUserAction(final Money amountAdjustedTo, final String adjustmentComment)
             throws AccountException {
 
@@ -1337,24 +1400,38 @@ public class SavingsBO extends AccountBO {
             throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
         }
 
-        Date trxnDate = getTrxnDate(getLastPmnt());
-        Money oldInterest = calculateInterestForAdjustment(trxnDate, null);
-        adjustExistingPayment(amountAdjustedTo, adjustmentComment);
+//        Date trxnDate = getTrxnDate(getLastPmnt());
+//        Money oldInterest = calculateInterestForAdjustment(trxnDate, null);
+
+        // adjust existing transaction
+        AccountPaymentEntity lastPayment = getLastPmnt();
+        Short actionType = helper.getPaymentActionType(lastPayment);
+        try {
+            PersonnelBO personnel = getPersonnelPersistence().getPersonnel(userContext.getId());
+            for (AccountTrxnEntity accntTrxn : lastPayment.getAccountTrxns()) {
+                if (actionType.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
+                    adjustForDeposit(accntTrxn);
+                } else if (actionType.equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())) {
+                    adjustForWithdrawal(accntTrxn);
+                }
+            }
+            addSavingsActivityDetails(buildSavingsActivity(lastPayment.getAmount(), getSavingsBalance(),
+                    AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), new DateTimeService().getCurrentJavaDateTime(), personnel));
+            logger.debug("transaction count before adding reversal transactions: " + lastPayment.getAccountTrxns().size());
+            List<AccountTrxnEntity> newlyAddedTrxns = reversalAdjustment(personnel, adjustmentComment, lastPayment);
+            buildFinancialEntries(new LinkedHashSet<AccountTrxnEntity>(newlyAddedTrxns));
+        } catch (PersistenceException e) {
+            throw new AccountException(e);
+        }
+
+
         AccountPaymentEntity newPayment = createAdjustmentPayment(amountAdjustedTo, adjustmentComment);
 
-        this.update();
-        StaticHibernateUtil.flushSession();
-
-        adjustInterest(oldInterest, trxnDate, newPayment);
-        if (this.getAccountState().getId().equals(AccountState.SAVINGS_INACTIVE.getValue())) {
-            try {
-                this.setAccountState(getSavingsPersistence().getAccountStatusObject(
-                        AccountState.SAVINGS_ACTIVE.getValue()));
-            } catch (PersistenceException pe) {
-                throw new AccountException(pe);
-            }
+//        adjustInterest(oldInterest, trxnDate, newPayment);
+        if (!this.isActive()) {
+            AccountStateEntity newAccountState = new AccountStateEntity(AccountState.SAVINGS_ACTIVE);
+            this.setAccountState(newAccountState);
         }
-        this.update();
     }
 
     protected void adjustInterest(final Money oldInterest, final Date trxnDate, final AccountPaymentEntity newPayment)
@@ -1466,31 +1543,6 @@ public class SavingsBO extends AccountBO {
             }
         }
         return oldInterest;
-    }
-
-    protected void adjustExistingPayment(final Money amountAdjustedTo, final String adjustmentComment)
-            throws AccountException {
-        AccountPaymentEntity lastPayment = getLastPmnt();
-        Short actionType = helper.getPaymentActionType(lastPayment);
-        try {
-            PersonnelBO personnel = getPersonnelPersistence().getPersonnel(userContext.getId());
-            for (AccountTrxnEntity accntTrxn : lastPayment.getAccountTrxns()) {
-                if (actionType.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
-                    adjustForDeposit(accntTrxn);
-                } else if (actionType.equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())) {
-                    adjustForWithdrawal(accntTrxn);
-                }
-            }
-            addSavingsActivityDetails(buildSavingsActivity(lastPayment.getAmount(), getSavingsBalance(),
-                    AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), new DateTimeService().getCurrentJavaDateTime(),
-                    personnel));
-            logger.debug("transaction count before adding reversal transactions: "
-                    + lastPayment.getAccountTrxns().size());
-            List<AccountTrxnEntity> newlyAddedTrxns = reversalAdjustment(adjustmentComment, lastPayment);
-            buildFinancialEntries(new LinkedHashSet<AccountTrxnEntity>(newlyAddedTrxns));
-        } catch (PersistenceException e) {
-            throw new AccountException(e);
-        }
     }
 
     protected AccountPaymentEntity createAdjustmentPayment(final Money amountAdjustedTo, final String adjustmentComment)

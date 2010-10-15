@@ -24,12 +24,10 @@
   <div class=" content">
   	<span id="page.id" title="viewProductsMix" />
   		[@mifos.crumbs breadcrumbs/]
-		<div class="marginLeft30">
+		<div class="margin20lefttop">
 			<form method="" action="" name="formname">
-				<div class="marginTop10">&nbsp;</div>
 				<p class="font15 orangeheading">[@spring.message "admin.viewproductsmix"/]</p>
-				<p>[@spring.message "manageProduct.viewProductMix.clickonaproductinstancebelowtoviewmixdetailsandmakechangesor" /] <a href="defineProductMix.ftl" >[@spring.message "admin.defineproductsmix"/] </a></p>
-				<br/>
+				<p class="margin5top10bottom">[@spring.message "manageProduct.viewProductMix.clickonaproductinstancebelowtoviewmixdetailsandmakechangesor" /] <a href="defineProductMix.ftl" >[@spring.message "admin.defineproductsmix"/] </a></p>
 				<div>
 	   	 			<span class="fontBold">[@spring.message "manageProduct.viewProductMix.loan" /]</span>
 	   	 			<ul>

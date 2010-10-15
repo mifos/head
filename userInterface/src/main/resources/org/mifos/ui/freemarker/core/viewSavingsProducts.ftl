@@ -20,25 +20,32 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-	<!--  Main Content Begins-->
-	<span id="page.id" title="View_AllSavingsProduct" />  
-  	<div class=" content">
-	  	[@mifos.crumb url="admin.viewSavingsproducts" /]
-	  	<p>&nbsp;&nbsp;</p>
-	  	<p class="font15 orangeheading">[@spring.message "admin.viewSavingsproducts"/]</p>
-		<p>[@spring.message "manageLoanProducts.viewSavingsProducts.clickonaSavingsproductbelowtoviewdetailsandmakechangesor"/] <a href="defineSavingsProduct.ftl">[@spring.message "admin.definenewSavingsproduct"/]</a></p>	    
-	    [#list products as product]
-	        <div>
-	        	<img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/> <a href="viewEditSavingsProduct.ftl?productId=${product.prdOfferingId}">${product.prdOfferingName}</a>
-	        	[#switch product.prdOfferingStatusId]
-                	[#case 2]
-                	[#break]
-                	[#case 5]
-                	<span><img src="pages/framework/images/status_closedblack.gif" />[@spring.message "inactive"/]</span>
-                	[#break]
-                [/#switch] 
-	        </div>
-	    [/#list]   
-  	</div>
-  	<!--Main Content Ends-->
+<!--  Main Content Begins-->
+<span id="page.id" title="View_AllSavingsProduct"/>
+<div class=" content">
+[@mifos.crumb url="admin.viewSavingsproducts" /]
+    <p>&nbsp;&nbsp;</p>
+
+    <p class="font15 orangeheading" style="margin-left:18px;">[@spring.message "admin.viewSavingsproducts"/]</p>
+
+    <div style="margin-left:18px; margin-top:2px;">
+        <p>[@spring.message "manageLoanProducts.viewSavingsProducts.clickonaSavingsproductbelowtoviewdetailsandmakechangesor"/]
+            <a href="defineSavingsProduct.ftl">[@spring.message "admin.definenewSavingsproduct"/]</a></p>
+        [#list products as product]
+            <div style="margin-top:10px;">
+                <img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/> <a
+                    href="viewEditSavingsProduct.ftl?productId=${product.prdOfferingId}">${product.prdOfferingName}</a>
+                [#switch product.prdOfferingStatusId]
+                    [#case 2]
+                        [#break]
+                    [#case 5]
+                        <span><img
+                                src="pages/framework/images/status_closedblack.gif"/>[@spring.message "inactive"/]</span>
+                        [#break]
+                [/#switch]
+            </div>
+        [/#list]
+    </div>
+</div>
+<!--Main Content Ends-->
 [/@adminLeftPaneLayout]

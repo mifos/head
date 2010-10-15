@@ -94,4 +94,8 @@ public class AccountActionEntity extends AbstractEntity {
     public String toString() {
         return AccountActionTypes.fromInt(getId()).toString();
     }
+
+    public boolean isSavingsAdjustment() {
+        return AccountActionTypes.SAVINGS_ADJUSTMENT.getValue().equals(this.id);
+    }
 }

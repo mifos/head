@@ -20,9 +20,12 @@
 
 package org.mifos.test.acceptance.framework.loanproduct;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.mifos.test.acceptance.framework.AbstractPage;
 
 import com.thoughtworks.selenium.Selenium;
+
+import java.util.List;
 
 public class DefineNewLoanProductPage extends AbstractPage {
 
@@ -81,7 +84,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String interestGLCode;
         private String principalGLCode;
         private boolean interestWaiver;
-
+        private List<String> questionGroups;
 
        public String getBranch() {
             return this.branch;
@@ -242,6 +245,14 @@ public class DefineNewLoanProductPage extends AbstractPage {
        public boolean isInterestWaiver() {
            return interestWaiver;
        }
+
+       public List<String> getQuestionGroups() {
+           return questionGroups;
+       }
+
+       public void setQuestionGroups(List<String> questionGroups) {
+           this.questionGroups = questionGroups;
+       }
    }
 
     public void fillLoanParameters(SubmitFormParameters parameters) {
@@ -263,6 +274,16 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.select("gracePeriodType", "value=" + parameters.getGracePeriodType());
         selenium.select("interestGLCode", "label=" + parameters.getInterestGLCode());
         selenium.select("principalGLCode", "label=" + parameters.getPrincipalGLCode());
+        selectQuestionGroups(parameters.getQuestionGroups());
+    }
+
+    private void selectQuestionGroups(List<String> questionGroups) {
+        if (CollectionUtils.isNotEmpty(questionGroups)) {
+            for (String questionGroup : questionGroups) {
+                selenium.addSelection("name=id", questionGroup);
+            }
+            selenium.click("SrcQGList.button.add");
+        }
     }
 
     public DefineNewLoanProductPreviewPage submitAndGotoNewLoanProductPreviewPage() {

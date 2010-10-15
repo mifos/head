@@ -67,6 +67,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
@@ -108,7 +109,6 @@ import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.service.MifosServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -238,18 +238,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     public static final String ACCOUNT_ID = "accountId";
     public static final String GLOBAL_ACCOUNT_NUM = "globalAccountNum";
 
-    private QuestionnaireFlowAdapter createLoanQuestionnaire =
-        new QuestionnaireFlowAdapter("Create","Loan",
-                ActionForwards.schedulePreview_success,
-                "custSearchAction.do?method=loadMainSearch",
-                new QuestionnaireServiceFacadeLocator() {
-                    @Override
-                    public QuestionnaireServiceFacade getService(HttpServletRequest request) {
-                        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
-                    }
-                });
-
-
+    private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator;
+    private QuestionGroupFilterForLoan questionGroupFilter;
+    private QuestionnaireFlowAdapter createLoanQuestionnaire;
 
     public LoanAccountAction() throws Exception {
         this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
@@ -271,6 +262,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         this.clientBusinessService = clientBusinessService;
         this.masterDataService = masterDataService;
         this.configurationPersistence = configurationPersistence;
+        this.questionGroupFilter = new QuestionGroupFilterForLoan();
+        this.questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
+        this.createLoanQuestionnaire = new QuestionnaireFlowAdapter("Create", "Loan", ActionForwards.schedulePreview_success,
+                "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator, questionGroupFilter);
     }
 
     /**
@@ -461,6 +456,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, disbursementDate, request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, loanActionForm.getLoanAmount(), request);
 
+        questionGroupFilter.setLoanOfferingBO(getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId()));
         return createLoanQuestionnaire.fetchAppliedQuestions(mapping, loanActionForm, request, ActionForwards.schedulePreview_success);
     }
 
@@ -664,7 +660,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private void setQuestionGroupInstances(HttpServletRequest request, LoanBO loanBO) throws PageExpiredException {
-        QuestionnaireServiceFacade questionnaireServiceFacade = MifosServiceFactory.getQuestionnaireServiceFacade(request);
+        QuestionnaireServiceFacade questionnaireServiceFacade = questionnaireServiceFacadeLocator.getService(request);
         if (questionnaireServiceFacade == null) {
             return;
         }
@@ -1554,7 +1550,5 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         request.setAttribute(METHODCALLED, "editQuestionResponses");
         return createLoanQuestionnaire.editResponses(mapping, request, (LoanAccountActionForm) form);
     }
-
-
 
 }

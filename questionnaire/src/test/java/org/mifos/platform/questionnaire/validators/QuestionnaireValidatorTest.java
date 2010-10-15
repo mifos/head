@@ -41,6 +41,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -363,7 +364,7 @@ public class QuestionnaireValidatorTest {
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(int id, String title, String event, String source, List<SectionDetail> sectionDetails) {
-        return new QuestionGroupDetail(id, title, getEventSource(event, source), sectionDetails, false);
+        return new QuestionGroupDetail(id, title, Arrays.asList(getEventSource(event, source)), sectionDetails, false);
     }
 
     private SectionDetail getSection(String name) {

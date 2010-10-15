@@ -50,4 +50,9 @@ public class EndOfDayBuilder {
         return this;
     }
 
+    public EndOfDayBuilder withInterestOf(String interestOf) {
+        this.interest = TestUtils.createMoney(interestOf);
+        return this;
+    }
+
 }

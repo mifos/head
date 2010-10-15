@@ -20,21 +20,8 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
-import static org.mifos.framework.util.helpers.DateUtils.getUserLocaleDate;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -56,8 +43,8 @@ import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
+import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
-import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.AccountingRulesConstants;
@@ -73,11 +60,21 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.service.MifosServiceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
+import static org.mifos.framework.util.helpers.DateUtils.getUserLocaleDate;
 
 public class LoanDisbursementAction extends BaseAction {
     private static final Logger logger = LoggerFactory.getLogger(LoanDisbursementAction.class);
@@ -264,15 +261,7 @@ public class LoanDisbursementAction extends BaseAction {
         return createGroupQuestionnaire.editResponses(mapping, request, (LoanDisbursementActionForm) form);
     }
 
-    private QuestionnaireFlowAdapter createGroupQuestionnaire =
-        new QuestionnaireFlowAdapter("Disburse", "Loan",
-                ActionForwards.preview_success,
-                "custSearchAction.do?method=loadMainSearch",
-                new QuestionnaireServiceFacadeLocator() {
-                    @Override
-                    public QuestionnaireServiceFacade getService(HttpServletRequest request) {
-                        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
-                    }
-                });
-
+    private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Disburse", "Loan",
+            ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch",
+            new DefaultQuestionnaireServiceFacadeLocator());
 }

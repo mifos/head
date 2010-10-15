@@ -80,7 +80,15 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     public void validateForDefineQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
         validateQuestionGroupTitle(questionGroupDetail);
         validateQuestionGroupSections(questionGroupDetail.getSectionDetails());
-        validateForEventSource(questionGroupDetail.getEventSource());
+        List<EventSourceDto> eventSourceDtos = questionGroupDetail.getEventSources();
+        if (eventSourceDtos == null || eventSourceDtos.size() == 0) {
+            throw new SystemException(INVALID_EVENT_SOURCE);
+        }
+        else {
+            for (EventSourceDto eventSourceDto : eventSourceDtos) {
+                validateForEventSource(eventSourceDto);
+            }
+        }
     }
 
     @Override
@@ -109,7 +117,15 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     public void validateForDefineQuestionGroup(QuestionGroupDto questionGroupDto) {
         ValidationException parentException = new ValidationException(GENERIC_VALIDATION);
         validateQuestionGroupTitle(questionGroupDto, parentException);
-        validateEventSource(questionGroupDto.getEventSourceDto(), parentException);
+        List<EventSourceDto> eventSourceDtos = questionGroupDto.getEventSourceDtos();
+        if (eventSourceDtos == null || eventSourceDtos.size() == 0) {
+            throw new SystemException(INVALID_EVENT_SOURCE);
+        }
+        else {
+            for (EventSourceDto eventSourceDto : eventSourceDtos) {
+                validateEventSource(eventSourceDto, parentException);
+            }
+        }
         validateSections(questionGroupDto.getSections(), parentException);
         if (parentException.containsChildExceptions()) {
             throw parentException;
