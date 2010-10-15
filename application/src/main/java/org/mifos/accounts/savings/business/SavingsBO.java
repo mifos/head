@@ -1673,7 +1673,7 @@ public class SavingsBO extends AccountBO {
         this.savingsBalance = this.savingsBalance.subtract(newAmount);
 
         Date transactionCreatedDate = new DateTimeService().getCurrentJavaDateTime();
-        accountTrxn = SavingsTrxnDetailEntity.savingsWithdrawal(newAccountPayment, customer, newAmount, newAmount, loggedInUser,
+        accountTrxn = SavingsTrxnDetailEntity.savingsWithdrawal(newAccountPayment, oldSavingsAccntTrxn.getCustomer(), newAmount, newAmount, loggedInUser,
                 oldSavingsAccntTrxn.getDueDate(), oldSavingsAccntTrxn.getActionDate(), transactionCreatedDate);
 
         this.savingsPerformance.setTotalWithdrawals(this.savingsPerformance.getTotalWithdrawals().add(accountTrxn.getWithdrawlAmount()));
