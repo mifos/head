@@ -42,7 +42,7 @@ import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.savings.business.SavingBOTestUtils;
+import org.mifos.accounts.savings.SavingBOTestUtils;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;

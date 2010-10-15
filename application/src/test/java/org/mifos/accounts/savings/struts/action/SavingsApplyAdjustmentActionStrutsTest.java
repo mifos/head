@@ -31,7 +31,7 @@ import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.accounts.savings.business.SavingBOTestUtils;
+import org.mifos.accounts.savings.SavingBOTestUtils;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;

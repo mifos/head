@@ -46,7 +46,7 @@ public class AccountPaymentEntity extends AbstractEntity {
     private static final Logger logger = LoggerFactory.getLogger(AccountPaymentEntity.class);
 
     private final Integer paymentId = null;
-    private final AccountBO account;
+    private AccountBO account;
     private final PaymentTypeEntity paymentType;
     private final String receiptNumber;
     private final String voucherNumber;
@@ -197,5 +197,9 @@ public class AccountPaymentEntity extends AbstractEntity {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public void setAccount(AccountBO account) {
+        this.account = account;
     }
 }

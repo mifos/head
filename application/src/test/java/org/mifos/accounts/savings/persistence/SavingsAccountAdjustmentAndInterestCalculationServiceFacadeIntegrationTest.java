@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.savings;
+package org.mifos.accounts.savings.persistence;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -167,10 +167,6 @@ public class SavingsAccountAdjustmentAndInterestCalculationServiceFacadeIntegrat
         this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
 
         savingsAccount = IntegrationTestObjectMother.findSavingsAccountById(savingsId);
-        assertThat(savingsAccount.getSavingsBalance().getAmountDoubleValue(), is(Double.valueOf("35.0")));
-
-        savingsAccount.updateInterestAccrued();
-
-        assertThat(savingsAccount.getSavingsBalance().getAmountDoubleValue(), is(Double.valueOf("35.0")));
+        // FIXME - keithw - add adjustTransaction integration tests if needed
     }
 }

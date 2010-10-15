@@ -27,6 +27,8 @@ import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
@@ -40,7 +42,10 @@ import org.mifos.accounts.savings.business.SavingsTransactionActivityHelper;
 import org.mifos.accounts.savings.business.SavingsTransactionActivityHelperImpl;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -78,17 +83,28 @@ public class SavingsAccountBuilder {
     private DateTime activationDate = new DateTime();
     private Money interestToBePosted = TestUtils.createMoney("0");
 
+    private List<AccountPaymentEntity> deposits = new ArrayList<AccountPaymentEntity>();
+
     public SavingsBO build() {
 
-        final SavingsBO savingsBO = new SavingsBO(savingsProduct, savingsType, savingsBalanceAmount,
+        final SavingsBO savingsAccount = new SavingsBO(savingsProduct, savingsType, savingsBalanceAmount,
                 savingsPaymentStrategy, savingsTransactionActivityHelper, scheduledPayments, interestRate,
                 interestCalcType, accountState, customer, offsettingAllowable,
                 scheduleForInterestCalculation, recommendedAmountUnit, recommendedAmount, createdDate,
                 createdByUserId, holidays, activationDate);
-        savingsBO.setCustomerPersistence(customerDao);
-        savingsBO.setInterestToBePosted(interestToBePosted);
+        savingsAccount.setCustomerPersistence(customerDao);
+        savingsAccount.setInterestToBePosted(interestToBePosted);
 
-        return savingsBO;
+        for (AccountPaymentEntity depositPayment : deposits) {
+            try {
+                depositPayment.setAccount(savingsAccount);
+                savingsAccount.deposit(depositPayment, customer);
+            } catch (AccountException e) {
+                throw new MifosRuntimeException("builder failed to apply deposits.", e);
+            }
+        }
+
+        return savingsAccount;
     }
 
     public SavingsAccountBuilder withSavingsProduct(final SavingsOfferingBO withSavingsProduct) {
@@ -155,6 +171,11 @@ public class SavingsAccountBuilder {
         return this;
     }
 
+    public SavingsAccountBuilder asPendingApproval() {
+        this.accountState = AccountState.SAVINGS_PENDING_APPROVAL;
+        return this;
+    }
+
     public SavingsAccountBuilder withPayments(final List<SavingsScheduleEntity> withPayments) {
         this.scheduledPayments = new LinkedHashSet<AccountActionDateEntity>(withPayments);
         return this;
@@ -195,6 +216,17 @@ public class SavingsAccountBuilder {
 
     public SavingsAccountBuilder withInterestToBePostedAmount(Money interestToBePosted) {
         this.interestToBePosted = interestToBePosted;
+        return this;
+    }
+
+    public SavingsAccountBuilder withDepositOf(String depositAmount) {
+        Money amount = TestUtils.createMoney(depositAmount);
+        String receiptNumber = null;
+        Date receiptDate = null;
+        PaymentTypeEntity paymentType = new PaymentTypeEntity(PaymentTypes.CASH.getValue());
+        Date paymentDate = new DateTime().toDate();
+        AccountPaymentEntity deposit = new AccountPaymentEntity(null, amount, receiptNumber, receiptDate, paymentType, paymentDate);
+        this.deposits.add(deposit);
         return this;
     }
 }

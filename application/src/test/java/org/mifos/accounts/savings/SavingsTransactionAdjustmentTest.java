@@ -63,7 +63,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SavingsPostInterestTest {
+public class SavingsTransactionAdjustmentTest {
 
     // class under test
     private SavingsBO savingsAccount;

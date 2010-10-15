@@ -484,25 +484,21 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
 
-        Date transactionDate = closureDate.toDateMidnight().toDate();
+//      Money interestAmount = savingsAccount.calculateInterestForClosure(transactionDate);
 
-        try {
-            Money interestAmount = savingsAccount.calculateInterestForClosure(transactionDate);
+        Money interestAmount = new Money(savingsAccount.getCurrency(), "0");
 
-            InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
-            List<InterestPostingPeriodResult> postingResults = recalculateSavingsAccountInterest(savingsAccount, postingSchedule, closureDate);
+        InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
+        List<InterestPostingPeriodResult> postingResults = recalculateSavingsAccountInterest(savingsAccount, postingSchedule, closureDate);
 
-            if (!postingResults.isEmpty()) {
-                Money endOfAccountBalance = postingResults.get(postingResults.size()-1).getPeriodBalance();
-                Money endOfAccountInterestDue = postingResults.get(postingResults.size()-1).getPeriodInterest();
-                System.out.println(endOfAccountBalance);
-                System.out.println(endOfAccountInterestDue);
-            }
-
-            return savingsAccount.toClosureDto(interestAmount.toString());
-        } catch (AccountException e) {
-            throw new BusinessRuleException(e.getKey(), e);
+        if (!postingResults.isEmpty()) {
+            Money endOfAccountBalance = postingResults.get(postingResults.size()-1).getPeriodBalance();
+            interestAmount = postingResults.get(postingResults.size()-1).getPeriodInterest();
+            System.out.println(endOfAccountBalance);
+            System.out.println(interestAmount);
         }
+
+        return savingsAccount.toClosureDto(interestAmount.toString());
     }
 
     @Override

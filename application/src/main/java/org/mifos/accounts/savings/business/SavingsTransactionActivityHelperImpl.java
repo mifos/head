@@ -71,9 +71,8 @@ public class SavingsTransactionActivityHelperImpl implements SavingsTransactionA
             installmentNumber = savingsInstallment.getInstallmentId();
         }
 
-        final SavingsTrxnDetailEntity accountTrxnBO = new SavingsTrxnDetailEntity(payment, payingCustomer,
-                AccountActionTypes.SAVINGS_DEPOSIT, amount, savingsBalance, createdBy, dueDate, transactionDate,
-                installmentNumber, "", new SavingsPersistence());
+        final SavingsTrxnDetailEntity accountTrxnBO = SavingsTrxnDetailEntity.savingsDeposit(payment, payingCustomer, savingsBalance, amount
+                , createdBy, dueDate, dueDate, transactionDate, installmentNumber);
 
         return accountTrxnBO;
     }

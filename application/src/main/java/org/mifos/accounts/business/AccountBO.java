@@ -684,6 +684,7 @@ public class AccountBO extends AbstractBusinessObject {
                 reschedule();
             }
 
+            // FIXME - keithw - move to savings account so savings doesnt have to use changeStatus for loans also.
             if (newStatusId.equals(AccountState.SAVINGS_INACTIVE.getValue())) {
                 ((SavingsBO) this).removeRecommendedAmountOnFutureInstallments();
             }
