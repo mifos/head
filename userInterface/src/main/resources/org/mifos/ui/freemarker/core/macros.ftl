@@ -85,6 +85,17 @@
 [/#macro]
 
 
+[#macro formMultiSelect path options attributes=""]
+    [@spring.bind path/]
+    <input type="hidden" name="_${spring.status.expression}" value="true"/>
+    <select multiple="multiple" id="${spring.status.expression}" name="${spring.status.expression}" ${attributes}>
+        [#list options?keys as value]
+        [#assign isSelected = spring.contains(spring.status.value?default([""]), value)]
+        <option value="${value?html}"[#if isSelected] selected="selected"[/#if]>${options[value]?html}</option>
+        [/#list]
+    </select>
+[/#macro]
+
 
 [#macro showAllErrors path]
     [@spring.bind path/]

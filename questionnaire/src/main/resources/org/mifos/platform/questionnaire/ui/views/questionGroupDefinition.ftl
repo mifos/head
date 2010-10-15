@@ -46,7 +46,7 @@
             <li>
                 <label for="eventSourceId"><span class="red">*</span>[@spring.message
                     "questionnaire.questionGroupAppliesTo"/]:</label>
-                [@mifosmacros.formCheckboxes "questionGroupForm.eventSourceIds", EventSources, '' /]
+                [@mifosmacros.formMultiSelect "questionGroupForm.eventSourceIds", EventSources, '' /]
             </li>
             <li>
                 <label for="editable">[@spring.message "questionnaire.editable"/]:</label>
