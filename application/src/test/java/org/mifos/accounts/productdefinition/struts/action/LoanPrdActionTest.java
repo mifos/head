@@ -55,7 +55,7 @@ public class LoanPrdActionTest {
     
     @Test
     public void shouldSetQuestionGroupsOnSession() throws PageExpiredException {
-        List<QuestionGroupDetail> questionGroupDetails = asList(getQuestionGroupDetail(1, "QG1"), getQuestionGroupDetail(2, "QG2"), getQuestionGroupDetail(3, "QG3"));
+        List<QuestionGroupDetail> questionGroupDetails = asList(getQuestionGroupDetail(1, "QG1", true), getQuestionGroupDetail(2, "QG2", true), getQuestionGroupDetail(3, "QG3", true));
         when(questionnaireServiceFacade.getQuestionGroups("Create", "Loan")).thenReturn(questionGroupDetails);
         when(request.getAttribute(Constants.CURRENTFLOWKEY)).thenReturn(FLOW_KEY);
         when(request.getSession()).thenReturn(session);
@@ -72,7 +72,7 @@ public class LoanPrdActionTest {
 
     @Test
     public void shouldSetSelectedQuestionGroupsOnSession() throws PageExpiredException {
-        List<QuestionGroupDetail> questionGroupDetails = asList(getQuestionGroupDetail(1, "QG1"), getQuestionGroupDetail(2, "QG2"), getQuestionGroupDetail(3, "QG3"));
+        List<QuestionGroupDetail> questionGroupDetails = asList(getQuestionGroupDetail(1, "QG1", true), getQuestionGroupDetail(2, "QG2", true), getQuestionGroupDetail(3, "QG3", false));
         when(questionnaireServiceFacade.getQuestionGroupDetail(1)).thenReturn(questionGroupDetails.get(0));
         when(questionnaireServiceFacade.getQuestionGroupDetail(2)).thenReturn(questionGroupDetails.get(1));
         when(questionnaireServiceFacade.getQuestionGroupDetail(3)).thenReturn(questionGroupDetails.get(2));
@@ -84,19 +84,28 @@ public class LoanPrdActionTest {
         LoanOfferingBO loanOfferingBO = new LoanProductBuilder().buildForUnitTests();
         loanOfferingBO.setQuestionGroups(getQustionGroups(1, 2, 3));
         loanPrdAction.setSelectedQuestionGroupsOnSession(request, loanOfferingBO, questionnaireServiceFacade);
-        assertThat((List<QuestionGroupDetail>) flow.getObjectFromSession(ProductDefinitionConstants.SELECTEDQGLIST), is(questionGroupDetails));
+        List<QuestionGroupDetail> questionGroupDetailList = (List<QuestionGroupDetail>) flow.getObjectFromSession(ProductDefinitionConstants.SELECTEDQGLIST);
+        assertThat(questionGroupDetailList, is(notNullValue()));
+        assertThat(questionGroupDetailList.size(), is(2));
+        assertQuestionGroup(questionGroupDetailList.get(0), 1, "QG1");
+        assertQuestionGroup(questionGroupDetailList.get(1), 2, "QG2");
         verify(questionnaireServiceFacade, times(3)).getQuestionGroupDetail(anyInt());
         verify(request, times(1)).getAttribute(Constants.CURRENTFLOWKEY);
         verify(request, times(1)).getSession();
         verify(session, times(1)).getAttribute(Constants.FLOWMANAGER);
     }
-    
+
+    private void assertQuestionGroup(QuestionGroupDetail questionGroupDetail, int id, String title) {
+        assertThat(questionGroupDetail.getId(), is(id));
+        assertThat(questionGroupDetail.getTitle(), is(title));
+    }
+
     @Test
     public void shouldGetQuestionGroupResponses() throws PageExpiredException {
         when(request.getAttribute(Constants.CURRENTFLOWKEY)).thenReturn(FLOW_KEY);
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute(Constants.FLOWMANAGER)).thenReturn(flowManager);
-        List<QuestionGroupDetail> questionGroupDetails = asList(getQuestionGroupDetail(1, "QG1"), getQuestionGroupDetail(2, "QG2"), getQuestionGroupDetail(3, "QG3"));
+        List<QuestionGroupDetail> questionGroupDetails = asList(getQuestionGroupDetail(1, "QG1", true), getQuestionGroupDetail(2, "QG2", true), getQuestionGroupDetail(3, "QG3", true));
         when(flowManager.getFromFlow(FLOW_KEY, ProductDefinitionConstants.SELECTEDQGLIST)).thenReturn(questionGroupDetails);
         Set<QuestionGroupReference> questionGroupReferences = loanPrdAction.getQuestionGroups(request);
         assertThat(questionGroupReferences, is(notNullValue()));
@@ -125,10 +134,11 @@ public class LoanPrdActionTest {
         return questionGroupReference;
     }
 
-    private QuestionGroupDetail getQuestionGroupDetail(int id, String title) {
+    private QuestionGroupDetail getQuestionGroupDetail(int id, String title, boolean active) {
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail();
         questionGroupDetail.setId(id);
         questionGroupDetail.setTitle(title);
+        questionGroupDetail.setActive(active);
         return questionGroupDetail;
     }
 }
