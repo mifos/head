@@ -186,7 +186,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
             parentException.addChildException(new ValidationException(QUESTION_TITILE_MATCHES_EXISTING_QUESTION));
         } else {
             if (QuestionType.INVALID == question.getType()) {
-                parentException.addChildException(new ValidationException(QUESTION_TYPE_NOT_PROVIDED));
+                parentException.addChildException(new ValidationException(ANSWER_TYPE_NOT_PROVIDED));
             } else if (question.isTypeWithChoices()) {
                 validateChoices(question, parentException);
             } else if (QuestionType.NUMERIC == question.getType()) {
@@ -582,7 +582,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
 
     private void validateQuestionType(QuestionDetail questionDetail) throws SystemException {
         if (QuestionType.INVALID == questionDetail.getType()) {
-            throw new SystemException(QUESTION_TYPE_NOT_PROVIDED);
+            throw new SystemException(ANSWER_TYPE_NOT_PROVIDED);
         }
         if (QuestionType.NUMERIC == questionDetail.getType()) {
             validateForNumericQuestionType(questionDetail.getNumericMin(), questionDetail.getNumericMax());
