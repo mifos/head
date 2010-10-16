@@ -43,6 +43,7 @@ public class AverageBalanceCalculationStrategyTest {
 
     private InterestCalculationPeriodDetail interestCalculationPeriodDetail;
 
+    private LocalDate august31st = new LocalDate(new DateTime().withDate(2010, 8, 31));
     private LocalDate september1st = new LocalDate(new DateTime().withDate(2010, 9, 1));
     private LocalDate september6th = new LocalDate(new DateTime().withDate(2010, 9, 6));
     private LocalDate september13th = new LocalDate(new DateTime().withDate(2010, 9, 13));
@@ -67,7 +68,7 @@ public class AverageBalanceCalculationStrategyTest {
     }
 
     private InterestCalculationPeriodBuilder zeroBalanceAug31stToSeptember30thCalculationPeriod() {
-        return new InterestCalculationPeriodBuilder().from(september1st).to(september30th).withStartingBalance("0");
+        return new InterestCalculationPeriodBuilder().from(august31st).to(september30th).withStartingBalance("0");
     }
 
     @Before
@@ -91,7 +92,7 @@ public class AverageBalanceCalculationStrategyTest {
 
         EndOfDayDetail endOfDayDetail = new EndOfDayBuilder().on(september6th).withDespoitsOf("1000").build();
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().from(september6th.plusDays(1))
+        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().from(september6th)
                                                                                               .containing(endOfDayDetail)
                                                                                               .build();
 
@@ -109,7 +110,7 @@ public class AverageBalanceCalculationStrategyTest {
 
         interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
                                                                                               .containing(september6thDetails, september13thDetails)
-                                                                                              .from(september6th.plusDays(1))
+                                                                                              .from(september6th)
                                                                                               .build();
 
         // exercise test
@@ -123,19 +124,20 @@ public class AverageBalanceCalculationStrategyTest {
     @Test
     public void shouldCalculateAverageBalanceGivenOneDepositExistBeforeRange() {
 
+        EndOfDayDetail september1stDetails = new EndOfDayBuilder().on(september1st).build();
         EndOfDayDetail september6thDetails = new EndOfDayBuilder().on(september6th).withDespoitsOf("1000").build();
         EndOfDayDetail september13thDetails = new EndOfDayBuilder().on(september13th).withDespoitsOf("1000").build();
         EndOfDayDetail september20thDetails = new EndOfDayBuilder().on(september20th).withDespoitsOf("500").build();
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().withStartingBalance("1000")
-                                                .containing(september6thDetails, september13thDetails, september20thDetails)
+        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
+                                                                                              .withStartingBalance("1000")
+                                                .containing(september1stDetails, september6thDetails, september13thDetails, september20thDetails)
                                                 .build();
 
         // exercise test
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
 
         // verification
-        // (1000 * 6 + 2000 * 7 + 3000 * 7 + 3500 * 10)/30
         assertThat(averageBalancePrincipal, is(TestUtils.createMoney(("2533.3"))));
     }
 
@@ -160,6 +162,7 @@ public class AverageBalanceCalculationStrategyTest {
         LocalDate jun28 =new LocalDate(new DateTime().withDate(2010, 6, 28));
         LocalDate jun30 =new LocalDate(new DateTime().withDate(2010, 6, 30));
 
+        EndOfDayDetail apr1Details = new EndOfDayBuilder().on(apr1st).withInterestOf("21").build();
         EndOfDayDetail apr5Details = new EndOfDayBuilder().on(apr5).withDespoitsOf("20").build();
         EndOfDayDetail apr12Details = new EndOfDayBuilder().on(apr12).withDespoitsOf("20").build();
         EndOfDayDetail apr19Details = new EndOfDayBuilder().on(apr19).withDespoitsOf("20").build();
@@ -177,8 +180,9 @@ public class AverageBalanceCalculationStrategyTest {
         EndOfDayDetail jun28Details = new EndOfDayBuilder().on(jun28).withDespoitsOf("520").build();
 
         interestCalculationPeriodDetail = new InterestCalculationPeriodBuilder().from(apr1st).to(jun30)
-                                                                                                .withStartingBalance("1765")
-                                                                                                .containing(apr5Details,
+                                                                                                .withStartingBalance("1743")
+                                                                                                .containing(apr1Details,
+                                                                                                        apr5Details,
                                                                                                         apr12Details,
                                                                                                         apr19Details,
                                                                                                         apr26Details,
@@ -197,6 +201,6 @@ public class AverageBalanceCalculationStrategyTest {
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
 
         // verification
-        assertThat(averageBalancePrincipal, is(TestUtils.createMoney(("1901.7"))));
+        assertThat(averageBalancePrincipal, is(TestUtils.createMoney(("1902.2"))));
     }
 }

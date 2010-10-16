@@ -73,7 +73,7 @@ public class InterestCalculationPeriodDetail {
     }
 
     public int getDuration() {
-        return Days.daysBetween(interval.getStartDate(), interval.getEndDate()).getDays() + 1;
+        return Days.daysBetween(interval.getStartDate(), interval.getEndDate()).getDays();
     }
 
     public Money getBalanceBeforeInterval() {

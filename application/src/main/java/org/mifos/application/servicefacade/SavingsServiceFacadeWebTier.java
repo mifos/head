@@ -365,7 +365,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
      * If any interest calculation is different the value of previously posted interest, an interest posting is done
      * with the difference.
      */
-    @Override
     public void batchRecalculateInterestToBePostedForSavingsAccount(LocalDate dateBatchJobIsScheduled) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -407,7 +406,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                         savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult);
 
                         StringBuilder postingInfoMessage = new StringBuilder().append("account id: ").append(savingsId)
-                                                                              .append(" posting interest: ").append(interestPostingPeriodResult);
+                                                                              .append("posting interest: ").append(interestPostingPeriodResult);
 
                         logger.info(postingInfoMessage.toString());
                     }
