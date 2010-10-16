@@ -45,6 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Arrays;
 
 import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
@@ -178,7 +179,7 @@ public class QuestionGroupInstanceDaoIntegrationTest {
     }
 
     private QuestionGroupDetail defineQuestionGroup(String title, String event, String source, List<SectionDetail> sectionDetails, boolean editable) throws SystemException {
-        return questionnaireService.defineQuestionGroup(new QuestionGroupDetail(0, title, new EventSourceDto(event, source, null), sectionDetails, editable));
+        return questionnaireService.defineQuestionGroup(new QuestionGroupDetail(0, title, Arrays.asList(new EventSourceDto(event, source, null)), sectionDetails, editable));
     }
 
     private SectionDetail getSection(String name) throws SystemException {
@@ -215,6 +216,7 @@ public class QuestionGroupInstanceDaoIntegrationTest {
         calendar.set(year, month, date);
         questionGroupInstance.setDateConducted(calendar.getTime());
         questionGroupInstance.setCreatorId(122);
+        questionGroupInstance.setEventSourceId(questionGroup.getEventSources().iterator().next().getId());
         questionGroupInstance.setVersionNum(versionNum);
         questionGroupInstance.setEntityId(entityId);
         List<QuestionGroupResponse> questionGroupResponses = new ArrayList<QuestionGroupResponse>();

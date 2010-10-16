@@ -20,11 +20,14 @@
 
 package org.mifos.test.acceptance.framework.loanproduct;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
+
+import java.util.List;
 
 public class EditLoanProductPage extends MifosPage {
 
@@ -34,7 +37,6 @@ public class EditLoanProductPage extends MifosPage {
     String minInstalmentAmountTextBox = "minimumInstallmentAmount";
     String cashFlowCheckbox = "cashFlowValidation";
     String cashFlowThresholdTextBox = "cashFlowWarningThreshold";
-
     public EditLoanProductPage(Selenium selenium) {
         super(selenium);
     }
@@ -49,7 +51,7 @@ public class EditLoanProductPage extends MifosPage {
         selenium.type("EditLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
         selenium.type("EditLoanProduct.input.minInterestRate", parameters.getMinInterestRate() );
         selenium.type("EditLoanProduct.input.defaultInterestRate", parameters.getDefaultInterestRate());
-        return submitAndGotoProductPreviewPage();
+        return editSubmit();
     }
 
     public void verifyModifiedDescriptionAndInterest(SubmitFormParameters formParameters) {
@@ -81,9 +83,19 @@ public class EditLoanProductPage extends MifosPage {
         } else {
             selenium.uncheck("EditLoanProduct.input.includeInterestWaiver");
         }
-        return submitAndGotoProductPreviewPage();
+        return editSubmit();
     }
 
+    public EditLoanProductPreviewPage submitQuestionGroupChanges(SubmitFormParameters formParameters) {
+        List<String> questionGroups = formParameters.getQuestionGroups();
+        if (CollectionUtils.isNotEmpty(questionGroups)) {
+            for (String questionGroup : questionGroups) {
+                selenium.addSelection("name=id", questionGroup);
+            }
+            selenium.click("SrcQGList.button.add");
+        }
+        return editSubmit();
+    }
     public EditLoanProductPreviewPage submitVariableInstalmentChange(String maxGap, String minGap, String minInstalmentAmount) {
         if (!selenium.isChecked(configureVariableInstalmentsCheckbox)){
             selenium.click(configureVariableInstalmentsCheckbox);
@@ -92,21 +104,18 @@ public class EditLoanProductPage extends MifosPage {
         selenium.type(maxInstalmentGapTextBox, maxGap);
         selenium.type(minInstalmentGapTextBox, minGap);
         selenium.type(minInstalmentAmountTextBox, minInstalmentAmount);
-        return submitAndGotoProductPreviewPage();
+        return editSubmit();
     }
-
-    public EditLoanProductPreviewPage submitAndGotoProductPreviewPage() {
+    private EditLoanProductPreviewPage editSubmit() {
         selenium.click("EditLoanProduct.button.preview");
         waitForPageToLoad();
         return new EditLoanProductPreviewPage(selenium);
     }
-
     public void verifyVariableInstalmentOptionDefaults() {
         verifyVariableInstalmentOptionsWhenPageLoads();
         selenium.click(configureVariableInstalmentsCheckbox);
         verifyVariableInstalmentFieldsWhenSelected();
     }
-
     private void verifyVariableInstalmentFieldsWhenSelected() {
         selenium.waitForCondition("selenium.isVisible('minimumInstallmentAmount')","10000");
         Assert.assertTrue(selenium.isVisible(maxInstalmentGapTextBox));
@@ -116,15 +125,12 @@ public class EditLoanProductPage extends MifosPage {
         Assert.assertTrue(selenium.getValue(maxInstalmentGapTextBox).equals(""));
         Assert.assertTrue(selenium.getValue(minInstalmentAmountTextBox).equals(""));
     }
-
     private void verifyVariableInstalmentOptionsWhenPageLoads() {
         Assert.assertTrue(!selenium.isChecked(configureVariableInstalmentsCheckbox)
                 & !selenium.isVisible(maxInstalmentGapTextBox)
                 & !selenium.isVisible(minInstalmentGapTextBox)
                 & !selenium.isVisible(minInstalmentAmountTextBox));
     }
-
-
     public void verifyVariableInstalmentOptionFields() {
         submitVariableInstalmentChange("text,", "text,", "text,");
         Assert.assertTrue(selenium.isTextPresent("The min installment amount for variable installments is invalid because only numbers or decimal separator are allowed"));
@@ -147,8 +153,6 @@ public class EditLoanProductPage extends MifosPage {
         submitVariableInstalmentChange("1","10", "1");
         Assert.assertTrue(selenium.isTextPresent("Minimum gap must be less than the maximum gap for loans with variable installments"));
     }
-
-
     public void verifyVariableInstalmentOptionDisabled() {
         Assert.assertTrue(!selenium.isElementPresent(configureVariableInstalmentsCheckbox));
     }

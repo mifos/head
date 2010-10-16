@@ -75,6 +75,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.Arrays;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -312,7 +313,7 @@ public class QuestionnaireServiceTest {
         Assert.assertNotNull(questionGroupDetail);
         Assert.assertEquals(QUESTION_GROUP_TITLE, questionGroupDetail.getTitle());
         assertSections(questionGroupDetail.getSectionDetails());
-        assertEvent(questionGroupDetail.getEventSource());
+        assertEvent(questionGroupDetail.getEventSources().get(0));
     }
 
     private void assertEvent(EventSourceDto eventSourceDto) {
@@ -344,7 +345,7 @@ public class QuestionnaireServiceTest {
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String event, String source, String... sectionNames) {
-        return new QuestionGroupDetail(0, QUESTION_GROUP_TITLE, getEventSource(event, source), getSectionDefinitions(sectionNames), false);
+        return new QuestionGroupDetail(0, QUESTION_GROUP_TITLE, Arrays.asList(getEventSource(event, source)), getSectionDefinitions(sectionNames), false);
     }
 
     private List<SectionDetail> getSectionDefinitions(String... sectionNames) {
@@ -667,11 +668,11 @@ public class QuestionnaireServiceTest {
     public void shouldSaveResponses() {
         List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, "value", false));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSourceDto("Create", "Client", null), sectionDetails, true);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", Arrays.asList(new EventSourceDto("Create", "Client", null)), sectionDetails, true);
         QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
         questionGroupInstance.setVersionNum(0);
         when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(1, 1)).thenReturn(asList(questionGroupInstance));
-        questionnaireService.saveResponses(new QuestionGroupDetails(1, 1, asList(questionGroupDetail)));
+        questionnaireService.saveResponses(new QuestionGroupDetails(1, 1, 1, asList(questionGroupDetail)));
         verify(questionGroupInstanceDao).retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(1, 1);
         verify(questionnaireValidator, times(1)).validateForQuestionGroupResponses(asList(questionGroupDetail));
         verify(questionGroupInstanceDao, times(1)).saveOrUpdateAll(Matchers.<List<QuestionGroupInstance>>any()); // TODO: Verify the contents using a custom matcher
@@ -681,7 +682,7 @@ public class QuestionnaireServiceTest {
     public void testValidateResponse() {
         List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSourceDto("Create", "Client", null), sectionDetails, true);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", Arrays.asList(new EventSourceDto("Create", "Client", null)), sectionDetails, true);
         try {
             doThrow(new MandatoryAnswerNotFoundException("Title")).
                     when(questionnaireValidator).validateForQuestionGroupResponses(asList(questionGroupDetail));
@@ -846,7 +847,7 @@ public class QuestionnaireServiceTest {
         QuestionGroupResponseDtoBuilder responseBuilder = new QuestionGroupResponseDtoBuilder();
         responseBuilder.withResponse("Answer1").withSectionQuestion(999);
         QuestionGroupResponseDto questionGroupResponseDto = responseBuilder.build();
-        instanceBuilder.withQuestionGroup(123).withCompleted(true).withCreator(111).withEntity(12345).withVersion(1).addResponses(questionGroupResponseDto);
+        instanceBuilder.withQuestionGroup(123).withCompleted(true).withCreator(111).withEventSource(1).withEntity(12345).withVersion(1).addResponses(questionGroupResponseDto);
         QuestionGroupInstanceDto questionGroupInstanceDto = instanceBuilder.build();
         when(questionGroupInstanceDao.create(Matchers.<QuestionGroupInstance>any())).thenReturn(789);
         Integer qgInstanceId = questionnaireService.saveQuestionGroupInstance(questionGroupInstanceDto);

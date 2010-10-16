@@ -817,9 +817,6 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         validateCollateralNotes(errors, locale);
         validateDefaultFee(errors, locale, currency);
         validateAdditionalFee(errors, locale, currency, request);
-        if (configService.isGlimEnabled() && getCustomer(request).isGroup()) {
-
-        }
     }
 
     private void validateCollateralNotes(ActionErrors errors, Locale userLocale) {

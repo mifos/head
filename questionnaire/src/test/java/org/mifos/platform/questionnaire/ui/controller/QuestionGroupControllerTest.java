@@ -32,7 +32,6 @@ import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailFormMatcher;
-import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailListMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailsMatcher;
 import org.mifos.platform.questionnaire.matchers.QuestionGroupsGroupByEventSourceMatcher;
@@ -61,6 +60,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Arrays;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -218,7 +218,7 @@ public class QuestionGroupControllerTest {
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, String... sectionNames) {
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail();
         questionGroupDetail.setTitle(title);
-        questionGroupDetail.setEventSource(new EventSourceDto(event, source, null));
+        questionGroupDetail.setEventSources(Arrays.asList(new EventSourceDto(event, source, null)));
         List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
         for (String sectionName : sectionNames) {
             SectionDetail sectionDetail = new SectionDetail();
@@ -398,7 +398,7 @@ public class QuestionGroupControllerTest {
         String result = questionGroupController.saveQuestionnaire(
                 getQuestionGroupDetails(), 1, requestContext);
         verify(questionnaireServiceFacade, times(1)).saveResponses(argThat(new QuestionGroupDetailsMatcher(
-                new QuestionGroupDetails(1, 2, asList(
+                new QuestionGroupDetails(1, 2, 3, asList(
                         getQuestionGroupDetail(TITLE, "View", "Client", "S1", "S3"))))));
         assertThat(result, is("success"));
     }
@@ -551,7 +551,7 @@ public class QuestionGroupControllerTest {
     }
 
     private QuestionGroupDetails getQuestionGroupDetails() {
-        QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(1, 2, asList(
+        QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(1, 2, 3, asList(
                 getQuestionGroupDetail(TITLE, "View", "Client", "S1", "S2"),
                 getQuestionGroupDetail(TITLE, "View", "Client", "S1", "S3")
         ));
@@ -574,13 +574,13 @@ public class QuestionGroupControllerTest {
             sectionDetail.setName(sectionName);
             sectionDetails.add(sectionDetail);
         }
-        return new QuestionGroupDetail(questionGroupId, title, new EventSourceDto(event, source, null), sectionDetails,editable,active);
+        return new QuestionGroupDetail(questionGroupId, title, Arrays.asList(new EventSourceDto(event, source, null)), sectionDetails,editable,active);
     }
 
     private QuestionGroupForm getQuestionGroupForm(String title, String eventSourceId, String... sectionNames) {
         QuestionGroupForm questionGroup = new QuestionGroupForm();
         questionGroup.setTitle(title);
-        questionGroup.setEventSourceId(eventSourceId);
+        questionGroup.setEventSourceIds(Arrays.asList(eventSourceId));
         for (String sectionName : sectionNames) {
             questionGroup.setSectionName(sectionName);
             questionGroup.addCurrentSection();

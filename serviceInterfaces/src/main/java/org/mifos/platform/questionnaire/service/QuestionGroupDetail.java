@@ -35,27 +35,27 @@ public class QuestionGroupDetail implements Serializable {
     private String title;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_BAD_FIELD")
     private List<SectionDetail> sectionDetails;
-    private EventSourceDto eventSourceDto;
+    private List<EventSourceDto> eventSourceDtos;
     private boolean editable;
     private boolean active;
 
     public QuestionGroupDetail() {
-        this(0, null, null, new ArrayList<SectionDetail>(), false);
+        this(0, null, new ArrayList<EventSourceDto>(), new ArrayList<SectionDetail>(), false);
     }
 
     public QuestionGroupDetail(int id, String title, List<SectionDetail> sectionDetails) {
         this(id, title, null, sectionDetails, false);
     }
 
-    public QuestionGroupDetail(int id, String title, EventSourceDto eventSourceDto, List<SectionDetail> sectionDetails, boolean editable) {
-        this(id, title, eventSourceDto, sectionDetails, editable, false);
+    public QuestionGroupDetail(int id, String title, List<EventSourceDto> eventSourceDtos, List<SectionDetail> sectionDetails, boolean editable) {
+        this(id, title, eventSourceDtos, sectionDetails, editable, false);
     }
 
-    public QuestionGroupDetail(int id, String title, EventSourceDto eventSourceDto, List<SectionDetail> sectionDetails, boolean editable, boolean active) {
+    public QuestionGroupDetail(int id, String title, List<EventSourceDto> eventSourceDtos, List<SectionDetail> sectionDetails, boolean editable, boolean active) {
         this.id = id;
         this.title = title;
         this.sectionDetails = sectionDetails;
-        this.eventSourceDto = eventSourceDto;
+        this.eventSourceDtos = eventSourceDtos;
         this.editable = editable;
         this.active = active;
     }
@@ -72,8 +72,8 @@ public class QuestionGroupDetail implements Serializable {
         return sectionDetails;
     }
 
-    public EventSourceDto getEventSource() {
-        return eventSourceDto;
+    public List<EventSourceDto> getEventSources() {
+        return eventSourceDtos;
     }
 
     public void setId(Integer id) {
@@ -88,8 +88,8 @@ public class QuestionGroupDetail implements Serializable {
         this.sectionDetails = sectionDetails;
     }
 
-    public void setEventSource(EventSourceDto eventSourceDto) {
-        this.eventSourceDto = eventSourceDto;
+    public void setEventSources(List<EventSourceDto> eventSourceDtos) {
+        this.eventSourceDtos = eventSourceDtos;
     }
 
     public SectionDetail getSectionDetail(int i) {

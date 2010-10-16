@@ -34,6 +34,7 @@ public class QuestionGroupInstance implements Serializable {
     private Date dateConducted;
     private int completedStatus;
     private int creatorId;
+    private int eventSourceId;
     private int versionNum;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<QuestionGroupResponse> questionGroupResponses;
@@ -66,14 +67,12 @@ public class QuestionGroupInstance implements Serializable {
         this.entityId = entityId;
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="Date is mutable, but can't help method returning date.")
     public Date getDateConducted() {
-        return dateConducted;
+        return (Date) dateConducted.clone();
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="Date is mutable, but can't help method returning date.")
     public void setDateConducted(Date dateConducted) {
-        this.dateConducted = dateConducted;
+        this.dateConducted = (Date) dateConducted.clone();
     }
 
     public int getCompletedStatus() {
@@ -98,6 +97,14 @@ public class QuestionGroupInstance implements Serializable {
 
     public int getVersionNum() {
         return versionNum;
+    }
+
+    public int getEventSourceId() {
+        return eventSourceId;
+    }
+
+    public void setEventSourceId(int eventSourceId) {
+        this.eventSourceId = eventSourceId;
     }
 
     public void setVersionNum(int versionNum) {

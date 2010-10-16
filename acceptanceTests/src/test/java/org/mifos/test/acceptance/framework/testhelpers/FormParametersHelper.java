@@ -25,6 +25,8 @@ import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataP
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.util.StringUtil;
 
+import java.util.Arrays;
+
 public class FormParametersHelper {
     public static DefineNewLoanProductPage.SubmitFormParameters getWeeklyLoanProductParameters() {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = new DefineNewLoanProductPage.SubmitFormParameters();
@@ -115,4 +117,10 @@ public class FormParametersHelper {
         formParameters.setGlCode(6201);
         return formParameters;
         }
+
+    public static DefineNewLoanProductPage.SubmitFormParameters getWeeklyLoanProductParametersWithQuestionGroups(String... questionGroupTitle) {
+        DefineNewLoanProductPage.SubmitFormParameters weeklyLoanProductParameters = getWeeklyLoanProductParameters();
+        weeklyLoanProductParameters.setQuestionGroups(Arrays.asList(questionGroupTitle));
+        return weeklyLoanProductParameters;
+    }
 }

@@ -44,4 +44,8 @@ public class EndOfDayDetail {
     public Money getResultantAmountForDay() {
         return this.deposits.subtract(this.withdrawals).add(this.interest);
     }
+
+    public Money getInterest() {
+        return this.interest;
+    }
 }

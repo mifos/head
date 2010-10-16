@@ -44,6 +44,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -262,7 +263,7 @@ public class QuestionnaireServiceFacadeTest {
     public void shouldSaveQuestionGroupDetail() {
         List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, "value", false));
-        QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(1, 1,
+        QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(1, 1, 1,
                 asList(getQuestionGroupDetail("QG1", "Create", "Client", sectionDetails)));
         questionnaireServiceFacade.saveResponses(questionGroupDetails);
         verify(questionnaireService, times(1)).saveResponses(questionGroupDetails);
@@ -272,7 +273,7 @@ public class QuestionnaireServiceFacadeTest {
     public void testValidateResponse() {
         List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", new EventSourceDto("Create", "Client", null), sectionDetails, true);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", Arrays.asList(new EventSourceDto("Create", "Client", null)), sectionDetails, true);
         try {
             Mockito.doThrow(new MandatoryAnswerNotFoundException("Title")).
                     when(questionnaireService).validateResponses(asList(questionGroupDetail));
@@ -365,7 +366,7 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, List<SectionDetail> sections) {
-        return new QuestionGroupDetail(1, title, new EventSourceDto(event, source, null), sections, false);
+        return new QuestionGroupDetail(1, title, Arrays.asList(new EventSourceDto(event, source, null)), sections, false);
     }
 
     private SectionDetail getSectionDetailWithQuestionIds(String name, int... questionIds) {

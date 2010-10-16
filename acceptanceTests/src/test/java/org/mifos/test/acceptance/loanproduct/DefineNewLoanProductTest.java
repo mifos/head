@@ -26,22 +26,28 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.loan.QuestionGroupHelper;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Random;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(sequential = true, groups = {"smoke", "loanproduct", "acceptance"})
 public class DefineNewLoanProductTest extends UiTestCaseBase {
 
+    private Random random;
+    private QuestionGroupHelper questionGroupHelper;
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     @BeforeMethod
     @Override
     public void setUp() throws Exception {
         super.setUp();
         selenium.windowMaximize();
+        questionGroupHelper = new QuestionGroupHelper(new NavigationHelper(selenium));
+        random = new Random();
     }
 
     @AfterMethod
@@ -55,6 +61,20 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         new NavigationHelper(selenium).navigateToAdminPage().
         verifyPage().
         defineLoanProduct(formParameters);
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void createWeeklyLoanProductWithQuestionGroups()throws Exception {
+        String questionGroupTitle = "QG1" + random.nextInt(100);
+        String question1 = "DT_" + random.nextInt(100);
+        String question2 = "SS_" + random.nextInt(100);
+        questionGroupHelper.createQuestionGroup(questionGroupTitle, question1, question2, "Create Loan");
+
+        SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParametersWithQuestionGroups(questionGroupTitle);
+        AdminPage adminPage = loginAndNavigateToAdminPage();
+        adminPage.verifyPage();
+        adminPage.defineLoanProduct(formParameters);
+
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception

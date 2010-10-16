@@ -20,42 +20,49 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-  <!--  Main Content Begins-->
-  <span id="page.id" title="view_organizational_holidays" />
-  <div class=" content">
-  
-    [@mifos.crumbs breadcrumbs /]
-  	
-      <div class="span-24">        
+<!--  Main Content Begins-->
+<span id="page.id" title="view_organizational_holidays"/>
+<div class=" content">
+
+[@mifos.crumbs breadcrumbs /]
+
+    <div class="span-24">
         <div class="clear">&nbsp;</div>
-        <div class="marginLeft30">
-        <p class="font15"><span class="fontBold">[@spring.message "organizationPreferences.viewholidays"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "organizationPreferences.viewholidays.organizationWide" /]</span></p>
-        <p>[@spring.message "organizationPreferences.viewholidays.belowIsTheListOfOrganizationWideHolidaysClickHereTo"/]<a id="holiday.link.defineNewHoliday" href="defineNewHoliday.ftl">[@spring.message "organizationPreferences.viewholidays.defineNewHoliday"/]</a> </p>
-        
-      [#list holidaysMap?keys as key]
-      	<p class="fontBold">Holidays for year ${key}</p>
-      	<div class="span-22"> 
-        	<div class="bluedivs span-20 fontBold paddingLeft">
-        		<span class="span-3">[@spring.message "organizationPreferences.definenewholiday.fromDat"/]</span>
-            	<span class="span-3">[@spring.message "organizationPreferences.definenewholiday.toDate"/]</span>
-            	<span class="span-5">[@spring.message "organizationPreferences.definenewholiday.holidayName"/]</span>
-            	<span class="span-5">[@spring.message "organizationPreferences.definenewholiday.repaymentRule"/]</span>
-            	<span class="span-5">[@spring.message "organizationPreferences.definenewholiday.appliesto"/]</span>
-        	</div>
-      		[#list holidaysMap[key] as officeHoliday]
-	        	<div class="span-20 borderbtm paddingLeft ">
-	        		<span class="span-3">${officeHoliday.holidayDetails.fromDate}</span>
-	            	<span class="span-3">${officeHoliday.holidayDetails.thruDate}</span>
-	            	<span class="span-5">${officeHoliday.holidayDetails.name}</span>
-	            	<span class="span-5">${officeHoliday.holidayDetails.repaymentRuleName}</span>
-	            	<span class="span-5">${officeHoliday.officeNamesAsString}</span>
-	    	    </div>
-      		[/#list]
-      	</div>
-		<div class="clear">&nbsp;</div>	    
-      [/#list]
-    	</div>
-      </div>
-   </div>  
-  <!--Main Content Ends-->
+        <div class="marginLeft15">
+            <p class="font15"><span class="fontBold">[@spring.message "organizationPreferences.viewholidays"/]</span>&nbsp;-&nbsp;<span
+                    class="orangeheading">[@spring.message "organizationPreferences.viewholidays.organizationWide" /]</span>
+            </p>
+
+            <p class="padding5topbottom">[@spring.message "organizationPreferences.viewholidays.belowIsTheListOfOrganizationWideHolidaysClickHereTo"/]
+                <a id="holiday.link.defineNewHoliday"
+                   href="defineNewHoliday.ftl">[@spring.message "organizationPreferences.viewholidays.defineNewHoliday"/]</a>
+            </p>
+
+            [#list holidaysMap?keys as key]
+            <p class="fontBold padding10topbottom">Holidays for year ${key}</p>
+            <table style="line-height:1.2;margin-bottom:5px; border-bottom:1px solid #D7DEEE;" cellspacing="0" cellpadding="3" border="0" width="98%">
+                <tbody>
+                <tr>
+                    <td width="11%" class="drawtablehd">[@spring.message "organizationPreferences.definenewholiday.fromDat"/]</td>
+                    <td width="11%" class="drawtablehd">[@spring.message "organizationPreferences.definenewholiday.toDate"/]</td>
+                    <td width="20%" class="drawtablehd">[@spring.message "organizationPreferences.definenewholiday.holidayName"/]</td>
+                    <td width="15%" class="drawtablehd">[@spring.message "organizationPreferences.definenewholiday.repaymentRule"/]</td>
+                    <td width="43%" class="drawtablehd">[@spring.message "organizationPreferences.definenewholiday.appliesto"/]</td>
+                </tr>
+                [#list holidaysMap[key] as officeHoliday]
+                <tr>
+                    <td width="11%" class="drawtablerow">${officeHoliday.holidayDetails.fromDate}</td>
+                    <td width="11%" class="drawtablerow">${officeHoliday.holidayDetails.thruDate}</td>
+                    <td width="20%" class="drawtablerow">${officeHoliday.holidayDetails.name}</td>
+                    <td width="15%" class="drawtablerow">${officeHoliday.holidayDetails.repaymentRuleName}</td>
+                    <td width="43%" class="drawtablerow">${officeHoliday.officeNamesAsString}</td>
+                </tr>
+                [/#list]
+                </tbody>
+            </table>
+           [/#list]
+        </div>
+    </div>
+</div>
+<!--Main Content Ends-->
 [/@adminLeftPaneLayout]

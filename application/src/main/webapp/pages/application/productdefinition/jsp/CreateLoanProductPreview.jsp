@@ -456,7 +456,19 @@ explanation of the license and how it is applied.
 									</c:if></td>
 								</tr>
 							</table>
-
+							<table width="93%" border="0" cellpadding="3" cellspacing="0">
+                                <tr>
+									<td height="23" class="fontnormalbold"><mifos:mifoslabel
+										name="product.assocedquestiongroups" bundle="ProductDefUIResources" /> : <span
+										class="fontnormal"><br>
+									<c:forEach
+										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SelectedQGList')}"
+										var="questionGroup">
+										<c:out value="${questionGroup.title}" />
+										<br>
+									</c:forEach></span> <br>
+                                </tr>
+							</table>
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<td width="100%" height="23" class="fontnormalbold">

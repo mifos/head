@@ -53,6 +53,7 @@ import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.savings.interest.InterestPostingPeriodResult;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
@@ -91,6 +92,7 @@ import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
@@ -102,6 +104,7 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -541,37 +544,60 @@ public class SavingsBO extends AccountBO {
         return getInterestToBePosted() == null ? interestCalculated : getInterestToBePosted().add(interestCalculated);
     }
 
+    public void postInterest(InterestScheduledEvent postingSchedule, InterestPostingPeriodResult interestPostingPeriodResult) {
+
+        Money actualInterestToBePosted = interestPostingPeriodResult.getDifferenceInInterest();
+        if (actualInterestToBePosted.isGreaterThanZero()) {
+            LocalDate currentPostingDate = interestPostingPeriodResult.getPostingPeriod().getEndDate();
+            LocalDate nextPostingDate = postingSchedule.nextMatchingDateFromAlreadyMatchingDate(currentPostingDate);
+
+            doPostInterest(currentPostingDate, nextPostingDate, actualInterestToBePosted);
+        }
+    }
+
     public boolean postInterest(InterestScheduledEvent postingSchedule) {
         boolean eligibleForInterestPosing = accountRequiresInterestPosting();
+
         if (eligibleForInterestPosing) {
-            this.savingsBalance = this.savingsBalance.add(this.interestToBePosted);
-            this.savingsPerformance.setTotalInterestDetails(this.interestToBePosted);
-
-            SavingsActivityEntity savingsActivity = SavingsActivityEntity.savingsInterestPosting(this, personnel, this.savingsBalance, this.interestToBePosted, this.nextIntPostDate);
-            savingsActivityDetails.add(savingsActivity);
-
-            AccountPaymentEntity interestPayment = AccountPaymentEntity.savingsInterestPosting(this, this.interestToBePosted, this.nextIntPostDate);
-
-            DateTime dueDate = new DateTime();
-            SavingsTrxnDetailEntity interestPostingTransaction = SavingsTrxnDetailEntity.savingsInterestPosting(interestPayment, this.customer, this.savingsBalance, this.nextIntPostDate, dueDate);
-
-            interestPayment.addAccountTrxn(interestPostingTransaction);
-            this.addAccountPayment(interestPayment);
-
-            this.lastIntPostDate = this.nextIntPostDate;
-            this.nextIntPostDate = postingSchedule.nextMatchingDateFromAlreadyMatchingDate(new LocalDate(this.lastIntPostDate)).toDateMidnight().toDate();
-            this.interestToBePosted = Money.zero(this.getCurrency());
-
-            // NOTE: financial Transaction Processing should be decoupled from application domain model.
-            try {
-                BaseFinancialActivity baseFinancialActivity = new SavingsInterestPostingFinancialActivity(interestPostingTransaction);
-                baseFinancialActivity.buildAccountEntries();
-            } catch (FinancialException e) {
-                throw new MifosRuntimeException(e);
-            }
+            LocalDate currentPostingDate = new LocalDate(this.nextIntPostDate);
+            LocalDate nextPostingDate = postingSchedule.nextMatchingDateFromAlreadyMatchingDate(new LocalDate(this.nextIntPostDate));
+            Money actualInterestToBePosted = this.interestToBePosted;
+            doPostInterest(currentPostingDate, nextPostingDate, actualInterestToBePosted);
         }
 
         return eligibleForInterestPosing;
+    }
+
+    private void doPostInterest(LocalDate currentPostingDate, LocalDate nextPostingDate, Money actualInterestToBePosted) {
+        this.savingsBalance = this.savingsBalance.add(actualInterestToBePosted);
+        this.savingsPerformance.setTotalInterestDetails(actualInterestToBePosted);
+
+        SavingsActivityEntity savingsActivity = SavingsActivityEntity.savingsInterestPosting(this, personnel, this.savingsBalance, actualInterestToBePosted, currentPostingDate.toDateMidnight().toDate());
+        savingsActivityDetails.add(savingsActivity);
+
+        AccountPaymentEntity interestPayment = AccountPaymentEntity.savingsInterestPosting(this, actualInterestToBePosted, currentPostingDate.toDateMidnight().toDate());
+
+        DateTime dueDate = new DateTime();
+        SavingsTrxnDetailEntity interestPostingTransaction = SavingsTrxnDetailEntity.savingsInterestPosting(interestPayment, this.customer, this.savingsBalance, currentPostingDate.toDateMidnight().toDate(), dueDate);
+
+        interestPayment.addAccountTrxn(interestPostingTransaction);
+        this.addAccountPayment(interestPayment);
+
+        updatePostingDetails(nextPostingDate);
+
+        // NOTE: financial Transaction Processing should be decoupled from application domain model.
+        try {
+            BaseFinancialActivity baseFinancialActivity = new SavingsInterestPostingFinancialActivity(interestPostingTransaction);
+            baseFinancialActivity.buildAccountEntries();
+        } catch (FinancialException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    public void updatePostingDetails(LocalDate nextPostingDate) {
+        this.lastIntPostDate = this.nextIntPostDate;
+        this.nextIntPostDate = nextPostingDate.toDateMidnight().toDate();
+        this.interestToBePosted = Money.zero(this.getCurrency());
     }
 
     private boolean accountRequiresInterestPosting() {
@@ -1305,30 +1331,107 @@ public class SavingsBO extends AccountBO {
         }
     }
 
+    public void adjustLastUserAction(Money amountAdjustedTo, String adjustmentNote, PersonnelBO updatedBy) {
+
+        if (!isAdjustPossibleOnLastTrxn(amountAdjustedTo)) {
+            throw new BusinessRuleException(AccountExceptionConstants.CANNOTADJUST);
+        }
+
+        try {
+            // adjust existing transaction
+            AccountPaymentEntity lastPayment = getLastPmnt();
+            AccountActionTypes savingsTransactionType = findFirstDepositOrWithdrawalTransaction(lastPayment);
+
+            for (AccountTrxnEntity accntTrxn : lastPayment.getAccountTrxns()) {
+                if (AccountActionTypes.SAVINGS_DEPOSIT.equals(savingsTransactionType)) {
+                    adjustForDeposit(accntTrxn);
+                } else if (AccountActionTypes.SAVINGS_WITHDRAWAL.equals(savingsTransactionType)) {
+                    adjustForWithdrawal(accntTrxn);
+                }
+            }
+
+            Date adjustedOn = new DateTimeService().getCurrentJavaDateTime();
+            SavingsActivityEntity adjustment = SavingsActivityEntity.savingsAdjustment(this, updatedBy, this.savingsBalance, lastPayment.getAmount(), adjustedOn);
+            savingsActivityDetails.add(adjustment);
+
+            logger.debug("transaction count before adding reversal transactions: " + lastPayment.getAccountTrxns().size());
+
+            List<AccountTrxnEntity> newlyAddedTrxns = lastPayment.reversalAdjustment(updatedBy, adjustmentNote);
+
+            // FIXME - financial transactions should be decoupled from domain model.
+            buildFinancialEntries(new LinkedHashSet<AccountTrxnEntity>(newlyAddedTrxns));
+            // end of adjustExistingTransaction
+
+            AccountPaymentEntity newPayment = createAdjustmentPayment(amountAdjustedTo, adjustmentNote);
+        } catch (AccountException e) {
+            throw new BusinessRuleException(e.getKey());
+        }
+
+        if (this.isActive()) {
+            AccountStateEntity newAccountState = new AccountStateEntity(AccountState.SAVINGS_INACTIVE);
+            this.setAccountState(newAccountState);
+        } else if (!this.isActive()) {
+            AccountStateEntity newAccountState = new AccountStateEntity(AccountState.SAVINGS_ACTIVE);
+            this.setAccountState(newAccountState);
+        }
+    }
+
+    @Deprecated
+    private List<AccountTrxnEntity> reversalAdjustment(PersonnelBO updatedBy, final String adjustmentComment, final AccountPaymentEntity lastPayment) throws AccountException {
+        return lastPayment.reversalAdjustment(updatedBy, adjustmentComment);
+    }
+
+
+    private AccountActionTypes findFirstDepositOrWithdrawalTransaction(AccountPaymentEntity lastPayment) {
+        AccountActionTypes accountActionTypes = AccountActionTypes.SAVINGS_INTEREST_POSTING;
+        for (AccountTrxnEntity accntTrxn : lastPayment.getAccountTrxns()) {
+            if (!accntTrxn.getAccountActionEntity().isSavingsAdjustment()) {
+                accountActionTypes = AccountActionTypes.fromInt(accntTrxn.getAccountActionEntity().getId());
+            }
+        }
+        return accountActionTypes;
+    }
+
+    @Deprecated
     public void adjustLastUserAction(final Money amountAdjustedTo, final String adjustmentComment)
             throws AccountException {
-        logger.debug("In SavingsBO::generateDepositAccountActions(), accountId: " + getAccountId());
+
         if (!isAdjustPossibleOnLastTrxn(amountAdjustedTo)) {
             throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
         }
-        Date trxnDate = getTrxnDate(getLastPmnt());
-        Money oldInterest = calculateInterestForAdjustment(trxnDate, null);
-        adjustExistingPayment(amountAdjustedTo, adjustmentComment);
+
+//        Date trxnDate = getTrxnDate(getLastPmnt());
+//        Money oldInterest = calculateInterestForAdjustment(trxnDate, null);
+
+        // adjust existing transaction
+        AccountPaymentEntity lastPayment = getLastPmnt();
+        Short actionType = helper.getPaymentActionType(lastPayment);
+        try {
+            PersonnelBO personnel = getPersonnelPersistence().getPersonnel(userContext.getId());
+            for (AccountTrxnEntity accntTrxn : lastPayment.getAccountTrxns()) {
+                if (actionType.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
+                    adjustForDeposit(accntTrxn);
+                } else if (actionType.equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())) {
+                    adjustForWithdrawal(accntTrxn);
+                }
+            }
+            addSavingsActivityDetails(buildSavingsActivity(lastPayment.getAmount(), getSavingsBalance(),
+                    AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), new DateTimeService().getCurrentJavaDateTime(), personnel));
+            logger.debug("transaction count before adding reversal transactions: " + lastPayment.getAccountTrxns().size());
+            List<AccountTrxnEntity> newlyAddedTrxns = reversalAdjustment(personnel, adjustmentComment, lastPayment);
+            buildFinancialEntries(new LinkedHashSet<AccountTrxnEntity>(newlyAddedTrxns));
+        } catch (PersistenceException e) {
+            throw new AccountException(e);
+        }
+
+
         AccountPaymentEntity newPayment = createAdjustmentPayment(amountAdjustedTo, adjustmentComment);
 
-        this.update();
-        StaticHibernateUtil.flushSession();
-
-        adjustInterest(oldInterest, trxnDate, newPayment);
-        if (this.getAccountState().getId().equals(AccountState.SAVINGS_INACTIVE.getValue())) {
-            try {
-                this.setAccountState(getSavingsPersistence().getAccountStatusObject(
-                        AccountState.SAVINGS_ACTIVE.getValue()));
-            } catch (PersistenceException pe) {
-                throw new AccountException(pe);
-            }
+//        adjustInterest(oldInterest, trxnDate, newPayment);
+        if (!this.isActive()) {
+            AccountStateEntity newAccountState = new AccountStateEntity(AccountState.SAVINGS_ACTIVE);
+            this.setAccountState(newAccountState);
         }
-        this.update();
     }
 
     protected void adjustInterest(final Money oldInterest, final Date trxnDate, final AccountPaymentEntity newPayment)
@@ -1440,31 +1543,6 @@ public class SavingsBO extends AccountBO {
             }
         }
         return oldInterest;
-    }
-
-    protected void adjustExistingPayment(final Money amountAdjustedTo, final String adjustmentComment)
-            throws AccountException {
-        AccountPaymentEntity lastPayment = getLastPmnt();
-        Short actionType = helper.getPaymentActionType(lastPayment);
-        try {
-            PersonnelBO personnel = getPersonnelPersistence().getPersonnel(userContext.getId());
-            for (AccountTrxnEntity accntTrxn : lastPayment.getAccountTrxns()) {
-                if (actionType.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
-                    adjustForDeposit(accntTrxn);
-                } else if (actionType.equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())) {
-                    adjustForWithdrawal(accntTrxn);
-                }
-            }
-            addSavingsActivityDetails(buildSavingsActivity(lastPayment.getAmount(), getSavingsBalance(),
-                    AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), new DateTimeService().getCurrentJavaDateTime(),
-                    personnel));
-            logger.debug("transaction count before adding reversal transactions: "
-                    + lastPayment.getAccountTrxns().size());
-            List<AccountTrxnEntity> newlyAddedTrxns = reversalAdjustment(adjustmentComment, lastPayment);
-            buildFinancialEntries(new LinkedHashSet<AccountTrxnEntity>(newlyAddedTrxns));
-        } catch (PersistenceException e) {
-            throw new AccountException(e);
-        }
     }
 
     protected AccountPaymentEntity createAdjustmentPayment(final Money amountAdjustedTo, final String adjustmentComment)
@@ -2197,5 +2275,14 @@ public class SavingsBO extends AccountBO {
 
     public MeetingBO getInterestPostingMeeting() {
         return this.savingsOffering.getFreqOfPostIntcalc().getMeeting();
+    }
+
+    public SavingsAccountClosureDto toClosureDto(String interestAmountAtClosure) {
+        return new SavingsAccountClosureDto(new LocalDate(), this.savingsBalance.toString(), interestAmountAtClosure);
+    }
+
+    public boolean isGroupModelWithIndividualAccountability() {
+
+        return this.customer.isCenter() || (this.customer.isGroup() && this.recommendedAmntUnit.isPerIndividual());
     }
 }

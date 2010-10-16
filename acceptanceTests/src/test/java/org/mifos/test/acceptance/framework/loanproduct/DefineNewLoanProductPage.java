@@ -20,9 +20,12 @@
 
 package org.mifos.test.acceptance.framework.loanproduct;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.mifos.test.acceptance.framework.AbstractPage;
 
 import com.thoughtworks.selenium.Selenium;
+
+import java.util.List;
 import org.testng.Assert;
 
 public class DefineNewLoanProductPage extends AbstractPage {
@@ -54,7 +57,6 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
    public static class SubmitFormParameters {
-
         // interest types
         public static final int FLAT = 1;
         public static final int DECLINING_BALANCE = 2;
@@ -63,11 +65,14 @@ public class DefineNewLoanProductPage extends AbstractPage {
         // applicable for
         public static final int CLIENTS = 1;
         public static final int GROUPS = 2;
+
         // freq of installments
         public static final int WEEKS = 1;
         public static final int MONTHS = 2;
+
         // grace period type
         public static final int NONE = 1;
+
         private String branch;
         private String offeringName;
         private String offeringShortName;
@@ -88,15 +93,20 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String interestGLCode;
         private String principalGLCode;
         private boolean interestWaiver;
-        public String getBranch() {
+        private List<String> questionGroups;
+
+       public String getBranch() {
             return this.branch;
         }
+
         public void setBranch(String branch) {
             this.branch = branch;
         }
+
         public String getOfferingName() {
             return this.offeringName;
         }
+
         public void setOfferingName(String offeringName) {
             this.offeringName = offeringName;
         }
@@ -104,10 +114,10 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public String getOfferingShortName() {
             return this.offeringShortName;
         }
+
         public void setOfferingShortName(String offeringShortName) {
             this.offeringShortName = offeringShortName;
         }
-
 
         public String getDescription() {
             return this.description;
@@ -244,6 +254,14 @@ public class DefineNewLoanProductPage extends AbstractPage {
        public boolean isInterestWaiver() {
            return interestWaiver;
        }
+
+       public List<String> getQuestionGroups() {
+           return questionGroups;
+       }
+
+       public void setQuestionGroups(List<String> questionGroups) {
+           this.questionGroups = questionGroups;
+       }
    }
 
     public DefineNewLoanProductPage fillLoanParameters(SubmitFormParameters parameters) {
@@ -265,7 +283,17 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.select("gracePeriodType", "value=" + parameters.getGracePeriodType());
         selenium.select("interestGLCode", "label=" + parameters.getInterestGLCode());
         selenium.select("principalGLCode", "label=" + parameters.getPrincipalGLCode());
+        selectQuestionGroups(parameters.getQuestionGroups());
         return this;
+    }
+
+    private void selectQuestionGroups(List<String> questionGroups) {
+        if (CollectionUtils.isNotEmpty(questionGroups)) {
+            for (String questionGroup : questionGroups) {
+                selenium.addSelection("name=id", questionGroup);
+            }
+            selenium.click("SrcQGList.button.add");
+        }
     }
 
     public DefineNewLoanProductPreviewPage submitAndGotoNewLoanProductPreviewPage() {
@@ -273,7 +301,6 @@ public class DefineNewLoanProductPage extends AbstractPage {
         waitForPageToLoad();
         return new DefineNewLoanProductPreviewPage(selenium);
     }
-
     public DefineNewLoanProductPage verifyVariableInstalmentOptionsDefaults() {
 
         Assert.assertTrue(!selenium.isChecked(configureVariableInstalmentsCheckbox)

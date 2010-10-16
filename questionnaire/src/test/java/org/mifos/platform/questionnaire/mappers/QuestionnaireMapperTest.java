@@ -77,6 +77,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.Arrays;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -241,7 +242,7 @@ public class QuestionnaireMapperTest {
         when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
         EventSourceDto eventSourceDto = getEventSource("Create", "Client");
         List<SectionDetail> sectionDetails = asList(getSectionDefinition("S1", 12, TITLE), getSectionDefinition("S2", 0, TITLE));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, TITLE, eventSourceDto, sectionDetails, true);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(0, TITLE, Arrays.asList(eventSourceDto), sectionDetails, true);
         questionGroupDetail.setActive(false);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         assertQuestionGroup(questionGroup, QuestionGroupState.INACTIVE);
@@ -259,7 +260,7 @@ public class QuestionnaireMapperTest {
         when(questionGroupDao.retrieveSectionByNameAndQuestionGroupId("S1", 123)).thenReturn(asList(section));
         EventSourceDto eventSourceDto = getEventSource("Create", "Client");
         List<SectionDetail> sectionDetails = asList(getSectionDefinition("S1", 12, TITLE), getSectionDefinition("S2", 0, TITLE));
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, TITLE, eventSourceDto, sectionDetails, true);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(123, TITLE, Arrays.asList(eventSourceDto), sectionDetails, true);
         questionGroupDetail.setActive(false);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         assertQuestionGroup(questionGroup, QuestionGroupState.INACTIVE);
@@ -280,7 +281,7 @@ public class QuestionnaireMapperTest {
         SectionQuestionDetail sectionQuestionDetail2 = getSectionQuestionDetail(0, 0, "Ques2");
         sectionDetail.setQuestionDetails(asList(sectionQuestionDetail1, sectionQuestionDetail2));
         List<SectionDetail> sectionDetails = asList(sectionDetail);
-        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(questionGroupId, TITLE, eventSourceDto, sectionDetails, true, true);
+        QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(questionGroupId, TITLE, Arrays.asList(eventSourceDto), sectionDetails, true, true);
         SectionQuestion sectionQuestion = getSectionQuestion(getQuestionEntity(999, "Ques1"), 333);
         Section section = getSection(sectionQuestion, 222, "Misc");
         when(questionGroupDao.retrieveSectionByNameAndQuestionGroupId("Misc", 123)).thenReturn(asList(section));
@@ -404,7 +405,7 @@ public class QuestionnaireMapperTest {
         assertThat(questionGroupDetail.getSectionDetails().size(), is(2));
         assertThat(questionGroupDetail.getSectionDetails().get(0).getName(), is("S1"));
         assertThat(questionGroupDetail.getSectionDetails().get(1).getName(), is("S2"));
-        EventSourceDto eventSourceDto = questionGroupDetail.getEventSource();
+        EventSourceDto eventSourceDto = questionGroupDetail.getEventSources().get(0);
         assertThat(eventSourceDto, is(notNullValue()));
         assertThat(eventSourceDto.getEvent(), is("Create"));
         assertThat(eventSourceDto.getSource(), is("Client"));
@@ -519,26 +520,26 @@ public class QuestionnaireMapperTest {
 
         List<QuestionDetail> questionDetails1 = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails1 = asList(getSectionDetailWithQuestions(14, "Sec1", questionDetails1, "value", null));
-        QuestionGroupDetail questionGroupDetail1 = new QuestionGroupDetail(10, "QG1", new EventSourceDto("Create", "Client", null), sectionDetails1, true);
+        QuestionGroupDetail questionGroupDetail1 = new QuestionGroupDetail(10, "QG1", Arrays.asList(new EventSourceDto("Create", "Client", null)), sectionDetails1, true);
 
         List<QuestionDetail> questionDetails2 = asList(new QuestionDetail(13, "Question 2", "Question 2", QuestionType.DATE, true));
         List<SectionDetail> sectionDetails2 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails2, null, null));
-        QuestionGroupDetail questionGroupDetail2 = new QuestionGroupDetail(11, "QG2", new EventSourceDto("Create", "Client", null), sectionDetails2, true);
+        QuestionGroupDetail questionGroupDetail2 = new QuestionGroupDetail(11, "QG2", Arrays.asList(new EventSourceDto("Create", "Client", null)), sectionDetails2, true);
 
         QuestionDetail questionDetail1 = new QuestionDetail(13, "Question 3", "Question 3", QuestionType.MULTI_SELECT, true);
         questionDetail1.setAnswerChoices(asList(getChoiceDto("a1"), getChoiceDto("a2"), getChoiceDto("a3")));
         List<QuestionDetail> questionDetails3 = asList(questionDetail1);
         List<SectionDetail> sectionDetails3 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails3, null, asList("a2", "a3")));
-        QuestionGroupDetail questionGroupDetail3 = new QuestionGroupDetail(11, "QG2", new EventSourceDto("Create", "Client", null), sectionDetails3, true);
+        QuestionGroupDetail questionGroupDetail3 = new QuestionGroupDetail(11, "QG2", Arrays.asList(new EventSourceDto("Create", "Client", null)), sectionDetails3, true);
 
         QuestionDetail questionDetail2 = new QuestionDetail(13, "Question 4", "Question 4", QuestionType.SMART_SELECT, true);
         questionDetail2.setAnswerChoices(asList(getChoiceDto("a1", "Tag1", "Tag2"), getChoiceDto("a2", "Tag11", "Tag22"), getChoiceDto("a3", "Tag111", "Tag222")));
         questionDetails3 = asList(questionDetail2);
         sectionDetails3 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails3, asList(getSelectionDetail("a1", "Tag2"), getSelectionDetail("a3", "Tag111"))));
-        QuestionGroupDetail questionGroupDetail4 = new QuestionGroupDetail(11, "QG2", new EventSourceDto("Create", "Client", null), sectionDetails3, true);
+        QuestionGroupDetail questionGroupDetail4 = new QuestionGroupDetail(11, "QG2", Arrays.asList(new EventSourceDto("Create", "Client", null)), sectionDetails3, true);
 
         List<QuestionGroupInstance> questionGroupInstances =
-                questionnaireMapper.mapToQuestionGroupInstances(new QuestionGroupDetails(101, 201, asList(questionGroupDetail1, questionGroupDetail2, questionGroupDetail3, questionGroupDetail4)));
+                questionnaireMapper.mapToQuestionGroupInstances(new QuestionGroupDetails(101, 201, 1, asList(questionGroupDetail1, questionGroupDetail2, questionGroupDetail3, questionGroupDetail4)));
         assertThat(questionGroupInstances, is(notNullValue()));
         assertThat(questionGroupInstances.size(), is(4));
         QuestionGroupInstance questionGroupInstance1 = questionGroupInstances.get(0);
@@ -921,7 +922,7 @@ public class QuestionnaireMapperTest {
         QuestionGroupResponseDtoBuilder responseBuilder = new QuestionGroupResponseDtoBuilder();
         responseBuilder.withResponse("Answer1").withSectionQuestion(999);
         QuestionGroupResponseDto questionGroupResponseDto = responseBuilder.build();
-        instanceBuilder.withQuestionGroup(123).withCompleted(true).withCreator(111).withEntity(12345).withVersion(1).addResponses(questionGroupResponseDto);
+        instanceBuilder.withQuestionGroup(123).withCompleted(true).withCreator(111).withEventSource(1).withEntity(12345).withVersion(1).addResponses(questionGroupResponseDto);
         return instanceBuilder.build();
     }
 }

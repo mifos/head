@@ -20,15 +20,9 @@
 
 package org.mifos.accounts.productdefinition.struts.action;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.slf4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -56,6 +50,7 @@ import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
+import org.mifos.accounts.productdefinition.business.QuestionGroupReference;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
@@ -71,6 +66,7 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -79,11 +75,23 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.MifosServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * @deprecated this entire class will soon be no longer used and will be deleted after localisation of messages.properties files is complete.
@@ -220,6 +228,7 @@ public class LoanPrdAction extends BaseAction {
                 findGLCodeEntity(request, ProductDefinitionConstants.LOANINTERESTGLCODELIST, loanPrdActionForm.getInterestGLCode()),
                 loanPrdActionForm, loanPrdActionForm.shouldWaiverInterest());
 
+        loanOffering.setQuestionGroups(getQuestionGroups(request));
         loanOffering.setCurrency(getCurrency(loanPrdActionForm.getCurrencyId()));
 
 
@@ -239,7 +248,20 @@ public class LoanPrdAction extends BaseAction {
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 
-
+    // Intentionally made public to aid testing !!!
+    public Set<QuestionGroupReference> getQuestionGroups(HttpServletRequest request) throws PageExpiredException {
+        Set<QuestionGroupReference> questionGroupReferences = null;
+        List<QuestionGroupDetail> questionGroups = (List<QuestionGroupDetail>) SessionUtils.getAttribute(ProductDefinitionConstants.SELECTEDQGLIST, request);
+        if (CollectionUtils.isNotEmpty(questionGroups)) {
+            questionGroupReferences = new LinkedHashSet<QuestionGroupReference>(questionGroups.size());
+            for (QuestionGroupDetail questionGroupDetail : questionGroups) {
+                QuestionGroupReference questionGroupReference = new QuestionGroupReference();
+                questionGroupReference.setQuestionGroupId(questionGroupDetail.getId());
+                questionGroupReferences.add(questionGroupReference);
+            }
+        }
+        return questionGroupReferences;
+    }
     private void mapVariableInstallmentDetails(LoanOfferingBO loanOffering, LoanPrdActionForm loanPrdActionForm) {
         boolean variableInstallmentsAllowed = loanPrdActionForm.canConfigureVariableInstallments();
         loanOffering.setVariableInstallmentsAllowed(variableInstallmentsAllowed);
@@ -269,29 +291,45 @@ public class LoanPrdAction extends BaseAction {
         logger.debug("start manage of Loan Product Action " + loanPrdActionForm.getPrdOfferingId());
         Short prdOfferingId = loanPrdActionForm.getPrdOfferingIdValue();
         loanPrdActionForm.clear();
-        LoanOfferingBO loanOffering = ((LoanPrdBusinessService) ServiceFactory.getInstance().getBusinessService(
-                BusinessServiceName.LoanProduct)).getLoanOffering(prdOfferingId);
+        LoanOfferingBO loanOffering = getLoanOffering(prdOfferingId);
         loadMasterData(request);
-        List<FundBO> fundsSelected = new ArrayList<FundBO>();
-        for (LoanOfferingFundEntity loanOfferingFund : loanOffering.getLoanOfferingFunds()) {
-            fundsSelected.add(loanOfferingFund.getFund());
+        loadSelectedFeesAndFunds(getFeesSelected(request, loanOffering), getFundsSelected(loanOffering), request);
+        loadStatusList(request);
+        setDataIntoActionForm(loanOffering, loanPrdActionForm, request);
+        setSelectedQuestionGroupsOnSession(request, loanOffering, getQuestionnaireServiceFacade(request));
+        setCurrencyOnSession(request, loanOffering);
+		setRepaymentIndepOfMeetingEnabledFlag(request);
+        logger.debug("manage of Loan Product Action called" + prdOfferingId);
+        return mapping.findForward(ActionForwards.manage_success.toString());
+    }
+
+    private LoanOfferingBO getLoanOffering(Short prdOfferingId) throws ServiceException {
+        return ((LoanPrdBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.LoanProduct)).getLoanOffering(prdOfferingId);
+    }
+
+    private void setCurrencyOnSession(HttpServletRequest request, LoanOfferingBO loanOffering) {
+        request.getSession().setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
+        if (AccountingRules.isMultiCurrencyEnabled()) {
+            request.getSession().setAttribute("currencyCode", loanOffering.getCurrency().getCurrencyCode());
         }
+    }
+
+    private List<FeeDto> getFeesSelected(HttpServletRequest request, LoanOfferingBO loanOffering) throws ServiceException {
         List<FeeDto> feeSelected = new ArrayList<FeeDto>();
         for (LoanOfferingFeesEntity prdOfferingFees : loanOffering.getLoanOfferingFees()) {
             FeeBO fee = prdOfferingFees.getFees();
             fee = new LoanPrdBusinessService().getfee(fee.getFeeId(), fee.getFeeType());
             feeSelected.add(new FeeDto(getUserContext(request), fee));
         }
-        loadSelectedFeesAndFunds(feeSelected, fundsSelected, request);
-        loadStatusList(request);
-        setDataIntoActionForm(loanOffering, loanPrdActionForm, request);
-        request.getSession().setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
-        if (AccountingRules.isMultiCurrencyEnabled()) {
-            request.getSession().setAttribute("currencyCode", loanOffering.getCurrency().getCurrencyCode());
+        return feeSelected;
+    }
+
+    private List<FundBO> getFundsSelected(LoanOfferingBO loanOffering) {
+        List<FundBO> fundsSelected = new ArrayList<FundBO>();
+        for (LoanOfferingFundEntity loanOfferingFund : loanOffering.getLoanOfferingFunds()) {
+            fundsSelected.add(loanOfferingFund.getFund());
         }
-        setRepaymentIndepOfMeetingEnabledFlag(request);
-        logger.debug("manage of Loan Product Action called" + prdOfferingId);
-        return mapping.findForward(ActionForwards.manage_success.toString());
+        return fundsSelected;
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -324,8 +362,7 @@ public class LoanPrdAction extends BaseAction {
         logger.debug("start update method of Loan Product Action" + loanPrdActionForm.getPrdOfferingId());
         UserContext userContext = getUserContext(request);
         Locale locale = getLocale(userContext);
-        LoanOfferingBO loanOffering = ((LoanPrdBusinessService) ServiceFactory.getInstance().getBusinessService(
-                BusinessServiceName.LoanProduct)).getLoanOffering(loanPrdActionForm.getPrdOfferingIdValue());
+        LoanOfferingBO loanOffering = getLoanOffering(loanPrdActionForm.getPrdOfferingIdValue());
         loanOffering.setUserContext(userContext);
         setInitialObjectForAuditLogging(loanOffering);
         mapVariableInstallmentDetails(loanOffering, loanPrdActionForm);
@@ -348,8 +385,8 @@ public class LoanPrdAction extends BaseAction {
                         ProductDefinitionConstants.SRCFUNDSLIST, request), loanPrdActionForm.getLoanOfferingFunds()),
                 getFeeList((List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE, request),
                         loanPrdActionForm.getPrdOfferinFees()), loanPrdActionForm.getRecurAfterValue(), RecurrenceType
-                        .fromInt(loanPrdActionForm.getFreqOfInstallmentsValue()), loanPrdActionForm, loanPrdActionForm.shouldWaiverInterest());
-
+                        .fromInt(loanPrdActionForm.getFreqOfInstallmentsValue()), loanPrdActionForm, loanPrdActionForm.shouldWaiverInterest(),
+                getQuestionGroups(request));
         loanOffering.setCashFlowCheckEnabled(loanPrdActionForm.getCashFlowValidation());
         if(loanPrdActionForm.getCashFlowValidation()) {
             if(StringUtils.isEmpty(loanPrdActionForm.getCashFlowWarningThreshold())) {
@@ -380,8 +417,24 @@ public class LoanPrdAction extends BaseAction {
         loanPrdActionForm.clear();
         loanPrdActionForm.setPrdOfferingId(getStringValue(loanOffering.getPrdOfferingId()));
         request.getSession().setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
+        setSelectedQuestionGroupsOnSession(request, loanOffering, getQuestionnaireServiceFacade(request));
         logger.debug("get method of Loan Product Action called" + loanOffering.getPrdOfferingId());
         return mapping.findForward(ActionForwards.get_success.toString());
+    }
+
+    // Intentionally made public to aid testing !!!
+    public void setSelectedQuestionGroupsOnSession(HttpServletRequest request, LoanOfferingBO loanOffering,
+                                    QuestionnaireServiceFacade questionnaireServiceFacade) throws PageExpiredException {
+        Set<QuestionGroupReference> questionGroupReferences = loanOffering.getQuestionGroups();
+        if (questionnaireServiceFacade != null && CollectionUtils.isNotEmpty(questionGroupReferences)) {
+            List<QuestionGroupDetail> questionGroupDetails = new ArrayList<QuestionGroupDetail>();
+            for (QuestionGroupReference questionGroupReference : questionGroupReferences) {
+                Integer questionGroupId = questionGroupReference.getQuestionGroupId();
+                QuestionGroupDetail questionGroupDetail = questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId);
+                if (questionGroupDetail != null && questionGroupDetail.isActive()) questionGroupDetails.add(questionGroupDetail);
+            }
+            SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDQGLIST, questionGroupDetails, request);
+        }
     }
 
     @TransactionDemarcate(saveToken = true)
@@ -421,7 +474,16 @@ public class LoanPrdAction extends BaseAction {
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANINTERESTGLCODELIST, getGLCodes(
                 FinancialActionConstants.INTERESTPOSTING, FinancialConstants.CREDIT), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFEE, fees, request);
+        setQuestionGroupsOnSession(request, getQuestionnaireServiceFacade(request));
         logger.debug("Load master data method of Loan Product Action called");
+    }
+
+    // Intentionally made public to aid testing !!!
+    public void setQuestionGroupsOnSession(HttpServletRequest request, QuestionnaireServiceFacade questionnaireServiceFacade) throws PageExpiredException {
+        if (questionnaireServiceFacade != null) {
+            List<QuestionGroupDetail> questionGroups = questionnaireServiceFacade.getQuestionGroups("Create", "Loan");
+            SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SRCQGLIST, questionGroups, request);
+        }
     }
 
     private void loadSelectedFeesAndFunds(List<FeeDto> feesSelected, List<FundBO> fundsSelected,
@@ -841,7 +903,9 @@ public class LoanPrdAction extends BaseAction {
         logger.debug("setDataIntoActionForm method of Loan Product Action called");
 
     }
-
+    private QuestionnaireServiceFacade getQuestionnaireServiceFacade(HttpServletRequest request) {
+        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
+    }
     private void setVariableInstallmentDetailsOnLoanProductForm(LoanPrdActionForm loanPrdActionForm, LoanOfferingBO loanOfferingBO) {
         boolean variableInstallmentsAllowed = loanOfferingBO.isVariableInstallmentsAllowed();
         loanPrdActionForm.setCanConfigureVariableInstallments(variableInstallmentsAllowed);

@@ -202,6 +202,7 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
        Assert.assertEquals(0, totalStaffSummaryBO.compareTo(lastBO));
     }
 
+    @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();

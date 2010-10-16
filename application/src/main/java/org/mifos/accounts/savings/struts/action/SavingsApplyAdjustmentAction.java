@@ -45,7 +45,6 @@ import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -164,13 +163,10 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, adjustedAmount, note);
         try {
             this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
-
-            this.savingsServiceFacade.handleInterestCalculation(savingsId);
         } catch (BusinessRuleException e) {
             throw new AccountException(e.getMessageKey(), e);
         } finally {
             doCleanUp(request);
-            StaticHibernateUtil.getSessionTL().evict(savings);
         }
 
         return mapping.findForward("account_detail_page");

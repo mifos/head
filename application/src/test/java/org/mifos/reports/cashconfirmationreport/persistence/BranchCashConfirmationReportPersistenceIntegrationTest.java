@@ -49,6 +49,7 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends Bran
     private BranchCashConfirmationReportBO reportBO;
     private BranchCashConfirmationReportBO firstJanReportBO;
 
+    @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();

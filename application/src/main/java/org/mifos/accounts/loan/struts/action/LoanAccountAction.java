@@ -74,6 +74,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.questionnaire.struts.CashFlowAdaptor;
 import org.mifos.application.questionnaire.struts.CashFlowCaptor;
+import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.CashFlowServiceLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
@@ -235,7 +236,6 @@ import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
  */
 public class LoanAccountAction extends AccountAppAction implements QuestionnaireAction {
 
-
     private final LoanBusinessService loanBusinessService;
     private final LoanPrdBusinessService loanPrdBusinessService;
     private final ClientBusinessService clientBusinessService;
@@ -250,17 +250,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     public static final String ACCOUNT_ID = "accountId";
     public static final String GLOBAL_ACCOUNT_NUM = "globalAccountNum";
 
-    private QuestionnaireFlowAdapter createLoanQuestionnaire =
-        new QuestionnaireFlowAdapter("Create","Loan",
-                ActionForwards.schedulePreview_success,
-                CUSTOMER_SEARCH_URL,
-                new QuestionnaireServiceFacadeLocator() {
-                    @Override
-                    public QuestionnaireServiceFacade getService(HttpServletRequest request) {
-                        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
-                    }
-                });
-
+    private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator;
+    private QuestionGroupFilterForLoan questionGroupFilter;
+    private QuestionnaireFlowAdapter createLoanQuestionnaire;
     private CashFlowAdaptor cashFlowAdaptor =
             new CashFlowAdaptor(ActionForwards.capture_cash_flow.toString(),
                     new CashFlowServiceLocator() {
@@ -293,6 +285,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         this.clientBusinessService = clientBusinessService;
         this.masterDataService = masterDataService;
         this.configurationPersistence = configurationPersistence;
+        this.questionGroupFilter = new QuestionGroupFilterForLoan();
+        this.questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
+        this.createLoanQuestionnaire = new QuestionnaireFlowAdapter("Create", "Loan", ActionForwards.schedulePreview_success,
+                "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator, questionGroupFilter);
     }
 
     /**
@@ -476,7 +472,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                                     ActionForwards.validateInstallments_failure;
         return mapping.findForward(forward.name());
     }
-
     private boolean validateInstallments(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
         boolean result = true;
         UserContext userContext = getUserContext(request);
@@ -492,7 +487,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         }
         return result;
     }
-
     @TransactionDemarcate(joinToken = true)
     public ActionForward showPreview(final ActionMapping mapping, final ActionForm form,
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response){
@@ -526,6 +520,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
         setInstallmentsOnSession(request, loanActionForm);
 
+        questionGroupFilter.setLoanOfferingBO(getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId()));
         ActionForward pageAfterQuestionnaire = mapping.findForward(ActionForwards.schedulePreview_success.toString());
         if (loanOffering.isCashFlowCheckEnabled()) {
             pageAfterQuestionnaire = cashFlowAdaptor.renderCashFlow(
@@ -541,6 +536,13 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         if (loanScheduleDetailsDto.isGlimApplicable()) {
             setGlimEnabledSessionAttributes(request, loanScheduleDetailsDto.isGroup());
             loanActionForm.setLoanAmount(Double.toString(loanScheduleDetailsDto.getGlimLoanAmount()));
+        }
+    }
+
+    private void setPerspectiveOnRequest(HttpServletRequest request) {
+        String perspective = request.getParameter(PERSPECTIVE);
+        if (perspective != null) {
+            request.setAttribute(PERSPECTIVE, request.getParameter(PERSPECTIVE));
         }
     }
 
@@ -602,7 +604,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                                                     ActionForwards.preview_failure;
         return mapping.findForward(forward.name());
     }
-
     private void setRedoLoanAttributesOnSession(HttpServletRequest request, LoanAccountActionForm loanAccountForm, String perspective, Integer customerId) throws InvalidDateException, ApplicationException {
         if (perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN)) {
             UserContext userContext = getUserContext(request);
@@ -640,7 +641,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return loanServiceFacade.previewLoanCreationDetails(customerId,
                                         accountDetails, selectedClientIds, businessActEntity);
     }
-
     private void setInstallmentsOnSession(HttpServletRequest request, LoanAccountActionForm loanAccountForm) throws PageExpiredException {
         SessionUtils.setCollectionAttribute(LoanConstants.INSTALLMENTS, loanAccountForm.getInstallments(), request);
     }
@@ -764,20 +764,25 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         return mapping.findForward(ActionForwards.get_success.toString());
     }
+
     private void setQuestionGroupInstances(HttpServletRequest request, LoanBO loanBO) throws PageExpiredException {
-        QuestionnaireServiceFacade questionnaireServiceFacade = MifosServiceFactory.getQuestionnaireServiceFacade(request);
+        QuestionnaireServiceFacade questionnaireServiceFacade = questionnaireServiceFacadeLocator.getService(request);
         if (questionnaireServiceFacade == null) {
             return;
         }
         setQuestionGroupInstances(questionnaireServiceFacade, request, loanBO.getAccountId());
     }
+
+    // Intentionally made public to aid testing !
     public void setQuestionGroupInstances(QuestionnaireServiceFacade questionnaireServiceFacade, HttpServletRequest request, Integer loanAccountId) throws PageExpiredException {
         List<QuestionGroupInstanceDetail> instanceDetails = questionnaireServiceFacade.getQuestionGroupInstances(loanAccountId, "View", "Loan");
         SessionUtils.setCollectionAttribute("questionGroupInstances", instanceDetails, request);
     }
+
     private void setCurrentPageUrl(HttpServletRequest request, LoanBO loanBO) throws PageExpiredException, UnsupportedEncodingException {
         SessionUtils.removeThenSetAttribute("currentPageUrl", constructCurrentPageUrl(request, loanBO), request);
     }
+
     private String constructCurrentPageUrl(HttpServletRequest request, LoanBO loanBO) throws UnsupportedEncodingException {
         String globalAccountNum = request.getParameter("globalAccountNum");
         String officerId = request.getParameter("recordOfficeId");

@@ -33,8 +33,8 @@ import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.EditStatusActionForm;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
+import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
-import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
@@ -46,11 +46,9 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.service.MifosServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -116,16 +114,8 @@ public class EditStatusAction extends BaseAction {
     }
 
     private void initializeLoanQuestionnaire(String globalAccountNum) {
-        approveLoanQuestionnaire =
-                new QuestionnaireFlowAdapter("Approve", "Loan",
-                        ActionForwards.preview_success,
-                        "loanAccountAction.do?method=get&globalAccountNum=" + globalAccountNum,
-                        new QuestionnaireServiceFacadeLocator() {
-                            @Override
-                            public QuestionnaireServiceFacade getService(HttpServletRequest request) {
-                                return MifosServiceFactory.getQuestionnaireServiceFacade(request);
-                            }
-                        });
+        approveLoanQuestionnaire = new QuestionnaireFlowAdapter("Approve", "Loan", ActionForwards.preview_success,
+                "loanAccountAction.do?method=get&globalAccountNum=" + globalAccountNum, new DefaultQuestionnaireServiceFacadeLocator());
     }
 
     private boolean loanApproved(HttpServletRequest request) throws PageExpiredException {

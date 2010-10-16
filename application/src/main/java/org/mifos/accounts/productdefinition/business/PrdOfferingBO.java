@@ -20,14 +20,7 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
@@ -47,6 +40,14 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * A product is a set of rules (interest rate, number of installments, maximum
@@ -76,6 +77,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
     private Set<PrdOfferingBO> collectionProductMix;
     private Set<PrdOfferingBO> prdOfferingNotAllowedId; // For Not allowed products
     private Short prdMixFlag; // Tagging products for which mixes were defined
+    private Set<QuestionGroupReference> questionGroups;
 
     /**
      * default constructor for hibernate usage
@@ -555,5 +557,28 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
 
     public boolean isDifferentStartDate(DateTime startDate) {
         return !new LocalDate(startDate).equals(new LocalDate(this.startDate));
+    }
+
+    public Set<QuestionGroupReference> getQuestionGroups() {
+        return questionGroups;
+    }
+
+    public void setQuestionGroups(Set<QuestionGroupReference> questionGroups) {
+        this.questionGroups = questionGroups;
+    }
+
+    public void mergeQuestionGroups(Set<QuestionGroupReference> questionGroups) {
+        if (this.questionGroups == null || questionGroups == null) setQuestionGroups(questionGroups);
+        else {
+            for (Iterator<QuestionGroupReference> iterator = this.questionGroups.iterator(); iterator.hasNext();) {
+                QuestionGroupReference questionGroup = iterator.next();
+                if (questionGroups.contains(questionGroup)) {
+                    questionGroups.remove(questionGroup);
+                } else {
+                    iterator.remove();
+                }
+            }
+            this.questionGroups.addAll(questionGroups);
+        }
     }
 }

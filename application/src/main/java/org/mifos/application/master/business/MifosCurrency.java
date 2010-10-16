@@ -142,6 +142,7 @@ public final class MifosCurrency extends AbstractEntity {
         return currencyId == null ? 0 : currencyId.hashCode();
     }
 
+    @Override
     public String toString() {
         return "ID="+currencyId +";Code="+ currencyCode +";Name=" +currencyName;
     }

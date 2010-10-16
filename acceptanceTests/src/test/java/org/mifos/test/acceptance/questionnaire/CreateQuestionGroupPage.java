@@ -50,9 +50,17 @@ public class CreateQuestionGroupPage extends MifosPage {
         if (createQuestionGroupParameters.isAnswerEditable()) {
            selenium.click("id=editable");
         }
-        selenium.select("id=eventSourceId", createQuestionGroupParameters.getAppliesTo());
+        selectAppliesTo(createQuestionGroupParameters.getAppliesTo());
         selenium.click("id=_eventId_defineQuestionGroup");
         waitForPageToLoad();
+    }
+
+    private void selectAppliesTo(String appliesTo) {
+        if ("--select one--".equals(appliesTo)) {
+            return;
+        }
+
+        selenium.addSelection("id=eventSourceIds", "label=" + appliesTo);
     }
 
     public void addSection(CreateQuestionGroupParameters createQuestionGroupParameters) {

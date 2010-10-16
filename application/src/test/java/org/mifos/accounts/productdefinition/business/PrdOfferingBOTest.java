@@ -22,8 +22,14 @@ package org.mifos.accounts.productdefinition.business;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
 import org.testng.annotations.Test;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 @Test(groups = { "unit", "fastTestsSuite" }, dependsOnGroups = { "productMixTestSuite" })
 public class PrdOfferingBOTest extends TestCase {
@@ -38,8 +44,38 @@ public class PrdOfferingBOTest extends TestCase {
     public void testReturnTrueForIsOfSameOfferingIfPrdOfferingIdIsSame() {
         LoanOfferingBO loanOfferingBO = LoanOfferingBO.createInstanceForTest(Short.valueOf("1234"));
         Assert.assertTrue(loanOfferingBO.isOfSameOffering(LoanOfferingBO.createInstanceForTest(Short.valueOf("1234"))));
-        Assert
-                .assertFalse(loanOfferingBO.isOfSameOffering(LoanOfferingBO
-                        .createInstanceForTest(Short.valueOf("4321"))));
+        Assert.assertFalse(loanOfferingBO.isOfSameOffering(LoanOfferingBO.createInstanceForTest(Short.valueOf("4321"))));
     }
+
+    public void testMergeQuestionGroups() {
+        LoanOfferingBO loanOfferingBO = new LoanProductBuilder().buildForUnitTests();
+        Set<QuestionGroupReference> questionGroupReferences = getQustionGroups(1, 2, 3, 4);
+        loanOfferingBO.mergeQuestionGroups(questionGroupReferences);
+        Set<QuestionGroupReference> questionGroups = loanOfferingBO.getQuestionGroups();
+        assertThat(questionGroups, is(questionGroupReferences));
+        questionGroupReferences = getQustionGroups(2, 5);
+        loanOfferingBO.mergeQuestionGroups(questionGroupReferences);
+        questionGroups = loanOfferingBO.getQuestionGroups();
+        assertThat(questionGroups.size(), is(2));
+        QuestionGroupReference[] qgRefs = questionGroups.toArray(new QuestionGroupReference[questionGroups.size()]);
+        assertThat(qgRefs[0].getQuestionGroupId(), is(2));
+        assertThat(qgRefs[1].getQuestionGroupId(), is(5));
+        loanOfferingBO.mergeQuestionGroups(null);
+        assertThat(loanOfferingBO.getQuestionGroups(), is(nullValue()));
+    }
+
+    private Set<QuestionGroupReference> getQustionGroups(int... questionGroupIds) {
+        Set<QuestionGroupReference> questionGroupReferences = new HashSet<QuestionGroupReference>();
+        for (int questionGroupId : questionGroupIds) {
+            questionGroupReferences.add(makeQuestionGroupRef(questionGroupId));
+        }
+        return questionGroupReferences;
+    }
+
+    private QuestionGroupReference makeQuestionGroupRef(int questionGroupId) {
+        QuestionGroupReference questionGroupReference = new QuestionGroupReference();
+        questionGroupReference.setQuestionGroupId(questionGroupId);
+        return questionGroupReference;
+    }
+
 }

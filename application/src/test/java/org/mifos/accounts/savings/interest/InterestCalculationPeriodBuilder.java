@@ -36,7 +36,7 @@ public class InterestCalculationPeriodBuilder {
     private LocalDate intervalEndDate = new LocalDate(2010, 12, 31);
 
     public InterestCalculationPeriodDetail build() {
-        interval = new InterestCalculationInterval(intervalStartDate, intervalEndDate);
+        interval = new InterestCalculationIntervalBuilder().from(intervalStartDate).to(intervalEndDate).build();
         return new InterestCalculationPeriodDetail(interval, dailyDetails, balanceBeforeInterval);
     }
 

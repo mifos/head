@@ -539,7 +539,7 @@ public class QuestionnaireValidatorForDtoTest {
             List<ValidationException> childExceptions = e.getChildExceptions();
             assertThat(childExceptions, is(notNullValue()));
             assertThat(childExceptions.size(), is(1));
-            assertThat(childExceptions.get(0).getKey(), is(QUESTION_TYPE_NOT_PROVIDED));
+            assertThat(childExceptions.get(0).getKey(), is(ANSWER_TYPE_NOT_PROVIDED));
         }
     }
 

@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -62,7 +63,7 @@ public class QuestionnaireMapperIntegrationTest {
     private void testMapEventSource(String event, String source, String description) {
         EventSourceDto eventSourceDto = new EventSourceDto(event, source, description);
         List<SectionDetail> sectionDetails = getSectionDefinitions();
-        QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(new QuestionGroupDetail(0, "Title", eventSourceDto, sectionDetails, false));
+        QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(new QuestionGroupDetail(0, "Title", Arrays.asList(eventSourceDto), sectionDetails, false));
         Set<EventSourceEntity> eventSources = questionGroup.getEventSources();
         assertThat(eventSources, is(not(nullValue())));
         assertThat(eventSources.size(), is(1));

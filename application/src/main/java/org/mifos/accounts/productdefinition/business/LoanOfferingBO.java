@@ -688,36 +688,10 @@ public class LoanOfferingBO extends PrdOfferingBO {
         setWaiverInterest(waiverInterest);
         setIntDedDisbursement(intDedDisbursement);
         setPrinDueLastInst(prinDueLastInst);
-        if (this.loanOfferingMeeting.getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId().equals(
-                recurrenceType.getValue())) {
-            this.loanOfferingMeeting.getMeeting().getMeetingDetails().setRecurAfter(recurAfter);
-        } else {
-            try {
-                this.loanOfferingMeeting.setMeeting(new MeetingBO(recurrenceType, recurAfter, startDate,
-                        MeetingType.LOAN_INSTALLMENT));
-            } catch (MeetingException e) {
-                throw new ProductDefinitionException(e);
-            }
-        }
+        setMeetingDetails(startDate, recurAfter, recurrenceType);
 
-        if (this.loanOfferingFunds != null) {
-            this.loanOfferingFunds.clear();
-            if (funds != null && funds.size() > 0) {
-                for (FundBO fund : funds) {
-                    addLoanOfferingFund(new LoanOfferingFundEntity(fund, this));
-                }
-            }
-        }
-        if (this.loanOfferingFees != null) {
-            this.loanOfferingFees.clear();
-            if (fees != null && fees.size() > 0) {
-                for (FeeBO fee : fees) {
-                    if (isFrequencyMatchingOfferingFrequency(fee, this.loanOfferingMeeting.getMeeting())) {
-                        addPrdOfferingFee(new LoanOfferingFeesEntity(this, fee));
-                    }
-                }
-            }
-        }
+        setFunds(funds);
+        setFees(fees);
         try {
             new LoanPrdPersistence().createOrUpdate(this);
         } catch (PersistenceException e) {
@@ -733,8 +707,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
                        final Short gracePeriodDuration, final Double maxInterestRate, final Double minInterestRate,
                        final Double defInterestRate, final boolean loanCounter, final boolean intDedDisbursement,
                        final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final Short recurAfter,
-                       final RecurrenceType recurrenceType, final LoanPrdActionForm loanPrdActionForm, boolean waiverInterest)
-            throws ProductDefinitionException {
+                       final RecurrenceType recurrenceType, final LoanPrdActionForm loanPrdActionForm, boolean waiverInterest,
+                       Set<QuestionGroupReference> questionGroups) throws ProductDefinitionException {
         logger.debug("Updating loan Offering :" + prdOfferingName);
         super.update(userId, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate,
                 endDate, description, status);
@@ -751,6 +725,19 @@ public class LoanOfferingBO extends PrdOfferingBO {
         setIntDedDisbursement(intDedDisbursement);
         setPrinDueLastInst(prinDueLastInst);
         populateLoanAmountAndInstall(loanPrdActionForm);
+        setMeetingDetails(startDate, recurAfter, recurrenceType);
+        setFunds(funds);
+        setFees(fees);
+        mergeQuestionGroups(questionGroups);
+        try {
+            new LoanPrdPersistence().createOrUpdate(this);
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+        logger.debug("Loan Offering updated:" + prdOfferingName);
+    }
+
+    private void setMeetingDetails(Date startDate, Short recurAfter, RecurrenceType recurrenceType) throws ProductDefinitionException {
         if (this.loanOfferingMeeting.getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId().equals(
                 recurrenceType.getValue())) {
             this.loanOfferingMeeting.getMeeting().getMeetingDetails().setRecurAfter(recurAfter);
@@ -762,15 +749,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 throw new ProductDefinitionException(e);
             }
         }
+    }
 
-        if (this.loanOfferingFunds != null) {
-            this.loanOfferingFunds.clear();
-            if (funds != null && funds.size() > 0) {
-                for (FundBO fund : funds) {
-                    addLoanOfferingFund(new LoanOfferingFundEntity(fund, this));
-                }
-            }
-        }
+    private void setFees(List<FeeBO> fees) throws ProductDefinitionException {
         if (this.loanOfferingFees != null) {
             this.loanOfferingFees.clear();
             if (fees != null && fees.size() > 0) {
@@ -781,12 +762,17 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 }
             }
         }
-        try {
-            new LoanPrdPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new ProductDefinitionException(e);
+    }
+
+    private void setFunds(List<FundBO> funds) {
+        if (this.loanOfferingFunds != null) {
+            this.loanOfferingFunds.clear();
+            if (funds != null && funds.size() > 0) {
+                for (FundBO fund : funds) {
+                    addLoanOfferingFund(new LoanOfferingFundEntity(fund, this));
+                }
+            }
         }
-        logger.debug("Loan Offering updated:" + prdOfferingName);
     }
 
     private void validate(final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,

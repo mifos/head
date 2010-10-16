@@ -303,7 +303,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 loanOffering.getMinInterestRate(), loanOffering.getDefInterestRate(), loanOffering.isIncludeInLoanCounter(),
                 loanOffering.isIntDedDisbursement(), loanOffering.isPrinDueLastInst(),
                 new ArrayList<FundBO>(), new ArrayList<FeeBO>(), Short.valueOf("1"),
-                RecurrenceType.MONTHLY, loanPrdActionForm, loanOffering.isInterestWaived());
+                RecurrenceType.MONTHLY, loanPrdActionForm, loanOffering.isInterestWaived(), null);
         StaticHibernateUtil.commitTransaction();
 
         setRequestPathInfo("/loanAccountAction.do");

@@ -153,7 +153,7 @@ public class AccountPaymentEntity extends AbstractEntity {
      * Create reverse entries of all the transactions associated with this
      * payment and adds them to the set of transactions associated.
      */
-    List<AccountTrxnEntity> reversalAdjustment(final PersonnelBO personnel, final String adjustmentComment) throws AccountException {
+    public List<AccountTrxnEntity> reversalAdjustment(final PersonnelBO personnel, final String adjustmentComment) throws AccountException {
         List<AccountTrxnEntity> newlyAddedTrxns = null;
         this.setAmount(getAmount().subtract(getAmount()));
         logger.debug("The amount in account payment is " + getAmount());

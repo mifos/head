@@ -1,6 +1,5 @@
 package org.mifos.application.questionnaire.struts;
 
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -11,7 +10,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -21,7 +20,6 @@ import org.mifos.security.util.UserContext;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-
 public class QuestionnaireFlowAdapter {
 
     private ActionForwards joinFlowAt;
@@ -29,18 +27,25 @@ public class QuestionnaireFlowAdapter {
     private String source;
     private String cancelToURL;
     private QuestionnaireServiceFacadeLocator serviceLocator;
+    private QuestionGroupFilter questionGroupFilter;
 
-    public QuestionnaireFlowAdapter(String event, String source, ActionForwards joinFlowAt, String cancelToURL, QuestionnaireServiceFacadeLocator serviceLocator) {
-       this.event = event;
-       this.source = source;
-       this.joinFlowAt = joinFlowAt;
-       this.cancelToURL = cancelToURL;
-       this.serviceLocator = serviceLocator;
+    public QuestionnaireFlowAdapter(String event, String source, ActionForwards joinFlowAt, String cancelToURL,
+                                    QuestionnaireServiceFacadeLocator serviceLocator) {
+        this(event, source, joinFlowAt, cancelToURL, serviceLocator, getDefaultQuestionGroupFilter());
     }
 
-    public ActionForward fetchAppliedQuestions(
-            ActionMapping mapping, QuestionResponseCapturer form,
-            HttpServletRequest request, ActionForwards defaultForward) {
+    public QuestionnaireFlowAdapter(String event, String source, ActionForwards joinFlowAt, String cancelToURL,
+                                    QuestionnaireServiceFacadeLocator serviceLocator, QuestionGroupFilter questionGroupFilter) {
+        this.event = event;
+        this.source = source;
+        this.joinFlowAt = joinFlowAt;
+        this.cancelToURL = cancelToURL;
+        this.serviceLocator = serviceLocator;
+        this.questionGroupFilter = questionGroupFilter;
+    }
+
+    public ActionForward fetchAppliedQuestions(ActionMapping mapping, QuestionResponseCapturer form, HttpServletRequest request,
+                                               ActionForwards defaultForward) {
         joinFlowAt = defaultForward;
         if (CollectionUtils.isEmpty(form.getQuestionGroups())) {
             List<QuestionGroupDetail> questionGroups = getQuestionGroups(request);
@@ -62,7 +67,7 @@ public class QuestionnaireFlowAdapter {
         return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
     }
 
-   public ActionErrors validateResponses(HttpServletRequest request, QuestionResponseCapturer form) {
+    public ActionErrors validateResponses(HttpServletRequest request, QuestionResponseCapturer form) {
         List<QuestionGroupDetail> groups = form.getQuestionGroups();
         QuestionnaireServiceFacade questionnaireServiceFacade = serviceLocator.getService(request);
         if ((groups == null) || (questionnaireServiceFacade == null)) {
@@ -72,10 +77,10 @@ public class QuestionnaireFlowAdapter {
         try {
             questionnaireServiceFacade.validateResponses(groups);
         } catch (ValidationException e) {
-            if (e.hasChildExceptions()) {
+            if (e.containsChildExceptions()) {
                 for (ValidationException ve : e.getChildExceptions()) {
                    if (ve instanceof MandatoryAnswerNotFoundException) {
-                       errors.add(ClientConstants.ERROR_REQUIRED, new ActionMessage(ClientConstants.ERROR_REQUIRED, ve.getIdentifier()));
+                       errors.add(ClientConstants.ERROR_REQUIRED, new ActionMessage(ClientConstants.ERROR_REQUIRED, ve.getQuestionTitle()));
                    }
                    else if (ve instanceof BadNumericResponseException) {
                        populateNumericError((BadNumericResponseException) ve, errors);
@@ -88,7 +93,7 @@ public class QuestionnaireFlowAdapter {
     }
 
     private void populateNumericError(BadNumericResponseException exception, ActionErrors actionErrors) {
-        String title = exception.getIdentifier();
+        String title = exception.getQuestionTitle();
         Integer allowedMinValue = exception.getAllowedMinValue();
         Integer allowedMaxValue = exception.getAllowedMaxValue();
         if (exception.areMinMaxBoundsPresent()) {
@@ -108,15 +113,15 @@ public class QuestionnaireFlowAdapter {
 
     public void saveResponses(HttpServletRequest request, QuestionResponseCapturer form, int associateWithId) {
         List<QuestionGroupDetail> questionResponses = form.getQuestionGroups();
-        if (CollectionUtils.isEmpty(questionResponses)) {
-            return;
-        }
-        QuestionnaireServiceFacade questionnaireServiceFacade = serviceLocator.getService(request);
-        //MifosUser loggedinUser = ((MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        if (questionnaireServiceFacade != null) {
-            UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-            questionnaireServiceFacade.saveResponses(
-                    new QuestionGroupDetails(userContext.getId(), associateWithId, questionResponses));
+        if (CollectionUtils.isNotEmpty(questionResponses)) {
+            QuestionnaireServiceFacade questionnaireServiceFacade = serviceLocator.getService(request);
+            //MifosUser loggedinUser = ((MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+            if (questionnaireServiceFacade != null) {
+                UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+                Integer eventSourceId = questionnaireServiceFacade.getEventSourceId(event, source);
+                QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(userContext.getId(), associateWithId, eventSourceId, questionResponses);
+                questionnaireServiceFacade.saveResponses(questionGroupDetails);
+            }
         }
     }
 
@@ -130,10 +135,7 @@ public class QuestionnaireFlowAdapter {
 
     private List<QuestionGroupDetail> getQuestionGroups(HttpServletRequest request) {
         QuestionnaireServiceFacade questionnaireServiceFacade = serviceLocator.getService(request);
-        if (questionnaireServiceFacade == null) {
-            return null;
-        }
-        return questionnaireServiceFacade.getQuestionGroups(event, source);
+        return questionnaireServiceFacade != null ? questionGroupFilter.doFilter(questionnaireServiceFacade.getQuestionGroups(event, source)) : null;
     }
 
     private void setQuestionnaireAttributesToRequest(HttpServletRequest request, QuestionResponseCapturer form) {
@@ -147,4 +149,12 @@ public class QuestionnaireFlowAdapter {
         return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
     }
 
+    private static QuestionGroupFilter getDefaultQuestionGroupFilter() {
+        return new QuestionGroupFilter() {
+            @Override
+            public List<QuestionGroupDetail> doFilter(List<QuestionGroupDetail> questionGroupDetails) {
+                return questionGroupDetails; // no filtering by default
+            }
+        };
+    }
 }

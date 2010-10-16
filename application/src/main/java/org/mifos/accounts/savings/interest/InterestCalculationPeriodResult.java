@@ -24,14 +24,18 @@ import org.mifos.framework.util.helpers.Money;
 
 public class InterestCalculationPeriodResult {
 
+    private final InterestCalculationInterval interestCalculationInterval;
     private final Money interest;
     private final Money averagePrincipal;
     private final Money totalPrincipal;
+    private final Money previousTotalInterestForPeriod;
 
-    public InterestCalculationPeriodResult(Money interest, Money averagePrincipal, Money totalPrincipal) {
-        this.interest = interest;
+    public InterestCalculationPeriodResult(InterestCalculationInterval interestCalculationInterval, Money calculatedInterest, Money averagePrincipal, Money totalPrincipal, Money previousTotalInterestForPeriod) {
+        this.interestCalculationInterval = interestCalculationInterval;
+        this.interest = calculatedInterest;
         this.averagePrincipal = averagePrincipal;
         this.totalPrincipal = totalPrincipal;
+        this.previousTotalInterestForPeriod = previousTotalInterestForPeriod;
     }
 
     public Money getInterest() {
@@ -46,8 +50,15 @@ public class InterestCalculationPeriodResult {
         return this.totalPrincipal;
     }
 
+    public Money getPreviousTotalInterestForPeriod() {
+        return this.previousTotalInterestForPeriod;
+    }
+
     @Override
     public String toString() {
-        return new StringBuilder().append("total principal gain/loss for period: ").append(totalPrincipal).append(" interest: ").append(interest).append(" avg principal: ").append(averagePrincipal).toString();
+        return new StringBuilder().append(this.interestCalculationInterval).append(" >> total principal for period: ").append(totalPrincipal)
+                                  .append(" interest calculated: ").append(interest)
+                                  .append(" previous interest: ").append(previousTotalInterestForPeriod)
+                                  .append(" avg principal: ").append(averagePrincipal).toString();
     }
 }

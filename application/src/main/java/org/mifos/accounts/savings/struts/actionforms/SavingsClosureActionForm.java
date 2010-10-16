@@ -39,18 +39,13 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.util.UserContext;
 
 public class SavingsClosureActionForm extends ValidatorActionForm {
+
     private String receiptId;
-
     private String receiptDate;
-
     private String customerId;
-
     private String paymentTypeId;
-
     private String trxnDate;
-
     private String notes;
-
     private String amount;
 
     public SavingsClosureActionForm() {
@@ -105,7 +100,7 @@ public class SavingsClosureActionForm extends ValidatorActionForm {
     }
 
     @Override
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+    public ActionErrors validate(@SuppressWarnings("unused") ActionMapping mapping, HttpServletRequest request) {
         String method = request.getParameter("method");
         ActionErrors errors = new ActionErrors();
 
@@ -128,8 +123,7 @@ public class SavingsClosureActionForm extends ValidatorActionForm {
             }
 
             if (this.getReceiptDate() != null && !this.getReceiptDate().equals("")) {
-                ActionErrors dateError = validateDate(this.getReceiptDate(),
-                        resources.getString("Savings.receiptDate"), userContext);
+                ActionErrors dateError = validateDate(this.getReceiptDate(), resources.getString("Savings.receiptDate"));
                 if (dateError != null && !dateError.isEmpty()) {
                     errors.add(dateError);
                 }
@@ -154,7 +148,7 @@ public class SavingsClosureActionForm extends ValidatorActionForm {
         return errors;
     }
 
-    private ActionErrors validateDate(String date, String fieldName, UserContext userContext) {
+    private ActionErrors validateDate(String date, String fieldName) {
         ActionErrors errors = new ActionErrors();
         java.sql.Date sqlDate = null;
         if (date != null && !date.equals("")) {
@@ -184,5 +178,13 @@ public class SavingsClosureActionForm extends ValidatorActionForm {
 
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+
+    public void clearForm() {
+        setNotes(null);
+        setReceiptDate(null);
+        setReceiptId(null);
+        setPaymentTypeId(null);
+        setCustomerId(null);
     }
 }

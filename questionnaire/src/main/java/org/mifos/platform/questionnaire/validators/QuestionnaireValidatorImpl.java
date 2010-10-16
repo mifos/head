@@ -22,12 +22,12 @@ package org.mifos.platform.questionnaire.validators;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.domain.AnswerType;
 import org.mifos.platform.questionnaire.domain.QuestionChoiceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionEntity;
 import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
+import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
@@ -80,33 +80,56 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     public void validateForDefineQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
         validateQuestionGroupTitle(questionGroupDetail);
         validateQuestionGroupSections(questionGroupDetail.getSectionDetails());
-        validateForEventSource(questionGroupDetail.getEventSource());
+        List<EventSourceDto> eventSourceDtos = questionGroupDetail.getEventSources();
+        if (eventSourceDtos == null || eventSourceDtos.size() == 0) {
+            throw new SystemException(INVALID_EVENT_SOURCE);
+        }
+        else {
+            for (EventSourceDto eventSourceDto : eventSourceDtos) {
+                validateForEventSource(eventSourceDto);
+            }
+        }
     }
 
     @Override
     public void validateForEventSource(EventSourceDto eventSourceDto) throws SystemException {
-        if (eventSourceDto == null || StringUtils.isEmpty(eventSourceDto.getSource()) || StringUtils.isEmpty(eventSourceDto.getEvent()))
+        if (eventSourceDto == null || StringUtils.isEmpty(eventSourceDto.getSource()) || StringUtils.isEmpty(eventSourceDto.getEvent())) {
             throw new SystemException(INVALID_EVENT_SOURCE);
+        }
         validateEventSource(eventSourceDto);
     }
 
     @Override
     public void validateForQuestionGroupResponses(List<QuestionGroupDetail> questionGroupDetails) {
-        if (isEmpty(questionGroupDetails)) throw new SystemException(NO_ANSWERS_PROVIDED);
+        if (isEmpty(questionGroupDetails)) {
+            throw new SystemException(NO_ANSWERS_PROVIDED);
+        }
         ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
         for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
             validateResponsesInQuestionGroup(questionGroupDetail, validationException);
         }
-        if (validationException.hasChildExceptions()) throw validationException;
+        if (validationException.containsChildExceptions()) {
+            throw validationException;
+        }
     }
 
     @Override
     public void validateForDefineQuestionGroup(QuestionGroupDto questionGroupDto) {
         ValidationException parentException = new ValidationException(GENERIC_VALIDATION);
         validateQuestionGroupTitle(questionGroupDto, parentException);
-        validateEventSource(questionGroupDto.getEventSourceDto(), parentException);
+        List<EventSourceDto> eventSourceDtos = questionGroupDto.getEventSourceDtos();
+        if (eventSourceDtos == null || eventSourceDtos.size() == 0) {
+            throw new SystemException(INVALID_EVENT_SOURCE);
+        }
+        else {
+            for (EventSourceDto eventSourceDto : eventSourceDtos) {
+                validateEventSource(eventSourceDto, parentException);
+            }
+        }
         validateSections(questionGroupDto.getSections(), parentException);
-        if (parentException.hasChildExceptions()) throw parentException;
+        if (parentException.containsChildExceptions()) {
+            throw parentException;
+        }
     }
 
     private void validateSections(List<SectionDto> sections, ValidationException parentException) {
@@ -149,7 +172,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     public void validateForDefineQuestion(QuestionDto questionDto) {
         ValidationException parentException = new ValidationException(GENERIC_VALIDATION);
         validateQuestion(questionDto, parentException, false);
-        if (parentException.hasChildExceptions()) {
+        if (parentException.containsChildExceptions()) {
             throw parentException;
         }
     }
@@ -157,13 +180,13 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     private void validateQuestion(QuestionDto question, ValidationException parentException, boolean withDuplicateQuestionTypeCheck) {
         if (StringUtils.isEmpty(question.getTitle())) {
             parentException.addChildException(new ValidationException(QUESTION_TITLE_NOT_PROVIDED));
-        } else if (question.getTitle().length() >= MAX_LENGTH_FOR_TITILE) {
+        } else if (question.getTitle().length() >= MAX_LENGTH_FOR_QUESTION_TEXT) {
             parentException.addChildException(new ValidationException(QUESTION_TITLE_TOO_BIG));
         } else if (questionHasDuplicateTitle(question, withDuplicateQuestionTypeCheck)) {
             parentException.addChildException(new ValidationException(QUESTION_TITILE_MATCHES_EXISTING_QUESTION));
         } else {
             if (QuestionType.INVALID == question.getType()) {
-                parentException.addChildException(new ValidationException(QUESTION_TYPE_NOT_PROVIDED));
+                parentException.addChildException(new ValidationException(ANSWER_TYPE_NOT_PROVIDED));
             } else if (question.isTypeWithChoices()) {
                 validateChoices(question, parentException);
             } else if (QuestionType.NUMERIC == question.getType()) {
@@ -552,20 +575,24 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     private void validateQuestionGroupTitle(QuestionGroupDetail questionGroupDetail) throws SystemException {
-        if (StringUtils.isEmpty(questionGroupDetail.getTitle()))
+        if (StringUtils.isEmpty(questionGroupDetail.getTitle())) {
             throw new SystemException(QUESTION_GROUP_TITLE_NOT_PROVIDED);
+        }
     }
 
     private void validateQuestionType(QuestionDetail questionDetail) throws SystemException {
-        if (QuestionType.INVALID == questionDetail.getType())
-            throw new SystemException(QUESTION_TYPE_NOT_PROVIDED);
-        if (QuestionType.NUMERIC == questionDetail.getType())
+        if (QuestionType.INVALID == questionDetail.getType()) {
+            throw new SystemException(ANSWER_TYPE_NOT_PROVIDED);
+        }
+        if (QuestionType.NUMERIC == questionDetail.getType()) {
             validateForNumericQuestionType(questionDetail.getNumericMin(), questionDetail.getNumericMax());
+        }
     }
 
     private void validateForNumericQuestionType(Integer min, Integer max) {
-        if (areInValidNumericBounds(min, max))
+        if (areInValidNumericBounds(min, max)) {
             throw new SystemException(INVALID_NUMERIC_BOUNDS);
+        }
     }
 
     private boolean areInValidNumericBounds(Integer min, Integer max) {
@@ -573,7 +600,8 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     private void validateQuestionTitle(QuestionDetail questionDefinition) throws SystemException {
-        if (StringUtils.isEmpty(questionDefinition.getTitle()))
+        if (StringUtils.isEmpty(questionDefinition.getTitle())) {
             throw new SystemException(QUESTION_TITLE_NOT_PROVIDED);
+        }
     }
 }

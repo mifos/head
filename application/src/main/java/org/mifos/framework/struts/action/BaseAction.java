@@ -30,8 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -43,6 +41,7 @@ import org.hibernate.HibernateException;
 import org.mifos.accounts.fees.servicefacade.FeeServiceFacade;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
+import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
@@ -91,6 +90,8 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -103,6 +104,7 @@ public abstract class BaseAction extends DispatchAction {
     }
 
     protected CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+    protected SavingsDao savingsDao = DependencyInjectedServiceLocator.locateSavingsDao();
     protected CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator.locateCustomerServiceFacade();
     protected MeetingServiceFacade meetingServiceFacade = DependencyInjectedServiceLocator.locateMeetingServiceFacade();
     protected CenterDetailsServiceFacade centerDetailsServiceFacade = DependencyInjectedServiceLocator.locateCenterDetailsServiceFacade();
@@ -127,6 +129,7 @@ public abstract class BaseAction extends DispatchAction {
 
         if (springAppContext != null) {
             this.customerDao = springAppContext.getBean(CustomerDao.class);
+            this.savingsDao = springAppContext.getBean(SavingsDao.class);
             this.customerServiceFacade = springAppContext.getBean(CustomerServiceFacade.class);
             this.meetingServiceFacade = springAppContext.getBean(MeetingServiceFacade.class);
             this.centerDetailsServiceFacade = springAppContext.getBean(CenterDetailsServiceFacade.class);

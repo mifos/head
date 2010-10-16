@@ -29,35 +29,35 @@
   		<div class="marginLeft30">
 		<div class="span-24">
   		    <div class="clear">&nbsp;</div>
-    		<div class="span-23 borderbtm">
-        		<p class="font15"><span class="orangeheading">[@spring.message "manageProducts.editLatenessDormancy.setLatenessDefinition" /]</span></p>
+    		<div class="span-23 borderbtm width95prc">
+        		<p class="font15 margin10topbottom"><span class="orangeheading">[@spring.message "manageProducts.editLatenessDormancy.setLatenessDefinition" /]</span></p>
             	<div class="fontBold">Loans</div>
-            	<div class="span-23">
-	            	<span class="span-11">[@spring.message "manageProducts.editLatenessDormancy.specifyTheNumberOfDaysOfNonPayment" /]</span>
+            	<div class="span-23 width95prc">
+	            	<span class="span-11 width50prc">[@spring.message "manageProducts.editLatenessDormancy.specifyTheNumberOfDaysOfNonPayment" /]</span>
     	            <span class="span-8">
     	            	[@spring.bind "formBean.latenessDays" /]
-						<input type="text" id="lateness" name="${spring.status.expression}" value="${spring.status.value?default("")}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days" /]
+						<input class="width40px" type="text" id="lateness" name="${spring.status.expression}" value="${spring.status.value?default("")}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days" /]
 					</span>
 					[@spring.showErrors "<br>" /]
         	    </div>
 			<div class="clear">&nbsp;</div>
         </div>
         <div class="clear">&nbsp;</div>
-        <div class="span-23 borderbtm">
-			        	<p class="font15 orangeheading">[@spring.message "manageProducts.editLatenessDormancy.setDormancyDefinition" /] </p>
+        <div class="span-23 width95prc">
+			        	<p class="font15 orangeheading margin10topbottom">[@spring.message "manageProducts.editLatenessDormancy.setDormancyDefinition" /] </p>
             <div class="fontBold">Savings</div>
-            <div class="span-23">
-            	<span class="span-11">[@spring.message "manageProducts.editLatenessDormancy.specifyTheNumberOfDaysToDefineDormancy"/]</span>
+            <div class="span-23 width95prc">
+            	<span class="span-11 width50prc">[@spring.message "manageProducts.editLatenessDormancy.specifyTheNumberOfDaysToDefineDormancy"/]</span>
                 <span class="span-8">
                 	[@spring.bind "formBean.dormancyDays" /]
-                	<input type="text" id="dormancy" name="${spring.status.expression}" value="${spring.status.value?default("")}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days"/]
+                	<input class="width40px" type="text" id="dormancy" name="${spring.status.expression}" value="${spring.status.value?default("")}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days"/]
                 </span>
 				[@spring.showErrors "<br>" /]
             </div>
             <div class="clear">&nbsp;</div>
         </div>
         <div class="clear">&nbsp;</div>
-        <div class="prepend-10">
+        <div class="buttonsSubmitCancel">
             <input class="buttn"  type="submit" name="submit" value="[@spring.message "submit"/]"/>
             <input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]"/>
         </div>

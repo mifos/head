@@ -5,7 +5,7 @@ html, body { height: 100% }
 	float:left;
 	width:100%;
 	margin-bottom:2px;
-	border-bottom: 9px solid #FF9600;
+	border-bottom: 6px solid #FF9600;
 }
 .site_logo {
     float:right;
@@ -17,8 +17,8 @@ html, body { height: 100% }
     text-indent:-9999em;
  }
 .top_menu {
-    margin-left: 205px;
-    margin-top: 55px;
+    margin-left: 201px;
+    margin-top: 48px;
 }
 .top_menu ul {
     list-style: none;
@@ -35,7 +35,6 @@ html, body { height: 100% }
     font-size:12px;
     font-weight:bold;
     padding:5px 15px;
-    text-decoration:none;
 }
 .top_menu ul li a.current {
     background-color:#FF9600;
@@ -55,7 +54,7 @@ html, body { height: 100% }
 .leftmenu .colleft {
 	 background-color:  #FFFFFF;
     float:left;
-    left:200px;
+    left:174px;
     position:relative;
     width:200%;
 }
@@ -66,7 +65,6 @@ html, body { height: 100% }
     position:relative;
     width:240%;
 }
-
 .leftmenu .col1wrap {
     float:right;
     padding-bottom:1em;
@@ -89,8 +87,8 @@ html, body { height: 100% }
 .leftmenu .col2 {
     float:left;
     position:relative;
-    right:200px;
-    width:200px;
+    right:175px;
+    width:175px;
     height: 85%;
 }
 .main_content{
@@ -102,8 +100,10 @@ html, body { height: 100% }
 }
 .breadcrumb {
 	background-color:#D7DEEE;
-	padding:2px;
-	font-size:12px;
+    padding-bottom:4px;
+    padding-left:10px;
+    padding-top:3px;
+    font-size:10px;
 }
 .side_bar h3 {
 	background-color:#FF9600;
@@ -154,15 +154,145 @@ html, body { height: 100% }
 .content_panel .questions{
 	list-style-type: circle;
 }
+
+/* ftl css adjustemnt  */
+.leftpanelform {
+    padding-bottom:8px;
+    padding-left:9px;
+    padding-top:15px;
+    width:149px;
+    line-height:1.2;
+}
+
+
+input[type="checkbox"], input.checkbox {
+    top:0px
+}
+
 .button_footer {
    /* background: #EEEEEE;
     border-top: 1px solid #CCCCCC;
     padding: 10px 0;*/
     clear: both;
 }
+.borderbtm {
+border-bottom:1px solid #D7DEEE;
+margin-bottom:0;
+margin-top:2px;
+}
+
+.orangeheading-position {
+    margin-left:20px;
+    margin-bottom:15px;
+}
+
+.black-subheading {
+    color:black;
+    padding:6px 0;
+}
+
+.leftpanehead{
+    padding-bottom:4px;
+}
+
+.width10prc {
+    width:10%;
+}
+
+.width15prc {
+    width:15%;
+}
+
+.width20prc {
+    width:20%;
+}
+
+.width45prc {
+    width:45%;
+}
+
+.width50prc {
+    width:50%;
+}
+.width75prc {
+    width:75%;
+}
+
+.width40px {
+    width:40px;     
+}
+
+.width235pxfloatleft {
+    float:left;
+    width:235px
+}
+
+.margin10lefttop {
+    margin: 10px 0 0 10px;
+}
+
+.margin15lefttop {
+    margin: 15px 0 0 15px;
+}
+
+.margin20lefttop {
+    margin: 20px 0 0 20px;
+}
+
 .button_container {
     clear: both;
     margin: 5px auto;
     text-align: center;
 }
+.margin5topbottom {
+    margin: 5px 0;
+}
 
+.margin5top10bottom {
+    margin: 5px 0 10px 0;
+}
+
+
+.margin10topbottom {
+    margin: 10px 0;
+}
+
+.marginLeft20prc {
+    margin-left:20%;
+}
+
+.padding5topbottom {
+    padding: 5px 0;
+}
+
+.buttonsSubmitCancel {
+    text-align: center;
+    border-top: 1px solid #D7DEEE;
+    padding-top: 15px;
+}
+
+.padding10topbottom {
+    padding: 10px 0;
+}
+
+.width80prc {
+    width:80%;
+}
+
+.width95prc {
+    width:95%;
+}
+
+.height5px {
+    height:5px;
+}
+
+.lineheight1p2 {
+    line-height:1.2;
+}
+
+.standardTableLayout {
+    line-height:1.2;
+    margin-bottom:5px;
+    border-bottom:1px solid #D7DEEE;
+}

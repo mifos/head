@@ -47,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Arrays;
 
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_EXT;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_PREFIX;
@@ -295,6 +296,24 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         questionnaireValidator.validateForDefineQuestion(questionDto);
         QuestionEntity questionEntity = questionnaireMapper.mapToQuestion(questionDto);
         return createQuestion(questionEntity);
+    }
+
+    @Override
+    public EventSourceDto getEventSource(int eventSourceId) {
+        EventSourceEntity sourceEntity = eventSourceDao.getDetails(eventSourceId);
+        if (sourceEntity == null) {
+            throw new SystemException(QuestionnaireConstants.INVALID_EVENT_SOURCE);
+        }
+        return questionnaireMapper.mapToEventSources(Arrays.asList(sourceEntity)).get(0);
+    }
+
+    @Override
+    public Integer getEventSourceId(String event, String source) {
+        List<EventSourceEntity> events = eventSourceDao.retrieveByEventAndSource(event,  source);
+        if (events == null || events.isEmpty()) {
+            throw new SystemException(QuestionnaireConstants.INVALID_EVENT_SOURCE);
+        }
+        return events.get(0).getId();
     }
 
     @SuppressWarnings("PMD.PreserveStackTrace")

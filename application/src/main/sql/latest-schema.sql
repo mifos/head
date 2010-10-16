@@ -4384,6 +4384,7 @@ create table question_group_instance(
     completed_status smallint not null,
     created_by integer not null,
     version_id integer not null,
+    event_source_id integer not null,
     primary key (id),
     foreign key (question_group_id) references question_group(id)
 ) engine=innodb character set utf8;
@@ -4505,7 +4506,7 @@ create table QRTZ_CALENDARS(
 create table QRTZ_PAUSED_TRIGGER_GRPS(
     trigger_group  varchar(200) not null,
     primary key (trigger_group)
-);
+) engine=innodb character set utf8;
 
 create table QRTZ_FIRED_TRIGGERS(
     entry_id varchar(95) not null,
@@ -4614,11 +4615,16 @@ create table BATCH_STEP_EXECUTION_SEQ (id bigint not null) engine=myisam;
 create table BATCH_JOB_EXECUTION_SEQ (id bigint not null) engine=myisam;
 
 create table BATCH_JOB_SEQ (id bigint not null) engine=myisam;
-
 create table cash_flow  (
   id int auto_increment not null primary key,
   capital decimal(13, 10),
   liability decimal(13, 10)
+) engine=innodb character set utf8;
+create table prd_offering_question_group(
+    prd_offering_id smallint not null,
+    question_group_id integer not null,
+    foreign key (prd_offering_id) references prd_offering(prd_offering_id),
+    foreign key (question_group_id) references question_group(id)
 ) engine=innodb character set utf8;
 
 create table monthly_cash_flow_details(
