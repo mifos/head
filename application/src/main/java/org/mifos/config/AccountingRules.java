@@ -20,16 +20,16 @@
 
 package org.mifos.config;
 
+import org.apache.commons.lang.StringUtils;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.core.MifosRuntimeException;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.config.persistence.ConfigurationPersistence;
-import org.mifos.core.MifosRuntimeException;
 
 public class AccountingRules {
 
@@ -64,6 +64,8 @@ public class AccountingRules {
      * for details see http://mifosforge.jira.com/browse/MIFOS-1537
      */
     private static final Short DIGITS_BEFORE_DECIMAL_FOR_INTEREST = 10;
+
+    private static final Short DIGITS_BEFORE_DECIMAL_FOR_CASHFLOW_THRESHOLD = 10;
 
     // FIXME: we should use a standard caching mechanism rather than ad hoc caches like
     // this.  Also, we need to consider if this should be thread safe since this initial
@@ -158,11 +160,17 @@ public class AccountingRules {
         return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_INTEREST);
     }
 
+    public static Double getCashFlowWarningThreshold() {
+        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.CASHFLOW_WARNING_THRESHOLD);
+    }
+
+
     public static Short getDigitsAfterDecimal() {
         return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL);
     }
 
     public static Short getDigitsAfterDecimal(final MifosCurrency currency) {
+        if (currency == null) return getDigitsAfterDecimal();
         final String code = currency.getCurrencyCode();
         if (getDefaultCurrencyCode().equals(code)) {
             return getDigitsAfterDecimal();
@@ -184,6 +192,15 @@ public class AccountingRules {
 
     public static Short getDigitsAfterDecimalForInterest() {
         return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST);
+    }
+
+
+    public static Short getDigitsBeforeDecimalForCashFlowThreshold() {
+        return DIGITS_BEFORE_DECIMAL_FOR_CASHFLOW_THRESHOLD;
+    }
+
+    public static Short getDigitsAfterDecimalForCashFlowThreshold() {
+        return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_CASHFLOW_THRESHOLD);
     }
 
     // the defaultValue passed in should be the value from database

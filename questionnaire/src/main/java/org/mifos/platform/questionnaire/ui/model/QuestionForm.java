@@ -22,6 +22,7 @@ package org.mifos.platform.questionnaire.ui.model;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
+import org.mifos.platform.validation.ScreenObject;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -20,6 +20,12 @@
 
 package org.mifos.framework.util;
 
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
+import org.mifos.config.Localization;
+import org.mifos.framework.util.helpers.ConversionError;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
+
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -28,12 +34,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.config.AccountingRules;
-import org.mifos.config.Localization;
-import org.mifos.framework.util.helpers.ConversionError;
-import org.mifos.framework.util.helpers.DoubleConversionResult;
 
 public class LocalizationConverter {
     private DecimalFormat currentDecimalFormat;
@@ -46,6 +46,9 @@ public class LocalizationConverter {
     private short digitsBeforeDecimalForMoney;
     private short digitsAfterDecimalForInterest;
     private short digitsBeforeDecimalForInterest;
+    private short digitsBeforeDecimalForCashFlowThreshold;
+    private short digitsAfterDecimalForCashFlowThreshold;
+    private double cashFlowWarningThreshold;
     // the decimalFormatLocale is introduced because the double format is not
     // supported for
     // 1.1 realease yet and the English format is still used no matter what the
@@ -66,10 +69,14 @@ public class LocalizationConverter {
         initLocalizationConverter();
     }
 
+
     private void initLocalizationConverter() {
         digitsBeforeDecimalForMoney = AccountingRules.getDigitsBeforeDecimal();
         digitsAfterDecimalForInterest = AccountingRules.getDigitsAfterDecimalForInterest();
         digitsBeforeDecimalForInterest = AccountingRules.getDigitsBeforeDecimalForInterest();
+        cashFlowWarningThreshold = AccountingRules.getCashFlowWarningThreshold();
+        digitsBeforeDecimalForCashFlowThreshold = AccountingRules.getDigitsBeforeDecimalForCashFlowThreshold();
+        digitsAfterDecimalForCashFlowThreshold = AccountingRules.getDigitsAfterDecimalForCashFlowThreshold();
         currentLocale = Localization.getInstance().getMainLocale();
         // for this 1.1. release this will be defaulted to the English locale
         // and
@@ -189,13 +196,16 @@ public class LocalizationConverter {
             result.setErrors(errors);
             return result;
         }
+
         List<ConversionError> errors = checkDigits(digitsBeforeDecimalForInterest, digitsAfterDecimalForInterest,
                 ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST,
                 ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST, doubleStr);
         result.setErrors(errors);
+
         if (errors.size() > 0) {
             return result;
         }
+
         try {
             Double interest = getDoubleValueForInterest(doubleStr);
             if ((interest > AccountingRules.getMaxInterest()) || (interest < AccountingRules.getMinInterest())) {
@@ -203,11 +213,48 @@ public class LocalizationConverter {
             } else {
                 result.setDoubleValue(interest);
             }
+
         } catch (Exception ex) {
             result.getErrors().add(ConversionError.CONVERSION_ERROR);
         }
+
         return result;
     }
+
+    public DoubleConversionResult parseDoubleForCashFlowThreshold(String doubleStr) {
+        DoubleConversionResult result = new DoubleConversionResult();
+        if (doubleStr == null) {
+            List<ConversionError> errors = new ArrayList<ConversionError>();
+            errors.add(ConversionError.CONVERSION_ERROR);
+            result.setErrors(errors);
+            return result;
+        }
+
+        List<ConversionError> errors = checkDigits(digitsBeforeDecimalForCashFlowThreshold, digitsAfterDecimalForCashFlowThreshold,
+                ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD,
+                ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD, doubleStr);
+        result.setErrors(errors);
+
+        if (errors.size() > 0) {
+            return result;
+        }
+
+
+        try {
+            Double cashFlowThreshold = getDoubleValueForInterest(doubleStr);
+            if (cashFlowThreshold < 0 ) {
+                errors.add(ConversionError.CASHFLOW_THRESHOLD_OUT_OF_RANGE);
+            } else {
+                result.setDoubleValue(cashFlowThreshold);
+            }
+
+        } catch (Exception ex) {
+            result.getErrors().add(ConversionError.CONVERSION_ERROR);
+        }
+
+        return result;
+    }
+
 
     public char getDecimalFormatSymbol() {
         return decimalFormatSymbol;
@@ -314,8 +361,13 @@ public class LocalizationConverter {
                     + " and language code: " + dateLocale.getLanguage());
         }
 
+        return getDateSeparator(dateLocale, DateFormat.SHORT);
+
+    }
+
+    public String getDateSeparator(Locale dateLocale, int dateFormat) {
         String separator = "";
-        DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, dateLocale);
+        DateFormat format = DateFormat.getDateInstance(dateFormat, dateLocale);
         String now = format.format(new DateTimeService().getCurrentJavaDateTime());
         char chArray[] = now.toCharArray();
         for (char element : chArray) {
@@ -325,7 +377,6 @@ public class LocalizationConverter {
             }
         }
         return separator;
-
     }
 
     public DateFormat getDateFormat() {

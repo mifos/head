@@ -144,6 +144,12 @@
                 <browser>*firefox</browser>
             </properties>
         </profile>
+		<profile>
+            <id>chrome</id>
+            <properties>
+                <browser>*chrome</browser>
+            </properties>
+        </profile>
         <profile>
             <id>iexplore</id>
             <properties>

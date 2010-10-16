@@ -28,5 +28,7 @@
         <wb-resource deploy-path="/" source-path="/application/src/main/webapp"/>
         <wb-resource deploy-path="/" source-path="/questionnaire/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/questionnaire/src/test/java"/>
+        <wb-resource deploy-path="/" source-path="/cashflow/src/test/java"/>
+        <wb-resource deploy-path="/" source-path="/cashflow/src/main/java"/>
     </wb-module>
 </project-modules>

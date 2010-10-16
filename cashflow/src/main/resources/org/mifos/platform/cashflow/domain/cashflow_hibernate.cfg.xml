@@ -1,0 +1,11 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<mapping class="org.mifos.platform.cashflow.domain.CashFlow" />
+		<mapping class="org.mifos.platform.cashflow.domain.MonthlyCashFlow" />
+        <mapping resource="org/mifos/platform/cashflow/domain/CashFlow.hbm.xml" />
+        <mapping resource="org/mifos/platform/cashflow/domain/MonthlyCashFlow.hbm.xml" />
+	</session-factory>
+</hibernate-configuration>

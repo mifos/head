@@ -50,4 +50,41 @@ public class LoanProductDetailsPage  extends MifosPage {
             Assert.assertTrue(selenium.isTextPresent(amount));
         }
 
+    public void verifyVariableInstalmentOption(String maxGap, String minGap, String minInstalmentAmount) {
+        Assert.assertTrue(selenium.isTextPresent("Minimum gap between installments: " + minGap  + " days"));
+        if ("".equals(maxGap)) {
+            Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: N/A"));
+        } else {
+            Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: " + maxGap  + " days"));
+        }
+        if ("".equals(minInstalmentAmount)) {
+            Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: N/A")) ;
+        } else {
+            Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: " + minInstalmentAmount)) ;
+        }
+        Assert.assertTrue(selenium.isTextPresent("Can configure variable installments: Yes"));
+    }
+
+    public void verifyVariableInstalmentOptionUnChecked() {
+        Assert.assertTrue(!selenium.isTextPresent("Minimum gap between installments:"));
+        Assert.assertTrue(!selenium.isTextPresent("Maximum gap between installments:"));
+        Assert.assertTrue(!selenium.isTextPresent("Minimum installment amount:")) ;
+        Assert.assertTrue(selenium.isTextPresent("Can configure variable installments: No"));
+    }
+
+    public LoanProductDetailsPage verifyCashFlowOfEditedLoan(String warningThreshold) {
+        Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: Yes"));
+        if ("".equals(warningThreshold)) {
+            Assert.assertTrue(selenium.isTextPresent("Warning Threshold: N/A"));
+        } else {
+            Assert.assertTrue(selenium.isTextPresent("Warning Threshold: " + warningThreshold + " %"));
+        }
+        return this;
+    }
+
+    public LoanProductDetailsPage verifyCashFlowUncheckedInEditedProduct() {
+        Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: No"));
+        Assert.assertTrue(!selenium.isTextPresent("Warning Threshold:"));
+        return this;
+    }
 }

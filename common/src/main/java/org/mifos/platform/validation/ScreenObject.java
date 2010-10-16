@@ -1,6 +1,5 @@
-package org.mifos.platform.questionnaire.ui.model;
+package org.mifos.platform.validation;
 
-import org.mifos.platform.validation.MifosBeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageContext;
 

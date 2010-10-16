@@ -20,6 +20,10 @@
 
 package org.mifos.framework.util.helpers;
 
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
+import org.mifos.core.CurrencyMismatchException;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -27,10 +31,6 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
-
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.config.AccountingRules;
-import org.mifos.core.CurrencyMismatchException;
 
 /**
  * This class represents Money objects in the system, it should be used for all
@@ -71,6 +71,10 @@ public final class Money implements Serializable, Comparable<Money> {
      */
     public Money(MifosCurrency currency) {
         this(currency, new BigDecimal(0));
+    }
+
+    public Money(MifosCurrency currency, Double amount) {
+        this(currency, new BigDecimal(amount));
     }
 
     public Money(MifosCurrency currency, String amount) {

@@ -20,6 +20,19 @@
 
 package org.mifos.accounts.loan.struts.actionforms;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -34,6 +47,7 @@ import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.AmountRange;
 import org.mifos.accounts.productdefinition.business.InstallmentRange;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -45,6 +59,7 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.questionnaire.struts.CashFlowCaptor;
 import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
@@ -67,7 +82,10 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.platform.cashflow.service.CashFlowDetail;
+import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.util.UserContext;
 
@@ -84,7 +102,7 @@ import java.util.ResourceBundle;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
 
-public class LoanAccountActionForm extends BaseActionForm implements QuestionResponseCapturer {
+public class LoanAccountActionForm extends BaseActionForm implements QuestionResponseCapturer, CashFlowCaptor {
 
     public LoanAccountActionForm() {
         super();
@@ -195,6 +213,18 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     /*private List<QuestionGroupDto> questionGroupDtos;*/
 
     private List<QuestionGroupDetail> questionGroups;
+
+    private List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
+
+    private boolean variableInstallmentsAllowed;
+
+    private Integer minimumGapInDays;
+
+    private Integer maximumGapInDays;
+
+    private Money minInstallmentAmount;
+
+    private CashFlowForm cashFlowForm;
 
     public Date getOriginalDisbursementDate() {
         return this.originalDisbursementDate;
@@ -757,15 +787,16 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     private MifosCurrency getCurrencyFromLoanOffering(HttpServletRequest request){
+        LoanOfferingBO loanOfferingBO = getLoanOffering(request);
+        return loanOfferingBO != null ? loanOfferingBO.getCurrency() : null;
+    }
+
+    private LoanOfferingBO getLoanOffering(HttpServletRequest request) {
         try {
-            LoanOfferingBO loanOfferingBO = ((LoanOfferingBO) SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
-            if (loanOfferingBO != null) {
-                return loanOfferingBO.getCurrency();
-            }
+            return ((LoanOfferingBO) SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
         } catch (PageExpiredException e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     private void checkValidationForSchedulePreview(ActionErrors errors, MifosCurrency currency, HttpServletRequest request)
@@ -846,8 +877,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
                 return ((String) object).startsWith("clients");
             }
         });
-        List<String> indices = extractClientIdsFromRequest(request, paramsStartingWithClients);
-        return indices;
+        return extractClientIdsFromRequest(request, paramsStartingWithClients);
     }
 
     private List<String> extractClientIdsFromRequest(HttpServletRequest request, Collection<?> paramsStartingWithClients) {
@@ -1457,6 +1487,10 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         clientDetails = new ArrayList<LoanAccountDetailsDto>(clientDetailsCopy);
     }
 
+    public void initializeInstallments(List<RepaymentScheduleInstallment> installments) {
+        this.installments = installments;
+    }
+
     private static class RemoveEmptyClientDetailsForUncheckedClients implements Predicate {
 
         private final List<String> clients2;
@@ -1490,7 +1524,51 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         return questionGroups;
     }
 
+    public List<RepaymentScheduleInstallment> getInstallments() {
+        return installments;
+    }
+
     private boolean isRedoOperation() {
-        return PERSPECTIVE_VALUE_REDO_LOAN.equals(perspective) && CollectionUtils.isNotEmpty(paymentDataBeans);
+        return PERSPECTIVE_VALUE_REDO_LOAN.equals(this.perspective) && CollectionUtils.isNotEmpty(paymentDataBeans);
+    }
+
+    public boolean isVariableInstallmentsAllowed() {
+        return variableInstallmentsAllowed;
+    }
+
+    public void setVariableInstallmentsAllowed(boolean variableInstallmentsAllowed) {
+        this.variableInstallmentsAllowed = variableInstallmentsAllowed;
+    }
+
+    public void setMinimumGapInDays(Integer minimumGapInDays) {
+        this.minimumGapInDays = minimumGapInDays;
+    }
+
+    public Integer getMinimumGapInDays() {
+        return minimumGapInDays;
+    }
+
+    public Integer getMaximumGapInDays() {
+        return maximumGapInDays;
+    }
+
+    public void setMaximumGapInDays(Integer maximumGapInDays) {
+        this.maximumGapInDays = maximumGapInDays;
+    }
+
+    public Money getMinInstallmentAmount() {
+        return minInstallmentAmount;
+    }
+    
+    public void setMinInstallmentAmount(Money minInstallmentAmount) {
+        this.minInstallmentAmount = minInstallmentAmount;
+    }
+
+    public CashFlowForm getCashFlowForm() {
+        return cashFlowForm;
+    }
+
+    public void setCashFlowForm(CashFlowForm cashFlowForm) {
+        this.cashFlowForm = cashFlowForm;
     }
 }

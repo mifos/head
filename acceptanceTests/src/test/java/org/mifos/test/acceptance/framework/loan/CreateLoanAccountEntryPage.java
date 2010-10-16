@@ -77,7 +77,7 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         return new CreateLoanAccountConfirmationPage(selenium);
     }
 
-    private void submitAndNavigateToLoanPreviewPage(CreateLoanAccountSubmitParameters formParameters) {
+    public ViewInstallmentDetailsPage submitAndNavigateToLoanPreviewPage(CreateLoanAccountSubmitParameters formParameters) {
         selenium.type("loancreationdetails.input.sumLoanAmount",formParameters.getAmount());
         if (formParameters.isGracePeriodTypeNone()) {
             Assert.assertFalse(selenium.isEditable("loancreationdetails.input.gracePeriod"));
@@ -102,6 +102,7 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
         selenium.click("loancreationdetails.button.continue");
         waitForPageToLoad();
+        return new ViewInstallmentDetailsPage(selenium);
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {
@@ -151,10 +152,11 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
     }
 
 
-    public void clickContinue(){
+    public ViewInstallmentDetailsPage clickContinue(){
         selenium.click("loancreationdetails.button.continue");
         waitForPageToLoad();
         selenium.isVisible("schedulePreview.button.preview");
+        return  new ViewInstallmentDetailsPage(selenium);
     }
 
     public CreateLoanAccountConfirmationPage clickContinueAndNavigateToLoanAccountConfirmationPage() {
@@ -173,5 +175,39 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
     public void checkTotalAmount(String expectedTotalAmount) {
         Assert.assertEquals(selenium.getValue("sumLoanAmount"), expectedTotalAmount);
+    }
+
+    public CreateLoanAccountEntryPage verifyVariableInstalmentsInLoanProductSummery(String maxGap, String minGap, String minInstalmentAmount) {
+        if ("".equals(maxGap)) {
+            Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: N/A"));
+        } else {
+            Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: " + maxGap  + " days"));
+        }
+        if ("".equals(minInstalmentAmount)) {
+            Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: N/A")) ;
+        } else {
+            Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: " + minInstalmentAmount)) ;
+        }
+        Assert.assertTrue(selenium.isTextPresent("Minimum gap between installments: " + minGap));
+        Assert.assertTrue(selenium.isTextPresent("Can configure variable installments: Yes"));
+        return this;
+    }
+
+    public CreateLoanAccountEntryPage verifyUncheckedVariableInstalmentsInLoanProductSummery() {
+        Assert.assertTrue(!selenium.isTextPresent("Minimum gap between installments:"));
+        Assert.assertTrue(!selenium.isTextPresent("Maximum gap between installments:"));
+        Assert.assertTrue(!selenium.isTextPresent("Minimum installment amount:" )) ;
+        Assert.assertTrue(!selenium.isTextPresent("Can configure variable installments: No"));
+        return this;
+        
+    }
+
+    public CreateLoanAccountEntryPage setDisbursalDate(String dd, String mm, String yyyy) {
+
+        typeText("disbursementDateDD",dd);
+        typeText("disbursementDateMM",mm);
+        typeText("disbursementDateYY",yyyy);
+
+        return this;
     }
 }

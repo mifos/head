@@ -20,10 +20,6 @@
 
 package org.mifos.test.acceptance.loan;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.sql.SQLException;
-
 import org.dbunit.DatabaseUnitException;
 import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
@@ -42,6 +38,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.sql.SQLException;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(sequential=true, groups={"loan","acceptance","ui"})
@@ -83,8 +83,8 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
         assertTextFoundOnPage(TEST_ACCOUNT_NOTE);
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @Test(enabled=false)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void addNoteToLoanAccountAndVerifyAllNotes() throws Exception {
         initData();
 

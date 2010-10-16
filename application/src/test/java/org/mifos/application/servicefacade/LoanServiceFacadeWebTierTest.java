@@ -110,8 +110,6 @@ public class LoanServiceFacadeWebTierTest {
     @Mock
     private LoanBO loanBO;
 
-    private MeetingBO meeting;
-
     @Before
     public void setupAndInjectDependencies() {
         loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao);
@@ -121,7 +119,7 @@ public class LoanServiceFacadeWebTierTest {
     public void shouldFindAllActiveLoanProductsWithMeetingThatMatchCustomerMeeting() {
 
         // setup
-        meeting = new MeetingBuilder().build();
+        MeetingBO meeting = new MeetingBuilder().build();
         CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(CustomerLevel.GROUP);
 
         List<LoanOfferingBO> activeLoanProducts = Arrays.asList(activeLoanProduct);

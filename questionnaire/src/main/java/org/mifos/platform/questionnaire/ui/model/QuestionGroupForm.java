@@ -27,6 +27,7 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
+import org.mifos.platform.validation.ScreenObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;

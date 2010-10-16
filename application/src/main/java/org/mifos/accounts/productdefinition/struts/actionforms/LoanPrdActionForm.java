@@ -29,8 +29,6 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -60,6 +58,8 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoanPrdActionForm extends BaseActionForm {
     private static final Logger logger = LoggerFactory.getLogger(LoanPrdActionForm.class);
@@ -295,6 +295,20 @@ public class LoanPrdActionForm extends BaseActionForm {
     private Double maxInterestRateValue;
     private Double minInterestRateValue;
     private Double defInterestRateValue;
+
+    private String canConfigureVariableInstallments;
+    private Integer minimumGapBetweenInstallments;
+    private Integer maximumGapBetweenInstallments;
+
+    private String minimumInstallmentAmount;
+    private Double minimumInstallmentAmountValue;
+
+    private String cashFlowValidation;
+
+    private String cashFlowWarningThreshold;
+    private Double cashFlowWarningThresholdValue;
+
+
 
     public Double getLastLoanDefaultLoanAmt1Value() {
         if (lastLoanDefaultLoanAmt1Value != null) {
@@ -1724,6 +1738,7 @@ public class LoanPrdActionForm extends BaseActionForm {
             }
             recurAfter = "1";
             minNoInstallments = "1";
+            minimumGapBetweenInstallments = 1;
         }
         if (method != null
                 && (method.equals(Methods.preview.toString()) || method.equals(Methods.editPreview.toString()))) {
@@ -1735,6 +1750,8 @@ public class LoanPrdActionForm extends BaseActionForm {
             loanOfferingFunds = null;
             gracePeriodType = null;
             gracePeriodDuration = null;
+            canConfigureVariableInstallments = null;
+            cashFlowValidation = null;
         }
         logger.debug("reset method of Savings Product Action form method called ");
     }
@@ -1837,6 +1854,8 @@ public class LoanPrdActionForm extends BaseActionForm {
         validatePrincDueOnLastInstAndPrincGraceType(errors);
         setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
         validateInterestGLCode(request, errors);
+        validateVariableInstallmentPeriods(errors, locale);
+        validateCashFlow(errors, locale);
         logger.debug("validateForPreview method of Loan Product Action form method called :" + prdOfferingName);
     }
 
@@ -1868,6 +1887,8 @@ public class LoanPrdActionForm extends BaseActionForm {
         validatePrincDueOnLastInstAndPrincGraceType(errors);
         setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
         validateInterestGLCode(request, errors);
+        validateVariableInstallmentPeriods(errors, locale);
+        validateCashFlow(errors, locale);
         logger.debug("validateForEditPreview method of Loan Product Action form method called :" + prdOfferingName);
     }
 
@@ -2363,6 +2384,40 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     }
 
+
+    private void validateCashFlow(ActionErrors actionErrors, Locale locale) {
+
+        DoubleConversionResult cashFlowWarningThresholdResult = null;
+        Double cashFlowThreshold = null;
+        List<ConversionError> errorList = null;
+
+        if(getCashFlowValidation()) {
+            if(cashFlowWarningThreshold != null && (!cashFlowWarningThreshold.trim().equals(""))){
+
+                cashFlowWarningThresholdResult = parseDoubleForCashFlowThreshold(cashFlowWarningThreshold);
+
+                errorList = cashFlowWarningThresholdResult.getErrors();
+                if (errorList.size() > 0) {
+                    for (int i = 0; i < errorList.size(); i++) {
+                        addError(actionErrors, cashFlowWarningThreshold,
+                                ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID_FORMAT, getConversionErrorText(errorList
+                                        .get(i), locale));
+                    }
+                } else {
+                    cashFlowThreshold = cashFlowWarningThresholdResult.getDoubleValue();
+                }
+            }
+
+            if(cashFlowThreshold != null) {
+                if(cashFlowThreshold >= AccountingRules.getCashFlowWarningThreshold()) {
+                    addError(actionErrors,"cashFlowWarningThreshold",ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID, String.valueOf(AccountingRules.getCashFlowWarningThreshold()));
+                }
+                cashFlowWarningThresholdValue = cashFlowThreshold;
+            }
+
+        }
+    }
+
     private void validateMinMaxDefLoanAmounts(ActionErrors errors, String maxLoanAmountStr, String minLoanAmountStr,
             String defLoanAmountStr, String error, String rownum, Locale locale) {
 
@@ -2682,4 +2737,150 @@ public class LoanPrdActionForm extends BaseActionForm {
             }
         }
     }
+
+    public Integer getMinimumGapBetweenInstallments() {
+        return minimumGapBetweenInstallments;
+    }
+
+    public void setMinimumGapBetweenInstallments(Integer minimumGapBetweenInstallments) {
+        this.minimumGapBetweenInstallments = minimumGapBetweenInstallments;
+    }
+
+    public Integer getMaximumGapBetweenInstallments() {
+        return maximumGapBetweenInstallments;
+    }
+
+    public void setMaximumGapBetweenInstallments(Integer maximumGapBetweenInstallments) {
+        this.maximumGapBetweenInstallments = maximumGapBetweenInstallments;
+    }
+
+    public Double getMinimumInstallmentAmountValue() {
+        if (minimumInstallmentAmountValue != null) {
+            return minimumInstallmentAmountValue;
+        }
+        return getDoubleValueForMoney(minimumInstallmentAmount);
+    }
+
+
+
+
+    private void validateVariableInstallmentPeriods(ActionErrors actionErrors, Locale locale) {
+        if (canConfigureVariableInstallments()) {
+            validateMinimumGapForVariableInstallments(actionErrors);
+            validateMaximumGapForVariableInstallments(actionErrors);
+            validateMinMaxGapsForVariableInstallments(actionErrors);
+            validateMinimumInstallmentAmountForValriableInstallments(actionErrors, locale);
+        }
+    }
+
+
+
+
+    private void validateMinimumInstallmentAmountForValriableInstallments(ActionErrors actionErrors, Locale locale) {
+        if (StringUtils.isNotEmpty(minimumInstallmentAmount)) {
+            DoubleConversionResult conversionResult = parseDoubleForMoney(minimumInstallmentAmount);
+            List<ConversionError> errorList = conversionResult.getErrors();
+            if (errorList.isEmpty()) {
+                minimumInstallmentAmountValue = conversionResult.getDoubleValue();
+            } else {
+                for (ConversionError error : errorList) {
+                    addError(actionErrors, "minimumInstallmentAmount",
+                            ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_AMOUNT_INVALID_FORMAT,
+                            getConversionErrorText(error, locale));
+                }
+            }
+        }
+    }
+
+    private void validateMinMaxGapsForVariableInstallments(ActionErrors actionErrors) {
+        if (minimumGapBetweenInstallments != null && maximumGapBetweenInstallments != null
+                && minimumGapBetweenInstallments >= maximumGapBetweenInstallments) {
+            addError(actionErrors, "minimumGapBetweenInstallments",
+                    ProductDefinitionConstants.MIN_GAP_MORE_THAN_MAX_GAP_FOR_VARIABLE_INSTALLMENT_PRODUCT);
+        }
+    }
+
+    private void validateMaximumGapForVariableInstallments(ActionErrors actionErrors) {
+        if (maximumGapBetweenInstallments != null) {
+            if (maximumGapBetweenInstallments <= 0) {
+                addError(actionErrors, "maximumGapBetweenInstallments",
+                        ProductDefinitionConstants.VARIABLE_INSTALLMENT_MAX_GAP_NEGATIVE_OR_ZERO);
+            }
+            if (maximumGapBetweenInstallments > ProductDefinitionConstants.MAX_ALLOWED_INSTALLMENT_GAP) {
+                addError(actionErrors, "maximumGapBetweenInstallments",
+                        ProductDefinitionConstants.VARIABLE_INSTALLMENT_MAX_GAP_MORE_THAN_ALLOWED);
+            }
+        }
+    }
+
+    private void validateMinimumGapForVariableInstallments(ActionErrors actionErrors) {
+        if (minimumGapBetweenInstallments == null) {
+            addError(actionErrors, "minimumGapBetweenInstallments",
+                    ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_NOT_PROVIDED);
+        } else {
+            if (minimumGapBetweenInstallments <= 0) {
+                addError(actionErrors, "minimumGapBetweenInstallments",
+                        ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_NEGATIVE_OR_ZERO);
+            }
+            if (minimumGapBetweenInstallments > ProductDefinitionConstants.MAX_ALLOWED_INSTALLMENT_GAP) {
+                addError(actionErrors, "minimumGapBetweenInstallments",
+                        ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_GAP_MORE_THAN_ALLOWED);
+            }
+        }
+    }
+
+    public String getMinimumInstallmentAmount() {
+        return minimumInstallmentAmount;
+    }
+
+    public void setMinimumInstallmentAmount(String minimumInstallmentAmount) {
+        this.minimumInstallmentAmount = minimumInstallmentAmount;
+    }
+
+    public String getCanConfigureVariableInstallments() {
+        return canConfigureVariableInstallments;
+    }
+
+    public void setCanConfigureVariableInstallments(String canConfigureVariableInstallments) {
+        this.canConfigureVariableInstallments = canConfigureVariableInstallments;
+    }
+
+    public void setCanConfigureVariableInstallments(boolean canConfigureVariableInstallments) {
+        this.setCanConfigureVariableInstallments(getStringValue(canConfigureVariableInstallments));
+    }
+
+    public boolean canConfigureVariableInstallments() {
+        return getBooleanValue(canConfigureVariableInstallments);
+    }
+
+    public boolean getCashFlowValidation() {
+        return getBooleanValue(cashFlowValidation);
+    }
+
+
+    public void setCashFlowValidation(boolean cashFlowValidation) {
+        this.setCashFlowValidation(getStringValue(cashFlowValidation));
+    }
+
+    private void setCashFlowValidation(String cashFlowValidation) {
+        this.cashFlowValidation = cashFlowValidation;
+
+    }
+
+
+    public void setCashFlowWarningThreshold(String cashFlowWarningThreshold) {
+        this.cashFlowWarningThreshold = cashFlowWarningThreshold;
+    }
+
+    public String getCashFlowWarningThreshold() {
+        return cashFlowWarningThreshold;
+    }
+
+    public Double getCashFlowWarningThresholdValue() {
+        if (StringUtils.isEmpty(cashFlowWarningThreshold)) {
+            return cashFlowWarningThresholdValue;
+        }
+        return getDoubleValue(cashFlowWarningThreshold);
+    }
+
 }

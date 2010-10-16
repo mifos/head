@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2005-2010 Grameen Foundation USA
+  ~  All rights reserved.
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+  ~  implied. See the License for the specific language governing
+  ~  permissions and limitations under the License.
+  ~
+  ~  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+  ~  explanation of the license and how it is applied.
+  -->
+
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<!--
+See http://www.mifos.org/developers/wiki/LoggerConfiguration for information on
+customizing this logging configuration.
+-->
+
+<!-- add debug="true" as an attribute of the log4j:configuration tag to debug
+how log4j is setting up logging. -->
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="MifosAppender" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.mifos.framework.components.logger.MifosPatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd/HH:mm:ss.SSS/zzz} %-3p, %c, %C{1}, %M, %L, %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="MifosRollingFileAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="/tmp/Mifos-trunk-sandbox.log"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <layout class="org.mifos.framework.components.logger.MifosPatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd/HH:mm:ss.SSS/zzz} %-3p, %c, %C{1}, %M, %L, %m%n"/>
+        </layout>
+    </appender>
+
+    <category name="org.hibernate"> 
+        <priority value="WARN"/> 
+    </category>
+    
+    <category name="org.hibernate.engine.StatefulPersistenceContext.ProxyWarnLog" additivity="true">
+       <priority value="ERROR"/>
+    </category>
+
+    <root>
+        <!-- Any log statement of level less than this priority will not be logged -->
+        <priority value="INFO"/>
+        <appender-ref ref="MifosAppender"/>
+        <appender-ref ref="MifosRollingFileAppender"/>
+    </root>
+</log4j:configuration>

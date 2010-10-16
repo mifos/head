@@ -21,42 +21,27 @@
 package org.mifos.test.acceptance.loanproduct;
 
 
-import org.mifos.framework.util.DbUnitUtilities;
-import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"smoke","loanproduct","acceptance"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"smoke", "loanproduct", "acceptance"})
 public class DefineNewLoanProductTest extends UiTestCaseBase {
 
-    private AppLauncher appLauncher;
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     @BeforeMethod
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        appLauncher = new AppLauncher(selenium);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        selenium.windowMaximize();
     }
 
     @AfterMethod
@@ -64,30 +49,20 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void createWeeklyLoanProduct()throws Exception {
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void createWeeklyLoanProduct() throws Exception {
         SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
-        AdminPage adminPage = loginAndNavigateToAdminPage();
-        adminPage.verifyPage();
-        adminPage.defineLoanProduct(formParameters);
-
+        new NavigationHelper(selenium).navigateToAdminPage().
+        verifyPage().
+        defineLoanProduct(formParameters);
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void createMonthlyLoanProduct()throws Exception {
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void createMonthlyLoanProduct() throws Exception {
         SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
-        AdminPage adminPage = loginAndNavigateToAdminPage();
-        adminPage.verifyPage();
-        adminPage.defineLoanProduct(formParameters);
-
+        new NavigationHelper(selenium).navigateToAdminPage().
+        verifyPage().
+        defineLoanProduct(formParameters);
     }
-
-    private AdminPage loginAndNavigateToAdminPage() {
-        return appLauncher
-         .launchMifos()
-         .loginSuccessfullyUsingDefaultCredentials()
-         .navigateToAdminPage();
-     }
-
 }
 

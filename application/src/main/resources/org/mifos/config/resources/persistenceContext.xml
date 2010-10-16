@@ -22,6 +22,7 @@
         <property name="configLocations">
           <list>
               <value>classpath:org/mifos/platform/questionnaire/domain/questionnaire_hibernate.cfg.xml</value>
+              <value>classpath:org/mifos/platform/cashflow/domain/cashflow_hibernate.cfg.xml</value>
               <value>classpath:org/mifos/framework/util/resources/hibernate.cfg.xml</value>
           </list>
         </property>

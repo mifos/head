@@ -437,3 +437,8 @@ drop table if exists BATCH_JOB_EXECUTION_CONTEXT;
 drop table if exists BATCH_STEP_EXECUTION_SEQ;
 drop table if exists BATCH_JOB_EXECUTION_SEQ;
 drop table if exists BATCH_JOB_SEQ;
+drop table if exists variable_installment_details;
+
+drop table if exists loan_cash_flow;
+drop table if exists monthly_cash_flow_details;
+drop table if exists cash_flow;

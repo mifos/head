@@ -35,141 +35,18 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-        <span id="page.id" title="CreateLoanProduct" />
-		<script>
-		<!--
-			function showMeetingFrequency(){
-				if (document.getElementsByName("freqOfInstallments")[1].checked == true){
-					document.getElementById("week").style.display = "none";
-					document.getElementById("month").style.display = "block";
-				}
-				else {
-					document.getElementById("week").style.display = "block";
-					document.getElementsByName("freqOfInstallments")[0].checked = true;
-					document.getElementById("month").style.display = "none";
-				}
-			}
-			function fnCancel(form) {
-				form.method.value="cancelCreate";
-				form.action="loanproductaction.do";
-				form.submit();
-			}
-			
-			function fnIntDesbr() {
-				if(document.getElementsByName("intDedDisbursementFlag")[0].checked==true) {
-					document.getElementsByName("gracePeriodType")[0].disabled=true;
-					document.getElementsByName("gracePeriodType")[0].selectedIndex=0;
-					document.getElementsByName("gracePeriodDuration")[0].value="";
-					document.getElementsByName("gracePeriodDuration")[0].disabled=true;
-				}
-				else {
-					document.getElementsByName("gracePeriodType")[0].disabled=false;
-					document.getElementsByName("gracePeriodDuration")[0].disabled=false;
-				}
-			}
-			function fnGracePeriod() {
-				if(document.getElementsByName("gracePeriodType")[0].selectedIndex==0 ||
-					document.getElementsByName("gracePeriodType")[0].value==1) {
-					document.getElementsByName("gracePeriodDuration")[0].value="";
-					document.getElementsByName("gracePeriodDuration")[0].disabled=true;
-				}else {
-					document.getElementsByName("gracePeriodDuration")[0].disabled=false;
-				}
-			}
-		
-			function checkRow(){
-			if (document.loanproductactionform.loanAmtCalcType[0].checked == true){
-				document.getElementById("option0").style.display = "block";
-				document.getElementById("option1").style.display = "none";
-				document.getElementById("option2").style.display = "none";
-				}
-			else if (document.loanproductactionform.loanAmtCalcType[1].checked == true){
-				document.getElementById("option0").style.display = "none";
-				document.getElementById("option1").style.display = "block";
-				document.getElementById("option2").style.display = "none";
-				}
-				
-			else if (document.loanproductactionform.loanAmtCalcType[2].checked == true){
-				document.getElementById("option0").style.display = "none";
-				document.getElementById("option1").style.display = "none";
-				document.getElementById("option2").style.display = "block";		
-				}				
-			}
-			
-			function checkType(){
-			if (document.loanproductactionform.calcInstallmentType[0].checked == true){
-				document.getElementById("install0").style.display = "block";
-				document.getElementById("install1").style.display = "none";
-				document.getElementById("install2").style.display = "none";
-				}
-			else if (document.loanproductactionform.calcInstallmentType[1].checked == true){
-				document.getElementById("install0").style.display = "none";
-				document.getElementById("install1").style.display = "block";
-				document.getElementById("install2").style.display = "none";			
-				//if(document.getElementsByName("freqOfInstallments")[1].checked)
-				//{
-						//installments_as_month_value();
-				//}
-				//else
-				//{
-						//installments_as_week_value();
-				//}
-				}				
-			else if (document.loanproductactionform.calcInstallmentType[2].checked == true){
-				document.getElementById("install0").style.display = "none";
-				document.getElementById("install1").style.display = "none";
-				document.getElementById("install2").style.display = "block";		
-				}				
-			}
-		
-			function changeValue(event, editbox, endvalue, rownum)
-			{
-				
-				if(!(endvalue=="")){
-				if (FnCheckNumber(event,'','',editbox) == false)
-					return false;
-				for(var i=rownum;i<rownum+1;i++)
-					{					
-						eval("document.loanproductactionform.startRangeLoanAmt"+(i+1)).value = parseFloat(endvalue) +1;	
-					}	
-					}
-			}	
-			
-			function changeInstallmentValue(event, editbox, endvalue, rownum)
-			{
-			   
-				if(!(endvalue=="")){
-				if (FnCheckNumber(event,'','',editbox) == false)
-					return false;
-				for(var i=rownum;i<rownum+1;i++)
-					{					
-						eval("document.loanproductactionform.startInstallmentRange"+(i+1)).value = parseFloat(endvalue) +1;			
-						
-					}	
-					}						
-			}
-			
-			function showLoanAmountType() {
-		    var loanAmtCalcType = document.getElementsByName("loanAmtCalcType");
-		    if (loanAmtCalcType[1].checked == false && loanAmtCalcType[2].checked == false) {
-		        loanAmtCalcType[0].checked = true;
-		    }
-		    }
-			function showInstallType() {
-		    var calcInstallmentType = document.getElementsByName("calcInstallmentType");
-		    if (calcInstallmentType[1].checked == false && calcInstallmentType[2].checked == false) {
-		        calcInstallmentType[0].checked = true;
-		    }
-		    
-			}
-		//-->
-		</script>
+        <span id="page.id" title="CreateLoanProduct"/>
 		<script src="pages/framework/js/date.js"></script>
 		<script src="pages/framework/js/func.js"></script>
+		<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="pages/application/loan/js/CreateLoanProduct.js"></script>
 		<html-el:form action="/loanproductaction"
 			onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) &&
 				validateMyForm(endDate,endDateFormat,endDateYY))"
 			focus="prdOfferingName">
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}"
+                var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
+
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
@@ -397,7 +274,6 @@ explanation of the license and how it is applied.
 												<td class="drawtablerow"><mifos:decimalinput size="10"
 													property="defaultLoanAmount" /></td>
 											</tr>
-
 										</table>
 										</td>
 									</tr>
@@ -639,7 +515,7 @@ explanation of the license and how it is applied.
 										</fmt:message>:</td>
 										<td valign="top"><mifos:decimalinput
 											styleId= "createLoanProduct.input.minInterestRate" property="minInterestRate" /> <mifos:mifoslabel
-											name="product.rate" bundle="ProductDefUIResources" /></td>
+												name="product.rate" bundle="ProductDefUIResources" /></td>
 									</tr>
 									<tr class="fontnormal">
 										<td align="right"><span class="mandatorytext"> <font
@@ -664,6 +540,79 @@ explanation of the license and how it is applied.
 										<br>
 										</td>
 									</tr>
+                                    <c:if test="${repaymentSchedulesIndependentOfMeetingIsEnabled == '1'}">
+                                        <tr class="fontnormal">
+                                            <td width="30%" align="right" valign="top"><mifos:mifoslabel
+                                                name="product.canConfigureVariableInstallments"
+                                                bundle="ProductDefUIResources" isColonRequired="yes" />
+                                            </td>
+                                            <td valign="top"><html-el:checkbox styleId="createLoanProduct.checkbox.canConfigureVariableInstallments"
+                                                property="canConfigureVariableInstallments" onclick="showVariableInstallmentInputs();" value="1" />
+                                            </td>
+                                        </tr>
+                                        <tr class="fontnormal">
+                                            <td width="30%" align="right" valign="top">
+                                                <div id="minimumGapBetweenInstallmentsLabelDiv"  style="display: none;">
+                                                    <mifos:mifoslabel name="product.minimumGapBetweenInstallments" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                                </div>
+                                            </td>
+                                            <td valign="top">
+                                                <div id="minimumGapBetweenInstallmentsInputDiv" style="display: none;">
+                                                        <mifos:mifosnumbertext property="minimumGapBetweenInstallments" />
+                                                        <span id="days"> <mifos:mifoslabel name="product.days" bundle="ProductDefUIResources" /> </span>
+                                                </div>
+                                            </td>
+                                       </tr>
+                                       <tr class="fontnormal">
+                                            <td width="30%" align="right" valign="top">
+                                                <div id="maximumGapBetweenInstallmentsLabelDiv"  style="display: none;">
+                                                    <mifos:mifoslabel name="product.maximumGapBetweenInstallments" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                                </div>
+                                            </td>
+                                            <td valign="top">
+                                                <div id="maximumGapBetweenInstallmentsInputDiv" style="display: none;">
+                                                        <mifos:mifosnumbertext property="maximumGapBetweenInstallments" />
+                                                        <span id="days"> <mifos:mifoslabel name="product.days" bundle="ProductDefUIResources" /> </span>
+                                                </div>
+                                            </td>
+                                       </tr>
+                                       <tr class="fontnormal">
+                                            <td width="30%" align="right" valign="top">
+                                                <div id="minimumInstallmentAmountLabelDiv"  style="display: none;">
+                                                    <mifos:mifoslabel name="product.minimumInstallmentAmount" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                                </div>
+                                            </td>
+                                             <td valign="top">
+                                                 <div id="minimumInstallmentAmountInputDiv" style="display: none;">
+                                                    <mifos:decimalinput styleId= "createLoanProduct.input.minimumInstallmentAmount" property="minimumInstallmentAmount" />
+                                                 </div>
+                                            </td>
+                                        </tr>
+                                    </c:if>
+
+                                    <tr class="fontnormal">
+                                            <td width="30%" align="right" valign="top"><mifos:mifoslabel
+                                                name="product.cashFlowValidation"
+                                                bundle="ProductDefUIResources" isColonRequired="yes" />
+                                            </td>
+                                            <td valign="top"><html-el:checkbox styleId="createLoanProduct.checkbox.cashFlowValidation"
+                                                onclick="showCashFlowInputs();" property="cashFlowValidation" value="1" />
+                                            </td>
+                                        </tr>
+                                        <tr class="fontnormal">
+                                            <td width="30%" align="right" valign="top">
+                                                <div id="cashFlowThresholdDiv"  style="display: none;">
+                                                    <mifos:mifoslabel name="product.cashFlowWarningThreshold" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                                </div>
+                                            </td>
+                                            <td valign="top">
+                                                <div id="cashFlowThresholdInputDiv" style="display: none;">
+                                                        <mifos:decimalinput styleId= "createLoanProduct.input.cashFlowWarningThreshold" property="cashFlowWarningThreshold" />
+                                                        <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" />
+                                                </div>
+                                            </td>
+                                       </tr>
+                                       
 									<tr class="fontnormal">
 										<td width="30%" align="right" valign="top"><mifos:mifoslabel
 											mandatory="yes" name="product.freqofinst"
@@ -948,12 +897,9 @@ explanation of the license and how it is applied.
 										<c:set
 											value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}"
 											var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
-
 										<tr class="fontnormal" id="intdeddis">
 											<td valign="top"><c:if
 												test="${repaymentSchedulesIndependentOfMeetingIsEnabled == '0'}">
-
-
 												<html-el:checkbox style="visibility:hidden"
 													property="intDedDisbursementFlag" value="1"
 													onclick="fnIntDesbr();" />
@@ -997,12 +943,14 @@ explanation of the license and how it is applied.
 									</table>
 									<br>
 									<script type="text/javascript">
+									    showCashFlowInputs();
 										fnIntDesbr();
 										fnGracePeriod();
 										checkRow();
 										checkType();
 										showLoanAmountType();
 										showInstallType();
+										showVariableInstallmentInputs();
 									</script>
 
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">

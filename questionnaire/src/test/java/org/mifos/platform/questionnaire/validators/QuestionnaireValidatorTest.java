@@ -24,9 +24,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.platform.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
-import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
@@ -260,11 +260,11 @@ public class QuestionnaireValidatorTest {
             fail("Should have thrown the validation exception");
         } catch (ValidationException e) {
             assertEquals(GENERIC_VALIDATION, e.getKey());
-            assertEquals(true, e.containsChildExceptions());
+            assertEquals(true, e.hasChildExceptions());
             assertEquals(1, e.getChildExceptions().size());
             ValidationException childException = e.getChildExceptions().get(0);
             assertTrue(childException instanceof MandatoryAnswerNotFoundException);
-            assertEquals("Q1", childException.getQuestionTitle());
+            assertEquals("Q1", childException.getIdentifier());
         }
     }
 
@@ -279,11 +279,11 @@ public class QuestionnaireValidatorTest {
             fail("Should have thrown the validation exception");
         } catch (ValidationException e) {
             assertEquals(GENERIC_VALIDATION, e.getKey());
-            assertEquals(true, e.containsChildExceptions());
+            assertEquals(true, e.hasChildExceptions());
             assertEquals(1, e.getChildExceptions().size());
             ValidationException childException = e.getChildExceptions().get(0);
             assertTrue(childException instanceof BadNumericResponseException);
-            assertEquals("Numeric Question", childException.getQuestionTitle());
+            assertEquals("Numeric Question", childException.getIdentifier());
             assertEquals(Integer.valueOf(10), ((BadNumericResponseException)childException).getAllowedMinValue());
             assertEquals(Integer.valueOf(100), ((BadNumericResponseException)childException).getAllowedMaxValue());
         }
@@ -300,11 +300,11 @@ public class QuestionnaireValidatorTest {
             fail("Should have thrown the validation exception");
         } catch (ValidationException e) {
             assertEquals(GENERIC_VALIDATION, e.getKey());
-            assertEquals(true, e.containsChildExceptions());
+            assertEquals(true, e.hasChildExceptions());
             assertEquals(1, e.getChildExceptions().size());
             ValidationException childException = e.getChildExceptions().get(0);
             assertTrue(childException instanceof BadNumericResponseException);
-            assertEquals("Numeric Question", childException.getQuestionTitle());
+            assertEquals("Numeric Question", childException.getIdentifier());
             assertEquals(Integer.valueOf(10), ((BadNumericResponseException)childException).getAllowedMinValue());
             assertNull(((BadNumericResponseException)childException).getAllowedMaxValue());
         }
@@ -321,11 +321,11 @@ public class QuestionnaireValidatorTest {
             fail("Should have thrown the validation exception");
         } catch (ValidationException e) {
             assertEquals(GENERIC_VALIDATION, e.getKey());
-            assertEquals(true, e.containsChildExceptions());
+            assertEquals(true, e.hasChildExceptions());
             assertEquals(1, e.getChildExceptions().size());
             ValidationException childException = e.getChildExceptions().get(0);
             assertTrue(childException instanceof BadNumericResponseException);
-            assertEquals("Numeric Question", childException.getQuestionTitle());
+            assertEquals("Numeric Question", childException.getIdentifier());
             assertNull(((BadNumericResponseException)childException).getAllowedMinValue());
             assertEquals(Integer.valueOf(100), ((BadNumericResponseException)childException).getAllowedMaxValue());
         }

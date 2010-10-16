@@ -20,18 +20,21 @@
 
 package org.mifos.accounts.loan.util.helpers;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Locale;
-
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class RepaymentScheduleInstallment implements Serializable {
 
     private Integer installment;
 
-    private java.util.Date dueDate;
+    private Date dueDateValue;
 
     private Money principal;
 
@@ -45,23 +48,47 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     private Locale locale;
 
-    public RepaymentScheduleInstallment(int installment, Date dueDate, Money principal, Money interest, Money fees,
-            Money miscFees, Money miscPenalty) {
+    private Money totalValue;
+
+    private String total;
+
+    private String dueDate;
+
+    private String dateFormat;
+
+    public RepaymentScheduleInstallment(int installment, Date dueDateValue, Money principal, Money interest, Money fees,
+                                        Money miscFees, Money miscPenalty, Locale locale) {
         this.installment = installment;
-        this.dueDate = dueDate;
         this.principal = principal;
         this.interest = interest;
         this.fees = fees;
         this.miscFees = miscFees;
         this.miscPenalty = miscPenalty;
+        this.totalValue = principal.add(interest).add(fees).add(miscFees).add(miscPenalty);
+        this.total = this.totalValue.toString();
+        this.locale = locale;
+        this.dateFormat = computeDateFormat(this.locale);
+        this.dueDateValue = dueDateValue;
+        this.dueDate = DateUtils.getDBtoUserFormatString(dueDateValue, locale);
+    }
+
+    @Deprecated
+    public RepaymentScheduleInstallment(Locale locale) {
+        this.locale = locale;
+        this.dateFormat = computeDateFormat(locale);
+    }
+
+    private String computeDateFormat(Locale locale) {
+        String dateSeparator = DateUtils.getDateSeparatorByLocale(locale, DateFormat.MEDIUM);
+        return String.format("dd%sMMM%syyyy", dateSeparator, dateSeparator);
     }
 
     public void setInstallment(Integer installment) {
         this.installment = installment;
     }
 
-    public void setDueDate(java.util.Date dueDate) {
-        this.dueDate = dueDate;
+    public void setDueDateValue(Date dueDateValue) {
+        this.dueDateValue = dueDateValue;
     }
 
     public void setPrincipal(Money principal) {
@@ -73,15 +100,16 @@ public class RepaymentScheduleInstallment implements Serializable {
     }
 
     public void setFees(Money fees) {
-        this.fees = this.fees.add(fees);
+        if (this.fees == null) this.fees = fees;
+        else this.fees = this.fees.add(fees);
     }
 
     public Integer getInstallment() {
         return installment;
     }
 
-    public java.util.Date getDueDate() {
-        return dueDate;
+    public Date getDueDateValue() {
+        return dueDateValue;
     }
 
     public Money getPrincipal() {
@@ -96,21 +124,12 @@ public class RepaymentScheduleInstallment implements Serializable {
         return fees;
     }
 
-    public Money getTotal() {
-        return principal.add(interest).add(fees).add(miscFees).add(miscPenalty);
-    }
-
-    public String getDueDateInUserLocale() {
-        return DateUtils.getDBtoUserFormatString(getDueDate(), getLocale());
-
+    public Money getTotalValue() {
+        return totalValue;
     }
 
     public Locale getLocale() {
         return locale;
-    }
-
-    public void setLocale(Locale locale) {
-        this.locale = locale;
     }
 
     public Money getMiscFees() {
@@ -129,4 +148,43 @@ public class RepaymentScheduleInstallment implements Serializable {
         this.miscPenalty = miscPenalty;
     }
 
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+//        this.dueDateValue = DateUtils.getDate(dueDate, locale, dateFormat);
+        this.dueDate = dueDate;
+    }
+
+    public void setTotalValue(Double totalValue) {
+        this.totalValue = new Money(getCurrency(), totalValue);
+    }
+
+    public MifosCurrency getCurrency() {
+        return principal.getCurrency();
+    }
+
+    public String getTotal() {
+        return total;
+    }
+
+    public void setTotal(String total) {
+        this.total = total;
+    }
+
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public String getInstallmentNumberAsString() {
+        return String.valueOf(installment);
+    }
+
+    public Calendar getDueDateValueAsCalendar() {
+        if (dueDateValue == null) return null;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dueDateValue);
+        return calendar;
+    }
 }

@@ -47,7 +47,6 @@
     </div>
     [@mifos.footer/]
 [/#macro]
-
 [#macro adminClientLeftPane]
     [@mifos.header "title" /]
     [@mifos.topNavigationNoSecurity currentTab="Admin" /]
@@ -64,6 +63,22 @@
                 <div class="side_bar">
                     [#include "adminClientLeftPane.ftl" /]
                 </div>
+            </div>
+        </div>
+    </div>
+    [@mifos.footer/]
+[/#macro]
+[#macro headerOnlyLayout]
+    [@mifos.header "title" /]
+    [@mifos.topNavigationNoSecurity currentTab="ClientsAndAccounts" /]
+    <div class="colmask leftmenu">
+        <div class="leftmenu noleftcol">
+            <div class="col1wrap">
+                <div class="col1nomargin">
+                <div class="main_content">
+                    [#nested]
+                </div>
+             </div>
             </div>
         </div>
     </div>

@@ -26,4 +26,5 @@
     <bean id="databaseTestUtils" class="org.mifos.test.framework.util.DatabaseTestUtils" />
 
     <import resource="classpath:META-INF/spring/QuestionnaireContext.xml"/>
+    <import resource="classpath:META-INF/spring/CashFlowContext.xml"/>
 </beans>

@@ -23,15 +23,17 @@ package org.mifos.test.acceptance.loanproduct;
 
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
 import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
-import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -40,8 +42,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"loanproduct","acceptance", "ui"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui","smoke"})
 public class EditLoanProductTest extends UiTestCaseBase {
 
     @Autowired
@@ -51,9 +53,13 @@ public class EditLoanProductTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
+
 
     @Override
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
@@ -62,10 +68,11 @@ public class EditLoanProductTest extends UiTestCaseBase {
 
     @AfterMethod
     public void logOut() {
-        (new MifosPage(selenium)).logout();
+//        (new MifosPage(selenium)).logout();
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
     public void viewExistingLoanProduct() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
         ViewLoanProductsPage viewLoanProducts = loginAndNavigateToViewLoanProductsPage();
@@ -74,7 +81,8 @@ public class EditLoanProductTest extends UiTestCaseBase {
 
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
     public void editExistingLoanProduct() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
         ViewLoanProductsPage viewLoanProducts = loginAndNavigateToViewLoanProductsPage();
@@ -96,6 +104,73 @@ public class EditLoanProductTest extends UiTestCaseBase {
 
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
+    public void verifyLSIMDisabled() throws Exception {
+        applicationDatabaseOperation.updateLSIM(0);
+        createNewLoanProductAndNavigateToEditLoanPage().
+                verifyVariableInstalmentOptionDisabled();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
+    public void verifyVariableInstalmentUnchecked() throws Exception {
+        applicationDatabaseOperation.updateLSIM(1);
+        createNewLoanProductAndNavigateToEditLoanPage().
+                submitAndGotoProductPreviewPage().
+                verifyVariableInstalmentUnChecked().submit().
+                verifyVariableInstalmentOptionUnChecked();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
+    public void verifyVariableInstalment() throws Exception {
+        applicationDatabaseOperation.updateLSIM(1);
+        createNewLoanProductAndNavigateToEditLoanPage();
+        setAndValidateInstalmentOption("60", "1", "100");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyVariableInstalmentWithNullValues() throws Exception {
+        applicationDatabaseOperation.updateLSIM(1);
+        createNewLoanProductAndNavigateToEditLoanPage();
+        setAndValidateInstalmentOption("","1","");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyCashFlow() throws Exception {
+        createNewLoanProductAndNavigateToEditLoanPage();
+        setAndValidateCashFlow("99.9");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyCashFlowWithNullValue() throws Exception {
+        createNewLoanProductAndNavigateToEditLoanPage();
+        setAndValidateCashFlow("");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyCashFlowUnchecked() throws Exception {
+        createNewLoanProductAndNavigateToEditLoanPage().
+                submitAndGotoProductPreviewPage().
+                verifyCashFlowUncheckedInEditPreview().
+                submit().verifyCashFlowUncheckedInEditedProduct();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyCashFlowFields() throws Exception {
+        createNewLoanProductAndNavigateToEditLoanPage().
+                verifyCashFlowDefaultsInEditProduct();
+//                verifyCashFlowFields();
+    }
+
+
+
+    private void setAndValidateCashFlow(String warningThreshold) {
+        new EditLoanProductPage(selenium).
+                setCashFlowThreshold(warningThreshold).
+                submitAndGotoProductPreviewPage().
+                verifyCashflowThresholdInEditPreview(warningThreshold).
+                submit().verifyCashFlowOfEditedLoan(warningThreshold);
+    }
+
     private ViewLoanProductsPage loginAndNavigateToViewLoanProductsPage() {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
@@ -104,13 +179,37 @@ public class EditLoanProductTest extends UiTestCaseBase {
         return viewLoanProducts;
     }
 
-
     private AdminPage loginAndNavigateToAdminPage() {
         return appLauncher
-         .launchMifos()
-         .loginSuccessfullyUsingDefaultCredentials()
-         .navigateToAdminPage();
-     }
+                .launchMifos()
+                .loginSuccessfullyUsingDefaultCredentials()
+                .navigateToAdminPage();
+    }
+
+    private String createMonthlyLoanProduct() {
+        SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
+        formParameters.setOfferingShortName(StringUtil.getRandomString(4));
+        String loanName = formParameters.getOfferingName();
+        loginAndNavigateToAdminPage().
+        navigateToDefineLoanProduct().
+        fillLoanParameters(formParameters).submitAndGotoNewLoanProductPreviewPage().submit();
+        return loanName;
+    }
+
+    private void setAndValidateInstalmentOption(String maxGap, String minGap, String minInstalmentAmount) {
+        new EditLoanProductPage(selenium).submitVariableInstalmentChange(maxGap, minGap, minInstalmentAmount)
+                .verifyVariableInstalmentOption(maxGap, minGap, minInstalmentAmount).
+                submit()
+                .verifyVariableInstalmentOption(maxGap, minGap, minInstalmentAmount);
+    }
+
+    private EditLoanProductPage createNewLoanProductAndNavigateToEditLoanPage() {
+        String loanName = createMonthlyLoanProduct();
+        return loginAndNavigateToAdminPage().
+                navigateToViewLoanProducts().
+                viewLoanProductDetails(loanName).
+                editLoanProduct();
+    }
 
 }
 

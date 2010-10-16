@@ -11,7 +11,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
-import org.mifos.platform.questionnaire.exceptions.ValidationException;
+import org.mifos.platform.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -41,6 +41,7 @@ public class QuestionnaireFlowAdapter {
     public ActionForward fetchAppliedQuestions(
             ActionMapping mapping, QuestionResponseCapturer form,
             HttpServletRequest request, ActionForwards defaultForward) {
+        joinFlowAt = defaultForward;
         if (CollectionUtils.isEmpty(form.getQuestionGroups())) {
             List<QuestionGroupDetail> questionGroups = getQuestionGroups(request);
             if (CollectionUtils.isEmpty(questionGroups)) {
@@ -61,7 +62,7 @@ public class QuestionnaireFlowAdapter {
         return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
     }
 
-    public ActionErrors validateResponses(HttpServletRequest request, QuestionResponseCapturer form) {
+   public ActionErrors validateResponses(HttpServletRequest request, QuestionResponseCapturer form) {
         List<QuestionGroupDetail> groups = form.getQuestionGroups();
         QuestionnaireServiceFacade questionnaireServiceFacade = serviceLocator.getService(request);
         if ((groups == null) || (questionnaireServiceFacade == null)) {
@@ -71,10 +72,10 @@ public class QuestionnaireFlowAdapter {
         try {
             questionnaireServiceFacade.validateResponses(groups);
         } catch (ValidationException e) {
-            if (e.containsChildExceptions()) {
+            if (e.hasChildExceptions()) {
                 for (ValidationException ve : e.getChildExceptions()) {
                    if (ve instanceof MandatoryAnswerNotFoundException) {
-                       errors.add(ClientConstants.ERROR_REQUIRED, new ActionMessage(ClientConstants.ERROR_REQUIRED, ve.getQuestionTitle()));
+                       errors.add(ClientConstants.ERROR_REQUIRED, new ActionMessage(ClientConstants.ERROR_REQUIRED, ve.getIdentifier()));
                    }
                    else if (ve instanceof BadNumericResponseException) {
                        populateNumericError((BadNumericResponseException) ve, errors);
@@ -87,7 +88,7 @@ public class QuestionnaireFlowAdapter {
     }
 
     private void populateNumericError(BadNumericResponseException exception, ActionErrors actionErrors) {
-        String title = exception.getQuestionTitle();
+        String title = exception.getIdentifier();
         Integer allowedMinValue = exception.getAllowedMinValue();
         Integer allowedMaxValue = exception.getAllowedMaxValue();
         if (exception.areMinMaxBoundsPresent()) {

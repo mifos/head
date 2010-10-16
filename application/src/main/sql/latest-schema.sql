@@ -1237,6 +1237,16 @@ create unique index prd_offering_short_name_idx on prd_offering (prd_offering_sh
 create index prd_offering_office_idx on prd_offering (office_id);
 create index prd_type_idx on prd_offering (prd_type_id);
 
+create table variable_installment_details (
+  id smallint auto_increment not null,
+  min_gap_in_days smallint,
+  max_gap_in_days smallint,
+  min_loan_amount decimal(21,4),
+  min_loan_amount_currency_id smallint,
+  primary key(id)
+)
+engine=innodb character set utf8;
+
 create table loan_offering (
   prd_offering_id smallint not null,
   interest_type_id smallint not null,
@@ -1265,6 +1275,10 @@ create table loan_offering (
   interest_glcode_id smallint not null,
   penalties_glcode_id smallint,
   interest_waiver_flag smallint default 0,
+  variable_installment_flag smallint default 0,
+  variable_installment_details_id smallint,
+  cashflow_comparison_flag smallint default 0,
+  cashflow_threshold decimal(13, 10),
   primary key(prd_offering_id),
   foreign key(principal_glcode_id)
     references gl_code(glcode_id)
@@ -1308,6 +1322,10 @@ create table loan_offering (
       on update no action,
   foreign key(default_loan_amount_currency_id)
     references currency(currency_id)
+      on delete no action
+      on update no action,
+  foreign key(variable_installment_details_id)
+    references variable_installment_details(id)
       on delete no action
       on update no action
 )
@@ -4596,3 +4614,35 @@ create table BATCH_STEP_EXECUTION_SEQ (id bigint not null) engine=myisam;
 create table BATCH_JOB_EXECUTION_SEQ (id bigint not null) engine=myisam;
 
 create table BATCH_JOB_SEQ (id bigint not null) engine=myisam;
+
+create table cash_flow  (
+  id int auto_increment not null primary key,
+  capital decimal(13, 10),
+  liability decimal(13, 10)
+) engine=innodb character set utf8;
+
+create table monthly_cash_flow_details(
+  id int auto_increment not null primary key,
+  cash_flow_id int,
+  month_year date,
+  revenue decimal(21, 4) not null,
+  expenses decimal(21, 4) not null,
+  notes varchar(300),
+  foreign key(cash_flow_id)
+  references cash_flow(id)
+   on delete no action
+   on update no action
+) engine=innodb character set utf8;
+
+create table loan_cash_flow  (
+  loan_id int not null,
+  cash_flow_id int not null,
+  foreign key(loan_id)
+  references loan_account(account_id)
+   on delete no action
+   on update no action,
+  foreign key(cash_flow_id)
+  references cash_flow(id)
+   on delete no action
+   on update no action
+) engine=innodb character set utf8;

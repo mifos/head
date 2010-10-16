@@ -22,6 +22,7 @@
 [@adminLeftPaneLayout]
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
     <script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
+    <script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
     <script src="pages/questionnaire/js/createQuestion.js" type="text/javascript"></script>
     <script src="pages/questionnaire/js/editQuestion.js" type="text/javascript"></script>
     <span id="page.id" title="editQuestion"></span>

@@ -116,7 +116,7 @@ public class ClientTest extends UiTestCaseBase {
 
         ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
 
-        ClientViewDetailsPage clientDetailsPage = clientsAndAccountsPage.createClient("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
+        ClientViewDetailsPage clientDetailsPage = clientsAndAccountsPage.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
 
         clientsAndAccountsPage.changeCustomerStatus(clientDetailsPage);
     }

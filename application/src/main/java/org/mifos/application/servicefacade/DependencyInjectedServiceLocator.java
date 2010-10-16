@@ -33,6 +33,14 @@ import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
 import org.mifos.accounts.fund.servicefacade.WebTierFundServiceFacade;
+import org.mifos.accounts.loan.business.service.validators.InstallmentFormatValidator;
+import org.mifos.accounts.loan.business.service.validators.InstallmentFormatValidatorImpl;
+import org.mifos.accounts.loan.business.service.validators.InstallmentRulesValidator;
+import org.mifos.accounts.loan.business.service.validators.InstallmentRulesValidatorImpl;
+import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
+import org.mifos.accounts.loan.business.service.validators.InstallmentsValidatorImpl;
+import org.mifos.accounts.loan.business.service.validators.ListOfInstallmentsValidator;
+import org.mifos.accounts.loan.business.service.validators.ListOfInstallmentsValidatorImpl;
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
@@ -146,6 +154,11 @@ public class DependencyInjectedServiceLocator {
     // helpers
     private static HibernateTransactionHelper hibernateTransactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
+    // validators
+    private static InstallmentFormatValidator installmentFormatValidator;
+    private static ListOfInstallmentsValidator listOfInstallmentsValidator;
+    private static InstallmentRulesValidator installmentRulesValidator;
+    private static InstallmentsValidator installmentsValidator;
 
     public static CollectionSheetService locateCollectionSheetService() {
 
@@ -341,5 +354,33 @@ public class DependencyInjectedServiceLocator {
 
     public static FundDao locateFundDao() {
         return fundDao;
+    }
+
+    public static InstallmentFormatValidator locateInstallmentFormatValidator() {
+        if (installmentFormatValidator == null) {
+            installmentFormatValidator = new InstallmentFormatValidatorImpl();
+        }
+        return installmentFormatValidator;
+    }
+
+    public static ListOfInstallmentsValidator locateListOfInstallmentsValidator() {
+        if (listOfInstallmentsValidator == null) {
+            listOfInstallmentsValidator = new ListOfInstallmentsValidatorImpl();
+        }
+        return listOfInstallmentsValidator;
+    }
+
+    public static InstallmentRulesValidator locateInstallmentRulesValidator() {
+        if (installmentRulesValidator == null) {
+            installmentRulesValidator = new InstallmentRulesValidatorImpl();
+        }
+        return installmentRulesValidator;
+    }
+
+    public static InstallmentsValidator locateInstallmentsValidator() {
+        if (installmentsValidator == null) {
+            installmentsValidator = new InstallmentsValidatorImpl(locateInstallmentFormatValidator(), locateListOfInstallmentsValidator(), locateInstallmentRulesValidator());
+        }
+        return installmentsValidator;
     }
 }

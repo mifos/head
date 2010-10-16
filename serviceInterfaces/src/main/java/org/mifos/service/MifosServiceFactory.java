@@ -20,6 +20,7 @@
 
 package org.mifos.service;
 
+import org.mifos.platform.cashflow.CashFlowService;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -33,12 +34,20 @@ public class MifosServiceFactory {
     }
 
     public static QuestionnaireServiceFacade getQuestionnaireServiceFacade(HttpServletRequest request) {
-        QuestionnaireServiceFacade questionnaireServiceFacade;
         try {
-            questionnaireServiceFacade = (QuestionnaireServiceFacade) getSpringBean(request, "questionnaireServiceFacade");
+            return (QuestionnaireServiceFacade) getSpringBean(request, "questionnaireServiceFacade");
         } catch (Exception e) {
-            questionnaireServiceFacade = null;
+            // to support existing struts tests
+            return null;
         }
-        return questionnaireServiceFacade;
+    }
+
+    public static CashFlowService getCashFlowService(HttpServletRequest request) {
+        try {
+            return (CashFlowService) getSpringBean(request, "cashFlowService");
+        } catch (Exception e) {
+            // to support existing struts tests
+            return null;
+        }
     }
 }

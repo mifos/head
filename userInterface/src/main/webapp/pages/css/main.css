@@ -58,8 +58,15 @@ html, body { height: 100% }
     left:200px;
     position:relative;
     width:200%;
-
 }
+.leftmenu .noleftcol {
+	 background-color:  #FFFFFF;
+    float:left;
+    left:0px;
+    position:relative;
+    width:240%;
+}
+
 .leftmenu .col1wrap {
     float:right;
     padding-bottom:1em;
@@ -69,6 +76,12 @@ html, body { height: 100% }
 }
 .leftmenu .col1 {
 	margin:0 0 0 200px;
+    overflow:hidden;
+    position:relative;
+    right:100%;
+}
+.leftmenu .col1nomargin {
+	margin:0 0 0 120px;
     overflow:hidden;
     position:relative;
     right:100%;
@@ -141,3 +154,15 @@ html, body { height: 100% }
 .content_panel .questions{
 	list-style-type: circle;
 }
+.button_footer {
+   /* background: #EEEEEE;
+    border-top: 1px solid #CCCCCC;
+    padding: 10px 0;*/
+    clear: both;
+}
+.button_container {
+    clear: both;
+    margin: 5px auto;
+    text-align: center;
+}
+

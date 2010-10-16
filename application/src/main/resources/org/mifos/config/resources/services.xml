@@ -144,4 +144,12 @@
 
     <bean name="questionnaireMigrationMapper" class="org.mifos.application.questionnaire.migration.mappers.QuestionnaireMigrationMapperImpl"/>
 
+    <bean name="installmentFormatValidator" class="org.mifos.accounts.loan.business.service.validators.InstallmentFormatValidatorImpl"/>
+
+    <bean name="listOfInstallmentsValidator" class="org.mifos.accounts.loan.business.service.validators.ListOfInstallmentsValidatorImpl"/>
+
+    <bean name="installmentRulesValidator" class="org.mifos.accounts.loan.business.service.validators.InstallmentRulesValidatorImpl"/>
+
+    <bean name="installmentsValidator" class="org.mifos.accounts.loan.business.service.validators.InstallmentsValidatorImpl"/>
+
 </beans>

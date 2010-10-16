@@ -185,4 +185,15 @@ public interface AccountConstants {
     String SELECTED_ACCOUNT_STATUS = "SelectedAccountStatus";
 
     String GL_CODE = "glCode";
+    String INSTALLMENT_DUEDATE_INVALID = "errors.installment.duedate.invalid"; 
+    String INSTALLMENT_DUEDATE_SAME_AS_DISBURSE_DATE = "errors.installment.duedate.same.as.disburse.date"; 
+    String INSTALLMENT_DUEDATE_IS_HOLIDAY = "errors.installment.duedate.is.holiday"; 
+    String INSTALLMENT_DUEDATE_BEFORE_DISBURSE_DATE = "errors.installment.duedate.before.disburse.date";
+    String INSTALLMENT_DUEDATE_DUPLICATE = "errors.installment.duedate.duplicate";
+    String INSTALLMENT_DUEDATE_INVALID_ORDER = "errors.installment.duedate.invalid.order";
+    String INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP = "errors.installment.duedate.within.min.gap";
+    String INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP = "errors.installment.duedate.beyond.max.gap";
+    String INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT = "errors.installment.amount.less.than.min.amount";
+    String INSTALLMENT_TOTAL_AMOUNT_INVALID = "errors.installment.total.amount.invalid";
+    String GENERIC_VALIDATION_ERROR = "Generic Error";
 }

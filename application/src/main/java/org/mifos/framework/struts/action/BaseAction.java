@@ -239,7 +239,10 @@ public abstract class BaseAction extends DispatchAction {
     }
 
     private void joinToken(HttpServletRequest request) throws PageExpiredException {
-        String flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
+        String flowKey = (String) request.getParameter(Constants.CURRENTFLOWKEY);
+        if(null == flowKey){
+            flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
+        }
         FlowManager flowManager = (FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER);
         if (flowKey == null || !flowManager.isFlowValid(flowKey)) {
             throw new PageExpiredException("no flow for key " + flowKey);

@@ -83,7 +83,7 @@ public class DataSetUpgradeUtil {
 
     // Variables for data from command line
     String dataSetName;
-    String databaseName = "mifos_gazelle_acceptance";
+    String databaseName = "mifos_acceptance_tests";
     String user;
     String password;
     String dataSetDirectoryName;
@@ -181,7 +181,7 @@ public class DataSetUpgradeUtil {
             jdbcConnection.commit();
             jdbcConnection.setAutoCommit(true);
             IDatabaseConnection databaseConnection = new DatabaseConnection(jdbcConnection);
-            databaseConnection.getConfig().setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, Boolean.TRUE);
+            databaseConnection.getConfig().setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, Boolean.FALSE);
             DatabaseOperation.CLEAN_INSERT.execute(databaseConnection, dataSet);
         }
         finally {

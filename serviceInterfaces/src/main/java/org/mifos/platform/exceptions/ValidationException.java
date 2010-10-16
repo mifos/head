@@ -18,7 +18,7 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.exceptions;
+package org.mifos.platform.exceptions;
 
 import org.mifos.framework.exceptions.SystemException;
 
@@ -32,19 +32,23 @@ import static org.mifos.platform.util.CollectionUtils.isEmpty;
 
 @SuppressWarnings("PMD")
 public class ValidationException extends SystemException {
-    //TODO FIXEME rename to QuestionnaireValidationException for disambiguation with org.mifos.framework.exception.ValidationException
     private static final long serialVersionUID = -8094463668575047971L;
     private List<ValidationException> childExceptions;
-    protected final String questionTitle;
+    protected final String identifier;
     private static final String MIFOS_PACKAGE_PREFIX = "org.mifos";
 
     public ValidationException(String key) {
         this(key, null);
     }
 
-    protected ValidationException(String key, String questionTitle) {
+    public ValidationException(String key, String identifier) {
         super(key);
-        this.questionTitle = questionTitle;
+        this.identifier = identifier;
+    }
+
+    public ValidationException(String key, String identifier, String message) {
+        super(key, message);
+        this.identifier = identifier;
     }
 
     public void addChildException(ValidationException validationException) {
@@ -56,12 +60,12 @@ public class ValidationException extends SystemException {
         return childExceptions;
     }
 
-    public boolean containsChildExceptions() {
+    public boolean hasChildExceptions() {
         return !isEmpty(childExceptions);
     }
 
-    public String getQuestionTitle() {
-        return questionTitle;
+    public String getIdentifier() {
+        return identifier;
     }
 
     @Override
@@ -106,4 +110,13 @@ public class ValidationException extends SystemException {
         buffer.append("\n");
     }
 
+    public void copyChildExceptions(ValidationException otherException) {
+        if (otherException.hasChildExceptions()) {
+            for (ValidationException validationException : otherException.getChildExceptions()) {
+                addChildException(validationException);
+            }
+        } else {
+            addChildException(otherException);
+        }
+    }
 }
