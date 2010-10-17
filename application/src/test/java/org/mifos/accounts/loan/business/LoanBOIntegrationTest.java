@@ -27,6 +27,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.acceptedpaymenttype.business.service.AcceptedPaymentTypeService;
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -5642,7 +5643,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * These tests validate new schedule-generating code
      ****************************************/
 
-    @Test
+    @Test @Ignore
     public void testScheduleWeeklyLoanNoFeesNoHoliday() throws Exception {
 
         Session session = StaticHibernateUtil.getSessionTL();
