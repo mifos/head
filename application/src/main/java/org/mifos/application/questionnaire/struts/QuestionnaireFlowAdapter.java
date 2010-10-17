@@ -8,9 +8,9 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.platform.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
-import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -77,10 +77,10 @@ public class QuestionnaireFlowAdapter {
         try {
             questionnaireServiceFacade.validateResponses(groups);
         } catch (ValidationException e) {
-            if (e.containsChildExceptions()) {
+            if (e.hasChildExceptions()) {
                 for (ValidationException ve : e.getChildExceptions()) {
                    if (ve instanceof MandatoryAnswerNotFoundException) {
-                       errors.add(ClientConstants.ERROR_REQUIRED, new ActionMessage(ClientConstants.ERROR_REQUIRED, ve.getQuestionTitle()));
+                       errors.add(ClientConstants.ERROR_REQUIRED, new ActionMessage(ClientConstants.ERROR_REQUIRED, ve.getIdentifier()));
                    }
                    else if (ve instanceof BadNumericResponseException) {
                        populateNumericError((BadNumericResponseException) ve, errors);
@@ -93,7 +93,7 @@ public class QuestionnaireFlowAdapter {
     }
 
     private void populateNumericError(BadNumericResponseException exception, ActionErrors actionErrors) {
-        String title = exception.getQuestionTitle();
+        String title = exception.getIdentifier();
         Integer allowedMinValue = exception.getAllowedMinValue();
         Integer allowedMaxValue = exception.getAllowedMaxValue();
         if (exception.areMinMaxBoundsPresent()) {

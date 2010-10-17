@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.loanproduct;
 
 
+import java.util.Random;
+
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
@@ -31,8 +33,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.Random;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(sequential = true, groups = {"smoke", "loanproduct", "acceptance"})
@@ -62,7 +62,7 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         verifyPage().
         defineLoanProduct(formParameters);
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createWeeklyLoanProductWithQuestionGroups()throws Exception {
         String questionGroupTitle = "QG1" + random.nextInt(100);
@@ -71,9 +71,8 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         questionGroupHelper.createQuestionGroup(questionGroupTitle, question1, question2, "Create Loan");
 
         SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParametersWithQuestionGroups(questionGroupTitle);
-        AdminPage adminPage = loginAndNavigateToAdminPage();
-        adminPage.verifyPage();
-        adminPage.defineLoanProduct(formParameters);
+        new NavigationHelper(selenium).navigateToAdminPage().
+        verifyPage().defineLoanProduct(formParameters);
 
     }
 
@@ -81,8 +80,7 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
     public void createMonthlyLoanProduct() throws Exception {
         SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
         new NavigationHelper(selenium).navigateToAdminPage().
-        verifyPage().
-        defineLoanProduct(formParameters);
+        verifyPage().defineLoanProduct(formParameters);
     }
 }
 

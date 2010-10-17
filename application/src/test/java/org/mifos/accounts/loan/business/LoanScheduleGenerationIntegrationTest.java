@@ -132,6 +132,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
         new DateTimeService().resetToCurrentSystemDateTime();
     }
 
+    @Ignore
     @Test
     public void testNewWeeklyGroupLoanNoFeesNoHoliday() throws Exception {
 

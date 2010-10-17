@@ -20,34 +20,34 @@
 
 package org.mifos.platform.questionnaire.validators;
 
+
+
 import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.platform.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.domain.AnswerType;
 import org.mifos.platform.questionnaire.domain.QuestionChoiceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionEntity;
 import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
-import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
-import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
-import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.*; //NOPMD
 import static org.mifos.platform.util.CollectionUtils.isEmpty;
 import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
@@ -108,7 +108,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
             validateResponsesInQuestionGroup(questionGroupDetail, validationException);
         }
-        if (validationException.containsChildExceptions()) {
+        if (validationException.hasChildExceptions()) {
             throw validationException;
         }
     }
@@ -127,7 +127,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
             }
         }
         validateSections(questionGroupDto.getSections(), parentException);
-        if (parentException.containsChildExceptions()) {
+        if (parentException.hasChildExceptions()) {
             throw parentException;
         }
     }
@@ -172,7 +172,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     public void validateForDefineQuestion(QuestionDto questionDto) {
         ValidationException parentException = new ValidationException(GENERIC_VALIDATION);
         validateQuestion(questionDto, parentException, false);
-        if (parentException.containsChildExceptions()) {
+        if (parentException.hasChildExceptions()) {
             throw parentException;
         }
     }

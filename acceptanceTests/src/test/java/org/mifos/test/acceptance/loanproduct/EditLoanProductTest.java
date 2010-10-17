@@ -115,7 +115,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
     public void verifyVariableInstalmentUnchecked() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
         createNewLoanProductAndNavigateToEditLoanPage().
-                submitAndGotoProductPreviewPage().
+                editSubmit().
                 verifyVariableInstalmentUnChecked().submit().
                 verifyVariableInstalmentOptionUnChecked();
     }
@@ -149,7 +149,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowUnchecked() throws Exception {
         createNewLoanProductAndNavigateToEditLoanPage().
-                submitAndGotoProductPreviewPage().
+                editSubmit().
                 verifyCashFlowUncheckedInEditPreview().
                 submit().verifyCashFlowUncheckedInEditedProduct();
     }
@@ -166,7 +166,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
     private void setAndValidateCashFlow(String warningThreshold) {
         new EditLoanProductPage(selenium).
                 setCashFlowThreshold(warningThreshold).
-                submitAndGotoProductPreviewPage().
+                editSubmit().
                 verifyCashflowThresholdInEditPreview(warningThreshold).
                 submit().verifyCashFlowOfEditedLoan(warningThreshold);
     }

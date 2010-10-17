@@ -567,12 +567,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return loanScheduleDetailsDto;
     }
 
-    private void setPerspectiveOnRequest(HttpServletRequest request) {
-        String perspective = request.getParameter(PERSPECTIVE);
-        if (perspective != null) {
-            request.setAttribute(PERSPECTIVE, request.getParameter(PERSPECTIVE));
-        }
-    }
+
 
     private void setVariableInstallmentDetailsOnForm(LoanOfferingBO loanOffering, LoanAccountActionForm loanActionForm) {
         boolean variableInstallmentsAllowed = loanOffering.isVariableInstallmentsAllowed();

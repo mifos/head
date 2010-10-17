@@ -106,7 +106,7 @@ public class EditLoanProductPage extends MifosPage {
         selenium.type(minInstalmentAmountTextBox, minInstalmentAmount);
         return editSubmit();
     }
-    private EditLoanProductPreviewPage editSubmit() {
+    public EditLoanProductPreviewPage editSubmit() {
         selenium.click("EditLoanProduct.button.preview");
         waitForPageToLoad();
         return new EditLoanProductPreviewPage(selenium);
@@ -173,4 +173,5 @@ public class EditLoanProductPage extends MifosPage {
         Assert.assertTrue(selenium.isVisible(cashFlowThresholdTextBox));
         return this;
     }
+
 }
