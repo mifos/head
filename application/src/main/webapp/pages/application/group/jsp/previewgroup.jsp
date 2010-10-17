@@ -289,7 +289,7 @@ explanation of the license and how it is applied.
 				
 				<tr id="Group.TrainedDate">
                   <td class="fontnormalbold">
-					 <mifos:mifoslabel name="Group.grouptrainedon" bundle="GroupUIResources" keyhm="Group.TrainedDate" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
+					 <mifos:mifoslabel name="Group.grouptrainedon" bundle="GroupUIResources" keyhm="Group.Trained" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
 					<span class="fontnormal">
 						<c:out value="${sessionScope.groupCustActionForm.trainedDate}" />
 					</span><br>

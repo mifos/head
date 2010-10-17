@@ -198,7 +198,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setState(QuestionGroupState.getQuestionGroupStateAsEnum(questionGroupDetail.isActive()));
         questionGroup.setDateOfCreation(getCurrentDateTime());
         questionGroup.setSections(mapToSections(questionGroupDetail));
-        questionGroup.setEventSources(mapToEventSources(questionGroupDetail.getEventSources()));
+        questionGroup.setEventSources(mapEventSourceDtoToEntity(questionGroupDetail.getEventSources()));
         questionGroup.setEditable(questionGroupDetail.isEditable());
         return questionGroup;
     }
@@ -207,7 +207,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return questionGroupDetail.isNewQuestionGroup() ? new QuestionGroup() : questionGroupDao.getDetails(questionGroupDetail.getId());
     }
 
-    private Set<EventSourceEntity> mapToEventSources(List<EventSourceDto> eventSourceDtos) {
+    private Set<EventSourceEntity> mapEventSourceDtoToEntity(List<EventSourceDto> eventSourceDtos) {
         Set<EventSourceEntity> eventSources = new HashSet<EventSourceEntity>();
         for (EventSourceDto eventSourceDto : eventSourceDtos) {
             List list = eventSourceDao.retrieveByEventAndSource(eventSourceDto.getEvent(), eventSourceDto.getSource());
@@ -418,7 +418,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setEditable(questionGroupDto.isEditable());
         questionGroup.setDateOfCreation(getCurrentDateTime());
         questionGroup.setPpi(questionGroupDto.isPpi());
-        questionGroup.setEventSources(mapToEventSources(questionGroupDto.getEventSourceDtos()));
+        questionGroup.setEventSources(mapEventSourceDtoToEntity(questionGroupDto.getEventSourceDtos()));
         questionGroup.setTitle(questionGroupDto.getTitle());
         questionGroup.setState(QuestionGroupState.ACTIVE);
         questionGroup.setSections(mapToSectionsFromDtos(questionGroupDto.getSections()));
