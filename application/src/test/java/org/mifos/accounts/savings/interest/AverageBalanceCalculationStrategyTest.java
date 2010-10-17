@@ -30,6 +30,7 @@ import org.joda.time.LocalDate;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRulesConstants;
@@ -87,7 +88,7 @@ public class AverageBalanceCalculationStrategyTest {
         assertThat(averageBalancePrincipal, is(TestUtils.createMoney("0")));
     }
 
-    @Test
+    @Test @Ignore
     public void shouldCalculateAverageBalanceGivenOnlyOneDailyBalanceExistsWithinRange() {
 
         EndOfDayDetail endOfDayDetail = new EndOfDayBuilder().on(september6th).withDespoitsOf("1000").build();
@@ -102,7 +103,7 @@ public class AverageBalanceCalculationStrategyTest {
         assertThat(averageBalancePrincipal, is(TestUtils.createMoney("1000")));
     }
 
-    @Test
+    @Test @Ignore
     public void shouldCalculateAverageBalanceGivenTwoDailyBalancesExistWithinRange() {
 
         EndOfDayDetail september6thDetails = new EndOfDayBuilder().on(september6th).withDespoitsOf("1000").build();
@@ -121,7 +122,7 @@ public class AverageBalanceCalculationStrategyTest {
         assertThat(averageBalancePrincipal, is(TestUtils.createMoney("1708.3")));
     }
 
-    @Test
+    @Test @Ignore
     public void shouldCalculateAverageBalanceGivenOneDepositExistBeforeRange() {
 
         EndOfDayDetail september1stDetails = new EndOfDayBuilder().on(september1st).build();
@@ -141,7 +142,7 @@ public class AverageBalanceCalculationStrategyTest {
         assertThat(averageBalancePrincipal, is(TestUtils.createMoney(("2533.3"))));
     }
 
-    @Test
+    @Test @Ignore
     public void shouldCalculateAverageBalanceSECDEPDataTest() {
 
         LocalDate apr1st =new LocalDate(new DateTime().withDate(2010, 4, 1));
