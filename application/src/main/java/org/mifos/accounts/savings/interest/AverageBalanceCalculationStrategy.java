@@ -49,7 +49,7 @@ public class AverageBalanceCalculationStrategy implements PrincipalCalculationSt
         Money runningBalance = interestCalculationPeriodDetail.getBalanceBeforeInterval();
 
         //Calculation of effect of previous balance till the first activity in the calculation interval
-        int subDuration = Days.daysBetween(prevDate, nextDate).getDays();
+        int subDuration = Days.daysBetween(prevDate, nextDate).getDays() + 1;
         Money totalBalance = runningBalance.multiply(subDuration);
         prevDate = nextDate;
 
