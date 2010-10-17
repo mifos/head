@@ -83,7 +83,7 @@ public class DataSetUpgradeUtil {
 
     // Variables for data from command line
     String dataSetName;
-    String databaseName = "mifos_acceptance_tests";
+    String databaseName ="mifos_gazelle_acceptance";
     String user;
     String password;
     String dataSetDirectoryName;
