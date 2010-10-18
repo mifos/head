@@ -181,7 +181,7 @@ public class DataSetUpgradeUtil {
             jdbcConnection.commit();
             jdbcConnection.setAutoCommit(true);
             IDatabaseConnection databaseConnection = new DatabaseConnection(jdbcConnection);
-            databaseConnection.getConfig().setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, Boolean.FALSE);
+            databaseConnection.getConfig().setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, Boolean.TRUE);
             DatabaseOperation.CLEAN_INSERT.execute(databaseConnection, dataSet);
         }
         finally {
