@@ -31,10 +31,10 @@
                 <tbody>
                 <tr>
                     <td width="33%" class="drawtablerowboldnoline">
-                    [@spring.message "organizationPreferences.viewfunds.name"/]
+                    [@spring.message "organizationPreferences.viewFunds.name"/]
                     </td>
                     <td width="44%" class="drawtablerowboldnoline">
-                    [@spring.message "organizationPreferences.viewfunds.fundCode"/]
+                    [@spring.message "organizationPreferences.viewFunds.fundCode"/]
                     </td>
                     <td width="23%" class="drawtablerowboldnoline">&nbsp;</td>
                 </tr>
@@ -44,7 +44,7 @@
                         <td width="44%" class="drawtablerow">${fund.code.value}</td>
                         <td align="right" width="23%" class="drawtablerow">
                             <a class="floatRT"
-                               href="editFunds.ftl?fundId=${fund.id}">[@spring.message "organizationPreferences.viewfunds.edit"/]</a>
+                               href="editFunds.ftl?fundId=${fund.id}">[@spring.message "organizationPreferences.viewFunds.edit"/]</a>
                         </td>
                     </tr>
                     [/#list]

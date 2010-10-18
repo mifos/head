@@ -56,7 +56,7 @@ import static org.mifos.platform.questionnaire.QuestionnaireConstants.NO_QUESTIO
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_SECTION_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TYPE_NOT_PROVIDED;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.ANSWER_TYPE_NOT_PROVIDED;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -107,7 +107,7 @@ public class QuestionnaireValidatorTest {
             questionnaireValidator.validateForDefineQuestion(new QuestionDetail("Title 123", QuestionType.INVALID));
             fail("Should have thrown the validation exception");
         } catch (SystemException e) {
-            assertEquals(QUESTION_TYPE_NOT_PROVIDED, e.getKey());
+            assertEquals(ANSWER_TYPE_NOT_PROVIDED, e.getKey());
         }
     }
 
