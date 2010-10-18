@@ -119,6 +119,7 @@ public class CashFlowTest extends UiTestCaseBase {
 //                verifyPage();
     }
 
+/*
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowFields() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
@@ -126,7 +127,7 @@ public class CashFlowTest extends UiTestCaseBase {
                 verifyCashFlowFieldDefault().
                 verifyCashFlowFields();
     }
-
+*/
     private void createAndValidateLoanProductWithCashFlow(String warningThreshold, DefineNewLoanProductPage.SubmitFormParameters formParameters) {
         loanProductTestHelper.navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
                 fillCashFlow(warningThreshold).
