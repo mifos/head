@@ -21,7 +21,7 @@
 package org.mifos.platform.questionnaire.exceptions;
 
 import org.junit.Test;
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.validations.ValidationException;
 
 import java.util.List;
 

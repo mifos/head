@@ -21,7 +21,7 @@
 package org.mifos.platform.questionnaire.ui.controller;
 
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.validations.ValidationException;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.ui.model.UploadQuestionGroupForm;
 import org.springframework.binding.message.MessageContext;

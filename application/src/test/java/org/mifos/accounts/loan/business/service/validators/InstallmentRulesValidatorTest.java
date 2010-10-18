@@ -11,7 +11,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.validations.ValidationException;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 

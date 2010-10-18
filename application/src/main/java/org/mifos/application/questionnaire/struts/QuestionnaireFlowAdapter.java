@@ -8,7 +8,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.validations.ValidationException;
 import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;

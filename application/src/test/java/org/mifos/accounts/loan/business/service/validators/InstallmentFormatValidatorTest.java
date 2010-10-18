@@ -8,7 +8,7 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.validations.ValidationException;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;

@@ -18,7 +18,7 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.exceptions;
+package org.mifos.platform.validations;
 
 import org.mifos.framework.exceptions.SystemException;
 

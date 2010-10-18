@@ -7,7 +7,7 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.validations.ValidationException;
 
 import java.util.Calendar;
 import java.util.Date;

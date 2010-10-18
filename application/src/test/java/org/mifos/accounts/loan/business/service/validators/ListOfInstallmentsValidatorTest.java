@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.util.helpers.AccountConstants;
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.validations.ValidationException;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;

@@ -3,7 +3,7 @@ package org.mifos.accounts.loan.business.service.validators;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.validations.ValidationException;
 
 import java.util.Date;
 import java.util.List;

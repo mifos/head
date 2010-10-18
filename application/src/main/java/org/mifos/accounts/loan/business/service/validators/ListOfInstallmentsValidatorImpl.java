@@ -2,7 +2,7 @@ package org.mifos.accounts.loan.business.service.validators;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.validations.ValidationException;
 
 import java.util.ArrayList;
 import java.util.Date;
