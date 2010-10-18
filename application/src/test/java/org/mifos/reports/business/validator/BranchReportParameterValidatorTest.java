@@ -22,6 +22,8 @@ package org.mifos.reports.business.validator;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import org.mifos.platform.validations.ErrorEntry;
+import org.mifos.platform.validations.Errors;
 import org.mifos.reports.business.BranchReportParameterForm;
 import org.mifos.reports.business.service.BranchReportService;
 import org.mifos.reports.business.service.IBranchReportService;

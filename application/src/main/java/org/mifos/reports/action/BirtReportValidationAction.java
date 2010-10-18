@@ -28,8 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.mifos.framework.servlet.ModifiableParameterServletRequest;
+import org.mifos.platform.validations.Errors;
 import org.mifos.reports.business.ReportParameterForm;
-import org.mifos.reports.business.validator.Errors;
 import org.mifos.reports.business.validator.ReportParameterValidator;
 import org.mifos.reports.business.validator.ReportParameterValidatorFactory;
 

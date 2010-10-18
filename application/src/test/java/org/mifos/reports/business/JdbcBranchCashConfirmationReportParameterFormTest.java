@@ -23,7 +23,7 @@ package org.mifos.reports.business;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.Ignore;
-import org.mifos.reports.business.validator.Errors;
+import org.mifos.platform.validations.Errors;
 import org.mifos.reports.util.helpers.ReportValidationConstants;
 
 import static org.easymock.classextension.EasyMock.createMock;

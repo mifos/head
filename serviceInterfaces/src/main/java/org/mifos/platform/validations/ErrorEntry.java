@@ -18,36 +18,27 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.reports.business.validator;
+package org.mifos.platform.validations;
 
-import java.util.ArrayList;
-import java.util.List;
+public class ErrorEntry {
+    private final String fieldName;
+    private final String errorCode;
 
-public class Errors {
-    List<ErrorEntry> errors;
-
-    public Errors() {
-        errors = new ArrayList<ErrorEntry>();
+    public ErrorEntry(String fieldName, String errorCode) {
+        super();
+        this.fieldName = fieldName;
+        this.errorCode = errorCode;
     }
 
-    public void rejectValue(String fieldName, String errorCode) {
-        errors.add(new ErrorEntry(fieldName, errorCode));
+    public String getErrorCode() {
+        return errorCode;
     }
 
-    public boolean hasErrors() {
-        return !errors.isEmpty();
+    public String getFieldName() {
+        return fieldName;
     }
 
-    public List<ErrorEntry> getErrors() {
-        return errors;
-    }
-
-    public ErrorEntry getFieldError(String fieldName) {
-        for (ErrorEntry errorEntry : errors) {
-            if (errorEntry.fieldName.equals(fieldName)) {
-                return errorEntry;
-            }
-        }
-        return null;
+    public boolean isSameField(String fieldName) {
+        return this.fieldName.equals(fieldName);
     }
 }

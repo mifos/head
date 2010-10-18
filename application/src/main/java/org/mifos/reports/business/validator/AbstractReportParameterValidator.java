@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.mifos.framework.servlet.ModifiableParameterServletRequest;
+import org.mifos.platform.validations.Errors;
 import org.mifos.reports.business.ReportParameterForm;
 
 public abstract class AbstractReportParameterValidator<T extends ReportParameterForm> implements

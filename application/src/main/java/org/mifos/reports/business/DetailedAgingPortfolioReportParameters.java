@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.mifos.framework.servlet.ModifiableParameterServletRequest;
 import org.mifos.framework.util.helpers.NumberUtils;
 import org.mifos.framework.util.helpers.ServletUtils;
-import org.mifos.reports.business.validator.Errors;
+import org.mifos.platform.validations.Errors;
 import org.mifos.reports.util.helpers.ReportValidationConstants;
 
 public class DetailedAgingPortfolioReportParameters extends AbstractReportParameterForm {
