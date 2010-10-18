@@ -18,50 +18,42 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.reports.business.validator;
+package org.mifos.platform.validations;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
-import org.mifos.application.master.MessageLookup;
 
 public class Errors {
-    List<ErrorEntry> errors;
-    private final Locale locale;
+    private final List<ErrorEntry> errorEntries;
 
-    public Errors(Locale locale) {
-        this.locale = locale;
-        errors = new ArrayList<ErrorEntry>();
+    public Errors() {
+        errorEntries = new ArrayList<ErrorEntry>();
     }
 
-    public void rejectValue(String fieldName, String errorCode) {
-        errors.add(new ErrorEntry(fieldName, errorCode));
-    }
-
-    public List<String> getAllErrorMessages() {
-        List<String> errorMessages = new ArrayList<String>();
-        for (ErrorEntry entry : errors) {
-            errorMessages.add(MessageLookup.getInstance().lookup(entry.errorCode, locale));
-
-        }
-        return errorMessages;
+    public void addError(String fieldName, String errorCode) {
+        errorEntries.add(new ErrorEntry(errorCode, fieldName));
     }
 
     public boolean hasErrors() {
-        return !errors.isEmpty();
+        return !errorEntries.isEmpty();
     }
 
-    public List<ErrorEntry> getErrors() {
-        return errors;
+    public List<ErrorEntry> getErrorEntries() {
+        return errorEntries;
     }
 
     public ErrorEntry getFieldError(String fieldName) {
-        for (ErrorEntry errorEntry : errors) {
-            if (errorEntry.fieldName.equals(fieldName)) {
-                return errorEntry;
+        ErrorEntry result = null;
+        for (ErrorEntry errorEntry : errorEntries) {
+            if (errorEntry.isSameField(fieldName)) {
+                result = errorEntry;
+                break;
             }
         }
-        return null;
+        return result;
+    }
+
+    public void addErrors(List<ErrorEntry> errorEntries) {
+        this.errorEntries.addAll(errorEntries);
     }
 }

@@ -38,7 +38,7 @@ import org.mifos.platform.questionnaire.builders.QuestionGroupResponseDtoBuilder
 import org.mifos.platform.questionnaire.builders.SectionDtoBuilder;
 import org.mifos.platform.questionnaire.domain.ppi.PPISurveyLocator;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.validations.ValidationException;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
 import org.mifos.platform.questionnaire.parsers.QuestionGroupDefinitionParser;

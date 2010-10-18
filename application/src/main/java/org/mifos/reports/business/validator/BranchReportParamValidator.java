@@ -24,6 +24,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.mifos.platform.validations.Errors;
 import org.mifos.reports.business.BranchReportParameterForm;
 import org.mifos.reports.business.service.IBranchReportService;
 import org.mifos.reports.util.helpers.ReportValidationConstants;
@@ -43,7 +44,7 @@ public class BranchReportParamValidator extends AbstractReportParameterValidator
             return;
         }
         if (!branchReportService.isReportDataPresentForRundateAndBranchId(form.getBranchId(), form.getRunDate())) {
-            errors.rejectValue(ReportValidationConstants.RUN_DATE_PARAM,
+            errors.addError(ReportValidationConstants.RUN_DATE_PARAM,
                     ReportValidationConstants.BRANCH_REPORT_NO_DATA_FOUND_MSG);
         }
     }

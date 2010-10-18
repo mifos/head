@@ -19,9 +19,11 @@
  */
 package org.mifos.platform.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
@@ -60,5 +62,18 @@ public class CollectionUtils {
             result = collStr.substring(1, collStr.length() - 1);
         }
         return result;
+    }
+
+    public static <K, V> void addKeyValue(Map<K, List<V>> multiMap, K key, V value) {
+        if (key != null) {
+            List<V> values;
+            if (multiMap.containsKey(key)) {
+                values = multiMap.get(key);
+            } else {
+                values = new ArrayList<V>();
+                multiMap.put(key, values);
+            }
+            values.add(value);
+        }
     }
 }

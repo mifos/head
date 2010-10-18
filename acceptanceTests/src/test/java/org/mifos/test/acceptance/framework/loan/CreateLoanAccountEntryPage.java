@@ -22,12 +22,16 @@ package org.mifos.test.acceptance.framework.loan;
 
 import com.thoughtworks.selenium.Selenium;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
 import org.testng.Assert;
 
 public class CreateLoanAccountEntryPage extends AbstractPage {
+
+    String continueButton = "loancreationdetails.button.continue";
 
     public void verifyPage() {
         this.verifyPage("LoanCreationDetail");
@@ -100,13 +104,13 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
             selenium.select("monthWeek", formParameters.getLsimWeekDay());
         }
 
-        selenium.click("loancreationdetails.button.continue");
+        selenium.click(continueButton);
         waitForPageToLoad();
         return new ViewInstallmentDetailsPage(selenium);
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {
-        selenium.click("loancreationdetails.button.continue");
+        selenium.click(continueButton);
         waitForPageToLoad();
         return navigateToConfirmationPage();
 
@@ -153,14 +157,14 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
 
     public ViewInstallmentDetailsPage clickContinue(){
-        selenium.click("loancreationdetails.button.continue");
+        selenium.click(continueButton);
         waitForPageToLoad();
         selenium.isVisible("schedulePreview.button.preview");
         return  new ViewInstallmentDetailsPage(selenium);
     }
 
     public CreateLoanAccountConfirmationPage clickContinueAndNavigateToLoanAccountConfirmationPage() {
-        selenium.click("loancreationdetails.button.continue");
+        selenium.click(continueButton);
         waitForPageToLoad();
         return navigateToConfirmationPage();
 
@@ -202,12 +206,26 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         
     }
 
-    public CreateLoanAccountEntryPage setDisbursalDate(String dd, String mm, String yyyy) {
+    public CreateLoanAccountEntryPage setDisbursalDate(DateTime validDisbursalDate) {
+        String dd = DateTimeFormat.forPattern("dd").print(validDisbursalDate);
+        String mm = DateTimeFormat.forPattern("MM").print(validDisbursalDate);
+        String yyyy = DateTimeFormat.forPattern("yyyy").print(validDisbursalDate);
 
         typeText("disbursementDateDD",dd);
         typeText("disbursementDateMM",mm);
         typeText("disbursementDateYY",yyyy);
 
+        return this;
+    }
+
+    public CreateLoanAccountCashFlowPage clickContinueToNavigateToCashFlowPage() {
+        selenium.click(continueButton);
+        selenium.waitForPageToLoad("3000");
+        return new CreateLoanAccountCashFlowPage(selenium);
+    }
+
+    public CreateLoanAccountEntryPage setInstallments(int noOfInstallment) {
+        typeText("noOfInstallments",String.valueOf(noOfInstallment));
         return this;
     }
 }

@@ -21,8 +21,9 @@
 package org.mifos.test.acceptance.loanproduct;
 
 
+import org.joda.time.DateTime;
+import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
@@ -50,6 +51,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
     String loanProductName;
     LoanProductTestHelper loanProductTestHelper;
     LoanTestHelper loanTestHelper;
+    DateTime systemDateTime;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -58,6 +60,8 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
         super.setUp();
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
+        systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
+        loanTestHelper.setApplicationTime(systemDateTime);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
         dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
         dataSetup.createUser(userLoginName, userName, officeName);
@@ -66,7 +70,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
 
     @AfterMethod
     public void logOut() {
-//        (new MifosPage(selenium)).logout();
+        (new MifosPage(selenium)).logout();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -90,7 +94,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
                 verifyVariableInstalmentOptionsUnChecked();
         new NavigationHelper(selenium).navigateToHomePage();
         loanTestHelper.
-                navigateToCreateLoanAccountEntryPageWithoutLogout(setLoanSearchParameters()).
+                navigateToCreateLoanAccountEntryPageWithoutLogout(clientName, loanProductName).
                 verifyUncheckedVariableInstalmentsInLoanProductSummery();
 
     }
@@ -98,14 +102,18 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyVariableInstalmentWithNullValue() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
-        createAndValidateLoanProductWithVariableInstalment("","1","");
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
+        loanProductName = formParameters.getOfferingName();
+        createAndValidateLoanProductWithVariableInstalment("","1","",formParameters);
         navigateToCreateNewLoanPageAndValidateInstallmentSummary("","1","");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyVariableInstalment() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
-        createAndValidateLoanProductWithVariableInstalment("60", "1", "100.5");
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
+        loanProductName = formParameters.getOfferingName();
+        createAndValidateLoanProductWithVariableInstalment("60", "1", "100.5", formParameters);
         navigateToCreateNewLoanPageAndValidateInstallmentSummary("60", "1", "100.5");
     }
 
@@ -119,9 +127,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
                 verifyVariableInstalmentOptionsFields();
     }
 
-    private void createAndValidateLoanProductWithVariableInstalment(String maxGap, String minGap, String minInstalmentAmount) {
-        DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
-        loanProductName = formParameters.getOfferingName();
+    private void createAndValidateLoanProductWithVariableInstalment(String maxGap, String minGap, String minInstalmentAmount, DefineNewLoanProductPage.SubmitFormParameters formParameters) {
         loanProductTestHelper.
                 navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
                 fillVariableInstalmentOption(maxGap, minGap, minInstalmentAmount).
@@ -135,15 +141,8 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
     private void navigateToCreateNewLoanPageAndValidateInstallmentSummary(String maxGap, String minGap, String minInstalmentAmount) {
         new NavigationHelper(selenium).navigateToHomePage();
         loanTestHelper.
-                navigateToCreateLoanAccountEntryPageWithoutLogout(setLoanSearchParameters()).
+                navigateToCreateLoanAccountEntryPageWithoutLogout(clientName, loanProductName).
                 verifyVariableInstalmentsInLoanProductSummery(maxGap, minGap, minInstalmentAmount);
-    }
-
-    private CreateLoanAccountSearchParameters setLoanSearchParameters() {
-        CreateLoanAccountSearchParameters accountSearchParameters = new CreateLoanAccountSearchParameters();
-        accountSearchParameters.setSearchString(clientName);
-        accountSearchParameters.setLoanProduct(loanProductName);
-        return accountSearchParameters;
     }
 }
 

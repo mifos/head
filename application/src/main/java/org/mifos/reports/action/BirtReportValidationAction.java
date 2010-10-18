@@ -28,11 +28,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.mifos.framework.servlet.ModifiableParameterServletRequest;
+import org.mifos.platform.validations.Errors;
 import org.mifos.reports.business.ReportParameterForm;
-import org.mifos.reports.business.validator.Errors;
 import org.mifos.reports.business.validator.ReportParameterValidator;
 import org.mifos.reports.business.validator.ReportParameterValidatorFactory;
-import org.mifos.security.util.UserContext;
 
 public class BirtReportValidationAction extends HttpServlet {
 
@@ -60,8 +59,7 @@ public class BirtReportValidationAction extends HttpServlet {
         }
 
         ReportParameterForm form = validator.buildReportParameterForm(request);
-        Errors errors = new Errors(((UserContext) request.getSession().getAttribute("UserContext"))
-                .getPreferredLocale());
+        Errors errors = new Errors();
         validator.validate(form, errors);
         ModifiableParameterServletRequest modifiedRequest = new ModifiableParameterServletRequest(request);
         if (errors.hasErrors()) {

@@ -18,16 +18,21 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.reports.business.validator;
+package org.mifos.platform.validations;
 
 public class ErrorEntry {
-    final String fieldName;
-    final String errorCode;
+    private final String fieldName;
+    private final String errorCode;
+    private final String defaultMessage;
 
-    public ErrorEntry(String fieldName, String errorCode) {
-        super();
-        this.fieldName = fieldName;
+    public ErrorEntry(String errorCode, String fieldName) {
+        this(errorCode, fieldName, null);
+    }
+
+    public ErrorEntry(String errorCode, String fieldName, String defaultMessage) {
         this.errorCode = errorCode;
+        this.fieldName = fieldName;
+        this.defaultMessage = defaultMessage;
     }
 
     public String getErrorCode() {
@@ -36,5 +41,13 @@ public class ErrorEntry {
 
     public String getFieldName() {
         return fieldName;
+    }
+
+    public boolean isSameField(String fieldName) {
+        return this.fieldName.equals(fieldName);
+    }
+
+    public String getDefaultMessage() {
+        return defaultMessage;
     }
 }

@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.validations.ValidationException;
 import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;

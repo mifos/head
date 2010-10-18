@@ -48,7 +48,7 @@ public class CollectionSheetReportParametersTest extends AbstractReportParameter
         reportParams = new CollectionSheetReportParameterForm(String.valueOf(SELECT_BRANCH_OFFICE_SELECTION_ITEM
                 .getId()), AbstractReportParametersTest.VALID_ID,
                 AbstractReportParametersTest.VALID_ID, VALID_REPORT_DATE);
-        errorsMock.rejectValue(ReportValidationConstants.BRANCH_ID_PARAM,
+        errorsMock.addError(ReportValidationConstants.BRANCH_ID_PARAM,
                 ReportValidationConstants.BRANCH_ID_INVALID_MSG);
         replay(errorsMock);
         reportParams.validate(errorsMock);
@@ -59,7 +59,7 @@ public class CollectionSheetReportParametersTest extends AbstractReportParameter
         reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersTest.VALID_ID, String
                 .valueOf(SELECT_LOAN_OFFICER_SELECTION_ITEM.getId()), AbstractReportParametersTest.VALID_ID,
                 VALID_REPORT_DATE);
-        errorsMock.rejectValue(ReportValidationConstants.LOAN_OFFICER_ID_PARAM,
+        errorsMock.addError(ReportValidationConstants.LOAN_OFFICER_ID_PARAM,
                 ReportValidationConstants.LOAN_OFFICER_ID_INVALID_MSG);
         replay(errorsMock);
         reportParams.validate(errorsMock);
@@ -70,7 +70,7 @@ public class CollectionSheetReportParametersTest extends AbstractReportParameter
         reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersTest.VALID_ID, String
                 .valueOf(NA_LOAN_OFFICER_SELECTION_ITEM.getId()), AbstractReportParametersTest.VALID_ID,
                 VALID_REPORT_DATE);
-        errorsMock.rejectValue(ReportValidationConstants.LOAN_OFFICER_ID_PARAM,
+        errorsMock.addError(ReportValidationConstants.LOAN_OFFICER_ID_PARAM,
                 ReportValidationConstants.LOAN_OFFICER_ID_INVALID_MSG);
         replay(errorsMock);
         reportParams.validate(errorsMock);
@@ -81,7 +81,7 @@ public class CollectionSheetReportParametersTest extends AbstractReportParameter
         reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersTest.VALID_ID,
                 AbstractReportParametersTest.VALID_ID, String.valueOf(SELECT_CENTER_SELECTION_ITEM.getId()),
                 VALID_REPORT_DATE);
-        errorsMock.rejectValue(ReportValidationConstants.CENTER_ID_PARAM,
+        errorsMock.addError(ReportValidationConstants.CENTER_ID_PARAM,
                 ReportValidationConstants.CENTER_ID_INVALID_MSG);
         replay(errorsMock);
         reportParams.validate(errorsMock);
@@ -92,7 +92,7 @@ public class CollectionSheetReportParametersTest extends AbstractReportParameter
         reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersTest.VALID_ID,
                 AbstractReportParametersTest.VALID_ID, String.valueOf(NA_CENTER_SELECTION_ITEM.getId()),
                 VALID_REPORT_DATE);
-        errorsMock.rejectValue(ReportValidationConstants.CENTER_ID_PARAM,
+        errorsMock.addError(ReportValidationConstants.CENTER_ID_PARAM,
                 ReportValidationConstants.CENTER_ID_INVALID_MSG);
         replay(errorsMock);
         reportParams.validate(errorsMock);

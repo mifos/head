@@ -21,7 +21,7 @@
 package org.mifos.platform.questionnaire.domain;
 
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.validations.ValidationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.domain.ppi.PPISurveyLocator;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;

@@ -40,7 +40,7 @@ public class BranchReportParameterFormTest extends AbstractReportParametersTest 
     public void testValidatorReturnsErrorIfBranchIdIsSelect() throws Exception {
         reportParams = new BranchReportParameterForm(String.valueOf(SELECT_BRANCH_OFFICE_SELECTION_ITEM.getId()),
                 VALID_BRANCH_REPORT_DATE);
-        errorsMock.rejectValue(ReportValidationConstants.BRANCH_ID_PARAM,
+        errorsMock.addError(ReportValidationConstants.BRANCH_ID_PARAM,
                 ReportValidationConstants.BRANCH_ID_INVALID_MSG);
         replay(errorsMock);
         reportParams.validate(errorsMock);
@@ -50,7 +50,7 @@ public class BranchReportParameterFormTest extends AbstractReportParametersTest 
     public void testValidatorReturnsErrorIfReportDateIsEmpty() throws Exception {
         reportParams = new BranchReportParameterForm(VALID_ID, "");
         errorsMock
-                .rejectValue(ReportValidationConstants.RUN_DATE_PARAM, ReportValidationConstants.RUN_DATE_INVALID_MSG);
+                .addError(ReportValidationConstants.RUN_DATE_PARAM, ReportValidationConstants.RUN_DATE_INVALID_MSG);
         replay(errorsMock);
         reportParams.validate(errorsMock);
         verify(errorsMock);
@@ -59,7 +59,7 @@ public class BranchReportParameterFormTest extends AbstractReportParametersTest 
     public void testReportDateFormatIsInvalid() throws Exception {
         reportParams = new BranchReportParameterForm(VALID_ID, INVALID_BRANCH_REPORT_DATE);
         errorsMock
-                .rejectValue(ReportValidationConstants.RUN_DATE_PARAM, ReportValidationConstants.RUN_DATE_INVALID_MSG);
+                .addError(ReportValidationConstants.RUN_DATE_PARAM, ReportValidationConstants.RUN_DATE_INVALID_MSG);
         replay(errorsMock);
         reportParams.validate(errorsMock);
         verify(errorsMock);

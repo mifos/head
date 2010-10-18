@@ -34,7 +34,7 @@ import org.apache.commons.validator.DateValidator;
 import org.mifos.framework.servlet.ModifiableParameterServletRequest;
 import org.mifos.framework.util.helpers.NumberUtils;
 import org.mifos.framework.util.helpers.ServletUtils;
-import org.mifos.reports.business.validator.Errors;
+import org.mifos.platform.validations.Errors;
 import org.mifos.reports.util.helpers.ReportValidationConstants;
 
 public abstract class AbstractReportParameterForm implements ReportParameterForm {
@@ -46,7 +46,7 @@ public abstract class AbstractReportParameterForm implements ReportParameterForm
     protected void addErrorIfInvalid(Errors errors, String input, Integer invalidValue, String fieldName,
             String errorCode) {
         if (!NumberUtils.isDigits(input) || invalidValue.equals(Integer.valueOf(input))) {
-            errors.rejectValue(fieldName, errorCode);
+            errors.addError(fieldName, errorCode);
         }
     }
 
@@ -54,7 +54,7 @@ public abstract class AbstractReportParameterForm implements ReportParameterForm
             String errorCode) {
         Date date = parseDate(meetingDate, REPORT_DATE_PARAM_FORMAT);
         if (notAvailableDate.equals(date)) {
-            errors.rejectValue(fieldName, errorCode);
+            errors.addError(fieldName, errorCode);
         }
     }
 
@@ -77,7 +77,7 @@ public abstract class AbstractReportParameterForm implements ReportParameterForm
 
     protected void addErrorIfInvalidRunDate(Errors errors, String runDate, String fieldName, String errorCode) {
         if (!DateValidator.getInstance().isValid(runDate, reportDatePattern(), false)) {
-            errors.rejectValue(fieldName, errorCode);
+            errors.addError(fieldName, errorCode);
         }
     }
 

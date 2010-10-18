@@ -23,7 +23,7 @@ package org.mifos.reports.business;
 import static org.easymock.classextension.EasyMock.createMock;
 import junit.framework.TestCase;
 
-import org.mifos.reports.business.validator.Errors;
+import org.mifos.platform.validations.Errors;
 
 public abstract class AbstractReportParametersTest extends TestCase {
 

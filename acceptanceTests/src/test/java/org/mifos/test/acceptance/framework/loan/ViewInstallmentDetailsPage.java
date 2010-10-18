@@ -90,21 +90,46 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         return this;
     }
 
-    public ViewInstallmentDetailsPage validateDateField(DateTime disbursalDate, int minGap, int maxGap, int noOfInstallments) {
+    public ViewInstallmentDetailsPage validateDateFieldValidations(DateTime disbursalDate, int minGap, int maxGap, int noOfInstallments) {
         validateBlankDate(noOfInstallments);
-        validateInvalidDateFormat(noOfInstallments,disbursalDate,"dd-MM-");
-//        validateDateOrder(disbursalDate,minGap, noOfInstallments);
+        validateInvalidDateFormat(noOfInstallments,disbursalDate,"dd-MM-yyyy", minGap);
+        validateDateOrder(disbursalDate,minGap,noOfInstallments);
+        validateErrorForSameDate(disbursalDate,minGap,noOfInstallments);
         validateGapForFirstDateAndDisbursalDate(disbursalDate);
         validateErrorForInstallmentGapsLessThanMinGap(minGap, noOfInstallments, disbursalDate);
         validateErrorForInstallmentGapsGraterThanMaxGap(maxGap, noOfInstallments, disbursalDate);
         return this;
     }
 
+    private void validateErrorForSameDate(DateTime disbursalDate, int minGap, int noOfInstallments) {
+        DateTime nextInstallmentDate = getValidDate(disbursalDate, minGap, true);
+        for (int iterator = 0; iterator < noOfInstallments-1 ; iterator++) {
+            fillDate(disbursalDate, minGap, noOfInstallments, true);
+            DateTime currentInstallmentDate = nextInstallmentDate;
+            nextInstallmentDate = getValidDate(currentInstallmentDate, minGap, true);
+            selenium.type("installment.dueDate." + iterator, dateTimeFormatter.print(currentInstallmentDate));
+            selenium.type("installment.dueDate." + (iterator+1), dateTimeFormatter.print(currentInstallmentDate));
+            clickValidateAndWaitForPAgeToLoad();
+            Assert.assertTrue(selenium.isTextPresent("Installments [" + (iterator+1) +", " + (iterator+2) +"] have the same due date"));
+        }
+
+        DateTime validDate = getValidDate(disbursalDate, minGap, true);
+        selenium.type("installment.dueDate.0", dateTimeFormatter.print(validDate));
+        StringBuffer stringBuffer = new StringBuffer("1");
+        for (int iterator = 1; iterator < noOfInstallments ; iterator++) {
+            selenium.type("installment.dueDate." + iterator, dateTimeFormatter.print(validDate));
+            stringBuffer = stringBuffer.append(", ").append(iterator+1);
+        }
+        clickValidateAndWaitForPAgeToLoad();
+        Assert.assertTrue(selenium.isTextPresent("Installments [" + stringBuffer.toString() .trim() +"] have the same due date"));
+
+    }
+
     private void validateErrorForInstallmentGapsGraterThanMaxGap(int maxGap, int noOfInstallments, DateTime disbursalDate) {
-        DateTime nextInstallment = getValidDate(disbursalDate, maxGap);
+        DateTime nextInstallment = getValidDate(disbursalDate, maxGap, true);
         for (int installment = 0; installment < noOfInstallments; installment++) {
             selenium.type("installment.dueDate." + installment, dateTimeFormatter.print(nextInstallment));
-            nextInstallment=getValidDate(nextInstallment, maxGap+1);
+            nextInstallment=getValidDate(nextInstallment, maxGap+1, true);
         }
         clickValidateAndWaitForPAgeToLoad();
         for (int installment = 1; installment < noOfInstallments-1; installment++) {
@@ -112,44 +137,54 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         }
     }
 
-//    private void validateDateOrder(DateTime cal, int minGap, int noOfInstallment) {
-//        for (int installment = noOfInstallment -1; installment == 0 ; installment--) {
-//            cal.add(Calendar.DATE, minGap+1);
-//            selenium.type("installment.dueDate." + installment, getFormattedDate(cal.getTime()));
-//        }
-//        clickValidateAndWaitForPAgeToLoad();
-//        for (int installment = 0; installment < noOfInstallment ; installment++) {
-//            Assert.assertTrue(selenium.isTextPresent("Installment " + String.valueOf(installment+1) + " has invalid date. Installment due dates should be in ascending order"));
-//        }
-//    }
-
-    private void validateBlankDate(double noOfInstallment) {
-        for (int installment = 0; installment < noOfInstallment ; installment++) {
-            selenium.type("installment.dueDate." + installment, " ");
-        }
-        clickValidateAndWaitForPAgeToLoad();
-        for (int installment = 0; installment < noOfInstallment ; installment++) {
-            Assert.assertTrue(selenium.isTextPresent("Installment " + (installment+1) +" has an invalid due date. An example due date is 01-Apr-2010"));
+    private void validateDateOrder(DateTime disbursalDate, int minGap, int noOfInstallments) {
+        DateTime nextInstallmentDate = getValidDate(disbursalDate, minGap, true);
+        for (int iterator = 0; iterator < noOfInstallments-1 ; iterator++) {
+            fillDate(disbursalDate, minGap, noOfInstallments, true);
+            DateTime currentInstallmentDate = nextInstallmentDate;
+            nextInstallmentDate = getValidDate(currentInstallmentDate, minGap, true);
+            selenium.type("installment.dueDate." + iterator, dateTimeFormatter.print(nextInstallmentDate));
+            selenium.type("installment.dueDate." + (iterator+1), dateTimeFormatter.print(currentInstallmentDate));
+            clickValidateAndWaitForPAgeToLoad();
+            Assert.assertTrue(selenium.isTextPresent("Installment " + (iterator+2) + " has an invalid due date. Installment due dates should be in ascending order"));
         }
     }
 
-    private void validateInvalidDateFormat(int noOfInstallments, DateTime disbursalDate, String dateFormat) {
+    private void fillDate(DateTime disbursalDate, int gap, int noOfInstallments, boolean IsGapMinimumGap) {
         DateTime nextInstallment = disbursalDate;
         for (int installment = 0; installment < noOfInstallments; installment++) {
-            nextInstallment = nextInstallment.plusDays(1);
+            nextInstallment = getValidDate(nextInstallment,gap, IsGapMinimumGap);
+            selenium.type("installment.dueDate." + installment, dateTimeFormatter.print(nextInstallment));
+        }
+    }
+
+    private void validateBlankDate(double noOfInstallment) {
+        for (int installment = 0; installment < noOfInstallment ; installment++) {
+            selenium.type("installment.dueDate." + installment, "");
+        }
+        clickValidateAndWaitForPAgeToLoad();
+        for (int installment = 0; installment < noOfInstallment ; installment++) {
+            Assert.assertTrue(selenium.isTextPresent("Installment " + (installment+1) +" has an invalid due date. An example due date is 23-Apr-2010"));
+        }
+    }
+
+    private void validateInvalidDateFormat(int noOfInstallments, DateTime disbursalDate, String dateFormat, int minGap) {
+        DateTime nextInstallment = disbursalDate;
+        for (int installment = 0; installment < noOfInstallments; installment++) {
+            nextInstallment = nextInstallment.plusDays(minGap);
             selenium.type("installment.dueDate." + installment, DateTimeFormat.forPattern(dateFormat).print(nextInstallment));
         }
         clickValidateAndWaitForPAgeToLoad();
         for (int installment = 0; installment < noOfInstallments; installment++) {
-            Assert.assertTrue(selenium.isTextPresent("Installment " + (installment+1) +" has an invalid due date. An example due date is 01-Apr-2010"));
+            Assert.assertTrue(selenium.isTextPresent("Installment " + (installment+1) +" has an invalid due date. An example due date is 23-Apr-2010"));
         }
     }
 
     private void validateErrorForInstallmentGapsLessThanMinGap(int minGap, int noOfInstallments, DateTime disbursalDate) {
-        DateTime nextInstalment = getValidDate(disbursalDate,minGap);
+        DateTime nextInstalment = getValidDate(disbursalDate,minGap, true);
         for (int installment = 0; installment < noOfInstallments; installment++) {
             selenium.type("installment.dueDate." + installment, dateTimeFormatter.print(nextInstalment));
-            nextInstalment = getValidDate(nextInstalment,minGap-1);
+            nextInstalment = getValidDate(nextInstalment,minGap-1, true);
             }
         clickValidateAndWaitForPAgeToLoad();
         for (int installment = 1; installment < noOfInstallments-1; installment++) {
@@ -158,10 +193,14 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
 //        Assert.assertTrue(selenium.isTextPresent("Gap between disbursal date and due date of first installment is less than the allowable minimum gap"));
     }
 
-    private DateTime getValidDate(DateTime disbursalDate, int minGap) {
+    private DateTime getValidDate(DateTime disbursalDate, int minGap, boolean isGapIsMinimumGap) {
         DateTime dateTime = disbursalDate.plusDays(minGap);
         if (dateTime.getDayOfWeek()==7) {
-            dateTime = dateTime.plusDays(1);
+            if (isGapIsMinimumGap) {
+                dateTime = dateTime.plusDays(1);
+            } else {
+                dateTime = dateTime.minusDays(1);
+            }
         }
         return dateTime;
     }
@@ -181,16 +220,15 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         selenium.waitForPageToLoad("3000");
     }
 
-    public void verifyInstallmentTotal(int noOfInstallments, int minInstalmentAmount) {
+    public ViewInstallmentDetailsPage verifyInstallmentTotalValidations(int noOfInstallments, int minInstalmentAmount) {
         verifyBlankTotalField(noOfInstallments);
         verifyErrorForTotalLessThanMinAmount(minInstalmentAmount,noOfInstallments);
         verifyErrorForInvalidTotal(noOfInstallments);
+        return this;
     }
 
     private void verifyErrorForInvalidTotal(int noOfInstallments) {
-        for (int installment = 0; installment < noOfInstallments-1; installment++) {
-            selenium.type("installments["+installment+"].total","abc11" );
-        }
+        fillAllTotalFields(noOfInstallments, "abcd123");
         clickValidateAndWaitForPAgeToLoad();
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
             Assert.assertTrue(selenium.isTextPresent("Installment "+(installment+1)+" has invalid total amount"));
@@ -198,9 +236,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
     }
 
     private void verifyErrorForTotalLessThanMinAmount(int minInstalmentAmount, int noOfInstallments) {
-        for (int installment = 0; installment < noOfInstallments-1; installment++) {
-            selenium.type("installments["+installment+"].total",String.valueOf(minInstalmentAmount-1) );
-        }
+        fillAllTotalFields(noOfInstallments, String.valueOf(minInstalmentAmount-1));
         clickValidateAndWaitForPAgeToLoad();
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
             Assert.assertTrue(selenium.isTextPresent("Installment "+(installment+1)+" has total amount less than the allowed value"));
@@ -208,12 +244,42 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
     }
 
     private void verifyBlankTotalField(int noOfInstallments) {
-        for (int installment = 0; installment < noOfInstallments-1; installment++) {
-            selenium.type("installments["+installment+"].total"," ");
-        }
+        fillAllTotalFields(noOfInstallments, "");
         clickValidateAndWaitForPAgeToLoad();
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
             Assert.assertTrue(selenium.isTextPresent("Installment "+(installment+1)+" has invalid total amount"));
+        }
+
+    }
+
+    private void fillAllTotalFields(int noOfInstallments, String installmentAmount) {
+        for (int installment = 0; installment < noOfInstallments-1; installment++) {
+            selenium.type("installments["+installment+"].total", installmentAmount);
+        }
+    }
+
+    public ViewInstallmentDetailsPage verifyValidData(int noOfInstallments, int minGap, int minInstalmentAmount, DateTime disbursalDate, int maxGap) {
+        fillAllTotalFields(noOfInstallments, String.valueOf(minInstalmentAmount));
+        fillDate(disbursalDate,minGap,noOfInstallments, true);
+        clickValidateAndWaitForPAgeToLoad();
+        verifyNoErrorMessageIsThrown();
+        fillDate(disbursalDate,maxGap,noOfInstallments, false);
+        verifyNoErrorMessageIsThrown();
+        return this;
+    }
+
+    private void verifyNoErrorMessageIsThrown() {
+        Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li"));
+    }
+
+    public void verifyCashFlow(int cashFlowIncremental) {
+        String tableXpath = "//form/table//table[2]/tbody/tr[5]/td/table/tbody/tr[2]/td/table";
+        int noOfMonths = selenium.getXpathCount(tableXpath + "//tr").intValue() - 1;
+        int  cashFlow = cashFlowIncremental;
+        for (int rowIndex = 1; rowIndex <= noOfMonths ; rowIndex++) {
+            Assert.assertEquals(selenium.getText(tableXpath + "//tr[" + (rowIndex+1) + "]/td[2]"),String.valueOf(cashFlow));
+            Assert.assertEquals(selenium.getText(tableXpath + "//tr[" + (rowIndex+1) + "]/td[3]"), "notes" + rowIndex);
+            cashFlow = cashFlow + cashFlowIncremental;
         }
 
     }

@@ -371,8 +371,10 @@ public class DefineNewLoanProductPage extends AbstractPage {
     }
 
     public DefineNewLoanProductPage fillCashFlow(String warningThreshold) {
-        selenium.click(cashFlowCheckbox);
-        selenium.type(cashFlowThresholdTextBox,warningThreshold);
+        if (!selenium.isChecked(cashFlowCheckbox)) {
+            selenium.click(cashFlowCheckbox);
+        }
+        selenium.type(cashFlowThresholdTextBox, warningThreshold);
         return this;
     }
 
@@ -384,4 +386,20 @@ public class DefineNewLoanProductPage extends AbstractPage {
         Assert.assertTrue(selenium.isVisible(cashFlowThresholdTextBox));
         return this;
     }
+
+    public void verifyCashFlowFields() {
+        fillCashFlow("100");
+        submitAndGotoNewLoanProductPreviewPage();
+        Assert.assertTrue(selenium.isTextPresent("Warning Threshold should be a value less than 100.0"));
+        fillCashFlow("abc");
+        submitAndGotoNewLoanProductPreviewPage();
+        Assert.assertTrue(selenium.isTextPresent("Warning threshold should be a non-negative number."));
+        fillCashFlow("99.999");
+        submitAndGotoNewLoanProductPreviewPage();
+        Assert.assertTrue(selenium.isTextPresent("Warning threshold should be a non-negative number."));
+        fillCashFlow("-10");
+        submitAndGotoNewLoanProductPreviewPage();
+        Assert.assertTrue(selenium.isTextPresent("Warning threshold should be a non-negative number."));
+    }
+
 }

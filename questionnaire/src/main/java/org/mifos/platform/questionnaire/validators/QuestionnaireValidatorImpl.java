@@ -24,7 +24,7 @@ package org.mifos.platform.questionnaire.validators;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.validations.ValidationException;
 import org.mifos.platform.questionnaire.domain.AnswerType;
 import org.mifos.platform.questionnaire.domain.QuestionChoiceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionEntity;

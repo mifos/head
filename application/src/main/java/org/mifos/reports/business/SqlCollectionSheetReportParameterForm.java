@@ -22,7 +22,7 @@ package org.mifos.reports.business;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.mifos.reports.business.validator.Errors;
+import org.mifos.platform.validations.Errors;
 import org.mifos.reports.util.helpers.ReportValidationConstants;
 
 public class SqlCollectionSheetReportParameterForm extends CollectionSheetReportParameterForm {

@@ -1,8 +1,8 @@
 package org.mifos.accounts.loan.business.service.validators;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.util.CollectionUtils;
+import org.mifos.platform.validations.ErrorEntry;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,54 +10,52 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mifos.accounts.util.helpers.AccountConstants.GENERIC_VALIDATION_ERROR;
 import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_DUPLICATE;
 import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_INVALID_ORDER;
 
 public class ListOfInstallmentsValidatorImpl implements ListOfInstallmentsValidator {
     @Override
-    public void validateDuplicateDueDates(List<RepaymentScheduleInstallment> installments) throws ValidationException {
-        Map<Date, List<String>> dateInstallmentsLookup = new LinkedHashMap<Date, List<String>>();
-        for (RepaymentScheduleInstallment installment : installments) {
-            Date dueDateValue = installment.getDueDateValue();
-            if (dueDateValue != null) {
-                List<String> installmentList;
-                if (dateInstallmentsLookup.containsKey(dueDateValue)) {
-                    installmentList = dateInstallmentsLookup.get(dueDateValue);
-                } else {
-                    installmentList = new ArrayList<String>();
-                    dateInstallmentsLookup.put(dueDateValue, installmentList);
-                }
-                installmentList.add(String.valueOf(installment.getInstallment()));
-            }
-        }
-        throwValidationExceptionIfRequired(dateInstallmentsLookup);
+    public List<ErrorEntry> validateDuplicateDueDates(List<RepaymentScheduleInstallment> installments) {
+        Map<Date, List<String>> installmentsLookup = getDueDateInstallmentsLookup(installments);
+        return retrieveErrors(installmentsLookup);
     }
 
-    private void throwValidationExceptionIfRequired(Map<Date, List<String>> dateInstallmentsLookup) {
-        ValidationException parentException = new ValidationException(GENERIC_VALIDATION_ERROR);
+    private Map<Date, List<String>> getDueDateInstallmentsLookup(List<RepaymentScheduleInstallment> installments) {
+        Map<Date, List<String>> dateInstallmentsLookup = new LinkedHashMap<Date, List<String>>();
+        for (RepaymentScheduleInstallment installment : installments) {
+            Date key = installment.getDueDateValue();
+            String value = installment.getInstallmentNumberAsString();
+            CollectionUtils.addKeyValue(dateInstallmentsLookup, key, value);
+        }
+        return dateInstallmentsLookup;
+    }
+
+    private List<ErrorEntry> retrieveErrors(Map<Date, List<String>> dateInstallmentsLookup) {
+        List<ErrorEntry> errorEntries = new ArrayList<ErrorEntry>();
         for (List<String> installments : dateInstallmentsLookup.values()) {
             if (installments.size() > 1) {
-                ValidationException childException = new ValidationException(INSTALLMENT_DUEDATE_DUPLICATE, installments.toString());
-                parentException.addChildException(childException);
+                errorEntries.add(new ErrorEntry(INSTALLMENT_DUEDATE_DUPLICATE, installments.toString()));
             }
         }
-        if (parentException.hasChildExceptions()) throw parentException;
+        return errorEntries;
     }
 
     @Override
-    public void validateOrderingOfDueDates(List<RepaymentScheduleInstallment> installments) throws ValidationException {
+    public List<ErrorEntry> validateOrderingOfDueDates(List<RepaymentScheduleInstallment> installments) {
+        List<ErrorEntry> errorEntries = new ArrayList<ErrorEntry>();
         if (CollectionUtils.isNotEmpty(installments)) {
             for (int i = 1; i < installments.size(); i++) {
                 Date previousDate = installments.get(i - 1).getDueDateValue();
                 RepaymentScheduleInstallment installment = installments.get(i);
                 Date currentDate = installment.getDueDateValue();
                 if (!isCurrentDateGreaterThanPreviousDate(previousDate, currentDate)) {
-                    throw new ValidationException(INSTALLMENT_DUEDATE_INVALID_ORDER, String.valueOf(installment.getInstallment()));
+                    String fieldName = installment.getInstallmentNumberAsString();
+                    errorEntries.add(new ErrorEntry(INSTALLMENT_DUEDATE_INVALID_ORDER, fieldName));
+                    break;
                 }
             }
-
         }
+        return errorEntries;
     }
 
     private boolean isCurrentDateGreaterThanPreviousDate(Date previousDate, Date currentDate) {

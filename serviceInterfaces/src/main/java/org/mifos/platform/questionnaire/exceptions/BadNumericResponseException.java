@@ -20,7 +20,7 @@
 
 package org.mifos.platform.questionnaire.exceptions;
 
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.validations.ValidationException;
 
 public class BadNumericResponseException extends ValidationException {
     private static final long serialVersionUID = 8068243180234201365L;

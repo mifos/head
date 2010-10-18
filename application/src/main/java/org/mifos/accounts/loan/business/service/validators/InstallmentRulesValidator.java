@@ -3,15 +3,15 @@ package org.mifos.accounts.loan.business.service.validators;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.validations.ErrorEntry;
 
 import java.util.Date;
 import java.util.List;
 
 public interface InstallmentRulesValidator {
-    void validateForDisbursementDate(List<RepaymentScheduleInstallment> installments, Date disbursementDate) throws ValidationException;
+    List<ErrorEntry> validateForDisbursementDate(List<RepaymentScheduleInstallment> installments, Date disbursementDate);
 
-    void validateForVariableInstallments(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO) throws ValidationException;
+    List<ErrorEntry> validateForVariableInstallments(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO);
 
-    void validateForHolidays(List<RepaymentScheduleInstallment> installments, FiscalCalendarRules fiscalCalendarRules) throws ValidationException;
+    List<ErrorEntry> validateForHolidays(List<RepaymentScheduleInstallment> installments, FiscalCalendarRules fiscalCalendarRules);
 }

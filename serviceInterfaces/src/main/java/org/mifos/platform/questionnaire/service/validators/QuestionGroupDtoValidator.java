@@ -20,7 +20,7 @@
 
 package org.mifos.platform.questionnaire.service.validators;
 
-import org.mifos.platform.exceptions.ValidationException;
+import org.mifos.platform.validations.ValidationException;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;

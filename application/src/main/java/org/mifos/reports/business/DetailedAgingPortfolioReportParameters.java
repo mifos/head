@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.mifos.framework.servlet.ModifiableParameterServletRequest;
 import org.mifos.framework.util.helpers.NumberUtils;
 import org.mifos.framework.util.helpers.ServletUtils;
-import org.mifos.reports.business.validator.Errors;
+import org.mifos.platform.validations.Errors;
 import org.mifos.reports.util.helpers.ReportValidationConstants;
 
 public class DetailedAgingPortfolioReportParameters extends AbstractReportParameterForm {
@@ -55,7 +55,7 @@ public class DetailedAgingPortfolioReportParameters extends AbstractReportParame
 
     private void addErrorIfInvalid(Errors errors, String parameter, String fieldName, String errorCode) {
         if (!NumberUtils.isDigits(parameter) || Integer.valueOf(INVALID_ID).equals(Integer.valueOf(parameter))) {
-            errors.rejectValue(fieldName, errorCode);
+            errors.addError(fieldName, errorCode);
         }
     }
 
