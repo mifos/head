@@ -49,6 +49,4 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
     }
-
-
 }

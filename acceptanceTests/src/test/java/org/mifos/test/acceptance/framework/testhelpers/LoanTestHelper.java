@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.testhelpers;
 
 import com.thoughtworks.selenium.Selenium;
+import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
@@ -62,7 +63,9 @@ import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 /**
@@ -382,5 +385,22 @@ public class LoanTestHelper {
         DisburseLoanPage disburseLoanPage = loanAccountPage.navigateToDisburseLoan();
         disburseLoanPage.verifyPage();
         return disburseLoanPage;
+    }
+
+    public CreateLoanAccountEntryPage navigateToCreateLoanAccountEntryPageWithoutLogout(String clientName, String loanProductName) {
+        return navigateToCreateLoanAccountEntryPageWithoutLogout(setLoanSearchParameters(clientName,loanProductName));
+    }
+    
+    public CreateLoanAccountSearchParameters setLoanSearchParameters(String clientName, String loanProductName) {
+        CreateLoanAccountSearchParameters accountSearchParameters = new CreateLoanAccountSearchParameters();
+        accountSearchParameters.setSearchString(clientName);
+        accountSearchParameters.setLoanProduct(loanProductName);
+        return accountSearchParameters;
+    }
+
+
+    public void setApplicationTime(DateTime systemDateTime) throws UnsupportedEncodingException {
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        dateTimeUpdaterRemoteTestingService.setDateTime(systemDateTime);
     }
 }

@@ -22,7 +22,6 @@ package org.mifos.test.acceptance.loan;
 
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
@@ -33,7 +32,6 @@ import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
-import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.TestDataSetup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +40,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.UnsupportedEncodingException;
-
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(sequential = true, groups = {"loanproduct", "acceptance", "ui","smoke"})
@@ -51,24 +47,26 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
 
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
-    String officeName = "test_office";
-    String userLoginName = "test_user";
-    String userName="test user";
-    String clientName = "test client";
-    String loanProductName;
-    LoanProductTestHelper loanProductTestHelper;
-    LoanTestHelper loanTestHelper;
-    NavigationHelper navigationHelper;
+    private final static String officeName = "test_office";
+    private final static String userLoginName = "test_user";
+    private final static String userName="test user";
+    private final static String clientName = "test client";
+    private LoanProductTestHelper loanProductTestHelper;
+    private String loanProductName;
+    private LoanTestHelper loanTestHelper;
+    private DateTime systemDateTime;
+    private NavigationHelper navigationHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        selenium.windowMaximize();
-        loanProductTestHelper = new LoanProductTestHelper(selenium);
-        loanTestHelper = new LoanTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
+        loanTestHelper = new LoanTestHelper(selenium);
+        loanProductTestHelper = new LoanProductTestHelper(selenium);
+        systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
+        loanTestHelper.setApplicationTime(systemDateTime);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
         dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
         dataSetup.createUser(userLoginName, userName, officeName);
@@ -80,7 +78,6 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
     
-     @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyRepaymentScheduleField() throws Exception {
         int noOfInstallments = 5;
@@ -92,12 +89,15 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
         int maxGap = 10;
         int minGap = 1;
         int minInstalmentAmount = 100;
-        DateTime disbursalDate = getSystemCurrentDate();
+        DateTime disbursalDate = systemDateTime.plusDays(1);
+
         createLoanProductWithVariableInstalment(maxGap, minGap, minInstalmentAmount, formParameters);
         createNewLoanAccountAndNavigateToRepaymentSchedule(disbursalDate).
         validateRepaymentScheduleFieldDefault(noOfInstallments).
-                validateDateField(disbursalDate,minGap,maxGap,noOfInstallments).
-                verifyInstallmentTotal(noOfInstallments,minInstalmentAmount);
+                validateDateFieldValidations(disbursalDate,minGap,maxGap,noOfInstallments).
+                verifyInstallmentTotalValidations(noOfInstallments,minInstalmentAmount).
+                verifyValidData(noOfInstallments,minGap,minInstalmentAmount,disbursalDate, maxGap);
+
     }
 
     private DefineNewLoanProductPage.SubmitFormParameters defineLoanProductParameters(int defInstallments, int defaultLoanAmount, int defaultInterestRate) {
@@ -118,21 +118,12 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
                 submit();
     }
 
-     private DateTime getSystemCurrentDate() throws UnsupportedEncodingException {
-         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2010,2,12,1,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-         return targetTime.plusDays(1);
-    }
 
     private ViewInstallmentDetailsPage createNewLoanAccountAndNavigateToRepaymentSchedule(DateTime validDisbursalDate) {
         navigationHelper.navigateToHomePage();
-        String disbursalDD = DateTimeFormat.forPattern("dd").print(validDisbursalDate);
-        String disbursalMM = DateTimeFormat.forPattern("MM").print(validDisbursalDate);
-        String disbursalYYYY = DateTimeFormat.forPattern("yyyy").print(validDisbursalDate);
         return loanTestHelper.
                 navigateToCreateLoanAccountEntryPageWithoutLogout(setLoanSearchParameters()).
-                setDisbursalDate(disbursalDD, disbursalMM, disbursalYYYY).
+                setDisbursalDate(validDisbursalDate).
                 clickContinue();
     }
 
